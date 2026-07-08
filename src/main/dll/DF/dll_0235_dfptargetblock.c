@@ -13,8 +13,8 @@
 #include "main/gamebits.h"
 
 #define DFPTARGETBLOCK_OBJFLAG_HIDDEN 0x4000
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
-                              DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
+                              int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E6488;
@@ -24,10 +24,9 @@ extern const f32 lbl_803E6490;
 #define DFPTARGETBLOCK_POINT_OFFSET_X 0x04
 #define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
-#define DFPTARGETBLOCK_POINT_STRIDE 0x0C
+#define DFPTARGETBLOCK_POINT_STRIDE   0x0C
 
-extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj,
-                                  int* priority, int flags);
+extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 extern f32 timeDelta;
@@ -46,9 +45,8 @@ extern const f32 lbl_803E64B8;
 extern const f32 lbl_803E64BC;
 extern const f32 lbl_803E64C0;
 extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern s32 gTargetBlockHomePos[];
 extern const f32 lbl_803E64C4;
 extern const f32 lbl_803E64C8;
@@ -75,9 +73,11 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     DfpTargetBlockAudioState* state;
 
     state = ((GameObject*)obj)->extra;
-    if (state->completionSfxReady != 0) return;
-    if (state->stateSfxReady == 0 || state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) return;
-    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6490);
+    if (state->completionSfxReady != 0)
+        return;
+    if (state->stateSfxReady == 0 || state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED)
+        return;
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6490);
 }
 
 typedef struct DfpTargetBlockPartfxArgs
@@ -107,8 +107,8 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
     Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
 }
 
-static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
-                                               DfpTargetBlockAudioState* state, const f32* threshold)
+static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTargetBlockAudioState* state,
+                                               const f32* threshold)
 {
     f32 dx;
     f32 dz;
@@ -155,8 +155,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     }
 
     if ((state->completionSfxReady != 0) || (state->stateSfxReady == 0) ||
-        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) ||
-        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING))
+        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) || (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING))
     {
         return;
     }
@@ -238,8 +237,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (mode == 1)
     {
-        if ((dx > lbl_803E649C) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
-            (dz > lbl_803E64A8))
+        if ((dx > lbl_803E649C) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) || (dz > lbl_803E64A8))
         {
             dfptargetblock_resetToHome(obj, home, state);
         }
@@ -247,8 +245,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     }
     else if (mode == 2)
     {
-        if ((dx > lbl_803E64B4) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
-            (dz > lbl_803E64BC))
+        if ((dx > lbl_803E64B4) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) || (dz > lbl_803E64BC))
         {
             dfptargetblock_resetToHome(obj, home, state);
 
@@ -262,8 +259,9 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
             for (i = DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i != 0; i--)
             {
-                (*gPartfxInterface)->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID,
-                                                 &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);
+                (*gPartfxInterface)
+                    ->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE,
+                                  -1, NULL);
             }
         }
         dfptargetblock_checkSettled(obj, state, &lbl_803E64C0);
@@ -291,8 +289,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         buf[3] = lbl_803E648C;
         buf[4] = lbl_803E64C4;
         buf[5] = lbl_803E648C;
-        objfx_spawnArcedBurst((int)obj, 5, lbl_803E64C8, 1, 2, 0x32, lbl_803E64C4,
-                              lbl_803E64C4, lbl_803E64B0, buf, 0);
+        objfx_spawnArcedBurst((int)obj, 5, lbl_803E64C8, 1, 2, 0x32, lbl_803E64C4, lbl_803E64C4, lbl_803E64B0, buf, 0);
     }
     else
     {
@@ -430,7 +427,10 @@ s32 gTargetBlockHomePos[] = {0, 0, 0};
 
 ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     {
-        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
         (ObjectDescriptorCallback)dfptargetblock_initialise,
         (ObjectDescriptorCallback)dfptargetblock_release,
         0,
@@ -445,8 +445,7 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     0,
 };
 
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj,
-                                           DfpTargetBlockCollisionPoints* collisionPoints)
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
 {
     u8* point;
     f32 probe[3];

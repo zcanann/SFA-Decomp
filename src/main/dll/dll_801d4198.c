@@ -18,9 +18,9 @@
 /* QueenEarthWalkerState::flags bits */
 #define QEW_FLAG_EYE_ANIMS 0x8  /* run characterDoEyeAnims vs the bite */
 #define QEW_FLAG_TARGETING 0x2  /* targeting the player */
-#define QEW_FLAG_LATCHED 0x4    /* player position captured; set/cleared by SH/dll_01AC_shqueenearthwalker.c */
+#define QEW_FLAG_LATCHED   0x4  /* player position captured; set/cleared by SH/dll_01AC_shqueenearthwalker.c */
 #define QEW_FLAG_INIT_DONE 0x20 /* one-shot init guard */
-#define QEW_FLAG_ACTIVE 0x10    /* feed sequence completed; suppress idle attacks */
+#define QEW_FLAG_ACTIVE    0x10 /* feed sequence completed; suppress idle attacks */
 
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);

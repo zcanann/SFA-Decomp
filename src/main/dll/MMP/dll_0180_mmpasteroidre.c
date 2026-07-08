@@ -21,18 +21,16 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define MMPASTEROIDRE_OBJFLAG_HIDDEN 0x4000
+#define MMPASTEROIDRE_OBJFLAG_HIDDEN             0x4000
 #define MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
-
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern void setDrawLights(int v);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
 
 f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};
 extern PartFxSpawnParams gMmpAsteroidDustSpawnParams;
@@ -75,21 +73,28 @@ void mmp_asteroid_re_initialise(void)
 {
 }
 
-int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
-int mmp_asteroid_re_getObjectTypeId(void) { return 0x0; }
+int mmp_asteroid_re_getExtraSize(void)
+{
+    return 0x1c;
+}
+int mmp_asteroid_re_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 #pragma peephole off
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E44F8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E44F8);
 }
 
 #pragma scheduling off
 int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
-    MmpAsteroidReState * state = ((GameObject*)obj)->extra;
+    MmpAsteroidReState* state = ((GameObject*)obj)->extra;
     int i;
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -112,16 +117,16 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ((ObjAnimComponent*)obj)->bankIndex = 1;
             break;
         case 3:
-            {
-                int r;
-                state->eventFlags = state->eventFlags & ~ASTEROIDRE_FX_IMPACT;
-                state->eventFlags = state->eventFlags | 0x50;
-                r = randomGetRange(10, 60);
-                state->periodicFxTimer = r;
-                state->phase = MMP_ASTEROID_PHASE_RISING;
-                mainSetBits(GAMEBIT_MMPAsteroidRelated087B, state->phase);
-                break;
-            }
+        {
+            int r;
+            state->eventFlags = state->eventFlags & ~ASTEROIDRE_FX_IMPACT;
+            state->eventFlags = state->eventFlags | 0x50;
+            r = randomGetRange(10, 60);
+            state->periodicFxTimer = r;
+            state->phase = MMP_ASTEROID_PHASE_RISING;
+            mainSetBits(GAMEBIT_MMPAsteroidRelated087B, state->phase);
+            break;
+        }
         case 4:
             state->stateTimer = lbl_803E44E8;
             setDrawLights(1);
@@ -135,7 +140,7 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void mmp_asteroid_re_init(int obj)
 {
-    MmpAsteroidReState * state = ((GameObject*)obj)->extra;
+    MmpAsteroidReState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->animEventCallback = mmp_asteroid_re_SeqFn;
     state->eventFlags = 0;
@@ -176,7 +181,7 @@ void mmp_asteroid_re_update(int obj)
 
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
-    MmpAsteroidReState * state = ((GameObject*)obj)->extra;
+    MmpAsteroidReState* state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & ASTEROIDRE_SEQ_TICK) == 0)
     {
         if (mainGetBit(0xD52) != 0)
@@ -200,8 +205,8 @@ void mmp_asteroid_re_update(int obj)
         if (state->intensity != 0)
         {
             f32 speed = ((GameObject*)obj)->anim.velocityY;
-            if (speed < lbl_803E4500 * ((state->baseY + gMmpAsteroidIntensityHeightTable[state->intensity]) - ((GameObject*)
-                obj)->anim.localPosY))
+            if (speed < lbl_803E4500 * ((state->baseY + gMmpAsteroidIntensityHeightTable[state->intensity]) -
+                                        ((GameObject*)obj)->anim.localPosY))
             {
                 ((GameObject*)obj)->anim.velocityY = lbl_803E4504 * timeDelta + speed;
             }
@@ -214,28 +219,31 @@ void mmp_asteroid_re_update(int obj)
             *(s16*)&state->pitchPhase = lbl_803E4514 * timeDelta + state->pitchPhase;
             ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4518, ((GameObject*)obj)->anim.velocityY * timeDelta,
                                                     *(f32*)&lbl_803E4518);
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + mathSinf(
-                (gMmpAsteroidPi * state->bobPhase) / lbl_803E4520);
+            ((GameObject*)obj)->anim.localPosY =
+                ((GameObject*)obj)->anim.localPosY + mathSinf((gMmpAsteroidPi * state->bobPhase) / lbl_803E4520);
             if (((GameObject*)obj)->anim.localPosY < state->baseY)
             {
                 ((GameObject*)obj)->anim.localPosY = state->baseY;
             }
-            ((GameObject*)obj)->anim.rotZ = (s16)(
-                ((GameObject*)obj)->anim.rotZ + (int)(lbl_803E4524 * mathSinf(
-                    (gMmpAsteroidPi * state->rollPhase) / lbl_803E4520)));
-            ((GameObject*)obj)->anim.rotY = (s16)(
-                ((GameObject*)obj)->anim.rotY + (int)(lbl_803E4524 * mathSinf(
-                    (gMmpAsteroidPi * state->pitchPhase) / lbl_803E4520)));
+            ((GameObject*)obj)->anim.rotZ =
+                (s16)(((GameObject*)obj)->anim.rotZ +
+                      (int)(lbl_803E4524 * mathSinf((gMmpAsteroidPi * state->rollPhase) / lbl_803E4520)));
+            ((GameObject*)obj)->anim.rotY =
+                (s16)(((GameObject*)obj)->anim.rotY +
+                      (int)(lbl_803E4524 * mathSinf((gMmpAsteroidPi * state->pitchPhase) / lbl_803E4520)));
             gMmpAsteroidDustSpawnParams.scale = lbl_803E44F8;
             gMmpAsteroidDustSpawnParams.posX = ((GameObject*)obj)->anim.localPosX;
             gMmpAsteroidDustSpawnParams.posY = state->baseY - lbl_803E4528;
             gMmpAsteroidDustSpawnParams.posZ = ((GameObject*)obj)->anim.localPosZ;
             gMmpAsteroidDustHeightParam = (int)(((GameObject*)obj)->anim.localPosY - state->baseY);
-            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST, NULL, 2, -1, &gMmpAsteroidDustHeightParam);
-            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST_CLOUD, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
-                                             &gMmpAsteroidDustHeightParam);
-            (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST_CLOUD, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
-                                             &gMmpAsteroidDustHeightParam);
+            (*gPartfxInterface)
+                ->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST, NULL, 2, -1, &gMmpAsteroidDustHeightParam);
+            (*gPartfxInterface)
+                ->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST_CLOUD, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
+                              &gMmpAsteroidDustHeightParam);
+            (*gPartfxInterface)
+                ->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_DUST_CLOUD, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
+                              &gMmpAsteroidDustHeightParam);
         }
     }
     if (state->eventFlags != 0)
@@ -259,8 +267,7 @@ void mmp_asteroid_re_update(int obj)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_EXPLODE_DEBRIS, NULL, 1, -1, NULL);
                 count--;
-            }
-            while (count != 0);
+            } while (count != 0);
             spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
             CameraShake_Start(lbl_803E4530, lbl_803E4534, lbl_803E4538);
             doRumble(lbl_803E453C);
@@ -276,8 +283,7 @@ void mmp_asteroid_re_update(int obj)
             state->periodicFxTimer -= timeDelta;
             if (state->periodicFxTimer < lbl_803E4518)
             {
-                state->periodicFxTimer = (f32)(int)
-                randomGetRange(10, 0x3C);
+                state->periodicFxTimer = (f32)(int)randomGetRange(10, 0x3C);
                 (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_PERIODIC, NULL, 1, -1, NULL);
             }
         }

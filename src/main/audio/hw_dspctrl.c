@@ -50,13 +50,12 @@ typedef struct SalStudio
     u8 padAC[0x10];
 } SalStudio;
 
-
 #include "main/unknown/autos/musyx_dsp.h"
 #include "dolphin/os/OSCache.h"
 #include "string.h"
 
-#define dspStudio ((DSPstudioinfo *)lbl_803CC1E0)
-#define dspSortedVoices ((DSPvoice **)(lbl_803CC1E0 + 0x5e0))
+#define dspStudio       ((DSPstudioinfo*)lbl_803CC1E0)
+#define dspSortedVoices ((DSPvoice**)(lbl_803CC1E0 + 0x5e0))
 
 extern u16* dspCmdLastLoad;
 extern u16* dspCmdLastBase;
@@ -71,19 +70,19 @@ extern u32 dspARAMZeroBuffer;
 extern s32* dspSurround;
 extern u8 salFrame;
 extern u16 dspMixerCycles[]; /* dspMixerCycles[32] */
-extern u16 pbOffsets[]; /* pbOffsets[9] */
+extern u16 pbOffsets[];      /* pbOffsets[9] */
 extern u16 dspSRCCycles[4][3];
 
-#define __OSBusClock (*(u32 *)0x800000F8)
+#define __OSBusClock (*(u32*)0x800000F8)
 
-extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol,
-                                         u16* resetFlags, u16 resetMask);
-extern void HandleDepopVoice(DSPstudioinfo * stp, DSPvoice * dsp_vptr);
+extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,
+                                         u16 resetMask);
+extern void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr);
 extern void SortVoices(DSPvoice** voices, int l, int r);
-extern int adsrSetup(ADSR_VARS * adsr);
+extern int adsrSetup(ADSR_VARS* adsr);
 extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime);
-extern int adsrRelease(ADSR_VARS * adsr);
-extern u32 adsrHandle(ADSR_VARS * adsr, u16 * adsr_start, u16 * adsr_delta);
+extern int adsrRelease(ADSR_VARS* adsr);
+extern u32 adsrHandle(ADSR_VARS* adsr, u16* adsr_start, u16* adsr_delta);
 
 int salSynthSendMessage(int synth, int msg);
 void salDeactivateVoice(SalVoice* voice);
@@ -93,8 +92,8 @@ extern void salDeactivateVoice(SalVoice* voice);
 
 static void sal_setup_dspvol(u16* dsp_delta, u16* last_vol, u16 vol)
 {
-    *dsp_delta = ((s16)vol - (s16) * last_vol) / 160;
-    *last_vol += (s16) * dsp_delta * 160;
+    *dsp_delta = ((s16)vol - (s16)*last_vol) / 160;
+    *last_vol += (s16)*dsp_delta * 160;
 }
 
 static void sal_update_hostplayinfo(DSPvoice* dsp_vptr)
@@ -150,24 +149,28 @@ static void DoDepopFade(s32* dspStart, s16* dspDelta, s32* hostSum)
     *hostSum += *dspDelta * 160;
 }
 
-#define SAL_CHECK_CMD_SPACE(n)                                                          \
-    if ((dspCmdPtr + (n)) > (dspCmdMaxPtr - 4)) {                                       \
-        u16 size;                                                                       \
-        dspCmdPtr[0] = 13;                                                              \
-        dspCmdPtr[1] = (u32)dspCmdMaxPtr >> 16;                                         \
-        dspCmdPtr[2] = (u32)dspCmdMaxPtr;                                               \
-        size = (((u32)(dspCmdPtr + 4) - (u32)dspCmdCurBase) + 3) & 0xFFFC;              \
-        if (dspCmdLastLoad) {                                                           \
-            dspCmdLastLoad[3] = size;                                                   \
-            DCStoreRangeNoSync(dspCmdLastBase, dspCmdLastSize);                         \
-        } else {                                                                        \
-            dspCmdFirstSize = size;                                                     \
-        }                                                                               \
-        dspCmdLastLoad = dspCmdPtr;                                                     \
-        dspCmdLastSize = size;                                                          \
-        dspCmdLastBase = dspCmdCurBase;                                                 \
-        dspCmdCurBase = dspCmdPtr = dspCmdMaxPtr;                                       \
-        dspCmdMaxPtr = dspCmdPtr + 0xC0;                                                \
+#define SAL_CHECK_CMD_SPACE(n)                                                                                         \
+    if ((dspCmdPtr + (n)) > (dspCmdMaxPtr - 4))                                                                        \
+    {                                                                                                                  \
+        u16 size;                                                                                                      \
+        dspCmdPtr[0] = 13;                                                                                             \
+        dspCmdPtr[1] = (u32)dspCmdMaxPtr >> 16;                                                                        \
+        dspCmdPtr[2] = (u32)dspCmdMaxPtr;                                                                              \
+        size = (((u32)(dspCmdPtr + 4) - (u32)dspCmdCurBase) + 3) & 0xFFFC;                                             \
+        if (dspCmdLastLoad)                                                                                            \
+        {                                                                                                              \
+            dspCmdLastLoad[3] = size;                                                                                  \
+            DCStoreRangeNoSync(dspCmdLastBase, dspCmdLastSize);                                                        \
+        }                                                                                                              \
+        else                                                                                                           \
+        {                                                                                                              \
+            dspCmdFirstSize = size;                                                                                    \
+        }                                                                                                              \
+        dspCmdLastLoad = dspCmdPtr;                                                                                    \
+        dspCmdLastSize = size;                                                                                         \
+        dspCmdLastBase = dspCmdCurBase;                                                                                \
+        dspCmdCurBase = dspCmdPtr = dspCmdMaxPtr;                                                                      \
+        dspCmdMaxPtr = dspCmdPtr + 0xC0;                                                                               \
     }
 
 void salBuildCommandList(s16* dest, u32 nsDelay)
@@ -339,90 +342,87 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         case 0:
                         case 4:
                         case 5:
+                        {
+                            SNDADPCMinfo* adpcmInfo;
+                            pb->addr.format = 0;
+                            pb->adpcm.gain = 0;
+                            adpcmInfo = dsp_vptr->smp_info.extraData;
+                            pb->adpcm.yn2 = 0;
+                            pb->adpcm.yn1 = 0;
+                            pb->adpcm.pred_scale = adpcmInfo->initialPS;
+                            for (i = 0; i < 8; i++)
                             {
-                                SNDADPCMinfo* adpcmInfo;
-                                pb->addr.format = 0;
-                                pb->adpcm.gain = 0;
-                                adpcmInfo = dsp_vptr->smp_info.extraData;
-                                pb->adpcm.yn2 = 0;
-                                pb->adpcm.yn1 = 0;
-                                pb->adpcm.pred_scale = adpcmInfo->initialPS;
-                                for (i = 0; i < 8; i++)
-                                {
-                                    pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
-                                    pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
-                                }
-                                base = (u32)dsp_vptr->smp_info.addr * 2;
-                                addr = base + 2;
-                                dsp_vptr->playInfo.posHi = dsp_vptr->playInfo.posLo = 0;
-                                if ((dsp_vptr->smp_info.compType == 4) ||
-                                    (dsp_vptr->smp_info.compType == 5))
-                                {
-                                    pb->loopType = 1;
-                                }
-                                else
-                                {
-                                    pb->adpcmLoop.loop_yn2 = adpcmInfo->loopY1;
-                                    pb->adpcmLoop.loop_yn1 = adpcmInfo->loopY2;
-                                    pb->adpcmLoop.loop_pred_scale = adpcmInfo->loopPS;
-                                    pb->loopType = 0;
-                                }
+                                pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
+                                pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
                             }
-                            break;
-                        case 1:
+                            base = (u32)dsp_vptr->smp_info.addr * 2;
+                            addr = base + 2;
+                            dsp_vptr->playInfo.posHi = dsp_vptr->playInfo.posLo = 0;
+                            if ((dsp_vptr->smp_info.compType == 4) || (dsp_vptr->smp_info.compType == 5))
                             {
-                                DSPADPCMplusInfo* adpcmInfo;
-                                pb->addr.format = 0;
-                                pb->adpcm.gain = 0;
-                                offset = (dsp_vptr->smp_info.offset + 0xD) / 14;
-                                adpcmInfo = dsp_vptr->smp_info.extraData;
-                                pb->adpcm.yn2 = adpcmInfo->blk[offset].Y0;
-                                pb->adpcm.yn1 = adpcmInfo->blk[offset].Y1;
-                                pb->adpcm.pred_scale = adpcmInfo->blk[offset].PS;
-                                pb->adpcmLoop.loop_yn2 = adpcmInfo->loopY0;
-                                pb->adpcmLoop.loop_yn1 = adpcmInfo->loopY1;
+                                pb->loopType = 1;
+                            }
+                            else
+                            {
+                                pb->adpcmLoop.loop_yn2 = adpcmInfo->loopY1;
+                                pb->adpcmLoop.loop_yn1 = adpcmInfo->loopY2;
                                 pb->adpcmLoop.loop_pred_scale = adpcmInfo->loopPS;
-                                for (i = 0; i < 8; i++)
-                                {
-                                    pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
-                                    pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
-                                }
-                                base = (u32)dsp_vptr->smp_info.addr * 2;
-                                addr = base + offset * 16 + 2;
-                                dsp_vptr->playInfo.posHi = offset * 0xE;
-                                dsp_vptr->playInfo.posLo = 0;
+                                pb->loopType = 0;
                             }
-                            break;
+                        }
+                        break;
+                        case 1:
+                        {
+                            DSPADPCMplusInfo* adpcmInfo;
+                            pb->addr.format = 0;
+                            pb->adpcm.gain = 0;
+                            offset = (dsp_vptr->smp_info.offset + 0xD) / 14;
+                            adpcmInfo = dsp_vptr->smp_info.extraData;
+                            pb->adpcm.yn2 = adpcmInfo->blk[offset].Y0;
+                            pb->adpcm.yn1 = adpcmInfo->blk[offset].Y1;
+                            pb->adpcm.pred_scale = adpcmInfo->blk[offset].PS;
+                            pb->adpcmLoop.loop_yn2 = adpcmInfo->loopY0;
+                            pb->adpcmLoop.loop_yn1 = adpcmInfo->loopY1;
+                            pb->adpcmLoop.loop_pred_scale = adpcmInfo->loopPS;
+                            for (i = 0; i < 8; i++)
+                            {
+                                pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
+                                pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
+                            }
+                            base = (u32)dsp_vptr->smp_info.addr * 2;
+                            addr = base + offset * 16 + 2;
+                            dsp_vptr->playInfo.posHi = offset * 0xE;
+                            dsp_vptr->playInfo.posLo = 0;
+                        }
+                        break;
                         case 3:
+                        {
+                            pb->addr.format = 0x19;
+                            pb->adpcm.gain = 0x100;
+                            for (i = 0; i < 8; i++)
                             {
-                                pb->addr.format = 0x19;
-                                pb->adpcm.gain = 0x100;
-                                for (i = 0; i < 8; i++)
-                                {
-                                    pb->adpcm.a[i][0] = 0;
-                                    pb->adpcm.a[i][1] = 0;
-                                }
-                                addr = dsp_vptr->smp_info.offset +
-                                    (base = (u32)dsp_vptr->smp_info.addr);
-                                dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
-                                dsp_vptr->playInfo.posLo = 0;
+                                pb->adpcm.a[i][0] = 0;
+                                pb->adpcm.a[i][1] = 0;
                             }
-                            break;
+                            addr = dsp_vptr->smp_info.offset + (base = (u32)dsp_vptr->smp_info.addr);
+                            dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
+                            dsp_vptr->playInfo.posLo = 0;
+                        }
+                        break;
                         case 2:
+                        {
+                            pb->addr.format = 0xA;
+                            pb->adpcm.gain = 0x800;
+                            for (i = 0; i < 8; i++)
                             {
-                                pb->addr.format = 0xA;
-                                pb->adpcm.gain = 0x800;
-                                for (i = 0; i < 8; i++)
-                                {
-                                    pb->adpcm.a[i][0] = 0;
-                                    pb->adpcm.a[i][1] = 0;
-                                }
-                                addr = dsp_vptr->smp_info.offset +
-                                    (base = (u32)dsp_vptr->smp_info.addr >> 1);
-                                dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
-                                dsp_vptr->playInfo.posLo = 0;
+                                pb->adpcm.a[i][0] = 0;
+                                pb->adpcm.a[i][1] = 0;
                             }
-                            break;
+                            addr = dsp_vptr->smp_info.offset + (base = (u32)dsp_vptr->smp_info.addr >> 1);
+                            dsp_vptr->playInfo.posHi = dsp_vptr->smp_info.offset;
+                            dsp_vptr->playInfo.posLo = 0;
+                        }
+                        break;
                         }
                         pb->addr.currentAddressHi = addr >> 0x10;
                         pb->addr.currentAddressLo = addr;
@@ -435,36 +435,35 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                             case 0:
                             case 1:
                             case 4:
-                                {
-                                    u32 bn;
-                                    u32 bo;
-                                    bn = dsp_vptr->smp_info.loop / 14;
-                                    bo = dsp_vptr->smp_info.loop - (bn * 0xE);
-                                    loopAddr = base + bn * 16 + 2 + bo;
-                                    endAddr = dsp_vptr->smp_info.loop + dsp_vptr->smp_info.loopLength - 1;
-                                    bn = endAddr / 14;
-                                    bo = endAddr - (bn * 0xE);
-                                    endAddr = base + bn * 16 + 2 + bo;
-                                }
-                                break;
+                            {
+                                u32 bn;
+                                u32 bo;
+                                bn = dsp_vptr->smp_info.loop / 14;
+                                bo = dsp_vptr->smp_info.loop - (bn * 0xE);
+                                loopAddr = base + bn * 16 + 2 + bo;
+                                endAddr = dsp_vptr->smp_info.loop + dsp_vptr->smp_info.loopLength - 1;
+                                bn = endAddr / 14;
+                                bo = endAddr - (bn * 0xE);
+                                endAddr = base + bn * 16 + 2 + bo;
+                            }
+                            break;
                             case 5:
-                                {
-                                    u32 bn;
-                                    u32 bo;
-                                    loopAddr = ((u32)dsp_vptr->vSampleInfo.loopBufferAddr * 2) + 2;
-                                    endAddr = dsp_vptr->smp_info.loop + dsp_vptr->smp_info.loopLength - 1;
-                                    bn = endAddr / 14;
-                                    bo = endAddr - (bn * 0xE);
-                                    endAddr = base + bn * 16 + 2 + bo;
-                                    dsp_vptr->vSampleInfo.inLoopBuffer = 0;
-                                }
-                                break;
+                            {
+                                u32 bn;
+                                u32 bo;
+                                loopAddr = ((u32)dsp_vptr->vSampleInfo.loopBufferAddr * 2) + 2;
+                                endAddr = dsp_vptr->smp_info.loop + dsp_vptr->smp_info.loopLength - 1;
+                                bn = endAddr / 14;
+                                bo = endAddr - (bn * 0xE);
+                                endAddr = base + bn * 16 + 2 + bo;
+                                dsp_vptr->vSampleInfo.inLoopBuffer = 0;
+                            }
+                            break;
                             case 2:
                             case 3:
                             default:
                                 loopAddr = base + dsp_vptr->smp_info.loop;
-                                endAddr = base + dsp_vptr->smp_info.loop +
-                                    dsp_vptr->smp_info.loopLength - 1;
+                                endAddr = base + dsp_vptr->smp_info.loop + dsp_vptr->smp_info.loopLength - 1;
                                 break;
                             }
                             pb->addr.loopAddressHi = loopAddr >> 16;
@@ -482,15 +481,15 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                             case 1:
                             case 4:
                             case 5:
-                                {
-                                    u32 bn;
-                                    u32 bo;
-                                    bn = dsp_vptr->smp_info.length / 14;
-                                    bo = dsp_vptr->smp_info.length - (bn * 0xE);
-                                    tmp_addr = base + bn * 16 + 2 + bo;
-                                    zeroAddr = (dspARAMZeroBuffer * 2) + 2;
-                                }
-                                break;
+                            {
+                                u32 bn;
+                                u32 bo;
+                                bn = dsp_vptr->smp_info.length / 14;
+                                bo = dsp_vptr->smp_info.length - (bn * 0xE);
+                                tmp_addr = base + bn * 16 + 2 + bo;
+                                zeroAddr = (dspARAMZeroBuffer * 2) + 2;
+                            }
+                            break;
                             case 3:
                                 tmp_addr = base + dsp_vptr->smp_info.length;
                                 zeroAddr = dspARAMZeroBuffer;
@@ -514,8 +513,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         pb->mix.vAuxAL = dsp_vptr->lastVolLa = dsp_vptr->volLa;
                         pb->mix.vAuxAR = dsp_vptr->lastVolRa = dsp_vptr->volRa;
                         pb->mix.vAuxAS = dsp_vptr->lastVolSa = dsp_vptr->volSa;
-                        pb->mixerCtrl =
-                            (pb->mix.vAuxAS | (pb->mix.vAuxAL | pb->mix.vAuxAR)) != 0 ? 1 : 0;
+                        pb->mixerCtrl = (pb->mix.vAuxAS | (pb->mix.vAuxAL | pb->mix.vAuxAR)) != 0 ? 1 : 0;
                         pb->mix.vAuxBL = dsp_vptr->lastVolLb = dsp_vptr->volLb;
                         pb->mix.vAuxBR = dsp_vptr->lastVolRb = dsp_vptr->volRb;
                         pb->mix.vAuxBS = dsp_vptr->lastVolSb = dsp_vptr->volSb;
@@ -550,30 +548,27 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     if ((dsp_vptr->smp_info.compType == 4) || (dsp_vptr->smp_info.compType == 5))
                     {
                         pb->adpcmLoop.loop_pred_scale = dsp_vptr->streamLoopPS;
-                        if ((dsp_vptr->smp_info.compType == 5) &&
-                            (dsp_vptr->vSampleInfo.inLoopBuffer == 0) && (pb->streamLoopCnt != 0))
+                        if ((dsp_vptr->smp_info.compType == 5) && (dsp_vptr->vSampleInfo.inLoopBuffer == 0) &&
+                            (pb->streamLoopCnt != 0))
                         {
                             u32 bn;
                             u32 bo;
                             bn = (dsp_vptr->vSampleInfo.loopBufferLength - 1) / 14;
                             bo = (dsp_vptr->vSampleInfo.loopBufferLength - 1) - (bn * 14);
-                            tmp_addr = ((u32)dsp_vptr->vSampleInfo.loopBufferAddr * 2) + bn * 16 +
-                                2 + bo;
+                            tmp_addr = ((u32)dsp_vptr->vSampleInfo.loopBufferAddr * 2) + bn * 16 + 2 + bo;
                             dsp_vptr->smp_info.addr = dsp_vptr->vSampleInfo.loopBufferAddr;
                             pb->addr.endAddressHi = tmp_addr >> 0x10;
                             pb->addr.endAddressLo = tmp_addr;
                             dsp_vptr->vSampleInfo.inLoopBuffer = 1;
                         }
                     }
-                    if ((dsp_vptr->smp_info.loopLength == 0) &&
-                        (dsp_vptr->playInfo.posHi >= dsp_vptr->smp_info.length))
+                    if ((dsp_vptr->smp_info.loopLength == 0) && (dsp_vptr->playInfo.posHi >= dsp_vptr->smp_info.length))
                     {
                         salSynthSendMessage((int)dsp_vptr, 0);
                         salDeactivateVoice((SalVoice*)dsp_vptr);
                         continue;
                     }
-                    if (((dsp_vptr->changed[0] & 0x10) != 0) &&
-                        (adsrSetup(&dsp_vptr->adsr) != 0))
+                    if (((dsp_vptr->changed[0] & 0x10) != 0) && (adsrSetup(&dsp_vptr->adsr) != 0))
                     {
                         salSynthSendMessage((int)dsp_vptr, 0);
                         salDeactivateVoice((SalVoice*)dsp_vptr);
@@ -590,23 +585,17 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     {
                         needsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vL, &pb->mix.vDeltaL, &dsp_vptr->lastVolL,
                                                                    dsp_vptr->volL, rampResetOffsetFlags, 1);
-                        needsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vR, &pb->mix.vDeltaR,
-                                                                    &dsp_vptr->lastVolR, dsp_vptr->volR,
-                                                                    rampResetOffsetFlags, 2);
-                        needsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vS, &pb->mix.vDeltaS,
-                                                                    &dsp_vptr->lastVolS, dsp_vptr->volS,
-                                                                    rampResetOffsetFlags, 4);
+                        needsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vR, &pb->mix.vDeltaR, &dsp_vptr->lastVolR,
+                                                                    dsp_vptr->volR, rampResetOffsetFlags, 2);
+                        needsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vS, &pb->mix.vDeltaS, &dsp_vptr->lastVolS,
+                                                                    dsp_vptr->volS, rampResetOffsetFlags, 4);
                     }
                     if ((dsp_vptr->changed[0] & 2) != 0)
                     {
-                        sal_setup_dspvol(&pb->mix.vDeltaAuxAL, &dsp_vptr->lastVolLa,
-                                         dsp_vptr->volLa);
-                        sal_setup_dspvol(&pb->mix.vDeltaAuxAR, &dsp_vptr->lastVolRa,
-                                         dsp_vptr->volRa);
-                        sal_setup_dspvol(&pb->mix.vDeltaAuxAS, &dsp_vptr->lastVolSa,
-                                         dsp_vptr->volSa);
-                        if ((pb->mix.vDeltaAuxAS | (pb->mix.vDeltaAuxAL | pb->mix.vDeltaAuxAR)) !=
-                            0)
+                        sal_setup_dspvol(&pb->mix.vDeltaAuxAL, &dsp_vptr->lastVolLa, dsp_vptr->volLa);
+                        sal_setup_dspvol(&pb->mix.vDeltaAuxAR, &dsp_vptr->lastVolRa, dsp_vptr->volRa);
+                        sal_setup_dspvol(&pb->mix.vDeltaAuxAS, &dsp_vptr->lastVolSa, dsp_vptr->volSa);
+                        if ((pb->mix.vDeltaAuxAS | (pb->mix.vDeltaAuxAL | pb->mix.vDeltaAuxAR)) != 0)
                         {
                             pb->mixerCtrl |= 1;
                             needsDelta = 1;
@@ -623,17 +612,16 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     else if ((pb->mixerCtrl & 1) != 0)
                     {
                         u32 localNeedsDelta;
-                        localNeedsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vAuxAL, &pb->mix.vDeltaAuxAL,
-                                                                        &dsp_vptr->lastVolLa, dsp_vptr->volLa,
-                                                                        rampResetOffsetFlags, 8);
-                        localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxAR, &pb->mix.vDeltaAuxAR,
-                                                                         &dsp_vptr->lastVolRa, dsp_vptr->volRa,
-                                                                         rampResetOffsetFlags, 0x10);
-                        localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxAS, &pb->mix.vDeltaAuxAS,
-                                                                         &dsp_vptr->lastVolSa, dsp_vptr->volSa,
-                                                                         rampResetOffsetFlags, 0x20);
-                        if ((localNeedsDelta |
-                            (pb->mix.vAuxAS | (pb->mix.vAuxAL | pb->mix.vAuxAR))) == 0)
+                        localNeedsDelta =
+                            salCheckVolErrorAndResetDelta(&pb->mix.vAuxAL, &pb->mix.vDeltaAuxAL, &dsp_vptr->lastVolLa,
+                                                          dsp_vptr->volLa, rampResetOffsetFlags, 8);
+                        localNeedsDelta |=
+                            salCheckVolErrorAndResetDelta(&pb->mix.vAuxAR, &pb->mix.vDeltaAuxAR, &dsp_vptr->lastVolRa,
+                                                          dsp_vptr->volRa, rampResetOffsetFlags, 0x10);
+                        localNeedsDelta |=
+                            salCheckVolErrorAndResetDelta(&pb->mix.vAuxAS, &pb->mix.vDeltaAuxAS, &dsp_vptr->lastVolSa,
+                                                          dsp_vptr->volSa, rampResetOffsetFlags, 0x20);
+                        if ((localNeedsDelta | (pb->mix.vAuxAS | (pb->mix.vAuxAL | pb->mix.vAuxAR))) == 0)
                         {
                             pb->mixerCtrl &= ~1;
                         }
@@ -652,14 +640,10 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     {
                         if (stp->type == 0)
                         {
-                            sal_setup_dspvol(&pb->mix.vDeltaAuxBL, &dsp_vptr->lastVolLb,
-                                             dsp_vptr->volLb);
-                            sal_setup_dspvol(&pb->mix.vDeltaAuxBR, &dsp_vptr->lastVolRb,
-                                             dsp_vptr->volRb);
-                            sal_setup_dspvol(&pb->mix.vDeltaAuxBS, &dsp_vptr->lastVolSb,
-                                             dsp_vptr->volSb);
-                            if ((pb->mix.vDeltaAuxBS |
-                                (pb->mix.vDeltaAuxBL | pb->mix.vDeltaAuxBR)) != 0)
+                            sal_setup_dspvol(&pb->mix.vDeltaAuxBL, &dsp_vptr->lastVolLb, dsp_vptr->volLb);
+                            sal_setup_dspvol(&pb->mix.vDeltaAuxBR, &dsp_vptr->lastVolRb, dsp_vptr->volRb);
+                            sal_setup_dspvol(&pb->mix.vDeltaAuxBS, &dsp_vptr->lastVolSb, dsp_vptr->volSb);
+                            if ((pb->mix.vDeltaAuxBS | (pb->mix.vDeltaAuxBL | pb->mix.vDeltaAuxBR)) != 0)
                             {
                                 pb->mixerCtrl |= 2;
                                 needsDelta = 1;
@@ -675,18 +659,14 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         }
                         else
                         {
-                            sal_setup_dspvol(&pb->mix.vDeltaAuxBL, &dsp_vptr->lastVolLb,
-                                             dsp_vptr->volLb);
-                            sal_setup_dspvol(&pb->mix.vDeltaAuxBR, &dsp_vptr->lastVolRb,
-                                             dsp_vptr->volRb);
+                            sal_setup_dspvol(&pb->mix.vDeltaAuxBL, &dsp_vptr->lastVolLb, dsp_vptr->volLb);
+                            sal_setup_dspvol(&pb->mix.vDeltaAuxBR, &dsp_vptr->lastVolRb, dsp_vptr->volRb);
                             if ((pb->mix.vDeltaAuxBL | pb->mix.vDeltaAuxBR) != 0)
                             {
                                 pb->mixerCtrl |= 0x10;
                                 needsDelta = 1;
                             }
-                            else if ((pb->mix.vDeltaAuxAS |
-                                    (pb->mix.vAuxAS | (pb->mix.vAuxBL | pb->mix.vAuxBR))) !=
-                                0)
+                            else if ((pb->mix.vDeltaAuxAS | (pb->mix.vAuxAS | (pb->mix.vAuxBL | pb->mix.vAuxBR))) != 0)
                             {
                                 pb->mixerCtrl |= 0x10;
                             }
@@ -710,8 +690,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                             localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxBS, &pb->mix.vDeltaAuxBS,
                                                                              &dsp_vptr->lastVolSb, dsp_vptr->volSb,
                                                                              rampResetOffsetFlags, 0x100);
-                            if ((localNeedsDelta |
-                                (pb->mix.vAuxBS | (pb->mix.vAuxBL | pb->mix.vAuxBR))) == 0)
+                            if ((localNeedsDelta | (pb->mix.vAuxBS | (pb->mix.vAuxBL | pb->mix.vAuxBR))) == 0)
                             {
                                 pb->mixerCtrl &= ~2;
                             }
@@ -730,12 +709,12 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     else if ((pb->mixerCtrl & 0x10) != 0)
                     {
                         u32 localNeedsDelta;
-                        localNeedsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vAuxBL, &pb->mix.vDeltaAuxBL,
-                                                                        &dsp_vptr->lastVolLb, dsp_vptr->volLb,
-                                                                        rampResetOffsetFlags, 0x40);
-                        localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxBR, &pb->mix.vDeltaAuxBR,
-                                                                         &dsp_vptr->lastVolRb, dsp_vptr->volRb,
-                                                                         rampResetOffsetFlags, 0x80);
+                        localNeedsDelta =
+                            salCheckVolErrorAndResetDelta(&pb->mix.vAuxBL, &pb->mix.vDeltaAuxBL, &dsp_vptr->lastVolLb,
+                                                          dsp_vptr->volLb, rampResetOffsetFlags, 0x40);
+                        localNeedsDelta |=
+                            salCheckVolErrorAndResetDelta(&pb->mix.vAuxBR, &pb->mix.vDeltaAuxBR, &dsp_vptr->lastVolRb,
+                                                          dsp_vptr->volRb, rampResetOffsetFlags, 0x80);
                         if ((localNeedsDelta | (pb->mix.vAuxBL | pb->mix.vAuxBR)) == 0)
                         {
                             if ((pb->mix.vAuxAS | pb->mix.vDeltaAuxAS) == 0)
@@ -768,8 +747,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     if (stp->type == 0)
                     {
                         if ((pb->mix.vS != 0) || (pb->mix.vDeltaS != 0) || (pb->mix.vAuxAS != 0) ||
-                            (pb->mix.vDeltaAuxAS != 0) || (pb->mix.vAuxBS != 0) ||
-                            (pb->mix.vDeltaAuxBS != 0))
+                            (pb->mix.vDeltaAuxAS != 0) || (pb->mix.vAuxBS != 0) || (pb->mix.vDeltaAuxBS != 0))
                         {
                             pb->mixerCtrl |= 4;
                         }
@@ -793,8 +771,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     }
                     mix_start = 0;
                     newVoice = 0;
-                    dsp_vptr->currentAddr =
-                        (pb->addr.currentAddressHi << 0x10) | pb->addr.currentAddressLo;
+                    dsp_vptr->currentAddr = (pb->addr.currentAddressHi << 0x10) | pb->addr.currentAddressLo;
                 block_186:
                     if ((dsp_vptr->changed[mix_start] & 0x40) != 0)
                     {
@@ -806,8 +783,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         pb->src.ratioLo = dsp_vptr->pitch[mix_start];
                         dsp_vptr->playInfo.pitch = dsp_vptr->pitch[mix_start];
                     }
-                    VoiceDone = adsrHandle(&dsp_vptr->adsr, &pb->ve.currentVolume,
-                                           &pb->ve.currentDelta);
+                    VoiceDone = adsrHandle(&dsp_vptr->adsr, &pb->ve.currentVolume, &pb->ve.currentDelta);
                     old_adsr_delta = pb->ve.currentDelta;
                     for (s = 0; s < 5; s++)
                     {
@@ -902,8 +878,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         salSynthSendMessage((int)dsp_vptr, 0);
                         salDeactivateVoice((SalVoice*)dsp_vptr);
                     }
-                    DCStoreRangeNoSync(dsp_vptr->patchData,
-                                       (u32)pptr - (u32)dsp_vptr->patchData);
+                    DCStoreRangeNoSync(dsp_vptr->patchData, (u32)pptr - (u32)dsp_vptr->patchData);
                     cyclesUsed += dspMixerCycles[pb->mixerCtrl] + 0x4FE;
                     switch (pb->src.ratioHi)
                     {
@@ -940,8 +915,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         {
                             if (dspStudio[st1].state == 1)
                             {
-                                for (dsp_vptr = dspStudio[st1].voiceRoot; dsp_vptr;
-                                     dsp_vptr = next_dsp_vptr)
+                                for (dsp_vptr = dspStudio[st1].voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
                                 {
                                     next_dsp_vptr = dsp_vptr->next;
                                     if (dsp_vptr->state == 2)

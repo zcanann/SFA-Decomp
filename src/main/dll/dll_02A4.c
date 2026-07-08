@@ -30,10 +30,10 @@
 
 typedef struct Dll2A4State
 {
-    f32 fadeTimer;      /* 0x00: counts down by timeDelta; frees obj at 0 */
-    s16 spinRateX;      /* 0x04 */
-    s16 spinRateY;      /* 0x06 */
-    s16 spinRateZ;      /* 0x08 */
+    f32 fadeTimer; /* 0x00: counts down by timeDelta; frees obj at 0 */
+    s16 spinRateX; /* 0x04 */
+    s16 spinRateY; /* 0x06 */
+    s16 spinRateZ; /* 0x08 */
     u8 padA[0x0C - 0x0A];
 } Dll2A4State;
 
@@ -52,9 +52,15 @@ typedef struct SquadronShipSetup
     u8 rot1A;          /* 0x1a */
 } SquadronShipSetup;
 
-int dll_2A4_getExtraSize_ret_12(void) { return sizeof(Dll2A4State); }
+int dll_2A4_getExtraSize_ret_12(void)
+{
+    return sizeof(Dll2A4State);
+}
 
-int dll_2A4_getObjectTypeId(void) { return 0x0; }
+int dll_2A4_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_2A4_free_nop(void)
 {
@@ -120,12 +126,15 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     if (Obj_IsLoadingLocked())
     {
         newObj = Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_A);
-        ((SquadronShipSetup*)newObj)->head.posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
-        randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
-        ((SquadronShipSetup*)newObj)->head.posY = ((GameObject*)obj)->anim.localPosY + (f32)(int)
-        randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
-        ((SquadronShipSetup*)newObj)->head.posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-        randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
+        ((SquadronShipSetup*)newObj)->head.posX =
+            ((GameObject*)obj)->anim.localPosX +
+            (f32)(int)randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
+        ((SquadronShipSetup*)newObj)->head.posY =
+            ((GameObject*)obj)->anim.localPosY +
+            (f32)(int)randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
+        ((SquadronShipSetup*)newObj)->head.posZ =
+            ((GameObject*)obj)->anim.localPosZ +
+            (f32)(int)randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         ((SquadronShipSetup*)newObj)->rot1A = 0;
         ((SquadronShipSetup*)newObj)->rot19 = 0;
         ((SquadronShipSetup*)newObj)->rot18 = 0;
@@ -148,12 +157,15 @@ void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     if (Obj_IsLoadingLocked())
     {
         newObj = Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_B);
-        ((SquadronShipSetup*)newObj)->head.posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
-        randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
-        ((SquadronShipSetup*)newObj)->head.posY = ((GameObject*)obj)->anim.localPosY + (f32)(int)
-        randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
-        ((SquadronShipSetup*)newObj)->head.posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-        randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
+        ((SquadronShipSetup*)newObj)->head.posX =
+            ((GameObject*)obj)->anim.localPosX +
+            (f32)(int)randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
+        ((SquadronShipSetup*)newObj)->head.posY =
+            ((GameObject*)obj)->anim.localPosY +
+            (f32)(int)randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
+        ((SquadronShipSetup*)newObj)->head.posZ =
+            ((GameObject*)obj)->anim.localPosZ +
+            (f32)(int)randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         ((SquadronShipSetup*)newObj)->rot1A = 0;
         ((SquadronShipSetup*)newObj)->rot19 = 0;
         ((SquadronShipSetup*)newObj)->rot18 = 0;

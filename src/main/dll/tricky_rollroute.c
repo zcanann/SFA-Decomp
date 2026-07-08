@@ -30,7 +30,7 @@
  * the init-done byte, speed the roll speed, stateFlags the flag word, route the
  * embedded RomCurveWalker, followObj/playerObj the owner links, unk700 the
  * curve link and unk708 (read as f32) the rolling-sfx countdown. */
-#define CANNONBALL_HIDE_FLAG 0x10
+#define CANNONBALL_HIDE_FLAG        0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 
 /* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
@@ -54,7 +54,7 @@ extern f32 lbl_803E250C;
 
 void trickyFn_80141290(int obj, int ball)
 {
-    TrickyState *ts = (TrickyState *)ball;
+    TrickyState* ts = (TrickyState*)ball;
     int toNode;
     u8 nodeCount;
     int node;
@@ -115,14 +115,12 @@ void trickyFn_80141290(int obj, int ball)
         if (nodeCount != 0)
         {
             targetNode = (int)(*gRomCurveInterface)->getById(nodeIds[0]);
-            bestDistance = getXZDistance((float*)((int)ts->followObj + 0x18),
-                                         (float*)(targetNode + 8));
+            bestDistance = getXZDistance((float*)((int)ts->followObj + 0x18), (float*)(targetNode + 8));
 
             for (i = 1; i < nodeCount; i++)
             {
                 candidateNode = (int)(*gRomCurveInterface)->getById(nodeIds[i]);
-                distance = getXZDistance((float*)((int)ts->followObj + 0x18),
-                                         (float*)(candidateNode + 8));
+                distance = getXZDistance((float*)((int)ts->followObj + 0x18), (float*)(candidateNode + 8));
                 if (distance < bestDistance)
                 {
                     targetNode = candidateNode;
@@ -201,10 +199,8 @@ void trickyFn_80141290(int obj, int ball)
             nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(curve, 0);
             toNode = (int)(*gRomCurveInterface)->getById(nextNode);
 
-            bestDistance = getXZDistance((float*)(ts->playerObj + 0x18),
-                                         (float*)(fromNode + 8));
-            distance = getXZDistance((float*)(ts->playerObj + 0x18),
-                                     (float*)(toNode + 8));
+            bestDistance = getXZDistance((float*)(ts->playerObj + 0x18), (float*)(fromNode + 8));
+            distance = getXZDistance((float*)(ts->playerObj + 0x18), (float*)(toNode + 8));
 
             if (bestDistance > distance)
             {

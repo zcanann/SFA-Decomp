@@ -19,21 +19,21 @@
 
 typedef struct StaticCameraState
 {
-    u8 setupParam;          /* 0x00: from placement byte 0x19 */
-    u8 unk1;                /* 0x01: cleared at init */
+    u8 setupParam; /* 0x00: from placement byte 0x19 */
+    u8 unk1;       /* 0x01: cleared at init */
     u8 pad2[2];
-    f32 unk4;               /* 0x04: placement byte 0x1a as float */
+    f32 unk4; /* 0x04: placement byte 0x1a as float */
 } StaticCameraState;
 
 typedef struct StaticCameraPlacement
 {
     u8 pad00[0x19];
-    u8 setupParam;          /* 0x19 */
-    u8 unkByte1A;           /* 0x1A: stored into extra as float */
+    u8 setupParam; /* 0x19 */
+    u8 unkByte1A;  /* 0x1A: stored into extra as float */
     u8 pad1B;
-    s16 rotX;               /* 0x1C: negated into anim.rotX */
-    s16 rotY;               /* 0x1E: negated into anim.rotY */
-    s16 rotZ;               /* 0x20: negated into anim.rotZ */
+    s16 rotX; /* 0x1C: negated into anim.rotX */
+    s16 rotY; /* 0x1E: negated into anim.rotY */
+    s16 rotZ; /* 0x20: negated into anim.rotZ */
 } StaticCameraPlacement;
 
 STATIC_ASSERT(offsetof(StaticCameraPlacement, setupParam) == 0x19);
@@ -42,8 +42,14 @@ STATIC_ASSERT(offsetof(StaticCameraPlacement, rotX) == 0x1C);
 STATIC_ASSERT(offsetof(StaticCameraPlacement, rotY) == 0x1E);
 STATIC_ASSERT(offsetof(StaticCameraPlacement, rotZ) == 0x20);
 
-int StaticCamera_getExtraSize(void) { return sizeof(StaticCameraState); }
-int StaticCamera_getObjectTypeId(void) { return 0x0; }
+int StaticCamera_getExtraSize(void)
+{
+    return sizeof(StaticCameraState);
+}
+int StaticCamera_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void StaticCamera_free(int obj)
 {
@@ -93,7 +99,10 @@ void StaticCamera_initialise(void)
 }
 
 ObjectDescriptor gStaticCameraObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)StaticCamera_initialise,
     (ObjectDescriptorCallback)StaticCamera_release,
     0,

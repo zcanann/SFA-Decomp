@@ -41,7 +41,7 @@ extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern f32 fn_8008ED88(void);
-extern void fn_8008EDE8(f32 * pos);
+extern void fn_8008EDE8(f32* pos);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void textureSetupFn_800799c0(void);
 extern void gxTextureFn_800794e0(void);
@@ -131,8 +131,8 @@ void renderClouds(int a, int b, int c, int d)
     f32 v;
 
     view = Camera_GetCurrentViewSlot();
-    (*gSkyInterface)->getCurrentAmbientAndLightColors(
-        &ambientRed, &ambientGreen, &ambientBlue, &lightRed, &lightGreen, &lightBlue);
+    (*gSkyInterface)
+        ->getCurrentAmbientAndLightColors(&ambientRed, &ambientGreen, &ambientBlue, &lightRed, &lightGreen, &lightBlue);
 
     if (gCloudOverrideObject != NULL)
     {
@@ -351,8 +351,8 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
                 {
                     Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
                 }
-                lbl_8039AB28.mainCloudObj = (GameObject*)Obj_SetupObject(
-                    Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
+                lbl_8039AB28.mainCloudObj =
+                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
                 lbl_8039AB28.mainCloudAssetId = tbl->a[state[0x5d]];
             }
         }
@@ -376,8 +376,8 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
                 {
                     Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
                 }
-                lbl_8039AB28.upperCloudObj = (GameObject*)Obj_SetupObject(
-                    Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
+                lbl_8039AB28.upperCloudObj =
+                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
                 lbl_8039AB28.upperCloudAssetId = tbl->b[state[0x5b]];
             }
         }
@@ -401,8 +401,8 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
                 {
                     Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
                 }
-                lbl_8039AB28.lowerCloudObj = (GameObject*)Obj_SetupObject(
-                    Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
+                lbl_8039AB28.lowerCloudObj =
+                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
                 lbl_8039AB28.lowerCloudAssetId = tbl->c[state[0x5a]];
             }
         }
@@ -429,13 +429,41 @@ void cloudaction_initialise(void)
     gCloudOverrideObject = NULL;
 }
 
-int gCloudActionEnvTbl[] =
-{
-    0, 1575, 1577, 1886, 1525,
-    0, 1576, 1890, 2147,
-    0, 1578, 2140, 2145, 2147,
+int gCloudActionEnvTbl[] = {
+    0, 1575, 1577, 1886, 1525, 0, 1576, 1890, 2147, 0, 1578, 2140, 2145, 2147,
 };
 
 /* descriptor/ptr table auto 0x8030f7e8-0x8030f86c */
-u32 lbl_8030F7E8[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000c0000, (u32)cloudaction_initialise, (u32)cloudaction_release, 0x00000000, (u32)cloudaction_update, (u32)cloudaction_onMapSetup, (u32)cloudaction_func05, (u32)renderClouds, (u32)cloudaction_free, (u32)cloudaction_func08_nop, (u32)cloudaction_func09_nop, (u32)__end_critical_region, (u32)__begin_critical_region, (u32)__kill_critical_regions, 0x00000000 };
-u32 lbl_8030F830[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)waterfx_initialise, (u32)waterfx_release, 0x00000000, (u32)waterfx_run, (u32)waterfx_func04, (u32)waterfx_func05, (u32)waterfx_spawnSplashBurst, (u32)waterfx_spawnRipple, (u32)waterfx_func08, (u32)waterfx_onMapSetup, (u32)waterfx_setRippleScale };
+u32 lbl_8030F7E8[18] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x000c0000,
+                        (u32)cloudaction_initialise,
+                        (u32)cloudaction_release,
+                        0x00000000,
+                        (u32)cloudaction_update,
+                        (u32)cloudaction_onMapSetup,
+                        (u32)cloudaction_func05,
+                        (u32)renderClouds,
+                        (u32)cloudaction_free,
+                        (u32)cloudaction_func08_nop,
+                        (u32)cloudaction_func09_nop,
+                        (u32)__end_critical_region,
+                        (u32)__begin_critical_region,
+                        (u32)__kill_critical_regions,
+                        0x00000000};
+u32 lbl_8030F830[15] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x000a0000,
+                        (u32)waterfx_initialise,
+                        (u32)waterfx_release,
+                        0x00000000,
+                        (u32)waterfx_run,
+                        (u32)waterfx_func04,
+                        (u32)waterfx_func05,
+                        (u32)waterfx_spawnSplashBurst,
+                        (u32)waterfx_spawnRipple,
+                        (u32)waterfx_func08,
+                        (u32)waterfx_onMapSetup,
+                        (u32)waterfx_setRippleScale};

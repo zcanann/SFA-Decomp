@@ -22,9 +22,15 @@ int CFPerch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int cfperch_getExtraSize(void) { return 0x0; }
+int cfperch_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int cfperch_getObjectTypeId(void) { return 0x0; }
+int cfperch_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void cfperch_free(int* obj)
 {

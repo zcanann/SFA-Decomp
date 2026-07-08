@@ -5,11 +5,11 @@
 #include "main/model_light.h"
 #include "main/pi_dolphin.h"
 
-#define GX_CULL_NONE 0
+#define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
-#define GX_CULL_BACK 2
-#define GX_FOG_NONE 0
-#define GX_LEQUAL 3
+#define GX_CULL_BACK  2
+#define GX_FOG_NONE   0
+#define GX_LEQUAL     3
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
@@ -333,7 +333,8 @@ LAB_8005E630:
         {
             if ((SHADER_FLAGS(shader) & 0x800) == 0)
             {
-                if ((SHADER_FLAGS(shader) & 0x1000) == 0) goto LAB_8005E6D0;
+                if ((SHADER_FLAGS(shader) & 0x1000) == 0)
+                    goto LAB_8005E6D0;
             }
         }
     }
@@ -377,7 +378,7 @@ typedef struct MapBlockData
  */
 typedef struct BitStreamReader
 {
-    u8* data;   /* 0x00 */
+    u8* data; /* 0x00 */
     int unk4;
     int unk8;
     int unkC;
@@ -407,14 +408,9 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
         f32 az0 = (f32)(b->minZ >> 3) + fldZ;
         f32 ax1 = (f32)(b->maxX >> 3) + fldX;
         f32 az1 = (f32)(b->maxZ >> 3) + fldZ;
-        modelLightStruct_selectBrightestAabbLights(
-            ax0 + fx,
-            (f32)(b->minY >> 3) + fldY,
-            az0 + fz,
-            ax1 + fx,
-            (f32)(b->maxY >> 3) + fldY,
-            az1 + fz,
-            (u8*)&gTexDimmedLightList, 2, &lightCount);
+        modelLightStruct_selectBrightestAabbLights(ax0 + fx, (f32)(b->minY >> 3) + fldY, az0 + fz, ax1 + fx,
+                                                   (f32)(b->maxY >> 3) + fldY, az1 + fz, (u8*)&gTexDimmedLightList, 2,
+                                                   &lightCount);
     }
     resetLotsOfRenderVars();
     fn_8004CE0C(i);
@@ -447,9 +443,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
     return;
 }
 
-u32
-frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ,
-                                f32 maxZ, f32* planeOffsets)
+u32 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ, f32 maxZ, f32* planeOffsets)
 {
     FrustumPlane* plane;
     int cornerIndex;
@@ -495,18 +489,19 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
             nearZ = minZ;
             farZ = maxZ;
         }
-        if ((nearX * plane[i].normalX + nearY * plane[i].normalY + nearZ * plane[i].normalZ + plane[i].distance + planeOffsets[i]
-                < lbl_803DEBCC) &&
-            (farX * plane[i].normalX + farY * plane[i].normalY + farZ * plane[i].normalZ + plane[i].distance + planeOffsets[i] <
-                lbl_803DEBCC))
+        if ((nearX * plane[i].normalX + nearY * plane[i].normalY + nearZ * plane[i].normalZ + plane[i].distance +
+                 planeOffsets[i] <
+             lbl_803DEBCC) &&
+            (farX * plane[i].normalX + farY * plane[i].normalY + farZ * plane[i].normalZ + plane[i].distance +
+                 planeOffsets[i] <
+             lbl_803DEBCC))
             return 0;
     }
     return 1;
 }
 
-u8
-mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes, int planeCount, f32* minX,
-                                    f32* minY, f32* minZ, f32* maxX, f32* maxY, f32* maxZ)
+u8 mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes, int planeCount, f32* minX,
+                                       f32* minY, f32* minZ, f32* maxX, f32* maxY, f32* maxZ)
 {
     u8 cornerIndex;
     float nearX;
@@ -558,9 +553,9 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
             farZ = *maxZ;
         }
         if ((planes->distance + (nearX * planes->normalX + nearY * planes->normalY + nearZ * planes->normalZ) <
-                lbl_803DEBCC)
-            && (planes->distance + (farX * planes->normalX + farY * planes->normalY + farZ * planes->normalZ) <
-                lbl_803DEBCC))
+             lbl_803DEBCC) &&
+            (planes->distance + (farX * planes->normalX + farY * planes->normalY + farZ * planes->normalZ) <
+             lbl_803DEBCC))
         {
             return 0;
         }
@@ -589,172 +584,178 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
     int byteBase;
 
     {
-    u8* texGlobals;
-    int rec;
+        u8* texGlobals;
+        int rec;
 
-    texGlobals = lbl_8037E0C0;
-    bitPos = ((BitStreamReader*)stream)->bitPos;
-    {
-        int off = bitPos >> 3;
-        byteBase = (int)((BitStreamReader*)stream)->data;
-        bits = *(u8*)(byteBase + off);
-        byteBase += off;
-        bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
-        bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
-    }
-    ((BitStreamReader*)stream)->bitPos = bitPos + 8;
-    rec = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
-    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
-    {
-        goto end;
-    }
-    if (mapBlockBounds_ComputeAndTestPlanes(rec, block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT, &minX, &minY, &minZ, &maxX, &maxY, &maxZ)
-        == 0)
-    {
-        goto end;
-    }
-    if ((u8)passSelect == 0)
-    {
-        flags = SHADER_FLAGS(shader);
-        if ((flags & 0x80000000) != 0)
+        texGlobals = lbl_8037E0C0;
+        bitPos = ((BitStreamReader*)stream)->bitPos;
         {
-            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
-            {
-                int shadowType = 5;
-                *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
-            }
-            lbl_803DCE30 = lbl_803DCE30 + 1;
+            int off = bitPos >> 3;
+            byteBase = (int)((BitStreamReader*)stream)->data;
+            bits = *(u8*)(byteBase + off);
+            byteBase += off;
+            bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
+            bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
         }
-        else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
+        ((BitStreamReader*)stream)->bitPos = bitPos + 8;
+        rec = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
+        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
         {
-            fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
-            {
-                int shadowType = 4;
-                *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
-            }
-            lbl_803DCE30 = lbl_803DCE30 + 1;
+            goto end;
         }
-    }
-    else
-    {
-        if (shader != NULL)
+        if (mapBlockBounds_ComputeAndTestPlanes(rec, block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT,
+                                                &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
+        {
+            goto end;
+        }
+        if ((u8)passSelect == 0)
         {
             flags = SHADER_FLAGS(shader);
-            if (((flags & 0x80000000) == 0) && ((flags & 0x20000) == 0))
+            if ((flags & 0x80000000) != 0)
             {
-                if ((shader != NULL) && ((flags & 0x80000) != 0))
+                fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
                 {
-                    count = 0;
+                    int shadowType = 5;
+                    *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
                 }
-                else
+                lbl_803DCE30 = lbl_803DCE30 + 1;
+            }
+            else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
+            {
+                fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
                 {
-                    modelLightStruct_selectBrightestAabbLights(minX + playerMapOffsetX, minY,
-                                                               minZ + playerMapOffsetZ, maxX + playerMapOffsetX, maxY,
-                                                               maxZ + playerMapOffsetZ,
-                                                               (u8*)&gTexBlockLightList, 2, &count);
+                    int shadowType = 4;
+                    *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
                 }
-                if ((shader != NULL) &&
-                    (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
-                {
-                    fn_80088730(chanColor);
-                    chanColor[3] = 0;
-                    chanColor[2] = 0;
-                    chanColor[1] = 0;
-                    chanColor[0] = 0;
-                    if (count == 0)
-                    {
-                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
-                        {
-                            fn_8004EF9C(chanColor);
-                        }
-                        else
-                        {
-                            fn_8004EECC(chanColor);
-                        }
-                    }
-                    else
-                    {
-                        modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &lightColor[0], &lightColor[1], &lightColor[2], &lightColor[3]);
-                        modelLightStruct_getPosition((void*)gTexBlockLightList, &lightPos[0], &lightPos[1], &lightPos[2]);
-                        modelLightStruct_getRadius((void*)gTexBlockLightList);
-                        fn_8004F6D8(lightColor, &lightPos[0], chanColor);
-                        for (i = 1; i < count; i = i + 1)
-                        {
-                            modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0], &lightColor[1], &lightColor[2], &lightColor[3]);
-                            modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0], &lightPos[1], &lightPos[2]);
-                            modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
-                            fn_8004F380(lightColor, &lightPos[0]);
-                        }
-                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
-                        {
-                            fn_8004F2B0();
-                        }
-                        else
-                        {
-                            fn_8004F080();
-                        }
-                    }
-                }
-                else
-                {
-                    for (i = 0; i < count; i = i + 1)
-                    {
-                        modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0], &lightColor[1], &lightColor[2], &lightColor[3]);
-                        modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0], &lightPos[1], &lightPos[2]);
-                        modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
-                        fn_8004FA30(lightColor, &lightPos[0]);
-                    }
-                }
-                if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x2000) != 0))
-                {
-                    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x40000000) != 0))
-                    {
-                        visible = visArg;
-                    }
-                    else
-                    {
-                        u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(rec, block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT,
-                                                                      &minX, &minY, &minZ, &maxX, &maxY, &maxZ);
-                        if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
-                        {
-                            visible = 1;
-                        }
-                        else
-                        {
-                            visible = 0;
-                        }
-                        if ((u8)visArg != 0)
-                        {
-                            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-                            gxSetZMode_(1, GX_LEQUAL, 0);
-                            gxSetPeControl_ZCompLoc_(1);
-                            GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-                        }
-                    }
-                    if ((u8)visible == 0)
-                    {
-                        goto end;
-                    }
-                    fn_8004D230();
-                }
-                textureFn_800528bc();
+                lbl_803DCE30 = lbl_803DCE30 + 1;
             }
         }
-        GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, ((MapBlockBoundsRec*)rec)->dlistSize);
-        flags = SHADER_FLAGS(shader);
-        if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
-            (mapBlockBounds_HasCornerPastDepthThreshold(rec, mtx) != 0))
+        else
         {
-            fn_8005D3B4(rec, block, 0x17);
+            if (shader != NULL)
             {
-                int shadowType = 6;
-                *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
+                flags = SHADER_FLAGS(shader);
+                if (((flags & 0x80000000) == 0) && ((flags & 0x20000) == 0))
+                {
+                    if ((shader != NULL) && ((flags & 0x80000) != 0))
+                    {
+                        count = 0;
+                    }
+                    else
+                    {
+                        modelLightStruct_selectBrightestAabbLights(
+                            minX + playerMapOffsetX, minY, minZ + playerMapOffsetZ, maxX + playerMapOffsetX, maxY,
+                            maxZ + playerMapOffsetZ, (u8*)&gTexBlockLightList, 2, &count);
+                    }
+                    if ((shader != NULL) &&
+                        (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
+                    {
+                        fn_80088730(chanColor);
+                        chanColor[3] = 0;
+                        chanColor[2] = 0;
+                        chanColor[1] = 0;
+                        chanColor[0] = 0;
+                        if (count == 0)
+                        {
+                            if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
+                            {
+                                fn_8004EF9C(chanColor);
+                            }
+                            else
+                            {
+                                fn_8004EECC(chanColor);
+                            }
+                        }
+                        else
+                        {
+                            modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &lightColor[0], &lightColor[1],
+                                                             &lightColor[2], &lightColor[3]);
+                            modelLightStruct_getPosition((void*)gTexBlockLightList, &lightPos[0], &lightPos[1],
+                                                         &lightPos[2]);
+                            modelLightStruct_getRadius((void*)gTexBlockLightList);
+                            fn_8004F6D8(lightColor, &lightPos[0], chanColor);
+                            for (i = 1; i < count; i = i + 1)
+                            {
+                                modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0],
+                                                                 &lightColor[1], &lightColor[2], &lightColor[3]);
+                                modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0],
+                                                             &lightPos[1], &lightPos[2]);
+                                modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
+                                fn_8004F380(lightColor, &lightPos[0]);
+                            }
+                            if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
+                            {
+                                fn_8004F2B0();
+                            }
+                            else
+                            {
+                                fn_8004F080();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (i = 0; i < count; i = i + 1)
+                        {
+                            modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0],
+                                                             &lightColor[1], &lightColor[2], &lightColor[3]);
+                            modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0], &lightPos[1],
+                                                         &lightPos[2]);
+                            modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
+                            fn_8004FA30(lightColor, &lightPos[0]);
+                        }
+                    }
+                    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x2000) != 0))
+                    {
+                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x40000000) != 0))
+                        {
+                            visible = visArg;
+                        }
+                        else
+                        {
+                            u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(
+                                rec, block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX, &minY,
+                                &minZ, &maxX, &maxY, &maxZ);
+                            if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
+                            {
+                                visible = 1;
+                            }
+                            else
+                            {
+                                visible = 0;
+                            }
+                            if ((u8)visArg != 0)
+                            {
+                                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+                                gxSetZMode_(1, GX_LEQUAL, 0);
+                                gxSetPeControl_ZCompLoc_(1);
+                                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                            }
+                        }
+                        if ((u8)visible == 0)
+                        {
+                            goto end;
+                        }
+                        fn_8004D230();
+                    }
+                    textureFn_800528bc();
+                }
             }
-            lbl_803DCE30 = lbl_803DCE30 + 1;
+            GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, ((MapBlockBoundsRec*)rec)->dlistSize);
+            flags = SHADER_FLAGS(shader);
+            if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
+                (mapBlockBounds_HasCornerPastDepthThreshold(rec, mtx) != 0))
+            {
+                fn_8005D3B4(rec, block, 0x17);
+                {
+                    int shadowType = 6;
+                    *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
+                }
+                lbl_803DCE30 = lbl_803DCE30 + 1;
+            }
         }
-    }
-end:
-    return;
+    end:
+        return;
     }
 }
 
@@ -788,8 +789,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 ovr = base;
                 for (remain = 0x50; remain != 0; remain--)
                 {
-                    if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
-                        ((int)ovrByte == ovr->layerByte))
+                    if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
                         texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
                         goto layer0_done;
@@ -808,10 +808,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
             ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
-                *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8,
-                (f32*)texMatrix,
-                *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8,
-                lbl_803DEBCC);
+                *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8, (f32*)texMatrix,
+                *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8, lbl_803DEBCC);
             texMtx = (float*)texMatrix;
         }
         else
@@ -835,8 +833,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 ovr = base;
                 for (remain = 0x50; remain != 0; remain--)
                 {
-                    if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
-                        ((int)ovrByte == ovr->layerByte))
+                    if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
                         texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
                         goto layer1_done;
@@ -855,10 +852,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
             ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
-                *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8,
-                (f32*)texMatrix,
-                *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8,
-                lbl_803DEBCC);
+                *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8, (f32*)texMatrix,
+                *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / lbl_803DEBC8, lbl_803DEBCC);
             texMtx = (float*)texMatrix;
         }
         else
@@ -908,9 +903,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                         float* mvec;
                         int mtxOff = (u32)((TexLayer*)layer)->mtxIndex * 0x10;
                         mvec = (float*)(lbl_803DCE68 + mtxOff);
-                        ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
-                            mvec[0] / lbl_803DEBC8, (f32*)texMatrix,
-                            mvec[1] / lbl_803DEBC8, lbl_803DEBCC);
+                        ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(mvec[0] / lbl_803DEBC8, (f32*)texMatrix,
+                                                                    mvec[1] / lbl_803DEBC8, lbl_803DEBCC);
                         texMtx = (float*)texMatrix;
                     }
                     else
@@ -1049,7 +1043,8 @@ LAB_8005F7FC:
         {
             if ((SHADER_FLAGS(shader) & 0x800) == 0)
             {
-                if ((SHADER_FLAGS(shader) & 0x1000) == 0) goto LAB_8005F89C;
+                if ((SHADER_FLAGS(shader) & 0x1000) == 0)
+                    goto LAB_8005F89C;
             }
         }
     }

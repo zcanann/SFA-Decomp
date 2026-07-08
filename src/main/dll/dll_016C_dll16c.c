@@ -34,10 +34,10 @@ typedef struct IMIceMountainState
 {
     u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
     u8 pad01[3];
-    s32 latchFlags; /* SCGameBitLatch record; bit 1 = latch fired this frame */
+    s32 latchFlags;   /* SCGameBitLatch record; bit 1 = latch fired this frame */
     s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
     u8 pad09;
-    s16 musicTrack; /* -1 or 26; Music_Trigger edge latch */
+    s16 musicTrack;   /* -1 or 26; Music_Trigger edge latch */
     u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
     u8 pad0D[3];
     f32 warningTextTimer; /* shows text 0x351 while above the floor value */
@@ -68,8 +68,8 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Obj_FreeObject(int*);
-void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible,
-                                    int opacity, int reissueMove);
+void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
+                                    int reissueMove);
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -94,13 +94,20 @@ void dll_16C_initialise(void)
 {
 }
 
-int dll_16C_getExtraSize(void) { return 0x24; }
-int dll_16C_getObjectTypeId(void) { return 0x3; }
+int dll_16C_getExtraSize(void)
+{
+    return 0x24;
+}
+int dll_16C_getObjectTypeId(void)
+{
+    return 0x3;
+}
 
 void dll_16C_free(int* obj)
 {
     int* p = (int*)((GameObject*)obj)->childObjs[0];
-    if (p != NULL) Obj_FreeObject(p);
+    if (p != NULL)
+        Obj_FreeObject(p);
 }
 
 #pragma scheduling off
@@ -128,7 +135,8 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     {
         if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
         {
-            if (mainGetBit(GAMEBIT_IM_HutRelated0382) == 0) return;
+            if (mainGetBit(GAMEBIT_IM_HutRelated0382) == 0)
+                return;
         }
         extra = ((GameObject*)obj)->extra;
         p = extra->linkedObj;
@@ -214,9 +222,8 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             s8 idx = ((Dll16CState*)extra)->subObjIndex;
             if (idx > 0)
             {
-                *(int*)&((GameObject*)obj)->childObjs[0] =
-                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
-                                    *(int*)&((GameObject*)obj)->anim.parent);
+                *(int*)&((GameObject*)obj)->childObjs[0] = Obj_SetupObject(
+                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
                 ((GameObject*)obj)->childCount = 1;
             }
             ((Dll16CState*)extra)->subObjIndexApplied = ((Dll16CState*)extra)->subObjIndex;
@@ -262,14 +269,15 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
-void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible,
-                                    int opacity, int reissueMove)
+void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
+                                    int reissueMove)
 {
     if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
     {
         u8 saved = *(u8*)((char*)src + 0x37);
         *(u8*)((char*)src + 0x37) = opacity;
-        (*(void (**)(void*, int, int, int, int, int))(**(int**)&((GameObject*)src)->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
+        (*(void (**)(void*, int, int, int, int, int))(**(int**)&((GameObject*)src)->anim.dll + 0x10))(src, p1, p2, p3,
+                                                                                                      p4, -1);
         *(u8*)((char*)src + 0x37) = saved;
     }
     ((GameObject*)dst)->anim.previousWorldPosX = ((GameObject*)dst)->anim.worldPosX;
@@ -317,9 +325,8 @@ void dll_16C_update(int* obj)
             s8 idx = extra->subObjIndex;
             if (idx > 0)
             {
-                *(int*)&((GameObject*)obj)->childObjs[0] =
-                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
-                                    *(int*)&((GameObject*)obj)->anim.parent);
+                *(int*)&((GameObject*)obj)->childObjs[0] = Obj_SetupObject(
+                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
                 ((GameObject*)obj)->childCount = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;
@@ -376,7 +383,8 @@ void dll_16C_update(int* obj)
         {
             f32 fade;
             int* player = (int*)Obj_GetPlayerObject();
-            fade = Vec_distance(&((GameObject*)extra->linkedObj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+            fade =
+                Vec_distance(&((GameObject*)extra->linkedObj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
             fade = (fade - lbl_803E475C) / lbl_803E4760;
             if (fade < lbl_803E4748)
             {

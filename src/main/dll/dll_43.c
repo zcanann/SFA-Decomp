@@ -21,8 +21,6 @@
 #include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-
-
 extern u8 lbl_803DB424;
 extern TitleMenuControl* gTitleMenuControlInterface;
 extern u8 lbl_803DD6C4;

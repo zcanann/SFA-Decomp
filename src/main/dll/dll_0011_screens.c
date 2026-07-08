@@ -160,8 +160,7 @@ void gameBitFn_800ea2e0(u8 id)
                     cachedBits = mainGetBit(dwBank);
                 }
                 dwMask = 1 << (texts[5] % 32);
-            }
-            while ((cachedBits & dwMask) != 0);
+            } while ((cachedBits & dwMask) != 0);
         }
     }
 }
@@ -184,8 +183,8 @@ void loadTaskTexts(void)
     while (pp--, i-- != 0)
     {
         name = (u8*)*pp;
-        if (name[0] == 'T' && name[1] == 'a' && name[2] == 's' && name[3] == 'k' &&
-            name[4] == 'T' && name[5] == 'e' && name[6] == 'x' && name[7] == 't' && name[8] == 's')
+        if (name[0] == 'T' && name[1] == 'a' && name[2] == 's' && name[3] == 'k' && name[4] == 'T' && name[5] == 'e' &&
+            name[6] == 'x' && name[7] == 't' && name[8] == 's')
         {
             idx = (name[9] - '0') * 100 + (name[10] - '0') * 10 + (name[11] - '0');
             if (idx < 0xd)
@@ -203,7 +202,7 @@ void screens_run(void)
         mm_free(lbl_803DD4A0);
         lbl_803DD4A0 = 0;
         lbl_803DD4A4 = 0;
-        lbl_803DD4AC = (u32) - 1;
+        lbl_803DD4AC = (u32)-1;
     }
 }
 
@@ -213,7 +212,7 @@ void screens_remove(void)
     {
         mm_free(lbl_803DD4A0);
         lbl_803DD4A0 = 0;
-        lbl_803DD4AC = (u32) - 1;
+        lbl_803DD4AC = (u32)-1;
         lbl_803DD4A4 = 0;
         lbl_803DD4A8 = 0;
     }
@@ -233,12 +232,14 @@ void screens_show(int id)
         {
             count++;
         }
-        if (id < 0 || id >= count - 1) id = 0;
+        if (id < 0 || id >= count - 1)
+            id = 0;
         offset = asset[id];
         size = asset[id + 1] - offset;
         if (size != (int)lbl_803DD4A4)
         {
-            if (lbl_803DD4A0 != 0) mm_free(lbl_803DD4A0);
+            if (lbl_803DD4A0 != 0)
+                mm_free(lbl_803DD4A0);
             lbl_803DD4A0 = (u32)mmAlloc(size, 2, 0);
         }
         lbl_803DD4A4 = size;
@@ -255,7 +256,7 @@ void screens_release(void)
 
 void screens_initialise(void)
 {
-    lbl_803DD4AC = (u32) - 1;
+    lbl_803DD4AC = (u32)-1;
     lbl_803DD4A0 = 0;
     lbl_803DD4A4 = 0;
     lbl_803DD4A8 = 0;

@@ -125,9 +125,9 @@ extern int randomGetRange(int lo, int hi);
 #define FRAGMENT_VTABLE_STATUS 0x20
 
 /* DrExplodableState.phase6E4 progression (see file header) */
-#define EXPLODABLE_PHASE_WAIT 0     /* wait for the activate game bit */
+#define EXPLODABLE_PHASE_WAIT     0 /* wait for the activate game bit */
 #define EXPLODABLE_PHASE_BREAKING 1 /* fragments spawned; poll their status */
-#define EXPLODABLE_PHASE_BROKEN 2   /* already broken, nothing to do */
+#define EXPLODABLE_PHASE_BROKEN   2 /* already broken, nothing to do */
 
 void explodable_render(void)
 {
@@ -138,7 +138,10 @@ STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
-int explodable_getExtraSize(void) { return 0x6e8; }
+int explodable_getExtraSize(void)
+{
+    return 0x6e8;
+}
 
 extern void Obj_FreeObject(int obj);
 void explodable_free(int obj, int flag)
@@ -155,7 +158,7 @@ void explodable_free(int obj, int flag)
         slotPtr = state - 4;
         while (slotPtr += 4, ++i < 15)
         {
-            child = *(void* *)&((DrExplodableState*)slotPtr)->children[0];
+            child = *(void**)&((DrExplodableState*)slotPtr)->children[0];
             if (child != NULL)
             {
                 Obj_FreeObject((int)child);
@@ -222,8 +225,7 @@ void explodable_update(int obj)
                 }
                 slotPtr += 4;
                 i++;
-            }
-            while (i < 0xf);
+            } while (i < 0xf);
         }
     }
 }
@@ -281,8 +283,8 @@ void explodable_init(int obj, int setup)
     {
         ((ExplodablePlacement*)setup)->scaleParam = 0x14;
     }
-    ((GameObject*)obj)->anim.rootMotionScale =
-        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
+    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
+                                               (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
     e = gExplodableBreakRecipeTable;
     if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
     {
@@ -323,12 +325,9 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     s->rotX = c->rotX;
     s->rotY = c->rotY;
     s->rotZ = c->rotZ;
-    s->spinX = c->spinX * (f32)(u32)
-    c->spinScale;
-    s->spinY = c->spinY * (f32)(u32)
-    c->spinScale;
-    s->spinZ = c->spinZ * (f32)(u32)
-    c->spinScale;
+    s->spinX = c->spinX * (f32)(u32)c->spinScale;
+    s->spinY = c->spinY * (f32)(u32)c->spinScale;
+    s->spinZ = c->spinZ * (f32)(u32)c->spinScale;
     f1 = lbl_803E4354;
     s->spin2X = lbl_803E4354 * c->spin2X;
     s->spin2Z = f1 * c->spin2Z;
@@ -338,9 +337,8 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     s->vel2Y = f1 * c->vel2Y;
     s->vel2Z = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
-    s->scale = (s8)(int)(
-        lbl_803E435C * (((GameObject*)obj)->anim.rootMotionScale / *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance
-            + 4)));
+    s->scale = (s8)(int)(lbl_803E435C * (((GameObject*)obj)->anim.rootMotionScale /
+                                         *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4)));
     s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
     return Obj_SetupObject((int)s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
@@ -414,12 +412,13 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
             i14 += 4;
             i8 += 4;
         }
-        ((DrExplodableState*)state)->phase6E4 =
-            ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0) ? EXPLODABLE_PHASE_BREAKING : EXPLODABLE_PHASE_WAIT;
+        ((DrExplodableState*)state)->phase6E4 = ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0)
+                                                    ? EXPLODABLE_PHASE_BREAKING
+                                                    : EXPLODABLE_PHASE_WAIT;
     }
 }
 
-extern void vecRotateZXY(s16 * rot, f32 * vec);
+extern void vecRotateZXY(s16* rot, f32* vec);
 extern f32 sqrtf(f32 x);
 
 extern f32 lbl_803E4370;
@@ -461,12 +460,9 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
         c->velY = dy * scale;
         c->velZ = dz * scale;
         max = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        c->spinX = (f32)(int)
-        randomGetRange(0, max) / lbl_803E437C;
-        c->spinY = (f32)(int)
-        randomGetRange(0, max) / lbl_803E437C;
-        c->spinZ = (f32)(int)
-        randomGetRange(0, max) / lbl_803E437C;
+        c->spinX = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        c->spinY = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        c->spinZ = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
         scale = (f32)((ExplodablePlacement*)def)->launchScale2 / lbl_803E4358;
         if (((GameObject*)obj)->anim.velocityX > lbl_803E4368)
         {
@@ -489,12 +485,9 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
             c->launchFlags |= 0x10;
         }
         max2 = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        c->spin2X = (f32)(int)
-        randomGetRange(0, max2) / lbl_803E4374;
-        c->spin2Y = (f32)(int)
-        randomGetRange(0, max2) / lbl_803E4374;
-        c->spin2Z = (f32)(int)
-        randomGetRange(0, max2) / lbl_803E4374;
+        c->spin2X = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        c->spin2Y = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        c->spin2Z = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
         c->vel2X = dx * scale;
         c->vel2Y = dy * scale - lbl_803E4380;
         c->vel2Z = dz * scale;
@@ -518,35 +511,167 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
 }
 
 GasVentTableEntry gExplodableBreakRecipeTable[16] = {
-    { 124, 876, 216, 1, 0, { 0, 0 } },
-    { 2098, 2099, 705, 50, 0, { 0, 0 } },
-    { 147, 1408, 0, 100, 0, { 0, 0 } },
-    { 176, 903, 0, 100, 0, { 0, 0 } },
-    { 677, 933, 0, 20, 0, { 0, 0 } },
-    { 1257, 1258, 216, 1, 0, { 0, 0 } },
-    { 1078, 1079, 705, 50, 0, { 0, 0 } },
-    { 125, 126, 705, 50, 0, { 0, 0 } },
-    { 127, 129, 0, 10, 0, { 0, 0 } },
-    { 1399, 1401, 216, 50, 0, { 0, 0 } },
-    { 255, 254, 0, 10, 1, { 0, 0 } },
-    { 1531, 1532, 705, 50, 0, { 0, 0 } },
-    { 1910, 1911, 705, 50, 0, { 0, 0 } },
-    { 1938, 1937, 705, 50, 0, { 0, 0 } },
-    { 1190, 1201, 705, 50, 0, { 0, 0 } },
-    { 2071, 2072, 705, 50, 0, { 0, 0 } },
+    {124, 876, 216, 1, 0, {0, 0}},    {2098, 2099, 705, 50, 0, {0, 0}}, {147, 1408, 0, 100, 0, {0, 0}},
+    {176, 903, 0, 100, 0, {0, 0}},    {677, 933, 0, 20, 0, {0, 0}},     {1257, 1258, 216, 1, 0, {0, 0}},
+    {1078, 1079, 705, 50, 0, {0, 0}}, {125, 126, 705, 50, 0, {0, 0}},   {127, 129, 0, 10, 0, {0, 0}},
+    {1399, 1401, 216, 50, 0, {0, 0}}, {255, 254, 0, 10, 1, {0, 0}},     {1531, 1532, 705, 50, 0, {0, 0}},
+    {1910, 1911, 705, 50, 0, {0, 0}}, {1938, 1937, 705, 50, 0, {0, 0}}, {1190, 1201, 705, 50, 0, {0, 0}},
+    {2071, 2072, 705, 50, 0, {0, 0}},
 };
 
 /* descriptor/ptr table auto 0x80322ea0-0x80323198 */
-u32 gExplodableObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)explodable_init, (u32)explodable_update, 0x00000000, (u32)explodable_render, (u32)explodable_free, 0x00000000, (u32)explodable_getExtraSize };
-u32 lbl_80322ED8[18] = { 0x000007a4, 0x000007a5, 0x00004000, 0x00000064, 0xfffff000, 0x44e74000, 0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000, 0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000 };
-u32 gCFForceFieldObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfforcefield_initialise, (u32)cfforcefield_release, 0x00000000, (u32)cfforcefield_init, (u32)cfforcefield_update, (u32)cfforcefield_hitDetect, (u32)cfforcefield_render, (u32)cfforcefield_free, (u32)cfforcefield_getObjectTypeId, (u32)cfforcefield_getExtraSize };
-u32 gSlidingDoorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)SlidingDoor_initialise, (u32)SlidingDoor_release, 0x00000000, (u32)SlidingDoor_init, (u32)SlidingDoor_update, (u32)SlidingDoor_hitDetect, (u32)SlidingDoor_render, (u32)SlidingDoor_free, (u32)SlidingDoor_getObjectTypeId, (u32)SlidingDoor_getExtraSize };
-u32 gAttractorObjDescriptor[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)attractor_initialise, (u32)attractor_release, 0x00000000, (u32)attractor_init, (u32)attractor_update, (u32)attractor_hitDetect, (u32)attractor_render, (u32)attractor_free, (u32)attractor_getObjectTypeId, (u32)attractor_getExtraSize, (u32)attractor_setScale, (u32)attractor_getTarget };
-u32 gCFMagicWallObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cfmagicwall_initialise, (u32)cfmagicwall_release, 0x00000000, (u32)cfmagicwall_init, (u32)cfmagicwall_update, (u32)cfmagicwall_hitDetect, (u32)cfmagicwall_render, (u32)cfmagicwall_free, (u32)cfmagicwall_getObjectTypeId, (u32)cfmagicwall_getExtraSize };
-u32 lbl_80323008[12] = { 0x02fc02fd, 0x02fe02ff, 0x0b2a0b2b, 0x0b2c0b2d, 0x0b2e0b2f, 0x0b300b31, 0x0b6c0b32, 0x0b370b38, 0x0b390b3a, 0x0b3b0b3c, 0x0b3d0b3e, 0x0b3f0000 };
-u32 gCFLevelControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)cflevelcontrol_initialise, (u32)cflevelcontrol_release, 0x00000000, (u32)cflevelcontrol_init, (u32)cflevelcontrol_update, (u32)cflevelcontrol_hitDetect, (u32)cflevelcontrol_render, (u32)cflevelcontrol_free, (u32)cflevelcontrol_getObjectTypeId, (u32)cflevelcontrol_getExtraSize };
-u32 gExplodedObjDescriptor[20] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)exploded_initialise, (u32)exploded_release, 0x00000000, (u32)exploded_init, (u32)exploded_update, (u32)exploded_hitDetect, (u32)exploded_render, (u32)exploded_free, (u32)exploded_getObjectTypeId, (u32)exploded_getExtraSize, (u32)exploded_setScale, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
-u32 gSpiritDoorLockObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)SpiritDoorLock_initialise, (u32)SpiritDoorLock_release, 0x00000000, (u32)SpiritDoorLock_init, (u32)SpiritDoorLock_update, (u32)SpiritDoorLock_hitDetect, (u32)SpiritDoorLock_render, (u32)SpiritDoorLock_free, (u32)SpiritDoorLock_getObjectTypeId, (u32)SpiritDoorLock_getExtraSize };
-u32 lbl_803230F8[12] = { 0xffffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
-u32 gRollingBarrelObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)RollingBarrel_initialise, (u32)RollingBarrel_release, 0x00000000, (u32)RollingBarrel_init, (u32)RollingBarrel_update, (u32)RollingBarrel_hitDetect, (u32)RollingBarrel_render, (u32)RollingBarrel_free, (u32)RollingBarrel_getObjectTypeId, (u32)RollingBarrel_getExtraSize };
-u32 gMMP_levelcontrolObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)MMP_levelcontrol_initialise, (u32)MMP_levelcontrol_release, 0x00000000, (u32)MMP_levelcontrol_init, (u32)MMP_levelcontrol_update, (u32)MMP_levelcontrol_hitDetect, (u32)MMP_levelcontrol_render, (u32)MMP_levelcontrol_free, (u32)MMP_levelcontrol_getObjectTypeId, (u32)MMP_levelcontrol_getExtraSize };
+u32 gExplodableObjDescriptor[14] = {0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00090000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    (u32)explodable_init,
+                                    (u32)explodable_update,
+                                    0x00000000,
+                                    (u32)explodable_render,
+                                    (u32)explodable_free,
+                                    0x00000000,
+                                    (u32)explodable_getExtraSize};
+u32 lbl_80322ED8[18] = {0x000007a4, 0x000007a5, 0x00004000, 0x00000064, 0xfffff000, 0x44e74000,
+                        0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000,
+                        0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000};
+u32 gCFForceFieldObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      (u32)cfforcefield_initialise,
+                                      (u32)cfforcefield_release,
+                                      0x00000000,
+                                      (u32)cfforcefield_init,
+                                      (u32)cfforcefield_update,
+                                      (u32)cfforcefield_hitDetect,
+                                      (u32)cfforcefield_render,
+                                      (u32)cfforcefield_free,
+                                      (u32)cfforcefield_getObjectTypeId,
+                                      (u32)cfforcefield_getExtraSize};
+u32 gSlidingDoorObjDescriptor[14] = {0x00000000,
+                                     0x00000000,
+                                     0x00000000,
+                                     0x00090000,
+                                     (u32)SlidingDoor_initialise,
+                                     (u32)SlidingDoor_release,
+                                     0x00000000,
+                                     (u32)SlidingDoor_init,
+                                     (u32)SlidingDoor_update,
+                                     (u32)SlidingDoor_hitDetect,
+                                     (u32)SlidingDoor_render,
+                                     (u32)SlidingDoor_free,
+                                     (u32)SlidingDoor_getObjectTypeId,
+                                     (u32)SlidingDoor_getExtraSize};
+u32 gAttractorObjDescriptor[16] = {0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x000b0000,
+                                   (u32)attractor_initialise,
+                                   (u32)attractor_release,
+                                   0x00000000,
+                                   (u32)attractor_init,
+                                   (u32)attractor_update,
+                                   (u32)attractor_hitDetect,
+                                   (u32)attractor_render,
+                                   (u32)attractor_free,
+                                   (u32)attractor_getObjectTypeId,
+                                   (u32)attractor_getExtraSize,
+                                   (u32)attractor_setScale,
+                                   (u32)attractor_getTarget};
+u32 gCFMagicWallObjDescriptor[14] = {0x00000000,
+                                     0x00000000,
+                                     0x00000000,
+                                     0x00090000,
+                                     (u32)cfmagicwall_initialise,
+                                     (u32)cfmagicwall_release,
+                                     0x00000000,
+                                     (u32)cfmagicwall_init,
+                                     (u32)cfmagicwall_update,
+                                     (u32)cfmagicwall_hitDetect,
+                                     (u32)cfmagicwall_render,
+                                     (u32)cfmagicwall_free,
+                                     (u32)cfmagicwall_getObjectTypeId,
+                                     (u32)cfmagicwall_getExtraSize};
+u32 lbl_80323008[12] = {0x02fc02fd, 0x02fe02ff, 0x0b2a0b2b, 0x0b2c0b2d, 0x0b2e0b2f, 0x0b300b31,
+                        0x0b6c0b32, 0x0b370b38, 0x0b390b3a, 0x0b3b0b3c, 0x0b3d0b3e, 0x0b3f0000};
+u32 gCFLevelControlObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)cflevelcontrol_initialise,
+                                        (u32)cflevelcontrol_release,
+                                        0x00000000,
+                                        (u32)cflevelcontrol_init,
+                                        (u32)cflevelcontrol_update,
+                                        (u32)cflevelcontrol_hitDetect,
+                                        (u32)cflevelcontrol_render,
+                                        (u32)cflevelcontrol_free,
+                                        (u32)cflevelcontrol_getObjectTypeId,
+                                        (u32)cflevelcontrol_getExtraSize};
+u32 gExplodedObjDescriptor[20] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x000a0000,
+                                  (u32)exploded_initialise,
+                                  (u32)exploded_release,
+                                  0x00000000,
+                                  (u32)exploded_init,
+                                  (u32)exploded_update,
+                                  (u32)exploded_hitDetect,
+                                  (u32)exploded_render,
+                                  (u32)exploded_free,
+                                  (u32)exploded_getObjectTypeId,
+                                  (u32)exploded_getExtraSize,
+                                  (u32)exploded_setScale,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00000000};
+u32 gSpiritDoorLockObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)SpiritDoorLock_initialise,
+                                        (u32)SpiritDoorLock_release,
+                                        0x00000000,
+                                        (u32)SpiritDoorLock_init,
+                                        (u32)SpiritDoorLock_update,
+                                        (u32)SpiritDoorLock_hitDetect,
+                                        (u32)SpiritDoorLock_render,
+                                        (u32)SpiritDoorLock_free,
+                                        (u32)SpiritDoorLock_getObjectTypeId,
+                                        (u32)SpiritDoorLock_getExtraSize};
+u32 lbl_803230F8[12] = {0xffffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+                        0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+u32 gRollingBarrelObjDescriptor[14] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00090000,
+                                       (u32)RollingBarrel_initialise,
+                                       (u32)RollingBarrel_release,
+                                       0x00000000,
+                                       (u32)RollingBarrel_init,
+                                       (u32)RollingBarrel_update,
+                                       (u32)RollingBarrel_hitDetect,
+                                       (u32)RollingBarrel_render,
+                                       (u32)RollingBarrel_free,
+                                       (u32)RollingBarrel_getObjectTypeId,
+                                       (u32)RollingBarrel_getExtraSize};
+u32 gMMP_levelcontrolObjDescriptor[14] = {0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00090000,
+                                          (u32)MMP_levelcontrol_initialise,
+                                          (u32)MMP_levelcontrol_release,
+                                          0x00000000,
+                                          (u32)MMP_levelcontrol_init,
+                                          (u32)MMP_levelcontrol_update,
+                                          (u32)MMP_levelcontrol_hitDetect,
+                                          (u32)MMP_levelcontrol_render,
+                                          (u32)MMP_levelcontrol_free,
+                                          (u32)MMP_levelcontrol_getObjectTypeId,
+                                          (u32)MMP_levelcontrol_getExtraSize};

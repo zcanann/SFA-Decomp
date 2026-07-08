@@ -77,7 +77,8 @@ int CFPrisonCage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     CfPrisonCageMapData* data = (CfPrisonCageMapData*)((GameObject*)obj)->anim.placement;
     if (mainGetBit(data->openedBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
         return 0;
     }
@@ -98,29 +99,35 @@ int CFPrisonCage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
        see cfprisonguard) */
     if (mainGetBit(GAMEBIT_ITEM_PrisonKey_Got) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isEventReady(0x44) != 0)
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-                ((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+            ((GameObject*)obj)->anim.resetHitboxFlags =
+                (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
     return 0;
 }
 
-int CFPrisonCage_getExtraSize(void) { return 0x0; }
+int CFPrisonCage_getExtraSize(void)
+{
+    return 0x0;
+}
 
 int CFPrisonCage_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH) return 0x8;
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH)
+        return 0x8;
     return 0x0;
 }
 
@@ -131,7 +138,8 @@ void CFPrisonCage_free(void)
 void CFPrisonCage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E42B0);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E42B0);
 }
 
 void CFPrisonCage_hitDetect(int* obj)
@@ -150,10 +158,12 @@ void CFPrisonCage_update(int* obj)
     {
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case CFPRISONCAGE_TYPE_CAGE: seqIndex = 0;
+        case CFPRISONCAGE_TYPE_CAGE:
+            seqIndex = 0;
             break;
         case CFPRISONCAGE_TYPE_SWITCH:
-        default: seqIndex = 1;
+        default:
+            seqIndex = 1;
             break;
         }
         (*gObjectTriggerInterface)->runSequence(seqIndex, obj, -1);

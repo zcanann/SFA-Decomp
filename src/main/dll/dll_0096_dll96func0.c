@@ -17,11 +17,11 @@
 
 typedef struct GfxCmd
 {
-    u32 mode;     /* 0x00: blend/draw mode */
-    f32 x, y, z;  /* 0x04: size/scale per axis */
-    void* tex;    /* 0x10: texture descriptor */
-    u16 flags;    /* 0x14: per-entry render flags */
-    u8 layer;     /* 0x16: draw layer */
+    u32 mode;    /* 0x00: blend/draw mode */
+    f32 x, y, z; /* 0x04: size/scale per axis */
+    void* tex;   /* 0x10: texture descriptor */
+    u16 flags;   /* 0x14: per-entry render flags */
+    u8 layer;    /* 0x16: draw layer */
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
@@ -179,7 +179,8 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E12C0 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, DLL96_EFFECT_ID, 0);
+    return (*gModgfxInterface)
+        ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803175E8, 0x18, base + 0xd4, DLL96_EFFECT_ID, 0);
 }
 
 void dll_96_func01_nop(void)

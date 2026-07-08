@@ -39,9 +39,15 @@
 
 #define PAD_BUTTON_A 0x100
 
-int earthwalker_getExtraSize(void) { return 0x660; }
+int earthwalker_getExtraSize(void)
+{
+    return 0x660;
+}
 
-int earthwalker_getObjectTypeId(void) { return 0; }
+int earthwalker_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void earthwalker_free(void)
 {
@@ -88,8 +94,8 @@ void earthwalker_update(int obj)
     EarthWalkerState* ewState = (EarthWalkerState*)state;
     int prevAnim;
 
-    if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1,
-                                                     ewState->hitReactState, &ewState->hitReactStepScale)) != 0)
+    if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
+                                                     &ewState->hitReactStepScale)) != 0)
     {
         return;
     }
@@ -111,8 +117,7 @@ void earthwalker_update(int obj)
 
     prevAnim = ewState->animPhase;
     dll_2E_func03(obj, state);
-    if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 &&
-        ewState->animPhase == 1)
+    if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 && ewState->animPhase == 1)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
     }
@@ -376,8 +381,7 @@ void earthwalker_update(int obj)
             if (newState != -1)
             {
                 buttonDisable(0, PAD_BUTTON_A);
-                (*gObjectTriggerInterface)->runSequence(
-                    newState, (void*)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(newState, (void*)obj, -1);
                 ewState->lastTriggeredState = newState;
             }
         }
@@ -403,9 +407,15 @@ void earthwalker_update(int obj)
  *                    frame timer) when near; 3 requests setState 3 and
  *                    -> 3 when the move finishes.
  */
-int dll_28B_substateHandler0(void) { return 0x2; }
+int dll_28B_substateHandler0(void)
+{
+    return 0x2;
+}
 
-int dll_28B_stateHandler0(void) { return 0x2; }
+int dll_28B_stateHandler0(void)
+{
+    return 0x2;
+}
 
 int dll_28B_substateHandler3(int obj, int ai)
 {
@@ -494,10 +504,9 @@ int dll_28B_stateHandler2(int obj, int ai)
     ((GameObject*)obj)->anim.localPosX = state->route.posX;
     ((GameObject*)obj)->anim.localPosZ = state->route.posZ;
     ewObj->facingAngle = getAngle(-state->route.tangentX, -state->route.tangentZ);
-    ObjAnim_SampleRootCurvePhase(
-        sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
-        (ObjAnimComponent*)obj, &((BaddieState*)ai)->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                                       ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
+                                 (ObjAnimComponent*)obj, &((BaddieState*)ai)->moveSpeed);
     return 0;
 }
 
@@ -562,8 +571,7 @@ void earthwalker_init(int obj, int setup)
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)
     {
-        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 ||
-            (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
+        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 || (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
         {
             ewState->interactionState = 2;
         }
@@ -581,6 +589,4 @@ void earthwalker_init(int obj, int setup)
 
 #include "main/objHitReact.h"
 #include "main/gamebit_ids.h"
-ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {
-    { 575, 706, -1, { 0xFF, 0xFF }, 0, { 0, 0, 0 }, 0.01f, { 0, 0, 0, 0 } }
-};
+ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {{575, 706, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.01f, {0, 0, 0, 0}}};

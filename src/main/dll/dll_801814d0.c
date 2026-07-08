@@ -75,8 +75,8 @@ void fn_801814D0(int obj, int arg, u8* state)
     f32 candidateY;
     f32 launchVel;
 
-    hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitWork[3], &hitWork[2], &hitWork[1],
-                                                 &effectPos.x, &effectPos.y, &effectPos.z);
+    hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitWork[3], &hitWork[2], &hitWork[1], &effectPos.x, &effectPos.y,
+                                                 &effectPos.z);
     if (hitType != 0)
     {
         if (hitType == 0x10)

@@ -40,7 +40,8 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 int CFPrisonUncle_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CfPrisonUncleState* p = ((GameObject*)obj)->extra;
-    if (p->magicGranted != 0) return 0;
+    if (p->magicGranted != 0)
+        return 0;
     if (animUpdate->triggerCommand == 2)
     {
         p->magicGranted = 1;
@@ -49,9 +50,15 @@ int CFPrisonUncle_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int cfprisonuncle_getExtraSize(void) { return 0xa8; }
+int cfprisonuncle_getExtraSize(void)
+{
+    return 0xa8;
+}
 
-int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
+int cfprisonuncle_getObjectTypeId(void)
+{
+    return 0x9;
+}
 
 void cfprisonuncle_free(void)
 {
@@ -67,15 +74,17 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
+                                                                                  lbl_803E4288);
         }
     }
     else if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0 && visible != 0)
     {
-        ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
+                                                                                  lbl_803E4288);
         }
     }
     else if (sub != NULL && *(void**)&sub->target != NULL)
@@ -86,25 +95,27 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 if (objUpdateOpacity(sub->target) != 0)
                 {
-                    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(
-                        sub->target, p2, p3, p4, p5, lbl_803E4288);
+                    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
+                                                                                          lbl_803E4288);
                     ObjPath_GetPointWorldPosition(sub->target, 0, &((GameObject*)obj)->anim.localPosX,
                                                   &((GameObject*)obj)->anim.localPosY,
                                                   &((GameObject*)obj)->anim.localPosZ, 0);
                 }
-                ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
+                ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
+                                                                                       lbl_803E4288);
             }
         }
         else
         {
             if (objUpdateOpacity(sub->target) != 0)
             {
-                ((void(*)(int, int, int, int, int, f32))
-                    objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5, lbl_803E4288);
+                ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
+                                                                                      lbl_803E4288);
             }
             if (visible != 0)
             {
-                ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4288);
+                ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
+                                                                                       lbl_803E4288);
             }
         }
     }
@@ -125,8 +136,10 @@ void cfprisonuncle_update(int* obj)
     int m2, objectIndex, objectCount, m1, m3;
     int* objects;
     int i;
-    if (sub == NULL) return;
-    if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0) return;
+    if (sub == NULL)
+        return;
+    if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0)
+        return;
     if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
     {
         *(void**)&sub->target = NULL;
@@ -164,13 +177,14 @@ void cfprisonuncle_update(int* obj)
         else
         {
             objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
-                (int)obj, lbl_803E428C, (f32)(u32)framesThisStep, 0);
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E428C,
+                                                                        (f32)(u32)framesThisStep, 0);
         }
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         if (((GameObject*)obj)->seqIndex == -1)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);

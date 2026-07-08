@@ -15,9 +15,9 @@
 #include "main/dll/baddie_state.h"
 #include "main/sfa_shared_decls.h"
 
-#define MODEL_LIGHT_KIND_POINT 2
+#define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10
-#define DIM2LIFT_HIT_VOLUME_SLOT_9 9
+#define DIM2LIFT_HIT_VOLUME_SLOT_9  9
 
 /* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
 #define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
@@ -62,7 +62,8 @@ extern u8 gDIMbossAnimController[];
 
 #pragma scheduling off
 #pragma peephole off
-typedef struct DIM2icicleBlueWhiteEffectPlacement {
+typedef struct DIM2icicleBlueWhiteEffectPlacement
+{
     ObjPlacement base;
     u8 pad18[0x1E - 0x18];
     s16 gameBit;
@@ -93,10 +94,12 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
     extern f32 lbl_803E4C30;
     int* lightSlot = (int*)*(int*)&((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
 
-    if (*(void**)lightSlot != NULL) return;
+    if (*(void**)lightSlot != NULL)
+        return;
 
     lightSlot[0] = objCreateLight(0, 1);
-    if (*(void**)lightSlot == NULL) return;
+    if (*(void**)lightSlot == NULL)
+        return;
 
     modelLightStruct_setLightKind(lightSlot[0], MODEL_LIGHT_KIND_POINT);
     modelLightStruct_setPosition(lightSlot[0], ((f32*)lightSlot)[0x16], ((f32*)lightSlot)[0x17],
@@ -127,7 +130,10 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
 
 #pragma scheduling on
 #pragma peephole on
-int DIMbossAnim_hasMoveDone(int unused, int* state) { return *(s8*)&((BaddieState*)state)->moveDone != 0; }
+int DIMbossAnim_hasMoveDone(int unused, int* state)
+{
+    return *(s8*)&((BaddieState*)state)->moveDone != 0;
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -139,8 +145,8 @@ int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight)
         ((BaddieState*)state)->moveDone = 0;
     }
     ((BaddieState*)state)->moveSpeed = lbl_803E4C24;
-    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[8])(obj, state, weight, 1);
-    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
+    ((void (*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[8])(obj, state, weight, 1);
+    ((void (*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
     return 0;
 }
 
@@ -195,12 +201,18 @@ int DIMbossAnim_selectTargetControlMode(int* obj)
     int* state = ((GameObject*)obj)->extra;
     switch (((GroundBaddieState*)state)->targetState)
     {
-    case 1: return 5;
-    case 2: return 6;
-    case 4: return 4;
-    case 0: return 2;
-    case 3: return 2;
-    default: return 2;
+    case 1:
+        return 5;
+    case 2:
+        return 6;
+    case 4:
+        return 4;
+    case 0:
+        return 2;
+    case 3:
+        return 2;
+    default:
+        return 2;
     }
 }
 
@@ -220,7 +232,8 @@ int DIMbossAnim_finishDefeat(int obj, int p2)
         ((BaddieState*)p2)->physicsActive = 0;
         ((BaddieState*)p2)->hasTarget = 0;
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x80);
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
         mainSetBits(((GroundBaddieState*)state)->gameBitB, 0);
@@ -314,8 +327,8 @@ int DIMbossHitDetect_trackTargetMove(int obj, int runtime, f32 hitAmount)
     s16 unused;
     s16 distance;
     ((BaddieState*)runtime)->animSpeedA = lbl_803E4BD8;
-    if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0 || ((
-        GameObject*)obj)->anim.currentMove == 1)
+    if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0 ||
+        ((GameObject*)obj)->anim.currentMove == 1)
     {
         (*(int (**)(int, int, int, u16*, s16*, s16*))(*(int*)gBaddieControlInterface + 0x14))(
             obj, *(int*)&((BaddieState*)runtime)->targetObj, 0x10, &dirSector, &unused, &distance);
@@ -544,8 +557,8 @@ int DIMbossHitDetect_randomSwipe(int obj, int runtime, f32 arg)
         *(int*)&((BaddieState*)runtime)->eventFlags = eventFlags & ~BADDIE_EVENT_LANDING;
         gDIMbossSequenceFlags |= (DIMBOSS_SEQUENCE_FLAG_0001 | DIMBOSS_SEQUENCE_FLAG_0004);
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(
-        obj, runtime, 0, randomGetRange(0, 1), lbl_80325AA0);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, runtime, 0, randomGetRange(0, 1),
+                                                                             lbl_80325AA0);
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, runtime, arg, 0xf0);
     return 0;
 }
@@ -579,8 +592,9 @@ int DIMbossAnim_updatePlayerHitReaction(int obj, int runtime)
             if (dirSector == 0 || dirSector == 15)
             {
                 ((BaddieState*)runtime)->moveDone = 0;
-                if (distance > 240 && (((u8)(*(u8 (**)(int, int, f32))(*(int*)gBaddieControlInterface + 0x18))(
-                    obj, runtime, lbl_803E4BBC)) & 1))
+                if (distance > 240 && (((u8)(*(u8(**)(int, int, f32))(*(int*)gBaddieControlInterface + 0x18))(
+                                           obj, runtime, lbl_803E4BBC)) &
+                                       1))
                 {
                     (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(
                         obj, runtime, gDim2LiftFarMoveChoices[randomGetRange(0, 5)]);
@@ -615,8 +629,6 @@ int DIMbossAnim_updatePlayerHitReaction(int obj, int runtime)
 }
 
 f32 gDim2LiftMoveSpeedByDir[16] = {
-    0.007f, 0.025f, 0.029f, 0.05f,
-    0.011f, 0.014f, 0.016f, 0.018f,
-    0.018f, 0.016f, 0.014f, 0.011f,
-    0.05f, 0.029f, 0.025f, 0.007f,
+    0.007f, 0.025f, 0.029f, 0.05f,  0.011f, 0.014f, 0.016f, 0.018f,
+    0.018f, 0.016f, 0.014f, 0.011f, 0.05f,  0.029f, 0.025f, 0.007f,
 };

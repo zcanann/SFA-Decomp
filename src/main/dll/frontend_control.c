@@ -36,10 +36,10 @@ extern char sFrontendTimeFormat[];
 __declspec(section ".sdata") extern char sFrontendCompletionPercentFormat[];
 __declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
 
-#define CHEAT_SEQUENCE_LEN 5
+#define CHEAT_SEQUENCE_LEN  5
 #define CHEAT_INPUT_TIMEOUT 0xF
-#define SECONDS_PER_HOUR 3600
-#define SECONDS_PER_MINUTE 60
+#define SECONDS_PER_HOUR    3600
+#define SECONDS_PER_MINUTE  60
 
 #define PAD_TRIGGER_Z 0x10
 
@@ -64,7 +64,8 @@ void saveFileSelect_checkCheatCodes(void)
         }
     }
     held = getButtonsHeld(0);
-    if ((held & PAD_TRIGGER_Z) == 0) return;
+    if ((held & PAD_TRIGGER_Z) == 0)
+        return;
 
     if (saveFileSelect_saveCheatProgress == 0)
     {
@@ -85,7 +86,8 @@ void saveFileSelect_checkCheatCodes(void)
             Sfx_PlayFromObject(0, SFXen_waterblock_stop);
         }
     }
-    if (saveFileSelect_debugCheatProgress != 0) return;
+    if (saveFileSelect_debugCheatProgress != 0)
+        return;
 
     pressed = (u16)getButtonsJustPressed(0);
     hi = (int)(pressed & 0xF000) >> 8;
@@ -119,7 +121,8 @@ void saveSelect_drawText(int unused, int alpha)
     drawTexture(lbl_803A8680[2], lbl_803E1D60, lbl_803E1D5C, alpha, 0x100);
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
 
-    saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase; /* retail draw path resets the working slot pointer to the base */
+    saveFileSelect_saveSlots =
+        saveFileSelect_saveSlotsBase; /* retail draw path resets the working slot pointer to the base */
     gameTextShowStr((char*)&saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex], 0x41, 0, 0);
 
     sprintf(buf, sFrontendCompletionPercentFormat,
@@ -135,11 +138,9 @@ void saveSelect_drawText(int unused, int alpha)
     sprintf(buf, sFrontendTimeFormat, hours, (u32)(u8)minutes, (u32)(u8)seconds);
     gameTextShowStr(buf, 0x43, 0, 0);
 
-    sprintf(buf, sFrontendSingleDigitFormat,
-            saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].lifeCount);
+    sprintf(buf, sFrontendSingleDigitFormat, saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].lifeCount);
     gameTextShowStr(buf, 0x44, 0, 0);
 
-    sprintf(buf, sFrontendSingleDigitFormat,
-            saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].magicCount);
+    sprintf(buf, sFrontendSingleDigitFormat, saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].magicCount);
     gameTextShowStr(buf, 0x45, 0, 0);
 }

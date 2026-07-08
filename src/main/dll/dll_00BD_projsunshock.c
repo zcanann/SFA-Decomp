@@ -30,4 +30,5 @@ extern void projtesla_doUnsupported();
 extern void projtesla_release();
 extern void projtesla_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* lbl_80319920[8] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projtesla_initialise, projtesla_release, (void*)0x00000000, projtesla_doUnsupported };
+void* lbl_80319920[8] = {(void*)0x00000000,    (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
+                         projtesla_initialise, projtesla_release, (void*)0x00000000, projtesla_doUnsupported};

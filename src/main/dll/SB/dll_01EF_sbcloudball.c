@@ -26,7 +26,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/engine_shared.h"
 
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
-#define SBCLOUDBALL_PARTFX 0xa8
+#define SBCLOUDBALL_PARTFX               0xa8
 
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
@@ -73,9 +73,14 @@ extern f32 gSbCloudBallVelocityScale;
 extern f32 gSbCloudBallTrailVelScale;
 extern f32 gSbCloudBallTrailParticleScale;
 
-
-int SB_CloudBall_getExtraSize(void) { return 0x24; }
-int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
+int SB_CloudBall_getExtraSize(void)
+{
+    return 0x24;
+}
+int SB_CloudBall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_CloudBall_free(GameObject* obj)
 {
@@ -95,7 +100,8 @@ void SB_CloudBall_free(GameObject* obj)
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E58E8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E58E8);
 }
 
 void SB_CloudBall_hitDetect(GameObject* obj)
@@ -104,8 +110,10 @@ void SB_CloudBall_hitDetect(GameObject* obj)
     SBCloudBallState* state = obj->extra;
     int* target = (int*)ObjAnim_GetPriorityHitState(&obj->anim)->lastHitObject;
 
-    if ((void*)target == NULL) return;
-    if (state->fadeTimer != lbl_803E58EC) return;
+    if ((void*)target == NULL)
+        return;
+    if (state->fadeTimer != lbl_803E58EC)
+        return;
     if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
         Sfx_PlayFromObject((int*)obj, SFXen_rockshat16);
@@ -144,8 +152,7 @@ void SB_CloudBall_update(GameObject* obj)
         obj->anim.previousLocalPosX = obj->anim.localPosX;
         obj->anim.previousLocalPosY = obj->anim.localPosY;
         obj->anim.previousLocalPosZ = obj->anim.localPosZ;
-        obj->anim.rootMotionScale = lbl_803E58F8 * (f32)(int)
-        randomGetRange(-0x64, 0x64) + lbl_803E58F4;
+        obj->anim.rootMotionScale = lbl_803E58F8 * (f32)(int)randomGetRange(-0x64, 0x64) + lbl_803E58F4;
         if (*(s8*)&state->launched == 0)
         {
             state->velX = obj->anim.velocityX;
@@ -164,7 +171,8 @@ void SB_CloudBall_update(GameObject* obj)
         obj->anim.localPosY = state->posY;
         obj->anim.localPosZ = state->posZ;
         obj->unkF4 = obj->unkF4 - framesThisStep;
-        if (obj->unkF4 < 0 || (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
+        if (obj->unkF4 < 0 ||
+            (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
         {
             if (state->fadeTimer == lbl_803E58EC)
             {
@@ -173,7 +181,7 @@ void SB_CloudBall_update(GameObject* obj)
             }
         }
         obj->anim.rotX = (s16)getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
-                                   obj->anim.localPosZ - obj->anim.previousLocalPosZ);
+                                       obj->anim.localPosZ - obj->anim.previousLocalPosZ);
         ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumePriority = 5;
         ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumeId = 1;
         ObjAnim_GetPriorityHitState(&obj->anim)->objectHitMask = 0x10;
@@ -204,8 +212,7 @@ void SB_CloudBall_init(GameObject* obj)
     extern int objCreateLight(int* obj, int mode);
     SBCloudBallState* state = obj->extra;
 
-    ObjAnim_GetPriorityHitState(&obj->anim)->flags =
-        (s16)(ObjAnim_GetPriorityHitState(&obj->anim)->flags & ~1);
+    ObjAnim_GetPriorityHitState(&obj->anim)->flags = (s16)(ObjAnim_GetPriorityHitState(&obj->anim)->flags & ~1);
     ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask =
         (u16)(ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask | 1);
     if ((void*)state->light == NULL)
@@ -216,7 +223,8 @@ void SB_CloudBall_init(GameObject* obj)
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
             lightSetFieldBC_8001db14(state->light, 1);
-            modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear, gSbCloudBallLightAttenFar);
+            modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear,
+                                                    gSbCloudBallLightAttenFar);
         }
     }
 }

@@ -4,8 +4,8 @@ extern SynthVoiceRuntime lbl_803AF550;
 #undef SYNTH_VOICE_RUNTIME
 #define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
 
-#define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32)&(((SynthVoice*)0)->studioMap))
-#define SYNTH_RUNTIME_VOICES_OFFSET ((u32)&(((SynthVoiceRuntime*)0)->voices))
+#define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32) & (((SynthVoice*)0)->studioMap))
+#define SYNTH_RUNTIME_VOICES_OFFSET   ((u32) & (((SynthVoiceRuntime*)0)->voices))
 
 extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
 extern void sndSeqVolume(u32 value0, u16 value1, u32 handle, u32 mode);
@@ -16,14 +16,14 @@ extern u32 synthResolveHandle(u32 handle);
 extern u32 seqPlaySong(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
 extern u32 sndSeqPlayEx(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
 
-#define SYNTH_START_FLAG_VOLUME_MODE2 0x01
-#define SYNTH_START_FLAG_REUSE_HANDLE 0x02
+#define SYNTH_START_FLAG_VOLUME_MODE2  0x01
+#define SYNTH_START_FLAG_REUSE_HANDLE  0x02
 #define SYNTH_START_FLAG_PENDING_START 0x04
-#define SYNTH_START_FLAG_PARAM_14 0x08
-#define SYNTH_START_FLAG_MUTE 0x10
-#define SYNTH_START_FLAG_SPEED 0x20
-#define SYNTH_START_FLAG_VOLUME_MODE3 0x40
-#define SYNTH_START_FLAG_CLEAR_MUTE 0x80
+#define SYNTH_START_FLAG_PARAM_14      0x08
+#define SYNTH_START_FLAG_MUTE          0x10
+#define SYNTH_START_FLAG_SPEED         0x20
+#define SYNTH_START_FLAG_VOLUME_MODE3  0x40
+#define SYNTH_START_FLAG_CLEAR_MUTE    0x80
 
 typedef struct SynthStartParams
 {
@@ -83,7 +83,8 @@ resolved:
         if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0)
         {
             voiceBase = (u8*)runtime + studioIndex * sizeof(SynthVoice);
-            synthVolume(value0, value1, ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->currentStudio, mode, pubHandle);
+            synthVolume(value0, value1, ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->currentStudio, mode,
+                        pubHandle);
             voice = (SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET);
             voiceBytes = (u8*)voice;
             voiceCursor = (u8*)voice;
@@ -97,8 +98,7 @@ resolved:
                 voiceBytes++;
                 voiceCursor++;
                 voiceIndex++;
-            }
-            while (voiceIndex < SYNTH_SEQUENCE_TRACK_COUNT);
+            } while (voiceIndex < SYNTH_SEQUENCE_TRACK_COUNT);
         }
         else
         {
@@ -226,78 +226,79 @@ void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 
     {
         if ((slot = resolveHandle(request->reuseHandle)) != SYNTH_HANDLE_INVALID)
         {
-        if (noLock != 0)
-        {
-            synthRestoreQueuedHandle(request->reuseHandle);
-            synthUpdateHandle(request->volume, request->volumeTime, request->reuseHandle, 0);
-            if ((request->flags & SYNTH_START_FLAG_MUTE) != 0)
+            if (noLock != 0)
             {
-                newHandle = request->reuseHandle;
-                mixValue1 = request->mixValue1;
-                mixValue0 = request->mixValue0;
-                newHandle = synthResolveHandle(newHandle);
-                if (newHandle != SYNTH_HANDLE_INVALID)
+                synthRestoreQueuedHandle(request->reuseHandle);
+                synthUpdateHandle(request->volume, request->volumeTime, request->reuseHandle, 0);
+                if ((request->flags & SYNTH_START_FLAG_MUTE) != 0)
                 {
+                    newHandle = request->reuseHandle;
+                    mixValue1 = request->mixValue1;
+                    mixValue0 = request->mixValue0;
+                    newHandle = synthResolveHandle(newHandle);
+                    if (newHandle != SYNTH_HANDLE_INVALID)
+                    {
+                        if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0)
+                        {
+                            runtime->voices[newHandle].immediateMixValue0 = mixValue0;
+                            runtime->voices[newHandle].immediateMixValue1 = mixValue1;
+                        }
+                        else
+                        {
+                            runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |=
+                                SYNTH_PENDING_FLAG_MIX_DATA;
+                            runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue0 = mixValue0;
+                            runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue1 = mixValue1;
+                        }
+                    }
+                }
+                if ((request->flags & SYNTH_START_FLAG_SPEED) != 0)
+                {
+                    newHandle = request->reuseHandle;
+                    speed = request->value16;
+                    newHandle = synthResolveHandle(newHandle);
                     if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0)
                     {
-                        runtime->voices[newHandle].immediateMixValue0 = mixValue0;
-                        runtime->voices[newHandle].immediateMixValue1 = mixValue1;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 0) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 1) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 2) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 3) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 4) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 5) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 6) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 7) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 8) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 9) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 10) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 11) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 12) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 13) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 14) = speed;
+                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 15) = speed;
                     }
                     else
                     {
                         runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |=
-                            SYNTH_PENDING_FLAG_MIX_DATA;
-                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue0 = mixValue0;
-                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue1 = mixValue1;
+                            SYNTH_PENDING_FLAG_SPEED;
+                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.value16 = speed;
                     }
                 }
             }
-            if ((request->flags & SYNTH_START_FLAG_SPEED) != 0)
+            else
             {
-                newHandle = request->reuseHandle;
-                speed = request->value16;
-                newHandle = synthResolveHandle(newHandle);
-                if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0)
+                sndSeqContinue(request->reuseHandle);
+                sndSeqVolume(request->volume, request->volumeTime, request->reuseHandle, 0);
+                if ((request->flags & SYNTH_START_FLAG_MUTE) != 0)
                 {
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 0) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 1) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 2) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 3) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 4) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 5) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 6) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 7) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 8) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 9) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 10) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 11) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 12) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 13) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 14) = speed;
-                    SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 15) = speed;
+                    sndSeqMute(request->reuseHandle, request->mixValue0, request->mixValue1);
                 }
-                else
+                if ((request->flags & SYNTH_START_FLAG_SPEED) != 0)
                 {
-                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= SYNTH_PENDING_FLAG_SPEED;
-                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.value16 = speed;
+                    sndSeqSpeed(request->reuseHandle, request->value16);
                 }
             }
-        }
-        else
-        {
-            sndSeqContinue(request->reuseHandle);
-            sndSeqVolume(request->volume, request->volumeTime, request->reuseHandle, 0);
-            if ((request->flags & SYNTH_START_FLAG_MUTE) != 0)
-            {
-                sndSeqMute(request->reuseHandle, request->mixValue0, request->mixValue1);
-            }
-            if ((request->flags & SYNTH_START_FLAG_SPEED) != 0)
-            {
-                sndSeqSpeed(request->reuseHandle, request->value16);
-            }
-        }
-        *outHandle = request->reuseHandle;
-        return;
+            *outHandle = request->reuseHandle;
+            return;
         }
         *outHandle = SYNTH_HANDLE_INVALID;
         return;

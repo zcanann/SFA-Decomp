@@ -35,11 +35,11 @@
 /* gSaveSelectPanelIndex: current sub-panel (index into gSaveSelectPanels; -1 = none). */
 typedef enum SaveSelectPanelId
 {
-    SAVE_SELECT_PANEL_CHOOSE_SLOT    = 0, /* pick a save slot */
-    SAVE_SELECT_PANEL_OPEN_FILE      = 1, /* opened file: continue / save */
-    SAVE_SELECT_PANEL_SLOT_ACTION    = 2, /* copy / erase slot action */
-    SAVE_SELECT_PANEL_CONFIRM_ERASE  = 3, /* confirm-erase prompt */
-    SAVE_SELECT_PANEL_CHAPTER_SELECT = 4  /* chapter (act) select */
+    SAVE_SELECT_PANEL_CHOOSE_SLOT = 0,   /* pick a save slot */
+    SAVE_SELECT_PANEL_OPEN_FILE = 1,     /* opened file: continue / save */
+    SAVE_SELECT_PANEL_SLOT_ACTION = 2,   /* copy / erase slot action */
+    SAVE_SELECT_PANEL_CONFIRM_ERASE = 3, /* confirm-erase prompt */
+    SAVE_SELECT_PANEL_CHAPTER_SELECT = 4 /* chapter (act) select */
 } SaveSelectPanelId;
 
 typedef struct SaveSelectPanel
@@ -101,7 +101,6 @@ extern int gSaveSelectInfoStartSlot;
 extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void* outPtr);
-
 
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
@@ -165,8 +164,7 @@ void saveSelectOpenFile(int sel, int slot)
                 (*(TitleMenuTextEntry**)((char*)pp + off))[1].textId = 984;
                 gSaveSelectMenuItemActive = 1;
                 gSaveSelectMenuItem =
-                    ((void *(**)(int, int, int, int, int))gTitleMenuItemInterface->vtable)[3]
-                    (983, 41, 0, 1, 0);
+                    ((void* (**)(int, int, int, int, int))gTitleMenuItemInterface->vtable)[3](983, 41, 0, 1, 0);
                 ((void (**)(void*, int))gTitleMenuItemInterface->vtable)[8](gSaveSelectMenuItem, 1);
                 ((void (**)(TitleMenuTextEntry*))gTitleMenuLinkInterface->vtable)[11](
                     *(TitleMenuTextEntry**)((char*)pp + off));
@@ -174,7 +172,7 @@ void saveSelectOpenFile(int sel, int slot)
         }
         else
         {
-            if (((u8 (**)(void*))gTitleMenuItemInterface->vtable)[9](gSaveSelectMenuItem) == 1)
+            if (((u8(**)(void*))gTitleMenuItemInterface->vtable)[9](gSaveSelectMenuItem) == 1)
             {
                 gplaySaveGame((u8)saveFileSelect_currentSlotIndex);
             }
@@ -198,8 +196,7 @@ void SaveSelectScreen_release(void)
         mm_free(gSaveSelectTextBuffers[i]);
         gSaveSelectTextBuffers[i] = zero;
         i++;
-    }
-    while (i < SAVE_SELECT_TEXT_BUFFER_COUNT);
+    } while (i < SAVE_SELECT_TEXT_BUFFER_COUNT);
 }
 
 #pragma dont_inline on
@@ -234,14 +231,15 @@ void saveFileSelect_init(int sel, int slot)
                 }
                 gSaveSelectPanelIndex = SAVE_SELECT_PANEL_OPEN_FILE;
                 gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[0].flags =
-                    (u16)(gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
+                    (u16)(gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[0].flags &
+                          ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
                 gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[1].pad18[2] = 0;
                 gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries[1].textId = 982;
                 gSaveSelectMenuItemActive = 0;
-                ((void (**)(void*, u8, int, int, int, int, int, int, int, int, int, int))
-                    gTitleMenuLinkInterface->vtable)[1]
-                (gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries, gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].count, 0, 0, 5, 4, 20, 200,
-                 255, 255, 255, 255);
+                ((void (**)(void*, u8, int, int, int, int, int, int, int, int, int,
+                            int))gTitleMenuLinkInterface->vtable)[1](
+                    gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].entries,
+                    gSaveSelectPanels[SAVE_SELECT_PANEL_OPEN_FILE].count, 0, 0, 5, 4, 20, 200, 255, 255, 255, 255);
                 ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
                 saveFileSelect_debugCheatProgress = 0;
                 saveFileSelect_saveCheatProgress = 0;
@@ -312,10 +310,8 @@ void saveSelectGoToChapterSelect(void)
             }
             off += 60;
         }
-        ((void (**)(void*, u8, int, void*, int, int, int, int, int, int, int, int))
-            gTitleMenuLinkInterface->vtable)[1]
-        (panel->entries, panel->count, 0, lbl_8031A7F8, 5, 4, 0, 0,
-         0, 0, 0, 0);
+        ((void (**)(void*, u8, int, void*, int, int, int, int, int, int, int, int))gTitleMenuLinkInterface->vtable)[1](
+            panel->entries, panel->count, 0, lbl_8031A7F8, 5, 4, 0, 0, 0, 0, 0, 0);
         gSaveSelectRefreshCounter = 2;
     }
     else
@@ -401,10 +397,9 @@ void saveSelectGoToChooseSlot(int arg)
         }
     }
 
-    ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
-        gTitleMenuLinkInterface->vtable)[1](
-        p->entries, p->count, 0, 0, 5, 4, 0x14, 0xc8,
-        0xff, 0xff, 0xff, 0xff);
+    ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int,
+                int))gTitleMenuLinkInterface->vtable)[1](p->entries, p->count, 0, 0, 5, 4, 0x14, 0xc8, 0xff, 0xff, 0xff,
+                                                         0xff);
 
     ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
 
@@ -484,8 +479,7 @@ void SaveSelectScreen_render(int param)
 
     panel = &gSaveSelectPanels[gSaveSelectPanelIndex];
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
-    progress = (int)(lbl_803E1D64 -
-        (*gScreenTransitionInterface)->getProgress());
+    progress = (int)(lbl_803E1D64 - (*gScreenTransitionInterface)->getProgress());
     if ((u8)progress < 0x80)
     {
         f32 conv = (f32)(int)((u8)progress * 0x86);
@@ -709,9 +703,9 @@ int SaveSelectScreen_run(void)
                     panel->entries[1].pad18[2] = 0;
                     panel->entries[1].textId = 0x3d6;
                     gSaveSelectMenuItemActive = 0;
-                    ((void (**)(TitleMenuTextEntry*, u8, int, int, int, int, int, int, int, int, int, int))
-                            gTitleMenuLinkInterface->vtable)[1]
-                        (panel->entries, panel->count, 0, 0, 5, 4, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+                    ((void (**)(TitleMenuTextEntry*, u8, int, int, int, int, int, int, int, int, int,
+                                int))gTitleMenuLinkInterface->vtable)[1](panel->entries, panel->count, 0, 0, 5, 4, 0x14,
+                                                                         0xc8, 0xff, 0xff, 0xff, 0xff);
                     ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
                     saveFileSelect_debugCheatProgress = 0;
                     saveFileSelect_saveCheatProgress = 0;
@@ -785,9 +779,9 @@ void SaveSelectScreen_initialise(void)
         panel->entries[1].pad18[2] = 0;
         panel->entries[1].textId = 0x3d6;
         gSaveSelectMenuItemActive = 0;
-        ((void (**)(TitleMenuTextEntry*, u8, int, int, int, int, int, int, int, int, int, int))
-                gTitleMenuLinkInterface->vtable)[1]
-            (panel->entries, panel->count, 0, 0, 5, 4, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+        ((void (**)(TitleMenuTextEntry*, u8, int, int, int, int, int, int, int, int, int,
+                    int))gTitleMenuLinkInterface->vtable)[1](panel->entries, panel->count, 0, 0, 5, 4, 0x14, 0xc8, 0xff,
+                                                             0xff, 0xff, 0xff);
         ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
         saveFileSelect_debugCheatProgress = 0;
         saveFileSelect_saveCheatProgress = 0;
@@ -817,17 +811,18 @@ extern TitleMenuTextEntry lbl_8031A5DC[];
 extern TitleMenuTextEntry lbl_8031A654[];
 
 SaveSelectPanel gSaveSelectPanels[] = {
-    { lbl_8031A4B0, 3, 0, 0x0379, 0x0367, { 2, 0 } },
-    { lbl_8031A564, 2, 0, 0x0379, 0x0367, { 2, 0 } },
-    { lbl_8031A618, 1, 0, 0x037A, 0xFFFF, { 2, 0 } },
-    { lbl_8031A5DC, 1, 0, 0x0379, 0x0367, { 2, 0 } },
-    { lbl_8031A654, 6, 0, 0x0450, 0x0367, { 2, 0 } },
+    {lbl_8031A4B0, 3, 0, 0x0379, 0x0367, {2, 0}}, {lbl_8031A564, 2, 0, 0x0379, 0x0367, {2, 0}},
+    {lbl_8031A618, 1, 0, 0x037A, 0xFFFF, {2, 0}}, {lbl_8031A5DC, 1, 0, 0x0379, 0x0367, {2, 0}},
+    {lbl_8031A654, 6, 0, 0x0450, 0x0367, {2, 0}},
 };
 
 extern void fn_80007F78();
-u8 lbl_8031A7F8[12] = { 0, 0, 5, 213, 0, 0, 5, 214, 0, 0, 5, 212 };
-void* lbl_8031A804[4] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
-u8 saveFileSelect_debugCheatSequence[12] = { 64, 0, 128, 0, 64, 0, 128, 0, 0, 4, 0, 0 };
-void* saveFileSelect_slotCheatSequence[3] = { (void*)0x04000800, (void*)((u8*)fn_80007F78 + 0x88), (void*)0x00020000 };
-void* lbl_8031A82C[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, SaveSelectScreen_initialise, SaveSelectScreen_release, (void*)0x00000000, SaveSelectScreen_run, SaveSelectScreen_frameEnd_nop, SaveSelectScreen_render };
-u8 sFrontendTimeFormat[14] = { 37, 51, 100, 58, 37, 48, 50, 100, 58, 37, 48, 50, 100, 0 };
+u8 lbl_8031A7F8[12] = {0, 0, 5, 213, 0, 0, 5, 214, 0, 0, 5, 212};
+void* lbl_8031A804[4] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000};
+u8 saveFileSelect_debugCheatSequence[12] = {64, 0, 128, 0, 64, 0, 128, 0, 0, 4, 0, 0};
+void* saveFileSelect_slotCheatSequence[3] = {(void*)0x04000800, (void*)((u8*)fn_80007F78 + 0x88), (void*)0x00020000};
+void* lbl_8031A82C[10] = {(void*)0x00000000,      (void*)0x00000000,           (void*)0x00000000,
+                          (void*)0x00050000,      SaveSelectScreen_initialise, SaveSelectScreen_release,
+                          (void*)0x00000000,      SaveSelectScreen_run,        SaveSelectScreen_frameEnd_nop,
+                          SaveSelectScreen_render};
+u8 sFrontendTimeFormat[14] = {37, 51, 100, 58, 37, 48, 50, 100, 58, 37, 48, 50, 100, 0};

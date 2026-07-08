@@ -15,20 +15,20 @@ extern f32 lbl_803E7798;
 extern f32 lbl_803E77A8;
 extern f32 lbl_803E77D4;
 
-#define SYNTH_FADE_COUNT 0x20
-#define SYNTH_FADE_TABLE_OFFSET 0x5d4
-#define SYNTH_FADE_SELECTOR_ACTION_2 0xfa
+#define SYNTH_FADE_COUNT                  0x20
+#define SYNTH_FADE_TABLE_OFFSET           0x5d4
+#define SYNTH_FADE_SELECTOR_ACTION_2      0xfa
 #define SYNTH_FADE_SELECTOR_ACTION_2_OR_3 0xfc
-#define SYNTH_FADE_SELECTOR_ACTION_3 0xfb
-#define SYNTH_FADE_SELECTOR_ACTION_0 0xfd
-#define SYNTH_FADE_SELECTOR_ACTION_1 0xfe
+#define SYNTH_FADE_SELECTOR_ACTION_3      0xfb
+#define SYNTH_FADE_SELECTOR_ACTION_0      0xfd
+#define SYNTH_FADE_SELECTOR_ACTION_1      0xfe
 #define SYNTH_FADE_SELECTOR_ACTION_0_OR_1 0xff
-#define SYNTH_FADE_TYPE_ACTION_0 0
-#define SYNTH_FADE_TYPE_ACTION_1 1
-#define SYNTH_FADE_TYPE_ACTION_2 2
-#define SYNTH_FADE_TYPE_ACTION_3 3
-#define SYNTH_FADE_ACTION_DISABLED 4
-#define SYNTH_INVALID_LINK_ID 0xffffffff
+#define SYNTH_FADE_TYPE_ACTION_0          0
+#define SYNTH_FADE_TYPE_ACTION_1          1
+#define SYNTH_FADE_TYPE_ACTION_2          2
+#define SYNTH_FADE_TYPE_ACTION_3          3
+#define SYNTH_FADE_ACTION_DISABLED        4
+#define SYNTH_INVALID_LINK_ID             0xffffffff
 
 extern void synthDispatchFadeAction(SynthFade* fade);
 
@@ -62,8 +62,7 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         fade = (SynthFade*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
         for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++)
         {
-            if (fade->type == SYNTH_FADE_TYPE_ACTION_0 ||
-                fade->type == SYNTH_FADE_TYPE_ACTION_1)
+            if (fade->type == SYNTH_FADE_TYPE_ACTION_0 || fade->type == SYNTH_FADE_TYPE_ACTION_1)
             {
                 u32 fadeTime = convertedTime;
                 fade->delayAction = action;
@@ -95,8 +94,7 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         fade = (SynthFade*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
         for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++)
         {
-            if (fade->type == SYNTH_FADE_TYPE_ACTION_2 ||
-                fade->type == SYNTH_FADE_TYPE_ACTION_3)
+            if (fade->type == SYNTH_FADE_TYPE_ACTION_2 || fade->type == SYNTH_FADE_TYPE_ACTION_3)
             {
                 u32 fadeTime = convertedTime;
                 fade->delayAction = action;
@@ -169,32 +167,30 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         return;
 
     default:
+    {
+        u32 fadeTime = convertedTime;
+        fade = (SynthFade*)(stateBase + target * sizeof(SynthFade));
+        *(u8*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
+        *(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) = handle;
+        if (fadeTime != 0)
         {
-            u32 fadeTime = convertedTime;
-            fade = (SynthFade*)(stateBase + target * sizeof(SynthFade));
-            *(u8*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
-            *(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) = handle;
-            if (fadeTime != 0)
-            {
-                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x08) =
-                    *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00);
-                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
-                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x0c) = lbl_803E77A8;
-                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x10) = lbl_803E77D4 / fadeTime;
-            }
-            else
-            {
-                *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00) =
-                    *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
-                if (*(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) != SYNTH_INVALID_LINK_ID)
-                {
-                    synthDispatchFadeAction(
-                        (SynthFade*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET));
-                }
-            }
-            synthMasterFaderActiveFlags |= 1U << target;
-            return;
+            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x08) = *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00);
+            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
+            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x0c) = lbl_803E77A8;
+            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x10) = lbl_803E77D4 / fadeTime;
         }
+        else
+        {
+            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00) = *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) =
+                lbl_803E7798 * volume;
+            if (*(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) != SYNTH_INVALID_LINK_ID)
+            {
+                synthDispatchFadeAction((SynthFade*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET));
+            }
+        }
+        synthMasterFaderActiveFlags |= 1U << target;
+        return;
+    }
     }
 }
 
@@ -207,9 +203,8 @@ int synthIsFadeOutActive(u8 voiceIdx)
 {
     u8* v = lbl_803BCD90 + voiceIdx * sizeof(SynthFade);
     if (((v[SYNTH_FADE_TABLE_OFFSET + 0x2d] != SYNTH_FADE_ACTION_DISABLED) &&
-            ((synthMasterFaderActiveFlags & (1U << voiceIdx)) != 0)) &&
-        (*(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 8) >
-            *(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 4)))
+         ((synthMasterFaderActiveFlags & (1U << voiceIdx)) != 0)) &&
+        (*(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 8) > *(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 4)))
     {
         return 1;
     }
@@ -242,19 +237,19 @@ int synthHWMessageHandler(int mode, u32 arg)
     switch (mode)
     {
     case 0:
+    {
+        if (*((synthVoice + 0x11c) + (arg & 0xff) * SYNTH_VOICE_STRIDE) != 0)
         {
-            if (*((synthVoice + 0x11c) + (arg & 0xff) * SYNTH_VOICE_STRIDE) != 0)
-            {
-                break;
-            }
-            synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
-            if (arg != *(u32*)((u8*)(synthVoice + 0xf4) + (arg & 0xff) * SYNTH_VOICE_STRIDE))
-            {
-                break;
-            }
-            macSampleEndNotify();
             break;
         }
+        synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
+        if (arg != *(u32*)((u8*)(synthVoice + 0xf4) + (arg & 0xff) * SYNTH_VOICE_STRIDE))
+        {
+            break;
+        }
+        macSampleEndNotify();
+        break;
+    }
     case 1:
         voiceKill(arg & 0xff);
         break;
@@ -262,10 +257,10 @@ int synthHWMessageHandler(int mode, u32 arg)
         result = synthClaimVirtualSampleSlot(arg & 0xff);
         break;
     case 3:
-        {
-            synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
-            break;
-        }
+    {
+        synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
+        break;
+    }
     }
     return result;
 }

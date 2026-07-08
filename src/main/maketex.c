@@ -9,7 +9,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/frame_timing.h"
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
-#define MAKETEX_CAMMODE_DEFAULT 0x42  /* default gameplay cameramode DLL */
+#define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
 extern int randomGetRange(int lo, int hi);
 extern int lbl_803DD044;
@@ -25,22 +25,55 @@ extern u32 focusedNpc;
 extern s16 seqGlobal2;
 extern s16 seqGlobal1;
 extern u8 seqGlobal3;
-u8 getCurSeqNo(void) { return curSeqNo; }
-u32 getFocusedNpc(void) { return focusedNpc; }
-void ObjSeq_setGlobal2(s16 x) { seqGlobal2 = x; }
-s16 ObjSeq_getGlobal2(void) { return seqGlobal2; }
-void ObjSeq_setGlobal1(s16 x) { seqGlobal1 = x; }
-s16 ObjSeq_getGlobal1(void) { return seqGlobal1; }
-void ObjSeq_setGlobal3(u8 x) { seqGlobal3 = x; }
-u8 ObjSeq_getGlobal3(void) { return seqGlobal3; }
+u8 getCurSeqNo(void)
+{
+    return curSeqNo;
+}
+u32 getFocusedNpc(void)
+{
+    return focusedNpc;
+}
+void ObjSeq_setGlobal2(s16 x)
+{
+    seqGlobal2 = x;
+}
+s16 ObjSeq_getGlobal2(void)
+{
+    return seqGlobal2;
+}
+void ObjSeq_setGlobal1(s16 x)
+{
+    seqGlobal1 = x;
+}
+s16 ObjSeq_getGlobal1(void)
+{
+    return seqGlobal1;
+}
+void ObjSeq_setGlobal3(u8 x)
+{
+    seqGlobal3 = x;
+}
+u8 ObjSeq_getGlobal3(void)
+{
+    return seqGlobal3;
+}
 
 extern u32 lbl_803DB700;
-void cardSetStatusNoCard2(void) { lbl_803DB700 = 0x3; }
+void cardSetStatusNoCard2(void)
+{
+    lbl_803DB700 = 0x3;
+}
 
-void clearCurSeqNo(void) { curSeqNo = 0x0; }
+void clearCurSeqNo(void)
+{
+    curSeqNo = 0x0;
+}
 
 extern f32 lbl_803DEFA0;
-void storeZeroToFloatParam(f32* p) { *p = lbl_803DEFA0; }
+void storeZeroToFloatParam(f32* p)
+{
+    *p = lbl_803DEFA0;
+}
 
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
@@ -62,7 +95,10 @@ extern s16 lbl_803DD0E4;
 extern f32 lbl_803DD0E0;
 extern s16 lbl_8030ECF8[];
 
-int fn_80080150(f32* p) { return lbl_803DEFA0 != *p; }
+int fn_80080150(f32* p)
+{
+    return lbl_803DEFA0 != *p;
+}
 
 void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 {
@@ -98,7 +134,8 @@ int fn_8007FE04(int* arr, int* count_ptr, int target)
     int n;
     n = *count_ptr;
     i = maketex_indexOf(arr, n, target);
-    if (i == -1) return -1;
+    if (i == -1)
+        return -1;
     arr[i] = arr[n - 1];
     (*count_ptr)--;
     return i;
@@ -156,7 +193,8 @@ int arrayIndexOf(int* arr, int count, int target)
     {
         int v = *arr;
         arr++;
-        if (v == target) return idx;
+        if (v == target)
+            return idx;
         idx++;
     }
     return -1;
@@ -241,7 +279,8 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
     {
         for (i = 0; i != count; i++)
         {
-            if ((*arr)[0] == key) return (*arr)[1];
+            if ((*arr)[0] == key)
+                return (*arr)[1];
             arr++;
         }
         return 0;
@@ -262,8 +301,7 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
         {
             count = mid;
         }
-    }
-    while (count <= lo);
+    } while (count <= lo);
     return 0;
 }
 
@@ -286,7 +324,8 @@ void ObjSeq_preempt(int key, int value)
 {
     u8 count = lbl_803DD124;
     int i = (s8)count;
-    if (i >= 40) return;
+    if (i >= 40)
+        return;
     gObjSeqPreemptList[i][0] = key;
     gObjSeqPreemptList[i][1] = value;
     lbl_803DD124++;
@@ -301,7 +340,8 @@ void cameraFocusNpc(int param1, u8* obj)
     } buf;
     f32* p;
 
-    if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK) return;
+    if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK)
+        return;
     focusedNpc = (u32)obj;
     p = *(f32**)(obj + 0x74);
     if (p == NULL || param1 == 7 || param1 == 6)
@@ -617,12 +657,12 @@ extern u8 lbl_803DD059;
 extern u8 lbl_803DD05A;
 
 #define CARD_RESULT_UNLOCKED 1
-#define CARD_RESULT_READY 0
-#define CARD_RESULT_NOCARD -3
-#define CARD_RESULT_NOFILE -4
-#define CARD_RESULT_IOERROR -5
-#define CARD_RESULT_BROKEN -6
-#define CARD_RESULT_NOENT -8
+#define CARD_RESULT_READY    0
+#define CARD_RESULT_NOCARD   -3
+#define CARD_RESULT_NOFILE   -4
+#define CARD_RESULT_IOERROR  -5
+#define CARD_RESULT_BROKEN   -6
+#define CARD_RESULT_NOENT    -8
 #define CARD_RESULT_INSSPACE -9
 #define CARD_RESULT_ENCODING -13
 
@@ -855,8 +895,7 @@ int saveGame(int writeImages)
 /* Saves the game: verifies the existing save slots' checksums, rewrites
  * stale slots and card images, then runs the caller's callback and maps the
  * result to a status code. */
-int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD,
-                             int (*cb)(int, int, int, int))
+int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD, int (*cb)(int, int, int, int))
 {
     u64 x[1];
     u16 i[1];
@@ -1058,27 +1097,28 @@ extern f32 sqrtf(f32 x);
  * Field offsets are pinned to the original raw-buffer layout so member
  * spelling stays byte-neutral.
  */
-typedef struct ObjSeqTurnState {
-  u8 pad00[0x24];
-  f32 turnRate;      /* 0x24: per-frame blend increment */
-  u8 pad28[0x40 - 0x28];
-  f32 vecX;          /* 0x40 */
-  f32 vecY;          /* 0x44 */
-  f32 vecZ;          /* 0x48 */
-  f32 blend;         /* 0x4c: 0..1 progress */
-  s16 turnAmount;    /* 0x50 */
-  s16 targetPitch;   /* 0x52 */
-  s16 f54;           /* 0x54 */
-  u8 mode;           /* 0x56: 4 = start, 5 = advance */
-  u8 seqId;          /* 0x57 */
-  u8 pad58[0x6E - 0x58];
-  s16 flags;         /* 0x6e */
-  u8 pad70[0xE8 - 0x70];
-  void (*resetVecCb)(int); /* 0xe8 */
-  u8 padEC[0x110 - 0xEC];
-  int cbArg;         /* 0x110 */
-  s16 savedVecY;     /* 0x114 */
-  s16 savedVecX;     /* 0x116 */
+typedef struct ObjSeqTurnState
+{
+    u8 pad00[0x24];
+    f32 turnRate; /* 0x24: per-frame blend increment */
+    u8 pad28[0x40 - 0x28];
+    f32 vecX;        /* 0x40 */
+    f32 vecY;        /* 0x44 */
+    f32 vecZ;        /* 0x48 */
+    f32 blend;       /* 0x4c: 0..1 progress */
+    s16 turnAmount;  /* 0x50 */
+    s16 targetPitch; /* 0x52 */
+    s16 f54;         /* 0x54 */
+    u8 mode;         /* 0x56: 4 = start, 5 = advance */
+    u8 seqId;        /* 0x57 */
+    u8 pad58[0x6E - 0x58];
+    s16 flags; /* 0x6e */
+    u8 pad70[0xE8 - 0x70];
+    void (*resetVecCb)(int); /* 0xe8 */
+    u8 padEC[0x110 - 0xEC];
+    int cbArg;     /* 0x110 */
+    s16 savedVecY; /* 0x114 */
+    s16 savedVecX; /* 0x116 */
 } ObjSeqTurnState;
 
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
@@ -1168,16 +1208,14 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
                 {
                     if (p7 != -1)
                     {
-                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                            (obj, p7, 0.0f, 0);
+                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, p7, 0.0f, 0);
                     }
                 }
                 else
                 {
                     if (p6 != -1)
                     {
-                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                            (obj, p6, 0.0f, 0);
+                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, p6, 0.0f, 0);
                     }
                 }
             }
@@ -1192,19 +1230,19 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         {
             ((ObjSeqTurnState*)state)->blend = 1.0001f;
         }
-        ((GameObject*)obj)->anim.rotX += (s16)(((ObjSeqTurnState*)state)->turnRate * (f32)((ObjSeqTurnState*)state)->turnAmount);
+        ((GameObject*)obj)->anim.rotX +=
+            (s16)(((ObjSeqTurnState*)state)->turnRate * (f32)((ObjSeqTurnState*)state)->turnAmount);
         modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
         if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
             yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
-            yaw = (f32)(s16)
-            yawd;
+            yaw = (f32)(s16)yawd;
             {
                 f32 cur = (f32)modelVec[1];
                 yaw = cur * (1.0f - ((ObjSeqTurnState*)state)->blend) + yaw * ((ObjSeqTurnState*)state)->blend;
             }
-            yaw = (yaw < (f32) - p5) ? (f32) - p5 : ((yaw > (f32)p5) ? (f32)p5 : yaw);
+            yaw = (yaw < (f32)-p5) ? (f32)-p5 : ((yaw > (f32)p5) ? (f32)p5 : yaw);
             modelVec[1] = yaw;
             modelVec[0] = (f32)((ObjSeqTurnState*)state)->targetPitch * ((ObjSeqTurnState*)state)->blend;
         }
@@ -1216,8 +1254,7 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
                 fa = fa * 3.142f / 325767.0f;
                 ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent*)obj, &out);
-                ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-                    (obj, out, (f32)framesThisStep, NULL);
+                ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, out, (f32)framesThisStep, NULL);
             }
         }
         if (((ObjSeqTurnState*)state)->blend > 1.0f)
@@ -1271,8 +1308,7 @@ int seqStreamFn_8008023c(int x)
         lbl_803DB724 = x;
     }
     lbl_803DB728 = -1;
-    if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 ||
-        seqId == 0x57a)
+    if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 || seqId == 0x57a)
     {
         lbl_803DD074 = 0.0f;
         lbl_803DB724 = -1;
@@ -1316,7 +1352,7 @@ void endObjSequence(int seq)
                 frees[nFree++] = obj;
                 if (st->resetVecCb != NULL)
                 {
-                    (*(void (**)(int, int, int)) & st->resetVecCb)(st->cbArg, obj, (int)st);
+                    (*(void (**)(int, int, int))&st->resetVecCb)(st->cbArg, obj, (int)st);
                     st->resetVecCb = NULL;
                 }
                 if (nFree == 0x10)
@@ -1361,17 +1397,42 @@ extern void showMemCardError();
 extern void cardGetMessage();
 extern void cardDeleteFn_8007d99c();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* jumptable_8030EACC[14] = { (void*)((u8*)cardDeleteFn_8007d99c + 0x130), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x13C), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x118), (void*)((u8*)cardDeleteFn_8007d99c + 0x10C), (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x148) };
-void* jumptable_8030EB04[14] = { (void*)((u8*)cardGetMessage + 0x50), (void*)((u8*)cardGetMessage + 0x64), (void*)((u8*)cardGetMessage + 0x94), (void*)((u8*)cardGetMessage + 0xC4), (void*)((u8*)cardGetMessage + 0xF4), (void*)((u8*)cardGetMessage + 0x124), (void*)((u8*)cardGetMessage + 0x168), (void*)((u8*)cardGetMessage + 0x1AC), (void*)((u8*)cardGetMessage + 0x1DC), (void*)((u8*)cardGetMessage + 0x1E8), (void*)((u8*)cardGetMessage + 0x228), (void*)((u8*)cardGetMessage + 0x258), (void*)((u8*)cardGetMessage + 0x258), (void*)((u8*)cardGetMessage + 0x288) };
-void* jumptable_8030EB3C[7] = { (void*)((u8*)showMemCardError + 0x2C8), (void*)((u8*)showMemCardError + 0x2D4), (void*)((u8*)showMemCardError + 0x2E8), (void*)((u8*)showMemCardError + 0x2FC), (void*)((u8*)showMemCardError + 0x318), (void*)((u8*)showMemCardError + 0x33C), (void*)((u8*)showMemCardError + 0x36C) };
-u8 lbl_8030EB58[168] = { 83, 84, 65, 82, 70, 79, 88, 32, 65, 68, 86, 69, 78, 84, 85, 82, 69, 83, 0, 0, 68, 105, 110, 111, 115, 97, 117, 114, 32, 80, 108, 97, 110, 101, 116, 0, 111, 112, 101, 110, 105, 110, 103, 46, 98, 110, 114, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 48, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 49, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 50, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 51, 46, 105, 109, 103, 0, 0, 0, 99, 97, 114, 100, 47, 109, 101, 109, 99, 97, 114, 100, 105, 99, 111, 110, 48, 46, 112, 97, 108, 0, 0, 0 };
-u8 lbl_8030EC00[16] = { 0, 0, 40, 229, 0, 0, 40, 230, 0, 0, 40, 231, 0, 0, 40, 232 };
-u8 lbl_8030EC10[12] = { 0, 0, 80, 28, 0, 0, 80, 29, 0, 0, 80, 30 };
-u8 lbl_8030EC1C[12] = { 0, 0, 81, 161, 0, 0, 81, 162, 255, 255, 255, 255 };
-u8 lbl_8030EC28[28] = { 0, 0, 81, 164, 0, 0, 81, 165, 0, 0, 81, 167, 0, 0, 81, 168, 0, 0, 81, 169, 0, 0, 81, 170, 0, 0, 81, 171 };
-u8 lbl_8030EC44[16] = { 0, 0, 81, 172, 0, 0, 81, 173, 0, 0, 81, 174, 0, 0, 81, 175 };
-u8 lbl_8030EC54[16] = { 0, 0, 0, 42, 0, 0, 0, 37, 0, 0, 0, 33, 0, 0, 0, 43 };
-u8 lbl_8030EC64[12] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
-u8 lbl_8030EC70[12] = { 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 5, 37 };
-u8 lbl_8030EC7C[28] = { 0, 0, 2, 229, 0, 0, 2, 230, 0, 0, 2, 232, 0, 0, 2, 234, 0, 0, 2, 234, 0, 0, 2, 232, 0, 0, 2, 233 };
-u8 lbl_8030EC98[16] = { 0, 0, 2, 237, 0, 0, 2, 238, 0, 0, 2, 239, 0, 0, 2, 240 };
+void* jumptable_8030EACC[14] = {
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x130), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x13C), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x118), (void*)((u8*)cardDeleteFn_8007d99c + 0x10C),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x148)};
+void* jumptable_8030EB04[14] = {
+    (void*)((u8*)cardGetMessage + 0x50),  (void*)((u8*)cardGetMessage + 0x64),  (void*)((u8*)cardGetMessage + 0x94),
+    (void*)((u8*)cardGetMessage + 0xC4),  (void*)((u8*)cardGetMessage + 0xF4),  (void*)((u8*)cardGetMessage + 0x124),
+    (void*)((u8*)cardGetMessage + 0x168), (void*)((u8*)cardGetMessage + 0x1AC), (void*)((u8*)cardGetMessage + 0x1DC),
+    (void*)((u8*)cardGetMessage + 0x1E8), (void*)((u8*)cardGetMessage + 0x228), (void*)((u8*)cardGetMessage + 0x258),
+    (void*)((u8*)cardGetMessage + 0x258), (void*)((u8*)cardGetMessage + 0x288)};
+void* jumptable_8030EB3C[7] = {(void*)((u8*)showMemCardError + 0x2C8), (void*)((u8*)showMemCardError + 0x2D4),
+                               (void*)((u8*)showMemCardError + 0x2E8), (void*)((u8*)showMemCardError + 0x2FC),
+                               (void*)((u8*)showMemCardError + 0x318), (void*)((u8*)showMemCardError + 0x33C),
+                               (void*)((u8*)showMemCardError + 0x36C)};
+u8 lbl_8030EB58[168] = {83,  84,  65,  82,  70,  79,  88,  32,  65,  68,  86,  69,  78,  84,  85,  82,  69,  83,  0,
+                        0,   68,  105, 110, 111, 115, 97,  117, 114, 32,  80,  108, 97,  110, 101, 116, 0,   111, 112,
+                        101, 110, 105, 110, 103, 46,  98,  110, 114, 0,   99,  97,  114, 100, 47,  109, 101, 109, 99,
+                        97,  114, 100, 105, 99,  111, 110, 48,  46,  105, 109, 103, 0,   0,   0,   99,  97,  114, 100,
+                        47,  109, 101, 109, 99,  97,  114, 100, 105, 99,  111, 110, 49,  46,  105, 109, 103, 0,   0,
+                        0,   99,  97,  114, 100, 47,  109, 101, 109, 99,  97,  114, 100, 105, 99,  111, 110, 50,  46,
+                        105, 109, 103, 0,   0,   0,   99,  97,  114, 100, 47,  109, 101, 109, 99,  97,  114, 100, 105,
+                        99,  111, 110, 51,  46,  105, 109, 103, 0,   0,   0,   99,  97,  114, 100, 47,  109, 101, 109,
+                        99,  97,  114, 100, 105, 99,  111, 110, 48,  46,  112, 97,  108, 0,   0,   0};
+u8 lbl_8030EC00[16] = {0, 0, 40, 229, 0, 0, 40, 230, 0, 0, 40, 231, 0, 0, 40, 232};
+u8 lbl_8030EC10[12] = {0, 0, 80, 28, 0, 0, 80, 29, 0, 0, 80, 30};
+u8 lbl_8030EC1C[12] = {0, 0, 81, 161, 0, 0, 81, 162, 255, 255, 255, 255};
+u8 lbl_8030EC28[28] = {0,  0,   81, 164, 0,  0,   81, 165, 0,  0,   81, 167, 0,  0,
+                       81, 168, 0,  0,   81, 169, 0,  0,   81, 170, 0,  0,   81, 171};
+u8 lbl_8030EC44[16] = {0, 0, 81, 172, 0, 0, 81, 173, 0, 0, 81, 174, 0, 0, 81, 175};
+u8 lbl_8030EC54[16] = {0, 0, 0, 42, 0, 0, 0, 37, 0, 0, 0, 33, 0, 0, 0, 43};
+u8 lbl_8030EC64[12] = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
+u8 lbl_8030EC70[12] = {255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 5, 37};
+u8 lbl_8030EC7C[28] = {0, 0,   2, 229, 0, 0,   2, 230, 0, 0,   2, 232, 0, 0,
+                       2, 234, 0, 0,   2, 234, 0, 0,   2, 232, 0, 0,   2, 233};
+u8 lbl_8030EC98[16] = {0, 0, 2, 237, 0, 0, 2, 238, 0, 0, 2, 239, 0, 0, 2, 240};

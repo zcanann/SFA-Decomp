@@ -78,8 +78,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].tex = &base[0xf4];
         entries[1].mode = 2;
         entries[1].x = lbl_803E0D3C;
-        entries[1].y = lbl_803E0D40 * (f32)(int)
-        randomGetRange(3, 5);
+        entries[1].y = lbl_803E0D40 * (f32)(int)randomGetRange(3, 5);
         entries[1].z = lbl_803E0D3C;
         e = &entries[2];
     }
@@ -121,11 +120,9 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[1].flags = 0xe;
         e[1].tex = &base[0xf4];
         e[1].mode = 0x400000;
-        e[1].x = lbl_803E0D64 + (f32)(int)
-        randomGetRange(0, 0x14);
+        e[1].x = lbl_803E0D64 + (f32)(int)randomGetRange(0, 0x14);
         e[1].y = lbl_803E0D4C;
-        e[1].z = (f32)(int)
-        randomGetRange(0, 0x1e);
+        e[1].z = (f32)(int)randomGetRange(0, 0x1e);
         e += 2;
     }
     e[0].layer = 1;
@@ -149,8 +146,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[0].flags = 0xe;
         e[0].tex = &base[0xf4];
         e[0].mode = 0x400000;
-        e[0].x = lbl_803E0D6C * (f32)(int)
-        randomGetRange(1, 0x28);
+        e[0].x = lbl_803E0D6C * (f32)(int)randomGetRange(1, 0x28);
         e[0].y = lbl_803E0D38;
         e[0].z = lbl_803E0D38;
         e += 1;
@@ -159,8 +155,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[0].flags = 0xe;
     e[0].tex = &base[0xf4];
     e[0].mode = 0x4000;
-    e[0].x = lbl_803E0D70 * (f32)(int)
-    randomGetRange(-3, 3);
+    e[0].x = lbl_803E0D70 * (f32)(int)randomGetRange(-3, 3);
     e[0].y = lbl_803E0D38;
     e[0].z = lbl_803E0D38;
     e[1].layer = 3;
@@ -230,7 +225,8 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)gDll7BEffectResourceData, 0xc, &base[0x8c], DLL7B_EFFECT_ID, 0);
+    (*gModgfxInterface)
+        ->spawnEffect(&buf, 0, 0xe, (u8*)(int)gDll7BEffectResourceData, 0xc, &base[0x8c], DLL7B_EFFECT_ID, 0);
 }
 
 void dll_7B_func01_nop(void)
@@ -242,26 +238,20 @@ void dll_7B_func00_nop(void)
 }
 
 u8 gDll7BEffectResourceData[308] = {
-    244, 72, 0, 0, 254, 212, 0, 0, 0, 0, 247, 104, 0, 0, 1, 244,
-    0, 6, 0, 0, 252, 24, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0,
-    0, 0, 253, 168, 0, 16, 0, 0, 3, 232, 0, 0, 0, 0, 0, 21,
-    0, 0, 8, 152, 0, 0, 2, 188, 0, 26, 0, 0, 11, 184, 0, 0,
-    1, 44, 0, 31, 0, 0, 244, 72, 3, 32, 0, 0, 0, 0, 0, 31,
-    247, 104, 5, 220, 254, 112, 0, 6, 0, 31, 252, 24, 5, 20, 0, 0,
-    0, 22, 0, 31, 0, 0, 5, 220, 3, 132, 0, 11, 0, 31, 3, 232,
-    4, 176, 254, 212, 0, 16, 0, 31, 8, 152, 5, 220, 0, 0, 0, 26,
-    0, 31, 11, 184, 3, 32, 2, 188, 0, 31, 0, 31, 0, 0, 0, 8,
-    0, 7, 0, 0, 0, 1, 0, 8, 0, 1, 0, 9, 0, 8, 0, 1,
-    0, 2, 0, 9, 0, 2, 0, 10, 0, 9, 0, 2, 0, 3, 0, 10,
-    0, 3, 0, 11, 0, 10, 0, 3, 0, 4, 0, 11, 0, 4, 0, 12,
-    0, 11, 0, 4, 0, 5, 0, 12, 0, 5, 0, 13, 0, 12, 0, 5,
-    0, 6, 0, 13, 0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5,
-    0, 6, 0, 0, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12,
-    0, 13, 0, 0, 0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5,
-    0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13,
-    0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 8, 0, 9, 0, 10,
-    0, 11, 0, 12, 0, 0, 0, 50, 0, 200, 0, 50, 0, 0, 0, 0,
-    0, 0, 0, 0,
+    244, 72,  0, 0,   254, 212, 0, 0,   0,   0,   247, 104, 0,   0,   1, 244, 0, 6,   0,   0,   252, 24, 0,   0,
+    0,   0,   0, 11,  0,   0,   0, 0,   0,   0,   253, 168, 0,   16,  0, 0,   3, 232, 0,   0,   0,   0,  0,   21,
+    0,   0,   8, 152, 0,   0,   2, 188, 0,   26,  0,   0,   11,  184, 0, 0,   1, 44,  0,   31,  0,   0,  244, 72,
+    3,   32,  0, 0,   0,   0,   0, 31,  247, 104, 5,   220, 254, 112, 0, 6,   0, 31,  252, 24,  5,   20, 0,   0,
+    0,   22,  0, 31,  0,   0,   5, 220, 3,   132, 0,   11,  0,   31,  3, 232, 4, 176, 254, 212, 0,   16, 0,   31,
+    8,   152, 5, 220, 0,   0,   0, 26,  0,   31,  11,  184, 3,   32,  2, 188, 0, 31,  0,   31,  0,   0,  0,   8,
+    0,   7,   0, 0,   0,   1,   0, 8,   0,   1,   0,   9,   0,   8,   0, 1,   0, 2,   0,   9,   0,   2,  0,   10,
+    0,   9,   0, 2,   0,   3,   0, 10,  0,   3,   0,   11,  0,   10,  0, 3,   0, 4,   0,   11,  0,   4,  0,   12,
+    0,   11,  0, 4,   0,   5,   0, 12,  0,   5,   0,   13,  0,   12,  0, 5,   0, 6,   0,   13,  0,   0,  0,   1,
+    0,   2,   0, 3,   0,   4,   0, 5,   0,   6,   0,   0,   0,   7,   0, 8,   0, 9,   0,   10,  0,   11, 0,   12,
+    0,   13,  0, 0,   0,   0,   0, 1,   0,   2,   0,   3,   0,   4,   0, 5,   0, 6,   0,   7,   0,   8,  0,   9,
+    0,   10,  0, 11,  0,   12,  0, 13,  0,   1,   0,   2,   0,   3,   0, 4,   0, 5,   0,   8,   0,   9,  0,   10,
+    0,   11,  0, 12,  0,   0,   0, 50,  0,   200, 0,   50,  0,   0,   0, 0,   0, 0,   0,   0,
 };
 
-void* lbl_80314DE4[9] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, dll_7B_func00_nop, dll_7B_func01_nop, (void*)0x00000000, dll_7B_func03, (void*)0x00000000 };
+void* lbl_80314DE4[9] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, dll_7B_func00_nop,
+                         dll_7B_func01_nop, (void*)0x00000000, dll_7B_func03,     (void*)0x00000000};

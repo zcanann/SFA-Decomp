@@ -6,20 +6,20 @@
 
 #define PAD_BUTTON_A 0x100
 
-#define DREARTHWARRIOR_OBJGROUP 0xa
-#define DREARTHWARRIOR_PARTFX 0x7e6
+#define DREARTHWARRIOR_OBJGROUP           0xa
+#define DREARTHWARRIOR_PARTFX             0x7e6
 #define DREARTHWARRIOR_AIRMETER_BGTEXTURE 0x5cf /* HUD air-meter background texture id */
 
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
-#define DREARTHWARRIOR_CHILD_OBJ_HELPER 0x6f5
+#define DREARTHWARRIOR_CHILD_OBJ_HELPER   0x6f5
 #define DREARTHWARRIOR_EFFECT_RESOURCE_ID 0x5a /* shared effect resource -> gEarthWarriorResource */
 
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
     s8 spawnYaw; /* (s8)<<8 -> anim.rotX */
-    u8 unk19; /* -> DREarthWarriorState.unk14E8 */
+    u8 unk19;    /* -> DREarthWarriorState.unk14E8 */
     s16 airMeterMax;
     u8 pad1C[0xB18 - 0x1C];
     f32 unkB18;
@@ -97,8 +97,8 @@ typedef struct EarthWarriorSub
     u8 pad3F3[5];
     int moveTable; /* config row pointer */
     int prevMoveTable; /* 0x3FC: previously-selected move-table pointer; compared against moveTable to detect a move change */
-    int configRow; /* config row pointer */
-    f32 animSpeedMax; /* 0x404: upper clamp for BaddieState.animSpeedC (and symmetric +/-max fallback) */
+    int configRow;       /* config row pointer */
+    f32 animSpeedMax;    /* 0x404: upper clamp for BaddieState.animSpeedC (and symmetric +/-max fallback) */
     f32 targetAnimSpeed; /* 0x408: interpolate() target for BaddieState.animSpeedC, clamped to configRow[0xc] floor */
     u8 pad40C[4];
     f32 footstepCooldown; /* 0x410: per-tick countdown gating footstep rumble/sfx */
@@ -106,9 +106,9 @@ typedef struct EarthWarriorSub
     f32 yawStepRate; /* 0x420: base per-frame yaw-turn step (yawStepScale*yawStepRate*timeDelta caps appliedYaw turn) */
     u8 pad424[4];
     f32 yawSmoothDivisor; /* 0x428: divides smoothing const (K/yawSmoothDivisor) = interpolate() rate for appliedYaw yaw turn */
-    f32 yawStepScale; /* 0x42C: multiplier on yawStepRate for the appliedYaw yaw-turn per-frame cap */
+    f32 yawStepScale;            /* 0x42C: multiplier on yawStepRate for the appliedYaw yaw-turn per-frame cap */
     f32 currentYawSmoothDivisor; /* 0x430: divides smoothing const for the currentYaw turn (parallel to yawSmoothDivisor) */
-    f32 currentYawStepRate; /* 0x434: per-frame step cap (currentYawStepRate*timeDelta) for the currentYaw turn */
+    f32 currentYawStepRate;      /* 0x434: per-frame step cap (currentYawStepRate*timeDelta) for the currentYaw turn */
     f32 animSpeedSmoothing; /* 0x438: interpolate() rate/gain closing animSpeedC toward targetAnimSpeed (copied from unk830) */
     u8 pad43C[0x14];
     int unk450;
@@ -130,13 +130,13 @@ typedef struct EarthWarriorSub
     u8 pad490[4];
     int savedYaw;
     u8 pad498[0x3a];
-    s16 aimHalfY; /* 0x4D2: aimAccumY/2; written to secondary look-bone (vec9) */
+    s16 aimHalfY;  /* 0x4D2: aimAccumY/2; written to secondary look-bone (vec9) */
     s16 aimAccumY; /* 0x4D4: integrated aim angle (accum += delta*timeDelta) toward clamped target from yawTurnDir; written to look-bone vec0[1] */
     s16 aimAccumX; /* 0x4D6: integrated aim angle (accum += delta) from spawnRotY phase; written negated to look-bone vec0[0] */
     u8 pad4D8[0x308];
     f32 unk7E0;
     u8 pad7E4[0x48];
-    f32 animSpeedASmoothing; /* 0x82C: interpolate() rate closing BaddieState.animSpeedA toward animSpeedC */
+    f32 animSpeedASmoothing;      /* 0x82C: interpolate() rate closing BaddieState.animSpeedA toward animSpeedC */
     f32 animSpeedSmoothingReload; /* 0x830: preset smoothing rate copied into animSpeedSmoothing on state entry */
     f32 unk834;
     u8 pad838[8];
@@ -145,7 +145,7 @@ typedef struct EarthWarriorSub
     u8 pad848[0x10];
     int leapStartYaw; /* 0x858: yaw latched (from currentYaw) at leap start; re-added to move progress to build leap yaw */
     u8 pad85C[0x4a];
-    u8 soundId; /* 0x8A6: active sound-effect id passed to objAudioFn_8006edcc (8 or 0xa) */
+    u8 soundId;       /* 0x8A6: active sound-effect id passed to objAudioFn_8006edcc (8 or 0xa) */
     u8 soundIdReload; /* 0x8A7: stored sound id copied into soundId on leap trigger */
     u8 pad8A8[8];
     u8 attackStage;
@@ -265,23 +265,44 @@ extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
 void fn_802BCA10(int obj, int sub, int state);
 
-int DR_EarthWarrior_defaultStateHandler(void) { return 0x0; }
+int DR_EarthWarrior_defaultStateHandler(void)
+{
+    return 0x0;
+}
 
 void DR_EarthWarrior_func21(void)
 {
 }
 
-int DR_EarthWarrior_func20(void) { return 0x0; }
+int DR_EarthWarrior_func20(void)
+{
+    return 0x0;
+}
 
-int DR_EarthWarrior_func16(void) { return 0x0; }
+int DR_EarthWarrior_func16(void)
+{
+    return 0x0;
+}
 
-int DR_EarthWarrior_render2(void) { return 0x0; }
+int DR_EarthWarrior_render2(void)
+{
+    return 0x0;
+}
 
-int DR_EarthWarrior_setScale(void) { return 0x0; }
+int DR_EarthWarrior_setScale(void)
+{
+    return 0x0;
+}
 
-int DR_EarthWarrior_getExtraSize(void) { return 0x14fc; }
+int DR_EarthWarrior_getExtraSize(void)
+{
+    return 0x14fc;
+}
 
-int DR_EarthWarrior_getObjectTypeId(void) { return 0x43; }
+int DR_EarthWarrior_getObjectTypeId(void)
+{
+    return 0x43;
+}
 
 void DR_EarthWarrior_func15(int obj, f32* x, f32* y, f32* z)
 {
@@ -328,8 +349,7 @@ int DR_EarthWarrior_func14(int obj)
 void DR_EarthWarrior_func18(int obj, f32* a, int* b)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    *a = (f32)(s32)
-    inner->sub.aimAccumY;
+    *a = (f32)(s32)inner->sub.aimAccumY;
     *b = inner->sub.aimAccumX;
 }
 
@@ -413,15 +433,13 @@ void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     if (vis == -1)
     {
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E8338);
-        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c,
-                                      (char*)inner + 0x1440, 0);
+        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c, (char*)inner + 0x1440, 0);
         ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char*)inner + 0xb18);
     }
     else if (vis != 0)
     {
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E8338);
-        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c,
-                                      (char*)inner + 0x1440, 0);
+        ObjPath_GetPointWorldPosition(p1, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c, (char*)inner + 0x1440, 0);
         ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char*)inner + 0xb18);
         dll_2E_func06(p1, (char*)inner + 0x3ec, 0);
     }
@@ -430,7 +448,7 @@ void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 void DR_EarthWarrior_free(int obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    if (*(void* *)&inner->sub.modelChain != NULL)
+    if (*(void**)&inner->sub.modelChain != NULL)
     {
         ObjModelChain_Free((ObjModelChain*)inner->sub.modelChain);
     }
@@ -439,7 +457,7 @@ void DR_EarthWarrior_free(int obj)
     {
         (*gGameUIInterface)->airMeterSetShutdown();
     }
-    if (*(void* *)&inner->helperObj != NULL)
+    if (*(void**)&inner->helperObj != NULL)
     {
         ObjLink_DetachChild(obj, inner->helperObj);
         Obj_FreeObject(inner->helperObj);
@@ -479,7 +497,8 @@ void DR_EarthWarrior_func17(int obj, int param)
         EarthWarriorState* inner2 = ((GameObject*)obj)->extra;
         int placement = *(int*)&((GameObject*)obj)->anim.placementData;
         ((ByteFlags*)&inner2->sub.flags994)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, DREARTHWARRIOR_AIRMETER_BGTEXTURE);
+        (*gGameUIInterface)
+            ->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, DREARTHWARRIOR_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(inner2->sub.health);
         mainSetBits(0x7bc, 1);
         mainSetBits(0x7d4, 0);
@@ -560,10 +579,8 @@ void fn_802BE6E8(int obj, int t, int p3)
     *(int*)((char*)inner + 0) &= ~0x8000;
     if (((DREarthWarriorState*)inner)->controlMode == 2)
     {
-        ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)
-        padGetStickX(0);
-        ((EarthWarriorState*)inner)->baddie.moveInputZ = (f32)(s8)
-        padGetStickY(0);
+        ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)padGetStickX(0);
+        ((EarthWarriorState*)inner)->baddie.moveInputZ = (f32)(s8)padGetStickY(0);
         *(int*)&((EarthWarriorState*)inner)->baddie.unk31C = getButtonsJustPressed(0);
         *(int*)&((EarthWarriorState*)inner)->baddie.unk318 = getButtonsHeld(0);
         ((EarthWarriorState*)inner)->baddie.cameraYaw = *(s16*)slot;
@@ -581,10 +598,10 @@ void fn_802BE6E8(int obj, int t, int p3)
     fn_802B0EA4(obj, sub, inner);
     (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
-    ((GameObject*)obj)->anim.rotY = (s16)(
-        ((GameObject*)obj)->anim.rotY + (((EarthWarriorState*)inner)->baddie.spawnRotY >> 2));
-    ((GameObject*)obj)->anim.rotZ = (s16)(
-        ((GameObject*)obj)->anim.rotZ + (((EarthWarriorState*)inner)->baddie.spawnRotZ >> 2));
+    ((GameObject*)obj)->anim.rotY =
+        (s16)(((GameObject*)obj)->anim.rotY + (((EarthWarriorState*)inner)->baddie.spawnRotY >> 2));
+    ((GameObject*)obj)->anim.rotZ =
+        (s16)(((GameObject*)obj)->anim.rotZ + (((EarthWarriorState*)inner)->baddie.spawnRotZ >> 2));
     if (((ByteFlags*)((char*)inner + 0x14ec))->b02)
     {
         (*gGameUIInterface)->runAirMeter(((DREarthWarriorState*)inner)->airMeterCapacity);
@@ -604,9 +621,9 @@ int fn_802BC830(int obj, int sub, int state)
     ((BaddieState*)state)->moveSpeed = lbl_803E82EC;
     if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject*)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
-        ((BaddieState*)state)->animSpeedC > *(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x1c) - GXInit_WhiteColor &&
-        ((BaddieState*)state)->inputMagnitude > lbl_803E82FC &&
-        ((EarthWarriorSub*)sub)->frameCounter >= 0x96)
+        ((BaddieState*)state)->animSpeedC >
+            *(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x1c) - GXInit_WhiteColor &&
+        ((BaddieState*)state)->inputMagnitude > lbl_803E82FC && ((EarthWarriorSub*)sub)->frameCounter >= 0x96)
     {
         ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b40 = 1;
         ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 = 0;
@@ -615,8 +632,10 @@ int fn_802BC830(int obj, int sub, int state)
         ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((EarthWarriorSub*)sub)->moveTable + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent*)obj, 0x10);
         ((EarthWarriorSub*)sub)->leapStartYaw = ((EarthWarriorSub*)sub)->currentYaw;
-        ((EarthWarriorSub*)sub)->animSpeedRate = (lbl_803E8308 + (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((
-            BaddieState*)state)->animSpeedC)) / lbl_803E830C;
+        ((EarthWarriorSub*)sub)->animSpeedRate =
+            (lbl_803E8308 +
+             (*(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x14) + ((BaddieState*)state)->animSpeedC)) /
+            lbl_803E830C;
         ((EarthWarriorSub*)sub)->appliedYaw = ((EarthWarriorSub*)sub)->currentYaw;
         ((EarthWarriorSub*)sub)->currentYaw += 0x8000;
         ((BaddieState*)state)->animSpeedC = -((BaddieState*)state)->animSpeedC;
@@ -625,7 +644,8 @@ int fn_802BC830(int obj, int sub, int state)
     if (((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b80 != 0)
     {
         f32 lim;
-        if (((BaddieState*)state)->animSpeedC <= (lim = *(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x10)) && ((BaddieState*)state)->animSpeedA <= lim)
+        if (((BaddieState*)state)->animSpeedC <= (lim = *(f32*)((char*)((EarthWarriorSub*)sub)->configRow + 0x10)) &&
+            ((BaddieState*)state)->animSpeedA <= lim)
         {
             ((EarthWarriorSub*)sub)->savedYaw = ((EarthWarriorSub*)sub)->currentYaw;
             ((ByteFlags*)&((EarthWarriorSub*)sub)->flags3F0)->b40 = 0;
@@ -783,7 +803,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
         ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E8300;
         {
-            s16 yaw = (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->leapStartYaw);
+            s16 yaw = (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress +
+                       (f32)(s32)((EarthWarriorSub*)q)->leapStartYaw);
             *(s16*)&((EarthWarriorSub*)q)->appliedYaw = yaw;
             ((EarthWarriorSub*)q)->savedYaw = yaw;
         }
@@ -798,11 +819,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04 = 1;
             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b08 = 1;
         }
-        ((EarthWarriorState*)state)->baddie.animSpeedC = ((EarthWarriorSub*)q)->animSpeedRate * timeDelta + ((EarthWarriorState*)
-            state)->baddie.animSpeedC;
+        ((EarthWarriorState*)state)->baddie.animSpeedC =
+            ((EarthWarriorSub*)q)->animSpeedRate * timeDelta + ((EarthWarriorState*)state)->baddie.animSpeedC;
         ((EarthWarriorSub*)q)->targetAnimSpeed = lbl_803E8304;
-        if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor && ((GameObject*)obj)->anim.
-            currentMoveProgress < lbl_803E8318)
+        if (((GameObject*)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
+            ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E8318)
         {
             ((EarthWarriorSub*)q)->flags8D8 |= 8;
         }
@@ -841,7 +862,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     }
     if (!((ByteFlags*)((char*)inner + 0x14ec))->b01 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 &&
-        ((EarthWarriorState*)state)->baddie.animSpeedC > lbl_803E8340 + *(f32*)(((EarthWarriorSub*)q)->configRow + 0x14) &&
+        ((EarthWarriorState*)state)->baddie.animSpeedC >
+            lbl_803E8340 + *(f32*)(((EarthWarriorSub*)q)->configRow + 0x14) &&
         (((EarthWarriorSub*)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub*)q)->frameCounter >= 0x96))
     {
         ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 = 1;
@@ -854,8 +876,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     {
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
-            f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->yawTurnProgress, lbl_803E8338 / ((EarthWarriorSub*)q)->yawSmoothDivisor,
-                                timeDelta);
+            f32 v = interpolate((f32)(s32)((EarthWarriorSub*)q)->yawTurnProgress,
+                                lbl_803E8338 / ((EarthWarriorSub*)q)->yawSmoothDivisor, timeDelta);
             f32 cap = timeDelta * (((EarthWarriorSub*)q)->yawStepScale * ((EarthWarriorSub*)q)->yawStepRate);
             if (v > cap)
             {
@@ -865,7 +887,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             {
                 v = -v;
             }
-            *(s16*)&((EarthWarriorSub*)q)->appliedYaw = (gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->appliedYaw);
+            *(s16*)&((EarthWarriorSub*)q)->appliedYaw =
+                (gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->appliedYaw);
         }
         if (((EarthWarriorSub*)q)->frameCounter < 0x96)
         {
@@ -880,11 +903,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             {
                 v = -v;
             }
-            *(s16*)&((EarthWarriorSub*)q)->currentYaw = (
-                gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->currentYaw);
+            *(s16*)&((EarthWarriorSub*)q)->currentYaw =
+                (gEarthWarriorDegToAngle * v + (f32)(s32)((EarthWarriorSub*)q)->currentYaw);
         }
         else if (((EarthWarriorState*)state)->baddie.animSpeedC <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0x4) &&
-            ((EarthWarriorState*)state)->baddie.animSpeedA <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
+                 ((EarthWarriorState*)state)->baddie.animSpeedA <= *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
         {
             ((EarthWarriorSub*)q)->currentYaw += ((EarthWarriorSub*)q)->turnDegrees * 0xb6;
         }
@@ -893,7 +916,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     {
         f32 r = interpolate(((EarthWarriorSub*)q)->targetAnimSpeed - ((EarthWarriorState*)state)->baddie.animSpeedC,
                             ((EarthWarriorSub*)q)->animSpeedSmoothing, timeDelta);
-        r = (r < lbl_803E834C * timeDelta) ? lbl_803E834C * timeDelta : ((r > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : r);
+        r = (r < lbl_803E834C * timeDelta) ? lbl_803E834C * timeDelta
+                                           : ((r > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : r);
         if (((EarthWarriorSub*)q)->frameCounter >= 0x96 && r > lbl_803E8304)
         {
             r = lbl_803E8314 * -r;
@@ -903,7 +927,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
             f32 lo = *(f32*)((EarthWarriorSub*)q)->configRow;
             ((EarthWarriorState*)state)->baddie.animSpeedC =
-                (vv < lo) ? lo : ((vv > ((EarthWarriorSub*)q)->animSpeedMax) ? ((EarthWarriorSub*)q)->animSpeedMax : vv);
+                (vv < lo) ? lo
+                          : ((vv > ((EarthWarriorSub*)q)->animSpeedMax) ? ((EarthWarriorSub*)q)->animSpeedMax : vv);
         }
         ((EarthWarriorState*)state)->baddie.animSpeedB = lbl_803E8304;
     }
@@ -913,9 +938,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
         ((EarthWarriorState*)state)->baddie.animSpeedC = (vv < -h) ? -h : ((vv > h) ? h : vv);
     }
-    ((EarthWarriorState*)state)->baddie.animSpeedA += interpolate(
-        ((EarthWarriorState*)state)->baddie.animSpeedC - ((EarthWarriorState*)state)->baddie.animSpeedA,
-        ((EarthWarriorSub*)q)->animSpeedASmoothing, timeDelta);
+    ((EarthWarriorState*)state)->baddie.animSpeedA +=
+        interpolate(((EarthWarriorState*)state)->baddie.animSpeedC - ((EarthWarriorState*)state)->baddie.animSpeedA,
+                    ((EarthWarriorSub*)q)->animSpeedASmoothing, timeDelta);
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
@@ -945,8 +970,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             {
                 if (((EarthWarriorSub*)q)->attackPhase == 4)
                 {
-                    if (((EarthWarriorState*)state)->baddie.animSpeedA < *(f32*)(tbl + 0x10) && ((BaddieState*)state)->
-                        inputMagnitude < lbl_803E8308)
+                    if (((EarthWarriorState*)state)->baddie.animSpeedA < *(f32*)(tbl + 0x10) &&
+                        ((BaddieState*)state)->inputMagnitude < lbl_803E8308)
                     {
                         return 2;
                     }
@@ -972,10 +997,10 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             }
         }
         if ((skip != 0 || (void*)((EarthWarriorSub*)q)->prevMoveTable != (void*)((EarthWarriorSub*)q)->moveTable ||
-                ((GameObject*)obj)->anim.currentMove != *(s16*)(((EarthWarriorSub*)q)->moveTable + ((EarthWarriorSub*)q)
-                    ->attackPhase * 2)) &&
-            (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 || ((ByteFlags*)&((EarthWarriorSub*)q)->
-                flags3F2)->b10 != 0))
+             ((GameObject*)obj)->anim.currentMove !=
+                 *(s16*)(((EarthWarriorSub*)q)->moveTable + ((EarthWarriorSub*)q)->attackPhase * 2)) &&
+            (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 ||
+             ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F2)->b10 != 0))
         {
             if (((GameObject*)obj)->anim.currentMove == 0x14)
             {
@@ -989,7 +1014,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
         if (((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-            obj, ((EarthWarriorState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0)) == 0)
+                obj, ((EarthWarriorState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0)) == 0)
         {
             ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E8354;
         }
@@ -1030,8 +1055,8 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         ((BaddieState*)p2)->moveDone = 0;
         return 3;
     }
-    if (*(f32*)&((EarthWarriorState*)p2)->baddie.trackedObj >= lbl_803E8358 && ((BaddieState*)p2)->inputMagnitude >=
-        lbl_803E8358 &&
+    if (*(f32*)&((EarthWarriorState*)p2)->baddie.trackedObj >= lbl_803E8358 &&
+        ((BaddieState*)p2)->inputMagnitude >= lbl_803E8358 &&
         ((BaddieState*)p2)->animSpeedC >= *(f32*)(q->configRow + 0x4))
     {
         return 3;
@@ -1047,7 +1072,8 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         q->targetAnimSpeed = a * (t * q->animSpeedScale);
     }
-    ((BaddieState*)p2)->animSpeedC += interpolate(q->targetAnimSpeed - ((BaddieState*)p2)->animSpeedC, q->animSpeedSmoothing, timeDelta);
+    ((BaddieState*)p2)->animSpeedC +=
+        interpolate(q->targetAnimSpeed - ((BaddieState*)p2)->animSpeedC, q->animSpeedSmoothing, timeDelta);
     if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
     {
         q->yawTurnProgress = 0;
@@ -1146,34 +1172,33 @@ void DR_EarthWarrior_hitDetect(int obj)
                     return;
                 }
                 Obj_SpawnHitLightAndFade(obj, &hx, lbl_803E8368);
-                if (hit == 0x1a || hitObj == Obj_GetPlayerObject() ||
-                    ((GameObject*)hitObj)->anim.seqId == 0x23)
+                if (hit == 0x1a || hitObj == Obj_GetPlayerObject() || ((GameObject*)hitObj)->anim.seqId == 0x23)
                 {
                     return;
                 }
                 {
-                objAudioFn_800393f8(obj, (void*)((char*)inner + 0x3bc), 0x28e, 0x1000, -1, 1);
-                {
-                    s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
-                    if (d > 0x8000)
+                    objAudioFn_800393f8(obj, (void*)((char*)inner + 0x3bc), 0x28e, 0x1000, -1, 1);
                     {
-                        d = (s16)(d - 0xffff);
+                        s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
+                        if (d > 0x8000)
+                        {
+                            d = (s16)(d - 0xffff);
+                        }
+                        if (d < -0x8000)
+                        {
+                            d += 0xffff;
+                        }
+                        if (d > 0x4000 || d < -0x4000)
+                        {
+                            ((ByteFlags*)&inner->sub.flags994)->b80 = 0;
+                        }
+                        else
+                        {
+                            ((ByteFlags*)&inner->sub.flags994)->b80 = 1;
+                        }
                     }
-                    if (d < -0x8000)
-                    {
-                        d += 0xffff;
-                    }
-                    if (d > 0x4000 || d < -0x4000)
-                    {
-                        ((ByteFlags*)&inner->sub.flags994)->b80 = 0;
-                    }
-                    else
-                    {
-                        ((ByteFlags*)&inner->sub.flags994)->b80 = 1;
-                    }
-                }
-                inner->sub.savedControlMode = inner->baddie.controlMode;
-                (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
+                    inner->sub.savedControlMode = inner->baddie.controlMode;
+                    (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
                 }
             }
         }
@@ -1192,24 +1217,25 @@ void DR_EarthWarrior_hitDetect(int obj)
                 f32 spd;
                 f32 vcos;
                 f32 vsin;
-                spd = sqrtf(
-                    ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.
-                    velocityZ * ((GameObject*)obj)->anim.velocityZ);
-                ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject*)obj)->anim.worldPosX - ((
-                    GameObject*)obj)->anim.previousWorldPosX);
-                ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject*)obj)->anim.worldPosZ - ((
-                    GameObject*)obj)->anim.previousWorldPosZ);
-                vcos = mathSinf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320
-                )
-                ;
-                vsin = mathCosf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320
-                )
-                ;
-                inner->baddie.animSpeedA = -((GameObject*)obj)->anim.velocityZ * vsin - ((GameObject*)obj)->anim.
-                    velocityX * vcos;
+                spd = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                            ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
+                ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject*)obj)->anim.worldPosX -
+                                                                         ((GameObject*)obj)->anim.previousWorldPosX);
+                ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject*)obj)->anim.worldPosZ -
+                                                                         ((GameObject*)obj)->anim.previousWorldPosZ);
+                vcos = mathSinf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320);
+                vsin = mathCosf((lbl_803E8374 * (f32)(s32)inner->sub.currentYaw) / lbl_803E8320);
+                inner->baddie.animSpeedA =
+                    -((GameObject*)obj)->anim.velocityZ * vsin - ((GameObject*)obj)->anim.velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
-                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8378) ? lbl_803E8378 : ((inner->baddie.animSpeedA > inner->sub.animSpeedMax) ? inner->sub.animSpeedMax : inner->baddie.animSpeedA);
-                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8304) ? lbl_803E8304 : ((inner->baddie.animSpeedA > spd) ? spd : inner->baddie.animSpeedA);
+                inner->baddie.animSpeedA =
+                    (inner->baddie.animSpeedA < lbl_803E8378)
+                        ? lbl_803E8378
+                        : ((inner->baddie.animSpeedA > inner->sub.animSpeedMax) ? inner->sub.animSpeedMax
+                                                                                : inner->baddie.animSpeedA);
+                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8304)
+                                               ? lbl_803E8304
+                                               : ((inner->baddie.animSpeedA > spd) ? spd : inner->baddie.animSpeedA);
                 if (!((ByteFlags*)&inner->sub.flags3F0)->b40)
                 {
                     inner->baddie.animSpeedC = inner->baddie.animSpeedA;
@@ -1220,7 +1246,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         inner->sub.footstepCooldown -= timeDelta;
         if (inner->sub.footstepCooldown < lbl_803E8304)
         {
-            inner->sub.footstepCooldown = *(f32 *)&lbl_803E8304;
+            inner->sub.footstepCooldown = *(f32*)&lbl_803E8304;
         }
         if ((void*)inner != NULL)
         {
@@ -1239,7 +1265,7 @@ void DR_EarthWarrior_update(int obj)
     Obj_GetPlayerObject();
     hitState->hitVolumePriority = 0;
     hitState->hitVolumeId = 0;
-    if (*(void* *)&inner->helperObj == NULL && Obj_IsLoadingLocked() != 0)
+    if (*(void**)&inner->helperObj == NULL && Obj_IsLoadingLocked() != 0)
     {
         int setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
         int newObj = Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
@@ -1290,8 +1316,7 @@ void DR_EarthWarrior_update(int obj)
             {
                 if (((ByteFlags*)&inner->sub.flags994)->b08 == 0)
                 {
-                    (*gObjectTriggerInterface)->runSequence(
-                        inner->sub.interactSequenceId, (void*)obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(inner->sub.interactSequenceId, (void*)obj, -1);
                     buttonDisable(0, PAD_BUTTON_A);
                 }
                 else
@@ -1324,9 +1349,11 @@ void DR_EarthWarrior_update(int obj)
         vecA[2] = lbl_803E833C * ((GameObject*)obj)->anim.velocityZ;
         for (i = 0, placement = (int)inner; i < 4; i++)
         {
-            w.mat[1] = lbl_803E835C * ((GameObject*)obj)->anim.velocityX + ((DREarthWarriorPlacement*)placement)->unkB18;
+            w.mat[1] =
+                lbl_803E835C * ((GameObject*)obj)->anim.velocityX + ((DREarthWarriorPlacement*)placement)->unkB18;
             w.mat[2] = ((DREarthWarriorPlacement*)placement)->unkB1C;
-            w.mat[3] = lbl_803E835C * ((GameObject*)obj)->anim.velocityZ + ((DREarthWarriorPlacement*)placement)->unkB20;
+            w.mat[3] =
+                lbl_803E835C * ((GameObject*)obj)->anim.velocityZ + ((DREarthWarriorPlacement*)placement)->unkB20;
             w.mat[0] = lbl_803E8338;
             w.angles[0] = 2;
             for (j = 2; j != 0; j--)
@@ -1413,88 +1440,65 @@ void DR_EarthWarrior_init(int obj, int p2)
         ((DREarthWarriorState*)inner)->unk14ED = 1;
     }
     ((DREarthWarriorState*)inner)->tailSimHandle = (s32)ObjModelChain_Alloc(&gEarthWarriorTailChainDesc, 1);
-    ObjModelChain_SetOrigin((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, lbl_803E8324, lbl_803E831C, lbl_803E8394);
+    ObjModelChain_SetOrigin((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, lbl_803E8324, lbl_803E831C,
+                            lbl_803E8394);
     *(int*)((char*)obj + 0x108) = (int)fn_802BC788;
     ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);
 }
 #pragma opt_propagation reset
 
 u8 gDREarthWarriorRowIndices[960] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 22, 0, 22,
-    0, 22, 0, 22, 0, 22, 0, 22, 0, 22, 0, 22, 0, 22, 0, 22,
-    0, 22, 0, 22, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
-    0, 4, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 28,
-    0, 27, 0, 2, 65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0,
-    65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0,
-    65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0,
-    65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0,
-    65, 64, 0, 0, 65, 64, 0, 0, 65, 64, 0, 0, 65, 80, 0, 0,
-    65, 128, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0,
-    66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0,
-    66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0,
-    66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0,
-    66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0, 66, 0, 0, 0,
-    66, 0, 0, 0, 66, 0, 0, 0, 65, 128, 0, 0, 65, 128, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0,
-    65, 32, 0, 0, 65, 32, 0, 0, 65, 32, 0, 0, 64, 224, 0, 0,
-    64, 224, 0, 0, 64, 224, 0, 0, 64, 224, 0, 0, 64, 224, 0, 0,
-    64, 224, 0, 0, 64, 224, 0, 0, 64, 224, 0, 0, 64, 224, 0, 0,
-    64, 224, 0, 0, 64, 224, 0, 0, 64, 224, 0, 0, 64, 224, 0, 0,
-    64, 208, 0, 0, 64, 192, 0, 0, 64, 176, 0, 0, 64, 160, 0, 0,
-    64, 153, 153, 154, 64, 128, 0, 0, 64, 102, 102, 102, 64, 89, 153, 154,
-    64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154,
-    64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154,
-    64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154,
-    64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154,
-    64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154,
-    64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154, 64, 89, 153, 154,
-    64, 89, 153, 154, 65, 0, 0, 0, 65, 0, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0, 64, 160, 0, 0,
-    64, 160, 0, 0, 64, 160, 0, 0, 65, 96, 0, 0, 65, 96, 0, 0,
-    65, 96, 0, 0, 65, 96, 0, 0, 65, 96, 0, 0, 65, 96, 0, 0,
-    65, 96, 0, 0, 65, 96, 0, 0, 65, 96, 0, 0, 65, 96, 0, 0,
-    65, 96, 0, 0, 65, 96, 0, 0, 65, 96, 0, 0, 65, 80, 0, 0,
-    65, 64, 0, 0, 65, 48, 0, 0, 65, 32, 0, 0, 65, 25, 153, 154,
-    65, 0, 0, 0, 64, 230, 102, 102, 64, 217, 153, 154, 64, 217, 153, 154,
-    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
-    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
-    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
-    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
-    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
-    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
+    0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,
+    1,  2,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  2,   0,   2,   0,  2,   0,   2,   0,  22,  0,   22,
+    0,  22,  0,   22,  0,  22,  0,   22,  0,  22,  0,   22,  0,  22,  0,   22,  0,  22,  0,   22,  0,  4,   0,   4,
+    0,  4,   0,   4,   0,  4,   0,   4,   0,  4,   0,   4,   0,  2,   0,   2,   0,  2,   0,   2,   0,  2,   0,   28,
+    0,  27,  0,   2,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,
+    65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,
+    65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,   65, 64,  0,   0,
+    65, 64,  0,   0,   65, 80,  0,   0,   65, 128, 0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,
+    66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,
+    66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,
+    66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,   66, 0,   0,   0,
+    65, 128, 0,   0,   65, 128, 0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,
+    65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,
+    65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,
+    65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,
+    65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,
+    65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,
+    65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   65, 32,  0,   0,   64, 224, 0,   0,
+    64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,
+    64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,   64, 224, 0,   0,
+    64, 208, 0,   0,   64, 192, 0,   0,   64, 176, 0,   0,   64, 160, 0,   0,   64, 153, 153, 154, 64, 128, 0,   0,
+    64, 102, 102, 102, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154,
+    64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154,
+    64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154,
+    64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154,
+    64, 89,  153, 154, 64, 89,  153, 154, 64, 89,  153, 154, 65, 0,   0,   0,   65, 0,   0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,   64, 160, 0,   0,
+    64, 160, 0,   0,   64, 160, 0,   0,   65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,
+    65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,
+    65, 96,  0,   0,   65, 96,  0,   0,   65, 96,  0,   0,   65, 80,  0,   0,   65, 64,  0,   0,   65, 48,  0,   0,
+    65, 32,  0,   0,   65, 25,  153, 154, 65, 0,   0,   0,   64, 230, 102, 102, 64, 217, 153, 154, 64, 217, 153, 154,
+    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
+    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
+    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
+    64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
 };
 
 /* --- .data reconstruction (0x803351F8-0x803352AC) --- */
 u8 gDREarthWarriorInitData[132] = {
-    0x02, 0x8F, 0x08, 0x00, 0x01, 0x00, 0x02, 0x90, 0x10, 0x00, 0x03, 0x00,
-    0xC1, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0x40, 0x00, 0x00,
-    0x41, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0x40, 0x00, 0x00,
-    0x41, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00,
-    0xC1, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00,
-    0x3D, 0xCC, 0xCC, 0xCD, 0x3D, 0xCC, 0xCC, 0xCD, 0x3D, 0xCC, 0xCC, 0xCD,
-    0x3D, 0xCC, 0xCC, 0xCD, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0xC2, 0x0C, 0x00, 0x00, 0x42, 0x0C, 0x00, 0x00, 0x40, 0xA0, 0x00, 0x00,
-    0x40, 0xA0, 0x00, 0x00, 0x40, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07,
-    0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x0A,
+    0x02, 0x8F, 0x08, 0x00, 0x01, 0x00, 0x02, 0x90, 0x10, 0x00, 0x03, 0x00, 0xC1, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0xC1, 0x40, 0x00, 0x00, 0x41, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0x40, 0x00, 0x00, 0x41, 0x10,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00, 0xC1, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41,
+    0x40, 0x00, 0x00, 0x3D, 0xCC, 0xCC, 0xCD, 0x3D, 0xCC, 0xCC, 0xCD, 0x3D, 0xCC, 0xCC, 0xCD, 0x3D, 0xCC, 0xCC, 0xCD,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0xC2, 0x0C, 0x00, 0x00, 0x42, 0x0C, 0x00, 0x00, 0x40, 0xA0, 0x00, 0x00, 0x40, 0xA0, 0x00, 0x00, 0x40, 0xA0,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x0A,
 };
 int lbl_8033527C[12] = {
     0x3BA3D70A, 0x3E75C290, 0x3E449BA6, 0x3FA5E355, 0x3F9FBE77, 0x4010624E,

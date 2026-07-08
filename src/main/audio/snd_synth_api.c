@@ -17,8 +17,8 @@ extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
 extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
-extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser,
-                                        void* auxBCallback, void* auxBUser);
+extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, void* auxBCallback,
+                                        void* auxBUser);
 
 extern void hwOff(u32 slot);
 
@@ -37,11 +37,11 @@ extern u32 synthFlags;
 extern u8* synthVoice;
 
 #define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
-#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET 0x114
+#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
 
 /* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
-#define SND_OUTPUTMODE_MONO 0     /* mono downmix */
-#define SND_OUTPUTMODE_STEREO 1   /* plain stereo */
+#define SND_OUTPUTMODE_MONO     0 /* mono downmix */
+#define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
 /*
@@ -196,9 +196,8 @@ void sndOutputMode(int mode)
  * Configure studio AUX A/B processing callbacks and cache the callback
  * routing indices used by synth voice updates.
  */
-void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, u8 auxAIndex,
-                                  void* auxAData, void* auxBCallback, void* auxBUser,
-                                  u8 auxBIndex, void* auxBData)
+void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, u8 auxAIndex, void* auxAData,
+                                  void* auxBCallback, void* auxBUser, u8 auxBIndex, void* auxBData)
 {
     sndBegin();
     if (auxACallback != 0)

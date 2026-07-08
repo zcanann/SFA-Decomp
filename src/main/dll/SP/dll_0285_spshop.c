@@ -18,7 +18,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 typedef struct ShopBuyItemState
 {
-    s8 unk0; /* 0x0 */
+    s8 unk0;      /* 0x0 */
     s8 itemIndex; /* 0x1 shop item type: purchase-effect switch + items-table index */
     u8 pad2[0x4 - 0x2];
     u8 unk4;
@@ -72,15 +72,15 @@ extern u8 lbl_80327FD0[];
 
 typedef struct ShopItemRow
 {
-    u8 price; /* 0x0 "P$" */
-    u8 discount1; /* 0x1 "D1" */
-    u8 discount2; /* 0x2 "D2" */
-    u8 discount3; /* 0x3 "D3" (observed always == price) */
-    u8 field4; /* 0x4 */
-    u8 minPrice; /* 0x5 */
-    s16 availBit; /* 0x6 "available" GameBit slot (-1 = always available) */
+    u8 price;      /* 0x0 "P$" */
+    u8 discount1;  /* 0x1 "D1" */
+    u8 discount2;  /* 0x2 "D2" */
+    u8 discount3;  /* 0x3 "D3" (observed always == price) */
+    u8 field4;     /* 0x4 */
+    u8 minPrice;   /* 0x5 */
+    s16 availBit;  /* 0x6 "available" GameBit slot (-1 = always available) */
     s16 boughtBit; /* 0x8 "bought" GameBit slot (-1 = none) */
-    s16 textId; /* 0xa */
+    s16 textId;    /* 0xa */
 } ShopItemRow;
 
 /* number of ShopItemRow entries in lbl_80327FD0
@@ -92,37 +92,37 @@ typedef struct ShopItemRow
    are all-zero/unused rows. */
 enum ShopItemIndex
 {
-    SHOP_ITEM_DUMBLEDANG_POD        = 0x00, /* 1/2 heart */
-    SHOP_ITEM_DUMBLEDANG_POD_4X     = 0x01, /* 2 hearts */
-    SHOP_ITEM_PUKPUK_EGG            = 0x02, /* 1 heart */
-    SHOP_ITEM_PUKPUK_EGGS_7X        = 0x03, /* 7 hearts */
-    SHOP_ITEM_BOMB_SPORE            = 0x04,
-    SHOP_ITEM_MOON_SEED             = 0x05,
-    SHOP_ITEM_GRUBTUB_FUNGUS        = 0x06,
-    SHOP_ITEM_FIREFLY               = 0x07,
-    SHOP_ITEM_FUEL_CELL             = 0x08,
-    SHOP_ITEM_TRICKYS_BALL          = 0x14,
-    SHOP_ITEM_FIREFLY_LANTERN       = 0x15,
-    SHOP_ITEM_SNOWHORN_ARTIFACT     = 0x16,
-    SHOP_ITEM_BAFOMDAD_HOLDER       = 0x17,
-    SHOP_ITEM_BAD_GUY_ALERT_UNUSED  = 0x18, /* never available (GAMEBIT_Always0) */
-    SHOP_ITEM_ROCK_CANDY            = 0x19,
-    SHOP_ITEM_PDA_UNUSED            = 0x1A,
-    SHOP_ITEM_VIEWFINDER            = 0x1B,
-    SHOP_ITEM_MAP_DARKICE_MINES     = 0x28,
-    SHOP_ITEM_MAP_CAPE_CLAW         = 0x29,
-    SHOP_ITEM_MAP_THORNTAIL_HOLLOW  = 0x2A,
-    SHOP_ITEM_MAP_MOON_PASS         = 0x2B,
-    SHOP_ITEM_MAP_WALLED_CITY       = 0x2C,
-    SHOP_ITEM_MAP_CLOUDRUNNER_FORT  = 0x2D,
+    SHOP_ITEM_DUMBLEDANG_POD = 0x00,    /* 1/2 heart */
+    SHOP_ITEM_DUMBLEDANG_POD_4X = 0x01, /* 2 hearts */
+    SHOP_ITEM_PUKPUK_EGG = 0x02,        /* 1 heart */
+    SHOP_ITEM_PUKPUK_EGGS_7X = 0x03,    /* 7 hearts */
+    SHOP_ITEM_BOMB_SPORE = 0x04,
+    SHOP_ITEM_MOON_SEED = 0x05,
+    SHOP_ITEM_GRUBTUB_FUNGUS = 0x06,
+    SHOP_ITEM_FIREFLY = 0x07,
+    SHOP_ITEM_FUEL_CELL = 0x08,
+    SHOP_ITEM_TRICKYS_BALL = 0x14,
+    SHOP_ITEM_FIREFLY_LANTERN = 0x15,
+    SHOP_ITEM_SNOWHORN_ARTIFACT = 0x16,
+    SHOP_ITEM_BAFOMDAD_HOLDER = 0x17,
+    SHOP_ITEM_BAD_GUY_ALERT_UNUSED = 0x18, /* never available (GAMEBIT_Always0) */
+    SHOP_ITEM_ROCK_CANDY = 0x19,
+    SHOP_ITEM_PDA_UNUSED = 0x1A,
+    SHOP_ITEM_VIEWFINDER = 0x1B,
+    SHOP_ITEM_MAP_DARKICE_MINES = 0x28,
+    SHOP_ITEM_MAP_CAPE_CLAW = 0x29,
+    SHOP_ITEM_MAP_THORNTAIL_HOLLOW = 0x2A,
+    SHOP_ITEM_MAP_MOON_PASS = 0x2B,
+    SHOP_ITEM_MAP_WALLED_CITY = 0x2C,
+    SHOP_ITEM_MAP_CLOUDRUNNER_FORT = 0x2D,
     SHOP_ITEM_MAP_LIGHTFOOT_VILLAGE = 0x2E,
-    SHOP_ITEM_MAP_DRAGON_ROCK       = 0x2F,
-    SHOP_ITEM_MAP_KRAZOA_PALACE     = 0x30,
+    SHOP_ITEM_MAP_DRAGON_ROCK = 0x2F,
+    SHOP_ITEM_MAP_KRAZOA_PALACE = 0x30,
     SHOP_ITEM_MAP_OCEAN_FORCE_POINT = 0x31,
-    SHOP_ITEM_MAP_SNOWHORN_WASTES   = 0x32,
-    SHOP_ITEM_MAP_VOLCANO_FORCE_PT  = 0x33,
+    SHOP_ITEM_MAP_SNOWHORN_WASTES = 0x32,
+    SHOP_ITEM_MAP_VOLCANO_FORCE_PT = 0x33,
 
-    SHOP_ITEM_LAST                  = 0x3B
+    SHOP_ITEM_LAST = 0x3B
 };
 extern void staffToggle(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
@@ -136,8 +136,6 @@ extern f32 lbl_803E59C8;
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
-
-
 
 /* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
@@ -225,7 +223,10 @@ void shop_buyItem(int obj, int price)
     }
 }
 
-s32 shop_getItemIndex(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
+s32 shop_getItemIndex(int* obj)
+{
+    return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex;
+}
 
 void shop_setItemIndex(int* obj, int v)
 {
@@ -315,11 +316,20 @@ void shop_func0B(int* obj, int v, int p3)
     }
 }
 
-s32 shop_getStateField0(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
+s32 shop_getStateField0(int* obj)
+{
+    return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0;
+}
 
-int shop_getExtraSize(void) { return 0x5; }
+int shop_getExtraSize(void)
+{
+    return 0x5;
+}
 
-int shop_getObjectTypeId(void) { return 0x0; }
+int shop_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void shop_free(int* obj)
 {
@@ -332,7 +342,8 @@ void shop_free(int* obj)
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59C8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59C8);
 }
 
 void shop_hitDetect(void)

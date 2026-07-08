@@ -20,27 +20,27 @@ typedef struct Dll19APlacement
  * class-specific tail. */
 typedef struct Dll19ASpawnSetup
 {
-    u8 pad00[4];   /* 0x00 */
-    u8 color[4];   /* 0x04 */
-    f32 posX;      /* 0x08 */
-    f32 posY;      /* 0x0c */
-    f32 posZ;      /* 0x10 */
-    u8 pad14[4];   /* 0x14 */
-    s16 unk18;     /* 0x18 */
-    u8 pad1A[8];   /* 0x1a */
-    s16 unk22;     /* 0x22 */
-    u8 pad24[3];   /* 0x24 */
-    u8 unk27;      /* 0x27 */
-    u8 pad28;      /* 0x28 */
-    u8 unk29;      /* 0x29 */
-    s8 rotByte;    /* 0x2a: object yaw byte (anim.rotX >> 8) */
-    u8 unk2B;      /* 0x2b */
-    u8 pad2C[2];   /* 0x2c */
-    s8 unk2E;      /* 0x2e */
-    u8 pad2F;      /* 0x2f */
-    s16 unk30;     /* 0x30 */
-    u8 linkIndex;  /* 0x32: placement gateBitIndex forwarded as child link index */
-    u8 pad33[5];   /* 0x33 */
+    u8 pad00[4];  /* 0x00 */
+    u8 color[4];  /* 0x04 */
+    f32 posX;     /* 0x08 */
+    f32 posY;     /* 0x0c */
+    f32 posZ;     /* 0x10 */
+    u8 pad14[4];  /* 0x14 */
+    s16 unk18;    /* 0x18 */
+    u8 pad1A[8];  /* 0x1a */
+    s16 unk22;    /* 0x22 */
+    u8 pad24[3];  /* 0x24 */
+    u8 unk27;     /* 0x27 */
+    u8 pad28;     /* 0x28 */
+    u8 unk29;     /* 0x29 */
+    s8 rotByte;   /* 0x2a: object yaw byte (anim.rotX >> 8) */
+    u8 unk2B;     /* 0x2b */
+    u8 pad2C[2];  /* 0x2c */
+    s8 unk2E;     /* 0x2e */
+    u8 pad2F;     /* 0x2f */
+    s16 unk30;    /* 0x30 */
+    u8 linkIndex; /* 0x32: placement gateBitIndex forwarded as child link index */
+    u8 pad33[5];  /* 0x33 */
 } Dll19ASpawnSetup;
 
 STATIC_ASSERT(offsetof(Dll19ASpawnSetup, posX) == 0x8);
@@ -49,7 +49,7 @@ STATIC_ASSERT(offsetof(Dll19ASpawnSetup, rotByte) == 0x2a);
 STATIC_ASSERT(offsetof(Dll19ASpawnSetup, linkIndex) == 0x32);
 STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
 
-#define GAMEBIT_DLL19A_RESET 0x5b9
+#define GAMEBIT_DLL19A_RESET     0x5b9
 #define GAMEBIT_DLL19A_GATE_BASE 0x1cd
 
 /* type id of the child object spawned into a Dll19ASpawnSetup once the gate bit + timer elapse */
@@ -61,8 +61,14 @@ extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
 extern f32 lbl_803E5180;
 
-int dll_19A_getExtraSize(void) { return 0x4; }
-int dll_19A_getObjectTypeId(void) { return 0x0; }
+int dll_19A_getExtraSize(void)
+{
+    return 0x4;
+}
+int dll_19A_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_19A_free(void)
 {
@@ -71,7 +77,8 @@ void dll_19A_free(void)
 void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5180);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5180);
 }
 
 void dll_19A_hitDetect(void)
@@ -98,7 +105,8 @@ void dll_19A_update(int obj)
     }
     else
     {
-        if ((((GameObject*)obj)->unkF8 == 0) && (mainGetBit(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
+        if ((((GameObject*)obj)->unkF8 == 0) &&
+            (mainGetBit(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);

@@ -22,9 +22,8 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
-#define CCLEVCONTROL_ENVFX_A 0x242
+#define CCLEVCONTROL_ENVFX_A              0x242
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-
 
 extern void Music_Trigger(int id, int arg);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
@@ -43,7 +42,10 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int cclevcontrol_getExtraSize(void) { return 0x10; }
+int cclevcontrol_getExtraSize(void)
+{
+    return 0x10;
+}
 
 void cclevcontrol_free(void)
 {
@@ -51,7 +53,10 @@ void cclevcontrol_free(void)
     Music_Trigger(MUSICTRIG_Arwing_Crash, 0);
 }
 
-void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
+void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+}
 
 void cclevcontrol_update(int obj)
 {
@@ -102,26 +107,26 @@ void cclevcontrol_update(int obj)
     {
         SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 1), 0x80, -1, -1, 0x24, 0xea);
     }
-    if (mainGetBit(0x3d6) != 0
-        && (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f) != 0)
+    if (mainGetBit(0x3d6) != 0 &&
+        (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f) != 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
     }
-    if (mainGetBit(0x161) != 0
-        && (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e) == 0)
+    if (mainGetBit(0x161) != 0 &&
+        (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e) == 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1e, 1);
     }
-    if (mainGetBit(0x3d7) != 0
-        && (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d) == 0)
+    if (mainGetBit(0x3d7) != 0 &&
+        (u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d) == 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
     }
     tricky = getTrickyObject();
     if (state[1] & 1)
     {
-        if (mainGetBit(0x22d) != 0 || mainGetBit(0x22e) == 0
-            || (((GameObject*)tricky)->objectFlags & CCLEVCONTROL_OBJFLAG_PARENT_SLACK) != 0)
+        if (mainGetBit(0x22d) != 0 || mainGetBit(0x22e) == 0 ||
+            (((GameObject*)tricky)->objectFlags & CCLEVCONTROL_OBJFLAG_PARENT_SLACK) != 0)
         {
             state[1] &= ~1;
             (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
@@ -129,8 +134,7 @@ void cclevcontrol_update(int obj)
     }
     else
     {
-        if (mainGetBit(0x22d) == 0 && mainGetBit(0x22a) != 0 && mainGetBit(0x22e) != 0
-            && mainGetBit(0x160) == 0)
+        if (mainGetBit(0x22d) == 0 && mainGetBit(0x22a) != 0 && mainGetBit(0x22e) != 0 && mainGetBit(0x160) == 0)
         {
             state[1] |= 1;
             (*gCameraInterface)->loadTriggeredCamAction(1, 1, 0);

@@ -59,8 +59,7 @@ void DFPulley_integrateLinks(DFRope* self)
             PSVECAdd((Vec*)part->velocity, &accel, (Vec*)part->velocity);
             PSVECScale((Vec*)part->velocity, &velscaled, self->damping);
             PSVECSubtract((Vec*)part->velocity, &velscaled, (Vec*)part->velocity);
-            part->velocity[1] = self->step * self->inverseTicks
-                + part->velocity[1];
+            part->velocity[1] = self->step * self->inverseTicks + part->velocity[1];
             PSVECScale((Vec*)part->velocity, &scaled, self->step);
             PSVECAdd((Vec*)part->pos, &scaled, (Vec*)part->pos);
         }

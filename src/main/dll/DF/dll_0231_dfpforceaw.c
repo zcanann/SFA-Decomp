@@ -15,11 +15,11 @@
 #include "main/gamebit_ids.h"
 
 #define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DFPFORCEAW_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
+#define DFPFORCEAW_MSG_PLAYER_BURST           0x60004 /* knock the player back with a burst hit */
 
 /* partfx ids spawned on the player-burst trigger: single burst flash plus a
  * 10-count spray of burst particles (same shape in both mainGetBit(0x1d9) arms) */
-#define DFPFORCEAW_PARTFX_BURST 0x5ed       /* spawned once */
+#define DFPFORCEAW_PARTFX_BURST          0x5ed /* spawned once */
 #define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
 
 typedef struct TrickyCurveObjectDef
@@ -77,7 +77,8 @@ void TrickyCurve_updateBurstTrigger(int obj)
     dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
 
-    if ((((TrickyCurveObjState*)state)->gateGameBit != -1) && (mainGetBit(((TrickyCurveObjState*)state)->gateGameBit) != 0))
+    if ((((TrickyCurveObjState*)state)->gateGameBit != -1) &&
+        (mainGetBit(((TrickyCurveObjState*)state)->gateGameBit) != 0))
     {
         return;
     }
@@ -159,8 +160,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
             do
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST_PARTICLE, &fxParams, 2, -1, NULL);
-            }
-            while (burstParticles-- != 0);
+            } while (burstParticles-- != 0);
         }
         else
         {
@@ -170,8 +170,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
             do
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST_PARTICLE, &fxParams, 2, -1, NULL);
-            }
-            while (burstParticles-- != 0);
+            } while (burstParticles-- != 0);
         }
         mainSetBits(((TrickyCurveObjState*)state)->triggerGameBit, 1);
         Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
@@ -182,8 +181,14 @@ void TrickyCurve_updateBurstTrigger(int obj)
     state[0x12] = zSide;
 }
 
-int TrickyCurve_getExtraSize(void) { return 0x14; }
-int TrickyCurve_getObjectTypeId(void) { return 0x0; }
+int TrickyCurve_getExtraSize(void)
+{
+    return 0x14;
+}
+int TrickyCurve_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void TrickyCurve_free(int obj)
 {

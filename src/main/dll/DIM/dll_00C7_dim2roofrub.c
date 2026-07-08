@@ -75,71 +75,27 @@ ObjectDescriptor gPollenObjDescriptor = {
 };
 
 PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
 
 PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
 };
 
 PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
 };
 
 PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
@@ -179,7 +135,7 @@ typedef struct Dim2roofrubPlacement
     f32 posX;
     f32 posY;
     f32 posZ;
-    s32 mapId; /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
+    s32 mapId;         /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
     s16 animDataIndex; /* 0x18 anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
     s16 unk1A;
     s16 unk1C;
@@ -229,15 +185,7 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void GCbaddieShield_update(int* obj);
 
-
-
-
-
-
-
-
 extern void Shield_update(int* obj);
-
 
 extern int* Obj_GetActiveModel(int obj);
 extern void objSetSlot(int* obj, int slot);
@@ -245,10 +193,10 @@ extern f32 lbl_803E3270;
 
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
+extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
-extern void objSetMtxFn_800412d4(f32 * m);
+extern void objSetMtxFn_800412d4(f32* m);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
@@ -303,7 +251,10 @@ void Shield_release(void);
 void Shield_initialise(void);
 
 int animatedobj_getExtraSize(void);
-int dim2roofrub_getExtraSize(void) { return 0x140; }
+int dim2roofrub_getExtraSize(void)
+{
+    return 0x140;
+}
 int depthoffieldpoint_getExtraSize(void);
 int staff_getExtraSize(void);
 int staff_getObjectTypeId(void);
@@ -316,9 +267,8 @@ int Shield_getObjectTypeId(void);
 
 void dim2roofrub_free(int* obj)
 {
-    (*gObjectTriggerInterface)
-        ->freeState(((GameObject*)obj)->extra);
-    ((void(*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
+    ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
 
@@ -335,7 +285,10 @@ void staffFn_80170380(int* obj, int cmd);
 void Shield_init(int* obj, void* initData);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBomb_initialise,
     (ObjectDescriptorCallback)MikaBomb_release,
     0,
@@ -349,7 +302,10 @@ ObjectDescriptor gMikaBombObjDescriptor = {
 };
 
 ObjectDescriptor gMikaBombShadowObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBombShadow_initialise,
     (ObjectDescriptorCallback)MikaBombShadow_release,
     0,
@@ -363,7 +319,10 @@ ObjectDescriptor gMikaBombShadowObjDescriptor = {
 };
 
 ObjectDescriptor gStaticCameraObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)StaticCamera_initialise,
     (ObjectDescriptorCallback)StaticCamera_release,
     0,
@@ -377,7 +336,10 @@ ObjectDescriptor gStaticCameraObjDescriptor = {
 };
 
 ObjectDescriptor gGCbaddieShieldObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)GCbaddieShield_initialise,
     (ObjectDescriptorCallback)GCbaddieShield_release,
     0,
@@ -391,7 +353,10 @@ ObjectDescriptor gGCbaddieShieldObjDescriptor = {
 };
 
 ObjectDescriptor gBaddieInterestPObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)BaddieInterestP_initialise,
     (ObjectDescriptorCallback)BaddieInterestP_release,
     0,
@@ -405,22 +370,14 @@ ObjectDescriptor gBaddieInterestPObjDescriptor = {
 };
 
 u32 lbl_80320700[] = {
-    0xFFFFFFFF,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 ObjectDescriptor gAnimatedObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -434,60 +391,19 @@ ObjectDescriptor gAnimatedObjDescriptor = {
 };
 
 u32 lbl_80320768[] = {
-    0x00000000,
-    0x3FD5A1CB,
-    0xC0253F7D,
-    0x3C23D70A,
-    0x06100000,
-    0x402F3B64,
-    0x3F4B020C,
-    0xBFFA1CAC,
-    0x3C23D70A,
-    0x09200000,
-    0x402EB852,
-    0x3F476C8B,
-    0xBF73B646,
-    0x3C23D70A,
-    0x07200000,
-    0x4032E148,
-    0xBF795810,
-    0xBFF8F5C3,
-    0x3C23D70A,
-    0x09200000,
-    0x4033F7CF,
-    0xBF810625,
-    0xBF747AE1,
-    0x3C23D70A,
-    0x07200000,
-    0xC02F3B64,
-    0x3F4B020C,
-    0xBFFC28F6,
-    0x3C23D70A,
-    0x09200000,
-    0xC02EB852,
-    0x3F476C8B,
-    0xBF73B646,
-    0x3C23D70A,
-    0x07200000,
-    0xC032E148,
-    0xBF795810,
-    0xBFFC49BA,
-    0x3C23D70A,
-    0x09200000,
-    0xC033F7CF,
-    0xBF810625,
-    0xBF747AE1,
-    0x3C23D70A,
-    0x07200000,
-    0x00000000,
-    0x3ECF5C29,
-    0x403CED91,
-    0x3C23D70A,
-    0x08400000,
+    0x00000000, 0x3FD5A1CB, 0xC0253F7D, 0x3C23D70A, 0x06100000, 0x402F3B64, 0x3F4B020C, 0xBFFA1CAC, 0x3C23D70A,
+    0x09200000, 0x402EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0x4032E148, 0xBF795810, 0xBFF8F5C3,
+    0x3C23D70A, 0x09200000, 0x4033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000, 0xC02F3B64, 0x3F4B020C,
+    0xBFFC28F6, 0x3C23D70A, 0x09200000, 0xC02EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0xC032E148,
+    0xBF795810, 0xBFFC49BA, 0x3C23D70A, 0x09200000, 0xC033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000,
+    0x00000000, 0x3ECF5C29, 0x403CED91, 0x3C23D70A, 0x08400000,
 };
 
 ObjectDescriptor gDIM2RoofRubObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -501,7 +417,10 @@ ObjectDescriptor gDIM2RoofRubObjDescriptor = {
 };
 
 ObjectDescriptor gDepthOfFieldPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -515,28 +434,20 @@ ObjectDescriptor gDepthOfFieldPointObjDescriptor = {
 };
 
 u16 lbl_803208A0[] = {
-    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
-    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
-    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
-    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
-    0x00C2, 0x006F, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x00C2, 0x006F, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 
 u32 lbl_803208E8[] = {
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0x01020000,
-    0,
-    0,
+    0, 0, 0, 0, 0, 0, 0x01020000, 0, 0,
 };
 
 ObjectDescriptor23 gStaffObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_23_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_23_SLOTS,
     (ObjectDescriptorCallback)staff_initialise,
     (ObjectDescriptorCallback)staff_release,
     0,
@@ -570,7 +481,10 @@ u32 lbl_80320978[] = {
 
 ObjectDescriptor10WithPadding gFireballObjDescriptor = {
     {
-        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
         (ObjectDescriptorCallback)Fireball_initialise,
         (ObjectDescriptorCallback)Fireball_release,
         0,
@@ -586,19 +500,14 @@ ObjectDescriptor10WithPadding gFireballObjDescriptor = {
 };
 
 u32 lbl_803209C0[] = {
-    0x0000004F,
-    0xFFC40000,
-    0x0000001F,
-    0x0000004F,
-    0x00C4FF00,
-    0x00000005,
-    0x0000004F,
-    0x00C4FF00,
-    0x0000001E,
+    0x0000004F, 0xFFC40000, 0x0000001F, 0x0000004F, 0x00C4FF00, 0x00000005, 0x0000004F, 0x00C4FF00, 0x0000001E,
 };
 
 ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
     (ObjectDescriptorCallback)flamethrowerspe_initialise,
     (ObjectDescriptorCallback)flamethrowerspe_release,
     0,
@@ -615,26 +524,14 @@ ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
 };
 
 f32 lbl_80320A28[] = {
-    0.5f,
-    0.55f,
-    0.65f,
-    0.7f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.3f,
-    0.3f,
-    0.3f,
-    0.3f,
+    0.5f, 0.55f, 0.65f, 0.7f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.3f, 0.3f, 0.3f, 0.3f,
 };
 
 ObjectDescriptor gShieldObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Shield_initialise,
     (ObjectDescriptorCallback)Shield_release,
     0,
@@ -648,18 +545,17 @@ ObjectDescriptor gShieldObjDescriptor = {
 };
 
 u32 jumptable_80320AA0[] = {
-    (u32)((char*)staffFn_80170380 + 0x10C),
-    (u32)((char*)staffFn_80170380 + 0x184),
-    (u32)((char*)staffFn_80170380 + 0x35C),
-    (u32)((char*)staffFn_80170380 + 0x3D0),
-    (u32)((char*)staffFn_80170380 + 0x584),
-    (u32)((char*)staffFn_80170380 + 0x550),
-    (u32)((char*)staffFn_80170380 + 0x65C),
-    (u32)((char*)staffFn_80170380 + 0x84),
+    (u32)((char*)staffFn_80170380 + 0x10C), (u32)((char*)staffFn_80170380 + 0x184),
+    (u32)((char*)staffFn_80170380 + 0x35C), (u32)((char*)staffFn_80170380 + 0x3D0),
+    (u32)((char*)staffFn_80170380 + 0x584), (u32)((char*)staffFn_80170380 + 0x550),
+    (u32)((char*)staffFn_80170380 + 0x65C), (u32)((char*)staffFn_80170380 + 0x84),
 };
 
 ObjectDescriptor12 gCurveObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
     0,
     0,
     0,
@@ -675,21 +571,14 @@ ObjectDescriptor12 gCurveObjDescriptor = {
 };
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)restartmarker_init,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0, (ObjectDescriptorCallback)restartmarker_init, 0, 0, 0, 0, 0, 0,
 };
 
 ObjectDescriptor dll_F7 = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)dll_F7_initialise,
     (ObjectDescriptorCallback)dll_F7_release,
     0,
@@ -704,7 +593,10 @@ ObjectDescriptor dll_F7 = {
 
 ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     {
-        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
         (ObjectDescriptorCallback)checkpoint4_initialise,
         (ObjectDescriptorCallback)checkpoint4_release,
         0,
@@ -722,15 +614,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 
 void GCbaddieShield_update(int* obj);
 
-
-
-
 void MikaBombShadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
-
-
-
 
 void dim2roofrub_init(int* obj, int* params)
 {
@@ -753,8 +639,7 @@ void dim2roofrub_init(int* obj, int* params)
     f4 = ((GameObject*)obj)->unkF4;
     if (f4 == 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != 1)
     {
-        (*gObjectTriggerInterface)
-            ->loadAnimData((u8*)state, (u8*)params);
+        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
         ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
     else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != f4 - 1)
@@ -762,8 +647,7 @@ void dim2roofrub_init(int* obj, int* params)
         (*gObjectTriggerInterface)->freeState((u8*)state);
         if (((Dim2roofrubPlacement*)params)->animDataIndex != -1)
         {
-            (*gObjectTriggerInterface)
-                ->loadAnimData((u8*)state, (u8*)params);
+            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
         }
         ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
@@ -776,7 +660,6 @@ void dim2roofrub_init(int* obj, int* params)
         }
     }
 }
-
 
 void MikaBomb_init(int* obj);
 
@@ -800,13 +683,13 @@ typedef struct Dim2FxVec
     f32 z;
 } Dim2FxVec;
 
-#define DIM2ROOFRUB_SEQID_SLIDE       0xa8
-#define DIM2ROOFRUB_SEQID_TREAD       0x451
+#define DIM2ROOFRUB_SEQID_SLIDE 0xa8
+#define DIM2ROOFRUB_SEQID_TREAD 0x451
 
-#define DIM2ROOFRUB_EVENT_TOGGLE_LIGHT  1
-#define DIM2ROOFRUB_EVENT_TOGGLE_HEAVY  2
-#define DIM2ROOFRUB_EVENT_TOGGLE_FX     3
-#define DIM2ROOFRUB_EVENT_SPAWN_DUST    4
+#define DIM2ROOFRUB_EVENT_TOGGLE_LIGHT 1
+#define DIM2ROOFRUB_EVENT_TOGGLE_HEAVY 2
+#define DIM2ROOFRUB_EVENT_TOGGLE_FX    3
+#define DIM2ROOFRUB_EVENT_SPAWN_DUST   4
 /* dust particle spawned 3x on the SPAWN_DUST anim event */
 #define DIM2ROOFRUB_PARTFX 2046
 
@@ -846,15 +729,18 @@ void dim2roofrub_spawnEffects(int* obj)
         v.x = gDim2RoofRubEffectScale * (lbl_803E3248 * ((GameObject*)obj)->anim.rootMotionScale);
         v.y = gDim2RoofRubEffectScale * (lbl_803E324C * ((GameObject*)obj)->anim.rootMotionScale);
         v.z = gDim2RoofRubEffectScale * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
-        objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count, lbl_803E3258, &v);
+        objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count, lbl_803E3258,
+                              &v);
         v.x = lbl_803E325C;
         v.y = gDim2RoofRubEffectScale * (lbl_803E3260 * ((GameObject*)obj)->anim.rootMotionScale);
         v.z = gDim2RoofRubEffectScale * (lbl_803E3264 * ((GameObject*)obj)->anim.rootMotionScale);
-        objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count, lbl_803E3268, &v);
+        objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count, lbl_803E3268,
+                              &v);
         v.x = gDim2RoofRubEffectScale * (lbl_803E326C * ((GameObject*)obj)->anim.rootMotionScale);
         v.y = gDim2RoofRubEffectScale * (lbl_803E324C * ((GameObject*)obj)->anim.rootMotionScale);
         v.z = gDim2RoofRubEffectScale * (lbl_803E3250 * ((GameObject*)obj)->anim.rootMotionScale);
-        objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count, lbl_803E3258, &v);
+        objfx_spawnLightPulse(obj, lbl_803E3254 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count, lbl_803E3258,
+                              &v);
     }
     if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_SLIDE)
     {
@@ -895,8 +781,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
         prm = *(int**)&((GameObject*)obj)->anim.placementData;
         PSMTXTrans(mTransPlayer, -(((Dim2roofrubPlacement*)prm)->posX - playerMapOffsetX),
-                   -((Dim2roofrubPlacement*)prm)->posY,
-                   -(((Dim2roofrubPlacement*)prm)->posZ - playerMapOffsetZ));
+                   -((Dim2roofrubPlacement*)prm)->posY, -(((Dim2roofrubPlacement*)prm)->posZ - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
         cam = (s16*)(*gCameraInterface)->getCamera();
         ((GameObject*)cam)->anim.rotY += 0x8000;
@@ -956,17 +841,17 @@ void dim2roofrub_update(int* obj)
                 ((GameObject*)obj)->unkF8 ^= 4;
                 break;
             case DIM2ROOFRUB_EVENT_SPAWN_DUST:
+            {
+                int k;
+                v.x = ((GameObject*)obj)->anim.localPosX;
+                v.y = ((GameObject*)obj)->anim.localPosY;
+                v.z = ((GameObject*)obj)->anim.localPosZ;
+                for (k = 3; k != 0; k--)
                 {
-                    int k;
-                    v.x = ((GameObject*)obj)->anim.localPosX;
-                    v.y = ((GameObject*)obj)->anim.localPosY;
-                    v.z = ((GameObject*)obj)->anim.localPosZ;
-                    for (k = 3; k != 0; k--)
-                    {
-                        (*gPartfxInterface)->spawnObject(obj, DIM2ROOFRUB_PARTFX, &v, 0x200001, -1, NULL);
-                    }
-                    break;
+                    (*gPartfxInterface)->spawnObject(obj, DIM2ROOFRUB_PARTFX, &v, 0x200001, -1, NULL);
                 }
+                break;
+            }
             }
         }
         res = (*gObjectTriggerInterface)->update((u8*)obj, timeDelta);
@@ -1008,10 +893,7 @@ void dim2roofrub_update(int* obj)
 }
 #pragma opt_propagation reset
 
-
-
 void Shield_update(int* obj);
-
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 

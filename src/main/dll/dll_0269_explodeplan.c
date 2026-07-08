@@ -24,7 +24,7 @@ typedef struct ExplodePlanState
 typedef struct ExplodePlanPlacement
 {
     u8 pad0[0x18];
-    s8 rotXByte;     /* 0x18: rotX in 1/256 turns */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1E - 0x19];
     s16 removeGameBit; /* 0x1E: game bit that removes this prop */
 } ExplodePlanPlacement;
@@ -33,9 +33,15 @@ STATIC_ASSERT(offsetof(ExplodePlanPlacement, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(ExplodePlanPlacement, removeGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ExplodePlanPlacement) == 0x20);
 
-int explodeplan_getExtraSize(void) { return sizeof(ExplodePlanState); }
+int explodeplan_getExtraSize(void)
+{
+    return sizeof(ExplodePlanState);
+}
 
-int explodeplan_getObjectTypeId(void) { return EXPLODEPLAN_OBJECT_TYPE_ID; }
+int explodeplan_getObjectTypeId(void)
+{
+    return EXPLODEPLAN_OBJECT_TYPE_ID;
+}
 
 void explodeplan_free(void)
 {

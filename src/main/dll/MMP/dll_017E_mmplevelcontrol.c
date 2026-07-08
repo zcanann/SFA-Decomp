@@ -24,7 +24,7 @@ extern void Music_Trigger(int id, int arg);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 
-#define MMPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
+#define MMPLEVELCONTROL_OBJFLAG_HIDDEN             0x4000
 #define MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* env-effect ids for the area weather/sky sets (index-style; roles opaque).
@@ -39,12 +39,8 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 #define MMPLEVELCONTROL_ENVFX_G 0x10d
 #define MMPLEVELCONTROL_ENVFX_H 0x139
 
-
-
-
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int setBit, int textId);
-
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int setBit,
+                                  int textId);
 
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
@@ -76,8 +72,14 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
-int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
+int MMP_levelcontrol_getExtraSize(void)
+{
+    return 0x0;
+}
+int MMP_levelcontrol_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void MMP_levelcontrol_free(int obj)
 {
@@ -89,7 +91,8 @@ void MMP_levelcontrol_free(int obj)
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void MMP_levelcontrol_hitDetect(void)
@@ -155,7 +158,8 @@ void MMP_levelcontrol_update(int obj)
             }
             ((GameObject*)obj)->unkF8 = 1;
         }
-        else if (coordsToMapCell(((GameObject*)playerForMap)->anim.localPosX, ((GameObject*)playerForMap)->anim.localPosZ) == 0x12)
+        else if (coordsToMapCell(((GameObject*)playerForMap)->anim.localPosX,
+                                 ((GameObject*)playerForMap)->anim.localPosZ) == 0x12)
         {
             skyFn_80088c94(7, 0);
             if (((GameObject*)obj)->unkF4 == 2)

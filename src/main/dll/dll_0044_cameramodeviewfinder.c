@@ -33,7 +33,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_B  0x200
 #define PAD_TRIGGER_Z 0x010
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
@@ -41,11 +41,11 @@
 
 /* ViewfinderState.mode state machine (see file header) */
 #define VIEWFINDER_MODE_ENTER_BLEND 0
-#define VIEWFINDER_MODE_YAW_SETTLE 1
-#define VIEWFINDER_MODE_ACTIVE 2
-#define VIEWFINDER_MODE_EXIT_BLEND 3
-#define VIEWFINDER_MODE_FADE_BACK 4
-#define VIEWFINDER_MODE_IDLE 5
+#define VIEWFINDER_MODE_YAW_SETTLE  1
+#define VIEWFINDER_MODE_ACTIVE      2
+#define VIEWFINDER_MODE_EXIT_BLEND  3
+#define VIEWFINDER_MODE_FADE_BACK   4
+#define VIEWFINDER_MODE_IDLE        5
 
 extern u8 padGetCY(int port);
 extern s8 padGetStickX(int port);
@@ -113,13 +113,12 @@ void firstPersonDoControls(s16* obj)
     spin = stickX * -(lbl_803E17F0 * zoom - lbl_803E17EC);
     spin = interpolate(spin - lbl_803DD548->yawSpeed, lbl_803E17F4, timeDelta);
     lbl_803DD548->yawSpeed = lbl_803DD548->yawSpeed + spin;
-    if ((lbl_803DD548->yawSpeed > lbl_803E17F8) &&
-        (lbl_803DD548->yawSpeed < lbl_803E17FC))
+    if ((lbl_803DD548->yawSpeed > lbl_803E17F8) && (lbl_803DD548->yawSpeed < lbl_803E17FC))
     {
         lbl_803DD548->yawSpeed = lbl_803E17C4;
     }
     spinI = (int)(lbl_803E1800 * ((f32)stickY / lbl_803E1804));
-    *obj = lbl_803DD548->yawSpeed * timeDelta + (f32) * obj;
+    *obj = lbl_803DD548->yawSpeed * timeDelta + (f32)*obj;
     pitchDelta = spinI - (obj[1] & 0xffffU);
     if (0x8000 < pitchDelta)
     {
@@ -155,23 +154,19 @@ void firstPersonDoControls(s16* obj)
     {
         zoom2 = ((CameraObject*)obj)->fov;
         stickX = padGetCY(0);
-        t = (f32) - stickX;
+        t = (f32)-stickX;
         t = lbl_803E1810 * t;
         zoom2 = t * timeDelta + zoom2;
         viewFinderSetZoom(Camera_GetFovY());
-        fovTarget = (zoom2 < lbl_803E17FC)
-                        ? lbl_803E17FC
-                        : ((zoom2 > lbl_803E17E0) ? lbl_803E17E0 : zoom2);
+        fovTarget = (zoom2 < lbl_803E17FC) ? lbl_803E17FC : ((zoom2 > lbl_803E17E0) ? lbl_803E17E0 : zoom2);
         if (lbl_803DD548->flags.sfxEnabled)
         {
-            if ((fovTarget == ((CameraObject*)obj)->fov) &&
-                (lbl_803DD548->flags.zoomSfxPlaying))
+            if ((fovTarget == ((CameraObject*)obj)->fov) && (lbl_803DD548->flags.zoomSfxPlaying))
             {
                 Sfx_StopFromObject(0, SFXTRIG_and_swipe1);
                 lbl_803DD548->flags.zoomSfxPlaying = 0;
             }
-            if ((fovTarget != ((CameraObject*)obj)->fov) &&
-                (!lbl_803DD548->flags.zoomSfxPlaying))
+            if ((fovTarget != ((CameraObject*)obj)->fov) && (!lbl_803DD548->flags.zoomSfxPlaying))
             {
                 Sfx_PlayFromObject(0, SFXTRIG_and_swipe1);
                 lbl_803DD548->flags.zoomSfxPlaying = 1;
@@ -377,12 +372,14 @@ void CameraModeViewfinder_update(s16* obj)
             lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
             lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
             curvesMove(&lbl_803DD548->viewCurve);
-            *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) = *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) & ~0x4000;
+            *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) =
+                *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) & ~0x4000;
             firstPersonZoomOutOnExit(0xf, 0xfe);
             lbl_803DD548->mode = VIEWFINDER_MODE_FADE_BACK;
             if (lbl_803DD548->flags.sfxEnabled)
             {
-                Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? SFXTRIG_and_missilelaunch : SFXTRIG_shop_pricedown);
+                Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? SFXTRIG_and_missilelaunch
+                                                                         : SFXTRIG_shop_pricedown);
             }
         }
         ((CameraObject*)obj)->unk13E = 1;
@@ -430,8 +427,7 @@ void CameraModeViewfinder_update(s16* obj)
         {
             brightness = 1;
         }
-        (*gCameraInterface)->getRelativePosition(lbl_803E17C4, (int)obj, &outA, &hitY,
-                                                 &outB, &hitDist, 0);
+        (*gCameraInterface)->getRelativePosition(lbl_803E17C4, (int)obj, &outA, &hitY, &outB, &hitDist, 0);
         if (hitDist < lbl_803E182C)
         {
             obj[1] = 0;
@@ -485,9 +481,9 @@ void CameraModeViewfinder_update(s16* obj)
         (*gCameraInterface)->setMode(VIEWFINDER_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0);
     }
     logPrintf(&sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
-    Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
-                                   (f32*)(obj + 6), (f32*)(obj + 8), (f32*)(obj + 10),
-                                   *(int*)&((GameObject*)obj)->anim.parent);
+    Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                                   ((GameObject*)obj)->anim.worldPosZ, (f32*)(obj + 6), (f32*)(obj + 8),
+                                   (f32*)(obj + 10), *(int*)&((GameObject*)obj)->anim.parent);
 }
 
 void CameraModeViewfinder_init(s16* obj, int mode, int* args)
@@ -565,7 +561,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->posZCurve.endTangent = zero;
     curvesMove(&lbl_803DD548->viewCurve);
     a2 = obj[0] - (u16)(0x8000 - getAngle(((GameObject*)obj)->anim.worldPosX - lbl_803DD548->posXCurve.end,
-                                              ((GameObject*)obj)->anim.worldPosZ - lbl_803DD548->posZCurve.end));
+                                          ((GameObject*)obj)->anim.worldPosZ - lbl_803DD548->posZCurve.end));
     if (a2 > 0x8000)
     {
         a2 = a2 - 0xffff;

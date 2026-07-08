@@ -3,7 +3,8 @@
 
 #pragma exceptions on
 
-typedef struct {
+typedef struct
+{
     DSPTaskInfo task;
     u8 pad[0x10];
     u8 dram[0x2000];
@@ -11,7 +12,7 @@ typedef struct {
 
 extern u16 hwIrqLevel;
 extern u32 oldState;
-extern void*(*gSalMallocHook)(u32 size);
+extern void* (*gSalMallocHook)(u32 size);
 extern u32 salLastTick;
 extern u16 dspCmdFirstSize;
 extern u32 dspCmdList;
@@ -133,4 +134,3 @@ void* salMalloc(u32 size)
 {
     return gSalMallocHook(size);
 }
-

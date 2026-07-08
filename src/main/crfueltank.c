@@ -5,14 +5,13 @@
 
 /* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): hides the tank from
    render/update; toggled with the hit-volume enable/disable. */
-#define CRFUELTANK_OBJFLAG_HIDDEN 0x4000
+#define CRFUELTANK_OBJFLAG_HIDDEN  0x4000
 #define CRFUELTANK_HIT_VOLUME_SLOT 0x1d
 
 extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 extern void ObjHits_DisableObject(void* obj);
 extern void ObjHits_EnableObject(void* obj);
 extern void ObjHits_SetHitVolumeSlot(void* obj, int hitVolume, int hitType, int sourceSlot);
-
 
 extern int fn_80080150(void* timer);
 extern void storeZeroToFloatParam(void* timer);
@@ -171,8 +170,25 @@ extern void ProximityMine_init();
 extern void ProximityMine_release();
 extern void ProximityMine_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gProximityMineObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, ProximityMine_initialise, ProximityMine_release, (void*)0x00000000, ProximityMine_init, ProximityMine_update, ProximityMine_hitDetect, ProximityMine_render, ProximityMine_free, ProximityMine_getObjectTypeId, ProximityMine_getExtraSize };
-void* gKtRexLevelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, KT_RexLevel_initialise, KT_RexLevel_release, (void*)0x00000000, KT_RexLevel_init, KT_RexLevel_update, KT_RexLevel_hitDetect, KT_RexLevel_render, KT_RexLevel_free, KT_RexLevel_getObjectTypeId, KT_RexLevel_getExtraSize };
-u8 lbl_8032A510[12] = { 0, 8, 0, 14, 0, 16, 0, 17, 0, 16, 0, 17 };
-u8 lbl_8032A51C[12] = { 59, 196, 155, 166, 59, 68, 155, 166, 59, 68, 155, 166 };
-u8 lbl_8032A528[12] = { 59, 180, 57, 88, 60, 68, 155, 166, 60, 68, 155, 166 };
+void* gProximityMineObjDescriptor[14] = {(void*)0x00000000,
+                                         (void*)0x00000000,
+                                         (void*)0x00000000,
+                                         (void*)0x00090000,
+                                         ProximityMine_initialise,
+                                         ProximityMine_release,
+                                         (void*)0x00000000,
+                                         ProximityMine_init,
+                                         ProximityMine_update,
+                                         ProximityMine_hitDetect,
+                                         ProximityMine_render,
+                                         ProximityMine_free,
+                                         ProximityMine_getObjectTypeId,
+                                         ProximityMine_getExtraSize};
+void* gKtRexLevelObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
+                                      (void*)0x00090000,           KT_RexLevel_initialise,  KT_RexLevel_release,
+                                      (void*)0x00000000,           KT_RexLevel_init,        KT_RexLevel_update,
+                                      KT_RexLevel_hitDetect,       KT_RexLevel_render,      KT_RexLevel_free,
+                                      KT_RexLevel_getObjectTypeId, KT_RexLevel_getExtraSize};
+u8 lbl_8032A510[12] = {0, 8, 0, 14, 0, 16, 0, 17, 0, 16, 0, 17};
+u8 lbl_8032A51C[12] = {59, 196, 155, 166, 59, 68, 155, 166, 59, 68, 155, 166};
+u8 lbl_8032A528[12] = {59, 180, 57, 88, 60, 68, 155, 166, 60, 68, 155, 166};

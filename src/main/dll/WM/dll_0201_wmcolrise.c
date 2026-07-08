@@ -19,7 +19,7 @@ typedef struct WMColrisePlacement
     ObjPlacement base; /* base.posY = the column's rest height */
     s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
     u8 pad19[5];
-    s16 gameBit;       /* 0x1E: rise-allowed gate, -1 = always */
+    s16 gameBit; /* 0x1E: rise-allowed gate, -1 = always */
 } WMColrisePlacement;
 
 STATIC_ASSERT(offsetof(WMColrisePlacement, gameBit) == 0x1E);
@@ -38,8 +38,14 @@ int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int WM_colrise_getExtraSize(void) { return sizeof(WMColriseState); }
-int WM_colrise_getObjectTypeId(void) { return 0x0; }
+int WM_colrise_getExtraSize(void)
+{
+    return sizeof(WMColriseState);
+}
+int WM_colrise_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_colrise_free(void)
 {
@@ -51,22 +57,21 @@ extern f32 lbl_803E5DC8; /* 1.0: render scale */
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5DC8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5DC8);
 }
 
 void WM_colrise_hitDetect(void)
 {
 }
 
-
-
 extern f32 timeDelta;
 extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
-extern f32 lbl_803E5DD0; /* 20.0 */
-extern f32 lbl_803E5DD4; /* 100.0: raised height above placement */
-extern f32 lbl_803E5DD8; /* 0.5: settle speed when overshot */
-extern f32 lbl_803E5DDC; /* 0.25: rise speed */
-extern f32 lbl_803E5DE0; /* 0.125: sink speed */
+extern f32 lbl_803E5DD0;       /* 20.0 */
+extern f32 lbl_803E5DD4;       /* 100.0: raised height above placement */
+extern f32 lbl_803E5DD8;       /* 0.5: settle speed when overshot */
+extern f32 lbl_803E5DDC;       /* 0.25: rise speed */
+extern f32 lbl_803E5DE0;       /* 0.125: sink speed */
 
 /* the rider registry hanging off anim+0x58 (engine field not yet
    named in ObjAnimComponent): the shared platform helpers push the
@@ -94,7 +99,8 @@ void WM_colrise_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
     sub->raiseTimer -= 1;
-    if ((s8)sub->raiseTimer < 0) sub->raiseTimer = 0;
+    if ((s8)sub->raiseTimer < 0)
+        sub->raiseTimer = 0;
     /* rearm the 60-frame rise window while any rider sits more than
        3.0 above the column */
     if ((s8)OBJ_RIDER_REGISTRY(obj)->riderCount > 0)

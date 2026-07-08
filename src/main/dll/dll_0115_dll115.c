@@ -26,16 +26,16 @@ extern f32 lbl_803E37B0;
 
 enum
 {
-    DLL115_STEP_COUNT = 8,    /* number of indexed step slots */
-    DLL115_STEP_IDLE = 8,     /* parked, awaiting nothing */
-    DLL115_STEP_FINISH = 9,   /* run the preempt + finishing sequence */
-    DLL115_STEP_DONE = 10     /* terminal */
+    DLL115_STEP_COUNT = 8,  /* number of indexed step slots */
+    DLL115_STEP_IDLE = 8,   /* parked, awaiting nothing */
+    DLL115_STEP_FINISH = 9, /* run the preempt + finishing sequence */
+    DLL115_STEP_DONE = 10   /* terminal */
 };
 
 /* placement+0x39 flag: start parked instances at the finishing step */
 #define DLL115_PLACEMENT_FINISH_FLAG 0x10
 
-#define DLL115_OBJFLAG_HIDDEN 0x4000
+#define DLL115_OBJFLAG_HIDDEN             0x4000
 #define DLL115_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* Sequence-event callback: while a trigger sequence is running on an
@@ -73,15 +73,25 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int dll_115_getExtraSize_ret_2(void) { return 0x2; }
-int dll_115_getObjectTypeId(void) { return 0x0; }
+int dll_115_getExtraSize_ret_2(void)
+{
+    return 0x2;
+}
+int dll_115_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void dll_115_free(int obj) { ObjGroup_RemoveObject(obj, DLL115_OBJGROUP); }
+void dll_115_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, DLL115_OBJGROUP);
+}
 
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37B0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37B0);
 }
 
 void dll_115_hitDetect_nop(void)
@@ -123,8 +133,9 @@ void dll_115_update(int obj)
     {
     case DLL115_STEP_FINISH:
         (*gObjectTriggerInterface)->preempt(obj, ((Dll115Placement*)mapData)->preemptArg);
-        (*gObjectTriggerInterface)->runSequence(((Dll115Placement*)mapData)->finishSeqId, (void*)obj,
-                                                ((Dll115Placement*)mapData)->finishSeqParam);
+        (*gObjectTriggerInterface)
+            ->runSequence(((Dll115Placement*)mapData)->finishSeqId, (void*)obj,
+                          ((Dll115Placement*)mapData)->finishSeqParam);
         break;
     case DLL115_STEP_IDLE:
     case DLL115_STEP_DONE:
@@ -150,8 +161,10 @@ void dll_115_update(int obj)
     while (step >= 0)
     {
         eventId = p[12];
-        if (eventId == -1) break;
-        if ((u32)mainGetBit(eventId) != 0) break;
+        if (eventId == -1)
+            break;
+        if ((u32)mainGetBit(eventId) != 0)
+            break;
         state[0]--;
         p--;
         step--;
@@ -173,12 +186,13 @@ void dll_115_init(s16* obj, int mapData)
     p = (s16*)mapData;
     do
     {
-        if (p[12] == -1) break;
-        if ((u32)mainGetBit(p[12]) == 0) break;
+        if (p[12] == -1)
+            break;
+        if ((u32)mainGetBit(p[12]) == 0)
+            break;
         p++;
         step++;
-    }
-    while (step < DLL115_STEP_COUNT);
+    } while (step < DLL115_STEP_COUNT);
     if ((step < DLL115_STEP_COUNT) && (*(s16*)(mapData + 0x18 + step * 2) == -1))
     {
         state[0] = DLL115_STEP_IDLE;
@@ -187,8 +201,7 @@ void dll_115_init(s16* obj, int mapData)
     {
         state[0] = step;
     }
-    if ((state[0] == DLL115_STEP_IDLE) &&
-        ((((Dll115Placement*)mapData)->flags & DLL115_PLACEMENT_FINISH_FLAG) != 0))
+    if ((state[0] == DLL115_STEP_IDLE) && ((((Dll115Placement*)mapData)->flags & DLL115_PLACEMENT_FINISH_FLAG) != 0))
     {
         state[0] = DLL115_STEP_FINISH;
     }

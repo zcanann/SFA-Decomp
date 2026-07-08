@@ -118,9 +118,7 @@ void fn_801C2914(int obj)
     state->orbitC += (s32)(lbl_803E4E58 * timeDelta);
 
     ((GameObject*)obj)->anim.localPosY =
-        lbl_803E4E5C +
-        (((ObjPlacement*)def)->posY +
-            mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64));
+        lbl_803E4E5C + (((ObjPlacement*)def)->posY + mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64));
 
     trigA = mathSinf((gDfShShrinePi * state->orbitB) / lbl_803E4E64);
     trigB = mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64);
@@ -136,10 +134,9 @@ void fn_801C2914(int obj)
                                                                  (ObjAnimEventList*)animEvents);
     if (player != NULL)
     {
-        angleDelta =
-        ((u16)getAngle(((GameObject*)obj)->anim.worldPosX - ((GameObject*)player)->anim.worldPosX,
-                       ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)player)->anim.worldPosZ) -
-            ((u16)((GameObject*)obj)->anim.rotX));
+        angleDelta = ((u16)getAngle(((GameObject*)obj)->anim.worldPosX - ((GameObject*)player)->anim.worldPosX,
+                                    ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)player)->anim.worldPosZ) -
+                      ((u16)((GameObject*)obj)->anim.rotX));
         if (angleDelta > 0x8000)
         {
             angleDelta -= 0xffff;
@@ -304,10 +301,10 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-#define DFSH_REWARD_BIT(idx) (base[(idx)])
-#define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx) (((u16 *)((u8 *)base + 40))[(idx)])
-#define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)base + 0x3c))[(idx)])
+#define DFSH_REWARD_BIT(idx)    (base[(idx)])
+#define DFSH_REWARD_DELAY(idx)  (base[10 + (idx)])
+#define DFSH_REQUIRED_BIT(idx)  (((u16*)((u8*)base + 40))[(idx)])
+#define DFSH_TARGET_OBJECT(idx) (((int*)((u8*)base + 0x3c))[(idx)])
 
 typedef struct DfshShrineFlagsBits
 {
@@ -361,12 +358,10 @@ void DFSH_Shrine_update(int objArg)
     }
     SCGameBitLatch_UpdateInverted(state->musicLatch, 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update(state->musicLatch, 4, -1, -1, 0xcbb, 0xc4);
-    if ((f32)(s32)state->transitionTimer > lbl_803E4E8C
-    )
+    if ((f32)(s32)state->transitionTimer > lbl_803E4E8C)
     {
         state->transitionTimer = (f32)(s32)state->transitionTimer - timeDelta;
-        if ((f32)(s32)state->transitionTimer <= lbl_803E4E8C
-        )
+        if ((f32)(s32)state->transitionTimer <= lbl_803E4E8C)
         {
             state->transitionTimer = 0;
         }
@@ -376,16 +371,15 @@ void DFSH_Shrine_update(int objArg)
     switch (state->mode)
     {
     case DFSHRINE_MODE_IDLE:
+    {
+        f32 t = state->idleChimeTimer - timeDelta;
+        state->idleChimeTimer = t;
+        if (t <= lbl_803E4E8C)
         {
-            f32 t = state->idleChimeTimer - timeDelta;
-            state->idleChimeTimer = t;
-            if (t <= lbl_803E4E8C)
-            {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_spirit_voice);
-                state->idleChimeTimer = (f32)(s32)
-                randomGetRange(500, 1000);
-            }
+            Sfx_PlayFromObject((int)obj, SFXTRIG_spirit_voice);
+            state->idleChimeTimer = (f32)(s32)randomGetRange(500, 1000);
         }
+    }
         if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             mainSetBits(0x589, 0);
@@ -560,11 +554,8 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
 
-
 u16 gDfShShrineRewardTable[50] = {
-    246, 2997, 247, 2998, 248, 249, 250, 251, 2995, 2996,
-    60, 60, 60, 60, 600, 600, 600, 600, 600, 600,
-    3000, 3008, 3001, 3009, 3002, 3003, 3004, 3005, 3006, 3007,
-    4, 36948, 4, 37071, 4, 37054, 4, 37083, 4, 37063,
-    4, 37065, 4, 37066, 4, 37067, 4, 37068, 4, 37070,
+    246, 2997,  247, 2998,  248,  249,   250,  251,   2995, 2996,  60,   60,    60,   60,    600,   600,   600,
+    600, 600,   600, 3000,  3008, 3001,  3009, 3002,  3003, 3004,  3005, 3006,  3007, 4,     36948, 4,     37071,
+    4,   37054, 4,   37083, 4,    37063, 4,    37065, 4,    37066, 4,    37067, 4,    37068, 4,     37070,
 };

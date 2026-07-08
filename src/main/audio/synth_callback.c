@@ -2,7 +2,7 @@
 
 #pragma exceptions on
 
-#define SYNTH_CALLBACK_ACTIVE_LIST_COUNT 2
+#define SYNTH_CALLBACK_ACTIVE_LIST_COUNT    2
 #define SYNTH_CALLBACK_COMPLETED_LIST_INDEX 2
 
 void synthRecycleVoiceCallbacks(SynthVoice* voice)
@@ -69,8 +69,7 @@ SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex)
         prev = 0;
         {
             u8* ccsBase = (u8*)gSynthCurrentVoice + 0x1518;
-            callback->listIndex =
-                ((SynthCallbackControllerState*)(ccsBase + controllerIndex * 0x38))->listIndex;
+            callback->listIndex = ((SynthCallbackControllerState*)(ccsBase + controllerIndex * 0x38))->listIndex;
         }
 
         current = gSynthCurrentVoice->callbackLists[callback->listIndex];
@@ -251,8 +250,7 @@ u32 synthAssignHandle(s32 voiceIndex)
                 break;
             }
         }
-    }
-    while (handle == SYNTH_HANDLE_INVALID);
+    } while (handle == SYNTH_HANDLE_INVALID);
 
     gSynthVoices[voiceIndex].handle = handle;
     return handle;

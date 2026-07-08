@@ -58,23 +58,23 @@ extern void Dummy3E_release(void);
 extern void TitleMenuItem_initialise(void);
 extern void Dummy3E_initialise(void);
 
-#define LINK_ITEM_SLOTS 25          /* per-item icon-strip slot capacity */
+#define LINK_ITEM_SLOTS 25 /* per-item icon-strip slot capacity */
 
-extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */
-extern u8 linkIsRotated;            /* swap analog axes (rotated layout) */
+extern u8 linkFlag_803dd8f8; /* whether navigation input is accepted */
+extern u8 linkIsRotated;     /* swap analog axes (rotated layout) */
 extern s16 linkItemOpacity;
-extern s16 linkCount_803dd90e;      /* selected-item highlight pulse counter */
+extern s16 linkCount_803dd90e; /* selected-item highlight pulse counter */
 extern s8 linkSelected;
-extern u8 linkTextures[0x30];       /* LinkTextureSlot[6] */
-extern s16 gTumbleweedBushSelColorB;            /* selected-color B */
-extern s16 gTumbleweedBushSelColorG;            /* selected-color G */
-extern s16 gTumbleweedBushSelColorR;            /* selected-color R */
-extern s16 gTumbleweedBushBaseColorB;            /* base-color B */
-extern s16 gTumbleweedBushBaseColorG;            /* base-color G */
-extern s16 gTumbleweedBushBaseColorR;            /* base-color R */
+extern u8 linkTextures[0x30];                  /* LinkTextureSlot[6] */
+extern s16 gTumbleweedBushSelColorB;           /* selected-color B */
+extern s16 gTumbleweedBushSelColorG;           /* selected-color G */
+extern s16 gTumbleweedBushSelColorR;           /* selected-color R */
+extern s16 gTumbleweedBushBaseColorB;          /* base-color B */
+extern s16 gTumbleweedBushBaseColorG;          /* base-color G */
+extern s16 gTumbleweedBushBaseColorR;          /* base-color R */
 extern s8 gTumbleweedBushPulseDir;             /* highlight pulse direction */
-extern s8 gTumbleweedBushInputEnabled;             /* input enabled after first update */
-extern const char* gTumbleweedBushDefaultText;    /* default message text */
+extern s8 gTumbleweedBushInputEnabled;         /* input enabled after first update */
+extern const char* gTumbleweedBushDefaultText; /* default message text */
 extern void* saveFileSelect_saveSlots;
 extern void OSReport(const char* msg, ...);
 extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error format string */
@@ -93,11 +93,10 @@ extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern void buttonDisable(int port, u32 mask);
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_A     0x100
+#define PAD_BUTTON_B     0x200
 #define PAD_BUTTON_START 0x1000
-#define PAD_ACCEPT_MASK (PAD_BUTTON_A | PAD_BUTTON_START)
-
+#define PAD_ACCEPT_MASK  (PAD_BUTTON_A | PAD_BUTTON_START)
 
 extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
 extern void fn_8001BE2C(int mode); /* mode 3: (re)load the three subtitle textures */
@@ -131,21 +130,50 @@ typedef struct LinkMenuItemDB
     u8 pad39[3];
 } LinkMenuItemDB;
 
-void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
-void setLinkNotRotated(void) { linkIsRotated = 0; }
-void setLinkIsRotated(void) { linkIsRotated = 1; }
-u8 Link_func0C(void) { return linkCount_803dd90e; }
+void titleScreenFn_80130464(u8 v)
+{
+    linkFlag_803dd8f8 = v;
+}
+void setLinkNotRotated(void)
+{
+    linkIsRotated = 0;
+}
+void setLinkIsRotated(void)
+{
+    linkIsRotated = 1;
+}
+u8 Link_func0C(void)
+{
+    return linkCount_803dd90e;
+}
 #pragma scheduling off
 #pragma peephole off
-void Link_func0A(int idx, int v) { extern LinkMenuItemDB gTumbleweedBushItems[40];  gTumbleweedBushItems[idx].state = v; }
+void Link_func0A(int idx, int v)
+{
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    gTumbleweedBushItems[idx].state = v;
+}
 #pragma peephole reset
-s32 Link_func09(int idx) { extern LinkMenuItemDB gTumbleweedBushItems[40];  return gTumbleweedBushItems[idx].state; }
+s32 Link_func09(int idx)
+{
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    return gTumbleweedBushItems[idx].state;
+}
 #pragma scheduling reset
-void Link_setOpacity(u8 v) { linkItemOpacity = v; }
+void Link_setOpacity(u8 v)
+{
+    linkItemOpacity = v;
+}
 #pragma peephole off
-void Link_setSelected(int v) { linkSelected = v; }
+void Link_setSelected(int v)
+{
+    linkSelected = v;
+}
 #pragma peephole reset
-s32 Link_getSelected(void) { return linkSelected; }
+s32 Link_getSelected(void)
+{
+    return linkSelected;
+}
 
 #pragma scheduling off
 u16 fn_80130124(void)
@@ -292,12 +320,12 @@ typedef struct LinkMenuItemDA
     u8 pad39[3];
 } LinkMenuItemDA;
 
-#define LINK_FLAG_DRAW_SLOTS       0x0004
+#define LINK_FLAG_DRAW_SLOTS        0x0004
 #define LINK_FLAG_DRAW_BLACK_SHADOW 0x0100
-#define LINK_FLAG_DIM_OPACITY      0x0800
-#define LINK_FLAG_FADE_TIMER_ONLY  0x1040
-#define LINK_FLAG_HIDDEN           0x4000
-#define LINK_FLAG_SELECTED_COLOR   0x0080
+#define LINK_FLAG_DIM_OPACITY       0x0800
+#define LINK_FLAG_FADE_TIMER_ONLY   0x1040
+#define LINK_FLAG_HIDDEN            0x4000
+#define LINK_FLAG_SELECTED_COLOR    0x0080
 
 #pragma peephole off
 void Link_render(void)
@@ -385,9 +413,12 @@ void Link_render(void)
                 {
                     if (linkSelected == i)
                     {
-                        red = gTumbleweedBushBaseColorR + ((linkCount_803dd90e * (gTumbleweedBushSelColorR - gTumbleweedBushBaseColorR)) >> 8);
-                        green = gTumbleweedBushBaseColorG + ((linkCount_803dd90e * (gTumbleweedBushSelColorG - gTumbleweedBushBaseColorG)) >> 8);
-                        blue = gTumbleweedBushBaseColorB + ((linkCount_803dd90e * (gTumbleweedBushSelColorB - gTumbleweedBushBaseColorB)) >> 8);
+                        red = gTumbleweedBushBaseColorR +
+                              ((linkCount_803dd90e * (gTumbleweedBushSelColorR - gTumbleweedBushBaseColorR)) >> 8);
+                        green = gTumbleweedBushBaseColorG +
+                                ((linkCount_803dd90e * (gTumbleweedBushSelColorG - gTumbleweedBushBaseColorG)) >> 8);
+                        blue = gTumbleweedBushBaseColorB +
+                               ((linkCount_803dd90e * (gTumbleweedBushSelColorB - gTumbleweedBushBaseColorB)) >> 8);
                         if ((drawItem->flags & LINK_FLAG_DIM_OPACITY) != 0)
                         {
                             alpha = linkItemOpacity * 200 >> 8;
@@ -400,7 +431,8 @@ void Link_render(void)
                     }
                     else
                     {
-                        gameTextSetColor((u8)gTumbleweedBushBaseColorR, (u8)gTumbleweedBushBaseColorG, (u8)gTumbleweedBushBaseColorB,
+                        gameTextSetColor((u8)gTumbleweedBushBaseColorR, (u8)gTumbleweedBushBaseColorG,
+                                         (u8)gTumbleweedBushBaseColorB,
                                          (u8)((((int)((u32)opacity >> 31)) + opacity) >> 1));
                     }
                 }
@@ -527,7 +559,7 @@ u32 Link_update(void)
     {
         s8 oldHorizontal = horizontalInput;
         horizontalInput = verticalInput;
-        verticalInput = (s8) - oldHorizontal;
+        verticalInput = (s8)-oldHorizontal;
     }
 
     if (verticalInput != 0)
@@ -543,8 +575,7 @@ u32 Link_update(void)
             linkSelected = item->downLink;
             linkCount_803dd90e = 0xff;
         }
-        else if ((verticalInput > 0) && (item->upLink != -1) &&
-            LINK_IS_NAVIGABLE(item->upLink))
+        else if ((verticalInput > 0) && (item->upLink != -1) && LINK_IS_NAVIGABLE(item->upLink))
         {
             padClearAnalogInputY(0);
             linkSelected = item->upLink;
@@ -569,15 +600,13 @@ u32 Link_update(void)
         }
         else
         {
-            if ((horizontalInput < 0) && (item->leftLink != -1) &&
-                LINK_IS_NAVIGABLE(item->leftLink))
+            if ((horizontalInput < 0) && (item->leftLink != -1) && LINK_IS_NAVIGABLE(item->leftLink))
             {
                 padClearAnalogInputX(0);
                 linkSelected = item->leftLink;
                 linkCount_803dd90e = 0xff;
             }
-            else if ((horizontalInput > 0) && (item->rightLink != -1) &&
-                LINK_IS_NAVIGABLE(item->rightLink))
+            else if ((horizontalInput > 0) && (item->rightLink != -1) && LINK_IS_NAVIGABLE(item->rightLink))
             {
                 padClearAnalogInputX(0);
                 linkSelected = item->rightLink;
@@ -635,7 +664,7 @@ u32 Link_update(void)
     }
     else if (linkCount_803dd90e < 0)
     {
-        linkCount_803dd90e = (s16) - linkCount_803dd90e;
+        linkCount_803dd90e = (s16)-linkCount_803dd90e;
         gTumbleweedBushPulseDir = (s8)(*(s8*)&gTumbleweedBushPulseDir ^ 1);
     }
 
@@ -667,8 +696,7 @@ void Link_initialise(void)
 
     for (i = 0; i < 6; i++)
     {
-        ((LinkTextureSlot*)linkTextures)[i].texture =
-            textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
+        ((LinkTextureSlot*)linkTextures)[i].texture = textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
     }
 
     padFn_80014b18(10);
@@ -680,11 +708,10 @@ void Link_initialise(void)
 #pragma peephole reset
 
 #pragma peephole off
-void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage,
-                int unused1, int unused2, int baseRed, int baseGreen, int baseBlue,
-                int selectedRed, int selectedGreen, int selectedBlue)
+void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
+                int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue)
 {
-    extern void linkInitTextures(LinkMenuItemDB* item);
+    extern void linkInitTextures(LinkMenuItemDB * item);
     extern LinkMenuItem gTumbleweedBushItems[40];
     extern s8 gTumbleweedBushItemCount;
     int i;
@@ -842,7 +869,8 @@ void linkDrawFn_801302c0(void)
     {
         if (i != linkSelected)
         {
-            if (((gTumbleweedBushItems[i].flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)gTumbleweedBushItems[i].slots[0] != -1))
+            if (((gTumbleweedBushItems[i].flags & LINK_FLAG_DRAW_SLOTS) != 0) &&
+                ((s8)gTumbleweedBushItems[i].slots[0] != -1))
             {
                 iconTex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
             }
@@ -935,14 +963,10 @@ void linkDrawFn_80130484(void)
 
 LinkMenuItemDB gTumbleweedBushItems[40];
 
-u8 linkTextures[0x30] =
-{
-    0x00, 0x00, 0x00, 0x00, 0x03, 0x14, 0x28, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x03, 0x15, 0x28, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x03, 0x17, 0x50, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x03, 0x19, 0x50, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x03, 0x18, 0x28, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x03, 0x1A, 0x14, 0x00,
+u8 linkTextures[0x30] = {
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x14, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x15, 0x28, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x17, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x19, 0x50, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x03, 0x18, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x1A, 0x14, 0x00,
 };
 
 struct LinkObjDescriptor
@@ -952,31 +976,38 @@ struct LinkObjDescriptor
     void* fns[16];
 };
 
-struct LinkObjDescriptor lbl_8031C1E4 =
-{
-    { 0, 0, 0 },
+struct LinkObjDescriptor lbl_8031C1E4 = {
+    {0, 0, 0},
     0x000F0000,
     {
-        Link_initialise, Link_release, NULL,         Link_setup,
-        Link_free,       Link_update,  Link_render,  Link_getSelected,
-        Link_setSelected,Link_func09,  Link_func0A,  Link_func0B,
-        Link_func0C,     Link_copy,    Link_setOpacity, Link_func0F,
+        Link_initialise,
+        Link_release,
+        NULL,
+        Link_setup,
+        Link_free,
+        Link_update,
+        Link_render,
+        Link_getSelected,
+        Link_setSelected,
+        Link_func09,
+        Link_func0A,
+        Link_func0B,
+        Link_func0C,
+        Link_copy,
+        Link_setOpacity,
+        Link_func0F,
     },
 };
 
 /* pooled PICMENU overflow debug format strings (embedded NULs), raw bytes. */
-char sTumbleweedBushSlotOverflowErr[] =
-{
-    0x50, 0x49, 0x43, 0x4D, 0x45, 0x4E, 0x55, 0x3A, 0x20, 0x74, 0x65, 0x78,
-    0x20, 0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C, 0x6F, 0x77, 0x0A, 0x00, 0x00,
-    0x55, 0x50, 0x4C, 0x49, 0x4E, 0x4B, 0x20, 0x6F, 0x76, 0x65, 0x72, 0x66,
-    0x6C, 0x6F, 0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x44, 0x4F, 0x57, 0x4E,
-    0x4C, 0x49, 0x4E, 0x4B, 0x20, 0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C, 0x6F,
-    0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x00, 0x00, 0x4C, 0x45, 0x46, 0x54,
-    0x4C, 0x49, 0x4E, 0x4B, 0x20, 0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C, 0x6F,
-    0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x00, 0x00, 0x52, 0x49, 0x47, 0x48,
-    0x54, 0x4C, 0x49, 0x4E, 0x4B, 0x20, 0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C,
-    0x6F, 0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x00,
+char sTumbleweedBushSlotOverflowErr[] = {
+    0x50, 0x49, 0x43, 0x4D, 0x45, 0x4E, 0x55, 0x3A, 0x20, 0x74, 0x65, 0x78, 0x20, 0x6F, 0x76, 0x65, 0x72,
+    0x66, 0x6C, 0x6F, 0x77, 0x0A, 0x00, 0x00, 0x55, 0x50, 0x4C, 0x49, 0x4E, 0x4B, 0x20, 0x6F, 0x76, 0x65,
+    0x72, 0x66, 0x6C, 0x6F, 0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x44, 0x4F, 0x57, 0x4E, 0x4C, 0x49, 0x4E,
+    0x4B, 0x20, 0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C, 0x6F, 0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x00, 0x00,
+    0x4C, 0x45, 0x46, 0x54, 0x4C, 0x49, 0x4E, 0x4B, 0x20, 0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C, 0x6F, 0x77,
+    0x3D, 0x25, 0x64, 0x0A, 0x00, 0x00, 0x00, 0x52, 0x49, 0x47, 0x48, 0x54, 0x4C, 0x49, 0x4E, 0x4B, 0x20,
+    0x6F, 0x76, 0x65, 0x72, 0x66, 0x6C, 0x6F, 0x77, 0x3D, 0x25, 0x64, 0x0A, 0x00, 0x00,
 };
 
 char sTumbleweedBushNavLinkRangeErr[] = {
@@ -984,29 +1015,57 @@ char sTumbleweedBushNavLinkRangeErr[] = {
 };
 
 /* descriptor/ptr table auto 0x8031c2a8-0x8031c508 */
-u32 lbl_8031C2A8[3] = { 0x06160615, 0x0309030a, 0x030b030c };
-u32 lbl_8031C2B4[19] = { 0x00000000, 0x00000000, 0x00000000, 0x000e0000, (u32)TitleMenuItem_initialise, (u32)TitleMenuItem_release, 0x00000000, (u32)TitleMenuItem_createWithText, (u32)TitleMenuItem_create, (u32)TitleMenuItem_createWithWindow, (u32)TitleMenuItem_free, (u32)TitleMenuItem_update, (u32)TitleMenuItem_render, (u32)TitleMenuItem_isEnabled, (u32)TitleMenuItem_setEnabled, (u32)TitleMenuItem_getVal, (u32)TitleMenuItem_setVal, (u32)TitleMenuItem_isChanged, (u32)TitleMenuItem_setAButtonToggle };
-u32 lbl_8031C300[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)Dummy3E_initialise, (u32)Dummy3E_release, 0x00000000, (u32)Dummy3E_func03_ret_0, (u32)Dummy3E_func04_nop, (u32)Dummy3E_func05_ret_1 };
-u32 lbl_8031C328[5] = { 0xd800e700, 0x20804100, 0x80007fff, 0x00950000, 0x041a0000 };
-u32 lbl_8031C33C[5] = { 0xd300e200, 0x3c004b00, 0x80007fff, 0x00950000, 0x04420000 };
-u32 lbl_8031C350[5] = { 0xf1000280, 0xf3800000, 0x80007fff, 0x00950000, 0x04520000 };
-u32 lbl_8031C364[5] = { 0xf100f880, 0xec00f380, 0x80007fff, 0x00950000, 0x041e0000 };
-u32 lbl_8031C378[5] = { 0xe200f100, 0xf100fd80, 0x80007fff, 0x00950000, 0x04550000 };
-u32 lbl_8031C38C[5] = { 0xe480e980, 0xfd800500, 0x80007fff, 0x00950000, 0x041f0000 };
-u32 lbl_8031C3A0[5] = { 0xcb80df80, 0xec000000, 0x80007fff, 0x00950000, 0x05590000 };
-u32 lbl_8031C3B4[5] = { 0xdd00e480, 0xf8800000, 0x80007fff, 0x00950000, 0x04410000 };
-u32 lbl_8031C3C8[5] = { 0xb500cb80, 0xc180d300, 0x80007fff, 0x00950000, 0x052c0000 };
-u32 lbl_8031C3DC[5] = { 0xfb001180, 0xb500c180, 0x80007fff, 0x00950000, 0x03e00000 };
-u32 lbl_8031C3F0[5] = { 0xee800000, 0xc180d080, 0x80007fff, 0x00950000, 0x04190000 };
-u32 lbl_8031C404[5] = { 0x28003480, 0x00001900, 0x80007fff, 0x00950000, 0x04150000 };
-u32 lbl_8031C418[10] = { 0xb000c400, 0xfd800780, 0x80007fff, 0x00950000, 0x04160000, 0xbc80c400, 0xf8800780, 0x80007fff, 0x00950000, 0x04160000 };
-u32 lbl_8031C440[5] = { 0xc400cb80, 0xfd800500, 0x80007fff, 0x00950000, 0x04430000 };
-u32 lbl_8031C454[5] = { 0xe480e980, 0xf600fb00, 0x80007fff, 0x00950000, 0x04590000 };
-u32 lbl_8031C468[5] = { 0xe700fb00, 0x02801180, 0x80007fff, 0x00950000, 0x04480000 };
-u32 lbl_8031C47C[5] = { 0xfb000280, 0x07800c80, 0x80007fff, 0x00950000, 0x04180000 };
-u32 lbl_8031C490[5] = { 0x0a000f00, 0xda80e700, 0x80007fff, 0x00950000, 0x04170000 };
-u32 lbl_8031C4A4[5] = { 0x05001180, 0xd800df80, 0x80007fff, 0x00950000, 0x04440000 };
-u32 lbl_8031C4B8[5] = { 0x0c800f00, 0xe700ee80, 0x80007fff, 0x00950000, 0x04450000 };
-u32 lbl_8031C4CC[5] = { 0x05000f00, 0xec00fb00, 0x80007fff, 0x00950000, 0x04200000 };
-u32 lbl_8031C4E0[5] = { 0x02800500, 0xee80f600, 0x80007fff, 0x00950000, 0x041d0000 };
-u32 lbl_8031C4F4[5] = { 0xba00ce00, 0x20803700, 0x80007fff, 0x00950000, 0x04460000 };
+u32 lbl_8031C2A8[3] = {0x06160615, 0x0309030a, 0x030b030c};
+u32 lbl_8031C2B4[19] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x000e0000,
+                        (u32)TitleMenuItem_initialise,
+                        (u32)TitleMenuItem_release,
+                        0x00000000,
+                        (u32)TitleMenuItem_createWithText,
+                        (u32)TitleMenuItem_create,
+                        (u32)TitleMenuItem_createWithWindow,
+                        (u32)TitleMenuItem_free,
+                        (u32)TitleMenuItem_update,
+                        (u32)TitleMenuItem_render,
+                        (u32)TitleMenuItem_isEnabled,
+                        (u32)TitleMenuItem_setEnabled,
+                        (u32)TitleMenuItem_getVal,
+                        (u32)TitleMenuItem_setVal,
+                        (u32)TitleMenuItem_isChanged,
+                        (u32)TitleMenuItem_setAButtonToggle};
+u32 lbl_8031C300[10] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00050000,
+                        (u32)Dummy3E_initialise,
+                        (u32)Dummy3E_release,
+                        0x00000000,
+                        (u32)Dummy3E_func03_ret_0,
+                        (u32)Dummy3E_func04_nop,
+                        (u32)Dummy3E_func05_ret_1};
+u32 lbl_8031C328[5] = {0xd800e700, 0x20804100, 0x80007fff, 0x00950000, 0x041a0000};
+u32 lbl_8031C33C[5] = {0xd300e200, 0x3c004b00, 0x80007fff, 0x00950000, 0x04420000};
+u32 lbl_8031C350[5] = {0xf1000280, 0xf3800000, 0x80007fff, 0x00950000, 0x04520000};
+u32 lbl_8031C364[5] = {0xf100f880, 0xec00f380, 0x80007fff, 0x00950000, 0x041e0000};
+u32 lbl_8031C378[5] = {0xe200f100, 0xf100fd80, 0x80007fff, 0x00950000, 0x04550000};
+u32 lbl_8031C38C[5] = {0xe480e980, 0xfd800500, 0x80007fff, 0x00950000, 0x041f0000};
+u32 lbl_8031C3A0[5] = {0xcb80df80, 0xec000000, 0x80007fff, 0x00950000, 0x05590000};
+u32 lbl_8031C3B4[5] = {0xdd00e480, 0xf8800000, 0x80007fff, 0x00950000, 0x04410000};
+u32 lbl_8031C3C8[5] = {0xb500cb80, 0xc180d300, 0x80007fff, 0x00950000, 0x052c0000};
+u32 lbl_8031C3DC[5] = {0xfb001180, 0xb500c180, 0x80007fff, 0x00950000, 0x03e00000};
+u32 lbl_8031C3F0[5] = {0xee800000, 0xc180d080, 0x80007fff, 0x00950000, 0x04190000};
+u32 lbl_8031C404[5] = {0x28003480, 0x00001900, 0x80007fff, 0x00950000, 0x04150000};
+u32 lbl_8031C418[10] = {0xb000c400, 0xfd800780, 0x80007fff, 0x00950000, 0x04160000,
+                        0xbc80c400, 0xf8800780, 0x80007fff, 0x00950000, 0x04160000};
+u32 lbl_8031C440[5] = {0xc400cb80, 0xfd800500, 0x80007fff, 0x00950000, 0x04430000};
+u32 lbl_8031C454[5] = {0xe480e980, 0xf600fb00, 0x80007fff, 0x00950000, 0x04590000};
+u32 lbl_8031C468[5] = {0xe700fb00, 0x02801180, 0x80007fff, 0x00950000, 0x04480000};
+u32 lbl_8031C47C[5] = {0xfb000280, 0x07800c80, 0x80007fff, 0x00950000, 0x04180000};
+u32 lbl_8031C490[5] = {0x0a000f00, 0xda80e700, 0x80007fff, 0x00950000, 0x04170000};
+u32 lbl_8031C4A4[5] = {0x05001180, 0xd800df80, 0x80007fff, 0x00950000, 0x04440000};
+u32 lbl_8031C4B8[5] = {0x0c800f00, 0xe700ee80, 0x80007fff, 0x00950000, 0x04450000};
+u32 lbl_8031C4CC[5] = {0x05000f00, 0xec00fb00, 0x80007fff, 0x00950000, 0x04200000};
+u32 lbl_8031C4E0[5] = {0x02800500, 0xee80f600, 0x80007fff, 0x00950000, 0x041d0000};
+u32 lbl_8031C4F4[5] = {0xba00ce00, 0x20803700, 0x80007fff, 0x00950000, 0x04460000};

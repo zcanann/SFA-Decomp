@@ -25,7 +25,7 @@ typedef struct PointLightState
 } PointLightState;
 
 #define POINTLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
-#define POINTLIGHT_MAX_SPOT_BRIGHTNESS 0x5a
+#define POINTLIGHT_MAX_SPOT_BRIGHTNESS    0x5a
 
 typedef struct PointLightSetup
 {
@@ -98,9 +98,15 @@ void pointlight_setEffectState(int obj, int enabled)
     }
 }
 
-int PointLight_getExtraSize(void) { return sizeof(PointLightState); }
+int PointLight_getExtraSize(void)
+{
+    return sizeof(PointLightState);
+}
 
-int PointLight_getObjectTypeId(void) { return 0; }
+int PointLight_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void PointLight_free(int obj)
 {
@@ -116,8 +122,7 @@ void PointLight_render(int obj)
 {
     PointLightState* state = ((GameObject*)obj)->extra;
     ModelLight* light = state->light;
-    if (light != NULL && *(u8*)((char*)light + 0x2f8) != 0 &&
-        *(u8*)((char*)light + 0x4c) != 0)
+    if (light != NULL && *(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)
     {
         queueGlowRender(light);
     }
@@ -138,10 +143,8 @@ void PointLight_update(int obj)
         return;
     }
 
-    ((GameObject*)obj)->anim.rotX =
-        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
-    ((GameObject*)obj)->anim.rotY =
-        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
+    ((GameObject*)obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
+    ((GameObject*)obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
 
     if (state->enabled != 0)
     {
@@ -205,10 +208,10 @@ void PointLight_init(int obj, int setup)
         }
         else
         {
-            modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
-                                             setupData->diffuseG, setupData->diffuseB, 0xff);
-            modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR,
-                                                   setupData->targetG, setupData->targetB, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR, setupData->diffuseG,
+                                             setupData->diffuseB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR, setupData->targetG,
+                                                   setupData->targetB, 0xff);
         }
 
         modelLightStruct_setDistanceAttenuation(state->light, (f32)(u32)setupData->distanceNear,
@@ -237,9 +240,8 @@ void PointLight_init(int obj, int setup)
 
         if (setupData->glowEnabled != 0)
         {
-            modelLightStruct_setupGlow(state->light, setupData->glowTexture, setupData->glowR,
-                                       setupData->glowG, setupData->glowB, setupData->glowAlpha,
-                                       (f32)(u32)setupData->glowScale);
+            modelLightStruct_setupGlow(state->light, setupData->glowTexture, setupData->glowR, setupData->glowG,
+                                       setupData->glowB, setupData->glowAlpha, (f32)(u32)setupData->glowScale);
             modelLightStruct_setGlowProjectionRadius(state->light, 12.0f);
         }
 

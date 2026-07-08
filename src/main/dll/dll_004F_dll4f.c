@@ -24,7 +24,6 @@ void dll_4F_func05(void)
     gCameraMode4FState = NULL;
 }
 
-
 void dll_4F_update(int* obj)
 {
     CameraObject* camera;
@@ -45,11 +44,7 @@ void dll_4F_update(int* obj)
     angle += (s32)(14560.0f * fz);
     target = (GameObject*)camera->anim.targetObj;
     {
-        f32 t = (3.1415927f * (f32)(s32)
-        angle
-        )
-        /
-        32768.0f;
+        f32 t = (3.1415927f * (f32)(s32)angle) / 32768.0f;
         sn = mathCosf(t);
         cs = mathSinf(t);
     }
@@ -67,7 +62,6 @@ void dll_4F_update(int* obj)
         gCameraMode4FState->blendProgress = 1.0f;
     }
 }
-
 
 void dll_4F_init(void)
 {

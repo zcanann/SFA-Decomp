@@ -39,9 +39,9 @@
 #include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
-#define TIMER_OBJGROUP 0x4c /* DLL 0x2B5 timer */
-#define TARGET_OBJGROUP 0xf /* player-target group; nearest object gets the trigger's sequence */
-#define TRICKY_TARGET_OBJGROUP 0x32          /* nearest object searched from the tricky object */
+#define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
+#define TARGET_OBJGROUP                 0xf  /* player-target group; nearest object gets the trigger's sequence */
+#define TRICKY_TARGET_OBJGROUP          0x32 /* nearest object searched from the tricky object */
 #define TRICKY_TARGET_OBJGROUP_FALLBACK 0x31 /* fallback group when TRICKY_TARGET_OBJGROUP has none */
 
 /* Env-effect ids co-activated by the type-3 command (p[3] sub-case); the A set
@@ -56,20 +56,20 @@
 /*
  * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
  */
-#define TRIGGER_SFLAG_ENTERED 0x01     /* enter-direction command list has run (latch) */
-#define TRIGGER_SFLAG_EXITED 0x02      /* exit-direction command list has run (latch) */
-#define TRIGGER_SFLAG_DISABLED 0x04    /* trigger's game bit was already set at init: fire enter once */
+#define TRIGGER_SFLAG_ENTERED     0x01 /* enter-direction command list has run (latch) */
+#define TRIGGER_SFLAG_EXITED      0x02 /* exit-direction command list has run (latch) */
+#define TRIGGER_SFLAG_DISABLED    0x04 /* trigger's game bit was already set at init: fire enter once */
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
 /*
  * Per-command-entry flags byte (entry[0] in the 4-byte command records at
  * placementData+0x18). Gates whether the entry runs for a given activation leg.
  */
-#define TRIGGER_CMD_ON_ENTER 0x01      /* run when activation direction is enter (legCode > 0) */
-#define TRIGGER_CMD_ON_EXIT 0x02       /* run when activation direction is exit (legCode < 0) */
-#define TRIGGER_CMD_ONCE_ENTER 0x04    /* enter leg runs only once (latched vs SFLAG_ENTERED) */
-#define TRIGGER_CMD_ONCE_EXIT 0x08     /* exit leg runs only once (latched vs SFLAG_EXITED) */
-#define TRIGGER_CMD_UNCONDITIONAL 0x10 /* ignore enter/exit gating */
+#define TRIGGER_CMD_ON_ENTER          0x01 /* run when activation direction is enter (legCode > 0) */
+#define TRIGGER_CMD_ON_EXIT           0x02 /* run when activation direction is exit (legCode < 0) */
+#define TRIGGER_CMD_ONCE_ENTER        0x04 /* enter leg runs only once (latched vs SFLAG_ENTERED) */
+#define TRIGGER_CMD_ONCE_EXIT         0x08 /* exit leg runs only once (latched vs SFLAG_EXITED) */
+#define TRIGGER_CMD_UNCONDITIONAL     0x10 /* ignore enter/exit gating */
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
 
 typedef struct TriggerPlacement
@@ -77,13 +77,13 @@ typedef struct TriggerPlacement
     s16 typeId; /* 0x0: object-sequence type id dispatched by Trigger_init */
     u8 pad2[0x38 - 0x2];
     s16 triggerId; /* 0x38: id matched against dispatched trigger message id */
-    u8 size[3]; /* 0x3A: dimensions (x,y,z) */
-    u8 rot[2]; /* 0x3D: rotation (x,y), range 0-255 */
+    u8 size[3];    /* 0x3A: dimensions (x,y,z) */
+    u8 rot[2];     /* 0x3D: rotation (x,y), range 0-255 */
     u8 pad3F[0x43 - 0x3F];
-    u8 target; /* 0x43: object the trigger applies to / can be activated by */
-    s16 gameBitSrc; /* 0x44: game-bit id copied into TriggerState.gameBit */
+    u8 target;              /* 0x43: object the trigger applies to / can be activated by */
+    s16 gameBitSrc;         /* 0x44: game-bit id copied into TriggerState.gameBit */
     u16 triggerDelayFrames; /* 0x46: frames the timer must reach before firing */
-    s16 gateBitSrc[4]; /* 0x48/0x4a/0x4c/0x4e: game-bit ids copied into TriggerState.gateBits */
+    s16 gateBitSrc[4];      /* 0x48/0x4a/0x4c/0x4e: game-bit ids copied into TriggerState.gateBits */
 } TriggerPlacement;
 
 typedef struct ObjInterpretSeqPlacement
@@ -152,17 +152,12 @@ extern int* gPlayerShadowInterface;
 extern int Obj_GetPlayerObject(void);
 extern void fn_80295918(int obj, int sel, f32 fval);
 
-
-
 extern void fn_8006FC00(int v);
-
-
 
 extern void timeOfDayFn_80055038(void);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);
-
 
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void textureFree(int tex);
@@ -171,15 +166,11 @@ extern void mainSetBits(int eventId, int value);
 
 extern int getTrickyObject(void);
 
-
-
-
 extern void gameTextFn_80125ba4(int id);
 extern int getArwing(void);
 
 extern void timer_addDuration(int timer, int dur);
 extern void envFxFn_800887cc(void);
-
 
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
@@ -282,8 +273,14 @@ void Trigger_init(u8* obj, u8* params)
     state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
-int Trigger_getExtraSize(void) { return 0xac; }
-int Trigger_getObjectTypeId(void) { return 0x0; }
+int Trigger_getExtraSize(void)
+{
+    return 0xac;
+}
+int Trigger_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 {
@@ -309,7 +306,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 
     while (i < 8)
     {
-        if (p[1] != 0 && ((sflags = *state, (sflags & TRIGGER_SFLAG_DISABLED) == 0) || (*p & TRIGGER_CMD_OVERRIDE_DISABLED) != 0))
+        if (p[1] != 0 &&
+            ((sflags = *state, (sflags & TRIGGER_SFLAG_DISABLED) == 0) || (*p & TRIGGER_CMD_OVERRIDE_DISABLED) != 0))
         {
             b = *p;
             if ((b & TRIGGER_CMD_UNCONDITIONAL) == 0)
@@ -507,8 +505,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         t = ObjGroup_FindNearestObject(TARGET_OBJGROUP, obj, 0);
                         if ((void*)t != NULL)
                         {
-                            (*gObjectTriggerInterface)
-                                ->runSequence(p[3], (void*)t, -1);
+                            (*gObjectTriggerInterface)->runSequence(p[3], (void*)t, -1);
                         }
                         break;
                     case 1:
@@ -576,8 +573,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     mainSetBits(bit, mainGetBit(bit) ^ (1 << (op >> 13 & 7)));
                     break;
                 case 0x13:
-                    (*gMapEventInterface)->setObjGroupStatus(
-                        (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 1);
+                    (*gMapEventInterface)
+                        ->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 1);
                     break;
                 case 0x27:
                     id = (p[2] << 8) | p[3];
@@ -609,8 +606,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0x14:
-                    (*gMapEventInterface)->setObjGroupStatus(
-                        (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 0);
+                    (*gMapEventInterface)
+                        ->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 0);
                     break;
                 case 0x22:
                     id = (p[2] << 8) | p[3];
@@ -645,8 +642,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0x18:
-                    (*gMapEventInterface)->setMapAct(
-                        (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3]);
+                    (*gMapEventInterface)->setMapAct((int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3]);
                     break;
                 case 0x1a:
                     (*gMapEventInterface)->setObjGroupStatus(p[3], p[2], 1);
@@ -681,14 +677,14 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     if (ang > 0x4000)
                     {
-                        (*gMapEventInterface)->savePoint(obj + 0xc,
-                                                            (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000),
-                                                            p[3], getCurMapLayer());
+                        (*gMapEventInterface)
+                            ->savePoint(obj + 0xc, (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000), p[3],
+                                        getCurMapLayer());
                     }
                     else
                     {
-                        (*gMapEventInterface)->savePoint(obj + 0xc, (int)((GameObject*)obj)->anim.rotX,
-                                                            p[3], getCurMapLayer());
+                        (*gMapEventInterface)
+                            ->savePoint(obj + 0xc, (int)((GameObject*)obj)->anim.rotX, p[3], getCurMapLayer());
                     }
                     break;
                 case 0x20:
@@ -705,8 +701,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     switch (p[2])
                     {
                     case 0:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
-                                                                    getCurMapLayer(), 0);
+                        (*gMapEventInterface)
+                            ->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX, getCurMapLayer(), 0);
                         break;
                     case 1:
                         (*gMapEventInterface)->clearRestartPoint();
@@ -715,8 +711,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         (*gMapEventInterface)->gotoRestartPoint();
                         break;
                     case 3:
-                        (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
-                                                                    getCurMapLayer(), 1);
+                        (*gMapEventInterface)
+                            ->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX, getCurMapLayer(), 1);
                         break;
                     }
                     break;
@@ -975,7 +971,8 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->gateBits[0] != -1 && mainGetBit(((TriggerState*)state)->gateBits[0]) == 0u)
+                    if (((TriggerState*)state)->gateBits[0] != -1 &&
+                        mainGetBit(((TriggerState*)state)->gateBits[0]) == 0u)
                     {
                         ok2 = 0;
                     }

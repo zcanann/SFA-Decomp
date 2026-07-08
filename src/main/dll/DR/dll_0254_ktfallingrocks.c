@@ -15,9 +15,9 @@
 typedef struct KtfallingrocksPlacement
 {
     u8 pad0[0x20 - 0x0];
-    u16 effectId;        /* 0x20: particle effect id spawned per rock */
+    u16 effectId; /* 0x20: particle effect id spawned per rock */
     u8 pad22[0x24 - 0x22];
-    s16 triggerBit;      /* 0x24: game bit; fires the burst then is cleared */
+    s16 triggerBit; /* 0x24: game bit; fires the burst then is cleared */
     u8 pad26[0x28 - 0x26];
 } KtfallingrocksPlacement;
 
@@ -25,10 +25,15 @@ STATIC_ASSERT(offsetof(KtfallingrocksPlacement, effectId) == 0x20);
 STATIC_ASSERT(offsetof(KtfallingrocksPlacement, triggerBit) == 0x24);
 STATIC_ASSERT(sizeof(KtfallingrocksPlacement) == 0x28);
 
-int ktfallingrocks_getExtraSize(void) { return 0x0; }
+int ktfallingrocks_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int ktfallingrocks_getObjectTypeId(void) { return 0x0; }
-
+int ktfallingrocks_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void ktfallingrocks_free(u8* obj)
 {
@@ -69,8 +74,8 @@ void ktfallingrocks_update(int obj)
         params.x = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
         params.y = ((GameObject*)obj)->anim.localPosY;
         params.z = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
-        (*gPartfxInterface)->spawnObject(
-            (void*)obj, ((KtfallingrocksPlacement*)placement)->effectId, &params, 0x200001, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, ((KtfallingrocksPlacement*)placement)->effectId, &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
     mainSetBits(((KtfallingrocksPlacement*)placement)->triggerBit, 0);

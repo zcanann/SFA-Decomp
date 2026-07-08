@@ -20,9 +20,15 @@
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
 
-int cmbsrc_getExtraSize(void) { return CMBSRC_EXTRA_STATE_BYTES; }
+int cmbsrc_getExtraSize(void)
+{
+    return CMBSRC_EXTRA_STATE_BYTES;
+}
 
-int cmbsrc_getObjectTypeId(void) { return 0; }
+int cmbsrc_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void cmbsrc_initialise(void)
 {
@@ -116,8 +122,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     {
         result = 1;
     }
-    else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
-        (*gSkyInterface)->getSunPosition(&sunTime) != 0)
+    else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 && (*gSkyInterface)->getSunPosition(&sunTime) != 0)
     {
         result = 1;
     }
@@ -152,8 +157,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     {
         result = 1;
     }
-    else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 &&
-        (*gSkyInterface)->getSunPosition(&sunTime) == 0)
+    else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 && (*gSkyInterface)->getSunPosition(&sunTime) == 0)
     {
         result = 1;
     }
@@ -209,7 +213,7 @@ void cmbsrc_hitDetect(int obj)
 
 int cmbsrc_cycleColor(int obj, int state)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight * light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -228,27 +232,28 @@ int cmbsrc_cycleColor(int obj, int state)
         if (sourceState->light != NULL)
         {
             modelLightStruct_setDiffuseColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
-                                             gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2], 0xff);
+                                             gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2],
+                                             0xff);
             modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
-                                              gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2], 0xff);
+                                              gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2],
+                                              0xff);
             modelLightStruct_setDiffuseTargetColor(sourceState->light,
                                                    (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
                                                    (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]),
-                                                   0xff);
+                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]), 0xff);
             if (setup->flags & CMBSRC_MAP_GLOW)
             {
                 if (setup->flags & CMBSRC_MAP_GLOW_LARGE)
                 {
-                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3], gCmbsrcColorRgbTable[idx * 3 + 1],
-                                               gCmbsrcColorRgbTable[idx * 3 + 2], 0x87,
-                                               660.0f * cmbsrc->objAnim.rootMotionScale);
+                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3],
+                                               gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2],
+                                               0x87, 660.0f * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
-                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3], gCmbsrcColorRgbTable[idx * 3 + 1],
-                                               gCmbsrcColorRgbTable[idx * 3 + 2], 0x87,
-                                               220.0f * cmbsrc->objAnim.rootMotionScale);
+                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3],
+                                               gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2],
+                                               0x87, 220.0f * cmbsrc->objAnim.rootMotionScale);
                 }
             }
         }
@@ -282,11 +287,10 @@ void cmbsrc_updateVisuals(int obj, int state)
     {
         f32 fullRadius = lbl_803E7374 * setup->radius;
         f32 radiusScaled;
-        sourceState->radius += interpolate(
-            sourceState->hitCharge / lbl_803E7378 *
-            (fullRadius - (radiusScaled = setup->radius * lbl_803E737C)) +
-            radiusScaled - sourceState->radius,
-            lbl_803E7380, timeDelta);
+        sourceState->radius += interpolate(sourceState->hitCharge / lbl_803E7378 *
+                                                   (fullRadius - (radiusScaled = setup->radius * lbl_803E737C)) +
+                                               radiusScaled - sourceState->radius,
+                                           lbl_803E7380, timeDelta);
     }
     dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
     if (sourceState->active == 1)
@@ -407,8 +411,7 @@ void cmbsrc_updateVisuals(int obj, int state)
             if (cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED)
             {
                 param[2] = sourceState->radius;
-                (*gPartfxInterface)->spawnObject((void*)obj, CMBSRC_PARTICLE_EFFECT_ID, param,
-                                                 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, CMBSRC_PARTICLE_EFFECT_ID, param, 2, -1, NULL);
             }
             sourceState->particleTimer += lbl_803E7398;
         }
@@ -447,15 +450,14 @@ int cmbsrc_update(int obj)
         {
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj,
-                                               gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
+                Sfx_KeepAliveLoopedObjectSound(
+                    obj, gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
             if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
                 ((CmbSrcLight*)state->light)->enabled != 0)
             {
                 s16 v[1];
-                v[0] = (s16)(((CmbSrcLight*)state->light)->glowAlpha +
-                              ((CmbSrcLight*)state->light)->glowAlphaStep);
+                v[0] = (s16)(((CmbSrcLight*)state->light)->glowAlpha + ((CmbSrcLight*)state->light)->glowAlphaStep);
                 if (v[0] < 0)
                 {
                     v[0] = 0;
@@ -500,7 +502,7 @@ int cmbsrc_update(int obj)
 
 void cmbsrc_init(int obj, u8* setup)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a);
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight * light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     u8* c2;
     u8* c1;
@@ -563,12 +565,11 @@ void cmbsrc_init(int obj, u8* setup)
             {
                 modelLightStruct_setPosition(state->light, 0.0f, 7.0f, 0.0f);
             }
-            modelLightStruct_setDiffuseColor(state->light,
-                                             (c0 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30])[mapData->colorIndex * 3],
-                                             (c1 = c0 + 1)[mapData->colorIndex * 3],
-                                             (c2 = c0 + 2)[mapData->colorIndex * 3], 0xff);
-            modelLightStruct_setSpecularColor(state->light, c0[mapData->colorIndex * 3],
-                                              c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0xff);
+            modelLightStruct_setDiffuseColor(
+                state->light, (c0 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30])[mapData->colorIndex * 3],
+                (c1 = c0 + 1)[mapData->colorIndex * 3], (c2 = c0 + 2)[mapData->colorIndex * 3], 0xff);
+            modelLightStruct_setSpecularColor(state->light, c0[mapData->colorIndex * 3], c1[mapData->colorIndex * 3],
+                                              c2[mapData->colorIndex * 3], 0xff);
             {
                 f32 attn = mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? 520.0f : 130.0f;
                 int n = (int)(attn * cmbsrc->objAnim.rootMotionScale);
@@ -587,11 +588,9 @@ void cmbsrc_init(int obj, u8* setup)
                 }
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
-            modelLightStruct_setDiffuseTargetColor(state->light,
-                                                   (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
+            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
                                                    (int)(0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
-                                                   (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]),
-                                                   0xff);
+                                                   (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]), 0xff);
             if (mapData->flags & CMBSRC_MAP_AFFECTS_AABB_LIGHT)
             {
                 modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
@@ -643,10 +642,9 @@ void cmbsrc_init(int obj, u8* setup)
     if (cmbsrc->objAnim.hitReactState != NULL)
     {
         state->hitFlags.disabled = 1;
-        ObjHitbox_SetSphereRadius(obj,
-                                  (int)(2.0f *
-                                      (mapData->radius * (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->
-                                          colorIndex]))));
+        ObjHitbox_SetSphereRadius(
+            obj, (int)(2.0f * (mapData->radius *
+                               (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->colorIndex]))));
         if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME)
         {
             ObjHits_SetHitVolumeSlot(obj, CMBSRC_HIT_VOLUME_SLOT, 1, 0);
@@ -679,24 +677,18 @@ void cmbsrc_init(int obj, u8* setup)
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
 
-f32 gCmbsrcColorRadiusScaleTable[] =
-{
-    100.0f, 100.0f, 120.0f, 200.0f,
-    100.0f, 100.0f, 100.0f, 100.0f,
-    100.0f, 100.0f, 100.0f, 100.0f,
-    100.0f, 100.0f, 100.0f, 150.0f,
+f32 gCmbsrcColorRadiusScaleTable[] = {
+    100.0f, 100.0f, 120.0f, 200.0f, 100.0f, 100.0f, 100.0f, 100.0f,
+    100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 150.0f,
 };
 
-u8 gCmbsrcColorRgbTable[] =
-{
-    0xFF, 0xC0, 0x00, 0xFF, 0x7F, 0x00, 0xFF, 0xC0, 0x00, 0xFF, 0xC0, 0x00,
-    0x00, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0xFF, 0xFF, 0x00,
-    0xFF, 0x40, 0x00, 0xFF, 0xC0, 0x00, 0x00, 0x7F, 0xFF, 0xFF, 0xFF, 0x00,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00,
-    0xFF, 0xC0, 0x00, 0xFF, 0xC0, 0x40, 0xC0, 0x7F, 0xFF, 0xFF, 0xC0, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+u8 gCmbsrcColorRgbTable[] = {
+    0xFF, 0xC0, 0x00, 0xFF, 0x7F, 0x00, 0xFF, 0xC0, 0x00, 0xFF, 0xC0, 0x00, 0x00, 0xFF, 0xFF, 0xFF,
+    0x00, 0x00, 0x00, 0xFF, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0x40, 0x00, 0xFF, 0xC0, 0x00, 0x00, 0x7F,
+    0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00,
+    0xFF, 0xC0, 0x00, 0xFF, 0xC0, 0x40, 0xC0, 0x7F, 0xFF, 0xFF, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-u8 gCmbsrcColorSoundIdTable[16] = {'r','r','r','r','r','r','r','r','r','r','r','r','r','r','r','r'};
+u8 gCmbsrcColorSoundIdTable[16] = {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'};

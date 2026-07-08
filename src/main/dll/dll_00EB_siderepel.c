@@ -15,8 +15,8 @@
 /* object group: side-repel object */
 #define SIDEREPEL_OBJGROUP 0x40
 
-#define SIDEREPEL_OBJFLAG_UPDATE_DISABLED 0x8000
-#define SIDEREPEL_OBJFLAG_HIDDEN 0x4000
+#define SIDEREPEL_OBJFLAG_UPDATE_DISABLED    0x8000
+#define SIDEREPEL_OBJFLAG_HIDDEN             0x4000
 #define SIDEREPEL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /*
@@ -24,20 +24,29 @@
  * the repel-volume radius at +0x18 (sphere radius >> 3 feeds the hit
  * sphere). Single-owner to siderepel_init.
  */
-typedef struct SideRepelPlacement {
+typedef struct SideRepelPlacement
+{
     ObjPlacement head; /* 0x00: common placement head */
     u16 radius;        /* 0x18: hit-sphere radius source */
 } SideRepelPlacement;
 
 STATIC_ASSERT(offsetof(SideRepelPlacement, radius) == 0x18);
 
-int siderepel_getExtraSize(void) { return 0x1; }
+int siderepel_getExtraSize(void)
+{
+    return 0x1;
+}
 
-void siderepel_free(int obj) { ObjGroup_RemoveObject(obj, SIDEREPEL_OBJGROUP); }
+void siderepel_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, SIDEREPEL_OBJGROUP);
+}
 
 void siderepel_init(int obj, int placement)
 {
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (SIDEREPEL_OBJFLAG_UPDATE_DISABLED | SIDEREPEL_OBJFLAG_HIDDEN | SIDEREPEL_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->objectFlags =
+        ((GameObject*)obj)->objectFlags |
+        (SIDEREPEL_OBJFLAG_UPDATE_DISABLED | SIDEREPEL_OBJFLAG_HIDDEN | SIDEREPEL_OBJFLAG_HITDETECT_DISABLED);
     ObjGroup_AddObject(obj, SIDEREPEL_OBJGROUP);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {

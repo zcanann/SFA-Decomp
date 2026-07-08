@@ -30,30 +30,36 @@ typedef struct VfpStatueBallPlacement
 
 typedef struct VfpStatueBallState
 {
-    s16 gameBit;         /* 0x00 */
-    s16 timer;           /* 0x02: decremented each tick, never tested */
-    u8 unk4;             /* 0x04 */
-    u8 active;           /* 0x05 */
-    u8 playActivateSfx;  /* 0x06 */
-    u8 prevActive;       /* 0x07 */
-    u8 unk8;             /* 0x08 */
-    u8 particleIdx;      /* 0x09 */
-    u8 particleAlpha;    /* 0x0A */
-    u8 particleChance;   /* 0x0B */
+    s16 gameBit;        /* 0x00 */
+    s16 timer;          /* 0x02: decremented each tick, never tested */
+    u8 unk4;            /* 0x04 */
+    u8 active;          /* 0x05 */
+    u8 playActivateSfx; /* 0x06 */
+    u8 prevActive;      /* 0x07 */
+    u8 unk8;            /* 0x08 */
+    u8 particleIdx;     /* 0x09 */
+    u8 particleAlpha;   /* 0x0A */
+    u8 particleChance;  /* 0x0B */
 } VfpStatueBallState;
 
 STATIC_ASSERT(sizeof(VfpStatueBallState) == 0xc);
 STATIC_ASSERT(offsetof(VfpStatueBallPlacement, variant) == 0x1A);
 STATIC_ASSERT(offsetof(VfpStatueBallPlacement, gameBit) == 0x1E);
 
-extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, f32 scale, int model, int mode, u8 chance,
-                                        f32 alpha, int flags, int unused);
+extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, f32 scale, int model, int mode, u8 chance, f32 alpha,
+                                        int flags, int unused);
 extern u8 fn_8016F16C(int* obj);
 extern f32 lbl_803E60B8;
 
-int VFP_statueball_getExtraSize(void) { return 0xc; }
+int VFP_statueball_getExtraSize(void)
+{
+    return 0xc;
+}
 
-int VFP_statueball_getObjectTypeId(void) { return 0x0; }
+int VFP_statueball_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_statueball_free(int obj)
 {

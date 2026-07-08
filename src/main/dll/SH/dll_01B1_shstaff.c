@@ -18,18 +18,21 @@
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"
 
-int sh_staff_getExtraSize(void) { return 0x74; }
+int sh_staff_getExtraSize(void)
+{
+    return 0x74;
+}
 
 /* ShStaffState.phase pickup / carry state machine (see file header) */
-#define SHSTAFF_PHASE_IDLE 0          /* wait for the staff object / acquired game bit */
-#define SHSTAFF_PHASE_ARMED 1         /* proximity map load; wait for the pickup trigger */
-#define SHSTAFF_PHASE_PICKUP 2        /* acquired; fade in and unload the pickup map */
-#define SHSTAFF_PHASE_CARRY_ATTACH 3  /* build the carry matrix from the world transform */
-#define SHSTAFF_PHASE_CARRY_LOCAL 4   /* build the carry matrix from the hand's local matrix */
-#define SHSTAFF_PHASE_CARRY_RENDER 5  /* settled carry: render attached to the hand */
-#define SHSTAFF_PHASE_DONE 6          /* deactivated */
+#define SHSTAFF_PHASE_IDLE           0     /* wait for the staff object / acquired game bit */
+#define SHSTAFF_PHASE_ARMED          1     /* proximity map load; wait for the pickup trigger */
+#define SHSTAFF_PHASE_PICKUP         2     /* acquired; fade in and unload the pickup map */
+#define SHSTAFF_PHASE_CARRY_ATTACH   3     /* build the carry matrix from the world transform */
+#define SHSTAFF_PHASE_CARRY_LOCAL    4     /* build the carry matrix from the hand's local matrix */
+#define SHSTAFF_PHASE_CARRY_RENDER   5     /* settled carry: render attached to the hand */
+#define SHSTAFF_PHASE_DONE           6     /* deactivated */
 #define SHSTAFF_CHILD_OBJ_HAZE_FLAME 0x659 /* staff-haze child flame (SH_StaffHaze_update), spawned by sh_staff_SeqFn */
-#define SHSTAFF_TARGET_OBJGROUP 0xf /* player-target group; the nearest object gets the pickup sequence */
+#define SHSTAFF_TARGET_OBJGROUP      0xf   /* player-target group; the nearest object gets the pickup sequence */
 
 #pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int p2)
@@ -38,7 +41,8 @@ void sh_staff_free(int* obj, int p2)
     int* child;
     int i;
 
-    if (p2 != 0) return;
+    if (p2 != 0)
+        return;
 
     i = 0;
     for (; i < 10; i++)
@@ -129,12 +133,13 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
 
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                          int useInputPosition);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
 extern void PSMTXInverse(int src, f32* dst);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * dst);
-extern void objSetMtxFn_800412d4(f32 * mtx);
+extern void PSMTXConcat(f32* a, f32* b, f32* dst);
+extern void objSetMtxFn_800412d4(f32* mtx);
 extern void objRenderModel(int obj);
 extern f32 lbl_803E54D0;
 extern f32 lbl_803E54D4;
@@ -280,9 +285,11 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                         bx = ((GameObject*)state->slots[4])->anim.localPosX;
                         ((GameObject*)state->slots[j])->anim.localPosX = t * (x0 - bx) + bx;
                         ((GameObject*)state->slots[j])->anim.localPosY =
-                            t * (y0 - ((GameObject*)state->slots[4])->anim.localPosY) + ((GameObject*)state->slots[4])->anim.localPosY;
+                            t * (y0 - ((GameObject*)state->slots[4])->anim.localPosY) +
+                            ((GameObject*)state->slots[4])->anim.localPosY;
                         ((GameObject*)state->slots[j])->anim.localPosZ =
-                            t * (z0 - ((GameObject*)state->slots[4])->anim.localPosZ) + ((GameObject*)state->slots[4])->anim.localPosZ;
+                            t * (z0 - ((GameObject*)state->slots[4])->anim.localPosZ) +
+                            ((GameObject*)state->slots[4])->anim.localPosZ;
                         ((GameObject*)state->slots[j])->anim.rootMotionScale = foldScale;
                     }
                 }
@@ -295,9 +302,11 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                         bx = ((GameObject*)state->slots[5])->anim.localPosX;
                         ((GameObject*)state->slots[j])->anim.localPosX = t * (x1 - bx) + bx;
                         ((GameObject*)state->slots[j])->anim.localPosY =
-                            t * (y1 - ((GameObject*)state->slots[5])->anim.localPosY) + ((GameObject*)state->slots[5])->anim.localPosY;
+                            t * (y1 - ((GameObject*)state->slots[5])->anim.localPosY) +
+                            ((GameObject*)state->slots[5])->anim.localPosY;
                         ((GameObject*)state->slots[j])->anim.localPosZ =
-                            t * (z1 - ((GameObject*)state->slots[5])->anim.localPosZ) + ((GameObject*)state->slots[5])->anim.localPosZ;
+                            t * (z1 - ((GameObject*)state->slots[5])->anim.localPosZ) +
+                            ((GameObject*)state->slots[5])->anim.localPosZ;
                         ((GameObject*)state->slots[j])->anim.rootMotionScale = foldScale;
                     }
                 }
@@ -322,8 +331,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     if ((u32)state->slots[j] != 0)
                     {
                         t = gShStaffHazeSpacing * j;
-                        t = t + (f32)(int)
-                        randomGetRange(-0x32, 0x32) / gShStaffScatterJitterDiv;
+                        t = t + (f32)(int)randomGetRange(-0x32, 0x32) / gShStaffScatterJitterDiv;
                         ((GameObject*)state->slots[j])->anim.localPosX = dx * t + x0;
                         ((GameObject*)state->slots[j])->anim.localPosY = dy * t + y0;
                         ((GameObject*)state->slots[j])->anim.localPosZ = dz * t + z0;
@@ -449,8 +457,8 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (state->hudFlag != 0)
     {
-        ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])
-            (((GameObject*)obj)->anim.modelInstance->helpTextIds[1], 0xa0, 0x8c);
+        ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])(
+            ((GameObject*)obj)->anim.modelInstance->helpTextIds[1], 0xa0, 0x8c);
     }
     state->hazeClimbT = lbl_803E54D8 * timeDelta + state->hazeClimbT;
     if (state->hazeClimbT > lbl_803E54D0)
@@ -464,8 +472,6 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern void staffToggle(int obj, int a);
 extern void playerPutAwayStaff(int obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
-
-
 
 extern f32 gShStaffFizzSfxTimerInit;
 extern f32 gShStaffMapUnloadDistSq;
@@ -482,7 +488,8 @@ void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+    ((GameObject*)obj)->anim.resetHitboxFlags =
+        (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
 
     if (clearChildren != 0)
     {
@@ -514,8 +521,10 @@ void sh_staff_update(int obj)
 
     if (mode == SHSTAFF_PHASE_IDLE)
     {
-        if (player == NULL) goto end;
-        if ((void*)Player_GetStaffObject((int)player) == NULL) goto end;
+        if (player == NULL)
+            goto end;
+        if ((void*)Player_GetStaffObject((int)player) == NULL)
+            goto end;
         if (mainGetBit(GAMEBIT_STAFF_ACQUIRED) != 0)
         {
             sh_staff_deactivate(obj, ((GameObject*)obj)->extra, 0);
@@ -599,9 +608,89 @@ end:
 }
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */
-u32 gSH_staffHazeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)SH_StaffHaze_update, 0x00000000, (u32)SH_StaffHaze_render, 0x00000000, 0x00000000, 0x00000000 };
-u32 gSH_BeaconObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_beacon_init, (u32)sh_beacon_update, 0x00000000, 0x00000000, (u32)sh_beacon_free, 0x00000000, (u32)sh_beacon_getExtraSize };
-u32 gSH_EmptyTumbleWObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)SH_EmptyTumbleW_init, (u32)SH_EmptyTumbleW_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
-u32 gSC_levelcontrolObjDescriptor[16] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)sc_levelcontrol_initialise, (u32)sc_levelcontrol_release, 0x00000000, (u32)sc_levelcontrol_init, (u32)sc_levelcontrol_update, (u32)sc_levelcontrol_hitDetect, (u32)sc_levelcontrol_render, (u32)sc_levelcontrol_free, (u32)sc_levelcontrol_getObjectTypeId, (u32)sc_levelcontrol_getExtraSize, (u32)sc_levelcontrol_applyAnimEventState, (u32)sc_levelcontrol_getAnimEventState };
-u32 gSC_MusicTreeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_musictree_initialise, (u32)sc_musictree_release, 0x00000000, (u32)sc_musictree_init, (u32)sc_musictree_update, (u32)sc_musictree_hitDetect, (u32)sc_musictree_render, (u32)sc_musictree_free, (u32)sc_musictree_getObjectTypeId, (u32)sc_musictree_getExtraSize };
-u32 gSC_totempoleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_totempole_initialise, (u32)sc_totempole_release, 0x00000000, (u32)sc_totempole_init, (u32)sc_totempole_update, (u32)sc_totempole_hitDetect, (u32)sc_totempole_render, (u32)sc_totempole_free, (u32)sc_totempole_getObjectTypeId, (u32)sc_totempole_getExtraSize };
+u32 gSH_staffHazeObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      (u32)SH_StaffHaze_update,
+                                      0x00000000,
+                                      (u32)SH_StaffHaze_render,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00000000};
+u32 gSH_BeaconObjDescriptor[14] = {0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x00090000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   (u32)sh_beacon_init,
+                                   (u32)sh_beacon_update,
+                                   0x00000000,
+                                   0x00000000,
+                                   (u32)sh_beacon_free,
+                                   0x00000000,
+                                   (u32)sh_beacon_getExtraSize};
+u32 gSH_EmptyTumbleWObjDescriptor[14] = {0x00000000,
+                                         0x00000000,
+                                         0x00000000,
+                                         0x00090000,
+                                         0x00000000,
+                                         0x00000000,
+                                         0x00000000,
+                                         (u32)SH_EmptyTumbleW_init,
+                                         (u32)SH_EmptyTumbleW_update,
+                                         0x00000000,
+                                         0x00000000,
+                                         0x00000000,
+                                         0x00000000,
+                                         0x00000000};
+u32 gSC_levelcontrolObjDescriptor[16] = {0x00000000,
+                                         0x00000000,
+                                         0x00000000,
+                                         0x000b0000,
+                                         (u32)sc_levelcontrol_initialise,
+                                         (u32)sc_levelcontrol_release,
+                                         0x00000000,
+                                         (u32)sc_levelcontrol_init,
+                                         (u32)sc_levelcontrol_update,
+                                         (u32)sc_levelcontrol_hitDetect,
+                                         (u32)sc_levelcontrol_render,
+                                         (u32)sc_levelcontrol_free,
+                                         (u32)sc_levelcontrol_getObjectTypeId,
+                                         (u32)sc_levelcontrol_getExtraSize,
+                                         (u32)sc_levelcontrol_applyAnimEventState,
+                                         (u32)sc_levelcontrol_getAnimEventState};
+u32 gSC_MusicTreeObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      (u32)sc_musictree_initialise,
+                                      (u32)sc_musictree_release,
+                                      0x00000000,
+                                      (u32)sc_musictree_init,
+                                      (u32)sc_musictree_update,
+                                      (u32)sc_musictree_hitDetect,
+                                      (u32)sc_musictree_render,
+                                      (u32)sc_musictree_free,
+                                      (u32)sc_musictree_getObjectTypeId,
+                                      (u32)sc_musictree_getExtraSize};
+u32 gSC_totempoleObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      (u32)sc_totempole_initialise,
+                                      (u32)sc_totempole_release,
+                                      0x00000000,
+                                      (u32)sc_totempole_init,
+                                      (u32)sc_totempole_update,
+                                      (u32)sc_totempole_hitDetect,
+                                      (u32)sc_totempole_render,
+                                      (u32)sc_totempole_free,
+                                      (u32)sc_totempole_getObjectTypeId,
+                                      (u32)sc_totempole_getExtraSize};

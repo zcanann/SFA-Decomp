@@ -22,8 +22,14 @@ extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
 
-int GCbaddieShield_getExtraSize(void) { return 0x8; }
-int GCbaddieShield_getObjectTypeId(void) { return 0x0; }
+int GCbaddieShield_getExtraSize(void)
+{
+    return 0x8;
+}
+int GCbaddieShield_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void GCbaddieShield_free(void)
 {
@@ -87,7 +93,10 @@ void GCbaddieShield_initialise(void)
 }
 
 ObjectDescriptor gGCbaddieShieldObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)GCbaddieShield_initialise,
     (ObjectDescriptorCallback)GCbaddieShield_release,
     0,

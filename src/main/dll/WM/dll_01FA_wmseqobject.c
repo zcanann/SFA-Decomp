@@ -27,14 +27,12 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 extern u8 lbl_803DDC78;
 extern f32 lbl_803E5CF8;
 
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
-#define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
+#define OBJ_S16(obj, offset) (*(s16*)((u8*)(obj) + (offset)))
+#define OBJ_S32(obj, offset) (*(s32*)((u8*)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-    (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define SCREEN_TRANSITION_START(kind, value) \
-    (*gScreenTransitionInterface)->step((kind), (value))
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
@@ -70,8 +68,14 @@ int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int WM_seqobject_getExtraSize(void) { return 1; }
-int WM_seqobject_getObjectTypeId(void) { return 0; }
+int WM_seqobject_getExtraSize(void)
+{
+    return 1;
+}
+int WM_seqobject_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void WM_seqobject_free(void)
 {
@@ -125,7 +129,7 @@ void WM_seqobject_update(int* obj)
         found = 0;
         for (i = 0; i < count; i++)
         {
-            if (OBJ_S16(*(int **)(objects + i), 0x46) == 0x139)
+            if (OBJ_S16(*(int**)(objects + i), 0x46) == 0x139)
             {
                 found = 1;
             }
@@ -178,4 +182,3 @@ void WM_seqobject_release(void)
 void WM_seqobject_initialise(void)
 {
 }
-

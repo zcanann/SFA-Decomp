@@ -30,7 +30,7 @@ typedef struct
 } GfxCmd;
 
 /* base spawn flags; low bit positions the effect at the source object */
-#define SPAWN_FLAGS_BASE 0xc010480
+#define SPAWN_FLAGS_BASE        0xc010480
 #define SPAWN_FLAG_USE_POSITION 1
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */

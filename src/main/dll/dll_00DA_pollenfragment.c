@@ -27,30 +27,30 @@ extern void storeZeroToFloatParam(void* timer);
 
 typedef struct
 {
-    s16 unk00; /* 0x00 */
-    s16 loopSfx; /* 0x02 */
-    s16 explodeSfx; /* 0x04 */
-    s16 unk06; /* 0x06 */
-    s16 burstFx; /* 0x08 */
-    s16 auraFx; /* 0x0A */
-    s16 unk0C; /* 0x0C */
-    s16 unk0E; /* 0x0E */
-    s16 targetGroup; /* 0x10 */
+    s16 unk00;         /* 0x00 */
+    s16 loopSfx;       /* 0x02 */
+    s16 explodeSfx;    /* 0x04 */
+    s16 unk06;         /* 0x06 */
+    s16 burstFx;       /* 0x08 */
+    s16 auraFx;        /* 0x0A */
+    s16 unk0C;         /* 0x0C */
+    s16 unk0E;         /* 0x0E */
+    s16 targetGroup;   /* 0x10 */
     u8 noVertical : 1; /* 0x12 bit 7 */
-    u8 timed : 1; /* 0x12 bit 6 */
+    u8 timed : 1;      /* 0x12 bit 6 */
     u8 smoothTurn : 1; /* 0x12 bit 5 */
-    u8 usePath : 1; /* 0x12 bit 4 */
+    u8 usePath : 1;    /* 0x12 bit 4 */
 } PollenFragmentDef;
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
 typedef struct PollenFragmentExtra
 {
     int ownerObj; /* 0x00: owner captured on first update */
-    f32 speed; /* 0x04: steering speed factor */
-    f32 timer; /* 0x08: lifetime/strength timer */
-    f32 velX; /* 0x0C */
-    f32 velY; /* 0x10 */
-    f32 velZ; /* 0x14 */
+    f32 speed;    /* 0x04: steering speed factor */
+    f32 timer;    /* 0x08: lifetime/strength timer */
+    f32 velX;     /* 0x0C */
+    f32 velY;     /* 0x10 */
+    f32 velZ;     /* 0x14 */
     u8 unk18[4];
     PollenFragmentDef* def; /* 0x1C */
 } PollenFragmentExtra;
@@ -114,10 +114,8 @@ void pollenfragment_init(int obj, int config)
     spawnCount = 4;
     do
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, (int)*(short*)(state[7] + 6),
-                                         NULL, 1, -1, NULL);
-    }
-    while (spawnCount-- != 0);
+        (*gPartfxInterface)->spawnObject((void*)obj, (int)*(short*)(state[7] + 6), NULL, 1, -1, NULL);
+    } while (spawnCount-- != 0);
     if (!((PollenFragmentDef*)state[7])->timed)
     {
         *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E319C;
@@ -149,8 +147,14 @@ void pollenfragment_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-int pollenfragment_getExtraSize(void) { return 0x28; }
-int pollenfragment_getObjectTypeId(void) { return 0x0; }
+int pollenfragment_getExtraSize(void)
+{
+    return 0x28;
+}
+int pollenfragment_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -204,78 +208,35 @@ ObjectDescriptor gPollenObjDescriptor = {
 };
 
 PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
 
 PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
 };
 
 PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
 };
 
 PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
 
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
 {
     int* state = ((GameObject*)obj)->extra;
-    if (fn_80080150((int)((char*)state + 0x20)) != 0) return;
-    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3158);
+    if (fn_80080150((int)((char*)state + 0x20)) != 0)
+        return;
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3158);
 }
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
@@ -379,11 +340,10 @@ void pollenfragment_update(int obj)
                 i = 2;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject(
-                        (void*)obj, (int)(((PollenFragmentExtra*)extra)->def)->burstFx, NULL,
-                        1, -1, NULL);
-                }
-                while (i-- != 0);
+                    (*gPartfxInterface)
+                        ->spawnObject((void*)obj, (int)(((PollenFragmentExtra*)extra)->def)->burstFx, NULL, 1, -1,
+                                      NULL);
+                } while (i-- != 0);
             }
             ((PollenFragmentExtra*)extra)->timer = lbl_803E3160;
             if (((GameObject*)obj)->anim.alpha >= framesThisStep << 3)
@@ -400,9 +360,8 @@ void pollenfragment_update(int obj)
     }
     if ((((PollenFragmentExtra*)extra)->def)->auraFx != -1)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj,
-                                         (int)(((PollenFragmentExtra*)extra)->def)->auraFx,
-                                         NULL, 1, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, (int)(((PollenFragmentExtra*)extra)->def)->auraFx, NULL, 1, -1, NULL);
     }
     nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, obj, 0);
     if (nearObj != NULL &&
@@ -429,14 +388,20 @@ void pollenfragment_update(int obj)
         ((PollenFragmentExtra*)extra)->velZ = dir.z;
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX +
-            ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (dir.x * ((PollenFragmentExtra*)extra)->speed)) / lbl_803E3164;
-        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ +
-            ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (dir.z * ((PollenFragmentExtra*)extra)->speed)) / lbl_803E3164;
+        ((GameObject*)obj)->anim.velocityX =
+            ((GameObject*)obj)->anim.velocityX +
+            ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (dir.x * ((PollenFragmentExtra*)extra)->speed)) /
+                lbl_803E3164;
+        ((GameObject*)obj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.velocityZ +
+            ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (dir.z * ((PollenFragmentExtra*)extra)->speed)) /
+                lbl_803E3164;
         if (!(((PollenFragmentExtra*)extra)->def)->noVertical)
         {
-            ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY +
-                ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (lbl_803E316C * (dir.y * ((PollenFragmentExtra*)extra)->speed))) / lbl_803E3164;
+            ((GameObject*)obj)->anim.velocityY =
+                ((GameObject*)obj)->anim.velocityY + ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) *
+                                                      (lbl_803E316C * (dir.y * ((PollenFragmentExtra*)extra)->speed))) /
+                                                         lbl_803E3164;
         }
     }
     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (horizDamping = lbl_803E3170);
@@ -445,8 +410,8 @@ void pollenfragment_update(int obj)
     if ((((PollenFragmentExtra*)extra)->def)->noVertical)
     {
         t = lbl_803E3178 * timeDelta;
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY -
-            (t * ((PollenFragmentExtra*)extra)->timer) / lbl_803E317C;
+        ((GameObject*)obj)->anim.velocityY =
+            ((GameObject*)obj)->anim.velocityY - (t * ((PollenFragmentExtra*)extra)->timer) / lbl_803E317C;
     }
     if ((((PollenFragmentExtra*)extra)->def)->smoothTurn)
     {
@@ -456,8 +421,7 @@ void pollenfragment_update(int obj)
     else if (((GameObject*)obj)->anim.seqId == POLLEN_FRAGMENT_OBJECT_ID)
     {
         t = lbl_803E3180 * lbl_803DBD48;
-        ((GameObject*)obj)->anim.rotX =
-            t * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotX = t * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
         ((GameObject*)obj)->anim.rotY =
             lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotY;
     }

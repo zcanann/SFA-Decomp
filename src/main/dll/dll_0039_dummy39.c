@@ -15,10 +15,9 @@ extern u8* lbl_803DD72C;
 
 extern void warpToMap(int idx, s8 transType);
 
-
 #define DUMMY39_COUNTDOWN_FRAMES 0x28
-#define DUMMY39_WARP_MAP 0x60
-#define DUMMY39_MAX_STEP_FRAMES 3
+#define DUMMY39_WARP_MAP         0x60
+#define DUMMY39_MAX_STEP_FRAMES  3
 
 void Dummy39_render(void)
 {
@@ -37,7 +36,8 @@ int Dummy39_run(void)
     s8 next;
     Obj_GetPlayerObject();
     step = framesThisStep;
-    if (step > DUMMY39_MAX_STEP_FRAMES) step = DUMMY39_MAX_STEP_FRAMES;
+    if (step > DUMMY39_MAX_STEP_FRAMES)
+        step = DUMMY39_MAX_STEP_FRAMES;
     cur = lbl_803DD728;
     if ((s8)cur > 0)
     {
@@ -54,6 +54,12 @@ int Dummy39_run(void)
 #pragma scheduling reset
 #pragma peephole reset
 
-void Dummy39_release(void) { textureFree(lbl_803DD72C); }
+void Dummy39_release(void)
+{
+    textureFree(lbl_803DD72C);
+}
 
-void Dummy39_initialise(void) { lbl_803DD728 = DUMMY39_COUNTDOWN_FRAMES; }
+void Dummy39_initialise(void)
+{
+    lbl_803DD728 = DUMMY39_COUNTDOWN_FRAMES;
+}

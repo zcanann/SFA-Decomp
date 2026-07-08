@@ -17,12 +17,11 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 
-
-extern int lbl_803DDC68; /* live WM_WallCraw population counter */
+extern int lbl_803DDC68;       /* live WM_WallCraw population counter */
 extern const f32 lbl_803E5CC8; /* 1.0 */
-extern f32 lbl_803E5CCC; /* 10.0: eastward drift base velocity */
-extern f32 lbl_803E5CD0; /* -30.0: westward drift base velocity */
-extern f32 lbl_803E5CD4; /* 0.1: burst velocity scale */
+extern f32 lbl_803E5CCC;       /* 10.0: eastward drift base velocity */
+extern f32 lbl_803E5CD0;       /* -30.0: westward drift base velocity */
+extern f32 lbl_803E5CD4;       /* 0.1: burst velocity scale */
 extern const f32 lbl_803E5CD8; /* 0.0 */
 extern const f32 lbl_803E5CDC; /* 200.0 */
 
@@ -42,8 +41,14 @@ enum
 
 #define WMOBJCREATOR_PARTFX_DEBRIS 0x1a6 /* debris-particle burst under the falling WM_rock (case 6) */
 
-int WM_ObjCreator_getExtraSize(void) { return 0x8; }
-int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
+int WM_ObjCreator_getExtraSize(void)
+{
+    return 0x8;
+}
+int WM_ObjCreator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_ObjCreator_free(void)
 {
@@ -52,7 +57,8 @@ void WM_ObjCreator_free(void)
 void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5CC8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5CC8);
 }
 
 void WM_ObjCreator_hitDetect(void)
@@ -144,60 +150,59 @@ void WM_ObjCreator_update(int obj)
         switch (placement->spawnMode)
         {
         case 0: /* one-shot WM_Galleon at the placement, at most one alive */
-            {
-                int* objs;
-                int k;
-                /* dead-on-this-path state recycled as the spawn-ok flag
+        {
+            int* objs;
+            int k;
+            /* dead-on-this-path state recycled as the spawn-ok flag
                    (#119: lands the flag web in state's r29 = retail) */
-                state = (WmObjCreatorState*)0;
-                if (((GameObject*)obj)->unkF8 == 0)
+            state = (WmObjCreatorState*)0;
+            if (((GameObject*)obj)->unkF8 == 0)
+            {
+                state = (WmObjCreatorState*)1;
+                if (mainGetBit(GAMEBIT_WM_GALLEON_GONE) != 0)
                 {
-                    state = (WmObjCreatorState*)1;
-                    if (mainGetBit(GAMEBIT_WM_GALLEON_GONE) != 0)
+                    state = (WmObjCreatorState*)0;
+                }
+                objs = ObjGroup_GetObjects(3, &count);
+                k = 0;
+                while (k < count && (s8)(int)state)
+                {
+                    if (((GameObject*)*objs)->anim.seqId == WMOBJCREATOR_SPAWN_WM_GALLEON)
                     {
                         state = (WmObjCreatorState*)0;
                     }
-                    objs = ObjGroup_GetObjects(3, &count);
-                    k = 0;
-                    while (k < count && (s8)(int)state)
-                    {
-                        if (((GameObject*)*objs)->anim.seqId == WMOBJCREATOR_SPAWN_WM_GALLEON)
-                        {
-                            state = (WmObjCreatorState*)0;
-                        }
-                        objs += 1;
-                        k += 1;
-                    }
+                    objs += 1;
+                    k += 1;
                 }
-                if ((s8)(int)state)
-                {
-                    setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_GALLEON);
-                    ((ObjPlacement*)setup)->posX = placement->base.posX;
-                    ((ObjPlacement*)setup)->posY = placement->base.posY;
-                    ((ObjPlacement*)setup)->posZ = placement->base.posZ;
-                    ((ObjPlacement*)setup)->color[0] = placement->base.color[0];
-                    ((ObjPlacement*)setup)->color[1] = placement->base.color[1];
-                    ((ObjPlacement*)setup)->color[2] = placement->base.color[2];
-                    ((ObjPlacement*)setup)->color[3] = placement->base.color[3];
-                    ((WmGalleonSpawnSetup*)setup)->unk1E = 0xffff;
-                    ((WmGalleonSpawnSetup*)setup)->unk1A = 2;
-                    ((WmGalleonSpawnSetup*)setup)->yawByte = placement->yaw;
-                    spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                              *(int*)&((GameObject*)obj)->anim.parent);
-                    if ((u32)spawned != 0)
-                    {
-                        ((GameObject*)spawned)->unkF4 = 8;
-                    }
-                    ((GameObject*)obj)->unkF8 = 1;
-                }
-                break;
             }
+            if ((s8)(int)state)
+            {
+                setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_GALLEON);
+                ((ObjPlacement*)setup)->posX = placement->base.posX;
+                ((ObjPlacement*)setup)->posY = placement->base.posY;
+                ((ObjPlacement*)setup)->posZ = placement->base.posZ;
+                ((ObjPlacement*)setup)->color[0] = placement->base.color[0];
+                ((ObjPlacement*)setup)->color[1] = placement->base.color[1];
+                ((ObjPlacement*)setup)->color[2] = placement->base.color[2];
+                ((ObjPlacement*)setup)->color[3] = placement->base.color[3];
+                ((WmGalleonSpawnSetup*)setup)->unk1E = 0xffff;
+                ((WmGalleonSpawnSetup*)setup)->unk1A = 2;
+                ((WmGalleonSpawnSetup*)setup)->yawByte = placement->yaw;
+                spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                          *(int*)&((GameObject*)obj)->anim.parent);
+                if ((u32)spawned != 0)
+                {
+                    ((GameObject*)spawned)->unkF4 = 8;
+                }
+                ((GameObject*)obj)->unkF8 = 1;
+            }
+            break;
+        }
         case 1: /* periodic LFXEmitter at the creator, drifting east */
             if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                int setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
-                                                 WMOBJCREATOR_SPAWN_LFX_EMITTER);
+                int setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
                 ((ObjPlacement*)setup)->color[0] = 0x20;
                 ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->color[3] = 0xff;
@@ -264,8 +269,7 @@ void WM_ObjCreator_update(int obj)
             if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
-                                             WMOBJCREATOR_SPAWN_LFX_EMITTER);
+                setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
                 ((ObjPlacement*)setup)->color[0] = 4;
                 ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->posX = placement->base.posX;
@@ -294,8 +298,7 @@ void WM_ObjCreator_update(int obj)
                 {
                     int setup;
                     n -= 1;
-                    setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
-                                                 WMOBJCREATOR_SPAWN_LFX_EMITTER);
+                    setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
                     ((ObjPlacement*)setup)->color[0] = 0x20;
                     ((ObjPlacement*)setup)->color[1] = 2;
                     ((ObjPlacement*)setup)->color[3] = 0xff;
@@ -324,11 +327,9 @@ void WM_ObjCreator_update(int obj)
                         vec.pos[1] = ((GameObject*)spawned)->anim.velocityX;
                         vec.pos[3] = ((GameObject*)spawned)->anim.velocityZ;
                         vec.pos[2] = lbl_803E5CD8;
-                        (*gPartfxInterface)->spawnObject((void*)spawned, 0x1a7, &vec,
-                                                         0x10000, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)spawned, 0x1a7, &vec, 0x10000, -1, NULL);
                     }
-                }
-                while (n != 0);
+                } while (n != 0);
                 mainSetBits(state->gameBit, 0);
             }
             break;
@@ -336,8 +337,7 @@ void WM_ObjCreator_update(int obj)
             if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
-                                             WMOBJCREATOR_SPAWN_LFX_EMITTER);
+                setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
                 ((ObjPlacement*)setup)->color[0] = 4;
                 ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->posX = placement->base.posX + (f32)(int)randomGetRange(-0x28, 0x28);
@@ -358,9 +358,11 @@ void WM_ObjCreator_update(int obj)
             if (mainGetBit(state->gameBit) != 0 || state->gameBit == -1)
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_ROCK);
-                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x104, 0x104);
+                ((ObjPlacement*)setup)->posX =
+                    ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x104, 0x104);
                 ((ObjPlacement*)setup)->posY = lbl_803E5CDC + ((GameObject*)obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x50, 0x50);
+                ((ObjPlacement*)setup)->posZ =
+                    ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x50, 0x50);
                 ((ObjPlacement*)setup)->color[0] = 0x20;
                 ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->color[3] = 0xff;
@@ -377,8 +379,7 @@ void WM_ObjCreator_update(int obj)
                     vec.pos[1] = (f32)(int)randomGetRange(-200, 200);
                     vec.pos[3] = (f32)(int)randomGetRange(-0x14, 0x14);
                     vec.pos[2] = lbl_803E5CDC;
-                    (*gPartfxInterface)->spawnObject((void*)obj, WMOBJCREATOR_PARTFX_DEBRIS, &vec, 0x10002, -1,
-                                                     NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, WMOBJCREATOR_PARTFX_DEBRIS, &vec, 0x10002, -1, NULL);
                 }
                 mainSetBits(state->gameBit, 0);
             }

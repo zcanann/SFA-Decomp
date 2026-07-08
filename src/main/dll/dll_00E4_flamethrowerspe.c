@@ -80,14 +80,23 @@ void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3)
     ((GameObject*)obj)->anim.rotX = b;
 }
 
-int flamethrowerspe_getExtraSize(void) { return 0x14; }
-int flamethrowerspe_getObjectTypeId(void) { return 0x0; }
+int flamethrowerspe_getExtraSize(void)
+{
+    return 0x14;
+}
+int flamethrowerspe_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void flamethrowerspe_free(void)
 {
 }
 
-void flamethrowerspe_render(void) { objRenderModelAndHitVolumes(lbl_803E3388); }
+void flamethrowerspe_render(void)
+{
+    objRenderModelAndHitVolumes(lbl_803E3388);
+}
 
 void flamethrowerspe_hitDetect(void)
 {
@@ -96,8 +105,8 @@ void flamethrowerspe_hitDetect(void)
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
-    extern int timerCountDown(f32* p);
-    extern void s16toFloat(f32* p, s16 val);
+    extern int timerCountDown(f32 * p);
+    extern void s16toFloat(f32 * p, s16 val);
     extern void objMove(int* obj, f32 x, f32 y, f32 z);
     extern u32 ObjHits_EnableObject();
     extern u64 ObjHits_DisableObject();
@@ -109,12 +118,7 @@ void flamethrowerspe_update(int* obj)
         ((GameObject*)obj)->anim.velocityX = lbl_803E338C;
         ((GameObject*)obj)->anim.velocityZ =
             lbl_803DBD68 * (lbl_803E3390 * (((FlamethrowerspeState*)state)->sizeScale *
-                (lbl_803E3394 * (f32)(s32)
-        randomGetRange(0x64, 0x96)
-        )
-        )
-        )
-        ;
+                                            (lbl_803E3394 * (f32)(s32)randomGetRange(0x64, 0x96))));
         vecRotateZXY(obj, &((GameObject*)obj)->anim.velocityX);
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
         s16toFloat(&((FlamethrowerspeState*)state)->lifeTimer, lbl_803DBD64);
@@ -134,8 +138,9 @@ void flamethrowerspe_update(int* obj)
             objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
                     ((GameObject*)obj)->anim.velocityZ * dt);
         }
-        ObjHitbox_SetSphereRadius(obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
-                                      (((f32)lbl_803DBD64 - ((FlamethrowerspeState*)state)->lifeTimer) / lbl_803DBD64)));
+        ObjHitbox_SetSphereRadius(
+            obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
+                       (((f32)lbl_803DBD64 - ((FlamethrowerspeState*)state)->lifeTimer) / lbl_803DBD64)));
         break;
     }
 }
@@ -143,7 +148,7 @@ void flamethrowerspe_update(int* obj)
 
 void flamethrowerspe_init(int* obj, int* params)
 {
-    extern void storeZeroToFloatParam(f32* p);
+    extern void storeZeroToFloatParam(f32 * p);
     extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     storeZeroToFloatParam(&((FlamethrowerspeState*)state)->lifeTimer);
@@ -166,7 +171,10 @@ void flamethrowerspe_initialise(void)
 }
 
 ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
     (ObjectDescriptorCallback)flamethrowerspe_initialise,
     (ObjectDescriptorCallback)flamethrowerspe_release,
     0,

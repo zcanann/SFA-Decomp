@@ -75,12 +75,13 @@ extern f32 lbl_803E2A08;
  *  - anchorY(0x32C): object localPosY captured at init.
  *  - unk330(0x330): init-seeded f32 constant.
  */
-typedef struct FireflyState {
+typedef struct FireflyState
+{
     u8 pad00[0x324];
-    f32 trackTimer;   /* 0x324 */
-    f32 breathTimer;  /* 0x328 */
-    f32 anchorY;      /* 0x32C */
-    f32 unk330;       /* 0x330 */
+    f32 trackTimer;  /* 0x324 */
+    f32 breathTimer; /* 0x328 */
+    f32 anchorY;     /* 0x32C */
+    f32 unk330;      /* 0x330 */
     u8 pad334[0x358 - 0x334];
     /* 0x344..0x364 is the wall/plane block fn_801554B4 (duster.c) writes.
      * planeNormal (0x344..0x34C) is passed by address to the PSVEC helpers,
@@ -106,9 +107,9 @@ void fn_80154870(int obj, int* state)
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
         ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || curve->atSegmentEnd != 0) &&
-            ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, lbl_803E29B0,
-                                          (int*)&lbl_803DBCD0, -1) != 0))
+         ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
+        ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, lbl_803E29B0, (int*)&lbl_803DBCD0, -1) !=
+         0))
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
     }
@@ -124,7 +125,7 @@ void fn_80154870(int obj, int* state)
     }
     ((GameObject*)obj)->anim.rotY =
         -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
-            (f32)((GameObject*)obj)->anim.rotY);
+          (f32)((GameObject*)obj)->anim.rotY);
     if (flag == 0)
     {
         fval = lbl_803E2990;
@@ -187,12 +188,11 @@ void fn_80154870(int obj, int* state)
     }
     ((BaddieState*)state)->seqEntryIndex += 1;
     ((GameObject*)obj)->anim.rotY =
-    (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
-        (f32)((GameObject*)obj)->anim.rotY);
+        (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
+         (f32)((GameObject*)obj)->anim.rotY);
     fn_80154328(obj, state);
 }
 #pragma opt_common_subs reset
-
 
 void fn_80154C24(int obj, int state)
 {

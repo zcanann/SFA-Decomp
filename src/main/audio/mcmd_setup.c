@@ -4,18 +4,18 @@
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
 extern McmdVoiceState* synthVoice;
-extern void synthFXCloneMidiSetup(McmdVoiceState * voice, McmdVoiceState * state);
-void DoSetPitch(McmdVoiceState * svoice);
-extern void sndConvertMs(u32 * p);
-extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
-extern void synthQueueVoiceInputUpdate(McmdVoiceState * state);
-extern int adsrSetup(McmdEnvelopeState * state);
+extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
+void DoSetPitch(McmdVoiceState* svoice);
+extern void sndConvertMs(u32* p);
+extern void sndConvertTicks(u32* p, McmdVoiceState* state);
+extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
+extern int adsrSetup(McmdEnvelopeState* state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */
-extern f32 lbl_803E77F0; /* 4096.0f */
-extern f32 lbl_803E77F4; /* attack scale epsilon */
-extern f32 lbl_803E77F8; /* decay scale epsilon */
+extern f32 lbl_803E77F0;  /* 4096.0f */
+extern f32 lbl_803E77F4;  /* attack scale epsilon */
+extern f32 lbl_803E77F8;  /* decay scale epsilon */
 
 typedef struct SampleInfo
 {
@@ -31,8 +31,8 @@ typedef struct SampleInfo
 
 extern SampleInfo dataSampleInfo;
 extern int dataGetSample(u16 key, SampleInfo* out);
-extern void hwInitSamplePlayback(u32 voice, u16 sampleId, SampleInfo* sampleInfo, u32 noKeySync,
-                                 u32 priority, u32 handle, u32 noStartOffset, u8 itdMode);
+extern void hwInitSamplePlayback(u32 voice, u16 sampleId, SampleInfo* sampleInfo, u32 noKeySync, u32 priority,
+                                 u32 handle, u32 noStartOffset, u8 itdMode);
 
 typedef union McmdAdsrData
 {
@@ -75,7 +75,7 @@ typedef union McmdAdsrCurve
 } McmdAdsrCurve;
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
-#define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)
+#define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
 #define MAC_FLAG64(hi, lo) (((u64)(hi) << 32) | (u64)(lo))
 
 /*
@@ -96,17 +96,14 @@ void mcmdPlayMacro(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     }
 
     svoice->macroAllocating = 1;
-    new_child = macStart(cstep->flags >> 0x10, (u8)(cstep->value >> 0x10),
-                         (u8)(cstep->value >> 0x18), svoice->baseSample, key,
-                         (u8)(svoice->volume >> 0x10), (u8)(svoice->pan >> 0x10),
-                         svoice->midiSlot, svoice->midiEvent, svoice->midiLayer,
-                         cstep->value, svoice->track, 0, svoice->vGroup, svoice->studio,
-                         svoice->itdMode == 0);
+    new_child = macStart(cstep->flags >> 0x10, (u8)(cstep->value >> 0x10), (u8)(cstep->value >> 0x18),
+                         svoice->baseSample, key, (u8)(svoice->volume >> 0x10), (u8)(svoice->pan >> 0x10),
+                         svoice->midiSlot, svoice->midiEvent, svoice->midiLayer, cstep->value, svoice->track, 0,
+                         svoice->vGroup, svoice->studio, svoice->itdMode == 0);
     svoice->macroAllocating = 0;
     if (new_child != 0xFFFFFFFF)
     {
-        svoice->cloneVidListNode =
-            (McmdVidListNode*)synthVoice[(u8)new_child].vidListNode->id;
+        svoice->cloneVidListNode = (McmdVidListNode*)synthVoice[(u8)new_child].vidListNode->id;
         synthVoice[(u8)new_child].voicePrevHandle = svoice->voiceHandle;
         if (svoice->voiceNextHandle != -1)
         {
@@ -164,11 +161,9 @@ void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
         }
     }
 
-    hwInitSamplePlayback(svoice->voiceHandle & 0xFF, smp, newsmp,
-                         (MAC_CFLAGS(svoice) & MAC_FLAG64(0, 0x100)) == 0,
-                         ((u32)svoice->priorityGroup << 24) | (svoice->priorityValue >> 15),
-                         svoice->voiceHandle, (MAC_CFLAGS(svoice) & MAC_FLAG64(0x800, 0)) == 0,
-                         svoice->itdMode);
+    hwInitSamplePlayback(svoice->voiceHandle & 0xFF, smp, newsmp, (MAC_CFLAGS(svoice) & MAC_FLAG64(0, 0x100)) == 0,
+                         ((u32)svoice->priorityGroup << 24) | (svoice->priorityValue >> 15), svoice->voiceHandle,
+                         (MAC_CFLAGS(svoice) & MAC_FLAG64(0x800, 0)) == 0, svoice->itdMode);
 
     svoice->prevSampleId = newsmp->info;
 
@@ -369,26 +364,17 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
         }
         else
         {
-            f32 sScale = voiceAdsrSustainTable[(u16)(adsr_ptr->dls.slevel >> 8 |
-                adsr_ptr->dls.slevel << 8) >> 5];
-            adsr.dls.atime = ((u8*)&adsr_ptr->dls.atime)[0] << 0 |
-                ((u8*)&adsr_ptr->dls.atime)[1] << 8 |
-                ((u8*)&adsr_ptr->dls.atime)[2] << 16 |
-                ((u8*)&adsr_ptr->dls.atime)[3] << 24;
-            adsr.dls.dtime = ((u8*)&adsr_ptr->dls.dtime)[0] << 0 |
-                ((u8*)&adsr_ptr->dls.dtime)[1] << 8 |
-                ((u8*)&adsr_ptr->dls.dtime)[2] << 16 |
-                ((u8*)&adsr_ptr->dls.dtime)[3] << 24;
+            f32 sScale = voiceAdsrSustainTable[(u16)(adsr_ptr->dls.slevel >> 8 | adsr_ptr->dls.slevel << 8) >> 5];
+            adsr.dls.atime = ((u8*)&adsr_ptr->dls.atime)[0] << 0 | ((u8*)&adsr_ptr->dls.atime)[1] << 8 |
+                             ((u8*)&adsr_ptr->dls.atime)[2] << 16 | ((u8*)&adsr_ptr->dls.atime)[3] << 24;
+            adsr.dls.dtime = ((u8*)&adsr_ptr->dls.dtime)[0] << 0 | ((u8*)&adsr_ptr->dls.dtime)[1] << 8 |
+                             ((u8*)&adsr_ptr->dls.dtime)[2] << 16 | ((u8*)&adsr_ptr->dls.dtime)[3] << 24;
             adsr.dls.slevel = lbl_803E77F0 * sScale;
             adsr.dls.rtime = adsr_ptr->dls.rtime >> 8 | adsr_ptr->dls.rtime << 8;
-            ascale = ((u8*)&adsr_ptr->dls.ascale)[0] << 0 |
-                ((u8*)&adsr_ptr->dls.ascale)[1] << 8 |
-                ((u8*)&adsr_ptr->dls.ascale)[2] << 16 |
-                ((u8*)&adsr_ptr->dls.ascale)[3] << 24;
-            dscale = ((u8*)&adsr_ptr->dls.dscale)[0] << 0 |
-                ((u8*)&adsr_ptr->dls.dscale)[1] << 8 |
-                ((u8*)&adsr_ptr->dls.dscale)[2] << 16 |
-                ((u8*)&adsr_ptr->dls.dscale)[3] << 24;
+            ascale = ((u8*)&adsr_ptr->dls.ascale)[0] << 0 | ((u8*)&adsr_ptr->dls.ascale)[1] << 8 |
+                     ((u8*)&adsr_ptr->dls.ascale)[2] << 16 | ((u8*)&adsr_ptr->dls.ascale)[3] << 24;
+            dscale = ((u8*)&adsr_ptr->dls.dscale)[0] << 0 | ((u8*)&adsr_ptr->dls.dscale)[1] << 8 |
+                     ((u8*)&adsr_ptr->dls.dscale)[2] << 16 | ((u8*)&adsr_ptr->dls.dscale)[3] << 24;
 
             if (ascale != 0x80000000)
             {
@@ -436,20 +422,16 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
         svoice->pitchAdsrPan -= ((s16)(s8)(cstep->value >> 8) << 8) / 100;
     }
 
-    adsr.dls.atime = ((u8*)&adsr_ptr->dls.atime)[0] << 0 |
-        ((u8*)&adsr_ptr->dls.atime)[1] << 8 |
-        ((u8*)&adsr_ptr->dls.atime)[2] << 16 |
-        ((u8*)&adsr_ptr->dls.atime)[3] << 24;
-    adsr.dls.dtime = ((u8*)&adsr_ptr->dls.dtime)[0] << 0 |
-        ((u8*)&adsr_ptr->dls.dtime)[1] << 8 |
-        ((u8*)&adsr_ptr->dls.dtime)[2] << 16 |
-        ((u8*)&adsr_ptr->dls.dtime)[3] << 24;
+    adsr.dls.atime = ((u8*)&adsr_ptr->dls.atime)[0] << 0 | ((u8*)&adsr_ptr->dls.atime)[1] << 8 |
+                     ((u8*)&adsr_ptr->dls.atime)[2] << 16 | ((u8*)&adsr_ptr->dls.atime)[3] << 24;
+    adsr.dls.dtime = ((u8*)&adsr_ptr->dls.dtime)[0] << 0 | ((u8*)&adsr_ptr->dls.dtime)[1] << 8 |
+                     ((u8*)&adsr_ptr->dls.dtime)[2] << 16 | ((u8*)&adsr_ptr->dls.dtime)[3] << 24;
     adsr.dls.slevel = adsr_ptr->dls.slevel >> 8 | adsr_ptr->dls.slevel << 8;
     adsr.dls.rtime = adsr_ptr->dls.rtime >> 8 | adsr_ptr->dls.rtime << 8;
     ascale = ((u8*)&adsr_ptr->dls.ascale)[0] << 0 | ((u8*)&adsr_ptr->dls.ascale)[1] << 8 |
-        ((u8*)&adsr_ptr->dls.ascale)[2] << 16 | ((u8*)&adsr_ptr->dls.ascale)[3] << 24;
+             ((u8*)&adsr_ptr->dls.ascale)[2] << 16 | ((u8*)&adsr_ptr->dls.ascale)[3] << 24;
     dscale = ((u8*)&adsr_ptr->dls.dscale)[0] << 0 | ((u8*)&adsr_ptr->dls.dscale)[1] << 8 |
-        ((u8*)&adsr_ptr->dls.dscale)[2] << 16 | ((u8*)&adsr_ptr->dls.dscale)[3] << 24;
+             ((u8*)&adsr_ptr->dls.dscale)[2] << 16 | ((u8*)&adsr_ptr->dls.dscale)[3] << 24;
 
     if (ascale != 0x80000000)
     {

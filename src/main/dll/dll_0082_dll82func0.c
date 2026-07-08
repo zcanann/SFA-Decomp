@@ -178,14 +178,15 @@ void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     if (variant == 3 || variant == 4)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315770, 0x18, base + 0xd4, DLL82_EFFECT_ID_VARIANT3_4, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315770, 0x18, base + 0xd4, DLL82_EFFECT_ID_VARIANT3_4, 0);
     }
     else
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315770, 0x18, base + 0xd4, DLL82_EFFECT_ID_DEFAULT, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315770, 0x18, base + 0xd4, DLL82_EFFECT_ID_DEFAULT, 0);
     }
 }
-
 
 void dll_82_func01_nop(void)
 {

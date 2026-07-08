@@ -204,7 +204,10 @@ void KaldaChompMe_initialise(void)
 }
 
 ObjectDescriptor gKaldaChompMeObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)KaldaChompMe_initialise,
     (ObjectDescriptorCallback)KaldaChompMe_release,
     0,
@@ -272,71 +275,27 @@ ObjectDescriptor gPollenObjDescriptor = {
 };
 
 PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
 
 PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
 };
 
 PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
 };
 
 PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {

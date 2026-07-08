@@ -79,7 +79,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
             }
             newChild = Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
             newChild = Obj_SetupObject(newChild, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                    *(int*)&((GameObject*)obj)->anim.parent);
+                                       *(int*)&((GameObject*)obj)->anim.parent);
             ObjLink_AttachChild(obj, newChild, 0);
             break;
         case 2:
@@ -98,8 +98,14 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 #pragma dont_inline reset
 #pragma scheduling on
 
-int animsharpclaw_getExtraSize(void) { return sizeof(AnimsharpclawState); }
-int animsharpclaw_getObjectTypeId(void) { return 0xb; }
+int animsharpclaw_getExtraSize(void)
+{
+    return sizeof(AnimsharpclawState);
+}
+int animsharpclaw_getObjectTypeId(void)
+{
+    return 0xb;
+}
 
 #pragma peephole off
 #pragma scheduling off
@@ -123,7 +129,8 @@ void animsharpclaw_free(int obj)
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 #pragma peephole on
 

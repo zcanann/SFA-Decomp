@@ -28,17 +28,17 @@
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
 {
-    f32 messageTimer;          /* 0x00: intro-message frames left */
-    s16 unk04;                 /* 0x04: -1 at map-event mode 4, else unset */
-    s16 unk06;                 /* 0x06 */
-    s16 unk08;                 /* 0x08: 700 at mode 7, else unset */
-    u8 unk0A;                  /* 0x0A: 0x1E at mode 7, else unset */
-    u8 unk0B;                  /* 0x0B: cleared at init, never read */
+    f32 messageTimer; /* 0x00: intro-message frames left */
+    s16 unk04;        /* 0x04: -1 at map-event mode 4, else unset */
+    s16 unk06;        /* 0x06 */
+    s16 unk08;        /* 0x08: 700 at mode 7, else unset */
+    u8 unk0A;         /* 0x0A: 0x1E at mode 7, else unset */
+    u8 unk0B;         /* 0x0B: cleared at init, never read */
     u8 pad0C[4];
     SCGameBitLatchState latch; /* 0x10: music-trigger latches */
     u8 latchesDisabled;        /* 0x14: set at mode 7; skips all latching */
     u8 pad15[3];
-    u32 frameCounter;          /* 0x18: frames since init */
+    u32 frameCounter; /* 0x18: frames since init */
 } WmLevelControlState;
 
 STATIC_ASSERT(offsetof(WmLevelControlState, unk08) == 0x08);
@@ -46,7 +46,6 @@ STATIC_ASSERT(offsetof(WmLevelControlState, latch) == 0x10);
 STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
 STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
 STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
-
 
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
@@ -69,24 +68,24 @@ extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void Music_Trigger(int id, int arg);
-extern f32 gWmLevelControlSkyVecTable[]; /* sky light/color/fog vector table */
-extern u8 gWmLevelControlSkyColorFrom;    /* sky-color blend source triplet */
-extern u8 gWmLevelControlSkyColorTo;    /* sky-color blend target triplet */
-extern u8 gWmLevelControlLightColorFrom;    /* light-color blend source triplet */
-extern u8 gWmLevelControlLightColorTo;    /* light-color blend target triplet */
-extern u8 gWmLevelControlFogColorFrom;    /* fog-color blend source triplet */
-extern u8 gWmLevelControlFogColorTo;    /* fog-color blend target triplet */
-extern f32 gWmLevelControlBlendHold;   /* restore-blend hold flag */
-extern f32 gWmLevelControlBlendFactor;   /* current blend factor */
-extern u8 gWmLevelControlBlendedLightIntensity;    /* blended light-intensity byte */
-extern u8 gWmLevelControlBlendedFogColor;    /* blended fog-color out-triplet */
-extern u8 gWmLevelControlBlendedSkyColor;    /* blended sky-color out-triplet */
-extern u8 gWmLevelControlBlendedLightColor;    /* blended light-color out-triplet */
-extern f32 lbl_803E5E74;   /* 1.0 */
-extern f32 gWmLevelControlBlendDecayPerTick;   /* 0.02: blend decay per tick */
-extern f32 gWmLevelControlLightIntensityBase;   /* 32.0: light-intensity base */
-extern f32 gWmLevelControlLightIntensityRange;   /* 128.0: light-intensity blend range */
-extern f32 gWmLevelControlOverrideLightIntensity;   /* 100.0: override light intensity */
+extern f32 gWmLevelControlSkyVecTable[];          /* sky light/color/fog vector table */
+extern u8 gWmLevelControlSkyColorFrom;            /* sky-color blend source triplet */
+extern u8 gWmLevelControlSkyColorTo;              /* sky-color blend target triplet */
+extern u8 gWmLevelControlLightColorFrom;          /* light-color blend source triplet */
+extern u8 gWmLevelControlLightColorTo;            /* light-color blend target triplet */
+extern u8 gWmLevelControlFogColorFrom;            /* fog-color blend source triplet */
+extern u8 gWmLevelControlFogColorTo;              /* fog-color blend target triplet */
+extern f32 gWmLevelControlBlendHold;              /* restore-blend hold flag */
+extern f32 gWmLevelControlBlendFactor;            /* current blend factor */
+extern u8 gWmLevelControlBlendedLightIntensity;   /* blended light-intensity byte */
+extern u8 gWmLevelControlBlendedFogColor;         /* blended fog-color out-triplet */
+extern u8 gWmLevelControlBlendedSkyColor;         /* blended sky-color out-triplet */
+extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-triplet */
+extern f32 lbl_803E5E74;                          /* 1.0 */
+extern f32 gWmLevelControlBlendDecayPerTick;      /* 0.02: blend decay per tick */
+extern f32 gWmLevelControlLightIntensityBase;     /* 32.0: light-intensity base */
+extern f32 gWmLevelControlLightIntensityRange;    /* 128.0: light-intensity blend range */
+extern f32 gWmLevelControlOverrideLightIntensity; /* 100.0: override light intensity */
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 typedef struct
@@ -164,35 +163,40 @@ void fn_801F3F18(int obj)
        with before the volatile reads. */
     fromColor = &gWmLevelControlLightColorFrom;
     toColor = &gWmLevelControlLightColorTo;
-    (&gWmLevelControlBlendedLightColor)[0] = gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) +
-                  (f32)(s32)fromColor[0];
-    (&gWmLevelControlBlendedLightColor)[1] = gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) +
-                  (f32)(s32)fromColor[1];
-    (&gWmLevelControlBlendedLightColor)[2] = gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) +
-                  (f32)(s32)fromColor[2];
-    skyFn_800895e0(1, *(volatile u8*)&gWmLevelControlBlendedLightColor, ((volatile u8*)&gWmLevelControlBlendedLightColor)[1], ((volatile u8*)&gWmLevelControlBlendedLightColor)[2], 0x40, 0x40);
+    (&gWmLevelControlBlendedLightColor)[0] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
+    (&gWmLevelControlBlendedLightColor)[1] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
+    (&gWmLevelControlBlendedLightColor)[2] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
+    skyFn_800895e0(1, *(volatile u8*)&gWmLevelControlBlendedLightColor,
+                   ((volatile u8*)&gWmLevelControlBlendedLightColor)[1],
+                   ((volatile u8*)&gWmLevelControlBlendedLightColor)[2], 0x40, 0x40);
 
     fromColor = &gWmLevelControlSkyColorFrom;
     toColor = &gWmLevelControlSkyColorTo;
-    (&gWmLevelControlBlendedSkyColor)[0] = gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) +
-                  (f32)(s32)fromColor[0];
-    (&gWmLevelControlBlendedSkyColor)[1] = gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) +
-                  (f32)(s32)fromColor[1];
-    (&gWmLevelControlBlendedSkyColor)[2] = gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) +
-                  (f32)(s32)fromColor[2];
-    fn_80089510(1, *(volatile u8*)&gWmLevelControlBlendedSkyColor, ((volatile u8*)&gWmLevelControlBlendedSkyColor)[1], ((volatile u8*)&gWmLevelControlBlendedSkyColor)[2]);
+    (&gWmLevelControlBlendedSkyColor)[0] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
+    (&gWmLevelControlBlendedSkyColor)[1] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
+    (&gWmLevelControlBlendedSkyColor)[2] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
+    fn_80089510(1, *(volatile u8*)&gWmLevelControlBlendedSkyColor, ((volatile u8*)&gWmLevelControlBlendedSkyColor)[1],
+                ((volatile u8*)&gWmLevelControlBlendedSkyColor)[2]);
 
     fromColor = &gWmLevelControlFogColorFrom;
     toColor = &gWmLevelControlFogColorTo;
-    (&gWmLevelControlBlendedFogColor)[0] = gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) +
-                  (f32)(s32)fromColor[0];
-    (&gWmLevelControlBlendedFogColor)[1] = gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) +
-                  (f32)(s32)fromColor[1];
-    (&gWmLevelControlBlendedFogColor)[2] = gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) +
-                  (f32)(s32)fromColor[2];
-    fn_80089578(1, *(volatile u8*)&gWmLevelControlBlendedFogColor, ((volatile u8*)&gWmLevelControlBlendedFogColor)[1], ((volatile u8*)&gWmLevelControlBlendedFogColor)[2]);
+    (&gWmLevelControlBlendedFogColor)[0] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
+    (&gWmLevelControlBlendedFogColor)[1] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
+    (&gWmLevelControlBlendedFogColor)[2] =
+        gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
+    fn_80089578(1, *(volatile u8*)&gWmLevelControlBlendedFogColor, ((volatile u8*)&gWmLevelControlBlendedFogColor)[1],
+                ((volatile u8*)&gWmLevelControlBlendedFogColor)[2]);
 
-    gWmLevelControlBlendedLightIntensity = gWmLevelControlBlendFactor * gWmLevelControlLightIntensityRange + gWmLevelControlLightIntensityBase;
+    gWmLevelControlBlendedLightIntensity =
+        gWmLevelControlBlendFactor * gWmLevelControlLightIntensityRange + gWmLevelControlLightIntensityBase;
     skySetOverrideLightDirectionEnabled(1);
     /* the embedded def pins light.x-then-color.x load order in the
        x arg (the bare spelling pre-hoists the two-use color.x) */
@@ -203,8 +207,14 @@ void fn_801F3F18(int obj)
     skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
 
-int WM_LevelControl_getExtraSize(void) { return sizeof(WmLevelControlState); }
-int WM_LevelControl_getObjectTypeId(void) { return 0x0; }
+int WM_LevelControl_getExtraSize(void)
+{
+    return sizeof(WmLevelControlState);
+}
+int WM_LevelControl_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_LevelControl_free(int obj)
 {
@@ -218,7 +228,8 @@ void WM_LevelControl_free(int obj)
 void WM_LevelControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5E74);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5E74);
 }
 
 void WM_LevelControl_hitDetect(void)
@@ -359,4 +370,17 @@ extern u8 WM_GeneralScales_release[];
 extern u8 WM_GeneralScales_render[];
 extern u8 WM_GeneralScales_update[];
 
-u32 gWM_GeneralScalesObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WM_GeneralScales_initialise, (u32)WM_GeneralScales_release, 0x00000000, (u32)WM_GeneralScales_init, (u32)WM_GeneralScales_update, (u32)WM_GeneralScales_hitDetect, (u32)WM_GeneralScales_render, (u32)WM_GeneralScales_free, (u32)WM_GeneralScales_getObjectTypeId, (u32)WM_GeneralScales_getExtraSize };
+u32 gWM_GeneralScalesObjDescriptor[14] = {0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00090000,
+                                          (u32)WM_GeneralScales_initialise,
+                                          (u32)WM_GeneralScales_release,
+                                          0x00000000,
+                                          (u32)WM_GeneralScales_init,
+                                          (u32)WM_GeneralScales_update,
+                                          (u32)WM_GeneralScales_hitDetect,
+                                          (u32)WM_GeneralScales_render,
+                                          (u32)WM_GeneralScales_free,
+                                          (u32)WM_GeneralScales_getObjectTypeId,
+                                          (u32)WM_GeneralScales_getExtraSize};

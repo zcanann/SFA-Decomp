@@ -16,14 +16,23 @@ extern f32 lbl_803E33F0;
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 
-int curve_func0B(void) { return 0x0; }
+int curve_func0B(void)
+{
+    return 0x0;
+}
 
 void curve_setScale(void)
 {
 }
 
-int curve_getExtraSize(void) { return 0x0; }
-int curve_getObjectTypeId(void) { return 0x0; }
+int curve_getExtraSize(void)
+{
+    return 0x0;
+}
+int curve_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void curve_free(void)
 {
@@ -32,7 +41,8 @@ void curve_free(void)
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(lbl_803E33F0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(lbl_803E33F0);
 }
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params)
@@ -59,7 +69,10 @@ void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params)
 }
 
 ObjectDescriptor12 gCurveObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
     0,
     0,
     0,

@@ -42,7 +42,7 @@ typedef struct MoonSeedBushPlacement
 } MoonSeedBushPlacement;
 
 /* sequence event opcodes consumed by MoonSeedBush_SeqFn */
-#define MOONSEEDBUSH_SEQEV_PLANT 1
+#define MOONSEEDBUSH_SEQEV_PLANT    1
 #define MOONSEEDBUSH_SEQEV_BURST_FX 2
 
 /* seed-burst particle fx: one lead burst + 0x28 spray spawns */
@@ -96,8 +96,14 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma peephole reset
 #pragma scheduling reset
 
-int MoonSeedBush_getExtraSize(void) { return sizeof(MoonSeedBushState); }
-int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
+int MoonSeedBush_getExtraSize(void)
+{
+    return sizeof(MoonSeedBushState);
+}
+int MoonSeedBush_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void MoonSeedBush_free(void)
 {
@@ -107,7 +113,8 @@ void MoonSeedBush_free(void)
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E44D0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E44D0);
 }
 #pragma peephole reset
 
@@ -122,7 +129,8 @@ void MoonSeedBush_update(int obj)
     MoonSeedBushState* state = ((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     int preemptSlot;
-    if ((state->flags & 1) == 0) return;
+    if ((state->flags & 1) == 0)
+        return;
     if (((MoonSeedBushPlacement*)def)->preemptSeq != 0 && state->seedState != MOONSEEDBUSH_SEED_UNGROWN)
     {
         preemptSlot = ((MoonSeedBushPlacement*)def)->preemptSlot;

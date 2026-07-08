@@ -27,19 +27,19 @@
 #define GAMEBIT_MOONSEED_COUNT 0x86A
 /* object-group id the planting spots register into */
 #define MSPLANTING_OBJ_GROUP 0x2E
-#define MSPLANTING_PARTFX 0x70f
+#define MSPLANTING_PARTFX    0x70f
 
 /* phase byte values (state byte at extra[0]) */
-#define MSPLANTING_PHASE_INIT 0
-#define MSPLANTING_PHASE_EMPTY 1
-#define MSPLANTING_PHASE_GROWN 2
-#define MSPLANTING_PHASE_CUT 3
+#define MSPLANTING_PHASE_INIT      0
+#define MSPLANTING_PHASE_EMPTY     1
+#define MSPLANTING_PHASE_GROWN     2
+#define MSPLANTING_PHASE_CUT       3
 #define MSPLANTING_PHASE_HARVESTED 4
 
 /* state->flags bits */
 #define MSPLANTING_FLAG_PLANTED 1
 #define MSPLANTING_FLAG_VISIBLE 2
-#define MSPLANTING_FLAG_BURST 4
+#define MSPLANTING_FLAG_BURST   4
 
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
@@ -85,13 +85,23 @@ extern void fn_8003B608(s16 a, s16 b, s16 c);
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int*)&((GameObject*)obj)->extra;
-    ((MoonSeedPlantingSpotState*)obj)->flags = (u8)((u32)((MoonSeedPlantingSpotState*)obj)->flags | MSPLANTING_FLAG_PLANTED);
+    ((MoonSeedPlantingSpotState*)obj)->flags =
+        (u8)((u32)((MoonSeedPlantingSpotState*)obj)->flags | MSPLANTING_FLAG_PLANTED);
     return 0;
 }
 
-int MoonSeedPlantingSpot_render2(void) { return 0x2; }
-int MoonSeedPlantingSpot_modelMtxFn(void) { return 0x0; }
-int MoonSeedPlantingSpot_func0B(void) { return 0x0; }
+int MoonSeedPlantingSpot_render2(void)
+{
+    return 0x2;
+}
+int MoonSeedPlantingSpot_modelMtxFn(void)
+{
+    return 0x0;
+}
+int MoonSeedPlantingSpot_func0B(void)
+{
+    return 0x0;
+}
 
 #pragma optimization_level 2
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
@@ -116,7 +126,8 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
         if (inner[0] == MSPLANTING_PHASE_CUT)
         {
             ret = 1;
-            if (mainGetBit(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0 && mainGetBit(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit) == 0)
+            if (mainGetBit(((MoonSeedPlantingSpotState*)inner)->plantedGameBit) != 0 &&
+                mainGetBit(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit) == 0)
             {
                 inner = ((GameObject*)obj)->extra;
                 placement = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -134,10 +145,19 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 }
 #pragma optimization_level reset
 
-int MoonSeedPlantingSpot_getExtraSize(void) { return sizeof(MoonSeedPlantingSpotState); }
-int MoonSeedPlantingSpot_getObjectTypeId(void) { return 0x1; }
+int MoonSeedPlantingSpot_getExtraSize(void)
+{
+    return sizeof(MoonSeedPlantingSpotState);
+}
+int MoonSeedPlantingSpot_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
-void MoonSeedPlantingSpot_free(int obj) { ObjGroup_RemoveObject(obj, MSPLANTING_OBJ_GROUP); }
+void MoonSeedPlantingSpot_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, MSPLANTING_OBJ_GROUP);
+}
 
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -151,7 +171,8 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
             {
                 int iv;
                 ((MoonSeedPlantingSpotState*)inner)->colorPhase += 0x1000;
-                iv = (int)(63.0f * (1.0f + mathSinf(3.1415927f * (f32)((MoonSeedPlantingSpotState*)inner)->colorPhase / 32768.0f)));
+                iv = (int)(63.0f * (1.0f + mathSinf(3.1415927f * (f32)((MoonSeedPlantingSpotState*)inner)->colorPhase /
+                                                    32768.0f)));
                 fn_8003B608((u8)(iv + 0x7f), 0xff, 0xff);
             }
         }
@@ -188,7 +209,8 @@ void MoonSeedPlantingSpot_update(int obj)
         ((MoonSeedPlantingSpotState*)ex)->flags = ((MoonSeedPlantingSpotState*)ex)->flags & ~MSPLANTING_FLAG_PLANTED;
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) && !(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED))
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) &&
+        !(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED))
     {
         if (mainGetBit(GAMEBIT_MOONSEED_COUNT) != 0)
         {
@@ -242,90 +264,89 @@ void MoonSeedPlantingSpot_update(int obj)
         }
         break;
     case MSPLANTING_PHASE_GROWN:
+    {
+        int tricky = getTrickyObject();
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_VISIBLE)
         {
-            int tricky = getTrickyObject();
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-            if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_VISIBLE)
+            void* player;
+            if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_BURST)
             {
-                void* player;
-                if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_BURST)
+                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY + (f32)(int)randomGetRange(-1, 1);
+                (*gPartfxInterface)->spawnObject((void*)obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
+            }
+            ((MoonSeedPlantingSpotState*)ex)->burstTimer = ((MoonSeedPlantingSpotState*)ex)->burstTimer - timeDelta;
+            if (((MoonSeedPlantingSpotState*)ex)->burstTimer <= 0.0f)
+            {
+                if ((int)randomGetRange(0, 1) != 0)
                 {
-                    ((GameObject*)obj)->anim.localPosY =
-                        ((ObjPlacement*)setup)->posY + (f32)(int)randomGetRange(-1, 1);
-                    (*gPartfxInterface)->spawnObject((void*)obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
-                }
-                ((MoonSeedPlantingSpotState*)ex)->burstTimer = ((MoonSeedPlantingSpotState*)ex)->burstTimer - timeDelta;
-                if (((MoonSeedPlantingSpotState*)ex)->burstTimer <= 0.0f)
-                {
-                    if ((int)randomGetRange(0, 1) != 0)
-                    {
-                        ((MoonSeedPlantingSpotState*)ex)->burstTimer = 45.0f;
-                        ((MoonSeedPlantingSpotState*)ex)->flags |= MSPLANTING_FLAG_BURST;
-                        Sfx_PlayFromObject(obj, SFXTRIG_pk_moonseed_rattle);
-                    }
-                    else
-                    {
-                        ((MoonSeedPlantingSpotState*)ex)->burstTimer =
-                            (f32)(int)randomGetRange(0x32, 200);
-                        ((MoonSeedPlantingSpotState*)ex)->flags &= ~MSPLANTING_FLAG_BURST;
-                    }
-                }
-                player = (void*)Obj_GetPlayerObject();
-                if (player != NULL && getXZDistance(&((GameObject*)player)->anim.worldPosX,
-                                                    &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
-                {
-                    objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
-                    (*(void (*)(int, int, int, int))(*(int*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28)))(
-                        tricky, obj, 1, 4);
+                    ((MoonSeedPlantingSpotState*)ex)->burstTimer = 45.0f;
+                    ((MoonSeedPlantingSpotState*)ex)->flags |= MSPLANTING_FLAG_BURST;
+                    Sfx_PlayFromObject(obj, SFXTRIG_pk_moonseed_rattle);
                 }
                 else
                 {
-                    objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
-                }
-                if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == MSPLANTING_HIT_CUT)
-                {
-                    ((MoonSeedPlantingSpotState*)ex)->phase = MSPLANTING_PHASE_CUT;
-                    ((MoonSeedPlantingSpotState*)ex)->colorPhase = 0;
-                    ((MoonSeedPlantingSpotState*)ex)->growthTimer = 30.0f;
+                    ((MoonSeedPlantingSpotState*)ex)->burstTimer = (f32)(int)randomGetRange(0x32, 200);
+                    ((MoonSeedPlantingSpotState*)ex)->flags &= ~MSPLANTING_FLAG_BURST;
                 }
             }
-            break;
-        }
-    case MSPLANTING_PHASE_CUT:
-        {
-            int tricky = getTrickyObject();
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-            ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-            if (getXZDistance(&((GameObject*)tricky)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
+            player = (void*)Obj_GetPlayerObject();
+            if (player != NULL &&
+                getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
             {
                 objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
+                (*(void (*)(int, int, int, int))(*(int*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28)))(tricky, obj,
+                                                                                                          1, 4);
             }
             else
             {
                 objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
             }
-            if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= 0.0f && mainGetBit(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&
-                mainGetBit(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) == 0)
+            if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == MSPLANTING_HIT_CUT)
             {
-                int setup2;
-                int ex2;
-                ex2 = *(int*)&((GameObject*)obj)->extra;
-                setup2 = *(int*)&((GameObject*)obj)->anim.placementData;
-                if (mainGetBit(((MoonSeedPlantingSpotState*)ex2)->plantedGameBit) != 0)
-                {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                    mainSetBits(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
-                    ((MoonSeedPlantingSpotState*)ex2)->phase = MSPLANTING_PHASE_HARVESTED;
-                    ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->posY;
-                }
+                ((MoonSeedPlantingSpotState*)ex)->phase = MSPLANTING_PHASE_CUT;
+                ((MoonSeedPlantingSpotState*)ex)->colorPhase = 0;
+                ((MoonSeedPlantingSpotState*)ex)->growthTimer = 30.0f;
             }
-            ((MoonSeedPlantingSpotState*)ex)->growthTimer = ((MoonSeedPlantingSpotState*)ex)->growthTimer - timeDelta;
-            if (((MoonSeedPlantingSpotState*)ex)->growthTimer < 0.0f)
-            {
-                ((MoonSeedPlantingSpotState*)ex)->growthTimer = 0.0f;
-            }
-            break;
         }
+        break;
+    }
+    case MSPLANTING_PHASE_CUT:
+    {
+        int tricky = getTrickyObject();
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
+        if (getXZDistance(&((GameObject*)tricky)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
+        {
+            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
+        }
+        else
+        {
+            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
+        }
+        if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= 0.0f &&
+            mainGetBit(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&
+            mainGetBit(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) == 0)
+        {
+            int setup2;
+            int ex2;
+            ex2 = *(int*)&((GameObject*)obj)->extra;
+            setup2 = *(int*)&((GameObject*)obj)->anim.placementData;
+            if (mainGetBit(((MoonSeedPlantingSpotState*)ex2)->plantedGameBit) != 0)
+            {
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                mainSetBits(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
+                ((MoonSeedPlantingSpotState*)ex2)->phase = MSPLANTING_PHASE_HARVESTED;
+                ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->posY;
+            }
+        }
+        ((MoonSeedPlantingSpotState*)ex)->growthTimer = ((MoonSeedPlantingSpotState*)ex)->growthTimer - timeDelta;
+        if (((MoonSeedPlantingSpotState*)ex)->growthTimer < 0.0f)
+        {
+            ((MoonSeedPlantingSpotState*)ex)->growthTimer = 0.0f;
+        }
+        break;
+    }
     }
 }
 

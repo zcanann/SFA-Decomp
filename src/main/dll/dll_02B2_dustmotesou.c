@@ -22,9 +22,15 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
 
-int dustmotesou_getExtraSize(void) { return 0; }
+int dustmotesou_getExtraSize(void)
+{
+    return 0;
+}
 
-int dustmotesou_getObjectTypeId(void) { return 0; }
+int dustmotesou_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void dustmotesou_free(int obj)
 {
@@ -58,8 +64,8 @@ void dustmotesou_update(int obj)
         {
             return;
         }
-        objfx_spawnMaskedHitEffect(obj, mapData->effectId, mapData->effectParamA, mapData->scale,
-                                   mapData->effectParamB, 0);
+        objfx_spawnMaskedHitEffect(obj, mapData->effectId, mapData->effectParamA, mapData->scale, mapData->effectParamB,
+                                   0);
         return;
     }
     if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK)
@@ -68,8 +74,7 @@ void dustmotesou_update(int obj)
         {
             return;
         }
-        hitDetectFn_80097070(obj, mapData->effectId, mapData->effectParamA,
-                             mapData->scale, mapData->effectParamB, 0);
+        hitDetectFn_80097070(obj, mapData->effectId, mapData->effectParamA, mapData->scale, mapData->effectParamB, 0);
         return;
     }
     if (mapData->effectId == 0 || mapData->effectParamA == 0 || mapData->effectParamB == 0)
@@ -79,22 +84,20 @@ void dustmotesou_update(int obj)
     if (mapData->burstMode == DUSTMOTESOU_BURST_BOX)
     {
         ((void (*)(int, int, f32, int, int, int, f32, f32, f32, int, int))objfx_spawnBoxBurst)(
-            obj, mapData->effectId, mapData->scale, mapData->effectParamA, mapData->effectParamB,
-            mapData->effectFlags, (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
-            (f32)(u32)mapData->spreadZ, 0, 0);
+            obj, mapData->effectId, mapData->scale, mapData->effectParamA, mapData->effectParamB, mapData->effectFlags,
+            (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ, 0, 0);
     }
     else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED)
     {
-        objfx_spawnArcedBurst(obj, mapData->effectId, mapData->scale,
-                              mapData->effectParamA, mapData->effectParamB, mapData->effectFlags,
-                              (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
+        objfx_spawnArcedBurst(obj, mapData->effectId, mapData->scale, mapData->effectParamA, mapData->effectParamB,
+                              mapData->effectFlags, (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
                               (f32)(u32)mapData->spreadZ, 0, 0);
     }
     else
     {
         ((void (*)(int, int, int, int, f32, int, f32, int, int))objfx_spawnDirectionalBurst)(
-            obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
-            mapData->scale, mapData->effectFlags, (f32)(u32)mapData->spreadX, 0, 0);
+            obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB, mapData->scale, mapData->effectFlags,
+            (f32)(u32)mapData->spreadX, 0, 0);
     }
 }
 

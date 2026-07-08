@@ -15,7 +15,6 @@ extern void removeButtonObject(int* obj);
 extern int playerIsDead(void);
 extern void playerSetIsDead(int* player, int v);
 
-
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);
 extern void Obj_FreeObject(int* obj);
@@ -44,21 +43,27 @@ static const f32 lbl_803E3D58 = 210.0f;
 
 typedef struct
 {
-    f32 timer; // 0x0
-    f32 camX; // 0x4
-    f32 camY; // 0x8
-    f32 camZ; // 0xc
-    f32 dist; // 0x10
-    f32 distTarget; // 0x14
-    int camRotY; // 0x18
-    int camRotX; // 0x1c
-    u8 menuShown : 1; // 0x20 bit 7
-    u8 camActive : 1; // bit 6
+    f32 timer;                // 0x0
+    f32 camX;                 // 0x4
+    f32 camY;                 // 0x8
+    f32 camZ;                 // 0xc
+    f32 dist;                 // 0x10
+    f32 distTarget;           // 0x14
+    int camRotY;              // 0x18
+    int camRotX;              // 0x1c
+    u8 menuShown : 1;         // 0x20 bit 7
+    u8 camActive : 1;         // bit 6
     u8 transitionStarted : 1; // bit 5
 } DeathSeqState;
 
-int DeathSeq_getExtraSize(void) { return 0x24; }
-int DeathSeq_getObjectTypeId(void) { return 0x0; }
+int DeathSeq_getExtraSize(void)
+{
+    return 0x24;
+}
+int DeathSeq_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DeathSeq_free(int* obj)
 {

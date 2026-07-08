@@ -18,46 +18,48 @@
 
 extern f32 lbl_803E1628; /* reticle rootMotionScale constant */
 
-extern void objRenderModelAndHitVolumes(GameObject *reticle, u32 a, u32 b, u32 c,
-                                 u32 d, f32 f);
+extern void objRenderModelAndHitVolumes(GameObject* reticle, u32 a, u32 b, u32 c, u32 d, f32 f);
 
-#define RETICLE_BANK_LOCKON 0
+#define RETICLE_BANK_LOCKON  0
 #define RETICLE_BANK_DEFAULT 1
 #define RETICLE_BANK_CONTEXT 2
 
-void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
-                                    u32 arg3, u32 arg4,
-                                    u32 arg5, u32 arg6)
+void camcontrol_updateTargetReticle(CamcontrolTargetObject* fallbackTarget, int unused2, u32 arg3, u32 arg4, u32 arg5,
+                                    u32 arg6)
 {
     int savedReticleState;
     u8 savedReticleAlpha;
-    GameObject *reticle;
-    GameObject *targetObject;
-    CamcontrolTargetObject *target;
-    ObjHitVolumeRuntimeTransform *slot;
-    ObjAnimBank *activeBank;
+    GameObject* reticle;
+    GameObject* targetObject;
+    CamcontrolTargetObject* target;
+    ObjHitVolumeRuntimeTransform* slot;
+    ObjAnimBank* activeBank;
     u8 idx;
     int bank;
     int paletteIdx;
 
-    reticle = (GameObject *)gCamcontrolTargetReticle;
+    reticle = (GameObject*)gCamcontrolTargetReticle;
     target = fallbackTarget;
-    if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
-        target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleOverride;
+    if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0)
+    {
+        target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleOverride;
         savedReticleState = gCamcontrolTargetState;
         gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE;
         savedReticleAlpha = reticle->anim.alpha;
         reticle->anim.alpha = 0xFF;
     }
 
-    if (target != NULL) {
-        targetObject = (GameObject *)target;
-        if (targetObject->anim.hitVolumeTransforms == NULL) goto end;
+    if (target != NULL)
+    {
+        targetObject = (GameObject*)target;
+        if (targetObject->anim.hitVolumeTransforms == NULL)
+            goto end;
 
         idx = target->targetSetupIndex;
         slot = &targetObject->anim.hitVolumeTransforms[idx];
 
-        switch (targetObject->anim.hitVolumeBounds[idx].flags & CAMCONTROL_TARGET_KIND_MASK) {
+        switch (targetObject->anim.hitVolumeBounds[idx].flags & CAMCONTROL_TARGET_KIND_MASK)
+        {
         case CAMCONTROL_TARGET_KIND_LOCKON:
             bank = RETICLE_BANK_LOCKON;
             break;
@@ -71,7 +73,8 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
         }
 
         paletteIdx = target->targetPaletteIndex;
-        if (paletteIdx >= 4) paletteIdx = 0;
+        if (paletteIdx >= 4)
+            paletteIdx = 0;
         gCamcontrolTargetHelpTextId = targetObject->anim.modelInstance->helpTextIds[paletteIdx];
 
         reticle->anim.worldPosX = slot->jointX;
@@ -80,14 +83,14 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
         reticle->anim.bankIndex = bank;
 
         reticle->anim.parent = targetObject->anim.parent;
-        if (reticle->anim.parent != NULL) {
-            Obj_TransformWorldPointToLocal(reticle->anim.worldPosX,
-                                           reticle->anim.worldPosY,
-                                           reticle->anim.worldPosZ,
-                                           &reticle->anim.localPosX, &reticle->anim.localPosY,
-                                           &reticle->anim.localPosZ,
+        if (reticle->anim.parent != NULL)
+        {
+            Obj_TransformWorldPointToLocal(reticle->anim.worldPosX, reticle->anim.worldPosY, reticle->anim.worldPosZ,
+                                           &reticle->anim.localPosX, &reticle->anim.localPosY, &reticle->anim.localPosZ,
                                            (u32)reticle->anim.parent);
-        } else {
+        }
+        else
+        {
             reticle->anim.localPosX = reticle->anim.worldPosX;
             reticle->anim.localPosY = reticle->anim.worldPosY;
             reticle->anim.localPosZ = reticle->anim.worldPosZ;
@@ -95,19 +98,21 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
         reticle->anim.rotY = 0;
         reticle->anim.rotZ = 0;
         reticle->anim.rootMotionScale = lbl_803E1628;
-        ((u8 *)reticle)[0x37] = reticle->anim.alpha;
+        ((u8*)reticle)[0x37] = reticle->anim.alpha;
         objRenderModelAndHitVolumes(reticle, arg3, arg4, arg5, arg6, gCamcontrolNormalizedMax);
-    } else {
+    }
+    else
+    {
         reticle->anim.parent = NULL;
     }
 
     activeBank = reticle->anim.banks[reticle->anim.bankIndex];
-    *(u16 *)((u8 *)activeBank + 0x18) = (u16)(*(u16 *)((u8 *)activeBank + 0x18) & ~8);
+    *(u16*)((u8*)activeBank + 0x18) = (u16)(*(u16*)((u8*)activeBank + 0x18) & ~8);
 
-    if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
+    if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0)
+    {
         gCamcontrolTargetState = savedReticleState;
         reticle->anim.alpha = savedReticleAlpha;
     }
-end:
-    ;
+end:;
 }

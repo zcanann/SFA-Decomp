@@ -46,7 +46,8 @@ CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
     s32 low;
     s32 mid;
     *idx_out = -1;
-    if (key < 0) return NULL;
+    if (key < 0)
+        return NULL;
     high = gCheckpointRouteCount - 1;
     low = 0;
     while (high >= low)
@@ -133,36 +134,31 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         {
             out1[0] = p->sideOffsets[i] * prodA + p->posX;
             out1[1] = q->sideOffsets[i] * prodB + q->posX;
-            out1[2] = 2.0f * ((f32)(u32)p->waveAmplitude *
-                mathSinf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
-            out1[3] = 2.0f * ((f32)(u32)q->waveAmplitude *
-                mathSinf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
+            out1[2] = 2.0f * ((f32)(u32)p->waveAmplitude * mathSinf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
+            out1[3] = 2.0f * ((f32)(u32)q->waveAmplitude * mathSinf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
             out2[0] = sclA * p->heightOffsets[i] + p->posY;
             out2[1] = sclB * q->heightOffsets[i] + q->posY;
             out2[2] = 0.0f;
             out2[3] = 0.0f;
             v3[0] = p->sideOffsets[i] * prodC + p->posZ;
             v3[1] = q->sideOffsets[i] * prodD + q->posZ;
-            v3[2] = 2.0f * ((f32)(u32)p->waveAmplitude *
-                mathCosf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
-            v3[3] = 2.0f * ((f32)(u32)q->waveAmplitude *
-                mathCosf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
+            v3[2] = 2.0f * ((f32)(u32)p->waveAmplitude * mathCosf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
+            v3[3] = 2.0f * ((f32)(u32)q->waveAmplitude * mathCosf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
             i += 1;
             out1 += 4;
             out2 += 4;
             v3 += 4;
             j += 4;
-        }
-        while (j < 0x10);
+        } while (j < 0x10);
     }
     else if (mode == 0)
     {
         out1[0] = fa * (sclA * sinA) + p->posX;
         out1[1] = fa * (sclB * sinB) + q->posX;
         out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-            mathSinf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathSinf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
         out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-            mathSinf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathSinf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
         out2[0] = sclA * fb + p->posY;
         out2[1] = sclB * fb + q->posY;
         {
@@ -173,9 +169,9 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         out3[0] = fa * (sclA * -cosA) + p->posZ;
         out3[1] = fa * (sclB * -cosB) + q->posZ;
         out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-            mathCosf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathCosf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
         out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-            mathCosf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathCosf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
     }
     else
     {
@@ -183,9 +179,9 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         out1[0] = p->sideOffsets[pointIdx] * (sclA * sinA) + p->posX;
         out1[1] = q->sideOffsets[pointIdx] * (sclB * sinB) + q->posX;
         out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-            mathSinf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathSinf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
         out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-            mathSinf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathSinf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
         out2[0] = sclA * p->heightOffsets[pointIdx] + p->posY;
         out2[1] = sclB * q->heightOffsets[pointIdx] + q->posY;
         {
@@ -196,9 +192,9 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         out3[0] = p->sideOffsets[pointIdx] * (sclA * -cosA) + p->posZ;
         out3[1] = q->sideOffsets[pointIdx] * (sclB * -cosB) + q->posZ;
         out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-            mathCosf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathCosf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
         out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-            mathCosf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+                                  mathCosf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
     }
     return ret;
 }
@@ -295,13 +291,11 @@ void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
     CheckpointRouteEntry* n;
     s32 alt_found;
     n = Checkpoint_find(key, &local_idx);
-    if (n == 0) return;
-    out_vec[0] = (f32)(s32)
-    randomGetRange(-0x63, 0x63) / lbl_803E0500;
-    out_vec[1] = (f32)(s32)
-    randomGetRange(-0x63, 0x63) / lbl_803E0500;
-    out_vec[2] = (f32)(s32)
-    randomGetRange(0, 0x63) / lbl_803E0500;
+    if (n == 0)
+        return;
+    out_vec[0] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[1] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[2] = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E0500;
     alt_found = 0;
     {
         s32 v = n->forwardLink0;
@@ -314,7 +308,7 @@ void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
             }
         }
     }
-    if ((s8) * flag_byte == 0)
+    if ((s8)*flag_byte == 0)
     {
         if (alt_found != 0)
         {
@@ -371,11 +365,15 @@ void Checkpoint_func0C(CheckpointRouteState* o)
 void Checkpoint_func0D(u32 v)
 {
     extern u32 lbl_803DD41C;
-    if (lbl_803DD416 >= 10) return;
+    if (lbl_803DD416 >= 10)
+        return;
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
 }
 
-int Checkpoint_func09_ret_1(void) { return 0x1; }
+int Checkpoint_func09_ret_1(void)
+{
+    return 0x1;
+}
 
 extern f32 lbl_803E0504; /* used by Checkpoint_func08/07/06 */
 extern f32 lbl_803E0508; /* used by Checkpoint_func08 */
@@ -383,23 +381,25 @@ extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
 
 /* Object cursor written back by Checkpoint_func08: the sampled heading/pitch
  * angles at the front and the interpolated world position (x/y/z) mid-block. */
-typedef struct CheckpointCursor {
+typedef struct CheckpointCursor
+{
     s16 headingAngle; /* 0x00 */
     s16 pitchAngle;   /* 0x02 */
-    u8  pad04[0x08];
-    f32 posX;         /* 0x0C */
-    f32 posY;         /* 0x10 */
-    f32 posZ;         /* 0x14 */
+    u8 pad04[0x08];
+    f32 posX; /* 0x0C */
+    f32 posY; /* 0x10 */
+    f32 posZ; /* 0x14 */
 } CheckpointCursor;
 STATIC_ASSERT(offsetof(CheckpointCursor, posX) == 0x0C);
 STATIC_ASSERT(offsetof(CheckpointCursor, posZ) == 0x14);
 
 /* Route navigation state passed as `o`: embeds CheckpointRouteState at the
  * front, with a route-branch flag byte further into the object. */
-typedef struct CheckpointNavState {
+typedef struct CheckpointNavState
+{
     CheckpointRouteState route; /* 0x00 */
-    u8  pad24[0x0C];
-    u8  branchFlag;             /* 0x30 */
+    u8 pad24[0x0C];
+    u8 branchFlag; /* 0x30 */
 } CheckpointNavState;
 STATIC_ASSERT(offsetof(CheckpointNavState, branchFlag) == 0x30);
 
@@ -461,7 +461,7 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
             return 1;
         }
         len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
-            ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
+                    ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
         t = o->route.pathT + dist / len;
         clamp = 0;
         if (t < kMin)
@@ -529,8 +529,7 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
         }
         out->posZ = z;
         i += 1;
-    }
-    while (i < 3);
+    } while (i < 3);
     out->headingAngle = ang1;
     if (flag != 0)
     {
@@ -673,7 +672,11 @@ void Checkpoint_release(void)
 {
 }
 
-void Checkpoint_reset(void) { extern u32 gCheckpointRouteCount; gCheckpointRouteCount = 0x0; }
+void Checkpoint_reset(void)
+{
+    extern u32 gCheckpointRouteCount;
+    gCheckpointRouteCount = 0x0;
+}
 
 u32 gCheckpointPartFxListBuffer[0x14];
 
@@ -726,7 +729,8 @@ void Checkpoint_Remove(CheckpointRouteEntry* obj)
     {
         i++;
     }
-    if (i >= count) return;
+    if (i >= count)
+        return;
     count = gCheckpointRouteCount - 1;
     gCheckpointRouteCount = count;
     e = &gCheckpointRouteTable[i];
@@ -838,10 +842,8 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                 dist2 = offs2 + (cos2 * obj->anim.localPosX + sin2 * obj->anim.localPosZ);
                 distA = offs1 + (cos1 * n->posX + sin1 * n->posZ);
                 distB = offs2 + (cos2 * cp->posX + sin2 * cp->posZ);
-                if (((distA <= 0.0f && dist1 <= 0.0f) || (distA > 0.0f && dist1 > 0.0f))
-                    &&
-                    ((distB <= 0.0f && dist2 <= 0.0f) || (distB > 0.0f && dist2 >
-                        0.0f)))
+                if (((distA <= 0.0f && dist1 <= 0.0f) || (distA > 0.0f && dist1 > 0.0f)) &&
+                    ((distB <= 0.0f && dist2 <= 0.0f) || (distB > 0.0f && dist2 > 0.0f)))
                 {
                     dx = cp->posX - n->posX;
                     dy = cp->posY - n->posY;

@@ -20,16 +20,16 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 typedef struct BaddieinterestpPlacement
 {
-    u8 pad0[0x14 - 0x0]; /* 0x00 */
-    s32 linkId;          /* 0x14 id (matched against other placements' linkId) */
-    s8 modeKind;         /* 0x18 high nibble = sun mode (bits 4-5), low nibble = reaction kind */
-    s8 prob;             /* 0x19 trigger probability (1..100) */
-    s16 targetIdLo;      /* 0x1A id low half */
-    s16 targetIdHi;      /* 0x1C id high half */
-    s16 doneGameBit;     /* 0x1E done-gate gamebit */
-    s16 enableGameBit;   /* 0x20 enable-gate gamebit */
+    u8 pad0[0x14 - 0x0];   /* 0x00 */
+    s32 linkId;            /* 0x14 id (matched against other placements' linkId) */
+    s8 modeKind;           /* 0x18 high nibble = sun mode (bits 4-5), low nibble = reaction kind */
+    s8 prob;               /* 0x19 trigger probability (1..100) */
+    s16 targetIdLo;        /* 0x1A id low half */
+    s16 targetIdHi;        /* 0x1C id high half */
+    s16 doneGameBit;       /* 0x1E done-gate gamebit */
+    s16 enableGameBit;     /* 0x20 enable-gate gamebit */
     u8 pad22[0x2C - 0x22]; /* 0x22 */
-    s16 unk2C;           /* 0x2C layout placeholder; never accessed in this TU */
+    s16 unk2C;             /* 0x2C layout placeholder; never accessed in this TU */
     u8 pad2E[0x30 - 0x2E]; /* 0x2E */
 } BaddieinterestpPlacement;
 
@@ -39,9 +39,15 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_801504BC(int* obj, int kind);
 extern f32 lbl_803E3224;
 
-int BaddieInterestP_getExtraSize(void) { return 0x0; }
+int BaddieInterestP_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int BaddieInterestP_getObjectTypeId(void) { return 0x0; }
+int BaddieInterestP_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void BaddieInterestP_free(void)
 {
@@ -50,7 +56,8 @@ void BaddieInterestP_free(void)
 void BaddieInterestP_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3220);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3220);
 }
 
 void BaddieInterestP_hitDetect(void)
@@ -63,9 +70,9 @@ void BaddieInterestP_update(int* obj)
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
     if (((int)((BaddieinterestpPlacement*)params)->enableGameBit == -1 ||
-            mainGetBit((int)((BaddieinterestpPlacement*)params)->enableGameBit) != 0) &&
+         mainGetBit((int)((BaddieinterestpPlacement*)params)->enableGameBit) != 0) &&
         ((int)((BaddieinterestpPlacement*)params)->doneGameBit == -1 ||
-            mainGetBit((int)((BaddieinterestpPlacement*)params)->doneGameBit) == 0))
+         mainGetBit((int)((BaddieinterestpPlacement*)params)->doneGameBit) == 0))
     {
         int count;
         int* objs = ObjGroup_GetObjects(3, &count);
@@ -110,25 +117,25 @@ void BaddieInterestP_update(int* obj)
                                 switch ((b & 0x30) >> 4)
                                 {
                                 case 0:
+                                {
+                                    kind = b & 0xf;
+                                    target = (int*)objs[i];
+                                    if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                     {
-                                        kind = b & 0xf;
-                                        target = (int*)objs[i];
-                                        if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
-                                        {
-                                            mainSetBits((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
-                                        }
-                                        switch (((GameObject*)target)->anim.seqId)
-                                        {
-                                        case 17:
-                                        case 314:
-                                        case 1463:
-                                        case 1464:
-                                        case 1465:
-                                        case 1505:
-                                            fn_801504BC(target, kind);
-                                            break;
-                                        }
+                                        mainSetBits((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
+                                    }
+                                    switch (((GameObject*)target)->anim.seqId)
+                                    {
+                                    case 17:
+                                    case 314:
+                                    case 1463:
+                                    case 1464:
+                                    case 1465:
+                                    case 1505:
+                                        fn_801504BC(target, kind);
                                         break;
+                                    }
+                                    break;
                                 }
                                 case 1:
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
@@ -211,7 +218,10 @@ void BaddieInterestP_initialise(void)
 }
 
 ObjectDescriptor gBaddieInterestPObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)BaddieInterestP_initialise,
     (ObjectDescriptorCallback)BaddieInterestP_release,
     0,

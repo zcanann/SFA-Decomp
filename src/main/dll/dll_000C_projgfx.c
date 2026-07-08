@@ -24,7 +24,10 @@ int projgfx_setzscale_doUnsupported(void)
 }
 #pragma scheduling reset
 
-int projgfx_getObjectTypeId(void) { return 0x0; }
+int projgfx_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void projgfx_func07_nop(void)
 {
@@ -38,14 +41,20 @@ void projgfx_func05_nop(void)
 {
 }
 
-int projgfx_func04_ret_m1(void) { return -0x1; }
+int projgfx_func04_ret_m1(void)
+{
+    return -0x1;
+}
 
 void projgfx_onMapSetup(void)
 {
 }
 
 #pragma scheduling off
-void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSupported); }
+void projgfx_release_doUnsupported(void)
+{
+    OSReport(sProjgfxReleaseDoNoLongerSupported);
+}
 #pragma scheduling reset
 
 void projgfx_initialise(void)
@@ -73,4 +82,4 @@ ObjectDescriptor11 projgfx_funcs = {
 char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
 char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-__declspec(section ".data") int sProjgfxUnused[1] = { 0 };
+__declspec(section ".data") int sProjgfxUnused[1] = {0};

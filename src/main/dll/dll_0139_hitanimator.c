@@ -55,7 +55,8 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 #pragma dont_inline on
-void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state, HitAnimatorPlacement* desc)
+void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state,
+                            HitAnimatorPlacement* desc)
 {
     int i;
     HitAnimatorPolyGroup* poly;
@@ -108,17 +109,18 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
 }
 #pragma dont_inline reset
 
-int HitAnimator_getExtraSize(void) { return HITANIMATOR_EXTRA_STATE_BYTES; }
+int HitAnimator_getExtraSize(void)
+{
+    return HITANIMATOR_EXTRA_STATE_BYTES;
+}
 
 void HitAnimator_update(HitAnimatorObject* obj)
 {
     HitAnimatorPlacement* desc = (HitAnimatorPlacement*)obj->objAnim.placementData;
     HitAnimatorState* state = obj->state;
     MapBlockData* block;
-    block = mapGetBlock(objPosToMapBlockIdx(
-        (double)obj->objAnim.localPosX,
-        (double)obj->objAnim.localPosY,
-        (double)obj->objAnim.localPosZ));
+    block = mapGetBlock(objPosToMapBlockIdx((double)obj->objAnim.localPosX, (double)obj->objAnim.localPosY,
+                                            (double)obj->objAnim.localPosZ));
     if (block == NULL)
     {
         state->flags &= ~HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
@@ -188,10 +190,8 @@ void HitAnimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
             state->flags |= HITANIMATOR_STATE_FLAG_TOGGLE_PENDING;
         }
     }
-    block = mapGetBlock(objPosToMapBlockIdx(
-        (double)obj->objAnim.localPosX,
-        (double)obj->objAnim.localPosY,
-        (double)obj->objAnim.localPosZ));
+    block = mapGetBlock(objPosToMapBlockIdx((double)obj->objAnim.localPosX, (double)obj->objAnim.localPosY,
+                                            (double)obj->objAnim.localPosZ));
     if (block != NULL)
     {
         if ((desc->flags & HITANIMATOR_SETUP_FLAG_BLOCK_UPDATE) != 0 && desc->blockEffectId != 0)

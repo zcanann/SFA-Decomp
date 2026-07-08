@@ -44,8 +44,14 @@ extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
 extern void lightSetFieldBC_8001db14(u8* p, int v);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
-int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
-int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
+int SB_CannonBall_getExtraSize(void)
+{
+    return SB_CANNONBALL_EXTRA_SIZE;
+}
+int SB_CannonBall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_CannonBall_free(GameObject* obj)
 {
@@ -58,11 +64,11 @@ void SB_CannonBall_free(GameObject* obj)
     }
 }
 
-
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void SB_CannonBall_hitDetect(GameObject* obj)
@@ -86,13 +92,17 @@ void SB_CannonBall_hitDetect(GameObject* obj)
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         int* target = *(int**)&hitState->lastHitObject;
         s16 type;
-        if (target == NULL) return;
+        if (target == NULL)
+            return;
         type = ((GameObject*)target)->anim.seqId;
-        if (type == SB_CLOUDBALL_ALIAS_OBJECT_TYPE) return;
-        if (type == SB_CANNONBALL_ALIAS_OBJECT_TYPE) return;
+        if (type == SB_CLOUDBALL_ALIAS_OBJECT_TYPE)
+            return;
+        if (type == SB_CANNONBALL_ALIAS_OBJECT_TYPE)
+            return;
     }
 
-    if (zero != t) return;
+    if (zero != t)
+        return;
 
     Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
     {
@@ -106,16 +116,14 @@ void SB_CannonBall_hitDetect(GameObject* obj)
         int i;
         for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--)
         {
-            (*gPartfxInterface)->spawnObject(
-                obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
     {
         int i;
         for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--)
         {
-            (*gPartfxInterface)->spawnObject(
-                obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
 }
@@ -126,14 +134,10 @@ void SB_CannonBall_update(GameObject* obj)
 #define hitState ((ObjHitsPriorityState*)obj->anim.hitReactState)
     if ((state->flags & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
-                                         NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
-                                         NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
-                                         NULL, 1, -1, NULL);
-        state->flags = (s8)(
-            state->flags & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
+        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
+        state->flags = (s8)(state->flags & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
     }
     else
     {
@@ -142,28 +146,23 @@ void SB_CannonBall_update(GameObject* obj)
         objfx_spawnFlaggedTrailBurst((int*)obj, 0.22f, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
                                      SB_CANNONBALL_SETUP_PARAM, 0);
     }
-    (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID,
-                                     NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, NULL, 1, -1, NULL);
     obj->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
     if ((state->flags & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0)
     {
         state->velocityX = obj->anim.velocityX;
         state->velocityY = obj->anim.velocityY;
         state->velocityZ = obj->anim.velocityZ;
-        state->flags = (s8)(
-            state->flags | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
+        state->flags = (s8)(state->flags | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
         state->posX = obj->anim.localPosX;
         state->posY = obj->anim.localPosY;
         state->posZ = obj->anim.localPosZ;
     }
     {
         f64 scale = 1.5;
-        state->posX = (f32)(
-            scale * (f64)(state->velocityX * timeDelta) + state->posX);
-        state->posY = (f32)(
-            scale * (f64)(state->velocityY * timeDelta) + state->posY);
-        state->posZ = (f32)(
-            scale * (f64)(state->velocityZ * timeDelta) + state->posZ);
+        state->posX = (f32)(scale * (f64)(state->velocityX * timeDelta) + state->posX);
+        state->posY = (f32)(scale * (f64)(state->velocityY * timeDelta) + state->posY);
+        state->posZ = (f32)(scale * (f64)(state->velocityZ * timeDelta) + state->posZ);
     }
     obj->anim.localPosX = state->posX;
     obj->anim.localPosY = state->posY;
@@ -199,12 +198,10 @@ void SB_CannonBall_init(GameObject* obj)
         if (state->modelLight != NULL)
         {
             modelLightStruct_setLightKind(state->modelLight, SB_CANNONBALL_LIGHT_FIELD50);
-            modelLightStruct_setDiffuseColor(state->modelLight, SB_CANNONBALL_LIGHT_RED,
-                                             SB_CANNONBALL_LIGHT_GREEN, SB_CANNONBALL_LIGHT_BLUE,
-                                             SB_CANNONBALL_LIGHT_ALPHA);
+            modelLightStruct_setDiffuseColor(state->modelLight, SB_CANNONBALL_LIGHT_RED, SB_CANNONBALL_LIGHT_GREEN,
+                                             SB_CANNONBALL_LIGHT_BLUE, SB_CANNONBALL_LIGHT_ALPHA);
             lightSetFieldBC_8001db14(state->modelLight, SB_CANNONBALL_LIGHT_FIELD_BC);
-            modelLightStruct_setDistanceAttenuation(state->modelLight, 150.0f,
-                                                    250.0f);
+            modelLightStruct_setDistanceAttenuation(state->modelLight, 150.0f, 250.0f);
         }
     }
     {

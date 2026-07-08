@@ -25,14 +25,14 @@ typedef struct CfForceFieldState
 {
     CfForceFieldFlags flags; /* 0x00 */
     u8 pad01[3];
-    f32 timer;               /* 0x04: collapse countdown, seconds */
+    f32 timer; /* 0x04: collapse countdown, seconds */
 } CfForceFieldState;
 
 typedef struct CfForceFieldMapData
 {
     ObjPlacement base;
-    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
-    s8 style;          /* 0x19: emitter style index (mod 3) */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
+    s8 style;    /* 0x19: emitter style index (mod 3) */
     s16 unk1A;
     u8 pad1C[2];
     s16 activeEvent;   /* 0x1E: game bit keeping the field running */
@@ -67,23 +67,27 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 /* frames the collapse spin-down runs for */
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
-
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
-
 
 extern int fn_80080150(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern int timerCountDown(f32* p);
 
 extern void storeZeroToFloatParam(f32* p);
-extern f32 lbl_803DBE90; /* ring radius scale */
-extern int lbl_803DBE94; /* burst position jitter, +/- units */
-extern int lbl_803DBE98; /* collapse rotY rate */
+extern f32 lbl_803DBE90;   /* ring radius scale */
+extern int lbl_803DBE94;   /* burst position jitter, +/- units */
+extern int lbl_803DBE98;   /* collapse rotY rate */
 extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
-int cfforcefield_getExtraSize(void) { return sizeof(CfForceFieldState); }
+int cfforcefield_getExtraSize(void)
+{
+    return sizeof(CfForceFieldState);
+}
 
-int cfforcefield_getObjectTypeId(void) { return 0x0; }
+int cfforcefield_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void cfforcefield_free(void)
 {
@@ -150,12 +154,12 @@ void cfforcefield_update(u8* obj)
                 stepPtr = &emitter->angleStep;
                 for (; angle < 0x7fff; angle += *stepPtr)
                 {
-                    local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94)
-                             + 10.0f * (strength * lbl_803DBE90)
-                                   * mathCosf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
-                    local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94)
-                             + 10.0f * (strength * lbl_803DBE90)
-                                   * mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
+                    local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
+                               10.0f * (strength * lbl_803DBE90) *
+                                   mathCosf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
+                    local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
+                               10.0f * (strength * lbl_803DBE90) *
+                                   mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
                     local[2] = 0.0f;
                     PSMTXMultVecSR((f32*)mtx, local, local);
                     /* burst target = ring point in world space; the burst
@@ -171,7 +175,8 @@ void cfforcefield_update(u8* obj)
 
             if (fn_80080150(&state->timer) != 0)
             {
-                ((GameObject*)obj)->anim.rotY = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
+                ((GameObject*)obj)->anim.rotY =
+                    (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
                 if (timerCountDown(&state->timer) != 0)
                 {
                     state->flags.disabled = 1;
@@ -182,7 +187,8 @@ void cfforcefield_update(u8* obj)
             {
                 s16toFloat(&state->timer, CFFORCEFIELD_COLLAPSE_FRAMES);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_littletink22); /* field power-down */
-                if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId != CFFORCEFIELD_MAP_SILENT_COLLAPSE)
+                if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId !=
+                    CFFORCEFIELD_MAP_SILENT_COLLAPSE)
                 {
                     Sfx_PlayFromObject((int)obj, SFXTRIG_sc_menuups16k_409); /* collapse jingle */
                 }

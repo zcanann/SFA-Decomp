@@ -16,21 +16,21 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define DLL28B_OBJ_GROUP 3
+#define DLL28B_OBJ_GROUP    3
 #define OBJFLAG_BIT_2000000 0x2000000
 
 typedef struct Dll28BState
 {
-    int objectFlagsMirror;  /* 0x00: receives OBJFLAG_BIT_2000000 each update */
+    int objectFlagsMirror; /* 0x00: receives OBJFLAG_BIT_2000000 each update */
     u8 pad4[0x35C - 0x4];
     u8 moveLib[0x96D - 0x35C]; /* 0x35C: dll_2E (moveLib) look-at/turn block */
-    u8 flags96D;            /* 0x96D: bit0 mirrors !(flagsAC0 & 1); 0x22 set at init */
+    u8 flags96D;               /* 0x96D: bit0 mirrors !(flagsAC0 & 1); 0x22 set at init */
     u8 pad96E[0x980 - 0x96E];
     u8 eyeAnim[0x9B0 - 0x980]; /* 0x980: eye-animation block */
     RomCurveWalker route;      /* 0x9B0: ROM-curve walker */
-    f32 playerDistance;     /* 0xAB8: planar distance to the player object */
+    f32 playerDistance;        /* 0xAB8: planar distance to the player object */
     u8 padABC[0xAC0 - 0xABC];
-    u8 flagsAC0;            /* 0xAC0: bit0 drives flags96D bit0 */
+    u8 flagsAC0; /* 0xAC0: bit0 drives flags96D bit0 */
     u8 padAC1[0xAC4 - 0xAC1];
 } Dll28BState;
 
@@ -41,11 +41,20 @@ STATIC_ASSERT(offsetof(Dll28BState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
 STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
 
-int dll_28B_getExtraSize(void) { return sizeof(Dll28BState); }
+int dll_28B_getExtraSize(void)
+{
+    return sizeof(Dll28BState);
+}
 
-int dll_28B_getObjectTypeId(void) { return 0x0; }
+int dll_28B_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void dll_28B_free(int obj) { ObjGroup_RemoveObject(obj, DLL28B_OBJ_GROUP); }
+void dll_28B_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, DLL28B_OBJ_GROUP);
+}
 
 void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -75,8 +84,8 @@ void dll_28B_update(int obj)
     ((Dll28BState*)state)->playerDistance = Vec_xzDistance(obj + 0x18, player + 0x18);
     ((Dll28BState*)state)->objectFlagsMirror |= OBJFLAG_BIT_2000000;
     dt = timeDelta;
-    (*(void (**)(int, int, f32, f32, void*, void*))(*gPlayerInterface + 0x8))(
-        obj, state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
+    (*(void (**)(int, int, f32, f32, void*, void*))(*gPlayerInterface + 0x8))(obj, state, dt, dt, gDll28BStateHandlers,
+                                                                              gDll28BSubstateHandlers);
     if ((((Dll28BState*)state)->flagsAC0 & 1) != 0)
     {
         ((Dll28BState*)state)->flags96D &= ~1;

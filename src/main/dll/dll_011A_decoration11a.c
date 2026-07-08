@@ -31,7 +31,10 @@ enum
     DECOR11A_MODEL_C = 0x7a3
 };
 
-int decoration11a_getExtraSize(void) { return 0x1c; }
+int decoration11a_getExtraSize(void)
+{
+    return 0x1c;
+}
 
 void decoration11a_free(void)
 {
@@ -42,7 +45,8 @@ void decoration11a_free(void)
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void decoration11a_hitDetect(int obj)
@@ -86,64 +90,65 @@ check_decor_objects:
                 sum = 0.0f;
 
                 {
-                f32 bMax;
-                f32 bMin;
-                f32 px;
-                bMin = state[3];
-                bMax = state[0];
-                sum += ((px = localPos[0]) < bMin) ? (px - bMin) * (px - bMin)
-                     : (px > bMax) ? (px - bMax) * (px - bMax)
-                     : 0.0f;
+                    f32 bMax;
+                    f32 bMin;
+                    f32 px;
+                    bMin = state[3];
+                    bMax = state[0];
+                    sum += ((px = localPos[0]) < bMin) ? (px - bMin) * (px - bMin)
+                           : (px > bMax)               ? (px - bMax) * (px - bMax)
+                                                       : 0.0f;
                 }
 
                 {
-                f32 bMax;
-                f32 bMin;
-                bMin = state[4];
-                bMax = state[1];
-                if (localPos[1] < bMin)
-                {
-                    delta = localPos[1] - bMin;
-                    term = delta * delta;
-                }
-                else if (localPos[1] > bMax)
-                {
-                    delta = localPos[1] - bMax;
-                    term = delta * delta;
-                }
-                else
-                {
-                    term = 0.0f;
-                }
-                sum += term;
+                    f32 bMax;
+                    f32 bMin;
+                    bMin = state[4];
+                    bMax = state[1];
+                    if (localPos[1] < bMin)
+                    {
+                        delta = localPos[1] - bMin;
+                        term = delta * delta;
+                    }
+                    else if (localPos[1] > bMax)
+                    {
+                        delta = localPos[1] - bMax;
+                        term = delta * delta;
+                    }
+                    else
+                    {
+                        term = 0.0f;
+                    }
+                    sum += term;
                 }
 
                 {
-                f32 bMax;
-                f32 bMin;
-                bMin = state[5];
-                bMax = state[2];
-                if (localPos[2] < bMin)
-                {
-                    delta = localPos[2] - bMin;
-                    term = delta * delta;
-                }
-                else if (localPos[2] > bMax)
-                {
-                    delta = localPos[2] - bMax;
-                    term = delta * delta;
-                }
-                else
-                {
-                    term = 0.0f;
-                }
-                sum += term;
+                    f32 bMax;
+                    f32 bMin;
+                    bMin = state[5];
+                    bMax = state[2];
+                    if (localPos[2] < bMin)
+                    {
+                        delta = localPos[2] - bMin;
+                        term = delta * delta;
+                    }
+                    else if (localPos[2] > bMax)
+                    {
+                        delta = localPos[2] - bMax;
+                        term = delta * delta;
+                    }
+                    else
+                    {
+                        term = 0.0f;
+                    }
+                    sum += term;
                 }
 
                 if (sum < radius * radius)
                 {
                     ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->lastHitObject = obj;
-                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags = OBJHITS_CONTACT_FLAG_KIND0;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags =
+                        OBJHITS_CONTACT_FLAG_KIND0;
                 }
             }
         }
@@ -162,14 +167,20 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 {
     f32 component;
     component = vertex[0];
-    if (component > maxOut[0]) maxOut[0] = component;
-    else if (component < minOut[0]) minOut[0] = component;
+    if (component > maxOut[0])
+        maxOut[0] = component;
+    else if (component < minOut[0])
+        minOut[0] = component;
     component = vertex[1];
-    if (component > maxOut[1]) maxOut[1] = component;
-    else if (component < minOut[1]) minOut[1] = component;
+    if (component > maxOut[1])
+        maxOut[1] = component;
+    else if (component < minOut[1])
+        minOut[1] = component;
     component = vertex[2];
-    if (component > maxOut[2]) maxOut[2] = component;
-    else if (component < minOut[2]) minOut[2] = component;
+    if (component > maxOut[2])
+        maxOut[2] = component;
+    else if (component < minOut[2])
+        minOut[2] = component;
 }
 #pragma dont_inline reset
 #pragma peephole off
@@ -202,36 +213,36 @@ void decoration11a_init(int* obj, u8* def)
         if (model == DECOR11A_MODEL_C)
         {
         calc_decor_bounds:
-            {
-                int i;
-                int* m;
-                f32* state;
-                f32 tmp[3];
-                f32 magB;
-                f32 maxMag;
+        {
+            int i;
+            int* m;
+            f32* state;
+            f32 tmp[3];
+            f32 magB;
+            f32 maxMag;
 
-                state = ((GameObject*)obj)->extra;
-                m = **(int***)(*(int*)&((GameObject*)obj)->anim.banks);
-                Model_GetVertexPosition(m, 0, state);
-                Model_GetVertexPosition(m, 0, state + 3);
-                for (i = 1; i < *(u16*)((char*)m + 0xe4); i++)
-                {
-                    Model_GetVertexPosition(m, i, tmp);
-                    decoration11a_expandBoundsWithVertex(tmp, state, state + 3);
-                }
-                PSVECScale(state, state, ((GameObject*)obj)->anim.rootMotionScale);
-                PSVECScale(state + 3, state + 3, ((GameObject*)obj)->anim.rootMotionScale);
-                magB = PSVECMag(state + 3);
-                if (PSVECMag(state) > magB)
-                {
-                    maxMag = PSVECMag(state);
-                }
-                else
-                {
-                    maxMag = PSVECMag(state + 3);
-                }
-                state[6] = maxMag;
+            state = ((GameObject*)obj)->extra;
+            m = **(int***)(*(int*)&((GameObject*)obj)->anim.banks);
+            Model_GetVertexPosition(m, 0, state);
+            Model_GetVertexPosition(m, 0, state + 3);
+            for (i = 1; i < *(u16*)((char*)m + 0xe4); i++)
+            {
+                Model_GetVertexPosition(m, i, tmp);
+                decoration11a_expandBoundsWithVertex(tmp, state, state + 3);
             }
+            PSVECScale(state, state, ((GameObject*)obj)->anim.rootMotionScale);
+            PSVECScale(state + 3, state + 3, ((GameObject*)obj)->anim.rootMotionScale);
+            magB = PSVECMag(state + 3);
+            if (PSVECMag(state) > magB)
+            {
+                maxMag = PSVECMag(state);
+            }
+            else
+            {
+                maxMag = PSVECMag(state + 3);
+            }
+            state[6] = maxMag;
+        }
         }
     }
 }

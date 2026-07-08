@@ -35,12 +35,16 @@ extern CameraModeTitlePose gCamTitleStartPose;
 
 #pragma scheduling off
 #pragma peephole off
-f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
+f32 titleScreenGetCamProgress(void)
+{
+    return titleScreenCamProgress;
+}
 
 void CameraModeTitle_moveCam(u8 newCam)
 {
     u32 cam = newCam;
-    if (cam == gCamTitleCurPose) return;
+    if (cam == gCamTitleCurPose)
+        return;
     if (gCamTitlePrevPose == TITLE_CAM_REST_POSE)
     {
         if (1.0f != titleScreenCamProgress)
@@ -107,9 +111,7 @@ void CameraModeTitle_update(CameraObject* camera)
             if (gCamTitleCurPose == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade((s32)(100.0f * titleScreenCamProgress), 1);
-                audioSetVolumes(
-                    (s32)((f32)(u32)save[10] * (1.0f - titleScreenCamProgress)), 10, 1, 0,
-                    0);
+                audioSetVolumes((s32)((f32)(u32)save[10] * (1.0f - titleScreenCamProgress)), 10, 1, 0, 0);
             }
             else if (gCamTitlePrevPose == TITLE_CAM_REST_POSE)
             {
@@ -120,8 +122,7 @@ void CameraModeTitle_update(CameraObject* camera)
 
         if (titleScreenCamProgress < 0.5f)
         {
-            ease = 0.5f *
-                ((2.0f * titleScreenCamProgress) * (2.0f * titleScreenCamProgress));
+            ease = 0.5f * ((2.0f * titleScreenCamProgress) * (2.0f * titleScreenCamProgress));
         }
         else
         {
@@ -204,11 +205,9 @@ void CameraModeTitle_initialise(void)
 }
 
 CameraModeTitlePose gCamTitlePoseTable[5] = {
-    { -18848.0f, 29.5f, 28386.0f, 21592, 1456, 0 },
-    { -18845.0f, 21.0f, 28565.0f, 49876, 65040, 64626 },
-    { -18947.0f, 25.0f, 28509.0f, 13804, 1994, 0 },
-    { -18949.0f, 54.0f, 28324.0f, 26248, 65226, 0 },
-    { -18876.25f, 33.25548f, 28366.39f, 9419, 3496, 170 },
+    {-18848.0f, 29.5f, 28386.0f, 21592, 1456, 0},        {-18845.0f, 21.0f, 28565.0f, 49876, 65040, 64626},
+    {-18947.0f, 25.0f, 28509.0f, 13804, 1994, 0},        {-18949.0f, 54.0f, 28324.0f, 26248, 65226, 0},
+    {-18876.25f, 33.25548f, 28366.39f, 9419, 3496, 170},
 };
 
 /* descriptor/ptr table auto 0x8031a01c-0x8031a0e0 */
@@ -237,7 +236,48 @@ extern u8 dll_19_func18[];
 extern u8 dll_19_func19[];
 extern u8 dll_19_func1A[];
 
-u32 lbl_8031A01C[11] = { 0x00000000, 0x00000000, 0x00000000, 0x00060000, (u32)CameraModeTitle_initialise, (u32)CameraModeTitle_release, 0x00000000, (u32)CameraModeTitle_init, (u32)CameraModeTitle_update, (u32)CameraModeTitle_loadVolumes, (u32)CameraModeTitle_moveCam };
-u32 lbl_8031A048[3] = { 0x00000000, 0x00000000, 0x00000000 };
-u32 lbl_8031A054[3] = { 0x00000000, 0x00000000, 0x00000000 };
-u32 dll_19[32] = { 0x00000000, 0x00000000, 0x00000000, 0x001a0000, (u32)dll_19_func03_nop, (u32)dll_19_func04_nop, 0x00000000, (u32)dll_19_func03_nop, (u32)dll_19_func04_nop, (u32)dll_19_func05, (u32)dll_19_func06, (u32)dll_19_func07, (u32)dll_19_func08, (u32)dll_19_func09_ret_0, (u32)dll_19_func0A, (u32)dll_19_func0B, (u32)dll_19_func0C, (u32)dll_19_func0D, (u32)dll_19_func0E, (u32)dll_19_func0F, (u32)dll_19_func10, (u32)dll_19_func11, (u32)dll_19_func12, (u32)dll_19_func13, (u32)dll_19_func14, (u32)dll_19_func15, (u32)dll_19_func16, (u32)dll_19_func17, (u32)dll_19_func18, (u32)dll_19_func19, (u32)dll_19_func1A, 0x00000000 };
+u32 lbl_8031A01C[11] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00060000,
+                        (u32)CameraModeTitle_initialise,
+                        (u32)CameraModeTitle_release,
+                        0x00000000,
+                        (u32)CameraModeTitle_init,
+                        (u32)CameraModeTitle_update,
+                        (u32)CameraModeTitle_loadVolumes,
+                        (u32)CameraModeTitle_moveCam};
+u32 lbl_8031A048[3] = {0x00000000, 0x00000000, 0x00000000};
+u32 lbl_8031A054[3] = {0x00000000, 0x00000000, 0x00000000};
+u32 dll_19[32] = {0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x001a0000,
+                  (u32)dll_19_func03_nop,
+                  (u32)dll_19_func04_nop,
+                  0x00000000,
+                  (u32)dll_19_func03_nop,
+                  (u32)dll_19_func04_nop,
+                  (u32)dll_19_func05,
+                  (u32)dll_19_func06,
+                  (u32)dll_19_func07,
+                  (u32)dll_19_func08,
+                  (u32)dll_19_func09_ret_0,
+                  (u32)dll_19_func0A,
+                  (u32)dll_19_func0B,
+                  (u32)dll_19_func0C,
+                  (u32)dll_19_func0D,
+                  (u32)dll_19_func0E,
+                  (u32)dll_19_func0F,
+                  (u32)dll_19_func10,
+                  (u32)dll_19_func11,
+                  (u32)dll_19_func12,
+                  (u32)dll_19_func13,
+                  (u32)dll_19_func14,
+                  (u32)dll_19_func15,
+                  (u32)dll_19_func16,
+                  (u32)dll_19_func17,
+                  (u32)dll_19_func18,
+                  (u32)dll_19_func19,
+                  (u32)dll_19_func1A,
+                  0x00000000};

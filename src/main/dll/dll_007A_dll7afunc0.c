@@ -64,12 +64,9 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     entries[1].flags = 8;
     entries[1].tex = &base[0x8c];
     entries[1].mode = 2;
-    entries[1].x = lbl_803E0D0C * (f32)(int)
-    randomGetRange(10, 15);
-    entries[1].y = lbl_803E0D0C * (f32)(int)
-    randomGetRange(10, 15);
-    entries[1].z = lbl_803E0D10 * (f32)(int)
-    randomGetRange(10, 15);
+    entries[1].x = lbl_803E0D0C * (f32)(int)randomGetRange(10, 15);
+    entries[1].y = lbl_803E0D0C * (f32)(int)randomGetRange(10, 15);
+    entries[1].z = lbl_803E0D10 * (f32)(int)randomGetRange(10, 15);
     entries[2].layer = 0;
     entries[2].flags = 9;
     entries[2].tex = &base[0x8c];
@@ -88,12 +85,9 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     entries[4].flags = 0;
     entries[4].tex = 0;
     entries[4].mode = 0x400000;
-    entries[4].x = (f32)(int)
-    randomGetRange(-2000, 200);
-    entries[4].y = (f32)(int)
-    randomGetRange(-200, 200);
-    entries[4].z = (f32)(int)
-    randomGetRange(-200, 200);
+    entries[4].x = (f32)(int)randomGetRange(-2000, 200);
+    entries[4].y = (f32)(int)randomGetRange(-200, 200);
+    entries[4].z = (f32)(int)randomGetRange(-200, 200);
     entries[5].layer = 1;
     entries[5].flags = 9;
     entries[5].tex = &base[0x8c];
@@ -165,12 +159,14 @@ int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], DLL7A_EFFECT_ID_VARIANT0, 0);
+        ret = (*gModgfxInterface)
+                  ->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], DLL7A_EFFECT_ID_VARIANT0, 0);
     }
     else if (variant == 1)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], DLL7A_EFFECT_ID_VARIANT1, 0);
+        ret = (*gModgfxInterface)
+                  ->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], DLL7A_EFFECT_ID_VARIANT1, 0);
     }
     return ret;
 }

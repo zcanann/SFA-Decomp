@@ -86,16 +86,15 @@ extern void GM_MazeWell_init(void);
 
 #define CAMMODE_DEFAULT 0x42 /* dll_0042 - default/release camera */
 
-#define KTREX_OBJGROUP 0x3
-#define KTREX_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
-#define KTREX_PARTFX_HIT 0x328 /* hit-response effect spawned at the player contact point */
+#define KTREX_OBJGROUP         0x3
+#define KTREX_ADVANCE_MSG      0xe0001 /* notify the struck object to advance its hit reaction */
+#define KTREX_PARTFX_HIT       0x328   /* hit-response effect spawned at the player contact point */
 #define MODEL_LIGHT_KIND_POINT 2
 
 typedef struct KtrexMsgBlob
 {
     int w[4];
 } KtrexMsgBlob;
-
 
 typedef struct KTRexWork
 {
@@ -109,14 +108,12 @@ typedef struct KTRexWork
     f32 posZ; /* 0x14 */
 } KTRexWork;
 
-
 typedef struct KtrexPlacement
 {
     u8 pad0[0x38 - 0x0];
     f32 laneSpeed; /* 0x38: lane traversal speed, read into runtime laneSpeed */
     u8 pad3C[0x40 - 0x3C];
 } KtrexPlacement;
-
 
 typedef struct KtrexState
 {
@@ -126,7 +123,6 @@ typedef struct KtrexState
     s16 scale; /* 0x274: returned by ktrex_setScale */
     u8 pad276[0x5A4 - 0x276];
 } KtrexState;
-
 
 /*
  * KT Rex boss arena state, allocated alongside the runtime and linked at
@@ -150,7 +146,7 @@ typedef struct KTRexArenaState
     f32 laneDX[4]; /* 0xa0 */
     f32 laneDY[4]; /* 0xb0 */
     f32 laneDZ[4]; /* 0xc0 */
-    void* rowAX; /* 0xd0: &laneAX */
+    void* rowAX;   /* 0xd0: &laneAX */
     void* rowAY;
     void* rowAZ;
     void* rowBX;
@@ -163,11 +159,11 @@ typedef struct KTRexArenaState
     s16 homeYaw; /* 0xf8: spawn heading */
     u16 timerFA;
     u8 laneIndex;
-    u8 moveVariant; /* 0xFD: 0/1 charge-attack move/curve selector, indexes lbl_803DC260/lbl_8032A51C */
+    u8 moveVariant;     /* 0xFD: 0/1 charge-attack move/curve selector, indexes lbl_803DC260/lbl_8032A51C */
     u8 currentLaneMask; /* 0xFE: rex's current lane as a single-bit mask (1/2/4/8) */
     u8 activeLaneMask;  /* 0xFF: bitmask of currently-active lanes, packed from 4 GameBits */
-    u8 laneMode; /* 0x100: 1/2 z-lanes, 4/8 x-lanes */
-    u8 phaseCounter; /* 0x101: arena phase/stage counter (published to GameBit 0x572/1394) */
+    u8 laneMode;        /* 0x100: 1/2 z-lanes, 4/8 x-lanes */
+    u8 phaseCounter;    /* 0x101: arena phase/stage counter (published to GameBit 0x572/1394) */
     u8 phaseCountdown;
     u8 pathCountdown;
     u32 phaseFlags; /* 0x104: arena phase progression bits */
@@ -180,7 +176,7 @@ typedef struct KTRexArenaState
     f32 vecX;
     f32 vecY;
     f32 vecZ;
-    void* light; /* 0x178 */
+    void* light;                            /* 0x178 */
     void* lightning[KTREX_LIGHTNING_COUNT]; /* 0x17c: active lightning-strike effect objects */
 } KTRexArenaState;
 
@@ -238,15 +234,24 @@ static inline f32* KTRex_GetActiveContactPointTable(int obj)
     return *(f32**)(model + 0x50);
 }
 
-int ktrex_stateHandlerA00(void) { return 0x0; }
+int ktrex_stateHandlerA00(void)
+{
+    return 0x0;
+}
 
 void ktrex_func0B(void)
 {
 }
 
-int ktrex_getExtraSize(void) { return 0x5a4; }
+int ktrex_getExtraSize(void)
+{
+    return 0x5a4;
+}
 
-int ktrex_getObjectTypeId(void) { return 0x49; }
+int ktrex_getObjectTypeId(void)
+{
+    return 0x49;
+}
 
 void ktrex_release(void)
 {
@@ -314,14 +319,14 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     localPoint[1] = lbl_803E67B8;
     localPoint[2] = lbl_803E67B8;
 
-    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)),
-                 localPoint, point1);
+    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
+                 point1);
     point1[0] = point1[0] + playerMapOffsetX;
     point1[1] = point1[1] + lbl_803E67BC;
     point1[2] = point1[2] + playerMapOffsetZ;
 
-    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)),
-                 localPoint, point2);
+    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
+                 point2);
     point2[0] = point2[0] + playerMapOffsetX;
     point2[2] = point2[2] + playerMapOffsetZ;
 
@@ -487,7 +492,8 @@ int ktrex_shouldAdvanceArenaPhase(void)
         }
         return 0;
     }
-    if ((currentMask == 1 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 8)) || (currentMask == 4 && (activeMask & 1)) || (currentMask == 2 && (activeMask & 4)) ||
+    if ((currentMask == 1 && (((KTRexArenaState*)gKTRexState)->activeLaneMask & 8)) ||
+        (currentMask == 4 && (activeMask & 1)) || (currentMask == 2 && (activeMask & 4)) ||
         (currentMask == 8 && (activeMask & 2)))
     {
         return 1;
@@ -541,10 +547,10 @@ int ktrex_updateArenaPathProgress(int obj)
         speed = ((KTRexRuntime*)obj)->laneSpeed;
     }
     ((KTRexArenaState*)gKTRexState)->laneLerpT = speed * timeDelta + ((KTRexArenaState*)gKTRexState)->laneLerpT;
-    if ((((KTRexArenaState*)gKTRexState)->laneLerpT > gKTRexLaneSpeedMax[((KTRexArenaState*)gKTRexState)->laneIndex] && speed >
-            lbl_803E67B8) ||
-        (((KTRexArenaState*)gKTRexState)->laneLerpT<gKTRexLaneSpeedMin[((KTRexArenaState*)gKTRexState)->laneIndex] && speed <
-            lbl_803E67B8))
+    if ((((KTRexArenaState*)gKTRexState)->laneLerpT > gKTRexLaneSpeedMax[((KTRexArenaState*)gKTRexState)->laneIndex] &&
+         speed > lbl_803E67B8) ||
+        (((KTRexArenaState*)gKTRexState)->laneLerpT < gKTRexLaneSpeedMin[((KTRexArenaState*)gKTRexState)->laneIndex] &&
+         speed < lbl_803E67B8))
     {
         if (dir != 0)
         {
@@ -568,21 +574,25 @@ int ktrex_updateArenaPathProgress(int obj)
         {
             ((KTRexArenaState*)gKTRexState)->laneLerpT = gKTRexLaneSpeedMax[((KTRexArenaState*)gKTRexState)->laneIndex];
         }
-        else if (((KTRexArenaState*)gKTRexState)->laneLerpT<gKTRexLaneSpeedMin[((KTRexArenaState*)gKTRexState)->laneIndex])
+        else if (((KTRexArenaState*)gKTRexState)->laneLerpT <
+                 gKTRexLaneSpeedMin[((KTRexArenaState*)gKTRexState)->laneIndex])
         {
             ((KTRexArenaState*)gKTRexState)->laneLerpT = gKTRexLaneSpeedMin[((KTRexArenaState*)gKTRexState)->laneIndex];
         }
         changed = 1;
     }
-    ((KTRexArenaState*)gKTRexState)->posX = ((KTRexArenaState*)gKTRexState)->laneLerpT * (((f32*)*(int*)&((KTRexArenaState*)
-        gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) + ((f32*)*(int*)&((
-        KTRexArenaState*)gKTRexState)->rowAX)[phase];
-    ((KTRexArenaState*)gKTRexState)->posY = ((KTRexArenaState*)gKTRexState)->laneLerpT * (((f32*)*(int*)&((KTRexArenaState*)
-        gKTRexState)->rowBY)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAY)[phase]) + ((f32*)*(int*)&((
-        KTRexArenaState*)gKTRexState)->rowAY)[phase];
-    ((KTRexArenaState*)gKTRexState)->posZ = ((KTRexArenaState*)gKTRexState)->laneLerpT * (((f32*)*(int*)&((KTRexArenaState*)
-        gKTRexState)->rowBZ)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) + ((f32*)*(int*)&((
-        KTRexArenaState*)gKTRexState)->rowAZ)[phase];
+    ((KTRexArenaState*)gKTRexState)->posX =
+        ((KTRexArenaState*)gKTRexState)->laneLerpT * (((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] -
+                                                      ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) +
+        ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase];
+    ((KTRexArenaState*)gKTRexState)->posY =
+        ((KTRexArenaState*)gKTRexState)->laneLerpT * (((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBY)[phase] -
+                                                      ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAY)[phase]) +
+        ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAY)[phase];
+    ((KTRexArenaState*)gKTRexState)->posZ =
+        ((KTRexArenaState*)gKTRexState)->laneLerpT * (((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] -
+                                                      ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) +
+        ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase];
     return changed;
 }
 
@@ -638,12 +648,9 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)((char*)gKTRexState + 0x118), (f32*)((char*)gKTRexState + 0x11c),
                                   (f32*)((char*)gKTRexState + 0x120), 0);
     memcpy(m, ObjPath_GetPointModelMtx((int)obj, 4), 48);
-    ((KTRexArenaState*)gKTRexState)->vecX = lbl_803E67B4 * (f32)(int)
-    randomGetRange(-50, 50);
-    ((KTRexArenaState*)gKTRexState)->vecY = lbl_803E67B4 * (f32)(int)
-    randomGetRange(60, 120);
-    ((KTRexArenaState*)gKTRexState)->vecZ = lbl_803E6848 * (f32)(int)
-    randomGetRange(100, 150);
+    ((KTRexArenaState*)gKTRexState)->vecX = lbl_803E67B4 * (f32)(int)randomGetRange(-50, 50);
+    ((KTRexArenaState*)gKTRexState)->vecY = lbl_803E67B4 * (f32)(int)randomGetRange(60, 120);
+    ((KTRexArenaState*)gKTRexState)->vecZ = lbl_803E6848 * (f32)(int)randomGetRange(100, 150);
     PSMTXMultVecSR(m, &((KTRexArenaState*)gKTRexState)->vecX, &((KTRexArenaState*)gKTRexState)->vecX);
     *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x100000LL;
 }
@@ -709,15 +716,11 @@ void ktrex_update(int obj)
         dx = ((f32*)*(int*)&st->rowBZ)[phase] - ((f32*)*(int*)&st->rowAZ)[phase];
         if (__fabs(dz) > __fabs(dx))
         {
-            frac =
-                (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&st->rowAX)[phase]) /
-                dz;
+            frac = (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&st->rowAX)[phase]) / dz;
         }
         else
         {
-            frac =
-                (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&st->rowAZ)[phase]) /
-                dx;
+            frac = (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&st->rowAZ)[phase]) / dx;
         }
     }
     ((KTRexArenaState*)gKTRexState)->laneFrac = frac;
@@ -850,13 +853,13 @@ int ktrex_stateHandlerB03(int obj, int runtime)
     }
     if (dir != 0)
     {
-        ((GameObject*)obj)->anim.rotX = lbl_803E6814 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(int)(
-            (KTRexArenaState*)gKTRexState)->homeYaw;
+        ((GameObject*)obj)->anim.rotX = lbl_803E6814 * ((GameObject*)obj)->anim.currentMoveProgress +
+                                        (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw;
     }
     else
     {
-        ((GameObject*)obj)->anim.rotX = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw - lbl_803E6814 * ((GameObject*)obj)->anim.
-            currentMoveProgress;
+        ((GameObject*)obj)->anim.rotX = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw -
+                                        lbl_803E6814 * ((GameObject*)obj)->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -934,7 +937,8 @@ int ktrex_stateHandlerB01(int obj, int runtime)
     }
     dx = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->posX - ((GameObject*)obj)->anim.localPosX);
     dz = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->posZ - ((GameObject*)obj)->anim.localPosZ);
-    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj, &((KTRexRuntime*)runtime)->curvePhase);
+    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj,
+                                 &((KTRexRuntime*)runtime)->curvePhase);
     ((GameObject*)obj)->anim.localPosX = ((KTRexArenaState*)gKTRexState)->posX;
     ((GameObject*)obj)->anim.localPosZ = ((KTRexArenaState*)gKTRexState)->posZ;
     return 0;
@@ -986,17 +990,18 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     pos.y = lbl_803E67B8;
     pos.z = lbl_803E67B8;
     setMatrixFromObjectPos(mtx, &pos);
-    Matrix_TransformPoint(mtx, ((KTRexRuntime*)runtime)->localOffsetX, lbl_803E67B8, -((KTRexRuntime*)runtime)->localOffsetZ,
-                          &((GameObject*)obj)->anim.velocityX, &tmpY, &((GameObject*)obj)->anim.velocityZ);
+    Matrix_TransformPoint(mtx, ((KTRexRuntime*)runtime)->localOffsetX, lbl_803E67B8,
+                          -((KTRexRuntime*)runtime)->localOffsetZ, &((GameObject*)obj)->anim.velocityX, &tmpY,
+                          &((GameObject*)obj)->anim.velocityZ);
     if (dir != 0)
     {
-        ((GameObject*)obj)->anim.rotX = lbl_803E681C * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(int)(
-            (KTRexArenaState*)gKTRexState)->homeYaw;
+        ((GameObject*)obj)->anim.rotX = lbl_803E681C * ((GameObject*)obj)->anim.currentMoveProgress +
+                                        (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw;
     }
     else
     {
-        ((GameObject*)obj)->anim.rotX = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw - lbl_803E681C * ((GameObject*)obj)->anim.
-            currentMoveProgress;
+        ((GameObject*)obj)->anim.rotX = (f32)(int)((KTRexArenaState*)gKTRexState)->homeYaw -
+                                        lbl_803E681C * ((GameObject*)obj)->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -1215,12 +1220,9 @@ void ktrex_updateAttackEffects(int obj)
         ((KTRexArenaState*)gKTRexState)->unk12C = lbl_803E6818;
         for (i = 0; i < 10; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x2) != 0)
@@ -1228,12 +1230,9 @@ void ktrex_updateAttackEffects(int obj)
         ((KTRexArenaState*)gKTRexState)->unk144 = lbl_803E6818;
         for (i = 0; i < 10; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x4) != 0)
@@ -1241,12 +1240,9 @@ void ktrex_updateAttackEffects(int obj)
         ((KTRexArenaState*)gKTRexState)->unk12C = lbl_803E6838;
         for (i = 0; i < 13; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x8) != 0)
@@ -1254,12 +1250,9 @@ void ktrex_updateAttackEffects(int obj)
         ((KTRexArenaState*)gKTRexState)->unk144 = lbl_803E6838;
         for (i = 0; i < 13; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x10) != 0)
@@ -1267,12 +1260,9 @@ void ktrex_updateAttackEffects(int obj)
         ((KTRexArenaState*)gKTRexState)->unk12C = lbl_803E67C8;
         for (i = 0; i < 16; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x124,
-                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x124, 0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x20) != 0)
@@ -1280,18 +1270,15 @@ void ktrex_updateAttackEffects(int obj)
         ((KTRexArenaState*)gKTRexState)->unk144 = lbl_803E67C8;
         for (i = 0; i < 16; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x13c,
-                                             0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, (char*)gKTRexState + 0x13c, 0x200001, -1, NULL);
         }
     }
     if ((((KTRexArenaState*)gKTRexState)->phaseFlags & 0x800) != 0)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x487, (char*)gKTRexState + 0x10c,
-                                         0x200001, -1, (char*)gKTRexState + 0x16c);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, 0x487, (char*)gKTRexState + 0x10c, 0x200001, -1, (char*)gKTRexState + 0x16c);
     }
     ((KTRexArenaState*)gKTRexState)->phaseFlags &= 0x1800LL;
     if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject())
@@ -1334,8 +1321,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     {
         return;
     }
-    contactPoints =
-        *(f32**)((u8*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex] + 0x50);
+    contactPoints = *(f32**)((u8*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex] + 0x50);
     if ((s8)((KTRexRuntime*)runtime)->hitCountdown != 0 && (hitType == 3 || hitType == 2) &&
         (((KTRexArenaState*)gKTRexState)->timerFA & 0x10) != 0 && hit == 5)
     {
@@ -1344,10 +1330,8 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
         Sfx_PlayFromObject(obj, SFXmv_roothack16);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x4b2, gKTRexEffectSpawnWork, 0x200001, -1,
-                                         NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x4b3, gKTRexEffectSpawnWork, 0x200001, -1,
-                                         NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x4b2, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x4b3, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         if (hit == 0xe)
         {
             ((KTRexRuntime*)runtime)->hitCountdown -= 1;
@@ -1371,8 +1355,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = contactPoints[hitType * 4 + 2];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, KTREX_PARTFX_HIT, gKTRexEffectSpawnWork, 0x200001, -1,
-                                         NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, KTREX_PARTFX_HIT, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= ((GameObject*)obj)->anim.worldPosX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY -= ((GameObject*)obj)->anim.worldPosY;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ -= ((GameObject*)obj)->anim.worldPosZ;
@@ -1382,8 +1365,8 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk4 = 0;
         msg[1] += randomGetRange(0, 0x9b);
         msg[2] += randomGetRange(0, 0x9b);
-        (*(void (**)(int, int, void*, int, int, int*))(*(int*)gKTRexResource + 0x4))(
-            obj, 0, gKTRexEffectSpawnWork, 1, -1, msg);
+        (*(void (**)(int, int, void*, int, int, int*))(*(int*)gKTRexResource + 0x4))(obj, 0, gKTRexEffectSpawnWork, 1,
+                                                                                     -1, msg);
         gKTRexContactEffectCooldown = 0x3c;
     }
     if ((s8)((KTRexRuntime*)runtime)->hitCountdown < 1)
@@ -1427,7 +1410,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     if (((KTRexArenaState*)gKTRexState)->laneIndex == 0 &&
         (phase = ((KTRexArenaState*)gKTRexState)->phaseCounter) >= 2 && (flags & 0x20) == 0 &&
         ((flag1 == 0 && ((KTRexArenaState*)gKTRexState)->laneLerpT >= lbl_803E67E8) ||
-            (flag1 != 0 && ((KTRexArenaState*)gKTRexState)->laneLerpT <= lbl_803E67C0)))
+         (flag1 != 0 && ((KTRexArenaState*)gKTRexState)->laneLerpT <= lbl_803E67C0)))
     {
         idx = phase >> 1;
         pb = (u8*)p;
@@ -1482,11 +1465,13 @@ int ktrex_stateHandlerA02(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x40;
         {
             u8 result;
-            if ((((KTRexArenaState*)gKTRexState)->currentLaneMask & ((KTRexArenaState*)gKTRexState)->activeLaneMask) != 0)
+            if ((((KTRexArenaState*)gKTRexState)->currentLaneMask & ((KTRexArenaState*)gKTRexState)->activeLaneMask) !=
+                0)
             {
                 if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
                 {
-                    if (((KTRexArenaState*)gKTRexState)->laneLerpT - ((KTRexArenaState*)gKTRexState)->laneFrac > lbl_803E67B4)
+                    if (((KTRexArenaState*)gKTRexState)->laneLerpT - ((KTRexArenaState*)gKTRexState)->laneFrac >
+                        lbl_803E67B4)
                     {
                         result = 1;
                         goto haveResult;
@@ -1494,7 +1479,8 @@ int ktrex_stateHandlerA02(int obj, int runtime)
                 }
                 else
                 {
-                    if (((KTRexArenaState*)gKTRexState)->laneFrac - ((KTRexArenaState*)gKTRexState)->laneLerpT > lbl_803E67B4)
+                    if (((KTRexArenaState*)gKTRexState)->laneFrac - ((KTRexArenaState*)gKTRexState)->laneLerpT >
+                        lbl_803E67B4)
                     {
                         result = 1;
                         goto haveResult;
@@ -1534,21 +1520,19 @@ int ktrex_stateHandlerA03(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->moveDone != 0)
     {
         phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
-        f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)
-            gKTRexState)->rowAX)[phase];
-        f4 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] - ((f32*)*(int*)&((KTRexArenaState*)
-            gKTRexState)->rowAZ)[phase];
+        f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] -
+             ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase];
+        f4 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] -
+             ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase];
         if (__fabs(f5) > __fabs(f4))
         {
-            f4 = (((GameObject*)obj)->anim.localPosX -
-                  ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
-                f5;
+            f4 = (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
+                 f5;
         }
         else
         {
-            f4 = (((GameObject*)obj)->anim.localPosZ -
-                  ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
-                f4;
+            f4 = (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
+                 f4;
         }
         ((KTRexArenaState*)gKTRexState)->laneLerpT = f4;
         popped = 0;
@@ -1739,10 +1723,10 @@ int ktrex_stateHandlerA11(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->rowBZ = (char*)gKTRexState + 0x60;
     }
     phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
-    f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)
-        ->rowAX)[phase];
-    f4 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)
-        ->rowAZ)[phase];
+    f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] -
+         ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase];
+    f4 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] -
+         ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase];
     if (__fabs(f5) > __fabs(f4))
     {
         f4 = (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) / f5;
@@ -1819,13 +1803,13 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         ((KTRexArenaState*)gKTRexState)->stateTimer = u4;
         if (u4 <= lbl_803E67B8)
         {
-            ((KTRexArenaState*)gKTRexState)->stateTimer = *(f32 *)&lbl_803E67B8;
+            ((KTRexArenaState*)gKTRexState)->stateTimer = *(f32*)&lbl_803E67B8;
         }
     }
     if (((KTRexArenaState*)gKTRexState)->stateTimer <= lbl_803E67B8 &&
         ((KTRexArenaState*)gKTRexState)->lastPhase == phase &&
         ((laneBit == 0 && ((KTRexArenaState*)gKTRexState)->laneLerpT >= lbl_803E67D0) ||
-            (laneBit != 0 && ((KTRexArenaState*)gKTRexState)->laneLerpT <= lbl_803E67D4)))
+         (laneBit != 0 && ((KTRexArenaState*)gKTRexState)->laneLerpT <= lbl_803E67D4)))
     {
         if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
         {
@@ -1944,22 +1928,135 @@ int ktrex_stateHandlerA01(int obj, int runtime)
     return 0;
 }
 
-f32 gKTRexLaneSpeedMin[3] = { 0.0f, 0.025f, 0.025f };
+f32 gKTRexLaneSpeedMin[3] = {0.0f, 0.025f, 0.025f};
 
 f32 gKTRexLaneSpeedMax[19] = {
-    1.0f, 0.975f, 0.975f, 2.8742e-40f, 2.8743e-40f, 2.87401e-40f,
-    2.8741e-40f, 2.87412e-40f, 2.87422e-40f, 2.87394e-40f, 2.87402e-40f, 2.88206e-40f,
-    2.88209e-40f, 2.8821e-40f, 2.88204e-40f, 2.87415e-40f, 2.87425e-40f, 2.87395e-40f,
-    2.87405e-40f,
+    1.0f,         0.975f,       0.975f,       2.8742e-40f,  2.8743e-40f,  2.87401e-40f, 2.8741e-40f,
+    2.87412e-40f, 2.87422e-40f, 2.87394e-40f, 2.87402e-40f, 2.88206e-40f, 2.88209e-40f, 2.8821e-40f,
+    2.88204e-40f, 2.87415e-40f, 2.87425e-40f, 2.87395e-40f, 2.87405e-40f,
 };
 
 /* descriptor/ptr table auto 0x8032a58c-0x8032a7c0 */
-u32 gKtRexObjDescriptor[17] = { 0x00000000, 0x00000000, 0x00000000, 0x000b0000, (u32)ktrex_initialise, (u32)ktrex_release, 0x00000000, (u32)ktrex_init, (u32)ktrex_update, (u32)ktrex_hitDetect, (u32)ktrex_render, (u32)ktrex_free, (u32)ktrex_getObjectTypeId, (u32)ktrex_getExtraSize, (u32)ktrex_setScale, (u32)ktrex_func0B, 0x00000000 };
-u32 gKtRexFloorSwitchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)KT_RexFloorSwitch_initialise, (u32)KT_RexFloorSwitch_release, 0x00000000, (u32)KT_RexFloorSwitch_init, (u32)KT_RexFloorSwitch_update, (u32)KT_RexFloorSwitch_hitDetect, (u32)KT_RexFloorSwitch_render, (u32)KT_RexFloorSwitch_free, (u32)KT_RexFloorSwitch_getObjectTypeId, (u32)KT_RexFloorSwitch_getExtraSize };
-u32 gKtLazerwallObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)KT_Lazerwall_initialise, (u32)KT_Lazerwall_release, 0x00000000, (u32)KT_Lazerwall_init, (u32)KT_Lazerwall_update, (u32)KT_Lazerwall_hitDetect, (u32)KT_Lazerwall_render, (u32)KT_Lazerwall_free, (u32)KT_Lazerwall_getObjectTypeId, (u32)KT_Lazerwall_getExtraSize };
-u32 gKtLazerlightObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ktlazerlight_initialise, (u32)ktlazerlight_release, 0x00000000, (u32)ktlazerlight_init, (u32)ktlazerlight_update, (u32)ktlazerlight_hitDetect, (u32)ktlazerlight_render, (u32)ktlazerlight_free, (u32)ktlazerlight_getObjectTypeId, (u32)ktlazerlight_getExtraSize };
-u32 gKtFallingrocksObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)ktfallingrocks_initialise, (u32)ktfallingrocks_release, 0x00000000, (u32)ktfallingrocks_init, (u32)ktfallingrocks_update, (u32)ktfallingrocks_hitDetect, (u32)ktfallingrocks_render, (u32)ktfallingrocks_free, (u32)ktfallingrocks_getObjectTypeId, (u32)ktfallingrocks_getExtraSize };
-u32 gDrLaserCannonObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)DR_LaserCannon_initialise, (u32)DR_LaserCannon_release, 0x00000000, (u32)DR_LaserCannon_init, (u32)DR_LaserCannon_update, (u32)DR_LaserCannon_hitDetect, (u32)DR_LaserCannon_render, (u32)DR_LaserCannon_free, (u32)DR_LaserCannon_getObjectTypeId, (u32)DR_LaserCannon_getExtraSize };
-u32 gDrakorMissileObjDescriptor[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000d0000, (u32)drakormissile_initialise, (u32)drakormissile_release, 0x00000000, (u32)drakormissile_init, (u32)drakormissile_update, (u32)drakormissile_hitDetect, (u32)drakormissile_render, (u32)drakormissile_free, (u32)drakormissile_getObjectTypeId, (u32)drakormissile_getExtraSize, (u32)drakormissile_setScale, (u32)drakormissile_startStraightLaunch, (u32)drakormissile_modelMtxFn, (u32)drakormissile_abortStraightFlight };
-s16 lbl_8032A730[44] = { 0x0ddc, 0x0de2, 0x0dde, 0x0ddd, 0x0de0, 0x0de3, 0x0ddf, 0x0de1, 0x0de4, 0x0000, 0x0de5, 0x0deb, 0x0de7, 0x0de6, 0x0de9, 0x0dec, 0x0de8, 0x0dea, 0x0ded, 0x0000, 0x0f34, 0x0f3a, 0x0f36, 0x0f35, 0x0f38, 0x0f3b, 0x0f37, 0x0f39, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000, 0x0571, 0x0000, 0x056e, 0x0000, 0x056f, 0x0000, 0x0570, 0x0000, 0x0572 };
-u32 gGmMazeWellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)GM_MazeWell_init, (u32)GM_MazeWell_update, 0x00000000, (u32)GM_MazeWell_render, (u32)GM_MazeWell_free, 0x00000000, (u32)GM_MazeWell_getExtraSize };
+u32 gKtRexObjDescriptor[17] = {0x00000000,
+                               0x00000000,
+                               0x00000000,
+                               0x000b0000,
+                               (u32)ktrex_initialise,
+                               (u32)ktrex_release,
+                               0x00000000,
+                               (u32)ktrex_init,
+                               (u32)ktrex_update,
+                               (u32)ktrex_hitDetect,
+                               (u32)ktrex_render,
+                               (u32)ktrex_free,
+                               (u32)ktrex_getObjectTypeId,
+                               (u32)ktrex_getExtraSize,
+                               (u32)ktrex_setScale,
+                               (u32)ktrex_func0B,
+                               0x00000000};
+u32 gKtRexFloorSwitchObjDescriptor[14] = {0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00090000,
+                                          (u32)KT_RexFloorSwitch_initialise,
+                                          (u32)KT_RexFloorSwitch_release,
+                                          0x00000000,
+                                          (u32)KT_RexFloorSwitch_init,
+                                          (u32)KT_RexFloorSwitch_update,
+                                          (u32)KT_RexFloorSwitch_hitDetect,
+                                          (u32)KT_RexFloorSwitch_render,
+                                          (u32)KT_RexFloorSwitch_free,
+                                          (u32)KT_RexFloorSwitch_getObjectTypeId,
+                                          (u32)KT_RexFloorSwitch_getExtraSize};
+u32 gKtLazerwallObjDescriptor[14] = {0x00000000,
+                                     0x00000000,
+                                     0x00000000,
+                                     0x00090000,
+                                     (u32)KT_Lazerwall_initialise,
+                                     (u32)KT_Lazerwall_release,
+                                     0x00000000,
+                                     (u32)KT_Lazerwall_init,
+                                     (u32)KT_Lazerwall_update,
+                                     (u32)KT_Lazerwall_hitDetect,
+                                     (u32)KT_Lazerwall_render,
+                                     (u32)KT_Lazerwall_free,
+                                     (u32)KT_Lazerwall_getObjectTypeId,
+                                     (u32)KT_Lazerwall_getExtraSize};
+u32 gKtLazerlightObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      (u32)ktlazerlight_initialise,
+                                      (u32)ktlazerlight_release,
+                                      0x00000000,
+                                      (u32)ktlazerlight_init,
+                                      (u32)ktlazerlight_update,
+                                      (u32)ktlazerlight_hitDetect,
+                                      (u32)ktlazerlight_render,
+                                      (u32)ktlazerlight_free,
+                                      (u32)ktlazerlight_getObjectTypeId,
+                                      (u32)ktlazerlight_getExtraSize};
+u32 gKtFallingrocksObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)ktfallingrocks_initialise,
+                                        (u32)ktfallingrocks_release,
+                                        0x00000000,
+                                        (u32)ktfallingrocks_init,
+                                        (u32)ktfallingrocks_update,
+                                        (u32)ktfallingrocks_hitDetect,
+                                        (u32)ktfallingrocks_render,
+                                        (u32)ktfallingrocks_free,
+                                        (u32)ktfallingrocks_getObjectTypeId,
+                                        (u32)ktfallingrocks_getExtraSize};
+u32 gDrLaserCannonObjDescriptor[14] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00090000,
+                                       (u32)DR_LaserCannon_initialise,
+                                       (u32)DR_LaserCannon_release,
+                                       0x00000000,
+                                       (u32)DR_LaserCannon_init,
+                                       (u32)DR_LaserCannon_update,
+                                       (u32)DR_LaserCannon_hitDetect,
+                                       (u32)DR_LaserCannon_render,
+                                       (u32)DR_LaserCannon_free,
+                                       (u32)DR_LaserCannon_getObjectTypeId,
+                                       (u32)DR_LaserCannon_getExtraSize};
+u32 gDrakorMissileObjDescriptor[18] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x000d0000,
+                                       (u32)drakormissile_initialise,
+                                       (u32)drakormissile_release,
+                                       0x00000000,
+                                       (u32)drakormissile_init,
+                                       (u32)drakormissile_update,
+                                       (u32)drakormissile_hitDetect,
+                                       (u32)drakormissile_render,
+                                       (u32)drakormissile_free,
+                                       (u32)drakormissile_getObjectTypeId,
+                                       (u32)drakormissile_getExtraSize,
+                                       (u32)drakormissile_setScale,
+                                       (u32)drakormissile_startStraightLaunch,
+                                       (u32)drakormissile_modelMtxFn,
+                                       (u32)drakormissile_abortStraightFlight};
+s16 lbl_8032A730[44] = {0x0ddc, 0x0de2, 0x0dde, 0x0ddd, 0x0de0, 0x0de3, 0x0ddf, 0x0de1, 0x0de4, 0x0000, 0x0de5,
+                        0x0deb, 0x0de7, 0x0de6, 0x0de9, 0x0dec, 0x0de8, 0x0dea, 0x0ded, 0x0000, 0x0f34, 0x0f3a,
+                        0x0f36, 0x0f35, 0x0f38, 0x0f3b, 0x0f37, 0x0f39, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000,
+                        0x0524, 0x0000, 0x0571, 0x0000, 0x056e, 0x0000, 0x056f, 0x0000, 0x0570, 0x0000, 0x0572};
+u32 gGmMazeWellObjDescriptor[14] = {0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00090000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    (u32)GM_MazeWell_init,
+                                    (u32)GM_MazeWell_update,
+                                    0x00000000,
+                                    (u32)GM_MazeWell_render,
+                                    (u32)GM_MazeWell_free,
+                                    0x00000000,
+                                    (u32)GM_MazeWell_getExtraSize};

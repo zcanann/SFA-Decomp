@@ -18,18 +18,18 @@
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 #define VFPMINIFIRE_PERSIST_EFFECT 0x38c
-#define VFPMINIFIRE_SMOKE_EFFECT 0x38a
-#define VFPMINIFIRE_SPARK_EFFECT 0x38b
-#define VFPMINIFIRE_BURST_EFFECT 0x38e
-#define VFPMINIFIRE_EFFECT_FLAGS 0x80001
-#define VFPMINIFIRE_BURST_COUNT 10
+#define VFPMINIFIRE_SMOKE_EFFECT   0x38a
+#define VFPMINIFIRE_SPARK_EFFECT   0x38b
+#define VFPMINIFIRE_BURST_EFFECT   0x38e
+#define VFPMINIFIRE_EFFECT_FLAGS   0x80001
+#define VFPMINIFIRE_BURST_COUNT    10
 
 typedef struct VfpMinifireState
 {
-    f32 baseY;        /* 0x00: downward hit-scan result, then rebased to
+    f32 baseY; /* 0x00: downward hit-scan result, then rebased to
                          (localPosY - that) as the fall threshold */
     u8 pad4[6];
-    u8 burstStarted;  /* 0x0A: flame burst has fired; fading out */
+    u8 burstStarted; /* 0x0A: flame burst has fired; fading out */
 } VfpMinifireState;
 
 typedef struct VfpMinifirePartfxArgs
@@ -44,12 +44,18 @@ typedef struct VfpMinifirePartfxArgs
     f32 z;
 } VfpMinifirePartfxArgs;
 
-#define VFPMINIFIRE_SPAWN(obj, id, args, flags) \
-    (*gPartfxInterface)->spawnObject((void *)(obj), (id), (args), (flags), -1, NULL)
+#define VFPMINIFIRE_SPAWN(obj, id, args, flags)                                                                        \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (id), (args), (flags), -1, NULL)
 
-int VFP_MiniFire_getExtraSize(void) { return 0xc; }
+int VFP_MiniFire_getExtraSize(void)
+{
+    return 0xc;
+}
 
-int VFP_MiniFire_getObjectTypeId(void) { return 0x0; }
+int VFP_MiniFire_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_MiniFire_free(int obj)
 {
@@ -82,8 +88,7 @@ void VFP_MiniFire_update(int obj)
 
     if (0.0f == state->baseY)
     {
-        hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX,
-                             ((GameObject*)obj)->anim.localPosY,
+        hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                              ((GameObject*)obj)->anim.localPosZ, (f32*)state, 0);
         state->baseY = ((GameObject*)obj)->anim.localPosY - state->baseY;
     }

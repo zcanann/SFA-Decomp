@@ -53,19 +53,18 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
     s16* placement;
 
     placement = obj->objAnim.placementData;
-    block = mapGetBlock(objPosToMapBlockIdx(
-        obj->objAnim.localPosX,
-        obj->objAnim.localPosY,
-        obj->objAnim.localPosZ));
+    block = mapGetBlock(objPosToMapBlockIdx(obj->objAnim.localPosX, obj->objAnim.localPosY, obj->objAnim.localPosZ));
     if (block == NULL)
     {
         state->needsApply = 1;
         return;
     }
     tables = getTablesBinEntry(TEXSCROLL_TABLE_ID);
-    if (tables == NULL) return;
+    if (tables == NULL)
+        return;
     tex = getLoadedTexture(-tables[(s32) * (s16*)((char*)placement + 0x18)]);
-    if (tex == NULL) return;
+    if (tex == NULL)
+        return;
 
     /* layer/material/texture inner types are opaque (no struct defined for
        them, as in tex_dolphin.c's shader walk): layer+0x41 = material count,
@@ -87,37 +86,23 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
                     {
                         if (mainGetBit(state->gameBit) != 0)
                         {
-                            mapTextureScrollSetStep(
-                                (s32) * (u8*)((char*)material + 0x2a),
-                                state->stepX,
-                                state->stepY,
-                                texWidthFixed, texHeightFixed,
-                                state->secondaryStepX,
-                                state->secondaryStepY,
-                                texWidthFixed, texHeightFixed);
+                            mapTextureScrollSetStep((s32) * (u8*)((char*)material + 0x2a), state->stepX, state->stepY,
+                                                    texWidthFixed, texHeightFixed, state->secondaryStepX,
+                                                    state->secondaryStepY, texWidthFixed, texHeightFixed);
                         }
                     }
                     else
                     {
-                        mapTextureScrollSetStep(
-                            (s32) * (u8*)((char*)material + 0x2a),
-                            state->stepX,
-                            state->stepY,
-                            texWidthFixed, texHeightFixed,
-                            state->secondaryStepX,
-                            state->secondaryStepY,
-                            texWidthFixed, texHeightFixed);
+                        mapTextureScrollSetStep((s32) * (u8*)((char*)material + 0x2a), state->stepX, state->stepY,
+                                                texWidthFixed, texHeightFixed, state->secondaryStepX,
+                                                state->secondaryStepY, texWidthFixed, texHeightFixed);
                     }
                 }
                 else
                 {
                     *(u8*)((char*)material + 0x2a) = mapTextureScrollAcquire(
-                        state->stepX,
-                        state->stepY,
-                        texWidthFixed, texHeightFixed,
-                        state->secondaryStepX,
-                        state->secondaryStepY,
-                        texWidthFixed, texHeightFixed);
+                        state->stepX, state->stepY, texWidthFixed, texHeightFixed, state->secondaryStepX,
+                        state->secondaryStepY, texWidthFixed, texHeightFixed);
                 }
             }
             material = (void*)((char*)material + 8);
@@ -125,8 +110,14 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
     }
 }
 
-int texscroll2_getExtraSize(void) { return TEXSCROLL2_EXTRA_STATE_BYTES; }
-int texscroll2_getObjectTypeId(void) { return 0x0; }
+int texscroll2_getExtraSize(void)
+{
+    return TEXSCROLL2_EXTRA_STATE_BYTES;
+}
+int texscroll2_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void texscroll2_free(void)
 {
@@ -135,7 +126,8 @@ void texscroll2_free(void)
 void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F30);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F30);
 }
 
 void texscroll2_hitDetect(void)

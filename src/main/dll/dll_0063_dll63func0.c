@@ -22,7 +22,6 @@ extern f32 lbl_803E08C8, lbl_803E08CC, lbl_803E08D0, lbl_803E08D4, lbl_803E08D8,
 extern f32 lbl_803E08E0, lbl_803E08E4, lbl_803E08E8, lbl_803E08EC, lbl_803E08F0, lbl_803E08F4;
 extern f32 lbl_803E08F8, lbl_803E08FC;
 
-
 #pragma inline_max_size(4000)
 static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

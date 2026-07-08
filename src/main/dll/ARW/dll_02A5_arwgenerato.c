@@ -9,9 +9,15 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-int arwgenerato_getExtraSize(void) { return 4; }
+int arwgenerato_getExtraSize(void)
+{
+    return 4;
+}
 
-int arwgenerato_getObjectTypeId(void) { return 0; }
+int arwgenerato_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void arwgenerato_free(void)
 {
@@ -47,8 +53,7 @@ void arwgenerato_update(int obj)
                 fn_802315EC(obj, state, mapData);
                 break;
             }
-            state->spawnTimer = (f32)(u32)
-            mapData->spawnInterval;
+            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
         }
     }
 }
@@ -58,8 +63,7 @@ void arwgenerato_init(int obj, int setup)
     ARWGeneratorState* state = ((GameObject*)obj)->extra;
     ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)setup;
 
-    state->spawnTimer = (f32)(u32)
-    mapData->spawnInterval;
+    state->spawnTimer = (f32)(u32)mapData->spawnInterval;
 }
 
 void arwgenerato_release(void)

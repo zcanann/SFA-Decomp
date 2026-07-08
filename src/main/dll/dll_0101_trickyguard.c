@@ -26,7 +26,7 @@
 
 /* Tricky vtable slots reached through (tricky + 0x68). */
 #define TRICKY_VTBL_IS_BUSY 0x11
-#define TRICKY_VTBL_GUARD 0x0A
+#define TRICKY_VTBL_GUARD   0x0A
 
 #define TRICKYGUARD_OBJECT_FLAG 0x4000
 
@@ -39,7 +39,6 @@ typedef struct TrickyguardPlacement
     u8 pad1C[0x20 - 0x1C];
 } TrickyguardPlacement;
 
-
 extern void objRenderFn_80041018(int* obj);
 
 void TrickyGuard_update(int* obj)
@@ -49,16 +48,20 @@ void TrickyGuard_update(int* obj)
     ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     if (placement->armingGameBit != -1)
     {
-        if ((u32)mainGetBit(placement->armingGameBit) == 0) return;
+        if ((u32)mainGetBit(placement->armingGameBit) == 0)
+            return;
     }
     tricky = getTrickyObject();
-    if (tricky == NULL) return;
-    if ((u8)((int (*)(int*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0) return;
+    if (tricky == NULL)
+        return;
+    if ((u8)((int (*)(int*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0)
+        return;
     if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
         ((void (*)(int*, int*, int, int))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_GUARD])(tricky, obj, 1, 3);
     }
-    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+    ((GameObject*)obj)->anim.resetHitboxFlags =
+        (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     objRenderFn_80041018(obj);
 }
 

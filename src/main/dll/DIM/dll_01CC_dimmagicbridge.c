@@ -24,9 +24,9 @@
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
-#define DIMMAGICBRIDGE_GAMEBIT_IGNITED   0x1e9
-#define DIMMAGICBRIDGE_GAMEBIT_TRIGGER   0x1ef
-#define DIMMAGICBRIDGE_GAMEBIT_LATCH     0x1e8
+#define DIMMAGICBRIDGE_GAMEBIT_IGNITED 0x1e9
+#define DIMMAGICBRIDGE_GAMEBIT_TRIGGER 0x1ef
+#define DIMMAGICBRIDGE_GAMEBIT_LATCH   0x1e8
 
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
@@ -64,15 +64,11 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
         wavePos = wavePos + state->wavePhase;
         if (*vb > 0)
         {
-            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C
-            )
-            +(f32)(int) * vb;
+            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C) + (f32)(int)*vb;
         }
         else
         {
-            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C) - (f32)(int) * vb
-            )
-            ;
+            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C) - (f32)(int)*vb);
         }
     }
     DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
@@ -103,10 +99,12 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
         tex->offsetT -= 10000;
     }
     phase = (s32)state->wavePhase + framesThisStep * 0x100;
-    if (phase > 0xffff) phase = phase - 0xffff;
+    if (phase > 0xffff)
+        phase = phase - 0xffff;
     state->wavePhase = phase;
     phase = (s32)state->wavePhaseB + framesThisStep * 0x80;
-    if (phase > 0xffff) phase = phase - 0xffff;
+    if (phase > 0xffff)
+        phase = phase - 0xffff;
     state->wavePhaseB = phase;
 }
 #pragma dont_inline reset
@@ -142,7 +140,8 @@ int dimmagicbridge_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 int sv = state->segmentGlow[i];
                 int v = sv + framesThisStep;
-                if (v > 0xff) v = 0xff;
+                if (v > 0xff)
+                    v = 0xff;
                 state->segmentGlow[i] = v;
             }
         }
@@ -153,8 +152,14 @@ int dimmagicbridge_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
-int dimmagicbridge_getExtraSize(void) { return 0x68; }
-int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
+int dimmagicbridge_getExtraSize(void)
+{
+    return 0x68;
+}
+int dimmagicbridge_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dimmagicbridge_free(void)
 {
@@ -163,7 +168,8 @@ void dimmagicbridge_free(void)
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A18);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A18);
 }
 
 void dimmagicbridge_hitDetect(void)
@@ -173,7 +179,7 @@ void dimmagicbridge_hitDetect(void)
 #pragma peephole on
 void dimmagicbridge_update(int obj)
 {
-    DimMagicBridgeState * sub;
+    DimMagicBridgeState* sub;
     void* player;
     player = Obj_GetPlayerObject();
     sub = ((GameObject*)obj)->extra;
@@ -198,7 +204,7 @@ void dimmagicbridge_update(int obj)
 
 void dimmagicbridge_init(u8* obj, u8* params)
 {
-    DimMagicBridgeState * state;
+    DimMagicBridgeState* state;
     int i;
     s32 minY;
     int model;
@@ -210,9 +216,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     int vtx;
     s16 vertexY;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
+    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8);
     ((GameObject*)obj)->animEventCallback = dimmagicbridge_SeqFn;
     state = ((GameObject*)obj)->extra;
     minY = 0;
@@ -244,8 +248,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
             if (first < second)
             {
                 pair[1] = second;
-                pair[2] = (f32)(s32)
-                first;
+                pair[2] = (f32)(s32)first;
                 sorted = 0;
             }
             pair++;

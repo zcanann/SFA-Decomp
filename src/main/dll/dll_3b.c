@@ -64,9 +64,7 @@ void AttractMovieAudio_Decode(void* readBufferArg)
 
     readBuffer = (AttractMovieReadBuffer*)readBufferArg;
     audioFrameSizes = (u32*)(readBuffer->ptr + THP_FRAME_HEADER_SIZE);
-    audioFrame = readBuffer->ptr +
-                 (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) +
-                 THP_FRAME_HEADER_SIZE;
+    audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + THP_FRAME_HEADER_SIZE;
     {
         AttractMovieAudioBuffer* received;
         OSReceiveMessage(&lbl_803A4480, &received, OS_MESSAGE_BLOCK);

@@ -51,13 +51,13 @@ STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
 
 /* advanceRoute takes a trailing (always-zero) arg not reflected in the shared
  * interface header; cast the slot locally to emit the extra r7=0. */
-#define DRSHACKLE_ADVANCE_ROUTE(iface, out, route, dist, mode, flag) \
-    ((s32 (*)(u8 *, CheckpointRouteState *, f32, s32, u8, int))(iface)->advanceRoute)( \
-        (out), (route), (dist), (mode), (flag), 0)
+#define DRSHACKLE_ADVANCE_ROUTE(iface, out, route, dist, mode, flag)                                                   \
+    ((s32 (*)(u8*, CheckpointRouteState*, f32, s32, u8, int))(iface)->advanceRoute)((out), (route), (dist), (mode),    \
+                                                                                    (flag), 0)
 
-#define DRSHACKLE_ANGLE_STEP 0xb6
-#define DRSHACKLE_SWING_BLEND_LIMIT 0x41
-#define DRSHACKLE_SWING_RETURN_LEFT 0x100
+#define DRSHACKLE_ANGLE_STEP         0xb6
+#define DRSHACKLE_SWING_BLEND_LIMIT  0x41
+#define DRSHACKLE_SWING_RETURN_LEFT  0x100
 #define DRSHACKLE_ANGLE_RETURN_LIMIT 0x2aaa
 
 int drshackle_updateSwingBlend(int obj, int state)
@@ -79,25 +79,18 @@ int drshackle_updateSwingBlend(int obj, int state)
     {
         fade = fade + (((fade - lbl_803E5B10) < lbl_803E5AE8)
                            ? lbl_803E5AE8
-                           : (((fade - lbl_803E5B10) > lbl_803E5B08)
-                                  ? lbl_803E5B08
-                                  : (fade - lbl_803E5B10)));
+                           : (((fade - lbl_803E5B10) > lbl_803E5B08) ? lbl_803E5B08 : (fade - lbl_803E5B10)));
     }
     if (fade < *(f32*)&lbl_803E5AE8)
     {
         fade = *(f32*)&lbl_803E5AE8;
     }
 
-    hitResult = DRSHACKLE_ADVANCE_ROUTE(
-        (*gCheckpointInterface),
-        (u8*)state, &s->collider, fade,
-        s->colliderMode, 1);
+    hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider, fade, s->colliderMode, 1);
 
-    (*gCheckpointInterface)
-        ->getRouteHeading((GameObject*)obj, &s->collider);
+    (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
 
-    (*gCheckpointInterface)->queueRouteRankItem(
-        (CheckpointRankItem*)&s->collider);
+    (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
 
     if (hitResult != 0)
     {
@@ -105,10 +98,9 @@ int drshackle_updateSwingBlend(int obj, int state)
         return 0;
     }
 
-    yawDelta = (s32)(u16)
-    getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
-             ((GameObject*)obj)->anim.localPosZ - s->anchorZ) -
-        (s32)(u16)s->yaw;
+    yawDelta = (s32)(u16)getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
+                                  ((GameObject*)obj)->anim.localPosZ - s->anchorZ) -
+               (s32)(u16)s->yaw;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta + -0xffff;
@@ -134,17 +126,13 @@ int drshackle_updateSwingBlend(int obj, int state)
 
     {
         f32 blend = s->swingBlend;
-        s->swingBlend =
-            (blend < lbl_803E5B70)
-                ? lbl_803E5B70
-                : ((blend > lbl_803E5AEC) ? lbl_803E5AEC : blend);
+        s->swingBlend = (blend < lbl_803E5B70) ? lbl_803E5B70 : ((blend > lbl_803E5AEC) ? lbl_803E5AEC : blend);
     }
 
     {
         f32 ang = fn_801EA678(obj, state);
         ang = -ang;
-        if (s->lastPitch < ang ||
-            yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
+        if (s->lastPitch < ang || yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
             s->swingReturn = 0;
         }
@@ -171,7 +159,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
         return 0;
     }
     mapBlockIdx = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                ((GameObject*)obj)->anim.localPosZ);
+                                      ((GameObject*)obj)->anim.localPosZ);
     if (mapBlockIdx > -1)
     {
         if (flags->positionAnchored == 0)
@@ -182,15 +170,10 @@ int drshackle_updateAttachedPosition(int obj, int state)
                 s->unk498 = zero;
             }
             s->lastPitch = -fn_801EA678(obj, state);
-            hitResult = DRSHACKLE_ADVANCE_ROUTE(
-                (*gCheckpointInterface),
-                (u8*)state, &s->collider,
-                -s->lastPitch * timeDelta,
-                s->colliderMode, 1);
-            (*gCheckpointInterface)
-                ->getRouteHeading((GameObject*)obj, &s->collider);
-            (*gCheckpointInterface)->queueRouteRankItem(
-                (CheckpointRankItem*)&s->collider);
+            hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
+                                                -s->lastPitch * timeDelta, s->colliderMode, 1);
+            (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
+            (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
             if (hitResult != 0)
             {
                 return 0;
@@ -216,9 +199,8 @@ int drshackle_updateAttachedPosition(int obj, int state)
 
             if (s->floorAdjustFlag == 0)
             {
-                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX,
-                                     ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                     &floorOffset, 0);
+                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                     ((GameObject*)obj)->anim.localPosZ, &floorOffset, 0);
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - floorOffset;
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E5B78;
             }
@@ -228,21 +210,17 @@ int drshackle_updateAttachedPosition(int obj, int state)
         return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
-    hitResult = DRSHACKLE_ADVANCE_ROUTE(
-        (*gCheckpointInterface),
-        (u8*)state, &s->collider,
-        timeDelta * fn_801EA678(obj, state), s->colliderMode, 1);
-    (*gCheckpointInterface)
-        ->getRouteHeading((GameObject*)obj, &s->collider);
-    (*gCheckpointInterface)->queueRouteRankItem(
-        (CheckpointRankItem*)&s->collider);
+    hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
+                                        timeDelta * fn_801EA678(obj, state), s->colliderMode, 1);
+    (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
+    (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
     if (hitResult != 0)
     {
         return 0;
     }
 
-    angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
-                          ((GameObject*)obj)->anim.localPosZ - s->anchorZ);
+    angle =
+        (s16)getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX, ((GameObject*)obj)->anim.localPosZ - s->anchorZ);
     ((GameObject*)obj)->anim.rotX = angle;
     ((GameObject*)obj)->anim.localPosX = s->anchorX;
     ((GameObject*)obj)->anim.localPosY = s->anchorY;

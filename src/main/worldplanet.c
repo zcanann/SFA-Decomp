@@ -93,8 +93,7 @@ void worldplanet_free(void)
     return;
 }
 
-void worldplanet_render(u32 obj, u32 p2, u32 p3,
-                        u32 p4, u32 p5, char visible)
+void worldplanet_render(u32 obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     int draw;
 
@@ -132,11 +131,15 @@ void worldplanet_init(int obj)
     gWorldPlanetSelectConfirmTimer = 0;
     mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
     mask = 0;
-    for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++) {
-        if (mainGetBit(gWorldPlanetGameBitTable[i]) != 0) {
+    for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++)
+    {
+        if (mainGetBit(gWorldPlanetGameBitTable[i]) != 0)
+        {
             flag = 1;
-            if (gWorldPlanetHintFlagTable[i] != 0) {
-                if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD) {
+            if (gWorldPlanetHintFlagTable[i] != 0)
+            {
+                if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD)
+                {
                     flag = 0;
                 }
             }
@@ -150,9 +153,13 @@ void worldplanet_init(int obj)
     if (gWorldPlanetSavedSelection != -1)
     {
         state->selectedPlanet = gWorldPlanetSavedSelection;
-    } else {
-        for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++) {
-            if (mainGetBit(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0) {
+    }
+    else
+    {
+        for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++)
+        {
+            if (mainGetBit(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0)
+            {
                 state->selectedPlanet = gWorldPlanetDefaultSelectOrder[j];
                 break;
             }
@@ -189,52 +196,61 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
     stickY = padGetStickY(0);
     resX = 0;
     resY = 0;
-    if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0) {
-        if ((s8)stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD &&
-            state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD) {
+    if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0)
+    {
+        if ((s8)stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             resX = -1;
             state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickX > WORLDPLANET_INPUT_STICK_THRESHOLD &&
-            state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        if ((s8)stickX > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             resX = 1;
             state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD &&
-            state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        if ((s8)stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             resY = -1;
             state->stickYRepeatFrames = 0;
         }
-        if ((s8)stickY > WORLDPLANET_INPUT_STICK_THRESHOLD &&
-            state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        if ((s8)stickY > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             resY = 1;
             state->stickYRepeatFrames = 0;
         }
         state->prevStickY = stickY;
-        if (state->prevStickY < -WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        if (state->prevStickY < -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             state->stickYRepeatFrames++;
-        } else if (state->prevStickY > WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        }
+        else if (state->prevStickY > WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             state->stickYRepeatFrames++;
         }
         else
         {
             state->stickYRepeatFrames = 0;
         }
-        if (state->stickYRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES) {
+        if (state->stickYRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES)
+        {
             state->prevStickY = 0;
             state->stickYRepeatFrames = 0;
         }
         state->prevStickX = stickX;
-        if (state->prevStickX < -WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        if (state->prevStickX < -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             state->stickXRepeatFrames++;
-        } else if (state->prevStickX > WORLDPLANET_INPUT_STICK_THRESHOLD) {
+        }
+        else if (state->prevStickX > WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
             state->stickXRepeatFrames++;
         }
         else
         {
             state->stickXRepeatFrames = 0;
         }
-        if (state->stickXRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES) {
+        if (state->stickXRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES)
+        {
             state->prevStickX = 0;
             state->stickXRepeatFrames = 0;
         }
@@ -325,7 +341,8 @@ void worldplanet_update(int obj)
             state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
                 int briefingPortrait = ObjList_FindObjectById(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
-                ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte = gWorldPlanetBriefingSpeakerModel[state->selectedPlanet];
+                ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte =
+                    gWorldPlanetBriefingSpeakerModel[state->selectedPlanet];
             }
             AudioStream_StopCurrent();
         }
@@ -378,8 +395,7 @@ void worldplanet_update(int obj)
                 ids += 1;
                 hints += 1;
                 k += 1;
-            }
-            while (k < 5);
+            } while (k < 5);
             state->unlockedPlanetMask = mask;
         }
         if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
@@ -397,7 +413,8 @@ void worldplanet_update(int obj)
                 }
                 done = 1;
             }
-            pauseMenuSetupTitle(WORLDPLANET_SELECT_TITLE_TEXT_ID, gWorldPlanetTitleStringIds[state->selectedPlanet], 0x19, 0);
+            pauseMenuSetupTitle(WORLDPLANET_SELECT_TITLE_TEXT_ID, gWorldPlanetTitleStringIds[state->selectedPlanet],
+                                0x19, 0);
             /* obj->unkF4 is the GameObject's generic per-instance state word
              * (its meaning is per-DLL); worldplanet uses it as a one-shot latch:
              * 0 until the first selection has been set up, 1 thereafter. This
@@ -529,10 +546,11 @@ void worldplanet_update(int obj)
                         (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
                         {
                             int briefingPortrait = ObjList_FindObjectById(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
-                            ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte = gWorldPlanetBriefingSpeakerModel[state->
-                                selectedPlanet];
+                            ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte =
+                                gWorldPlanetBriefingSpeakerModel[state->selectedPlanet];
                         }
-                        gWorldPlanetLoadedMapId = loadMapAndParent(gWorldPlanetLoadMapIndices[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+                        gWorldPlanetLoadedMapId = loadMapAndParent(
+                            gWorldPlanetLoadMapIndices[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                         lockLevel(gWorldPlanetLoadedMapId, 1);
                         loadModelAndAnimTabs();
                         lbl_803DDD00 = lbl_803E65F8;
@@ -604,11 +622,12 @@ void worldplanet_update(int obj)
                 {
                     Sfx_KeepAliveLoopedObjectSound((u32)rotPtr, SFXTRIG_crf_babyambi2);
                 }
-                *(f32*)(rotPtr + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
-                    .localPosX;
-                *(f32*)(rotPtr + 8) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
-                    .localPosY;
-                *(f32*)(rotPtr + 10) = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
+                *(f32*)(rotPtr + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) +
+                                      ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(rotPtr + 8) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) +
+                                      ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(rotPtr + 10) =
+                    r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;
@@ -636,14 +655,16 @@ void worldplanet_update(int obj)
  *          routes exist - the Arwing is just unlock-gated (the effectState-0 branch
  *          hides it), so in normal play only the reachable planet's is ever seen. */
 int gWorldPlanetObjectIdTable[3][5] = {
-    /* row 0: orbiting island objects  */ { 0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB },
-    /* row 1: orbit angle offsets      */ { 0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000 },
-    /* row 2: Arwing flight-path objs  */ { 0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097 },
+    /* row 0: orbiting island objects  */ {0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB},
+    /* row 1: orbit angle offsets      */ {0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000},
+    /* row 2: Arwing flight-path objs  */ {0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097},
 };
 
 /* descriptor/ptr table auto 0x8032a1c8-0x8032a200 */
 ObjectDescriptor gWorldPlanetObjDescriptor = {
-    0x00000000, 0x00000000, 0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
     0x00090000,
     (ObjectDescriptorCallback)worldplanet_initialise,
     (ObjectDescriptorCallback)worldplanet_release,

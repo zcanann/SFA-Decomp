@@ -19,10 +19,10 @@
 
 #define VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-#define VFP_OBJCREATOR_FALLING_MODE 1
+#define VFP_OBJCREATOR_FALLING_MODE    1
 #define VFP_OBJCREATOR_PROJECTILE_MODE 6
 
-#define VFP_OBJCREATOR_FALLING_OBJECT_ID 0x263
+#define VFP_OBJCREATOR_FALLING_OBJECT_ID    0x263
 #define VFP_OBJCREATOR_PROJECTILE_OBJECT_ID 0x549
 
 typedef struct VfpObjCreatorState
@@ -78,11 +78,17 @@ STATIC_ASSERT(sizeof(VfpObjCreatorSetup) == 0x28);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
-extern void vecRotateZXY(s16 * angles, f32 * vec);
+extern void vecRotateZXY(s16* angles, f32* vec);
 
-int VFP_ObjCreator_getExtraSize(void) { return 0xa; }
+int VFP_ObjCreator_getExtraSize(void)
+{
+    return 0xa;
+}
 
-int VFP_ObjCreator_getObjectTypeId(void) { return 0x0; }
+int VFP_ObjCreator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_ObjCreator_free(void)
 {
@@ -90,7 +96,8 @@ void VFP_ObjCreator_free(void)
 
 void VFP_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible == 0) return;
+    if (visible == 0)
+        return;
 }
 
 void VFP_ObjCreator_hitDetect(void)
@@ -99,8 +106,7 @@ void VFP_ObjCreator_hitDetect(void)
 
 void VFP_ObjCreator_update(int* obj)
 {
-    VfpObjCreatorPlacement* placement =
-        (VfpObjCreatorPlacement*)((GameObject*)obj)->anim.placementData;
+    VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)((GameObject*)obj)->anim.placementData;
     VfpObjCreatorState* state = ((GameObject*)obj)->extra;
 
     if (Obj_IsLoadingLocked() == 0)
@@ -128,12 +134,10 @@ void VFP_ObjCreator_update(int* obj)
             ((VfpObjCreatorSetup*)setupBuf)->base.color[0] = 2;
             ((VfpObjCreatorSetup*)setupBuf)->base.color[1] = 1;
             ((VfpObjCreatorSetup*)setupBuf)->base.posX =
-                ((GameObject*)obj)->anim.localPosX +
-                (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
+                ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
             ((VfpObjCreatorSetup*)setupBuf)->base.posY = ((GameObject*)obj)->anim.localPosY;
             ((VfpObjCreatorSetup*)setupBuf)->base.posZ =
-                ((GameObject*)obj)->anim.localPosZ +
-                (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
+                ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
             ((VfpObjCreatorSetup*)setupBuf)->unk20 = 0x50;
             ((VfpObjCreatorSetup*)setupBuf)->unk1E = (s16)(randomGetRange(0, 2) + 0x16a);
             ((VfpObjCreatorSetup*)setupBuf)->unk22 = -1;
@@ -147,8 +151,7 @@ void VFP_ObjCreator_update(int* obj)
             {
                 break;
             }
-            ((GameObject*)spawned)->anim.velocityY =
-                0.01f * (f32)(int)randomGetRange(0, 10) + 0.1f;
+            ((GameObject*)spawned)->anim.velocityY = 0.01f * (f32)(int)randomGetRange(0, 10) + 0.1f;
             ((GameObject*)spawned)->anim.velocityX = 0.2f * (f32)(int)randomGetRange(-10, 10);
             ((GameObject*)spawned)->anim.velocityZ = 0.2f * (f32)(int)randomGetRange(-10, 10);
         }

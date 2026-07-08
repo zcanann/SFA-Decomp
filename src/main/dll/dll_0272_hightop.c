@@ -27,7 +27,7 @@
 
 /* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */
 #define HIGHTOP_DEATH_SPAWN_OBJ_ID 0xd4
-#define HIGHTOP_DEATH_EFFECT_ID 0x675
+#define HIGHTOP_DEATH_EFFECT_ID    0x675
 #define HIGHTOP_AIRMETER_BGTEXTURE 0x5ce
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
@@ -37,8 +37,8 @@ typedef struct HighTopDeathSpawn
     ObjPlacement base; /* 0x00..0x17 */
     u8 pad18[0x1A - 0x18];
     s16 effectId; /* 0x1A: 0x675 */
-    s16 unk1C; /* 0x1C */
-    s16 gameBit; /* 0x1E: -1 */
+    s16 unk1C;    /* 0x1C */
+    s16 gameBit;  /* 0x1E: -1 */
     u8 pad20[0x2C - 0x20];
 } HighTopDeathSpawn;
 
@@ -79,7 +79,7 @@ typedef struct HightopPlacement
     s16 unk336;
     s16 unk338;
     u8 pad33A[0x346 - 0x33A];
-    u8 moveDone;         /* 0x346: BaddieState move-complete flag */
+    u8 moveDone; /* 0x346: BaddieState move-complete flag */
     u8 pad347[0x354 - 0x347];
     u8 unk354;
     u8 pad355[0x9FD - 0x355];
@@ -143,14 +143,16 @@ STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, substate) == 0xC4B);
 
 /* HighTopRuntime.flagsC40 bits (0x140 clear = CURVE_FOLLOW + bit 0x100 together) */
-#define HIGHTOP_FLAG_CURVE_ARMED 0x20  /* curve-follow armed (set with CURVE_FOLLOW) */
+#define HIGHTOP_FLAG_CURVE_ARMED  0x20 /* curve-follow armed (set with CURVE_FOLLOW) */
 #define HIGHTOP_FLAG_CURVE_FOLLOW 0x40 /* running Obj_UpdateRomCurveFollowVelocity */
 
 typedef struct HighTopObject
 {
-    union {
+    union
+    {
         ObjAnimComponent anim;
-        struct {
+        struct
+        {
             s16 yaw;
             u8 pad02[0xc - 0x2];
             f32 x;
@@ -168,34 +170,61 @@ STATIC_ASSERT(offsetof(HighTopObject, x) == offsetof(ObjAnimComponent, localPosX
 STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
 
 #define HIGHTOP_OBJECT_TYPE_ID 0x43
-#define HIGHTOP_OBJGROUP 0xa
-#define ARWARWING_OBJGROUP 0x26
+#define HIGHTOP_OBJGROUP       0xa
+#define ARWARWING_OBJGROUP     0x26
 
-int hightop_defaultStateHandler(void) { return 0x0; }
+int hightop_defaultStateHandler(void)
+{
+    return 0x0;
+}
 
 void hightop_func15(void)
 {
 }
 
-int hightop_func14(void) { return 0x0; }
+int hightop_func14(void)
+{
+    return 0x0;
+}
 
-int hightop_func10(void) { return 0x0; }
+int hightop_func10(void)
+{
+    return 0x0;
+}
 
-int hightop_func0E(void) { return 0x1; }
+int hightop_func0E(void)
+{
+    return 0x1;
+}
 
-int hightop_func0B(void) { return 0x1; }
+int hightop_func0B(void)
+{
+    return 0x1;
+}
 
-int HighTop_getExtraSize(void) { return sizeof(HighTopRuntime); }
+int HighTop_getExtraSize(void)
+{
+    return sizeof(HighTopRuntime);
+}
 
-int HighTop_getObjectTypeId(void) { return HIGHTOP_OBJECT_TYPE_ID; }
+int HighTop_getObjectTypeId(void)
+{
+    return HIGHTOP_OBJECT_TYPE_ID;
+}
 
 void HighTop_release(void)
 {
 }
 
-int HighTop_render2(void) { return 0x0; }
+int HighTop_render2(void)
+{
+    return 0x0;
+}
 
-int HighTop_setScale(void) { return 0x0; }
+int HighTop_setScale(void)
+{
+    return 0x0;
+}
 
 void hightop_func11(int obj, int val)
 {
@@ -702,9 +731,9 @@ void HighTop_update(int obj)
     *(int*)state &= ~0x8000;
     if ((((HighTopRuntime*)state)->flagsC40 & HIGHTOP_FLAG_CURVE_FOLLOW) != 0)
     {
-        int ev = Obj_UpdateRomCurveFollowVelocity(obj, (f32*)(state + 0xa10),
-                                                  lbl_803DC324 * (((HighTopRuntime*)state)->curveFollowSpeedScale * timeDelta),
-                                                  lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);
+        int ev = Obj_UpdateRomCurveFollowVelocity(
+            obj, (f32*)(state + 0xa10), lbl_803DC324 * (((HighTopRuntime*)state)->curveFollowSpeedScale * timeDelta),
+            lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);
         if (ev != 0)
         {
             if (ev == -1)
@@ -743,8 +772,7 @@ void HighTop_update(int obj)
         {
             if (substate < 0xa)
             {
-                (*gObjectTriggerInterface)
-                    ->runSequence(substate, (void*)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(substate, (void*)obj, -1);
             }
             else
             {
@@ -795,7 +823,8 @@ int hightop_stateHandler01(int obj, int stateArg)
         ((BaddieState*)stateArg)->turnRate = 0;
         ((BaddieState*)stateArg)->inputMagnitude = *(f32*)&lbl_803E6AA8;
     }
-    if (*(f32*)&((BaddieState*)stateArg)->trackedObj > *(f32*)&lbl_803E6AA8 && ((BaddieState*)stateArg)->inputMagnitude > *(f32*)&lbl_803E6AA8)
+    if (*(f32*)&((BaddieState*)stateArg)->trackedObj > *(f32*)&lbl_803E6AA8 &&
+        ((BaddieState*)stateArg)->inputMagnitude > *(f32*)&lbl_803E6AA8)
     {
         return 3;
     }
@@ -857,7 +886,8 @@ int hightop_stateHandler04(int obj, int stateArg)
         }
         fn_80039264((char*)state + 0xb48);
     }
-    count = mainGetBit(GAMEBIT_DR_HighTopSwitch1) + mainGetBit(GAMEBIT_DR_HighTopSwitch2) + mainGetBit(GAMEBIT_DR_HighTopSwitch3) + mainGetBit(GAMEBIT_DR_HighTopSwitch4);
+    count = mainGetBit(GAMEBIT_DR_HighTopSwitch1) + mainGetBit(GAMEBIT_DR_HighTopSwitch2) +
+            mainGetBit(GAMEBIT_DR_HighTopSwitch3) + mainGetBit(GAMEBIT_DR_HighTopSwitch4);
     if (mainGetBit(0x62b) != 0)
     {
         HighTopRuntime* state2;
@@ -870,8 +900,8 @@ int hightop_stateHandler04(int obj, int stateArg)
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_FOLLOW;
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_ARMED;
         state->flagsC49.b1 = 0;
-        ((void (*)(void*, int, int, void*))curve->slotA8)(
-            (char*)state + 0xa10, obj, 0x3463a, (curve = *gRomCurveInterface));
+        ((void (*)(void*, int, int, void*))curve->slotA8)((char*)state + 0xa10, obj, 0x3463a,
+                                                          (curve = *gRomCurveInterface));
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, HIGHTOP_AIRMETER_BGTEXTURE);
@@ -1015,7 +1045,9 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
         lateralSpeed = 0.0f;
     }
     ((HighTopRuntime*)stateArg)->baddie.animSpeedC =
-        dt * ((lateralSpeed - ((HighTopRuntime*)stateArg)->baddie.animSpeedC) / ((HighTopRuntime*)stateArg)->baddie.velSmoothTime) + ((HighTopRuntime*)stateArg)->baddie.animSpeedC;
+        dt * ((lateralSpeed - ((HighTopRuntime*)stateArg)->baddie.animSpeedC) /
+              ((HighTopRuntime*)stateArg)->baddie.velSmoothTime) +
+        ((HighTopRuntime*)stateArg)->baddie.animSpeedC;
     if (((GameObject*)obj)->anim.rotY > 0)
     {
         ang = lateralSpeed - lbl_803E6B14 * mathSinf(gHighTopPi * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
@@ -1024,8 +1056,9 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
     {
         ang = lateralSpeed - lbl_803E6B20 * mathSinf(gHighTopPi * (f32)((GameObject*)obj)->anim.rotY / lbl_803E6B1C);
     }
-    ((HighTopRuntime*)stateArg)->baddie.animSpeedA =
-        dt * ((ang - ((HighTopRuntime*)stateArg)->baddie.animSpeedA) / ((HighTopRuntime*)stateArg)->baddie.velSmoothTime) + ((HighTopRuntime*)stateArg)->baddie.animSpeedA;
+    ((HighTopRuntime*)stateArg)->baddie.animSpeedA = dt * ((ang - ((HighTopRuntime*)stateArg)->baddie.animSpeedA) /
+                                                           ((HighTopRuntime*)stateArg)->baddie.velSmoothTime) +
+                                                     ((HighTopRuntime*)stateArg)->baddie.animSpeedA;
     changed = 0;
     moveSpeed = ((GameObject*)obj)->anim.currentMoveProgress;
     band = 0;
@@ -1071,8 +1104,8 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
         ObjAnim_SetCurrentMove(obj, (&gHighTopBandMoveIds)[band], moveSpeed, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((HighTopRuntime*)stateArg)->baddie.animSpeedA,
-                                                                        (f32*)((char*)stateArg + 0x2a0));
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
+        (int)obj, ((HighTopRuntime*)stateArg)->baddie.animSpeedA, (f32*)((char*)stateArg + 0x2a0));
     return 0;
 }
 
@@ -1261,15 +1294,16 @@ int hightop_stateHandler10(int obj, int stateArg)
                 weight++;
                 roll -= gHighTopIdleSequenceWeights[i++];
             }
-            (*gObjectTriggerInterface)
-                ->runSequence(gHighTopIdleSequenceIds[i], (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(gHighTopIdleSequenceIds[i], (void*)obj, -1);
         }
     }
     return 0;
 }
 #pragma opt_strength_reduction reset
 
-int gHighTopIdleSequenceIds[3] = { 0x4, 0x5, 0x6 };
-int gHighTopIdleSequenceWeights[3] = { 0x32, 0x19, 0x19 };
-int lbl_8032AB48[26] = { 0x8, 0x9, 0x7, 0xA, -1043857408, 0x0, -1032847360, 0x41C80000, 0x0, -1032847360, 0x41C80000, 0x0, 0x42700000, -1043857408, 0x0, 0x42700000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x420C0000, 0x0, 0x0, -1039400960 };
-f32 gHighTopBandSpeedThresholds[4] = { 0.0f, 0.03f, 0.05f, 8.0f };
+int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
+int gHighTopIdleSequenceWeights[3] = {0x32, 0x19, 0x19};
+int lbl_8032AB48[26] = {0x8,         0x9,        0x7, 0xA,        -1043857408, 0x0, -1032847360, 0x41C80000, 0x0,
+                        -1032847360, 0x41C80000, 0x0, 0x42700000, -1043857408, 0x0, 0x42700000,  0x0,        0x0,
+                        0x0,         0x0,        0x0, 0x0,        0x420C0000,  0x0, 0x0,         -1039400960};
+f32 gHighTopBandSpeedThresholds[4] = {0.0f, 0.03f, 0.05f, 8.0f};

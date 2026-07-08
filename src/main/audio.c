@@ -7,17 +7,17 @@
  * resource load, set when enqueued and cleared/mirrored when the load
  * callback fires. (Pending clears use a 64-bit mask: ~(u64)FLAG.) */
 #define AUDIO_LOAD_MUSIC_TRIGGERS 0x1   /* music trigger table */
-#define AUDIO_LOAD_SFX_TRIGGERS 0x2     /* sfx trigger table */
-#define AUDIO_LOAD_STREAMS 0x4          /* stream table */
-#define AUDIO_LOAD_M_POOL 0x8           /* music group: pool data */
-#define AUDIO_LOAD_M_PROJECT 0x10       /* music group: project data */
-#define AUDIO_LOAD_M_SAMPLE_DIR 0x20    /* music group: sample directory */
-#define AUDIO_LOAD_M_SAMPLE_BUF 0x40    /* music group: sample buffer */
-#define AUDIO_LOAD_S_POOL 0x80          /* sfx group: pool data */
-#define AUDIO_LOAD_S_PROJECT 0x100      /* sfx group: project data */
-#define AUDIO_LOAD_S_SAMPLE_DIR 0x200   /* sfx group: sample directory */
-#define AUDIO_LOAD_S_SAMPLE_BUF 0x400   /* sfx group: sample buffer */
-#define AUDIO_LOAD_MIDI_WAD 0x800       /* MIDI WAD */
+#define AUDIO_LOAD_SFX_TRIGGERS   0x2   /* sfx trigger table */
+#define AUDIO_LOAD_STREAMS        0x4   /* stream table */
+#define AUDIO_LOAD_M_POOL         0x8   /* music group: pool data */
+#define AUDIO_LOAD_M_PROJECT      0x10  /* music group: project data */
+#define AUDIO_LOAD_M_SAMPLE_DIR   0x20  /* music group: sample directory */
+#define AUDIO_LOAD_M_SAMPLE_BUF   0x40  /* music group: sample buffer */
+#define AUDIO_LOAD_S_POOL         0x80  /* sfx group: pool data */
+#define AUDIO_LOAD_S_PROJECT      0x100 /* sfx group: project data */
+#define AUDIO_LOAD_S_SAMPLE_DIR   0x200 /* sfx group: sample directory */
+#define AUDIO_LOAD_S_SAMPLE_BUF   0x400 /* sfx group: sample buffer */
+#define AUDIO_LOAD_MIDI_WAD       0x800 /* MIDI WAD */
 
 TextCallbackEntry gAudioArqRequests[0x300 / sizeof(TextCallbackEntry)];
 u8 gAudioReverbSettings[0x154];
@@ -28,7 +28,7 @@ u8 gAudioStreamDvdBlockCurrent[0x30];
 u8 gAudioStreamDvdBlockPrepared[0xA0];
 
 // AISetStreamPlayState() states
-#define AI_STREAM_STOP 0
+#define AI_STREAM_STOP  0
 #define AI_STREAM_START 1
 
 void audioStopByMask(int mask)
@@ -158,8 +158,8 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
     }
 }
 
-int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6,
-                          f32* outF7, f32* outF8, int* outI9, int* outI10, int* outI11)
+int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8,
+                          int* outI9, int* outI10, int* outI11)
 {
     int idx;
     int selector;
@@ -229,14 +229,11 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
         }
         else
         {
-            *outF6 = (f32)(u32)
-            trigger->pitchBase;
+            *outF6 = (f32)(u32)trigger->pitchBase;
         }
     }
-    *outF7 = (f32)(u32)
-    trigger->nearDistanceRaw;
-    *outF8 = (f32)(u32)
-    trigger->farDistanceRaw;
+    *outF7 = (f32)(u32)trigger->nearDistanceRaw;
+    *outF8 = (f32)(u32)trigger->farDistanceRaw;
     *outI9 = (&gSfxTriggerExtraTable)[trigger->e_tableIdx];
     *outI10 = trigger->e_bit0;
     *outI11 = trigger->e_bit3;
@@ -283,7 +280,7 @@ static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
     s32 i;
     for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--)
     {
-        if (ch->handle == (u32) - 1)
+        if (ch->handle == (u32)-1)
         {
             return ch;
         }
@@ -293,7 +290,6 @@ static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
 }
 
 SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
-
 
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
 {
@@ -690,8 +686,7 @@ void Sfx_UpdateLoopedObjectSounds(void)
     for (; i >= 0; i--)
     {
         removeSound = 0;
-        if (((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) &&
-            ((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0))
+        if (((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) && ((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0))
         {
             removeSound = 1;
         }
@@ -701,12 +696,10 @@ void Sfx_UpdateLoopedObjectSounds(void)
             Sfx_StopFromObject(obj, *ip);
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1),
-                    sz);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
             memmove((u16*)table->ids + index, (u16*)table->ids + index2,
                     (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2,
-                    (u16)(gSfxLoopedObjectSoundCount - index));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
         }
         else
         {
@@ -824,12 +817,10 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
             Sfx_StopFromObject(obj, table->ids[i]);
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1),
-                    sz);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
             memmove((u16*)table->ids + index, (u16*)table->ids + index2,
                     (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2,
-                    (u16)(gSfxLoopedObjectSoundCount - index));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
             return;
         }
         op--;
@@ -857,12 +848,10 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
         {
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1),
-                    sz);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
             memmove((u16*)table->ids + index, (u16*)table->ids + index2,
                     (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2,
-                    (u16)(gSfxLoopedObjectSoundCount - index));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
             Sfx_StopFromObject(obj, sfxId);
             return;
         }
@@ -907,7 +896,10 @@ checked:
     }
 }
 
-int return0x64_8000A378(void) { return 0x64; }
+int return0x64_8000A378(void)
+{
+    return 0x64;
+}
 
 void doNothing_8000CF54(void)
 {
@@ -970,10 +962,10 @@ void Sfx_StopAllObjectSounds(void)
     i = SFX_OBJECT_CHANNEL_COUNT;
     while (i-- != 0)
     {
-        if (objectChannel->handle != (u32) - 1)
+        if (objectChannel->handle != (u32)-1)
         {
             sndFXKeyOff(objectChannel->handle);
-            objectChannel->handle = (u32) - 1;
+            objectChannel->handle = (u32)-1;
         }
         objectChannel++;
     }
@@ -990,13 +982,12 @@ void audioFn_8000b694(u32 value)
     i = SFX_OBJECT_CHANNEL_COUNT - 1;
     do
     {
-        if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
         {
             sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
         }
         objectChannel++;
-    }
-    while (i-- != 0);
+    } while (i-- != 0);
 }
 
 void Sfx_SetObjectSoundsPaused(s32 paused)
@@ -1011,7 +1002,7 @@ void Sfx_SetObjectSoundsPaused(s32 paused)
 
     do
     {
-        if (objectChannel->handle != (u32) - 1)
+        if (objectChannel->handle != (u32)-1)
         {
             if (paused != 0)
             {
@@ -1024,8 +1015,7 @@ void Sfx_SetObjectSoundsPaused(s32 paused)
             objectChannel->paused = pausedByte;
         }
         objectChannel++;
-    }
-    while (i-- != 0);
+    } while (i-- != 0);
 }
 
 void Sfx_StopObjectChannel(u32 obj, u32 channel)
@@ -1044,7 +1034,7 @@ void Sfx_StopObjectChannel(u32 obj, u32 channel)
     if (objectChannel != NULL)
     {
         sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32) - 1;
+        objectChannel->handle = (u32)-1;
     }
 }
 
@@ -1064,7 +1054,7 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
     if (objectChannel != NULL)
     {
         sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32) - 1;
+        objectChannel->handle = (u32)-1;
     }
 }
 
@@ -1203,8 +1193,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
     {
         return;
     }
-    volf = (f32)(u32)
-    objectChannel->volume;
+    volf = (f32)(u32)objectChannel->volume;
     level = volf;
     near = objectChannel->nearDistance;
     far = objectChannel->farDistance;
@@ -1212,7 +1201,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
     if (dist > lbl_803DE598 * far)
     {
         sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32) - 1;
+        objectChannel->handle = (u32)-1;
         return;
     }
     Sfx_RotateVectorByAngles(0, 0, -*(s16*)((u8*)slot + 0x54), delta);
@@ -1305,8 +1294,8 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
     {
         return;
     }
-    if (!Sfx_ReadTriggerParams((SfxTriggerFull*)Sfx_FindTrigger(sfxId), &outSfxId,
-                               &vol, &pitch, &nearDist, &farDist, &channelMask, &stealExisting, &globalCtrlDisabled))
+    if (!Sfx_ReadTriggerParams((SfxTriggerFull*)Sfx_FindTrigger(sfxId), &outSfxId, &vol, &pitch, &nearDist, &farDist,
+                               &channelMask, &stealExisting, &globalCtrlDisabled))
     {
         return;
     }
@@ -1344,7 +1333,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
                 return;
             }
             sndFXKeyOff(found->handle);
-            found->handle = (u32) - 1;
+            found->handle = (u32)-1;
         }
     }
     else
@@ -1362,7 +1351,7 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
             if (stealExisting != 0 || (int)gSfxObjectChannelMatchCount == 3)
             {
                 sndFXKeyOff(found->handle);
-                found->handle = (u32) - 1;
+                found->handle = (u32)-1;
             }
         }
     }
@@ -1423,7 +1412,7 @@ int d;
     }
 
     handle = sndFXStartEx(a, b, c, 0);
-    if (handle == (u32) - 1)
+    if (handle == (u32)-1)
     {
         goto fail;
     }
@@ -1453,10 +1442,9 @@ int d;
     ch->age = gSfxObjectChannelAge++;
     return ch;
 fail:
-    ch->handle = (u32) - 1;
+    ch->handle = (u32)-1;
     return 0;
 }
-
 
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
 {
@@ -1489,12 +1477,12 @@ void Sfx_UpdateObjectSounds(void)
     i = SFX_OBJECT_CHANNEL_COUNT;
     while (i-- != 0)
     {
-        if (objectChannel->handle != (u32) - 1)
+        if (objectChannel->handle != (u32)-1)
         {
             ch = (SfxObjectChannel*)sndFXCheck(objectChannel->handle);
-            if ((u32)ch == (u32) - 1)
+            if ((u32)ch == (u32)-1)
             {
-                objectChannel->handle = (u32) - 1;
+                objectChannel->handle = (u32)-1;
             }
         }
         objectChannel++;
@@ -1548,7 +1536,7 @@ void Sfx_UpdateObjectSounds(void)
         i = SFX_OBJECT_CHANNEL_COUNT;
         while (i-- != 0)
         {
-            if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
+            if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
             {
                 sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
             }
@@ -1560,7 +1548,7 @@ void Sfx_UpdateObjectSounds(void)
     i = SFX_OBJECT_CHANNEL_COUNT;
     while (i-- != 0)
     {
-        if ((ch->handle != (u32) - 1) && (ch->hasPosition != 0))
+        if ((ch->handle != (u32)-1) && (ch->hasPosition != 0))
         {
             if (ch->tracksObjectPosition != 0)
             {
@@ -1596,7 +1584,7 @@ void Sfx_InitObjectChannels(void)
     objectChannel = &gSfxObjectChannels[SFX_OBJECT_CHANNEL_COUNT];
     goto checkNextChannel;
 setChannelFree:
-    objectChannel->handle = (u32) - 1;
+    objectChannel->handle = (u32)-1;
 checkNextChannel:
     objectChannel--;
     if (n-- != 0)
@@ -1610,13 +1598,12 @@ checkNextChannel:
     i = SFX_OBJECT_CHANNEL_COUNT - 1;
     do
     {
-        if ((objectChannel->handle != (u32) - 1) && (objectChannel->globalCtrlDisabled == 0))
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
         {
             sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
         }
         objectChannel++;
-    }
-    while (i-- != 0);
+    } while (i-- != 0);
 }
 #pragma dont_inline reset
 
@@ -1634,8 +1621,7 @@ SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mod
 
     for (i = SFX_OBJECT_CHANNEL_COUNT; i != 0; i--)
     {
-        if ((objectChannel->handle != (u32) - 1) &&
-            ((obj == 0) || (objectChannel->object == obj)) &&
+        if ((objectChannel->handle != (u32)-1) && ((obj == 0) || (objectChannel->object == obj)) &&
             (((u8)channel == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
             (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId)))
         {
@@ -1764,8 +1750,8 @@ int musicInitMidiWad(void)
         gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
         saved = testAndSet_onlyUseHeap3(0);
-        gMidiWadFileData = loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0,
-                                               (void (*)(void*))MIDIWADLoadedCallback);
+        gMidiWadFileData =
+            loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, (void (*)(void*))MIDIWADLoadedCallback);
         testAndSet_onlyUseHeap3(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
@@ -2163,7 +2149,7 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
     }
     if ((int)gSfxObjectChannelMatchCount < limit)
     {
-        extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, int sfxId);
+        extern void Sfx_PlayFromObjectEx(u32 obj, f32 * pos, u32 channel, int sfxId);
         Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
     }
     return gSfxObjectChannelMatchCount;
@@ -2247,8 +2233,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
         gAudioStreamPlaying = 0;
     }
 
-    gAudioStreamEndPos = (f32)(u32)
-    s->lengthRaw / lbl_803DE5D4;
+    gAudioStreamEndPos = (f32)(u32)s->lengthRaw / lbl_803DE5D4;
     if (lbl_803DE5D0 == gAudioStreamEndPos)
     {
         gAudioStreamEndPos = gAudioStreamEndPosInfinite;
@@ -2469,8 +2454,7 @@ void streamFn_8000a380(int mask, int mode, int time)
             }
         }
         ch++;
-    }
-    while (i-- != 0);
+    } while (i-- != 0);
 }
 
 static int Music_IsTriggerExcluded(int id)
@@ -2532,14 +2516,11 @@ void Music_Update(void)
             {
                 if (ch->pad11 != 0)
                 {
-                    gMusicActivePriority = ch->field_12 < gMusicActivePriority
-                                               ? ch->field_12
-                                               : gMusicActivePriority;
+                    gMusicActivePriority = ch->field_12 < gMusicActivePriority ? ch->field_12 : gMusicActivePriority;
                 }
                 else
                 {
-                    lowPriority =
-                        ch->field_12 < lowPriority ? ch->field_12 : lowPriority;
+                    lowPriority = ch->field_12 < lowPriority ? ch->field_12 : lowPriority;
                 }
             }
             break;
@@ -2559,8 +2540,7 @@ void Music_Update(void)
             break;
         }
         ch++;
-    }
-    while (i-- != 0);
+    } while (i-- != 0);
 
     ch = gMusicChannels;
     for (i = 0; i < 16; i++)
@@ -2574,8 +2554,7 @@ void Music_Update(void)
             {
                 if (ch->pad11 != 0)
                 {
-                    if (ch->field_12 == gMusicActivePriority &&
-                        *(u32*)&ch->pad14[4] > bestActive18)
+                    if (ch->field_12 == gMusicActivePriority && *(u32*)&ch->pad14[4] > bestActive18)
                     {
                         bestActive18 = *(u32*)&ch->pad14[4];
                         activeVol = *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad;
@@ -2583,8 +2562,7 @@ void Music_Update(void)
                 }
                 else
                 {
-                    if (ch->field_12 == lowPriority &&
-                        *(u32*)&ch->pad14[4] > bestLow18)
+                    if (ch->field_12 == lowPriority && *(u32*)&ch->pad14[4] > bestLow18)
                     {
                         bestLow18 = *(u32*)&ch->pad14[4];
                         lowVol = *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad;
@@ -2643,8 +2621,7 @@ void Music_Update(void)
         case 3:
             if (ch->pad11 != 0)
             {
-                if (ch->field_12 == gMusicActivePriority &&
-                    *(u32*)&ch->pad14[4] < bestActive18)
+                if (ch->field_12 == gMusicActivePriority && *(u32*)&ch->pad14[4] < bestActive18)
                 {
                     if (st != 2)
                     {
@@ -2654,19 +2631,17 @@ void Music_Update(void)
                         }
                         else
                         {
-                            sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol),
-                                         ch->seqHandle, 1);
+                            sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle, 1);
                             ch->status = 2;
                         }
                     }
                 }
-                else if (ch->field_12 > gMusicActivePriority ||
-                    ch->field_12 > lowPriority || (int)fadeB != 0)
+                else if (ch->field_12 > gMusicActivePriority || ch->field_12 > lowPriority || (int)fadeB != 0)
                 {
                     if (st != 3)
                     {
-                        sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol),
-                                     ch->seqHandle, (u8)(ch->pad11 != 0 ? 0 : 2));
+                        sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle,
+                                     (u8)(ch->pad11 != 0 ? 0 : 2));
                         ch->status = 3;
                     }
                 }
@@ -2676,17 +2651,15 @@ void Music_Update(void)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
-                        sndSeqVolume((u8) * (u16*)&ch->pad14[0],
-                                     (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
-                                     ch->seqHandle, 0);
+                        sndSeqVolume((u8) * (u16*)&ch->pad14[0], (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA), ch->seqHandle,
+                                     0);
                         ch->status = 1;
                     }
                 }
             }
             else
             {
-                if (ch->field_12 == lowPriority &&
-                    *(u32*)&ch->pad14[4] < bestLow18)
+                if (ch->field_12 == lowPriority && *(u32*)&ch->pad14[4] < bestLow18)
                 {
                     if (st != 2)
                     {
@@ -2696,19 +2669,17 @@ void Music_Update(void)
                         }
                         else
                         {
-                            sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol),
-                                         ch->seqHandle, 1);
+                            sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle, 1);
                             ch->status = 2;
                         }
                     }
                 }
-                else if (ch->field_12 > lowPriority ||
-                    ch->field_12 > gMusicActivePriority || (int)fadeA != 0)
+                else if (ch->field_12 > lowPriority || ch->field_12 > gMusicActivePriority || (int)fadeA != 0)
                 {
                     if (st != 3)
                     {
-                        sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol),
-                                     ch->seqHandle, (u8)(ch->pad11 != 0 ? 0 : 2));
+                        sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle,
+                                     (u8)(ch->pad11 != 0 ? 0 : 2));
                         ch->status = 3;
                     }
                 }
@@ -2718,9 +2689,8 @@ void Music_Update(void)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
-                        sndSeqVolume((u8) * (u16*)&ch->pad14[0],
-                                     (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
-                                     ch->seqHandle, 0);
+                        sndSeqVolume((u8) * (u16*)&ch->pad14[0], (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB), ch->seqHandle,
+                                     0);
                         ch->status = 1;
                     }
                 }
@@ -2728,8 +2698,7 @@ void Music_Update(void)
             break;
         }
         ch++;
-    }
-    while (i-- != 0);
+    } while (i-- != 0);
 }
 
 static inline MusicTrackSlot* Music_FindTrackSlot(int track)
@@ -2812,8 +2781,8 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     *(int*)&channel->pad14[4] = counter;
     *(MusicTrigger**)&channel->pad14[8] = trigger;
     channel->field_20 = lbl_803DE560;
-    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData,
-                          (u32)Music_ChannelLoadedCallback, (u32)slot, (u32)channel, (u32)trigger);
+    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, (u32)Music_ChannelLoadedCallback,
+                          (u32)slot, (u32)channel, (u32)trigger);
 }
 
 void Music_PlayTrackByIndex(int index)
@@ -2942,8 +2911,7 @@ int audioInit(void)
         *(f32*)&gAudioReverbSettings[0x144] = lbl_803DE55C;
         sndAuxCallbackUpdateSettingsReverbSTD(gAudioReverbSettings);
         reverbWork = 0;
-        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0,
-                                     0xff, reverbWork);
+        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff, reverbWork);
         {
             extern u32 sndIsInstalled(void);
             if (!sndIsInstalled())
@@ -2959,18 +2927,18 @@ int audioInit(void)
         audioLoadTriggerData();
         testAndSet_onlyUseHeap3(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
-        gAudioStarfoxMPoolDataHandle = loadFileByPathAsync(base + 0x228, NULL, 0,
-                                                           (void (*)(void*))poolDataMLoadedCallback);
+        gAudioStarfoxMPoolDataHandle =
+            loadFileByPathAsync(base + 0x228, NULL, 0, (void (*)(void*))poolDataMLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_PROJECT;
-        gAudioStarfoxMProjectDataHandle = loadFileByPathAsync(base + 0x23c, NULL, 0,
-                                                              (void (*)(void*))projectDataMLoadedCallback);
+        gAudioStarfoxMProjectDataHandle =
+            loadFileByPathAsync(base + 0x23c, NULL, 0, (void (*)(void*))projectDataMLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
-        gAudioStarfoxMSampleDirectoryHandle = loadFileByPathAsync(base + 0x250, NULL, 0,
-                                                                  (void (*)(void*))sampleDirectoryMLoadedCallback);
+        gAudioStarfoxMSampleDirectoryHandle =
+            loadFileByPathAsync(base + 0x250, NULL, 0, (void (*)(void*))sampleDirectoryMLoadedCallback);
         testAndSet_onlyUseHeap3(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
-        gAudioStarfoxMSampleBufferHandle = loadFileByPathAsync(base + 0x264, NULL, 0,
-                                                               (void (*)(void*))sampleBufferMLoadedCallback);
+        gAudioStarfoxMSampleBufferHandle =
+            loadFileByPathAsync(base + 0x264, NULL, 0, (void (*)(void*))sampleBufferMLoadedCallback);
         if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
             gAudioStarfoxMSampleDirectoryHandle == NULL || gAudioStarfoxMSampleBufferHandle == NULL)
         {
@@ -2978,9 +2946,9 @@ int audioInit(void)
         }
         testAndSet_onlyUseHeap3(0);
     }
-    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_DIR) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_BUF))
+    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_DIR) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_BUF))
     {
         sndPushGroup(gAudioStarfoxMProjectDataHandle, 0, gAudioStarfoxMSampleBufferHandle,
                      gAudioStarfoxMSampleDirectoryHandle, gAudioStarfoxMPoolDataHandle);
@@ -2990,27 +2958,27 @@ int audioInit(void)
         gAudioMusicGroupReady = 1;
         testAndSet_onlyUseHeap3(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
-        gAudioStarfoxSPoolDataHandle = loadFileByPathAsync(base + 0x278, NULL, 0,
-                                                           (void (*)(void*))poolDataSLoadedCallback);
+        gAudioStarfoxSPoolDataHandle =
+            loadFileByPathAsync(base + 0x278, NULL, 0, (void (*)(void*))poolDataSLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_PROJECT;
-        gAudioStarfoxSProjectDataHandle = loadFileByPathAsync(base + 0x28c, NULL, 0,
-                                                              (void (*)(void*))projectDataSLoadedCallback);
+        gAudioStarfoxSProjectDataHandle =
+            loadFileByPathAsync(base + 0x28c, NULL, 0, (void (*)(void*))projectDataSLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
-        gAudioStarfoxSSampleDirectoryHandle = loadFileByPathAsync(base + 0x2a0, NULL, 0,
-                                                                  (void (*)(void*))sampleDirectorySLoadedCallback);
+        gAudioStarfoxSSampleDirectoryHandle =
+            loadFileByPathAsync(base + 0x2a0, NULL, 0, (void (*)(void*))sampleDirectorySLoadedCallback);
         testAndSet_onlyUseHeap3(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
-        gAudioStarfoxSSampleBufferHandle = loadFileByPathAsync(base + 0x2b4, NULL, 0,
-                                                               (void (*)(void*))sampleBufferSLoadedCallback);
+        gAudioStarfoxSSampleBufferHandle =
+            loadFileByPathAsync(base + 0x2b4, NULL, 0, (void (*)(void*))sampleBufferSLoadedCallback);
         if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
             gAudioStarfoxSSampleDirectoryHandle == NULL || gAudioStarfoxSSampleBufferHandle == NULL)
         {
             return 0xff;
         }
     }
-    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_PROJECT) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_DIR) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_BUF))
+    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_DIR) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_BUF))
     {
         for (v = 1; v <= 0x37; v++)
         {
@@ -3030,11 +2998,10 @@ int audioInit(void)
         extern u8 musicInitMidiWad(void);
         gAudioReady = musicInitMidiWad();
     }
-    if (gAudioReady&& gAudioMusicGroupReady && gAudioSfxGroupsReady &&
+    if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
 
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_MUSIC_TRIGGERS) && (gAudioCompletedLoadFlags & AUDIO_LOAD_SFX_TRIGGERS) &&
-            (gAudioCompletedLoadFlags & AUDIO_LOAD_STREAMS)
-    )
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_MUSIC_TRIGGERS) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_SFX_TRIGGERS) && (gAudioCompletedLoadFlags & AUDIO_LOAD_STREAMS))
     {
         gAudioResetting = 0;
         gAudioManagedChannelMask = 0x1f;
@@ -3055,7 +3022,11 @@ char sPoolDataMLoadedCallbackLoadError[] = "poolDataMLoadedCallback load error\n
 char sStreamsLoadedCallbackLoadError[] = "streamsLoadedCallback load error\n";
 char sSfxTriggersLoadedCallbackLoadError[] = "sfxTriggersLoadedCallback load error\n";
 char sMusicTriggersLoadedCallbackLoadError[356] =
-    "musicTriggersLoadedCallback load error\n\0/audio/data/Music.bin\0\0\0/audio/data/Sfx.bin\0/audio/data/Streams.bin\0audioInit: sndIsInstalled() returned FALSE!\n\0\0\0\0/audio/starfoxm.poo\0/audio/starfoxm.pro\0/audio/starfoxm.sdi\0/audio/starfoxm.sam\0/audio/starfoxs.poo\0/audio/starfoxs.pro\0/audio/starfoxs.sdi\0/audio/starfoxs.sam\0sndPushGroup failed on group %d\n";
+    "musicTriggersLoadedCallback load "
+    "error\n\0/audio/data/Music.bin\0\0\0/audio/data/Sfx.bin\0/audio/data/Streams.bin\0audioInit: sndIsInstalled() "
+    "returned "
+    "FALSE!\n\0\0\0\0/audio/starfoxm.poo\0/audio/starfoxm.pro\0/audio/starfoxm.sdi\0/audio/starfoxm.sam\0/audio/"
+    "starfoxs.poo\0/audio/starfoxs.pro\0/audio/starfoxs.sdi\0/audio/starfoxs.sam\0sndPushGroup failed on group %d\n";
 
 char sMusicTrackNameAmbIngaeRain[] = "amb_ingae_rain";
 char sMusicTrackNameAmbMoonlink[] = "amb_moonlink";
@@ -3158,131 +3129,116 @@ char sMusicTrackNameWLCCorridors[] = "WLC_Corridors";
 char sMusicTrackNameWLCPuzzle[] = "WLC_Puzzle";
 char sMusicTrackNameWLCChambers[] = "WLC_Chambers";
 
-MusicTrackSlot sMusicTrackTable[] =
-{
-    { 99, 54, 0, sMusicTrackNameAmbIngaeRain, 0, 0 },
-    { 98, 53, 0, sMusicTrackNameAmbMoonlink, 0, 0 },
-    { 72, 0, 0, sMusicTrackNameAndrossTune, 0, 0 },
-    { 38, 0, 0, sMusicTrackNameArwingCrash, 0, 0 },
-    { 53, 0, 0, sMusicTrackNameCCVisit1, 0, 0 },
-    { 54, 0, 0, sMusicTrackNameDIMCaves, 0, 0 },
-    { 55, 0, 0, sMusicTrackNameTTHFight, 0, 0 },
-    { 42, 0, 0, sMusicTrackNameCRFBridge, 0, 0 },
-    { 41, 0, 0, sMusicTrackNameCRFSuspense, 0, 0 },
-    { 43, 0, 0, sMusicTrackNameCRFSwim, 0, 0 },
-    { 45, 0, 0, sMusicTrackNameCRFTreasure, 0, 0 },
-    { 37, 0, 0, sMusicTrackNameDarkIceLava, 0, 0 },
-    { 39, 0, 0, sMusicTrackNameKrazoaDocks, 0, 0 },
-    { 40, 0, 0, sMusicTrackNameKrazoaShrine, 0, 0 },
-    { 44, 0, 0, sMusicTrackNameLFVSwamp, 0, 0 },
-    { 46, 0, 0, sMusicTrackNameSlowMotion, 0, 0 },
-    { 91, 42, 0, sMusicTrackNameAmbLavapits, 0, 0 },
-    { 13, 0, 0, sMusicTrackNameBackOfCloudrunner, 0, 0 },
-    { 81, 25, 0, sMusicTrackNameBarren, 0, 0 },
-    { 65, 0, 0, sMusicTrackNameBarrels, 0, 0 },
-    { 74, 18, 0, sMusicTrackNameBlizzard, 0, 0 },
-    { 71, 0, 0, sMusicTrackNameBloop, 0, 0 },
-    { 92, 43, 0, sMusicTrackNameCapeclawSeaside, 0, 0 },
-    { 34, 0, 0, sMusicTrackNameCaveTrade, 0, 0 },
-    { 96, 50, 0, sMusicTrackNameCclawCaves, 0, 0 },
-    { 97, 51, 0, sMusicTrackNameCclawGasroom, 0, 0 },
-    { 79, 23, 0, sMusicTrackNameCitytombs, 0, 0 },
-    { 16, 0, 0, sMusicTrackNameCldRnrDungeon, 0, 0 },
-    { 15, 0, 0, sMusicTrackNameCldRnrTune1, 0, 0 },
-    { 14, 0, 0, sMusicTrackNameCldRnrWalkabout, 0, 0 },
-    { 22, 0, 0, sMusicTrackNameCommunicator, 0, 0 },
-    { 87, 31, 0, sMusicTrackNameCrunDungeon, 0, 0 },
-    { 26, 0, 0, sMusicTrackNameDarkIceBoss1, 0, 0 },
-    { 59, 0, 0, sMusicTrackNameDIMCavern, 0, 0 },
-    { 69, 0, 0, sMusicTrackNameDIMDay, 0, 0 },
-    { 64, 0, 0, sMusicTrackNameDIMMines, 0, 0 },
-    { 52, 0, 0, sMusicTrackNameDIMSnow, 0, 0 },
-    { 60, 0, 0, sMusicTrackNameDIMCnBlt, 0, 0 },
-    { 85, 29, 0, sMusicTrackNameDownthewell, 0, 0 },
-    { 25, 0, 0, sMusicTrackNameDrako1, 0, 0 },
-    { 24, 0, 0, sMusicTrackNameDrako2, 0, 0 },
-    { 23, 0, 0, sMusicTrackNameDrako3, 0, 0 },
-    { 3, 0, 0, sMusicTrackNameEwtChase, 0, 0 },
-    { 10, 0, 0, sMusicTrackNameEwtLink, 0, 0 },
-    { 28, 0, 0, sMusicTrackNameEwtOutside, 0, 0 },
-    { 33, 0, 0, sMusicTrackNameGalleonBattle, 0, 0 },
-    { 11, 0, 0, sMusicTrackNameGalleonDocks, 0, 0 },
-    { 94, 45, 0, sMusicTrackNameGalleonOutside, 0, 0 },
-    { 89, 39, 0, sMusicTrackNameGalleonStorm, 0, 0 },
-    { 95, 49, 0, sMusicTrackNameGreatfoxInt, 0, 0 },
-    { 20, 0, 0, sMusicTrackNameGuardTheme, 0, 0 },
-    { 17, 0, 0, sMusicTrackNameIceWalkaround, 0, 0 },
-    { 93, 44, 0, sMusicTrackNameInsideGalleon, 0, 0 },
-    { 12, 0, 0, sMusicTrackNameInsideWarlock, 0, 0 },
-    { 73, 0, 0, sMusicTrackNameKpanomaly, 0, 0 },
-    { 67, 0, 0, sMusicTrackNameKptext, 0, 0 },
-    { 68, 0, 0, sMusicTrackNameKpwin, 0, 0 },
-    { 56, 0, 0, sMusicTrackNameLVFTracking, 0, 0 },
-    { 18, 0, 0, sMusicTrackNameMammothWalk, 0, 0 },
-    { 19, 0, 0, sMusicTrackNameMenuPage, 0, 0 },
-    { 75, 19, 0, sMusicTrackNameMinecaves, 0, 0 },
-    { 80, 24, 0, sMusicTrackNameMmpassalien, 0, 0 },
-    { 57, 0, 0, sMusicTrackNameMoundMusic, 0, 0 },
-    { 36, 0, 0, sMusicTrackNameNewIceRace, 0, 0 },
-    { 77, 21, 0, sMusicTrackNameNewstorm, 0, 0 },
-    { 76, 20, 0, sMusicTrackNameNightjungle, 0, 0 },
-    { 29, 0, 0, sMusicTrackNameOptionsPage, 0, 0 },
-    { 61, 0, 0, sMusicTrackNamePU1Mysterious, 0, 0 },
-    { 62, 0, 0, sMusicTrackNamePU2Heroic, 0, 0 },
-    { 63, 0, 0, sMusicTrackNamePU3Adventure, 0, 0 },
-    { 88, 32, 0, sMusicTrackNameSeqSwaphol1, 0, 0 },
-    { 84, 28, 0, sMusicTrackNameSforestday, 0, 0 },
-    { 66, 0, 0, sMusicTrackNameSlope, 0, 0 },
-    { 2, 0, 0, sMusicTrackNameStarfoxArea6, 0, 0 },
-    { 0, 0, 0, sMusicTrackNameStarfoxMap, 0, 0 },
-    { 1, 0, 0, sMusicTrackNameStarfoxRwing1, 0, 0 },
-    { 90, 40, 0, sMusicTrackNameSwapholNight, 0, 0 },
-    { 21, 0, 0, sMusicTrackNameSwapstoneCircle, 0, 0 },
-    { 70, 0, 0, sMusicTrackNameTeleport, 0, 0 },
-    { 4, 0, 0, sMusicTrackNameTestOfCombat, 0, 0 },
-    { 5, 0, 0, sMusicTrackNameTestOfFear, 0, 0 },
-    { 6, 0, 0, sMusicTrackNameTestOfMagic, 0, 0 },
-    { 7, 0, 0, sMusicTrackNameTestOfSacrifice, 0, 0 },
-    { 8, 0, 0, sMusicTrackNameTestOfSkill, 0, 0 },
-    { 9, 0, 0, sMusicTrackNameTestOfStrength, 0, 0 },
-    { 30, 0, 0, sMusicTrackNameTrex2a, 0, 0 },
-    { 32, 0, 0, sMusicTrackNameTrexChase, 0, 0 },
-    { 31, 0, 0, sMusicTrackNameTrexHit, 0, 0 },
-    { 58, 0, 0, sMusicTrackNameTTHNight, 0, 0 },
-    { 86, 30, 0, sMusicTrackNameUnderwater, 0, 0 },
-    { 27, 0, 0, sMusicTrackNameVfpWalkabout, 0, 0 },
-    { 35, 0, 0, sMusicTrackNameVolcanoFp, 0, 0 },
-    { 78, 22, 0, sMusicTrackNameWarlockmagic, 0, 0 },
-    { 82, 26, 0, sMusicTrackNameWcityDay, 0, 0 },
-    { 83, 27, 0, sMusicTrackNameWindydocks, 0, 0 },
-    { 47, 0, 0, sMusicTrackNameLFVStrength, 0, 0 },
-    { 48, 0, 0, sMusicTrackNameWLCChase, 0, 0 },
-    { 49, 0, 0, sMusicTrackNameWLCCorridors, 0, 0 },
-    { 50, 0, 0, sMusicTrackNameWLCPuzzle, 0, 0 },
-    { 51, 0, 0, sMusicTrackNameWLCChambers, 0, 0 },
+MusicTrackSlot sMusicTrackTable[] = {
+    {99, 54, 0, sMusicTrackNameAmbIngaeRain, 0, 0},
+    {98, 53, 0, sMusicTrackNameAmbMoonlink, 0, 0},
+    {72, 0, 0, sMusicTrackNameAndrossTune, 0, 0},
+    {38, 0, 0, sMusicTrackNameArwingCrash, 0, 0},
+    {53, 0, 0, sMusicTrackNameCCVisit1, 0, 0},
+    {54, 0, 0, sMusicTrackNameDIMCaves, 0, 0},
+    {55, 0, 0, sMusicTrackNameTTHFight, 0, 0},
+    {42, 0, 0, sMusicTrackNameCRFBridge, 0, 0},
+    {41, 0, 0, sMusicTrackNameCRFSuspense, 0, 0},
+    {43, 0, 0, sMusicTrackNameCRFSwim, 0, 0},
+    {45, 0, 0, sMusicTrackNameCRFTreasure, 0, 0},
+    {37, 0, 0, sMusicTrackNameDarkIceLava, 0, 0},
+    {39, 0, 0, sMusicTrackNameKrazoaDocks, 0, 0},
+    {40, 0, 0, sMusicTrackNameKrazoaShrine, 0, 0},
+    {44, 0, 0, sMusicTrackNameLFVSwamp, 0, 0},
+    {46, 0, 0, sMusicTrackNameSlowMotion, 0, 0},
+    {91, 42, 0, sMusicTrackNameAmbLavapits, 0, 0},
+    {13, 0, 0, sMusicTrackNameBackOfCloudrunner, 0, 0},
+    {81, 25, 0, sMusicTrackNameBarren, 0, 0},
+    {65, 0, 0, sMusicTrackNameBarrels, 0, 0},
+    {74, 18, 0, sMusicTrackNameBlizzard, 0, 0},
+    {71, 0, 0, sMusicTrackNameBloop, 0, 0},
+    {92, 43, 0, sMusicTrackNameCapeclawSeaside, 0, 0},
+    {34, 0, 0, sMusicTrackNameCaveTrade, 0, 0},
+    {96, 50, 0, sMusicTrackNameCclawCaves, 0, 0},
+    {97, 51, 0, sMusicTrackNameCclawGasroom, 0, 0},
+    {79, 23, 0, sMusicTrackNameCitytombs, 0, 0},
+    {16, 0, 0, sMusicTrackNameCldRnrDungeon, 0, 0},
+    {15, 0, 0, sMusicTrackNameCldRnrTune1, 0, 0},
+    {14, 0, 0, sMusicTrackNameCldRnrWalkabout, 0, 0},
+    {22, 0, 0, sMusicTrackNameCommunicator, 0, 0},
+    {87, 31, 0, sMusicTrackNameCrunDungeon, 0, 0},
+    {26, 0, 0, sMusicTrackNameDarkIceBoss1, 0, 0},
+    {59, 0, 0, sMusicTrackNameDIMCavern, 0, 0},
+    {69, 0, 0, sMusicTrackNameDIMDay, 0, 0},
+    {64, 0, 0, sMusicTrackNameDIMMines, 0, 0},
+    {52, 0, 0, sMusicTrackNameDIMSnow, 0, 0},
+    {60, 0, 0, sMusicTrackNameDIMCnBlt, 0, 0},
+    {85, 29, 0, sMusicTrackNameDownthewell, 0, 0},
+    {25, 0, 0, sMusicTrackNameDrako1, 0, 0},
+    {24, 0, 0, sMusicTrackNameDrako2, 0, 0},
+    {23, 0, 0, sMusicTrackNameDrako3, 0, 0},
+    {3, 0, 0, sMusicTrackNameEwtChase, 0, 0},
+    {10, 0, 0, sMusicTrackNameEwtLink, 0, 0},
+    {28, 0, 0, sMusicTrackNameEwtOutside, 0, 0},
+    {33, 0, 0, sMusicTrackNameGalleonBattle, 0, 0},
+    {11, 0, 0, sMusicTrackNameGalleonDocks, 0, 0},
+    {94, 45, 0, sMusicTrackNameGalleonOutside, 0, 0},
+    {89, 39, 0, sMusicTrackNameGalleonStorm, 0, 0},
+    {95, 49, 0, sMusicTrackNameGreatfoxInt, 0, 0},
+    {20, 0, 0, sMusicTrackNameGuardTheme, 0, 0},
+    {17, 0, 0, sMusicTrackNameIceWalkaround, 0, 0},
+    {93, 44, 0, sMusicTrackNameInsideGalleon, 0, 0},
+    {12, 0, 0, sMusicTrackNameInsideWarlock, 0, 0},
+    {73, 0, 0, sMusicTrackNameKpanomaly, 0, 0},
+    {67, 0, 0, sMusicTrackNameKptext, 0, 0},
+    {68, 0, 0, sMusicTrackNameKpwin, 0, 0},
+    {56, 0, 0, sMusicTrackNameLVFTracking, 0, 0},
+    {18, 0, 0, sMusicTrackNameMammothWalk, 0, 0},
+    {19, 0, 0, sMusicTrackNameMenuPage, 0, 0},
+    {75, 19, 0, sMusicTrackNameMinecaves, 0, 0},
+    {80, 24, 0, sMusicTrackNameMmpassalien, 0, 0},
+    {57, 0, 0, sMusicTrackNameMoundMusic, 0, 0},
+    {36, 0, 0, sMusicTrackNameNewIceRace, 0, 0},
+    {77, 21, 0, sMusicTrackNameNewstorm, 0, 0},
+    {76, 20, 0, sMusicTrackNameNightjungle, 0, 0},
+    {29, 0, 0, sMusicTrackNameOptionsPage, 0, 0},
+    {61, 0, 0, sMusicTrackNamePU1Mysterious, 0, 0},
+    {62, 0, 0, sMusicTrackNamePU2Heroic, 0, 0},
+    {63, 0, 0, sMusicTrackNamePU3Adventure, 0, 0},
+    {88, 32, 0, sMusicTrackNameSeqSwaphol1, 0, 0},
+    {84, 28, 0, sMusicTrackNameSforestday, 0, 0},
+    {66, 0, 0, sMusicTrackNameSlope, 0, 0},
+    {2, 0, 0, sMusicTrackNameStarfoxArea6, 0, 0},
+    {0, 0, 0, sMusicTrackNameStarfoxMap, 0, 0},
+    {1, 0, 0, sMusicTrackNameStarfoxRwing1, 0, 0},
+    {90, 40, 0, sMusicTrackNameSwapholNight, 0, 0},
+    {21, 0, 0, sMusicTrackNameSwapstoneCircle, 0, 0},
+    {70, 0, 0, sMusicTrackNameTeleport, 0, 0},
+    {4, 0, 0, sMusicTrackNameTestOfCombat, 0, 0},
+    {5, 0, 0, sMusicTrackNameTestOfFear, 0, 0},
+    {6, 0, 0, sMusicTrackNameTestOfMagic, 0, 0},
+    {7, 0, 0, sMusicTrackNameTestOfSacrifice, 0, 0},
+    {8, 0, 0, sMusicTrackNameTestOfSkill, 0, 0},
+    {9, 0, 0, sMusicTrackNameTestOfStrength, 0, 0},
+    {30, 0, 0, sMusicTrackNameTrex2a, 0, 0},
+    {32, 0, 0, sMusicTrackNameTrexChase, 0, 0},
+    {31, 0, 0, sMusicTrackNameTrexHit, 0, 0},
+    {58, 0, 0, sMusicTrackNameTTHNight, 0, 0},
+    {86, 30, 0, sMusicTrackNameUnderwater, 0, 0},
+    {27, 0, 0, sMusicTrackNameVfpWalkabout, 0, 0},
+    {35, 0, 0, sMusicTrackNameVolcanoFp, 0, 0},
+    {78, 22, 0, sMusicTrackNameWarlockmagic, 0, 0},
+    {82, 26, 0, sMusicTrackNameWcityDay, 0, 0},
+    {83, 27, 0, sMusicTrackNameWindydocks, 0, 0},
+    {47, 0, 0, sMusicTrackNameLFVStrength, 0, 0},
+    {48, 0, 0, sMusicTrackNameWLCChase, 0, 0},
+    {49, 0, 0, sMusicTrackNameWLCCorridors, 0, 0},
+    {50, 0, 0, sMusicTrackNameWLCPuzzle, 0, 0},
+    {51, 0, 0, sMusicTrackNameWLCChambers, 0, 0},
 };
 
 char sMidiWadLoadedCallbackLoadError[] = "MIDIWADLoadedCallback load error\n";
 char sMidiWadPath[] = "audio/midi.wad";
 
 SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
-    { 0xFFFF, 0 },
+    {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0},
+    {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0},
 };
 
-int gAudioStreamFadeTable[] = { 0, 2, 4 };
+int gAudioStreamFadeTable[] = {0, 2, 4};
 char sDvdCancelStreamWarning[0x3C] = "WARNING:DVDCancelStreamAsync returned FALSE\012\000\000\000\000/streams/";

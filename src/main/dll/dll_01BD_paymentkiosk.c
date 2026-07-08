@@ -20,7 +20,7 @@
 
 #define PAD_BUTTON_A 0x100
 
-#define PAYMENTKIOSK_OBJFLAG_HIDDEN 0x4000
+#define PAYMENTKIOSK_OBJFLAG_HIDDEN             0x4000
 #define PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern int Obj_GetPlayerObject(void);
@@ -130,8 +130,14 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int PaymentKiosk_getExtraSize(void) { return sizeof(PaymentKioskState); }
-int PaymentKiosk_getObjectTypeId(void) { return 0x1; }
+int PaymentKiosk_getExtraSize(void)
+{
+    return sizeof(PaymentKioskState);
+}
+int PaymentKiosk_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void PaymentKiosk_free(void)
 {
@@ -172,10 +178,12 @@ void PaymentKiosk_update(int obj)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         break;
     case PAYMENT_KIOSK_STATE_PAID:
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         break;
     }
     st->promptState = 0;
@@ -196,7 +204,8 @@ void PaymentKiosk_init(int obj, PaymentKioskMapData* initData)
     ((GameObject*)self)->animEventCallback = PaymentKiosk_SeqFn;
     *(short*)self = (short)((int)setup->facingByte << 8);
     state->payState = PAYMENT_KIOSK_STATE_RESOLVE;
-    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | (PAYMENTKIOSK_OBJFLAG_HIDDEN | PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags |
+                                             (PAYMENTKIOSK_OBJFLAG_HIDDEN | PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED));
     ((GameObject*)self)->anim.resetHitboxFlags =
         (u8)(((GameObject*)self)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
     secondaryFlag = (((GameObject*)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;

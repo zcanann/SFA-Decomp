@@ -7,10 +7,19 @@
 #include "main/dll/anim.h"
 #include "main/engine_shared.h"
 
-int doorswitch_getExtraSize(void) { return 0x0; }
-int doorswitch_getObjectTypeId(void) { return 0x0; }
+int doorswitch_getExtraSize(void)
+{
+    return 0x0;
+}
+int doorswitch_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+void doorswitch_free(void)
+{
+    OSReport(sDoorswitchInitNoLongerSupported);
+}
 
 void doorswitch_render(void)
 {
@@ -20,8 +29,14 @@ void doorswitch_hitDetect(void)
 {
 }
 
-void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
-void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+void doorswitch_update(void)
+{
+    OSReport(sDoorswitchInitNoLongerSupported);
+}
+void doorswitch_init(void)
+{
+    OSReport(sDoorswitchInitNoLongerSupported);
+}
 
 void doorswitch_release(void)
 {
@@ -34,7 +49,9 @@ void doorswitch_initialise(void)
 char sDoorswitchInitNoLongerSupported[] = "<doorswitch Init>No Longer supported \n";
 
 ObjectDescriptor gDFP_seqpointObjDescriptor = {
-    0x00000000, 0x00000000, 0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
     0x00090000,
     (ObjectDescriptorCallback)DFP_seqpoint_initialise,
     (ObjectDescriptorCallback)DFP_seqpoint_release,
@@ -48,7 +65,9 @@ ObjectDescriptor gDFP_seqpointObjDescriptor = {
     DFP_seqpoint_getExtraSize,
 };
 ObjectDescriptor gDFP_TorchObjDescriptor = {
-    0x00000000, 0x00000000, 0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
     0x00090000,
     (ObjectDescriptorCallback)DFP_Torch_initialise,
     (ObjectDescriptorCallback)DFP_Torch_release,

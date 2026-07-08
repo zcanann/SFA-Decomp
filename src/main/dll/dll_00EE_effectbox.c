@@ -30,30 +30,36 @@ extern f32 lbl_803E3514;
 typedef struct EffectboxPlacement
 {
     ObjPlacement base;
-    u8 rotYaw;          /* 0x18: yaw in 1/256 turns */
-    u8 rotPitch;        /* 0x19: pitch in 1/256 turns */
-    u8 extentX;         /* 0x1A */
-    u8 extentY;         /* 0x1B */
-    u8 extentZ;         /* 0x1C */
-    u8 actionArg;           /* 0x1D: action argument */
+    u8 rotYaw;    /* 0x18: yaw in 1/256 turns */
+    u8 rotPitch;  /* 0x19: pitch in 1/256 turns */
+    u8 extentX;   /* 0x1A */
+    u8 extentY;   /* 0x1B */
+    u8 extentZ;   /* 0x1C */
+    u8 actionArg; /* 0x1D: action argument */
     u8 pad1E;
-    u8 gameBitValue;    /* 0x1F: gate value compared against the game bit */
-    s16 gameBitIndex;          /* 0x20: game bit index */
-    u8 targetMode;      /* 0x22: EFFECTBOX_TARGET_* candidate set */
+    u8 gameBitValue;  /* 0x1F: gate value compared against the game bit */
+    s16 gameBitIndex; /* 0x20: game bit index */
+    u8 targetMode;    /* 0x22: EFFECTBOX_TARGET_* candidate set */
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
 
 /* EffectboxPlacement.targetMode values */
-#define EFFECTBOX_TARGET_PLAYER 0 /* Obj_GetPlayerObject */
-#define EFFECTBOX_TARGET_TRICKY 1 /* getTrickyObject */
-#define EFFECTBOX_TARGET_GROUP 2  /* every object in EFFECTBOX_TARGET_OBJGROUP */
+#define EFFECTBOX_TARGET_PLAYER   0 /* Obj_GetPlayerObject */
+#define EFFECTBOX_TARGET_TRICKY   1 /* getTrickyObject */
+#define EFFECTBOX_TARGET_GROUP    2 /* every object in EFFECTBOX_TARGET_OBJGROUP */
 #define EFFECTBOX_TARGET_OBJGROUP 5
 
-#define EFFECTBOX_OBJFLAG_HIDDEN 0x4000
+#define EFFECTBOX_OBJFLAG_HIDDEN             0x4000
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int EffectBox_getExtraSize(void) { return 0x0; }
-int EffectBox_getObjectTypeId(void) { return 0x0; }
+int EffectBox_getExtraSize(void)
+{
+    return 0x0;
+}
+int EffectBox_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void EffectBox_free(void)
 {
@@ -62,7 +68,8 @@ void EffectBox_free(void)
 
 void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3508);
+    if (visible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3508);
 }
 
 void EffectBox_hitDetect(void)
@@ -161,7 +168,8 @@ void EffectBox_update(int obj)
                             fn_80295918(other, 1, (f32)((EffectboxPlacement*)def)->actionArg);
                             break;
                         case EFFECTBOX_TARGET_GROUP:
-                            (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(other, ((EffectboxPlacement*)def)->actionArg);
+                            (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(
+                                other, ((EffectboxPlacement*)def)->actionArg);
                             break;
                         }
                     }

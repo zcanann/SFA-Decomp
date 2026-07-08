@@ -33,16 +33,15 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-
 extern void objRenderFn_80041018(int obj);
 extern int getTrickyObject(void);
 
-#define TRICKY_IFACE_OFFSET 0x68    /* tricky object -> interface vtable pointer */
+#define TRICKY_IFACE_OFFSET      0x68 /* tricky object -> interface vtable pointer */
 #define TRICKY_IFACE_NOTIFY_SLOT 0x28 /* vtable slot invoked when in range */
 
 /* setScale's paired debris/dust particle bursts */
 #define WALLANIMATOR_PARTFX_DEBRIS 0xca
-#define WALLANIMATOR_PARTFX_DUST 0xcb
+#define WALLANIMATOR_PARTFX_DUST   0xcb
 
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
 typedef struct WallanimatorPlacement
@@ -116,8 +115,7 @@ f32 wallanimator_setScale(int obj, int target)
         (*gPartfxInterface)->spawnObject((void*)obj, WALLANIMATOR_PARTFX_DEBRIS, spawn.rot, 0x200001, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, WALLANIMATOR_PARTFX_DUST, spawn.rot, 0x200001, -1, NULL);
         count--;
-    }
-    while (count != 0);
+    } while (count != 0);
 
     state = ((GameObject*)obj)->extra;
     deltaY = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
@@ -156,7 +154,8 @@ void wallanimator_free(int obj)
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void wallanimator_update(int obj)
@@ -169,7 +168,8 @@ void wallanimator_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     desc = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
 
     if (state->activeFlag != 0)
     {
@@ -197,14 +197,16 @@ void wallanimator_update(int obj)
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                (*(void (**)(int, int, int, int))(**(int**)(tricky + TRICKY_IFACE_OFFSET) + TRICKY_IFACE_NOTIFY_SLOT))(tricky, obj, 1, 1);
+                (*(void (**)(int, int, int, int))(**(int**)(tricky + TRICKY_IFACE_OFFSET) + TRICKY_IFACE_NOTIFY_SLOT))(
+                    tricky, obj, 1, 1);
             }
             objRenderFn_80041018(obj);
         }
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 }
 

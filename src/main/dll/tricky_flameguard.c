@@ -14,18 +14,18 @@ typedef struct TrickyState
     u8 pad59[0x60 - 0x59];
 } TrickyState;
 
-#define TRICKY_STATE_FLAGS_OFFSET 0x54
-#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
-#define TRICKY_STATE_RESET_FLAG_10 0x00000010
-#define TRICKY_STATE_HELPERS_ACTIVE_FLAG 0x00000800
+#define TRICKY_STATE_FLAGS_OFFSET          0x54
+#define TRICKY_STATE_TARGET_DIRTY_FLAG     0x00000400
+#define TRICKY_STATE_RESET_FLAG_10         0x00000010
+#define TRICKY_STATE_HELPERS_ACTIVE_FLAG   0x00000800
 #define TRICKY_STATE_HELPERS_FINISHED_FLAG 0x00001000
-#define TRICKY_STATE_RESET_FLAG_10000 0x00010000
-#define TRICKY_STATE_RESET_FLAG_20000 0x00020000
-#define TRICKY_STATE_RESET_FLAG_40000 0x00040000
-#define TRICKY_GUARD_HELPER_COUNT 7
-#define TRICKY_GUARD_APPROACH_GROUP 3
-#define TRICKY_GUARD_HELPER_SETUP_SIZE 0x24
-#define TRICKY_GUARD_HELPER_DEF_ID 0x04F0
+#define TRICKY_STATE_RESET_FLAG_10000      0x00010000
+#define TRICKY_STATE_RESET_FLAG_20000      0x00020000
+#define TRICKY_STATE_RESET_FLAG_40000      0x00040000
+#define TRICKY_GUARD_HELPER_COUNT          7
+#define TRICKY_GUARD_APPROACH_GROUP        3
+#define TRICKY_GUARD_HELPER_SETUP_SIZE     0x24
+#define TRICKY_GUARD_HELPER_DEF_ID         0x04F0
 
 typedef struct TrickyRuntime
 {
@@ -67,38 +67,37 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardTarget) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyRuntime, guardWalkGroup) == 0x730);
 STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 
-#define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
+#define TRICKY_RUNTIME(st) ((TrickyRuntime*)(st))
 
-#define TRICKY_CLEAR_FLAG(st, flag) \
-    { \
-        u32 m; \
-        u32 f2 = TRICKY_RUNTIME(st)->flags; \
-        m = ~(flag); \
-        TRICKY_RUNTIME(st)->flags = f2 & m; \
+#define TRICKY_CLEAR_FLAG(st, flag)                                                                                    \
+    {                                                                                                                  \
+        u32 m;                                                                                                         \
+        u32 f2 = TRICKY_RUNTIME(st)->flags;                                                                            \
+        m = ~(flag);                                                                                                   \
+        TRICKY_RUNTIME(st)->flags = f2 & m;                                                                            \
     }
 
-#define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    TRICKY_CLEAR_FLAG(st, TRICKY_STATE_TARGET_DIRTY_FLAG)
+#define TRICKY_CLEAR_TARGET_DIRTY(st) TRICKY_CLEAR_FLAG(st, TRICKY_STATE_TARGET_DIRTY_FLAG)
 
-#define TRICKY_MARK_HELPERS_FINISHED(st) \
-    { \
-        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_HELPERS_ACTIVE_FLAG); \
-        TRICKY_RUNTIME(st)->flags |= TRICKY_STATE_HELPERS_FINISHED_FLAG; \
+#define TRICKY_MARK_HELPERS_FINISHED(st)                                                                               \
+    {                                                                                                                  \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_HELPERS_ACTIVE_FLAG);                                                       \
+        TRICKY_RUNTIME(st)->flags |= TRICKY_STATE_HELPERS_FINISHED_FLAG;                                               \
     }
 
-#define TRICKY_CLEAR_RESET_FLAGS(st) \
-    { \
-        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_10); \
-        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_10000); \
-        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_20000); \
-        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_40000); \
-        TRICKY_RUNTIME(st)->unk0D = -1; \
+#define TRICKY_CLEAR_RESET_FLAGS(st)                                                                                   \
+    {                                                                                                                  \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_10);                                                             \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_10000);                                                          \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_20000);                                                          \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_RESET_FLAG_40000);                                                          \
+        TRICKY_RUNTIME(st)->unk0D = -1;                                                                                \
     }
 
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern f32 getXZDistance(f32* a, f32* b);
 
-int trickyGuardFindBaddieTarget(TrickyRuntime * state);
+int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 
 extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
@@ -154,7 +153,8 @@ void trickyFlame(int p1, int p2)
     {
     case 0:
         trickyDebugPrint(strBase + 0x700);
-        *(int*)&((TrickyRuntime*)p2)->guardPoint[0] = Objfsa_FindNearestCurveType24(&((TrickyRuntime*)p2)->homeObj->worldPosX, -1, 4);
+        *(int*)&((TrickyRuntime*)p2)->guardPoint[0] =
+            Objfsa_FindNearestCurveType24(&((TrickyRuntime*)p2)->homeObj->worldPosX, -1, 4);
         if (*(u8*)(*(int*)&((TrickyRuntime*)p2)->guardPoint[0] + 0x3) != 0)
         {
             newTarget = *(int*)&((TrickyRuntime*)p2)->guardPoint[0] + 0x8;
@@ -184,8 +184,8 @@ void trickyFlame(int p1, int p2)
     case 3:
         trickyDebugPrint(strBase + 0x70c);
         trickyFn_8013b368((void*)p1, lbl_803E2488, (void*)p2);
-        if ((u8) * (u8*)(*(int*)&((TrickyRuntime*)p2)->guardPoint[1] + 0x3) == Objfsa_GetWalkGroupIndexAtPoint(
-            (float*)&((GameObject*)p1)->anim.worldPosX, 0x0))
+        if ((u8) * (u8*)(*(int*)&((TrickyRuntime*)p2)->guardPoint[1] + 0x3) ==
+            Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)p1)->anim.worldPosX, 0x0))
         {
             ((TrickyRuntime*)p2)->guardReachedTarget = 1;
             ((TrickyRuntime*)p2)->guardState = 4;
@@ -459,11 +459,13 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     case 0:
         trickyDebugPrint(strBase + 0x648);
         trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosition, 0x0);
-        trickyState->guardPoint[0] = (f32)(trickyState->homeObj->worldPosX - lbl_803E247C *
-            mathSinf((lbl_803E2454 * trickyState->homeObj->rotX) / lbl_803E2458));
+        trickyState->guardPoint[0] =
+            (f32)(trickyState->homeObj->worldPosX -
+                  lbl_803E247C * mathSinf((lbl_803E2454 * trickyState->homeObj->rotX) / lbl_803E2458));
         trickyState->guardPoint[1] = trickyState->homeObj->worldPosY;
-        trickyState->guardPoint[2] = (f32)(trickyState->homeObj->worldPosZ - lbl_803E247C *
-            mathCosf((lbl_803E2454 * trickyState->homeObj->rotX) / lbl_803E2458));
+        trickyState->guardPoint[2] =
+            (f32)(trickyState->homeObj->worldPosZ -
+                  lbl_803E247C * mathCosf((lbl_803E2454 * trickyState->homeObj->rotX) / lbl_803E2458));
         trickyState->guardCanSpawnHelpers = 0;
         trickyState->guardState = 1;
         break;
@@ -614,9 +616,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
             int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
-            trickyTurnTowardYaw((int)obj, getAngle(
-                                    -(*(f32*)targ - obj->worldPosX),
-                                    -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
+            trickyTurnTowardYaw((int)obj,
+                                getAngle(-(*(f32*)targ - obj->worldPosX), -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
         }
         break;
     case 6:
@@ -642,9 +643,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
             int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
-            trickyTurnTowardYaw((int)obj, getAngle(
-                                    -(*(f32*)targ - obj->worldPosX),
-                                    -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
+            trickyTurnTowardYaw((int)obj,
+                                getAngle(-(*(f32*)targ - obj->worldPosX), -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
         }
         break;
     case 7:
@@ -666,7 +666,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         trickyState->guardTimer = trickyState->guardTimer + timeDelta;
         if (((double)trickyState->guardTimer >= (double)lbl_803E24D8 &&
-                (double)getXZDistance(trickyState->targetPosition, &obj->worldPosX) >= (double)lbl_803E24C4) ||
+             (double)getXZDistance(trickyState->targetPosition, &obj->worldPosX) >= (double)lbl_803E24C4) ||
             trickyGuardIsBaddieTargetValid(trickyState) == 0)
         {
             objAnimFn_8013a3f0((int)obj, 0x32, lbl_803E23F4, 0x4000000);
@@ -675,9 +675,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else
         {
             int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
-            trickyTurnTowardYaw((int)obj, getAngle(
-                                    -(*(f32*)targ - obj->worldPosX),
-                                    -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
+            trickyTurnTowardYaw((int)obj,
+                                getAngle(-(*(f32*)targ - obj->worldPosX), -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
         }
         break;
     case 8:
@@ -702,7 +701,6 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 }
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
-
 
 #pragma peephole on
 int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)

@@ -22,8 +22,8 @@ extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(int obj, void* p);
 
-#define GAMEBIT_QUEEN_LATCHED 0x1c2   /* player got close once the gas puzzle was done */
-#define GAMEBIT_QUEEN_RETIRED 0x1c3   /* queen leaves: hidden + hits disabled */
+#define GAMEBIT_QUEEN_LATCHED   0x1c2 /* player got close once the gas puzzle was done */
+#define GAMEBIT_QUEEN_RETIRED   0x1c3 /* queen leaves: hidden + hits disabled */
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 
 typedef struct
@@ -36,7 +36,10 @@ STATIC_ASSERT(sizeof(Vec3s) == 0x6);
 static const Vec3s ccqueenEyeSetupA = {{0x1e, 0, 0}};
 static const Vec3s ccqueenEyeSetupB = {{0x19, 0x19, 0x19}};
 
-int ccqueen_getExtraSize(void) { return 0x654; }
+int ccqueen_getExtraSize(void)
+{
+    return 0x654;
+}
 
 void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

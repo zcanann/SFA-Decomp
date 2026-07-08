@@ -49,18 +49,24 @@ extern f32 lbl_803E4A30;
 typedef struct Dll1CFObjectDef
 {
     u8 pad0[0x14 - 0x0];
-    s32 mapId;          /* 0x14: ObjPlacement mapId, not read by this DLL */
-    s8 rotXByte;        /* 0x18: rotX in 1/256 turns */
+    s32 mapId;   /* 0x14: ObjPlacement mapId, not read by this DLL */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1A - 0x19];
-    s16 rotYRaw;        /* 0x1A: scaled into rotY when the gate bit is set */
-    s16 unk1C;          /* 0x1C: not read */
-    s16 gateGameBit;    /* 0x1E: game bit that enables the rotY setup */
+    s16 rotYRaw;     /* 0x1A: scaled into rotY when the gate bit is set */
+    s16 unk1C;       /* 0x1C: not read */
+    s16 gateGameBit; /* 0x1E: game bit that enables the rotY setup */
 } Dll1CFObjectDef;
 
 /* The entry points compile with both passes OFF; the surrounding TU state is
  * the default, so no reset pair is needed. */
-int dll_1CF_getExtraSize(void) { return 0x0; }
-int dll_1CF_getObjectTypeId(void) { return 0x0; }
+int dll_1CF_getExtraSize(void)
+{
+    return 0x0;
+}
+int dll_1CF_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_1CF_free(void)
 {
@@ -69,7 +75,8 @@ void dll_1CF_free(void)
 void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visibleInt = visible;
-    if (visibleInt != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A30);
+    if (visibleInt != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A30);
 }
 
 void dll_1CF_hitDetect(void)

@@ -19,15 +19,15 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-#define DRAKORMISSILE_EXTRA_SIZE 0x38
+#define DRAKORMISSILE_EXTRA_SIZE     0x38
 #define DRAKORMISSILE_OBJECT_TYPE_ID 0x2
-#define DRAKORMISSILE_GROUP_ID 0x2
+#define DRAKORMISSILE_GROUP_ID       0x2
 
-#define DRAKORMISSILE_STATE_IDLE 0
-#define DRAKORMISSILE_STATE_FADEOUT 1
+#define DRAKORMISSILE_STATE_IDLE      0
+#define DRAKORMISSILE_STATE_FADEOUT   1
 #define DRAKORMISSILE_STATE_EXPLODING 2
-#define DRAKORMISSILE_STATE_STRAIGHT 3
-#define DRAKORMISSILE_STATE_HOMING 4
+#define DRAKORMISSILE_STATE_STRAIGHT  3
+#define DRAKORMISSILE_STATE_HOMING    4
 
 #define DRAKORMISSILE_RENDER_TRAIL_COUNT 5
 
@@ -38,15 +38,15 @@
  */
 typedef struct DrakorMissileState
 {
-    void* light;                                     /* 0x00 */
-    u8 state;                                         /* 0x04 */
-    u8 flags;                                         /* 0x05 */
-    u8 pad06[2];                                      /* 0x06 */
-    int timer;                                        /* 0x08 */
-    f32 fadeTime;                                     /* 0x0c */
-    u16 trailYaw[DRAKORMISSILE_RENDER_TRAIL_COUNT];   /* 0x10 */
-    u16 trailYawStep[DRAKORMISSILE_RENDER_TRAIL_COUNT]; /* 0x1a */
-    u16 trailPitch[DRAKORMISSILE_RENDER_TRAIL_COUNT]; /* 0x24 */
+    void* light;                                          /* 0x00 */
+    u8 state;                                             /* 0x04 */
+    u8 flags;                                             /* 0x05 */
+    u8 pad06[2];                                          /* 0x06 */
+    int timer;                                            /* 0x08 */
+    f32 fadeTime;                                         /* 0x0c */
+    u16 trailYaw[DRAKORMISSILE_RENDER_TRAIL_COUNT];       /* 0x10 */
+    u16 trailYawStep[DRAKORMISSILE_RENDER_TRAIL_COUNT];   /* 0x1a */
+    u16 trailPitch[DRAKORMISSILE_RENDER_TRAIL_COUNT];     /* 0x24 */
     u16 trailPitchStep[DRAKORMISSILE_RENDER_TRAIL_COUNT]; /* 0x2e */
 } DrakorMissileState;
 
@@ -57,18 +57,24 @@ typedef struct DrakorMissileState
 #define DRAKORMISSILE_SETUP_VEL_Y 0x19
 #define DRAKORMISSILE_SETUP_VEL_Z 0x1a
 
-#define DRAKORMISSILE_ACTIVE_TIMER 0x960
-#define DRAKORMISSILE_CLEAR_TIMER 0x80
-#define DRAKORMISSILE_TRACE_MISS_TIMER 0x258
+#define DRAKORMISSILE_ACTIVE_TIMER       0x960
+#define DRAKORMISSILE_CLEAR_TIMER        0x80
+#define DRAKORMISSILE_TRACE_MISS_TIMER   0x258
 #define DRAKORMISSILE_IGNORE_OBJECT_TYPE 0x2ab
-#define DRAKORMISSILE_TARGET_MASK 4
-#define DRAKORMISSILE_HIT_VOLUME_SLOT 22
-#define DRAKORMISSILE_ACTIVE_SFX_A 965
-#define DRAKORMISSILE_ACTIVE_SFX_B 966
+#define DRAKORMISSILE_TARGET_MASK        4
+#define DRAKORMISSILE_HIT_VOLUME_SLOT    22
+#define DRAKORMISSILE_ACTIVE_SFX_A       965
+#define DRAKORMISSILE_ACTIVE_SFX_B       966
 
-int drakormissile_getExtraSize(void) { return DRAKORMISSILE_EXTRA_SIZE; }
+int drakormissile_getExtraSize(void)
+{
+    return DRAKORMISSILE_EXTRA_SIZE;
+}
 
-int drakormissile_getObjectTypeId(void) { return DRAKORMISSILE_OBJECT_TYPE_ID; }
+int drakormissile_getObjectTypeId(void)
+{
+    return DRAKORMISSILE_OBJECT_TYPE_ID;
+}
 
 void drakormissile_hitDetect(void)
 {
@@ -104,8 +110,7 @@ void drakormissile_startActiveLaunch(int obj)
     s->light = light;
     if (s->light != NULL)
     {
-        modelLightStruct_setDistanceAttenuation(s->light, lbl_803E6950,
-                                                lbl_803E6954);
+        modelLightStruct_setDistanceAttenuation(s->light, lbl_803E6950, lbl_803E6954);
     }
     ((GameObject*)obj)->anim.alpha = 255;
     ((GameObject*)obj)->anim.rootMotionScale =
@@ -150,8 +155,9 @@ void drakormissile_startStraightLaunch(int obj, int from, int target, f32 speed)
     ((GameObject*)obj)->anim.velocityY = dir[1];
     ((GameObject*)obj)->anim.velocityZ = dir[2];
     horizDist = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-        ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
-    ((GameObject*)obj)->anim.rotX = (s16)getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
+                      ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
+    ((GameObject*)obj)->anim.rotX =
+        (s16)getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
     ((GameObject*)obj)->anim.rotY = -getAngle(((GameObject*)obj)->anim.velocityY, horizDist);
     ((GameObject*)obj)->anim.rotZ = 0;
     ObjHits_EnableObject(obj);
@@ -170,8 +176,7 @@ void drakormissile_startStraightLaunch(int obj, int from, int target, f32 speed)
         *(f32*)&hitDir[0] = endPos[0] - ((GameObject*)obj)->anim.localPosX;
         *(f32*)&hitDir[1] = endPos[1] - ((GameObject*)obj)->anim.localPosY;
         *(f32*)&hitDir[2] = endPos[2] - ((GameObject*)obj)->anim.localPosZ;
-        s->timer =
-            (int)(sqrtf(hitDir[0] * hitDir[0] + hitDir[1] * hitDir[1] + hitDir[2] * hitDir[2]) / speed);
+        s->timer = (int)(sqrtf(hitDir[0] * hitDir[0] + hitDir[1] * hitDir[1] + hitDir[2] * hitDir[2]) / speed);
     }
     else
     {
@@ -216,15 +221,14 @@ void drakormissile_update(int obj)
     int expired;
     int nearHit;
     int rem;
-    extern int modelLightStruct_getActiveState(void *light);
+    extern int modelLightStruct_getActiveState(void* light);
 
     moving = 0;
     switch (s->state)
     {
     case DRAKORMISSILE_STATE_STRAIGHT:
         moving = 1;
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         break;
     case DRAKORMISSILE_STATE_EXPLODING:
@@ -244,9 +248,8 @@ void drakormissile_update(int obj)
         break;
     case DRAKORMISSILE_STATE_HOMING:
         player = (int)Obj_GetPlayerObject();
-        if (((GameObject*)player)->anim.velocityX != (mag = lbl_803E695C) || ((GameObject*)player)->anim.velocityY !=
-            mag ||
-            ((GameObject*)player)->anim.velocityZ != mag)
+        if (((GameObject*)player)->anim.velocityX != (mag = lbl_803E695C) ||
+            ((GameObject*)player)->anim.velocityY != mag || ((GameObject*)player)->anim.velocityZ != mag)
         {
             mag = PSVECMag((f32*)(player + 0x24));
         }
@@ -258,29 +261,28 @@ void drakormissile_update(int obj)
         PSVECScale((f32*)((char*)obj + 0x24), (f32*)((char*)obj + 0x24), lbl_803DC2B0);
         PSVECAdd((f32*)(obj + 0x24), dir, (f32*)(obj + 0x24));
         mag = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
+                    ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
         {
             int tmpAng = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
             ((GameObject*)obj)->anim.rotX = tmpAng;
             tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
             ((GameObject*)obj)->anim.rotY = tmpAng;
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moving = 1;
         break;
     case DRAKORMISSILE_STATE_FADEOUT:
+    {
+        f32 life = s->fadeTime + timeDelta;
+        s->fadeTime = life;
+        if (life > gDrakorMissileFadeOutDuration)
         {
-            f32 life = s->fadeTime + timeDelta;
-            s->fadeTime = life;
-            if (life > gDrakorMissileFadeOutDuration)
-            {
-                Obj_FreeObject(obj);
-                return;
-            }
-            break;
+            Obj_FreeObject(obj);
+            return;
         }
+        break;
+    }
     case DRAKORMISSILE_STATE_IDLE:
         break;
     }
@@ -391,7 +393,7 @@ void drakormissile_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
     int i;
     DrakorMissileState* s = ((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    extern int modelLightStruct_getActiveState(void *light);
+    extern int modelLightStruct_getActiveState(void* light);
     if (visible != 0 && s->state != DRAKORMISSILE_STATE_FADEOUT)
     {
         f32 savedScale;

@@ -60,17 +60,26 @@ typedef struct RingGenState
 
 STATIC_ASSERT(sizeof(RingGenState) == 0xc);
 
-int IMSpaceRingGen_getExtraSize(void) { return 0xc; }
-int IMSpaceRingGen_getObjectTypeId(void) { return 0x0; }
+int IMSpaceRingGen_getExtraSize(void)
+{
+    return 0xc;
+}
+int IMSpaceRingGen_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void IMSpaceRingGen_free(void) { lbl_803DDB48 = NULL; }
+void IMSpaceRingGen_free(void)
+{
+    lbl_803DDB48 = NULL;
+}
 
 void IMSpaceRingGen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     u8* state = ((GameObject*)obj)->extra;
     if (visible != 0 && (state[8] != 0 || ((GameObject*)obj)->anim.alpha != 0))
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E47C0);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E47C0);
     }
 }
 
@@ -108,7 +117,8 @@ void IMSpaceRingGen_update(GameObject* obj)
     else
     {
         int alpha;
-        state->visible = ((int (*)(GameObject*))((void**)*(void**)*(int*)((char*)state->ringB + 0x68))[9])(state->ringB);
+        state->visible =
+            ((int (*)(GameObject*))((void**)*(void**)*(int*)((char*)state->ringB + 0x68))[9])(state->ringB);
         if (state->visible != 0)
         {
             alpha = obj->anim.alpha + framesThisStep * 8;
@@ -149,13 +159,11 @@ void IMSpaceRingGen_update(GameObject* obj)
                 ((ImSpaceRingSetup*)ring)->base.color[2] = setup[6];
                 ((ImSpaceRingSetup*)ring)->base.color[1] = 1;
                 ((ImSpaceRingSetup*)ring)->base.color[3] = 0xff;
-                Obj_SetupObject(ring, 5, obj->anim.mapEventSlot, -1,
-                                *(int*)&obj->anim.parent);
+                Obj_SetupObject(ring, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
             }
             obj->unkF4 = 1;
         }
-        objMove((int)obj,
-                state->ringA->anim.localPosX - obj->anim.localPosX,
+        objMove((int)obj, state->ringA->anim.localPosX - obj->anim.localPosX,
                 (lbl_803E47C4 + state->ringA->anim.localPosY) - obj->anim.localPosY,
                 state->ringA->anim.localPosZ - obj->anim.localPosZ);
         obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x100;

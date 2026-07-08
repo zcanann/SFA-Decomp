@@ -17,8 +17,6 @@
 #include "main/dll/CAM/camera_mode_cannon_state.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-
-
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern CameraModeCannonState* lbl_803DD5A0;
 
@@ -49,12 +47,10 @@ void CameraModeCannon_update(u8* obj)
     delta = (s16)((0x8000 - lbl_803DD5A0->target->anim.rotX) - vec[1] - yaw);
     camera->anim.rotX = (f32)(s32)yaw + (f32)(s32)delta / 5.0f;
     camera->anim.localPosX =
-        lbl_803DD5A0->target->anim.localPosX -
-        60.0f * mathSinf(3.1415927f * (f32)(s32)(-camera->anim.rotX) / 32768.0f);
+        lbl_803DD5A0->target->anim.localPosX - 60.0f * mathSinf(3.1415927f * (f32)(s32)(-camera->anim.rotX) / 32768.0f);
     camera->anim.localPosY = 80.0f + lbl_803DD5A0->target->anim.localPosY;
     camera->anim.localPosZ =
-        lbl_803DD5A0->target->anim.localPosZ -
-        60.0f * mathCosf(3.1415927f * (f32)(s32)(-camera->anim.rotX) / 32768.0f);
+        lbl_803DD5A0->target->anim.localPosZ - 60.0f * mathCosf(3.1415927f * (f32)(s32)(-camera->anim.rotX) / 32768.0f);
 }
 
 void CameraModeCannon_init(int* p1, int unused, int* p3)

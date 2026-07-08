@@ -13,12 +13,12 @@
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
 
-extern void DFPulley_integrateLinks(u8 * self);
+extern void DFPulley_integrateLinks(u8* self);
 
 #define DFBARREL_ROPE_PART_SIZE 0x34
 #define DFBARREL_ROPE_LINK_SIZE 0x24
 
-#define DFBARREL_SWAY_LIMIT 0x32
+#define DFBARREL_SWAY_LIMIT          0x32
 #define DFBARREL_SWAY_DIR_INCREASING 1
 #define DFBARREL_SWAY_DIR_DECREASING 2
 
@@ -62,8 +62,7 @@ void DFRope_UpdateSimulation(DFRope* self)
         f32 rate = lbl_803E4DF8;
         for (; i < self->count - 1; i++)
         {
-            partIter->force[0] =
-                partIter->force[0] + rate * (f32)(int)(s8)self->sway;
+            partIter->force[0] = partIter->force[0] + rate * (f32)(int)(s8)self->sway;
             partIter++;
         }
     }
@@ -89,8 +88,7 @@ void DFRope_UpdateSimulation(DFRope* self)
             }
             else
             {
-                PSVECScale(&tmp, (Vec*)link->force,
-                           -link->stiffness * (link->length - link->restLength));
+                PSVECScale(&tmp, (Vec*)link->force, -link->stiffness * (link->length - link->restLength));
             }
         }
         DFPulley_integrateLinks((u8*)self);
@@ -128,7 +126,8 @@ void DFRopeLink_AttachNodes(DFRopeLink* linkSelf, DFRopeNode* firstNode, DFRopeN
         nodeLinkIter += 4;
         secondLinkIndex++;
     }
-    if (firstLinkIndex > firstNode->linkCount || secondLinkIndex > secondNode->linkCount) return;
+    if (firstLinkIndex > firstNode->linkCount || secondLinkIndex > secondNode->linkCount)
+        return;
     firstNode->links[firstLinkIndex] = linkSelf;
     secondNode->links[secondLinkIndex] = linkSelf;
     linkSelf->a = firstNode;

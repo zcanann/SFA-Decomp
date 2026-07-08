@@ -180,8 +180,7 @@ int kaldachom_stateHandlerA00(int obj, int statePtr)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         ((GroundBaddieState*)statePtr)->baddie.stateTag = 1;
-        ((GroundBaddieState*)statePtr)->baddie.moveSpeed =
-            lbl_803E3098 + ((f32)(u32)state->aggression / lbl_803E309C);
+        ((GroundBaddieState*)statePtr)->baddie.moveSpeed = lbl_803E3098 + ((f32)(u32)state->aggression / lbl_803E309C);
         ObjHits_EnableObject((u32)obj);
     }
     else if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveDone != 0)

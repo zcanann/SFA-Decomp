@@ -100,11 +100,13 @@ GSTACK synthLoadedGroupTable[128];
 static MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
-    if (pool == NULL) return NULL;
+    if (pool == NULL)
+        return NULL;
     m = (MEM_DATA*)((u8*)pool + pool->macroOff);
     while (m->nextOff != 0xFFFFFFFF)
     {
-        if (m->id == id) return m;
+        if (m->id == id)
+            return m;
         m = (MEM_DATA*)((u8*)m + m->nextOff);
     }
     return NULL;
@@ -113,11 +115,13 @@ static MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
 static MEM_DATA* GetCurveAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
-    if (pool == NULL) return NULL;
+    if (pool == NULL)
+        return NULL;
     m = (MEM_DATA*)((u8*)pool + pool->curveOff);
     while (m->nextOff != 0xFFFFFFFF)
     {
-        if (m->id == id) return m;
+        if (m->id == id)
+            return m;
         m = (MEM_DATA*)((u8*)m + m->nextOff);
     }
     return NULL;
@@ -126,11 +130,13 @@ static MEM_DATA* GetCurveAddr(u16 id, POOL_DATA* pool)
 static MEM_DATA* GetKeymapAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
-    if (pool == NULL) return NULL;
+    if (pool == NULL)
+        return NULL;
     m = (MEM_DATA*)((u8*)pool + pool->keymapOff);
     while (m->nextOff != 0xFFFFFFFF)
     {
-        if (m->id == id) return m;
+        if (m->id == id)
+            return m;
         m = (MEM_DATA*)((u8*)m + m->nextOff);
     }
     return NULL;
@@ -139,11 +145,13 @@ static MEM_DATA* GetKeymapAddr(u16 id, POOL_DATA* pool)
 static MEM_DATA* GetLayerAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
-    if (pool == NULL) return NULL;
+    if (pool == NULL)
+        return NULL;
     m = (MEM_DATA*)((u8*)pool + pool->layerOff);
     while (m->nextOff != 0xFFFFFFFF)
     {
-        if (m->id == id) return m;
+        if (m->id == id)
+            return m;
         m = (MEM_DATA*)((u8*)m + m->nextOff);
     }
     return NULL;
@@ -173,45 +181,45 @@ void InsertData(u16 id, void* data, u8 dataType, u32 remove)
         }
         break;
     case 2:
+    {
+        id |= 0x4000;
+        if (!remove)
         {
-            id |= 0x4000;
-            if (!remove)
+            if ((m = GetKeymapAddr(id, data)) != NULL)
             {
-                if ((m = GetKeymapAddr(id, data)) != NULL)
-                {
-                    dataInsertKeymap(id, &m->data.map);
-                }
-                else
-                {
-                    dataInsertKeymap(id, NULL);
-                }
+                dataInsertKeymap(id, &m->data.map);
             }
             else
             {
-                dataRemoveKeymap(id);
+                dataInsertKeymap(id, NULL);
             }
-            break;
         }
+        else
+        {
+            dataRemoveKeymap(id);
+        }
+        break;
+    }
     case 3:
+    {
+        id |= 0x8000;
+        if (!remove)
         {
-            id |= 0x8000;
-            if (!remove)
+            if ((m = GetLayerAddr(id, data)) != NULL)
             {
-                if ((m = GetLayerAddr(id, data)) != NULL)
-                {
-                    dataInsertLayer(id, &m->data.layer.entry, m->data.layer.num);
-                }
-                else
-                {
-                    dataInsertLayer(id, NULL, 0);
-                }
+                dataInsertLayer(id, &m->data.layer.entry, m->data.layer.num);
             }
             else
             {
-                dataRemoveLayer(id);
+                dataInsertLayer(id, NULL, 0);
             }
-            break;
         }
+        else
+        {
+            dataRemoveLayer(id);
+        }
+        break;
+    }
     case 4:
         if (!remove)
         {

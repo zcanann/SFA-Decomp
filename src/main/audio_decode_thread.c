@@ -20,16 +20,15 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
 
     if (param != NULL)
     {
-        if (OSCreateThread(&context->thread, AudioDecoderForOnMemory, param,
-                           &context->thread, 0x1000, priority, 1) == 0)
+        if (OSCreateThread(&context->thread, AudioDecoderForOnMemory, param, &context->thread, 0x1000, priority, 1) ==
+            0)
         {
             return 0;
         }
     }
     else
     {
-        if (OSCreateThread(&context->thread, AudioDecoder, NULL,
-                           &context->thread, 0x1000, priority, 1) == 0)
+        if (OSCreateThread(&context->thread, AudioDecoder, NULL, &context->thread, 0x1000, priority, 1) == 0)
         {
             return 0;
         }

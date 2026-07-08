@@ -29,7 +29,7 @@ typedef struct CfccratePlacement
     f32 homeY;
     f32 homeZ;
     u8 pad14[0x18 - 0x14];
-    s8 rotX;     /* 0x18: spawn pitch byte, <<8 into anim.rotX */
+    s8 rotX;      /* 0x18: spawn pitch byte, <<8 into anim.rotX */
     u8 bankIndex; /* 0x19: anim bank index */
     s16 param1A;
     s16 param1C;
@@ -75,11 +75,17 @@ extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
 extern f32 sqrtf(f32);
 
-#define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
-  (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
+#define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
 
-int CFCrate_getExtraSize(void) { return 0x4c; }
-int CFCrate_getObjectTypeId(void) { return 0x1; }
+int CFCrate_getExtraSize(void)
+{
+    return 0x4c;
+}
+int CFCrate_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void CFCrate_free(int obj)
 {
@@ -153,7 +159,6 @@ void CFCrate_hitDetect(void)
 void CFCrate_update(int obj)
 {
 
-
     CfCcrateState* state;
     int viewslot;
     int cam;
@@ -193,7 +198,8 @@ void CFCrate_update(int obj)
         }
         else
         {
-            ((GameObject*)obj)->anim.localPosY = (f32)-(lbl_803E3DE0 * timeDelta - ((GameObject*)obj)->anim.localPosY);
+            ((GameObject*)obj)->anim.localPosY =
+                (f32) - (lbl_803E3DE0 * timeDelta - ((GameObject*)obj)->anim.localPosY);
         }
         break;
     case 0x6fc: /* DFP_Water */
@@ -232,15 +238,15 @@ void CFCrate_update(int obj)
         }
         break;
     case 0x622: /* VFP_locksym */
+    {
+        ObjTextureRuntimeSlot* p = objFindTexture((void*)obj, 0, 0);
+        if ((p != NULL) && (mainGetBit(state->gameBit) != 0) && (p->textureId == 0))
         {
-            ObjTextureRuntimeSlot* p = objFindTexture((void*)obj, 0, 0);
-            if ((p != NULL) && (mainGetBit(state->gameBit) != 0) && (p->textureId == 0))
-            {
-                Sfx_PlayFromObject(obj, SFXTRIG_en_littletink22_3c4);
-                p->textureId = 0x100;
-            }
-            break;
+            Sfx_PlayFromObject(obj, SFXTRIG_en_littletink22_3c4);
+            p->textureId = 0x100;
         }
+        break;
+    }
     case 0x65c:
         break;
     case 0x65d:
@@ -256,8 +262,7 @@ void CFCrate_update(int obj)
         }
         if (mainGetBit(state->gameBit) == 0)
         {
-            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX +
-                ((s8*)viewslot)[0x18] * framesThisStep;
+            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + ((s8*)viewslot)[0x18] * framesThisStep;
         }
         break;
     case 0x409:
@@ -293,13 +298,11 @@ void CFCrate_update(int obj)
         break;
     case 0x8e:
         state->oscPosA = lbl_803E3E04 * state->oscVelA + state->oscPosA;
-        if ((state->oscPosA > lbl_803E3E08) ||
-            (state->oscPosA < lbl_803E3E0C))
+        if ((state->oscPosA > lbl_803E3E08) || (state->oscPosA < lbl_803E3E0C))
         {
             state->oscVelA = -state->oscVelA;
         }
-        if ((state->oscPosB > lbl_803E3E10) ||
-            (state->oscPosB < lbl_803E3E14))
+        if ((state->oscPosB > lbl_803E3E10) || (state->oscPosB < lbl_803E3E14))
         {
             state->oscVelB = -state->oscVelB;
         }
@@ -320,29 +323,29 @@ void CFCrate_update(int obj)
         }
         break;
     case 0x125:
-        {
-            f32 fx, fy, fz;
-            f32 dist;
-            int player;
+    {
+        f32 fx, fy, fz;
+        f32 dist;
+        int player;
 
-            ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E3E18 * (double)-(s32)*(s16*)(cam + 4));
-            player = (int)Obj_GetPlayerObject();
-            fx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-            fz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-            fy = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-            dist = sqrtf(fy * fy + (fx * fx + fz * fz));
-            if (dist < lbl_803E3E20 && state->proximityLatch == 1)
-            {
-                state->proximityLatch = 0;
-                getLActions(obj, obj, 0x5c, 0, 0, 0);
-            }
-            else if ((dist > *(f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
-            {
-                state->proximityLatch = 1;
-                getLActions(obj, obj, 0x5d, 0, 0, 0);
-            }
-            break;
+        ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E3E18 * (double)-(s32) * (s16*)(cam + 4));
+        player = (int)Obj_GetPlayerObject();
+        fx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        fz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        fy = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        dist = sqrtf(fy * fy + (fx * fx + fz * fz));
+        if (dist < lbl_803E3E20 && state->proximityLatch == 1)
+        {
+            state->proximityLatch = 0;
+            getLActions(obj, obj, 0x5c, 0, 0, 0);
         }
+        else if ((dist > *(f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
+        {
+            state->proximityLatch = 1;
+            getLActions(obj, obj, 0x5d, 0, 0, 0);
+        }
+        break;
+    }
     }
 }
 
@@ -449,7 +452,8 @@ void CFCrate_init(int obj, int aux)
         ((GameObject*)obj)->anim.rotY = 0;
         if (((CfccratePlacement*)aux)->param1C >= 0x3e8)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / lbl_803E3DF4);
+            ((GameObject*)obj)->anim.rootMotionScale =
+                zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / lbl_803E3DF4);
         }
         else
         {
@@ -471,7 +475,8 @@ void CFCrate_init(int obj, int aux)
         ((GameObject*)obj)->anim.rotY = 0;
         if (((CfccratePlacement*)aux)->param1C >= 0x3e8)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / lbl_803E3DF4);
+            ((GameObject*)obj)->anim.rootMotionScale =
+                zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / lbl_803E3DF4);
         }
         else
         {

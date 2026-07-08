@@ -74,10 +74,10 @@ extern f32 lbl_803E5B5C;
 extern f32 lbl_803E5B60;
 extern f32 lbl_803E5B64;
 
-#define DRCLOUDCAGE_TRAIL_COUNT 9
-#define DRCLOUDCAGE_TRAIL_STRIDE 8
-#define DRCLOUDCAGE_TRAILS_OFFSET 0x4c8
-#define DRCLOUDCAGE_PAIR_SIZE 0x10
+#define DRCLOUDCAGE_TRAIL_COUNT       9
+#define DRCLOUDCAGE_TRAIL_STRIDE      8
+#define DRCLOUDCAGE_TRAILS_OFFSET     0x4c8
+#define DRCLOUDCAGE_PAIR_SIZE         0x10
 #define DRCLOUDCAGE_TRAIL_FLAG_ACTIVE 1
 
 typedef struct DRCloudCagePointPair
@@ -138,28 +138,28 @@ STATIC_ASSERT(sizeof(DRCloudCageObjPos) == 0x18);
 typedef struct DRCloudCageState
 {
     u8 pad00[0x18];
-    f32 distFar;              /* 0x18: d >= distFar clamps result to valFar */
-    f32 distNear;             /* 0x1C: d <= distNear clamps result to valNear */
-    f32 valFar;               /* 0x20 */
-    f32 valNear;              /* 0x24 */
+    f32 distFar;  /* 0x18: d >= distFar clamps result to valFar */
+    f32 distNear; /* 0x1C: d <= distNear clamps result to valNear */
+    f32 valFar;   /* 0x20 */
+    f32 valNear;  /* 0x24 */
     u8 pad28[0x3F4 - 0x28];
-    f32 channel4Vol;          /* 0x3F4: sfx channel 4 volume accumulator */
-    f32 channel2Vol;          /* 0x3F8: sfx channel 2 volume accumulator */
+    f32 channel4Vol; /* 0x3F4: sfx channel 4 volume accumulator */
+    f32 channel2Vol; /* 0x3F8: sfx channel 2 volume accumulator */
     u8 pad3FC[0x410 - 0x3FC];
-    s32 rotZOffset;           /* 0x410: added to obj rotZ before matrix build */
+    s32 rotZOffset; /* 0x410: added to obj rotZ before matrix build */
     u8 pad414[0x424 - 0x414];
-    f32 distanceGate;         /* 0x424: distance below which wind/engine sfx play */
+    f32 distanceGate;                 /* 0x424: distance below which wind/engine sfx play */
     DRCloudCageStateFlags stateFlags; /* 0x428: bit0 hidden */
     u8 pad429[0x434 - 0x429];
-    u8 routeGateActive;       /* 0x434: 0 => route-distance gate applies */
+    u8 routeGateActive; /* 0x434: 0 => route-distance gate applies */
     u8 pad435[0x440 - 0x435];
-    u16 windSfxId;            /* 0x440: channel-4 wind sfx id */
+    u16 windSfxId; /* 0x440: channel-4 wind sfx id */
     u8 pad442[0x4B4 - 0x442];
-    u8 trailColorByte;        /* 0x4B4: stored into each new trail point pair */
+    u8 trailColorByte; /* 0x4B4: stored into each new trail point pair */
     u8 pad4B5[0x51C - 0x4B5];
-    f32 lastSpawnPosX;        /* 0x51C: obj world position at last trail spawn */
-    f32 lastSpawnPosY;        /* 0x520 */
-    f32 lastSpawnPosZ;        /* 0x524 */
+    f32 lastSpawnPosX; /* 0x51C: obj world position at last trail spawn */
+    f32 lastSpawnPosY; /* 0x520 */
+    f32 lastSpawnPosZ; /* 0x524 */
 } DRCloudCageState;
 STATIC_ASSERT(offsetof(DRCloudCageState, distFar) == 0x18);
 STATIC_ASSERT(offsetof(DRCloudCageState, channel4Vol) == 0x3F4);
@@ -261,8 +261,8 @@ void fn_801E9C00(int obj, int state)
             {
                 if (pairIndex >= 2)
                 {
-                    if ((pair->startAlpha <= 0) && (pair->endAlpha <= 0) &&
-                        (*(s16*)((u8*)pair - 4) <= 0) && (*(s16*)((u8*)pair - 0x14) <= 0))
+                    if ((pair->startAlpha <= 0) && (pair->endAlpha <= 0) && (*(s16*)((u8*)pair - 4) <= 0) &&
+                        (*(s16*)((u8*)pair - 0x14) <= 0))
                     {
                         trail->count -= 2;
                     }
@@ -280,10 +280,8 @@ void fn_801E9C00(int obj, int state)
              * stay raw: the spawn loop below walks them via a running `slot`
              * base (slot += 4), so naming them as fixed struct fields shifts
              * the walker's addressing/CSE. */
-            if ((trail != *(DRCloudCageTrail**)(state + 0x510)) &&
-                (trail != *(DRCloudCageTrail**)(state + 0x514)) &&
-                (trail != *(DRCloudCageTrail**)(state + 0x518)) &&
-                (trail->count == 0))
+            if ((trail != *(DRCloudCageTrail**)(state + 0x510)) && (trail != *(DRCloudCageTrail**)(state + 0x514)) &&
+                (trail != *(DRCloudCageTrail**)(state + 0x518)) && (trail->count == 0))
             {
                 trail->flags &= ~DRCLOUDCAGE_TRAIL_FLAG_ACTIVE;
             }
@@ -318,11 +316,10 @@ void fn_801E9C00(int obj, int state)
 
         Matrix_TransformPoint(matrix, ((f32*)((u8*)&localPoints + activeOffset))[0],
                               ((f32*)((u8*)&localPoints + activeOffset))[1],
-                              ((f32*)((u8*)&localPoints + activeOffset))[2], &startX, pStartY,
-                              pStartZ);
+                              ((f32*)((u8*)&localPoints + activeOffset))[2], &startX, pStartY, pStartZ);
         Matrix_TransformPoint(matrix, ((f32*)((u8*)&localPoints + nextOffset))[0],
-                              ((f32*)((u8*)&localPoints + nextOffset))[1],
-                              ((f32*)((u8*)&localPoints + nextOffset))[2], pEndX, pEndY, pEndZ);
+                              ((f32*)((u8*)&localPoints + nextOffset))[1], ((f32*)((u8*)&localPoints + nextOffset))[2],
+                              pEndX, pEndY, pEndZ);
 
         hitDetected = 0;
         endpointIndex = 0;
@@ -358,8 +355,8 @@ void fn_801E9C00(int obj, int state)
             {
                 for (scanIndex = 0; scanIndex < DRCLOUDCAGE_TRAIL_COUNT; scanIndex++)
                 {
-                    selectedTrail = (DRCloudCageTrail*)(state + scanIndex * DRCLOUDCAGE_TRAIL_STRIDE +
-                                                        DRCLOUDCAGE_TRAILS_OFFSET);
+                    selectedTrail =
+                        (DRCloudCageTrail*)(state + scanIndex * DRCLOUDCAGE_TRAIL_STRIDE + DRCLOUDCAGE_TRAILS_OFFSET);
                     if (!(selectedTrail->flags & DRCLOUDCAGE_TRAIL_FLAG_ACTIVE))
                     {
                         break;
@@ -426,9 +423,8 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
     f32 v;
     DRCloudCagePulseParams pulse;
 
-    clamped = (distanceScale < lbl_803E5AE8)
-                  ? lbl_803E5AE8
-                  : ((distanceScale > lbl_803E5B08) ? lbl_803E5B08 : distanceScale);
+    clamped =
+        (distanceScale < lbl_803E5AE8) ? lbl_803E5AE8 : ((distanceScale > lbl_803E5B08) ? lbl_803E5B08 : distanceScale);
     if (channelFlags & 1)
     {
         if (Sfx_IsPlayingFromObjectChannel(obj, 8))
@@ -511,7 +507,8 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
         {
             if (((DRCloudCageState*)state)->channel2Vol > lbl_803E5B10)
             {
-                ((DRCloudCageState*)state)->channel2Vol = -(lbl_803E5B2C * timeDelta - ((DRCloudCageState*)state)->channel2Vol);
+                ((DRCloudCageState*)state)->channel2Vol =
+                    -(lbl_803E5B2C * timeDelta - ((DRCloudCageState*)state)->channel2Vol);
             }
         }
         if (((DRCloudCageState*)state)->channel2Vol > *(f32*)&lbl_803E5B08)
@@ -532,7 +529,8 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
         {
             if (((DRCloudCageState*)state)->channel4Vol > lbl_803E5B3C)
             {
-                ((DRCloudCageState*)state)->channel4Vol = -(lbl_803E5AF8 * timeDelta - ((DRCloudCageState*)state)->channel4Vol);
+                ((DRCloudCageState*)state)->channel4Vol =
+                    -(lbl_803E5AF8 * timeDelta - ((DRCloudCageState*)state)->channel4Vol);
             }
         }
         if (((DRCloudCageState*)state)->channel4Vol > *(f32*)&lbl_803E5B40)
@@ -567,8 +565,7 @@ f32 fn_801EA678(int obj, int state)
     int rank;
 
     if ((lbl_803DC0BC == -1) ||
-        (rank = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28)),
-         lbl_803DC0BC > rank))
+        (rank = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(state + 0x28)), lbl_803DC0BC > rank))
     {
         if (lbl_803DC0BC == -1)
         {
@@ -583,9 +580,8 @@ f32 fn_801EA678(int obj, int state)
              * read here. These stay raw: spelling them as nested-struct members
              * (rankItem.linkDepth / rankItem.routeProgress) shifts codegen. */
             templateMetric = lbl_803E5B48 * (f32) * (s32*)((u8*)lbl_803AD088 + 0x1c) +
-                lbl_803E5B48 * *(f32*)((u8*)lbl_803AD088 + 0xc);
-            stateMetric = lbl_803E5B48 * (f32) * (s32*)(state + 0x44) +
-                lbl_803E5B48 * *(f32*)(state + 0x34);
+                             lbl_803E5B48 * *(f32*)((u8*)lbl_803AD088 + 0xc);
+            stateMetric = lbl_803E5B48 * (f32) * (s32*)(state + 0x44) + lbl_803E5B48 * *(f32*)(state + 0x34);
             d = templateMetric - stateMetric;
             d = (d >= lbl_803E5AE8) ? d : -d;
         }
@@ -600,7 +596,7 @@ f32 fn_801EA678(int obj, int state)
         else
         {
             f32 ratio = (d - ((DRCloudCageState*)state)->distNear) /
-                    (((DRCloudCageState*)state)->distFar - ((DRCloudCageState*)state)->distNear);
+                        (((DRCloudCageState*)state)->distFar - ((DRCloudCageState*)state)->distNear);
             d = ((DRCloudCageState*)state)->valNear;
             result = ratio * (((DRCloudCageState*)state)->valFar - d) + d;
         }

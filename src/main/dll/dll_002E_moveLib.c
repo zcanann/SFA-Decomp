@@ -56,17 +56,17 @@ extern u8 gMoveLibDefaultMoveData[];
 extern f32 lbl_803E1C88;
 extern f32 lbl_803E1C8C;
 extern f32 lbl_803E1C90;
-extern void vecRotateZXY(s16 * angles, f32 * vec);
+extern void vecRotateZXY(s16* angles, f32* vec);
 extern f32 lbl_803E1CC8;
 extern const f32 lbl_803E1CCC;
 extern int getAngle(float y, float x);
 extern float mathCosf(float x);
-extern int Curve_AdvanceAlongPath(RomCurveWalker *curve);
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E1CB0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 lbl_803E1CC4;
-extern void normalize(f32 * x, f32 * y, f32 * z);
+extern void normalize(f32* x, f32* y, f32* z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 lbl_803E1CB4;
 extern f32 lbl_803E1CB8;
@@ -104,32 +104,32 @@ enum MoveLibPhase
 
 typedef struct MoveLibState
 {
-    f32 animPhase; /* 0x00: phase fed to ObjAnim_AdvanceCurrentMove */
-    f32 startOffsetX; /* 0x04: path-relative start offset (blend source) */
-    f32 startOffsetY; /* 0x08 */
-    f32 startOffsetZ; /* 0x0c */
-    f32 targetX; /* 0x10: current path / follow point (blend dest) */
-    f32 targetY; /* 0x14 */
-    f32 targetZ; /* 0x18 */
+    f32 animPhase;          /* 0x00: phase fed to ObjAnim_AdvanceCurrentMove */
+    f32 startOffsetX;       /* 0x04: path-relative start offset (blend source) */
+    f32 startOffsetY;       /* 0x08 */
+    f32 startOffsetZ;       /* 0x0c */
+    f32 targetX;            /* 0x10: current path / follow point (blend dest) */
+    f32 targetY;            /* 0x14 */
+    f32 targetZ;            /* 0x18 */
     u8 animChannels[0x5a0]; /* 0x1c: anim channel table block */
-    s16 turnTable[15]; /* 0x5bc: turn-state table (count entries) */
-    s16 eventTable[15]; /* 0x5da: secondary table */
-    int setupFlag; /* 0x5f8: anim setup/active latch (0x50/10/1/0) */
-    int turnState; /* 0x5fc: objAnimFn_80115650 turning state */
-    u8 phase; /* 0x600: movement phase */
-    u8 needsReinit; /* 0x601: latch path-relative start on next refresh */
+    s16 turnTable[15];      /* 0x5bc: turn-state table (count entries) */
+    s16 eventTable[15];     /* 0x5da: secondary table */
+    int setupFlag;          /* 0x5f8: anim setup/active latch (0x50/10/1/0) */
+    int turnState;          /* 0x5fc: objAnimFn_80115650 turning state */
+    u8 phase;               /* 0x600: movement phase */
+    u8 needsReinit;         /* 0x601: latch path-relative start on next refresh */
     u8 pad602[2];
     void* lastTarget; /* 0x604: previous locked target */
     void* lockTarget; /* 0x608: forced lock target (0 = nearest group-8) */
-    s16 yawLimitA; /* 0x60c: yaw-limit pair passed to objMathFn_8003a380 */
-    s16 yawLimitB; /* 0x60e */
-    u8 pointCount; /* 0x610: number of path/anim points */
-    u8 modeBits; /* 0x611: behaviour mode bitset */
+    s16 yawLimitA;    /* 0x60c: yaw-limit pair passed to objMathFn_8003a380 */
+    s16 yawLimitB;    /* 0x60e */
+    u8 pointCount;    /* 0x610: number of path/anim points */
+    u8 modeBits;      /* 0x611: behaviour mode bitset */
     u8 pad612[2];
     f32 lookAtMaxDistance; /* 0x614 */
     int reattackDelayBase; /* 0x618 */
-    int reattackDelayMin; /* 0x61c */
-    int reattackTimer; /* 0x620 */
+    int reattackDelayMin;  /* 0x61c */
+    int reattackTimer;     /* 0x620 */
 } MoveLibState;
 
 STATIC_ASSERT(offsetof(MoveLibState, targetX) == 0x10);
@@ -220,8 +220,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     }
     else
     {
-        *(f32*)p4 = *(f32*)p4 + p5 * (f32)(u32)
-        framesThisStep / *(f32*)(p3 + 0x34);
+        *(f32*)p4 = *(f32*)p4 + p5 * (f32)(u32)framesThisStep / *(f32*)(p3 + 0x34);
         if (*(f32*)p4 >= *(f32*)&lbl_803E1CA4)
         {
             ret = 1;
@@ -250,10 +249,19 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     return ret;
 }
 
-int dll_2E_func0F_ret_0(void) { return 0x0; }
+int dll_2E_func0F_ret_0(void)
+{
+    return 0x0;
+}
 
-void dll_2E_setLookAtMaxDistance(int* p, f32 v) { ((MoveLibState*)p)->lookAtMaxDistance = v; }
-void dll_2E_func04(int* p, int v) { *(int*)&((MoveLibState*)p)->lockTarget = v; }
+void dll_2E_setLookAtMaxDistance(int* p, f32 v)
+{
+    ((MoveLibState*)p)->lookAtMaxDistance = v;
+}
+void dll_2E_func04(int* p, int v)
+{
+    *(int*)&((MoveLibState*)p)->lockTarget = v;
+}
 
 void dll_2E_func08(int obj, int v1, int v2)
 {
@@ -266,8 +274,10 @@ void dll_2E_func08(int obj, int v1, int v2)
 void dll_2E_func09(int obj, void* src1, void* src2)
 {
     MoveLibState* s = (MoveLibState*)obj;
-    if (src1 == NULL) src1 = gMoveLibDefaultMoveData;
-    if (src2 == NULL) src2 = gMoveLibDefaultMoveData;
+    if (src1 == NULL)
+        src1 = gMoveLibDefaultMoveData;
+    if (src2 == NULL)
+        src2 = gMoveLibDefaultMoveData;
     memcpy(s->turnTable, src1, (u32)s->pointCount * 2);
     memcpy(s->eventTable, src2, (u32)s->pointCount * 2);
 }
@@ -467,8 +477,7 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
         {
             args[0] = 0x19;
             args[1] = 0x15;
-            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E1CB0,
-                                             args, (u8)c);
+            (*gRomCurveInterface)->initCurve(route, (void*)obj, lbl_803E1CB0, args, (u8)c);
             *flags |= 8;
             moved = 1;
         }
@@ -499,9 +508,10 @@ int dll_2E_func0E(int obj, RomCurveWalker* route, f32 phase, int p4, int c, f32*
     }
     if (moved != 0 && (*flags & 0x2) != 0)
     {
-        int targetAngle = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                               ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) +
-            0x8000);
+        int targetAngle =
+            (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+                           ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) +
+                  0x8000);
         ((GameObject*)obj)->anim.rotX =
             (s16)(((GameObject*)obj)->anim.rotX + ((targetAngle - ((GameObject*)obj)->anim.rotX) >> 3));
     }
@@ -569,8 +579,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
                 break;
             }
             *(int*)&s->lastTarget = player;
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, s->animPhase, framesThisStep,
-                                                                        NULL);
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, s->animPhase, framesThisStep, NULL);
             if (s->phase == MOVELIB_PHASE_FINISH)
             {
                 s16* v;
@@ -650,8 +659,8 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         {
             delta = delta + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = (f32)*(s16*)(int)(GameObject*)obj +
-            (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
+        ((GameObject*)obj)->anim.rotX =
+            (f32) * (s16*)(int)(GameObject*)obj + (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
     }
     objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
@@ -661,8 +670,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         {
             ObjAnim_SetCurrentMove(obj, move, lbl_803E1C90, 0);
         }
-        delta = ((GameObject*)obj)->anim.rotX - (u16)(s16)
-        getAngle(dx, dz);
+        delta = ((GameObject*)obj)->anim.rotX - (u16)(s16)getAngle(dx, dz);
         if (delta > 0x8000)
         {
             delta = delta - 0xffff;
@@ -688,7 +696,8 @@ typedef struct ProjNearSearch
 void dll_2E_func03(u16* obj, int state, int unused)
 {
     extern int fn_8003A8B4();
-    extern int objMathFn_8003a380(u16* obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw, int mode, short yawLimit);
+    extern int objMathFn_8003a380(u16 * obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw,
+                                  int mode, short yawLimit);
     extern int fn_80038F1C(int a, int b);
     extern void* seqFn_800394a0();
     extern int objFn_8003acfc();
@@ -744,8 +753,7 @@ void dll_2E_func03(u16* obj, int state, int unused)
         {
             if (s->setupFlag != 0 && (s->modeBits & 8) == 0)
             {
-                s->setupFlag =
-                    !fn_8003A8B4(obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                s->setupFlag = !fn_8003A8B4(obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
             }
             else
             {
@@ -755,7 +763,9 @@ void dll_2E_func03(u16* obj, int state, int unused)
         else
         {
             targetObj = s->lockTarget;
-            target = (u32)(targetObj != NULL ? targetObj : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
+            target = (u32)(targetObj != NULL
+                               ? targetObj
+                               : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
             if (targetObj != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)
@@ -792,15 +802,14 @@ void dll_2E_func03(u16* obj, int state, int unused)
                     }
                     if (s->setupFlag != 0)
                     {
-                        s->setupFlag =
-                            !fn_8003A8B4(obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                        s->setupFlag = !fn_8003A8B4(obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                     }
                     if (s->reattackTimer < -s->reattackDelayMin)
                     {
-                        s->reattackTimer =
-                            randomGetRange(s->reattackDelayMin, s->reattackDelayBase);
+                        s->reattackTimer = randomGetRange(s->reattackDelayMin, s->reattackDelayBase);
                     }
-                    if (s->reattackTimer < 0) return;
+                    if (s->reattackTimer < 0)
+                        return;
                 }
                 else
                 {
@@ -812,11 +821,14 @@ void dll_2E_func03(u16* obj, int state, int unused)
                     {
                         if ((((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->flags & 2) != 0)
                         {
-                            targetYaw = lbl_803E1CDC * (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawB;
+                            targetYaw =
+                                lbl_803E1CDC *
+                                (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawB;
                         }
                         else if ((((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->flags & 1) != 0)
                         {
-                            targetYaw = (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawA;
+                            targetYaw =
+                                (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawA;
                         }
                         else
                         {
@@ -840,10 +852,10 @@ void dll_2E_func03(u16* obj, int state, int unused)
                 ival = (short)yawDelta;
                 ival = (ival >= 0) ? ival : -ival;
                 if (((0x5555 < ival) || (target == 0)) ||
-                    (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) > s->lookAtMaxDistance))
+                    (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) >
+                     s->lookAtMaxDistance))
                 {
-                    if ((s->phase != MOVELIB_PHASE_IDLE) ||
-                        ((target == 0 && (*(u32*)&s->lastTarget != 0))))
+                    if ((s->phase != MOVELIB_PHASE_IDLE) || ((target == 0 && (*(u32*)&s->lastTarget != 0))))
                     {
                         objFn_8003acfc((int)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                         s->setupFlag = 10;
@@ -862,10 +874,8 @@ void dll_2E_func03(u16* obj, int state, int unused)
                     {
                         s->setupFlag = 0;
                     }
-                    objMathFn_8003a380(obj, target, &s->targetX,
-                                       (s->setupFlag != 0) ? (int)s->animChannels : 0,
-                                       s->turnTable, targetYaw, 8,
-                                       s->yawLimitA);
+                    objMathFn_8003a380(obj, target, &s->targetX, (s->setupFlag != 0) ? (int)s->animChannels : 0,
+                                       s->turnTable, targetYaw, 8, s->yawLimitA);
                     s->phase = MOVELIB_PHASE_TURN;
                 }
                 *(u32*)&s->lastTarget = target;
@@ -875,19 +885,20 @@ void dll_2E_func03(u16* obj, int state, int unused)
                 }
                 if (((s->modeBits & 8) == 0) && (s->setupFlag != 0))
                 {
-                    s->setupFlag =
-                        !fn_8003A8B4(obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                    s->setupFlag = !fn_8003A8B4(obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                 }
             }
         }
     }
 }
 
-int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning,
-                       PostControl* control, float* turnSpeed, s16* moves)
+int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning, PostControl* control,
+                       float* turnSpeed, s16* moves)
 {
-    extern int fn_8003A8B4(PostObjAnimComponent* objAnim, PostMotionTarget* leadAnims, u8 contactAnim, void* secondary);
-    extern s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events, double distance, int eventCount, int eventState);
+    extern int fn_8003A8B4(PostObjAnimComponent * objAnim, PostMotionTarget * leadAnims, u8 contactAnim,
+                           void* secondary);
+    extern s16 objMathFn_8003a380(PostObjAnimComponent * objAnim, PostObject * obj, void* primary, void* secondary,
+                                  s16* events, double distance, int eventCount, int eventState);
     extern void fn_80038F1C(int a, int b);
     extern PostMotionTarget* seqFn_800394a0(void);
     int yawDelta;
@@ -927,13 +938,11 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         yawDelta += -0x8000;
     }
 
-    hitResult = objMathFn_8003a380(objAnim, obj, control->primary,
-                                   ((control->flags & 8) != 0) ? 0 : control->secondary,
+    hitResult = objMathFn_8003a380(objAnim, obj, control->primary, ((control->flags & 8) != 0) ? 0 : control->secondary,
                                    control->events, distance, 8, control->eventState);
     if ((control->flags & 8) == 0)
     {
-        control->blocked = (u32)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim,
-                                                      control->secondary)) >> 5;
+        control->blocked = (u32)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim, control->secondary)) >> 5;
     }
     control->blocked = 0;
 
@@ -945,8 +954,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
 
     if (control->blocked == 0)
     {
-        if (((s16)yawDelta > -control->yawLimit) &&
-            ((s16)yawDelta < control->yawLimit))
+        if (((s16)yawDelta > -control->yawLimit) && ((s16)yawDelta < control->yawLimit))
         {
             *turnSpeed = lbl_803E1CC4;
             *turning = 0;
@@ -1015,7 +1023,8 @@ void dll_2E_initialise_nop(void)
 {
 }
 
-u8 gMoveLibDefaultMoveData[20] = { 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23 };
+u8 gMoveLibDefaultMoveData[20] = {0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23,
+                                  0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23};
 
 ObjectDescriptor16WithPadding dll_2E = {
     {
@@ -1044,6 +1053,25 @@ ObjectDescriptor16WithPadding dll_2E = {
 };
 
 /* descriptor/ptr table auto 0x8031a148-0x8031a1c8 */
-u32 lbl_8031A148[12] = { 0xffffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
-u32 lbl_8031A178[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)TitleScreenInit_initialise, (u32)TitleScreenInit_release, 0x00000000, (u32)TitleScreenInit_frameStart, (u32)TitleScreenInit_frameEnd, (u32)TitleScreenInit_render };
-u32 lbl_8031A1A0[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)n_rareware_initialise, (u32)n_rareware_release, 0x00000000, (u32)n_rareware_frameStart, (u32)n_rareware_frameEnd, (u32)n_rareware_render };
+u32 lbl_8031A148[12] = {0xffffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+                        0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+u32 lbl_8031A178[10] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00050000,
+                        (u32)TitleScreenInit_initialise,
+                        (u32)TitleScreenInit_release,
+                        0x00000000,
+                        (u32)TitleScreenInit_frameStart,
+                        (u32)TitleScreenInit_frameEnd,
+                        (u32)TitleScreenInit_render};
+u32 lbl_8031A1A0[10] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00050000,
+                        (u32)n_rareware_initialise,
+                        (u32)n_rareware_release,
+                        0x00000000,
+                        (u32)n_rareware_frameStart,
+                        (u32)n_rareware_frameEnd,
+                        (u32)n_rareware_render};

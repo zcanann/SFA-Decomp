@@ -41,7 +41,10 @@ const u32 gCurveFishCurveQueryKey = ROMCURVE_TYPE_CURVEFISH;
 /* per-frame cap on the body's yaw turn toward the next path node */
 #define CURVEFISH_MAX_YAW_TURN 0x180
 
-int CurveFish_getExtraSize(void) { return 0x120; }
+int CurveFish_getExtraSize(void)
+{
+    return 0x120;
+}
 
 typedef struct CurveFishSetup
 {
@@ -121,28 +124,28 @@ void CurveFish_update(int obj)
     switch (state->mode)
     {
     case CURVEFISH_MODE_WAIT:
+    {
+        f32 waitTime = 60.0f * (f32)(u32)setup->waitFrames;
+        if (!(state->phaseTimer >= waitTime))
         {
-            f32 waitTime = 60.0f * (f32)(u32)setup->waitFrames;
-            if (!(state->phaseTimer >= waitTime))
-            {
-                return;
-            }
-            state->phaseTimer -= waitTime;
-            state->mode = CURVEFISH_MODE_SPAWN;
+            return;
         }
+        state->phaseTimer -= waitTime;
+        state->mode = CURVEFISH_MODE_SPAWN;
+    }
     case CURVEFISH_MODE_SPAWN:
         ((GameObject*)obj)->anim.localPosX = setup2->spawnX;
         ((GameObject*)obj)->anim.localPosY = setup2->spawnY;
         ((GameObject*)obj)->anim.localPosZ = setup2->spawnZ;
 
-        firstNode = (int)(*gRomCurveInterface)->getById(
-            ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-                ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                ((GameObject*)obj)->anim.localPosZ, (int*)&curveQuery, 1, -1));
-        secondNode = (int)(*gRomCurveInterface)->getById(
-            ((int (*)(int, int))(*gRomCurveInterface)->slot54)(firstNode, 0));
-        thirdNode = (int)(*gRomCurveInterface)->getById(
-            ((int (*)(int, int))(*gRomCurveInterface)->slot54)(secondNode, 0));
+        firstNode = (int)(*gRomCurveInterface)
+                        ->getById(((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                            ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                            ((GameObject*)obj)->anim.localPosZ, (int*)&curveQuery, 1, -1));
+        secondNode =
+            (int)(*gRomCurveInterface)->getById(((int (*)(int, int))(*gRomCurveInterface)->slot54)(firstNode, 0));
+        thirdNode =
+            (int)(*gRomCurveInterface)->getById(((int (*)(int, int))(*gRomCurveInterface)->slot54)(secondNode, 0));
 
         if (fn_800DA980((RomCurveWalker*)state, (void*)firstNode, (void*)secondNode, (void*)thirdNode) != 0)
         {
@@ -153,8 +156,7 @@ void CurveFish_update(int obj)
     case CURVEFISH_MODE_FADE_IN:
         if (state->phaseTimer <= 60.0f)
         {
-            ((GameObject*)obj)->anim.alpha =
-                (u8)(int)(255.0f * (state->phaseTimer / 60.0f));
+            ((GameObject*)obj)->anim.alpha = (u8)(int)(255.0f * (state->phaseTimer / 60.0f));
             return;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
@@ -165,8 +167,8 @@ void CurveFish_update(int obj)
             state->speed = 2.0f * state->maxSpeed;
         }
         else if (playerGetFlags3F0Bit5((int)player) != 0 &&
-            getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
-            (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
+                 getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
+                     (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
         {
             speedDelta = 2.0f * (f32)(u32)setup2->speedChange;
             state->speed += (speedDelta * timeDelta) / 1000.0f;
@@ -177,8 +179,7 @@ void CurveFish_update(int obj)
         }
         else
         {
-            speedDelta = (f32)(int)randomGetRange(-setup2->speedChange,
-                                                  setup2->speedChange << 1);
+            speedDelta = (f32)(int)randomGetRange(-setup2->speedChange, setup2->speedChange << 1);
             state->speed += (speedDelta * timeDelta) / 1000.0f;
             if (state->speed < 0.0f)
             {
@@ -299,8 +300,7 @@ void CurveFish_init(int obj, u8* setup)
     flags |= 0x6000;
     ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-        ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / 100.0f);
+                                               ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / 100.0f);
     ((CurveFishState*)state)->mode = CURVEFISH_MODE_SPAWN;
     ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / 100.0f;
 }
-

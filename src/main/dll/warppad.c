@@ -31,9 +31,8 @@
 extern int ObjTrigger_IsSet(int obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
@@ -108,17 +107,19 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_B) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadProximityBurstDistSq)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            gWarpPadProximityBurstDistSq)
         {
-            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) && (state->countdownActive == 0))
+            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
+                (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
-                                      lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
+                                      &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 1, 6, 100,
-                                      lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 1, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
+                                      &fx, 0);
             }
         }
         fx.effectId = 0xc0e;
@@ -126,17 +127,19 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_C) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadProximityBurstDistSq)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            gWarpPadProximityBurstDistSq)
         {
-            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) && (state->countdownActive == 0))
+            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
+                (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
-                                      lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
+                                      &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 5, 6, 100,
-                                      lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 5, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
+                                      &fx, 0);
             }
         }
         fx.effectId = 0xc7e;
@@ -144,17 +147,19 @@ void warpPadFn_8019042c(int obj)
     }
     else
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadProximityBurstDistSq)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            gWarpPadProximityBurstDistSq)
         {
-            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) && (state->countdownActive == 0))
+            if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
+                (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
-                                      lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
+                                      &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 3, 6, 100,
-                                      lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 3, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
+                                      &fx, 0);
             }
         }
         fx.effectId = 0xc13;
@@ -165,16 +170,14 @@ void warpPadFn_8019042c(int obj)
     {
         if (state->pulseTimer < gWarpPadPulseStage1Time)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
-            )
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
         }
         else if (state->pulseTimer < gWarpPadPulseStage2Time)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC
-            )
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
@@ -186,8 +189,7 @@ void warpPadFn_8019042c(int obj)
         }
         else if (state->pulseTimer < gWarpPadPulseStage3Time)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
-            )
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
@@ -256,7 +258,8 @@ void warpPadPlayerStandingOn(int obj)
         if (lbl_803DCEB8 > -1)
         {
             player = Obj_GetPlayerObject();
-            if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadTriggerDist)
+            if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+                gWarpPadTriggerDist)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 ((GameObject*)obj)->unkF4 = state->activateDelay;
@@ -267,8 +270,8 @@ void warpPadPlayerStandingOn(int obj)
             }
         }
         gameBit = placement->enableGameBit;
-        if (((gameBit == -1) ||
-                ((mainGetBit(gameBit) != 0) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
+        if (((gameBit == -1) || ((mainGetBit(gameBit) != 0) &&
+                                 ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0))
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);

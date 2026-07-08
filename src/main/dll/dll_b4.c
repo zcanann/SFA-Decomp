@@ -44,7 +44,8 @@ void lockIconInit(void)
             modelLightStruct_setLightKind(lbl_803DD4C4, MODEL_LIGHT_KIND_DIRECTIONAL);
             modelLightStruct_setObjectLightMaskIndex(lbl_803DD4C4, 1);
             objSetEventName(lbl_803DD4C4, 1);
-            modelLightStruct_setDirection(lbl_803DD4C4, gCamcontrolNormalizedMax, gCamcontrolNormalizedMin, lbl_803E1640);
+            modelLightStruct_setDirection(lbl_803DD4C4, gCamcontrolNormalizedMax, gCamcontrolNormalizedMin,
+                                          lbl_803E1640);
             modelLightStruct_setDiffuseColor(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
         }
     }

@@ -6,8 +6,8 @@
 #define MIDI_CC_DATA_ENTRY_LSB 38
 #define MIDI_CC_DATA_INCREMENT 96
 #define MIDI_CC_DATA_DECREMENT 97
-#define MIDI_CC_RPN_LSB 100
-#define MIDI_CC_RPN_MSB 101
+#define MIDI_CC_RPN_LSB        100
+#define MIDI_CC_RPN_MSB        101
 
 /* RPN 0 = Pitch Bend Sensitivity (pitch bend range, in semitones). */
 #define MIDI_RPN_PITCH_BEND_SENSITIVITY 0
@@ -16,16 +16,16 @@ typedef struct InpMidiState
 {
     u8 pad0[0xC0];
     u8 midiCtrl[8][16][134]; /* 0x00C0 */
-    u8 fxCtrl[16][134]; /* 0x43C0 */
-    u8 pad1[0x1920]; /* 0x4C20 */
-    u32 globalDirty[8][16]; /* 0x6540 */
-    u8 pbRange[8][16]; /* 0x6740 */
+    u8 fxCtrl[16][134];      /* 0x43C0 */
+    u8 pad1[0x1920];         /* 0x4C20 */
+    u32 globalDirty[8][16];  /* 0x6540 */
+    u8 pbRange[8][16];       /* 0x6740 */
 } InpMidiState;
 
 extern u8 lbl_803CD760[];
 extern u8 lbl_803BD150[];
 extern McmdVoiceState* synthVoice;
-extern void synthQueueVoiceInputUpdate(McmdVoiceState * voice);
+extern void synthQueueVoiceInputUpdate(McmdVoiceState* voice);
 
 /*
  * inpSetMidiCtrl - combined RPN/MIDI controller setter.

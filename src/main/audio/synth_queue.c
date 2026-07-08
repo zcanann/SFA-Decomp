@@ -11,8 +11,8 @@ typedef struct SynthSeqRuntime
 extern SynthSeqRuntime lbl_803AF550;
 
 /* SynthVoice.state - which intrusive list the voice sits on */
-#define SYNTH_VOICE_STATE_FREE 0      /* unallocated */
-#define SYNTH_VOICE_STATE_QUEUED 1    /* on gSynthQueuedVoices; awaiting start */
+#define SYNTH_VOICE_STATE_FREE      0 /* unallocated */
+#define SYNTH_VOICE_STATE_QUEUED    1 /* on gSynthQueuedVoices; awaiting start */
 #define SYNTH_VOICE_STATE_ALLOCATED 2 /* on gSynthAllocatedVoices; playing */
 
 /* MusyX sequencer arrangement data (ARR). */
@@ -224,8 +224,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
         if (arr->masterTrackOffset != 0)
         {
             nseq->section[i].masterTrackBase = (u8*)(arr->masterTrackOffset + (u32)song);
-            nseq->section[i].masterTrackCursor =
-                nseq->section[i].masterTrackBase;
+            nseq->section[i].masterTrackCursor = nseq->section[i].masterTrackBase;
         }
         else
         {
@@ -348,9 +347,9 @@ void fn_8026CF78(int secIndex)
 
             if (((SynthArrangement*)gSynthCurrentVoice->arrbase)->info & 0x40000000)
             {
-                synthSetStudioChannelScale(
-                    (section->bpm = ((SynthMasterTrackEvent*)section->masterTrackCursor)->bpm) >> 10,
-                    gSynthCurrentVoiceSlotIndex, secIndex);
+                synthSetStudioChannelScale((section->bpm = ((SynthMasterTrackEvent*)section->masterTrackCursor)->bpm) >>
+                                               10,
+                                           gSynthCurrentVoiceSlotIndex, secIndex);
             }
             else
             {
@@ -431,12 +430,14 @@ void synthQueueHandle(u32 handle)
     found = 0xffffffff;
 done:
 
-    if (found == 0xffffffff) return;
+    if (found == 0xffffffff)
+        return;
 
     if ((found & 0x80000000) == 0)
     {
         voice = &gSynthVoices[found];
-        if (voice->state != SYNTH_VOICE_STATE_QUEUED) return;
+        if (voice->state != SYNTH_VOICE_STATE_QUEUED)
+            return;
 
         if (voice->prev != 0)
         {
@@ -486,7 +487,8 @@ done:
     {
         u32 idx = found & 0x7fffffffu;
         voice = &gSynthVoices[idx];
-        if (voice->state == SYNTH_VOICE_STATE_FREE) return;
+        if (voice->state == SYNTH_VOICE_STATE_FREE)
+            return;
         voice->pendingUpdate.flags |= 8;
     }
 }
@@ -600,7 +602,8 @@ done:
     }
     else
     {
-        if ((voice = &runtime->voices[found & 0x7fffffffu], runtime->voices[found & 0x7fffffffu].state) != SYNTH_VOICE_STATE_FREE)
+        if ((voice = &runtime->voices[found & 0x7fffffffu], runtime->voices[found & 0x7fffffffu].state) !=
+            SYNTH_VOICE_STATE_FREE)
         {
             voice->pendingUpdate.output = 0;
         }

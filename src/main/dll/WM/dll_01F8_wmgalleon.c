@@ -32,25 +32,25 @@ extern u32* lbl_803DCA94;
 extern void* lbl_803DDC74;
 extern f32 lbl_803E5CE8;
 
-#define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
-#define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
-#define WM_GALLEON_COMMAND_OPENED 1
-#define WM_GALLEON_COMMAND_CLEAR_LACTIONS 2
-#define WM_GALLEON_COMMAND_SCREEN_FADE 3
-#define WM_GALLEON_COMMAND_ACTION_12 4
-#define WM_GALLEON_COMMAND_ACTION_13 5
+#define WM_GALLEON_GAMEBIT_CUTSCENE_DONE    0x429
+#define WM_GALLEON_GAMEBIT_CLEAR_DOOR       0xD1
+#define WM_GALLEON_COMMAND_OPENED           1
+#define WM_GALLEON_COMMAND_CLEAR_LACTIONS   2
+#define WM_GALLEON_COMMAND_SCREEN_FADE      3
+#define WM_GALLEON_COMMAND_ACTION_12        4
+#define WM_GALLEON_COMMAND_ACTION_13        5
 #define WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS 6
-#define WM_GALLEON_COMMAND_SHOW_MODEL 7
-#define WM_GALLEON_COMMAND_HIDE_MODEL 8
-#define WM_GALLEON_COMMAND_ACTION_11 9
-#define WM_GALLEON_ACTION_OPENED 10
-#define WM_GALLEON_ACTION_11 11
-#define WM_GALLEON_ACTION_12 12
-#define WM_GALLEON_ACTION_13 13
+#define WM_GALLEON_COMMAND_SHOW_MODEL       7
+#define WM_GALLEON_COMMAND_HIDE_MODEL       8
+#define WM_GALLEON_COMMAND_ACTION_11        9
+#define WM_GALLEON_ACTION_OPENED            10
+#define WM_GALLEON_ACTION_11                11
+#define WM_GALLEON_ACTION_12                12
+#define WM_GALLEON_ACTION_13                13
 
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
+#define OBJ_U8(obj, offset)  (*(u8*)((u8*)(obj) + (offset)))
+#define OBJ_S16(obj, offset) (*(s16*)((u8*)(obj) + (offset)))
+#define OBJ_S32(obj, offset) (*(s32*)((u8*)(obj) + (offset)))
 
 extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
@@ -118,8 +118,14 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int WM_Galleon_getExtraSize(void) { return 0x10; }
-int WM_Galleon_getObjectTypeId(void) { return 0x0; }
+int WM_Galleon_getExtraSize(void)
+{
+    return 0x10;
+}
+int WM_Galleon_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_Galleon_free(int* obj, int leavingMap)
 {
@@ -166,15 +172,12 @@ void WM_Galleon_hitDetect(void)
 {
 }
 
-#define OBJ_F32(obj, offset) (*(f32 *)((u8 *)(obj) + (offset)))
-#define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
+#define OBJ_F32(obj, offset) (*(f32*)((u8*)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
-#define MAP_EVENT_TEST(mapId, eventId) \
-    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET(mapId, eventId, value) \
-    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-    (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define MAP_EVENT_TEST(mapId, eventId)            (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
+#define MAP_EVENT_SET(mapId, eventId, value)      (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 
 /* neighbor-TU placement layouts (dll_01FB) shared by this unit */
 
@@ -318,7 +321,6 @@ void WM_Galleon_initialise(void)
 {
 }
 
-
 /* descriptor/ptr table auto 0x80328748-0x80328898 */
 extern u8 LaserBeam_init[];
 extern u8 LaserBeam_getExtraSize[];
@@ -375,9 +377,87 @@ extern u8 WM_LaserTarget_release[];
 extern u8 WM_LaserTarget_render[];
 extern u8 WM_LaserTarget_update[];
 
-u32 gWM_seqobjectObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WM_seqobject_initialise, (u32)WM_seqobject_release, 0x00000000, (u32)WM_seqobject_init, (u32)WM_seqobject_update, (u32)WM_seqobject_hitDetect, (u32)WM_seqobject_render, (u32)WM_seqobject_free, (u32)WM_seqobject_getObjectTypeId, (u32)WM_seqobject_getExtraSize };
-u32 dll_1FB[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_1FB_initialise_nop, (u32)dll_1FB_release_nop, 0x00000000, (u32)dll_1FB_init, (u32)dll_1FB_update, (u32)dll_1FB_hitDetect_nop, (u32)dll_1FB_render, (u32)dll_1FB_free_nop, (u32)dll_1FB_getObjectTypeId, (u32)dll_1FB_getExtraSize_ret_12 };
-u32 gLaserBeamObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)LaserBeam_initialise, (u32)LaserBeam_release, 0x00000000, (u32)LaserBeam_init, (u32)LaserBeam_update, (u32)LaserBeam_hitDetect, (u32)LaserBeam_render, (u32)LaserBeam_free, (u32)LaserBeam_getObjectTypeId, (u32)LaserBeam_getExtraSize };
-u32 gPressureSwitchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)PressureSwitch_initialise, (u32)PressureSwitch_release, 0x00000000, (u32)PressureSwitch_init, (u32)PressureSwitch_update, (u32)PressureSwitch_hitDetect, (u32)PressureSwitch_render, (u32)PressureSwitch_free, (u32)PressureSwitch_getObjectTypeId, (u32)PressureSwitch_getExtraSize };
-u32 dll_1FF[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_1FF_initialise_nop, (u32)dll_1FF_release_nop, 0x00000000, (u32)dll_1FF_init, (u32)dll_1FF_update, (u32)dll_1FF_hitDetect_nop, (u32)dll_1FF_render, (u32)dll_1FF_free_nop, (u32)dll_1FF_getObjectTypeId, (u32)dll_1FF_getExtraSize_ret_8 };
-u32 gWM_LaserTargetObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WM_LaserTarget_initialise, (u32)WM_LaserTarget_release, 0x00000000, (u32)WM_LaserTarget_init, (u32)WM_LaserTarget_update, (u32)WM_LaserTarget_hitDetect, (u32)WM_LaserTarget_render, (u32)WM_LaserTarget_free, (u32)WM_LaserTarget_getObjectTypeId, (u32)WM_LaserTarget_getExtraSize };
+u32 gWM_seqobjectObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      (u32)WM_seqobject_initialise,
+                                      (u32)WM_seqobject_release,
+                                      0x00000000,
+                                      (u32)WM_seqobject_init,
+                                      (u32)WM_seqobject_update,
+                                      (u32)WM_seqobject_hitDetect,
+                                      (u32)WM_seqobject_render,
+                                      (u32)WM_seqobject_free,
+                                      (u32)WM_seqobject_getObjectTypeId,
+                                      (u32)WM_seqobject_getExtraSize};
+u32 dll_1FB[14] = {0x00000000,
+                   0x00000000,
+                   0x00000000,
+                   0x00090000,
+                   (u32)dll_1FB_initialise_nop,
+                   (u32)dll_1FB_release_nop,
+                   0x00000000,
+                   (u32)dll_1FB_init,
+                   (u32)dll_1FB_update,
+                   (u32)dll_1FB_hitDetect_nop,
+                   (u32)dll_1FB_render,
+                   (u32)dll_1FB_free_nop,
+                   (u32)dll_1FB_getObjectTypeId,
+                   (u32)dll_1FB_getExtraSize_ret_12};
+u32 gLaserBeamObjDescriptor[14] = {0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x00090000,
+                                   (u32)LaserBeam_initialise,
+                                   (u32)LaserBeam_release,
+                                   0x00000000,
+                                   (u32)LaserBeam_init,
+                                   (u32)LaserBeam_update,
+                                   (u32)LaserBeam_hitDetect,
+                                   (u32)LaserBeam_render,
+                                   (u32)LaserBeam_free,
+                                   (u32)LaserBeam_getObjectTypeId,
+                                   (u32)LaserBeam_getExtraSize};
+u32 gPressureSwitchObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)PressureSwitch_initialise,
+                                        (u32)PressureSwitch_release,
+                                        0x00000000,
+                                        (u32)PressureSwitch_init,
+                                        (u32)PressureSwitch_update,
+                                        (u32)PressureSwitch_hitDetect,
+                                        (u32)PressureSwitch_render,
+                                        (u32)PressureSwitch_free,
+                                        (u32)PressureSwitch_getObjectTypeId,
+                                        (u32)PressureSwitch_getExtraSize};
+u32 dll_1FF[14] = {0x00000000,
+                   0x00000000,
+                   0x00000000,
+                   0x00090000,
+                   (u32)dll_1FF_initialise_nop,
+                   (u32)dll_1FF_release_nop,
+                   0x00000000,
+                   (u32)dll_1FF_init,
+                   (u32)dll_1FF_update,
+                   (u32)dll_1FF_hitDetect_nop,
+                   (u32)dll_1FF_render,
+                   (u32)dll_1FF_free_nop,
+                   (u32)dll_1FF_getObjectTypeId,
+                   (u32)dll_1FF_getExtraSize_ret_8};
+u32 gWM_LaserTargetObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)WM_LaserTarget_initialise,
+                                        (u32)WM_LaserTarget_release,
+                                        0x00000000,
+                                        (u32)WM_LaserTarget_init,
+                                        (u32)WM_LaserTarget_update,
+                                        (u32)WM_LaserTarget_hitDetect,
+                                        (u32)WM_LaserTarget_render,
+                                        (u32)WM_LaserTarget_free,
+                                        (u32)WM_LaserTarget_getObjectTypeId,
+                                        (u32)WM_LaserTarget_getExtraSize};

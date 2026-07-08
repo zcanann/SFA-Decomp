@@ -29,7 +29,7 @@
 
 /* point-light struct fields gating the glow render (untyped here) */
 #define LIGHT_FIELD_2F8_OFFSET 0x2f8
-#define LIGHT_FIELD_4C_OFFSET 0x4c
+#define LIGHT_FIELD_4C_OFFSET  0x4c
 
 typedef struct TimerSetup
 {
@@ -44,11 +44,11 @@ typedef struct TimerSetup
 
 typedef struct TimerState
 {
-    f32 countdownTimer;  /* 0x00 */
-    void* lightSlot;     /* 0x04: effect-mode point-light slot pointer */
-    f32 lightScale;      /* 0x08 */
-    u8 mode;             /* 0x0C: TIMER_MODE_* */
-    TimerFlags flags;    /* 0x0D */
+    f32 countdownTimer;   /* 0x00 */
+    void* lightSlot;      /* 0x04: effect-mode point-light slot pointer */
+    f32 lightScale;       /* 0x08 */
+    u8 mode;              /* 0x0C: TIMER_MODE_* */
+    TimerFlags flags;     /* 0x0D */
     u8 pad0E[0x20 - 0xE]; /* 0x0E */
 } TimerState;
 
@@ -63,7 +63,10 @@ STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);
 STATIC_ASSERT(offsetof(TimerState, flags) == 0x0D);
 STATIC_ASSERT(sizeof(TimerState) == 0x20);
 
-int timer_getExtraSize(void) { return sizeof(TimerState); }
+int timer_getExtraSize(void)
+{
+    return sizeof(TimerState);
+}
 
 void timer_free(int obj)
 {
@@ -223,19 +226,17 @@ void timer_update(int obj)
                 if (state->lightSlot != NULL)
                 {
                     modelLightStruct_setupGlow(state->lightSlot, 0, 255, 0, 0, 100, lbl_803DC418);
-                    modelLightStruct_setPosition(state->lightSlot, lbl_803E741C, lbl_803E7420,
-                                                 *(f32*)&lbl_803E741C);
+                    modelLightStruct_setPosition(state->lightSlot, lbl_803E741C, lbl_803E7420, *(f32*)&lbl_803E741C);
                 }
                 break;
             }
         }
-tail:
+    tail:
         if (state->mode == TIMER_MODE_EFFECT && fn_80080150((int)state) != 0)
         {
             void* light = state->lightSlot;
             f32 glowAlpha; /* embedded-assign pins lbl_803DC41C to glowAlpha's reg */
-            int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer *
-                (glowAlpha = lbl_803DC41C));
+            int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer * (glowAlpha = lbl_803DC41C));
             ObjTextureRuntimeSlot* texPtr = objFindTexture((void*)obj, 0, 0);
             if (texPtr != 0)
             {

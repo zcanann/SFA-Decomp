@@ -19,15 +19,15 @@
 #include "main/dll/DIM/DIMboulder.h"
 
 #define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DIMLOGFIRE_HIT_VOLUME_SLOT 0x1f
+#define DIMLOGFIRE_HIT_VOLUME_SLOT            0x1f
 /* smoke particle emitted while the smoke-toggle phase is active */
 #define DIMLOGFIRE_PARTFX_SMOKE 215
-#define MODEL_LIGHT_KIND_POINT 2
+#define MODEL_LIGHT_KIND_POINT  2
 
 /* DimLogFireState.mode flame state machine */
-#define DIMLOGFIRE_MODE_LIT 1        /* burning: point light on, flicker + smoke particles */
-#define DIMLOGFIRE_MODE_UNLIT 2      /* doused: light off, waiting on the tricky/strength gate */
-#define DIMLOGFIRE_MODE_ANIM_HELD 4  /* frozen by anim event 3 (SeqFn triggerCommand) */
+#define DIMLOGFIRE_MODE_LIT       1 /* burning: point light on, flicker + smoke particles */
+#define DIMLOGFIRE_MODE_UNLIT     2 /* doused: light off, waiting on the tricky/strength gate */
+#define DIMLOGFIRE_MODE_ANIM_HELD 4 /* frozen by anim event 3 (SeqFn triggerCommand) */
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -40,11 +40,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern int randomGetRange(int lo, int hi);
-
-
-
-
-
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
@@ -113,8 +108,14 @@ int fn_801B0784(int obj, int delta)
     return inner->strengthInit <= 0;
 }
 
-int DIMLogFire_getExtraSize(void) { return 0x24; }
-int DIMLogFire_getObjectTypeId(void) { return 0x1; }
+int DIMLogFire_getExtraSize(void)
+{
+    return 0x24;
+}
+int DIMLogFire_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void DIMLogFire_free(int* obj, int mode)
 {
@@ -145,8 +146,8 @@ void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
             *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
             *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
-            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(
-                (int*)state->subObj, p2, p3, p4, p5, lbl_803E4820);
+            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)((int*)state->subObj, p2, p3, p4, p5,
+                                                                                   lbl_803E4820);
         }
         ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4820);
         if (*(void**)&state->light != NULL)

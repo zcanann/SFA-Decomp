@@ -19,12 +19,12 @@
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 extern char lbl_803AC948[];
-extern f32 lbl_803E4780; /* render scale */
-extern f32 lbl_803E4784; /* init position component */
+extern f32 lbl_803E4780;                                           /* render scale */
+extern f32 lbl_803E4784;                                           /* init position component */
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */
 
 /* state->flags */
-#define ANIMSPACECRAFT_PARTFX 0x133
+#define ANIMSPACECRAFT_PARTFX        0x133
 #define ANIMSPACECRAFT_FLAG_BLINK_ON 0x2
 #define ANIMSPACECRAFT_FLAG_TOGGLE_8 0x8
 #define ANIMSPACECRAFT_FLAG_TOGGLE_4 0x4
@@ -38,7 +38,10 @@ void imanimspacecraft_modelMtxFn(void)
 
 /* vtable slot 0x0B: reports whether the spacecraft's ANIMSPACECRAFT_FLAG_TOGGLE_4
    flag bit is set. */
-u32 imanimspacecraft_func0B(int* obj) { return ((ImAnimSpacecraftState*)((GameObject*)obj)->extra)->flags & ANIMSPACECRAFT_FLAG_TOGGLE_4; }
+u32 imanimspacecraft_func0B(int* obj)
+{
+    return ((ImAnimSpacecraftState*)((GameObject*)obj)->extra)->flags & ANIMSPACECRAFT_FLAG_TOGGLE_4;
+}
 
 int imanimspacecraft_setScale(int* obj, int bitIdx)
 {
@@ -117,8 +120,14 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int imanimspacecraft_getExtraSize(void) { return 0x4; }
-int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
+int imanimspacecraft_getExtraSize(void)
+{
+    return 0x4;
+}
+int imanimspacecraft_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void imanimspacecraft_free(GameObject* obj)
 {
@@ -128,7 +137,8 @@ void imanimspacecraft_free(GameObject* obj)
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4780);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4780);
 }
 
 void imanimspacecraft_hitDetect(void)
@@ -137,7 +147,8 @@ void imanimspacecraft_hitDetect(void)
 
 void imanimspacecraft_update(GameObject* obj)
 {
-    if (obj->unkF4 != 0) return;
+    if (obj->unkF4 != 0)
+        return;
     obj->unkF4 = 1;
 }
 

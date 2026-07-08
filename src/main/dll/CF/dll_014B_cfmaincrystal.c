@@ -17,7 +17,7 @@
 
 #define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
 #define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
-#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C  /* charge at which the bolt fires */
+#define CFMAINCRYSTAL_CHARGE_FIRE  0x3C /* charge at which the bolt fires */
 
 /* Spark fx emitted (1-in-3) while the pylons are still partially charged
    (sum of pylonTimer[0..2] < 0x12c). */
@@ -59,21 +59,18 @@ typedef struct
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
-
 extern int ObjMsg_Pop();
 extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-
 extern f32 lbl_803E4210;
 
 extern int* gCfMainCrystalObj;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
-
-extern void PSVECNormalize(f32 * out, f32 * in);
+extern void PSVECNormalize(f32* out, f32* in);
 extern f32 gCfMainCrystalPylonBeamY;
 extern f32 lbl_803E41DC;
 extern f32 lbl_803E41E0;
@@ -234,10 +231,8 @@ void fn_8019D9F0(int* obj)
                 count++;
             }
             i++;
-        }
-        while (i < 3);
-        if (sub->pylonTimer[0] + sub->pylonTimer[1] + sub->pylonTimer[2] < 0x12c
-            && (int)randomGetRange(0, 3) == 0)
+        } while (i < 3);
+        if (sub->pylonTimer[0] + sub->pylonTimer[1] + sub->pylonTimer[2] < 0x12c && (int)randomGetRange(0, 3) == 0)
         {
             (*gPartfxInterface)->spawnObject(obj, CFMAINCRYSTAL_PARTFX_CHARGE_SPARK, NULL, 0, -1, NULL);
         }
@@ -330,14 +325,19 @@ void fn_8019D9F0(int* obj)
             }
         }
         i++;
-    }
-    while (i < 3);
+    } while (i < 3);
     ((GameObject*)obj)->anim.rotX += framesThisStep * 0x2a;
 }
 
-int CFMainCrystal_getExtraSize(void) { return 0x160; }
+int CFMainCrystal_getExtraSize(void)
+{
+    return 0x160;
+}
 
-int CFMainCrystal_getObjectTypeId(void) { return 0x1; }
+int CFMainCrystal_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void CFMainCrystal_free(int* obj)
 {
@@ -347,7 +347,8 @@ void CFMainCrystal_free(int* obj)
 void CFMainCrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4210);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4210);
 }
 
 void CFMainCrystal_hitDetect(void)
@@ -386,7 +387,7 @@ void CFMainCrystal_update(int* obj)
 void CFMainCrystal_init(int* obj, u8* def)
 {
     CfMainCrystalState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
     if (*(s8*)((char*)def + 0x19) == 0)
     {
         state->chime[0] = 0x28;

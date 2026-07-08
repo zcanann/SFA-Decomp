@@ -22,18 +22,26 @@
 /* ambient particle burst spawned 3x every update tick */
 #define DLL0299_PARTFX_AMBIENT 0x547
 
-typedef struct {
-    void *pad;
+typedef struct
+{
+    void* pad;
     void (*slot1)(int, int, int, int, int, int);
 } Dll299Vtable;
 
-typedef struct {
+typedef struct
+{
     s16 id;
 } Dll299State;
 
-int dll_299_getExtraSize_ret_2(void) { return 0x2; }
+int dll_299_getExtraSize_ret_2(void)
+{
+    return 0x2;
+}
 
-int dll_299_getObjectTypeId(void) { return 0x0; }
+int dll_299_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_299_free(int obj)
 {

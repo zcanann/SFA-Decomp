@@ -19,20 +19,20 @@
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 
-#define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1
-#define SC_TOTEMPUZZLE_READY_FLAG 0x2
-#define SC_TOTEMPUZZLE_REVERSED_FLAG 0x1
-#define SC_TOTEMPUZZLE_PULSE_FLAG 0x4
-#define SC_TOTEMPUZZLE_FORWARD_STEP 4
-#define SC_TOTEMPUZZLE_SOLVED_COUNT 5
-#define SC_TOTEMPUZZLE_CAP_INDEX 5
+#define SC_TOTEMPUZZLE_OBJECT_TYPE       0x3c1
+#define SC_TOTEMPUZZLE_READY_FLAG        0x2
+#define SC_TOTEMPUZZLE_REVERSED_FLAG     0x1
+#define SC_TOTEMPUZZLE_PULSE_FLAG        0x4
+#define SC_TOTEMPUZZLE_FORWARD_STEP      4
+#define SC_TOTEMPUZZLE_SOLVED_COUNT      5
+#define SC_TOTEMPUZZLE_CAP_INDEX         5
 #define SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID 0x100
 
-#define SC_TOTEMPUZZLE_WRONG_SFX 0x487
+#define SC_TOTEMPUZZLE_WRONG_SFX    0x487
 #define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
 #define SC_TOTEMPUZZLE_PROGRESS_SFX 0x409
 
-#define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN 0x4000
+#define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct SCTotemPuzzleState
@@ -62,9 +62,8 @@ typedef struct SCTotemPuzzleParticleBox
 } SCTotemPuzzleParticleBox;
 
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern f32 gTotemPuzzleAngleStep;
 extern f32 lbl_803E55F4;
 extern f32 lbl_803E55F8;
@@ -137,7 +136,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
     if (solvedThisObject != 0)
     {
-        extern void objfx_spawnArcedBurst(SCTotemPuzzleObject* obj, int enabled, f32 radius, int particleKind,
+        extern void objfx_spawnArcedBurst(SCTotemPuzzleObject * obj, int enabled, f32 radius, int particleKind,
                                           int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
                                           SCTotemPuzzleParticleBox* box, int flags);
         ObjTextureRuntimeSlot* solvedTexture;
@@ -148,8 +147,8 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
         for (objectIndex = 20; objectIndex != 0; objectIndex--)
         {
-            objfx_spawnArcedBurst(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
-                                  *(f32*)&lbl_803E5604, lbl_803E5608, &particleBox, 0);
+            objfx_spawnArcedBurst(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604, *(f32*)&lbl_803E5604, lbl_803E5608,
+                                  &particleBox, 0);
         }
 
         solvedTexture = objFindTexture(obj, 0, 0);
@@ -238,9 +237,10 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     int countB, startB;
 
     state = obj->state;
-    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3],
-                                                 &lightArgs[4], &lightArgs[5]);
-    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) || (mainGetBit(0xc10) == 0))
+    hitKind =
+        ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3], &lightArgs[4], &lightArgs[5]);
+    if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) ||
+        (mainGetBit(0xc10) == 0))
     {
         if ((hitKind != 0) && (hitKind != 0x11))
         {
@@ -263,7 +263,9 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         {
             if (state->pulseTimer != lbl_803E55F4)
             {
-                mainSetBits(GAMEBIT_SC_totempuzzle_running, ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(obj, state));
+                mainSetBits(GAMEBIT_SC_totempuzzle_running,
+                            ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(
+                                obj, state));
             }
             objects = ObjList_GetObjects(&startA, &countA);
             while (startA < countA)
@@ -398,7 +400,8 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     }
     state->peerPhaseOffset = lbl_803E55FC;
     obj->animEventCallback = sc_totempuzzle_animEventCallback;
-    obj->objectFlags = (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags =
+        (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void sc_totempuzzle_release(void)
@@ -410,4 +413,18 @@ void sc_totempuzzle_initialise(void)
 }
 
 /* descriptor/ptr table auto 0x80327a24-0x80327a60 */
-u32 gSC_totempuzzleObjDescriptor[15] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)sc_totempuzzle_initialise, (u32)sc_totempuzzle_release, 0x00000000, (u32)sc_totempuzzle_init, (u32)sc_totempuzzle_update, (u32)sc_totempuzzle_hitDetect, (u32)sc_totempuzzle_render, (u32)sc_totempuzzle_free, (u32)sc_totempuzzle_getObjectTypeId, (u32)sc_totempuzzle_getExtraSize, 0x00000000 };
+u32 gSC_totempuzzleObjDescriptor[15] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)sc_totempuzzle_initialise,
+                                        (u32)sc_totempuzzle_release,
+                                        0x00000000,
+                                        (u32)sc_totempuzzle_init,
+                                        (u32)sc_totempuzzle_update,
+                                        (u32)sc_totempuzzle_hitDetect,
+                                        (u32)sc_totempuzzle_render,
+                                        (u32)sc_totempuzzle_free,
+                                        (u32)sc_totempuzzle_getObjectTypeId,
+                                        (u32)sc_totempuzzle_getExtraSize,
+                                        0x00000000};

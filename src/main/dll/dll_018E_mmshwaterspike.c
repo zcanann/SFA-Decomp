@@ -17,17 +17,17 @@
 typedef struct MmshWaterspikePlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 maxHeight;          /* 0x0C: Y ceiling the spike cannot exceed */
+    f32 maxHeight; /* 0x0C: Y ceiling the spike cannot exceed */
     u8 pad10[0x14 - 0x10];
-    s32 xyzAnimId;          /* 0x14: ID of the XYZ-animator driving height (printed on miss) */
+    s32 xyzAnimId; /* 0x14: ID of the XYZ-animator driving height (printed on miss) */
 } MmshWaterspikePlacement;
 
 /* object-def layout; unk1A/unk1C pack into the 32-bit XYZ-animator object ID */
 typedef struct MmshWaterspikeObjectDef
 {
     u8 pad0[0x1A - 0x0];
-    s16 xyzAnimIdLow;       /* 0x1A: low 16 bits of the animator object ID */
-    s16 xyzAnimIdHigh;      /* 0x1C: high 16 bits of the animator object ID */
+    s16 xyzAnimIdLow;  /* 0x1A: low 16 bits of the animator object ID */
+    s16 xyzAnimIdHigh; /* 0x1C: high 16 bits of the animator object ID */
     u8 pad1E[0x24 - 0x1E];
     u8 unk24;
     u8 pad25[0x28 - 0x25];
@@ -41,14 +41,24 @@ extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
 
-int mmsh_waterspike_getExtraSize(void) { return 0x0; }
-int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
+int mmsh_waterspike_getExtraSize(void)
+{
+    return 0x0;
+}
+int mmsh_waterspike_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void mmsh_waterspike_free(void)
 {
 }
 
-void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
 
 void mmsh_waterspike_hitDetect(void)
 {
@@ -78,9 +88,8 @@ void mmsh_waterspike_update(int obj)
     else
     {
         logPrintf(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)placement)->xyzAnimId);
-        hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
-                                 ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &hitList, 0, 0);
+        hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                        ((GameObject*)obj)->anim.localPosZ, &hitList, 0, 0);
         if (hitCount != 0)
         {
             riseDelta = lbl_803E4F80;
@@ -116,8 +125,7 @@ void mmsh_waterspike_update(int obj)
             if (lbl_803E4F84 == riseDelta)
             {
                 ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
-                    ((GameObject*)obj)->anim.localPosX,
-                    ((GameObject*)obj)->anim.localPosY,
+                    ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, 0, lbl_803E4F88, 3);
             }
         }

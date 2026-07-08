@@ -1,6 +1,6 @@
 #include "main/audio/synth_seq_events.h"
 
-#define SYNTH_TRACK_COMMAND_END 0xFFFF
+#define SYNTH_TRACK_COMMAND_END  0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
 
 #define TRACK_CMD(cursor) ((SynthTrackCommand*)(cursor)->current)
@@ -11,8 +11,7 @@ typedef struct SynthVoiceKeyGroups
     SynthKeyGroupState keyGroupStates[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoiceKeyGroups;
 
-#define KEYGROUP_STATE(voice, index) \
-    (((SynthKeyGroupState*)((u8*)(voice) + 0x14E8))[index])
+#define KEYGROUP_STATE(voice, index) (((SynthKeyGroupState*)((u8*)(voice) + 0x14E8))[index])
 
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
 {
@@ -53,8 +52,7 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
                         return 0;
                     }
                 }
-                else if (KEYGROUP_STATE(gSynthCurrentVoice,
-                                        SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active)
+                else if (KEYGROUP_STATE(gSynthCurrentVoice, SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active)
                 {
                     track->current = 0;
                     return 0;

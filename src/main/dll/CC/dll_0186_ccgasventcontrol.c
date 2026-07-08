@@ -29,30 +29,30 @@
 
 #define CCGASVENTCONTROL_AIRMETER_BGTEXTURE 0x603 /* air-meter background texture id */
 
-#define CCGASVENT_GROUP 0x3f
+#define CCGASVENT_GROUP                  0x3f
 #define CCGASVENTCONTROL_TARGET_OBJGROUP 5
-#define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
-#define GAMEBIT_GAS_PUZZLE_DONE 0xa3
-#define GAMEBIT_GAS_INTRO_TRIGGER 0x3ec /* fires the intro sequence once the vents exist */
+#define GAMEBIT_GAS_ACTIVE               0x1c0 /* gas filling the room */
+#define GAMEBIT_GAS_PUZZLE_DONE          0xa3
+#define GAMEBIT_GAS_INTRO_TRIGGER        0x3ec /* fires the intro sequence once the vents exist */
 
 /* extra-state byte (+0) state-machine index */
-#define CCGASVENT_STATE_WAIT_VENTS  0 /* wait until all four vents exist */
-#define CCGASVENT_STATE_WAIT_INTRO  1 /* vents ready; wait for room trigger, run intro seq */
-#define CCGASVENT_STATE_INIT_METER  2 /* one-shot: init air meter and arm active gas */
-#define CCGASVENT_STATE_ACTIVE      3 /* gas rising, air-meter drain/refill main loop */
-#define CCGASVENT_STATE_WARP_BACK   4 /* player drowned; restart-point warp */
-#define CCGASVENT_STATE_SAVE_POINT  5 /* puzzle solved; stamp a save point */
-#define CCGASVENT_STATE_WAIT_CLEAR  6 /* wait for gas to clear, then shut fog off */
-#define CCGASVENT_STATE_DONE        7 /* puzzle complete / inactive */
+#define CCGASVENT_STATE_WAIT_VENTS 0 /* wait until all four vents exist */
+#define CCGASVENT_STATE_WAIT_INTRO 1 /* vents ready; wait for room trigger, run intro seq */
+#define CCGASVENT_STATE_INIT_METER 2 /* one-shot: init air meter and arm active gas */
+#define CCGASVENT_STATE_ACTIVE     3 /* gas rising, air-meter drain/refill main loop */
+#define CCGASVENT_STATE_WARP_BACK  4 /* player drowned; restart-point warp */
+#define CCGASVENT_STATE_SAVE_POINT 5 /* puzzle solved; stamp a save point */
+#define CCGASVENT_STATE_WAIT_CLEAR 6 /* wait for gas to clear, then shut fog off */
+#define CCGASVENT_STATE_DONE       7 /* puzzle complete / inactive */
 
 typedef struct CcgasventcontrolState
 {
     u8 state;       /* 0x00: state-machine index (0..7) */
     u8 soundActive; /* 0x01: looped vent-hiss sound latch (CCGasVentControlFn_801a9fd0) */
     u8 pad02[2];
-    f32 airMeter;   /* 0x04: air-meter value, depletes while submerged */
-    f32 fogRise;    /* 0x08: rising gas/fog height above the vent */
-    u8 ventCount;   /* 0x0C: cached count of vents the player is clear of */
+    f32 airMeter; /* 0x04: air-meter value, depletes while submerged */
+    f32 fogRise;  /* 0x08: rising gas/fog height above the vent */
+    u8 ventCount; /* 0x0C: cached count of vents the player is clear of */
     u8 pad0D[3];
 } CcgasventcontrolState;
 
@@ -80,8 +80,6 @@ extern f32 lbl_803E4638;
 extern f32 lbl_803E463C;
 extern f32 lbl_803E4640;
 extern f32 getXZDistance(f32* a, f32* b);
-
-
 
 extern f32 lbl_803E461C;
 
@@ -133,7 +131,10 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 }
 #pragma dont_inline reset
 
-int ccgasventcontrol_getExtraSize(void) { return sizeof(CcgasventcontrolState); }
+int ccgasventcontrol_getExtraSize(void)
+{
+    return sizeof(CcgasventcontrolState);
+}
 
 void ccgasventcontrol_free(int obj)
 {
@@ -149,7 +150,8 @@ void ccgasventcontrol_free(int obj)
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4620);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4620);
 }
 
 void ccgasventcontrol_update(int obj)
@@ -159,15 +161,15 @@ void ccgasventcontrol_update(int obj)
     switch (((CcgasventcontrolState*)ex)->state)
     {
     case CCGASVENT_STATE_WAIT_VENTS:
+    {
+        int cnt;
+        ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
+        if (cnt == 4)
         {
-            int cnt;
-            ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
-            if (cnt == 4)
-            {
-                ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_INTRO;
-            }
-            break;
+            ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_INTRO;
         }
+        break;
+    }
     case CCGASVENT_STATE_WAIT_INTRO:
         if (mainGetBit(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
         {
@@ -190,22 +192,23 @@ void ccgasventcontrol_update(int obj)
             {
                 ((CcgasventcontrolState*)ex)->fogRise = *(f32*)&gCcGasVentFogRiseMax;
             }
-            if (((GameObject*)player)->anim.localPosY <= ((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)
-                ex)->fogRise)
+            if (((GameObject*)player)->anim.localPosY <=
+                ((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)ex)->fogRise)
             {
                 ((CcgasventcontrolState*)ex)->airMeter = -(timeDelta * b - ((CcgasventcontrolState*)ex)->airMeter);
             }
             else
             {
-                ((CcgasventcontrolState*)ex)->airMeter = lbl_803E462C * timeDelta + ((CcgasventcontrolState*)ex)->airMeter;
+                ((CcgasventcontrolState*)ex)->airMeter =
+                    lbl_803E462C * timeDelta + ((CcgasventcontrolState*)ex)->airMeter;
                 if (((CcgasventcontrolState*)ex)->airMeter > gCcGasVentAirMeterMax)
                 {
                     ((CcgasventcontrolState*)ex)->airMeter = *(f32*)&gCcGasVentAirMeterMax;
                 }
             }
             enableHeavyFog(((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)ex)->fogRise,
-                           ((GameObject*)obj)->anim.localPosY - lbl_803E4630, lbl_803E4634, lbl_803E4638,
-                           lbl_803E463C, 0);
+                           ((GameObject*)obj)->anim.localPosY - lbl_803E4630, lbl_803E4634, lbl_803E4638, lbl_803E463C,
+                           0);
             if (((CcgasventcontrolState*)ex)->airMeter >= lbl_803E4640)
             {
                 (*gGameUIInterface)->runAirMeter((int)((CcgasventcontrolState*)ex)->airMeter);
@@ -239,12 +242,12 @@ void ccgasventcontrol_update(int obj)
         (*gMapEventInterface)->gotoRestartPoint();
         break;
     case CCGASVENT_STATE_SAVE_POINT:
-        {
-            int player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
-            ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_CLEAR;
-            break;
-        }
+    {
+        int player = Obj_GetPlayerObject();
+        (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
+        ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_CLEAR;
+        break;
+    }
     case CCGASVENT_STATE_WAIT_CLEAR:
         if (mainGetBit(GAMEBIT_GAS_ACTIVE) == 0)
         {

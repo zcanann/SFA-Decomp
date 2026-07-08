@@ -20,7 +20,7 @@
 
 /* seqId range whose moves are driven by the first shared phase */
 #define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
-#define SOFTBODY_MOVE_PHASE_A_END 0x6b2
+#define SOFTBODY_MOVE_PHASE_A_END   0x6b2
 
 typedef struct SoftBodySetup
 {
@@ -38,9 +38,15 @@ STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
 STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
 STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 
-int SoftBody_getExtraSize(void) { return 0; }
+int SoftBody_getExtraSize(void)
+{
+    return 0;
+}
 
-int SoftBody_getObjectTypeId(void) { return 0; }
+int SoftBody_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void SoftBody_free(int obj)
 {
@@ -126,8 +132,8 @@ void SoftBody_init(int obj, int setup)
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
     if (object->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(obj,
-                                  (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius * object->anim.rootMotionScale));
+        ObjHitbox_SetSphereRadius(obj, (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
+                                             object->anim.rootMotionScale));
     }
 }
 

@@ -20,7 +20,8 @@ extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];
 extern f32 gImSpaceThrusterWeightMax;
-extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23, gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
+extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23,
+    gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
 extern f32 lbl_803E478C, lbl_803E4790, gImSpaceThrusterAlphaToWeightScale, lbl_803E4798;
 
 typedef enum ImSpaceThrusterPhase
@@ -35,9 +36,9 @@ typedef enum ImSpaceThrusterPhase
 typedef struct ImSpaceThrusterPlacement
 {
     ObjPlacement head;
-    s8 rotXByte;  /* 0x18: high byte of the spawn rotX */
-    u8 kind;      /* 0x19: thruster kind 0..6 */
-    s16 rotY;     /* 0x1a */
+    s8 rotXByte;   /* 0x18: high byte of the spawn rotX */
+    u8 kind;       /* 0x19: thruster kind 0..6 */
+    s16 rotY;      /* 0x1a */
     s16 bankIndex; /* 0x1c */
 } ImSpaceThrusterPlacement;
 
@@ -51,20 +52,29 @@ static inline int* getActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-int imspacethruster_getExtraSize(void) { return 0xc; }
-int imspacethruster_getObjectTypeId(void) { return 0x0; }
+int imspacethruster_getExtraSize(void)
+{
+    return 0xc;
+}
+int imspacethruster_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void imspacethruster_free(int obj)
 {
     ImSpaceThrusterState* state = ((GameObject*)obj)->extra;
-    if (state->bufA != 0) mm_free(state->bufA);
-    if (state->bufB != 0) mm_free(state->bufB);
+    if (state->bufA != 0)
+        mm_free(state->bufA);
+    if (state->bufB != 0)
+        mm_free(state->bufB);
 }
 
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, gImSpaceThrusterWeightMax);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, gImSpaceThrusterWeightMax);
 }
 
 void imspacethruster_hitDetect(void)
@@ -81,7 +91,7 @@ void imspacethruster_update(GameObject* obj)
     state = obj->extra;
     if (obj->anim.parent != NULL)
     {
-        mode = (*(s16 (**)(int, int))(*(int*)(*(int*)&((GameObject*)obj->anim.parent)->anim.dll) + 0x20))(
+        mode = (*(s16(**)(int, int))(*(int*)(*(int*)&((GameObject*)obj->anim.parent)->anim.dll) + 0x20))(
             *(int*)&obj->anim.parent, state->kind);
         switch (state->phase)
         {

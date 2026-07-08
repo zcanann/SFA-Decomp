@@ -14,8 +14,8 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/track_dolphin.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-#define GROUNDANIMATOR_OBJFLAG_FREED 0x40
-#define GROUNDANIMATOR_OBJGROUP 0x31
+#define GROUNDANIMATOR_OBJFLAG_FREED   0x40
+#define GROUNDANIMATOR_OBJGROUP        0x31
 #define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
 typedef struct GroundanimatorPlacement
@@ -75,23 +75,29 @@ extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern u16 lbl_803DBDF0;
 
+int groundanimator_getExtraSize(void)
+{
+    return 0x30;
+}
 
-int groundanimator_getExtraSize(void) { return 0x30; }
-
-u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b); }
+u8 groundanimator_modelMtxFn(int* obj)
+{
+    return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b);
+}
 
 #pragma peephole off
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3FC4);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3FC4);
 }
 
 #pragma scheduling off
 #pragma peephole on
 u8 groundanimator_isFullySunk(int* obj)
 {
-    GroundAnimatorState * state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
+    GroundAnimatorState* state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     f32 depth = state->sinkDepth;
     int* placement = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
     u8 maxDepth = ((GroundanimatorPlacement*)placement)->maxSinkDepth;
@@ -101,7 +107,7 @@ u8 groundanimator_isFullySunk(int* obj)
 #pragma peephole off
 void groundanimator_init(int* obj, int* desc)
 {
-    GroundAnimatorState * vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
+    GroundAnimatorState* vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     vstate->modelVariant = (u8)((WaveanimatorObjectDef*)desc)->modelVariant;
     vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
     vstate->lastDepth = lbl_803E3FB8;
@@ -133,7 +139,7 @@ void groundanimator_free(int* obj, int flag)
     int mid;
     int inner;
     void* block;
-    GroundAnimatorState * w;
+    GroundAnimatorState* w;
     int* r21;
     void* nv;
     int* cell;
@@ -157,8 +163,7 @@ void groundanimator_free(int* obj, int flag)
                         nv = fn_800606DC(block, mid);
                         for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
-                            cell = (int*)((char*)((MapBlockData*)block)->vertices +
-                                *(u16*)vtx * 6);
+                            cell = (int*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
                             fn_800605F0(cell, local);
                             if (*(void**)&w->heightBuf != NULL)
                             {
@@ -185,7 +190,7 @@ void groundanimator_free(int* obj, int flag)
 f32 groundanimator_setScale(int* obj, int* target)
 {
     int* r31;
-    GroundAnimatorState * g;
+    GroundAnimatorState* g;
     f32 dy;
     f32 dx;
     f32 dz;
@@ -225,8 +230,7 @@ f32 groundanimator_setScale(int* obj, int* target)
     }
     g->sinkDepth = lbl_803E3FBC * timeDelta + g->sinkDepth;
     g->flags = g->flags | 4;
-    return g->radius *
-        (g->sinkDepth / (lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth));
+    return g->radius * (g->sinkDepth / (lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth));
 }
 
 void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
@@ -321,7 +325,7 @@ void groundanimator_update(int* obj)
     u8 allow;
     int mid;
     int inner;
-    GroundAnimatorState * g;
+    GroundAnimatorState* g;
     int* r20;
     void* entry;
     void* near;
@@ -340,8 +344,7 @@ void groundanimator_update(int* obj)
     {
         return;
     }
-    bi = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                             (double)((GameObject*)obj)->anim.localPosY,
+    bi = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX, (double)((GameObject*)obj)->anim.localPosY,
                              (double)((GameObject*)obj)->anim.localPosZ);
     oldbit = g->flags & 1;
     if (bi > -1)
@@ -394,8 +397,7 @@ void groundanimator_update(int* obj)
                         fn_801A80F0(near, 1);
                     }
                     fn_801A80C4(near, ((GameObject*)obj)->anim.localPosX,
-                                ((GameObject*)obj)->anim.localPosY - g->yOffset,
-                                ((GameObject*)obj)->anim.localPosZ);
+                                ((GameObject*)obj)->anim.localPosY - g->yOffset, ((GameObject*)obj)->anim.localPosZ);
                     break;
                 default:
                     if ((g->flags & 2) == 0)
@@ -403,8 +405,7 @@ void groundanimator_update(int* obj)
                         (*(void (**)(void*, int))(*(int*)(*(int*)((char*)near + 0x68)) + 0x24))(near, 1);
                     }
                     (*(void (**)(void*, f32, f32, f32))(*(int*)(*(int*)((char*)near + 0x68)) + 0x38))(
-                        near, ((GameObject*)obj)->anim.localPosX,
-                        ((GameObject*)obj)->anim.localPosY - g->yOffset,
+                        near, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY - g->yOffset,
                         ((GameObject*)obj)->anim.localPosZ);
                     break;
                 }
@@ -426,8 +427,7 @@ void groundanimator_update(int* obj)
         {
             g->flags = g->flags & ~4;
         }
-        else if (g->sinkDepth <
-            lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth)
+        else if (g->sinkDepth < lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth)
         {
             g->sinkDepth = g->sinkDepth - timeDelta;
             if (g->sinkDepth < lbl_803E3FB0)
@@ -444,8 +444,7 @@ void groundanimator_update(int* obj)
         {
             f32 lim;
             g->dirtyFrames -= 1;
-            if (g->lastDepth >
-                (lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth))
+            if (g->lastDepth > (lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth))
             {
                 g->lastDepth = lim;
                 g->sinkDepth = lim;
@@ -457,7 +456,8 @@ void groundanimator_update(int* obj)
                         fn_801A80F0((void*)g->linkedObj, 0);
                         break;
                     default:
-                        (*(void (**)(void*, int))(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))((void*)g->linkedObj, 0);
+                        (*(void (**)(void*, int))(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))(
+                            (void*)g->linkedObj, 0);
                         break;
                     }
                 }
@@ -485,8 +485,7 @@ void groundanimator_update(int* obj)
                             void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
                             fn_800605F0(cell, vbuf);
                             vbuf[1] = (f32) * (s16*)((char*)g->heightBuf + hoffVtx) -
-                                (g->lastDepth / lbl_803E3F98) *
-                                *(f32*)((char*)g->falloffBuf + foffVtx);
+                                      (g->lastDepth / lbl_803E3F98) * *(f32*)((char*)g->falloffBuf + foffVtx);
                             fn_8006058C(cell, vbuf);
                         }
                         foffVtx += 4;
@@ -499,8 +498,7 @@ void groundanimator_update(int* obj)
                     }
                 }
             }
-            DCStoreRangeNoSync((void*)((MapBlockData*)block)->vertices,
-                               ((MapBlockData*)block)->vertexCount * 6);
+            DCStoreRangeNoSync((void*)((MapBlockData*)block)->vertices, ((MapBlockData*)block)->vertexCount * 6);
         }
     }
     if (((GroundanimatorPlacement*)r20)->enableGameBit == -1 ||
@@ -517,13 +515,16 @@ void groundanimator_update(int* obj)
         tricky = getTrickyObject();
         if (tricky != NULL && mainGetBit(GAMEBIT_Tricky_Usable) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
         if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             (*(void (**)(void*, int*, int, int))(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 1);
@@ -531,7 +532,8 @@ void groundanimator_update(int* obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     }
     objRenderFn_80041018(obj);
 }

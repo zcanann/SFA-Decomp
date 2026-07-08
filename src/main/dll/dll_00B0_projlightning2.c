@@ -32,9 +32,12 @@ char sProjlightning2DoNoLongerSupported[] = "<projlightning2 Do>No Longer suppor
 /* descriptor/ptr table auto 0x80319548-0x80319568 (pointer tables regenerate ADDR32 relocs).
  * Union u64 member forces the retail 8-byte alignment (table follows an odd-length
  * string; retail pads to an 8-aligned table start). Same idiom as dll_000A_expgfx. */
-typedef union DllDescriptorTable {
+typedef union DllDescriptorTable
+{
     void* ptrs[8];
     u64 align8;
 } DllDescriptorTable;
 
-DllDescriptorTable lbl_80319548 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projlightning3_initialise, projlightning3_release, (void*)0x00000000, projlightning3_doUnsupported } };
+DllDescriptorTable lbl_80319548 = {{(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
+                                    projlightning3_initialise, projlightning3_release, (void*)0x00000000,
+                                    projlightning3_doUnsupported}};

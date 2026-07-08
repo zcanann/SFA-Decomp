@@ -19,13 +19,13 @@ extern u32 Obj_GetPlayerObject();
 extern ObjAnimEventList gSClanternObjAnimEvents;
 extern f32 lbl_803E5498;
 
-#define SCLANTERN_EVENT_LEFT_SPARK_A 1
+#define SCLANTERN_EVENT_LEFT_SPARK_A  1
 #define SCLANTERN_EVENT_RIGHT_SPARK_A 2
-#define SCLANTERN_EVENT_LEFT_SPARK_B 3
+#define SCLANTERN_EVENT_LEFT_SPARK_B  3
 #define SCLANTERN_EVENT_RIGHT_SPARK_B 4
 #define SCLANTERN_EVENT_LANTERN_SWING 9
-#define SCLANTERN_SWING_SFX_ID 0x2f4
-#define SCLANTERN_SPARK_SFX_ID 0x415
+#define SCLANTERN_SWING_SFX_ID        0x2f4
+#define SCLANTERN_SPARK_SFX_ID        0x415
 #define SCLANTERN_SPARK_SUPPRESS_MOVE 0x1b
 
 u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
@@ -81,7 +81,7 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     {
         ObjPath_GetPointWorldPosition(obj, pointIndex - 1, &posX, &posY, &posZ, 0);
         if (!((lantern->anim.currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
-            (lantern->anim.currentMoveProgress < lbl_803E5498)))
+              (lantern->anim.currentMoveProgress < lbl_803E5498)))
         {
             Sfx_PlayAtPositionFromObject(obj, posX, posY, posZ, SCLANTERN_SPARK_SFX_ID);
         }
@@ -106,6 +106,27 @@ extern void SH_LevelControl_update();
 extern void SH_LevelControl_init();
 extern void warpstone_SeqFn();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* jumptable_803275C0[22] = { (void*)((u8*)warpstone_SeqFn + 0x1B0), (void*)((u8*)warpstone_SeqFn + 0x1BC), (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x1C8), (void*)((u8*)warpstone_SeqFn + 0x1E8), (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x228), (void*)((u8*)warpstone_SeqFn + 0x214), (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x274), (void*)((u8*)warpstone_SeqFn + 0x294), (void*)((u8*)warpstone_SeqFn + 0x298), (void*)((u8*)warpstone_SeqFn + 0x298), (void*)((u8*)warpstone_SeqFn + 0x298), (void*)((u8*)warpstone_SeqFn + 0x298), (void*)((u8*)warpstone_SeqFn + 0x2E0), (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x304), (void*)((u8*)warpstone_SeqFn + 0x318), (void*)((u8*)warpstone_SeqFn + 0x33C), (void*)((u8*)warpstone_SeqFn + 0x190), (void*)0x00000000 };
-u16 lbl_80327618[130] = { 5, 8, 19, 20, 146, 147, 153, 174, 175, 176, 190, 417, 196, 197, 198, 245, 260, 277, 434, 97, 97, 97, 434, 437, 440, 440, 434, 97, 97, 97, 97, 97, 437, 440, 440, 440, 434, 97, 97, 97, 97, 97, 434, 97, 97, 97, 435, 95, 95, 95, 435, 438, 441, 441, 435, 95, 95, 95, 95, 95, 438, 441, 441, 441, 435, 95, 95, 95, 95, 95, 435, 95, 95, 95, 436, 96, 96, 96, 436, 439, 442, 442, 436, 96, 96, 96, 96, 96, 439, 442, 442, 442, 436, 96, 96, 96, 96, 96, 436, 96, 96, 96, 65535, 65535, 65535, 65535, 65535, 65535, 424, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 424, 65535, 424, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535 };
-void* gSH_LevelControlObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, SH_LevelControl_init, SH_LevelControl_update, (void*)0x00000000, (void*)0x00000000, SH_LevelControl_free, (void*)0x00000000, SH_LevelControl_getExtraSize };
+void* jumptable_803275C0[22] = {(void*)((u8*)warpstone_SeqFn + 0x1B0), (void*)((u8*)warpstone_SeqFn + 0x1BC),
+                                (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x1C8),
+                                (void*)((u8*)warpstone_SeqFn + 0x1E8), (void*)((u8*)warpstone_SeqFn + 0x35C),
+                                (void*)((u8*)warpstone_SeqFn + 0x228), (void*)((u8*)warpstone_SeqFn + 0x214),
+                                (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x274),
+                                (void*)((u8*)warpstone_SeqFn + 0x294), (void*)((u8*)warpstone_SeqFn + 0x298),
+                                (void*)((u8*)warpstone_SeqFn + 0x298), (void*)((u8*)warpstone_SeqFn + 0x298),
+                                (void*)((u8*)warpstone_SeqFn + 0x298), (void*)((u8*)warpstone_SeqFn + 0x2E0),
+                                (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x304),
+                                (void*)((u8*)warpstone_SeqFn + 0x318), (void*)((u8*)warpstone_SeqFn + 0x33C),
+                                (void*)((u8*)warpstone_SeqFn + 0x190), (void*)0x00000000};
+u16 lbl_80327618[130] = {
+    5,     8,     19,    20,    146,   147,   153,   174,   175,   176,   190,   417,   196,   197,   198,   245, 260,
+    277,   434,   97,    97,    97,    434,   437,   440,   440,   434,   97,    97,    97,    97,    97,    437, 440,
+    440,   440,   434,   97,    97,    97,    97,    97,    434,   97,    97,    97,    435,   95,    95,    95,  435,
+    438,   441,   441,   435,   95,    95,    95,    95,    95,    438,   441,   441,   441,   435,   95,    95,  95,
+    95,    95,    435,   95,    95,    95,    436,   96,    96,    96,    436,   439,   442,   442,   436,   96,  96,
+    96,    96,    96,    439,   442,   442,   442,   436,   96,    96,    96,    96,    96,    436,   96,    96,  96,
+    65535, 65535, 65535, 65535, 65535, 65535, 424,   65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 424, 65535,
+    424,   65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535};
+void* gSH_LevelControlObjDescriptor[14] = {
+    (void*)0x00000000, (void*)0x00000000,    (void*)0x00000000,    (void*)0x00090000,           (void*)0x00000000,
+    (void*)0x00000000, (void*)0x00000000,    SH_LevelControl_init, SH_LevelControl_update,      (void*)0x00000000,
+    (void*)0x00000000, SH_LevelControl_free, (void*)0x00000000,    SH_LevelControl_getExtraSize};

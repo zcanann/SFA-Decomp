@@ -1,6 +1,6 @@
 #include "src/main/audio/synth_internal.h"
 
-#define SYNTH_TRACK_COMMAND_END 0xFFFF
+#define SYNTH_TRACK_COMMAND_END  0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
 
 u8* synthReadVariablePair(u8* input, u16* value0, s16* value1)

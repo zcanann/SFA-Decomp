@@ -25,7 +25,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 
-#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_A              0x100
 #define CARRYABLE_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the prop */
 
 /* object group this prop joins at init / leaves on free */
@@ -37,8 +37,8 @@
 #define CARRY_STATE_PUTDOWN 2
 
 /* flag byte (state->flags) bits */
-#define CARRYABLE_FLAG_JUST_GRABBED 0x01
-#define CARRYABLE_FLAG_DROP_DISABLED 0x04
+#define CARRYABLE_FLAG_JUST_GRABBED      0x01
+#define CARRYABLE_FLAG_DROP_DISABLED     0x04
 #define CARRYABLE_FLAG_SUPPRESS_POS_SAVE 0x08
 
 typedef struct CarryableUpdateHeldState
@@ -99,7 +99,10 @@ void Carryable_setSuppressPositionSave(u8* state, u8 enable)
     }
 }
 
-s32 Carryable_getDropDisabled(u8* state) { return (((CarryableUpdateHeldState*)state)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0; }
+s32 Carryable_getDropDisabled(u8* state)
+{
+    return (((CarryableUpdateHeldState*)state)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0;
+}
 
 void Carryable_setDropDisabled(u8* state, u8 enable)
 {
@@ -125,13 +128,25 @@ void Carryable_setGravityEnabled(u8* state, u8 clear)
     }
 }
 
-u8 Carryable_getSurfaceType(u8* state) { return ((CarryableUpdateHeldState*)state)->surfaceType; }
+u8 Carryable_getSurfaceType(u8* state)
+{
+    return ((CarryableUpdateHeldState*)state)->surfaceType;
+}
 
-s32 Carryable_wasJustGrabbed(u8* state) { return ((CarryableUpdateHeldState*)state)->flags & CARRYABLE_FLAG_JUST_GRABBED; }
+s32 Carryable_wasJustGrabbed(u8* state)
+{
+    return ((CarryableUpdateHeldState*)state)->flags & CARRYABLE_FLAG_JUST_GRABBED;
+}
 
-s32 Carryable_getCarryState(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
+s32 Carryable_getCarryState(u8* state)
+{
+    return ((CarryableUpdateHeldState*)state)->carryState;
+}
 
-void Carryable_free(int obj) { ObjGroup_RemoveObject(obj, CARRYABLE_OBJGROUP); }
+void Carryable_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, CARRYABLE_OBJGROUP);
+}
 
 int Carryable_updateRenderState(int* obj, int flag)
 {
@@ -149,11 +164,13 @@ int Carryable_updateRenderState(int* obj, int flag)
     }
     if (((GameObject*)obj)->unkF8 != 0)
     {
-        if (flag != -1) return 0;
+        if (flag != -1)
+            return 0;
     }
     else
     {
-        if (flag == 0) return 0;
+        if (flag == 0)
+            return 0;
     }
     return 1;
 }
@@ -172,13 +189,12 @@ int Carryable_updateHeld(u8* obj)
         struct
         {
             u8 a, b, c, d, e;
-        } * t;
+        }* t;
         int newCarryState = 0;
         t = (void*)*(u8**)(obj + 0x78);
-        if ((t[((GameObject*)obj)->hitVolumeIndex].e & 0xf) == 6
-            && (buttonGetDisabled(0) & PAD_BUTTON_A) == 0
-            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0
-            && ((GameObject*)obj)->unkF8 == 0)
+        if ((t[((GameObject*)obj)->hitVolumeIndex].e & 0xf) == 6 && (buttonGetDisabled(0) & PAD_BUTTON_A) == 0 &&
+            (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
+            ((GameObject*)obj)->unkF8 == 0)
         {
             *(s16*)held = 0;
             buttonDisable(0, PAD_BUTTON_A);
@@ -199,8 +215,8 @@ int Carryable_updateHeld(u8* obj)
             if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -(lbl_803E06DC * timeDelta - ((GameObject*)obj)->anim.velocityY);
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)
-                    ->anim.localPosY;
+                ((GameObject*)obj)->anim.localPosY =
+                    ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
             }
             cnt = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, &list, 0, 1);
@@ -210,8 +226,8 @@ int Carryable_updateHeld(u8* obj)
             {
                 if (*(s8*)((u8*)list[i] + 0x14) != 0xe)
                 {
-                    if (((GameObject*)obj)->anim.localPosY < *list[i] && ((GameObject*)obj)->anim.localPosY > *list[i] -
-                        lbl_803E06E0)
+                    if (((GameObject*)obj)->anim.localPosY < *list[i] &&
+                        ((GameObject*)obj)->anim.localPosY > *list[i] - lbl_803E06E0)
                     {
                         hit = *(u8**)(list[i] + 4);
                         ((GameObject*)obj)->anim.localPosY = *list[i];
@@ -253,7 +269,8 @@ int Carryable_updateHeld(u8* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
         {
-            if ((((CarryableUpdateHeldState*)held)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0 || isTrickyNear(player) == 0)
+            if ((((CarryableUpdateHeldState*)held)->flags & CARRYABLE_FLAG_DROP_DISABLED) != 0 ||
+                isTrickyNear(player) == 0)
             {
                 Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
             }

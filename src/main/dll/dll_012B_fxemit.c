@@ -30,9 +30,6 @@
 /* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
    (the per-file spelling is load-bearing for codegen). */
 
-
-
-
 extern ModgfxInterface** gModgfxInterface;
 extern char sCFTreasSharpyDebugFormat[];
 extern f32 lbl_803E3E48;
@@ -50,8 +47,8 @@ typedef struct FxEmitWorldSpawnArgs
     f32 z;
 } FxEmitWorldSpawnArgs;
 
-#define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
-    (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
+#define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
+    (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))
 
 void fxemit_emitEffect(FxEmitObject* obj)
 {
@@ -71,56 +68,56 @@ void fxemit_emitEffect(FxEmitObject* obj)
     switch (def->spawnMode)
     {
     case FXEMIT_SPAWN_MODE_OBJECT:
+    {
+        s16 mode = state->effectMode;
+        if (mode == 0)
         {
-            s16 mode = state->effectMode;
-            if (mode == 0)
-            {
-                spawnFlags = 2;
-            }
-            if (mode == 1)
-            {
-                spawnFlags = 2;
-            }
-            if (mode == 2)
-            {
-                spawnFlags = 2;
-            }
-            break;
+            spawnFlags = 2;
         }
+        if (mode == 1)
+        {
+            spawnFlags = 2;
+        }
+        if (mode == 2)
+        {
+            spawnFlags = 2;
+        }
+        break;
+    }
     case FXEMIT_SPAWN_MODE_OBJECT_ALT:
+    {
+        s16 mode = state->effectMode;
+        if (mode == 0)
         {
-            s16 mode = state->effectMode;
-            if (mode == 0)
-            {
-                spawnFlags = 4;
-            }
-            if (mode == 1)
-            {
-                spawnFlags = 4;
-            }
-            if (mode == 2)
-            {
-                spawnFlags = 4;
-            }
-            break;
+            spawnFlags = 4;
         }
+        if (mode == 1)
+        {
+            spawnFlags = 4;
+        }
+        if (mode == 2)
+        {
+            spawnFlags = 4;
+        }
+        break;
+    }
     case FXEMIT_SPAWN_MODE_WORLD:
+    {
+        s16 mode = state->effectMode;
+        if (mode == 0)
         {
-            s16 mode = state->effectMode;
-            if (mode == 0)
-            {
-                spawnFlags = 0x200001;
-            }
-            if (mode == 1)
-            {
-                spawnFlags = 1;
-            }
-            if (mode == 2)
-            {
-                spawnFlags = 1;
-            }
-            break;
+            spawnFlags = 0x200001;
         }
+        if (mode == 1)
+        {
+            spawnFlags = 1;
+        }
+        if (mode == 2)
+        {
+            spawnFlags = 1;
+        }
+        break;
+    }
     case FXEMIT_SPAWN_MODE_NONE:
         spawnFlags = 0;
         break;
@@ -178,14 +175,14 @@ void fxemit_emitEffect(FxEmitObject* obj)
             {
                 for (i = 0; i < state->emitCount; i++)
                 {
-                    ((void (*)(int, int, int, int, int, int))((void**)*(int*)resource)[1])(
-                        (int)obj, 0, 0, spawnFlags, -1, 0);
+                    ((void (*)(int, int, int, int, int, int))((void**)*(int*)resource)[1])((int)obj, 0, 0, spawnFlags,
+                                                                                           -1, 0);
                 }
             }
             else
             {
-                ((void (*)(int, int, int, int, int, int))((void**)*(int*)resource)[1])(
-                    (int)obj, 0, 0, spawnFlags, -1, 0);
+                ((void (*)(int, int, int, int, int, int))((void**)*(int*)resource)[1])((int)obj, 0, 0, spawnFlags, -1,
+                                                                                       0);
             }
             Resource_Release(resource);
         }
@@ -196,14 +193,14 @@ void fxemit_emitEffect(FxEmitObject* obj)
             {
                 for (i = 0; i < state->emitCount; i++)
                 {
-                    ((void (*)(int, int, int, int, int, int, int))((void**)*(int*)resource)[1])
-                        ((int)obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
+                    ((void (*)(int, int, int, int, int, int, int))((void**)*(int*)resource)[1])(
+                        (int)obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
                 }
             }
             else
             {
-                ((void (*)(int, int, int, int, int, int, int))((void**)*(int*)resource)[1])
-                    ((int)obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
+                ((void (*)(int, int, int, int, int, int, int))((void**)*(int*)resource)[1])(
+                    (int)obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
             }
             Resource_Release(resource);
         }
@@ -293,7 +290,11 @@ void FxEmit_hitDetect(void)
 {
 }
 
-void FxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void FxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
 
 void FxEmit_update(FxEmitObject* obj)
 {
@@ -385,38 +386,38 @@ void FxEmit_update(FxEmitObject* obj)
             switch (state->suppressed)
             {
             case 0:
+            {
+                if (state->stopBit != -1 && mainGetBit(state->stopBit) != 0)
                 {
-                    if (state->stopBit != -1 && mainGetBit(state->stopBit) != 0)
-                    {
-                        state->suppressed = 1;
-                    }
-                    if (def->sfxPeriod == FXEMIT_SFX_SUPPRESS)
-                    {
-                        state->suppressed = 1;
-                    }
-                    emitCount = state->emitCount;
-                    if (emitCount >= 0 || (emitCount < 0 && obj->emitCooldown <= 0))
-                    {
-                        dx = obj->objAnim.worldPosX - player->worldPosX;
-                        dy = obj->objAnim.worldPosY - player->worldPosY;
-                        dz = obj->objAnim.worldPosZ - player->worldPosZ;
-                        if (emitCount == 0)
-                        {
-                            state->suppressed = 1;
-                        }
-                        dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                        if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius)
-                        {
-                            fxemit_emitEffect(obj);
-                        }
-                        obj->emitCooldown = -state->emitCount;
-                    }
-                    else if (emitCount < 0 && obj->emitCooldown > 0)
-                    {
-                        obj->emitCooldown -= framesThisStep;
-                    }
-                    break;
+                    state->suppressed = 1;
                 }
+                if (def->sfxPeriod == FXEMIT_SFX_SUPPRESS)
+                {
+                    state->suppressed = 1;
+                }
+                emitCount = state->emitCount;
+                if (emitCount >= 0 || (emitCount < 0 && obj->emitCooldown <= 0))
+                {
+                    dx = obj->objAnim.worldPosX - player->worldPosX;
+                    dy = obj->objAnim.worldPosY - player->worldPosY;
+                    dz = obj->objAnim.worldPosZ - player->worldPosZ;
+                    if (emitCount == 0)
+                    {
+                        state->suppressed = 1;
+                    }
+                    dist = sqrtf(dx * dx + dy * dy + dz * dz);
+                    if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius)
+                    {
+                        fxemit_emitEffect(obj);
+                    }
+                    obj->emitCooldown = -state->emitCount;
+                }
+                else if (emitCount < 0 && obj->emitCooldown > 0)
+                {
+                    obj->emitCooldown -= framesThisStep;
+                }
+                break;
+            }
             }
         }
     }

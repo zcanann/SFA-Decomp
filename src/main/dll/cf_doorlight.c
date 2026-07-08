@@ -47,7 +47,7 @@ extern void Obj_FreeObject(int obj);
 #define BADDIE_CONTROL_MODE_RETURN 6
 
 #define SOUNDFLAG_PULLUP_BURST 0x1
-#define SOUNDFLAG_DOOR_CREAK 0x2
+#define SOUNDFLAG_DOOR_CREAK   0x2
 
 #define AGGRO_CHANCE_RANGE 0x63
 
@@ -69,8 +69,8 @@ int kaldachom_stateHandlerB05(int obj, int p)
     }
     if ((s8)((GroundBaddieState*)p)->baddie.moveDone != 0 || (s8)((GroundBaddieState*)p)->baddie.moveJustStartedB != 0)
     {
-        if (((int (*)(int, int, f32, int))((void**)*(int*)gBaddieControlInterface)[0x11])
-            (obj, p, (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
+        if (((int (*)(int, int, f32, int))((void**)*(int*)gBaddieControlInterface)[0x11])(
+                obj, p, (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
         {
             return 5;
         }
@@ -118,7 +118,8 @@ int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
         ((CfDoorlightState*)sub)->control->soundFlags = 0;
         (*gPlayerInterface)->setState((void*)obj, p2, 7);
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
         ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
         ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
@@ -163,7 +164,8 @@ int kaldachom_stateHandlerB01(int* obj, GroundBaddieState* state)
     }
     else
     {
-        if ((s8)state->baddie.moveDone != 0) return 6;
+        if ((s8)state->baddie.moveDone != 0)
+            return 6;
     }
     return 0;
 }
@@ -224,7 +226,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
             char* linkedObj;
             if (((CfDoorlightState*)state)->spawnsLinkedObj != 0)
             {
-                linkedObj = ((char *(*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
+                linkedObj = ((char* (*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
             }
             else
             {
@@ -233,7 +235,8 @@ int kaldachom_stateHandlerA07(int obj, int p)
             if (linkedObj != NULL)
             {
                 f32 fz = lbl_803E3060;
-                (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x2c))(linkedObj, fz, lbl_803E3078, fz);
+                (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x2c))(linkedObj, fz,
+                                                                                                 lbl_803E3078, fz);
             }
         }
     }
@@ -245,7 +248,6 @@ int kaldachom_stateHandlerA07(int obj, int p)
             control->soundFlags |= SOUNDFLAG_DOOR_CREAK;
         }
     }
-    ((GameObject*)obj)->anim.alpha =
-        (lbl_803E3078 - ((GameObject*)obj)->anim.currentMoveProgress) * lbl_803E308C;
+    ((GameObject*)obj)->anim.alpha = (lbl_803E3078 - ((GameObject*)obj)->anim.currentMoveProgress) * lbl_803E308C;
     return 0;
 }

@@ -23,7 +23,7 @@ typedef struct Dll1FFState
     s16 msgHi;
     u8 pad4;
     s8 grabPhase; /* 0 free, 1 held, 2 releasing */
-    s8 sendFlag; /* pending send flag */
+    s8 sendFlag;  /* pending send flag */
     u8 pad7;
 } Dll1FFState;
 
@@ -41,17 +41,21 @@ typedef struct Dll1FFSlots
     u8 count;
 } Dll1FFSlots;
 
-#define DLL1FF_BUTTON_ACTION 0x100  /* action-button mask (button-just-pressed / disable) */
-#define DLL1FF_MSG_GRAB 0x100008    /* ObjMsg kind sent on release */
+#define DLL1FF_BUTTON_ACTION 0x100    /* action-button mask (button-just-pressed / disable) */
+#define DLL1FF_MSG_GRAB      0x100008 /* ObjMsg kind sent on release */
 
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, int param);
 extern const f32 lbl_803E5D80;
 
-int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
+int dll_1FF_getExtraSize_ret_8(void)
+{
+    return 0x8;
+}
 
 int dll_1FF_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x146) return 0x2;
+    if (((GameObject*)obj)->anim.seqId == 0x146)
+        return 0x2;
     return 0x0;
 }
 
@@ -68,12 +72,14 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     if (((GameObject*)obj)->unkF8 != 0)
     {
         isVisible = visible;
-        if (isVisible != -1) return;
+        if (isVisible != -1)
+            return;
     }
     else
     {
         isVisible = visible;
-        if (isVisible == 0) return;
+        if (isVisible == 0)
+            return;
     }
     if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
     {
@@ -116,7 +122,8 @@ void dll_1FF_update(int obj)
     if (state->grabPhase == 0)
     {
         grab[0] = 0;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && ((GameObject*)obj)->unkF8 == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
+            ((GameObject*)obj)->unkF8 == 0)
         {
             state->msgLo = grab[0];
             state->msgHi = 0x28;
@@ -131,11 +138,11 @@ void dll_1FF_update(int obj)
         if (((GameObject*)obj)->unkF8 == 0)
         {
             ObjHits_EnableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~
-                INTERACT_FLAG_DISABLED);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E5D84 * timeDelta - ((GameObject*)obj)->anim.velocityY);
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
-                anim.localPosY;
+            ((GameObject*)obj)->anim.localPosY =
+                ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
             count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                          ((GameObject*)obj)->anim.localPosZ, hitList, 0, 1);
             landed = NULL;
@@ -167,7 +174,8 @@ void dll_1FF_update(int obj)
     else
     {
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         if ((getButtonsJustPressed(0) & DLL1FF_BUTTON_ACTION) != 0)
         {
             state->sendFlag = 0;
@@ -184,8 +192,7 @@ void dll_1FF_update(int obj)
         }
         if (state->sendFlag != 0)
         {
-            ObjMsg_SendToObject(player, DLL1FF_MSG_GRAB, obj,
-                                ((int)state->msgHi << 16) | ((int)state->msgLo & 0xffff));
+            ObjMsg_SendToObject(player, DLL1FF_MSG_GRAB, obj, ((int)state->msgHi << 16) | ((int)state->msgLo & 0xffff));
         }
     }
 }

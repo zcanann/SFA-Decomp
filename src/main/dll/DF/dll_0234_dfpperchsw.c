@@ -7,8 +7,14 @@
 #include "main/dll/crate2.h"
 #include "main/engine_shared.h"
 
-int DFP_PerchWitch_getExtraSize(void) { return 0x0; }
-int DFP_PerchWitch_getObjectTypeId(void) { return 0x0; }
+int DFP_PerchWitch_getExtraSize(void)
+{
+    return 0x0;
+}
+int DFP_PerchWitch_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DFP_PerchWitch_free(void)
 {
@@ -22,8 +28,14 @@ void DFP_PerchWitch_hitDetect(void)
 {
 }
 
-void DFP_PerchWitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
-void DFP_PerchWitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
+void DFP_PerchWitch_update(void)
+{
+    OSReport(sDfperchwitchInitNoLongerSupported);
+}
+void DFP_PerchWitch_init(void)
+{
+    OSReport(sDfperchwitchInitNoLongerSupported);
+}
 
 void DFP_PerchWitch_release(void)
 {
@@ -34,7 +46,10 @@ void DFP_PerchWitch_initialise(void)
 }
 
 ObjectDescriptor gDfpstatue1ObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)DFP_Statue1_initialise,
     (ObjectDescriptorCallback)DFP_Statue1_release,
     0,
@@ -48,7 +63,10 @@ ObjectDescriptor gDfpstatue1ObjDescriptor = {
 };
 
 ObjectDescriptor gDfperchwitchObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)DFP_PerchWitch_initialise,
     (ObjectDescriptorCallback)DFP_PerchWitch_release,
     0,

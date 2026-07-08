@@ -27,14 +27,20 @@ extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
 
-int dfpfloorbar_SeqFn(void) { return 0; }
+int dfpfloorbar_SeqFn(void)
+{
+    return 0;
+}
 
 int DFP_Floorbar_getExtraSize(void)
 {
     return 0xc;
 }
 
-int DFP_Floorbar_getObjectTypeId(void) { return 0; }
+int DFP_Floorbar_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void DFP_Floorbar_free(int* obj)
 {
@@ -62,9 +68,11 @@ void DFP_Floorbar_hitDetect(int* obj)
     s32 hitFlag;
     state = (int**)*(int*)&((GameObject*)obj)->extra;
     linkedObject = state[2];
-    if (linkedObject == NULL) return;
+    if (linkedObject == NULL)
+        return;
     hitFlag = *(s16*)((char*)linkedObject + 6) & 0x40;
-    if (hitFlag == 0) return;
+    if (hitFlag == 0)
+        return;
     state[2] = NULL;
 }
 
@@ -73,18 +81,16 @@ typedef struct DfpfloorbarPlacement
     u8 pad0[0xC - 0x0];
     f32 posY;
     u8 pad10[0x18 - 0x10];
-    u8 rotXByte;          /* 0x18: <<8 seeds anim.rotX */
-    u8 modeIndex;         /* 0x19: selects the mode-table row */
+    u8 rotXByte;  /* 0x18: <<8 seeds anim.rotX */
+    u8 modeIndex; /* 0x19: selects the mode-table row */
     u8 pad1A[0x1C - 0x1A];
-    s16 travelRange;      /* 0x1C: nonzero scales rootMotionScale */
-    s16 triggerGameBit;   /* 0x1E */
+    s16 travelRange;       /* 0x1C: nonzero scales rootMotionScale */
+    s16 triggerGameBit;    /* 0x1E */
     s16 completionGameBit; /* 0x20 */
 } DfpfloorbarPlacement;
 
 u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 void DFP_Floorbar_update(int obj)
@@ -106,7 +112,8 @@ void DFP_Floorbar_update(int obj)
     switch ((u8)mode)
     {
     case 1:
-        if (state->modeIndex > 5) return;
+        if (state->modeIndex > 5)
+            return;
         if (mainGetBit(0xe57) != 0)
         {
             ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
@@ -145,7 +152,8 @@ void DFP_Floorbar_update(int obj)
                 idx = count;
             }
         }
-        if (state->linkedObject == NULL) return;
+        if (state->linkedObject == NULL)
+            return;
     }
 
     {
@@ -156,8 +164,7 @@ void DFP_Floorbar_update(int obj)
     state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];
 
     active = state->active;
-    if (active != 0 &&
-        ((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
+    if (active != 0 && ((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXfoot_water_walk_2);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - timeDelta / lbl_803E6410;
@@ -168,23 +175,28 @@ void DFP_Floorbar_update(int obj)
         return;
     }
 
-    if (state->requiredScore == 0) return;
+    if (state->requiredScore == 0)
+        return;
     if (active == 0)
     {
         ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY;
     }
-    if (state->active != 0) return;
+    if (state->active != 0)
+        return;
 
     playerObj = Obj_GetPlayerObject();
-    if (playerObj == NULL) return;
+    if (playerObj == NULL)
+        return;
 
     yDelta = ((GameObject*)obj)->anim.localPosY - ((GameObject*)playerObj)->anim.localPosY;
-    if (yDelta < 0.0f) yDelta = yDelta * lbl_803E6414;
+    if (yDelta < 0.0f)
+        yDelta = yDelta * lbl_803E6414;
     if (yDelta < 100.0f)
     {
         xMid = ((GameObject*)playerObj)->anim.localPosX - (((GameObject*)obj)->anim.localPosX - 100.0f);
         zDelta = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)playerObj)->anim.localPosZ;
-        if (zDelta < 0.0f) zDelta = zDelta * lbl_803E6414;
+        if (zDelta < 0.0f)
+            zDelta = zDelta * lbl_803E6414;
         if (zDelta < 18.0f)
         {
             if (xMid >= 150.0f)
@@ -296,5 +308,13 @@ extern void TrickyCurve_init();
 extern void TrickyCurve_release();
 extern void TrickyCurve_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gTrickyCurveObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, TrickyCurve_initialise, TrickyCurve_release, (void*)0x00000000, TrickyCurve_init, TrickyCurve_update, TrickyCurve_hitDetect, TrickyCurve_render, TrickyCurve_free, TrickyCurve_getObjectTypeId, TrickyCurve_getExtraSize };
-void* gSfxplayerObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, sfxplayer_initialise, sfxplayer_release, (void*)0x00000000, sfxplayer_init, sfxplayer_update, sfxplayer_hitDetect, sfxplayer_render, sfxplayer_free, sfxplayer_getObjectTypeId, sfxplayer_getExtraSize };
+void* gTrickyCurveObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
+                                       (void*)0x00090000,           TrickyCurve_initialise,  TrickyCurve_release,
+                                       (void*)0x00000000,           TrickyCurve_init,        TrickyCurve_update,
+                                       TrickyCurve_hitDetect,       TrickyCurve_render,      TrickyCurve_free,
+                                       TrickyCurve_getObjectTypeId, TrickyCurve_getExtraSize};
+void* gSfxplayerObjDescriptor[14] = {(void*)0x00000000,         (void*)0x00000000,     (void*)0x00000000,
+                                     (void*)0x00090000,         sfxplayer_initialise,  sfxplayer_release,
+                                     (void*)0x00000000,         sfxplayer_init,        sfxplayer_update,
+                                     sfxplayer_hitDetect,       sfxplayer_render,      sfxplayer_free,
+                                     sfxplayer_getObjectTypeId, sfxplayer_getExtraSize};

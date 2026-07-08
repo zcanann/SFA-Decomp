@@ -14,9 +14,9 @@
 #include "main/audio/sfx_ids.h"
 
 #define VFPLADDERS_TRIGGER_SEQID 0x548
-#define VFPLADDERS_DROP_DELAY 0x5a /* frames between trigger and drop */
+#define VFPLADDERS_DROP_DELAY    0x5a /* frames between trigger and drop */
 
-#define VFPLADDERS_OBJFLAG_HIDDEN 0x4000
+#define VFPLADDERS_OBJFLAG_HIDDEN             0x4000
 #define VFPLADDERS_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 enum
@@ -52,11 +52,20 @@ STATIC_ASSERT(offsetof(VfpLaddersSetup, baseY) == 0x0C);
 STATIC_ASSERT(offsetof(VfpLaddersSetup, baseGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VfpLaddersSetup, triggerGameBit) == 0x20);
 
-int vfpladders_SeqFn(void) { return 0x0; }
+int vfpladders_SeqFn(void)
+{
+    return 0x0;
+}
 
-int VFP_Ladders_getExtraSize(void) { return 0x8; }
+int VFP_Ladders_getExtraSize(void)
+{
+    return 0x8;
+}
 
-int VFP_Ladders_getObjectTypeId(void) { return 0x0; }
+int VFP_Ladders_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_Ladders_free(int obj)
 {
@@ -114,11 +123,9 @@ void VFP_Ladders_update(int obj)
             {
                 state->delayTimer = VFPLADDERS_DROP_DELAY;
             }
-            if (state->phase == VFPLADDERS_PHASE_DROPPING &&
-                ((GameObject*)obj)->anim.localPosY > setup->baseY - 150.0f)
+            if (state->phase == VFPLADDERS_PHASE_DROPPING && ((GameObject*)obj)->anim.localPosY > setup->baseY - 150.0f)
             {
-                ((GameObject*)obj)->anim.localPosY =
-                    ((GameObject*)obj)->anim.localPosY - 2.0f * timeDelta;
+                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - 2.0f * timeDelta;
                 if (((GameObject*)obj)->anim.localPosY < setup->baseY - 150.0f)
                 {
                     ((GameObject*)obj)->anim.localPosY = setup->baseY - 150.0f;

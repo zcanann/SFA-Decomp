@@ -33,19 +33,19 @@
 typedef struct MmpGyserventState
 {
     u8 pad0[0x4 - 0x0];
-    f32 nearRadiusSq;  /* 0x04: squared near-distance threshold */
+    f32 nearRadiusSq; /* 0x04: squared near-distance threshold */
     u8 pad8[0xC - 0x8];
-    f32 planeNormalX;  /* 0x0C: clip-plane normal (vent local forward) */
-    f32 planeNormalY;  /* 0x10 */
-    f32 planeNormalZ;  /* 0x14 */
-    f32 planeOffset;   /* 0x18: plane d term */
-    f32 reachAX;       /* 0x1C: reach endpoint A */
-    f32 reachAY;       /* 0x20 */
-    f32 reachAZ;       /* 0x24 */
-    f32 reachBX;       /* 0x28: reach endpoint B */
-    f32 reachBY;       /* 0x2C */
-    f32 reachBZ;       /* 0x30 */
-    f32 reach;         /* 0x34: eruption reach distance */
+    f32 planeNormalX; /* 0x0C: clip-plane normal (vent local forward) */
+    f32 planeNormalY; /* 0x10 */
+    f32 planeNormalZ; /* 0x14 */
+    f32 planeOffset;  /* 0x18: plane d term */
+    f32 reachAX;      /* 0x1C: reach endpoint A */
+    f32 reachAY;      /* 0x20 */
+    f32 reachAZ;      /* 0x24 */
+    f32 reachBX;      /* 0x28: reach endpoint B */
+    f32 reachBY;      /* 0x2C */
+    f32 reachBZ;      /* 0x30 */
+    f32 reach;        /* 0x34: eruption reach distance */
 } MmpGyserventState;
 
 STATIC_ASSERT(offsetof(MmpGyserventState, nearRadiusSq) == 0x04);
@@ -60,11 +60,12 @@ extern void mtx44Transpose(void* m, void* out);
 extern void OSReport(const char* msg, ...);
 extern void objInterpretSeq(void* obj, int arg2, s8 legCode, int distanceSquared);
 extern char lbl_8032253C[]; /* OSReport format string (.data) */
-extern f32 lbl_803E40D8;     /* 0.0f - used both as a plain 0.0f and, via *(f32*)&lbl_803E40D8, as the y arg of Matrix_TransformPoint (same value) */
-extern f32 lbl_803E40DC;     /* 0.0625f (1/16) - reach scale per height byte */
-extern f32 lbl_803E40E0;     /* 1.0f */
-extern f32 lbl_803E40E4;     /* 100.0f - reach multiplier */
-extern f32 lbl_803E40E8;     /* 145.0f - near-radius multiplier */
+extern f32
+    lbl_803E40D8; /* 0.0f - used both as a plain 0.0f and, via *(f32*)&lbl_803E40D8, as the y arg of Matrix_TransformPoint (same value) */
+extern f32 lbl_803E40DC; /* 0.0625f (1/16) - reach scale per height byte */
+extern f32 lbl_803E40E0; /* 1.0f */
+extern f32 lbl_803E40E4; /* 100.0f - reach multiplier */
+extern f32 lbl_803E40E8; /* 145.0f - near-radius multiplier */
 
 /* obj is the GameObject, but typed s16* so the rotX/rotY/rotZ word writes
  * (obj[0..2]) and the f32 scale at obj+4 land at the exact offsets; it is cast
@@ -97,9 +98,8 @@ void objFn_80198fa4(s16* obj, void* placement)
     state = (MmpGyserventState*)((GameObject*)obj)->extra;
     obj[0] = (s16)((*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTX) & 0x3f) << 10);
     obj[1] = (s16)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTY) << 8);
-    *(f32*)(obj + 4) =
-        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-        (((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC);
+    *(f32*)(obj + 4) = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
+                       (((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC);
 
     xf.rotX = obj[0];
     xf.rotY = obj[1];
@@ -113,10 +113,8 @@ void objFn_80198fa4(s16* obj, void* placement)
     state->planeNormalX = outY;
     state->planeNormalY = outZ;
     state->planeNormalZ = outX;
-    state->planeOffset =
-        -(((GameObject*)obj)->anim.worldPosZ * outX +
-            (((GameObject*)obj)->anim.worldPosX * outY +
-                ((GameObject*)obj)->anim.worldPosY * outZ));
+    state->planeOffset = -(((GameObject*)obj)->anim.worldPosZ * outX +
+                           (((GameObject*)obj)->anim.worldPosX * outY + ((GameObject*)obj)->anim.worldPosY * outZ));
 
     xf.rotX = (s16)(-obj[0]);
     xf.rotY = (s16)(-obj[1]);
@@ -129,8 +127,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     mtx44Transpose(rotMtx, (char*)state + 0x38);
 
     state->reach = lbl_803E40E4 * *(f32*)(obj + 4);
-    state->nearRadiusSq =
-        (lbl_803E40E8 * *(f32*)(obj + 4)) * (lbl_803E40E8 * *(f32*)(obj + 4));
+    state->nearRadiusSq = (lbl_803E40E8 * *(f32*)(obj + 4)) * (lbl_803E40E8 * *(f32*)(obj + 4));
     if (*(int*)((char*)placement + MMP_GYSERVENT_PLACE_INSTANCE) == MMP_GYSERVENT_DEBUG_INSTANCE_ID)
     {
         OSReport(lbl_8032253C);

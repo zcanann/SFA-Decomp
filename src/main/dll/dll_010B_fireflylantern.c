@@ -26,8 +26,10 @@ extern f32 lbl_803E3AE8;
 int FireFlyLantern_spawnFireFly(int* obj)
 {
     FireFlyLanternSpawnSetup* setup;
-    if (Obj_IsLoadingLocked() == 0) return 0;
-    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), FIREFLYLANTERN_CHILD_OBJ_FIREFLY);
+    if (Obj_IsLoadingLocked() == 0)
+        return 0;
+    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup),
+                                                            FIREFLYLANTERN_CHILD_OBJ_FIREFLY);
     setup->objectType = FIREFLYLANTERN_CHILD_OBJ_FIREFLY;
     setup->setupType = 9;
     setup->field04 = 2;
@@ -88,8 +90,14 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int FireFlyLantern_getExtraSize(void) { return 0x24; }
-int FireFlyLantern_getObjectTypeId(void) { return 0x8; }
+int FireFlyLantern_getExtraSize(void)
+{
+    return 0x24;
+}
+int FireFlyLantern_getObjectTypeId(void)
+{
+    return 0x8;
+}
 
 void FireFlyLantern_free(int obj)
 {
@@ -101,7 +109,10 @@ void FireFlyLantern_free(int obj)
     ObjGroup_RemoveObject(obj, FIREFLYLANTERN_OBJGROUP);
 }
 
-void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AF0); }
+void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AF0);
+}
 
 void FireFlyLantern_update(int obj)
 {

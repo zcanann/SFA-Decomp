@@ -60,7 +60,8 @@ void AttractMovieVideo_Decoder(void);
 #define THP_VERSION_1_0 0x10000
 
 /* per-frame component kinds in THPHeader::mCompInfoDataOffsets table */
-enum {
+enum
+{
     THP_COMPONENT_VIDEO = 0,
     THP_COMPONENT_AUDIO = 1
 };
@@ -346,8 +347,7 @@ BOOL CreateReadThread(OSPriority priority)
     char* base = gPicMenuReadThreadArea;
     char* stack = base + 0x1000;
 
-    if (!OSCreateThread((OSThread*)stack, (void*(*)(void*))THPRead_Reader, NULL,
-                        stack, 0x1000, priority, 1))
+    if (!OSCreateThread((OSThread*)stack, (void* (*)(void*))THPRead_Reader, NULL, stack, 0x1000, priority, 1))
     {
         return 0;
     }
@@ -385,8 +385,7 @@ void AttractMovieVideo_Decode(void* param)
     db = gPicMenuVideoDecodeThreadArea;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
     player = &lbl_803A5D60;
-    dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr +
-        player->compInfo.mNumComponents * sizeof(u32) + 8;
+    dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr + player->compInfo.mNumComponents * sizeof(u32) + 8;
 
     {
         AttractMoviePlayer* player2;
@@ -406,11 +405,9 @@ void AttractMovieVideo_Decode(void* param)
             {
             case THP_COMPONENT_VIDEO:
             {
-                s32 dec = THPVideoDecode(dvdData,
-                                         ((AttractMovieTextureSet*)readMsg)->yTexture,
+                s32 dec = THPVideoDecode(dvdData, ((AttractMovieTextureSet*)readMsg)->yTexture,
                                          ((AttractMovieTextureSet*)readMsg)->uTexture,
-                                         ((AttractMovieTextureSet*)readMsg)->vTexture,
-                                         player2->thpWorkArea);
+                                         ((AttractMovieTextureSet*)readMsg)->vTexture, player2->thpWorkArea);
                 player2->videoError = dec;
                 if (dec != 0)
                 {
@@ -421,8 +418,7 @@ void AttractMovieVideo_Decode(void* param)
                     }
                     OSSuspendThread((OSThread*)(db + 0x1058));
                 }
-                ((AttractMovieTextureSet*)readMsg)->frameNumber =
-                    ((AttractMovieReadBuffer*)param)->frameNumber;
+                ((AttractMovieTextureSet*)readMsg)->frameNumber = ((AttractMovieReadBuffer*)param)->frameNumber;
                 OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
                 {
                     u32 intr = OSDisableInterrupts();
@@ -587,16 +583,15 @@ BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
 
     if (onMemoryArg != 0)
     {
-        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))AttractMovieVideo_DecoderForOnMemory,
-                            (void*)onMemoryArg,
-                            (void*)(db + 0x1058), 0x1000, priority, 1))
+        if (!OSCreateThread((OSThread*)(db + 0x1058), (void* (*)(void*))AttractMovieVideo_DecoderForOnMemory,
+                            (void*)onMemoryArg, (void*)(db + 0x1058), 0x1000, priority, 1))
         {
             return 0;
         }
     }
     else
     {
-        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))AttractMovieVideo_Decoder, NULL,
+        if (!OSCreateThread((OSThread*)(db + 0x1058), (void* (*)(void*))AttractMovieVideo_Decoder, NULL,
                             (void*)(db + 0x1058), 0x1000, priority, 1))
         {
             return 0;

@@ -127,31 +127,37 @@ extern f32 lbl_803DFE08;
 extern f32 lbl_803DFE0C;
 extern f32 lbl_803DFE10;
 
-#define FILL8() do {                            \
-    lbl_8039C380.posX = 0.0f;             \
-    lbl_8039C380.posY = 0.0f;            \
-    lbl_8039C380.posZ = 0.0f;            \
-    lbl_8039C380.scale = 1.0f;             \
-    lbl_8039C380.unk0 = 0;                         \
-    lbl_8039C380.unk2 = 0;                         \
-    lbl_8039C380.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C380;             \
-  } while (0)
+#define FILL8()                                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C380.posX = 0.0f;                                                                                      \
+        lbl_8039C380.posY = 0.0f;                                                                                      \
+        lbl_8039C380.posZ = 0.0f;                                                                                      \
+        lbl_8039C380.scale = 1.0f;                                                                                     \
+        lbl_8039C380.unk0 = 0;                                                                                         \
+        lbl_8039C380.unk2 = 0;                                                                                         \
+        lbl_8039C380.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C380;                                                               \
+    } while (0)
 
-int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                   u8 modelId, s16* extraArgs)
+int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
+                   s16* extraArgs)
 {
     int spawnResult;
     PartFxSpawn cfg;
 
     lbl_803DB810 = lbl_803DB810 + lbl_803DFD98;
-    if (lbl_803DB810 > 1.0f) lbl_803DB810 = lbl_803DFD9C;
+    if (lbl_803DB810 > 1.0f)
+        lbl_803DB810 = lbl_803DFD9C;
     lbl_803DB814 = lbl_803DB814 + lbl_803DFDA4;
-    if (lbl_803DB814 > 1.0f) lbl_803DB814 = lbl_803DFDA8;
-    if (sourceObj == 0) return -1;
+    if (lbl_803DB814 > 1.0f)
+        lbl_803DB814 = lbl_803DFDA8;
+    if (sourceObj == 0)
+        return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
-        if (spawnParams == 0) return -1;
+        if (spawnParams == 0)
+            return -1;
         cfg.sourcePosY = spawnParams->posX;
         cfg.sourcePosZ = spawnParams->posY;
         cfg.sourcePosW = spawnParams->posZ;
@@ -187,14 +193,10 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     switch (effectId)
     {
     case 0x361:
-        cfg.velocityX = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(-0x14, 0x14);
-        cfg.startPosX = (f32)(s32)
-        randomGetRange(-0x32, 0x32);
-        cfg.startPosZ = (f32)(s32)
-        randomGetRange(-0x32, 0x32);
+        cfg.velocityX = lbl_803DFDB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.velocityZ = lbl_803DFDB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.startPosX = (f32)(s32)randomGetRange(-0x32, 0x32);
+        cfg.startPosZ = (f32)(s32)randomGetRange(-0x32, 0x32);
         cfg.scale = lbl_803DFD9C;
         cfg.lifetimeFrames = 0x258;
         cfg.initialAlpha = 0xc8;
@@ -202,14 +204,10 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x62;
         break;
     case 0x362:
-        cfg.velocityX = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(-0x14, 0x14);
-        cfg.startPosX = (f32)(s32)
-        randomGetRange(-0x32, 0x32);
-        cfg.startPosZ = (f32)(s32)
-        randomGetRange(-0xa, 0xa);
+        cfg.velocityX = lbl_803DFDB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.velocityZ = lbl_803DFDB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.startPosX = (f32)(s32)randomGetRange(-0x32, 0x32);
+        cfg.startPosZ = (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.scale = lbl_803DFD9C;
         cfg.lifetimeFrames = 0x258;
         cfg.initialAlpha = 0xc8;
@@ -217,14 +215,10 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x62;
         break;
     case 0x35f:
-        cfg.startPosX = lbl_803DFDB4 * (f32)(s32)
-        randomGetRange(-0x64, 0x64);
-        cfg.startPosZ = lbl_803DFDB4 * (f32)(s32)
-        randomGetRange(-0x64, 0x64);
-        cfg.startPosY = lbl_803DFDB4 * (f32)(s32)
-        randomGetRange(-0xa, 0x78);
-        cfg.velocityY = lbl_803DFDB8 * (f32)(s32)
-        randomGetRange(2, 0x64);
+        cfg.startPosX = lbl_803DFDB4 * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.startPosZ = lbl_803DFDB4 * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.startPosY = lbl_803DFDB4 * (f32)(s32)randomGetRange(-0xa, 0x78);
+        cfg.velocityY = lbl_803DFDB8 * (f32)(s32)randomGetRange(2, 0x64);
         cfg.scale = lbl_803DFD9C;
         cfg.lifetimeFrames = 0x3c;
         cfg.initialAlpha = 0x9b;
@@ -239,20 +233,13 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.renderFlags = 0x20;
         break;
     case 0x360:
-        cfg.startPosX = (f32)(s32)
-        randomGetRange(-0x1e, 0x1e);
-        cfg.startPosZ = (f32)(s32)
-        randomGetRange(-0x1e, 0x1e);
-        cfg.startPosY = lbl_803DFDBC + (f32)(s32)
-        randomGetRange(0x1e, 0x28);
-        cfg.velocityX = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(-0x28, 0x28);
-        cfg.velocityZ = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(-0x28, 0x28);
-        cfg.velocityY = lbl_803DFDC4 * (f32)(s32)
-        randomGetRange(0, 0x64);
-        cfg.scale = lbl_803DFDC8 * (f32)(s32)
-        randomGetRange(0x14, 0x50);
+        cfg.startPosX = (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.startPosZ = (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.startPosY = lbl_803DFDBC + (f32)(s32)randomGetRange(0x1e, 0x28);
+        cfg.velocityX = lbl_803DFDC0 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.velocityZ = lbl_803DFDC0 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.velocityY = lbl_803DFDC4 * (f32)(s32)randomGetRange(0, 0x64);
+        cfg.scale = lbl_803DFDC8 * (f32)(s32)randomGetRange(0x14, 0x50);
         cfg.lifetimeFrames = randomGetRange(0, 0x118) + 0xb4;
         cfg.initialAlpha = 0xfe;
         cfg.behaviorFlags = 0x81008000;
@@ -261,7 +248,8 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     case 0x357:
         if (spawnParams == 0)
             FILL8();
-        if (spawnParams == 0) return -1;
+        if (spawnParams == 0)
+            return -1;
         cfg.colorWord0 = (u16)((u8)spawnParams->unk4 << 8);
         cfg.colorWord1 = (u16)((u8)spawnParams->unk2 << 8);
         cfg.colorWord2 = (u16)((u8)spawnParams->unk0 << 8);
@@ -276,20 +264,13 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x71;
         break;
     case 0x359:
-        cfg.startPosX = (f32)(s32)
-        randomGetRange(-0x1e, 0x1e);
-        cfg.startPosZ = (f32)(s32)
-        randomGetRange(-0x1e, 0x1e);
-        cfg.startPosY = lbl_803DFDBC + (f32)(s32)
-        randomGetRange(0x1e, 0x28);
-        cfg.velocityX = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
-        cfg.velocityZ = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
-        cfg.velocityY = lbl_803DFDC4 * (f32)(s32)
-        randomGetRange(0, 0x64);
-        cfg.scale = lbl_803DFDC8 * (f32)(s32)
-        randomGetRange(0x14, 0x50);
+        cfg.startPosX = (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.startPosZ = (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.startPosY = lbl_803DFDBC + (f32)(s32)randomGetRange(0x1e, 0x28);
+        cfg.velocityX = lbl_803DFDC0 * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.velocityZ = lbl_803DFDC0 * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.velocityY = lbl_803DFDC4 * (f32)(s32)randomGetRange(0, 0x64);
+        cfg.scale = lbl_803DFDC8 * (f32)(s32)randomGetRange(0x14, 0x50);
         cfg.lifetimeFrames = randomGetRange(0, 0x118) + 0xb4;
         cfg.initialAlpha = 0xfe;
         cfg.behaviorFlags = 0x81008000;
@@ -304,38 +285,25 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x91;
         break;
     case 0x353:
-        cfg.startPosX = (f32)(s32)
-        randomGetRange(-2, 2);
-        cfg.startPosZ = (f32)(s32)
-        randomGetRange(-2, 2);
-        cfg.velocityX = lbl_803DFDD4 * (f32)(s32)
-        randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = lbl_803DFDD4 * (f32)(s32)
-        randomGetRange(-0x14, 0x14);
-        cfg.velocityY = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(0, 0x50);
-        cfg.scale = lbl_803DFDD8 * (f32)(s32)
-        randomGetRange(0x28, 0x50);
+        cfg.startPosX = (f32)(s32)randomGetRange(-2, 2);
+        cfg.startPosZ = (f32)(s32)randomGetRange(-2, 2);
+        cfg.velocityX = lbl_803DFDD4 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.velocityZ = lbl_803DFDD4 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.velocityY = lbl_803DFDB0 * (f32)(s32)randomGetRange(0, 0x50);
+        cfg.scale = lbl_803DFDD8 * (f32)(s32)randomGetRange(0x28, 0x50);
         cfg.lifetimeFrames = randomGetRange(0, 0x17c) + 0xb4;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80400109;
         cfg.textureId = 0x47;
         break;
     case 0x354:
-        cfg.startPosX = (f32)(s32)
-        randomGetRange(-4, 4);
-        cfg.startPosZ = (f32)(s32)
-        randomGetRange(-4, 4);
-        cfg.startPosY = (f32)(s32)
-        randomGetRange(0xa, 0x14);
-        cfg.velocityX = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
-        cfg.velocityZ = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
-        cfg.velocityY = lbl_803DFDC4 * (f32)(s32)
-        randomGetRange(0, 0x64);
-        cfg.scale = lbl_803DFDC8 * (f32)(s32)
-        randomGetRange(0x14, 0x50);
+        cfg.startPosX = (f32)(s32)randomGetRange(-4, 4);
+        cfg.startPosZ = (f32)(s32)randomGetRange(-4, 4);
+        cfg.startPosY = (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.velocityX = lbl_803DFDC0 * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.velocityZ = lbl_803DFDC0 * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.velocityY = lbl_803DFDC4 * (f32)(s32)randomGetRange(0, 0x64);
+        cfg.scale = lbl_803DFDC8 * (f32)(s32)randomGetRange(0x14, 0x50);
         cfg.lifetimeFrames = randomGetRange(0, 0x118) + 0xb4;
         cfg.initialAlpha = 0xfe;
         cfg.behaviorFlags = 0x1000001;
@@ -353,15 +321,15 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = lbl_803DFDC4;
         cfg.lifetimeFrames = 0x96;
         cfg.initialAlpha = 0xff;
-        cfg.velocityY = lbl_803DFDDC * (f32)(s32)
-        randomGetRange(0, 0x14);
+        cfg.velocityY = lbl_803DFDDC * (f32)(s32)randomGetRange(0, 0x14);
         cfg.behaviorFlags = 0x80201;
         cfg.textureId = 0x62;
         break;
     case 0x35a:
         if (spawnParams == 0)
             FILL8();
-        if (spawnParams == 0) return -1;
+        if (spawnParams == 0)
+            return -1;
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -393,7 +361,8 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     case 0x35c:
         if (spawnParams == 0)
             FILL8();
-        if (spawnParams == 0) return -1;
+        if (spawnParams == 0)
+            return -1;
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -412,7 +381,8 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     case 0x35d:
         if (spawnParams == 0)
             FILL8();
-        if (spawnParams == 0) return -1;
+        if (spawnParams == 0)
+            return -1;
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -443,30 +413,21 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x7d;
         break;
     case 0x367:
-        cfg.startPosX = lbl_803DFD9C * (f32)(s32)
-        randomGetRange(-0x190, 0x190);
+        cfg.startPosX = lbl_803DFD9C * (f32)(s32)randomGetRange(-0x190, 0x190);
         cfg.startPosY = lbl_803DFDF4;
-        cfg.startPosZ = lbl_803DFD9C * (f32)(s32)
-        randomGetRange(-0x190, 0x190);
-        cfg.velocityX = lbl_803DFDF8 * (f32)(s32)
-        randomGetRange(-0x28, 0x28);
-        cfg.velocityY = lbl_803DFDC0 * (f32)(s32)
-        randomGetRange(0x64, 0xc8);
-        cfg.velocityZ = lbl_803DFDF8 * (f32)(s32)
-        randomGetRange(-0x28, 0x28);
-        cfg.scale = lbl_803DFDFC * (f32)(s32)
-        randomGetRange(5, 0x19);
+        cfg.startPosZ = lbl_803DFD9C * (f32)(s32)randomGetRange(-0x190, 0x190);
+        cfg.velocityX = lbl_803DFDF8 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.velocityY = lbl_803DFDC0 * (f32)(s32)randomGetRange(0x64, 0xc8);
+        cfg.velocityZ = lbl_803DFDF8 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.scale = lbl_803DFDFC * (f32)(s32)randomGetRange(5, 0x19);
         cfg.lifetimeFrames = 0x7d0;
         cfg.initialAlpha = 0xe6;
         cfg.sourceVecX = randomGetRange(0, 0xffff);
         cfg.sourceVecY = randomGetRange(0, 0xffff);
         cfg.sourceVecX = randomGetRange(0, 0xffff);
-        cfg.sourcePosY = (f32)(s32)
-        randomGetRange(0xe6, 0x320);
-        cfg.sourcePosZ = (f32)(s32)
-        randomGetRange(0xe6, 0x320);
-        cfg.sourcePosW = (f32)(s32)
-        randomGetRange(0xe6, 0x320);
+        cfg.sourcePosY = (f32)(s32)randomGetRange(0xe6, 0x320);
+        cfg.sourcePosZ = (f32)(s32)randomGetRange(0xe6, 0x320);
+        cfg.sourcePosW = (f32)(s32)randomGetRange(0xe6, 0x320);
         cfg.renderFlags = 0x10000000;
         cfg.behaviorFlags = 0x8f000000;
         cfg.textureId = 0x56e;
@@ -479,12 +440,9 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x17c;
         break;
     case 0x366:
-        cfg.velocityY = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(0x1f4, 0x3e8);
-        cfg.startPosZ = lbl_803DFD9C * (f32)(s32)
-        randomGetRange(-0x12c, 0x12c);
-        cfg.startPosX = lbl_803DFD9C * (f32)(s32)
-        randomGetRange(-0x12c, 0x12c);
+        cfg.velocityY = lbl_803DFDB0 * (f32)(s32)randomGetRange(0x1f4, 0x3e8);
+        cfg.startPosZ = lbl_803DFD9C * (f32)(s32)randomGetRange(-0x12c, 0x12c);
+        cfg.startPosX = lbl_803DFD9C * (f32)(s32)randomGetRange(-0x12c, 0x12c);
         cfg.startPosY = lbl_803DFE00;
         cfg.scale = lbl_803DFDB0;
         cfg.lifetimeFrames = 0x3c;
@@ -494,24 +452,17 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.initialAlpha = 0x50;
         break;
     case 0x365:
-        cfg.velocityY = lbl_803DFE04 * (f32)(s32)
-        randomGetRange(0x6e, 0xc8);
-        cfg.startPosZ = lbl_803DFE08 * (f32)(s32)
-        randomGetRange(-0x12c, 0x12c);
-        cfg.startPosX = lbl_803DFE08 * (f32)(s32)
-        randomGetRange(-0x12c, 0x12c);
-        cfg.scale = lbl_803DFE0C * (f32)(s32)
-        randomGetRange(1, 0x14) + lbl_803DFD98;
+        cfg.velocityY = lbl_803DFE04 * (f32)(s32)randomGetRange(0x6e, 0xc8);
+        cfg.startPosZ = lbl_803DFE08 * (f32)(s32)randomGetRange(-0x12c, 0x12c);
+        cfg.startPosX = lbl_803DFE08 * (f32)(s32)randomGetRange(-0x12c, 0x12c);
+        cfg.scale = lbl_803DFE0C * (f32)(s32)randomGetRange(1, 0x14) + lbl_803DFD98;
         cfg.initialAlpha = 0xff;
         cfg.sourceVecX = randomGetRange(0, 0xffff);
         cfg.sourceVecY = randomGetRange(0, 0xffff);
         cfg.sourceVecX = randomGetRange(0, 0xffff);
-        cfg.sourcePosY = (f32)(s32)
-        randomGetRange(0, 0x258);
-        cfg.sourcePosZ = (f32)(s32)
-        randomGetRange(0, 0x258);
-        cfg.sourcePosW = (f32)(s32)
-        randomGetRange(0, 0x258);
+        cfg.sourcePosY = (f32)(s32)randomGetRange(0, 0x258);
+        cfg.sourcePosZ = (f32)(s32)randomGetRange(0, 0x258);
+        cfg.sourcePosW = (f32)(s32)randomGetRange(0, 0x258);
         {
             u16 r2;
             cfg.colorWord0 = (u16)(randomGetRange(0, 0x9c40) + 0x63bf);
@@ -529,8 +480,7 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x3a2;
         break;
     case 0x364:
-        cfg.velocityY = lbl_803DFDB0 * (f32)(s32)
-        randomGetRange(5, 0x64);
+        cfg.velocityY = lbl_803DFDB0 * (f32)(s32)randomGetRange(5, 0x64);
         cfg.scale = lbl_803DFE10;
         cfg.lifetimeFrames = 0x50;
         {
@@ -552,7 +502,8 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) cfg.behaviorFlags ^= 2LL;
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
+        cfg.behaviorFlags ^= 2LL;
     if ((cfg.behaviorFlags & 1) != 0)
     {
         if ((spawnFlags & 0x200000) != 0)
@@ -579,32 +530,36 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
 extern FxNode9 lbl_8039C338;
 extern f32 lbl_803DF884;
 
-#define FILL338() do {                          \
-    lbl_8039C338.posX = lbl_803DF884;             \
-    lbl_8039C338.posY = lbl_803DF884;            \
-    lbl_8039C338.posZ = lbl_803DF884;            \
-    lbl_8039C338.scale = lbl_803DF878;             \
-    lbl_8039C338.unk0 = 0;                         \
-    lbl_8039C338.unk2 = 0;                         \
-    lbl_8039C338.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C338;             \
-  } while (0)
+#define FILL338()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C338.posX = lbl_803DF884;                                                                              \
+        lbl_8039C338.posY = lbl_803DF884;                                                                              \
+        lbl_8039C338.posZ = lbl_803DF884;                                                                              \
+        lbl_8039C338.scale = lbl_803DF878;                                                                             \
+        lbl_8039C338.unk0 = 0;                                                                                         \
+        lbl_8039C338.unk2 = 0;                                                                                         \
+        lbl_8039C338.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C338;                                                               \
+    } while (0)
 
 #undef FILL338
 
 extern FxNode9 lbl_8039C368;
 extern f32 lbl_803DFCEC;
 
-#define FILL368() do {                          \
-    lbl_8039C368.posX = lbl_803DFCEC;             \
-    lbl_8039C368.posY = lbl_803DFCEC;            \
-    lbl_8039C368.posZ = lbl_803DFCEC;            \
-    lbl_8039C368.scale = lbl_803DFCE0;             \
-    lbl_8039C368.unk0 = 0;                         \
-    lbl_8039C368.unk2 = 0;                         \
-    lbl_8039C368.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C368;             \
-  } while (0)
+#define FILL368()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C368.posX = lbl_803DFCEC;                                                                              \
+        lbl_8039C368.posY = lbl_803DFCEC;                                                                              \
+        lbl_8039C368.posZ = lbl_803DFCEC;                                                                              \
+        lbl_8039C368.scale = lbl_803DFCE0;                                                                             \
+        lbl_8039C368.unk0 = 0;                                                                                         \
+        lbl_8039C368.unk2 = 0;                                                                                         \
+        lbl_8039C368.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C368;                                                               \
+    } while (0)
 
 #undef FILL368
 
@@ -612,30 +567,34 @@ extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
 
-#define FILL350() do {                          \
-    lbl_8039C350.posX = lbl_803DF9D0;             \
-    lbl_8039C350.posY = lbl_803DF9D0;            \
-    lbl_8039C350.posZ = lbl_803DF9D0;            \
-    lbl_8039C350.scale = lbl_803DF9D4;             \
-    lbl_8039C350.unk0 = 0;                         \
-    lbl_8039C350.unk2 = 0;                         \
-    lbl_8039C350.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C350;             \
-  } while (0)
+#define FILL350()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C350.posX = lbl_803DF9D0;                                                                              \
+        lbl_8039C350.posY = lbl_803DF9D0;                                                                              \
+        lbl_8039C350.posZ = lbl_803DF9D0;                                                                              \
+        lbl_8039C350.scale = lbl_803DF9D4;                                                                             \
+        lbl_8039C350.unk0 = 0;                                                                                         \
+        lbl_8039C350.unk2 = 0;                                                                                         \
+        lbl_8039C350.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C350;                                                               \
+    } while (0)
 
 #undef FILL350
 
 extern FxNode9 lbl_8039C320;
 
-#define FILL320() do {                          \
-    lbl_8039C320.posX = 0.0f;             \
-    lbl_8039C320.posY = 0.0f;            \
-    lbl_8039C320.posZ = 0.0f;            \
-    lbl_8039C320.scale = 1.0f;             \
-    lbl_8039C320.unk0 = 0;                         \
-    lbl_8039C320.unk2 = 0;                         \
-    lbl_8039C320.unk4 = 0;                         \
-    spawnParams = (PartFxSpawnParams *)&lbl_8039C320;             \
-  } while (0)
+#define FILL320()                                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        lbl_8039C320.posX = 0.0f;                                                                                      \
+        lbl_8039C320.posY = 0.0f;                                                                                      \
+        lbl_8039C320.posZ = 0.0f;                                                                                      \
+        lbl_8039C320.scale = 1.0f;                                                                                     \
+        lbl_8039C320.unk0 = 0;                                                                                         \
+        lbl_8039C320.unk2 = 0;                                                                                         \
+        lbl_8039C320.unk4 = 0;                                                                                         \
+        spawnParams = (PartFxSpawnParams*)&lbl_8039C320;                                                               \
+    } while (0)
 
 #undef FILL320

@@ -51,11 +51,11 @@ STATIC_ASSERT(offsetof(DrCloudPerObject, mapDir) == 0xac);
 STATIC_ASSERT(offsetof(DrCloudPerObject, flagsB0) == 0xb0);
 STATIC_ASSERT(offsetof(DrCloudPerObject, state) == 0xb8);
 
-#define DRCLOUDPER_GROUP_TRIGGER 0x13
-#define DRCLOUDPER_GROUP_SURFACE 0x39
+#define DRCLOUDPER_GROUP_TRIGGER        0x13
+#define DRCLOUDPER_GROUP_SURFACE        0x39
 #define DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT 0x7a9
-#define DRCLOUDPER_MAP_ANIM_EVENT 0x0c
-#define DRCLOUDPER_OBJECT_FLAGS 0xe000
+#define DRCLOUDPER_MAP_ANIM_EVENT       0x0c
+#define DRCLOUDPER_OBJECT_FLAGS         0xe000
 
 int DR_CloudPer_setScale(int obj)
 {
@@ -81,9 +81,15 @@ int DR_CloudPer_selectActiveCloud(int obj)
     return 0;
 }
 
-int DR_CloudPer_getExtraSize(void) { return 0x10; }
+int DR_CloudPer_getExtraSize(void)
+{
+    return 0x10;
+}
 
-int DR_CloudPer_getObjectTypeId(void) { return 0; }
+int DR_CloudPer_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void DR_CloudPer_free(int obj)
 {
@@ -122,8 +128,7 @@ void DR_CloudPer_init(int obj, int setup)
     state->normalY = lbl_803E6BF8;
     state->normalZ = mathCosf(lbl_803E6BF0 * cloud->yaw / lbl_803E6BF4);
     state->planeDistance =
-        -(state->normalZ * cloud->posZ +
-          (state->normalX * cloud->posX + state->normalY * cloud->posY));
+        -(state->normalZ * cloud->posZ + (state->normalX * cloud->posX + state->normalY * cloud->posY));
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
     if (setupData->cloudIndex == mainGetBit(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT))
     {
@@ -138,4 +143,3 @@ void DR_CloudPer_release(void)
 void DR_CloudPer_initialise(void)
 {
 }
-

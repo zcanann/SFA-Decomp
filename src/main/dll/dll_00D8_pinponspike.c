@@ -24,8 +24,8 @@
 #include "main/audio/sfx.h"
 #define PINPONSPIKE_HIT_VOLUME_SLOT 10
 
-#define PINPONSPIKE_PARTFX 0x715
-#define PINPONSPIKE_OBJFLAG_HIDDEN 0x4000
+#define PINPONSPIKE_PARTFX                     0x715
+#define PINPONSPIKE_OBJFLAG_HIDDEN             0x4000
 #define PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern f32 lbl_803E3110;
@@ -39,7 +39,6 @@ extern f32 lbl_803E312C;
 
 extern int getAngle(float y, float x);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-
 
 extern void* getTrickyObject(void);
 
@@ -82,9 +81,15 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
     return 0x2000;
 }
 
-int pinponspike_getExtraSize(void) { return 0x0; }
+int pinponspike_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int pinponspike_getObjectTypeId(void) { return 0x0; }
+int pinponspike_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void pinponspike_free(int obj)
 {
@@ -130,7 +135,8 @@ void pinponspike_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, PINPONSPIKE_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
+            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                 (int)Obj_GetPlayerObject() ||
              ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
         {
             int i;

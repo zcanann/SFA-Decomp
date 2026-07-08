@@ -44,20 +44,20 @@
 #include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
-#define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
-#define FIRECRAWLER_OBJFLAG_RENDERED 0x800
+#define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
+#define FIRECRAWLER_OBJFLAG_RENDERED     0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
-#define FIREPIPE_OBJ_ID 0x710 /* child object spawned by firecrawler */
+#define FIREPIPE_OBJ_ID                  0x710 /* child object spawned by firecrawler */
 /* crawler-family enemy anim.seqIds (docblock table: seqId -> enemy name) */
-#define FIRECRAWLER_SEQID_FIRECRAWLER 0x6a2 /* FireCrawler */
-#define FIRECRAWLER_SEQID_REDEYE      0x6a3 /* RedEye */
+#define FIRECRAWLER_SEQID_FIRECRAWLER  0x6a2 /* FireCrawler */
+#define FIRECRAWLER_SEQID_REDEYE       0x6a3 /* RedEye */
 #define FIRECRAWLER_SEQID_SHADOWHUNTER 0x6a4 /* ShadowHunter */
 
 /* movement dust spawned on the move-loop event: turning (turnDelta != 0) */
 #define FIRECRAWLER_PARTFX_MOVE_TURN 0x802
 /* movement dust spawned on the move-loop event: moving straight (turnDelta == 0) */
 #define FIRECRAWLER_PARTFX_MOVE_STRAIGHT 0x809
-#define FIRECRAWLER_HIT_VOLUME_SLOT 9
+#define FIRECRAWLER_HIT_VOLUME_SLOT      9
 
 /* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
@@ -119,7 +119,7 @@ extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
 extern float fn_802943F4(float x);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 angle);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
+extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern f32 lbl_803E2BB8;
 extern f32 lbl_803E2BD4;
 extern f32 lbl_803E2BE4;
@@ -233,33 +233,34 @@ extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
  * this is the documented per-family union, hence a file-local overlay rather
  * than a shared-header field.
  */
-typedef struct FCVars {
+typedef struct FCVars
+{
     u8 pad000[0x2a0];
     u16 moveTableIndex; /* 0x2a0: reaction/move sub-table index (*0xc stride) */
     u8 pad2a2[0x2a4 - 0x2a2];
-    u16 projectileTimer;/* 0x2a4: firepipe launch timing counter (>=0x50 gate) */
+    u16 projectileTimer; /* 0x2a4: firepipe launch timing counter (>=0x50 gate) */
     u8 pad2a6[0x2ec - 0x2a6];
     u16 hitCountScalar; /* 0x2ec: hit-count scalar folded into emergeTimer */
     u8 pad2ee[0x2f1 - 0x2ee];
-    u8 hitConfigFlags;  /* 0x2f1: bit 0x40 = group-0 hit-immunity config */
+    u8 hitConfigFlags; /* 0x2f1: bit 0x40 = group-0 hit-immunity config */
     u8 pad2f2[0x2f8 - 0x2f2];
-    u16 moveEventMask;  /* 0x2f8: per-frame move-progress event bitmask (bit 1<<i) */
+    u16 moveEventMask; /* 0x2f8: per-frame move-progress event bitmask (bit 1<<i) */
     u8 pad2fa[0x310 - 0x2fa];
-    f32 pathSpeed;      /* 0x310: per-frame curve-advance speed */
+    f32 pathSpeed; /* 0x310: per-frame curve-advance speed */
     u8 pad314[0x323 - 0x314];
-    u8 moveStartFlags;  /* 0x323: bit 8 = move suppresses target-facing */
-    f32 engineTimer;    /* 0x324: engine-sfx / spin-down timer (dt-decremented) */
-    f32 emergeTimer;    /* 0x328: emerge/burrow fade timer */
-    f32 distToCurve;    /* 0x32c: distance from object to its curve point */
-    f32 warpTimer;      /* 0x330: HagabonMK2 warp/teleport cooldown timer */
+    u8 moveStartFlags; /* 0x323: bit 8 = move suppresses target-facing */
+    f32 engineTimer;   /* 0x324: engine-sfx / spin-down timer (dt-decremented) */
+    f32 emergeTimer;   /* 0x328: emerge/burrow fade timer */
+    f32 distToCurve;   /* 0x32c: distance from object to its curve point */
+    f32 warpTimer;     /* 0x330: HagabonMK2 warp/teleport cooldown timer */
     u8 pad334[0x338 - 0x334];
-    u16 turnDelta;      /* 0x338: signed turn amount / variant index (dual use) */
+    u16 turnDelta; /* 0x338: signed turn amount / variant index (dual use) */
     u8 pad33a[0x33c - 0x33a];
-    u8 flagsC;          /* 0x33c: bit1 hitVolumeIndex, bit4 invuln */
-    u8 flagsD;          /* 0x33d: move/link state bits (0x8/0x10/0x18/0x20/0x30/0x40) */
-    u8 moveChainIndex;  /* 0x33e: index into the chained-move table (tbl4) */
-    u8 reactStep;       /* 0x33f: reaction/hit sequence step (indexes seq/CrawlerSeq16) */
-    void *linkedObj;    /* 0x340: linked/tracked object pointer (HagabonMK2, hoodedZyck) */
+    u8 flagsC;         /* 0x33c: bit1 hitVolumeIndex, bit4 invuln */
+    u8 flagsD;         /* 0x33d: move/link state bits (0x8/0x10/0x18/0x20/0x30/0x40) */
+    u8 moveChainIndex; /* 0x33e: index into the chained-move table (tbl4) */
+    u8 reactStep;      /* 0x33f: reaction/hit sequence step (indexes seq/CrawlerSeq16) */
+    void* linkedObj;   /* 0x340: linked/tracked object pointer (HagabonMK2, hoodedZyck) */
 } FCVars;
 
 STATIC_ASSERT(offsetof(FCVars, moveTableIndex) == 0x2a0);
@@ -284,7 +285,10 @@ void whirlpool_updateWhileFrozen(void)
 {
 }
 
-void hagabonMK2_stopLoopSfx(int obj) { Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death); }
+void hagabonMK2_stopLoopSfx(int obj)
+{
+    Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
+}
 
 void firecrawler_spawnFirepipe(int* obj)
 {
@@ -361,7 +365,8 @@ void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int s
     {
         Sfx_PlayFromObject(obj, SFXTRIG_baddie_eggsnatch_carry2);
     }
-    if (cmd == 0x1a) return;
+    if (cmd == 0x1a)
+        return;
     Sfx_PlayFromObject(obj, SFXen_blkscrp6);
 }
 
@@ -385,8 +390,7 @@ void snowworm_applyReactionState(int* obj, int* st)
             f32* fbase = (f32*)t1;
             u32 idx2 = ((BaddieState*)st)->seqEntryIndex;
             u32 off = idx2 * 0xc;
-            Baddie_SetMove(obj, st, bbase[off + 8],
-                        *(f32*)((char*)fbase + off), 0, 0);
+            Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
         }
     }
     crawler_playReactionEffects(obj, st);
@@ -484,8 +488,7 @@ void crawler_initTailModel(int* obj, int* st)
         u8* bbase = gCrawlerSeqTable;
         u32 idx = ((BaddieState*)st)->seqEntryIndex;
         u32 off = idx * 0xc;
-        Baddie_SetMove(obj, st, bbase[off + 8],
-                    *(f32*)((char*)fbase + off), 0, 0);
+        Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
     }
     ((FCVars*)st)->emergeTimer = lbl_803E2C58;
     ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
@@ -495,7 +498,6 @@ void crawler_initTailModel(int* obj, int* st)
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }
 #pragma opt_common_subs reset
-
 
 void hoodedZyck_init(int* obj, int* st)
 {
@@ -603,11 +605,11 @@ void fn_80157CDC(int obj, int state)
     typedef struct
     {
         u8 pad[4];
-        u32 sfxId;   /* 0x4 */
+        u32 sfxId; /* 0x4 */
         u8 pad2;
-        u8 shakeAmt; /* 0x9 */
-        u8 rumbleAmt;/* 0xa */
-        u8 flags;    /* 0xb */
+        u8 shakeAmt;  /* 0x9 */
+        u8 rumbleAmt; /* 0xa */
+        u8 flags;     /* 0xb */
     } CrawlerSubDesc;
     typedef struct
     {
@@ -791,11 +793,11 @@ void fn_8015A52C(s16* obj)
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
         if (setup != NULL)
         {
-            ((GameObject*)setup)->anim.velocityX = lbl_803E2C9C * -mathSinf(
-                (gCrawlerPi * (f32) * obj) / gCrawlerHalfCircleBams);
+            ((GameObject*)setup)->anim.velocityX =
+                lbl_803E2C9C * -mathSinf((gCrawlerPi * (f32)*obj) / gCrawlerHalfCircleBams);
             ((GameObject*)setup)->anim.velocityY = lbl_803E2CA8;
-            ((GameObject*)setup)->anim.velocityZ = lbl_803E2C9C * -mathCosf(
-                (gCrawlerPi * (f32) * obj) / gCrawlerHalfCircleBams);
+            ((GameObject*)setup)->anim.velocityZ =
+                lbl_803E2C9C * -mathCosf((gCrawlerPi * (f32)*obj) / gCrawlerHalfCircleBams);
         }
     }
 }
@@ -816,21 +818,18 @@ void fn_80157B58(int* obj, u8* state)
         child = (int)Obj_SetupObject((int*)setup, 5, -1, -1, 0);
         if ((u32)child != 0)
         {
-            f32 dur = lbl_803E2B84 * ((f32) ((FCVars*)state)->projectileTimer / ((BaddieState*)state)->unk2A8);
-            ((GameObject*)child)->anim.velocityX =
-                (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX - ((GameObject*)setup)->anim.rootMotionScale)
-                / dur;
+            f32 dur = lbl_803E2B84 * ((f32)((FCVars*)state)->projectileTimer / ((BaddieState*)state)->unk2A8);
+            ((GameObject*)child)->anim.velocityX = (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX -
+                                                    ((GameObject*)setup)->anim.rootMotionScale) /
+                                                   dur;
             ((GameObject*)child)->anim.velocityY =
-                ((lbl_803E2B88 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY + (f32)(int)
-            randomGetRange(-10, 10)
-            )
-            -((GameObject*)setup)->anim.localPosX
-            )
-            /
-            dur;
-            ((GameObject*)child)->anim.velocityZ =
-                (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ - ((GameObject*)setup)->anim.localPosY) /
+                ((lbl_803E2B88 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY +
+                  (f32)(int)randomGetRange(-10, 10)) -
+                 ((GameObject*)setup)->anim.localPosX) /
                 dur;
+            ((GameObject*)child)->anim.velocityZ = (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ -
+                                                    ((GameObject*)setup)->anim.localPosY) /
+                                                   dur;
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_4ae);
     }
@@ -845,16 +844,19 @@ void snowworm_update(int* obj, u8* state)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
         ObjHits_DisableObject((int)obj);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
         ObjHits_EnableObject((int)obj);
     }
 
-    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0 && ((BaddieState*)state)->seqEntryIndex <= 1)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0 &&
+        ((BaddieState*)state)->seqEntryIndex <= 1)
     {
         if (((FCVars*)state)->turnDelta != 0 || (int)randomGetRange(0, 0x14) < 10)
         {
@@ -893,17 +895,18 @@ void snowworm_update(int* obj, u8* state)
             int r = randomGetRange(0, ((BaddieState*)state)->inWhirlpoolGroup);
             s16 a = randomGetRange(-0x8000, 0x7fff);
             f32 angle = (gCrawlerPi * a) / gCrawlerHalfCircleBams;
-            ((GameObject*)obj)->anim.localPosX = r * mathSinf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.
-                placementData + 8);
-            ((GameObject*)obj)->anim.localPosZ = r * mathCosf(angle) + ((GameObject*)((GameObject*)obj)->anim.
-                placementData)->anim.localPosY;
+            ((GameObject*)obj)->anim.localPosX =
+                r * mathSinf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8);
+            ((GameObject*)obj)->anim.localPosZ =
+                r * mathCosf(angle) + ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY;
             fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
         }
     }
 
     fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, lbl_803DBD30[((FCVars*)state)->turnDelta], 0);
+                ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ,
+                lbl_803DBD30[((FCVars*)state)->turnDelta], 0);
     crawler_playReactionEffects(obj, (int*)state);
 }
 
@@ -945,14 +948,16 @@ void hoodedZyck_update(s16* obj, u8* state)
         f32 diff;
         f32 z;
         u32 ang;
-        *(s16*)obj = (f32)((FCVars*)state)->turnDelta * timeDelta + (f32)(int) * obj;
+        *(s16*)obj = (f32)((FCVars*)state)->turnDelta * timeDelta + (f32)(int)*obj;
         z = lbl_803E2B18;
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityY = z;
         ((GameObject*)obj)->anim.velocityZ = z;
         ObjHits_SetHitVolumeSlot((int)obj, FIRECRAWLER_HIT_VOLUME_SLOT, 1, -1);
-        ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                       ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
+        ang =
+            getAngle(
+                ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
             0xffff;
         diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
         if (diff > lbl_803E2B2C)
@@ -976,11 +981,9 @@ void hoodedZyck_update(s16* obj, u8* state)
         }
         else
         {
-            if (grabbed != 0
-                || (mag < 1000
-                    && ((GameObject*)obj)->anim.currentMove != 2
-                    && ((GameObject*)obj)->anim.currentMove != 4
-                    && ((GameObject*)obj)->anim.currentMove != 6))
+            if (grabbed != 0 ||
+                (mag < 1000 && ((GameObject*)obj)->anim.currentMove != 2 && ((GameObject*)obj)->anim.currentMove != 4 &&
+                 ((GameObject*)obj)->anim.currentMove != 6))
             {
                 if (mag < 1000)
                 {
@@ -1015,23 +1018,23 @@ void hoodedZyck_update(s16* obj, u8* state)
 
 typedef struct
 {
-    f32 spd;     /* 0x0 */
-    u32 mask;    /* 0x4 */
-    u8 moveId;   /* 0x8 */
-    u8 next;     /* 0x9 */
-    u8 mode;     /* 0xa */
+    f32 spd;   /* 0x0 */
+    u32 mask;  /* 0x4 */
+    u8 moveId; /* 0x8 */
+    u8 next;   /* 0x9 */
+    u8 mode;   /* 0xa */
     u8 pad;
 } CrawlerSeq12;
 
 typedef struct
 {
-    f32 spd;     /* 0x0 */
-    u32 mask;    /* 0x4 */
-    u8 moveId;   /* 0x8 */
-    u8 next9;    /* 0x9 */
-    u8 nextA;    /* 0xa */
+    f32 spd;   /* 0x0 */
+    u32 mask;  /* 0x4 */
+    u8 moveId; /* 0x8 */
+    u8 next9;  /* 0x9 */
+    u8 nextA;  /* 0xa */
     u8 pad;
-    int flagC;   /* 0xc */
+    int flagC; /* 0xc */
 } CrawlerSeq16;
 
 void crawler_update(int* obj, u8* state)
@@ -1056,7 +1059,8 @@ void crawler_update(int* obj, u8* state)
     int j;
     int n;
 
-    if (((BaddieState*)state)->trackedObj != NULL && ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
+    if (((BaddieState*)state)->trackedObj != NULL &&
+        ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
         fn_8001FE90();
     }
@@ -1097,8 +1101,8 @@ void crawler_update(int* obj, u8* state)
         }
         if (((FCVars*)state)->reactStep != 0)
         {
-            Baddie_SetMove(obj, state, t6[((FCVars*)state)->reactStep].moveId,
-                        t6[((FCVars*)state)->reactStep].spd, 0, t6[((FCVars*)state)->reactStep].mask & 0xff);
+            Baddie_SetMove(obj, state, t6[((FCVars*)state)->reactStep].moveId, t6[((FCVars*)state)->reactStep].spd, 0,
+                           t6[((FCVars*)state)->reactStep].mask & 0xff);
             ((FCVars*)state)->flagsC = t6[((FCVars*)state)->reactStep].flagC;
             ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
             ((FCVars*)state)->reactStep = t6[((FCVars*)state)->reactStep].next9;
@@ -1113,22 +1117,19 @@ void crawler_update(int* obj, u8* state)
                     ((BaddieState*)state)->seqEntryIndex = 0;
                 }
                 fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, gCrawlerNearbyObjectBuffer);
-                if ((((BaddieState*)state)->controlFlags &
-                     t9[((BaddieState*)state)->seqEntryIndex].mask) == 0
-                    && t9[((BaddieState*)state)->seqEntryIndex].next != 0)
+                if ((((BaddieState*)state)->controlFlags & t9[((BaddieState*)state)->seqEntryIndex].mask) == 0 &&
+                    t9[((BaddieState*)state)->seqEntryIndex].next != 0)
                 {
-                    ((BaddieState*)state)->seqEntryIndex =
-                        t9[((BaddieState*)state)->seqEntryIndex].next;
+                    ((BaddieState*)state)->seqEntryIndex = t9[((BaddieState*)state)->seqEntryIndex].next;
                 }
                 Baddie_SetMove(obj, state, t9[((BaddieState*)state)->seqEntryIndex].moveId,
-                            t9[((BaddieState*)state)->seqEntryIndex].spd, 0,
-                            t9[((BaddieState*)state)->seqEntryIndex].mode);
+                               t9[((BaddieState*)state)->seqEntryIndex].spd, 0,
+                               t9[((BaddieState*)state)->seqEntryIndex].mode);
                 ((BaddieState*)state)->seqEntryIndex = t9[((BaddieState*)state)->seqEntryIndex].next;
             }
             else
             {
-                Baddie_SetMove(obj, state, *(u8*)(t7 + i + 8), *(f32*)((int)t7 + i), 0,
-                            *(u8*)(t7 + i + 0xa));
+                Baddie_SetMove(obj, state, *(u8*)(t7 + i + 8), *(f32*)((int)t7 + i), 0, *(u8*)(t7 + i + 0xa));
             }
         }
     }
@@ -1142,8 +1143,10 @@ void crawler_update(int* obj, u8* state)
     {
         if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(t8 + j * 0xc + 4);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8) * (u8*)(t8 + j * 0xc + 9);
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
+                (s8) * (int*)(t8 + j * 0xc + 4);
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
+                (s8) * (u8*)(t8 + j * 0xc + 9);
             if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
             {
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x40;
@@ -1168,11 +1171,11 @@ void crawler_update(int* obj, u8* state)
 typedef struct
 {
     u8 pad[6];
-    u16 sfxId;   /* 0x6 */
-    f32 vol;     /* 0x8 */
-    f32 x;       /* 0xc */
-    f32 y;       /* 0x10 */
-    f32 z;       /* 0x14 */
+    u16 sfxId; /* 0x6 */
+    f32 vol;   /* 0x8 */
+    f32 x;     /* 0xc */
+    f32 y;     /* 0x10 */
+    f32 z;     /* 0x14 */
 } CrawlerSfxParams;
 
 void hagabonMK2_update(s16* obj, u8* state)
@@ -1206,11 +1209,13 @@ void hagabonMK2_update(s16* obj, u8* state)
             if (((FireCrawlerState*)state)->engineLight != NULL)
             {
                 modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, MODEL_LIGHT_KIND_POINT);
-                modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+                modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight,
+                                             ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                             ((GameObject*)obj)->anim.localPosZ);
                 modelLightStruct_setDiffuseColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
                 modelLightStruct_setSpecularColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setDistanceAttenuation(((FireCrawlerState*)state)->engineLight, lbl_803E2C10, lbl_803E2C14);
+                modelLightStruct_setDistanceAttenuation(((FireCrawlerState*)state)->engineLight, lbl_803E2C10,
+                                                        lbl_803E2C14);
                 lightSetField4D(((FireCrawlerState*)state)->engineLight, 1);
                 modelLightStruct_setEnabled(((FireCrawlerState*)state)->engineLight, 1, lbl_803E2C18);
                 modelLightStruct_startColorFade(((FireCrawlerState*)state)->engineLight, 0, 0);
@@ -1228,10 +1233,11 @@ void hagabonMK2_update(s16* obj, u8* state)
         ((BaddieState*)state)->seqEntryIndex = 3;
         ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
-    sidekickToy_accelerateTowardTarget3D(obj, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
-                                         lbl_803E2C48 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosY,
-                                         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosZ,
-                                         *(f32*)&lbl_803E2C48, lbl_803E2C78, lbl_803E2C50, ((BaddieState*)state)->unk304);
+    sidekickToy_accelerateTowardTarget3D(
+        obj, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
+        lbl_803E2C48 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosY,
+        ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosZ, *(f32*)&lbl_803E2C48, lbl_803E2C78,
+        lbl_803E2C50, ((BaddieState*)state)->unk304);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         i = ((BaddieState*)state)->seqEntryIndex * 0xc;
@@ -1253,7 +1259,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     {
         ((FCVars*)state)->engineTimer = lbl_803E2C70;
     }
-    *(s16*)obj = ((FCVars*)state)->engineTimer * timeDelta + (f32)(int) * obj;
+    *(s16*)obj = ((FCVars*)state)->engineTimer * timeDelta + (f32)(int)*obj;
     ((FCVars*)state)->emergeTimer = lbl_803E2C38;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
@@ -1274,17 +1280,16 @@ void hagabonMK2_update(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
             f32 t = ((FCVars*)state)->engineTimer;
-            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
-                                   t / *(f32*)&lbl_803E2C70);
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death,
+                                   (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70), t / *(f32*)&lbl_803E2C70);
         }
     }
     else
     {
         Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
-    if (((FCVars*)state)->linkedObj != NULL
-        && (((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId == 0x1f
-            || ((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId == 0))
+    if (((FCVars*)state)->linkedObj != NULL && (((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId == 0x1f ||
+                                                ((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId == 0))
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
     }
@@ -1362,8 +1367,10 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         /* 0x261 = BaddieState.contactSfxFlags; kept raw - typed member as a
          * call arg shifts arg emission bytes here. */
         noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
-        ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                       ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
+        ang =
+            getAngle(
+                ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
             0xffff;
         diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
         if (diff > lbl_803E2B2C)
@@ -1423,13 +1430,13 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                 return;
             }
         }
-        if (((BaddieState*)state)->trackedObj != NULL && ((GameObject*)((BaddieState*)state)->trackedObj)->anim.hitboxScale >
-            lbl_803E2B50)
+        if (((BaddieState*)state)->trackedObj != NULL &&
+            ((GameObject*)((BaddieState*)state)->trackedObj)->anim.hitboxScale > lbl_803E2B50)
         {
             ((BaddieState*)state)->speedScale = lbl_803DBCE8;
         }
-        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 || noHit == 0
-            || (mag < 3000 && noHit != 0 && ((GameObject*)obj)->anim.currentMove != 0))
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 || noHit == 0 ||
+            (mag < 3000 && noHit != 0 && ((GameObject*)obj)->anim.currentMove != 0))
         {
             if (noHit != 0 && mag < 3000)
             {
@@ -1484,9 +1491,8 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
     {
         damage = damage << 2;
     }
-    if (idx == 1
-        && (((GameObject*)attacker)->anim.seqId == 0x1b5 || ((GameObject*)attacker)->anim.classId == 0x1c || cmd ==
-            0x1f))
+    if (idx == 1 &&
+        (((GameObject*)attacker)->anim.seqId == 0x1b5 || ((GameObject*)attacker)->anim.classId == 0x1c || cmd == 0x1f))
     {
         return;
     }
@@ -1544,8 +1550,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         {
             step = 3;
         }
-        Baddie_SetMove((int*)obj, state, tbl[step].moveId, tbl[step].spd, 0,
-                    tbl[step].mask & 0xff);
+        Baddie_SetMove((int*)obj, state, tbl[step].moveId, tbl[step].spd, 0, tbl[step].mask & 0xff);
         ((FCVars*)state)->flagsC = tbl[step].flagC;
         ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
         ((FCVars*)state)->reactStep = tbl[step].next9;
@@ -1587,8 +1592,9 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         return;
     }
 
-    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 && mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
-        || ((BaddieState*)state)->inWhirlpoolGroup == 1)
+    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 &&
+         mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0) ||
+        ((BaddieState*)state)->inWhirlpoolGroup == 1)
     {
         u8 v;
         Baddie_SetMove((int*)obj, state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
@@ -1598,7 +1604,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         v = ((BaddieState*)state)->inWhirlpoolGroup;
         if (v == 0)
         {
-            ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32) ((FCVars*)state)->hitCountScalar;
+            ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32)((FCVars*)state)->hitCountScalar;
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
             if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
             {
@@ -1626,7 +1632,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         if (v == 1)
         {
-            ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32) ((FCVars*)state)->hitCountScalar;
+            ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32)((FCVars*)state)->hitCountScalar;
             if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
@@ -1684,13 +1690,13 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
 
 typedef struct
 {
-    u8* tbl0; // 0x0  anim move ids
-    u8* tbl4; // 0x4  chained move table (stride 0xc)
-    u8* tbl8; // 0x8  random move table (stride 0xc)
-    u8* tblC; // 0xc  octant move table (stride 0xc)
-    u8* tbl10; // 0x10 single move entry
+    u8* tbl0;          // 0x0  anim move ids
+    u8* tbl4;          // 0x4  chained move table (stride 0xc)
+    u8* tbl8;          // 0x8  random move table (stride 0xc)
+    u8* tblC;          // 0xc  octant move table (stride 0xc)
+    u8* tbl10;         // 0x10 single move entry
     CrawlerSeq16* seq; // 0x14
-    u8* tbl18; // 0x18 anim-id loop table (stride 0xc)
+    u8* tbl18;         // 0x18 anim-id loop table (stride 0xc)
     u8 pad1C[4];
 } CrawlerDescriptor;
 
@@ -1716,10 +1722,10 @@ void crawler_updateC(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD | 8;
-        if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BA8,
-                                             (int*)&lbl_803DBCF0, -1) != 0)
+        if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BA8, (int*)&lbl_803DBCF0, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+            ((BaddieState*)state)->controlFlags =
+                ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
         if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
@@ -1740,7 +1746,8 @@ void crawler_updateC(s16* obj, u8* state)
             ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
             ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].nextA;
         }
-        if ((((BaddieState*)state)->controlFlags & (BADDIE_CONTROL_JUST_TRIGGERED | BADDIE_CONTROL_SEQUENCE_DRIVEN)) == 0)
+        if ((((BaddieState*)state)->controlFlags & (BADDIE_CONTROL_JUST_TRIGGERED | BADDIE_CONTROL_SEQUENCE_DRIVEN)) ==
+            0)
         {
             return;
         }
@@ -1775,8 +1782,9 @@ void crawler_updateC(s16* obj, u8* state)
                 }
                 else if (oct == 0 || oct == 7)
                 {
-                    scale = lbl_803E2BB4 * (lbl_803E2BA4 - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) +
-                        lbl_803E2BA4;
+                    scale = lbl_803E2BB4 *
+                                (lbl_803E2BA4 - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) +
+                            lbl_803E2BA4;
                 }
             }
             {
@@ -1787,26 +1795,28 @@ void crawler_updateC(s16* obj, u8* state)
                 {
                     dist = lbl_803E2BA0;
                 }
-                ((FCVars*)state)->pathSpeed = scale * (((lbl_803E2BA0 - dist) / lbl_803E2BA0) * ((BaddieState*)state)->pathStep);
+                ((FCVars*)state)->pathSpeed =
+                    scale * (((lbl_803E2BA0 - dist) / lbl_803E2BA0) * ((BaddieState*)state)->pathStep);
                 if (((FCVars*)state)->pathSpeed < lbl_803E2BBC)
                 {
-                    ((FCVars*)state)->pathSpeed = *(f32 *)&lbl_803E2BBC;
+                    ((FCVars*)state)->pathSpeed = *(f32*)&lbl_803E2BBC;
                 }
             }
-            if ((Curve_AdvanceAlongPath(base, ((FCVars*)state)->pathSpeed) != 0 || base->atSegmentEnd != 0)
-                && (*gRomCurveInterface)->goNextPoint(base) != 0
-                && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BC0,
-                                                    (int*)&lbl_803DBCF0, -1) != 0)
+            if ((Curve_AdvanceAlongPath(base, ((FCVars*)state)->pathSpeed) != 0 || base->atSegmentEnd != 0) &&
+                (*gRomCurveInterface)->goNextPoint(base) != 0 &&
+                (*gRomCurveInterface)
+                        ->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BC0, (int*)&lbl_803DBCF0, -1) != 0)
             {
-                ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+                ((BaddieState*)state)->controlFlags =
+                    ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
             }
             if ((((FCVars*)state)->flagsD & 0xa) == 0)
             {
                 f32 t;
                 f32 diff;
                 f32 a;
-                diff = (f32)(int)(((getAngle(base->tangentX, base->tangentZ) & 0xffff) + 0x8000)
-                    - ((int)*(s16*)obj & 0xffffu));
+                diff = (f32)(int)(((getAngle(base->tangentX, base->tangentZ) & 0xffff) + 0x8000) -
+                                  ((int)*(s16*)obj & 0xffffu));
                 if (diff > lbl_803E2BC8)
                 {
                     diff = lbl_803E2BC4 + diff;
@@ -1829,14 +1839,15 @@ void crawler_updateC(s16* obj, u8* state)
                     *(f32*)(state + 0x308) = lbl_803E2BD8;
                 }
             }
-            if ((((BaddieState*)state)->controlFlags & (BADDIE_CONTROL_JUST_TRIGGERED | BADDIE_CONTROL_SEQUENCE_DRIVEN)) != 0)
+            if ((((BaddieState*)state)->controlFlags &
+                 (BADDIE_CONTROL_JUST_TRIGGERED | BADDIE_CONTROL_SEQUENCE_DRIVEN)) != 0)
             {
                 ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x20;
                 if (((FCVars*)state)->reactStep != 0)
                 {
                     Baddie_SetMove((int*)obj, state, seq[((FCVars*)state)->reactStep].moveId,
-                                seq[((FCVars*)state)->reactStep].spd, 0,
-                                seq[((FCVars*)state)->reactStep].mask & 0xff);
+                                   seq[((FCVars*)state)->reactStep].spd, 0,
+                                   seq[((FCVars*)state)->reactStep].mask & 0xff);
                     ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
                     ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
                     ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].next9;
@@ -1894,8 +1905,7 @@ void crawler_updateC(s16* obj, u8* state)
                     }
                     else
                     {
-                        Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0,
-                                    *(u8*)((char*)tC + i + 0xa));
+                        Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
                         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD | 8;
                     }
                 }
@@ -1908,8 +1918,7 @@ void crawler_updateC(s16* obj, u8* state)
         else if ((flags & 0xc0000000) != 0)
         {
             i = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-            Baddie_SetMove((int*)obj, state, (t8 + i)[8], *(f32*)((int)t8 + i), 0,
-                        (t8 + i)[0xa]);
+            Baddie_SetMove((int*)obj, state, (t8 + i)[8], *(f32*)((int)t8 + i), 0, (t8 + i)[0xa]);
         }
     }
     fn_80157CDC((int)obj, (int)state);
@@ -1929,7 +1938,8 @@ void crawler_updateB(s16* obj, u8* state)
     int i;
     f32 dv[3];
 
-    if (((BaddieState*)state)->trackedObj != NULL && ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
+    if (((BaddieState*)state)->trackedObj != NULL &&
+        ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
         fn_8001FE90();
     }
@@ -1969,13 +1979,13 @@ void crawler_updateB(s16* obj, u8* state)
     count = fn_8014C11C((u32)obj, lbl_803E2BE0, 1, 0x28, gCrawlerNearbyObjectBuffer);
     if (count >= 1)
     {
-        if ((((FCVars*)state)->flagsD & 0x20) == 0 || (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
+        if ((((FCVars*)state)->flagsD & 0x20) == 0 ||
+            (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             if (((FCVars*)state)->reactStep != 0)
             {
                 Baddie_SetMove((int*)obj, state, seq[((FCVars*)state)->reactStep].moveId,
-                            seq[((FCVars*)state)->reactStep].spd, 0,
-                            seq[((FCVars*)state)->reactStep].mask & 0xff);
+                               seq[((FCVars*)state)->reactStep].spd, 0, seq[((FCVars*)state)->reactStep].mask & 0xff);
                 ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
                 ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
                 ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].next9;
@@ -2009,21 +2019,18 @@ void crawler_updateB(s16* obj, u8* state)
                         {
                             int i2 = ((FCVars*)state)->moveChainIndex * 0xc;
                             u8* p9 = (u8*)t4 + 9;
-                            Baddie_SetMove((int*)obj, state, (t4 + i2)[8], *(f32*)((int)t4 + i2), 0,
-                                        (t4 + i2)[0xa]);
+                            Baddie_SetMove((int*)obj, state, (t4 + i2)[8], *(f32*)((int)t4 + i2), 0, (t4 + i2)[0xa]);
                             ((FCVars*)state)->moveChainIndex = p9[((FCVars*)state)->moveChainIndex * 0xc];
                         }
                         else
                         {
-                            Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0,
-                                        *(u8*)((char*)tC + i + 0xa));
+                            Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
                         }
                     }
                     else
                     {
                         i = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-                        Baddie_SetMove((int*)obj, state, (t8 + i)[8], *(f32*)((int)t8 + i), 0,
-                                    (t8 + i)[0xa]);
+                        Baddie_SetMove((int*)obj, state, (t8 + i)[8], *(f32*)((int)t8 + i), 0, (t8 + i)[0xa]);
                     }
                 }
                 else
@@ -2040,15 +2047,15 @@ void crawler_updateB(s16* obj, u8* state)
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x30;
-            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER && ((GameObject*)obj)->childObjs[0] != NULL)
+            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER &&
+                ((GameObject*)obj)->childObjs[0] != NULL)
             {
                 firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
             }
             if (((FCVars*)state)->reactStep != 0)
             {
                 Baddie_SetMove((int*)obj, state, seq[((FCVars*)state)->reactStep].moveId,
-                            seq[((FCVars*)state)->reactStep].spd, 0,
-                            seq[((FCVars*)state)->reactStep].mask & 0xff);
+                               seq[((FCVars*)state)->reactStep].spd, 0, seq[((FCVars*)state)->reactStep].mask & 0xff);
                 ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
                 ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
                 ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].next9;
@@ -2057,20 +2064,19 @@ void crawler_updateB(s16* obj, u8* state)
             {
                 int i2;
                 u8* q;
-                if ((((BaddieState*)state)->controlFlags & *(u32*)((q = t4 + (i2 = ((FCVars*)state)->moveChainIndex * 0xc)) + 4)) != 0)
+                if ((((BaddieState*)state)->controlFlags &
+                     *(u32*)((q = t4 + (i2 = ((FCVars*)state)->moveChainIndex * 0xc)) + 4)) != 0)
                 {
                     u8 mv;
                     i = ((FCVars*)state)->moveTableIndex * 0xc;
                     mv = *(u8*)((char*)tC + i + 8);
                     if (mv == 0)
                     {
-                        Baddie_SetMove((int*)obj, state, q[8], *(f32*)((int)t4 + i2), 0,
-                                    q[0xa]);
+                        Baddie_SetMove((int*)obj, state, q[8], *(f32*)((int)t4 + i2), 0, q[0xa]);
                     }
                     else
                     {
-                        Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0,
-                                    *(u8*)((char*)tC + i + 0xa));
+                        Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
                     }
                 }
                 else
@@ -2081,13 +2087,11 @@ void crawler_updateB(s16* obj, u8* state)
                     if (mv == 0)
                     {
                         int i4 = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-                        Baddie_SetMove((int*)obj, state, (t8 + i4)[8], *(f32*)((int)t8 + i4), 0,
-                                    (t8 + i4)[0xa]);
+                        Baddie_SetMove((int*)obj, state, (t8 + i4)[8], *(f32*)((int)t8 + i4), 0, (t8 + i4)[0xa]);
                     }
                     else
                     {
-                        Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0,
-                                    *(u8*)((char*)tC + i + 0xa));
+                        Baddie_SetMove((int*)obj, state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
                     }
                 }
                 {
@@ -2109,7 +2113,8 @@ void crawler_updateB(s16* obj, u8* state)
             if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
             {
                 p = (u8*)t18 + j * 0xc;
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p + 4);
+                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
+                    (s8) * (int*)(p + 4);
                 ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8) * (u8*)(p + 9);
                 if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
                 {
@@ -2170,11 +2175,13 @@ void hagabonMK2_updateB(s16* obj, u8* state)
             if (((FireCrawlerState*)state)->engineLight != NULL)
             {
                 modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, MODEL_LIGHT_KIND_POINT);
-                modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+                modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight,
+                                             ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                             ((GameObject*)obj)->anim.localPosZ);
                 modelLightStruct_setDiffuseColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
                 modelLightStruct_setSpecularColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setDistanceAttenuation(((FireCrawlerState*)state)->engineLight, lbl_803E2C10, lbl_803E2C14);
+                modelLightStruct_setDistanceAttenuation(((FireCrawlerState*)state)->engineLight, lbl_803E2C10,
+                                                        lbl_803E2C14);
                 lightSetField4D(((FireCrawlerState*)state)->engineLight, 1);
                 modelLightStruct_setEnabled(((FireCrawlerState*)state)->engineLight, 1, lbl_803E2C18);
                 modelLightStruct_startColorFade(((FireCrawlerState*)state)->engineLight, 0, 0);
@@ -2217,16 +2224,15 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             t = lbl_803E2C3C;
         }
-        if ((Curve_AdvanceAlongPath(base, ((BaddieState*)state)->pathStep * t) != 0 || base->atSegmentEnd != 0)
-            && (*gRomCurveInterface)->goNextPoint(base) != 0
-            && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2C44,
-                                                (int*)&lbl_803DBCF8, -1) != 0)
+        if ((Curve_AdvanceAlongPath(base, ((BaddieState*)state)->pathStep * t) != 0 || base->atSegmentEnd != 0) &&
+            (*gRomCurveInterface)->goNextPoint(base) != 0 &&
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2C44, (int*)&lbl_803DBCF8, -1) != 0)
         {
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+            ((BaddieState*)state)->controlFlags =
+                ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
-        sidekickToy_accelerateTowardTarget3D(obj, base->posX, base->posY,
-                                             base->posZ, lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50,
-                                             ((BaddieState*)state)->unk304);
+        sidekickToy_accelerateTowardTarget3D(obj, base->posX, base->posY, base->posZ, lbl_803E2C48, lbl_803E2C4C,
+                                             lbl_803E2C50, ((BaddieState*)state)->unk304);
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
@@ -2240,7 +2246,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     if (((FCVars*)state)->engineTimer > lbl_803E2C30)
     {
         ((FCVars*)state)->engineTimer = -(lbl_803E2C54 * timeDelta - ((FCVars*)state)->engineTimer);
-        *(s16*)obj = ((FCVars*)state)->engineTimer * timeDelta + (f32)(int) * obj;
+        *(s16*)obj = ((FCVars*)state)->engineTimer * timeDelta + (f32)(int)*obj;
     }
     else
     {
@@ -2263,8 +2269,9 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             ((FCVars*)state)->emergeTimer = *(f32*)&lbl_803E2C58;
         }
-        ratio = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX
-            + ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) / lbl_803E2C48;
+        ratio = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                      ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) /
+                lbl_803E2C48;
         if (ratio < lbl_803E2C30)
         {
             ratio = lbl_803E2C30;
@@ -2299,8 +2306,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
             f32 t = ((FCVars*)state)->engineTimer;
-            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
-                                   t / *(f32*)&lbl_803E2C70);
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death,
+                                   (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70), t / *(f32*)&lbl_803E2C70);
         }
     }
     else
@@ -2310,8 +2317,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
 
     {
         s16 t;
-        if (((FCVars*)state)->linkedObj != NULL
-            && ((t = ((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId) == 0x1f || t == 0))
+        if (((FCVars*)state)->linkedObj != NULL &&
+            ((t = ((GameObject*)((FCVars*)state)->linkedObj)->anim.seqId) == 0x1f || t == 0))
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
         }
@@ -2342,28 +2349,22 @@ extern u8 lbl_8031FA78[];
 extern u8 lbl_8031FAA8[];
 
 void* gCrawlerDescriptorTable[24] = {
-    lbl_8031F3A0, lbl_8031F46C, lbl_8031F3D0, lbl_8031F4CC,
-    lbl_8031F424, lbl_8031F5EC, lbl_8031F52C, lbl_8031F65C,
-    lbl_8031F6F8, lbl_8031F7AC, lbl_8031F788, lbl_8031F728,
-    lbl_8031F7AC, lbl_8031F86C, lbl_8031F7D0, lbl_8031F8BC,
-    lbl_8031F958, lbl_8031FA18, lbl_8031F9E8, lbl_8031F988,
-    lbl_8031FA3C, lbl_8031FAA8, lbl_8031FA78, lbl_8031F65C,
+    lbl_8031F3A0, lbl_8031F46C, lbl_8031F3D0, lbl_8031F4CC, lbl_8031F424, lbl_8031F5EC, lbl_8031F52C, lbl_8031F65C,
+    lbl_8031F6F8, lbl_8031F7AC, lbl_8031F788, lbl_8031F728, lbl_8031F7AC, lbl_8031F86C, lbl_8031F7D0, lbl_8031F8BC,
+    lbl_8031F958, lbl_8031FA18, lbl_8031F9E8, lbl_8031F988, lbl_8031FA3C, lbl_8031FAA8, lbl_8031FA78, lbl_8031F65C,
 };
 
 u8 gCrawlerSpeedThresholds[] = {
-    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17,
-    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17,
-    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17,
-    0x00, 0x00, 0x00, 0x00,
+    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17, 0x3F, 0x99,
+    0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17, 0x3F, 0x99, 0x99, 0x9A,
+    0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17, 0x00, 0x00, 0x00, 0x00,
 };
 
 u8 gCrawlerSeqTable[] = {
-    0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
-    0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x00,
-    0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
-    0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x04, 0x04, 0x00,
-    0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x05, 0x00,
-    0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
+    0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x01, 0x02, 0x02, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
+    0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x04, 0x04, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x02, 0x04, 0x05, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
 };
 
 extern u8 lbl_803DBD00[];
@@ -2381,12 +2382,35 @@ void* gCrawlerModelChainIds[] = {
 };
 
 u8* gCrawlerReactionTables[] = {
-    lbl_8031FC40, lbl_803DBD34, lbl_8031FCE8, lbl_803DBD38,
+    lbl_8031FC40,
+    lbl_803DBD34,
+    lbl_8031FCE8,
+    lbl_803DBD38,
 };
-u8 lbl_8031FBB8[0x18] = { 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x06 };
-u8 lbl_8031FBD0[0x18] = { 0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x11 };
-u8 lbl_8031FBE8[0x18] = { 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x15, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00, 0x17 };
-u8 lbl_8031FC00[0x18] = { 0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x1a, 0x00, 0x00, 0x00, 0x1b, 0x00, 0x00, 0x00, 0x1c, 0x00, 0x00, 0x00, 0x1d };
-u8 lbl_8031FC18[0x14] = { 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x0b };
-u8 lbl_8031FC40[0xa8] = { 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x00, 0x3f, 0x33, 0x33, 0x33, 0x00, 0x00, 0x00, 0x03, 0x03, 0x03, 0x09, 0x00, 0x3f, 0x33, 0x33, 0x33, 0x00, 0x00, 0x00, 0x03, 0x08, 0x08, 0x08, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x00, 0x3f, 0xa6, 0x66, 0x66, 0x00, 0x00, 0x00, 0x03, 0x04, 0x04, 0x09, 0x00, 0x3f, 0x33, 0x33, 0x33, 0x00, 0x00, 0x00, 0x03, 0x08, 0x08, 0x08, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-u8 lbl_8031FCE8[0x60] = { 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x3f, 0x19, 0x99, 0x9a, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x09, 0x09, 0x09, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x08, 0x08, 0x08, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+u8 lbl_8031FBB8[0x18] = {0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x03,
+                         0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x06};
+u8 lbl_8031FBD0[0x18] = {0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00, 0x0e,
+                         0x00, 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x11};
+u8 lbl_8031FBE8[0x18] = {0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x14,
+                         0x00, 0x00, 0x00, 0x15, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00, 0x17};
+u8 lbl_8031FC00[0x18] = {0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x1a,
+                         0x00, 0x00, 0x00, 0x1b, 0x00, 0x00, 0x00, 0x1c, 0x00, 0x00, 0x00, 0x1d};
+u8 lbl_8031FC18[0x14] = {0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00,
+                         0x00, 0x09, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x0b};
+u8 lbl_8031FC40[0xa8] = {
+    0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x3e, 0xcc,
+    0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x00, 0x3f, 0x33, 0x33, 0x33, 0x00, 0x00, 0x00, 0x03, 0x03,
+    0x03, 0x09, 0x00, 0x3f, 0x33, 0x33, 0x33, 0x00, 0x00, 0x00, 0x03, 0x08, 0x08, 0x08, 0x00, 0x3f, 0x80, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x3e, 0xcc, 0xcc, 0xcd, 0x00, 0x00,
+    0x00, 0x01, 0x02, 0x02, 0x02, 0x00, 0x3f, 0xa6, 0x66, 0x66, 0x00, 0x00, 0x00, 0x03, 0x04, 0x04, 0x09, 0x00, 0x3f,
+    0x33, 0x33, 0x33, 0x00, 0x00, 0x00, 0x03, 0x08, 0x08, 0x08, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,
+    0x07, 0x07, 0x07, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+u8 lbl_8031FCE8[0x60] = {0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00, 0x40, 0x20,
+                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xcc, 0xcc, 0xcd,
+                         0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x3f, 0x19, 0x99, 0x9a, 0x00, 0x00,
+                         0x00, 0x01, 0x02, 0x02, 0x02, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
+                         0x09, 0x09, 0x09, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x08, 0x08,
+                         0x08, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x07, 0x07, 0x07, 0x00,
+                         0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};

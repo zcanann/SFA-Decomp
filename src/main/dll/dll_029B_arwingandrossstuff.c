@@ -24,7 +24,7 @@
 #define ARWINGANDROSSSTUFF_OBJGROUP 0x2
 
 #define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
-#define ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT 0xf
+#define ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT      0xf
 
 enum ArwSeqId
 {
@@ -146,9 +146,15 @@ void arwprojectile_setLifetime(int obj, int lifetime)
     state->lifetime = lifetime;
 }
 
-int arwingandrossstuff_getExtraSize(void) { return 0x20; }
+int arwingandrossstuff_getExtraSize(void)
+{
+    return 0x20;
+}
 
-int arwingandrossstuff_getObjectTypeId(void) { return 0; }
+int arwingandrossstuff_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void arwingandrossstuff_free(int obj)
 {
@@ -201,8 +207,8 @@ void arwingandrossstuff_hitDetect(int obj)
         }
         if (objAnim->seqId == ARW_SEQID_CHARGE)
         {
-            s16 angle = (s16) - getAngle(objAnim->localPosX - arwingAnim->localPosX,
-                                         objAnim->localPosY - arwingAnim->localPosY);
+            s16 angle =
+                (s16)-getAngle(objAnim->localPosX - arwingAnim->localPosX, objAnim->localPosY - arwingAnim->localPosY);
             f32 ang = gArwingAndrossPi * angle / gArwingAndrossBinAngScale;
 
             v.x = lbl_803E702C * mathSinf(ang);
@@ -386,9 +392,8 @@ void fn_8022ECE0(int obj, f32 param)
     src.rot[2] = 0;
     src.scale = lbl_803E704C;
     setMatrixFromObjectPos(mtx, &src);
-    Matrix_TransformPoint(mtx, *(f32*)&lbl_803E7044, lbl_803E7044, state->lifetime,
-                          &((GameObject*)obj)->anim.velocityX, &((GameObject*)obj)->anim.velocityY,
-                          &((GameObject*)obj)->anim.velocityZ);
+    Matrix_TransformPoint(mtx, *(f32*)&lbl_803E7044, lbl_803E7044, state->lifetime, &((GameObject*)obj)->anim.velocityX,
+                          &((GameObject*)obj)->anim.velocityY, &((GameObject*)obj)->anim.velocityZ);
 }
 
 void fn_8022ED74(int obj, int v)

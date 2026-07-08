@@ -16,14 +16,16 @@
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/gx/GXCull.h"
 
-typedef struct CamcontrolIconRenderOp {
+typedef struct CamcontrolIconRenderOp
+{
     u8 pad00[0x24];
-    s32 textureId;     /* 0x24 */
-    u8 pad28;          /* 0x28 */
-    u8 variantId;      /* 0x29: 1 = "press A" icon variant */
+    s32 textureId; /* 0x24 */
+    u8 pad28;      /* 0x28 */
+    u8 variantId;  /* 0x29: 1 = "press A" icon variant */
 } CamcontrolIconRenderOp;
 
-typedef struct CamcontrolIconColor {
+typedef struct CamcontrolIconColor
+{
     u8 r;
     u8 g;
     u8 b;
@@ -35,17 +37,17 @@ extern void fn_80051D5C(void* tex, void* a, u32 b, CamcontrolIconColor* color);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 
-#define GX_BM_NONE 0
-#define GX_BM_BLEND 1
-#define GX_BL_ZERO 0
-#define GX_BL_ONE 1
-#define GX_BL_SRCALPHA 4
+#define GX_BM_NONE        0
+#define GX_BM_BLEND       1
+#define GX_BL_ZERO        0
+#define GX_BL_ONE         1
+#define GX_BL_SRCALPHA    4
 #define GX_BL_INVSRCALPHA 5
-#define GX_LO_NOOP 5
-#define GX_LEQUAL 3
-#define GX_ALWAYS 7
-#define GX_AOP_AND 0
-#define GX_CULL_BACK 2
+#define GX_LO_NOOP        5
+#define GX_LEQUAL         3
+#define GX_ALWAYS         7
+#define GX_AOP_AND        0
+#define GX_CULL_BACK      2
 
 #define ICON_VARIANT_PRESS_A 1
 

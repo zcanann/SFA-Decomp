@@ -14,10 +14,10 @@ extern volatile u32 salLastTick;
 extern volatile u32 salDspInitIsDone;
 extern u8 salAIBufferIndex;
 
-#define SAL_AI_BUFFER_COUNT 4
-#define SAL_AI_DMA_CHUNK_SIZE 0x280
-#define SAL_AI_DMA_BUFFER_SIZE (SAL_AI_BUFFER_COUNT * SAL_AI_DMA_CHUNK_SIZE)
-#define SAL_AI_CACHED_BASE 0x80000000U
+#define SAL_AI_BUFFER_COUNT        4
+#define SAL_AI_DMA_CHUNK_SIZE      0x280
+#define SAL_AI_DMA_BUFFER_SIZE     (SAL_AI_BUFFER_COUNT * SAL_AI_DMA_CHUNK_SIZE)
+#define SAL_AI_CACHED_BASE         0x80000000U
 #define SAL_AI_OUTPUT_SAMPLE_COUNT 0x7d00
 
 /*
@@ -29,9 +29,7 @@ extern u8 salAIBufferIndex;
 void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
 {
     salAIBufferIndex = (salAIBufferIndex + 1) % SAL_AI_BUFFER_COUNT;
-    AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) +
-              salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
-              SAL_AI_DMA_CHUNK_SIZE);
+    AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) + salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE, SAL_AI_DMA_CHUNK_SIZE);
     salLastTick = OSGetTick();
     if (salDspCallbackEnabled != 0)
     {
@@ -101,8 +99,7 @@ int salInitAi(void* userCallback, u32 unused, u32* outSampleCount)
         salCallbackActive = 0;
         salAiCallback = userCallback;
         AIRegisterDMACallback(salCallback);
-        AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) +
-                  salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
+        AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) + salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
                   SAL_AI_DMA_CHUNK_SIZE);
         *(u32*)(lbl_803BD150 + 4) = 0x20;
         *outSampleCount = SAL_AI_OUTPUT_SAMPLE_COUNT;
@@ -132,6 +129,5 @@ int salAiGetDest(void)
     int nextBuffer;
 
     nextBuffer = salAIBufferIndex + 2;
-    return salAiDmaBuffer +
-        (u8)(nextBuffer % SAL_AI_BUFFER_COUNT) * SAL_AI_DMA_CHUNK_SIZE;
+    return salAiDmaBuffer + (u8)(nextBuffer % SAL_AI_BUFFER_COUNT) * SAL_AI_DMA_CHUNK_SIZE;
 }

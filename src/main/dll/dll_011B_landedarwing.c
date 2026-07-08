@@ -89,7 +89,8 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern int ObjTrigger_IsSet(int obj);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                          int useInputPosition);
 extern void* Obj_GetPlayerObject(void);
 extern int loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int idx);
@@ -102,10 +103,10 @@ extern void arwarwinggu_setTextureFrame(int obj, int arg);
 extern void arwarwinggu_applyTextureFrame(int obj);
 extern int playerGetFocusObject(int obj);
 
-
-
-
-int landed_arwing_getExtraSize(void) { return 0x1c; }
+int landed_arwing_getExtraSize(void)
+{
+    return 0x1c;
+}
 
 extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
@@ -210,12 +211,14 @@ void landed_arwing_renderPathEffects(int obj)
         i = 0;
         while (i < 5)
         {
-            ObjPath_GetPointWorldPosition(obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y, &scratch.z, 0);
+            ObjPath_GetPointWorldPosition(obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y,
+                                          &scratch.z, 0);
             scratch.x -= ((GameObject*)obj)->anim.localPosX;
             scratch.y -= ((GameObject*)obj)->anim.localPosY;
             scratch.z -= ((GameObject*)obj)->anim.localPosZ;
-            objfx_spawnMaskedHitEffect(obj, ((GameObject*)obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
-                                       gLandedArwingPathFxTable[i].arg5, gLandedArwingPathFxTable[i].arg6, scratch.effectPos);
+            objfx_spawnMaskedHitEffect(
+                obj, ((GameObject*)obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
+                gLandedArwingPathFxTable[i].arg5, gLandedArwingPathFxTable[i].arg6, scratch.effectPos);
             i++;
         }
     }
@@ -248,8 +251,8 @@ void landed_arwing_renderPathEffects(int obj)
     }
 }
 
-#define MAP_EVENT_STATUS(mapId) (*gMapEventInterface)->getMapAct((mapId))
-#define MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
+#define MAP_EVENT_STATUS(mapId)         (*gMapEventInterface)->getMapAct((mapId))
+#define MAP_EVENT_SET(mapId, value)     (*gMapEventInterface)->setMapAct((mapId), (value))
 #define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (arg), (value))
 
 int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -515,8 +518,7 @@ void landed_arwing_update(int obj)
             state->sequenceState = 2;
             cutSceneFn_8011dd30();
         }
-        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                  &state->sequenceHitCooldown);
+        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->sequenceHitCooldown);
         break;
     case 2:
         if (fn_8012DDA4() != 0)
@@ -577,7 +579,8 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     {
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotZ = 0;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC &&
+            !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
         {
             if (((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit > 0)
             {
@@ -610,9 +613,13 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                 if ((void*)other != NULL)
                 {
                     otherState = ((GameObject*)other)->extra;
-                    if (((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit > 0)
+                    if (((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)
+                            ->siblingGameBit > 0)
                     {
-                        mainSetBits(((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit, 1);
+                        mainSetBits(
+                            ((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)
+                                ->siblingGameBit,
+                            1);
                     }
                     ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
                 }
@@ -633,11 +640,9 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
             ((GameObject*)obj)->anim.rotY = randomGetRange(-200, 200);
             ((GameObject*)obj)->anim.rotZ = randomGetRange(-200, 200);
         }
-        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                  &state->hitEffectCooldown);
+        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
-                                                                  &events);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta, &events);
 }
 
 void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
@@ -666,16 +671,16 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
 
     if (flags->damaged == 0)
     {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && mainGetBit(
-            ((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) != 0)
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 &&
+            mainGetBit(((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) != 0)
         {
             flags->damaged = 1;
         }
     }
     else
     {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 && mainGetBit(
-            ((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) == 0)
+        if (((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit != -1 &&
+            mainGetBit(((LandedArwingUpdateDamageTexturePlacement*)def)->damagedGameBit) == 0)
         {
             flags->damaged = 0;
         }
@@ -703,9 +708,5 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
 }
 
 LandedArwingFxPoint gLandedArwingPathFxTable[] = {
-    {0.1f, 1, 7, 0x20, 0},
-    {0.1f, 2, 7, 0x20, 0},
-    {0.1f, 3, 8, 0x20, 0},
-    {0.1f, 4, 9, 0x20, 0},
-    {0.1f, 5, 6, 0x10, 0},
+    {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
 };

@@ -25,7 +25,7 @@ typedef struct WmSpiritSetState
 typedef struct WmSpiritSetMapData
 {
     ObjPlacement base;
-    s8 rotXByte;           /* 0x18: rotX in 1/256 turns */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1E - 0x19];
     s16 visibilityGameBit; /* 0x1E */
 } WmSpiritSetMapData;
@@ -36,9 +36,15 @@ STATIC_ASSERT(offsetof(WmSpiritSetMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(WmSpiritSetMapData, visibilityGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmSpiritSetMapData) == 0x20);
 
-int wmspiritset_getExtraSize(void) { return sizeof(WmSpiritSetState); }
+int wmspiritset_getExtraSize(void)
+{
+    return sizeof(WmSpiritSetState);
+}
 
-int wmspiritset_getObjectTypeId(void) { return 0x0; }
+int wmspiritset_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void wmspiritset_free(void)
 {

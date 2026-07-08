@@ -21,11 +21,11 @@ extern ModgfxInterface** gModgfxInterface;
 
 typedef struct
 {
-    u32 mode; /* +0x00 */
+    u32 mode;    /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    void* tex;   /* +0x10 */
+    u16 flags;   /* +0x14 */
+    u8 layer;    /* +0x16 */
 } GfxCmd;
 
 extern u8 lbl_80319028[];
@@ -42,8 +42,7 @@ extern f32 lbl_803E15F4;
 extern f32 lbl_803E15F8;
 extern f32 lbl_803E15FC;
 
-void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5,
-                   u8* extraArgs)
+void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5, u8* extraArgs)
 {
     struct
     {

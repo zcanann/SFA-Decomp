@@ -21,9 +21,9 @@
 #include "main/gamebit_ids.h"
 
 #define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
-#define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
-extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
-extern f32 lbl_803E24C4; /* squared eating-range threshold */
+#define PRESSURESWITCHFB_REMOVE_GROUP_ID    0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
+extern f32 lbl_803E242C;                         /* initial search radius for ObjGroup_FindNearestObject */
+extern f32 lbl_803E24C4;                         /* squared eating-range threshold */
 extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
 extern int coordsToMapCell(u8* p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -64,7 +64,8 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
             {
                 if ((mainGetBit(0x385) == 0) && (mainGetBit(0x384) != 0))
                 {
-                    if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) || (mainGetBit(GAMEBIT_ITEM_TrickyFood_GrabInProgress) != 0))
+                    if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) ||
+                        (mainGetBit(GAMEBIT_ITEM_TrickyFood_GrabInProgress) != 0))
                     {
                         result = 1;
                     }
@@ -82,8 +83,8 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
     {
         u8* levelObj = (u8*)*(u32*)(critter + 4);
 
-        if (vec3f_distanceSquared(&((GameObject*)levelObj)->anim.worldPosX,
-                                  &((GameObject*)tricky)->anim.worldPosX) < lbl_803E24C4)
+        if (vec3f_distanceSquared(&((GameObject*)levelObj)->anim.worldPosX, &((GameObject*)tricky)->anim.worldPosX) <
+            lbl_803E24C4)
         {
             return 2;
         }

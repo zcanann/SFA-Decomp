@@ -27,7 +27,7 @@ extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 extern f32 lbl_803E38A0;
 
 #define GAMEBIT_TRICKY_AVAILABLE 0x4e5
-#define TRICKYWARP_OBJ_GROUP 0x4b
+#define TRICKYWARP_OBJ_GROUP     0x4b
 #define ROMCURVE_TYPE_TRICKYWARP '$'
 
 void TrickyWarp_free(int obj)
@@ -39,7 +39,10 @@ void TrickyWarp_free(int obj)
     }
 }
 
-int TrickyWarp_getExtraSize(void) { return sizeof(TrickyWarpState); }
+int TrickyWarp_getExtraSize(void)
+{
+    return sizeof(TrickyWarpState);
+}
 
 void TrickyWarp_update(int obj)
 {
@@ -193,7 +196,10 @@ void TrickyWarp_init(s16* obj, u8* placement)
 }
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -207,7 +213,10 @@ ObjectDescriptor gMagicPlantObjDescriptor = {
 };
 
 ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -221,7 +230,10 @@ ObjectDescriptor gTrickyWarpObjDescriptor = {
 };
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -235,7 +247,10 @@ ObjectDescriptor gTrickyGuardObjDescriptor = {
 };
 
 ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -249,7 +264,10 @@ ObjectDescriptor gStayPointObjDescriptor = {
 };
 
 ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -263,7 +281,10 @@ ObjectDescriptor gDusterObjDescriptor = {
 };
 
 ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,

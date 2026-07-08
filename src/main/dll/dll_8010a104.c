@@ -28,7 +28,8 @@
  * sibling camshipbattle5C node but exposes the five-way neighbour array and the
  * three path-tag bytes this unit relies on.
  */
-typedef struct PathCurveNode {
+typedef struct PathCurveNode
+{
     u8 pad00[0x08];
     f32 x;
     f32 y;
@@ -50,7 +51,7 @@ extern f32 lbl_803E188C; /* far distance threshold */
 extern f32 fn_8010AC48(f32 px, f32 py, f32 pz, int* obj);
 
 #define PATHCAM_NEAR_THRESHOLD lbl_803E1888
-#define PATHCAM_FAR_THRESHOLD lbl_803E188C
+#define PATHCAM_FAR_THRESHOLD  lbl_803E188C
 
 void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
 {
@@ -71,13 +72,11 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     noForwardExit = 1;
     for (slot = 0; slot < PATHCURVE_NODE_LINK_COUNT; slot++)
     {
-        if (((PathCurveNode*)node)->links[slot] > -1 &&
-            (((PathCurveNode*)node)->directionMask & (1 << slot)) == 0)
+        if (((PathCurveNode*)node)->links[slot] > -1 && (((PathCurveNode*)node)->directionMask & (1 << slot)) == 0)
         {
             linked = (int)(*gRomCurveInterface)->getById(((PathCurveNode*)node)->links[slot]);
-            if ((u32)linked != 0 &&
-                (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
-                    ((PathCurveNode*)linked)->tag2 == tag))
+            if ((u32)linked != 0 && (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
+                                     ((PathCurveNode*)linked)->tag2 == tag))
             {
                 noForwardExit = 0;
                 slot = PATHCURVE_NODE_LINK_COUNT;
@@ -88,13 +87,12 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     {
         for (slot = 0; slot < PATHCURVE_NODE_LINK_COUNT; slot++)
         {
-            if (((PathCurveNode*)node)->links[slot] > -1 &&
-                (((PathCurveNode*)node)->directionMask & (1 << slot)) != 0)
+            if (((PathCurveNode*)node)->links[slot] > -1 && (((PathCurveNode*)node)->directionMask & (1 << slot)) != 0)
             {
                 linked = (int)(*gRomCurveInterface)->getById(((PathCurveNode*)node)->links[slot]);
                 if ((u32)linked != 0 &&
                     (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
-                        ((PathCurveNode*)linked)->tag2 == tag))
+                     ((PathCurveNode*)linked)->tag2 == tag))
                 {
                     *p1 = ((PathCurveNode*)node)->links[slot];
                     slot = PATHCURVE_NODE_LINK_COUNT;
@@ -142,7 +140,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
                 linked = (int)(*gRomCurveInterface)->getById(((PathCurveNode*)node)->links[slot2]);
                 if ((u32)linked != 0 &&
                     (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
-                        ((PathCurveNode*)linked)->tag2 == tag))
+                     ((PathCurveNode*)linked)->tag2 == tag))
                 {
                     *p2 = ((PathCurveNode*)node)->links[slot2];
                     slot2 = PATHCURVE_NODE_LINK_COUNT;
@@ -173,7 +171,7 @@ int fn_8010A47C(int curve, int* count, int tag)
                     linked = (int)(*gRomCurveInterface)->getById(((PathCurveNode*)curve)->links[slot]);
                     if (((u32)linked != 0) &&
                         ((((PathCurveNode*)linked)->tag0 == tag || (((PathCurveNode*)linked)->tag1 == tag)) ||
-                            (((PathCurveNode*)linked)->tag2 == tag)))
+                         (((PathCurveNode*)linked)->tag2 == tag)))
                     {
                         curve = linked;
                         done = 0;

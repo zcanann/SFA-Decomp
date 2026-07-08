@@ -33,10 +33,10 @@
 #define MAGICPLANT_OBJGROUP_A 0x34
 #define MAGICPLANT_OBJGROUP_B 0x3e
 
-#define MAGICPLANT_HIT_BURST_FX 0x34e   /* particle effect spawned when the plant is hit */
-#define MAGICPLANT_HIT_BURST_COUNT 0x14 /* 20 hit-burst particles */
-#define MAGICPLANT_IDLE_TIMER_MIN 300   /* frames between idle-sway retriggers (lo..hi) */
-#define MAGICPLANT_IDLE_TIMER_MAX 600
+#define MAGICPLANT_HIT_BURST_FX    0x34e /* particle effect spawned when the plant is hit */
+#define MAGICPLANT_HIT_BURST_COUNT 0x14  /* 20 hit-burst particles */
+#define MAGICPLANT_IDLE_TIMER_MIN  300   /* frames between idle-sway retriggers (lo..hi) */
+#define MAGICPLANT_IDLE_TIMER_MAX  600
 extern int randomGetRange(int lo, int hi);
 
 extern void* Obj_GetPlayerObject(void);
@@ -49,7 +49,8 @@ extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                          int useInputPosition);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -149,8 +150,7 @@ void MagicPlant_updateActive(int obj, MagicPlantSetup* setupParam, MagicPlantSta
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, MAGICPLANT_HIT_BURST_FX, NULL, 2, -1, NULL);
                 i--;
-            }
-            while (i != 0);
+            } while (i != 0);
 
             hitPos[0] += playerMapOffsetX;
             hitPos[2] += playerMapOffsetZ;
@@ -226,8 +226,8 @@ void MagicPlant_spawnChild(int obj, int objectId)
         setup->mapByte6 = mapData[0x06];
         setup->mapByte5 = mapData[0x05];
         setup->yawByte = (u8)(mapData[0x07] - 0xf);
-        childObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                   ((GameObject*)obj)->anim.parent);
+        childObj =
+            Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         if (childObj != 0)
         {
             ObjLink_AttachChild(obj, childObj, 0);
@@ -364,7 +364,10 @@ void MagicPlant_update(int obj)
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, NULL);
 }
 
-int MagicPlant_getExtraSize(void) { return MAGICPLANT_EXTRA_STATE_BYTES; }
+int MagicPlant_getExtraSize(void)
+{
+    return MAGICPLANT_EXTRA_STATE_BYTES;
+}
 
 int MagicPlant_SeqFn(u8* obj)
 {
@@ -440,7 +443,8 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     {
         progress = (*gMapEventInterface)->getTime(setup->eventId);
         divisor = setup->eventDuration;
-        if (divisor < 100) divisor = 100;
+        if (divisor < 100)
+            divisor = 100;
         progress /= divisor;
         if (progress > lbl_803E3858)
         {
@@ -474,7 +478,10 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
 }
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -488,7 +495,10 @@ ObjectDescriptor gMagicPlantObjDescriptor = {
 };
 
 ObjectDescriptor gTrickyWarpObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -502,7 +512,10 @@ ObjectDescriptor gTrickyWarpObjDescriptor = {
 };
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -516,7 +529,10 @@ ObjectDescriptor gTrickyGuardObjDescriptor = {
 };
 
 ObjectDescriptor gStayPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -530,7 +546,10 @@ ObjectDescriptor gStayPointObjDescriptor = {
 };
 
 ObjectDescriptor gDusterObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -544,7 +563,10 @@ ObjectDescriptor gDusterObjDescriptor = {
 };
 
 ObjectDescriptor gCurveFishObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,

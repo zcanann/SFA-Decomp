@@ -34,27 +34,27 @@
 #define PAD_TRIGGER_L 0x40
 
 /* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
-#define CAMMODE_CLIMB     0x43 /* dll_0043 climb/path camera */
+#define CAMMODE_CLIMB      0x43 /* dll_0043 climb/path camera */
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
-#define CAMMODE_COMBAT    0x49 /* dll_0049_cameramodecombat (follow) */
+#define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
 extern u16 getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
 extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints,
-                                            float* radii, int pointCount);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
+                                            int pointCount);
 extern int getCurSeqNo();
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
-extern int fn_80295C0C(int);     /* gates mode 0x49 (with objFn_80296700) */
-extern int objFn_802962b4(int obj);  /* gates mode 0x44 */
-extern int objFn_80296700(int obj);  /* gates mode 0x49 (with fn_80295C0C) */
+extern int fn_80295C0C(int);        /* gates mode 0x49 (with objFn_80296700) */
+extern int objFn_802962b4(int obj); /* gates mode 0x44 */
+extern int objFn_80296700(int obj); /* gates mode 0x49 (with fn_80295C0C) */
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 
-extern u8 gCutCamBboxBlocked;       /* last bbox-hit result */
+extern u8 gCutCamBboxBlocked; /* last bbox-hit result */
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
 extern f32 lbl_803E1688;      /* 4.0f  - collision probe / trace radius */
 extern f32 lbl_803E168C;      /* 3.1415927f (pi); angle-units -> radians with lbl_803E1690 */
@@ -74,9 +74,8 @@ extern f32 lbl_803E16C8;      /* 0.5f   - decay dead-zone (snap to 0 inside) */
 extern f32 lbl_803E16CC;      /* -0.5f  - decay dead-zone (snap to 0 inside) */
 
 #pragma dont_inline on
-int
-camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork,
-                     char traceMode, u8 runTrace, u8 runBbox, float radius)
+int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork, char traceMode, u8 runTrace,
+                         u8 runBbox, float radius)
 {
     u8 blocked;
     int clear;
@@ -139,8 +138,7 @@ u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
     return traceRec[CAMCONTROL_TRACE_BLOCKED_OFFSET];
 }
 
-u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAnim, f32* outPos,
-                                s16* outRotY)
+u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAnim, f32* outPos, s16* outRotY)
 {
     u8 box[112];
     float prev[3];
@@ -157,15 +155,14 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     cosv = mathSinf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
     sinv = mathCosf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
     d2 = cameraMtxVar57->maxDistance * cameraMtxVar57->maxDistance -
-        cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
+         cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
     if (d2 < lbl_803E1694)
     {
         d2 = *(f32*)&lbl_803E1694;
     }
     d2 = sqrtf(d2);
     pos[0] = cosv * d2 + targetAnim->worldPosX;
-    pos[1] = cameraMtxVar57->lowerHeightOffset +
-        (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
+    pos[1] = cameraMtxVar57->lowerHeightOffset + (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
     pos[2] = sinv * d2 + targetAnim->worldPosZ;
     if (targetAnim->classId == 1)
     {
@@ -286,7 +283,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     f32 t;
     f32 v;
 
-    OSGetTick();      /* timing probe; return value intentionally unused */
+    OSGetTick(); /* timing probe; return value intentionally unused */
     result = 0;
     ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
         (int)cam, &spinB, &spinC, &spinD, &spinA, cameraMtxVar57->targetHeight, 0);
@@ -379,8 +376,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     {
         for (i = 0; i <= found1; i++)
         {
-            if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, NULL, box, 7,
-                                     '\0', '\0', lbl_803E16A0) == 0)
+            if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, NULL, box, 7, '\0', '\0', lbl_803E16A0) == 0)
             {
                 found1 = 6;
                 break;
@@ -396,8 +392,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     {
         for (i = 0; i <= found2; i++)
         {
-            if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, NULL, box, 7,
-                                     '\0', '\0', lbl_803E16A0) == 0)
+            if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, NULL, box, 7, '\0', '\0', lbl_803E16A0) == 0)
             {
                 found2 = 6;
                 break;
@@ -495,7 +490,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     float* p;
     int i;
     int j;
-    f32 angScale;   /* 32768.0f = angle units per pi */
+    f32 angScale; /* 32768.0f = angle units per pi */
     f32 dz;
     f32 pi;
     f32 dx;
@@ -508,9 +503,8 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     u8 trace;
     s16 spin;
 
-    Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
-                                   camera->anim.localPosZ, &camera->anim.worldPosX,
-                                   &camera->anim.worldPosY, &camera->anim.worldPosZ,
+    Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
+                                   &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    (int)camera->anim.parent);
     gCutCamBboxBlocked = 0;
     if (target->anim.classId == 1)
@@ -556,8 +550,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         ang = ang + 0x1554;
         p = p + 6;
         i = i + 2;
-    }
-    while (i <= 0xc);
+    } while (i <= 0xc);
     for (j = 0; j <= 0xc; j++)
     {
         endPts[j][0] = prev[0];
@@ -567,8 +560,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     }
     hitDetect_calcSweptSphereBounds(bounds, (float*)path, (float*)endPts, radii, 0xd);
     hitDetectFn_800691c0(0, bounds, 0x248, 1);
-    trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, NULL, box, 7,
-                                 '\0', '\0', lbl_803E16A0);
+    trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, NULL, box, 7, '\0', '\0', lbl_803E16A0);
     blocked = 0;
     if (trace == 0)
     {
@@ -598,15 +590,13 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
             camera->anim.worldPosZ = z + target->anim.worldPosZ;
         }
         cameraMtxVar57->avoidanceYawOffset = cameraMtxVar57->avoidanceYawOffset * lbl_803E16C4;
-        if ((cameraMtxVar57->avoidanceYawOffset < lbl_803E16C8) &&
-            (cameraMtxVar57->avoidanceYawOffset > lbl_803E16CC))
+        if ((cameraMtxVar57->avoidanceYawOffset < lbl_803E16C8) && (cameraMtxVar57->avoidanceYawOffset > lbl_803E16CC))
         {
             cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
         }
     }
-    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
-                                   camera->anim.worldPosZ, &camera->anim.localPosX,
-                                   &camera->anim.localPosY, &camera->anim.localPosZ,
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                   &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    (int)camera->anim.parent);
 }
 
@@ -623,9 +613,8 @@ void camcontrol_updateModeSettings(int camera)
         {
             cameraMtxVar57->transitionTimer = 0;
         }
-        ratio = (f32)(cameraMtxVar57->transitionDuration -
-                cameraMtxVar57->transitionTimer) /
-            (f32)(s32)cameraMtxVar57->transitionDuration;
+        ratio = (f32)(cameraMtxVar57->transitionDuration - cameraMtxVar57->transitionTimer) /
+                (f32)(s32)cameraMtxVar57->transitionDuration;
         curve[0] = lbl_803E16AC;
         curve[1] = lbl_803E16A4;
         curve[2] = lbl_803E16AC;
@@ -634,35 +623,27 @@ void camcontrol_updateModeSettings(int camera)
         cameraMtxVar57->targetHeight =
             blend * (cameraMtxVar57->targetTargetHeight - cameraMtxVar57->savedTargetHeight) +
             cameraMtxVar57->savedTargetHeight;
-        cameraMtxVar57->minDistance =
-            blend * (cameraMtxVar57->targetMinDistance - cameraMtxVar57->savedMinDistance) +
-            cameraMtxVar57->savedMinDistance;
-        cameraMtxVar57->maxDistance =
-            blend * (cameraMtxVar57->targetMaxDistance - cameraMtxVar57->savedMaxDistance) +
-            cameraMtxVar57->savedMaxDistance;
+        cameraMtxVar57->minDistance = blend * (cameraMtxVar57->targetMinDistance - cameraMtxVar57->savedMinDistance) +
+                                      cameraMtxVar57->savedMinDistance;
+        cameraMtxVar57->maxDistance = blend * (cameraMtxVar57->targetMaxDistance - cameraMtxVar57->savedMaxDistance) +
+                                      cameraMtxVar57->savedMaxDistance;
         cameraMtxVar57->lowerHeightOffset =
-            blend * (cameraMtxVar57->targetLowerHeightOffset -
-                cameraMtxVar57->savedLowerHeightOffset) +
+            blend * (cameraMtxVar57->targetLowerHeightOffset - cameraMtxVar57->savedLowerHeightOffset) +
             cameraMtxVar57->savedLowerHeightOffset;
         cameraMtxVar57->upperHeightOffset =
-            blend * (cameraMtxVar57->targetUpperHeightOffset -
-                cameraMtxVar57->savedUpperHeightOffset) +
+            blend * (cameraMtxVar57->targetUpperHeightOffset - cameraMtxVar57->savedUpperHeightOffset) +
             cameraMtxVar57->savedUpperHeightOffset;
         cameraMtxVar57->distanceAdjustRate =
-            blend * (cameraMtxVar57->targetDistanceAdjustRate -
-                cameraMtxVar57->savedDistanceAdjustRate) +
+            blend * (cameraMtxVar57->targetDistanceAdjustRate - cameraMtxVar57->savedDistanceAdjustRate) +
             cameraMtxVar57->savedDistanceAdjustRate;
         cameraMtxVar57->heightAdjustRate =
-            blend * (cameraMtxVar57->targetHeightAdjustRate -
-                cameraMtxVar57->savedHeightAdjustRate) +
+            blend * (cameraMtxVar57->targetHeightAdjustRate - cameraMtxVar57->savedHeightAdjustRate) +
             cameraMtxVar57->savedHeightAdjustRate;
         cameraMtxVar57->slideRightAmount =
-            blend * (cameraMtxVar57->targetSlideRightAmount -
-                cameraMtxVar57->savedSlideRightAmount) +
+            blend * (cameraMtxVar57->targetSlideRightAmount - cameraMtxVar57->savedSlideRightAmount) +
             cameraMtxVar57->savedSlideRightAmount;
         cameraMtxVar57->slideLeftAmount =
-            blend * (cameraMtxVar57->targetSlideLeftAmount -
-                cameraMtxVar57->savedSlideLeftAmount) +
+            blend * (cameraMtxVar57->targetSlideLeftAmount - cameraMtxVar57->savedSlideLeftAmount) +
             cameraMtxVar57->savedSlideLeftAmount;
         ((CameraObject*)camera)->fov =
             blend * (cameraMtxVar57->fov - cameraMtxVar57->savedFov) + cameraMtxVar57->savedFov;

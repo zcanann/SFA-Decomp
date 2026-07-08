@@ -9,7 +9,8 @@
 #include "main/mm.h"
 #include "main/texture.h"
 
-typedef struct SkyBlendStateFlags {
+typedef struct SkyBlendStateFlags
+{
     u8 unused80 : 1;
     u8 active : 1;
     u8 bit20 : 1;
@@ -17,17 +18,20 @@ typedef struct SkyBlendStateFlags {
     u8 rest : 3;
 } SkyBlendStateFlags;
 
-typedef struct SkyVec3 {
+typedef struct SkyVec3
+{
     f32 x, y, z;
 } SkyVec3;
 
-typedef struct SkyRotQ {
+typedef struct SkyRotQ
+{
     u16 rx, ry, rz;
     f32 w;
     f32 x, y, z;
 } SkyRotQ;
 
-typedef struct Dll06InterpState {
+typedef struct Dll06InterpState
+{
     u8 pad00[0x24];
     s32 targetX;
     s32 targetY;
@@ -38,98 +42,102 @@ typedef struct Dll06InterpState {
     s8 active;
 } Dll06InterpState;
 
-typedef struct FogColor {
+typedef struct FogColor
+{
     u8 r;
     u8 g;
     u8 b;
     u8 a;
 } FogColor;
 
-typedef struct SkyBestIdx {
+typedef struct SkyBestIdx
+{
     u8 best;
     u8 second;
     u8 pad;
 } SkyBestIdx;
 
-typedef struct SkySlotAnim {
-    u8 pad00[4];        /* 0x00 */
-    u16 flags4;         /* 0x04 */
-    u16 flags6;         /* 0x06 */
-    u8 pad08[0x34];     /* 0x08 */
-    int frameCount;     /* 0x3c */
-    u8 pad40[0x30];     /* 0x40 */
-    f32 cur[0x21];      /* 0x70 */
-    f32 target[0x21];   /* 0xf4 */
-    f32 vel[0x21];      /* 0x178 */
-    f32 cur2[0x16];     /* 0x1fc */
-    f32 target2[0x16];  /* 0x254 */
-    f32 vel2[0x16];     /* 0x2ac */
-    f32 t;              /* 0x304 */
-    f32 step;           /* 0x308 */
-    f32 prevT;          /* 0x30c */
-    f32 blend;          /* 0x310 */
-    s8 b314;            /* 0x314 */
-    s8 b315;            /* 0x315 */
-    s8 b316;            /* 0x316 */
+typedef struct SkySlotAnim
+{
+    u8 pad00[4];       /* 0x00 */
+    u16 flags4;        /* 0x04 */
+    u16 flags6;        /* 0x06 */
+    u8 pad08[0x34];    /* 0x08 */
+    int frameCount;    /* 0x3c */
+    u8 pad40[0x30];    /* 0x40 */
+    f32 cur[0x21];     /* 0x70 */
+    f32 target[0x21];  /* 0xf4 */
+    f32 vel[0x21];     /* 0x178 */
+    f32 cur2[0x16];    /* 0x1fc */
+    f32 target2[0x16]; /* 0x254 */
+    f32 vel2[0x16];    /* 0x2ac */
+    f32 t;             /* 0x304 */
+    f32 step;          /* 0x308 */
+    f32 prevT;         /* 0x30c */
+    f32 blend;         /* 0x310 */
+    s8 b314;           /* 0x314 */
+    s8 b315;           /* 0x315 */
+    s8 b316;           /* 0x316 */
 } SkySlotAnim;
 
-typedef struct SkyTimeBlend {
-    void *texA;          /* 0x00 */
-    void *texB;          /* 0x04 */
-    void *texList[3];    /* 0x08 */
-    int texAId;          /* 0x14 */
-    int texBId;          /* 0x18 */
-    u8 pad1C[0x1F0];     /* 0x1c */
-    f32 time;            /* 0x20c */
-    u8 pad210[0xC];      /* 0x210 */
-    int palettes[8];     /* 0x21c */
-    f32 blend;           /* 0x23c */
-    u8 pad240[0xF];      /* 0x240 */
-    u8 phase;            /* 0x24f */
-    s8 prevPhase;        /* 0x250 */
-    u8 texSel;           /* 0x251 */
+typedef struct SkyTimeBlend
+{
+    void* texA;       /* 0x00 */
+    void* texB;       /* 0x04 */
+    void* texList[3]; /* 0x08 */
+    int texAId;       /* 0x14 */
+    int texBId;       /* 0x18 */
+    u8 pad1C[0x1F0];  /* 0x1c */
+    f32 time;         /* 0x20c */
+    u8 pad210[0xC];   /* 0x210 */
+    int palettes[8];  /* 0x21c */
+    f32 blend;        /* 0x23c */
+    u8 pad240[0xF];   /* 0x240 */
+    u8 phase;         /* 0x24f */
+    s8 prevPhase;     /* 0x250 */
+    u8 texSel;        /* 0x251 */
 } SkyTimeBlend;
 
 extern void setDrawCloudsAndLights(int mode);
-extern void fn_8008C9F4(u8 *cfg, u8 flags);
+extern void fn_8008C9F4(u8* cfg, u8 flags);
 extern u8 gSkyConfigFieldIndices[];
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
-extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
+extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
-extern void *Obj_AllocObjectSetup(int size, int objectId);
-extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, void *parent);
-extern void *Obj_GetActiveModel(void *obj);
-extern void ObjModel_SetRenderCallback(void *model, void *callback);
-extern int moonFxCb_80074110(int obj, int *model, int param);
-extern void modelLightStruct_setDirection(void *model, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDiffuseColor(void *model, int red, int green, int blue, int alpha);
+extern void* Obj_AllocObjectSetup(int size, int objectId);
+extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
+extern void* Obj_GetActiveModel(void* obj);
+extern void ObjModel_SetRenderCallback(void* model, void* callback);
+extern int moonFxCb_80074110(int obj, int* model, int param);
+extern void modelLightStruct_setDirection(void* model, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDiffuseColor(void* model, int red, int green, int blue, int alpha);
 extern void lightSetColor(int index, int red, int green, int blue);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
-extern void Obj_BuildWorldTransformMatrix(void *obj, f32 mtx[3][4], int flags);
+extern void Obj_BuildWorldTransformMatrix(void* obj, f32 mtx[3][4], int flags);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
-extern s16 *Camera_GetCurrentViewSlot(void);
+extern s16* Camera_GetCurrentViewSlot(void);
 extern int lbl_803DD130;
 extern int lbl_803DD134;
 extern int lbl_803DD138;
 extern int lbl_803DD13C;
 extern u8 gSkyEnvFxFlags;
-extern u8 *gSkyState;
-extern u8 *gSkySunObject;
-extern void *gSkyMoonObject;
-extern void *gSkySkyTexture;
+extern u8* gSkyState;
+extern u8* gSkySunObject;
+extern void* gSkyMoonObject;
+extern void* gSkySkyTexture;
 extern int gSkyObjectsInitialized;
 extern u8 gSkyOverrideLightColor;
 extern u8 gSkyOverrideLightColorEnabled;
 extern f32 gSkyOverrideLightIntensity;
 extern u8 gSkyOverrideLightDirectionEnabled;
-extern void *gSkyMoonLight;
+extern void* gSkyMoonLight;
 extern u8 gSkyCurrentLightColor;
 extern u8 gSkyCurrentAmbientColor;
 extern u8 gSkyCurrentTextureColor;
-extern void *gSkySunLight;
+extern void* gSkySunLight;
 extern f32 gSkyOverrideLightDirection[];
 extern const f32 pEXIInputFlag;
 extern const f32 EXIInputFlag;
@@ -140,27 +148,27 @@ extern f32 gSkyDayStartTime;
 extern f32 lbl_803DF064;
 extern f32 lbl_803DF068;
 extern f32 gSkySecondsPerDay;
-extern f32 PSVECMag(f32 *vec);
-extern void PSVECScale(f32 scale, f32 *src, f32 *dst);
-extern void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask);
-extern void modelLightStruct_getWorldPosition(u8 *p, f32 *a, f32 *b, f32 *c);
+extern f32 PSVECMag(f32* vec);
+extern void PSVECScale(f32 scale, f32* src, f32* dst);
+extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
+extern void modelLightStruct_getWorldPosition(u8* p, f32* a, f32* b, f32* c);
 extern const f32 lbl_803DF0F0;
 extern const f32 gSkyInitialTimeOfDay;
 extern const f32 lbl_803DF0F8;
 extern const f32 lbl_803DF0FC;
 extern const f32 lbl_803DF100;
 extern const f32 lbl_803DF104;
-extern void *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
+extern void* textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern f32 lbl_803DF07C;
 extern f32 lbl_803DF088;
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
-extern f32 Curve_EvalLinear(f32 *curve, f32 t, int mode);
-extern f32 *Camera_GetInverseViewMatrix(void);
+extern f32 Curve_EvalLinear(f32* curve, f32 t, int mode);
+extern f32* Camera_GetInverseViewMatrix(void);
 extern f32 Camera_GetFarPlane(void);
 extern void Camera_SetFarPlane(f32 dist, int mode);
 extern void Camera_RebuildProjectionMatrix(void);
-extern void vecRotateZXY(void *rot, f32 *vec);
-extern void objRender(int a, int b, int c, int d, void *obj, int mode);
+extern void vecRotateZXY(void* rot, f32* vec);
+extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern u16 gSkySunAlpha;
 extern u16 gSkyMoonAlpha;
 extern u8 gSkyBaseSunDirection[];
@@ -177,8 +185,8 @@ extern const f32 lbl_803DF0B8;
 extern const f32 gSkySunMoonScale;
 extern const f32 lbl_803DF0C0;
 extern const f32 lbl_803DF0C4;
-extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
-extern f32 Curve_EvalCatmullRom(u8 *curve, f32 t, int mode);
+extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
+extern f32 Curve_EvalCatmullRom(u8* curve, f32 t, int mode);
 extern const f32 lbl_803DF108;
 extern const f32 lbl_803DF10C;
 extern const f32 lbl_803DF110;
@@ -194,9 +202,9 @@ extern f32 lbl_803DF1A0;
 extern u8 colorScale;
 extern int lbl_803DB610;
 extern s8 gSky2DrawMode;
-extern u8 *gSky2State;
-extern u8 *lbl_803DD19C;
-extern void PSVECNormalize(void *src, void *dst);
+extern u8* gSky2State;
+extern u8* lbl_803DD19C;
+extern void PSVECNormalize(void* src, void* dst);
 extern u8 gSkySunPositionPrev;
 extern void padUpdate(void);
 extern void checkReset(void);
@@ -210,9 +218,9 @@ extern void mmFreeTick(int);
 extern void gameTextRun(void);
 extern void GXFlush_(int, int);
 extern int getLoadedFileFlags(int);
-extern void *objCreateLight(int, int);
-extern void modelLightStruct_setLightKind(void *, int);
-extern void modelLightStruct_setSpecularColor(void *, int, int, int, int);
+extern void* objCreateLight(int, int);
+extern void modelLightStruct_setLightKind(void*, int);
+extern void modelLightStruct_setSpecularColor(void*, int, int, int, int);
 extern u8 gDvdErrorPauseActive;
 extern f32 gSkySunDirection[];
 extern f32 gSkyMoonDirection[];
@@ -241,9 +249,9 @@ extern void GXSetNumIndStages(int n);
 extern void GXSetNumChans(int n);
 extern void GXSetNumTexGens(int n);
 extern void GXSetNumTevStages(int n);
-extern void selectTexture(void *tex, int slot);
+extern void selectTexture(void* tex, int slot);
 extern void fn_8007880C(void);
-extern void fn_80069B1C(void *a, void *b, f32 t, void *c);
+extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
 extern const f32 lbl_803DF150;
 extern const f32 lbl_803DF154;
@@ -282,11 +290,11 @@ extern const f32 gSkyPi;
 extern const f32 lbl_803DF0E4;
 extern const f32 lbl_803DF0E8;
 extern const f32 lbl_803DF0EC;
-extern void *memset(void *dst, int c, int n);
+extern void* memset(void* dst, int c, int n);
 extern int lbl_803DB754;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
-extern u8 *saveGameGetEnvState(void);
+extern u8* saveGameGetEnvState(void);
 extern int getSaveGameLoadStatus(void);
 int getEnvFxBit2BA(void);
 void setGameBit2BA(int value);
@@ -296,9 +304,10 @@ void envFxFn_80088884(void);
 void loadSunAndMoon(void);
 int getSkyColorFn_80088e08(int slot);
 int getSkyColorFn_80088e30(int slot);
-void skyGetCurrentTextureColor(u8 *red, u8 *green, u8 *blue);
-void skyGetCurrentAmbientAndLightColors(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed, u8 *lightGreen, u8 *lightBlue);
-void *fn_8008912C(void);
+void skyGetCurrentTextureColor(u8* red, u8* green, u8* blue);
+void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* ambientBlue, u8* lightRed, u8* lightGreen,
+                                        u8* lightBlue);
+void* fn_8008912C(void);
 void skyBuildSunModelMatrix(f32 mtx[3][4]);
 int skyFn_8008919c(int slot);
 void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
@@ -309,25 +318,25 @@ void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 void fn_80089510(int flags, u8 red, u8 green, u8 blue);
 void fn_80089578(int flags, u8 red, u8 green, u8 blue);
 void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-void getTimeOfDay(f32 *time);
+void getTimeOfDay(f32* time);
 void renderSky(void);
-void textureColorFn_8008991c(int slot, u8 *red, u8 *green, u8 *blue);
+void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue);
 void modelTextureFn_80089970(int slot);
-void *fn_80089A50(void);
-void *fn_80089A58(void);
-int getSunPos(f32 *outTime);
-void fn_8008B88C(int *outTimer);
+void* fn_80089A50(void);
+void* fn_80089A58(void);
+int getSunPos(f32* outTime);
+void fn_8008B88C(int* outTimer);
 void skyFn_80089710(int flags, u8 enabled, int startComplete);
-void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
-void dll_06_func0B(int *x, int *y);
-void dll_06_func0A(int *a, int *b, int *c, f32 *scale);
+void objGetColor(int slot, u8* red, u8* green, u8* blue);
+void dll_06_func0B(int* x, int* y);
+void dll_06_func0A(int* a, int* b, int* c, f32* scale);
 void dll_06_func0E(void);
 void dll_06_func0D(void);
 void sky2_initialise(void);
-void fn_8008EDE8(f32 *out);
+void fn_8008EDE8(f32* out);
 int fn_8008B71C(int slot);
-void skyTimeToDayHourMinute(f32 time, s16 *days, s16 *hours, s16 *minutes);
-void skyGetClockTime(f32 *time);
+void skyTimeToDayHourMinute(f32 time, s16* days, s16* hours, s16* minutes);
+void skyGetClockTime(f32* time);
 int dll_06_func0F(void);
 f32 fn_8008ED88(void);
 int return0_80088758(void);
@@ -343,13 +352,12 @@ void loadLightFn_8008bbc4(void);
 void dll_06_func06(int obj);
 void dll_06_func08(int obj);
 void fn_8008DAE8(int obj);
-void dll_06_func09(s32 *x, s32 *y, s32 *z);
+void dll_06_func09(s32* x, s32* y, s32* z);
 void sky2_onMapSetup(void);
 
-int FUN_80080e60(double param_1,double param_2,double param_3,double param_4,u64 param_5,
-                u64 param_6,u64 param_7,u64 param_8,int param_9,
-                u32 param_10,u32 param_11,int *param_12,int *param_13,int param_14,
-                int *param_15,int param_16)
+int FUN_80080e60(double param_1, double param_2, double param_3, double param_4, u64 param_5, u64 param_6, u64 param_7,
+                 u64 param_8, int param_9, u32 param_10, u32 param_11, int* param_12, int* param_13, int param_14,
+                 int* param_15, int param_16)
 {
     return 0;
 }
@@ -359,26 +367,24 @@ int FUN_80080e68(int param_1)
     return 0;
 }
 
-double FUN_80080e88(u64 param_1,u64 param_2,double param_3,float *param_4,int param_5,
-                   int param_6)
+double FUN_80080e88(u64 param_1, u64 param_2, double param_3, float* param_4, int param_5, int param_6)
 {
     return 0.0;
 }
 
-u32 FUN_80080e98(u32 param_1,int param_2)
+u32 FUN_80080e98(u32 param_1, int param_2)
 {
     return 0;
 }
 
-int FUN_80080eb4(int param_1,u32 param_2)
+int FUN_80080eb4(int param_1, u32 param_2)
 {
     return 0;
 }
 
-short * FUN_80080ed0(double param_1,double param_2,double param_3,double param_4,u64 param_5,
-                    u64 param_6,u64 param_7,u64 param_8,short *param_9,
-                    int *param_10,int param_11,int *param_12,int *param_13,int param_14,
-                    int *param_15,int param_16)
+short* FUN_80080ed0(double param_1, double param_2, double param_3, double param_4, u64 param_5, u64 param_6,
+                    u64 param_7, u64 param_8, short* param_9, int* param_10, int param_11, int* param_12, int* param_13,
+                    int param_14, int* param_15, int param_16)
 {
     return 0;
 }
@@ -428,7 +434,7 @@ u32 FUN_80080fa0(void)
     return 0;
 }
 
-u32 FUN_80080fc0(float *param_1)
+u32 FUN_80080fc0(float* param_1)
 {
     return 0;
 }
@@ -443,63 +449,62 @@ double FUN_80081014(void)
     return 0.0;
 }
 
-u32 FUN_80081084(float *param_1,float *param_2)
+u32 FUN_80081084(float* param_1, float* param_2)
 {
     return 0;
 }
 
-u32 FUN_800810ac(double param_1,float *param_2)
+u32 FUN_800810ac(double param_1, float* param_2)
 {
     return 0;
 }
 
-int FUN_80081134(u64 param_1,double param_2,double param_3,u64 param_4,
-                u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                int param_9,u32 param_10,u32 param_11,u32 param_12,
-                u32 param_13,u32 param_14,u32 param_15,u32 param_16)
+int FUN_80081134(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                 u64 param_8, int param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+                 u32 param_15, u32 param_16)
 {
     return 0;
 }
 
 /* gSkyEnvFxFlags: per-group env-FX trigger enables + update state */
-#define SKY_ENVFX_GROUP_C 0x01   /* lbl_803DD138 group (GameBit 0x3ab) */
-#define SKY_ENVFX_GROUP_A 0x02   /* lbl_803DD130 group (GameBit 0x3ac) */
-#define SKY_ENVFX_GROUP_B 0x04   /* lbl_803DD13C group */
-#define SKY_ENVFX_GROUP_D 0x08   /* lbl_803DD134 group (weather) */
+#define SKY_ENVFX_GROUP_C        0x01 /* lbl_803DD138 group (GameBit 0x3ab) */
+#define SKY_ENVFX_GROUP_A        0x02 /* lbl_803DD130 group (GameBit 0x3ac) */
+#define SKY_ENVFX_GROUP_B        0x04 /* lbl_803DD13C group */
+#define SKY_ENVFX_GROUP_D        0x08 /* lbl_803DD134 group (weather) */
 #define SKY_ENVFX_UPDATE_PENDING 0x10 /* sun position changed; process this frame */
-#define SKY_ENVFX_IMMEDIATE 0x20 /* fire acts immediately vs deferred */
+#define SKY_ENVFX_IMMEDIATE      0x20 /* fire acts immediately vs deferred */
 /* env-effect ids activated together when the GROUP_D (weather) flag is clear
    (index-style; roles opaque) */
-#define SKY_ENVFX_ID_A 0x136
-#define SKY_ENVFX_ID_B 0x137
-#define SKY_ENVFX_ID_C 0x143
-#define SKY_CONFIG_FIELD_COUNT 0xb
-#define SKY_CHILD_OBJ_SUN 0x62b  /* spawned into gSkySunObject */
-#define SKY_CHILD_OBJ_MOON 0x62c /* spawned into gSkyMoonObject */
-#define SKY_TEXTURE_SKY 0x5fa /* gSkySkyTexture */
+#define SKY_ENVFX_ID_A               0x136
+#define SKY_ENVFX_ID_B               0x137
+#define SKY_ENVFX_ID_C               0x143
+#define SKY_CONFIG_FIELD_COUNT       0xb
+#define SKY_CHILD_OBJ_SUN            0x62b /* spawned into gSkySunObject */
+#define SKY_CHILD_OBJ_MOON           0x62c /* spawned into gSkyMoonObject */
+#define SKY_TEXTURE_SKY              0x5fa /* gSkySkyTexture */
 #define MODEL_LIGHT_KIND_DIRECTIONAL 4
-#define GX_FALSE 0
-#define GX_TEV_SWAP0 0
-#define GX_TG_MTX2x4 1
-#define GX_TG_TEX0 4
-#define GX_IDENTITY 60
-#define GX_PTIDENTITY 125
-#define GX_CS_SCALE_1 0
-#define GX_TB_ZERO 0
-#define GX_TEVPREV 0
-#define GX_TEVSTAGE0 0
-#define GX_TEV_ADD 0
-#define GX_TEXCOORD0 0
-#define GX_TEXMAP0 0
-#define GX_TRUE 1
-#define GX_CA_TEXA 4
-#define GX_CC_C1 4
-#define GX_CC_A1 5
-#define GX_CA_ZERO 7
-#define GX_CC_TEXC 8
-#define GX_CC_ZERO 0xf
-#define GX_COLOR_NULL 0xff
-#define GX_FOG_NONE 0
+#define GX_FALSE                     0
+#define GX_TEV_SWAP0                 0
+#define GX_TG_MTX2x4                 1
+#define GX_TG_TEX0                   4
+#define GX_IDENTITY                  60
+#define GX_PTIDENTITY                125
+#define GX_CS_SCALE_1                0
+#define GX_TB_ZERO                   0
+#define GX_TEVPREV                   0
+#define GX_TEVSTAGE0                 0
+#define GX_TEV_ADD                   0
+#define GX_TEXCOORD0                 0
+#define GX_TEXMAP0                   0
+#define GX_TRUE                      1
+#define GX_CA_TEXA                   4
+#define GX_CC_C1                     4
+#define GX_CC_A1                     5
+#define GX_CA_ZERO                   7
+#define GX_CC_TEXC                   8
+#define GX_CC_ZERO                   0xf
+#define GX_COLOR_NULL                0xff
+#define GX_FOG_NONE                  0
 
 int getEnvFxBit2BA(void)
 {
@@ -599,7 +604,8 @@ void envFxFn_80088884(void)
             getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
         }
     }
-    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 && mainGetBit(GAMEBIT_ENV_disableDayFX1) == 0)
+    if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 &&
+        mainGetBit(GAMEBIT_ENV_disableDayFX1) == 0)
     {
         if ((gSkyEnvFxFlags & SKY_ENVFX_IMMEDIATE) != 0)
         {
@@ -681,8 +687,8 @@ void skyGetCurrentTextureColor(u8* red, u8* green, u8* blue)
     *blue = 0xff;
 }
 
-void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* ambientBlue, u8* lightRed,
-                                        u8* lightGreen, u8* lightBlue)
+void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* ambientBlue, u8* lightRed, u8* lightGreen,
+                                        u8* lightBlue)
 {
     u8* color;
     u8 red;
@@ -955,10 +961,8 @@ void modelTextureFn_80089970(int slot)
         offset = slot * 0xa4;
         sky = gSkyState + offset;
         modelLightStruct_setDirection(gSkySunLight, ((SkyState*)sky)->lights[0].directionX,
-                                      ((SkyState*)sky)->lights[0].directionY,
-                                      ((SkyState*)sky)->lights[0].directionZ);
-        modelLightStruct_setDiffuseColor(gSkySunLight, gSkyState[offset + 0x78],
-                                         gSkyState[offset + 0x79],
+                                      ((SkyState*)sky)->lights[0].directionY, ((SkyState*)sky)->lights[0].directionZ);
+        modelLightStruct_setDiffuseColor(gSkySunLight, gSkyState[offset + 0x78], gSkyState[offset + 0x79],
                                          gSkyState[offset + 0x7a], 0xff);
     }
     if (gSkyMoonLight != NULL)
@@ -968,12 +972,10 @@ void modelTextureFn_80089970(int slot)
         modelLightStruct_setDirection(gSkyMoonLight, ((SkyState*)sky)->lights[0].moonDirectionX,
                                       ((SkyState*)sky)->lights[0].moonDirectionY,
                                       ((SkyState*)sky)->lights[0].moonDirectionZ);
-        modelLightStruct_setDiffuseColor(gSkyMoonLight, gSkyState[offset + 0x80],
-                                         gSkyState[offset + 0x81],
+        modelLightStruct_setDiffuseColor(gSkyMoonLight, gSkyState[offset + 0x80], gSkyState[offset + 0x81],
                                          gSkyState[offset + 0x82], 0xff);
     }
-    lightSetColor(0, gSkyState[slot * 0xa4 + 0x88], gSkyState[slot * 0xa4 + 0x89],
-                  gSkyState[slot * 0xa4 + 0x8a]);
+    lightSetColor(0, gSkyState[slot * 0xa4 + 0x88], gSkyState[slot * 0xa4 + 0x89], gSkyState[slot * 0xa4 + 0x8a]);
 }
 
 void* fn_80089A50(void)
@@ -1294,7 +1296,10 @@ f32 fn_8008ED88(void)
     return lbl_803DF1A0;
 }
 
-int return0_80088758(void) { return 0x0; }
+int return0_80088758(void)
+{
+    return 0x0;
+}
 
 void doNothing_800887C4(void)
 {
@@ -1304,7 +1309,10 @@ void doNothing_800887C8(void)
 {
 }
 
-int return0_8008B7E8(void) { return 0x0; }
+int return0_8008B7E8(void)
+{
+    return 0x0;
+}
 
 void doNothing_8008B8B0(void)
 {
@@ -1318,7 +1326,10 @@ void dll_06_func0C_nop(void)
 {
 }
 
-int dll_06_func07_ret_0(void) { return 0x0; }
+int dll_06_func07_ret_0(void)
+{
+    return 0x0;
+}
 
 void sky2_release(void)
 {
@@ -1394,8 +1405,7 @@ void dll_06_func06(int obj)
     if (s != NULL)
     {
         gSky2DrawMode = 2;
-        fn_8005D0BC(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
-                    (u8) * (int*)(s + 0x2c), 55);
+        fn_8005D0BC(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28), (u8) * (int*)(s + 0x2c), 55);
         s = gSky2State;
         if (*(f32*)(s + 0x14) == *(f32*)(s + 0x18))
         {
@@ -1434,8 +1444,7 @@ void dll_06_func08(int obj)
             {
                 alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
             }
-            setTextColor(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
-                         (u8) * (int*)(s + 0x2c), (u8)alpha);
+            setTextColor(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28), (u8) * (int*)(s + 0x2c), (u8)alpha);
         }
         else
         {
@@ -1469,8 +1478,7 @@ void fn_8008DAE8(int obj)
         {
             alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
         }
-        Obj_SetModelColorOverrideRecursive(obj, (u8) * (int*)(s + 0x24),
-                                           (u8) * (int*)(s + 0x28),
+        Obj_SetModelColorOverrideRecursive(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
                                            (u8) * (int*)(s + 0x2c), (u8)alpha, 1);
     }
     else
@@ -1504,8 +1512,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
     {
         alt = 27;
     }
-    if (((s16*)lbl_803DD134)[idx] <= 0 ||
-        ((s16*)lbl_803DD134)[alt] != ((s16*)lbl_803DD134)[idx])
+    if (((s16*)lbl_803DD134)[idx] <= 0 || ((s16*)lbl_803DD134)[alt] != ((s16*)lbl_803DD134)[idx])
     {
         getEnvfxAct(player, player, 310, 0);
         getEnvfxAct(player, player, 311, 0);
@@ -1700,8 +1707,7 @@ void sky2_run(void)
                 p = *pp;
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
-                    *(f32*)(p + 0x310) =
-                        -(timeDelta * *(f32*)(p + 0x58) - *(f32*)(p + 0x310));
+                    *(f32*)(p + 0x310) = -(timeDelta * *(f32*)(p + 0x58) - *(f32*)(p + 0x310));
                     if (*(f32*)(*pp + 0x310) < (frzero = lbl_803DF108))
                     {
                         *(f32*)(*pp + 0x310) = frzero;
@@ -1796,8 +1802,7 @@ void sky2_run(void)
                     {
                         d = 0xffff - d;
                     }
-                    att = ((lbl_803DF178 - d) / lbl_803DF178 - lbl_803DF170) /
-                        lbl_803DF144;
+                    att = ((lbl_803DF178 - d) / lbl_803DF178 - lbl_803DF170) / lbl_803DF144;
                     if (att > best.x)
                     {
                         if (best.x > best.y)
@@ -1815,8 +1820,7 @@ void sky2_run(void)
                     }
                     dirp += 3;
                     k++;
-                }
-                while (k < 8);
+                } while (k < 8);
                 z2 = lbl_803DF108;
                 if (best.x > z2)
                 {
@@ -1870,8 +1874,7 @@ void sky2_run(void)
                     frzero = lbl_803DF108;
                     *(f32*)(*pp + 0x6c) = frzero;
                     diff = sb - sa;
-                    *(f32*)(*pp + 0x68) = randomGetRange(
-                        (int)(-diff * lbl_803DF168), (int)(diff * lbl_803DF168));
+                    *(f32*)(*pp + 0x68) = randomGetRange((int)(-diff * lbl_803DF168), (int)(diff * lbl_803DF168));
                     *(f32*)(*pp + 0x64) = lbl_803DF17C * randomGetRange(1, 10);
                 }
                 else if (*(s8*)(p + 0x314) == 1)
@@ -1897,8 +1900,7 @@ void sky2_run(void)
                         *(f32*)(*pp + 0x6c) = frzero;
                         amp = (s16)(int)(sb - sa);
                         *(f32*)(*pp + 0x68) = randomGetRange(-amp / 2, amp / 2);
-                        *(f32*)(*pp + 0x64) =
-                            lbl_803DF17C * randomGetRange(1, 10);
+                        *(f32*)(*pp + 0x64) = lbl_803DF17C * randomGetRange(1, 10);
                     }
                 }
             }
@@ -1978,8 +1980,7 @@ void sky2_run(void)
         }
         pp++;
         i++;
-    }
-    while (i < 2);
+    } while (i < 2);
 }
 #pragma opt_propagation reset
 
@@ -2101,8 +2102,7 @@ void skyFn_80088e54(int mode, f32 brightness)
         }
         ((SkyBlendStateFlags*)(gSkyState + 0x209))->unused80 =
             ((SkyBlendStateFlags*)(gSkyState + idx + 0xc1))->unused80;
-        ((SkyBlendStateFlags*)(gSkyState + 0x209))->bit20 =
-            ((SkyBlendStateFlags*)(gSkyState + idx + 0xc1))->bit20;
+        ((SkyBlendStateFlags*)(gSkyState + 0x209))->bit20 = ((SkyBlendStateFlags*)(gSkyState + idx + 0xc1))->bit20;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0)
         {
@@ -2262,8 +2262,7 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
                     {
                         if (*p == found)
                         {
-                            if (-*(f32*)(cur + 0x130) <
-                                lbl_803DF064 * -*(f32*)(found + 0x130))
+                            if (-*(f32*)(cur + 0x130) < lbl_803DF064 * -*(f32*)(found + 0x130))
                             {
                                 cur = found;
                             }
@@ -2332,8 +2331,8 @@ void skyFn_8008a500(void)
 
     if (gSkyState != NULL)
     {
-        dot = gSkySunDirection[2] * gSkySunDirection[2] + (gSkySunDirection[0] * gSkySunDirection[0] +
-            gSkySunDirection[1] * gSkySunDirection[1]);
+        dot = gSkySunDirection[2] * gSkySunDirection[2] +
+              (gSkySunDirection[0] * gSkySunDirection[0] + gSkySunDirection[1] * gSkySunDirection[1]);
         if (pEXIInputFlag != dot)
         {
             len = sqrtf(dot);
@@ -2345,8 +2344,8 @@ void skyFn_8008a500(void)
         *gSkySunDirection = *gSkySunDirection / len;
         gSkySunDirection[1] = gSkySunDirection[1] / len;
         gSkySunDirection[2] = gSkySunDirection[2] / len;
-        dot = gSkyMoonDirection[2] * gSkyMoonDirection[2] + (gSkyMoonDirection[0] * gSkyMoonDirection[0] +
-            gSkyMoonDirection[1] * gSkyMoonDirection[1]);
+        dot = gSkyMoonDirection[2] * gSkyMoonDirection[2] +
+              (gSkyMoonDirection[0] * gSkyMoonDirection[0] + gSkyMoonDirection[1] * gSkyMoonDirection[1]);
         if (pEXIInputFlag != dot)
         {
             len = sqrtf(dot);
@@ -2370,8 +2369,7 @@ void skyFn_8008a500(void)
             {
                 skyFn_80062a54(*gSkySunDirection, gSkySunDirection[1], gSkySunDirection[2], 100);
             }
-            (*gCloudActionInterface)->func08Nop(*gSkySunDirection, gSkySunDirection[1],
-                                                gSkySunDirection[2], 1);
+            (*gCloudActionInterface)->func08Nop(*gSkySunDirection, gSkySunDirection[1], gSkySunDirection[2], 1);
         }
         else
         {
@@ -2384,8 +2382,7 @@ void skyFn_8008a500(void)
             {
                 skyFn_80062a54(-(*gSkyMoonDirection), gSkyMoonDirection[1], -gSkyMoonDirection[2], 100);
             }
-            (*gCloudActionInterface)->func08Nop(-(*gSkyMoonDirection), gSkyMoonDirection[1],
-                                                -gSkyMoonDirection[2], 0);
+            (*gCloudActionInterface)->func08Nop(-(*gSkyMoonDirection), gSkyMoonDirection[1], -gSkyMoonDirection[2], 0);
         }
     }
 }
@@ -2435,15 +2432,9 @@ void sky2_update(int a, int b, u8* cfg)
             *(f32*)((&gSky2State)[b1] + 0x304) = lbl_803DF108;
             for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
             {
-                *(f32*)((&gSky2State)[b1] + i * 4 + 0xf4) =
-                    (f32)(u32)
-                cfg[gSkyConfigFieldIndices[i] + 0xc];
-                *(f32*)((&gSky2State)[b1] + i * 4 + 0x120) =
-                    (f32)(u32)
-                cfg[gSkyConfigFieldIndices[i] + 0x14];
-                *(f32*)((&gSky2State)[b1] + i * 4 + 0x14c) =
-                    (f32)(u32)
-                cfg[gSkyConfigFieldIndices[i] + 0x1c];
+                *(f32*)((&gSky2State)[b1] + i * 4 + 0xf4) = (f32)(u32)cfg[gSkyConfigFieldIndices[i] + 0xc];
+                *(f32*)((&gSky2State)[b1] + i * 4 + 0x120) = (f32)(u32)cfg[gSkyConfigFieldIndices[i] + 0x14];
+                *(f32*)((&gSky2State)[b1] + i * 4 + 0x14c) = (f32)(u32)cfg[gSkyConfigFieldIndices[i] + 0x1c];
                 *(f32*)((&gSky2State)[b1] + i * 4 + 0x254) =
                     (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x3e);
                 *(f32*)((&gSky2State)[b1] + i * 4 + 0x280) =
@@ -2543,12 +2534,9 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     }
     for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
     {
-        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0xf4) = (f32)(u32)
-        cfg[gSkyConfigFieldIndices[i] + 0xc];
-        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x120) = (f32)(u32)
-        cfg[gSkyConfigFieldIndices[i] + 0x14];
-        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x14c) = (f32)(u32)
-        cfg[gSkyConfigFieldIndices[i] + 0x1c];
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0xf4) = (f32)(u32)cfg[gSkyConfigFieldIndices[i] + 0xc];
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x120) = (f32)(u32)cfg[gSkyConfigFieldIndices[i] + 0x14];
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x14c) = (f32)(u32)cfg[gSkyConfigFieldIndices[i] + 0x1c];
         *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x254) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x3e);
         *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x280) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x2e);
     }
@@ -2622,13 +2610,11 @@ void fn_8008D088(int slot)
         }
         for (i = 0; i < 0x21; i++)
         {
-            (*(SkySlotAnim**)(&gSky2State + slot))->cur[i] =
-                (*(SkySlotAnim**)(&gSky2State + slot))->target[i];
+            (*(SkySlotAnim**)(&gSky2State + slot))->cur[i] = (*(SkySlotAnim**)(&gSky2State + slot))->target[i];
         }
         for (i = 0; i < 0x16; i++)
         {
-            (*(SkySlotAnim**)(&gSky2State + slot))->cur2[i] =
-                (*(SkySlotAnim**)(&gSky2State + slot))->target2[i];
+            (*(SkySlotAnim**)(&gSky2State + slot))->cur2[i] = (*(SkySlotAnim**)(&gSky2State + slot))->target2[i];
         }
     }
     else
@@ -2643,17 +2629,15 @@ void fn_8008D088(int slot)
             p->step = *(f32*)&lbl_803DF114 / len;
             for (i = 0; i < 0x21; i++)
             {
-                (*(SkySlotAnim**)(&gSky2State + slot))->vel[i] =
-                    ((*(SkySlotAnim**)(&gSky2State + slot))->target[i] -
-                        (*(SkySlotAnim**)(&gSky2State + slot))->cur[i]) /
-                    len;
+                (*(SkySlotAnim**)(&gSky2State + slot))->vel[i] = ((*(SkySlotAnim**)(&gSky2State + slot))->target[i] -
+                                                                  (*(SkySlotAnim**)(&gSky2State + slot))->cur[i]) /
+                                                                 len;
             }
             for (i = 0; i < 0x16; i++)
             {
-                (*(SkySlotAnim**)(&gSky2State + slot))->vel2[i] =
-                    ((*(SkySlotAnim**)(&gSky2State + slot))->target2[i] -
-                        (*(SkySlotAnim**)(&gSky2State + slot))->cur2[i]) /
-                    len;
+                (*(SkySlotAnim**)(&gSky2State + slot))->vel2[i] = ((*(SkySlotAnim**)(&gSky2State + slot))->target2[i] -
+                                                                   (*(SkySlotAnim**)(&gSky2State + slot))->cur2[i]) /
+                                                                  len;
             }
             (*(SkySlotAnim**)(&gSky2State + slot))->b315 = 0;
         }
@@ -2667,8 +2651,7 @@ void fn_8008D088(int slot)
             (*(SkySlotAnim**)(&gSky2State + slot))->cur2[i] +=
                 timeDelta * (*(SkySlotAnim**)(&gSky2State + slot))->vel2[i];
         }
-        (*(SkySlotAnim**)(&gSky2State + slot))->t +=
-            timeDelta * (*(SkySlotAnim**)(&gSky2State + slot))->step;
+        (*(SkySlotAnim**)(&gSky2State + slot))->t += timeDelta * (*(SkySlotAnim**)(&gSky2State + slot))->step;
         p = *(SkySlotAnim**)(&gSky2State + slot);
         flags = p->flags4;
         flag1 = flags & 1;
@@ -2697,12 +2680,10 @@ void fn_8008D088(int slot)
                 (*(SkySlotAnim**)(&gSky2State + slot))->blend = spd;
             }
         }
-        (*(SkySlotAnim**)(&gSky2State + slot))->prevT =
-            (*(SkySlotAnim**)(&gSky2State + slot))->t;
+        (*(SkySlotAnim**)(&gSky2State + slot))->prevT = (*(SkySlotAnim**)(&gSky2State + slot))->t;
     }
 }
 #pragma opt_common_subs reset
-
 
 void fn_8008BDA8(void)
 {
@@ -2805,8 +2786,7 @@ void fn_8008BDA8(void)
         gSkyState[iofs + 0xc0] = 0x80;
         iofs += 0xa4;
         i++;
-    }
-    while (i < 3);
+    } while (i < 3);
 }
 
 #pragma opt_common_subs off
@@ -2849,7 +2829,11 @@ void skyFn_8008a04c(void)
     }
     else
     {
-        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < *(f32*)&pEXIInputFlag) ? *(f32*)&pEXIInputFlag : ((((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay > EXIInputFlag) ? EXIInputFlag : ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay);
+        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < *(f32*)&pEXIInputFlag)
+                 ? *(f32*)&pEXIInputFlag
+                 : ((((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay > EXIInputFlag)
+                        ? EXIInputFlag
+                        : ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay);
         if (tc <= lbl_803DF07C)
         {
             frac = tc / lbl_803DF07C;
@@ -2954,10 +2938,8 @@ void skyFn_8008a04c(void)
             }
             iofs += 0xa4;
             i++;
-        }
-        while (i < 2);
-        fn_80089A60(2, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, 0xff, 0xff, 0xff, 0xff, 0xff,
-                    0xff);
+        } while (i < 2);
+        fn_80089A60(2, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
     }
 }
 #pragma opt_common_subs reset
@@ -2987,113 +2969,33 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     {
         prev = gSkyState + ((SkyState*)gSkyState)->previousLightIndex * 0xa4 + 0x20;
         cur2 = gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0x20;
-        dir[0] = *(f32*)(prev + 0x70) + ((SkyState*)gSkyState)->lightBlendFactor *
-            (*(f32*)(cur2 + 0x70) - *(f32*)(prev + 0x70));
-        dir[1] = *(f32*)(prev + 0x74) + ((SkyState*)gSkyState)->lightBlendFactor *
-            (*(f32*)(cur2 + 0x74) - *(f32*)(prev + 0x74));
-        dir[2] = *(f32*)(prev + 0x78) + ((SkyState*)gSkyState)->lightBlendFactor *
-            (*(f32*)(cur2 + 0x78) - *(f32*)(prev + 0x78));
+        dir[0] = *(f32*)(prev + 0x70) +
+                 ((SkyState*)gSkyState)->lightBlendFactor * (*(f32*)(cur2 + 0x70) - *(f32*)(prev + 0x70));
+        dir[1] = *(f32*)(prev + 0x74) +
+                 ((SkyState*)gSkyState)->lightBlendFactor * (*(f32*)(cur2 + 0x74) - *(f32*)(prev + 0x74));
+        dir[2] = *(f32*)(prev + 0x78) +
+                 ((SkyState*)gSkyState)->lightBlendFactor * (*(f32*)(cur2 + 0x78) - *(f32*)(prev + 0x78));
         bl = ((SkyState*)gSkyState)->lightBlendFactor;
         pb = prev[0x58];
-        r = (int)
-        (bl * ((f32)(u32)
-        cur2[0x58] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        r = (int)(bl * ((f32)(u32)cur2[0x58] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x59];
-        g = (int)
-        (bl * ((f32)(u32)
-        cur2[0x59] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        g = (int)(bl * ((f32)(u32)cur2[0x59] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x5a];
-        b = (int)
-        (bl * ((f32)(u32)
-        cur2[0x5a] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        b = (int)(bl * ((f32)(u32)cur2[0x5a] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x60];
-        c01 = (int)
-        (bl * ((f32)(u32)
-        cur2[0x60] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c01 = (int)(bl * ((f32)(u32)cur2[0x60] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x61];
-        c02 = (int)
-        (bl * ((f32)(u32)
-        cur2[0x61] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c02 = (int)(bl * ((f32)(u32)cur2[0x61] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x62];
-        c03 = (int)
-        (bl * ((f32)(u32)
-        cur2[0x62] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c03 = (int)(bl * ((f32)(u32)cur2[0x62] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x68];
-        c11 = (int)
-        (bl * ((f32)(u32)
-        cur2[0x68] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c11 = (int)(bl * ((f32)(u32)cur2[0x68] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x69];
-        c12 = (int)
-        (bl * ((f32)(u32)
-        cur2[0x69] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c12 = (int)(bl * ((f32)(u32)cur2[0x69] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0x6a];
-        c13 = (int)
-        (bl * ((f32)(u32)
-        cur2[0x6a] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c13 = (int)(bl * ((f32)(u32)cur2[0x6a] - (f32)(u32)pb) + (f32)(u32)pb);
         pb = prev[0xa0];
-        c2 = (int)
-        (bl * ((f32)(u32)
-        cur2[0xa0] - (f32)(u32)
-        pb
-        )
-        +(f32)(u32)
-        pb
-        )
-        ;
+        c2 = (int)(bl * ((f32)(u32)cur2[0xa0] - (f32)(u32)pb) + (f32)(u32)pb);
     }
     else
     {
@@ -3229,7 +3131,8 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 }
                 else
                 {
-                    *(s16*)&gSkySunAlpha = (gSkyAlphaFadeScale * (gSkySunFadeInThreshold - (sunT - gSkySunFadeOutThreshold)));
+                    *(s16*)&gSkySunAlpha =
+                        (gSkyAlphaFadeScale * (gSkySunFadeInThreshold - (sunT - gSkySunFadeOutThreshold)));
                 }
             }
             else
@@ -3252,24 +3155,19 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[1] = lbl_803DF0B8 * sunDir.y;
         vec[2] = lbl_803DF0B8 * sunDir.z;
         yaw = sky->sunYaw;
-        q1.rx =
-        sunT;
+        q1.rx = sunT;
         vecRotateZXY(&q1, vec);
         q1.w = EXIInputFlag;
-        q1.rz =
-        yaw;
+        q1.rz = yaw;
         q1.ry = 0;
         q1.rx = 0;
         vecRotateZXY(&q1, vec);
         gSkySunDirection[0] = vec[0];
         gSkySunDirection[1] = vec[1];
         gSkySunDirection[2] = vec[2];
-        ((GameObject*)gSkySunObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)
-        vec[0];
-        ((GameObject*)gSkySunObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)
-        vec[1];
-        ((GameObject*)gSkySunObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)
-        vec[2];
+        ((GameObject*)gSkySunObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)vec[0];
+        ((GameObject*)gSkySunObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)vec[1];
+        ((GameObject*)gSkySunObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)vec[2];
         ((GameObject*)gSkySunObject)->anim.rootMotionScale = gSkySunMoonScale * scale;
         *(s16*)gSkySunObject = 0x10000 - cam[0];
         ((GameObject*)gSkySunObject)->anim.rotY = cam[1];
@@ -3314,7 +3212,8 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 }
                 else
                 {
-                    *(s16*)&gSkyMoonAlpha = (gSkyAlphaFadeScale * (gSkySunFadeInThreshold - (moonTC - gSkySunFadeOutThreshold)));
+                    *(s16*)&gSkyMoonAlpha =
+                        (gSkyAlphaFadeScale * (gSkySunFadeInThreshold - (moonTC - gSkySunFadeOutThreshold)));
                 }
             }
             else
@@ -3336,24 +3235,19 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[0] = lbl_803DF0B8 * moonDir.x;
         vec[1] = lbl_803DF0B8 * moonDir.y;
         vec[2] = lbl_803DF0B8 * moonDir.z;
-        q2.rx =
-        moonTC;
+        q2.rx = moonTC;
         vecRotateZXY(&q2, vec);
         q2.w = EXIInputFlag;
-        q2.rz =
-        yaw;
+        q2.rz = yaw;
         q2.ry = 0;
         q2.rx = 0;
         vecRotateZXY(&q2, vec);
         gSkyMoonDirection[0] = vec[0];
         gSkyMoonDirection[1] = vec[1];
         gSkyMoonDirection[2] = vec[2];
-        ((GameObject*)gSkyMoonObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)
-        vec[0];
-        ((GameObject*)gSkyMoonObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)
-        vec[1];
-        ((GameObject*)gSkyMoonObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)
-        vec[2];
+        ((GameObject*)gSkyMoonObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)vec[0];
+        ((GameObject*)gSkyMoonObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)vec[1];
+        ((GameObject*)gSkyMoonObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)vec[2];
         ((GameObject*)gSkyMoonObject)->anim.rootMotionScale = gSkySunMoonScale * scale;
         *(s16*)gSkyMoonObject = 0x10000 - cam[0];
         ((GameObject*)gSkyMoonObject)->anim.rotY = cam[1];
@@ -3432,9 +3326,9 @@ void skyFn_8008aee8(void)
     if (gSkyState != NULL)
     {
         if ((player = Obj_GetPlayerObject()) != NULL &&
-            (((cell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
-                                      ((GameObject*)player)->anim.localPosZ)) == 0x30) ||
-                cell == 0x2b))
+            (((cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ)) ==
+              0x30) ||
+             cell == 0x2b))
         {
             return;
         }
@@ -3547,9 +3441,8 @@ void skyFn_8008aee8(void)
         widthF = (f32)(u32) * (u16*)(texC + 0xc);
         sinProd = widthF * frac / lbl_803DF0D8;
         sinProd *= lbl_803DF0DC;
-        sinProd *= mathCosf(gSkyPi * (f32) - cam[0x2a] / lbl_803DF0E4);
-        angle = widthF * lbl_803DF068 - lbl_803DF0E8 -
-            lbl_803DF0DC * (widthF * cam[0x29]) / lbl_803DF0E4 + sinProd;
+        sinProd *= mathCosf(gSkyPi * (f32)-cam[0x2a] / lbl_803DF0E4);
+        angle = widthF * lbl_803DF068 - lbl_803DF0E8 - lbl_803DF0DC * (widthF * cam[0x29]) / lbl_803DF0E4 + sinProd;
         angle *= lbl_803DF0EC;
         (*gSky2Interface)->applyTextColor(0);
         GXSetFog(GX_FOG_NONE, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
@@ -3570,10 +3463,7 @@ void skyFn_8008aee8(void)
         screenRes = getScreenResolution();
         sinProd *= lbl_803DF0B8;
         texW = *(u16*)(texC + 0xc);
-        v = angle / (lbl_803DF0EC * (f32)(u32)
-        texW
-        )
-        ;
+        v = angle / (lbl_803DF0EC * (f32)(u32)texW);
         skyDrawFn_80075d5c(pEXIInputFlag, v, EXIInputFlag, v - sinProd / (f32)(u32)texW, 0, 0,
                            (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, -0x18f);
     }
@@ -3707,10 +3597,9 @@ void Sky_func03(int a, int b, u8* cfg)
             ((SkyState*)gSkyState)->skyTextureIds[6] = ((Sky2Config*)cfg)->skyTexId6 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[7] = ((Sky2Config*)cfg)->skyTexId7 + 0xc38;
             tmp = *(int*)&((SkyState*)gSkyState)->texture1;
-            *(int*)&((SkyState*)gSkyState)->texture1 = *(int*)((u8*)&((SkyState*)gSkyState)->texture0
-                + ((SkyState*)gSkyState)->swapTexIndex * 4);
-            *(int*)((u8*)&((SkyState*)gSkyState)->texture0
-                + ((SkyState*)gSkyState)->swapTexIndex * 4) = tmp;
+            *(int*)&((SkyState*)gSkyState)->texture1 =
+                *(int*)((u8*)&((SkyState*)gSkyState)->texture0 + ((SkyState*)gSkyState)->swapTexIndex * 4);
+            *(int*)((u8*)&((SkyState*)gSkyState)->texture0 + ((SkyState*)gSkyState)->swapTexIndex * 4) = tmp;
             ((SkyState*)gSkyState)->unk250 = -1;
             if ((((u32)(u8)((SkyState*)gSkyState)->flags255 >> 7) & 1) != 0)
             {
@@ -3730,15 +3619,13 @@ void Sky_func03(int a, int b, u8* cfg)
                 ((SkyState*)gSkyState)->fadeFactor = pEXIInputFlag;
             }
         }
-        cloudMode = ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->
-            cloud;
+        cloudMode = ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->cloud;
         if (cloudMode != 0)
         {
             setDrawCloudsAndLights(cloudMode - 1);
         }
         ((SkyBlendStateFlags*)(gSkyState + 0x209))->unused80 =
-            ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->
-            unused80;
+            ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->unused80;
         ((SkyBlendStateFlags*)(gSkyState + 0x209))->bit20 =
             ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->bit20;
         env2 = saveGameGetEnvState();
@@ -3759,31 +3646,23 @@ void Sky_func03(int a, int b, u8* cfg)
     }
 }
 
-
 u8 gSkyColorBlendTable[248] = {
-    0, 29, 164, 0, 0, 72, 155, 68, 29, 12, 53, 28, 255, 143, 191, 255,
-    116, 186, 255, 219, 255, 255, 176, 255, 255, 255, 255, 232, 211, 255, 130, 255,
-    255, 79, 163, 255, 180, 255, 255, 111, 167, 255, 255, 255, 165, 245, 183, 140,
-    255, 205, 0, 255, 152, 0, 255, 129, 36, 242, 96, 33, 153, 53, 107, 104,
-    38, 102, 11, 0, 69, 7, 0, 65, 255, 255, 255, 255, 255, 255, 202, 0,
-    254, 77, 0, 97, 255, 116, 200, 98, 0, 59, 101, 224, 127, 0, 83, 44,
-    254, 254, 19, 0, 105, 38, 255, 254, 38, 205, 45, 61, 255, 253, 0, 169,
-    19, 57, 254, 254, 254, 8, 121, 208, 206, 0, 0, 255, 161, 0, 255, 254,
-    226, 92, 131, 63, 255, 255, 147, 180, 91, 67, 255, 254, 254, 210, 56, 130,
-    255, 0, 0, 122, 17, 1, 152, 0, 149, 36, 0, 87, 255, 72, 255, 101,
-    6, 101, 255, 230, 131, 255, 176, 47, 254, 0, 0, 63, 0, 0, 92, 142,
-    255, 0, 0, 92, 153, 198, 255, 0, 37, 172, 255, 255, 255, 53, 53, 255,
-    128, 128, 83, 122, 96, 70, 201, 0, 254, 77, 0, 97, 30, 65, 85, 195,
-    219, 244, 30, 65, 85, 203, 219, 133, 30, 65, 85, 111, 12, 134, 30, 65,
-    85, 49, 138, 216, 30, 65, 85, 255, 213, 81, 30, 65, 85, 255, 12, 0,
-    0, 0, 0, 0, 0, 0, 0, 0,
+    0,   29,  164, 0,   0,   72,  155, 68,  29,  12,  53,  28,  255, 143, 191, 255, 116, 186, 255, 219, 255, 255, 176,
+    255, 255, 255, 255, 232, 211, 255, 130, 255, 255, 79,  163, 255, 180, 255, 255, 111, 167, 255, 255, 255, 165, 245,
+    183, 140, 255, 205, 0,   255, 152, 0,   255, 129, 36,  242, 96,  33,  153, 53,  107, 104, 38,  102, 11,  0,   69,
+    7,   0,   65,  255, 255, 255, 255, 255, 255, 202, 0,   254, 77,  0,   97,  255, 116, 200, 98,  0,   59,  101, 224,
+    127, 0,   83,  44,  254, 254, 19,  0,   105, 38,  255, 254, 38,  205, 45,  61,  255, 253, 0,   169, 19,  57,  254,
+    254, 254, 8,   121, 208, 206, 0,   0,   255, 161, 0,   255, 254, 226, 92,  131, 63,  255, 255, 147, 180, 91,  67,
+    255, 254, 254, 210, 56,  130, 255, 0,   0,   122, 17,  1,   152, 0,   149, 36,  0,   87,  255, 72,  255, 101, 6,
+    101, 255, 230, 131, 255, 176, 47,  254, 0,   0,   63,  0,   0,   92,  142, 255, 0,   0,   92,  153, 198, 255, 0,
+    37,  172, 255, 255, 255, 53,  53,  255, 128, 128, 83,  122, 96,  70,  201, 0,   254, 77,  0,   97,  30,  65,  85,
+    195, 219, 244, 30,  65,  85,  203, 219, 133, 30,  65,  85,  111, 12,  134, 30,  65,  85,  49,  138, 216, 30,  65,
+    85,  255, 213, 81,  30,  65,  85,  255, 12,  0,   0,   0,   0,   0,   0,   0,   0,   0,
 };
 
 f32 gSkyMoonDirection[] = {
-    0.0f, 1.0f, 0.0f,
-    80.0f, 120.0f, 165.0f, 120.0f, 80.0f,
-    80.0f, 100.0f, 125.0f, 100.0f, 80.0f,
-    255.0f, 220.0f, 190.0f, 220.0f, 255.0f,
+    0.0f,   1.0f,   0.0f,   80.0f, 120.0f, 165.0f, 120.0f, 80.0f,  80.0f,
+    100.0f, 125.0f, 100.0f, 80.0f, 255.0f, 220.0f, 190.0f, 220.0f, 255.0f,
 };
 
 f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
@@ -3792,4 +3671,11 @@ u8 gSkyConfigFieldIndices[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0};
 
 /*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-u8 lbl_8030F500[160] = { 255, 206, 0, 0, 255, 206, 255, 206, 0, 100, 255, 206, 0, 50, 0, 100, 255, 206, 0, 50, 0, 0, 255, 206, 255, 206, 0, 0, 0, 50, 255, 206, 0, 100, 0, 50, 0, 50, 0, 100, 0, 50, 0, 50, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0, 8, 0, 0, 0, 2, 0, 0, 0, 16, 0, 0, 0, 8, 0, 0, 0, 32, 0, 0, 0, 40, 0, 0, 0, 48, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 24, 0, 0, 0, 24, 0, 0, 0, 32, 0, 0, 0, 32, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0, 48, 0, 0, 0, 48, 0, 0, 0, 56 };
+u8 lbl_8030F500[160] = {255, 206, 0,   0,   255, 206, 255, 206, 0, 100, 255, 206, 0, 50,  0, 100, 255, 206, 0, 50,
+                        0,   0,   255, 206, 255, 206, 0,   0,   0, 50,  255, 206, 0, 100, 0, 50,  0,   50,  0, 100,
+                        0,   50,  0,   50,  0,   0,   0,   50,  0, 0,   0,   0,   0, 0,   0, 6,   0,   0,   0, 2,
+                        0,   0,   0,   8,   0,   0,   0,   2,   0, 0,   0,   16,  0, 0,   0, 8,   0,   0,   0, 32,
+                        0,   0,   0,   40,  0,   0,   0,   48,  0, 0,   0,   1,   0, 0,   0, 2,   0,   0,   0, 2,
+                        0,   0,   0,   4,   0,   0,   0,   3,   0, 0,   0,   6,   0, 0,   0, 6,   0,   0,   0, 12,
+                        0,   0,   0,   12,  0,   0,   0,   24,  0, 0,   0,   24,  0, 0,   0, 32,  0,   0,   0, 32,
+                        0,   0,   0,   40,  0,   0,   0,   40,  0, 0,   0,   48,  0, 0,   0, 48,  0,   0,   0, 56};

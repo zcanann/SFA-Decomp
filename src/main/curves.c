@@ -27,7 +27,8 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
     {
         evalFn(px, bufX);
         vx = bufX[3];
-        d1x = gCurveForwardDiffStep * bufX[2] + (gCurveForwardDiffCoeffs[2] * bufX[0] + gCurveForwardDiffCoeffs[0] * bufX[1]);
+        d1x = gCurveForwardDiffStep * bufX[2] +
+              (gCurveForwardDiffCoeffs[2] * bufX[0] + gCurveForwardDiffCoeffs[0] * bufX[1]);
         d2x = gCurveForwardDiffCoeffs[3] * bufX[0] + gCurveForwardDiffCoeffs[1] * bufX[1];
         d3x = gCurveForwardDiffCoeffs[3] * bufX[0];
     }
@@ -35,7 +36,8 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
     {
         evalFn(py, bufY);
         vy = bufY[3];
-        d1y = gCurveForwardDiffStep * bufY[2] + (gCurveForwardDiffCoeffs[2] * bufY[0] + gCurveForwardDiffCoeffs[0] * bufY[1]);
+        d1y = gCurveForwardDiffStep * bufY[2] +
+              (gCurveForwardDiffCoeffs[2] * bufY[0] + gCurveForwardDiffCoeffs[0] * bufY[1]);
         d2y = gCurveForwardDiffCoeffs[3] * bufY[0] + gCurveForwardDiffCoeffs[1] * bufY[1];
         d3y = gCurveForwardDiffCoeffs[3] * bufY[0];
     }
@@ -43,7 +45,8 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
     {
         evalFn(pz, bufZ);
         vz = bufZ[3];
-        d1z = gCurveForwardDiffStep * bufZ[2] + (gCurveForwardDiffCoeffs[2] * bufZ[0] + gCurveForwardDiffCoeffs[0] * bufZ[1]);
+        d1z = gCurveForwardDiffStep * bufZ[2] +
+              (gCurveForwardDiffCoeffs[2] * bufZ[0] + gCurveForwardDiffCoeffs[0] * bufZ[1]);
         d2z = gCurveForwardDiffCoeffs[3] * bufZ[0] + gCurveForwardDiffCoeffs[1] * bufZ[1];
         d3z = gCurveForwardDiffCoeffs[3] * bufZ[0];
     }
@@ -125,7 +128,7 @@ void Curve_BuildSegmentLengthTable(Curve* curve, int count)
 }
 #pragma dont_inline reset
 
-typedef f32 (*CurveEvalPtrFirst)(f32 *values, f32 t, f32 *outTangent);
+typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 
 int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
 {
@@ -169,15 +172,18 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 {
                     if (curve->px != NULL)
                     {
-                        curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE674, &curve->tangent[0]);
+                        curve->sample[0] =
+                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE674, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
-                        curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE674, &curve->tangent[1]);
+                        curve->sample[1] =
+                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE674, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
-                        curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE674, &curve->tangent[2]);
+                        curve->sample[2] =
+                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE674, &curve->tangent[2]);
                     }
                     curve->t = lbl_803DE674;
                     curve->segmentDistance = lbl_803DE658;
@@ -241,15 +247,18 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 {
                     if (curve->px != NULL)
                     {
-                        curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE658, &curve->tangent[0]);
+                        curve->sample[0] =
+                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE658, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
-                        curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE658, &curve->tangent[1]);
+                        curve->sample[1] =
+                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE658, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
-                        curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE658, &curve->tangent[2]);
+                        curve->sample[2] =
+                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE658, &curve->tangent[2]);
                     }
                     zeroVal = lbl_803DE658;
                     curve->t = zeroVal;
@@ -290,8 +299,7 @@ void curvesSetupMoveNetworkCurve(Curve* curve)
     {
         debugPrintf(sCurvesSetupMoveNetworkCurveTooFewControlPoints);
     }
-    if ((curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) &&
-        (curve->count & 3) != 0)
+    if ((curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) && (curve->count & 3) != 0)
     {
         debugPrintf(sCurvesSetupMoveNetworkCurveBadControlPointCount);
     }
@@ -337,8 +345,7 @@ void curvesMove(Curve* curve)
     {
         debugPrintf(sCurvesMoveTooFewControlPoints);
     }
-    if ((curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) &&
-        (curve->count & 3) != 0)
+    if ((curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) && (curve->count & 3) != 0)
     {
         debugPrintf(sCurvesMoveBadControlPointCount);
     }
@@ -442,7 +449,7 @@ f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 
     cubic = values[3];
     cubic += (k668 = lbl_803DE668) * (p2 = values[2]) +
-        (-(p0 = values[0]) + (mid = (k664 = lbl_803DE664) * (p1 = values[1])));
+             (-(p0 = values[0]) + (mid = (k664 = lbl_803DE664) * (p1 = values[1])));
     quadratic = k664 * p2 + (k664 * p0 + lbl_803DE66C * p1);
     linear = k668 * p0 + mid;
 
@@ -549,7 +556,10 @@ void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
     heap[index].value = value;
 }
 
-char sCurvesSetupMoveNetworkCurveTooFewControlPoints[] = "curvesSetupMoveNetworkCurve: There must be at least four control points\n";
-char sCurvesSetupMoveNetworkCurveBadControlPointCount[] = "curvesSetupMoveNetworkCurve: There must be a multiple of four control points for bezier or hermite curves\n";
+char sCurvesSetupMoveNetworkCurveTooFewControlPoints[] =
+    "curvesSetupMoveNetworkCurve: There must be at least four control points\n";
+char sCurvesSetupMoveNetworkCurveBadControlPointCount[] =
+    "curvesSetupMoveNetworkCurve: There must be a multiple of four control points for bezier or hermite curves\n";
 char sCurvesMoveTooFewControlPoints[] = "curvesMove: There must be at least four control points\n";
-char sCurvesMoveBadControlPointCount[] = "curvesMove: There must be a multiple of four control points for bezier or hermite curves\n";
+char sCurvesMoveBadControlPointCount[] =
+    "curvesMove: There must be a multiple of four control points for bezier or hermite curves\n";

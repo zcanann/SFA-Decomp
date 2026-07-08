@@ -12,7 +12,7 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 extern char sInWaterMessage[]; /* "in water\n" */
-extern char lbl_8031D478[]; /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
+extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
 extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
@@ -59,8 +59,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     rejectDist = lbl_803E24C4;
     for (; i < count; i++)
     {
-        dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->playerObj + 0x18),
-                             (f32*)(*objs + 0x18));
+        dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->playerObj + 0x18), (f32*)(*objs + 0x18));
         if (dist > rejectDist)
         {
             dist = getXZDistance((f32*)(self + 0x18), (f32*)(*objs + 0x18));
@@ -83,7 +82,8 @@ void trickyFn_8013d8f0(u8* self, u8* state)
             *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
-        if (trickyFn_8013b368(self, lbl_803E247C, state) == 1) return;
+        if (trickyFn_8013b368(self, lbl_803E247C, state) == 1)
+            return;
     }
 
     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

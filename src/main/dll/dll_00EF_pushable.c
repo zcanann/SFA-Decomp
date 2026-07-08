@@ -28,7 +28,6 @@ extern f32 lbl_803E3584;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int getAngle(float y, float x);
 
-
 extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
 extern f32 gPushablePi;
@@ -90,7 +89,7 @@ typedef struct PushablePlacement
     s8 unk1E;
     u8 unk1F;
     u8 pad20[0x23 - 0x20];
-    s8 requiredHitId;   /* 0x23 hit-region id that triggers this pushable (-1 = none) */
+    s8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
     u8 pad24[0x28 - 0x24];
 } PushablePlacement;
 
@@ -102,7 +101,7 @@ typedef struct PushableObjectDef
     void* unk1C;
     u16 scaleRaw;
     u8 rotXByte;
-    u8 requiredHitId;   /* 0x23 hit-region id that triggers this pushable (-1 = none) */
+    u8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
 
@@ -119,10 +118,8 @@ void fn_80174A80(int obj, PushableState* ext)
     fval = lbl_803E3584;
     ext->eyeDriftSpeedX = fval;
     ext->eyeDriftSpeedY = fval;
-    ext->blinkInterval = lbl_803E3564 * (f32)(int)
-    randomGetRange(0x19, 0x4b);
-    ext->blinkStep = ext->blinkInterval / (f32)(int)
-    randomGetRange(0x28, 0x46);
+    ext->blinkInterval = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
+    ext->blinkStep = ext->blinkInterval / (f32)(int)randomGetRange(0x28, 0x46);
     fval = lbl_803E3528;
     ext->blinkPhase = fval;
     ext->gameBit = ((PushablePlacement*)def)->gameBit;
@@ -183,7 +180,8 @@ typedef struct Dll138HitInfo
 
 void fn_80174BFC(int obj, int ext)
 {
-    extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9, int p10);
+    extern int objBboxFn_800640cc(f32 * from, f32 * to, f32 radius, int mode, void* hit, int obj, int p7, int p8, u8 p9,
+                                  int p10);
     extern int Sfx_PlayFromObject(int a, int b);
     extern void saveGame_saveObjectPos(int obj);
     int def;
@@ -231,12 +229,12 @@ void fn_80174BFC(int obj, int ext)
             pose.y = ((GameObject*)obj)->anim.localPosY;
             pose.z = ((GameObject*)obj)->anim.localPosZ;
             setMatrixFromObjectPos(mtx, (short*)&pose);
-            Matrix_TransformPoint(mtx, velBase[i * 3], velBase[i * 3 + 1], velBase[i * 3 + 2],
-                                  &points[i * 3], &points[i * 3 + 1], &points[i * 3 + 2]);
+            Matrix_TransformPoint(mtx, velBase[i * 3], velBase[i * 3 + 1], velBase[i * 3 + 2], &points[i * 3],
+                                  &points[i * 3 + 1], &points[i * 3 + 2]);
             if ((1 << i & 0xf) != 0)
             {
-                if (objBboxFn_800640cc((f32*)(ext + i * 12 + 0x78), &points[i * 3], lbl_803E358C, 1, &hit, obj,
-                                       8, 0xd, (u8)(i + 3), 10) == 0)
+                if (objBboxFn_800640cc((f32*)(ext + i * 12 + 0x78), &points[i * 3], lbl_803E358C, 1, &hit, obj, 8, 0xd,
+                                       (u8)(i + 3), 10) == 0)
                 {
                     bits = (s8)(bits & ~(1 << i));
                 }
@@ -281,15 +279,15 @@ void fn_80174BFC(int obj, int ext)
                                 }
                                 break;
                             default:
+                            {
+                                s8 t = ((PushablePlacement*)def)->requiredHitId;
+                                if (t > -1 && t == hit.id)
                                 {
-                                    s8 t = ((PushablePlacement*)def)->requiredHitId;
-                                    if (t > -1 && t == hit.id)
-                                    {
-                                        mainSetBits(gamebit, 1);
-                                        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-                                    }
-                                    break;
+                                    mainSetBits(gamebit, 1);
+                                    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                                 }
+                                break;
+                            }
                             }
                         }
                     }
@@ -330,9 +328,8 @@ void fn_80174BFC(int obj, int ext)
                     mtx[12] = points[i * 3];
                     mtx[13] = points[i * 3 + 1];
                     mtx[14] = points[i * 3 + 2];
-                    Matrix_TransformPoint(mtx, -velBase[i * 3], -velBase[i * 3 + 1],
-                                          -velBase[i * 3 + 2], (f32*)(obj + 0xc),
-                                          (f32*)(obj + 0x10), (f32*)(obj + 0x14));
+                    Matrix_TransformPoint(mtx, -velBase[i * 3], -velBase[i * 3 + 1], -velBase[i * 3 + 2],
+                                          (f32*)(obj + 0xc), (f32*)(obj + 0x10), (f32*)(obj + 0x14));
                 }
             }
         }
@@ -410,7 +407,7 @@ u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
         *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) | 8;
         if (('\0' < *(char*)(*(int*)(obj + 0x2c) + 0x10f)) &&
             ((*(short*)(*(int*)(*(int*)(obj + 0x2c) + 0x100) + 0x44) == 0x24 &&
-                (bitVal = mainGetBit(0x103), bitVal == 0))))
+              (bitVal = mainGetBit(0x103), bitVal == 0))))
         {
             mainSetBits(0x103, 1);
             *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) & ~8;
@@ -493,8 +490,7 @@ int pushable_func0B(int obj, int other)
     d[0] = ((GameObject*)other)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
     d[1] = ((GameObject*)other)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     d[2] = ((GameObject*)other)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-    return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
-        ((PushableState*)state)->cullDistance;
+    return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) < ((PushableState*)state)->cullDistance;
 }
 
 static inline int* Transporter_GetActiveModel(void* obj)
@@ -522,8 +518,8 @@ void pushable_free(int* obj)
         mainSetBits(sub->gameBit, 0);
         break;
     default:
-        if (((PushablePlacement*)def)->gameBit > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->
-            savePosEnabled != 0)
+        if (((PushablePlacement*)def)->gameBit > -1 && type != 0x54a && type != 0x5ae && type != 0x108 &&
+            sub->savePosEnabled != 0)
         {
             saveGame_saveObjectPos(obj);
         }
@@ -539,8 +535,14 @@ void pushable_free(int* obj)
     ObjGroup_RemoveObject(obj, PUSHABLE_OBJGROUP);
 }
 
-int pushable_getExtraSize(void) { return 0x148; }
-int pushable_getObjectTypeId(void) { return 0x48; }
+int pushable_getExtraSize(void)
+{
+    return 0x148;
+}
+int pushable_getObjectTypeId(void)
+{
+    return 0x48;
+}
 
 void pushable_update(int* obj)
 {
@@ -560,15 +562,19 @@ void pushable_update(int* obj)
     }
     if (state->moveFlags.b6 == 0)
     {
-        if (playerIsDisguised(Obj_GetPlayerObject()) != 0) goto LAB_clear;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
+        if (playerIsDisguised(Obj_GetPlayerObject()) != 0)
+            goto LAB_clear;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     else
     {
     LAB_clear:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(GAMEBIT_PushableRelated0913) == 0)
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 &&
+        mainGetBit(GAMEBIT_PushableRelated0913) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         mainSetBits(GAMEBIT_PushableRelated0913, 1);
@@ -593,10 +599,12 @@ void pushable_update(int* obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x21e:
-        if (fn_80174668(obj, state) == 0) break;
+        if (fn_80174668(obj, state) == 0)
+            break;
         return;
     case 0x411:
-        if (fn_80174668(obj, state) == 0) break;
+        if (fn_80174668(obj, state) == 0)
+            break;
         return;
     case 0x54a:
         if (mainGetBit(state->gameBit) != 0)
@@ -623,8 +631,7 @@ void pushable_update(int* obj)
     }
     {
         s16 t = ((GameObject*)obj)->anim.seqId;
-        if (t != 0x54a && t != 0x5ae && t != 0x108 && state->savePosEnabled != 0 &&
-            (state->flags & 8) == 0)
+        if (t != 0x54a && t != 0x5ae && t != 0x108 && state->savePosEnabled != 0 && (state->flags & 8) == 0)
         {
             saveGame_saveObjectPos(obj);
         }
@@ -661,8 +668,7 @@ void pushable_init(s16* obj, char* def)
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
     state->scale = (f32) * &((PushableObjectDef*)def)->scaleRaw / gPushableU16ScaleDenom;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    state->cullDistance = state->scale * (f32)(u16)
-    modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
+    state->cullDistance = state->scale * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
     {
         f32 z0 = lbl_803E3528;
         state->timer_0x14 = z0;
@@ -768,8 +774,7 @@ void pushable_init(s16* obj, char* def)
                 state->cornerLocal[i].z = coord - lbl_803E3588;
                 state->cornerIdxPosZ = i;
             }
-            Matrix_TransformPoint(mtx, state->probeLocal[i].x, state->probeLocal[i].y,
-                                  state->probeLocal[i].z,
+            Matrix_TransformPoint(mtx, state->probeLocal[i].x, state->probeLocal[i].y, state->probeLocal[i].z,
                                   &state->cornerWorld[i].x, &state->cornerWorld[i].y, &state->cornerWorld[i].z);
         }
     }
@@ -806,7 +811,8 @@ void pushable_init(s16* obj, char* def)
         if (((PushableObjectDef*)def)->gameBit > -1 && mainGetBit(((PushableObjectDef*)def)->gameBit) != 0)
         {
             state->flags = state->flags | 0x81;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             pushable_savePos((int*)obj);
         }
         state->savePosEnabled = 0;
@@ -915,8 +921,8 @@ void pushable_hitDetect(int obj)
             vec.pos[2] = 0.0f;
             vec.pos[3] = 0.0f;
             setMatrixFromObjectPos(mtx, &vec);
-            Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
-                                  (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
+            Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
+                                  &tmpY, (f32*)((char*)obj + 0x2c));
             objMove((int*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
             if ((state->flags & 4) == 0)
             {
@@ -955,8 +961,8 @@ void pushable_hitDetect(int obj)
     if ((state->flags & 4) != 0)
     {
         ((GameObject*)obj)->anim.velocityY = -(lbl_803E35B8 * timeDelta - ((GameObject*)obj)->anim.velocityY);
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-            localPosY;
+        ((GameObject*)obj)->anim.localPosY =
+            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
     }
     if ((state->flags & PUSHABLE_FLAG_MOVING_Y) != 0 || (state->flags & 4) != 0)
     {
@@ -968,8 +974,7 @@ void pushable_hitDetect(int obj)
         for (; i < state->pointCount; i++)
         {
             Obj_TransformLocalPointToWorld(((PushableState*)e)->cornerLocal[0].x, ((PushableState*)e)->cornerLocal[0].y,
-                                           ((PushableState*)e)->cornerLocal[0].z,
-                                           w, w + 1, w + 2, (int*)obj);
+                                           ((PushableState*)e)->cornerLocal[0].z, w, w + 1, w + 2, (int*)obj);
             w += 3;
             e += 0xc;
         }
@@ -1061,13 +1066,12 @@ void pushable_hitDetect(int obj)
     for (; i < state->pointCount; i++)
     {
         Obj_TransformLocalPointToWorld(((PushableState*)e)->probeLocal[0].x, ((PushableState*)e)->probeLocal[0].y,
-                                       ((PushableState*)e)->probeLocal[0].z,
-                                       (f32*)(e + 0x78), (f32*)(e + 0x7c), (f32*)(e + 0x80), (int*)obj);
+                                       ((PushableState*)e)->probeLocal[0].z, (f32*)(e + 0x78), (f32*)(e + 0x7c),
+                                       (f32*)(e + 0x80), (int*)obj);
         e += 0xc;
     }
 }
 #pragma opt_common_subs reset
-
 
 typedef struct
 {
@@ -1082,7 +1086,8 @@ typedef struct
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
-    extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f);
+    extern int objBboxFn_800640cc(f32 * start, f32 * end, f32 radius, int a, int b, int* obj, int c, int d, int e,
+                                  int f);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     extern u32 fn_80174BFC();
     SetScaleParams* pp;
@@ -1248,8 +1253,8 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         vec.pos[2] = lbl_803E3528;
         vec.pos[3] = lbl_803E3528;
         setMatrixFromObjectPos(mtx, &vec);
-        Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
-                              (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
+        Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
+                              &tmpY, (f32*)((char*)obj + 0x2c));
         state->moveFlags.b7 = 1;
         objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
         Obj_BuildTransformMatrices(obj);
@@ -1328,9 +1333,8 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         e2 = (f32*)state;
         for (; j < state->pointCount; j++)
         {
-            Matrix_TransformPoint(mtx2, *(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
-                                  *(f32*)((char*)e2 + 0x20), (f32*)((char*)e2 + 0x78),
-                                  (f32*)((char*)e2 + 0x7c), (f32*)((char*)e2 + 0x80));
+            Matrix_TransformPoint(mtx2, *(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c), *(f32*)((char*)e2 + 0x20),
+                                  (f32*)((char*)e2 + 0x78), (f32*)((char*)e2 + 0x7c), (f32*)((char*)e2 + 0x80));
             e2 = (f32*)((char*)e2 + 0xc);
         }
     }
@@ -1381,23 +1385,23 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             }
             return;
         case 0x54a:
+        {
+            f32 v = state->timer_0x14;
+            f32 zero = lbl_803E3528;
+            if (v > zero)
             {
-                f32 v = state->timer_0x14;
-                f32 zero = lbl_803E3528;
-                if (v > zero)
+                state->timer_0x14 = v - timeDelta;
+                if (state->timer_0x14 <= zero)
                 {
-                    state->timer_0x14 = v - timeDelta;
-                    if (state->timer_0x14 <= zero)
-                    {
-                        state->timer_0x14 = zero;
-                    }
-                    else
-                    {
-                        fn_8003B5E0(0xc8, 0, 0, 0xff);
-                    }
+                    state->timer_0x14 = zero;
                 }
-                break;
+                else
+                {
+                    fn_8003B5E0(0xc8, 0, 0, 0xff);
+                }
             }
+            break;
+        }
         }
         {
             char* hdr = (char*)Transporter_GetActiveModel(obj);

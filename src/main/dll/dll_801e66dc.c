@@ -19,11 +19,17 @@
 
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
-extern int Stack_IsEmpty(int stack);          /* voxmaps.c */
-extern int Stack_Pop(int stack, int* out);    /* voxmaps.c */
+extern int Stack_IsEmpty(int stack);       /* voxmaps.c */
+extern int Stack_Pop(int stack, int* out); /* voxmaps.c */
 
-int fn_801E66DC(void) { return 0; }
-int fn_801E66E4(void) { return 0; }
+int fn_801E66DC(void)
+{
+    return 0;
+}
+int fn_801E66E4(void)
+{
+    return 0;
+}
 
 int fn_801E66EC(int arg1, int arg2)
 {

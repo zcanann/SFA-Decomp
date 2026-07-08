@@ -53,23 +53,23 @@ extern void* Obj_GetPlayerObject(void);
 typedef struct ShieldState
 {
     u8 pad0[0x4 - 0x0];
-    f32 fadeValue; /* 0x4: current shield fade, advanced toward fadeTarget by fadeRate*dt */
+    f32 fadeValue;  /* 0x4: current shield fade, advanced toward fadeTarget by fadeRate*dt */
     f32 fadeTarget; /* 0x8 */
-    f32 fadeRate; /* 0xC */
-    s32 fadeMax; /* 0x10: divisor for alpha (fadeValue/fadeMax) */
+    f32 fadeRate;   /* 0xC */
+    s32 fadeMax;    /* 0x10: divisor for alpha (fadeValue/fadeMax) */
     /* Per-segment parameters for the four ring segments, laid out
      * structure-of-arrays (each array indexed by segment 0..3). */
     f32 segScale[4]; /* 0x14: per-segment scale (feeds anim.rootMotionScale) */
     f32 segAlpha[4]; /* 0x24: per-segment alpha factor (feeds anim.alpha) */
     s16 segPhase[4]; /* 0x34: fcos16 wobble phase, advanced by segRate*dt */
-    s16 segSeed[4]; /* 0x3C: random per-segment cosine seed */
-    s16 segRotX[4]; /* 0x44: per-segment X rotation */
-    s16 segRotY[4]; /* 0x4C: per-segment Y rotation */
-    s16 segRotZ[4]; /* 0x54: per-segment Z rotation */
-    u8 flags0; /* 0x5C: segment-0 "fully faded" bit0 */
-    u8 flags1; /* 0x5D */
-    u8 flags2; /* 0x5E */
-    u8 flags3; /* 0x5F */
+    s16 segSeed[4];  /* 0x3C: random per-segment cosine seed */
+    s16 segRotX[4];  /* 0x44: per-segment X rotation */
+    s16 segRotY[4];  /* 0x4C: per-segment Y rotation */
+    s16 segRotZ[4];  /* 0x54: per-segment Z rotation */
+    u8 flags0;       /* 0x5C: segment-0 "fully faded" bit0 */
+    u8 flags1;       /* 0x5D */
+    u8 flags2;       /* 0x5E */
+    u8 flags3;       /* 0x5F */
     u8 pad60[0x6A - 0x60];
     s16 unk6A;
     u8 pad6C[0x6E - 0x6C];
@@ -153,7 +153,8 @@ int* fn_801702D4(int* obj, f32 fv)
 {
     void* alloc;
     int* new_obj;
-    if ((u8)Obj_IsLoadingLocked() == 0) return NULL;
+    if ((u8)Obj_IsLoadingLocked() == 0)
+        return NULL;
     alloc = Obj_AllocObjectSetup(36, 2102);
     ((ObjPlacement*)alloc)->posX = ((GameObject*)obj)->anim.worldPosX;
     ((ObjPlacement*)alloc)->posY = ((GameObject*)obj)->anim.worldPosY;
@@ -170,7 +171,10 @@ int* fn_801702D4(int* obj, f32 fv)
 }
 
 ObjectDescriptor gShieldObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Shield_initialise,
     (ObjectDescriptorCallback)Shield_release,
     0,
@@ -182,7 +186,6 @@ ObjectDescriptor gShieldObjDescriptor = {
     (ObjectDescriptorCallback)Shield_getObjectTypeId,
     Shield_getExtraSize,
 };
-
 
 #pragma opt_common_subs off
 void staffFn_80170380(int* obj, int cmd)
@@ -397,86 +400,92 @@ void staffFn_80170380(int* obj, int cmd)
         Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
         break;
     case 4:
-        {
-            f32 fade = lbl_803E33CC;
-            f32 amp;
-            ((ShieldState*)state)->fadeTarget = fade;
-            amp = lbl_803E33C4;
-            ((ShieldState*)state)->fadeRate = amp;
-            *(f32*)&((ShieldState*)state)->fadeMax = fade;
-            {
-                int i;
-                u8* hw;
-                f32* t0;
-                u8* w;
-                f32* t1;
-                f32 k;
-                i = 0;
-                hw = state;
-                t0 = (f32*)((char*)tbl + 0x20);
-                w = state;
-                t1 = (f32*)((char*)tbl + 0x30);
-                k = lbl_803E33A8;
-                for (; i < 4; i++)
-                {
-                    f32 wave;
-                    f32 sum;
-                    *(s16*)(hw + 0x34) = -0x4000;
-                    wave = fcos16((u16) * (s16*)(hw + 0x34));
-                    sum = amp + wave;
-                    wave = sum * k;
-                    *(f32*)(w + 0x24) = *t0 * wave;
-                    *(f32*)(w + 0x14) = *t1;
-                    *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
-                    hw += 2;
-                    t0 += 1;
-                    w += 4;
-                    t1 += 1;
-                }
-            }
-            Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
-            Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
-            break;
-        }
-    case 6:
+    {
+        f32 fade = lbl_803E33CC;
+        f32 amp;
+        ((ShieldState*)state)->fadeTarget = fade;
+        amp = lbl_803E33C4;
+        ((ShieldState*)state)->fadeRate = amp;
+        *(f32*)&((ShieldState*)state)->fadeMax = fade;
         {
             int i;
             u8* hw;
             f32* t0;
             u8* w;
             f32* t1;
-            f32 amp;
             f32 k;
             i = 0;
             hw = state;
             t0 = (f32*)((char*)tbl + 0x20);
             w = state;
             t1 = (f32*)((char*)tbl + 0x30);
-            amp = lbl_803E33C4;
             k = lbl_803E33A8;
             for (; i < 4; i++)
             {
                 f32 wave;
                 f32 sum;
-                *(s16*)(hw + 0x34) = 0x4000;
+                *(s16*)(hw + 0x34) = -0x4000;
                 wave = fcos16((u16) * (s16*)(hw + 0x34));
                 sum = amp + wave;
                 wave = sum * k;
                 *(f32*)(w + 0x24) = *t0 * wave;
                 *(f32*)(w + 0x14) = *t1;
+                *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                 hw += 2;
                 t0 += 1;
                 w += 4;
                 t1 += 1;
             }
-            break;
         }
+        Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
+        break;
+    }
+    case 6:
+    {
+        int i;
+        u8* hw;
+        f32* t0;
+        u8* w;
+        f32* t1;
+        f32 amp;
+        f32 k;
+        i = 0;
+        hw = state;
+        t0 = (f32*)((char*)tbl + 0x20);
+        w = state;
+        t1 = (f32*)((char*)tbl + 0x30);
+        amp = lbl_803E33C4;
+        k = lbl_803E33A8;
+        for (; i < 4; i++)
+        {
+            f32 wave;
+            f32 sum;
+            *(s16*)(hw + 0x34) = 0x4000;
+            wave = fcos16((u16) * (s16*)(hw + 0x34));
+            sum = amp + wave;
+            wave = sum * k;
+            *(f32*)(w + 0x24) = *t0 * wave;
+            *(f32*)(w + 0x14) = *t1;
+            hw += 2;
+            t0 += 1;
+            w += 4;
+            t1 += 1;
+        }
+        break;
+    }
     }
 }
 #pragma opt_common_subs reset
 
-int Shield_getExtraSize(void) { return 0x60; }
-int Shield_getObjectTypeId(void) { return 0x0; }
+int Shield_getExtraSize(void)
+{
+    return 0x60;
+}
+int Shield_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void Shield_free(int obj)
 {
@@ -489,8 +498,6 @@ void Shield_free(int obj)
     Sfx_StopFromObject(obj, SFXTRIG_lrope_powerup);
     Sfx_StopFromObject(obj, SFXTRIG_lockon3_on);
 }
-
-
 
 typedef struct ShieldFxVec
 {
@@ -547,12 +554,14 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     *(s16*)(state + off + 0x54) = dt * lbl_803DBD88[k] + (f32) * (s16*)(state + off + 0x54);
                     {
                         u8* r = state + k * 4;
-                        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(r + 0x24) * savedF8 *
+                        ((GameObject*)obj)->anim.rootMotionScale =
+                            *(f32*)(r + 0x24) * savedF8 *
                             (((ShieldState*)state)->fadeValue / *(f32*)&((ShieldState*)state)->fadeMax);
                         *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
-                    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E33C4);
+                    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
+                                                                                           lbl_803E33C4);
                 }
             }
         }
@@ -573,7 +582,8 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
-                    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E33C4);
+                    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
+                                                                                           lbl_803E33C4);
                     if (hud == 0)
                     {
                         f32 cD;
@@ -597,8 +607,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                             s.pos[1] += ((GameObject*)obj)->anim.localPosY;
                             s.pos[2] += ((GameObject*)obj)->anim.localPosZ;
                             s.alpha = cD;
-                            (*gPartfxInterface)->spawnObject(obj, SHIELD_PARTFX, &s, 0x200001, -1,
-                                                             NULL);
+                            (*gPartfxInterface)->spawnObject(obj, SHIELD_PARTFX, &s, 0x200001, -1, NULL);
                         }
                     }
                 }

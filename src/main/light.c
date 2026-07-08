@@ -10,16 +10,16 @@
 #include "main/resource.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define LIGHT_OBJFLAG_HIDDEN 0x4000
+#define LIGHT_OBJFLAG_HIDDEN             0x4000
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 #define LIGHT_DRAGHEAD_RESOURCE_ID 0xA5
-#define LIGHT_HIT_VOLUME_SLOT 0xE
+#define LIGHT_HIT_VOLUME_SLOT      0xE
 
 /* Partfx spawned by VFPDragHead_update: BREATH is the hit-driven breath fx
  * (state 1, gameBitA toggled); IDLE is the ambient periodic fx (states 0/2). */
 #define VFPDRAGHEAD_PARTFX_BREATH 0x390
-#define VFPDRAGHEAD_PARTFX_IDLE 0x391
+#define VFPDRAGHEAD_PARTFX_IDLE   0x391
 
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor).
@@ -53,9 +53,15 @@ extern s16 gVfpDragHeadSpawnTimer;
 extern u8 gVfpDragHeadActiveIndex;
 extern f32 lbl_803E6108;
 
-int VFP_Block1_getExtraSize(void) { return 0x2; }
+int VFP_Block1_getExtraSize(void)
+{
+    return 0x2;
+}
 
-int VFP_Block1_getObjectTypeId(void) { return 0x0; }
+int VFP_Block1_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_Block1_render(void)
 {
@@ -72,21 +78,22 @@ void VFP_Block1_free(int obj)
 
 /* Per-object extra state for SeqPoint (SeqPoint_getExtraSize == 0x10). */
 /* SeqPointState.mode: which predicate must hold for the seq point to fire. */
-typedef enum SeqPointMode {
-  SEQPOINT_MODE_RADIUS = 0,          /* fire when player is within triggerRadius */
-  SEQPOINT_MODE_BIT = 1,             /* fire when conditionBit is set */
-  SEQPOINT_MODE_RADIUS_AND_BIT = 2,  /* fire when in radius AND conditionBit set */
-  SEQPOINT_MODE_RADIUS_BIT_ONCE = 3, /* fire in radius with conditionBit clear, then set it */
-  SEQPOINT_MODE_BIT_ONCE = 4,        /* fire with conditionBit clear, then set it */
-  SEQPOINT_MODE_BIT_REPEAT = 5       /* fire whenever conditionBit is set (no done latch) */
+typedef enum SeqPointMode
+{
+    SEQPOINT_MODE_RADIUS = 0,          /* fire when player is within triggerRadius */
+    SEQPOINT_MODE_BIT = 1,             /* fire when conditionBit is set */
+    SEQPOINT_MODE_RADIUS_AND_BIT = 2,  /* fire when in radius AND conditionBit set */
+    SEQPOINT_MODE_RADIUS_BIT_ONCE = 3, /* fire in radius with conditionBit clear, then set it */
+    SEQPOINT_MODE_BIT_ONCE = 4,        /* fire with conditionBit clear, then set it */
+    SEQPOINT_MODE_BIT_REPEAT = 5       /* fire whenever conditionBit is set (no done latch) */
 } SeqPointMode;
 
 typedef struct SeqPointState
 {
     f32 triggerRadius;
     s16 conditionBit; /* gamebit gating modes 1-5 */
-    s16 disableBit; /* gamebit that permanently disables the point */
-    s16 sequenceId; /* trigger id fired at the player; switched in the SeqFn */
+    s16 disableBit;   /* gamebit that permanently disables the point */
+    s16 sequenceId;   /* trigger id fired at the player; switched in the SeqFn */
     u8 pad0A[3];
     u8 done;
     u8 mode; /* 0 radius, 1 bit, 2 radius+bit, 3/4 bit-once (sets it), 5 bit repeat */
@@ -201,19 +208,58 @@ void dll_224_free_nop(void)
 {
 }
 
-int VFP_Platform_getExtraSize(void) { return 0x6; }
-int VFP_Platform_getObjectTypeId(void) { return 0x0; }
-int VFP_DoorSwitch_getExtraSize(void) { return 0x4; }
-int VFP_DoorSwitch_getObjectTypeId(void) { return 0x0; }
-int SeqPoint_getExtraSize(void) { return 0x10; }
-int SeqPoint_getObjectTypeId(void) { return 0x0; }
-int VFPDragHead_getExtraSize(void) { return 0xc; }
-int VFPDragHead_getObjectTypeId(void) { return 0x0; }
-int return0_801FD13C(void) { return 0x0; }
-int VFP_coreplat_getExtraSize(void) { return 0x4; }
-int VFP_coreplat_getObjectTypeId(void) { return 0x0; }
-int dll_224_getExtraSize_ret_6(void) { return 0x6; }
-int dll_224_getObjectTypeId(void) { return 0x0; }
+int VFP_Platform_getExtraSize(void)
+{
+    return 0x6;
+}
+int VFP_Platform_getObjectTypeId(void)
+{
+    return 0x0;
+}
+int VFP_DoorSwitch_getExtraSize(void)
+{
+    return 0x4;
+}
+int VFP_DoorSwitch_getObjectTypeId(void)
+{
+    return 0x0;
+}
+int SeqPoint_getExtraSize(void)
+{
+    return 0x10;
+}
+int SeqPoint_getObjectTypeId(void)
+{
+    return 0x0;
+}
+int VFPDragHead_getExtraSize(void)
+{
+    return 0xc;
+}
+int VFPDragHead_getObjectTypeId(void)
+{
+    return 0x0;
+}
+int return0_801FD13C(void)
+{
+    return 0x0;
+}
+int VFP_coreplat_getExtraSize(void)
+{
+    return 0x4;
+}
+int VFP_coreplat_getObjectTypeId(void)
+{
+    return 0x0;
+}
+int dll_224_getExtraSize_ret_6(void)
+{
+    return 0x6;
+}
+int dll_224_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_Platform_free(int obj)
 {
@@ -234,10 +280,10 @@ void VFP_coreplat_free(int obj)
  * vfpcoreplat). VFP_Platform_getExtraSize == 0x6. */
 typedef struct VfpPlatformState
 {
-    s16 gameBitId;  /* drives the open/close state machine */
-    u8 state;       /* state-machine mode (cases 0-6) */
-    u8 axisMode;    /* 0/3 = move axis, 10 = trigger-on-bit, 99/0x63 = inert */
-    s16 timer;      /* dwell countdown */
+    s16 gameBitId; /* drives the open/close state machine */
+    u8 state;      /* state-machine mode (cases 0-6) */
+    u8 axisMode;   /* 0/3 = move axis, 10 = trigger-on-bit, 99/0x63 = inert */
+    s16 timer;     /* dwell countdown */
 } VfpPlatformState;
 
 STATIC_ASSERT(sizeof(VfpPlatformState) == 0x6);
@@ -297,13 +343,16 @@ void spellStoneUseFn_801fd270(int obj)
     SpellStoneUseState* state = ((GameObject*)obj)->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
-    if (player == NULL) return;
+    if (player == NULL)
+        return;
     if (state->requiredGameBit != -1)
     {
         cond = mainGetBit(state->requiredGameBit);
     }
-    if ((s16)mainGetBit(state->completeGameBit) != 0 || state->used != 0) return;
-    if (cond == 0) return;
+    if ((s16)mainGetBit(state->completeGameBit) != 0 || state->used != 0)
+        return;
+    if (cond == 0)
+        return;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if ((*gGameUIInterface)->isEventReady(gSpellStoneEventId) != 0)
     {
@@ -331,9 +380,9 @@ void VFPDragHead_free(int obj)
 /* Per-object extra state for VFPDragHead (VFPDragHead_getExtraSize == 0xC). */
 typedef struct VfpDragHeadState
 {
-    s16 gameBitA; /* toggled by hits; drives the 0x390 breath fx */
-    s16 gameBitB; /* suppresses idle fx when set (variant 2) */
-    s16 unk_04; /* init: 100 */
+    s16 gameBitA;     /* toggled by hits; drives the 0x390 breath fx */
+    s16 gameBitB;     /* suppresses idle fx when set (variant 2) */
+    s16 unk_04;       /* init: 100 */
     s16 despawnTimer; /* variant 0x3C5: init 0x78, counts down to free */
     u8 pad08[3];
     u8 headIndex; /* from def+0x1A; matched against gVfpDragHeadActiveIndex */
@@ -359,7 +408,7 @@ void VFPDragHead_init(int obj, int data)
     state->gameBitA = *(s16*)(data + 0x1e);
     state->gameBitB = *(s16*)(data + 0x20);
     state->unk_04 = 0x64;
-    state->headIndex =  * (s16*)(data + 0x1a);
+    state->headIndex = *(s16*)(data + 0x1a);
     if (*(s8*)(data + 0x19) == 1)
     {
         ((GameObject*)obj)->anim.rootMotionScale =
@@ -374,7 +423,7 @@ void SeqPoint_init(int obj, int data)
     SeqPointState* state = ((GameObject*)obj)->extra;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))SeqPoint_SeqFn;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    state->triggerRadius =  * (s16*)(data + 0x1a);
+    state->triggerRadius = *(s16*)(data + 0x1a);
     state->sequenceId = *(s16*)(data + 0x1c);
     state->mode = *(u8*)(data + 0x19);
     state->conditionBit = *(s16*)(data + 0x1e);
@@ -385,7 +434,8 @@ void SeqPoint_init(int obj, int data)
 void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6128);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6128);
 }
 
 void VFP_Platform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -394,12 +444,18 @@ void VFP_Platform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 isVisible = visible;
     if (isVisible != 0 && state->axisMode != 0x63)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E610C);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E610C);
     }
 }
 
-void VFP_DoorSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E611C); }
-void VFP_coreplat_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6140); }
+void VFP_DoorSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E611C);
+}
+void VFP_coreplat_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6140);
+}
 
 typedef struct
 {
@@ -418,8 +474,10 @@ void VFP_DoorSwitch_update(int obj)
         return;
     }
     state = ((GameObject*)obj)->extra;
-    if (state->activated != 0) return;
-    if (mainGetBit(state->gameBitId) == 0) return;
+    if (state->activated != 0)
+        return;
+    if (mainGetBit(state->gameBitId) == 0)
+        return;
     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
     Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
@@ -486,7 +544,11 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
     }
 }
 
-void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
 
 #pragma peephole on
 void SeqPoint_update(int* obj)
@@ -499,7 +561,8 @@ void SeqPoint_update(int* obj)
     {
         if (self->done != 0)
         {
-            if (mainGetBit(key) != 0) return;
+            if (mainGetBit(key) != 0)
+                return;
             mainSetBits(self->disableBit, 1);
             self->done = 1;
             return;
@@ -510,45 +573,59 @@ void SeqPoint_update(int* obj)
             return;
         }
     }
-    if (self->done != 0) return;
+    if (self->done != 0)
+        return;
     switch (self->mode)
     {
     case SEQPOINT_MODE_RADIUS:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius))
+            return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_BIT:
-        if (self->conditionBit == -1) return;
-        if (mainGetBit(self->conditionBit) == 0) return;
+        if (self->conditionBit == -1)
+            return;
+        if (mainGetBit(self->conditionBit) == 0)
+            return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_RADIUS_AND_BIT:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
-        if (self->conditionBit == -1) return;
-        if (mainGetBit(self->conditionBit) == 0) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius))
+            return;
+        if (self->conditionBit == -1)
+            return;
+        if (mainGetBit(self->conditionBit) == 0)
+            return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_RADIUS_BIT_ONCE:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
-        if (self->conditionBit == -1) return;
-        if (mainGetBit(self->conditionBit) != 0) return;
+        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius))
+            return;
+        if (self->conditionBit == -1)
+            return;
+        if (mainGetBit(self->conditionBit) != 0)
+            return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         mainSetBits(self->conditionBit, 1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_BIT_ONCE:
-        if (self->conditionBit == -1) return;
-        if (mainGetBit(self->conditionBit) != 0) return;
+        if (self->conditionBit == -1)
+            return;
+        if (mainGetBit(self->conditionBit) != 0)
+            return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         mainSetBits(self->conditionBit, 1);
         self->done = 1;
         break;
     case SEQPOINT_MODE_BIT_REPEAT:
-        if (self->conditionBit == -1) return;
-        if (mainGetBit(self->conditionBit) == 0) return;
+        if (self->conditionBit == -1)
+            return;
+        if (mainGetBit(self->conditionBit) == 0)
+            return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         break;
     }
@@ -566,33 +643,42 @@ void VFPDragHead_update(int* obj)
     {
         self2 = ((GameObject*)obj)->extra;
         gVfpDragHeadSpawnTimer -= (s16)timeDelta;
-        if (mainGetBit(self2->gameBitB) != 0) return;
-        if (gVfpDragHeadSpawnTimer > 0xc8) return;
-        if (self2->headIndex != gVfpDragHeadActiveIndex) return;
-        if (randomGetRange(0, 2) != 0) return;
+        if (mainGetBit(self2->gameBitB) != 0)
+            return;
+        if (gVfpDragHeadSpawnTimer > 0xc8)
+            return;
+        if (self2->headIndex != gVfpDragHeadActiveIndex)
+            return;
+        if (randomGetRange(0, 2) != 0)
+            return;
         (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
     }
     else if (((GameObject*)obj)->anim.seqId == 0x3c5)
     {
         self2 = ((GameObject*)obj)->extra;
         self2->despawnTimer -= (s16)timeDelta;
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
-            localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-            localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
-            localPosZ;
-        if (self2->despawnTimer > 0) return;
+        ((GameObject*)obj)->anim.localPosX =
+            ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY =
+            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ =
+            ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+        if (self2->despawnTimer > 0)
+            return;
         Obj_FreeObject(obj);
     }
     else if (state == 0)
     {
         self2 = ((GameObject*)obj)->extra;
         gVfpDragHeadSpawnTimer -= (s16)timeDelta;
-        if (mainGetBit(0x522) != 0) return;
-        if (gVfpDragHeadSpawnTimer > 0xc8) return;
-        if (self2->headIndex != gVfpDragHeadActiveIndex) return;
-        if (randomGetRange(0, 2) != 0) return;
+        if (mainGetBit(0x522) != 0)
+            return;
+        if (gVfpDragHeadSpawnTimer > 0xc8)
+            return;
+        if (self2->headIndex != gVfpDragHeadActiveIndex)
+            return;
+        if (randomGetRange(0, 2) != 0)
+            return;
         (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
     }
     else if (state == 1)
@@ -707,71 +793,71 @@ void fn_801FBAC8(int obj)
         }
         break;
     case 1:
+    {
+        s16 timer = state->timer;
+        if (timer != 0)
         {
-            s16 timer = state->timer;
-            if (timer != 0)
+            state->timer -= (s16)timeDelta;
+            if (state->timer <= 0)
             {
-                state->timer -= (s16)timeDelta;
-                if (state->timer <= 0)
-                {
-                    state->timer = 0;
-                }
+                state->timer = 0;
             }
-            else if (state->axisMode == 0)
-            {
-                if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
-                {
-                    state->state = 2;
-                }
-                if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
-                {
-                    state->state = 3;
-                }
-            }
-            else
-            {
-                if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
-                {
-                    state->state = 4;
-                }
-                if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
-                {
-                    state->state = 5;
-                }
-            }
-            break;
         }
+        else if (state->axisMode == 0)
+        {
+            if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
+            {
+                state->state = 2;
+            }
+            if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
+            {
+                state->state = 3;
+            }
+        }
+        else
+        {
+            if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
+            {
+                state->state = 4;
+            }
+            if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
+            {
+                state->state = 5;
+            }
+        }
+        break;
+    }
     case 2:
+    {
+        f32 thr;
+        f32 z = ((GameObject*)obj)->anim.localPosZ;
+        if (z < (thr = lbl_803E6108, thr + ((ObjPlacement*)params)->posZ))
         {
-            f32 thr;
-            f32 z = ((GameObject*)obj)->anim.localPosZ;
-            if (z < (thr = lbl_803E6108, thr + ((ObjPlacement*)params)->posZ))
+            ((GameObject*)obj)->anim.localPosZ = z + timeDelta;
+            if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
             {
-                ((GameObject*)obj)->anim.localPosZ = z + timeDelta;
-                if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
-                {
-                    ((GameObject*)obj)->anim.localPosZ = thr + ((ObjPlacement*)params)->posZ;
-                    state->state = 1;
-                    state->timer = 20;
-                }
+                ((GameObject*)obj)->anim.localPosZ = thr + ((ObjPlacement*)params)->posZ;
+                state->state = 1;
+                state->timer = 20;
             }
-            break;
         }
+        break;
+    }
     case 3:
+    {
+        f32 thr;
+        if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ - (thr = lbl_803E6108))
         {
-            f32 thr;
-            if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ - (thr = lbl_803E6108))
+            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+            if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ - thr)
             {
-                ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
-                if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ - thr)
-                {
-                    ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ - thr;
-                    state->state = 1;
-                    state->timer = 20;
-                }
+                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ - thr;
+                state->state = 1;
+                state->timer = 20;
             }
-            break;
         }
+        break;
+    }
     }
 }
 
@@ -814,57 +900,57 @@ void VFP_Platform_update(int obj)
                     }
                     break;
                 case 1:
+                {
+                    s16 timer = state->timer;
+                    if (timer != 0)
                     {
-                        s16 timer = state->timer;
-                        if (timer != 0)
+                        state->timer -= (s16)timeDelta;
+                        if (state->timer <= 0)
                         {
-                            state->timer -= (s16)timeDelta;
-                            if (state->timer <= 0)
-                            {
-                                state->timer = 0;
-                            }
+                            state->timer = 0;
                         }
-                        else if (s3 == 0)
-                        {
-                            if (yi == tyi - 60)
-                            {
-                                state->state = 2;
-                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                            }
-                            if (yi == tyi)
-                            {
-                                state->state = 3;
-                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                            }
-                        }
-                        else if (s3 == 3)
-                        {
-                            if (xi == txi - 60)
-                            {
-                                state->state = 2;
-                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                            }
-                            if (xi == txi)
-                            {
-                                state->state = 3;
-                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                            }
-                        }
-                        else
-                        {
-                            if (yi == tyi + 60)
-                            {
-                                state->state = 4;
-                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                            }
-                            if (yi == tyi)
-                            {
-                                state->state = 5;
-                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                            }
-                        }
-                        break;
                     }
+                    else if (s3 == 0)
+                    {
+                        if (yi == tyi - 60)
+                        {
+                            state->state = 2;
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                        }
+                        if (yi == tyi)
+                        {
+                            state->state = 3;
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                        }
+                    }
+                    else if (s3 == 3)
+                    {
+                        if (xi == txi - 60)
+                        {
+                            state->state = 2;
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                        }
+                        if (xi == txi)
+                        {
+                            state->state = 3;
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                        }
+                    }
+                    else
+                    {
+                        if (yi == tyi + 60)
+                        {
+                            state->state = 4;
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                        }
+                        if (yi == tyi)
+                        {
+                            state->state = 5;
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                        }
+                    }
+                    break;
+                }
                 case 2:
                     if (s3 == 3 && xi < txi)
                     {

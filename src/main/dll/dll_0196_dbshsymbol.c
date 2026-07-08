@@ -25,11 +25,11 @@
 
 /* shared with the shrine object (DLL 0x195) */
 #define DBSH_GB_RISE_DONE 0x16a
-#define DBSH_GB_CLOSE_A 0x16b
-#define DBSH_GB_CLOSE_B 0x16c
+#define DBSH_GB_CLOSE_A   0x16b
+#define DBSH_GB_CLOSE_B   0x16c
 
-#define DBSH_PARTNER_OBJTYPE 0x20f /* mirror symbol spun alongside this one */
-#define DBSH_SPIN_DONE 0x7ef4      /* spinProgress at a full turn */
+#define DBSH_PARTNER_OBJTYPE 0x20f  /* mirror symbol spun alongside this one */
+#define DBSH_SPIN_DONE       0x7ef4 /* spinProgress at a full turn */
 
 #define PAD_BUTTON_A 0x100
 
@@ -162,8 +162,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-            player, ((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100,
-            timeDelta, NULL) != 0)
+                player, ((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100, timeDelta, NULL) != 0)
         {
             if (((GameObject*)player)->anim.currentMoveProgress < lbl_803E50EC)
             {
@@ -174,14 +173,13 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         if (state->partnerObj != NULL)
         {
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                *(int*)&state->partnerObj, -((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100,
-                timeDelta, NULL) != 0)
+                    *(int*)&state->partnerObj, -((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100,
+                    timeDelta, NULL) != 0)
             {
                 f32 h = ((GameObject*)state->partnerObj)->anim.currentMoveProgress;
                 if (h < lbl_803E50EC)
                 {
-                    ((GameObject*)state->partnerObj)->anim.currentMoveProgress =
-                        lbl_803E5104 + h;
+                    ((GameObject*)state->partnerObj)->anim.currentMoveProgress = lbl_803E5104 + h;
                 }
             }
         }
@@ -192,13 +190,11 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     {
         if (state->spinSpeed < lbl_803E50EC)
         {
-            state->sfxTimerA = (f32)(int)
-            randomGetRange(0x28, 0x64);
+            state->sfxTimerA = (f32)(int)randomGetRange(0x28, 0x64);
         }
         else
         {
-            state->sfxTimerA = (f32)(int)
-            randomGetRange(0x78, 0xf0);
+            state->sfxTimerA = (f32)(int)randomGetRange(0x78, 0xf0);
         }
         Sfx_PlayFromObject(player, SFXTRIG_literun116_var);
     }
@@ -207,20 +203,17 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     {
         if (state->spinSpeed > lbl_803E50EC)
         {
-            state->sfxTimerB = (f32)(int)
-            randomGetRange(0x28, 0x64);
+            state->sfxTimerB = (f32)(int)randomGetRange(0x28, 0x64);
         }
         else
         {
-            state->sfxTimerB = (f32)(int)
-            randomGetRange(0x78, 0xf0);
+            state->sfxTimerB = (f32)(int)randomGetRange(0x78, 0xf0);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_spotfox03);
     }
     {
-        f32 vol = (lbl_803E5108 * state->spinSpeed >= lbl_803E50EC)
-                      ? lbl_803E5108 * state->spinSpeed
-                      : -(lbl_803E5108 * state->spinSpeed);
+        f32 vol = (lbl_803E5108 * state->spinSpeed >= lbl_803E50EC) ? lbl_803E5108 * state->spinSpeed
+                                                                    : -(lbl_803E5108 * state->spinSpeed);
         volume = (int)vol;
         if (volume > 100)
         {
@@ -271,8 +264,7 @@ void DBSH_Symbol_update(int obj)
         else if (phase == 2)
         {
             state->phase = 3;
-            state->triggerHandle =
-                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+            state->triggerHandle = (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
         else if (phase == 1)
         {

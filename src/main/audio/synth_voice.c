@@ -40,17 +40,16 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo0) == 0x28);
 STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeHi1) == 0x2c);
 STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 
-#define SYNTH_FADE_COUNT 0x20
-#define SYNTH_FADE_TABLE_OFFSET 0x5d4
-#define SYNTH_FADE_DELAY_ACTION_FREE_HANDLE 1
+#define SYNTH_FADE_COUNT                     0x20
+#define SYNTH_FADE_TABLE_OFFSET              0x5d4
+#define SYNTH_FADE_DELAY_ACTION_FREE_HANDLE  1
 #define SYNTH_FADE_DELAY_ACTION_QUEUE_HANDLE 2
-#define SYNTH_FADE_DELAY_ACTION_CLEAR_MIX 3
-#define SYNTH_VOICE_SLOT_SIZE 0x404
-#define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET 0x11c
+#define SYNTH_FADE_DELAY_ACTION_CLEAR_MIX    3
+#define SYNTH_VOICE_SLOT_SIZE                0x404
+#define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET   0x11c
 
 extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
-
 
 extern void macHandle(u32 delta);
 
@@ -84,14 +83,11 @@ extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern s16 sndSin(u32 packed);
 
 extern u8* dataGetKeymap(u32 sampleId);
-extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
-                                 u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                                 u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-extern int macStart(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
-                    u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                    u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-
-
+extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol, u8 pan, u8 midi,
+                                 u8 midiSet, u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio,
+                                 u32 itd);
+extern int macStart(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+                    u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
 typedef struct SynthVoiceLfo
 {
@@ -112,11 +108,11 @@ typedef struct SynthVoiceAdsr
 typedef struct SynthHwVoice
 {
     u8 unk000[0x24];
-    u32 lastLowCallTimeHi; /* 0x024 */
-    u32 lastLowCallTimeLo; /* 0x028 */
+    u32 lastLowCallTimeHi;  /* 0x024 */
+    u32 lastLowCallTimeLo;  /* 0x028 */
     u32 lastZeroCallTimeHi; /* 0x02C */
     u32 lastZeroCallTimeLo; /* 0x030 */
-    u8* addr; /* 0x034 */
+    u8* addr;               /* 0x034 */
     u8 unk038[0xA8 - 0x38];
     u8 timeUsedByInput; /* 0x0A8 */
     u8 unk0A9[0xEC - 0xA9];
@@ -124,70 +120,70 @@ typedef struct SynthHwVoice
     u8 unk0F0[0x10C - 0xF0];
     u8 prio; /* 0x10C */
     u8 unk10D;
-    u16 ageSpeed; /* 0x10E */
-    u32 age; /* 0x110 */
-    u32 cFlagsHi; /* 0x114 */
-    u32 cFlagsLo; /* 0x118 */
+    u16 ageSpeed;      /* 0x10E */
+    u32 age;           /* 0x110 */
+    u32 cFlagsHi;      /* 0x114 */
+    u32 cFlagsLo;      /* 0x118 */
     u8 callbackActive; /* 0x11C */
-    u8 fxFlag; /* 0x11D */
-    u8 vGroup; /* 0x11E */
-    u8 studio; /* 0x11F */
-    u8 track; /* 0x120 */
-    u8 midi; /* 0x121 */
-    u8 midiSet; /* 0x122 */
+    u8 fxFlag;         /* 0x11D */
+    u8 vGroup;         /* 0x11E */
+    u8 studio;         /* 0x11F */
+    u8 track;          /* 0x120 */
+    u8 midi;           /* 0x121 */
+    u8 midiSet;        /* 0x122 */
     u8 unk123;
     u32 sInfo; /* 0x124 */
     u8 unk128[4];
-    u16 curNote; /* 0x12C */
+    u16 curNote;  /* 0x12C */
     s8 curDetune; /* 0x12E */
     u8 unk12F;
-    u8 lastNote; /* 0x130 */
-    u8 portType; /* 0x131 */
+    u8 lastNote;           /* 0x130 */
+    u8 portType;           /* 0x131 */
     u16 portLastCtrlState; /* 0x132 */
-    u32 portDuration; /* 0x134 */
-    u32 portCurPitch; /* 0x138 */
-    u32 portTime; /* 0x13C */
-    u8 vibKeyRange; /* 0x140 */
-    u8 vibCentRange; /* 0x141 */
+    u32 portDuration;      /* 0x134 */
+    u32 portCurPitch;      /* 0x138 */
+    u32 portTime;          /* 0x13C */
+    u8 vibKeyRange;        /* 0x140 */
+    u8 vibCentRange;       /* 0x141 */
     u8 unk142[2];
-    u32 vibPeriod; /* 0x144 */
-    u32 vibCurTime; /* 0x148 */
-    s32 vibCurOffset; /* 0x14C */
+    u32 vibPeriod;      /* 0x144 */
+    u32 vibCurTime;     /* 0x148 */
+    s32 vibCurOffset;   /* 0x14C */
     s16 vibModAddScale; /* 0x150 */
     u8 unk152[2];
     u32 volume; /* 0x154 */
     u8 unk158[4];
     f32 lastVolFaderScale; /* 0x15C */
-    u32 lastPan; /* 0x160 */
-    u32 lastSPan; /* 0x164 */
-    f32 treCurScale; /* 0x168 */
-    u16 treScale; /* 0x16C */
-    u16 treModAddScale; /* 0x16E */
-    u32 panning[2]; /* 0x170 */
-    u32 panDelta[2]; /* 0x178 */
-    u32 panTarget[2]; /* 0x180 */
-    u32 panTime[2]; /* 0x188 */
-    u8 revVolScale; /* 0x190 */
-    u8 revVolOffset; /* 0x191 */
-    u8 volTable; /* 0x192 */
+    u32 lastPan;           /* 0x160 */
+    u32 lastSPan;          /* 0x164 */
+    f32 treCurScale;       /* 0x168 */
+    u16 treScale;          /* 0x16C */
+    u16 treModAddScale;    /* 0x16E */
+    u32 panning[2];        /* 0x170 */
+    u32 panDelta[2];       /* 0x178 */
+    u32 panTarget[2];      /* 0x180 */
+    u32 panTime[2];        /* 0x188 */
+    u8 revVolScale;        /* 0x190 */
+    u8 revVolOffset;       /* 0x191 */
+    u8 volTable;           /* 0x192 */
     u8 unk193;
-    s32 envDelta; /* 0x194 */
-    s32 envTarget; /* 0x198 */
-    s32 envCurrent; /* 0x19C */
+    s32 envDelta;    /* 0x194 */
+    s32 envTarget;   /* 0x198 */
+    s32 envCurrent;  /* 0x19C */
     s32 sweepOff[2]; /* 0x1A0 */
     s32 sweepAdd[2]; /* 0x1A8 */
     s32 sweepCnt[2]; /* 0x1B0 */
-    u8 sweepNum[2]; /* 0x1B8 */
+    u8 sweepNum[2];  /* 0x1B8 */
     u8 unk1BA[2];
     SynthVoiceLfo lfo[2]; /* 0x1BC */
     u8 lfoUsedByInput[2]; /* 0x1D4 */
-    u8 pbLowerKeyRange; /* 0x1D6 */
-    u8 pbUpperKeyRange; /* 0x1D7 */
-    u16 pbLast; /* 0x1D8 */
+    u8 pbLowerKeyRange;   /* 0x1D6 */
+    u8 pbUpperKeyRange;   /* 0x1D7 */
+    u16 pbLast;           /* 0x1D8 */
     u8 unk1DA[2];
     SynthVoiceAdsr pitchADSR; /* 0x1DC */
-    s16 pitchADSRRange; /* 0x204 */
-    u16 curPitch; /* 0x206 */
+    s16 pitchADSRRange;       /* 0x204 */
+    u16 curPitch;             /* 0x206 */
     u8 unk208[0x214 - 0x208];
     u32 midiDirtyFlags; /* 0x214 */
     u8 unk218[0x400 - 0x218];
@@ -195,7 +191,7 @@ typedef struct SynthHwVoice
     u8 unk402[2];
 } SynthHwVoice;
 
-#define HWVOICE(i) ((SynthHwVoice*)(synthVoice + (i) * 0x404))
+#define HWVOICE(i)        ((SynthHwVoice*)(synthVoice + (i) * 0x404))
 #define HWVOICE_FLAGS(sv) (*(u64*)&(sv)->cFlagsHi)
 
 typedef struct SynthMasterFader
@@ -207,7 +203,7 @@ typedef struct SynthMasterFader
 } SynthMasterFader;
 
 #define SYNTH_MASTER_FADERS ((SynthMasterFader*)(lbl_803BCD90 + 0x5D4))
-#define SYNTH_TRACK_VOLUME (lbl_803BCD90 + 0xBD4)
+#define SYNTH_TRACK_VOLUME  (lbl_803BCD90 + 0xBD4)
 
 extern u32 voiceGetPitchRatio(u8 note, u32 sInfo);
 extern u16 voiceScaleSampleRate(u32 rate);
@@ -217,7 +213,7 @@ extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 aux
 extern void hwStart(u32 voice, u8 studio);
 extern void hwKeyOff(u32 voice);
 extern void macSetPedalState(SynthHwVoice* sv, u32 state);
-extern u32 adsrHandleLowPrecision(SynthVoiceAdsr * adsr, u16 * start, u16 * delta);
+extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
 extern u32 adsrRelease(SynthVoiceAdsr* adsr);
 extern u32 synthFlags;
 extern const f32 lbl_803E7798;
@@ -232,20 +228,19 @@ extern const f32 lbl_803E77B8;
 
 typedef struct KeymapEntry
 {
-    u16 id; /* 0x0 */
-    s8 transpose; /* 0x2 */
-    u8 panning; /* 0x3 */
+    u16 id;         /* 0x0 */
+    s8 transpose;   /* 0x2 */
+    u8 panning;     /* 0x3 */
     s16 prioOffset; /* 0x4 */
     u8 reserved[2]; /* 0x6 */
-} KeymapEntry; /* size 0x8, MP4 musyx/synthdata.h KEYMAP */
+} KeymapEntry;      /* size 0x8, MP4 musyx/synthdata.h KEYMAP */
 
 /*
  * Resolve an indirection-table sample entry, then dispatch the resolved
  * sample or nested sample group.
  */
-int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan,
-                u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag,
-                u8 vGroup, u8 studio, u32 itd)
+int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section,
+                u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd)
 {
     u32 fullKey;
     u8* keymap;
@@ -257,7 +252,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     u32 handle;
     u32 ok;
     u32 rejected;
-    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32 * rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
     if ((keymap = dataGetKeymap(id)) != 0)
@@ -336,13 +331,12 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     {
                         return handle;
                     }
-                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, kk | (fullKey & 0x80), vol,
-                                    pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
-                                    studio, itd);
+                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, kk | (fullKey & 0x80),
+                                    vol, pan, midi, midiSet, section, step, trackid, vidFlag, vGroup, studio, itd);
                 }
-                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, kk | (fullKey & 0x80), vol,
-                                             pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
-                                             studio, itd);
+                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId,
+                                             kk | (fullKey & 0x80), vol, pan, midi, midiSet, section, step, trackid,
+                                             vidFlag, vGroup, studio, itd);
             }
         }
     }
@@ -353,8 +347,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
  * Start a sample/FX id, handling direct samples, table-expanded sample
  * groups, and already-linked voice chains.
  */
-int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
-                    u8 section, u16 step, u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
+int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
+                    u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
     u32 handle;
     u32 ok;
@@ -363,14 +357,13 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
     u32 vi;
     s32 prioTmp;
     u8 pri;
-    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32 * rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
-    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
-                        u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                        u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
-                                     u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                                     u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
+    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+                        u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
+    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi,
+                                     u8 midiSet, u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio,
+                                     u32 itd);
 
     prioTmp = prio + prioOffset;
     if ((u8)prioTmp > 0xFF)
@@ -400,11 +393,11 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         {
             return handle;
         }
-        return macStart(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section,
-                        step, trackid, 1, vGroup, studio, itd);
+        return macStart(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup, studio,
+                        itd);
     case 0x4000:
-        vid = StartKeymap(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section,
-                          step, trackid, 1, vGroup, studio, itd);
+        vid = StartKeymap(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup,
+                          studio, itd);
         if (vid != 0xFFFFFFFF)
         {
             vi = vidGetInternalId(vid);
@@ -416,8 +409,8 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         }
         return vid;
     case 0x8000:
-        vid = audioLayerFn_8026f8b8(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section,
-                                    step, trackid, 1, vGroup, studio, itd);
+        vid = audioLayerFn_8026f8b8(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1,
+                                    vGroup, studio, itd);
         if (vid != 0xFFFFFFFF)
         {
             vi = vidGetInternalId(vid);
@@ -540,8 +533,7 @@ void LowPrecisionHandler(int voice)
         HWVOICE_FLAGS(sv) |= 0x200000000000ULL;
     }
 
-    if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 &&
-        adsrHandleLowPrecision(&sv->pitchADSR, &adsr_start, &adsr_delta))
+    if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrHandleLowPrecision(&sv->pitchADSR, &adsr_start, &adsr_delta))
     {
         HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
     }
@@ -636,8 +628,8 @@ void LowPrecisionHandler(int voice)
     if ((HWVOICE_FLAGS(sv) & 0x400) != 0 && (s32)((sv->portDuration - sv->portTime) >> 8) > 0)
     {
         u32 old_portCurPitch = sv->portCurPitch;
-        sv->portCurPitch += (s32)lowDeltaTime * ((s32)(ccents - sv->portCurPitch) >> 8) /
-            (s32)((sv->portDuration - sv->portTime) >> 8);
+        sv->portCurPitch +=
+            (s32)lowDeltaTime * ((s32)(ccents - sv->portCurPitch) >> 8) / (s32)((sv->portDuration - sv->portTime) >> 8);
         if ((old_portCurPitch < ccents && sv->portCurPitch < ccents) ||
             (old_portCurPitch > ccents && sv->portCurPitch > ccents))
         {
@@ -733,8 +725,8 @@ void ZeroOffsetHandler(int voice)
     HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
     faderVol = ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].pauseVol *
-            ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].volume *
-        ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->fxFlag ? 22 : 21].volume;
+               ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].volume *
+               ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->fxFlag ? 22 : 21].volume;
 
     if (sv->track != 0xFF)
     {
@@ -834,11 +826,11 @@ void ZeroOffsetHandler(int voice)
         preVol = voiceVol;
         postVol = lbl_803E77B4 * (voiceVol * vol * (f32)inpGetVolume((McmdVoiceState*)sv));
         auxa = lbl_803E7798 * (f32)sv->revVolOffset +
-        (lbl_803E77B4 * (preVol * (f32)inpGetPreAuxA((McmdVoiceState*)sv)) +
-            lbl_803E7798 * ((f32)sv->revVolScale * (lbl_803E77B4 * (postVol * (f32)
-                inpGetReverb((McmdVoiceState*)sv)))));
+               (lbl_803E77B4 * (preVol * (f32)inpGetPreAuxA((McmdVoiceState*)sv)) +
+                lbl_803E7798 *
+                    ((f32)sv->revVolScale * (lbl_803E77B4 * (postVol * (f32)inpGetReverb((McmdVoiceState*)sv)))));
         auxb = lbl_803E77B4 * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
-            lbl_803E77B4 * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
+               lbl_803E77B4 * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
         sv->curOutputVolume = (u16)(lbl_803E77B8 * postVol);
         hwSetVolume(voice, sv->volTable, postVol, sv->lastPan, sv->lastSPan, auxa, auxb);
     }
@@ -1046,8 +1038,7 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
         SynthDelayedNode* next = node->next;
         node->bucketIndex = 0xff;
         {
-            if (*(u8*)(node->voiceIndex * SYNTH_VOICE_SLOT_SIZE + synthVoice +
-                SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0)
+            if (*(u8*)(node->voiceIndex * SYNTH_VOICE_SLOT_SIZE + synthVoice + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0)
             {
                 callback(node->voiceIndex);
             }
@@ -1130,7 +1121,8 @@ void audioFn_80271498(u32 delta)
                         {
                             fade[0] = fade[1];
                             synthDispatchFadeAction((SynthFade*)fade);
-                            if (((synthMasterFaderActiveFlags &= ~mask) == 0) && (synthMasterFaderPauseActiveFlags == 0))
+                            if (((synthMasterFaderActiveFlags &= ~mask) == 0) &&
+                                (synthMasterFaderPauseActiveFlags == 0))
                             {
                                 break;
                             }
@@ -1144,7 +1136,8 @@ void audioFn_80271498(u32 delta)
                         if (fadeDelta <= zeroThreshold)
                         {
                             fade[5] = fade[6];
-                            if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) && (synthMasterFaderActiveFlags == 0))
+                            if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) &&
+                                (synthMasterFaderActiveFlags == 0))
                             {
                                 break;
                             }
@@ -1166,8 +1159,7 @@ void audioFn_80271498(u32 delta)
                 {
                     for (channel = 0; channel < 4; channel++)
                     {
-                        auxSamplesA[channel] =
-                            inpGetAuxA(i, channel, *auxAIndex, *auxAMIDI);
+                        auxSamplesA[channel] = inpGetAuxA(i, channel, *auxAIndex, *auxAMIDI);
                     }
                     (*auxACallback)(1, auxSamplesA, ((u32*)(stateBase + 0xc14))[i]);
                 }
@@ -1175,8 +1167,7 @@ void audioFn_80271498(u32 delta)
                 {
                     for (channel = 0; channel < 4; channel++)
                     {
-                        auxSamplesB[channel] =
-                            inpGetAuxB(i, channel, *auxBIndex, *auxBMIDI);
+                        auxSamplesB[channel] = inpGetAuxB(i, channel, *auxBIndex, *auxBMIDI);
                     }
                     (*auxBCallback)(1, auxSamplesB, ((u32*)(stateBase + 0xc54))[i]);
                 }
@@ -1227,9 +1218,8 @@ int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
         {
             pan = sampleInfo->defaultPan;
         }
-        handle = synthStartSound(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity,
-                                 sampleInfo->flags | 0x80, volume, pan, 0xff, 0xff, 0, 0, 0xff,
-                                 sampleInfo->auxIndex, 0, studio, studioAux);
+        handle = synthStartSound(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity, sampleInfo->flags | 0x80,
+                                 volume, pan, 0xff, 0xff, 0, 0, 0xff, sampleInfo->auxIndex, 0, studio, studioAux);
     }
     return handle;
 }

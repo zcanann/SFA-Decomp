@@ -45,36 +45,37 @@ extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
 extern OSMessage lbl_803DD67C;
 
-typedef struct AttractMovieControl {
+typedef struct AttractMovieControl
+{
     u8 pad000[0x560];
-    u32 readBufBegin;     /* 0x560 */
-    u32 readBufEnd;       /* 0x564 */
+    u32 readBufBegin; /* 0x560 */
+    u32 readBufEnd;   /* 0x564 */
     u8 pad568[0x5f0 - 0x568];
-    u32 movieCount;       /* 0x5f0 */
-    u32 firstMovieSize;   /* 0x5f4 */
-    s32 initReadSize;     /* 0x5f8 */
+    u32 movieCount;     /* 0x5f0 */
+    u32 firstMovieSize; /* 0x5f4 */
+    s32 initReadSize;   /* 0x5f8 */
     u8 pad5fc[0x600 - 0x5fc];
-    u32 offsetTable;      /* 0x600 */
-    u32 dataOffset;       /* 0x604 */
+    u32 offsetTable; /* 0x600 */
+    u32 dataOffset;  /* 0x604 */
     u8 pad608[0x638 - 0x608];
-    s32 enabled;          /* 0x638 */
-    u8 isPrepared;        /* 0x63c */
-    u8 field63d;          /* 0x63d */
-    u8 playFlags;         /* 0x63e */
-    u8 audioExists;       /* 0x63f */
+    s32 enabled;    /* 0x638 */
+    u8 isPrepared;  /* 0x63c */
+    u8 field63d;    /* 0x63d */
+    u8 playFlags;   /* 0x63e */
+    u8 audioExists; /* 0x63f */
     u8 pad640[0x648 - 0x640];
-    s32 preloaded;        /* 0x648 */
-    void* loopFrame;      /* 0x64c */
-    u32 frameOffset;      /* 0x650 */
-    u32 frameSize;        /* 0x654 */
-    u32 movieIndex;       /* 0x658 */
+    s32 preloaded;   /* 0x648 */
+    void* loopFrame; /* 0x64c */
+    u32 frameOffset; /* 0x650 */
+    u32 frameSize;   /* 0x654 */
+    u32 movieIndex;  /* 0x658 */
     u8 pad65c[0x670 - 0x65c];
-    u32 field670;         /* 0x670 */
+    u32 field670; /* 0x670 */
     u8 pad674[0x684 - 0x674];
-    u32 field684;         /* 0x684 */
-    u32 field688;         /* 0x688 */
-    u32 field68c;         /* 0x68c */
-    u32 field690;         /* 0x690 */
+    u32 field684; /* 0x684 */
+    u32 field688; /* 0x688 */
+    u32 field68c; /* 0x68c */
+    u32 field690; /* 0x690 */
 } AttractMovieControl;
 
 STATIC_ASSERT(offsetof(AttractMovieControl, readBufBegin) == 0x560);
@@ -89,7 +90,8 @@ STATIC_ASSERT(offsetof(AttractMovieControl, field684) == 0x684);
 STATIC_ASSERT(offsetof(AttractMovieControl, field690) == 0x690);
 
 /* playFlags bits (shared by AttractMoviePlayer and AttractMovieControl) */
-enum {
+enum
+{
     THP_PLAY_LOOP = 1,
     THP_PLAY_EVEN_FIELD = 2,
     THP_PLAY_ODD_FIELD = 4
@@ -123,8 +125,7 @@ void PlayControl(void)
         return;
     }
 
-    if ((lbl_803A5D60.retraceCount == 0) &&
-        ((lbl_803A5D60.internalState == 0) || (lbl_803A5D60.internalState == 4)))
+    if ((lbl_803A5D60.retraceCount == 0) && ((lbl_803A5D60.internalState == 0) || (lbl_803A5D60.internalState == 4)))
     {
         lbl_803A5D60.internalState = 2;
     }
@@ -222,15 +223,11 @@ void PlayControl(void)
     {
         if (lbl_803A5D60.audioExists != 0)
         {
-            modResult = (lbl_803A5D60.curVideoNumber + lbl_803A5D60.initReadFrame) %
-                lbl_803A5D60.header.mNumFrames;
-            if ((modResult == (lbl_803A5D60.header.mNumFrames - 1)) &&
-                (lbl_803A5D60.dispTextureSet == NULL))
+            modResult = (lbl_803A5D60.curVideoNumber + lbl_803A5D60.initReadFrame) % lbl_803A5D60.header.mNumFrames;
+            if ((modResult == (lbl_803A5D60.header.mNumFrames - 1)) && (lbl_803A5D60.dispTextureSet == NULL))
             {
-                modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-                    lbl_803A5D60.header.mNumFrames;
-                if ((modResult == (lbl_803A5D60.header.mNumFrames - 1)) &&
-                    (decodedTexture == NULL))
+                modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) % lbl_803A5D60.header.mNumFrames;
+                if ((modResult == (lbl_803A5D60.header.mNumFrames - 1)) && (decodedTexture == NULL))
                 {
                     lbl_803A5D60.internalState = 3;
                     lbl_803A5D60.state = 3;
@@ -241,7 +238,7 @@ void PlayControl(void)
         {
             u32 numFrames;
             modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-                (numFrames = lbl_803A5D60.header.mNumFrames);
+                        (numFrames = lbl_803A5D60.header.mNumFrames);
             if ((modResult == (numFrames - 1)) && (decodedTexture == NULL))
             {
                 lbl_803A5D60.internalState = 3;
@@ -252,8 +249,8 @@ void PlayControl(void)
     else
     {
         u32 numFrames;
-        modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-            (numFrames = lbl_803A5D60.header.mNumFrames);
+        modResult =
+            (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) % (numFrames = lbl_803A5D60.header.mNumFrames);
         if (modResult == (numFrames - 1))
         {
             gAttractMovieLoopCompleted = 1;
@@ -296,8 +293,7 @@ void THPPlayerStop(void)
 
 BOOL THPPlayerPlay(void)
 {
-    if ((lbl_803A5D60.isOpen != 0) &&
-        ((lbl_803A5D60.state == 1) || (lbl_803A5D60.state == 4)))
+    if ((lbl_803A5D60.isOpen != 0) && ((lbl_803A5D60.state == 1) || (lbl_803A5D60.state == 4)))
     {
         lbl_803A5D60.state = 2;
         lbl_803A5D60.prevCount = 0;
@@ -321,90 +317,88 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
 
     if (ctrl->enabled != 0 && ctrl->isPrepared == 0)
     {
-    if ((s32)movieIndex > 0)
-    {
-        u32 offsetTable = ctrl->offsetTable;
+        if ((s32)movieIndex > 0)
+        {
+            u32 offsetTable = ctrl->offsetTable;
 
-        if (offsetTable == 0)
-        {
-            return FALSE;
-        }
-        if (ctrl->movieCount > movieIndex)
-        {
-            if (DVDRead((DVDFileInfo*)(base + 0x5a0), base + 0x560, 0x20,
-                        offsetTable + ((movieIndex - 1) * sizeof(u32))) < 0)
+            if (offsetTable == 0)
             {
                 return FALSE;
             }
+            if (ctrl->movieCount > movieIndex)
+            {
+                if (DVDRead((DVDFileInfo*)(base + 0x5a0), base + 0x560, 0x20,
+                            offsetTable + ((movieIndex - 1) * sizeof(u32))) < 0)
+                {
+                    return FALSE;
+                }
 
-            ctrl->frameOffset = ctrl->dataOffset + ctrl->readBufBegin;
-            ctrl->movieIndex = movieIndex;
-            ctrl->frameSize = ctrl->readBufEnd - ctrl->readBufBegin;
+                ctrl->frameOffset = ctrl->dataOffset + ctrl->readBufBegin;
+                ctrl->movieIndex = movieIndex;
+                ctrl->frameSize = ctrl->readBufEnd - ctrl->readBufBegin;
+            }
+            else
+            {
+                return FALSE;
+            }
         }
         else
         {
-            return FALSE;
+            ctrl->frameOffset = ctrl->dataOffset;
+            ctrl->frameSize = ctrl->firstMovieSize;
+            ctrl->movieIndex = movieIndex;
         }
-    }
-    else
-    {
-        ctrl->frameOffset = ctrl->dataOffset;
-        ctrl->frameSize = ctrl->firstMovieSize;
-        ctrl->movieIndex = movieIndex;
-    }
 
-    ctrl->playFlags = playFlags;
-    ctrl->field670 = 0;
+        ctrl->playFlags = playFlags;
+        ctrl->field670 = 0;
 
-    if (ctrl->preloaded != 0)
-    {
-        if (DVDRead((DVDFileInfo*)(base + 0x5a0), ctrl->loopFrame,
-                    ctrl->initReadSize, ctrl->dataOffset) < 0)
+        if (ctrl->preloaded != 0)
         {
-            return FALSE;
+            if (DVDRead((DVDFileInfo*)(base + 0x5a0), ctrl->loopFrame, ctrl->initReadSize, ctrl->dataOffset) < 0)
+            {
+                return FALSE;
+            }
+            startOffset = ((s32)ctrl->loopFrame + ctrl->frameOffset) - ctrl->dataOffset;
+            CreateVideoDecodeThread(0xf, (void*)startOffset);
+            if (ctrl->audioExists != 0)
+            {
+                CreateAudioDecodeThread(0xc, (void*)startOffset);
+            }
         }
-        startOffset = ((s32)ctrl->loopFrame + ctrl->frameOffset) -
-            ctrl->dataOffset;
-        CreateVideoDecodeThread(0xf, (void*)startOffset);
+        else
+        {
+            CreateVideoDecodeThread(0xf, NULL);
+            if (ctrl->audioExists != 0)
+            {
+                CreateAudioDecodeThread(0xc, NULL);
+            }
+            CreateReadThread(8);
+        }
+
+        InitAllMessageQueue();
+        VideoDecodeThreadStart();
         if (ctrl->audioExists != 0)
         {
-            CreateAudioDecodeThread(0xc, (void*)startOffset);
+            AudioDecodeThreadStart();
         }
-    }
-    else
-    {
-        CreateVideoDecodeThread(0xf, NULL);
-        if (ctrl->audioExists != 0)
+        if (ctrl->preloaded == 0)
         {
-            CreateAudioDecodeThread(0xc, NULL);
+            ReadThreadStart();
         }
-        CreateReadThread(8);
-    }
 
-    InitAllMessageQueue();
-    VideoDecodeThreadStart();
-    if (ctrl->audioExists != 0)
-    {
-        AudioDecodeThreadStart();
-    }
-    if (ctrl->preloaded == 0)
-    {
-        ReadThreadStart();
-    }
-
-    OSReceiveMessage((OSMessageQueue*)(base + 0x52c), (OSMessage*)&readyMsg, OS_MESSAGE_BLOCK);
-    if (readyMsg == 0)
-    {
-        return FALSE;
-    }
-    ctrl->isPrepared = 1;
-    ctrl->field63d = 0;
-    ctrl->field68c = 0;
-    ctrl->field690 = 0;
-    ctrl->field684 = 0;
-    ctrl->field688 = 0;
-    lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
-    return TRUE;
+        OSReceiveMessage((OSMessageQueue*)(base + 0x52c), (OSMessage*)&readyMsg, OS_MESSAGE_BLOCK);
+        if (readyMsg == 0)
+        {
+            return FALSE;
+        }
+        ctrl->isPrepared = 1;
+        ctrl->field63d = 0;
+        ctrl->field68c = 0;
+        ctrl->field690 = 0;
+        ctrl->field684 = 0;
+        ctrl->field688 = 0;
+        lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
+        return TRUE;
     }
     return FALSE;
 }
@@ -434,8 +428,7 @@ void InitAllMessageQueue(void)
     {
         PushFreeTextureSet((OSMessage)&buf->textureSet[i]);
         i++;
-    }
-    while (i < 3);
+    } while (i < 3);
 
     if (lbl_803A5D60.audioExists != 0)
     {
@@ -444,8 +437,7 @@ void InitAllMessageQueue(void)
         {
             PushFreeAudioBuffer((OSMessage)&buf->audioBuffer[i]);
             i++;
-        }
-        while (i < 3);
+        } while (i < 3);
     }
 
     OSInitMessageQueue(&lbl_803A5CEC, &lbl_803DD67C, 1);

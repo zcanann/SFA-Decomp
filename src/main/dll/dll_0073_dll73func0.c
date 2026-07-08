@@ -119,8 +119,7 @@ void dll_73_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[8].flags = 0x15;
     e[8].tex = &base[432];
     e[8].mode = 8;
-    e[8].x = (f32)(int)
-    randomGetRange(0x64, 0xff);
+    e[8].x = (f32)(int)randomGetRange(0x64, 0xff);
     e[8].y = lbl_803E0B98;
     e[8].z = lbl_803E0B98;
     e[9].layer = 2;
@@ -134,8 +133,7 @@ void dll_73_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[10].flags = 0x15;
     e[10].tex = &base[432];
     e[10].mode = 8;
-    e[10].x = (f32)(int)
-    randomGetRange(0x64, 0xff);
+    e[10].x = (f32)(int)randomGetRange(0x64, 0xff);
     e[10].y = lbl_803E0B98;
     e[10].z = lbl_803E0B98;
     e[11].layer = 3;

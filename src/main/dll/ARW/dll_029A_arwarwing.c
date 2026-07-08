@@ -39,11 +39,11 @@
 #define ARWARWING_OBJFLAG_PARENT_SLACK 0x1000
 
 #define ARWARWING_CHILD_OBJ_LASERSHOT 0x604
-#define ARWARWING_CHILD_OBJ_THRUSTER 0x6de
-#define ARWARWING_CHILD_OBJ_BOMB 0x608
+#define ARWARWING_CHILD_OBJ_THRUSTER  0x6de
+#define ARWARWING_CHILD_OBJ_BOMB      0x608
 
 /* Damage partfx emitted in arwarwing_emitDamageEffects, keyed on health. */
-#define ARWARWING_PARTFX_DAMAGE 0x7d0   /* health <= 4, every other frame */
+#define ARWARWING_PARTFX_DAMAGE   0x7d0 /* health <= 4, every other frame */
 #define ARWARWING_PARTFX_CRITICAL 0x7d1 /* health <= 2 (critical) */
 
 /* cross-map destination: Krazoa shrine (0xb) map-event advanced (act 5)
@@ -51,10 +51,10 @@
 #define ARWARWING_MAPEVENT_SHRINE 0xb
 
 /* ArwingState.flags477 bits */
-#define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
-#define ARWING_FLAG_ROLL_LEFT  0x2   /* barrel-rolling left */
-#define ARWING_FLAG_ROLL_RIGHT 0x4   /* barrel-rolling right */
-#define ARWING_FLAG_ROLLING    0x6   /* ROLL_LEFT | ROLL_RIGHT */
+#define ARWING_FLAG_ACTIVE     0x1 /* Arwing is active / engaged */
+#define ARWING_FLAG_ROLL_LEFT  0x2 /* barrel-rolling left */
+#define ARWING_FLAG_ROLL_RIGHT 0x4 /* barrel-rolling right */
+#define ARWING_FLAG_ROLLING    0x6 /* ROLL_LEFT | ROLL_RIGHT */
 
 typedef struct ArwarwingState
 {
@@ -115,11 +115,20 @@ enum
     ARWING_MODE_WARPOUT = 6
 };
 
-int getArwing(void) { return gArwing; }
+int getArwing(void)
+{
+    return gArwing;
+}
 
-int arwarwing_getExtraSize(void) { return 0x498; }
+int arwarwing_getExtraSize(void)
+{
+    return 0x498;
+}
 
-int arwarwing_getObjectTypeId(void) { return 0; }
+int arwarwing_getObjectTypeId(void)
+{
+    return 0;
+}
 
 #pragma scheduling off
 void arwarwing_free(int obj)
@@ -152,10 +161,8 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
 
     if (state->hitShake != 0)
     {
-        dx = (int)(lbl_803E6FF4 *
-            mathSinf(lbl_803E6EFC * (f32)*(u16*)&state->shakePitch / lbl_803E6F00));
-        dy = (int)(lbl_803E6F5C *
-            mathSinf(lbl_803E6EFC * (f32)*(u16*)&state->shakeYaw / lbl_803E6F00));
+        dx = (int)(lbl_803E6FF4 * mathSinf(lbl_803E6EFC * (f32) * (u16*)&state->shakePitch / lbl_803E6F00));
+        dy = (int)(lbl_803E6F5C * mathSinf(lbl_803E6EFC * (f32) * (u16*)&state->shakeYaw / lbl_803E6F00));
         ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY + dx);
         ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + dy);
     }
@@ -187,8 +194,7 @@ void arwarwing_hitDetect(int obj)
             f32 posY = *(volatile f32*)&pos[1];
             fn_8008020C((s16)(0x8000 - ((GameObject*)obj)->anim.rotX + state->aimYaw),
                         (s16)(((GameObject*)obj)->anim.rotY + state->aimPitch),
-                        (s16)(((GameObject*)obj)->anim.rotZ + state->aimRoll),
-                        pos[0], posY, pos[2], lbl_803E6FF8);
+                        (s16)(((GameObject*)obj)->anim.rotZ + state->aimRoll), pos[0], posY, pos[2], lbl_803E6FF8);
         }
     }
 }
@@ -200,10 +206,16 @@ void arwarwing_setFlightHalfWidth(int arwing, f32 width)
     (*(ArwingState**)&((GameObject*)arwing)->extra)->flightHalfWidth = width;
 }
 
-int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur; }
+int arwarwing_getRotY(int arwing)
+{
+    return (s16)(*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur;
+}
 
 #pragma scheduling off
-void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur = (s16)rotY; }
+void arwarwing_setRotY(int arwing, int rotY)
+{
+    (*(ArwingState**)&((GameObject*)arwing)->extra)->rotYCur = (s16)rotY;
+}
 #pragma scheduling reset
 
 void arwarwing_getVelocity(int out, int arwing)
@@ -226,7 +238,10 @@ void arwarwing_addVelocity(int arwing, int in)
 }
 
 #pragma scheduling off
-void arwarwing_clearActiveBomb(int arwing) { (*(ArwingState**)&((GameObject*)arwing)->extra)->activeBombObj = 0; }
+void arwarwing_clearActiveBomb(int arwing)
+{
+    (*(ArwingState**)&((GameObject*)arwing)->extra)->activeBombObj = 0;
+}
 #pragma scheduling reset
 
 int arwarwing_getRequiredRingCount(int arwing)
@@ -270,11 +285,20 @@ int arwarwing_getScore(int arwing)
 }
 #pragma peephole reset
 
-int arwarwing_getBombCount(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->bombCount; }
+int arwarwing_getBombCount(int arwing)
+{
+    return (*(ArwingState**)&((GameObject*)arwing)->extra)->bombCount;
+}
 
-int arwarwing_getMaxHealth(int arwing) { return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->maxHealth; }
+int arwarwing_getMaxHealth(int arwing)
+{
+    return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->maxHealth;
+}
 
-int arwarwing_getHealth(int arwing) { return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->health; }
+int arwarwing_getHealth(int arwing)
+{
+    return *(s8*)&(*(ArwingState**)&((GameObject*)arwing)->extra)->health;
+}
 
 int arwarwing_incrementPickup6DACount(int arwing)
 {
@@ -535,8 +559,7 @@ void arwarwing_update(int obj)
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
-        ((ArwingState*)state)->rotZCur =
-            (int)(lbl_803E6F6C * timeDelta + (f32)((ArwingState*)state)->rotZCur);
+        ((ArwingState*)state)->rotZCur = (int)(lbl_803E6F6C * timeDelta + (f32)((ArwingState*)state)->rotZCur);
         ((GameObject*)obj)->anim.rotZ = (s16)((ArwingState*)state)->rotZCur;
         ((ArwingState*)state)->velY = ((ArwingState*)state)->velY - lbl_803E6EF8 * timeDelta;
         objMove(obj, ((ArwingState*)state)->velX * timeDelta, ((ArwingState*)state)->velY * timeDelta,
@@ -558,9 +581,9 @@ void arwarwing_update(int obj)
         else
         {
             ((GameObject*)((ArwingState*)state)->thrusterL)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            throttle = lbl_803E6FFC * timeDelta +
-                (f32)(u32)((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha;
-            if (throttle > lbl_803E7000) throttle = lbl_803E7000;
+            throttle = lbl_803E6FFC * timeDelta + (f32)(u32)((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha;
+            if (throttle > lbl_803E7000)
+                throttle = lbl_803E7000;
             ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = throttle;
             ((GameObject*)((ArwingState*)state)->thrusterR)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((GameObject*)((ArwingState*)state)->thrusterR)->anim.alpha = throttle;
@@ -568,13 +591,12 @@ void arwarwing_update(int obj)
         ((ArwingState*)state)->velTargetX = -((ArwingState*)state)->stickX * ((ArwingState*)state)->maxSpeedX;
         ((ArwingState*)state)->velTargetY = -((ArwingState*)state)->stickY * ((ArwingState*)state)->maxSpeedY;
         ((ArwingState*)state)->velTargetZ = ((ArwingState*)state)->maxSpeedZ * ((ArwingState*)state)->speedScaleZ;
-        ((ArwingState*)state)->rotXTarget =
-            (int)(-((ArwingState*)state)->stickX * ((ArwingState*)state)->rotXRange);
+        ((ArwingState*)state)->rotXTarget = (int)(-((ArwingState*)state)->stickX * ((ArwingState*)state)->rotXRange);
         ((ArwingState*)state)->rotYTarget = (int)(((ArwingState*)state)->stickY * ((ArwingState*)state)->rotYRange);
         ((ArwingState*)state)->rotZTarget = (int)(((ArwingState*)state)->stickX * ((ArwingState*)state)->rotZRange);
         ((ArwingState*)state)->rotZTrimTarget =
             (int)(((ArwingState*)state)->rotZTrimRange *
-                (((ArwingState*)state)->lTriggerTrim + ((ArwingState*)state)->rTriggerTrim));
+                  (((ArwingState*)state)->lTriggerTrim + ((ArwingState*)state)->rTriggerTrim));
         arwarwing_updateFlightPhysics(obj, state);
         arwarwing_updateWeaponFire(obj, state);
         arwarwing_updateBombFire(obj, state);
@@ -595,28 +617,28 @@ void arwarwing_update(int obj)
         *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = wingRot;
 
         wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[0] + 0) = wingRot;
         wingRot = (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
         *(s16*)(((ArwingState*)state)->wingVec[0] + 4) = wingRot;
         wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[1] + 0) = wingRot;
         wingRot = (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
         *(s16*)(((ArwingState*)state)->wingVec[1] + 4) = wingRot;
         wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[2] + 0) = wingRot;
         wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
         *(s16*)(((ArwingState*)state)->wingVec[2] + 4) = wingRot;
         wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
+                        (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = wingRot;
         wingRot = (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                  (f32) * (s16*)((vv = ((ArwingState*)state)->wingVec[3]) + 4));
+                        (f32) * (s16*)((vv = ((ArwingState*)state)->wingVec[3]) + 4));
         *(s16*)(vv + 4) = wingRot;
     }
 
@@ -655,7 +677,8 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         arwarwinggu_setActiveVisible(((ArwingState*)state)->gunObjR, 1, level == 2);
     }
     {
-        ArwArwingProjectileSetup* setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_LASERSHOT);
+        ArwArwingProjectileSetup* setup =
+            (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_LASERSHOT);
         setup->posX = px;
         setup->posY = py;
         setup->posZ = pz;
@@ -720,9 +743,15 @@ int arwarwing_isExplodingOrWarping(int arwing)
 }
 #pragma scheduling reset
 
-int arwarwing_isBarrelRolling(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_BARRELROLL; }
+int arwarwing_isBarrelRolling(int arwing)
+{
+    return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_BARRELROLL;
+}
 
-int arwarwing_isDead(int arwing) { return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_DEAD; }
+int arwarwing_isDead(int arwing)
+{
+    return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_DEAD;
+}
 
 #pragma peephole off
 #pragma scheduling off
@@ -734,7 +763,8 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
-    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && mainGetBit(GAMEBIT_ArwingRelated09D6) == 0 && mainGetBit(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED) == 0)
+    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && mainGetBit(GAMEBIT_ArwingRelated09D6) == 0 &&
+        mainGetBit(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED) == 0)
     {
         sum = lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ);
         vol = (f32)(sum * lbl_803E6F50);
@@ -819,11 +849,12 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         ((ArwingState*)state)->rollRegenDelay = lbl_803E6F38;
     }
 
-    ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergy < lbl_803E6ECC
-                                            ? lbl_803E6ECC
-                                            : ((ArwingState*)state)->rollEnergy > ((ArwingState*)state)->rollEnergyMax
-                                            ? ((ArwingState*)state)->rollEnergyMax
-                                            : ((ArwingState*)state)->rollEnergy;
+    ((ArwingState*)state)->rollEnergy =
+        ((ArwingState*)state)
+                ->rollEnergy<lbl_803E6ECC ? lbl_803E6ECC : ((ArwingState*)state)->rollEnergy>((ArwingState*)state)
+                ->rollEnergyMax
+            ? ((ArwingState*)state)->rollEnergyMax
+            : ((ArwingState*)state)->rollEnergy;
 
     {
         f32 zero;
@@ -852,7 +883,10 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_clearAimSnapshot(int obj) { (*(ArwingState**)&((GameObject*)obj)->extra)->aimSnapshotValid = 0; }
+void arwarwing_clearAimSnapshot(int obj)
+{
+    (*(ArwingState**)&((GameObject*)obj)->extra)->aimSnapshotValid = 0;
+}
 #pragma scheduling reset
 
 #pragma peephole off
@@ -939,9 +973,8 @@ void arwarwing_initAttachments(int obj, int state)
                 modelLightStruct_setDiffuseTargetColor(((ArwingState*)state)->light, 0x14, 0x64, 0xc8, 0);
             }
         }
-        if (*(void**)&((ArwingState*)state)->escortObj != 0 && *(void**)&((ArwingState*)state)->bombObj != 0 && *(void*
-                *)&((ArwingState*)state)->gunObjL != 0 &&
-            *(void**)&((ArwingState*)state)->gunObjR != 0)
+        if (*(void**)&((ArwingState*)state)->escortObj != 0 && *(void**)&((ArwingState*)state)->bombObj != 0 &&
+            *(void**)&((ArwingState*)state)->gunObjL != 0 && *(void**)&((ArwingState*)state)->gunObjR != 0)
         {
             found = 1;
         }
@@ -1148,10 +1181,8 @@ void arwarwing_handlePathDamage(int obj, int state)
     }
     else
     {
-        ((ArwingState*)state)->shakeYaw =
-            lbl_803E6F3C * timeDelta + (f32)*(u16*)&((ArwingState*)state)->shakeYaw;
-        ((ArwingState*)state)->shakePitch =
-            lbl_803E6F40 * timeDelta + (f32)*(u16*)&((ArwingState*)state)->shakePitch;
+        ((ArwingState*)state)->shakeYaw = lbl_803E6F3C * timeDelta + (f32) * (u16*)&((ArwingState*)state)->shakeYaw;
+        ((ArwingState*)state)->shakePitch = lbl_803E6F40 * timeDelta + (f32) * (u16*)&((ArwingState*)state)->shakePitch;
     }
 }
 #pragma scheduling reset
@@ -1251,25 +1282,25 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 8:
-            {
-                int cam = Camera_GetCurrentViewSlot();
-                ((ArwingState*)state)->aimOffsetX = *(f32*)(cam + 0xc) - ((GameObject*)obj)->anim.localPosX;
-                ((ArwingState*)state)->aimOffsetY = *(f32*)(cam + 0x10) - ((GameObject*)obj)->anim.localPosY;
-                ((ArwingState*)state)->aimOffsetZ = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-                ((ArwingState*)state)->aimYaw = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)(cam + 0);
-                if (((ArwingState*)state)->aimYaw > 32768)
-                    ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw - 65535;
-                if (((ArwingState*)state)->aimYaw < -32768)
-                    ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw + 65535;
-                ((ArwingState*)state)->aimPitch = ((GameObject*)obj)->anim.rotY - (u16) * (s16*)(cam + 2);
-                if (((ArwingState*)state)->aimPitch > 32768)
-                    ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch - 65535;
-                if (((ArwingState*)state)->aimPitch < -32768)
-                    ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch + 65535;
-                ((ArwingState*)state)->aimRoll = *(s16*)(cam + 4) - ((GameObject*)obj)->anim.rotZ;
-                ((ArwingState*)state)->aimSnapshotValid = 1;
-                break;
-            }
+        {
+            int cam = Camera_GetCurrentViewSlot();
+            ((ArwingState*)state)->aimOffsetX = *(f32*)(cam + 0xc) - ((GameObject*)obj)->anim.localPosX;
+            ((ArwingState*)state)->aimOffsetY = *(f32*)(cam + 0x10) - ((GameObject*)obj)->anim.localPosY;
+            ((ArwingState*)state)->aimOffsetZ = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+            ((ArwingState*)state)->aimYaw = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)(cam + 0);
+            if (((ArwingState*)state)->aimYaw > 32768)
+                ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw - 65535;
+            if (((ArwingState*)state)->aimYaw < -32768)
+                ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw + 65535;
+            ((ArwingState*)state)->aimPitch = ((GameObject*)obj)->anim.rotY - (u16) * (s16*)(cam + 2);
+            if (((ArwingState*)state)->aimPitch > 32768)
+                ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch - 65535;
+            if (((ArwingState*)state)->aimPitch < -32768)
+                ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch + 65535;
+            ((ArwingState*)state)->aimRoll = *(s16*)(cam + 4) - ((GameObject*)obj)->anim.rotZ;
+            ((ArwingState*)state)->aimSnapshotValid = 1;
+            break;
+        }
         case 9:
             ((ArwingState*)state)->aimSnapshotValid = 0;
             break;
@@ -1291,7 +1322,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ArwArwingProjectileSetup*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 ((ArwArwingProjectileSetup*)setup)->field04 = 1;
                 ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-                loaded = ((int(*)(int,int))loadObjectAtObject)(obj, setup);
+                loaded = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
                 if ((void*)loaded != 0)
                     arwbombcoll_setLifetime(loaded, 0x12c);
             }
@@ -1443,11 +1474,10 @@ void arwarwing_init(int obj)
 #pragma scheduling reset
 
 int gArwingPathSetupData[30] = {
-    0, 0, 0, 1103626240, -1073741824, -1038090240,
-    -1043857408, -1073741824, -1038090240, 0, 0, 1110179840,
-    1095761920, 0, -1049624576, -1051721728, 0, -1049624576,
-    1102577664, 0, -1041235968, -1044905984, 0, -1041235968,
-    1095761920, 1097859072, -1044381696, -1051721728, 1097859072, -1044381696,
+    0,           0,           0,           1103626240,  -1073741824, -1038090240, -1043857408, -1073741824,
+    -1038090240, 0,           0,           1110179840,  1095761920,  0,           -1049624576, -1051721728,
+    0,           -1049624576, 1102577664,  0,           -1041235968, -1044905984, 0,           -1041235968,
+    1095761920,  1097859072,  -1044381696, -1051721728, 1097859072,  -1044381696,
 };
 
 int sArwingPathName[] = {

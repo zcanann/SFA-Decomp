@@ -19,9 +19,9 @@
 typedef struct DrlightbeaPlacement
 {
     u8 pad0[0x19 - 0x0];
-    s8 targetId;   /* 0x19: placed-object target id, or 0 to use the player */
+    s8 targetId; /* 0x19: placed-object target id, or 0 to use the player */
     u8 pad1A[0x20 - 0x1A];
-    s16 gameBit;   /* 0x20: enables the beam while set */
+    s16 gameBit; /* 0x20: enables the beam while set */
     u8 pad22[0x28 - 0x22];
 } DrlightbeaPlacement;
 
@@ -33,9 +33,15 @@ typedef struct DrLightBeaState
     DrLightBeaFlags flags;   /* 0x04 */
 } DrLightBeaState;
 
-int DR_LightBea_getExtraSize(void) { return 0xc; }
+int DR_LightBea_getExtraSize(void)
+{
+    return 0xc;
+}
 
-int DR_LightBea_getObjectTypeId(void) { return 0; }
+int DR_LightBea_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void DR_LightBea_free(int obj)
 {
@@ -111,8 +117,8 @@ void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5)
                 targetPos[1] = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
                 targetPos[2] = ((GameObject*)player)->anim.localPosZ;
             }
-            state->handle = (LightningEffect*)lightningCreate(sourcePos, targetPos, lbl_803E6BBC,
-                                                              lbl_803E6BC0, randomGetRange(5, 0xf), 0x60, 0);
+            state->handle = (LightningEffect*)lightningCreate(sourcePos, targetPos, lbl_803E6BBC, lbl_803E6BC0,
+                                                              randomGetRange(5, 0xf), 0x60, 0);
         }
     }
 }

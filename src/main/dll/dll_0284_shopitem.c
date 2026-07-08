@@ -22,19 +22,19 @@
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/sfa_shared_decls.h"
 
-#define SHOPITEM_OBJGROUP 0x4F
+#define SHOPITEM_OBJGROUP        0x4F
 #define SHOPITEM_TARGET_OBJGROUP 9
 
 #define SHOPITEM_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define SHOPITEM_OBJFLAG_UPDATE_DISABLED 0x8000
-#define PAD_BUTTON_A 0x100
+#define SHOPITEM_OBJFLAG_UPDATE_DISABLED    0x8000
+#define PAD_BUTTON_A                        0x100
 
 /* anim.seqId variants selecting per-item behaviour (see file header) */
 #define SHOPITEM_MSG_IN_RANGE 0x7000a /* sent to player when purchase is offered */
-#define SHOPITEM_SEQ_AMBIENT   0x462 /* spawns an ambient particle fx on init */
-#define SHOPITEM_SEQ_STATIC    0x464 /* static item, no spline advance */
-#define SHOPITEM_SEQ_BSPLINE   0x467 /* rides a B-spline path with trailing particles */
-#define SHOPITEM_SEQ_SPARKLE   0x468 /* sparkle/lightning item with custom post-render pass */
+#define SHOPITEM_SEQ_AMBIENT  0x462   /* spawns an ambient particle fx on init */
+#define SHOPITEM_SEQ_STATIC   0x464   /* static item, no spline advance */
+#define SHOPITEM_SEQ_BSPLINE  0x467   /* rides a B-spline path with trailing particles */
+#define SHOPITEM_SEQ_SPARKLE  0x468   /* sparkle/lightning item with custom post-render pass */
 
 /* ambient particle spawned on init for the SHOPITEM_SEQ_AMBIENT item */
 #define SHOPITEM_PARTFX_AMBIENT 0x3F1
@@ -82,15 +82,15 @@ extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
-#define GX_BM_NONE 0
-#define GX_BM_BLEND 1
-#define GX_BL_ZERO 0
-#define GX_BL_ONE 1
+#define GX_BM_NONE     0
+#define GX_BM_BLEND    1
+#define GX_BL_ZERO     0
+#define GX_BL_ONE      1
 #define GX_BL_SRCALPHA 4
-#define GX_LO_NOOP 5
-#define GX_LEQUAL 3
-#define GX_ALWAYS 7
-#define GX_AOP_AND 0
+#define GX_LO_NOOP     5
+#define GX_LEQUAL      3
+#define GX_ALWAYS      7
+#define GX_AOP_AND     0
 
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
@@ -107,7 +107,7 @@ extern void objRenderFn_80041018(int obj);
 extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void *p);
+extern void lightningRender(void* p);
 
 extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
@@ -254,45 +254,49 @@ int shopitem_SeqFn(int obj, int p2, ObjSeqState* seq)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_BSPLINE:
+    {
+        f32 t = ((ShopItemState*)sub)->splineT;
+        if (t > lbl_803E5A30)
         {
-            f32 t = ((ShopItemState*)sub)->splineT;
-            if (t > lbl_803E5A30)
+            u32 segCounter;
+            ((ShopItemState*)sub)->splineT = t - lbl_803E5A30;
+            segCounter = ((ShopItemState*)sub)->segCounter;
+            if (segCounter >= 4)
             {
-                u32 segCounter;
-                ((ShopItemState*)sub)->splineT = t - lbl_803E5A30;
-                segCounter = ((ShopItemState*)sub)->segCounter;
-                if (segCounter >= 4)
-                {
-                    ((ShopItemState*)sub)->segCounter += 1;
-                }
-                else
-                {
-                    fn_801F4D54(obj, sub);
-                }
-                fn_801F4ECC(obj, sub);
+                ((ShopItemState*)sub)->segCounter += 1;
             }
+            else
+            {
+                fn_801F4D54(obj, sub);
+            }
+            fn_801F4ECC(obj, sub);
         }
+    }
         {
             ((GameObject*)obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, ((ShopItemState*)sub)->splineT, 0);
             ((GameObject*)obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, ((ShopItemState*)sub)->splineT, 0);
             ((GameObject*)obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
-            ((ShopItemState*)sub)->splineT = ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->
-                splineT;
-            ((GameObject*)obj)->anim.rotX = getAngle(
-                ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
-            (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1,
-                                             NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 416, NULL, 1, -1,
-                                             NULL);
+            ((ShopItemState*)sub)->splineT =
+                ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->splineT;
+            ((GameObject*)obj)->anim.rotX =
+                getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+            (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 416, NULL, 1, -1, NULL);
         }
         break;
     }
     return 0;
 }
 
-int shopitem_getExtraSize(void) { return sizeof(ShopItemState); }
-int shopitem_getObjectTypeId(void) { return 0x0; }
+int shopitem_getExtraSize(void)
+{
+    return sizeof(ShopItemState);
+}
+int shopitem_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void shopitem_free(int obj)
 {
@@ -357,18 +361,19 @@ void shopitem_update(int obj)
             if ((u32)item != 0)
             {
                 if ((*(int (**)(int, int))((char*)**(int***)(item + 0x68) + 0x28))(
-                        item, ((ShopItemDef*)def)->itemSlot) == 0
-                    || (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x2C))(
+                        item, ((ShopItemDef*)def)->itemSlot) == 0 ||
+                    (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x2C))(
                         ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot) != 0)
                 {
                     b->flag_40 = 1;
                     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
+                    ((GameObject*)obj)->objectFlags =
+                        (u16)(((GameObject*)obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
-                ((ShopItemState*)state)->helpTextId = (s16)(
-                    *(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x3C))(
-                    ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
+                ((ShopItemState*)state)->helpTextId =
+                    (s16)(*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x3C))(
+                        ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
             }
         }
         else
@@ -388,8 +393,8 @@ void shopitem_update(int obj)
                 switch (((GameObject*)obj)->anim.seqId)
                 {
                 case SHOPITEM_SEQ_BSPLINE:
-                    ((GameObject*)obj)->anim.localPosY = lbl_803E5A68 +
-                        ((ShopItemDef*)*(int*)&((GameObject*)obj)->anim.placementData)->splineYOffset;
+                    ((GameObject*)obj)->anim.localPosY =
+                        lbl_803E5A68 + ((ShopItemDef*)*(int*)&((GameObject*)obj)->anim.placementData)->splineYOffset;
                     break;
                 }
                 if (money >= price)
@@ -406,43 +411,41 @@ void shopitem_update(int obj)
             switch (((GameObject*)obj)->anim.seqId)
             {
             case SHOPITEM_SEQ_BSPLINE:
+            {
+                f32 t = ((ShopItemState*)state)->splineT;
+                if (t > lbl_803E5A30)
                 {
-                    f32 t = ((ShopItemState*)state)->splineT;
-                    if (t > lbl_803E5A30)
+                    u32 segCounter;
+                    ((ShopItemState*)state)->splineT = t - lbl_803E5A30;
+                    segCounter = ((ShopItemState*)state)->segCounter;
+                    if (segCounter >= 4)
                     {
-                        u32 segCounter;
-                        ((ShopItemState*)state)->splineT = t - lbl_803E5A30;
-                        segCounter = ((ShopItemState*)state)->segCounter;
-                        if (segCounter >= 4)
-                        {
-                            ((ShopItemState*)state)->segCounter++;
-                        }
-                        else
-                        {
-                            fn_801F4D54(obj, state);
-                        }
-                        fn_801F4ECC(obj, state);
+                        ((ShopItemState*)state)->segCounter++;
                     }
-                    ((GameObject*)obj)->anim.localPosX = Curve_EvalBSpline(
-                        state + 4, ((ShopItemState*)state)->splineT, 0);
-                    ((GameObject*)obj)->anim.localPosY = Curve_EvalBSpline(
-                        state + 0x14, ((ShopItemState*)state)->splineT, 0);
-                    ((GameObject*)obj)->anim.localPosZ = Curve_EvalBSpline(
-                        state + 0x24, ((ShopItemState*)state)->splineT, 0);
-                    ((ShopItemState*)state)->splineT = ((ShopItemState*)state)->splineSpeed * timeDelta + ((
-                        ShopItemState*)state)->splineT;
-                    ((GameObject*)obj)->anim.rotX = getAngle(
-                        ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                        ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x19F,
-                                                     NULL, 1, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x1A0,
-                                                     NULL, 1, -1, NULL);
-                    break;
+                    else
+                    {
+                        fn_801F4D54(obj, state);
+                    }
+                    fn_801F4ECC(obj, state);
                 }
+                ((GameObject*)obj)->anim.localPosX = Curve_EvalBSpline(state + 4, ((ShopItemState*)state)->splineT, 0);
+                ((GameObject*)obj)->anim.localPosY =
+                    Curve_EvalBSpline(state + 0x14, ((ShopItemState*)state)->splineT, 0);
+                ((GameObject*)obj)->anim.localPosZ =
+                    Curve_EvalBSpline(state + 0x24, ((ShopItemState*)state)->splineT, 0);
+                ((ShopItemState*)state)->splineT =
+                    ((ShopItemState*)state)->splineSpeed * timeDelta + ((ShopItemState*)state)->splineT;
+                ((GameObject*)obj)->anim.rotX =
+                    getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+                             ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x19F, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x1A0, NULL, 1, -1, NULL);
+                break;
+            }
             }
         }
-        if (((GameObject*)obj)->anim.seqId != SHOPITEM_SEQ_STATIC && ((GameObject*)obj)->anim.seqId != SHOPITEM_SEQ_BSPLINE)
+        if (((GameObject*)obj)->anim.seqId != SHOPITEM_SEQ_STATIC &&
+            ((GameObject*)obj)->anim.seqId != SHOPITEM_SEQ_BSPLINE)
         {
             ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5A60, timeDelta, NULL);
         }
@@ -474,8 +477,7 @@ void shopitem_init(int obj, int data)
         fn_801F4C28(obj, state);
         break;
     case SHOPITEM_SEQ_AMBIENT:
-        (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4,
-                                         -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);
         break;
     case SHOPITEM_SEQ_SPARKLE:
         ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);

@@ -29,25 +29,17 @@ void dll_AA_func03(int sourceObj, int variant, u8* posSource, u32 seqFlags)
     (*gModgfxInterface)->setSequenceParams(&tab[0x1dc]);
     (*gModgfxInterface)->addSequenceFlags(seqFlags);
     (*gModgfxInterface)->resetSequenceSpawns();
-    (*gModgfxInterface)->addSequenceSpawn
-        (4, 0.65f, 0.0f, 0.0f, 0x15, &tab[0x1b0]);
-    (*gModgfxInterface)->addSequenceSpawn
-        (2, 0.5f, 1.0f, 0.5f, 0x15, &tab[0x1b0]);
-    (*gModgfxInterface)->addSequenceSpawn
-        (0x400000, 0.0f, -100.0f, 0.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceSpawn(4, 0.65f, 0.0f, 0.0f, 0x15, &tab[0x1b0]);
+    (*gModgfxInterface)->addSequenceSpawn(2, 0.5f, 1.0f, 0.5f, 0x15, &tab[0x1b0]);
+    (*gModgfxInterface)->addSequenceSpawn(0x400000, 0.0f, -100.0f, 0.0f, 0, NULL);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn
-        (4, 160.0f, 0.0f, 0.0f, 7, &tab[0x174]);
+    (*gModgfxInterface)->addSequenceSpawn(4, 160.0f, 0.0f, 0.0f, 7, &tab[0x174]);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn
-        (4, 255.0f, 0.0f, 0.0f, 7, &tab[0x174]);
-    (*gModgfxInterface)->addSequenceSpawn
-        (2, scale, 3.0f, scale, 0x15, &tab[0x1b0]);
+    (*gModgfxInterface)->addSequenceSpawn(4, 255.0f, 0.0f, 0.0f, 7, &tab[0x174]);
+    (*gModgfxInterface)->addSequenceSpawn(2, scale, 3.0f, scale, 0x15, &tab[0x1b0]);
     (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn
-        (4, 0.0f, 0.0f, 0.0f, 7, &tab[0x174]);
-    (*gModgfxInterface)->spawnSequence
-        (posSource, (u8*)(int)lbl_80319168, 0x15, &tab[0xd4], 0x18, 0x3e9, 0);
+    (*gModgfxInterface)->addSequenceSpawn(4, 0.0f, 0.0f, 0.0f, 7, &tab[0x174]);
+    (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)lbl_80319168, 0x15, &tab[0xd4], 0x18, 0x3e9, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
 

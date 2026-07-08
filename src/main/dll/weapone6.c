@@ -51,7 +51,7 @@ typedef struct
         {                                                                                                              \
             s8 mm;                                                                                                     \
             mm = -1;                                                                                                   \
-            *(s8*)&((TrickyState*)(st))->commandPhase = mm;                                                                    \
+            *(s8*)&((TrickyState*)(st))->commandPhase = mm;                                                            \
         }                                                                                                              \
     }
 
@@ -408,7 +408,7 @@ void fn_8013F100(int obj, register int state)
                 *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
             }
             ((TrickyState*)state)->substate = 5;
-    case 5:
+        case 5:
             if (trickyFn_8013b368(obj, lbl_803E24C8, state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

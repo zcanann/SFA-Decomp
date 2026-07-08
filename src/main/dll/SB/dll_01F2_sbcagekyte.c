@@ -31,7 +31,7 @@
 #define SB_CAGEKYTE_CHIRP_MIN 400
 #define SB_CAGEKYTE_CHIRP_MAX 600
 
-#define SB_CAGEKYTE_OBJFLAG_HIDDEN 0x4000
+#define SB_CAGEKYTE_OBJFLAG_HIDDEN             0x4000
 #define SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
@@ -52,8 +52,14 @@ int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-int SB_CageKyte_getExtraSize(void) { return 0x2; }
-int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
+int SB_CageKyte_getExtraSize(void)
+{
+    return 0x2;
+}
+int SB_CageKyte_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void SB_CageKyte_free(void)
 {
@@ -73,7 +79,7 @@ void SB_CageKyte_hitDetect(void)
 
 void SB_CageKyte_update(GameObject* obj)
 {
-    extern f32 Vec_distance(f32* a, f32* b);
+    extern f32 Vec_distance(f32 * a, f32 * b);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* timer;
     GameObject* player;
@@ -103,7 +109,8 @@ void SB_CageKyte_update(GameObject* obj)
 void SB_CageKyte_init(GameObject* obj)
 {
     obj->animEventCallback = SB_CageKyte_SeqFn;
-    obj->objectFlags = (u16)((u32)obj->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags =
+        (u16)((u32)obj->objectFlags | (SB_CAGEKYTE_OBJFLAG_HIDDEN | SB_CAGEKYTE_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void SB_CageKyte_release(void)

@@ -16,13 +16,19 @@
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/dll/dll_80220608_shared.h"
 
-#define VISANIMATOR_OBJFLAG_HIDDEN 0x4000
+#define VISANIMATOR_OBJFLAG_HIDDEN             0x4000
 #define VISANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-int VisAnimator_getExtraSize(void) { return sizeof(VisAnimatorState); }
-int VisAnimator_getObjectTypeId(void) { return 0x0; }
+int VisAnimator_getExtraSize(void)
+{
+    return sizeof(VisAnimatorState);
+}
+int VisAnimator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VisAnimator_free(void)
 {
@@ -42,9 +48,9 @@ void VisAnimator_update(int* obj)
 {
     s16* placement = ((GameObject*)obj)->anim.placementData;
     VisAnimatorState* vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
-    int idx = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                  (double)((GameObject*)obj)->anim.localPosY,
-                                  (double)((GameObject*)obj)->anim.localPosZ);
+    int idx =
+        objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX, (double)((GameObject*)obj)->anim.localPosY,
+                            (double)((GameObject*)obj)->anim.localPosZ);
     int gate;
     if (mapGetBlock(idx) == NULL)
     {

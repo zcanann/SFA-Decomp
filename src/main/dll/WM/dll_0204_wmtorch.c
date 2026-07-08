@@ -31,7 +31,7 @@ STATIC_ASSERT(offsetof(WmTorchPlacement, unk1C) == 0x1C);
 typedef struct WmTorchState
 {
     void* linkedObj;
-    f32 unk04;    /* from placement unk1A */
+    f32 unk04; /* from placement unk1A */
     u8 pad08[2];
     s16 unk0A;    /* from placement unk1C */
     u8 torchType; /* placement torchType: 0 / 0x7F / other */
@@ -52,8 +52,14 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E5DE8; /* sound-loop radius */
 extern void Obj_FreeObject(u8* obj);
 
-int wmtorch_getExtraSize(void) { return sizeof(WmTorchState); }
-int wmtorch_getObjectTypeId(void) { return 0x1; }
+int wmtorch_getExtraSize(void)
+{
+    return sizeof(WmTorchState);
+}
+int wmtorch_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void wmtorch_free(int obj, int mode)
 {
@@ -68,7 +74,8 @@ void wmtorch_free(int obj, int mode)
 
 void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    if (visible == 0) return;
+    if (visible == 0)
+        return;
 }
 
 void wmtorch_hitDetect(void)

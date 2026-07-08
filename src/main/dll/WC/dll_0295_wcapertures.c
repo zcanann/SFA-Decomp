@@ -14,41 +14,41 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define WCAPERTURES_EXTRA_SIZE 8
-#define WCAPERTURES_RENDER_TYPE_BASE 0x400
+#define WCAPERTURES_EXTRA_SIZE        8
+#define WCAPERTURES_RENDER_TYPE_BASE  0x400
 #define WCAPERTURES_RENDER_TYPE_SHIFT 0xb
 
-#define WCAPERTURES_SETUP_TYPE_OFFSET 0x18
+#define WCAPERTURES_SETUP_TYPE_OFFSET        0x18
 #define WCAPERTURES_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCAPERTURES_SETUP_OPEN_BIT_OFFSET 0x1e
-#define WCAPERTURES_SETUP_ARM_BIT_OFFSET 0x20
+#define WCAPERTURES_SETUP_OPEN_BIT_OFFSET    0x1e
+#define WCAPERTURES_SETUP_ARM_BIT_OFFSET     0x20
 
-#define WCAPERTURES_STATE_LIGHT 0x00
+#define WCAPERTURES_STATE_LIGHT        0x00
 #define WCAPERTURES_STATE_TARGET_ALPHA 0x04
-#define WCAPERTURES_STATE_MODE 0x06
-#define WCAPERTURES_STATE_FLAGS 0x07
+#define WCAPERTURES_STATE_MODE         0x06
+#define WCAPERTURES_STATE_FLAGS        0x07
 
 #define WCAPERTURES_MODE_CLOSED 0
-#define WCAPERTURES_MODE_ARMED 1
-#define WCAPERTURES_MODE_OPEN 2
+#define WCAPERTURES_MODE_ARMED  1
+#define WCAPERTURES_MODE_OPEN   2
 
-#define WCAPERTURES_FLAG_VISIBLE 1
-#define WCAPERTURES_INITIAL_ALPHA 1
-#define WCAPERTURES_ALPHA_OPAQUE 255
-#define WCAPERTURES_ALPHA_STEP_SHIFT 2
+#define WCAPERTURES_FLAG_VISIBLE           1
+#define WCAPERTURES_INITIAL_ALPHA          1
+#define WCAPERTURES_ALPHA_OPAQUE           255
+#define WCAPERTURES_ALPHA_STEP_SHIFT       2
 #define WCAPERTURES_LIGHT_ENABLE_THRESHOLD 128
 
 #define WCAPERTURES_CALLBACK_ARM 1
 
-#define WCAPERTURES_PARTFX_OPEN 0x805
-#define WCAPERTURES_PARTFX_KIND 2
+#define WCAPERTURES_PARTFX_OPEN           0x805
+#define WCAPERTURES_PARTFX_KIND           2
 #define WCAPERTURES_PARTFX_INVALID_HANDLE -1
 
-#define WCAPERTURES_CAMERA_MODE 68
-#define WCAPERTURES_PLAYER_STATE 33
+#define WCAPERTURES_CAMERA_MODE        68
+#define WCAPERTURES_PLAYER_STATE       33
 #define WCAPERTURES_ACCEPT_OBJECT_FLAG 0x800
 
-#define WCAPERTURES_LIGHT_KIND 2
+#define WCAPERTURES_LIGHT_KIND    2
 #define WCAPERTURES_LIGHT_BLUE_LO 0x4d
 #define WCAPERTURES_LIGHT_BLUE_HI 0x96
 
@@ -95,7 +95,10 @@ int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
+int wcapertures_getExtraSize(void)
+{
+    return WCAPERTURES_EXTRA_SIZE;
+}
 
 int wcapertures_getObjectTypeId(int obj)
 {
@@ -162,9 +165,9 @@ void wcapertures_hitDetect(int obj)
         col[0] = lbl_803E6E30;
         col[1] = lbl_803E6E34;
         col[2] = lbl_803E6E28;
-        (*gPartfxInterface)->spawnObject((void*)obj, WCAPERTURES_PARTFX_OPEN, ev,
-                                         WCAPERTURES_PARTFX_KIND,
-                                         WCAPERTURES_PARTFX_INVALID_HANDLE, col);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, WCAPERTURES_PARTFX_OPEN, ev, WCAPERTURES_PARTFX_KIND,
+                          WCAPERTURES_PARTFX_INVALID_HANDLE, col);
     }
     if (state->light != NULL)
         modelLightStruct_updateGlowAlpha(state->light);
@@ -267,8 +270,8 @@ void wcapertures_init(int obj, int initData)
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
                                        WCAPERTURES_LIGHT_BLUE_HI, lbl_803E6E3C);
         else
-            modelLightStruct_setupGlow(state->light, 0, WCAPERTURES_LIGHT_BLUE_LO,
-                                       WCAPERTURES_LIGHT_BLUE_LO, 0xff, 0xff, lbl_803E6E3C);
+            modelLightStruct_setupGlow(state->light, 0, WCAPERTURES_LIGHT_BLUE_LO, WCAPERTURES_LIGHT_BLUE_LO, 0xff,
+                                       0xff, lbl_803E6E3C);
         modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E6E40);
     }
 }

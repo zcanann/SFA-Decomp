@@ -17,8 +17,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 /* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicgem) */
-#define SCARAB_MSG_IN_RANGE 0x7000a /* sent to player when the scarab is in grab range */
-#define SCARAB_MSG_PICKUP   0x7000b /* player collected: award money and despawn */
+#define SCARAB_MSG_IN_RANGE     0x7000a /* sent to player when the scarab is in grab range */
+#define SCARAB_MSG_PICKUP       0x7000b /* player collected: award money and despawn */
 #define SCARAB_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
@@ -74,7 +74,7 @@ extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
 void Scarab_update(int obj)
 {
-    extern f32 Vec_xzDistance(f32* a, f32* b);
+    extern f32 Vec_xzDistance(f32 * a, f32 * b);
     extern void PSVECSubtract(void* a, void* b, void* out);
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     typedef struct
@@ -181,17 +181,18 @@ void Scarab_update(int obj)
             {
                 ObjHits_EnableObject((u32)obj);
             }
-            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->
-                anim.localPosX;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
-                anim.localPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
-                anim.localPosZ;
+            ((GameObject*)obj)->anim.localPosX =
+                ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)obj)->anim.localPosY =
+                ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)obj)->anim.localPosZ =
+                ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
             if (((GameObject*)obj)->anim.velocityY > lbl_803E3A08)
             {
                 ((GameObject*)obj)->anim.velocityY = lbl_803E3A0C * timeDelta + ((GameObject*)obj)->anim.velocityY;
             }
-            ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + ((ScarabState*)state)->yawSpeed * framesThisStep;
+            ((GameObject*)obj)->anim.rotZ =
+                ((GameObject*)obj)->anim.rotZ + ((ScarabState*)state)->yawSpeed * framesThisStep;
             if (scarab_sweptCollide(obj) != 0)
             {
                 flag = 1;
@@ -278,13 +279,13 @@ void Scarab_update(int obj)
             {
                 ((ScarabState*)state)->fleeTimer = 0xfa;
                 Sfx_PlayFromObject(obj, SFXen_firlp6);
-                ((GameObject*)obj)->anim.velocityX = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.
-                    localPosX;
-                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.
-                    localPosZ;
+                ((GameObject*)obj)->anim.velocityX =
+                    ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+                ((GameObject*)obj)->anim.velocityZ =
+                    ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
                 ((GameObject*)obj)->anim.rotX = 0;
-                sumsq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->
-                    anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
+                sumsq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                        ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
                 if (sumsq != lbl_803E39F8)
                 {
                     sumsq = sqrtf(sumsq);
@@ -316,12 +317,12 @@ void Scarab_update(int obj)
                 ((ScarabState*)state)->riseAmount = lbl_803E39F8;
                 {
                     f32 k = lbl_803E39F4;
-                    ((GameObject*)obj)->anim.localPosX = k * (((GameObject*)obj)->anim.velocityX * timeDelta) + ((
-                        GameObject*)obj)->anim.localPosX;
-                    ((GameObject*)obj)->anim.localPosY = k * (((GameObject*)obj)->anim.velocityY * timeDelta) + ((
-                        GameObject*)obj)->anim.localPosY;
-                    ((GameObject*)obj)->anim.localPosZ = k * (((GameObject*)obj)->anim.velocityZ * timeDelta) + ((
-                        GameObject*)obj)->anim.localPosZ;
+                    ((GameObject*)obj)->anim.localPosX =
+                        k * (((GameObject*)obj)->anim.velocityX * timeDelta) + ((GameObject*)obj)->anim.localPosX;
+                    ((GameObject*)obj)->anim.localPosY =
+                        k * (((GameObject*)obj)->anim.velocityY * timeDelta) + ((GameObject*)obj)->anim.localPosY;
+                    ((GameObject*)obj)->anim.localPosZ =
+                        k * (((GameObject*)obj)->anim.velocityZ * timeDelta) + ((GameObject*)obj)->anim.localPosZ;
                 }
             }
         }
@@ -331,9 +332,9 @@ void Scarab_update(int obj)
             {
                 best = 0;
                 bestDist = lbl_803E3A28;
-                count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                             &list, 1, 0);
+                count =
+                    hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                         ((GameObject*)obj)->anim.localPosZ, &list, 1, 0);
                 for (i = 0; i < count; i++)
                 {
                     dy = *list[i] - ((GameObject*)obj)->anim.localPosY;
@@ -389,9 +390,9 @@ void Scarab_update(int obj)
                 ((ScarabState*)state)->mode -= framesThisStep;
                 if (((ScarabState*)state)->mode <= 0)
                 {
-                    if (ViewFrustum_IsSphereVisible((f32*)(obj + 0xc),
-                                                    ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.
-                                                    rootMotionScale) == 0)
+                    if (ViewFrustum_IsSphereVisible((f32*)(obj + 0xc), ((GameObject*)obj)->anim.hitboxScale *
+                                                                           ((GameObject*)obj)->anim.rootMotionScale) ==
+                        0)
                     {
                         ((ScarabState*)state)->mode = 0;
                     }
@@ -407,21 +408,21 @@ void Scarab_update(int obj)
                     fang = ang;
                     fang = lbl_803DBDCC * fang + lbl_803E3A2C;
                     ((GameObject*)obj)->anim.rotX = fang;
-                    ((GameObject*)obj)->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best][1]) + ((GameObject*)obj)
-                        ->anim.localPosX;
-                    ((GameObject*)obj)->anim.localPosZ = timeDelta * (k * list[best][3]) + ((GameObject*)obj)
-                        ->anim.localPosZ;
+                    ((GameObject*)obj)->anim.localPosX =
+                        timeDelta * ((k = lbl_803E39F4) * list[best][1]) + ((GameObject*)obj)->anim.localPosX;
+                    ((GameObject*)obj)->anim.localPosZ =
+                        timeDelta * (k * list[best][3]) + ((GameObject*)obj)->anim.localPosZ;
                     ((GameObject*)obj)->anim.velocityX = list[best][1];
                     ((GameObject*)obj)->anim.velocityZ = list[best][3];
                 }
                 if (flag == 0)
                 {
-                    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)
-                        obj)->anim.localPosX;
-                    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)
-                        obj)->anim.localPosZ;
+                    ((GameObject*)obj)->anim.localPosX =
+                        ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
+                    ((GameObject*)obj)->anim.localPosZ =
+                        ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
                     sumsq = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-                        ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
+                                  ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
                     ObjAnim_SampleRootCurvePhase(sumsq, (ObjAnimComponent*)obj, &phase);
                     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, phase, timeDelta, NULL);
                 }
@@ -437,7 +438,7 @@ void Scarab_update(int obj)
                 hits = hitDetectFn_80067958(obj, (void*)(obj + 0x80), (void*)(obj + 0xc), 1, bufs.hitBuf, 0);
                 if (flag != 0 ||
                     Vec_distance((void*)(obj + 0x18), &((ObjPlacement*)((GameObject*)obj)->anim.placementData)->posX) >
-                    lbl_803E3A30 ||
+                        lbl_803E3A30 ||
                     ((hits & 1) != 0 && (hits & 0x10) == 0))
                 {
                     PSVECSubtract(&((ObjPlacement*)((GameObject*)obj)->anim.placementData)->posX, (void*)(obj + 0xc),
@@ -451,9 +452,9 @@ void Scarab_update(int obj)
             else
             {
                 bestDist = lbl_803E3A28;
-                count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                             &list, 1, 0);
+                count =
+                    hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                         ((GameObject*)obj)->anim.localPosZ, &list, 1, 0);
                 for (i = 0; i < count; i++)
                 {
                     dy = *list[i] - ((GameObject*)obj)->anim.localPosY;
@@ -527,10 +528,10 @@ void Scarab_update(int obj)
                         }
                         {
                             f32 k = lbl_803E3A40;
-                            ((GameObject*)obj)->anim.localPosX = k * -((GameObject*)obj)->anim.velocityX + ((GameObject
-                                *)obj)->anim.localPosX;
-                            ((GameObject*)obj)->anim.localPosZ = k * -((GameObject*)obj)->anim.velocityZ + ((GameObject
-                                *)obj)->anim.localPosZ;
+                            ((GameObject*)obj)->anim.localPosX =
+                                k * -((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.localPosX;
+                            ((GameObject*)obj)->anim.localPosZ =
+                                k * -((GameObject*)obj)->anim.velocityZ + ((GameObject*)obj)->anim.localPosZ;
                         }
                         Sfx_PlayFromObject(obj, SFXen_lwfl1_c);
                     }
@@ -542,7 +543,7 @@ void Scarab_update(int obj)
                 }
             }
             else if (((ScarabState*)state)->fleeTimer != 0 && ((GameObject*)obj)->anim.seqId == 0x3d6 &&
-                ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
+                     ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
             {
                 Sfx_PlayFromObject(obj, SFXen_mossyloop16);
                 money3 = gScarabMoneyValues;
@@ -605,8 +606,8 @@ void Scarab_init(int* obj, u8* def)
 
 extern int Obj_GetActiveModel(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
-                                        f32 alpha, int flags, int unused);
+extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance, f32 alpha,
+                                        int flags, int unused);
 
 extern u8 gScarabColorVariantsD;
 extern f32 lbl_803E3A04;
@@ -644,8 +645,8 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
         f32 sq, d;
         ((GameObject*)obj)->anim.velocityX = p3[0];
         ((GameObject*)obj)->anim.velocityZ = p3[2];
-        sq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX
-            + ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
+        sq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
         if (sq != lbl_803E39F8)
         {
             sq = sqrtf(sq);
@@ -749,7 +750,8 @@ void Scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 int scarab_sweptCollide(int obj)
 {
-    extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount);
+    extern void hitDetect_calcSweptSphereBounds(u32 * boundsOut, f32 * startPoints, f32 * endPoints, f32 * radii,
+                                                int pointCount);
     extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
     extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
     extern f32 gScarabSweptHitInfo[4];
@@ -821,7 +823,8 @@ int scarab_sweptCollide(int obj)
 
         if (results.solidFlags[idx] != 0)
         {
-            ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
+            ((ObjHitsPriorityState*)state)->contactFlags =
+                *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
             ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
             ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
             ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
@@ -830,7 +833,8 @@ int scarab_sweptCollide(int obj)
             ((ObjHitsPriorityState*)state)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
             return 1;
         }
-        ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
+        ((ObjHitsPriorityState*)state)->contactFlags =
+            *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
         ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
         ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
         ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;

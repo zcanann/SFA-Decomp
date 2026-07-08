@@ -36,10 +36,12 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     int spawnResult;
     PartFxSpawn cfg;
 
-    if (sourceObj == 0) return -1;
+    if (sourceObj == 0)
+        return -1;
     if ((spawnFlags & 0x200000) != 0)
     {
-        if (spawnParams == 0) return -1;
+        if (spawnParams == 0)
+            return -1;
         cfg.sourcePosY = spawnParams->posX;
         cfg.sourcePosZ = spawnParams->posY;
         cfg.sourcePosW = spawnParams->posZ;
@@ -74,12 +76,9 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     switch (effectId)
     {
     case 0x44c:
-        cfg.velocityX = lbl_803E0184 * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
-        cfg.velocityY = lbl_803E0188 * (f32)(s32)
-        randomGetRange(0xa, 0x14);
-        cfg.velocityZ = lbl_803E0184 * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
+        cfg.velocityX = lbl_803E0184 * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.velocityY = lbl_803E0188 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.velocityZ = lbl_803E0184 * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.scale = lbl_803E018C;
         cfg.lifetimeFrames = 0x6e;
         cfg.behaviorFlags = 0x8a100208;
@@ -93,10 +92,8 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.overrideColor2 = 0x1000;
         break;
     case 0x44d:
-        cfg.velocityX = lbl_803E018C * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
-        cfg.velocityZ = lbl_803E018C * (f32)(s32)
-        randomGetRange(-0xa, 0xa);
+        cfg.velocityX = lbl_803E018C * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.velocityZ = lbl_803E018C * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.scale = lbl_803E0190;
         cfg.lifetimeFrames = 0x258;
         cfg.initialAlpha = 0x7f;
@@ -130,9 +127,8 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             gEffect13DefaultSplashParams.rotZ = 0;
             spawnParams = (PartFxSpawnParams*)&gEffect13DefaultSplashParams;
         }
-        (*gWaterfxInterface)->spawnSplashBurst(NULL, spawnParams->posX,
-                                               spawnParams->posY,
-                                               spawnParams->posZ, lbl_803E01A0);
+        (*gWaterfxInterface)
+            ->spawnSplashBurst(NULL, spawnParams->posX, spawnParams->posY, spawnParams->posZ, lbl_803E01A0);
         Sfx_PlayFromObject((int)sourceObj, SFXsc_snort02);
         cfg.lifetimeFrames = 1;
         cfg.scale = lbl_803E01A4;
@@ -150,8 +146,7 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x451:
         Sfx_PlayFromObject((int)sourceObj, SFXsc_snort02);
         cfg.lifetimeFrames = 0x64;
-        cfg.scale = lbl_803E01AC * (f32)(s32)
-        cfg.lifetimeFrames;
+        cfg.scale = lbl_803E01AC * (f32)(s32)cfg.lifetimeFrames;
         cfg.behaviorFlags = 0x0a100201;
         cfg.textureId = 0x56;
         break;
@@ -159,7 +154,8 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) cfg.behaviorFlags ^= 2LL;
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
+        cfg.behaviorFlags ^= 2LL;
     if ((cfg.behaviorFlags & 1) != 0)
     {
         if ((spawnFlags & 0x200000) != 0)
@@ -197,4 +193,3 @@ void Effect13_release(void)
 void Effect13_initialise(void)
 {
 }
-

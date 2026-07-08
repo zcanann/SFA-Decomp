@@ -49,7 +49,7 @@ extern void CFMainCrystal_initialise(void);
 
 #define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
 
-#define WINDLIFT_SLOTS 14   /* max tracked lift slots */
+#define WINDLIFT_SLOTS 14 /* max tracked lift slots */
 
 typedef struct WindliftPlacement
 {
@@ -73,7 +73,7 @@ typedef struct WindliftObjectDef
     f32 posZ; /* 0x10 */
     u8 pad14[0x18 - 0x14];
     s8 unk18;
-    s8 heightByte; /* 0x19: lift height in gWindLiftHeightByteScale units (0 = default) */
+    s8 heightByte;    /* 0x19: lift height in gWindLiftHeightByteScale units (0 = default) */
     s16 pullStrength; /* 0x1A */
     s16 delay;
     s16 seqId;
@@ -95,13 +95,13 @@ typedef struct
 } WindLiftSlot;
 
 /* WindLiftSlot.phaseFlags bits */
-#define WLSLOT_RISING 0x1      /* rise force active this frame */
-#define WLSLOT_PENDING 0x2     /* pull direction re-evaluation requested */
-#define WLSLOT_PULLUP 0x4      /* pulling rider upward */
-#define WLSLOT_PULLDOWN 0x8    /* pulling rider downward */
-#define WLSLOT_HOLD 0x20       /* rider holding gamebit (grabbed) phase */
-#define WLSLOT_RELEASE 0x40    /* rider released phase */
-#define WLSLOT_LATCH 0x80      /* lift event latched/consumed */
+#define WLSLOT_RISING   0x1  /* rise force active this frame */
+#define WLSLOT_PENDING  0x2  /* pull direction re-evaluation requested */
+#define WLSLOT_PULLUP   0x4  /* pulling rider upward */
+#define WLSLOT_PULLDOWN 0x8  /* pulling rider downward */
+#define WLSLOT_HOLD     0x20 /* rider holding gamebit (grabbed) phase */
+#define WLSLOT_RELEASE  0x40 /* rider released phase */
+#define WLSLOT_LATCH    0x80 /* lift event latched/consumed */
 
 typedef struct
 {
@@ -269,9 +269,9 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             }
             factor = rise;
             slot->phaseFlags |= WLSLOT_RISING;
-            if (((slot->riseSpeed < lbl_803E4194 && slot->oscCounter % 2 != 0)
-                    || (slot->riseSpeed > lbl_803E4198 && slot->oscCounter % 2 == 0))
-                && (slot->phaseFlags & WLSLOT_PULLDOWN) != 0)
+            if (((slot->riseSpeed < lbl_803E4194 && slot->oscCounter % 2 != 0) ||
+                 (slot->riseSpeed > lbl_803E4198 && slot->oscCounter % 2 == 0)) &&
+                (slot->phaseFlags & WLSLOT_PULLDOWN) != 0)
             {
                 if (slot->oscCounter++ > 2)
                 {
@@ -364,9 +364,15 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     }
 }
 
-int WindLift_getExtraSize(void) { return 0x178; }
+int WindLift_getExtraSize(void)
+{
+    return 0x178;
+}
 
-int WindLift_getObjectTypeId(void) { return 0x0; }
+int WindLift_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WindLift_free(int* obj)
 {
@@ -381,7 +387,8 @@ void WindLift_free(int* obj)
 void WindLift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 vis = visible;
-    if (vis != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4190);
+    if (vis != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4190);
 }
 
 void WindLift_hitDetect(void)
@@ -490,7 +497,7 @@ void WindLift_update(int* obj)
             found = -1;
             for (j = 1; j < WINDLIFT_SLOTS; j++)
             {
-                if ((u32)sub->slots[j].riderObj == (u32) * objs)
+                if ((u32)sub->slots[j].riderObj == (u32)*objs)
                 {
                     found = j;
                 }
@@ -615,19 +622,55 @@ void WindLift_initialise(void)
 }
 
 u8 gWindLiftSeqDurationTable[] = {
-    0x00, 0x00, 0x00, 0x58, 0x00, 0x00, 0x00, 0x01,
-    0x00, 0x00, 0x00, 0x59, 0x00, 0x00, 0x00, 0x02,
-    0x00, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x03,
-    0x00, 0x00, 0x0A, 0xD7, 0x00, 0x00, 0x00, 0x04,
+    0x00, 0x00, 0x00, 0x58, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x59, 0x00, 0x00, 0x00, 0x02,
+    0x00, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x0A, 0xD7, 0x00, 0x00, 0x00, 0x04,
 };
 
 u8 gWindLiftSeqGamebitTable[] = {
-    0x00, 0x00, 0x0A, 0x94, 0x00, 0x00, 0x00, 0x95,
-    0x00, 0x00, 0x0A, 0x98, 0x00, 0x00, 0x00, 0x95,
-    0x00, 0x00, 0x0A, 0x99, 0x00, 0x00, 0x00, 0x95,
+    0x00, 0x00, 0x0A, 0x94, 0x00, 0x00, 0x00, 0x95, 0x00, 0x00, 0x0A, 0x98,
+    0x00, 0x00, 0x00, 0x95, 0x00, 0x00, 0x0A, 0x99, 0x00, 0x00, 0x00, 0x95,
 };
 
 /* descriptor/ptr table auto 0x80322a80-0x80322b28 */
-u32 gWindLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)WindLift_initialise, (u32)WindLift_release, 0x00000000, (u32)WindLift_init, (u32)WindLift_update, (u32)WindLift_hitDetect, (u32)WindLift_render, (u32)WindLift_free, (u32)WindLift_getObjectTypeId, (u32)WindLift_getExtraSize };
-u32 gCFPowerBaseObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)CFPowerBase_initialise, (u32)CFPowerBase_release, 0x00000000, (u32)CFPowerBase_init, (u32)CFPowerBase_update, (u32)CFPowerBase_hitDetect, (u32)CFPowerBase_render, (u32)CFPowerBase_free, (u32)CFPowerBase_getObjectTypeId, (u32)CFPowerBase_getExtraSize };
-u32 gCFMainCrystalObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)CFMainCrystal_initialise, (u32)CFMainCrystal_release, 0x00000000, (u32)CFMainCrystal_init, (u32)CFMainCrystal_update, (u32)CFMainCrystal_hitDetect, (u32)CFMainCrystal_render, (u32)CFMainCrystal_free, (u32)CFMainCrystal_getObjectTypeId, (u32)CFMainCrystal_getExtraSize };
+u32 gWindLiftObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  (u32)WindLift_initialise,
+                                  (u32)WindLift_release,
+                                  0x00000000,
+                                  (u32)WindLift_init,
+                                  (u32)WindLift_update,
+                                  (u32)WindLift_hitDetect,
+                                  (u32)WindLift_render,
+                                  (u32)WindLift_free,
+                                  (u32)WindLift_getObjectTypeId,
+                                  (u32)WindLift_getExtraSize};
+u32 gCFPowerBaseObjDescriptor[14] = {0x00000000,
+                                     0x00000000,
+                                     0x00000000,
+                                     0x00090000,
+                                     (u32)CFPowerBase_initialise,
+                                     (u32)CFPowerBase_release,
+                                     0x00000000,
+                                     (u32)CFPowerBase_init,
+                                     (u32)CFPowerBase_update,
+                                     (u32)CFPowerBase_hitDetect,
+                                     (u32)CFPowerBase_render,
+                                     (u32)CFPowerBase_free,
+                                     (u32)CFPowerBase_getObjectTypeId,
+                                     (u32)CFPowerBase_getExtraSize};
+u32 gCFMainCrystalObjDescriptor[14] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00090000,
+                                       (u32)CFMainCrystal_initialise,
+                                       (u32)CFMainCrystal_release,
+                                       0x00000000,
+                                       (u32)CFMainCrystal_init,
+                                       (u32)CFMainCrystal_update,
+                                       (u32)CFMainCrystal_hitDetect,
+                                       (u32)CFMainCrystal_render,
+                                       (u32)CFMainCrystal_free,
+                                       (u32)CFMainCrystal_getObjectTypeId,
+                                       (u32)CFMainCrystal_getExtraSize};

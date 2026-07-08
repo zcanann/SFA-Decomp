@@ -9,18 +9,27 @@ extern f32 lbl_803E3EE8;
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 
-#define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED 0x8000
+#define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
 #define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int CFLightWall_getExtraSize(void) { return 0x0; }
+int CFLightWall_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int CFLightWall_getObjectTypeId(void) { return 0x0; }
+int CFLightWall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void CFLightWall_free(void)
 {
 }
 
-void CFLightWall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3EE8); }
+void CFLightWall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3EE8);
+}
 
 void CFLightWall_hitDetect(void)
 {

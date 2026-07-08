@@ -249,8 +249,7 @@ int randomGetRange(int lo, int hi)
     {
         return lo;
     }
-    v = (f32)(u32)
-    rand();
+    v = (f32)(u32)rand();
     v = v / lbl_803DE7F8;
     v = v * (lbl_803DE7C4 + hi - lo);
     v = v + lo;
@@ -408,8 +407,7 @@ void mtx44_mult(f32* a, f32* b, f32* out)
         out[2] = b2 + (b0 + b1);
         out += 4;
         a += 4;
-    }
-    while (end != a);
+    } while (end != a);
 
     a0 = a[0];
     a1 = a[1];

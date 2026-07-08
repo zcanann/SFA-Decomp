@@ -23,10 +23,9 @@
 #define CHUKCHUK_CHILD_OBJ_ICEBALL 1307
 
 /* sub->flags bits (see chukchukstate_struct.h) */
-#define CHUKCHUK_FLAG_PRIMED 0x1
-#define CHUKCHUK_FLAG_DEAD 0x2
+#define CHUKCHUK_FLAG_PRIMED        0x1
+#define CHUKCHUK_FLAG_DEAD          0x2
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
-
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 ObjHits_DisableObject();
@@ -36,7 +35,7 @@ STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 /* glow-texture ramp table */
-u8 lbl_8031FF80[] = { 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0 };
+u8 lbl_8031FF80[] = {0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0};
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -67,10 +66,13 @@ void fn_8015F5B0(short* obj)
         if (o != NULL)
         {
             pl = Obj_GetPlayerObject();
-            ((GameObject*)o)->anim.velocityX = (((GameObject*)pl)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / (sc =
-                42.0f);
-            ((GameObject*)o)->anim.velocityY = (((GameObject*)pl)->anim.localPosY + (f32)(u32)sub->aimHeightY - ((GameObject*)obj)->anim.localPosY) / sc;
-            ((GameObject*)o)->anim.velocityZ = (((GameObject*)pl)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / sc;
+            ((GameObject*)o)->anim.velocityX =
+                (((GameObject*)pl)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / (sc = 42.0f);
+            ((GameObject*)o)->anim.velocityY =
+                (((GameObject*)pl)->anim.localPosY + (f32)(u32)sub->aimHeightY - ((GameObject*)obj)->anim.localPosY) /
+                sc;
+            ((GameObject*)o)->anim.velocityZ =
+                (((GameObject*)pl)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / sc;
         }
     }
 }
@@ -90,8 +92,14 @@ void ChukChuk_setScale(int obj, int message)
 
 #pragma scheduling off
 #pragma peephole off
-int ChukChuk_getExtraSize(void) { return sizeof(ChukChukState); }
-int ChukChuk_getObjectTypeId(void) { return 0x0; }
+int ChukChuk_getExtraSize(void)
+{
+    return sizeof(ChukChukState);
+}
+int ChukChuk_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -104,7 +112,8 @@ void ChukChuk_free(void)
 void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 #pragma scheduling on
@@ -251,7 +260,8 @@ void ChukChuk_update(short* obj)
 void ChukChuk_init(u8* obj, u8* params)
 {
     ChukChukState* sub = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     sub->gameBit = *(s16*)(params + 0x18);
     if (sub->gameBit != -1 && mainGetBit(sub->gameBit) != 0)
     {

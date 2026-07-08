@@ -28,7 +28,7 @@ typedef struct
 } GfxCmd;
 
 /* base spawn flags; low bit positions the effect at the source object */
-#define SPAWN_FLAGS_BASE 0xc0104c0
+#define SPAWN_FLAGS_BASE        0xc0104c0
 #define SPAWN_FLAG_USE_POSITION 1
 
 extern u8 lbl_803188D8[];
@@ -211,7 +211,6 @@ void dll_A1_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803188D8, 0x18, &assets[0xd4], DLLA1_EFFECT_ID, 0);
 }
-
 
 void dll_A1_func01_nop(void)
 {

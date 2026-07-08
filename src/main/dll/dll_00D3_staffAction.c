@@ -46,8 +46,7 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32* a, f32* b, f32* out);
 extern void fn_8003B950(void* mtx);
-extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount,
-                                void* hits, int hitCount);
+extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* hits, int hitCount);
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
@@ -374,8 +373,14 @@ void dll_D3_hitDetect_nop(void)
 {
 }
 
-int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
-int dll_D3_getObjectTypeId(void) { return 0x49; }
+int dll_D3_getExtraSize_ret_1188(void)
+{
+    return 0x4a4;
+}
+int dll_D3_getObjectTypeId(void)
+{
+    return 0x49;
+}
 
 void dll_D3_free(int obj)
 {
@@ -389,8 +394,8 @@ void dll_D3_free(int obj)
     (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
 
-extern void Vec3_Normalize(f32 * v);
-extern void Vec3_Cross(f32 * a, f32 * b, f32 * out);
+extern void Vec3_Normalize(f32* v);
+extern void Vec3_Cross(f32* a, f32* b, f32* out);
 
 typedef struct StaffBits
 {
@@ -415,7 +420,7 @@ void fn_80166E38(f32* out, f32* forward, f32* up)
     Vec3_Cross(rt, fwd, upRecomputed);
     Vec3_Normalize(upRecomputed);
     {
-        f32(*mat)[4] = (f32 (*)[4])out;
+        f32(*mat)[4] = (f32(*)[4])out;
         mat[0][0] = -rt[0];
         mat[0][1] = -rt[1];
         mat[0][2] = -rt[2];
@@ -444,26 +449,28 @@ void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-        if ((((LandedArwingState*)state)->surfaceMode == 6) && ((((u32)((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
-        {
-            if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
+            if ((((LandedArwingState*)state)->surfaceMode == 6) &&
+                ((((u32)((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
             {
-                fn_80166E38(slideMtx, &((GameObject*)obj)->anim.velocityX, &((LandedArwingState*)state)->surfaceNormalX);
+                if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
+                {
+                    fn_80166E38(slideMtx, &((GameObject*)obj)->anim.velocityX,
+                                &((LandedArwingState*)state)->surfaceNormalX);
+                }
+                scale = ((GameObject*)obj)->anim.rootMotionScale;
+                initRotationMtx(mtx, scale, scale, scale);
+                mtx44_mult(mtx, slideMtx, mtx);
+                mtx[12] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
+                mtx[13] = ((GameObject*)obj)->anim.localPosY;
+                mtx[14] = ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ;
+                fn_8003B950(mtx);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
+                fn_8003B950(0);
             }
-            scale = ((GameObject*)obj)->anim.rootMotionScale;
-            initRotationMtx(mtx, scale, scale, scale);
-            mtx44_mult(mtx, slideMtx, mtx);
-            mtx[12] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
-            mtx[13] = ((GameObject*)obj)->anim.localPosY;
-            mtx[14] = ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ;
-            fn_8003B950(mtx);
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
-            fn_8003B950(0);
-        }
-        else
-        {
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
-        }
+            else
+            {
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
+            }
             break;
         }
     }
@@ -479,9 +486,9 @@ u32 fn_801659B8(s16* obj, u32* params)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject((u32)obj);
-        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise((u16) * obj);
+        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise((u16)*obj);
         ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
-        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise((u16) * obj);
+        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*obj);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
@@ -688,8 +695,7 @@ void updateConstrainedChaseVelocity(int obj, f32 targetX, f32 targetY, f32 targe
             }
             break;
         case 6:
-            dot = vz * state->surfaceNormalZ +
-                (vx * state->surfaceNormalX + vy * state->surfaceNormalY);
+            dot = vz * state->surfaceNormalZ + (vx * state->surfaceNormalX + vy * state->surfaceNormalY);
             vx = -(dot * state->surfaceNormalX - vx);
             vy = -(dot * state->surfaceNormalY - vy);
             vz = -(dot * state->surfaceNormalZ - vz);
@@ -736,8 +742,8 @@ void fn_80166444(int obj, int state)
     f32 speed;
 
     distanceRemaining = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
-        (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-            ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
+                              (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                               ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
     traveled = lbl_803E2FDC;
     stepCount = 0;
     hitScratch.hitRadius = traveled;
@@ -791,8 +797,8 @@ void fn_80166444(int obj, int state)
     if (hitFound != 0)
     {
         if ((((hitScratch.hit[0] != ((LandedArwingState*)state)->surfaceNormalX) ||
-                    (hitScratch.hit[1] != ((LandedArwingState*)state)->surfaceNormalY)) ||
-                (hitScratch.hit[2] != ((LandedArwingState*)state)->surfaceNormalZ)) ||
+              (hitScratch.hit[1] != ((LandedArwingState*)state)->surfaceNormalY)) ||
+             (hitScratch.hit[2] != ((LandedArwingState*)state)->surfaceNormalZ)) ||
             (hitScratch.hit[3] != ((LandedArwingState*)state)->surfacePlaneD))
         {
             fn_80166840(obj, state, hitScratch.hit, end);
@@ -883,9 +889,9 @@ void dll_D3_update(int* obj)
     f32 vec[4];
     int hitResult[21];
 #define searchRadius vec[0]
-#define dx vec[1]
-#define dy vec[2]
-#define dz vec[3]
+#define dx           vec[1]
+#define dy           vec[2]
+#define dz           vec[3]
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
@@ -901,16 +907,15 @@ void dll_D3_update(int* obj)
             if ((extra->boundsObj = (void*)ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &searchRadius)) != NULL)
             {
                 (*(void (**)(int, int, int))(*(int**)*(int**)(*(int*)&extra->boundsObj + 0x68) + 0x20 / 4))(
-                    *(int*)&extra->boundsObj,
-                    (int)&extra->boundsMinX,
-                    (int)&extra->bounceFlags);
+                    *(int*)&extra->boundsObj, (int)&extra->boundsMinX, (int)&extra->bounceFlags);
                 extra->surfaceMode = 5;
             }
             ((StaffBits*)&extra->flags92)->hi -= 1;
         }
     }
 
-    if (((GameObject*)obj)->unkF4 != 0) return;
+    if (((GameObject*)obj)->unkF4 != 0)
+        return;
 
     if (((GameObject*)obj)->unkF8 == 0)
     {
@@ -923,7 +928,8 @@ void dll_D3_update(int* obj)
     }
 
     rc = ((int (*)(int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
-    if (rc == 0) return;
+    if (rc == 0)
+        return;
 
     if (((StaffBits*)&extra->flags92)->b1 == 0u)
     {
@@ -938,28 +944,21 @@ void dll_D3_update(int* obj)
     if (((TreasureChestState*)state)->targetState != 1)
     {
         rc = ((int (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
-            obj, state,
-            (f32)(u32)((TreasureChestState*)state)->aggroRange,
-            0x8000);
+            obj, state, (f32)(u32)((TreasureChestState*)state)->aggroRange, 0x8000);
         if (rc != 0u)
         {
-            ((void (*)(int*, int*, int, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x28 /
-                4])(
-                obj, state,
-                (int)((char*)state + 0x35c),
-                (int)((TreasureChestState*)state)->gameBitB,
-                0, 0, 1, 0, -1);
+            ((void (*)(int*, int*, int, int, int, int, int, int, int))(
+                (void**)*(int*)gBaddieControlInterface)[0x28 / 4])(
+                obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
             ((TreasureChestState*)state)->unk349 = 0;
             ((TreasureChestState*)state)->targetState = 1;
             ((TreasureChestState*)state)->unk405 = 2;
         }
 
-        if ((u32)((TreasureChestState*)state)->targetObj != 0 &&
-            ((TreasureChestState*)state)->targetState == 2)
+        if ((u32)((TreasureChestState*)state)->targetObj != 0 && ((TreasureChestState*)state)->targetState == 2)
         {
-            if (((TreasureChestState*)state)->targetDistance <=
-                (f32)(u32)((TreasureChestState*)state)->aggroRange)
+            if (((TreasureChestState*)state)->targetDistance <= (f32)(u32)((TreasureChestState*)state)->aggroRange)
             {
                 ((TreasureChestState*)state)->targetState = 1;
             }
@@ -969,29 +968,23 @@ void dll_D3_update(int* obj)
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
         dx = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosX -
-            ((GameObject*)obj)->anim.worldPosX;
+             ((GameObject*)obj)->anim.worldPosX;
         dy = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosY -
-            ((GameObject*)obj)->anim.worldPosY;
+             ((GameObject*)obj)->anim.worldPosY;
         dz = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosZ -
-            ((GameObject*)obj)->anim.worldPosZ;
-        ((TreasureChestState*)state)->targetDistance =
-            sqrtf(dz * dz + (dx * dx + dy * dy));
+             ((GameObject*)obj)->anim.worldPosZ;
+        ((TreasureChestState*)state)->targetDistance = sqrtf(dz * dz + (dx * dx + dy * dy));
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
-        obj, state,
-        (int)((char*)state + 0x35c),
-        (int)((TreasureChestState*)state)->gameBitB,
-        0, 0, 0, 0);
+        obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 0, 0);
 
     hits = (int)((TreasureChestState*)state)->hitPoints;
     if (hits > 0)
     {
         ((void (*)(int*, int*, int, int, int*, int*, int, int*))((void**)*(int*)gBaddieControlInterface)[0x50 / 4])(
-            obj, state,
-            (int)((char*)state + 0x35c),
-            (int)((TreasureChestState*)state)->gameBitB,
-            lbl_803202E8, lbl_80320360, 0, gStaffActionHitLightParams);
+            obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, lbl_803202E8,
+            lbl_80320360, 0, gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
             (*(void (**)(int))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))(
@@ -1003,8 +996,7 @@ void dll_D3_update(int* obj)
         }
     }
 
-    ((void (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x2c / 4])(
-        obj, state, lbl_803E2FDC, -1);
+    ((void (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x2c / 4])(obj, state, lbl_803E2FDC, -1);
 
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
@@ -1015,14 +1007,10 @@ void dll_D3_update(int* obj)
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 
-    if (((StaffBits*)&extra->flags92)->b0 == 0u &&
-        extra->surfaceMode == 6)
+    if (((StaffBits*)&extra->flags92)->b0 == 0u && extra->surfaceMode == 6)
     {
-        hitCount = objBboxFn_800640cc(
-            (int)((char*)obj + 0x80),
-            &((GameObject*)obj)->anim.localPosX,
-            lbl_803E3030, 0,
-            hitResult, obj, -0x7c, -1, 0xff, 0);
+        hitCount = objBboxFn_800640cc((int)((char*)obj + 0x80), &((GameObject*)obj)->anim.localPosX, lbl_803E3030, 0,
+                                      hitResult, obj, -0x7c, -1, 0xff, 0);
         if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
         {
             ((StaffBits*)&extra->flags92)->b0 = 1;
@@ -1051,8 +1039,8 @@ void dll_D3_init(int obj, int def, int flag)
     {
         setupFlags |= 1;
     }
-    ((void (*)(int, int, int, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])
-        (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
+    ((void (*)(int, int, int, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
+        obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
     ((GameObject*)obj)->animEventCallback = NULL;
 
     extra = (LandedArwingState*)((GroundBaddieState*)state)->control;

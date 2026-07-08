@@ -32,18 +32,18 @@ extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 
-#define LEVELNAME_PHASE_WAIT 0
-#define LEVELNAME_PHASE_SLIDE_IN 1
-#define LEVELNAME_PHASE_HOLD 2
+#define LEVELNAME_PHASE_WAIT      0
+#define LEVELNAME_PHASE_SLIDE_IN  1
+#define LEVELNAME_PHASE_HOLD      2
 #define LEVELNAME_PHASE_SLIDE_OUT 3
-#define LEVELNAME_PHASE_IDLE 4
+#define LEVELNAME_PHASE_IDLE      4
 
-#define LEVELNAME_PHASE 0x14       /* state machine phase byte (struct .phase) */
-#define LEVELNAME_TRIGGER_DIST 0xc /* trigger radius byte in the extra record */
-#define LEVELNAME_BANNER_Y_MAX 0xdc
+#define LEVELNAME_PHASE         0x14 /* state machine phase byte (struct .phase) */
+#define LEVELNAME_TRIGGER_DIST  0xc  /* trigger radius byte in the extra record */
+#define LEVELNAME_BANNER_Y_MAX  0xdc
 #define LEVELNAME_BANNER_Y_STEP 4
-#define LEVELNAME_SEQEV_SHOW 1     /* anim event id that triggers the banner */
-#define LEVELNAME_SEQFN_HANDLED 4  /* LevelName_SeqFn return when the show event fired */
+#define LEVELNAME_SEQEV_SHOW    1 /* anim event id that triggers the banner */
+#define LEVELNAME_SEQFN_HANDLED 4 /* LevelName_SeqFn return when the show event fired */
 
 int LevelName_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -64,8 +64,14 @@ int LevelName_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int LevelName_getExtraSize(void) { return 0x18; }
-int LevelName_getObjectTypeId(void) { return 0x0; }
+int LevelName_getExtraSize(void)
+{
+    return 0x18;
+}
+int LevelName_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void LevelName_free(void)
 {
@@ -100,7 +106,8 @@ void LevelName_update(int* obj)
         }
         break;
     case LEVELNAME_PHASE_SLIDE_IN:
-        ((LevelnameState*)state)->bannerY = (s16)(((LevelnameState*)state)->bannerY + framesThisStep * LEVELNAME_BANNER_Y_STEP);
+        ((LevelnameState*)state)->bannerY =
+            (s16)(((LevelnameState*)state)->bannerY + framesThisStep * LEVELNAME_BANNER_Y_STEP);
         if (((LevelnameState*)state)->bannerY > LEVELNAME_BANNER_Y_MAX)
         {
             ((LevelnameState*)state)->bannerY = LEVELNAME_BANNER_Y_MAX;
@@ -108,19 +115,22 @@ void LevelName_update(int* obj)
         }
         break;
     case LEVELNAME_PHASE_HOLD:
+    {
+        ((LevelnameState*)state)->holdTimer += framesThisStep;
+        if ((u32)((LevelnameState*)state)->holdTimer > (u32)((LevelnameState*)state)->holdDuration)
         {
-            ((LevelnameState*)state)->holdTimer += framesThisStep;
-            if ((u32)((LevelnameState*)state)->holdTimer > (u32)((LevelnameState*)state)->holdDuration)
-            {
-                state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_OUT;
-            }
-            ((LevelnameState*)state)->bannerY = (s16)(
-                (s32)(lbl_803E36E0 * mathSinf(
-                    (lbl_803E36E4 * (f32)((s32)((LevelnameState*)state)->holdTimer * 0x500)) / lbl_803E36E8)) + LEVELNAME_BANNER_Y_MAX);
-            break;
+            state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_OUT;
         }
+        ((LevelnameState*)state)->bannerY =
+            (s16)((s32)(lbl_803E36E0 *
+                        mathSinf((lbl_803E36E4 * (f32)((s32)((LevelnameState*)state)->holdTimer * 0x500)) /
+                                 lbl_803E36E8)) +
+                  LEVELNAME_BANNER_Y_MAX);
+        break;
+    }
     case LEVELNAME_PHASE_SLIDE_OUT:
-        ((LevelnameState*)state)->bannerY = (s16)(((LevelnameState*)state)->bannerY - framesThisStep * LEVELNAME_BANNER_Y_STEP);
+        ((LevelnameState*)state)->bannerY =
+            (s16)(((LevelnameState*)state)->bannerY - framesThisStep * LEVELNAME_BANNER_Y_STEP);
         if (((LevelnameState*)state)->bannerY < 0)
         {
             ((LevelnameState*)state)->bannerY = 0;

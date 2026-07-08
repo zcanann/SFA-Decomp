@@ -109,13 +109,13 @@ extern f32 lbl_803E580C;
 /* Sequence-event opcodes consumed by SB_Galleon_SeqFn. */
 enum SbGalleonSeqEvent
 {
-    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_1 = 2,  /* toggle damagePhase to 1 */
+    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_1 = 2, /* toggle damagePhase to 1 */
     SBGALLEON_SEQEV_SPRAY_ON = 3,
     SBGALLEON_SEQEV_SPRAY_OFF = 4,
-    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_2 = 5,  /* toggle damagePhase to 2 */
+    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_2 = 5, /* toggle damagePhase to 2 */
     SBGALLEON_SEQEV_SFX_ON = 6,
     SBGALLEON_SEQEV_SFX_OFF = 7,
-    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8 = 8,  /* toggle damagePhase to 8 */
+    SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8 = 8, /* toggle damagePhase to 8 */
     SBGALLEON_SEQEV_SKY_ON = 9,
     SBGALLEON_SEQEV_SKY_OFF = 10,
     SBGALLEON_SEQEV_SPLASH_SFX = 0xb,
@@ -134,19 +134,19 @@ enum SbGalleonCameraState
     SBGALLEON_CAM_DONE = 4
 };
 
-#define SBGALLEON_FX_SPRAY 0x7aa         /* water-spray particle fx */
-#define SBGALLEON_FX_WANDER 0xa3         /* wandering particle fx */
-#define SBGALLEON_ROMLIST_LINKED 0xf7    /* romlist type of the linked spray actor */
-#define SBGALLEON_GAMETEXT 0x4b1         /* on-screen gameText id */
-#define SBGALLEON_GAMEBIT_INTRO 0x75     /* gates the intro map-event setup */
+#define SBGALLEON_FX_SPRAY         0x7aa /* water-spray particle fx */
+#define SBGALLEON_FX_WANDER        0xa3  /* wandering particle fx */
+#define SBGALLEON_ROMLIST_LINKED   0xf7  /* romlist type of the linked spray actor */
+#define SBGALLEON_GAMETEXT         0x4b1 /* on-screen gameText id */
+#define SBGALLEON_GAMEBIT_INTRO    0x75  /* gates the intro map-event setup */
 #define SBGALLEON_GAMEBIT_DEFEATED 0xac8 /* set on free */
-#define SBGALLEON_SFX_SPLASH 0x143
-#define SBGALLEON_SFX_SPRAY 0x2c6
-#define SBGALLEON_TEXTURE_SKY_A 0x16d /* gSbGalleonSkyTexA */
-#define SBGALLEON_TEXTURE_SKY_B 0x89  /* gSbGalleonSkyTexB */
-#define SBGALLEON_MUSIC_INTRO 0xa3
-#define SBGALLEON_MAP_PALACE 0xb         /* map-event/dir id this boss locks */
-#define SBGALLEON_SKY_LIGHT_SLOT 7       /* sky override light slot fn_801E1588 drives */
+#define SBGALLEON_SFX_SPLASH       0x143
+#define SBGALLEON_SFX_SPRAY        0x2c6
+#define SBGALLEON_TEXTURE_SKY_A    0x16d /* gSbGalleonSkyTexA */
+#define SBGALLEON_TEXTURE_SKY_B    0x89  /* gSbGalleonSkyTexB */
+#define SBGALLEON_MUSIC_INTRO      0xa3
+#define SBGALLEON_MAP_PALACE       0xb /* map-event/dir id this boss locks */
+#define SBGALLEON_SKY_LIGHT_SLOT   7   /* sky override light slot fn_801E1588 drives */
 
 int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -177,21 +177,21 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case SBGALLEON_SEQEV_SPRAY_ON:
+        {
+            int start;
+            int end;
+            int* arr = ObjList_GetObjects(&start, &end);
+            for (i = start; i < end; i++)
             {
-                int start;
-                int end;
-                int* arr = ObjList_GetObjects(&start, &end);
-                for (i = start; i < end; i++)
+                if (((GameObject*)arr[i])->anim.seqId == SBGALLEON_ROMLIST_LINKED)
                 {
-                    if (((GameObject*)arr[i])->anim.seqId == SBGALLEON_ROMLIST_LINKED)
-                    {
-                        state->linkedActor = arr[i];
-                        i = end;
-                    }
+                    state->linkedActor = arr[i];
+                    i = end;
                 }
-                state->sprayActive = 1;
-                break;
             }
+            state->sprayActive = 1;
+            break;
+        }
         case SBGALLEON_SEQEV_SPRAY_OFF:
             state->sprayActive = 0;
             break;
@@ -261,8 +261,7 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     {
         f32 v = state->textAlpha;
-        state->textAlpha =
-            (v < lbl_803E56CC) ? lbl_803E56CC : ((v > lbl_803E57F4) ? lbl_803E57F4 : v);
+        state->textAlpha = (v < lbl_803E56CC) ? lbl_803E56CC : ((v > lbl_803E57F4) ? lbl_803E57F4 : v);
     }
     if (state->textAlpha > lbl_803E56CC)
     {
@@ -324,7 +323,8 @@ void fn_801E1588(int obj, int state)
         int v2 = gSbGalleonSkyColorAStart[2];
         gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
     }
-    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorA[0], *(volatile u8*)&gSbGalleonSkyColorA[1], *(volatile u8*)&gSbGalleonSkyColorA[2], 0x40, 0x40);
+    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorA[0],
+                   *(volatile u8*)&gSbGalleonSkyColorA[1], *(volatile u8*)&gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
         gSbGalleonSkyColorB[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[0] - v0);
@@ -337,7 +337,8 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC078[2];
         gSbGalleonSkyColorB[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[2] - v2);
     }
-    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorB[0], *(volatile u8*)&gSbGalleonSkyColorB[1], *(volatile u8*)&gSbGalleonSkyColorB[2]);
+    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorB[0],
+                *(volatile u8*)&gSbGalleonSkyColorB[1], *(volatile u8*)&gSbGalleonSkyColorB[2]);
     {
         int v0 = gSbGalleonSkyColorCStart[0];
         gSbGalleonSkyColorC[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[0] - v0);
@@ -350,11 +351,11 @@ void fn_801E1588(int obj, int state)
         int v2 = gSbGalleonSkyColorCStart[2];
         gSbGalleonSkyColorC[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[2] - v2);
     }
-    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorC[0], *(volatile u8*)&gSbGalleonSkyColorC[1], *(volatile u8*)&gSbGalleonSkyColorC[2]);
+    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorC[0],
+                *(volatile u8*)&gSbGalleonSkyColorC[1], *(volatile u8*)&gSbGalleonSkyColorC[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
-    skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
-                                 lbl_803DDC28 * (d.y - c.y) + c.y,
+    skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x, lbl_803DDC28 * (d.y - c.y) + c.y,
                                  lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
     if (((SBGalleonState*)state)->skyFlag == 0)
     {
@@ -387,14 +388,29 @@ void SB_Galleon_initialise(void)
 {
 }
 
-int SB_Galleon_getExtraSize(void) { return sizeof(SBGalleonState); }
-int SB_Galleon_getObjectTypeId(void) { return 0x0; }
+int SB_Galleon_getExtraSize(void)
+{
+    return sizeof(SBGalleonState);
+}
+int SB_Galleon_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-u32 getSbGalleon(void) { return gSbGalleon; }
+u32 getSbGalleon(void)
+{
+    return gSbGalleon;
+}
 
-u8 SB_Galleon_getDamagePhase(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase; }
+u8 SB_Galleon_getDamagePhase(int* obj)
+{
+    return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase;
+}
 
-s32 SB_Galleon_getStage(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->stage; }
+s32 SB_Galleon_getStage(int* obj)
+{
+    return ((SBGalleonState*)((GameObject*)obj)->extra)->stage;
+}
 
 /*
  * Galleon DLL vtable slot SB_GALLEON_VTBL_ON_GUN_DESTROYED: a destructible part
@@ -476,8 +492,7 @@ void SB_Galleon_hitDetect(GameObject* obj)
         stk.d = lbl_803E56C8;
         for (i = 0; i < framesThisStep; i++)
         {
-            (*gPartfxInterface)->spawnObject(
-                (void*)state->linkedActor, SBGALLEON_FX_SPRAY, stk.pad, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject((void*)state->linkedActor, SBGALLEON_FX_SPRAY, stk.pad, 2, -1, 0);
         }
     }
 }
@@ -602,11 +617,13 @@ int SB_Galleon_getPhase(int* obj)
     phase = (u8)state->phase;
     if ((s8)phase == 0)
     {
-        if (state->timer26 > 0) return -2;
+        if (state->timer26 > 0)
+            return -2;
     }
     if ((s8)phase == 1)
     {
-        if ((pattern = (s8)state->flightPattern) == 2 || pattern == 3 || pattern == 5) return -1;
+        if ((pattern = (s8)state->flightPattern) == 2 || pattern == 3 || pattern == 5)
+            return -1;
     }
     return (s8)phase;
 }
@@ -617,8 +634,10 @@ int SB_Galleon_func0E(int* obj)
     if ((s8)(u8)state->phase == 1)
     {
         int wrapped;
-        if ((s8)(u8)state->phaseCounter >= 5) wrapped = (s8)(u8)state->phaseCounter - 5;
-        else wrapped = (s8)(u8)state->phaseCounter;
+        if ((s8)(u8)state->phaseCounter >= 5)
+            wrapped = (s8)(u8)state->phaseCounter - 5;
+        else
+            wrapped = (s8)(u8)state->phaseCounter;
         return (6 - wrapped) * 0x5a;
     }
     return 0x640;

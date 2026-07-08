@@ -69,9 +69,9 @@ void wclevelcont_worldPosToTileB(int obj, f32 px, f32 pz, s16* outRow, s16* outC
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
+                                                                   ((GameObject*)obj)->anim.localPosY,
+                                                                   ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DB8) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
@@ -80,9 +80,9 @@ void wclevelcont_tileBToWorldPos(int obj, s16 col, s16 row, f32* outXp, f32* out
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
+                                                                   ((GameObject*)obj)->anim.localPosY,
+                                                                   ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     {
         f32 base = lbl_803E6DB4;
         *outXp = base + (lbl_803E6DB8 + outX + (f32)(col * 48));
@@ -148,9 +148,9 @@ void wclevelcont_worldPosToTileA(int obj, f32 px, f32 pz, s16* outRow, s16* outC
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
+                                                                   ((GameObject*)obj)->anim.localPosY,
+                                                                   ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
@@ -159,9 +159,9 @@ void wclevelcont_tileAToWorldPos(int obj, s16 col, s16 row, f32* outXp, f32* out
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(((GameObject*)obj)->anim.localPosX,
+                                                                   ((GameObject*)obj)->anim.localPosY,
+                                                                   ((GameObject*)obj)->anim.localPosZ, &outX, &outZ);
     {
         f32 base = lbl_803E6DB4;
         *outXp = base + (lbl_803E6DD0 + outX + (f32)(col * 48));
@@ -169,9 +169,15 @@ void wclevelcont_tileAToWorldPos(int obj, s16 col, s16 row, f32* outXp, f32* out
     }
 }
 
-int wclevelcont_getExtraSize(void) { return 0x1c; }
+int wclevelcont_getExtraSize(void)
+{
+    return 0x1c;
+}
 
-int wclevelcont_getObjectTypeId(void) { return 0; }
+int wclevelcont_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void wclevelcont_free(int obj)
 {
@@ -246,7 +252,8 @@ void wclevelcont_syncProgressBits(int stateArg)
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
-    if ((u32)mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 && ((u32)mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
+    if ((u32)mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 &&
+        ((u32)mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
     {
         flag = 1;
     }
@@ -432,14 +439,22 @@ void wclevelcont_init(int obj)
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     mainSetBits(0x811, 0);
     memcpy(lbl_803AD298, lbl_8032B088, 0x40);
-    if ((u32)mainGetBit(0x7fa) != 0) state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
-    if ((u32)mainGetBit(0x7f9) != 0) state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
-    if ((u32)mainGetBit(0x813) != 0) state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
-    if ((u32)mainGetBit(0x812) != 0) state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
-    if ((u32)mainGetBit(0x2a5) != 0) state->completionFlags |= WCLEVELCTL_FLAG_TREX;
-    if ((u32)mainGetBit(0x205) != 0) state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
-    if ((u32)mainGetBit(0xbcf) != 0) state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
-    if ((u32)mainGetBit(0xcac) != 0) state->completionFlags |= WCLEVELCTL_FLAG_EXTRA;
+    if ((u32)mainGetBit(0x7fa) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
+    if ((u32)mainGetBit(0x7f9) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
+    if ((u32)mainGetBit(0x813) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
+    if ((u32)mainGetBit(0x812) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
+    if ((u32)mainGetBit(0x2a5) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_TREX;
+    if ((u32)mainGetBit(0x205) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
+    if ((u32)mainGetBit(0xbcf) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
+    if ((u32)mainGetBit(0xcac) != 0)
+        state->completionFlags |= WCLEVELCTL_FLAG_EXTRA;
     flags = state->completionFlags;
     if (flags & 0x200)
     {

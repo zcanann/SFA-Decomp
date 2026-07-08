@@ -43,8 +43,8 @@ typedef char synth_ctrl_assert_auxBSend[SYNTH_CTRL_OFFSETOF(SynthGlobalState, au
 typedef char synth_ctrl_assert_auxPairState[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxPairState) == 0xc94 ? 1 : -1];
 typedef char synth_ctrl_assert_auxMixSlot[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxMixSlot) == 0xca4 ? 1 : -1];
 
-#define SYNTH_FADE_SCALE sSynthFadeScale
-#define SYNTH_FADE_ONE sSynthFadeUnit
+#define SYNTH_FADE_SCALE      sSynthFadeScale
+#define SYNTH_FADE_ONE        sSynthFadeUnit
 #define SYNTH_FADE_TIME_SCALE sSynthFadeTimeScale
 
 extern void* salMalloc(u32 size);
@@ -69,26 +69,31 @@ extern u8 synthAuxBIndex[8];
 extern f32 lbl_803E77D0;
 extern f32 lbl_803E77A8;
 
-#define SYNTH_APPLY_FADE(fade, fadeIndex, fadeHandle)      \
-    do {                                                   \
-        (fade)->delayAction = action;                      \
-        (fade)->handle = (fadeHandle);                     \
-                                                           \
-        if (fadeTime != 0) {                               \
-            (fade)->start = (fade)->current;               \
-            (fade)->target = target;                       \
-            (fade)->progress = SYNTH_FADE_ONE;             \
-            (fade)->progressStep = SYNTH_FADE_TIME_SCALE / fadeTime; \
-        } else {                                           \
-            (fade)->target = target;                       \
-            (fade)->current = target;                      \
-                                                           \
-            if ((fade)->handle != SYNTH_INVALID_LINK_ID) { \
-                synthDispatchDelayedAction(fade);          \
-            }                                              \
-        }                                                  \
-                                                           \
-        gSynthFadeMask |= 1 << (fadeIndex);                \
+#define SYNTH_APPLY_FADE(fade, fadeIndex, fadeHandle)                                                                  \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (fade)->delayAction = action;                                                                                  \
+        (fade)->handle = (fadeHandle);                                                                                 \
+                                                                                                                       \
+        if (fadeTime != 0)                                                                                             \
+        {                                                                                                              \
+            (fade)->start = (fade)->current;                                                                           \
+            (fade)->target = target;                                                                                   \
+            (fade)->progress = SYNTH_FADE_ONE;                                                                         \
+            (fade)->progressStep = SYNTH_FADE_TIME_SCALE / fadeTime;                                                   \
+        }                                                                                                              \
+        else                                                                                                           \
+        {                                                                                                              \
+            (fade)->target = target;                                                                                   \
+            (fade)->current = target;                                                                                  \
+                                                                                                                       \
+            if ((fade)->handle != SYNTH_INVALID_LINK_ID)                                                               \
+            {                                                                                                          \
+                synthDispatchDelayedAction(fade);                                                                      \
+            }                                                                                                          \
+        }                                                                                                              \
+                                                                                                                       \
+        gSynthFadeMask |= 1 << (fadeIndex);                                                                            \
     } while (0)
 
 extern void sndBegin(void);

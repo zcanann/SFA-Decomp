@@ -59,11 +59,9 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                         memset(dspVoice[i].pb, 0, sizeof(_PB));
                         dspVoice[i].patchData = salMalloc(0x80);
                         dspVoice[i].pb->currHi = ((u32)dspVoice[i].pb >> 16);
-                        dspVoice[i].pb->currLo = (u16)(u32)
-                        dspVoice[i].pb;
+                        dspVoice[i].pb->currLo = (u16)(u32)dspVoice[i].pb;
                         dspVoice[i].pb->update.dataHi = ((u32)dspVoice[i].patchData >> 16);
-                        dspVoice[i].pb->update.dataLo = (u16)(u32)
-                        dspVoice[i].patchData;
+                        dspVoice[i].pb->update.dataLo = (u16)(u32)dspVoice[i].patchData;
                         dspVoice[i].pb->itd.bufferHi = (itdPtr >> 16);
                         dspVoice[i].pb->itd.bufferLo = itdPtr;
                         dspVoice[i].itdBuffer = (void*)itdPtr;
@@ -97,12 +95,9 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                         dspStudio[i].auxB[1] = dspStudio[i].auxB[0] + 0x1e0;
                         dspStudio[i].auxB[2] = dspStudio[i].auxB[1] + 0x1e0;
                         memset(dspStudio[i].spb, 0, sizeof(_SPB));
-                        dspStudio[i].hostDPopSum.l = dspStudio[i].hostDPopSum.r =
-                            dspStudio[i].hostDPopSum.s = 0;
-                        dspStudio[i].hostDPopSum.lA = dspStudio[i].hostDPopSum.rA =
-                            dspStudio[i].hostDPopSum.sA = 0;
-                        dspStudio[i].hostDPopSum.lB = dspStudio[i].hostDPopSum.rB =
-                            dspStudio[i].hostDPopSum.sB = 0;
+                        dspStudio[i].hostDPopSum.l = dspStudio[i].hostDPopSum.r = dspStudio[i].hostDPopSum.s = 0;
+                        dspStudio[i].hostDPopSum.lA = dspStudio[i].hostDPopSum.rA = dspStudio[i].hostDPopSum.sA = 0;
+                        dspStudio[i].hostDPopSum.lB = dspStudio[i].hostDPopSum.rB = dspStudio[i].hostDPopSum.sB = 0;
                         DCFlushRangeNoSync(dspStudio[i].spb, sizeof(_SPB));
                     }
 
@@ -156,12 +151,9 @@ void salActivateStudio(u8 studio, u32 isMaster, u32 type)
     memset(base[studio].main[0], 0, 0x3c00);
     DCFlushRangeNoSync(base[studio].main[0], 0x3c00);
     memset(base[studio].spb, 0, sizeof(_SPB));
-    base[studio].hostDPopSum.l = base[studio].hostDPopSum.r =
-        base[studio].hostDPopSum.s = 0;
-    base[studio].hostDPopSum.lA = base[studio].hostDPopSum.rA =
-        base[studio].hostDPopSum.sA = 0;
-    base[studio].hostDPopSum.lB = base[studio].hostDPopSum.rB =
-        base[studio].hostDPopSum.sB = 0;
+    base[studio].hostDPopSum.l = base[studio].hostDPopSum.r = base[studio].hostDPopSum.s = 0;
+    base[studio].hostDPopSum.lA = base[studio].hostDPopSum.rA = base[studio].hostDPopSum.sA = 0;
+    base[studio].hostDPopSum.lB = base[studio].hostDPopSum.rB = base[studio].hostDPopSum.sB = 0;
     DCFlushRangeNoSync(base[studio].spb, sizeof(_SPB));
     memset(base[studio].auxA[0], 0, 0x780);
     DCFlushRangeNoSync(base[studio].auxA[0], 0x780);
@@ -191,7 +183,7 @@ int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u
 
     if (targetVol != *last_vol)
     {
-        delta = (s16)targetVol - (s16) * last_vol;
+        delta = (s16)targetVol - (s16)*last_vol;
         delta = (s16)delta;
         if ((delta >= 0x20) && (delta < 0xa0))
         {

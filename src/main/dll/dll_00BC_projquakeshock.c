@@ -36,9 +36,12 @@ char sProjquakeshockDoNoLongerSupported[] = "<projquakeshock Do>No Longer suppor
  * pointer tables regenerate ADDR32 relocs). Union u64 member forces the
  * retail 8-byte alignment after the 0x29-byte string (retail pad
  * gap_07_803198D1_data). Same idiom as dll_00B1_projlightning3. */
-typedef union DllDescriptorTable {
+typedef union DllDescriptorTable
+{
     void* ptrs[8];
     u64 align8;
 } DllDescriptorTable;
 
-DllDescriptorTable lbl_803198D8 = { { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000, projsunshock_initialise, projsunshock_release, (void*)0x00000000, projsunshock_doUnsupported } };
+DllDescriptorTable lbl_803198D8 = {{(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
+                                    projsunshock_initialise, projsunshock_release, (void*)0x00000000,
+                                    projsunshock_doUnsupported}};

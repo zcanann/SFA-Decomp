@@ -24,9 +24,8 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlo
             goto block_18;
         }
         ctrl = slotPtr->entries[i].controller;
-        if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
-            ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
-            ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING)
+        if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION || ctrl == MCMD_CTRL_PANNING ||
+            ctrl == MCMD_CTRL_EX_A0 || ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING)
         {
             switch (ctrl)
             {

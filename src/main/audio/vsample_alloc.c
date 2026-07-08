@@ -92,8 +92,7 @@ static u16 vsNewInstanceID(VS* v)
                 break;
             }
         }
-    }
-    while (i != v->numBuffers);
+    } while (i != v->numBuffers);
 
     return instID;
 }

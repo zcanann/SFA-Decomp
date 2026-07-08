@@ -22,10 +22,10 @@
 #define FOGCONTROL_OBJFLAG_HIDDEN 0x4000
 
 /* FogcontrolPlacement::flags (low byte, offset 0x1A) */
-#define FOG_FLAG_MODE 0x01      /* enableHeavyFog mode arg */
-#define FOG_FLAG_FAST_IN 0x02   /* ramp-in uses fast speed 0.005 (else 0.02) */
-#define FOG_FLAG_FAST_OUT 0x04  /* ramp-out uses fast speed 0.005 (else 0.02) */
-#define FOG_FLAG_ENABLE 0x08    /* fog volume is placed/active */
+#define FOG_FLAG_MODE     0x01 /* enableHeavyFog mode arg */
+#define FOG_FLAG_FAST_IN  0x02 /* ramp-in uses fast speed 0.005 (else 0.02) */
+#define FOG_FLAG_FAST_OUT 0x04 /* ramp-out uses fast speed 0.005 (else 0.02) */
+#define FOG_FLAG_ENABLE   0x08 /* fog volume is placed/active */
 
 typedef struct FogcontrolPlacement
 {
@@ -67,8 +67,14 @@ typedef struct FogControlState
     u8 rest : 6;
 } FogControlState;
 
-int FogControl_getExtraSize(void) { return sizeof(FogControlState); }
-int FogControl_getObjectTypeId(void) { return 0x0; }
+int FogControl_getExtraSize(void)
+{
+    return sizeof(FogControlState);
+}
+int FogControl_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void FogControl_free(int obj)
 {
@@ -149,15 +155,15 @@ void FogControl_update(int obj)
                 st->blend = 1.0f;
                 st->full = 1;
             }
-            fogY = st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
+            fogY =
+                st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
                 (f32)((FogcontrolPlacement*)setup)->fogBase;
             fogY = ((GameObject*)obj)->anim.localPosY + fogY;
-            enableHeavyFog(fogY,
-                           ((f32)((FogcontrolPlacement*)setup)->fogBottom + fogY) - (f32)((FogcontrolPlacement*)setup)->fogTop,
-                           (f32)((FogcontrolPlacement*)setup)->fogRed,
-                           (f32)((FogcontrolPlacement*)setup)->fogGreen / 65535.0f,
-                           0.0001f,
-                           *(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_MODE);
+            enableHeavyFog(
+                fogY,
+                ((f32)((FogcontrolPlacement*)setup)->fogBottom + fogY) - (f32)((FogcontrolPlacement*)setup)->fogTop,
+                (f32)((FogcontrolPlacement*)setup)->fogRed, (f32)((FogcontrolPlacement*)setup)->fogGreen / 65535.0f,
+                0.0001f, *(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_MODE);
         }
     }
 }
@@ -188,14 +194,10 @@ void FogControl_init(int obj, FogcontrolPlacement* placement)
             st->full = 1;
             st->on = 1;
             st->blend = 1.0f;
-            fogY = st->blend * ((f32)placement->fogTop - placement->fogBase) +
-                placement->fogBase;
+            fogY = st->blend * ((f32)placement->fogTop - placement->fogBase) + placement->fogBase;
             fogY = ((GameObject*)obj)->anim.localPosY + fogY;
-            enableHeavyFog(fogY,
-                           ((f32)placement->fogBottom + fogY) - placement->fogTop,
-                           placement->fogRed,
-                           placement->fogGreen / 65535.0f,
-                           0.0001f, *(u8*)&placement->flags & FOG_FLAG_MODE);
+            enableHeavyFog(fogY, ((f32)placement->fogBottom + fogY) - placement->fogTop, placement->fogRed,
+                           placement->fogGreen / 65535.0f, 0.0001f, *(u8*)&placement->flags & FOG_FLAG_MODE);
         }
     }
 }

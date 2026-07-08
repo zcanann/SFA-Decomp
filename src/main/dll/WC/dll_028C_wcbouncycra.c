@@ -2,12 +2,12 @@
 #include "main/game_object.h"
 
 #define WCBLOCK_GRID_OBJECT_OFFSET 0x268
-#define WCBLOCK_CELL_X_OFFSET 0x27e
-#define WCBLOCK_CELL_Z_OFFSET 0x280
-#define WCBLOCK_TILE_INDEX_OFFSET 0x283
-#define WCBLOCK_VARIANT_A 1
+#define WCBLOCK_CELL_X_OFFSET      0x27e
+#define WCBLOCK_CELL_Z_OFFSET      0x280
+#define WCBLOCK_TILE_INDEX_OFFSET  0x283
+#define WCBLOCK_VARIANT_A          1
 
-#define WCBLOCK_GRID_IFACE(state) (*(WCBlockGridInterface **)(*(int *)((state)->controller + 0x68)))
+#define WCBLOCK_GRID_IFACE(state) (*(WCBlockGridInterface**)(*(int*)((state)->controller + 0x68)))
 
 typedef struct WCBlockGridInterface
 {
@@ -37,15 +37,15 @@ STATIC_ASSERT(offsetof(WCBlockState, cellX) == WCBLOCK_CELL_X_OFFSET);
 STATIC_ASSERT(offsetof(WCBlockState, cellZ) == WCBLOCK_CELL_Z_OFFSET);
 STATIC_ASSERT(offsetof(WCBlockState, tileIndex) == WCBLOCK_TILE_INDEX_OFFSET);
 
-#define WBOUNCY_EXTRA_SIZE 0xc
-#define WBOUNCY_STATE_HOME_Y 0x00
-#define WBOUNCY_STATE_COOLDOWN 0x08
-#define WBOUNCY_STATE_FLAGS 0x0a
+#define WBOUNCY_EXTRA_SIZE         0xc
+#define WBOUNCY_STATE_HOME_Y       0x00
+#define WBOUNCY_STATE_COOLDOWN     0x08
+#define WBOUNCY_STATE_FLAGS        0x0a
 #define WBOUNCY_STATE_BOUNCE_COUNT 0x0b
-#define WBOUNCY_FLAG_ACTIVE 1
-#define WBOUNCY_TRIGGER_GROUP 3
-#define WBOUNCY_RESET_COOLDOWN 0x28
-#define WBOUNCY_MAX_BOUNCES 0xa
+#define WBOUNCY_FLAG_ACTIVE        1
+#define WBOUNCY_TRIGGER_GROUP      3
+#define WBOUNCY_RESET_COOLDOWN     0x28
+#define WBOUNCY_MAX_BOUNCES        0xa
 
 typedef struct WCBouncyCrateState
 {
@@ -62,9 +62,15 @@ STATIC_ASSERT(offsetof(WCBouncyCrateState, cooldown) == WBOUNCY_STATE_COOLDOWN);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, flags) == WBOUNCY_STATE_FLAGS);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, bounceCount) == WBOUNCY_STATE_BOUNCE_COUNT);
 
-int WCBouncyCra_getExtraSize(void) { return WBOUNCY_EXTRA_SIZE; }
+int WCBouncyCra_getExtraSize(void)
+{
+    return WBOUNCY_EXTRA_SIZE;
+}
 
-int WCBouncyCra_getObjectTypeId(void) { return 0; }
+int WCBouncyCra_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void WCBouncyCra_free(void)
 {
@@ -126,8 +132,8 @@ void WCBouncyCra_update(int obj)
     else
     {
         ((GameObject*)obj)->anim.velocityY = gBouncyCrateGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-            localPosY;
+        ((GameObject*)obj)->anim.localPosY =
+            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (((GameObject*)obj)->anim.localPosY <= state->homeY)
         {
             ((GameObject*)obj)->anim.localPosY =
@@ -176,17 +182,13 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int stateArg, int player)
     objAnim = (ObjAnimComponent*)obj;
     if (objAnim->bankIndex == WCBLOCK_VARIANT_A)
     {
-        iface->getCellXYA(
-            state->tileIndex, &state->cellX, &state->cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
-        iface->getCellWorldA(
-            obj, state->cellX, state->cellZ, &cellX, &cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
+        iface->getCellXYA(state->tileIndex, &state->cellX, &state->cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
+        iface->getCellWorldA(obj, state->cellX, state->cellZ, &cellX, &cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
     }
     else
     {
-        iface->getCellXYB(
-            state->tileIndex, &state->cellX, &state->cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
-        iface->getCellWorldB(
-            obj, state->cellX, state->cellZ, &cellX, &cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
+        iface->getCellXYB(state->tileIndex, &state->cellX, &state->cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
+        iface->getCellWorldB(obj, state->cellX, state->cellZ, &cellX, &cellZ, (iface = WCBLOCK_GRID_IFACE(state)));
     }
 
     min = cellX - WCBLOCK_PLAYER_CELL_MARGIN;

@@ -4,7 +4,7 @@
 
 extern u32 dspHRTFOn;
 extern u8* dspVoice;
-extern void*(*gSalMallocHook)(u32 size);
+extern void* (*gSalMallocHook)(u32 size);
 
 void hwSaveSample(u32** sample, void** ptr)
 {
@@ -20,8 +20,10 @@ void hwSaveSample(u32** sample, void** ptr)
     {
         if (type < 3)
         {
-            if (type >= 2) goto size_double;
-            if (type >= 0) goto size_adpcm;
+            if (type >= 2)
+                goto size_double;
+            if (type >= 0)
+                goto size_adpcm;
             goto save;
         }
         else if (type >= 6)
@@ -53,8 +55,10 @@ void hwRemoveSample(u32* sample, void* ptr)
     {
         if (type < 3)
         {
-            if (type >= 2) goto size_double;
-            if (type >= 0) goto size_adpcm;
+            if (type >= 2)
+                goto size_double;
+            if (type >= 0)
+                goto size_adpcm;
             goto remove;
         }
         else if (type >= 6)

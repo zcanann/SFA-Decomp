@@ -20,10 +20,10 @@
    comment does not distinguish what 2 vs 3 mean. */
 #define WMGENERALSCALES_PARTFX_SLAM 0x556 /* slam impact effect (anim events 2/3) */
 
-#define WMGENERALSCALES_PHASE_IDLE 0
+#define WMGENERALSCALES_PHASE_IDLE   0
 #define WMGENERALSCALES_PHASE_HIDDEN 1
-#define WMGENERALSCALES_PHASE_SLAM0 2
-#define WMGENERALSCALES_PHASE_SLAM1 3
+#define WMGENERALSCALES_PHASE_SLAM0  2
+#define WMGENERALSCALES_PHASE_SLAM1  3
 
 /* per-object extra state (getExtraSize == 0x8). unk00 is written here
    (0.0 / 800.0 on the slam events) but only read by other TUs. */
@@ -118,50 +118,59 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 6: /* sheathe: detach the sword child */
+        {
+            int* child = ((GameObject*)obj)->childObjs[0];
+            if (child != NULL)
             {
-                int* child = ((GameObject*)obj)->childObjs[0];
-                if (child != NULL)
-                {
-                    ObjLink_DetachChild((int*)obj, child);
-                }
-                break;
+                ObjLink_DetachChild((int*)obj, child);
             }
+            break;
+        }
         case 7: /* begin fade-in (model flag + alpha ramp from 1) */
-            {
-                u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
-                p[0x5f] |= 0x10;
-                state->fadeAlpha = 1;
-                break;
-            }
+        {
+            u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
+            p[0x5f] |= 0x10;
+            state->fadeAlpha = 1;
+            break;
+        }
         case 8: /* end fade: clear the flag, fully invisible */
-            {
-                u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
-                p[0x5f] &= ~0x10;
-                Obj_SetModelRenderOpAlpha(obj, 0);
-                state->fadeAlpha = 0;
-                break;
-            }
+        {
+            u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
+            p[0x5f] &= ~0x10;
+            Obj_SetModelRenderOpAlpha(obj, 0);
+            state->fadeAlpha = 0;
+            break;
+        }
         }
         animUpdate->eventIds[i] = 0;
     }
     return 0;
 }
 
-int WM_GeneralScales_getExtraSize(void) { return sizeof(WmGeneralScalesState); }
-int WM_GeneralScales_getObjectTypeId(void) { return 0x9; }
+int WM_GeneralScales_getExtraSize(void)
+{
+    return sizeof(WmGeneralScalesState);
+}
+int WM_GeneralScales_getObjectTypeId(void)
+{
+    return 0x9;
+}
 
 void WM_GeneralScales_free(int* obj)
 {
     int* p = (int*)obj[0xc8 / 4]; /* childObjs[0] */
-    if (p != NULL) ObjLink_DetachChild(obj, p);
+    if (p != NULL)
+        ObjLink_DetachChild(obj, p);
 }
 
 void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
-    if (state->phase == WMGENERALSCALES_PHASE_HIDDEN) return;
-    if (visible == 0) return;
-    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5EA4);
+    if (state->phase == WMGENERALSCALES_PHASE_HIDDEN)
+        return;
+    if (visible == 0)
+        return;
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }
 
 void WM_GeneralScales_hitDetect(void)

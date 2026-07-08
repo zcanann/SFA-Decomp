@@ -81,8 +81,7 @@ int hwInit(u32* sampleRate, u8 valueA, u8 valueB, u32 flags)
     salMessageCallback = 0;
 
     if ((u32)salInitAi(snd_handle_irq, flags, sampleRate) != 0 &&
-        salInitDspCtrl(valueA, valueB, (flags & 1) != 0) != 0 &&
-        (u32)salInitDsp(flags) != 0)
+        salInitDspCtrl(valueA, valueB, (flags & 1) != 0) != 0 && (u32)salInitDsp(flags) != 0)
     {
         sndEnd();
         salStartAi();

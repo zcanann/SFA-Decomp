@@ -61,7 +61,10 @@ int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
     return state->offeringsRemaining <= 0;
 }
 
-int DR_Chimmey_getExtraSize(void) { return 0x18; }
+int DR_Chimmey_getExtraSize(void)
+{
+    return 0x18;
+}
 
 void DR_Chimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {

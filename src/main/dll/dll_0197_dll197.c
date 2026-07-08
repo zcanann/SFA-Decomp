@@ -24,7 +24,7 @@
 
 /* partfx ids (docblock: "spawns 0x1a3 spark particles" on activation;
  * render "emitting the 0x1f7 sparkle particle"). */
-#define DLL197_PARTFX_SPARK 0x1a3
+#define DLL197_PARTFX_SPARK   0x1a3
 #define DLL197_PARTFX_SPARKLE 0x1f7
 
 extern int Obj_GetPlayerObject(void);
@@ -122,8 +122,7 @@ void dll_197_update(int obj)
 
     *(f32*)(callbackData + 0x10) = lbl_803E513C;
     state->previousActive = state->active;
-    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0 ||
-        (state->hitCooldown != 0 && state->hitCooldown <= 0x14))
+    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0 || (state->hitCooldown != 0 && state->hitCooldown <= 0x14))
     {
         state->active = 1 - state->active;
         if (state->active != 0)
@@ -169,14 +168,13 @@ void dll_197_update(int obj)
         stageEffectBase = state->stage * 2;
         resourceParams[1] = stageEffectBase + 0x19d;
         resourceParams[2] = stageEffectBase + 0x19e;
-        (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)resource + 4)))(
-            obj, 1, callbackData, 0x10004, -1, resourceParams);
+        (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)resource + 4)))(obj, 1, callbackData, 0x10004, -1,
+                                                                                      resourceParams);
         Resource_Release(resource);
 
         for (effect = 0; effect < 200; effect++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARK, NULL, 0,
-                                             -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARK, NULL, 0, -1, NULL);
         }
 
         if (state->gameBit != -1 && mainGetBit(state->gameBit) == 0)
@@ -224,8 +222,14 @@ void dll_197_update(int obj)
     }
 }
 
-int dll_197_getExtraSize(void) { return 0x10; }
-int dll_197_getObjectTypeId(void) { return 0x1; }
+int dll_197_getExtraSize(void)
+{
+    return 0x10;
+}
+int dll_197_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -305,8 +309,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         particleParams.pos[0] = lbl_803E5130;
         particleParams.pos[1] = lbl_803E5134;
         particleParams.pos[2] = lbl_803E5130;
-        (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams,
-                                         0x12, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams, 0x12, -1, NULL);
     }
 
     state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
@@ -399,4 +402,8 @@ extern void nwsh_levcon_init();
 extern void nwsh_levcon_release();
 extern void nwsh_levcon_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gNWSH_levconObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, nwsh_levcon_initialise, nwsh_levcon_release, (void*)0x00000000, nwsh_levcon_init, nwsh_levcon_update, nwsh_levcon_hitDetect, nwsh_levcon_render, nwsh_levcon_free, nwsh_levcon_getObjectTypeId, nwsh_levcon_getExtraSize };
+void* gNWSH_levconObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
+                                       (void*)0x00090000,           nwsh_levcon_initialise,  nwsh_levcon_release,
+                                       (void*)0x00000000,           nwsh_levcon_init,        nwsh_levcon_update,
+                                       nwsh_levcon_hitDetect,       nwsh_levcon_render,      nwsh_levcon_free,
+                                       nwsh_levcon_getObjectTypeId, nwsh_levcon_getExtraSize};

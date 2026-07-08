@@ -101,7 +101,10 @@ int ARWArwingGu_getExtraSize(int obj)
     }
 }
 
-int ARWArwingGu_getObjectTypeId(void) { return 0; }
+int ARWArwingGu_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void ARWArwingGu_free(void)
 {
@@ -124,57 +127,55 @@ void ARWArwingGu_update(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case ARWGU_DEF_ENGINE:
-        {
-            ArwingGuState* state = ((GameObject*)obj)->extra;
-            int model = Obj_GetActiveModel(obj);
-            ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
-            int anim = ObjModel_GetTexture(*(int*)model, 0);
-            fn_800541A4(anim, (u16)state->texture.textureFrame);
-            textureAnimFn_80053f2c(anim, (int)state, (int)texture);
-            break;
-        }
+    {
+        ArwingGuState* state = ((GameObject*)obj)->extra;
+        int model = Obj_GetActiveModel(obj);
+        ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
+        int anim = ObjModel_GetTexture(*(int*)model, 0);
+        fn_800541A4(anim, (u16)state->texture.textureFrame);
+        textureAnimFn_80053f2c(anim, (int)state, (int)texture);
+        break;
+    }
     case ARWGU_DEF_GUN_L:
     case ARWGU_DEF_GUN_R:
+    {
+        ArwingGuState* state = ((GameObject*)obj)->extra;
+        f32 minTimer;
+        f32 vt = state->visibleTimer;
+        if (vt > (minTimer = lbl_803E7060))
         {
-            ArwingGuState* state = ((GameObject*)obj)->extra;
-            f32 minTimer;
-            f32 vt = state->visibleTimer;
-            if (vt > (minTimer = lbl_803E7060))
+            state->visibleTimer = vt - timeDelta;
+            if (state->visibleTimer <= minTimer)
             {
-                state->visibleTimer = vt - timeDelta;
-                if (state->visibleTimer <= minTimer)
-                {
-                    state->visibleTimer = minTimer;
-                    objAnim->alpha = 0;
-                }
+                state->visibleTimer = minTimer;
+                objAnim->alpha = 0;
             }
-            break;
         }
+        break;
+    }
     case ARWGU_DEF_BOMB:
+    {
+        ArwingGuState* state = ((GameObject*)obj)->extra;
+        f32 alpha;
+        if (state->fadeIn != 0)
         {
-            ArwingGuState* state = ((GameObject*)obj)->extra;
-            f32 alpha;
-            if (state->fadeIn != 0)
-            {
-                alpha = lbl_803E705C * timeDelta + (f32)(u32)
-                objAnim->alpha;
-            }
-            else
-            {
-                alpha = (f32)(u32)
-                objAnim->alpha - lbl_803E705C * timeDelta;
-            }
-            if (alpha < lbl_803E7060)
-            {
-                alpha = lbl_803E7060;
-            }
-            else if (alpha > lbl_803E705C)
-            {
-                alpha = lbl_803E705C;
-            }
-            objAnim->alpha = alpha;
-            break;
+            alpha = lbl_803E705C * timeDelta + (f32)(u32)objAnim->alpha;
         }
+        else
+        {
+            alpha = (f32)(u32)objAnim->alpha - lbl_803E705C * timeDelta;
+        }
+        if (alpha < lbl_803E7060)
+        {
+            alpha = lbl_803E7060;
+        }
+        else if (alpha > lbl_803E705C)
+        {
+            alpha = lbl_803E705C;
+        }
+        objAnim->alpha = alpha;
+        break;
+    }
     }
 }
 

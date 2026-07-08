@@ -21,10 +21,10 @@
 /* object group this object joins */
 #define UNUSED_OBJGROUP 0x10
 
-#define PAD_BUTTON_A 0x100
-#define UNUSED107_PARTFX 0x51c
-#define UNUSED107_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
-#define UNUSED107_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold this object */
+#define PAD_BUTTON_A               0x100
+#define UNUSED107_PARTFX           0x51c
+#define UNUSED107_MSG_PLAYER_BURST 0x60004  /* knock the player back with a burst hit */
+#define UNUSED107_MSG_PLAYER_GRAB  0x100010 /* tells player to grab/hold this object */
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -100,8 +100,14 @@ void fn_80185868(int obj, f32 arg)
 #pragma opt_common_subs reset
 #pragma dont_inline reset
 
-int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
-int dll_107_getObjectTypeId(void) { return 0x0; }
+int dll_107_getExtraSize_ret_44(void)
+{
+    return 0x2c;
+}
+int dll_107_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_107_free(int* obj)
 {
@@ -182,7 +188,7 @@ void dll_107_hitDetect_nop(void)
 void dll_107_update(int obj)
 {
 
-    extern f32 getXZDistance(f32* a, f32* b);
+    extern f32 getXZDistance(f32 * a, f32 * b);
     typedef struct
     {
         s16 ang;
@@ -288,7 +294,8 @@ void dll_107_update(int obj)
             int cam = (*gCameraInterface)->getOverrideTarget();
             on = 0;
             if ((void*)cam != (void*)obj &&
-                (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && ((GameObject*)obj)->unkF8 == 0)
+                (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
+                ((GameObject*)obj)->unkF8 == 0)
             {
                 buttonDisable(0, PAD_BUTTON_A);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
@@ -315,9 +322,12 @@ void dll_107_update(int obj)
         {
             u8 st21;
             ObjHits_DisableObject(obj);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX =
+                ((GameObject*)obj)->anim.localPosX;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY =
+                ((GameObject*)obj)->anim.localPosY;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ =
+                ((GameObject*)obj)->anim.localPosZ;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
             {
@@ -388,7 +398,8 @@ void dll_107_update(int obj)
             ObjHits_SetHitVolumeSlot(obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
             if (((GameObject*)obj)->anim.velocityY > lbl_803E3A70)
             {
-                ((GameObject*)obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
+                ((GameObject*)obj)->anim.velocityY =
+                    gWindLift107LaunchGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
             }
             ObjHits_EnableObject(obj);
         }
@@ -414,12 +425,12 @@ void dll_107_update(int obj)
             ((GameObject*)obj)->anim.velocityY = lbl_803E3A58;
             return;
         }
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
-            localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-            localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
-            localPosZ;
+        ((GameObject*)obj)->anim.localPosX =
+            ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY =
+            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ =
+            ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
     }
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;

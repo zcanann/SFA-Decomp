@@ -27,16 +27,17 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 {
     u8 pad0[0x8 - 0x0];
     u8 pathPointIndex; /* 0x8: path point used to seat the player on the stone */
-    u8 unk9;        /* 0x9: toggled bit0 on event 0xa */
-    u8 flagsA;      /* 0xa: input/hit flags (bit0 player, bit1 hit) */
+    u8 unk9;           /* 0x9: toggled bit0 on event 0xa */
+    u8 flagsA;         /* 0xa: input/hit flags (bit0 player, bit1 hit) */
     u8 padB[0xE - 0xB];
-    s16 gameBitE;   /* 0xe: GameBit id (get/set) */
+    s16 gameBitE; /* 0xe: GameBit id (get/set) */
     u8 padE[0xD4 - 0x10];
-    u8 flagsD4;     /* 0xd4: bit2 set on event 0x17 */
+    u8 flagsD4; /* 0xd4: bit2 set on event 0x17 */
 } WarpstoneUpdateMenuAnimObjState;
 
 extern u32 getButtonsJustPressed(int port);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                          int useInputPosition);
 extern int playerHasKrazoaSpirit();
 extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
 extern int lbl_803DC050;
@@ -53,7 +54,10 @@ int warpstone_getObjectTypeId(void)
 }
 
 extern void loadUiDll(int index);
-void warpstone_loadBaseUi(void) { loadUiDll(0x1); }
+void warpstone_loadBaseUi(void)
+{
+    loadUiDll(0x1);
+}
 
 extern void ObjLink_DetachChild(int obj, int child);
 extern void Obj_FreeObject(int obj);
@@ -122,7 +126,8 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             model = Obj_GetActiveModel((int)player);
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex, &x, &y, &z, 0);
+            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex, &x, &y, &z,
+                                          0);
             objSetPos((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
@@ -135,9 +140,8 @@ extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);
 
-#define WARPSTONE_MAP_EVENT_SET(mapId, value) \
-    (*gMapEventInterface)->setMapAct((mapId), (value))
-#define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
+#define WARPSTONE_MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
+#define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value)                                                                \
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 int warpstone_testEvent(u32 p1, u32 p2, int option)
@@ -199,15 +203,15 @@ int warpstone_testEvent(u32 p1, u32 p2, int option)
         break;
 
     case 0x17:
+    {
+        int hasSpirit = playerHasKrazoaSpirit(1, 0);
+        if (horizontal > 0 && hasSpirit == 0)
         {
-            int hasSpirit = playerHasKrazoaSpirit(1, 0);
-            if (horizontal > 0 && hasSpirit == 0)
-            {
-                Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
-                return 1;
-            }
-            break;
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
+            return 1;
         }
+        break;
+    }
 
     case 0x18:
         lbl_803DDBF4 = 1;
@@ -268,10 +272,9 @@ int warpstone_SeqFn(int obj, u32 p2, int animObj)
     child = *(int*)state;
     if ((void*)child != NULL)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-        (child, ((GameObject*)obj)->anim.currentMoveProgress -
-         ((GameObject*)child)->anim.currentMoveProgress,
-         timeDelta, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+            child, ((GameObject*)obj)->anim.currentMoveProgress - ((GameObject*)child)->anim.currentMoveProgress,
+            timeDelta, NULL);
     }
 
     animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_testEvent;
@@ -300,12 +303,14 @@ int warpstone_SeqFn(int obj, u32 p2, int animObj)
             }
             if (hit)
             {
-                ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 2;
+                ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA =
+                    ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 2;
             }
         }
         animUpdate->sequenceEventActive = 0;
 
-        if (mainGetBit(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE) != 0 && animatedObjGetSeqId(animObj) == 0x35f)
+        if (mainGetBit(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE) != 0 &&
+            animatedObjGetSeqId(animObj) == 0x35f)
         {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
@@ -408,7 +413,7 @@ typedef struct WarpstoneState
     u8 pad0[0xC - 0x0];
     u8 activated;
     u8 padD[0xE - 0xD];
-    s16 gameBitE;   /* 0xe: GameBit id stored at init */
+    s16 gameBitE; /* 0xe: GameBit id stored at init */
     s16 gameBit10;
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
@@ -523,50 +528,46 @@ void warpstone_update(int obj)
             int mag = yawDelta - 0x8000;
             mag = (mag >= 0) ? mag : -mag;
             if (mag > 0x18e3)
-        {
-            if (yawDelta > 0)
             {
-                if (yawDelta > 0xe38)
+                if (yawDelta > 0)
                 {
-                    moveId = 0x17;
+                    if (yawDelta > 0xe38)
+                    {
+                        moveId = 0x17;
+                    }
+                    else
+                    {
+                        moveId = 0x16;
+                    }
+                }
+                else if (yawDelta < -0xe38)
+                {
+                    moveId = 0x19;
                 }
                 else
                 {
-                    moveId = 0x16;
+                    moveId = 0x18;
+                }
+                if (((GameObject*)obj)->anim.currentMove != moveId)
+                {
+                    ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, moveId, lbl_803E5460, 0);
                 }
             }
-            else if (yawDelta < -0xe38)
+            else if (((GameObject*)obj)->anim.currentMove != 0)
             {
-                moveId = 0x19;
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0, lbl_803E5460, 0);
+                Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
             }
-            else
+            else if (randFn_80080100(lbl_803DC048) != 0)
             {
-                moveId = 0x18;
+                Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1b, lbl_803E5460, 0);
             }
-            if (((GameObject*)obj)->anim.currentMove != moveId)
+            else if (randFn_80080100(lbl_803DC04C) != 0)
             {
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                    (obj, moveId, lbl_803E5460, 0);
+                Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1a, lbl_803E5460, 0);
             }
-        }
-        else if (((GameObject*)obj)->anim.currentMove != 0)
-        {
-            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                (obj, 0, lbl_803E5460, 0);
-            Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
-        }
-        else if (randFn_80080100(lbl_803DC048) != 0)
-        {
-            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
-            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                (obj, 0x1b, lbl_803E5460, 0);
-        }
-        else if (randFn_80080100(lbl_803DC04C) != 0)
-        {
-            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
-            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                (obj, 0x1a, lbl_803E5460, 0);
-        }
         }
     }
 

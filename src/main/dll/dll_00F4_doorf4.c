@@ -29,14 +29,14 @@ typedef struct DoorF4State
 {
     f32 cosYaw; /* cos/sin of spawn yaw; door plane normal */
     f32 sinYaw;
-    f32 planeD; /* -(cos*x + sin*z) plane offset */
+    f32 planeD;    /* -(cos*x + sin*z) plane offset */
     f32 openRange; /* per-type approach distance */
-    int gameBitA; /* params+0x1E; open latch */
-    int gameBitB; /* per-type (68/152/-1) secondary gate */
-    int gameBitC; /* params+0x20; near-side GameBit id copy (write-only cache) */
-    u16 sfxOpen; /* 830 for types 318/890 */
-    u16 sfxClose; /* 831 */
-    u8 active; /* gamebit-derived open state */
+    int gameBitA;  /* params+0x1E; open latch */
+    int gameBitB;  /* per-type (68/152/-1) secondary gate */
+    int gameBitC;  /* params+0x20; near-side GameBit id copy (write-only cache) */
+    u16 sfxOpen;   /* 830 for types 318/890 */
+    u16 sfxClose;  /* 831 */
+    u8 active;     /* gamebit-derived open state */
     u8 triggerLatch;
     u8 toggled;
     u8 pad23;
@@ -63,13 +63,13 @@ STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 #define DOORF4_OBJ_GROUP 14
 
 /* messages received by a door's inbox */
-#define DOORMSG_OPEN 0x30002
+#define DOORMSG_OPEN  0x30002
 #define DOORMSG_CLOSE 0x30003
 /* messages broadcast to a door's linked partner objects */
 #define DOORMSG_PARTNER_CLOSE 0x30005
-#define DOORMSG_PARTNER_OPEN 0x30006
+#define DOORMSG_PARTNER_OPEN  0x30006
 
-#define DOORF4_OBJFLAG_HIDDEN 0x4000
+#define DOORF4_OBJFLAG_HIDDEN             0x4000
 #define DOORF4_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -90,7 +90,6 @@ extern f32 lbl_803E3684;
 extern f32 gDoorF4Pi;
 extern f32 gDoorF4BinaryAngleScale;
 
-
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 sqrtf(f32 x);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -98,8 +97,8 @@ extern f32 lbl_803E3648;
 
 /* Env-fx ids (getEnvfxAct 3rd arg): A/B are the two door-open variants gated by
  * gamebit 0x57; OFF is activated when the door deactivates (toggled 1 -> 0). */
-#define DOORF4_ENVFX_A 0x7f
-#define DOORF4_ENVFX_B 0x7c
+#define DOORF4_ENVFX_A   0x7f
+#define DOORF4_ENVFX_B   0x7c
 #define DOORF4_ENVFX_OFF 0xe
 extern f32 lbl_803E3658;
 extern f32 lbl_803E365C;
@@ -122,13 +121,20 @@ void DoorF4_initialise(void)
 {
 }
 
-int DoorF4_getExtraSize(void) { return 0x24; }
-int DoorF4_getObjectTypeId(void) { return 0x1; }
+int DoorF4_getExtraSize(void)
+{
+    return 0x24;
+}
+int DoorF4_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void DoorF4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3680);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3680);
 }
 
 void DoorF4_free(int obj)
@@ -224,10 +230,10 @@ void DoorF4_init(int* obj, int* params)
 
     ObjGroup_AddObject(obj, DOORF4_OBJ_GROUP);
 
-    state->cosYaw = mathSinf(gDoorF4Pi * (f32)(int) * (s16*)obj / gDoorF4BinaryAngleScale);
-    state->sinYaw = mathCosf(gDoorF4Pi * (f32)(int) * (s16*)obj / gDoorF4BinaryAngleScale);
-    state->planeD = -(state->cosYaw * ((GameObject*)obj)->anim.localPosX +
-        state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
+    state->cosYaw = mathSinf(gDoorF4Pi * (f32)(int)*(s16*)obj / gDoorF4BinaryAngleScale);
+    state->sinYaw = mathCosf(gDoorF4Pi * (f32)(int)*(s16*)obj / gDoorF4BinaryAngleScale);
+    state->planeD =
+        -(state->cosYaw * ((GameObject*)obj)->anim.localPosX + state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
 }
 
 int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -297,8 +303,8 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         ang[0] = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
         sd = mathSinf(ang[0]);
         s = mathCosf(ang[0]);
-        sd = -(def->head.posX * sd + def->head.posZ * s)
-            + (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
+        sd = -(def->head.posX * sd + def->head.posZ * s) +
+             (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
         thr = sub->openRange;
         if (dist < thr && gb != 0 && sd < thr && sd > -thr)
         {
@@ -334,8 +340,8 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ang[0] = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
             sd = mathSinf(ang[0]);
             s = mathCosf(ang[0]);
-            sd = -(def->head.posX * sd + def->head.posZ * s)
-                + (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
+            sd = -(def->head.posX * sd + def->head.posZ * s) +
+                 (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
             if (((GameObject*)obj)->unkF8 == 0)
             {
                 if (sd < lbl_803E3648 && sd > lbl_803E3658)
@@ -355,7 +361,8 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     case 2:
         if (gb == 0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0 && mainGetBit(0x2c) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0 &&
+                mainGetBit(0x2c) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
@@ -374,8 +381,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         if (gb != 0)
         {
-            for (i = objIdx, walk = (int**)((char*)list + i * 4); i < objCount && active == 0;
-                 walk++, i++)
+            for (i = objIdx, walk = (int**)((char*)list + i * 4); i < objCount && active == 0; walk++, i++)
             {
                 other = *walk;
                 if (((GameObject*)other)->anim.seqId == 0x7c)
@@ -387,8 +393,8 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                         ang[0] = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
                         sd = mathSinf(ang[0]);
                         s = mathCosf(ang[0]);
-                        sd = -(def->head.posX * sd + def->head.posZ * s)
-                            + (sd * ((GameObject*)other)->anim.localPosX + s * ((GameObject*)other)->anim.localPosZ);
+                        sd = -(def->head.posX * sd + def->head.posZ * s) +
+                             (sd * ((GameObject*)other)->anim.localPosX + s * ((GameObject*)other)->anim.localPosZ);
                         if (sd < lbl_803E3664 && sd > lbl_803E3668)
                         {
                             active = 1;
@@ -428,8 +434,8 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ang[0] = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
             sd = mathSinf(ang[0]);
             s = mathCosf(ang[0]);
-            sd = -(def->head.posX * sd + def->head.posZ * s)
-                + (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
+            sd = -(def->head.posX * sd + def->head.posZ * s) +
+                 (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
             if (sd < lbl_803E366C && sd > lbl_803E3670)
             {
                 active = 1;
@@ -467,8 +473,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_B;
     }
     ((GameObject*)obj)->unkF8 = active;
-    if ((((GameObject*)obj)->anim.seqId == 0x13e || ((GameObject*)obj)->anim.seqId == 0x151)
-        && sub->triggerLatch != 0)
+    if ((((GameObject*)obj)->anim.seqId == 0x13e || ((GameObject*)obj)->anim.seqId == 0x151) && sub->triggerLatch != 0)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
     }
@@ -536,8 +541,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 4:
-                if (sub->sfxOpen != 0
-                    && Sfx_IsPlayingFromObject(obj, sub->sfxOpen) != 0)
+                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObject(obj, sub->sfxOpen) != 0)
                 {
                     Sfx_StopFromObject(obj, sub->sfxOpen);
                 }

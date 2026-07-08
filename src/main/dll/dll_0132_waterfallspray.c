@@ -21,24 +21,22 @@ typedef struct WaterFallSprayState
 typedef struct WaterFallSprayPlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 mapId;       /* 0x14: selects the alternate SFX-id pair */
-    s16 gameBit;     /* 0x18: gating mainGetBit (-1 = always on) */
-    s8 rotZSeed;     /* 0x1a: <<8 -> anim.rotZ */
-    s8 rotYSeed;     /* 0x1b: <<8 -> anim.rotY */
-    s8 rotXSeed;     /* 0x1c: <<8 -> anim.rotX */
-    u8 randX;        /* 0x1d: +/- spawn offset range, X */
-    u8 randZ;        /* 0x1e: +/- spawn offset range, Z */
-    u8 randY;        /* 0x1f: +/- spawn offset range, Y */
-    u8 distance;     /* 0x20: trigger radius (<<4) */
+    s32 mapId;   /* 0x14: selects the alternate SFX-id pair */
+    s16 gameBit; /* 0x18: gating mainGetBit (-1 = always on) */
+    s8 rotZSeed; /* 0x1a: <<8 -> anim.rotZ */
+    s8 rotYSeed; /* 0x1b: <<8 -> anim.rotY */
+    s8 rotXSeed; /* 0x1c: <<8 -> anim.rotX */
+    u8 randX;    /* 0x1d: +/- spawn offset range, X */
+    u8 randZ;    /* 0x1e: +/- spawn offset range, Z */
+    u8 randY;    /* 0x1f: +/- spawn offset range, Y */
+    u8 distance; /* 0x20: trigger radius (<<4) */
     u8 pad21[0x23 - 0x21];
-    u8 flags;        /* 0x23: spawn/keepalive flags */
-    u8 count;        /* 0x24: particles spawned per trigger */
+    u8 flags; /* 0x23: spawn/keepalive flags */
+    u8 count; /* 0x24: particles spawned per trigger */
 } WaterFallSprayPlacement;
 
 STATIC_ASSERT(offsetof(WaterFallSprayPlacement, gameBit) == 0x18);
 STATIC_ASSERT(offsetof(WaterFallSprayPlacement, count) == 0x24);
-
-
 
 void WaterFallSpray_free(u8* obj)
 {
@@ -55,13 +53,11 @@ typedef struct WaterFallSprayPartfxArgs
     f32 zOffset;
 } WaterFallSprayPartfxArgs;
 
-#define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) \
-    (*gPartfxInterface)->spawnObject( \
-        (obj), (id), (args), 4, -1, 0)
+#define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) (*gPartfxInterface)->spawnObject((obj), (id), (args), 4, -1, 0)
 
 void WaterFallSpray_update(int* objParam)
 {
-    extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId);
+    extern void Sfx_KeepAliveLoopedObjectSound(u8 * obj, int sfxId);
     WaterFallSprayState* state;
     WaterFallSprayPlacement* data;
     u8* obj;
@@ -108,12 +104,9 @@ void WaterFallSpray_update(int* objParam)
                 {
                     for (i = 0; i < data->count; i++)
                     {
-                        partfxArgs.xOffset = (f32)(s32)
-                        randomGetRange(-data->randX, data->randX);
-                        partfxArgs.yOffset = (f32)(s32)
-                        randomGetRange(-data->randY, data->randY);
-                        partfxArgs.zOffset = (f32)(s32)
-                        randomGetRange(-data->randZ, data->randZ);
+                        partfxArgs.xOffset = (f32)(s32)randomGetRange(-data->randX, data->randX);
+                        partfxArgs.yOffset = (f32)(s32)randomGetRange(-data->randY, data->randY);
+                        partfxArgs.zOffset = (f32)(s32)randomGetRange(-data->randZ, data->randZ);
                         if ((data->flags & 1) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x320, &partfxArgs);
@@ -174,7 +167,10 @@ void WaterFallSpray_render(void)
 {
 }
 
-int WaterFallSpray_getExtraSize(void) { return 0x8; }
+int WaterFallSpray_getExtraSize(void)
+{
+    return 0x8;
+}
 
 int WaterFallSpray_SeqFn(int* obj)
 {

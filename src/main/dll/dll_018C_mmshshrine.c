@@ -34,11 +34,9 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
 #define MMSH_SHRINE_CAMMODE_CAMDEBUG 0x4c
-#define MMSH_SHRINE_ENVFX_A 0x20d
-#define MMSH_SHRINE_ENVFX_B 0x20e
-#define MMSH_SHRINE_ENVFX_C 0x222
-
-
+#define MMSH_SHRINE_ENVFX_A          0x20d
+#define MMSH_SHRINE_ENVFX_B          0x20e
+#define MMSH_SHRINE_ENVFX_C          0x222
 
 extern int objGetAnimStateFlags(int obj, int flag);
 
@@ -53,46 +51,46 @@ extern f32 lbl_803E4F58;
 extern f32 lbl_803E4F5C;
 extern f32 lbl_803E4F60;
 
-#define MMSH_SHRINE_FLAG_LIT 0x4000
-#define MMSH_SHRINE_LOAD_MAP_DIR 0x20
-#define MMSH_SHRINE_LOAD_TRIGGER_TIMER 0xf4
-#define MMSH_SHRINE_LATCH_FLAG_OPEN_READY 0x1
-#define MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE 0x2
+#define MMSH_SHRINE_FLAG_LIT                  0x4000
+#define MMSH_SHRINE_LOAD_MAP_DIR              0x20
+#define MMSH_SHRINE_LOAD_TRIGGER_TIMER        0xf4
+#define MMSH_SHRINE_LATCH_FLAG_OPEN_READY     0x1
+#define MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE    0x2
 #define MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE 0x4
-#define MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK 0x8
-#define MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK 0x10
-#define MMSH_SHRINE_LATCH_FLAG_SWAY_RESET 0x20
-#define MMSH_SHRINE_SEQ_RESULT_COMPLETE 4
-#define MMSH_SHRINE_SEQ_MAP_DIR 0xb
-#define MMSH_SHRINE_SEQ_MAP_EVENT 3
-#define MMSH_SHRINE_SEQ_GB_KRYSTAL 0x12a
-#define MMSH_SHRINE_SEQ_GB_UNKNOWN_FF 0xff
-#define MMSH_SHRINE_SEQ_GB_RESET0 0xe82
-#define MMSH_SHRINE_SEQ_GB_RESET1 0xe83
-#define MMSH_SHRINE_SEQ_GB_RESET2 0xe84
-#define MMSH_SHRINE_SEQ_GB_RESET3 0xe85
-#define MMSH_SHRINE_GB_OPEN 0xae6
-#define MMSH_SHRINE_GB_COMPLETE 0xae4
-#define MMSH_SHRINE_GB_RESET_A 0x12b
-#define MMSH_SHRINE_GB_RESET_B 0xae5
-#define MMSH_SHRINE_GB_MUSIC_LOCK 0xcbb
-#define MMSH_SHRINE_SFX_IDLE 0x343
-#define MMSH_SHRINE_MUSIC_RUMBLE 0xd8
-#define MMSH_SHRINE_MUSIC_RUMBLE_STOP 0xd9
-#define MMSH_SHRINE_MUSIC_STOP_8 0x8
-#define MMSH_SHRINE_MUSIC_STOP_A 0xa
-#define MMSH_SHRINE_GB_EFA 0xefa
-#define MMSH_SHRINE_GB_12D 0x12d
-#define MMSH_SHRINE_GB_F07 0xf07
+#define MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK   0x8
+#define MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK     0x10
+#define MMSH_SHRINE_LATCH_FLAG_SWAY_RESET     0x20
+#define MMSH_SHRINE_SEQ_RESULT_COMPLETE       4
+#define MMSH_SHRINE_SEQ_MAP_DIR               0xb
+#define MMSH_SHRINE_SEQ_MAP_EVENT             3
+#define MMSH_SHRINE_SEQ_GB_KRYSTAL            0x12a
+#define MMSH_SHRINE_SEQ_GB_UNKNOWN_FF         0xff
+#define MMSH_SHRINE_SEQ_GB_RESET0             0xe82
+#define MMSH_SHRINE_SEQ_GB_RESET1             0xe83
+#define MMSH_SHRINE_SEQ_GB_RESET2             0xe84
+#define MMSH_SHRINE_SEQ_GB_RESET3             0xe85
+#define MMSH_SHRINE_GB_OPEN                   0xae6
+#define MMSH_SHRINE_GB_COMPLETE               0xae4
+#define MMSH_SHRINE_GB_RESET_A                0x12b
+#define MMSH_SHRINE_GB_RESET_B                0xae5
+#define MMSH_SHRINE_GB_MUSIC_LOCK             0xcbb
+#define MMSH_SHRINE_SFX_IDLE                  0x343
+#define MMSH_SHRINE_MUSIC_RUMBLE              0xd8
+#define MMSH_SHRINE_MUSIC_RUMBLE_STOP         0xd9
+#define MMSH_SHRINE_MUSIC_STOP_8              0x8
+#define MMSH_SHRINE_MUSIC_STOP_A              0xa
+#define MMSH_SHRINE_GB_EFA                    0xefa
+#define MMSH_SHRINE_GB_12D                    0x12d
+#define MMSH_SHRINE_GB_F07                    0xf07
 
 enum MMSHShrinePhase
 {
-    MMSH_SHRINE_PHASE_IDLE       = 0, /* idle SFX, wait for activation flag  */
+    MMSH_SHRINE_PHASE_IDLE = 0,       /* idle SFX, wait for activation flag  */
     MMSH_SHRINE_PHASE_ACTIVATING = 1, /* wait for open-ready latch, then lit */
-    MMSH_SHRINE_PHASE_LIT        = 2, /* shrine lit, await player test anim  */
-    MMSH_SHRINE_PHASE_RESULT     = 3, /* end sway seq, run result sequence   */
-    MMSH_SHRINE_PHASE_COMPLETE   = 4, /* grant completion game bit           */
-    MMSH_SHRINE_PHASE_RESET      = 5  /* clear flags, return to idle         */
+    MMSH_SHRINE_PHASE_LIT = 2,        /* shrine lit, await player test anim  */
+    MMSH_SHRINE_PHASE_RESULT = 3,     /* end sway seq, run result sequence   */
+    MMSH_SHRINE_PHASE_COMPLETE = 4,   /* grant completion game bit           */
+    MMSH_SHRINE_PHASE_RESET = 5       /* clear flags, return to idle         */
 };
 
 typedef struct MMSHShrineRuntime
@@ -155,7 +153,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
                 objSetAnimStateFlags(playerObj, 4, 1);
                 mainSetBits(MMSH_SHRINE_SEQ_GB_KRYSTAL, 1);
                 mainSetBits(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF, 1);
-                (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
+                (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR, MMSH_SHRINE_SEQ_MAP_EVENT);
                 break;
             case 0xe:
                 ((MMSHShrineObject*)objArg)->flags06 |= MMSH_SHRINE_FLAG_LIT;
@@ -203,12 +201,10 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
         seq->commands[i] = 0;
     }
 
-    if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) &&
-        ((u8)fn_801C49B8(objArg) != 0))
+    if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) && ((u8)fn_801C49B8(objArg) != 0))
     {
         fn_8011F6D4(0);
-        runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE |
-            MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
+        runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE | MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
         runtime->phase = MMSH_SHRINE_PHASE_RESULT;
         mainSetBits(MMSH_SHRINE_SEQ_GB_RESET0, 0);
         mainSetBits(MMSH_SHRINE_SEQ_GB_RESET1, 0);
@@ -236,7 +232,8 @@ void MMSH_Shrine_free(int obj)
     if ((((MMSHShrineRuntime*)state)->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
     {
         fn_8011F6D4(0);
-        ((MMSHShrineRuntime*)state)->latch.activeMask = ((MMSHShrineRuntime*)state)->latch.activeMask & ~MMSH_SHRINE_LATCH_FLAG_SWAY_RESET;
+        ((MMSHShrineRuntime*)state)->latch.activeMask =
+            ((MMSHShrineRuntime*)state)->latch.activeMask & ~MMSH_SHRINE_LATCH_FLAG_SWAY_RESET;
     }
     if (*(void**)state != NULL)
     {
@@ -255,8 +252,7 @@ void MMSH_Shrine_free(int obj)
     mainSetBits(MMSH_SHRINE_SEQ_GB_RESET3, 0);
 }
 
-void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
-                        char visible)
+void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5, char visible)
 {
     MMSHShrineObject* shrine = (MMSHShrineObject*)obj;
     MMSHShrineRuntime* runtime = shrine->runtime;
@@ -309,26 +305,23 @@ void MMSH_Shrine_update(int objArg)
     }
     unlockLevel(mapGetDirIdx(MMSH_SHRINE_LOAD_MAP_DIR), 1, 0);
     fn_801C4664((int)obj);
-    SCGameBitLatch_Update(&runtime->latch,MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK, -1, -1,
-                          MMSH_SHRINE_GB_OPEN, 0xa);
-    SCGameBitLatch_UpdateInverted(&runtime->latch,MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE, -1, -1,
+    SCGameBitLatch_Update(&runtime->latch, MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK, -1, -1, MMSH_SHRINE_GB_OPEN, 0xa);
+    SCGameBitLatch_UpdateInverted(&runtime->latch, MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE, -1, -1,
                                   MMSH_SHRINE_GB_MUSIC_LOCK, 8);
-    SCGameBitLatch_Update(&runtime->latch,MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK, -1, -1,
-                          MMSH_SHRINE_GB_MUSIC_LOCK, 0xc4);
+    SCGameBitLatch_Update(&runtime->latch, MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK, -1, -1, MMSH_SHRINE_GB_MUSIC_LOCK, 0xc4);
 
     switch (runtime->phase)
     {
     case MMSH_SHRINE_PHASE_IDLE:
+    {
+        f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
+        runtime->idleSfxTimer = idleSfxTimer;
+        if (idleSfxTimer <= lbl_803E4F40)
         {
-            f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
-            runtime->idleSfxTimer = idleSfxTimer;
-            if (idleSfxTimer <= lbl_803E4F40)
-            {
-                Sfx_PlayFromObject((int)obj,MMSH_SHRINE_SFX_IDLE);
-                runtime->idleSfxTimer = (f32)(s32)
-                randomGetRange(500, 1000);
-            }
+            Sfx_PlayFromObject((int)obj, MMSH_SHRINE_SFX_IDLE);
+            runtime->idleSfxTimer = (f32)(s32)randomGetRange(500, 1000);
         }
+    }
         if ((obj->objectFlags & 1) == 0)
         {
             break;
@@ -436,5 +429,22 @@ extern void MMSH_Scales_init();
 extern void MMSH_Scales_release();
 extern void MMSH_Scales_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gMMSH_ScalesObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, MMSH_Scales_initialise, MMSH_Scales_release, (void*)0x00000000, MMSH_Scales_init, MMSH_Scales_update, MMSH_Scales_hitDetect, MMSH_Scales_render, MMSH_Scales_free, MMSH_Scales_getObjectTypeId, MMSH_Scales_getExtraSize };
-void* gMMSH_WaterSpikeObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, mmsh_waterspike_initialise, mmsh_waterspike_release, (void*)0x00000000, mmsh_waterspike_init, mmsh_waterspike_update, mmsh_waterspike_hitDetect, mmsh_waterspike_render, mmsh_waterspike_free, mmsh_waterspike_getObjectTypeId, mmsh_waterspike_getExtraSize };
+void* gMMSH_ScalesObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
+                                       (void*)0x00090000,           MMSH_Scales_initialise,  MMSH_Scales_release,
+                                       (void*)0x00000000,           MMSH_Scales_init,        MMSH_Scales_update,
+                                       MMSH_Scales_hitDetect,       MMSH_Scales_render,      MMSH_Scales_free,
+                                       MMSH_Scales_getObjectTypeId, MMSH_Scales_getExtraSize};
+void* gMMSH_WaterSpikeObjDescriptor[14] = {(void*)0x00000000,
+                                           (void*)0x00000000,
+                                           (void*)0x00000000,
+                                           (void*)0x00090000,
+                                           mmsh_waterspike_initialise,
+                                           mmsh_waterspike_release,
+                                           (void*)0x00000000,
+                                           mmsh_waterspike_init,
+                                           mmsh_waterspike_update,
+                                           mmsh_waterspike_hitDetect,
+                                           mmsh_waterspike_render,
+                                           mmsh_waterspike_free,
+                                           mmsh_waterspike_getObjectTypeId,
+                                           mmsh_waterspike_getExtraSize};

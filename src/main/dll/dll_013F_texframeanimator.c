@@ -4,16 +4,16 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 
-#define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN 0x4000
+#define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN             0x4000
 #define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct TexframeanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 wrapFrame;    /* 0x18 */
-    s8 textureSlot;  /* 0x19 */
-    s16 endFrame;    /* 0x1A */
-    s16 speed;       /* 0x1C */
+    s8 wrapFrame;   /* 0x18 */
+    s8 textureSlot; /* 0x19 */
+    s16 endFrame;   /* 0x1A */
+    s16 speed;      /* 0x1C */
     s16 completedGameBit;
     s16 triggerGameBit;
     s16 unk22;
@@ -44,8 +44,14 @@ typedef struct TexFrameAnimatorState
     u8 flagLow : 5;
 } TexFrameAnimatorState;
 
-int TexFrameAnimator_getExtraSize(void) { return 0x18; }
-int TexFrameAnimator_getObjectTypeId(void) { return 0x0; }
+int TexFrameAnimator_getExtraSize(void)
+{
+    return 0x18;
+}
+int TexFrameAnimator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void TexFrameAnimator_free(void)
 {
@@ -54,7 +60,8 @@ void TexFrameAnimator_free(void)
 void TexFrameAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
 }
 
 void TexFrameAnimator_hitDetect(void)
@@ -74,8 +81,7 @@ void TexFrameAnimator_update(int* obj)
     state = ((GameObject*)obj)->extra;
     params = *(u8**)&((GameObject*)obj)->anim.placementData;
 
-    if ((state->active == 0) &&
-        ((u32)mainGetBit(((TexframeanimatorPlacement*)params)->triggerGameBit) != 0) &&
+    if ((state->active == 0) && ((u32)mainGetBit(((TexframeanimatorPlacement*)params)->triggerGameBit) != 0) &&
         (state->done == 0))
     {
         state->active = 1;
@@ -84,8 +90,7 @@ void TexFrameAnimator_update(int* obj)
 
     if ((state->active != 0) && (state->textureSlot != 0))
     {
-        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
-                                                ((GameObject*)obj)->anim.localPosY,
+        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                                 ((GameObject*)obj)->anim.localPosZ));
         if (block == NULL || !(((MapBlockData*)block)->flags4 & 8))
         {
@@ -136,7 +141,8 @@ void TexFrameAnimator_init(int* obj, u8* params)
         state->frame = state->endFrame;
         state->active = 1;
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HIDDEN);
 }
 
@@ -147,7 +153,6 @@ void TexFrameAnimator_release(void)
 void TexFrameAnimator_initialise(void)
 {
 }
-
 
 extern u8 WaterFallSpray_free[];
 extern u8 WaterFallSpray_getExtraSize[];
@@ -174,12 +179,25 @@ extern u8 sfxplayerObj_update[];
  * debug string (retail pad gap_07_803223FA_data), placing the descriptors
  * at .data+0x18/0x50/0x88/0xC0 as in the target obj. Same idiom as
  * dll_00B1_projlightning3. */
-typedef union ObjDescriptorTable {
+typedef union ObjDescriptorTable
+{
     u32 words[14];
     u64 align8;
 } ObjDescriptorTable;
 
-ObjDescriptorTable gFogControlObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)FogControl_init, (u32)FogControl_update, (u32)FogControl_hitDetect, 0x00000000, (u32)FogControl_free, (u32)FogControl_getObjectTypeId, (u32)FogControl_getExtraSize } };
-ObjDescriptorTable gLightningObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)lightning_init, (u32)lightning_update, 0x00000000, (u32)lightning_render, (u32)lightning_free, 0x00000000, (u32)lightning_getExtraSize } };
-ObjDescriptorTable gWaterFallSprayObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)WaterFallSpray_init, (u32)WaterFallSpray_update, 0x00000000, (u32)WaterFallSpray_render, (u32)WaterFallSpray_free, 0x00000000, (u32)WaterFallSpray_getExtraSize } };
-ObjDescriptorTable gSfxPlayerObjDescriptor = { { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000, 0x00000000, (u32)sfxplayerObj_free, 0x00000000, (u32)sfxplayerObj_getExtraSize } };
+ObjDescriptorTable gFogControlObjDescriptor = {{0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000,
+                                                0x00000000, (u32)FogControl_init, (u32)FogControl_update,
+                                                (u32)FogControl_hitDetect, 0x00000000, (u32)FogControl_free,
+                                                (u32)FogControl_getObjectTypeId, (u32)FogControl_getExtraSize}};
+ObjDescriptorTable gLightningObjDescriptor = {{0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000,
+                                               0x00000000, (u32)lightning_init, (u32)lightning_update, 0x00000000,
+                                               (u32)lightning_render, (u32)lightning_free, 0x00000000,
+                                               (u32)lightning_getExtraSize}};
+ObjDescriptorTable gWaterFallSprayObjDescriptor = {
+    {0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)WaterFallSpray_init,
+     (u32)WaterFallSpray_update, 0x00000000, (u32)WaterFallSpray_render, (u32)WaterFallSpray_free, 0x00000000,
+     (u32)WaterFallSpray_getExtraSize}};
+ObjDescriptorTable gSfxPlayerObjDescriptor = {{0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000,
+                                               0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000,
+                                               0x00000000, (u32)sfxplayerObj_free, 0x00000000,
+                                               (u32)sfxplayerObj_getExtraSize}};

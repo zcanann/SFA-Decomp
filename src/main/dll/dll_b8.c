@@ -13,7 +13,6 @@
 #include "main/camera.h"
 #include "main/sfa_shared_decls.h"
 
-
 void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
 {
     CameraViewSlot* vs;
@@ -36,4 +35,7 @@ void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
     CAMCONTROL_CAMERA->blendStartFovY = Camera_GetFovY();
 }
 
-void cameraSetInterpMode(u8 mode) { CAMCONTROL_CAMERA->blendCurveMode = mode; }
+void cameraSetInterpMode(u8 mode)
+{
+    CAMCONTROL_CAMERA->blendCurveMode = mode;
+}

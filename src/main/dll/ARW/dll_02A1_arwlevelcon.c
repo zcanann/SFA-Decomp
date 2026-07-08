@@ -23,7 +23,6 @@
 /* camera mode DLL 0x56 = dll_0056_cameramodearwing */
 #define ARWLEVELCON_CAMMODE_ARWING 0x56
 
-
 typedef struct ARWLevelConSetup
 {
     u8 pad00[0x14];
@@ -114,9 +113,15 @@ int arwlevelcon_SeqFn(int obj, int p2, int data)
     return 0;
 }
 
-int arwlevelcon_getExtraSize(void) { return 0x24; }
+int arwlevelcon_getExtraSize(void)
+{
+    return 0x24;
+}
 
-int arwlevelcon_getObjectTypeId(void) { return 0; }
+int arwlevelcon_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void arwlevelcon_free(void)
 {

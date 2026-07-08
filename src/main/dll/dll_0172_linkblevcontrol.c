@@ -19,8 +19,8 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/gameplay_runtime.h"
 
-#define LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
-#define LINKBLEVCONTROL_OBJFLAG_HIDDEN 0x4000
+#define LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK       0x1000
+#define LINKBLEVCONTROL_OBJFLAG_HIDDEN             0x4000
 #define LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
@@ -49,16 +49,19 @@ enum
     GAMEBIT_LINKB_STAGE_5 = 0x543
 };
 
-int linkb_levcontrol_getExtraSize(void) { return 0x10; }
+int linkb_levcontrol_getExtraSize(void)
+{
+    return 0x10;
+}
 
 enum LinkbLevStage
 {
     LINKBLEVCONTROL_STAGE_START = 0, /* awaiting stage-1 gate bit (0x384)     */
-    LINKBLEVCONTROL_STAGE_1     = 1, /* stage 1 reached (gate 0x384)          */
-    LINKBLEVCONTROL_STAGE_2     = 2, /* stage 2 reached (gate 0x385)          */
-    LINKBLEVCONTROL_STAGE_3     = 3, /* stage 3 reached (gate 0x386)          */
-    LINKBLEVCONTROL_STAGE_4     = 4, /* stage 4 reached (gate 0x387)          */
-    LINKBLEVCONTROL_STAGE_5     = 5  /* final stage reached (gate 0x543)      */
+    LINKBLEVCONTROL_STAGE_1 = 1,     /* stage 1 reached (gate 0x384)          */
+    LINKBLEVCONTROL_STAGE_2 = 2,     /* stage 2 reached (gate 0x385)          */
+    LINKBLEVCONTROL_STAGE_3 = 3,     /* stage 3 reached (gate 0x386)          */
+    LINKBLEVCONTROL_STAGE_4 = 4,     /* stage 4 reached (gate 0x387)          */
+    LINKBLEVCONTROL_STAGE_5 = 5      /* final stage reached (gate 0x543)      */
 };
 
 typedef struct LinkbLevState
@@ -159,7 +162,8 @@ void linkb_levcontrol_update(int* obj)
             if (cur[0] != 0)
             {
                 fn_80138908(tricky, 1);
-                if (state->trickyHitCount-- == -1 && !(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
+                if (state->trickyHitCount-- == -1 &&
+                    !(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
                     mainSetBits(GAMEBIT_LINKB_STAGE_3, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
@@ -231,7 +235,9 @@ void linkb_levcontrol_init(int* obj)
      * reuse envBase's register instead of re-materializing the address */
     u8* envBase = (u8*)(int)lbl_803238D8;
     LinkbLevState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags |
+              (LINKBLEVCONTROL_OBJFLAG_HIDDEN | LINKBLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
     if (mainGetBit(0x36e) != 0)
     {
         state->flags &= 4;

@@ -13,7 +13,10 @@ void Dummy3A_frameEnd(void)
 {
 }
 
-int Dummy3A_frameStart(void) { return 0; }
+int Dummy3A_frameStart(void)
+{
+    return 0;
+}
 
 void Dummy3A_release(void)
 {

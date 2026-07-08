@@ -86,8 +86,8 @@ extern void ColdWaterControl_init(void);
 extern void InfoPoint_initialise(void);
 extern void decoration11a_init(void);
 
-#define PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED 0x8000
-#define PORTALSPELLDOOR_OBJFLAG_HIDDEN 0x4000
+#define PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED    0x8000
+#define PORTALSPELLDOOR_OBJFLAG_HIDDEN             0x4000
 #define PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct PortalspelldoorPlacement
@@ -108,8 +108,14 @@ extern f32 lbl_803E3A90;
 extern f32 lbl_803E3A88;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-int PortalSpellDoor_getExtraSize(void) { return 0x10; }
-int PortalSpellDoor_getObjectTypeId(void) { return 0x0; }
+int PortalSpellDoor_getExtraSize(void)
+{
+    return 0x10;
+}
+int PortalSpellDoor_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void PortalSpellDoor_free(void)
 {
@@ -118,7 +124,8 @@ void PortalSpellDoor_free(void)
 void PortalSpellDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3A88);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3A88);
 }
 
 void PortalSpellDoor_hitDetect(void)
@@ -201,7 +208,10 @@ void PortalSpellDoor_init(u8* obj, u8* data)
     if (mainGetBit(*(s16*)(data + 0x1e)) != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED | PORTALSPELLDOOR_OBJFLAG_HIDDEN | PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED));
+        ((GameObject*)obj)->objectFlags =
+            (u16)(((GameObject*)obj)->objectFlags |
+                  (PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED | PORTALSPELLDOOR_OBJFLAG_HIDDEN |
+                   PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED));
     }
     sub->openTimer = -1;
 }
@@ -232,13 +242,121 @@ ObjectDescriptor gPortalSpellDoorObjDescriptor = {
 };
 
 /* descriptor/ptr table auto 0x80321830-0x80321a28 */
-u32 gLanternFireFlyObjDescriptor[18] = { 0x00000000, 0x00000000, 0x00000000, 0x000c0000, (u32)LanternFireFly_initialise, (u32)LanternFireFly_release, 0x00000000, (u32)LanternFireFly_init, (u32)LanternFireFly_update, (u32)LanternFireFly_hitDetect, (u32)LanternFireFly_render, (u32)LanternFireFly_free, (u32)LanternFireFly_getObjectTypeId, (u32)LanternFireFly_getExtraSize, (u32)LanternFireFly_setScale, (u32)LanternFireFly_func0B, (u32)LanternFireFly_modelMtxFn, 0x00000000 };
-u32 gFireFlyLanternObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)FireFlyLantern_init, (u32)FireFlyLantern_update, 0x00000000, (u32)FireFlyLantern_render, (u32)FireFlyLantern_free, (u32)FireFlyLantern_getObjectTypeId, (u32)FireFlyLantern_getExtraSize };
-u32 gFlammableVineObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)FlammableVine_initialise, (u32)FlammableVine_release, 0x00000000, (u32)FlammableVine_init, (u32)FlammableVine_update, (u32)FlammableVine_hitDetect, (u32)FlammableVine_render, (u32)FlammableVine_free, (u32)FlammableVine_getObjectTypeId, (u32)FlammableVine_getExtraSize };
-u32 lbl_803218E8[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_109_initialise_nop, (u32)dll_109_release_nop, 0x00000000, (u32)dll_109_init, (u32)carryable_break_respawn_update, (u32)dll_109_hitDetect_nop, (u32)dll_109_render, (u32)dll_109_free, (u32)dll_109_getObjectTypeId, (u32)dll_109_getExtraSize_ret_16 };
-u32 gFall_LaddersObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)Fall_Ladders_initialise, (u32)Fall_Ladders_release, 0x00000000, (u32)Fall_Ladders_init, (u32)Fall_Ladders_update, (u32)Fall_Ladders_hitDetect, (u32)Fall_Ladders_render, (u32)Fall_Ladders_free, (u32)Fall_Ladders_getObjectTypeId, (u32)Fall_Ladders_getExtraSize };
-u32 gColdWaterControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)ColdWaterControl_init, (u32)ColdWaterControl_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)ColdWaterControl_getExtraSize };
-u32 lbl_80321990[4] = { 0x00000050, 0x00000230, 0x0000003c, 0x00000190 };
-u32 lbl_803219A0[6] = { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
-u32 gInfoPointObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)InfoPoint_initialise, (u32)InfoPoint_release, 0x00000000, (u32)InfoPoint_init, (u32)InfoPoint_update, (u32)InfoPoint_hitDetect, (u32)InfoPoint_render, (u32)InfoPoint_free, (u32)InfoPoint_getObjectTypeId, (u32)InfoPoint_getExtraSize };
-u32 gDecoration11AObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)decoration11a_init, (u32)decoration11a_update, (u32)decoration11a_hitDetect, (u32)decoration11a_render, (u32)decoration11a_free, 0x00000000, (u32)decoration11a_getExtraSize };
+u32 gLanternFireFlyObjDescriptor[18] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x000c0000,
+                                        (u32)LanternFireFly_initialise,
+                                        (u32)LanternFireFly_release,
+                                        0x00000000,
+                                        (u32)LanternFireFly_init,
+                                        (u32)LanternFireFly_update,
+                                        (u32)LanternFireFly_hitDetect,
+                                        (u32)LanternFireFly_render,
+                                        (u32)LanternFireFly_free,
+                                        (u32)LanternFireFly_getObjectTypeId,
+                                        (u32)LanternFireFly_getExtraSize,
+                                        (u32)LanternFireFly_setScale,
+                                        (u32)LanternFireFly_func0B,
+                                        (u32)LanternFireFly_modelMtxFn,
+                                        0x00000000};
+u32 gFireFlyLanternObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        (u32)FireFlyLantern_init,
+                                        (u32)FireFlyLantern_update,
+                                        0x00000000,
+                                        (u32)FireFlyLantern_render,
+                                        (u32)FireFlyLantern_free,
+                                        (u32)FireFlyLantern_getObjectTypeId,
+                                        (u32)FireFlyLantern_getExtraSize};
+u32 gFlammableVineObjDescriptor[14] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00090000,
+                                       (u32)FlammableVine_initialise,
+                                       (u32)FlammableVine_release,
+                                       0x00000000,
+                                       (u32)FlammableVine_init,
+                                       (u32)FlammableVine_update,
+                                       (u32)FlammableVine_hitDetect,
+                                       (u32)FlammableVine_render,
+                                       (u32)FlammableVine_free,
+                                       (u32)FlammableVine_getObjectTypeId,
+                                       (u32)FlammableVine_getExtraSize};
+u32 lbl_803218E8[14] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00090000,
+                        (u32)dll_109_initialise_nop,
+                        (u32)dll_109_release_nop,
+                        0x00000000,
+                        (u32)dll_109_init,
+                        (u32)carryable_break_respawn_update,
+                        (u32)dll_109_hitDetect_nop,
+                        (u32)dll_109_render,
+                        (u32)dll_109_free,
+                        (u32)dll_109_getObjectTypeId,
+                        (u32)dll_109_getExtraSize_ret_16};
+u32 gFall_LaddersObjDescriptor[14] = {0x00000000,
+                                      0x00000000,
+                                      0x00000000,
+                                      0x00090000,
+                                      (u32)Fall_Ladders_initialise,
+                                      (u32)Fall_Ladders_release,
+                                      0x00000000,
+                                      (u32)Fall_Ladders_init,
+                                      (u32)Fall_Ladders_update,
+                                      (u32)Fall_Ladders_hitDetect,
+                                      (u32)Fall_Ladders_render,
+                                      (u32)Fall_Ladders_free,
+                                      (u32)Fall_Ladders_getObjectTypeId,
+                                      (u32)Fall_Ladders_getExtraSize};
+u32 gColdWaterControlObjDescriptor[14] = {0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00090000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          (u32)ColdWaterControl_init,
+                                          (u32)ColdWaterControl_update,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          (u32)ColdWaterControl_getExtraSize};
+u32 lbl_80321990[4] = {0x00000050, 0x00000230, 0x0000003c, 0x00000190};
+u32 lbl_803219A0[6] = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+u32 gInfoPointObjDescriptor[14] = {0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x00090000,
+                                   (u32)InfoPoint_initialise,
+                                   (u32)InfoPoint_release,
+                                   0x00000000,
+                                   (u32)InfoPoint_init,
+                                   (u32)InfoPoint_update,
+                                   (u32)InfoPoint_hitDetect,
+                                   (u32)InfoPoint_render,
+                                   (u32)InfoPoint_free,
+                                   (u32)InfoPoint_getObjectTypeId,
+                                   (u32)InfoPoint_getExtraSize};
+u32 gDecoration11AObjDescriptor[14] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00090000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       (u32)decoration11a_init,
+                                       (u32)decoration11a_update,
+                                       (u32)decoration11a_hitDetect,
+                                       (u32)decoration11a_render,
+                                       (u32)decoration11a_free,
+                                       0x00000000,
+                                       (u32)decoration11a_getExtraSize};

@@ -26,7 +26,7 @@
 typedef struct PressureswitchPlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 restPosY;    /* 0x0C: rest (up) Y position; pad sinks below this */
+    f32 restPosY; /* 0x0C: rest (up) Y position; pad sinks below this */
     u8 pad10[0x1A - 0x10];
     s16 unk1A;
     s16 triggerGameBit; /* 0x1C: game bit raised while the pad is pressed */
@@ -50,7 +50,7 @@ typedef struct PswContactList
     u8 pad00[0x100];
     GameObject* objects[3]; /* 0x100: contacts; `count` of them are valid */
     u8 pad10C[0x10F - 0x10C];
-    s8 count;               /* 0x10F */
+    s8 count; /* 0x10F */
 } PswContactList;
 
 /* Re-derefs the +0x58 list pointer per use. */
@@ -58,7 +58,7 @@ typedef struct PswContactList
 
 /* seqIds of objects this pad reacts to (compared against ent->anim.seqId). */
 #define PSWITCH_TRIGGER_SEQ_ID 0x6d
-#define PSWITCH_CHIME_SEQ_ID 0x146
+#define PSWITCH_CHIME_SEQ_ID   0x146
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
@@ -69,7 +69,7 @@ typedef struct PressureSwitchState
     s8 chimeLatch;
     s16 retriggerTimer;
     s16 mapGameBit; /* 0xf45/0xf46 per-map bit, -1 none */
-    u8 flags; /* PressureSwitchFlags overlay */
+    u8 flags;       /* PressureSwitchFlags overlay */
     u8 pad7;
 } PressureSwitchState;
 
@@ -94,8 +94,14 @@ int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int PressureSwitch_getExtraSize(void) { return 0x8; }
-int PressureSwitch_getObjectTypeId(void) { return 0x0; }
+int PressureSwitch_getExtraSize(void)
+{
+    return 0x8;
+}
+int PressureSwitch_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void PressureSwitch_free(void)
 {
@@ -104,7 +110,8 @@ void PressureSwitch_free(void)
 void PressureSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void PressureSwitch_hitDetect(void)
@@ -150,8 +157,7 @@ void PressureSwitch_update(int obj)
     }
     byteOff[0] = 0;
     ((PressureSwitchFlags*)&state->flags)->active = byteOff[0];
-    if (PSW_CONTACT_LIST(obj) != NULL &&
-        PSW_CONTACT_LIST(obj)->count > 0)
+    if (PSW_CONTACT_LIST(obj) != NULL && PSW_CONTACT_LIST(obj)->count > 0)
     {
         state->retriggerTimer = (s16)(placement->retriggerDelay * 60);
         i = 0;

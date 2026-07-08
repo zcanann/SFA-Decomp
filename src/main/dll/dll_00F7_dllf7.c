@@ -20,7 +20,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define DLLF7_OBJGROUP 0x3e
+#define DLLF7_OBJGROUP        0x3e
 #define DLLF7_TARGET_OBJGROUP 0x4
 
 #define DLLF7_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -53,17 +53,17 @@ typedef struct DllF7Placement
 typedef struct DllF7GasSetup
 {
     u8 pad0[0x8 - 0x0];
-    f32 posX;                /* 0x08 */
-    f32 posY;                /* 0x0c */
-    f32 posZ;                /* 0x10 */
+    f32 posX; /* 0x08 */
+    f32 posY; /* 0x0c */
+    f32 posZ; /* 0x10 */
     u8 pad14[0x1a - 0x14];
-    u8 field1A;              /* 0x1a */
-    u8 pad1B;                /* 0x1b */
-    s16 field1C;             /* 0x1c */
+    u8 field1A;  /* 0x1a */
+    u8 pad1B;    /* 0x1b */
+    s16 field1C; /* 0x1c */
     u8 pad1E[0x24 - 0x1e];
-    s16 field24;             /* 0x24 */
+    s16 field24; /* 0x24 */
     u8 pad26[0x2c - 0x26];
-    s16 field2C;             /* 0x2c */
+    s16 field2C; /* 0x2c */
 } DllF7GasSetup;
 
 typedef struct DllF7Vec
@@ -116,8 +116,14 @@ extern f32 playerMapOffsetZ;
 extern void* gDllF7Resource5B;
 extern void* gDllF7Resource5A;
 
-int dll_F7_getExtraSize(void) { return 0xc; }
-int dll_F7_getObjectTypeId(void) { return 0x2; }
+int dll_F7_getExtraSize(void)
+{
+    return 0xc;
+}
+int dll_F7_getObjectTypeId(void)
+{
+    return 0x2;
+}
 
 void dll_F7_free(int obj)
 {
@@ -160,8 +166,7 @@ void dll_F7_update(int* obj)
     if (state->byte9 != 0)
     {
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
-        if (state->byteB == 0 &&
-            (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->mapEventId) != 0)
+        if (state->byteB == 0 && (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->mapEventId) != 0)
         {
             state->byte9 = 0;
             state->byte8 = 1;
@@ -189,8 +194,8 @@ void dll_F7_update(int* obj)
             blk.rotZ = 0;
             blk.rotY = 0;
             blk.rotX = 0;
-            ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)gDllF7Resource5A)[
-                1])(0, 1, (s16*)((int)&blk + 16), 1025, -1, &blk.params);
+            ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)gDllF7Resource5A)[1])(
+                0, 1, (s16*)((int)&blk + 16), 1025, -1, &blk.params);
         }
     }
     if (state->hitsRemaining <= 0)
@@ -227,12 +232,12 @@ void dll_F7_update(int* obj)
             near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, obj, &radius);
             if (near != NULL)
             {
-                ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX = ((GameObject*)obj)->anim.
-                    localPosX;
-                ((GameObject*)near)->anim.localPosY = ((GameObject*)near)->anim.worldPosY = lbl_803E3410 + ((GameObject
-                    *)obj)->anim.localPosY;
-                ((GameObject*)near)->anim.localPosZ = ((GameObject*)near)->anim.worldPosZ = ((GameObject*)obj)->anim.
-                    localPosZ;
+                ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX =
+                    ((GameObject*)obj)->anim.localPosX;
+                ((GameObject*)near)->anim.localPosY = ((GameObject*)near)->anim.worldPosY =
+                    lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
+                ((GameObject*)near)->anim.localPosZ = ((GameObject*)near)->anim.worldPosZ =
+                    ((GameObject*)obj)->anim.localPosZ;
                 *(s16*)near = *(s16*)obj;
             }
         }
@@ -292,7 +297,10 @@ void dll_F7_initialise(void)
 }
 
 ObjectDescriptor dll_F7 = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)dll_F7_initialise,
     (ObjectDescriptorCallback)dll_F7_release,
     0,

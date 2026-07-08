@@ -19,7 +19,6 @@ typedef struct CameraModeStaticPlacement
     u8 pad22[0x28 - 0x22];
 } CameraModeStaticPlacement;
 
-
 extern void* ObjGroup_GetObjects();
 extern f32 sqrtf(f32 x);
 extern CameraModeStaticState* lbl_803DD558;
@@ -144,13 +143,11 @@ void CameraModeStatic_update(short* camObj)
             }
             camObj[2] += (int)(viewObj * framesThisStep) >> 3;
         }
-        Obj_TransformWorldPointToLocal(((CameraObject*)camObj)->anim.worldPosX,
-                                       ((CameraObject*)camObj)->anim.worldPosY,
-                                       ((CameraObject*)camObj)->anim.worldPosZ,
-                                       &((CameraObject*)camObj)->anim.localPosX,
-                                       &((CameraObject*)camObj)->anim.localPosY,
-                                       &((CameraObject*)camObj)->anim.localPosZ,
-                                       *(int*)&((CameraObject*)camObj)->anim.parent);
+        Obj_TransformWorldPointToLocal(
+            ((CameraObject*)camObj)->anim.worldPosX, ((CameraObject*)camObj)->anim.worldPosY,
+            ((CameraObject*)camObj)->anim.worldPosZ, &((CameraObject*)camObj)->anim.localPosX,
+            &((CameraObject*)camObj)->anim.localPosY, &((CameraObject*)camObj)->anim.localPosZ,
+            *(int*)&((CameraObject*)camObj)->anim.parent);
     }
     return;
 }
@@ -221,13 +218,10 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
         ((CameraObject*)cam)->fov = fov;
     }
     Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
-                                   ((CameraObject*)cam)->anim.worldPosZ,
-                                   &((CameraObject*)cam)->anim.localPosX,
-                                   &((CameraObject*)cam)->anim.localPosY,
-                                   &((CameraObject*)cam)->anim.localPosZ,
+                                   ((CameraObject*)cam)->anim.worldPosZ, &((CameraObject*)cam)->anim.localPosX,
+                                   &((CameraObject*)cam)->anim.localPosY, &((CameraObject*)cam)->anim.localPosZ,
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
-
 
 void CameraModeStatic_release(void)
 {

@@ -53,27 +53,27 @@ extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
-#define S3D_MAX_GROUPS 0x40
-#define S3D_MAX_ACTIVE_NODES 0x40
+#define S3D_MAX_GROUPS                   0x40
+#define S3D_MAX_ACTIVE_NODES             0x40
 #define S3D_EMITTER_FLAG_RESTART_ON_STOP 0x00000002
-#define S3D_EMITTER_FLAG_USE_AUX_STUDIO 0x00000010
-#define S3D_EMITTER_FLAG_SKIP_FADE_IN 0x00000020
-#define S3D_EMITTER_FLAG_PLAYING 0x00020000
-#define S3D_EMITTER_FLAG_REMOVE 0x00040000
-#define S3D_EMITTER_FLAG_AGE_OUT 0x00100000
-#define S3D_CTRL_VOLUME 0x07
-#define S3D_CTRL_PAN 0x0a
-#define S3D_CTRL_SPATIAL_AZIMUTH 0x83
-#define S3D_CTRL_SPATIAL_PITCH 0x84
-#define S3D_CTRL_14BIT_LIMIT 0x3fff
-#define S3D_GROUP_KEY_STEREO_LIMIT 0x80000000
-#define S3D_INVALID_FX_HANDLE 0xffffffff
+#define S3D_EMITTER_FLAG_USE_AUX_STUDIO  0x00000010
+#define S3D_EMITTER_FLAG_SKIP_FADE_IN    0x00000020
+#define S3D_EMITTER_FLAG_PLAYING         0x00020000
+#define S3D_EMITTER_FLAG_REMOVE          0x00040000
+#define S3D_EMITTER_FLAG_AGE_OUT         0x00100000
+#define S3D_CTRL_VOLUME                  0x07
+#define S3D_CTRL_PAN                     0x0a
+#define S3D_CTRL_SPATIAL_AZIMUTH         0x83
+#define S3D_CTRL_SPATIAL_PITCH           0x84
+#define S3D_CTRL_14BIT_LIMIT             0x3fff
+#define S3D_GROUP_KEY_STEREO_LIMIT       0x80000000
+#define S3D_INVALID_FX_HANDLE            0xffffffff
 
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
 #pragma fp_contract off
-void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* azimuthOut,
-                    f32* pitchOut, f32* frontBackOut)
+void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* azimuthOut, f32* pitchOut,
+                    f32* frontBackOut)
 {
     SndSpatialListener* listener;
     f64 k1;
@@ -112,8 +112,7 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
     k3 = lbl_803E7898;
     k1 = lbl_803E78A8;
 
-    for (; listener != (SndSpatialListener*)0x0;
-         listener = listener->next)
+    for (; listener != (SndSpatialListener*)0x0; listener = listener->next)
     {
         dx = emitter->posX - (listener->posX + listener->velX * listener->time);
         dy = emitter->posY - (listener->posY + listener->velY * listener->time);
@@ -122,12 +121,9 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
         if (listenerDistance > zero)
         {
             invSqrt = __frsqrte((f64)listenerDistance);
-            invSqrt = k3 * invSqrt *
-                (k1 - listenerDistance * (invSqrt * invSqrt));
-            invSqrt = k3 * invSqrt *
-                (k1 - listenerDistance * (invSqrt * invSqrt));
-            invSqrt = k3 * invSqrt *
-                (k1 - listenerDistance * (invSqrt * invSqrt));
+            invSqrt = k3 * invSqrt * (k1 - listenerDistance * (invSqrt * invSqrt));
+            invSqrt = k3 * invSqrt * (k1 - listenerDistance * (invSqrt * invSqrt));
+            invSqrt = k3 * invSqrt * (k1 - listenerDistance * (invSqrt * invSqrt));
             tmp1 = (f32)((f64)listenerDistance * invSqrt);
             listenerDistance = tmp1;
         }
@@ -140,20 +136,16 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
             {
                 dz = one - curveParam;
                 *distanceOut += listener->volumeScale *
-                (emitter->minVolume +
-                    (emitter->maxVolume - emitter->minVolume) *
-                    (one - (dz * ratio +
-                        ratio * (curveParam * ratio))));
+                                (emitter->minVolume + (emitter->maxVolume - emitter->minVolume) *
+                                                          (one - (dz * ratio + ratio * (curveParam * ratio))));
             }
             else
             {
                 dz = one + curveParam;
                 *distanceOut += listener->volumeScale *
-                (emitter->minVolume +
-                    (emitter->maxVolume - emitter->minVolume) *
-                    (one - (dz * ratio -
-                        curveParam *
-                        (one - (one - ratio) * (one - ratio)))));
+                                (emitter->minVolume +
+                                 (emitter->maxVolume - emitter->minVolume) *
+                                     (one - (dz * ratio - curveParam * (one - (one - ratio) * (one - ratio)))));
             }
 
             if ((emitter->flags & S3D_EMITTER_FLAG_WAITING_FOR_ROOM) == 0)
@@ -167,53 +159,36 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                     if (listenerVelocityDistance > zero)
                     {
                         invSqrt = __frsqrte((f64)listenerVelocityDistance);
-                        invSqrt = k3 * invSqrt *
-                        (k1 -
-                            listenerVelocityDistance * (invSqrt * invSqrt));
-                        invSqrt = k3 * invSqrt *
-                        (k1 -
-                            listenerVelocityDistance * (invSqrt * invSqrt));
-                        invSqrt = k3 * invSqrt *
-                        (k1 -
-                            listenerVelocityDistance * (invSqrt * invSqrt));
+                        invSqrt = k3 * invSqrt * (k1 - listenerVelocityDistance * (invSqrt * invSqrt));
+                        invSqrt = k3 * invSqrt * (k1 - listenerVelocityDistance * (invSqrt * invSqrt));
+                        invSqrt = k3 * invSqrt * (k1 - listenerVelocityDistance * (invSqrt * invSqrt));
                         tmp2 = (f32)((f64)listenerVelocityDistance * invSqrt);
                         listenerVelocityDistance = tmp2;
                     }
 
                     if (listenerVelocityDistance > zero)
                     {
-                        dx = (emitter->posX + emitter->refX * half) -
-                            (listener->posX + listener->refX * half);
-                        dy = (emitter->posY + emitter->refY * half) -
-                            (listener->posY + listener->refY * half);
-                        dz = (emitter->posZ + emitter->refZ * half) -
-                            (listener->posZ + listener->refZ * half);
+                        dx = (emitter->posX + emitter->refX * half) - (listener->posX + listener->refX * half);
+                        dy = (emitter->posY + emitter->refY * half) - (listener->posY + listener->refY * half);
+                        dz = (emitter->posZ + emitter->refZ * half) - (listener->posZ + listener->refZ * half);
                         projectedDistance = dz * dz;
                         projectedDistance += dx * dx + dy * dy;
                         if (projectedDistance > zero)
                         {
                             invSqrt = __frsqrte((f64)projectedDistance);
-                            invSqrt = k3 * invSqrt *
-                            (k1 -
-                                projectedDistance * (invSqrt * invSqrt));
-                            invSqrt = k3 * invSqrt *
-                            (k1 -
-                                projectedDistance * (invSqrt * invSqrt));
-                            invSqrt = k3 * invSqrt *
-                            (k1 -
-                                projectedDistance * (invSqrt * invSqrt));
+                            invSqrt = k3 * invSqrt * (k1 - projectedDistance * (invSqrt * invSqrt));
+                            invSqrt = k3 * invSqrt * (k1 - projectedDistance * (invSqrt * invSqrt));
+                            invSqrt = k3 * invSqrt * (k1 - projectedDistance * (invSqrt * invSqrt));
                             tmp3 = (f32)((f64)projectedDistance * invSqrt);
                             projectedDistance = tmp3;
                         }
                         if (projectedDistance < listenerDistance)
                         {
-                            *panOut = listener->panScale /
-                                (listener->panScale - listenerVelocityDistance);
+                            *panOut = listener->panScale / (listener->panScale - listenerVelocityDistance);
                         }
                         else
                         {
-                            *panOut = listener->panScale /
-                                (listener->panScale + listenerVelocityDistance);
+                            *panOut = listener->panScale / (listener->panScale + listenerVelocityDistance);
                         }
                     }
                 }
@@ -223,20 +198,16 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                     salApplyMatrix(listener->matrix, &emitter->posX, transformed);
                     if (transformed[2] <= zero)
                     {
-                        frontBackSum += -listener->rearRange < transformed[2]
-                            ? -transformed[2] / listener->rearRange
-                            : lbl_803E78A4;
+                        frontBackSum += -listener->rearRange < transformed[2] ? -transformed[2] / listener->rearRange
+                                                                              : lbl_803E78A4;
                     }
                     else
                     {
-                        frontBackSum += listener->frontRange > transformed[2]
-                            ? -transformed[2] / listener->frontRange
-                            : lbl_803E7890;
+                        frontBackSum += listener->frontRange > transformed[2] ? -transformed[2] / listener->frontRange
+                                                                              : lbl_803E7890;
                     }
 
-                    if (((zero != transformed[0]) ||
-                            (zero != transformed[1])) ||
-                        (zero != transformed[2]))
+                    if (((zero != transformed[0]) || (zero != transformed[1])) || (zero != transformed[2]))
                     {
                         salNormalizeVector(transformed);
                     }
@@ -257,8 +228,7 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
 }
 #pragma fp_contract reset
 
-void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 unused,
-                             f32 azimuth, f32 pitch)
+void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 unused, f32 azimuth, f32 pitch)
 {
     u32 handle;
     u16 value14;
@@ -276,12 +246,10 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     }
     else
     {
-        synthFXSetCtrl(handle, S3D_CTRL_VOLUME,
-                       S3D_CLAMP_7BIT((u32)(int)(lbl_803E78A0 * distance)));
+        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, S3D_CLAMP_7BIT((u32)(int)(lbl_803E78A0 * distance)));
     }
 
-    synthFXSetCtrl(handle, S3D_CTRL_PAN,
-                   S3D_CLAMP_7BIT((u32)(int)(lbl_803E78B4 * (lbl_803E78A4 + pan))));
+    synthFXSetCtrl(handle, S3D_CTRL_PAN, S3D_CLAMP_7BIT((u32)(int)(lbl_803E78B4 * (lbl_803E78A4 + pan))));
 
     synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH,
                    S3D_CLAMP_7BIT((u32)(int)(lbl_803E78B4 * (lbl_803E78A4 - azimuth))));
@@ -293,8 +261,7 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     }
     else
     {
-        value14 = (u16)(u32)
-        pitch;
+        value14 = (u16)(u32)pitch;
     }
     synthFXSetCtrl14(handle, S3D_CTRL_SPATIAL_PITCH, value14);
 
@@ -383,8 +350,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
 /*
  * s3dInsertActiveEmitter - active spatial voice node insert.
  */
-int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3,
-                           f32 arg4)
+int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3, f32 arg4)
 {
     S3DMixGroup* group;
     S3DActiveNode* scan;
@@ -458,7 +424,6 @@ int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 ar
     ((S3DActiveNode*)(base + 0x450))[lbl_803DE36C++].distance = distance;
     return 1;
 }
-
 
 void s3dStartQueuedEmitters(void)
 {
@@ -553,8 +518,7 @@ void s3dStartQueuedEmitters(void)
             {
                 emitter->age = one;
             }
-            s3dApplyEmitterControls(emitter, node->distance, node->arg1,
-                                    node->arg2, node->arg3, node->arg4);
+            s3dApplyEmitterControls(emitter, node->distance, node->arg1, node->arg2, node->arg3, node->arg4);
             emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
             lbl_803CC910[groupIndex].sortedCount++;
             if (lbl_803CC910[groupIndex].sortedHead != (S3DSortedNode*)0x0)

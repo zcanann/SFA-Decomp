@@ -18,19 +18,25 @@
 
 /* DfpTorchState.mode: torch behaviour selected from placement->mode */
 #define DFPTORCH_MODE_ALWAYS_LIT 0 /* permanently burning, ignited at init */
-#define DFPTORCH_MODE_LIGHTABLE 1  /* player-toggled; burn timer + gamebit latch */
+#define DFPTORCH_MODE_LIGHTABLE  1 /* player-toggled; burn timer + gamebit latch */
 
 /* partfx ids: FLICKER emitted on the flicker-timer tick while the flame is
    visible; IGNITE spawned 100x on the unlit->lit transition (light-up burst) */
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
-#define DFPTORCH_PARTFX_IGNITE 0x1a3
+#define DFPTORCH_PARTFX_IGNITE  0x1a3
 extern f32 sqrtf(f32 x);
 extern ModgfxInterface** gModgfxInterface;
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
-int DFP_Torch_getExtraSize(void) { return 0x10; }
-int DFP_Torch_getObjectTypeId(void) { return 0x1; }
+int DFP_Torch_getExtraSize(void)
+{
+    return 0x10;
+}
+int DFP_Torch_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void DFP_Torch_free(int obj)
 {
@@ -43,7 +49,7 @@ void DFP_Torch_free(int obj)
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 
-    extern void voxmaps_worldToGrid(f32* in, s16* out);
+    extern void voxmaps_worldToGrid(f32 * in, s16 * out);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
     DfpTorchState* state = ((GameObject*)obj)->extra;
     char* cam;
@@ -117,8 +123,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     stk2.fx.col[0] = 0.0f;
                     stk2.fx.col[1] = 5.0f;
                     stk2.fx.col[2] = 0.0f;
-                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_FLICKER, &stk2.fx, 0x12, -1,
-                                                     NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_FLICKER, &stk2.fx, 0x12, -1, NULL);
                 }
                 state->flickerTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
             }
@@ -198,8 +203,7 @@ void DFP_Torch_update(int obj)
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++)
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_IGNITE, NULL, 0, -1,
-                                                     NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_IGNITE, NULL, 0, -1, NULL);
                 }
                 if (state->gameBit != -1)
                 {

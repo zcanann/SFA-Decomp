@@ -18,20 +18,22 @@ extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int playerIsDisguised(int obj);
 
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 typedef struct SharpClawPadParticleArgs
 {
-    u8 pad00[0xc];   /* 0x00: filled in by objfx_spawnArcedBurst, not written here */
-    f32 offset[3];   /* 0x0C: emitter offset x/y/z */
+    u8 pad00[0xc]; /* 0x00: filled in by objfx_spawnArcedBurst, not written here */
+    f32 offset[3]; /* 0x0C: emitter offset x/y/z */
 } SharpClawPadParticleArgs;
 
 STATIC_ASSERT(offsetof(SharpClawPadParticleArgs, offset) == 0xC);
 STATIC_ASSERT(sizeof(SharpClawPadParticleArgs) == 0x18);
 
-int CCSharpclawPad_getExtraSize(void) { return 0x4; }
+int CCSharpclawPad_getExtraSize(void)
+{
+    return 0x4;
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -47,11 +49,9 @@ void CCSharpclawPad_update(int obj)
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f,
-                              2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f,
-                              2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
     else
     {
@@ -83,8 +83,8 @@ void CCSharpclawPad_update(int obj)
         }
         player = Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            100.0f
-            && playerIsDisguised((int)player) != 0)
+                100.0f &&
+            playerIsDisguised((int)player) != 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
             mainSetBits(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
@@ -93,11 +93,9 @@ void CCSharpclawPad_update(int obj)
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f,
-                              2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f,
-                              2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
 }
 

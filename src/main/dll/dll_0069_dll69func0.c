@@ -213,7 +213,7 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_803137F8, 4, &base[0x50],
-                                     variant == 2 ? DLL69_EFFECT_ID_VARIANT2 : DLL69_EFFECT_ID_DEFAULT, 0);
+    (*gModgfxInterface)
+        ->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_803137F8, 4, &base[0x50],
+                      variant == 2 ? DLL69_EFFECT_ID_VARIANT2 : DLL69_EFFECT_ID_DEFAULT, 0);
 }
-

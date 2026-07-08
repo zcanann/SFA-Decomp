@@ -42,7 +42,10 @@ STATIC_ASSERT(offsetof(CcpedstalState, gameBit) == 0x4);
 STATIC_ASSERT(offsetof(CcpedstalState, markFlags) == 0x6);
 STATIC_ASSERT(sizeof(CcpedstalState) == 0x8);
 
-int ccpedstal_getExtraSize(void) { return sizeof(CcpedstalState); }
+int ccpedstal_getExtraSize(void)
+{
+    return sizeof(CcpedstalState);
+}
 
 /* If the pedestal's gameBit is set, lights the model (index 1, hitbox bit 8).
  * Otherwise shows model 0 and, while gameBit 0xA9 is set and the object's
@@ -53,7 +56,8 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
     CcpedstalState* state = (CcpedstalState*)state2;
     if (mainGetBit(state->gameBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         Obj_SetActiveModelIndex(obj, 1);
     }
     else
@@ -62,8 +66,8 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
         Obj_SetActiveModelIndex(obj, 0);
         if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
             if (ObjTrigger_IsSetById(obj, 0xa9) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -74,8 +78,8 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
         }
         doMark = 0;
     check:
@@ -95,15 +99,18 @@ void ccpedstal_updateAltVariant(int obj, u8* state2)
     CcpedstalState* state = (CcpedstalState*)state2;
     if (mainGetBit(0xdc5) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     }
     if (mainGetBit(state->gameBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         Obj_SetActiveModelIndex(obj, 0);
     }
     else

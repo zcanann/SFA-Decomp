@@ -33,9 +33,15 @@ int cnthitobjec_SeqFn(int obj, int p2, int p3)
     return 0;
 }
 
-int cnthitobjec_getExtraSize(void) { return sizeof(CntHitObjectState); }
+int cnthitobjec_getExtraSize(void)
+{
+    return sizeof(CntHitObjectState);
+}
 
-int cnthitobjec_getObjectTypeId(void) { return 0; }
+int cnthitobjec_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void cnthitobjec_free(void)
 {
@@ -100,9 +106,8 @@ void cnthitobjec_hitDetect(int obj)
                 amount = s->explosionSize;
             }
             model = ((CntHitObjectSetup*)((GameObject*)obj)->anim.placementData)->base.mapId;
-            if (model != CNTHIT_MODEL_NO_EXPLOSION_A && model != CNTHIT_MODEL_NO_EXPLOSION_B && model !=
-                CNTHIT_MODEL_NO_EXPLOSION_C &&
-                model != CNTHIT_MODEL_NO_EXPLOSION_D)
+            if (model != CNTHIT_MODEL_NO_EXPLOSION_A && model != CNTHIT_MODEL_NO_EXPLOSION_B &&
+                model != CNTHIT_MODEL_NO_EXPLOSION_C && model != CNTHIT_MODEL_NO_EXPLOSION_D)
             {
                 spawnExplosion(obj, amount, 1, 1, 1, 1, 0, 1, 0);
             }
@@ -133,8 +138,7 @@ void cnthitobjec_update(int obj)
         }
     }
 
-    if (state->flags.disabled == 0 && state->remainingHealth == 0 &&
-        mainGetBit(setup->startGameBit) != 0)
+    if (state->flags.disabled == 0 && state->remainingHealth == 0 && mainGetBit(setup->startGameBit) != 0)
     {
         ObjHits_EnableObject(obj);
         state->remainingHealth = setup->startHealth;
@@ -186,8 +190,8 @@ int mcupgrade_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
 {
     if (event->explosionCount != 0)
     {
-        (*gGameUIInterface)->showNpcDialogue(
-            ((CntHitObjectSetup*)((GameObject*)obj)->anim.placementData)->startHealth, 0x14, 0x8c, 0);
+        (*gGameUIInterface)
+            ->showNpcDialogue(((CntHitObjectSetup*)((GameObject*)obj)->anim.placementData)->startHealth, 0x14, 0x8c, 0);
     }
     return 0;
 }

@@ -13,9 +13,8 @@
 
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 
-int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
-                               void* uTextureBuffer, void* vTextureBuffer, void* audioBuffer,
-                               void* thpWorkBuffer)
+int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, void* uTextureBuffer,
+                               void* vTextureBuffer, void* audioBuffer, void* thpWorkBuffer)
 {
     AttractMoviePlayer* player;
     u8* curr;
@@ -25,8 +24,10 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
     u32 i;
 
     player = &lbl_803A5D60;
-    if (player->isOpen == 0) goto fail;
-    if (player->state != 0) goto fail;
+    if (player->isOpen == 0)
+        goto fail;
+    if (player->state != 0)
+        goto fail;
 
     if (player->isOnMemory != 0)
     {
@@ -84,9 +85,8 @@ fail:
     return 0;
 }
 
-void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBufferSize,
-                                 int* uTextureBufferSize, int* vTextureBufferSize,
-                                 u32* audioBufferSize, int* thpWorkBufferSize)
+void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBufferSize, int* uTextureBufferSize,
+                                 int* vTextureBufferSize, u32* audioBufferSize, int* thpWorkBufferSize)
 {
     AttractMoviePlayer* player;
     u32 movieOrReadSize;

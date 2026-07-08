@@ -5,18 +5,30 @@
 #include "main/frame_timing.h"
 
 extern u8 gScreenTransitionDone;
-u8 screenTransition_func07(void) { return gScreenTransitionDone; }
+u8 screenTransition_func07(void)
+{
+    return gScreenTransitionDone;
+}
 
 extern f32 screenTransitionAlpha;
-f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
+f32 screenTransition_getAlpha(void)
+{
+    return screenTransitionAlpha;
+}
 
 extern u8 screenTransitionPause;
 #pragma peephole off
-void setScreenTransitionPause(u32 pause) { screenTransitionPause = pause; }
+void setScreenTransitionPause(u32 pause)
+{
+    screenTransitionPause = pause;
+}
 #pragma peephole reset
 
 extern f32 gScreenTransitionAlphaMax;
-u32 isScreenTransitionActive(void) { return gScreenTransitionAlphaMax == screenTransitionAlpha; }
+u32 isScreenTransitionActive(void)
+{
+    return gScreenTransitionAlphaMax == screenTransitionAlpha;
+}
 
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
@@ -341,4 +353,3 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         GXSetScissor(sx, sy, sw, sh);
     }
 }
-

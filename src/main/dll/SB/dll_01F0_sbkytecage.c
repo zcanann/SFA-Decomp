@@ -58,7 +58,7 @@ enum
 };
 
 /* game bits */
-#define GAMEBIT_KYTE_CAGED 117
+#define GAMEBIT_KYTE_CAGED  117
 #define GAMEBIT_KYTE_OPENED 0x92a
 
 /* anim.resetHitboxMode trigger bits */
@@ -104,8 +104,7 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     if (obj->seqIndex != -1)
     {
         animUpdate->hitVolumePair &= ~4;
-        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f,
-                                                                         timeDelta, NULL) != 0)
+        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f, timeDelta, NULL) != 0)
         {
             Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
         }
@@ -115,8 +114,14 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-int SB_KyteCage_getExtraSize(void) { return sizeof(SBKyteCageState); }
-int SB_KyteCage_getObjectTypeId(void) { return 0x0; }
+int SB_KyteCage_getExtraSize(void)
+{
+    return sizeof(SBKyteCageState);
+}
+int SB_KyteCage_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_KyteCage_free(GameObject* obj)
 {
@@ -200,8 +205,7 @@ void SB_KyteCage_update(int obj)
             ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
         }
     }
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.004f,
-                                                                     timeDelta, NULL) != 0)
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.004f, timeDelta, NULL) != 0)
     {
         Sfx_PlayFromObject((int*)obj, SFXfend_rob_beep2);
     }

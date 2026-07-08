@@ -34,14 +34,16 @@ typedef struct BrokenPipeState
 
 STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 
-int brokenpipe_getExtraSize(void) { return 4; }
+int brokenpipe_getExtraSize(void)
+{
+    return 4;
+}
 
 void brokenpipe_update(int obj)
 {
     BrokenPipeState* state = ((GameObject*)obj)->extra;
 
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                              &state->hitEffectCooldown);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
 }
 
 void brokenpipe_init(int obj, int setup)
@@ -59,9 +61,8 @@ void brokenpipe_init(int obj, int setup)
         {
             object->anim.rootMotionScale = lbl_803E7340;
         }
-        ObjHitbox_SetSphereRadius(obj,
-                                  (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
-                                        object->anim.rootMotionScale));
+        ObjHitbox_SetSphereRadius(obj, (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
+                                             object->anim.rootMotionScale));
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= BROKENPIPE_OBJFLAG_HIDDEN;

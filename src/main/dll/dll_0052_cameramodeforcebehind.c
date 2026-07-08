@@ -14,19 +14,17 @@
 #include "main/object_transform.h"
 #include "main/engine_shared.h"
 
-
-
 extern void camcontrol_traceFromTarget();
 extern f32 interpolate(f32 a, f32 t, f32 exp);
-extern f32 gCamForceBehindPi; /* binary-angle -> radians scale (numerator) */
-extern f32 gCamForceBehindBamsToRadDivisor; /* binary-angle -> radians divisor (half-circle = 0x8000) */
-extern f32 gCamForceBehindHeightOffset; /* camera height offset above the target */
+extern f32 gCamForceBehindPi;                 /* binary-angle -> radians scale (numerator) */
+extern f32 gCamForceBehindBamsToRadDivisor;   /* binary-angle -> radians divisor (half-circle = 0x8000) */
+extern f32 gCamForceBehindHeightOffset;       /* camera height offset above the target */
 extern f32 gCamForceBehindDefaultOrbitRadius; /* default orbit radius (when no override is supplied) */
-extern f32 gCamForceBehindOrbitRadius; /* orbit radius */
+extern f32 gCamForceBehindOrbitRadius;        /* orbit radius */
 extern f32 gCamForceBehindActiveHeightOffset; /* active height offset */
-extern f32 gCamForceBehindTraceDistance; /* derived horizontal trace distance */
-extern f32 gCamForceBehindPlacementRadius; /* derived orbit radius used to place the camera */
-extern f32 gCamForceBehindEaseRate; /* yaw/pitch ease rate fed to interpolate() */
+extern f32 gCamForceBehindTraceDistance;      /* derived horizontal trace distance */
+extern f32 gCamForceBehindPlacementRadius;    /* derived orbit radius used to place the camera */
+extern f32 gCamForceBehindEaseRate;           /* yaw/pitch ease rate fed to interpolate() */
 
 void CameraModeForceBehind_release(void);
 void CameraModeForceBehind_initialise(void);
@@ -97,8 +95,7 @@ void CameraModeForceBehind_update(u8* obj)
     {
         pitch = pitch + 0xffff;
     }
-    camera->anim.rotY = (f32)(s32)camera->anim.rotY +
-                        interpolate((f32)pitch, gCamForceBehindEaseRate, timeDelta);
+    camera->anim.rotY = (f32)(s32)camera->anim.rotY + interpolate((f32)pitch, gCamForceBehindEaseRate, timeDelta);
 
     cosYaw = mathSinf(gCamForceBehindPi * (f32)(s32)(camera->anim.rotX - 0x4000) / gCamForceBehindBamsToRadDivisor);
     sinYaw = mathCosf(gCamForceBehindPi * (f32)(s32)(camera->anim.rotX - 0x4000) / gCamForceBehindBamsToRadDivisor);

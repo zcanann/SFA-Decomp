@@ -283,19 +283,23 @@ void dll_81_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     if (variant == 0x1e)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT1E, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT1E, 0);
     }
     else if (variant == 2 || variant == 3)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT23, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT23, 0);
     }
     else if ((u32)(variant - 10) <= 3 || variant == 0xe)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT10_13, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_VARIANT10_13, 0);
     }
     else
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_DEFAULT, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80315548, 0x18, base + 0xd4, DLL81_EFFECT_ID_DEFAULT, 0);
     }
 }
 

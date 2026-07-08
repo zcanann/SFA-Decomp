@@ -11,8 +11,8 @@
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
-                       u32 reactionState, float* reactionStepScale)
+int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
+                       float* reactionStepScale)
 {
     ObjAnimDef* animDef;
     ObjAnimComponent* objAnim;
@@ -31,16 +31,15 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE)
     {
         OSReport(sObjHitReactHitstateFrameString, objAnim->currentMoveProgress);
-        moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
-            (obj, (double)*reactionStepScale, (double)timeDelta, NULL);
+        moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)(obj, (double)*reactionStepScale,
+                                                                              (double)timeDelta, NULL);
         if (moveEnded != 0)
         {
             OSReport(sObjHitReactResetString);
             reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
         }
     }
-    hitType = ObjHits_GetPriorityHitWithPosition(obj, 0, &hitSphereIndex, 0, &hitPos[0], &hitPos[1],
-                                                 &hitPos[2]);
+    hitType = ObjHits_GetPriorityHitWithPosition(obj, 0, &hitSphereIndex, 0, &hitPos[0], &hitPos[1], &hitPos[2]);
     if (hitType != 0)
     {
         ObjAnimBank* bank = ObjAnim_GetActiveBank(objAnim);
@@ -61,24 +60,21 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
         if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION)
         {
             if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
-                    !sfxActive))
+                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId), !sfxActive))
             {
                 Sfx_PlayFromObject(obj, reactionEntry->primaryHitSfxId);
             }
             if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
-                    !sfxActive))
+                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId), !sfxActive))
             {
                 Sfx_PlayFromObject(obj, reactionEntry->secondaryHitSfxId);
             }
             if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT)
             {
-                effectHandle = (ObjHitReactEffectHandle*)
-                    Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
-                effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE,
-                                            &effectPos, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
-                                            OBJHITREACT_HIT_EFFECT_NO_SOURCE,
+                effectHandle = (ObjHitReactEffectHandle*)Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,
+                                                                          OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+                effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectPos,
+                                            OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
                                             &effectColorArgs);
                 if (effectHandle != (ObjHitReactEffectHandle*)0x0)
                 {
@@ -87,15 +83,15 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
             }
             else
             {
-                objLightFn_8009a1dc((void*)obj, gObjHitReactAltEffectScale, &effectPos,
-                                    OBJHITREACT_ALT_EFFECT_COUNT, NULL);
+                objLightFn_8009a1dc((void*)obj, gObjHitReactAltEffectScale, &effectPos, OBJHITREACT_ALT_EFFECT_COUNT,
+                                    NULL);
             }
         }
         if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
             (reactionEntry->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM))
         {
-            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-                (obj, reactionEntry->reactionMoveId, gObjHitsScalarZero, 0);
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, reactionEntry->reactionMoveId,
+                                                                         gObjHitsScalarZero, 0);
             *reactionStepScale = reactionEntry->reactionStepScale;
             reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
         }
@@ -160,8 +156,8 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
 }
 
 #pragma dont_inline on
-void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType,
-                                 ObjHitReactState* hitState, int moveId, int async)
+void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType, ObjHitReactState* hitState,
+                                 int moveId, int async)
 {
     int moveEntryWordIndex;
     s16* moveEntryTable;
@@ -190,8 +186,8 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
                                 hitState->activeEntryByteCount);
                     return;
                 }
-                fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID, hitState->entries,
-                                       entryByteOffset, hitState->activeEntryByteCount);
+                fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID, hitState->entries, entryByteOffset,
+                                       hitState->activeEntryByteCount);
                 return;
             }
         }
@@ -200,8 +196,8 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
 }
 #pragma dont_inline reset
 
-u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState,
-                          u32 entryArena, ObjAnimComponent* objAnim)
+u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u32 entryArena,
+                          ObjAnimComponent* objAnim)
 {
     ObjHitReactEntry* entries;
 

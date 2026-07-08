@@ -34,11 +34,20 @@ typedef struct SpiritdoorspiritPlacement
 
 STATIC_ASSERT(offsetof(SpiritdoorspiritPlacement, gateGameBit) == 0x1E);
 
-int spiritdoorspirit_getExtraSize(void) { return 0x1; }
-int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
+int spiritdoorspirit_getExtraSize(void)
+{
+    return 0x1;
+}
+int spiritdoorspirit_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 #pragma scheduling off
-void spiritdoorspirit_free(int obj) { ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP); }
+void spiritdoorspirit_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
+}
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -52,7 +61,7 @@ void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visibl
         return;
     }
 
-    ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void spiritdoorspirit_hitDetect(void)

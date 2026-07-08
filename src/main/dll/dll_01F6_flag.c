@@ -32,8 +32,14 @@ enum
 /* placement-record byte seeding the flag's initial rotX */
 #define FLAG_MAPDATA_ROT_X_BYTE_OFF 0x18
 
-int Flag_getExtraSize(void) { return 0x0; }
-int Flag_getObjectTypeId(void) { return 0x0; }
+int Flag_getExtraSize(void)
+{
+    return 0x0;
+}
+int Flag_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void Flag_free(void)
 {
@@ -41,7 +47,8 @@ void Flag_free(void)
 
 void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59A8);
+    if (visible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E59A8);
 }
 
 void Flag_hitDetect(void)
@@ -54,9 +61,7 @@ void Flag_update(int obj)
 
     if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_FLUTTER)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59AC,
-                                                                     (f32)(u32)framesThisStep,
-                                                                     NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59AC, (f32)(u32)framesThisStep, NULL);
     }
     else if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_TIED)
     {
@@ -69,15 +74,13 @@ void Flag_update(int obj)
         else
         {
             ((GameObject*)obj)->anim.velocityX = (f32)((GameObject*)linkedObj)->anim.rotZ * lbl_803E599C;
-            ((GameObject*)obj)->anim.rotZ = (s16)(
-                (f32)((GameObject*)obj)->anim.rotZ + ((GameObject*)obj)->anim.velocityX);
+            ((GameObject*)obj)->anim.rotZ =
+                (s16)((f32)((GameObject*)obj)->anim.rotZ + ((GameObject*)obj)->anim.velocityX);
         }
     }
     else
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59B0,
-                                                                     (f32)(u32)framesThisStep,
-                                                                     NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59B0, (f32)(u32)framesThisStep, NULL);
     }
 }
 
@@ -85,8 +88,7 @@ void Flag_init(int* obj, int* def)
 {
     if (((GameObject*)obj)->anim.seqId != FLAG_SEQ_TIED)
     {
-        ((GameObject*)obj)->anim.rotX =
-            (s16)((s32) * (s8*)((char*)def + FLAG_MAPDATA_ROT_X_BYTE_OFF) << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + FLAG_MAPDATA_ROT_X_BYTE_OFF) << 8);
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5998, 0);
     }
 }

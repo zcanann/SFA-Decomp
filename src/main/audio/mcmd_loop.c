@@ -4,7 +4,6 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/inp_ctrl.h"
 
-
 void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
 {
     u16 counter;
@@ -40,14 +39,12 @@ void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
     }
 
 check_flags:
-    if (((u8)(params->flags >> 8) & 1) != 0 &&
-        (*(u64*)&state->inputFlags & 0x10000000008ULL) == 0x00000000008ULL)
+    if (((u8)(params->flags >> 8) & 1) != 0 && (*(u64*)&state->inputFlags & 0x10000000008ULL) == 0x00000000008ULL)
     {
         state->loopCounter = 0;
     }
-    else if (((u8)(params->flags >> 24) & 1) != 0 &&
-        (*(u64*)&state->inputFlags & 0x20ULL) == 0 &&
-        !hwIsActive(state->voiceHandle & 0xff))
+    else if (((u8)(params->flags >> 24) & 1) != 0 && (*(u64*)&state->inputFlags & 0x20ULL) == 0 &&
+             !hwIsActive(state->voiceHandle & 0xff))
     {
         state->loopCounter = 0;
     }

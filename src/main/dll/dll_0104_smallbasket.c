@@ -61,18 +61,18 @@ extern void largecrate_release(void);
 extern void largecrate_initialise(void);
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define SMALLBASKET_OBJGROUP 0x10
-#define SMALLBASKET_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the basket */
-#define PAD_BUTTON_A 0x100
+#define SMALLBASKET_OBJGROUP                   0x10
+#define SMALLBASKET_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the basket */
+#define PAD_BUTTON_A                           0x100
 
 /* Contents object DLL-ids spawned by fn_801816F8 on break/throw (roles from
    the file docblock: 0x3d3/0x3d4/0x3d5 fruit variants, 0xb/0x3cd effect). */
-#define SMALLBASKET_CHILD_OBJ_FRUIT_A 0x3d3
-#define SMALLBASKET_CHILD_OBJ_FRUIT_B 0x3d4
-#define SMALLBASKET_CHILD_OBJ_FRUIT_C 0x3d5
-#define SMALLBASKET_CHILD_OBJ_EFFECT 0xb
+#define SMALLBASKET_CHILD_OBJ_FRUIT_A    0x3d3
+#define SMALLBASKET_CHILD_OBJ_FRUIT_B    0x3d4
+#define SMALLBASKET_CHILD_OBJ_FRUIT_C    0x3d5
+#define SMALLBASKET_CHILD_OBJ_EFFECT     0xb
 #define SMALLBASKET_CHILD_OBJ_EFFECT_ALT 0x3cd
-#define SMALLBASKET_RESOURCE_ID 0x5b /* basket object resource -> gSmallBasketResource */
+#define SMALLBASKET_RESOURCE_ID          0x5b /* basket object resource -> gSmallBasketResource */
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -81,15 +81,15 @@ typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
    and carries the class-specific tuning fields from 0x18 on. */
 typedef struct SmallBasketThrowSetup
 {
-    ObjPlacement head;   /* 0x00 */
-    s8 yawByte;          /* 0x18 */
+    ObjPlacement head; /* 0x00 */
+    s8 yawByte;        /* 0x18 */
     u8 pad19;
-    s16 field1A;         /* 0x1A */
-    s16 field1C;         /* 0x1C init -1 */
+    s16 field1A; /* 0x1A */
+    s16 field1C; /* 0x1C init -1 */
     u8 pad1E[6];
-    s16 field24;         /* 0x24 init -1 */
+    s16 field24; /* 0x24 init -1 */
     u8 pad26[6];
-    s16 field2C;         /* 0x2C init -1 */
+    s16 field2C; /* 0x2C init -1 */
 } SmallBasketThrowSetup;
 
 /* CfperchState's carryAttached/throwState fields are u8 in the header, but the
@@ -119,24 +119,21 @@ extern const f32 lbl_803E3958;
 extern const f32 lbl_803E395C;
 extern const f32 lbl_803E3960;
 extern const f32 lbl_803E3964;
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
-                              int p7, int p8, int p9, int p10);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints,
-                                            f32* radii, int pointCount);
+extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
+                              int p10);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
+                                            int pointCount);
 extern void hitDetectFn_800691c0(u8* obj, void* bounds, u32 mask, int flags);
-extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
-                               void* outHits, int flags);
+extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
 extern const f32 lbl_803E3970;
 void SmallBasket_init(int obj, int def);
 void SmallBasket_update(int obj);
-void SmallBasket_render(int obj, int p2, int p3, int p4,
-                        int p5, char visible);
+void SmallBasket_render(int obj, int p2, int p3, int p4, int p5, char visible);
 extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
-extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4,
-                                 int p5, double scale);
+extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, double scale);
 extern void* Obj_GetPlayerObject(void);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
@@ -146,7 +143,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 objPtr);
-
 
 extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);
@@ -217,11 +213,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     }
     if (data[0x1e] == 7)
     {
-        num = (f32)(int)
-        Player_GetCurrentHealth((int)player);
+        num = (f32)(int)Player_GetCurrentHealth((int)player);
         ratio = num;
-        den = (f32)(int)
-        Player_GetMaxHealth((int)player);
+        den = (f32)(int)Player_GetMaxHealth((int)player);
         ratio = ratio / den;
         ratio = ratio * lbl_803E3930;
         if (ratio <= lbl_803E3940)
@@ -275,10 +269,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX =
-                ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
-            ((GameObject*)spawned)->anim.velocityZ =
-                ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -289,17 +281,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
@@ -309,8 +293,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)
-        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
@@ -339,10 +322,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX =
-                ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
-            ((GameObject*)spawned)->anim.velocityZ =
-                ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -353,17 +334,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
@@ -373,8 +346,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)
-        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
@@ -403,10 +375,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX =
-                ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
-            ((GameObject*)spawned)->anim.velocityZ =
-                ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -417,17 +387,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
@@ -437,8 +399,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)
-        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
@@ -465,13 +426,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ((SmallBasketThrowSetup*)setup)->field1C = -1;
         if ((s8)data[9] != 0)
         {
-            ((ObjPlacement*)setup)->posX =
-                ((GameObject*)obj)->anim.localPosX + (f32)(int)
-            randomGetRange(-0xf, 0xf);
+            ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
             ((ObjPlacement*)setup)->posY = lbl_803E395C + ((GameObject*)obj)->anim.localPosY;
-            ((ObjPlacement*)setup)->posZ =
-                ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-            randomGetRange(-0xf, 0xf);
+            ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
         }
         else
         {
@@ -493,22 +450,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         if (mag != lbl_803E3938)
         {
             mag = sqrtf(mag);
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / (mag = lbl_803E3964 *
-                mag);
+            ((GameObject*)spawned)->anim.velocityX =
+                ((GameObject*)spawned)->anim.velocityX / (mag = lbl_803E3964 * mag);
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)
-        randomGetRange(0, 0x19) - lbl_803E3950
-        )
-        ;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         (*(ObjThrowInitFn*)(*(int*)*(int*)&((GameObject*)spawned)->anim.dll + 0x2c))(
             spawned, ((GameObject*)spawned)->anim.velocityX, ((GameObject*)spawned)->anim.velocityY,
@@ -521,8 +470,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)
-        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
         {
@@ -698,15 +646,13 @@ void objThrowFn_80182504(int obj)
     vecRotateZXY(&local.f8, &((GameObject*)obj)->anim.velocityX);
 }
 
-void SmallBasket_render(int obj, int p2, int p3, int p4,
-                        int p5, char visible)
+void SmallBasket_render(int obj, int p2, int p3, int p4, int p5, char visible)
 {
     int extra;
     int result;
     short field_a;
     extra = *(int*)&((GameObject*)obj)->extra;
-    result = (*gMapEventInterface)->shouldNotSaveTime(
-        *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14));
+    result = (*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14));
     if (result == 0)
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
@@ -724,14 +670,16 @@ void SmallBasket_render(int obj, int p2, int p3, int p4,
         }
         else
         {
-            objRenderModelAndHitVolumes((void*)obj, p2, p3, p4, p5,
-                                 (double)lbl_803E3950);
+            objRenderModelAndHitVolumes((void*)obj, p2, p3, p4, p5, (double)lbl_803E3950);
         }
     }
 }
 
 ObjectDescriptor gSmallBasketObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -875,8 +823,7 @@ void SmallBasket_update(int obj)
         if (((CfperchState*)state)->hiddenTimer <= 0)
         {
             if ((Vec_distance(&((GameObject*)obj)->anim.worldPosX,
-                    &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
-                    lbl_803E3930) &&
+                              &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E3930) &&
                 (((CfperchState*)state)->enableGameBit == -1))
             {
                 flag = 1;
@@ -1059,7 +1006,8 @@ void SmallBasket_update(int obj)
                     ((CfperchState*)state)->disableTimer = 0;
                     ((CfperchState*)state)->hiddenTimer = 0;
                     ObjMsg_SendToObject(player, SMALLBASKET_MSG_PLAYER_GRAB, obj,
-                                        (((CfperchState*)state)->carryParam << 16) | ((u16)((CfperchState*)state)->carryAngle));
+                                        (((CfperchState*)state)->carryParam << 16) |
+                                            ((u16)((CfperchState*)state)->carryAngle));
                 }
             }
         }
@@ -1075,12 +1023,12 @@ void SmallBasket_update(int obj)
                 }
                 ObjHits_EnableObject(obj);
             }
-            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->
-                anim.localPosX;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
-                anim.localPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
-                anim.localPosZ;
+            ((GameObject*)obj)->anim.localPosX =
+                ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)obj)->anim.localPosY =
+                ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)obj)->anim.localPosZ =
+                ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
             smallbasket_resolveCollision(obj);
             contactFlags = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags;
             if ((contactFlags != 0) && (*(s8*)&((CfperchState*)state)->throwState == 1))
@@ -1089,8 +1037,7 @@ void SmallBasket_update(int obj)
                 blk.fz = ((GameObject*)obj)->anim.localPosY;
                 blk.fw = ((GameObject*)obj)->anim.localPosZ;
                 objLightFn_8009a1dc((void*)obj, lbl_803E3934, &blk, 1, 0);
-                (**(void (**)(int, int, int, int, int, int))(*(int*)gSmallBasketResource + 0x4))(
-                    obj, 1, 0, 2, -1, 0);
+                (**(void (**)(int, int, int, int, int, int))(*(int*)gSmallBasketResource + 0x4))(obj, 1, 0, 2, -1, 0);
                 Sfx_PlayFromObject(obj, (u16)((CfperchState*)state)->sfxId);
                 ((CfperchState*)state)->disableTimer = 0x32;
                 ((CfperchState*)state)->throwState = 0;
@@ -1157,4 +1104,17 @@ void SmallBasket_update(int obj)
 }
 
 /* descriptor/ptr table auto 0x803216f0-0x80321728 */
-u32 gLargeCrateObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)largecrate_initialise, (u32)largecrate_release, 0x00000000, (u32)largecrate_init, (u32)largecrate_update, (u32)largecrate_hitDetect, (u32)largecrate_render, (u32)largecrate_free, (u32)largecrate_getObjectTypeId, (u32)largecrate_getExtraSize };
+u32 gLargeCrateObjDescriptor[14] = {0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00090000,
+                                    (u32)largecrate_initialise,
+                                    (u32)largecrate_release,
+                                    0x00000000,
+                                    (u32)largecrate_init,
+                                    (u32)largecrate_update,
+                                    (u32)largecrate_hitDetect,
+                                    (u32)largecrate_render,
+                                    (u32)largecrate_free,
+                                    (u32)largecrate_getObjectTypeId,
+                                    (u32)largecrate_getExtraSize};

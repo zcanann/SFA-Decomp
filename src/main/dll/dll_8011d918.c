@@ -21,17 +21,23 @@ void cMenuPlayTrickyCommandSfx(int obj)
     int sfx = 0;
     switch (gCMenuActivatedId)
     {
-    case 0: sfx = 0x3FB;
+    case 0:
+        sfx = 0x3FB;
         break;
-    case 5: sfx = 0x3FA;
+    case 5:
+        sfx = 0x3FA;
         break;
-    case 1: sfx = 0x3F8;
+    case 1:
+        sfx = 0x3F8;
         break;
-    case 4: sfx = 0x3F9;
+    case 4:
+        sfx = 0x3F9;
         break;
-    case 2: sfx = 0x3F7;
+    case 2:
+        sfx = 0x3F7;
         break;
-    case 3: sfx = 0x3FC;
+    case 3:
+        sfx = 0x3FC;
         break;
     }
     if (sfx != 0)

@@ -17,8 +17,7 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
     {
         gCamcontrolTargetHelpTextId = CAMCONTROL_HELP_TEXT_NONE;
         camcontrol_updateTargetReticle((CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus,
-                                       gCamcontrolActiveActionId == 0x49,
-                                       arg1, arg2, arg3, arg4);
+                                       gCamcontrolActiveActionId == 0x49, arg1, arg2, arg3, arg4);
         CAMCONTROL_CAMERA->targetReticleOverride = 0;
     }
 }
@@ -28,8 +27,10 @@ void camcontrol_setAButtonIconForTarget(void)
     CamcontrolTargetObject* target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->currentTarget;
     int kind;
 
-    if (gameTextFn_80134be8() != 0) return;
-    if (target == NULL) return;
+    if (gameTextFn_80134be8() != 0)
+        return;
+    if (target == NULL)
+        return;
 
     kind = target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
     if (kind == CAMCONTROL_TARGET_KIND_TALK_ICON)

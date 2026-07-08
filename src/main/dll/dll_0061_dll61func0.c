@@ -96,8 +96,7 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     entry[5].flags = 9;
     entry[5].tex = &base[0x8c];
     entry[5].mode = 2;
-    randScale = 0.05f * (f32)(int)
-    randomGetRange(0, 0xc);
+    randScale = 0.05f * (f32)(int)randomGetRange(0, 0xc);
     randScale = 2.6f + randScale;
     entry[5].x = randScale;
     entry[5].y = randScale;

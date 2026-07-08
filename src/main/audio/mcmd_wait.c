@@ -6,18 +6,18 @@
 #include "main/audio/hw_init.h"
 #include "main/sfa_shared_decls.h"
 extern u16 sndRand(void);
-extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
+extern void sndConvertTicks(u32* p, McmdVoiceState* state);
 
 extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
-#define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)
+#define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
 #define MAC_FLAG64(hi, lo) (((u64)(hi) << 32) | (u64)(lo))
 
-#define MAC_WAIT(sv) (*(u64 *)&(sv)->wakeTimeHi)
-#define MAC_START_TIME(sv) (*(u64 *)&(sv)->startTimeHi)
-#define MAC_WAIT_TIME(sv) (*(u64 *)&(sv)->activeTimeHi)
-#define MAC_REALTIME macRealTimeHi
+#define MAC_WAIT(sv)       (*(u64*)&(sv)->wakeTimeHi)
+#define MAC_START_TIME(sv) (*(u64*)&(sv)->startTimeHi)
+#define MAC_WAIT_TIME(sv)  (*(u64*)&(sv)->activeTimeHi)
+#define MAC_REALTIME       macRealTimeHi
 
 /*
  * Delay/schedule a voice command, optionally randomizing the delay and
@@ -49,8 +49,7 @@ int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
         if ((u8)(cstep->flags >> 0x18) & 1)
         {
-            if (!(MAC_CFLAGS(svoice) & MAC_FLAG64(0, 0x20)) &&
-                !hwIsActive(svoice->voiceHandle & 0xff))
+            if (!(MAC_CFLAGS(svoice) & MAC_FLAG64(0, 0x20)) && !hwIsActive(svoice->voiceHandle & 0xff))
             {
                 return 0;
             }
@@ -108,12 +107,12 @@ int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
         }
         else
         {
-            MAC_WAIT(svoice) = (u64) - 1;
+            MAC_WAIT(svoice) = (u64)-1;
         }
 
         if (MAC_WAIT(svoice) != 0)
         {
-            if (MAC_WAIT(svoice) != (u64) - 1)
+            if (MAC_WAIT(svoice) != (u64)-1)
             {
                 TimeQueueAdd(svoice);
             }

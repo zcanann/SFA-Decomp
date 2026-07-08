@@ -21,7 +21,7 @@ extern f32 lbl_803E6600;
 extern f32 gWorldPlanetLightingSkyDirX;
 extern f32 gWorldPlanetLightingSkyDirZ;
 
-#define WORLDPLANET_LERP_BYTE(from, to, idx, t) \
+#define WORLDPLANET_LERP_BYTE(from, to, idx, t)                                                                        \
     ((u8)(s32)((t) * (f32)((s32)(&to)[idx] - (s32)(&from)[idx]) + (f32)(s32)(&from)[idx]))
 
 #pragma peephole on
@@ -34,17 +34,20 @@ void worldplanet_updateMapLighting(void)
     (&lbl_803DDD24)[0] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 0, lbl_803E65F8);
     (&lbl_803DDD24)[1] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 1, lbl_803E65F8);
     (&lbl_803DDD24)[2] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 2, lbl_803E65F8);
-    skyFn_800895e0(7, ((volatile u8*)&lbl_803DDD24)[0], ((volatile u8*)&lbl_803DDD24)[1], ((volatile u8*)&lbl_803DDD24)[2], 0x40, 0x40);
+    skyFn_800895e0(7, ((volatile u8*)&lbl_803DDD24)[0], ((volatile u8*)&lbl_803DDD24)[1],
+                   ((volatile u8*)&lbl_803DDD24)[2], 0x40, 0x40);
 
     (&lbl_803DDD20)[0] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 0, gWorldPlanetLightingLerpT);
     (&lbl_803DDD20)[1] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 1, gWorldPlanetLightingLerpT);
     (&lbl_803DDD20)[2] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 2, gWorldPlanetLightingLerpT);
-    fn_80089510(7, ((volatile u8*)&lbl_803DDD20)[0], ((volatile u8*)&lbl_803DDD20)[1], ((volatile u8*)&lbl_803DDD20)[2]);
+    fn_80089510(7, ((volatile u8*)&lbl_803DDD20)[0], ((volatile u8*)&lbl_803DDD20)[1],
+                ((volatile u8*)&lbl_803DDD20)[2]);
 
     (&lbl_803DDD1C)[0] = WORLDPLANET_LERP_BYTE(lbl_803DC204, lbl_803DC208, 0, gWorldPlanetLightingLerpT);
     (&lbl_803DDD1C)[1] = WORLDPLANET_LERP_BYTE(lbl_803DC204, lbl_803DC208, 1, gWorldPlanetLightingLerpT);
     (&lbl_803DDD1C)[2] = WORLDPLANET_LERP_BYTE(lbl_803DC204, lbl_803DC208, 2, gWorldPlanetLightingLerpT);
-    fn_80089578(7, ((volatile u8*)&lbl_803DDD1C)[0], ((volatile u8*)&lbl_803DDD1C)[1], ((volatile u8*)&lbl_803DDD1C)[2]);
+    fn_80089578(7, ((volatile u8*)&lbl_803DDD1C)[0], ((volatile u8*)&lbl_803DDD1C)[1],
+                ((volatile u8*)&lbl_803DDD1C)[2]);
 
     lbl_803DDD18 = (u8)(s32)(gWorldPlanetLightingLerpT * lbl_803E6600 + lbl_803E65FC);
     skyFn_800894a8(7, gWorldPlanetLightingSkyDirX, lbl_803E65F8, gWorldPlanetLightingSkyDirZ);

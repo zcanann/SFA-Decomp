@@ -31,10 +31,6 @@ __declspec(section ".sdata") extern char lbl_803DBBF0[];
 /* texture asset loaded into lbl_803DD960 (this DLL's only texture) */
 #define DLL3F_TEXTURE_ID 0x47A
 
-
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void dll_3F_updateTimerReadout(void* obj)
@@ -59,7 +55,8 @@ void dll_3F_updateTimerReadout(void* obj)
     nearest = (void*)ObjGroup_FindNearestObject(9, player, &maxDist);
     if (nearest != NULL)
     {
-        ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &start, &elapsed, &total);
+        ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &start, &elapsed,
+                                                                                              &total);
     }
     elapsed = total - (elapsed - start);
     if (elapsed < 0)
@@ -75,7 +72,10 @@ void dll_3F_frameEnd_nop(void)
 {
 }
 
-int dll_3F_frameStart_ret_0(void) { return 0; }
+int dll_3F_frameStart_ret_0(void)
+{
+    return 0;
+}
 
 void dll_3F_release(void)
 {

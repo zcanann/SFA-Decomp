@@ -19,14 +19,12 @@ extern u32 getButtonsHeld(int port);
 extern u8 padGetCX(int port);
 extern u8 padGetCY(int port);
 
-
-
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 
 #define PAD_BUTTON_RIGHT 0x002
-#define PAD_BUTTON_DOWN 0x004
-#define PAD_BUTTON_UP   0x008
+#define PAD_BUTTON_DOWN  0x004
+#define PAD_BUTTON_UP    0x008
 
 extern CameraModeDebugState* gCamDebugState;
 extern f32 lbl_803E1840;
@@ -120,9 +118,8 @@ void CameraModeDebug_update(CameraObject* cam)
         }
         cam->anim.worldPosZ = state->anim.worldPosZ + h;
     }
-    Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
-                                   &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
-                                   *(int*)&cam->anim.parent);
+    Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ, &cam->anim.localPosX,
+                                   &cam->anim.localPosY, &cam->anim.localPosZ, *(int*)&cam->anim.parent);
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
@@ -145,4 +142,3 @@ void CameraModeDebug_release_nop(void)
 void CameraModeDebug_initialise_nop(void)
 {
 }
-

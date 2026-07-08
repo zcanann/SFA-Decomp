@@ -55,7 +55,7 @@ typedef struct TrickyImpressState
     u8 pad7AC[0x7B0 - 0x7AC];
     s32 childObj1; /* 0x7B0: attached child object handle (slot 1) */
     u8 pad7B4[0x7B8 - 0x7B4];
-    s32 childObj2; /* 0x7B8: attached child object handle (slot 2) */
+    s32 childObj2;   /* 0x7B8: attached child object handle (slot 2) */
     u8 childSlotMap; /* 0x7BC: packed 2-bit slot index per impress child (childObj0/1/2 via >>6/>>4/>>2 & 3) */
     u8 pad7BD[0x808 - 0x7BD];
     f32 unk808;
@@ -96,17 +96,17 @@ extern s16 gErrExceptionType;
 extern u32 gErrContext;
 extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
-extern void OSResumeThread(u8 * thread);
+extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 // OSSetErrorHandler() error kinds (OSError)
-#define OS_ERROR_SYSTEM_RESET 0
-#define OS_ERROR_MACHINE_CHECK 1
-#define OS_ERROR_DSI 2
-#define OS_ERROR_ISI 3
-#define OS_ERROR_ALIGNMENT 5
+#define OS_ERROR_SYSTEM_RESET       0
+#define OS_ERROR_MACHINE_CHECK      1
+#define OS_ERROR_DSI                2
+#define OS_ERROR_ISI                3
+#define OS_ERROR_ALIGNMENT          5
 #define OS_ERROR_PERFORMACE_MONITOR 11
-#define OS_ERROR_SYSTEM_INTERRUPT 13
-#define OS_ERROR_PROTECTION 15
+#define OS_ERROR_SYSTEM_INTERRUPT   13
+#define OS_ERROR_PROTECTION         15
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 
 u8 gErrDisplayThreadStack[0x1000];
@@ -141,18 +141,17 @@ extern int gDebugDrawPass;
 extern f32 gDebugGlyphVScale;
 extern f32 gDebugGlyphUScale;
 u8 gDebugGlyphMetricsTable[192] = {
-    0x02, 0x04, 0x06, 0x08, 0x0A, 0x0F, 0x11, 0x15, 0x17, 0x1F, 0x21, 0x27, 0x29, 0x2B, 0x2D, 0x2F,
-    0x31, 0x33, 0x35, 0x38, 0x3A, 0x3F, 0x41, 0x43, 0x45, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x52, 0x56,
-    0x58, 0x5B, 0x5D, 0x62, 0x64, 0x68, 0x6A, 0x6F, 0x71, 0x76, 0x78, 0x7D, 0x7F, 0x84, 0x86, 0x8B,
-    0x8D, 0x92, 0x94, 0x96, 0x98, 0x9A, 0x9D, 0xA2, 0xA5, 0xA9, 0xAB, 0xB0, 0xB3, 0xB8, 0x00, 0x01,
-    0x00, 0x09, 0x0B, 0x11, 0x13, 0x19, 0x1B, 0x21, 0x23, 0x29, 0x2B, 0x31, 0x33, 0x38, 0x3A, 0x41,
-    0x43, 0x49, 0x4B, 0x4C, 0x4E, 0x53, 0x55, 0x5B, 0x5D, 0x62, 0x64, 0x6B, 0x6D, 0x73, 0x75, 0x7B,
-    0x7D, 0x83, 0x85, 0x8B, 0x8D, 0x93, 0x95, 0x9B, 0x9D, 0xA3, 0xA5, 0xAA, 0xAC, 0xB2, 0xB4, 0xBC,
-    0xBE, 0xC4, 0xC6, 0xCC, 0xCE, 0xD3, 0xD5, 0xD7, 0xD9, 0xDC, 0xDE, 0xE0, 0xE2, 0xE7, 0xE9, 0xEF,
-    0x00, 0x01, 0x03, 0x08, 0x09, 0x0F, 0x11, 0x16, 0x18, 0x1D, 0x1F, 0x24, 0x26, 0x28, 0x2A, 0x2F,
-    0x31, 0x36, 0x38, 0x39, 0x3B, 0x3D, 0x3F, 0x43, 0x45, 0x46, 0x48, 0x4F, 0x51, 0x56, 0x58, 0x5D,
-    0x5F, 0x64, 0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92,
-    0x94, 0x99, 0x9B, 0xA0, 0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
+    0x02, 0x04, 0x06, 0x08, 0x0A, 0x0F, 0x11, 0x15, 0x17, 0x1F, 0x21, 0x27, 0x29, 0x2B, 0x2D, 0x2F, 0x31, 0x33,
+    0x35, 0x38, 0x3A, 0x3F, 0x41, 0x43, 0x45, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x52, 0x56, 0x58, 0x5B, 0x5D, 0x62,
+    0x64, 0x68, 0x6A, 0x6F, 0x71, 0x76, 0x78, 0x7D, 0x7F, 0x84, 0x86, 0x8B, 0x8D, 0x92, 0x94, 0x96, 0x98, 0x9A,
+    0x9D, 0xA2, 0xA5, 0xA9, 0xAB, 0xB0, 0xB3, 0xB8, 0x00, 0x01, 0x00, 0x09, 0x0B, 0x11, 0x13, 0x19, 0x1B, 0x21,
+    0x23, 0x29, 0x2B, 0x31, 0x33, 0x38, 0x3A, 0x41, 0x43, 0x49, 0x4B, 0x4C, 0x4E, 0x53, 0x55, 0x5B, 0x5D, 0x62,
+    0x64, 0x6B, 0x6D, 0x73, 0x75, 0x7B, 0x7D, 0x83, 0x85, 0x8B, 0x8D, 0x93, 0x95, 0x9B, 0x9D, 0xA3, 0xA5, 0xAA,
+    0xAC, 0xB2, 0xB4, 0xBC, 0xBE, 0xC4, 0xC6, 0xCC, 0xCE, 0xD3, 0xD5, 0xD7, 0xD9, 0xDC, 0xDE, 0xE0, 0xE2, 0xE7,
+    0xE9, 0xEF, 0x00, 0x01, 0x03, 0x08, 0x09, 0x0F, 0x11, 0x16, 0x18, 0x1D, 0x1F, 0x24, 0x26, 0x28, 0x2A, 0x2F,
+    0x31, 0x36, 0x38, 0x39, 0x3B, 0x3D, 0x3F, 0x43, 0x45, 0x46, 0x48, 0x4F, 0x51, 0x56, 0x58, 0x5D, 0x5F, 0x64,
+    0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 0x94, 0x99, 0x9B, 0xA0,
+    0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
 };
 extern f32 lbl_803E2390;
 extern f32 gDebugGlyphCellTexels;
@@ -194,10 +193,22 @@ void reportAllocFail(void)
 {
 }
 
-f32 fn_80138F78(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14; }
-u32 fn_80138F84(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk24; }
-s16 fn_80138F90(u8* obj) { return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414; }
-void* trickyGetQueuedPathParticlePos(void* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
+f32 fn_80138F78(u8* obj)
+{
+    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14;
+}
+u32 fn_80138F84(u8* obj)
+{
+    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk24;
+}
+s16 fn_80138F90(u8* obj)
+{
+    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414;
+}
+void* trickyGetQueuedPathParticlePos(void* obj)
+{
+    return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX;
+}
 
 int TitleScreen_getObjectTypeId(u8* obj);
 
@@ -237,7 +248,8 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     } stk;
     u8 i = 0x14;
     u32 flags = ((TrickyImpressState*)b)->flags54;
-    if ((flags & 0x1800) == 0) return;
+    if ((flags & 0x1800) == 0)
+        return;
     stk.dx = ((TrickyImpressState*)b)->renderPosX - ((GameObject*)a)->anim.worldPosX;
     stk.dy = ((TrickyImpressState*)b)->renderPosY - ((GameObject*)a)->anim.worldPosY;
     stk.dz = ((TrickyImpressState*)b)->renderPosZ - ((GameObject*)a)->anim.worldPosZ;
@@ -367,15 +379,36 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     u8 term;
     n = gDebugRecordCount + 1;
     gDebugRecordCount = n;
-    if (n > 0xfa) return;
+    if (n > 0xfa)
+        return;
     tag = 0x81;
-    p = debugLogEnd; debugLogEnd = p + 1; *p = tag;
-    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = r; }
-    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = g; }
-    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = b; }
-    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = a; }
+    p = debugLogEnd;
+    debugLogEnd = p + 1;
+    *p = tag;
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = r;
+    }
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = g;
+    }
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = b;
+    }
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = a;
+    }
     term = 0;
-    p2 = debugLogEnd; debugLogEnd = p2 + 1; *p2 = term;
+    p2 = debugLogEnd;
+    debugLogEnd = p2 + 1;
+    *p2 = term;
 }
 #pragma optimization_level reset
 
@@ -389,7 +422,8 @@ int fn_80138920(u8* obj, int sfxId, int vol)
 {
     u8* b = ((GameObject*)obj)->extra;
     s16 v;
-    if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
+    if ((u32)((b[0x58] >> 6) & 1) != 0u)
+        return 0;
     v = ((GameObject*)obj)->anim.currentMove;
     switch (v)
     {
@@ -402,7 +436,8 @@ int fn_80138920(u8* obj, int sfxId, int vol)
     case 47:
         return 0;
     }
-    if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
+    if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0)
+        return 0;
     objAudioFn_800393f8(obj, b + 936, sfxId, vol, -1, 0);
     return 1;
 }
@@ -448,7 +483,13 @@ void debugPrintReset(void)
 }
 
 /* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
-struct Bits58 { u8 _pad[0x58]; u8 b7:1; u8 b6:1; u8 lo:6; };
+struct Bits58
+{
+    u8 _pad[0x58];
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 lo : 6;
+};
 void fn_80138908(u8* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
@@ -507,7 +548,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 
         if (dll_19_func1B(*objs) != 0)
         {
-            obj_extra = (**(f32 (**)(int))((char*)(*gBaddieControlInterface) + 0x60))(*objs);
+            obj_extra = (**(f32(**)(int))((char*)(*gBaddieControlInterface) + 0x60))(*objs);
         }
         else
         {
@@ -534,20 +575,18 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
             v2 = mainGetBit(g2);
         }
 
-        if (ObjGroup_ContainsObject(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 &&
-            obj_extra > lbl_803E23DC &&
-            v1 == 0 &&
+        if (ObjGroup_ContainsObject(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > lbl_803E23DC && v1 == 0 &&
             v2 != 0)
         {
             if (((GameObject*)*objs)->anim.seqId != 2129)
             {
-                if ((*gMapEventInterface)->shouldNotSaveTime(
-                    *(int*)((char*)data + 0x14)) != 0)
+                if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0)
                 {
                     if (p2 == 0)
                     {
                         s16 m = ((GameObject*)*objs)->anim.seqId;
-                        if (m == 1022 || m == 1239 || m == 636 || m == 593) goto next;
+                        if (m == 1022 || m == 1239 || m == 636 || m == 593)
+                            goto next;
                     }
                     {
                         f32 dist = vec3f_distanceSquared(p1 + 0x18, *objs + 0x18);
@@ -607,11 +646,12 @@ void fn_80138D7C(int obj, int p2)
     }
 }
 
-#define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
-#define TUMBLEWEED_BLEND_WEIGHT_OFFSET 0x830
+#define TUMBLEWEED_BLEND_FLAGS_OFFSET    0x82e
+#define TUMBLEWEED_BLEND_WEIGHT_OFFSET   0x830
 #define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
 
-typedef struct {
+typedef struct
+{
     u8 pending : 1;
     u8 active : 1;
     u8 rest : 6;
@@ -640,9 +680,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0)
     {
         u8* data = *(u8**)(state + 0);
-        target = (f32)(u32)
-        data[0] / (f32)(u32)
-        data[1];
+        target = (f32)(u32)data[0] / (f32)(u32)data[1];
         if (target > *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET))
         {
             *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
@@ -678,8 +716,8 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < *(f32*)&lbl_803E23DC)
             {
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
-                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                    lbl_803E23DC;
             }
             if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target)
             {
@@ -695,9 +733,8 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 }
             }
         }
-        ObjModel_SetBlendChannelWeight(
-            (int)Obj_GetActiveModel(obj), 1,
-            lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
+        ObjModel_SetBlendChannelWeight((int)Obj_GetActiveModel(obj), 1,
+                                       lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
     }
 }
 
@@ -885,7 +922,8 @@ int fn_80136A40(int p1, int c)
             {
                 selectTexture((char*)gDebugFontTex0, 0);
                 gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 10));
-                gDebugGlyphVScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 0xc));
+                gDebugGlyphVScale =
+                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 0xc));
             }
             gDebugCurrentFontSet = 0;
         }
@@ -899,7 +937,8 @@ int fn_80136A40(int p1, int c)
             {
                 selectTexture((char*)gDebugFontTex1, 0);
                 gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 10));
-                gDebugGlyphVScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 0xc));
+                gDebugGlyphVScale =
+                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 0xc));
             }
             gDebugCurrentFontSet = 1;
         }
@@ -913,7 +952,8 @@ int fn_80136A40(int p1, int c)
             {
                 selectTexture((char*)gDebugFontTex2, 0);
                 gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 10));
-                gDebugGlyphVScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 0xc));
+                gDebugGlyphVScale =
+                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 0xc));
             }
             gDebugCurrentFontSet = 2;
         }
@@ -930,9 +970,7 @@ int fn_80136A40(int p1, int c)
         textRenderChar(px << 2, py << 2,
                        (int)(*(f32*)&lbl_803E2398 * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
                        (int)(lbl_803E2398 * (lbl_803E239C * (gDebugScaleY + gDebugScaleBiasY) + py)),
-                       (f32)(first << 5) * gDebugGlyphUScale,
-                       lbl_803E23A0,
-                       gDebugGlyphUScale * (f32)((first + c) << 5),
+                       (f32)(first << 5) * gDebugGlyphUScale, lbl_803E23A0, gDebugGlyphUScale * (f32)((first + c) << 5),
                        lbl_803E23A4 * gDebugGlyphVScale);
     }
     return c;
@@ -1103,8 +1141,7 @@ int debugPrintDrawRecord(int p1, u8* p)
             w = 7;
         }
         debugPrintYpos += w;
-        if ((f32)debugPrintYpos * (sc = gDebugScaleX + gDebugScaleBiasX) >
-            (f32)(int)(gDebugScreenWidth - 0x10))
+        if ((f32)debugPrintYpos * (sc = gDebugScaleX + gDebugScaleBiasX) > (f32)(int)(gDebugScreenWidth - 0x10))
         {
             if (gDebugDrawPass == 0)
             {
@@ -1362,19 +1399,20 @@ void errDisplayThreadMain(void)
                 rr = r & 0xff;
                 debugPrintfxy(0xc, y + 0xc, &lbl_803DBC34, rr, rr + 7);
                 rp = gErrContext + rr * 4;
-                debugPrintfxy(0x10, y + 0x18, strs + 0x22c,
-                              *(u32*)(gErrContext + (u8)r * 4), *(u32*)(rp + 4),
+                debugPrintfxy(0x10, y + 0x18, strs + 0x22c, *(u32*)(gErrContext + (u8)r * 4), *(u32*)(rp + 4),
                               *(u32*)(rp + 8), *(u32*)(rp + 0xc));
                 y += 0x24;
                 rp = gErrContext + rr * 4;
-                debugPrintfxy(0x10, y, strs + 0x22c, *(u32*)(rp + 0x10),
-                              *(u32*)(rp + 0x14), *(u32*)(rp + 0x18), *(u32*)(rp + 0x1c));
+                debugPrintfxy(0x10, y, strs + 0x22c, *(u32*)(rp + 0x10), *(u32*)(rp + 0x14), *(u32*)(rp + 0x18),
+                              *(u32*)(rp + 0x1c));
             }
             if (enableDebugText != 0)
             {
                 DCStoreRange(debugDrawFrameBuffer, 0x96000);
-                debugDrawFrameBuffer = (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
-                debugFrameBuffer = (debugFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
+                debugDrawFrameBuffer =
+                    (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
+                debugFrameBuffer =
+                    (debugFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
                 VISetNextFrameBuffer(debugFrameBuffer);
                 VIFlush();
                 VIWaitForRetrace();
@@ -1391,7 +1429,8 @@ void errDisplayThreadMain(void)
         if (enableDebugText != 0)
         {
             DCStoreRange(debugDrawFrameBuffer, 0x96000);
-            debugDrawFrameBuffer = (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
+            debugDrawFrameBuffer =
+                (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
             debugFrameBuffer = (debugFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
             VISetNextFrameBuffer(debugFrameBuffer);
             VIFlush();
@@ -1500,41 +1539,30 @@ void debugPrintDraw(int ctx)
 }
 
 u8 gDebugFontGlyphs[580] = {
-    12, 12, 12, 0, 12, 51, 51, 0, 0, 0, 38, 63, 38, 63, 38, 44,
-    14, 46, 44, 14, 51, 40, 29, 10, 51, 29, 51, 45, 51, 62, 12, 12,
-    0, 0, 0, 14, 3, 3, 3, 14, 28, 48, 48, 48, 28, 0, 12, 63,
-    29, 55, 0, 12, 63, 12, 0, 0, 0, 0, 13, 3, 0, 0, 63, 0,
-    0, 0, 0, 0, 0, 12, 48, 56, 25, 11, 3, 30, 41, 45, 37, 30,
-    12, 15, 12, 12, 63, 31, 48, 30, 3, 63, 31, 48, 62, 48, 31, 24,
-    28, 18, 63, 16, 63, 3, 31, 48, 31, 30, 3, 31, 51, 30, 63, 48,
-    24, 12, 12, 30, 51, 30, 51, 30, 30, 51, 62, 48, 30, 0, 3, 0,
-    3, 0, 0, 12, 0, 12, 2, 56, 14, 3, 14, 56, 0, 63, 0, 63,
-    0, 7, 28, 48, 28, 7, 30, 51, 24, 0, 12, 60, 129, 189, 161, 28,
-    30, 51, 63, 51, 51, 31, 51, 31, 51, 31, 30, 51, 3, 51, 30, 31,
-    51, 51, 51, 31, 63, 3, 31, 3, 63, 63, 3, 31, 3, 3, 62, 3,
-    59, 51, 30, 51, 51, 63, 51, 51, 63, 12, 12, 12, 63, 63, 48, 51,
-    51, 46, 51, 51, 31, 51, 51, 3, 3, 3, 3, 63, 51, 63, 45, 33,
-    33, 51, 55, 63, 59, 51, 30, 51, 51, 51, 30, 31, 51, 31, 3, 3,
-    46, 51, 51, 55, 62, 31, 51, 31, 51, 51, 62, 3, 30, 48, 31, 63,
-    12, 12, 12, 12, 51, 51, 51, 51, 30, 51, 51, 51, 26, 12, 33, 33,
-    45, 63, 51, 51, 51, 30, 51, 51, 51, 51, 30, 12, 12, 63, 24, 30,
-    6, 63, 63, 3, 3, 3, 63, 6, 12, 24, 48, 63, 48, 48, 48, 63,
-    12, 51, 0, 0, 0, 0, 0, 0, 0, 63, 3, 12, 0, 0, 0, 0,
-    9, 101, 114, 114, 111, 114, 84, 104, 114, 101, 97, 100, 70, 117, 110, 99,
-    32, 37, 120, 0, 69, 120, 99, 101, 112, 116, 105, 111, 110, 58, 0, 0,
-    83, 121, 115, 116, 101, 109, 32, 114, 101, 115, 101, 116, 0, 0, 0, 0,
-    77, 97, 99, 104, 105, 110, 101, 32, 99, 104, 101, 99, 107, 0, 0, 0,
-    65, 108, 105, 103, 110, 109, 101, 110, 116, 0, 0, 0, 80, 101, 114, 102,
-    111, 114, 109, 97, 110, 99, 101, 32, 109, 111, 110, 105, 116, 111, 114, 0,
-    83, 121, 115, 116, 101, 109, 32, 109, 97, 110, 97, 103, 101, 109, 101, 110,
-    116, 32, 105, 110, 116, 101, 114, 114, 117, 112, 116, 0, 77, 101, 109, 111,
-    114, 121, 32, 80, 114, 111, 116, 101, 99, 116, 105, 111, 110, 32, 69, 114,
-    114, 111, 114, 0, 85, 110, 107, 110, 111, 119, 110, 32, 101, 114, 114, 111,
-    114, 0, 0, 0, 83, 116, 97, 99, 107, 32, 116, 114, 97, 99, 101, 0,
-    83, 116, 97, 99, 107, 32, 37, 120, 59, 32, 100, 101, 112, 116, 104, 32,
-    37, 100, 0, 0, 9, 37, 48, 56, 120, 9, 37, 48, 56, 120, 0, 0,
-    71, 101, 110, 101, 114, 97, 108, 32, 80, 117, 114, 112, 111, 115, 101, 32,
-    82, 101, 103, 105, 115, 116, 101, 114, 115, 0, 0, 0, 9, 37, 48, 56,
-    120, 9, 37, 48, 56, 120, 9, 37, 48, 56, 120, 9, 37, 48, 56, 120,
-    0, 0, 0, 0,
+    12,  12,  12,  0,   12,  51,  51,  0,   0,   0,   38,  63,  38,  63,  38,  44,  14,  46,  44,  14,  51,  40,  29,
+    10,  51,  29,  51,  45,  51,  62,  12,  12,  0,   0,   0,   14,  3,   3,   3,   14,  28,  48,  48,  48,  28,  0,
+    12,  63,  29,  55,  0,   12,  63,  12,  0,   0,   0,   0,   13,  3,   0,   0,   63,  0,   0,   0,   0,   0,   0,
+    12,  48,  56,  25,  11,  3,   30,  41,  45,  37,  30,  12,  15,  12,  12,  63,  31,  48,  30,  3,   63,  31,  48,
+    62,  48,  31,  24,  28,  18,  63,  16,  63,  3,   31,  48,  31,  30,  3,   31,  51,  30,  63,  48,  24,  12,  12,
+    30,  51,  30,  51,  30,  30,  51,  62,  48,  30,  0,   3,   0,   3,   0,   0,   12,  0,   12,  2,   56,  14,  3,
+    14,  56,  0,   63,  0,   63,  0,   7,   28,  48,  28,  7,   30,  51,  24,  0,   12,  60,  129, 189, 161, 28,  30,
+    51,  63,  51,  51,  31,  51,  31,  51,  31,  30,  51,  3,   51,  30,  31,  51,  51,  51,  31,  63,  3,   31,  3,
+    63,  63,  3,   31,  3,   3,   62,  3,   59,  51,  30,  51,  51,  63,  51,  51,  63,  12,  12,  12,  63,  63,  48,
+    51,  51,  46,  51,  51,  31,  51,  51,  3,   3,   3,   3,   63,  51,  63,  45,  33,  33,  51,  55,  63,  59,  51,
+    30,  51,  51,  51,  30,  31,  51,  31,  3,   3,   46,  51,  51,  55,  62,  31,  51,  31,  51,  51,  62,  3,   30,
+    48,  31,  63,  12,  12,  12,  12,  51,  51,  51,  51,  30,  51,  51,  51,  26,  12,  33,  33,  45,  63,  51,  51,
+    51,  30,  51,  51,  51,  51,  30,  12,  12,  63,  24,  30,  6,   63,  63,  3,   3,   3,   63,  6,   12,  24,  48,
+    63,  48,  48,  48,  63,  12,  51,  0,   0,   0,   0,   0,   0,   0,   63,  3,   12,  0,   0,   0,   0,   9,   101,
+    114, 114, 111, 114, 84,  104, 114, 101, 97,  100, 70,  117, 110, 99,  32,  37,  120, 0,   69,  120, 99,  101, 112,
+    116, 105, 111, 110, 58,  0,   0,   83,  121, 115, 116, 101, 109, 32,  114, 101, 115, 101, 116, 0,   0,   0,   0,
+    77,  97,  99,  104, 105, 110, 101, 32,  99,  104, 101, 99,  107, 0,   0,   0,   65,  108, 105, 103, 110, 109, 101,
+    110, 116, 0,   0,   0,   80,  101, 114, 102, 111, 114, 109, 97,  110, 99,  101, 32,  109, 111, 110, 105, 116, 111,
+    114, 0,   83,  121, 115, 116, 101, 109, 32,  109, 97,  110, 97,  103, 101, 109, 101, 110, 116, 32,  105, 110, 116,
+    101, 114, 114, 117, 112, 116, 0,   77,  101, 109, 111, 114, 121, 32,  80,  114, 111, 116, 101, 99,  116, 105, 111,
+    110, 32,  69,  114, 114, 111, 114, 0,   85,  110, 107, 110, 111, 119, 110, 32,  101, 114, 114, 111, 114, 0,   0,
+    0,   83,  116, 97,  99,  107, 32,  116, 114, 97,  99,  101, 0,   83,  116, 97,  99,  107, 32,  37,  120, 59,  32,
+    100, 101, 112, 116, 104, 32,  37,  100, 0,   0,   9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 0,   0,   71,
+    101, 110, 101, 114, 97,  108, 32,  80,  117, 114, 112, 111, 115, 101, 32,  82,  101, 103, 105, 115, 116, 101, 114,
+    115, 0,   0,   0,   9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 9,   37,  48,  56,
+    120, 0,   0,   0,   0,
 };

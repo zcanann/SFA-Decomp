@@ -19,13 +19,13 @@
 typedef struct ChukaPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 posX; /* 0x08 */
-    f32 posY; /* 0x0C */
-    f32 posZ; /* 0x10 */
-    s32 mapId; /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
-    s8 rotXByte; /* 0x18 high byte of initial rotX (<<8) */
-    u8 modeIndex; /* 0x19 mode selector; copied to ChukaState.modeIndex (indexes gChukaModeTable) */
-    s16 rotZInit; /* 0x1A initial rotZ */
+    f32 posX;      /* 0x08 */
+    f32 posY;      /* 0x0C */
+    f32 posZ;      /* 0x10 */
+    s32 mapId;     /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
+    s8 rotXByte;   /* 0x18 high byte of initial rotX (<<8) */
+    u8 modeIndex;  /* 0x19 mode selector; copied to ChukaState.modeIndex (indexes gChukaModeTable) */
+    s16 rotZInit;  /* 0x1A initial rotZ */
     s16 barHeight; /* 0x1C model-scale height divisor (rootMotionScale) */
     s16 unk1E;
     s16 unk20;
@@ -38,9 +38,18 @@ typedef struct ChukaPlacement
     u8 pad2F[0x30 - 0x2F];
 } ChukaPlacement;
 
-int chuka_SeqFn(void) { return 0x0; }
-int chuka_getExtraSize(void) { return 0xc; }
-int chuka_getObjectTypeId(void) { return 0x0; }
+int chuka_SeqFn(void)
+{
+    return 0x0;
+}
+int chuka_getExtraSize(void)
+{
+    return 0xc;
+}
+int chuka_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void chuka_free(int obj)
 {
@@ -56,8 +65,10 @@ void chuka_hitDetect(int obj)
     GameObject* light;
     ChukaState* state = ((GameObject*)obj)->extra;
     light = (GameObject*)state->linkedObject;
-    if (light == NULL) return;
-    if ((light->anim.flags & 0x40) == 0) return;
+    if (light == NULL)
+        return;
+    if ((light->anim.flags & 0x40) == 0)
+        return;
     state->linkedObject = 0;
 }
 
@@ -218,8 +229,7 @@ void chuka_init(int obj, int params)
 
     if (placement->barHeight != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale =
-            1.0f / ((f32)placement->barHeight / 1000.0f);
+        ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)placement->barHeight / 1000.0f);
     }
 
     if (placement->rotZInit != 0)

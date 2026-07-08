@@ -24,33 +24,33 @@ extern f32 lbl_803E1258;
 
 typedef struct GfxCmd
 {
-    u32 mode; /* +0x00 */
+    u32 mode;    /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    void* tex;   /* +0x10 */
+    u16 flags;   /* +0x14 */
+    u8 layer;    /* +0x16 */
 } GfxCmd;
 
 typedef struct GfxBuf
 {
-    GfxCmd* cmds; /* +0x00 */
-    int ctx; /* +0x04 */
-    u8 pad0[0x18]; /* +0x08 */
-    f32 col[3]; /* +0x20 */
-    f32 pos[3]; /* +0x2c */
-    f32 scale; /* +0x38 */
-    u32 v3c; /* +0x3c */
-    u32 v40; /* +0x40 */
-    s16 variant; /* +0x44 */
-    s16 hw[7]; /* +0x46 */
-    u32 flags; /* +0x54 */
-    u8 v58; /* +0x58 */
-    u8 v59; /* +0x59 */
-    u8 v5a; /* +0x5a */
-    u8 priority; /* +0x5b */
-    u8 v5c; /* +0x5c */
-    s8 count; /* +0x5d */
-    u8 pad1[2]; /* +0x5e */
+    GfxCmd* cmds;       /* +0x00 */
+    int ctx;            /* +0x04 */
+    u8 pad0[0x18];      /* +0x08 */
+    f32 col[3];         /* +0x20 */
+    f32 pos[3];         /* +0x2c */
+    f32 scale;          /* +0x38 */
+    u32 v3c;            /* +0x3c */
+    u32 v40;            /* +0x40 */
+    s16 variant;        /* +0x44 */
+    s16 hw[7];          /* +0x46 */
+    u32 flags;          /* +0x54 */
+    u8 v58;             /* +0x58 */
+    u8 v59;             /* +0x59 */
+    u8 v5a;             /* +0x5a */
+    u8 priority;        /* +0x5b */
+    u8 v5c;             /* +0x5c */
+    s8 count;           /* +0x5d */
+    u8 pad1[2];         /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 

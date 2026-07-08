@@ -3,7 +3,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 
-void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state);
+void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state);
 void crcloudrace_updateRaceState(int obj);
 
 extern f32 lbl_803E6748;
@@ -31,27 +31,34 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
 };
 
 #pragma dont_inline on
-void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
+void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
+{
     f32 dist;
     int player;
     u32 near;
 
     dist = lbl_803E6740;
     player = (int)Obj_GetPlayerObject();
-    if (mainGetBit(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME) == 0) {
-        if (mainGetBit(CRCLOUDRACE_GAMEBIT_ABORT_TRIGGER) != 0) {
+    if (mainGetBit(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME) == 0)
+    {
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_ABORT_TRIGGER) != 0)
+        {
             state->phase = CRCLOUDRACE_PHASE_ABORT;
             setMotionBlur(0, lbl_803E6744);
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 0);
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 0);
         }
-    } else {
+    }
+    else
+    {
         mainSetBits(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME, 1);
         setMotionBlur(0, lbl_803E6744);
-        if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 && playerGetFocusObject(player) == 0) {
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 && playerGetFocusObject(player) == 0)
+        {
             near = ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, obj, &dist);
-            if (near != 0) {
-                (*(void (**)(int, int))((char *)*((GameObject *)near)->anim.dll + 0x20))(near, 1);
+            if (near != 0)
+            {
+                (*(void (**)(int, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 1);
             }
             state->phase = CRCLOUDRACE_PHASE_RESET_TO_START;
         }
@@ -59,20 +66,24 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
 }
 #pragma dont_inline reset
 
-void crcloudrace_updateRaceState(int obj) {
-    CrCloudRaceObject *raceObj;
-    CrCloudRaceState *inner;
+void crcloudrace_updateRaceState(int obj)
+{
+    CrCloudRaceObject* raceObj;
+    CrCloudRaceState* inner;
     int player;
 
-    raceObj = (CrCloudRaceObject *)obj;
+    raceObj = (CrCloudRaceObject*)obj;
     inner = raceObj->state;
     player = (int)Obj_GetPlayerObject();
-    switch (inner->phase) {
+    switch (inner->phase)
+    {
     case CRCLOUDRACE_PHASE_START:
-        if (mainGetBit(CRCLOUDRACE_GAMEBIT_TOTEM_GATE) != 0) {
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_TOTEM_GATE) != 0)
+        {
             mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 1);
         }
-        if (playerGetFocusObject(player) != 0) {
+        if (playerGetFocusObject(player) != 0)
+        {
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 1);
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 1);
             inner->phase = CRCLOUDRACE_PHASE_RACING;
@@ -85,10 +96,11 @@ void crcloudrace_updateRaceState(int obj) {
     case CRCLOUDRACE_PHASE_ABORT:
         mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 0);
         inner->phase = CRCLOUDRACE_PHASE_COUNTDOWN;
-        s16toFloat((char *)inner->timer, CRCLOUDRACE_COUNTDOWN_FRAMES);
+        s16toFloat((char*)inner->timer, CRCLOUDRACE_COUNTDOWN_FRAMES);
         break;
     case CRCLOUDRACE_PHASE_COUNTDOWN:
-        if (timerCountDown((char *)inner->timer) != 0) {
+        if (timerCountDown((char*)inner->timer) != 0)
+        {
             inner->phase = CRCLOUDRACE_PHASE_RELOAD_DRAG_ROCK;
         }
         break;
@@ -118,13 +130,16 @@ void crcloudrace_updateRaceState(int obj) {
     }
 }
 
-int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
-    CrCloudRaceState *state = ((CrCloudRaceObject *)obj)->state;
+int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    CrCloudRaceState* state = ((CrCloudRaceObject*)obj)->state;
     int i;
 
     state->flags |= CRCLOUDRACE_STATE_FLAG_COMPLETION_CALLBACK;
-    for (i = 0; i < animUpdate->eventCount; i++) {
-        switch (animUpdate->eventIds[i]) {
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch (animUpdate->eventIds[i])
+        {
         case CRCLOUDRACE_COMPLETION_ANIM_EVENT:
             mainSetBits(CRCLOUDRACE_GAMEBIT_COMPLETION_EVENT, 1);
             mainSetBits(CRCLOUDRACE_GAMEBIT_DRAG_ROCK_CLEARED, 0);
@@ -140,81 +155,82 @@ int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *anim
 
 int crcloudrace_getExtraSize(void)
 {
-  return sizeof(CrCloudRaceState);
+    return sizeof(CrCloudRaceState);
 }
 
 int crcloudrace_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 void crcloudrace_free(void)
 {
-  return;
+    return;
 }
 
-void crcloudrace_render(u32 obj,u32 p2,u32 p3,
-                        u32 p4,u32 p5,char visible)
+void crcloudrace_render(u32 obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-  int draw;
+    int draw;
 
-  draw = visible;
-  if (draw != 0) {
-    ((CrCloudRaceRenderScaleFn)objRenderModelAndHitVolumes)((double)lbl_803E6748);
-  }
-  return;
+    draw = visible;
+    if (draw != 0)
+    {
+        ((CrCloudRaceRenderScaleFn)objRenderModelAndHitVolumes)((double)lbl_803E6748);
+    }
+    return;
 }
 
 void crcloudrace_hitDetect(void)
 {
-  return;
+    return;
 }
 
-void crcloudrace_update(CrCloudRaceObject *obj)
+void crcloudrace_update(CrCloudRaceObject* obj)
 {
-  u32 eventActive;
-  CrCloudRaceState *state;
+    u32 eventActive;
+    CrCloudRaceState* state;
 
-  state = obj->state;
-  if (obj->unkF8 == 0) {
-    eventActive = mainGetBit(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
-    if (eventActive != 0) {
-      getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_A,0);
-      getEnvfxActImmediately(obj,obj,CRCLOUDRACE_ENVFX_CLEAR_B,0);
-      mainSetBits(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR,0);
-      unlockLevel(0,0,1);
+    state = obj->state;
+    if (obj->unkF8 == 0)
+    {
+        eventActive = mainGetBit(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
+        if (eventActive != 0)
+        {
+            getEnvfxActImmediately(obj, obj, CRCLOUDRACE_ENVFX_CLEAR_A, 0);
+            getEnvfxActImmediately(obj, obj, CRCLOUDRACE_ENVFX_CLEAR_B, 0);
+            mainSetBits(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR, 0);
+            unlockLevel(0, 0, 1);
+        }
+        obj->unkF4 = 1;
     }
-    obj->unkF4 = 1;
-  }
-  crcloudrace_updateRaceState((int)obj);
-  state->flags &= ~1;
-  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,1,-1,-1,
-                        CRCLOUDRACE_GAMEBIT_START_LATCH_A,CRCLOUDRACE_GAMEBIT_START_LATCH_B);
-  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,2,-1,-1,
-                        CRCLOUDRACE_GAMEBIT_START_LATCH_A,CRCLOUDRACE_GAMEBIT_START_LATCH_C);
-  return;
+    crcloudrace_updateRaceState((int)obj);
+    state->flags &= ~1;
+    SCGameBitLatch_Update((SCGameBitLatchState*)state->effect, 1, -1, -1, CRCLOUDRACE_GAMEBIT_START_LATCH_A,
+                          CRCLOUDRACE_GAMEBIT_START_LATCH_B);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state->effect, 2, -1, -1, CRCLOUDRACE_GAMEBIT_START_LATCH_A,
+                          CRCLOUDRACE_GAMEBIT_START_LATCH_C);
+    return;
 }
 
-void crcloudrace_init(CrCloudRaceObject *obj)
+void crcloudrace_init(CrCloudRaceObject* obj)
 {
-  CrCloudRaceState *state;
+    CrCloudRaceState* state;
 
-  state = obj->state;
-  obj->animEventCallback = crcloudrace_completionCallback;
-  state->phase = CRCLOUDRACE_PHASE_START;
-  storeZeroToFloatParam(state->timer);
-  mainSetBits(CRCLOUDRACE_GAMEBIT_START_LATCH_A,1);
-  streamFn_8000a380(3,2,1000);
-  return;
+    state = obj->state;
+    obj->animEventCallback = crcloudrace_completionCallback;
+    state->phase = CRCLOUDRACE_PHASE_START;
+    storeZeroToFloatParam(state->timer);
+    mainSetBits(CRCLOUDRACE_GAMEBIT_START_LATCH_A, 1);
+    streamFn_8000a380(3, 2, 1000);
+    return;
 }
-
 
 void crcloudrace_release(void)
 {
-  return;
+    return;
 }
 
 void crcloudrace_initialise(void)
 {
-  return;
+    return;
 }

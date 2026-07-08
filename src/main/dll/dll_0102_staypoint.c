@@ -35,7 +35,7 @@
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 extern int fn_80138F84(int tricky); /* current stay-point object for Tricky */
-extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
+extern f32 lbl_803E38A8;            /* stay-point engage radius, squared */
 
 typedef struct StayPointSetup
 {
@@ -80,8 +80,8 @@ void StayPoint_update(int obj)
             {
                 ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = STAYPOINT_PRIORITY_MENU;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (
-                u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
             if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
                 ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
             {
@@ -89,8 +89,8 @@ void StayPoint_update(int obj)
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAYPOINT_HITBOX_IN_RANGE) != 0)
             {
-                ((void (*)(void*, int, int, int))(*(int*)(*(int*)(*(int*)((int)tricky + 0x68)) + 0x28)))(
-                    tricky, obj, 1, 3);
+                ((void (*)(void*, int, int, int))(*(int*)(*(int*)(*(int*)((int)tricky + 0x68)) + 0x28)))(tricky, obj, 1,
+                                                                                                         3);
             }
         }
     }

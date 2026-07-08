@@ -14,7 +14,6 @@
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
 
-
 typedef struct ARWProximitSetup
 {
     u8 pad00[0x31];
@@ -52,9 +51,15 @@ enum ArwProximitPhase
     ARWPROXIMIT_PHASE_DONE = 4      /* disabled, light freed */
 };
 
-int arwproximit_getExtraSize(void) { return 0x18; }
+int arwproximit_getExtraSize(void)
+{
+    return 0x18;
+}
 
-int arwproximit_getObjectTypeId(void) { return 0; }
+int arwproximit_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void arwproximit_free(int obj)
 {
@@ -100,92 +105,87 @@ void arwproximit_update(int obj)
     switch (state->phase)
     {
     case ARWPROXIMIT_PHASE_DORMANT:
+    {
+        GameObject* arwing = (GameObject*)getArwing();
+        if (arwing == NULL)
+            arwing = (GameObject*)Obj_GetPlayerObject();
+        if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityActivateDistance)
         {
-            GameObject* arwing = (GameObject*)getArwing();
-            if (arwing == NULL)
-                arwing = (GameObject*)Obj_GetPlayerObject();
-            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityActivateDistance)
-            {
-                state->light = objCreateLight(obj, 1);
-                if (state->light != NULL)
-                {
-                    modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-                    modelLightStruct_setPosition(state->light, lbl_803E71D8, *(f32*)&lbl_803E71D8,
-                                                 lbl_803E71F0);
-                    modelLightStruct_setDiffuseColor(state->light, 0, 0xff, 0, 0);
-                    modelLightStruct_setDiffuseTargetColor(state->light, 0, 0, 0, 0);
-                    modelLightStruct_setDistanceAttenuation(state->light, lbl_803E71F0, lbl_803E71F4);
-                    modelLightStruct_setupGlow(state->light, 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
-                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E71F0);
-                }
-                ObjHits_EnableObject(obj);
-                ObjHits_MarkObjectPositionDirty(obj);
-                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                state->phase = ARWPROXIMIT_PHASE_FADEIN;
-            }
-            return;
-        }
-    case ARWPROXIMIT_PHASE_FADEIN:
-    default:
-        {
-            GameObject* arwing;
-            int alpha = (int)
-            (gArwProximityFadeInRate * timeDelta + (f32)(u32)
-            objAnim->alpha
-            )
-            ;
-            if (alpha > 0xff)
-                alpha = 0xff;
-            objAnim->alpha = alpha;
-            arwing = (GameObject*)getArwing();
-            if (arwing == NULL)
-                arwing = (GameObject*)Obj_GetPlayerObject();
-            if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityWarningDistance)
-            {
-                if (state->light != NULL)
-                {
-                    modelLightStruct_setDiffuseColor(state->light, 0xff, 0, 0, 0);
-                    modelLightStruct_setGlowColor(state->light, 0xff, 0, 0, 0x64);
-                    modelLightStruct_startColorFade(state->light, 2, 0xa);
-                }
-                s16toFloat((void*)&state->warningTimer, 0x3c);
-                state->phase = ARWPROXIMIT_PHASE_WARNING;
-                if (state->textVariant == 2)
-                {
-                    if (randomGetRange(0, 1) != 0)
-                        gameTextFn_80125ba4(0xf);
-                    else
-                        gameTextFn_80125ba4(0xc);
-                }
-            }
-            break;
-        }
-    case ARWPROXIMIT_PHASE_WARNING:
-        {
-            u8 r, g, b, a;
-            objAnim->alpha = 0xff;
+            state->light = objCreateLight(obj, 1);
             if (state->light != NULL)
             {
-                modelLightStruct_getDiffuseColor(state->light, &r, &g, &b, &a);
-                modelLightStruct_setGlowColor(state->light, r, g, b, 0x64);
+                modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
+                modelLightStruct_setPosition(state->light, lbl_803E71D8, *(f32*)&lbl_803E71D8, lbl_803E71F0);
+                modelLightStruct_setDiffuseColor(state->light, 0, 0xff, 0, 0);
+                modelLightStruct_setDiffuseTargetColor(state->light, 0, 0, 0, 0);
+                modelLightStruct_setDistanceAttenuation(state->light, lbl_803E71F0, lbl_803E71F4);
+                modelLightStruct_setupGlow(state->light, 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
+                modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E71F0);
             }
-            if (timerCountDown((void*)&state->warningTimer) != 0 ||
-                ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-                    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == getArwing()))
-            {
-                storeZeroToFloatParam((void*)&state->warningTimer);
-                s16toFloat((void*)&state->despawnTimer, 0x14);
-                if (state->light != NULL)
-                    modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
-                spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
-                ObjHitbox_SetSphereRadius(obj, 0x12c);
-                ObjHits_SetHitVolumeSlot(obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                ObjHits_MarkObjectPositionDirty(obj);
-                state->phase = ARWPROXIMIT_PHASE_DETONATE;
-            }
-            break;
+            ObjHits_EnableObject(obj);
+            ObjHits_MarkObjectPositionDirty(obj);
+            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            state->phase = ARWPROXIMIT_PHASE_FADEIN;
         }
+        return;
+    }
+    case ARWPROXIMIT_PHASE_FADEIN:
+    default:
+    {
+        GameObject* arwing;
+        int alpha = (int)(gArwProximityFadeInRate * timeDelta + (f32)(u32)objAnim->alpha);
+        if (alpha > 0xff)
+            alpha = 0xff;
+        objAnim->alpha = alpha;
+        arwing = (GameObject*)getArwing();
+        if (arwing == NULL)
+            arwing = (GameObject*)Obj_GetPlayerObject();
+        if (Vec_distance((int)&objAnim->worldPosX, (int)&arwing->anim.worldPosX) < gArwProximityWarningDistance)
+        {
+            if (state->light != NULL)
+            {
+                modelLightStruct_setDiffuseColor(state->light, 0xff, 0, 0, 0);
+                modelLightStruct_setGlowColor(state->light, 0xff, 0, 0, 0x64);
+                modelLightStruct_startColorFade(state->light, 2, 0xa);
+            }
+            s16toFloat((void*)&state->warningTimer, 0x3c);
+            state->phase = ARWPROXIMIT_PHASE_WARNING;
+            if (state->textVariant == 2)
+            {
+                if (randomGetRange(0, 1) != 0)
+                    gameTextFn_80125ba4(0xf);
+                else
+                    gameTextFn_80125ba4(0xc);
+            }
+        }
+        break;
+    }
+    case ARWPROXIMIT_PHASE_WARNING:
+    {
+        u8 r, g, b, a;
+        objAnim->alpha = 0xff;
+        if (state->light != NULL)
+        {
+            modelLightStruct_getDiffuseColor(state->light, &r, &g, &b, &a);
+            modelLightStruct_setGlowColor(state->light, r, g, b, 0x64);
+        }
+        if (timerCountDown((void*)&state->warningTimer) != 0 ||
+            ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
+             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == getArwing()))
+        {
+            storeZeroToFloatParam((void*)&state->warningTimer);
+            s16toFloat((void*)&state->despawnTimer, 0x14);
+            if (state->light != NULL)
+                modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
+            spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
+            ObjHitbox_SetSphereRadius(obj, 0x12c);
+            ObjHits_SetHitVolumeSlot(obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
+            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            ObjHits_MarkObjectPositionDirty(obj);
+            state->phase = ARWPROXIMIT_PHASE_DETONATE;
+        }
+        break;
+    }
     case ARWPROXIMIT_PHASE_DETONATE:
         if (timerCountDown((void*)&state->despawnTimer) != 0)
         {
@@ -217,10 +217,8 @@ void arwproximit_update(int obj)
             ObjHits_MarkObjectPositionDirty(obj);
             state->phase = ARWPROXIMIT_PHASE_DONE;
         }
-        ((GameObject*)obj)->anim.rotZ =
-            timeDelta * state->spinSpeed + (f32)((GameObject*)obj)->anim.rotZ;
-        ((GameObject*)obj)->anim.rotY =
-            timeDelta * state->spinSpeed + (f32)((GameObject*)obj)->anim.rotY;
+        ((GameObject*)obj)->anim.rotZ = timeDelta * state->spinSpeed + (f32)((GameObject*)obj)->anim.rotZ;
+        ((GameObject*)obj)->anim.rotY = timeDelta * state->spinSpeed + (f32)((GameObject*)obj)->anim.rotY;
     }
 
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)

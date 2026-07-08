@@ -1,11 +1,11 @@
 #include "main/engine_shared.h"
 
-#define PAD_MOTOR_STOP 0
-#define PAD_MOTOR_RUMBLE 1
+#define PAD_MOTOR_STOP      0
+#define PAD_MOTOR_RUMBLE    1
 #define PAD_MOTOR_STOP_HARD 2
 
 #define PAD_ERR_NO_CONTROLLER -1
-#define PAD_ERR_TRANSFER -3
+#define PAD_ERR_TRANSFER      -3
 
 #define PAD_CHAN0_BIT 0x80000000
 
@@ -19,11 +19,12 @@
 #define PADTRIG_R 0x20
 #define PADTRIG_L 0x40
 
-typedef struct PadStateBlock {
-    u32 held[4];        // 0x00
-    u32 buttons[4];     // 0x10
-    u32 released[4];    // 0x20
-    u32 pressed[4];     // 0x30
+typedef struct PadStateBlock
+{
+    u32 held[4];             // 0x00
+    u32 buttons[4];          // 0x10
+    u32 released[4];         // 0x20
+    u32 pressed[4];          // 0x30
     PadStatusLite status[8]; // 0x40
 } PadStateBlock;
 
@@ -609,4 +610,4 @@ void padUpdate(void)
 }
 #pragma opt_common_subs reset
 
-u32 gPadButtonMask[4] = { 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
+u32 gPadButtonMask[4] = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};

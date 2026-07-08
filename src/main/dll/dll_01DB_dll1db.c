@@ -70,10 +70,10 @@ typedef struct Dll1DBPlacement
     u8 pad5[0xC - 0x5];
     f32 topPosY; /* 0x0C */
     u8 pad10[0x18 - 0x10];
-    s8 rotXByte;     /* 0x18: seeds anim.rotX in dll_1DB_init */
+    s8 rotXByte; /* 0x18: seeds anim.rotX in dll_1DB_init */
     u8 pad19[0x1E - 0x19];
-    s16 boardedBit;  /* 0x1E: game bit selecting the initial rest state / set while a player rides */
-    s16 triggerBit;  /* 0x20: external trigger that releases the platform */
+    s16 boardedBit; /* 0x1E: game bit selecting the initial rest state / set while a player rides */
+    s16 triggerBit; /* 0x20: external trigger that releases the platform */
     u8 pad22[0x28 - 0x22];
 } Dll1DBPlacement;
 
@@ -82,17 +82,23 @@ STATIC_ASSERT(offsetof(Dll1DBPlacement, boardedBit) == 0x1E);
 
 typedef struct Dll1DBState
 {
-    f32 velocity;        /* 0x00 */
-    u8 state;            /* 0x04: STATE_* */
-    u8 boardedFlag;      /* 0x05 */
-    u8 contactLostFlag;  /* 0x06 */
+    f32 velocity;       /* 0x00 */
+    u8 state;           /* 0x04: STATE_* */
+    u8 boardedFlag;     /* 0x05 */
+    u8 contactLostFlag; /* 0x06 */
     u8 pad7;
 } Dll1DBState;
 
 STATIC_ASSERT(sizeof(Dll1DBState) == 0x8);
 
-int dll_1DB_getExtraSize(void) { return 0x8; }
-int dll_1DB_getObjectTypeId(void) { return 0x0; }
+int dll_1DB_getExtraSize(void)
+{
+    return 0x8;
+}
+int dll_1DB_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_1DB_free(void)
 {
@@ -101,7 +107,8 @@ void dll_1DB_free(void)
 void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B08);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B08);
 }
 
 void dll_1DB_hitDetect(void)
@@ -181,8 +188,9 @@ void dll_1DB_update(int obj)
         }
         break;
     case STATE_RISING:
-        ((Dll1DBState*)sub)->velocity = ((Dll1DBState*)sub)->velocity + (lbl_803E4B10 * timeDelta +
-            lbl_803E4B14 * (f32)(s32)(((Dll1DBState*)sub)->velocity < lbl_803E4B0C));
+        ((Dll1DBState*)sub)->velocity =
+            ((Dll1DBState*)sub)->velocity +
+            (lbl_803E4B10 * timeDelta + lbl_803E4B14 * (f32)(s32)(((Dll1DBState*)sub)->velocity < lbl_803E4B0C));
         {
             f32 v = ((Dll1DBState*)sub)->velocity;
             if (v > lbl_803E4B18)
@@ -190,7 +198,8 @@ void dll_1DB_update(int obj)
                 ((Dll1DBState*)sub)->velocity = *(f32*)&lbl_803E4B18;
             }
         }
-        ((GameObject*)obj)->anim.localPosY = ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY =
+            ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (((GameObject*)obj)->anim.localPosY > ((Dll1DBPlacement*)state)->topPosY)
         {
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);
@@ -212,7 +221,8 @@ void dll_1DB_update(int obj)
                 ((Dll1DBState*)sub)->velocity = *(f32*)&lbl_803E4B20;
             }
         }
-        ((GameObject*)obj)->anim.localPosY = ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY =
+            ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (((GameObject*)obj)->anim.localPosY < ((Dll1DBPlacement*)state)->topPosY - lbl_803E4B24)
         {
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);

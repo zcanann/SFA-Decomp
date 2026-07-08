@@ -31,13 +31,13 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 typedef struct SlidingdoorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 openGameBit;    /* 0x18: door opens while this bit is set (gated by gateGameBit) */
-    s16 openedGameBit;  /* 0x1A: set to 1 once the door opens */
-    s16 preemptEvent;   /* 0x1C: event preempted by SlidingDoor_update if already moving */
+    s16 openGameBit;      /* 0x18: door opens while this bit is set (gated by gateGameBit) */
+    s16 openedGameBit;    /* 0x1A: set to 1 once the door opens */
+    s16 preemptEvent;     /* 0x1C: event preempted by SlidingDoor_update if already moving */
     s8 startupSequenceId; /* 0x1E: startup sequence id */
     u8 pad1F[0x20 - 0x1F];
-    s16 unk20;          /* 0x20 */
-    s16 gateGameBit;    /* 0x22: -1 = none; otherwise must also be set to open */
+    s16 unk20;       /* 0x20 */
+    s16 gateGameBit; /* 0x22: -1 = none; otherwise must also be set to open */
     u8 pad24[0x28 - 0x24];
 } SlidingdoorPlacement;
 
@@ -74,8 +74,8 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (player != NULL)
     {
-        playerNear = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            130.0f;
+        playerNear =
+            Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 130.0f;
     }
     else
     {
@@ -99,7 +99,7 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (mainGetBit(((SlidingdoorPlacement*)params)->openGameBit) != 0 &&
             (((SlidingdoorPlacement*)params)->gateGameBit == -1 ||
-                mainGetBit(((SlidingdoorPlacement*)params)->gateGameBit) != 0))
+             mainGetBit(((SlidingdoorPlacement*)params)->gateGameBit) != 0))
         {
             mainSetBits(((SlidingdoorPlacement*)params)->openedGameBit, 1);
             if (playerNear != 0 || trickyNear != 0)
@@ -111,8 +111,8 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     else if (mode == SLIDINGDOOR_MODE_OPEN)
     {
         if ((mainGetBit(((SlidingdoorPlacement*)params)->openGameBit) != 0 ||
-                (((SlidingdoorPlacement*)params)->gateGameBit != -1 &&
-                    mainGetBit(((SlidingdoorPlacement*)params)->gateGameBit) != 0)) &&
+             (((SlidingdoorPlacement*)params)->gateGameBit != -1 &&
+              mainGetBit(((SlidingdoorPlacement*)params)->gateGameBit) != 0)) &&
             playerNear == 0 && trickyNear == 0)
         {
             ((SlidingdoorState*)state)->mode = SLIDINGDOOR_MODE_CLOSING;
@@ -142,14 +142,21 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
         u32 modeAfter = ((u32)state[0] >> 5) & 7;
         if (modeAfter != SLIDINGDOOR_MODE_OPENING)
         {
-            if (modeAfter != SLIDINGDOOR_MODE_CLOSING) result = 1;
+            if (modeAfter != SLIDINGDOOR_MODE_CLOSING)
+                result = 1;
         }
     }
     return result;
 }
 
-int SlidingDoor_getExtraSize(void) { return 0x1; }
-int SlidingDoor_getObjectTypeId(void) { return 0x0; }
+int SlidingDoor_getExtraSize(void)
+{
+    return 0x1;
+}
+int SlidingDoor_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SlidingDoor_free(void)
 {
@@ -157,7 +164,8 @@ void SlidingDoor_free(void)
 
 void SlidingDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (visible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void SlidingDoor_hitDetect(void)
@@ -168,7 +176,8 @@ void SlidingDoor_update(u8* obj)
 {
     u8* sub;
     u8* data;
-    if (((GameObject*)obj)->unkF4 != 0) return;
+    if (((GameObject*)obj)->unkF4 != 0)
+        return;
     sub = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (((SlidingdoorPlacement*)data)->preemptEvent != 0)

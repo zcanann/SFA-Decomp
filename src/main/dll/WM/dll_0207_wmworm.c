@@ -24,15 +24,25 @@ extern f32 lbl_803E5E58; /* 440.0: chase range */
 extern f32 lbl_803E5E5C; /* 0.0 */
 extern f32 lbl_803E5E60; /* 0.01: chase speed factor */
 
-int WM_Worm_getExtraSize(void) { return sizeof(WmWormState); }
-int WM_Worm_getObjectTypeId(void) { return 0x0; }
+int WM_Worm_getExtraSize(void)
+{
+    return sizeof(WmWormState);
+}
+int WM_Worm_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_Worm_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void WM_Worm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void WM_Worm_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
 
 void WM_Worm_hitDetect(void)
 {
@@ -96,14 +106,12 @@ void WM_Worm_update(GameObject* obj)
                 {
                     for (i = 0; (s16)i < state->burstCount; i++)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
-                                                         -1, NULL);
+                        (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4, -1, NULL);
                     }
                 }
                 else
                 {
-                    (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
-                                                     -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4, -1, NULL);
                 }
                 /* cooldown: burstCount frames before the next burst
                    (negated; the guard above re-fires at <= 0) */

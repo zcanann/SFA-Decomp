@@ -19,17 +19,17 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define TREE_AMBIENT_EFFECT_COUNT 3
-#define TREE_AMBIENT_EFFECT_OBJECT_ID 0x210
-#define TREE_AMBIENT_EFFECT_SETUP_SIZE 0x28
-#define TREE_OBJECT_FLAGS_INIT 0x2000
-#define TREE_RESET_HITBOX_FLAG INTERACT_FLAG_DISABLED /* 0x08 */
-#define TREE_FLAG_BURST_MODE_MASK 0x0f
+#define TREE_AMBIENT_EFFECT_COUNT        3
+#define TREE_AMBIENT_EFFECT_OBJECT_ID    0x210
+#define TREE_AMBIENT_EFFECT_SETUP_SIZE   0x28
+#define TREE_OBJECT_FLAGS_INIT           0x2000
+#define TREE_RESET_HITBOX_FLAG           INTERACT_FLAG_DISABLED /* 0x08 */
+#define TREE_FLAG_BURST_MODE_MASK        0x0f
 #define TREE_FLAG_PLAYER_PROXIMITY_BURST 0x10
-#define TREE_FLAG_HIT_ENABLED 0x20
+#define TREE_FLAG_HIT_ENABLED            0x20
 /* two-bit mask (0x40|0x80); intentionally includes the AMBIENT_EFFECTS bit */
-#define TREE_FLAG_HIT_WITH_POSITION 0xc0
-#define TREE_FLAG_AMBIENT_EFFECTS 0x80
+#define TREE_FLAG_HIT_WITH_POSITION        0xc0
+#define TREE_FLAG_AMBIENT_EFFECTS          0x80
 #define TREE_FLAG_DISABLE_PLAYER_PROXIMITY 0x100
 
 typedef struct TreeSetup
@@ -53,7 +53,7 @@ typedef struct TreeAmbientEffectSetup
     ObjPlacement base;
     int sourceObject;
     u16 animFrame;
-    s16 unk1E; /* always 0 at spawn */
+    s16 unk1E;    /* always 0 at spawn */
     u8 colorA[3]; /* opaque setup channels consumed by the ambient-effect DLL */
     u8 colorB[2]; /* opaque setup channels consumed by the ambient-effect DLL */
     s8 verticalDrift;
@@ -98,7 +98,10 @@ STATIC_ASSERT(offsetof(TreeState, lastPlayerDistance) == 0x56);
 STATIC_ASSERT(offsetof(TreeState, flags) == 0x58);
 STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
-int tree_getExtraSize(void) { return sizeof(TreeState); }
+int tree_getExtraSize(void)
+{
+    return sizeof(TreeState);
+}
 
 void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 {
@@ -130,9 +133,8 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
         effectSetup->verticalDrift = -0x28;
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
-        state->ambientEffectHandles[idx] =
-            Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                            *(int*)&((GameObject*)obj)->anim.parent);
+        state->ambientEffectHandles[idx] = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                                           *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
 
@@ -158,14 +160,15 @@ void tree_updateAmbientEffects(int obj, int state)
             else
             {
                 if ((*(int (**)(int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) + 0x28))(
-                    ((TreeState*)state)->ambientEffectHandles[i]) > 3)
+                        ((TreeState*)state)->ambientEffectHandles[i]) > 3)
                 {
                     ((TreeState*)state)->ambientEffectHandles[i] = 0;
                 }
                 else
                 {
-                    (*(void (**)(int, int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) + 0x24))(
-                        ((TreeState*)state)->ambientEffectHandles[i], (int)&ts->ambientEffectPos[i][0]);
+                    (*(void (**)(int, int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) +
+                                            0x24))(((TreeState*)state)->ambientEffectHandles[i],
+                                                   (int)&ts->ambientEffectPos[i][0]);
                 }
             }
         }
@@ -186,8 +189,8 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
             {
-                ObjPath_GetPointWorldPosition(obj, i, &state->ambientEffectPos[i][0],
-                                              &state->ambientEffectPos[i][1], &state->ambientEffectPos[i][2], 0);
+                ObjPath_GetPointWorldPosition(obj, i, &state->ambientEffectPos[i][0], &state->ambientEffectPos[i][1],
+                                              &state->ambientEffectPos[i][2], 0);
             }
         }
         ((GameObject*)obj)->unkF8 = 1;
@@ -288,8 +291,8 @@ void tree_update(int obj)
     f32 dx, dz, dist;
     int hitObject;      /* out-params required by API, not read by this fn */
     int hitSphereIndex; /* out-params required by API, not read by this fn */
-    u32 hitVolume;     /* out-params required by API, not read by this fn */
-    f32 colorVec[3]; /* dual role: hit world-position outparam, then scaled effect colour */
+    u32 hitVolume;      /* out-params required by API, not read by this fn */
+    f32 colorVec[3];    /* dual role: hit world-position outparam, then scaled effect colour */
     f32 burstVec[3];
     f32 intensity;
     f32* colorPtr;
@@ -314,8 +317,8 @@ void tree_update(int obj)
         {
             if (state->flags & TREE_FLAG_HIT_WITH_POSITION)
             {
-                hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume,
-                                                         &colorVec[0], &colorVec[1], &colorVec[2]);
+                hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume, &colorVec[0],
+                                                         &colorVec[1], &colorVec[2]);
             }
             else
             {
@@ -356,7 +359,7 @@ void tree_update(int obj)
                             if ((void*)state->ambientEffectHandles[i] != NULL)
                             {
                                 if ((*(int (**)(int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) + 0x28))(
-                                    state->ambientEffectHandles[i]) > 1)
+                                        state->ambientEffectHandles[i]) > 1)
                                 {
                                     ObjHits_RecordObjectHit(state->ambientEffectHandles[i], obj, 0xe, 1, 0);
                                     break;
@@ -381,8 +384,7 @@ void tree_update(int obj)
             if (playerDist < state->proximityRadius)
             {
                 if ((state->flags & TREE_FLAG_PLAYER_PROXIMITY_BURST) &&
-                    state->lastPlayerDistance >= state->proximityRadius &&
-                    state->playerBurstCooldown <= lbl_803E72F8)
+                    state->lastPlayerDistance >= state->proximityRadius && state->playerBurstCooldown <= lbl_803E72F8)
                 {
                     intensity = state->scale;
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
@@ -412,19 +414,26 @@ void tree_update(int obj)
 }
 
 f32 gTreeEffectColors[] = {
-    0.0f, 250.0f, 0.0f, 80.0f,
-    0.0f, 250.0f, 0.0f, 110.0f,
-    25.0f, 200.0f, 0.0f, 80.0f,
-    0.0f, 100.0f, 0.0f, 60.0f,
-    0.0f, 200.0f, 0.0f, 140.0f,
-    0.0f, 250.0f, 0.0f, 160.0f,
-    0.0f, 200.0f, 0.0f, 100.0f,
-    0.0f, 350.0f, 0.0f, 130.0f,
-    0.0f, 350.0f, 0.0f, 130.0f,
-    25.0f, 300.0f, 0.0f, 80.0f,
-    0.0f, 50.0f, 0.0f, 50.0f,
+    0.0f, 250.0f, 0.0f, 80.0f,  0.0f,  250.0f, 0.0f, 110.0f, 25.0f, 200.0f, 0.0f, 80.0f,  0.0f, 100.0f, 0.0f, 60.0f,
+    0.0f, 200.0f, 0.0f, 140.0f, 0.0f,  250.0f, 0.0f, 160.0f, 0.0f,  200.0f, 0.0f, 100.0f, 0.0f, 350.0f, 0.0f, 130.0f,
+    0.0f, 350.0f, 0.0f, 130.0f, 25.0f, 300.0f, 0.0f, 80.0f,  0.0f,  50.0f,  0.0f, 50.0f,
 };
 
 /* descriptor/ptr table auto 0x8032bc90-0x8032bd00 */
-u32 gTreeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)tree_init, (u32)tree_update, 0x00000000, (u32)tree_render, 0x00000000, 0x00000000, (u32)tree_getExtraSize };
-u32 gBrokenPipeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)brokenpipe_init, (u32)brokenpipe_update, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)brokenpipe_getExtraSize };
+u32 gTreeObjDescriptor[14] = {
+    0x00000000,     0x00000000,       0x00000000, 0x00090000,       0x00000000, 0x00000000, 0x00000000,
+    (u32)tree_init, (u32)tree_update, 0x00000000, (u32)tree_render, 0x00000000, 0x00000000, (u32)tree_getExtraSize};
+u32 gBrokenPipeObjDescriptor[14] = {0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00090000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    (u32)brokenpipe_init,
+                                    (u32)brokenpipe_update,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    0x00000000,
+                                    (u32)brokenpipe_getExtraSize};

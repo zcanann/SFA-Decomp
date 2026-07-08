@@ -54,7 +54,6 @@ extern const char sSeqObjNeedBitUsedBitFormat[];
 extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
 extern const char lbl_80321208[];
 
-
 STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(DoorLockPlacement, rotYByte) == 0x19);
@@ -86,26 +85,30 @@ STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
 STATIC_ASSERT(sizeof(SeqObj2State) == 0x1);
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 
-#define SEQOBJECT_STATE_OPEN 0x01
+#define SEQOBJECT_STATE_OPEN             0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
-#define SEQOBJECT_STATE_SEQUENCE_DONE 0x04
+#define SEQOBJECT_STATE_SEQUENCE_DONE    0x04
 
-#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR 0x01
+#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR     0x01
 #define SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE 0x02
-#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE 0x04
-#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE 0x08
-#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
-#define SEQOBJECT_FLAG_UNUSED_20 0x20
+#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE   0x04
+#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE     0x08
+#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM      0x10
+#define SEQOBJECT_FLAG_UNUSED_20              0x20
 
-#define SEQOBJECT_OBJFLAG_HIDDEN 0x4000
+#define SEQOBJECT_OBJFLAG_HIDDEN             0x4000
 #define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
-    SeqObjectPlacement * def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
+    SeqObjectPlacement* def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
     SeqObj2State* state = ((GameObject*)obj)->extra;
     int i;
-    enum { SEQOBJ2_SEQEV_CLEAR_TRIGGER = 0, SEQOBJ2_SEQEV_SET_OPEN = 1 };
+    enum
+    {
+        SEQOBJ2_SEQEV_CLEAR_TRIGGER = 0,
+        SEQOBJ2_SEQEV_SET_OPEN = 1
+    };
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         int op = animUpdate->eventIds[i];
@@ -125,10 +128,19 @@ int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int SeqObj2_getExtraSize(void) { return 0x1; }
-int SeqObj2_getObjectTypeId(void) { return 0x0; }
+int SeqObj2_getExtraSize(void)
+{
+    return 0x1;
+}
+int SeqObj2_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void SeqObj2_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP); }
+void SeqObj2_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, SEQOBJ2_OBJGROUP);
+}
 
 void SeqObj2_render(void)
 {
@@ -141,7 +153,7 @@ void SeqObj2_hitDetect(void)
 void SeqObj2_update(int* obj)
 {
     SeqObj2State* state;
-    SeqObjectPlacement * def;
+    SeqObjectPlacement* def;
     char* strBase;
     u32 bitValue;
 
@@ -217,7 +229,8 @@ void SeqObj2_init(int* obj, SeqObjectPlacement* def)
         }
     }
     ObjGroup_AddObject((u32)obj, SEQOBJ2_OBJGROUP);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SEQOBJECT_OBJFLAG_HIDDEN | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (SEQOBJECT_OBJFLAG_HIDDEN | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void SeqObj2_release(void)
@@ -227,7 +240,6 @@ void SeqObj2_release(void)
 void SeqObj2_initialise(void)
 {
 }
-
 
 ObjectDescriptor gSeqObj2ObjDescriptor = {
     0,
@@ -248,13 +260,20 @@ ObjectDescriptor gSeqObj2ObjDescriptor = {
 
 const char sSeqObjNeedBitClearDuringSequenceFormat[] = "newseqobj %d: need bit clear during sequence\n";
 
-const char lbl_80321208[444] = "newseqobj %d: used bit set during sequence\n\000newseqobj %d: need bit clear before preempting sequence\n\000\000\000\000newseqobj %d: used bit set before preempting sequence\n\000\000newseqobj %d: about to prempt the sequence - objs %d\n\000\000\000newseqobj %d: need bit clear after sequence\n\000\000\000\000newseqobj %d: used bit set after sequence\n\000\000newseqobj %d: need bit clear before sequence\n\000\000\000newseqobj %d: used bit set before sequence\n\000newseqobj %d: about to start the sequence\n\000\000";
+const char lbl_80321208[444] =
+    "newseqobj %d: used bit set during sequence\n\000newseqobj %d: need bit clear before preempting "
+    "sequence\n\000\000\000\000newseqobj %d: used bit set before preempting sequence\n\000\000newseqobj %d: about to "
+    "prempt the sequence - objs %d\n\000\000\000newseqobj %d: need bit clear after sequence\n\000\000\000\000newseqobj "
+    "%d: used bit set after sequence\n\000\000newseqobj %d: need bit clear before sequence\n\000\000\000newseqobj %d: "
+    "used bit set before sequence\n\000newseqobj %d: about to start the sequence\n\000\000";
 const char sSeqObjNeedBitUsedBitFormat[40] = "newseqobj %d: Need Bit %d, Used Bit %d\n\000";
 
 /* descriptor/ptr table auto 0x803213f0-0x80321460; 8-aligned union places it at
  * 0x803213F0 after the 4-byte retail pad gap_07_803213EC_data (dll_013F idiom) */
-ObjDescriptorAlign8 gIMMultiSeqObjDescriptor = { {
-    0x00000000, 0x00000000, 0x00000000,
+ObjDescriptorAlign8 gIMMultiSeqObjDescriptor = {{
+    0x00000000,
+    0x00000000,
+    0x00000000,
     0x00090000,
     (ObjectDescriptorCallback)IMMultiSeq_initialise,
     (ObjectDescriptorCallback)IMMultiSeq_release,
@@ -266,5 +285,18 @@ ObjDescriptorAlign8 gIMMultiSeqObjDescriptor = { {
     (ObjectDescriptorCallback)IMMultiSeq_free,
     (ObjectDescriptorCallback)IMMultiSeq_getObjectTypeId,
     IMMultiSeq_getExtraSize,
-} };
-u32 lbl_80321428[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_115_initialise_nop, (u32)dll_115_release_nop, 0x00000000, (u32)dll_115_init, (u32)dll_115_update, (u32)dll_115_hitDetect_nop, (u32)dll_115_render, (u32)dll_115_free, (u32)dll_115_getObjectTypeId, (u32)dll_115_getExtraSize_ret_2 };
+}};
+u32 lbl_80321428[14] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00090000,
+                        (u32)dll_115_initialise_nop,
+                        (u32)dll_115_release_nop,
+                        0x00000000,
+                        (u32)dll_115_init,
+                        (u32)dll_115_update,
+                        (u32)dll_115_hitDetect_nop,
+                        (u32)dll_115_render,
+                        (u32)dll_115_free,
+                        (u32)dll_115_getObjectTypeId,
+                        (u32)dll_115_getExtraSize_ret_2};

@@ -26,37 +26,37 @@
 #include "main/objlib.h"
 #include "main/frame_timing.h"
 
-#define TRICKY_CURVE_GAMEBIT_HIT 0x468
+#define TRICKY_CURVE_GAMEBIT_HIT       0x468
 #define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7
-#define TRICKY_CURVE_COOLDOWN_TICKS 200
-#define TRICKY_CURVE_BURST_LIMIT 0x14
-#define TRICKY_CURVE_HIT_PRIORITY 0x14
-#define TRICKY_CURVE_MESSAGE_BURST 0x60004
-#define TRICKY_CURVE_PARTFX_COOLDOWN 0x397
-#define TRICKY_CURVE_PARTFX_BURST 0x399
-#define TRICKY_CURVE_SFX_BURST 0x1c9
-#define TRICKY_CURVE_SFX_COOLDOWN 0x1ca
+#define TRICKY_CURVE_COOLDOWN_TICKS    200
+#define TRICKY_CURVE_BURST_LIMIT       0x14
+#define TRICKY_CURVE_HIT_PRIORITY      0x14
+#define TRICKY_CURVE_MESSAGE_BURST     0x60004
+#define TRICKY_CURVE_PARTFX_COOLDOWN   0x397
+#define TRICKY_CURVE_PARTFX_BURST      0x399
+#define TRICKY_CURVE_SFX_BURST         0x1c9
+#define TRICKY_CURVE_SFX_COOLDOWN      0x1ca
 
 typedef struct TrickyCurveObject
 {
     u8 unk0[0xc];
-    f32 x;                              /* 0x0C: localPosX (GameObject anim) */
-    f32 y;                              /* 0x10: localPosY */
-    f32 z;                              /* 0x14: localPosZ */
+    f32 x; /* 0x0C: localPosX (GameObject anim) */
+    f32 y; /* 0x10: localPosY */
+    f32 z; /* 0x14: localPosZ */
     u8 unk18[0xa0];
     struct TrickyCurveTriggerState* state; /* 0xB8: GameObject extra block */
 } TrickyCurveObject;
 
 typedef struct TrickyCurveTriggerState
 {
-    s16 xExtent;    /* 0x00: half-extent of the trigger box on each axis */
-    s16 zExtent;    /* 0x02 */
-    s16 yExtent;    /* 0x04 */
-    s16 cooldown;   /* 0x06: ticks until the cooldown variant can hit again */
-    u8 unk8[8];     /* 0x08: unknown */
-    u8 xSide;       /* 0x10: which side of the midline the player entered on */
-    u8 ySide;       /* 0x11 */
-    u8 zSide;       /* 0x12 */
+    s16 xExtent;  /* 0x00: half-extent of the trigger box on each axis */
+    s16 zExtent;  /* 0x02 */
+    s16 yExtent;  /* 0x04 */
+    s16 cooldown; /* 0x06: ticks until the cooldown variant can hit again */
+    u8 unk8[8];   /* 0x08: unknown */
+    u8 xSide;     /* 0x10: which side of the midline the player entered on */
+    u8 ySide;     /* 0x11 */
+    u8 zSide;     /* 0x12 */
 } TrickyCurveTriggerState;
 
 typedef struct TrickyCurveBurstPartfxArgs
@@ -78,11 +78,12 @@ STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 
 extern int objGetAnimState80A(int obj);
 
-extern u8 gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
-extern f32 lbl_803E6448;                /* burst partfx scale constant */
+extern u8
+    gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
+extern f32 lbl_803E6448;      /* burst partfx scale constant */
 
-#define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \
-    (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (mode), (arg5), (arg6))
+#define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6)                                                            \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (mode), (arg5), (arg6))
 
 void fn_80206968(TrickyCurveObject* obj)
 {
@@ -97,7 +98,7 @@ void fn_80206968(TrickyCurveObject* obj)
     f32 yDelta;
 
     state = obj->state;
-    player = (GameObject *)Obj_GetPlayerObject();
+    player = (GameObject*)Obj_GetPlayerObject();
     insideAxes = 0;
     xSide = 0;
     ySide = 0;
@@ -194,7 +195,7 @@ void fn_80206C18(TrickyCurveObject* obj)
     TrickyCurveBurstPartfxArgs partfxArgs;
 
     state = obj->state;
-    player = (GameObject *)Obj_GetPlayerObject();
+    player = (GameObject*)Obj_GetPlayerObject();
     insideAxes = 0;
     xSide = 0;
     ySide = 0;

@@ -31,13 +31,13 @@ extern f32 lbl_803E4CA8;
 extern f32 lbl_803E4CAC;
 extern f32 lbl_803E4CB0;
 
-#define DIMBOSSTONSIL_HIT_EFFECT_ID 0x4b2
+#define DIMBOSSTONSIL_HIT_EFFECT_ID     0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
-#define DIMBOSSTONSIL_PRIMARY_HIT_SFX 0x18a
-#define DIMBOSSTONSIL_ALT_HIT_SFX 0x18b
-#define DIMBOSSTONSIL_NORMAL_HIT_SFX 0x18c
-#define DIMBOSSTONSIL_HIT_GAMEBIT 0x20c
-#define DIMBOSSTONSIL_ADVANCE_MSG 0xe0001
+#define DIMBOSSTONSIL_PRIMARY_HIT_SFX   0x18a
+#define DIMBOSSTONSIL_ALT_HIT_SFX       0x18b
+#define DIMBOSSTONSIL_NORMAL_HIT_SFX    0x18c
+#define DIMBOSSTONSIL_HIT_GAMEBIT       0x20c
+#define DIMBOSSTONSIL_ADVANCE_MSG       0xe0001
 /* particle-spawn flag word: bit 0x200000 | bit 0x1 */
 #define DIMBOSSTONSIL_HIT_FX_FLAGS 0x200001
 
@@ -73,8 +73,8 @@ int DIMbosstonsil_chooseHitReaction(void* obj, DIMbosstonsilState* state)
     if (state->active != 0)
     {
         lbl_803DDB9C = lbl_803DDBA0;
-        (*(void (***)(void*, void*, int, u16*, s16*, s16*))gBaddieControlInterface)[5]
-            (obj, Obj_GetPlayerObject(), 4, &moveId, &unused1, &unused2);
+        (*(void (***)(void*, void*, int, u16*, s16*, s16*))gBaddieControlInterface)[5](obj, Obj_GetPlayerObject(), 4,
+                                                                                       &moveId, &unused1, &unused2);
         switch (moveId)
         {
         case 0:
@@ -136,14 +136,16 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
     {
         spawnPos = (f32*)((char*)spawnArgs + 0xc);
         {
-            f32 (*modelPos)[4] = (f32(*)[4])(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks +
-                ((s8)((u8*)obj)[0xad] << 2)) + 0x50));
+            f32(*modelPos)[4] = (f32(*)[4])(
+                *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + ((s8)((u8*)obj)[0xad] << 2)) + 0x50));
             spawnPos[0] = playerMapOffsetX + modelPos[modelPart][1];
             spawnPos[1] = modelPos[modelPart][2];
             spawnPos[2] = playerMapOffsetZ + modelPos[modelPart][3];
         }
-        (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
         objLightFn_8009a1dc(obj, lbl_803E4CA4, spawnArgs, 3, 0);
         Sfx_PlayFromObject(obj, DIMBOSSTONSIL_PRIMARY_HIT_SFX);
         doRumble(lbl_803E4CA8);

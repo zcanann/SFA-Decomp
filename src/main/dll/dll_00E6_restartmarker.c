@@ -19,15 +19,5 @@ void restartmarker_init(int* obj, int* placement)
 }
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)restartmarker_init,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0, (ObjectDescriptorCallback)restartmarker_init, 0, 0, 0, 0, 0, 0,
 };

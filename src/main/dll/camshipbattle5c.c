@@ -27,23 +27,23 @@ extern const f32 lbl_803E1898; /* angle unwrap step */
 extern const f32 lbl_803E1888; /* angle near/zero threshold */
 extern char sPathCamNeedTwoControlPointsError[];
 
-
 extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 
 /* curve-node field offsets (raw walking-pointer accesses below) */
-#define NODE_SELF_ID 0x14
-#define NODE_DIR_MASK 0x1B
+#define NODE_SELF_ID    0x14
+#define NODE_DIR_MASK   0x1B
 #define NODE_NEIGHBOURS 0x1C
-#define NODE_TAG0 0x31
-#define NODE_TAG1 0x32
-#define NODE_TAG2 0x33
+#define NODE_TAG0       0x31
+#define NODE_TAG1       0x32
+#define NODE_TAG2       0x33
 
 /*
  * A single ROM curve-node as returned by gRomCurveInterface->getById.
  * Single-owner layout for this unit (and its sibling dll_8010a104.c,
  * which still uses raw offsets). Only the fields touched here are named.
  */
-typedef struct RomCurveNode {
+typedef struct RomCurveNode
+{
     /* 0x00 */ u8 pad00[0x08];
     /* 0x08 */ f32 x;
     /* 0x0C */ f32 y;
@@ -78,8 +78,7 @@ STATIC_ASSERT(offsetof(RomCurveNode, sampleD) == 0x3A);
 
 #pragma opt_common_subs off
 #pragma ppc_unroll_factor_limit 1
-void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
-                                f32* o5, f32* o6, f32* o7)
+void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4, f32* o5, f32* o6, f32* o7)
 {
     f32* wp;
     int* np;
@@ -157,8 +156,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                     *w4 = (f32)(pts[1]->sampleA + (pts[1]->sampleA - pts[2]->sampleA));
                     *w5 = (f32)(pts[1]->sampleB + (pts[1]->sampleB - pts[2]->sampleB));
                     *w6 = (f32)(pts[1]->sampleC + (pts[1]->sampleC - pts[2]->sampleC));
-                    *w7 = (f32)pts[1]->sampleD +
-                        ((f32)pts[1]->sampleD - (f32)pts[2]->sampleD);
+                    *w7 = (f32)pts[1]->sampleD + ((f32)pts[1]->sampleD - (f32)pts[2]->sampleD);
                 }
                 else if (j == 3)
                 {
@@ -168,8 +166,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                     *w4 = (f32)(pts[2]->sampleA + (pts[2]->sampleA - pts[1]->sampleA));
                     *w5 = (f32)(pts[2]->sampleB + (pts[2]->sampleB - pts[1]->sampleB));
                     *w6 = (f32)(pts[2]->sampleC + (pts[2]->sampleC - pts[1]->sampleC));
-                    *w7 = (f32)pts[2]->sampleD +
-                        ((f32)pts[2]->sampleD - (f32)pts[1]->sampleD);
+                    *w7 = (f32)pts[2]->sampleD + ((f32)pts[2]->sampleD - (f32)pts[1]->sampleD);
                 }
             }
             pwNode++;
@@ -221,8 +218,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                 }
             }
             axis++;
-        }
-        while (axis < 3);
+        } while (axis < 3);
     }
 }
 #pragma opt_common_subs on
@@ -292,7 +288,8 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
                             neighbour = (u8*)(*gRomCurveInterface)->getById(idx);
                             if (neighbour != NULL)
                             {
-                                if (neighbour[NODE_TAG0] == tag || neighbour[NODE_TAG1] == tag || neighbour[NODE_TAG2] == tag)
+                                if (neighbour[NODE_TAG0] == tag || neighbour[NODE_TAG1] == tag ||
+                                    neighbour[NODE_TAG2] == tag)
                                 {
                                     out[3] = *(int*)(node2 + i * 4 + NODE_NEIGHBOURS);
                                 }

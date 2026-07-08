@@ -11,60 +11,60 @@
 #include "main/dll/FRONT/n_options.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
-#define GX_AOP_AND 0
-#define GX_BL_ZERO 0
-#define GX_BM_NONE 0
-#define GX_COLOR0 0
-#define GX_CS_SCALE_1 0
-#define GX_DF_NONE 0
-#define GX_FALSE 0
-#define GX_SRC_REG 0
-#define GX_TB_ZERO 0
-#define GX_TEVPREV 0
-#define GX_TEV_ADD 0
-#define GX_BL_ONE 1
-#define GX_BM_BLEND 1
-#define GX_SRC_VTX 1
-#define GX_TRUE 1
-#define GX_AF_NONE 2
-#define GX_ALPHA0 2
-#define GX_BM_LOGIC 2
-#define GX_CA_A2 3
-#define GX_BL_SRCALPHA 4
-#define GX_COLOR0A0 4
-#define GX_GREATER 4
+#define GX_AOP_AND        0
+#define GX_BL_ZERO        0
+#define GX_BM_NONE        0
+#define GX_COLOR0         0
+#define GX_CS_SCALE_1     0
+#define GX_DF_NONE        0
+#define GX_FALSE          0
+#define GX_SRC_REG        0
+#define GX_TB_ZERO        0
+#define GX_TEVPREV        0
+#define GX_TEV_ADD        0
+#define GX_BL_ONE         1
+#define GX_BM_BLEND       1
+#define GX_SRC_VTX        1
+#define GX_TRUE           1
+#define GX_AF_NONE        2
+#define GX_ALPHA0         2
+#define GX_BM_LOGIC       2
+#define GX_CA_A2          3
+#define GX_BL_SRCALPHA    4
+#define GX_COLOR0A0       4
+#define GX_GREATER        4
 #define GX_BL_INVSRCALPHA 5
-#define GX_COLOR1A1 5
-#define GX_LO_NOOP 5
-#define GX_CC_C2 6
-#define GX_ALWAYS 7
-#define GX_CA_ZERO 7
-#define GX_LO_OR 7
-#define GX_CC_ZERO 0xf
-#define GX_TEXCOORD_NULL 0xff
-#define GX_TEXMAP_NULL 0xff
-#define GX_TEVSTAGE0 0
-#define GX_TEV_SWAP0 0
-#define GX_FOG_NONE 0
-#define GX_VA_PNMTXIDX 0
-#define GX_VA_TEX0MTXIDX 1
-#define GX_VA_TEX1MTXIDX 2
-#define GX_DIRECT 1
-#define GX_INDEX8 2
-#define GX_INDEX16 3
-#define GX_VA_POS 9
-#define GX_VA_NRM 10
-#define GX_VA_CLR0 11
-#define GX_VA_TEX0 13
-#define GX_VA_TEX1 14
-#define GX_VA_NBT 25
-#define GX_TRIANGLES 0x90
-#define GX_VTXFMT7 7
-#define GX_CULL_NONE 0
-#define GX_CULL_FRONT 1
-#define GX_CULL_BACK 2
-#define GX_TEVREG2 3
-#define GX_KCOLOR0 0
+#define GX_COLOR1A1       5
+#define GX_LO_NOOP        5
+#define GX_CC_C2          6
+#define GX_ALWAYS         7
+#define GX_CA_ZERO        7
+#define GX_LO_OR          7
+#define GX_CC_ZERO        0xf
+#define GX_TEXCOORD_NULL  0xff
+#define GX_TEXMAP_NULL    0xff
+#define GX_TEVSTAGE0      0
+#define GX_TEV_SWAP0      0
+#define GX_FOG_NONE       0
+#define GX_VA_PNMTXIDX    0
+#define GX_VA_TEX0MTXIDX  1
+#define GX_VA_TEX1MTXIDX  2
+#define GX_DIRECT         1
+#define GX_INDEX8         2
+#define GX_INDEX16        3
+#define GX_VA_POS         9
+#define GX_VA_NRM         10
+#define GX_VA_CLR0        11
+#define GX_VA_TEX0        13
+#define GX_VA_TEX1        14
+#define GX_VA_NBT         25
+#define GX_TRIANGLES      0x90
+#define GX_VTXFMT7        7
+#define GX_CULL_NONE      0
+#define GX_CULL_FRONT     1
+#define GX_CULL_BACK      2
+#define GX_TEVREG2        3
+#define GX_KCOLOR0        0
 
 typedef struct ObjPrintGXColor
 {
@@ -94,8 +94,8 @@ typedef struct ObjModelRenderOp
     u32 flags;
 } ObjModelRenderOp;
 
-#define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent *)(obj))->modelInstance)
-#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent *)(obj))->bankIndex)
+#define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
+#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
 extern u32 FUN_8001759c();
 extern u32 FUN_800175b0();
@@ -204,13 +204,28 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
 extern u32 curObjMtx;
 extern u8 lbl_803DCC29;
 extern u32 lbl_803DCC74;
-void objSetMtxFn_800412d4(u32 x) { curObjMtx = x; }
-void set_shadowFlag_803dcc29(u8 x) { lbl_803DCC29 = x; }
-u32 isRomListLoading(void) { return lbl_803DCC74; }
+void objSetMtxFn_800412d4(u32 x)
+{
+    curObjMtx = x;
+}
+void set_shadowFlag_803dcc29(u8 x)
+{
+    lbl_803DCC29 = x;
+}
+u32 isRomListLoading(void)
+{
+    return lbl_803DCC74;
+}
 
 extern u32 lbl_803DCC70;
-void clearForceLoadImmediately(void) { lbl_803DCC70 = 0x0; }
-void setForceLoadImmediately(void) { lbl_803DCC70 = 0x1; }
+void clearForceLoadImmediately(void)
+{
+    lbl_803DCC70 = 0x0;
+}
+void setForceLoadImmediately(void)
+{
+    lbl_803DCC70 = 0x1;
+}
 
 extern u8 gObjOverrideColorPending;
 extern u8 gObjOverrideColor;
@@ -269,8 +284,10 @@ extern s16 gObjMapBlockInfo[];
 
 s32 mapCheckCurBlocks(int v)
 {
-    if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v) return 0;
-    if (((s16*)((char*)gObjMapBlockInfo + 0x8e))[0] == v) return 1;
+    if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v)
+        return 0;
+    if (((s16*)((char*)gObjMapBlockInfo + 0x8e))[0] == v)
+        return 1;
     return -1;
 }
 
@@ -309,19 +326,19 @@ void renderResetFn_8003fc60(void)
 extern s32 DVDGetCommandBlockStatus(void* block);
 
 // DVDGetCommandBlockStatus() command-block states (DVD_STATE_*)
-#define DVD_STATE_FATAL_ERROR -1
-#define DVD_STATE_END 0
-#define DVD_STATE_BUSY 1
-#define DVD_STATE_WAITING 2
-#define DVD_STATE_COVER_CLOSED 3
-#define DVD_STATE_NO_DISK 4
-#define DVD_STATE_COVER_OPEN 5
-#define DVD_STATE_WRONG_DISK 6
+#define DVD_STATE_FATAL_ERROR   -1
+#define DVD_STATE_END           0
+#define DVD_STATE_BUSY          1
+#define DVD_STATE_WAITING       2
+#define DVD_STATE_COVER_CLOSED  3
+#define DVD_STATE_NO_DISK       4
+#define DVD_STATE_COVER_OPEN    5
+#define DVD_STATE_WRONG_DISK    6
 #define DVD_STATE_MOTOR_STOPPED 7
-#define DVD_STATE_PAUSING 8
-#define DVD_STATE_IGNORED 9
-#define DVD_STATE_CANCELED 10
-#define DVD_STATE_RETRY 11
+#define DVD_STATE_PAUSING       8
+#define DVD_STATE_IGNORED       9
+#define DVD_STATE_CANCELED      10
+#define DVD_STATE_RETRY         11
 
 int fn_80041D98(void* block)
 {
@@ -333,19 +350,32 @@ int fn_80041D98(void* block)
     status = DVDGetCommandBlockStatus(block);
     switch (status)
     {
-    case DVD_STATE_FATAL_ERROR: return status;
-    case DVD_STATE_END: return status;
-    case DVD_STATE_BUSY: return status;
-    case DVD_STATE_WAITING: return status;
-    case DVD_STATE_COVER_CLOSED: return status;
-    case DVD_STATE_NO_DISK: return status;
-    case DVD_STATE_COVER_OPEN: return status;
-    case DVD_STATE_WRONG_DISK: return status;
-    case DVD_STATE_MOTOR_STOPPED: return status;
-    case DVD_STATE_PAUSING: return status;
-    case DVD_STATE_IGNORED: return status;
-    case DVD_STATE_CANCELED: return status;
-    case DVD_STATE_RETRY: return status;
+    case DVD_STATE_FATAL_ERROR:
+        return status;
+    case DVD_STATE_END:
+        return status;
+    case DVD_STATE_BUSY:
+        return status;
+    case DVD_STATE_WAITING:
+        return status;
+    case DVD_STATE_COVER_CLOSED:
+        return status;
+    case DVD_STATE_NO_DISK:
+        return status;
+    case DVD_STATE_COVER_OPEN:
+        return status;
+    case DVD_STATE_WRONG_DISK:
+        return status;
+    case DVD_STATE_MOTOR_STOPPED:
+        return status;
+    case DVD_STATE_PAUSING:
+        return status;
+    case DVD_STATE_IGNORED:
+        return status;
+    case DVD_STATE_CANCELED:
+        return status;
+    case DVD_STATE_RETRY:
+        return status;
     }
     return 0;
 }
@@ -407,13 +437,12 @@ extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
-
-extern void PSMTXMultVec(f32 * m, f32 * src, f32 * dst);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
+extern void PSMTXMultVec(f32* m, f32* src, f32* dst);
+extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
-extern void objRotateFn_8003bce8(f32 * m, s16 * a, s16 * b, s16 * c);
+extern void objRotateFn_8003bce8(f32* m, s16* a, s16* b, s16* c);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 a, f32 b, f32 c, int* x, int* y, int* z);
 extern int depthReadRequestPoll(int x, int y, int* obj);
@@ -476,12 +505,13 @@ void objRenderFuzz(int* obj)
     u8 strong;
     f32 dx, dy, dz, dist;
     int* cam = Camera_GetCurrentViewSlot();
-    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) || ((GameObject*)obj)->anim.mapEventSlot == 0x3f
-        || ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) ||
+        ((GameObject*)obj)->anim.mapEventSlot == 0x3f || ((GameObject*)obj)->anim.seqId == 0x882 ||
+        ((GameObject*)obj)->anim.seqId == 0x887)
     {
         strong = 1;
-        if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x77d
-            || ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
+        if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x77d ||
+            ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
         {
             maxN = 0xf;
         }
@@ -513,15 +543,14 @@ void objRenderFuzz(int* obj)
     dist = sqrtf(dx * dx + dy * dy + dz * dz);
     if (strong == 0)
     {
-        cnt = (s32)(
-            (lbl_803DEA64 * (lbl_803DEA68 * dist)) / (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.
-                rootMotionScale));
+        cnt = (s32)((lbl_803DEA64 * (lbl_803DEA68 * dist)) /
+                    (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
         gObjFuzzStep = 2;
     }
     else
     {
-        cnt = (s32)(
-            (lbl_803DEA68 * dist) / (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
+        cnt = (s32)((lbl_803DEA68 * dist) /
+                    (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
         gObjFuzzStep = 1;
     }
     n = 16 - cnt;
@@ -693,19 +722,23 @@ void objRenderModel(int* obj)
     }
     {
         s16 t = ((GameObject*)obj)->anim.seqId;
-        if (t == 0x6a8) return;
-        if (t == 0x6a9) return;
-        if (t == 0x6aa) return;
-        if (t == 0x6ab) return;
-        if (t == 0x6ac) return;
-        if (t == 0x752) return;
+        if (t == 0x6a8)
+            return;
+        if (t == 0x6a9)
+            return;
+        if (t == 0x6aa)
+            return;
+        if (t == 0x6ab)
+            return;
+        if (t == 0x6ac)
+            return;
+        if (t == 0x752)
+            return;
     }
     Camera_ProjectWorldPointWithOffset(
-        ((GameObject*)obj)->anim.localPosX - playerMapOffsetX,
-        ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosX - playerMapOffsetX, ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ,
-        ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale,
-        &px, &py, &pz);
+        ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale, &px, &py, &pz);
     Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
     if (sz <= depthReadRequestPoll(sx, sy, obj))
     {
@@ -826,9 +859,9 @@ void objRenderChild(int* child, int* parent, u8 p3)
         if (space != NULL)
         {
             Obj_TransformWorldPointToLocal(((GameObject*)child)->anim.worldPosX, ((GameObject*)child)->anim.worldPosY,
-                                           ((GameObject*)child)->anim.worldPosZ,
-                                           &((GameObject*)child)->anim.localPosX, &((GameObject*)child)->anim.localPosY,
-                                           &((GameObject*)child)->anim.localPosZ, (u32)space);
+                                           ((GameObject*)child)->anim.worldPosZ, &((GameObject*)child)->anim.localPosX,
+                                           &((GameObject*)child)->anim.localPosY, &((GameObject*)child)->anim.localPosZ,
+                                           (u32)space);
         }
         else
         {
@@ -1716,7 +1749,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
     }
 }
 
-extern void PSMTXCopy(f32 * src, f32 * dst);
+extern void PSMTXCopy(f32* src, f32* dst);
 extern f32 gObjJointMtxTemp[];
 extern void ObjModel_UpdateAnimMatrices(int* am, u8* m, int* obj, f32* mtx);
 extern void modelInitMtxs(u8* m, int* am);
@@ -1729,8 +1762,8 @@ extern void Camera_RebuildProjectionMatrix(void);
 extern void _gxSetFogParams(void);
 extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
-extern void getColor803dd01c(f32 * c);
-extern void renderHeavyFog(f32 * c);
+extern void getColor803dd01c(f32* c);
+extern void renderHeavyFog(f32* c);
 extern void selectTexture(u8* tex, int mapId);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
@@ -1757,8 +1790,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     if (!(*(u16*)((char*)am + 0x18) & 8))
     {
         ((ObjDef*)am)->hitboxStateIndex = 0;
-        if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) && ((ModelFileHeader*)m)->
-            jointCount != 0)
+        if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
+            ((ModelFileHeader*)m)->jointCount != 0)
         {
             if (gObjCachedModel != (u32)m)
             {
@@ -1842,8 +1875,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             gObjCachedTexture = (u32)tex;
             selectTexture(tex, 0);
         }
-        if (gObjGxKColorCache[0] != color[0] || gObjGxKColorCache[1] != color[1]
-            || gObjGxKColorCache[2] != color[2] || gObjGxKColorCache[3] != color[3])
+        if (gObjGxKColorCache[0] != color[0] || gObjGxKColorCache[1] != color[1] || gObjGxKColorCache[2] != color[2] ||
+            gObjGxKColorCache[3] != color[3])
         {
             u32 kcol = *(u32*)color;
             GXSetTevKColor(GX_KCOLOR0, &kcol);
@@ -1882,7 +1915,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 }
 
 extern void ObjModel_ToggleVertexBuffer(int* am);
-extern void PSMTXIdentity(f32 * m);
+extern void PSMTXIdentity(f32* m);
 extern void modelInitBoneMtxs2(int* am, f32* wm, f32* out);
 f32 gObjBoneMtxBuffer[0xC00];
 extern void ObjModel_ApplyBlendChannels(int* am);
@@ -1936,8 +1969,8 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         did = 0;
         *(u8*)((char*)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) && ((ModelFileHeader*)m)->
-            jointCount != 0)
+        if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
+            ((ModelFileHeader*)m)->jointCount != 0)
         {
             if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
             {
@@ -1979,9 +2012,9 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 vtx = *(int*)&((ModelFileHeader*)m)->vertices;
             }
             ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
-                                              ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+                                       ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
             ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
-                                                *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
+                                       *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
@@ -2113,31 +2146,31 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             bs.pos += 1;
             break;
         case 1:
-            {
-                u32 w;
-                int pos = bs.pos;
-                u8* p = bs.data + (pos >> 3);
-                w = p[0];
-                w |= p[1] << 8;
-                w |= p[2] << 16;
-                bs.pos = pos + 6;
-                op = ObjModel_GetRenderOp(m, (w >> (pos & 7)) & 0x3f);
-            }
-            break;
+        {
+            u32 w;
+            int pos = bs.pos;
+            u8* p = bs.data + (pos >> 3);
+            w = p[0];
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs.pos = pos + 6;
+            op = ObjModel_GetRenderOp(m, (w >> (pos & 7)) & 0x3f);
+        }
+        break;
         case 2:
-            {
-                u8* dl;
-                u32 w;
-                int pos = bs.pos;
-                u8* p = (u8*)((pos >> 3) + bs.data);
-                w = p[0];
-                w |= p[1] << 8;
-                w |= p[2] << 16;
-                bs.pos = pos + 8;
-                dl = modelFileGetDisplayList(m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
-                GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
-            }
-            break;
+        {
+            u8* dl;
+            u32 w;
+            int pos = bs.pos;
+            u8* p = (u8*)((pos >> 3) + bs.data);
+            w = p[0];
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs.pos = pos + 8;
+            dl = modelFileGetDisplayList(m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
+            GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
+        }
+        break;
         case 4:
             modelLoadMtxsToGx((int)m, am, &bs, vm);
             break;
@@ -2147,7 +2180,6 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
     }
 }
-
 
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
@@ -2222,11 +2254,11 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     {
         int* player = Obj_GetPlayerObject();
         int* cam = (int*)(*gCameraInterface)->getCamera();
-        if (player != NULL && !(((GameObject*)player)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) && *(int**)&((GameObject*)cam)->anim.
-            targetObj == player)
+        if (player != NULL && !(((GameObject*)player)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) &&
+            *(int**)&((GameObject*)cam)->anim.targetObj == player)
         {
-            f32 d = lbl_803DEA38 + (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale + *(
-                f32*)&((GameObject*)obj)->anim.targetObj);
+            f32 d = lbl_803DEA38 + (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale +
+                                    *(f32*)&((GameObject*)obj)->anim.targetObj);
             f32 dist = Camera_DistanceToCurrentViewPosition(((GameObject*)player)->anim.worldPosX,
                                                             ((GameObject*)player)->anim.worldPosY,
                                                             ((GameObject*)player)->anim.worldPosZ);
@@ -2246,7 +2278,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     else
     {
-        objGetColor(*(u8*)((char*)obj + 0xf2), (u8*)&gObjCurChanColor, (u8*)&gObjCurChanColor + 1, (u8*)&gObjCurChanColor + 2);
+        objGetColor(*(u8*)((char*)obj + 0xf2), (u8*)&gObjCurChanColor, (u8*)&gObjCurChanColor + 1,
+                    (u8*)&gObjCurChanColor + 2);
     }
     mode8 = mode;
     m4 = mode8 & 4;
@@ -2263,8 +2296,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     {
         *(u8*)((char*)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) && ((ModelFileHeader*)m)->
-            jointCount != 0)
+        if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
+            ((ModelFileHeader*)m)->jointCount != 0)
         {
             if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
             {
@@ -2314,10 +2347,11 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 {
                     vtx = *(int*)&((ModelFileHeader*)m)->vertices;
                 }
-                ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
-                                                  ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+                ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx,
+                                           *(int*)&((ModelFileHeader*)am)->jointBlendData,
+                                           ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
                 ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
-                                                    *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
+                                           *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
@@ -2347,7 +2381,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         joff = 0;
         for (; j < ((ModelFileHeader*)m)->jointCount; j++)
         {
-            f32 sc = (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->jointBlendData + joff + 0xc)) + lbl_803DEA1C;
+            f32 sc =
+                (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->jointBlendData + joff + 0xc)) + lbl_803DEA1C;
             f32* jm = (f32*)ObjModel_GetJointMatrix((u8*)am, j);
             PSMTXScale(sm, sc, sc, sc);
             if (lbl_803DCC35 == 0)
@@ -2582,8 +2617,8 @@ extern void* textureCrazyPointerFollowFn_80054c30(void* tex, int p2);
 extern void fn_80051B00(void* tex, int mtx, int fl, u8* color);
 extern void fn_80051868(void* tex, int mtx, int fl);
 extern void fn_80051D5C(void* tex, int mtx, int fl, u8* color);
-extern void gxColorFn_80052764(u8 * color);
-extern void textureFn_800524ec(u8 * color);
+extern void gxColorFn_80052764(u8* color);
+extern void textureFn_800524ec(u8* color);
 extern f32 lbl_803DEA48;
 
 #pragma opt_propagation off
@@ -2781,7 +2816,7 @@ extern u8 textureFn_80050ad8(void* tex, int n, int p3, u32 p4);
 extern void textureFn_80051348(u32 ref, int p2);
 extern void fn_800510F0(u32 ref, int p2, int p3);
 extern void fn_80050FF4(int p1);
-extern void fn_8005011C(f32 * m);
+extern void fn_8005011C(f32* m);
 
 extern u32 modelLightStruct_getProjectionTexture(int light);
 extern void fn_80050558(u32 t, int p2, int p3, int p4, int p5);
@@ -2789,7 +2824,7 @@ extern void fn_80050A28(int t);
 
 extern void textureFn_8004c330(void* tex, f32* m);
 extern void gxTextureFn_8004d5b4(int* op);
-extern void gxTextureFn_80052638(u8 * color);
+extern void gxTextureFn_80052638(u8* color);
 extern f32 lbl_803967F0[];
 extern u8 lbl_803DCC3C;
 
@@ -3146,42 +3181,46 @@ void defragMemory(int mode)
             case 0x4d:
             case 0x54:
             case 0x55:
+            {
+                void* n;
+                if (*(void**)p1 == NULL)
                 {
-                    void* n;
-                    if (*(void**)p1 == NULL)
-                    {
-                        break;
-                    }
-                    if (*(s16*)p2 == -1)
-                    {
-                        break;
-                    }
-                    if (mmGetRegionForPtr(*(void**)p1) != 0)
-                    {
-                        break;
-                    }
-                    if (mode == 2)
-                    {
-                        if (i == 0x20) break;
-                        if (i == 0x4b) break;
-                        if (i == 0x23) break;
-                        if (i == 0x4d) break;
-                    }
-                    n = mmAlloc(*(int*)p3 + 0x20, 0x7d7d7d7d, 0);
-                    if (n == NULL)
-                    {
-                        break;
-                    }
-                    memcpy(n, *(void**)p1, *(int*)p3);
-                    {
-                        int d = mmSetFreeDelay(0);
-                        mm_free(*(void**)p1);
-                        *(int*)p1 = 0;
-                        *(void**)p1 = n;
-                        mmSetFreeDelay(d);
-                    }
                     break;
                 }
+                if (*(s16*)p2 == -1)
+                {
+                    break;
+                }
+                if (mmGetRegionForPtr(*(void**)p1) != 0)
+                {
+                    break;
+                }
+                if (mode == 2)
+                {
+                    if (i == 0x20)
+                        break;
+                    if (i == 0x4b)
+                        break;
+                    if (i == 0x23)
+                        break;
+                    if (i == 0x4d)
+                        break;
+                }
+                n = mmAlloc(*(int*)p3 + 0x20, 0x7d7d7d7d, 0);
+                if (n == NULL)
+                {
+                    break;
+                }
+                memcpy(n, *(void**)p1, *(int*)p3);
+                {
+                    int d = mmSetFreeDelay(0);
+                    mm_free(*(void**)p1);
+                    *(int*)p1 = 0;
+                    *(void**)p1 = n;
+                    mmSetFreeDelay(d);
+                }
+                break;
+            }
             }
             *(u8*)p4 = 0;
             p1 += 4;
@@ -3222,78 +3261,82 @@ void defragMemory(int mode)
             case 0x4d:
             case 0x54:
             case 0x55:
+            {
+                void* n;
+                if (*(void**)q1 != NULL && *(s16*)q2 != -1 && mmGetRegionForPtr(*(void**)q1) == 0)
                 {
-                    void* n;
-                    if (*(void**)q1 != NULL && *(s16*)q2 != -1 && mmGetRegionForPtr(*(void**)q1) == 0)
+                    n = mmAlloc(*(int*)q3 + 0x20, 0x7d7d7d7d, 0);
+                    if (n == NULL)
                     {
-                        n = mmAlloc(*(int*)q3 + 0x20, 0x7d7d7d7d, 0);
-                        if (n == NULL)
-                        {
-                            break;
-                        }
-                        if (*(int*)q3 >= 0x33450 && *(u32*)q1 < (u32)n)
-                        {
-                            int d = mmSetFreeDelay(0);
-                            mm_free(n);
-                            mmSetFreeDelay(d);
-                        }
-                        else if (*(int*)q3 < 0x33450 && *(u32*)q1 > (u32)n)
-                        {
-                            int d = mmSetFreeDelay(0);
-                            mm_free(n);
-                            mmSetFreeDelay(d);
-                        }
-                        else
-                        {
-                            int d;
-                            memcpy(n, *(void**)q1, *(int*)q3);
-                            d = mmSetFreeDelay(0);
-                            mm_free(*(void**)q1);
-                            *(int*)q1 = 0;
-                            *(void**)q1 = n;
-                            mmSetFreeDelay(d);
-                            done = 0;
-                        }
+                        break;
+                    }
+                    if (*(int*)q3 >= 0x33450 && *(u32*)q1 < (u32)n)
+                    {
+                        int d = mmSetFreeDelay(0);
+                        mm_free(n);
+                        mmSetFreeDelay(d);
+                    }
+                    else if (*(int*)q3 < 0x33450 && *(u32*)q1 > (u32)n)
+                    {
+                        int d = mmSetFreeDelay(0);
+                        mm_free(n);
+                        mmSetFreeDelay(d);
                     }
                     else
                     {
-                        if (mode == 2) break;
-                        if (pass == 0) break;
-                        if (*(void**)q1 == NULL) break;
-                        if (*(s16*)q2 == -1) break;
-                        if (mmGetRegionForPtr(*(void**)q1) != 1 && mmGetRegionForPtr(*(void**)q1) != 2)
-                        {
-                            break;
-                        }
-                        if (getHeapItemSize(*(void**)q1) < 0x3000)
-                        {
-                            break;
-                        }
-                        n = mmAlloc(*(int*)q3 + 0x20, 0x7d7d7d7d, 0);
-                        if (n == NULL)
-                        {
-                            break;
-                        }
-                        if (mmGetRegionForPtr(n) != 0)
-                        {
-                            int d = mmSetFreeDelay(0);
-                            mm_free(n);
-                            mmSetFreeDelay(d);
-                        }
-                        else
-                        {
-                            int d;
-                            memcpy(n, *(void**)q1, *(int*)q3);
-                            d = mmSetFreeDelay(0);
-                            mm_free(*(void**)q1);
-                            *(int*)q1 = 0;
-                            *(void**)q1 = n;
-                            mmSetFreeDelay(d);
-                            done = 0;
-                        }
+                        int d;
+                        memcpy(n, *(void**)q1, *(int*)q3);
+                        d = mmSetFreeDelay(0);
+                        mm_free(*(void**)q1);
+                        *(int*)q1 = 0;
+                        *(void**)q1 = n;
+                        mmSetFreeDelay(d);
+                        done = 0;
                     }
-                    break;
                 }
+                else
+                {
+                    if (mode == 2)
+                        break;
+                    if (pass == 0)
+                        break;
+                    if (*(void**)q1 == NULL)
+                        break;
+                    if (*(s16*)q2 == -1)
+                        break;
+                    if (mmGetRegionForPtr(*(void**)q1) != 1 && mmGetRegionForPtr(*(void**)q1) != 2)
+                    {
+                        break;
+                    }
+                    if (getHeapItemSize(*(void**)q1) < 0x3000)
+                    {
+                        break;
+                    }
+                    n = mmAlloc(*(int*)q3 + 0x20, 0x7d7d7d7d, 0);
+                    if (n == NULL)
+                    {
+                        break;
+                    }
+                    if (mmGetRegionForPtr(n) != 0)
+                    {
+                        int d = mmSetFreeDelay(0);
+                        mm_free(n);
+                        mmSetFreeDelay(d);
+                    }
+                    else
+                    {
+                        int d;
+                        memcpy(n, *(void**)q1, *(int*)q3);
+                        d = mmSetFreeDelay(0);
+                        mm_free(*(void**)q1);
+                        *(int*)q1 = 0;
+                        *(void**)q1 = n;
+                        mmSetFreeDelay(d);
+                        done = 0;
+                    }
+                }
+                break;
+            }
             }
             *(u8*)q4 = 0;
             q1 += 4;
@@ -3313,14 +3356,22 @@ void* getCurrentDataFile(int id)
     u8* base = lbl_80345E10;
     switch (id)
     {
-    case 42: return &base[0x170e0];
-    case 47: return &base[0x14200];
-    case 36: return &base[0x10200];
-    case 33: return &base[0xc200];
-    case 80: return *(void**)&base[0x19718];
-    case 38: return &base[0xa200];
-    case 26: return &base[0x8200];
-    case 14: return &base[0x2c0];
+    case 42:
+        return &base[0x170e0];
+    case 47:
+        return &base[0x14200];
+    case 36:
+        return &base[0x10200];
+    case 33:
+        return &base[0xc200];
+    case 80:
+        return *(void**)&base[0x19718];
+    case 38:
+        return &base[0xa200];
+    case 26:
+        return &base[0x8200];
+    case 14:
+        return &base[0x2c0];
     }
     return NULL;
 }
@@ -3839,9 +3890,9 @@ extern int GXFlush_(u8 visible, int unused);
 extern u8 gDvdErrorPauseActive;
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
-#define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx)*4 + 0x20000) + (disp)))
-#define MAPTBLP(idx, disp) (*(int**)((char*)base + ((idx)*4 + 0x20000) + (disp)))
-#define MAPTBL16(idx, disp) (*(s16*)((char*)base + ((idx)*2 + 0x20000) + (disp)))
+#define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
+#define MAPTBLP(idx, disp)  (*(int**)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
+#define MAPTBL16(idx, disp) (*(s16*)((char*)base + ((idx) * 2 + 0x20000) + (disp)))
 
 int mapUnload(int mapId, int flags)
 {
@@ -3865,13 +3916,10 @@ int mapUnload(int mapId, int flags)
     st = (int*)(*gMapEventInterface)->getCurCharPos();
     {
         int pairs[56] = {
-            0x2b, 0x1, 0x2a, 0x2, 0x2f, 0x8, 0x30, 0x4,
-            0x46, 0x1, 0x45, 0x2, 0x49, 0x8, 0x4a, 0x4,
-            0x24, 0x20, 0x23, 0x10, 0x4e, 0x20, 0x4d, 0x10,
-            0x21, 0x80, 0x20, 0x40, 0x4c, 0x80, 0x4b, 0x40,
-            0x25, 0x100, 0x26, 0x200, 0x47, 0x100, 0x48, 0x200,
-            0x1b, 0x1000, 0x1a, 0x2000, 0x54, 0x1000, 0x53, 0x2000,
-            0xd, 0x400, 0xe, 0x800, 0x55, 0x400, 0x56, 0x800,
+            0x2b, 0x1,    0x2a, 0x2,    0x2f, 0x8,    0x30, 0x4,   0x46, 0x1,   0x45, 0x2,   0x49, 0x8,
+            0x4a, 0x4,    0x24, 0x20,   0x23, 0x10,   0x4e, 0x20,  0x4d, 0x10,  0x21, 0x80,  0x20, 0x40,
+            0x4c, 0x80,   0x4b, 0x40,   0x25, 0x100,  0x26, 0x200, 0x47, 0x100, 0x48, 0x200, 0x1b, 0x1000,
+            0x1a, 0x2000, 0x54, 0x1000, 0x53, 0x2000, 0xd,  0x400, 0xe,  0x800, 0x55, 0x400, 0x56, 0x800,
         };
 
         while (s = OSDisableInterrupts(), n = lbl_803DCC80, OSRestoreInterrupts(s), n != 0)
@@ -3928,9 +3976,8 @@ int mapUnload(int mapId, int flags)
         hi = (char*)base + 0x20000;
         for (; i < 0x38; i += 2)
         {
-            if ((f20 && mapId == MAPTBL32(e[0], -0x6EC8))
-                || (f10 && mapId != MAPTBL32(e[0], -0x6EC8))
-                || ((flags & e[1]) && mapId == MAPTBL32(e[0], -0x6EC8)))
+            if ((f20 && mapId == MAPTBL32(e[0], -0x6EC8)) || (f10 && mapId != MAPTBL32(e[0], -0x6EC8)) ||
+                ((flags & e[1]) && mapId == MAPTBL32(e[0], -0x6EC8)))
             {
                 MAPTBL32(e[0], -0x6EC8) = -1;
             }
@@ -3939,13 +3986,10 @@ int mapUnload(int mapId, int flags)
                 if (((int**)(hi + -0x6A28))[idx] != NULL)
                 {
                     s16 v;
-                    if (f80
-                        || ((flags & e[1]) && mapId == ((s16*)(hi + -0x68C8))[idx])
-                        || (f10 && mapId != MAPTBL16(idx, -0x68C8))
-                        || (f20 && mapId == MAPTBL16(idx, -0x68C8)))
+                    if (f80 || ((flags & e[1]) && mapId == ((s16*)(hi + -0x68C8))[idx]) ||
+                        (f10 && mapId != MAPTBL16(idx, -0x68C8)) || (f20 && mapId == MAPTBL16(idx, -0x68C8)))
                     {
-                        if (gObjLevelLockSlots != (v = MAPTBL16(idx, -0x68C8))
-                            && lockp[1] != v)
+                        if (gObjLevelLockSlots != (v = MAPTBL16(idx, -0x68C8)) && lockp[1] != v)
                         {
                             switch (idx)
                             {
@@ -4447,10 +4491,8 @@ int getTableFileEntry(int fileId, int index, int* out)
 }
 
 f32 gObjJointMtxTemp[24] = {
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.014794691f, 1.6930165e+22f, 2.5424896e+29f, 4.6243438e+30f,
-    1.6713787e-19f, 3.5253297e+09f, 13.204376f, 1.8988991e+28f,
-    2.818281e+20f, 4.2326e+21f, 0.03909816f, 6.162976e-33f,
+    1.0f,         0.0f,           0.0f,           0.0f,           0.0f,           1.0f,
+    0.0f,         0.0f,           0.0f,           0.0f,           1.0f,           0.0f,
+    0.014794691f, 1.6930165e+22f, 2.5424896e+29f, 4.6243438e+30f, 1.6713787e-19f, 3.5253297e+09f,
+    13.204376f,   1.8988991e+28f, 2.818281e+20f,  4.2326e+21f,    0.03909816f,    6.162976e-33f,
 };

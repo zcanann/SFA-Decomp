@@ -14,8 +14,7 @@ extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
 extern f32 lbl_803E1748;
 
-u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* target,
-                              CameraObject* camera)
+u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera)
 {
     CamcontrolPathSampleWork work;
     int handler;
@@ -30,15 +29,15 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
     work.localX = work.sampleX;
     work.localY = work.sampleY;
     work.localZ = work.sampleZ;
-    Obj_TransformLocalPointToWorld((double)work.localX, (double)work.localY, (double)work.localZ,
-                                   &work.worldX, &work.worldY, work.worldZ, work.model);
+    Obj_TransformLocalPointToWorld((double)work.localX, (double)work.localY, (double)work.localZ, &work.worldX,
+                                   &work.worldY, work.worldZ, work.model);
     work.targetObj = target;
     handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
     (*(VtableFn*)(**(int**)(handler + 4) + 0x14))(&work, target);
-    Obj_TransformLocalPointToWorld(work.sampleX, work.sampleY, work.sampleZ,
-                                   &work.targetX, &work.targetY, work.targetZ, work.model);
-    (*(VtableFn*)(**(int**)(handler + 4) + 0x24))
-        (&work, 1, 3, &gCamcontrolPathState->curveMin, &gCamcontrolPathState->curveMax);
+    Obj_TransformLocalPointToWorld(work.sampleX, work.sampleY, work.sampleZ, &work.targetX, &work.targetY, work.targetZ,
+                                   work.model);
+    (*(VtableFn*)(**(int**)(handler + 4) + 0x24))(&work, 1, 3, &gCamcontrolPathState->curveMin,
+                                                  &gCamcontrolPathState->curveMax);
     i = gCamcontrolPathState->pathCurve.count + -3;
     for (; i < gCamcontrolPathState->pathCurve.count; i = i + 1)
     {
@@ -47,8 +46,7 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
     }
     if (lbl_803E1740 != gCamcontrolPathState->pathCurve.pathLength)
     {
-        pathT = gCamcontrolPathState->pathCurve.pathDistance /
-            gCamcontrolPathState->pathCurve.pathLength;
+        pathT = gCamcontrolPathState->pathCurve.pathDistance / gCamcontrolPathState->pathCurve.pathLength;
     }
     else
     {
@@ -62,7 +60,7 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
     {
         pathT = *(f32*)&lbl_803E1740;
     }
-    pathT = Curve_EvalHermite(pathT,gCamcontrolPathState->initialiseCurve, (float*)0x0);
+    pathT = Curve_EvalHermite(pathT, gCamcontrolPathState->initialiseCurve, (float*)0x0);
     if (pathT < lbl_803E1748)
     {
         pathT = lbl_803E1748;

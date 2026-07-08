@@ -29,7 +29,7 @@ typedef struct ObjUpdateRomCurveFollowVelocityState
     u8 pad294[0x298 - 0x294];
 } ObjUpdateRomCurveFollowVelocityState;
 
-#define BARRELGENER_OBJGROUP 0x3a
+#define BARRELGENER_OBJGROUP          0x3a
 #define GAMEBIT_BARRELGENER_TRIGGERED 0xadb
 /* update group a dispensed barrel is added to (GunpowderBarrel DLL 0x158) */
 #define BARREL_UPDATE_OBJGROUP 25
@@ -50,11 +50,20 @@ void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
     s16toFloat(&state->releaseTimer, (s16)(releaseFrame - lbl_803DC398));
 }
 
-int barrelgener_getExtraSize(void) { return 0x10; }
+int barrelgener_getExtraSize(void)
+{
+    return 0x10;
+}
 
-int barrelgener_getObjectTypeId(void) { return 0; }
+int barrelgener_getObjectTypeId(void)
+{
+    return 0;
+}
 
-void barrelgener_free(int obj) { ObjGroup_RemoveObject(obj, BARRELGENER_OBJGROUP); }
+void barrelgener_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, BARRELGENER_OBJGROUP);
+}
 
 void barrelgener_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -148,7 +157,8 @@ void barrelgener_update(int obj)
 }
 
 #pragma optimization_level 2
-void Obj_SteerVelocityTowardVector(int out, f32* currentVel, f32* desiredDir, f32 maxSpeed, f32 maxSpeedDelta, f32 maxTurnAngle)
+void Obj_SteerVelocityTowardVector(int out, f32* currentVel, f32* desiredDir, f32 maxSpeed, f32 maxSpeedDelta,
+                                   f32 maxTurnAngle)
 {
     f32 mtx[12];
     f32 n1[3];
@@ -224,7 +234,8 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 advanceStep, f32
     dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
     if (dist < arriveRadius)
     {
-        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 ||
+            ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint((RomCurveWalker*)routePtr) != 0)
                 result = -1;
@@ -255,7 +266,8 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 advanceStep, f32
     return result;
 }
 
-int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed, int flag, int* pickIdx)
+int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed,
+                                            int flag, int* pickIdx)
 {
     int result;
     f32 delta[3];
@@ -267,7 +279,8 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceSt
     dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
     if (dist < arriveRadius)
     {
-        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 || ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 ||
+            ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPointIndexed((RomCurveWalker*)routePtr, *pickIdx) != 0)
                 result = -1;
@@ -359,8 +372,8 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
             pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            entries[i] = lightningCreate((f32*)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
-                                 lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
+            entries[i] =
+                lightningCreate((f32*)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4, lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }
     }
@@ -446,7 +459,6 @@ void Obj_SmoothTurnAnglesTowardVelocity(int obj, int velVec, int turnFrames, f32
 }
 #pragma opt_common_subs reset
 
-
 #pragma opt_loop_invariants off
 int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
 {
@@ -460,8 +472,7 @@ int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
 
     if ((u32)obj != Obj_GetPlayerObject())
     {
-        PSVECSubtract((void*)&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.previousLocalPosX,
-                      vel);
+        PSVECSubtract((void*)&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.previousLocalPosX, vel);
     }
     else
     {

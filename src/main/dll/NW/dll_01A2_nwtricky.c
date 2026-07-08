@@ -16,8 +16,8 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 
-#define NWTRICKY_OBJFLAG_PARENT_SLACK 0x1000
-#define NWTRICKY_OBJFLAG_HIDDEN 0x4000
+#define NWTRICKY_OBJFLAG_PARENT_SLACK       0x1000
+#define NWTRICKY_OBJFLAG_HIDDEN             0x4000
 #define NWTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* anim.seqId of the SnowHorn herd objects Tricky herds (docblock: "the
@@ -115,7 +115,7 @@ void NW_tricky_update(int* obj)
         {
             if (mainGetBit(GAMEBIT_ITEM_TrickyStayFind_Got))
             {
-                if (!(*(u8 (**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
+                if (!(*(u8(**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
                     mainSetBits(GAMEBIT_Tricky_Usable, 0);
                     ((NwTrickyState*)state)->timer = lbl_803E5260;
@@ -126,8 +126,8 @@ void NW_tricky_update(int* obj)
                     found = ObjList_FindObjectById(*ip);
                     if (found != NULL && enemy_getHealthFraction(found) > lbl_803E5260)
                     {
-                        (*(void (**)(int*, int, int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x34))(
-                            tricky, 1, found);
+                        (*(void (**)(int*, int, int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x34))(tricky, 1,
+                                                                                                         found);
                         break;
                     }
                 }
@@ -191,5 +191,6 @@ void NW_tricky_update(int* obj)
 void NW_tricky_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = NW_tricky_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }

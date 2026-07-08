@@ -17,11 +17,11 @@
 /* GfxCmd/GfxBuf are intentionally TU-local; the sibling DLL 0x98 keeps its own. */
 typedef struct
 {
-    u32 mode; /* +0x00 */
+    u32 mode;    /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    void* tex;   /* +0x10 */
+    u16 flags;   /* +0x14 */
+    u8 layer;    /* +0x16 */
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
@@ -42,28 +42,29 @@ extern f32 lbl_803E1310;
 
 typedef struct
 {
-    GfxCmd* cmds; /* +0x00 */
-    int ctx; /* +0x04 */
-    u8 pad0[0x18]; /* +0x08 */
-    f32 col[3]; /* +0x20 */
-    f32 pos[3]; /* +0x2c */
-    f32 scale; /* +0x38 */
-    u32 unk_3c; /* +0x3c */
-    u32 unk_40; /* +0x40 */
-    s16 variant; /* +0x44 */
-    s16 hw[7]; /* +0x46 */
-    u32 flags; /* +0x54 */
+    GfxCmd* cmds;                              /* +0x00 */
+    int ctx;                                   /* +0x04 */
+    u8 pad0[0x18];                             /* +0x08 */
+    f32 col[3];                                /* +0x20 */
+    f32 pos[3];                                /* +0x2c */
+    f32 scale;                                 /* +0x38 */
+    u32 unk_3c;                                /* +0x3c */
+    u32 unk_40;                                /* +0x40 */
+    s16 variant;                               /* +0x44 */
+    s16 hw[7];                                 /* +0x46 */
+    u32 flags;                                 /* +0x54 */
     u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c; /* +0x58..+0x5c */
-    s8 count; /* +0x5d */
-    u8 pad1[2]; /* +0x5e */
-    GfxCmd entries[32]; /* +0x60 */
+    s8 count;                                  /* +0x5d */
+    u8 pad1[2];                                /* +0x5e */
+    GfxCmd entries[32];                        /* +0x60 */
 } GfxBuf;
 
 #pragma inline_max_size(2000)
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL97_EFFECT_ID 0x3c
 
-static inline void dll_97_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, u32 unused, f32* extraArgs)
+static inline void dll_97_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, u32 unused,
+                                     f32* extraArgs)
 {
     GfxBuf buf;
     GfxCmd* e;
@@ -178,9 +179,12 @@ static inline void dll_97_func03Body(u8* base, int sourceObj, int variant, int p
     {
         if ((u32)sourceObj != 0 && (u32)posSource != 0)
         {
-            buf.pos[0] = lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
-            buf.pos[1] = lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
-            buf.pos[2] = lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[0] =
+                lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
+            buf.pos[1] =
+                lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
+            buf.pos[2] =
+                lbl_803E12EC + (((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
         }
         else if ((u32)sourceObj != 0)
         {
@@ -195,7 +199,8 @@ static inline void dll_97_func03Body(u8* base, int sourceObj, int variant, int p
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, DLL97_EFFECT_ID, 0);    base++;
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, DLL97_EFFECT_ID, 0);
+    base++;
 }
 
 void dll_97_func03(int sourceObj, int variant, int posSource, u32 flags, u32 unused, f32* extraArgs)
@@ -211,4 +216,3 @@ void dll_97_func01_nop(void)
 void dll_97_func00_nop(void)
 {
 }
-

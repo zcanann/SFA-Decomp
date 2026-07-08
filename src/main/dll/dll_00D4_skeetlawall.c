@@ -24,23 +24,23 @@ typedef struct SkeetlaWallState
 void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte)
 {
     SkeetlaWallState* state = ((GameObject*)obj)->extra;
-    outVec[0] = ((GameObject*)obj)->anim.worldPosX - (f32)(u32)
-    state->negXExtent;
-    outVec[1] = ((GameObject*)obj)->anim.worldPosX + (f32)(u32)
-    state->posXExtent;
-    outVec[2] = ((GameObject*)obj)->anim.worldPosZ + (f32)(u32)
-    state->posZExtent;
-    outVec[3] = ((GameObject*)obj)->anim.worldPosZ - (f32)(u32)
-    state->negZExtent;
-    outVec[4] = ((GameObject*)obj)->anim.worldPosY + (f32)(u32)
-    state->posYExtent;
-    outVec[5] = ((GameObject*)obj)->anim.worldPosY - (f32)(u32)
-    state->negYExtent;
+    outVec[0] = ((GameObject*)obj)->anim.worldPosX - (f32)(u32)state->negXExtent;
+    outVec[1] = ((GameObject*)obj)->anim.worldPosX + (f32)(u32)state->posXExtent;
+    outVec[2] = ((GameObject*)obj)->anim.worldPosZ + (f32)(u32)state->posZExtent;
+    outVec[3] = ((GameObject*)obj)->anim.worldPosZ - (f32)(u32)state->negZExtent;
+    outVec[4] = ((GameObject*)obj)->anim.worldPosY + (f32)(u32)state->posYExtent;
+    outVec[5] = ((GameObject*)obj)->anim.worldPosY - (f32)(u32)state->negYExtent;
     outByte[0] = state->shapeFlag;
 }
 
-int SkeetlaWall_getExtraSize(void) { return 0x7; }
-int SkeetlaWall_getObjectTypeId(void) { return 0x0; }
+int SkeetlaWall_getExtraSize(void)
+{
+    return 0x7;
+}
+int SkeetlaWall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SkeetlaWall_free(void)
 {
@@ -53,7 +53,7 @@ void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
             break;
         }
     }
@@ -115,6 +115,6 @@ u8 lbl_803203F8[0xC] = {
 };
 
 u8 lbl_80320404[0x14] = {
-    0x3B, 0x83, 0x12, 0x6F, 0x3B, 0xC4, 0x9B, 0xA6, 0x3C, 0x23, 0xD7, 0x0A,
-    0x3C, 0x23, 0xD7, 0x0A, 0x3C, 0x23, 0xD7, 0x0A,
+    0x3B, 0x83, 0x12, 0x6F, 0x3B, 0xC4, 0x9B, 0xA6, 0x3C, 0x23,
+    0xD7, 0x0A, 0x3C, 0x23, 0xD7, 0x0A, 0x3C, 0x23, 0xD7, 0x0A,
 };

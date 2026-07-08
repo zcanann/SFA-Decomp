@@ -24,9 +24,9 @@
 #include "main/dll/babycloudrunnerstate_struct.h"
 
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
-#define BABYCLOUDRUNNER_OBJGROUP 3
-#define BABYCLOUDRUNNER_OBJGROUP_SECONDARY 0x20
-#define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE 0x5d1 /* HUD air-meter background texture id */
+#define BABYCLOUDRUNNER_OBJGROUP             3
+#define BABYCLOUDRUNNER_OBJGROUP_SECONDARY   0x20
+#define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE   0x5d1 /* HUD air-meter background texture id */
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
@@ -55,8 +55,6 @@ extern f32 timeDelta;
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-
-
 
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
@@ -91,11 +89,11 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 typedef struct BabyCloudRunnerPlacement
 {
     ObjPlacement base; /* 0x00: posX/posY/posZ at 0x08/0x0c/0x10 = roost point */
-    s16 outerRadius; /* 0x18: outer trigger radius */
-    s16 innerRadius; /* 0x1a: inner trigger radius (halved for proximity tests) */
+    s16 outerRadius;   /* 0x18: outer trigger radius */
+    s16 innerRadius;   /* 0x1a: inner trigger radius (halved for proximity tests) */
     u8 behaviourState; /* 0x1c: initial BabyCloudRunnerState.behaviourState */
-    u8 initialYaw; /* 0x1d: << 8 -> rotX */
-    s16 enableBit; /* 0x1e: gamebit set on capture */
+    u8 initialYaw;     /* 0x1d: << 8 -> rotX */
+    s16 enableBit;     /* 0x1e: gamebit set on capture */
     u8 pad20[2];
     s16 runnerGameBit; /* 0x22: despawn gamebit; -0x2fc -> runnerIndex */
 } BabyCloudRunnerPlacement;
@@ -196,7 +194,8 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
     fn_8003ADC4((int*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
     shifted = Obj_GetYawDeltaToObject(obj, target, 0);
     *(s16*)obj += (shifted >>= 3);
-    if (playMove == 0) return;
+    if (playMove == 0)
+        return;
     if ((s16)shifted > -200 && (s16)shifted < 200)
     {
         if (sub->turnLatch != 0)
@@ -320,12 +319,16 @@ void babycloudrunner_initialise(void)
 {
 }
 
-
-int babycloudrunner_getExtraSize(void) { return 0x248; }
+int babycloudrunner_getExtraSize(void)
+{
+    return 0x248;
+}
 int CFPrisonGuard_getExtraSize(void);
 
-int babycloudrunner_getObjectTypeId(void) { return 0; }
-
+int babycloudrunner_getObjectTypeId(void)
+{
+    return 0;
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -335,13 +338,11 @@ int babycloudrunner_setScale(int* obj)
     return !(state->flags22C & 1);
 }
 
-
 void babycloudrunner_free(int* obj)
 {
     ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
     ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
 }
-
 
 /* Pick the burrow/surface move from the vertical speed, clamp the playback
  * rate, latch the spit SFX while surfacing fast, and advance the current
@@ -389,7 +390,7 @@ int fn_8019E3F4(int* obj)
             ((WormSpitByte*)&sub->spitFlags)->spitLatch = 0;
         }
     }
-    ((int(*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, 0);
+    ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, 0);
     return 1;
 }
 #pragma opt_common_subs reset
@@ -433,9 +434,8 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         char* pp = Obj_GetPlayerObject();
         BabyCloudRunnerPlacement* def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
         int found = 0;
-        if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32)def2->innerRadius
-            && sub2->runnerState == 3
-            && (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
+        if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32)def2->innerRadius && sub2->runnerState == 3 &&
+            (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
         {
             found = 1;
         }
@@ -474,8 +474,8 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             *(f32*)((char*)sub->linkedObj + 8) = sub->scale;
         }
         sub->behaviourState = 0xb;
-        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)def->innerRadius
-            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)def->innerRadius &&
+            (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             sub->behaviourState = 7;
             return 4;
@@ -596,14 +596,17 @@ void babycloudrunner_update(int* obj)
                 Obj_UpdateRomCurveFollowVelocity(obj, sub->curveWalker, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)((int)obj + 0x24), 0x1e, lbl_803E4238, lbl_803E4254);
-                objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY, ((GameObject*)obj)->anim.velocityZ);
+                objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+                        ((GameObject*)obj)->anim.velocityZ);
                 if (sub->runnerState == 1)
                 {
                     if (sub->runnerIndex != -1 && mainGetBit(sub->runnerIndex + 0xb2a) != 0)
                     {
                         sub->runnerState = 2;
                         mainSetBits(0x66, 0);
-                        (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], BABYCLOUDRUNNER_AIRMETER_BGTEXTURE);
+                        (*gGameUIInterface)
+                            ->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex],
+                                           BABYCLOUDRUNNER_AIRMETER_BGTEXTURE);
                         s16toFloat((int)&sub->countdownTimer, (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
@@ -612,18 +615,20 @@ void babycloudrunner_update(int* obj)
                 if (sub->runnerState == 2)
                 {
                     near = (int*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, 0);
-                    if (near != NULL && Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < gBabyCloudRunnerTargetNearDist)
+                    if (near != NULL &&
+                        Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < gBabyCloudRunnerTargetNearDist)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, sub, 0);
-                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) > gBabyCloudRunnerPlayerFarDist)
+                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) >
+                            gBabyCloudRunnerPlayerFarDist)
                         {
                             fn_8014C66C(near, obj);
                             if (((GameObject*)obj)->anim.currentMove != 0xd)
                             {
                                 ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
                             }
-                            ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
-                                (int)obj, lbl_803E422C, timeDelta, 0);
+                            ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E422C, timeDelta,
+                                                                                      0);
                         }
                         else
                         {
@@ -646,8 +651,8 @@ void babycloudrunner_update(int* obj)
                 radius = (f32)def->outerRadius;
                 if (fn_80080150(&sub->countdownTimer) != 0)
                 {
-                    if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0 && timerCountDown(
-                        &sub->countdownTimer) != 0)
+                    if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0 &&
+                        timerCountDown(&sub->countdownTimer) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
                         (*gGameUIInterface)->airMeterSetShutdown();
@@ -675,9 +680,8 @@ void babycloudrunner_update(int* obj)
                     char* pp = Obj_GetPlayerObject();
                     def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
                     found = 0;
-                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)def2->innerRadius
-                        && sub2->runnerState == 3
-                        && (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
+                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)def2->innerRadius && sub2->runnerState == 3 &&
+                        (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
                     {
                         found = 1;
                     }
@@ -718,8 +722,8 @@ void babycloudrunner_update(int* obj)
                         sub->unkB0 = 1;
                     }
                     sandworm_turnTowardTargetAnim((int)obj, (int)Obj_GetPlayerObject(), sub, 1);
-                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(
-                        (int)obj, sub->animSpeed, timeDelta, 0) != 0)
+                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, sub->animSpeed, timeDelta,
+                                                                                  0) != 0)
                     {
                         if (randFn_80080100(2) != 0)
                         {
@@ -737,4 +741,4 @@ void babycloudrunner_update(int* obj)
 }
 #pragma opt_common_subs reset
 
-int gBabyCloudRunnerAirMeterValues[4] = { 0x1770, 0x2EE0, 0x2EE0, 0x3E80 };
+int gBabyCloudRunnerAirMeterValues[4] = {0x1770, 0x2EE0, 0x2EE0, 0x3E80};

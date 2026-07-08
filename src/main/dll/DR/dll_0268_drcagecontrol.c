@@ -16,8 +16,8 @@
 typedef struct CageControlPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 armGameBit;    /* 0x1E: game bit that pre-opens the cage */
-    s16 watchGameBit;  /* 0x20: drives the pickup sfx + completion */
+    s16 armGameBit;   /* 0x1E: game bit that pre-opens the cage */
+    s16 watchGameBit; /* 0x20: drives the pickup sfx + completion */
     u8 pad22[0x28 - 0x22];
 } CageControlPlacement;
 
@@ -63,9 +63,15 @@ int DR_CageControl_SeqFn(int obj)
     return ret;
 }
 
-int DR_CageControl_getExtraSize(void) { return 0x4; }
+int DR_CageControl_getExtraSize(void)
+{
+    return 0x4;
+}
 
-int DR_CageControl_getObjectTypeId(void) { return 0x0; }
+int DR_CageControl_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DR_CageControl_free(void)
 {

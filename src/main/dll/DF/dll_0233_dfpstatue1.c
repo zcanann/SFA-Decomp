@@ -24,8 +24,7 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
 
     state = obj->state;
     loopBit = mainGetBit(state->loopSfxId);
-    if ((state->loopActive == 0) && (loopBit != 0) &&
-        (mainGetBit(0xedf) != 0))
+    if ((state->loopActive == 0) && (loopBit != 0) && (mainGetBit(0xedf) != 0))
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
         state->loopActive = 1;
@@ -64,8 +63,14 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
 }
 #pragma dont_inline reset
 
-int DFP_Statue1_getExtraSize(void) { return 0xa; }
-int DFP_Statue1_getObjectTypeId(void) { return 0x0; }
+int DFP_Statue1_getExtraSize(void)
+{
+    return 0xa;
+}
+int DFP_Statue1_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DFP_Statue1_free(void)
 {
@@ -79,7 +84,10 @@ void DFP_Statue1_hitDetect(void)
 {
 }
 
-void DFP_Statue1_update(DfpStatue1Object* obj) { dfpstatue1_updateState(obj); }
+void DFP_Statue1_update(DfpStatue1Object* obj)
+{
+    dfpstatue1_updateState(obj);
+}
 
 void DFP_Statue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
 {

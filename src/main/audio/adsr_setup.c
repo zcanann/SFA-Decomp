@@ -32,8 +32,7 @@ int fn_8027A660(int state)
             {
                 adsr->state = ADSR_STATE_SUSTAIN;
                 adsr->currentVolume = 0x7fff0000;
-                adsr->currentDelta =
-                    -((0x7fff0000 - (adsr->sLevel << 16)) / adsr->dTime);
+                adsr->currentDelta = -((0x7fff0000 - (adsr->sLevel << 16)) / adsr->dTime);
                 break;
             }
         case ADSR_STATE_SUSTAIN:
@@ -71,15 +70,13 @@ int fn_8027A660(int state)
                 break;
             }
         case ADSR_STATE_DECAY:
-            adsr->cnt =
-                adsr->dTime * (((0xc1 - (u32)adsr->sLevel) << 16) / 0xc1) >> 16;
+            adsr->cnt = adsr->dTime * (((0xc1 - (u32)adsr->sLevel) << 16) / 0xc1) >> 16;
             if (adsr->cnt != 0)
             {
                 adsr->state = ADSR_STATE_SUSTAIN;
                 adsr->currentVolume = 0x7fff0000;
                 adsr->currentIndex = 0xc10000;
-                adsr->currentDelta =
-                    -(((0xc1 - (u32)adsr->sLevel) << 16) / adsr->cnt);
+                adsr->currentDelta = -(((0xc1 - (u32)adsr->sLevel) << 16) / adsr->cnt);
                 break;
             }
         case ADSR_STATE_SUSTAIN:

@@ -58,18 +58,18 @@ extern f32 lbl_803E56A4;
 /* Camera mode id passed to setMode()/getMode() (== the target camera-mode DLL number). */
 #define CAMMODE_STATIC 0x48 /* dll_0048_cameramodestatic */
 
-#define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
+#define PLATFORM1_ANCHOR_SEQ_ID       0x3ff
 #define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
-#define PLATFORM1_IDLE_PULL_MOVE_ID 0
+#define PLATFORM1_IDLE_PULL_MOVE_ID   0
 
-#define PLATFORM1_LOOP_SFX_ID 0x3af
-#define PLATFORM1_PLAYER_SFX_ID 0x13a
+#define PLATFORM1_LOOP_SFX_ID     0x3af
+#define PLATFORM1_PLAYER_SFX_ID   0x13a
 #define PLATFORM1_PLATFORM_SFX_ID 0x4a3
 
 #define PLATFORM1_TRACK_EXIT_NEG (-0x46dc) /* offset below this -> EXIT_NEGATIVE */
 #define PLATFORM1_TRACK_EXIT_POS (-0xb24)  /* offset above this -> EXIT_POSITIVE */
 
-#define SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN 0x4000
+#define SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* platform1_control: tug-of-war rope
@@ -136,11 +136,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             list = ObjList_GetObjects(&idx2, &cnt2);
             for (; idx2 < cnt2; idx2++)
             {
-                if ((GameObject*)list[idx2] != self &&
-                    ((GameObject*)list[idx2])->anim.seqId == SC_SEQ_TOTEMPOLE)
+                if ((GameObject*)list[idx2] != self && ((GameObject*)list[idx2])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
                     totemObj = list[idx2];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 2);
+                    ((void (*)(int, int)) *
+                     (void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 2);
                     break;
                 }
             }
@@ -149,11 +149,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             list = ObjList_GetObjects(&idx3, &cnt3);
             for (; idx3 < cnt3; idx3++)
             {
-                if ((GameObject*)list[idx3] != self &&
-                    ((GameObject*)list[idx3])->anim.seqId == SC_SEQ_TOTEMPOLE)
+                if ((GameObject*)list[idx3] != self && ((GameObject*)list[idx3])->anim.seqId == SC_SEQ_TOTEMPOLE)
                 {
                     totemObj = list[idx3];
-                    ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 3);
+                    ((void (*)(int, int)) *
+                     (void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 3);
                     break;
                 }
             }
@@ -163,8 +163,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 playerObj->anim.currentMoveProgress = lbl_803E5668;
                 ((GameObject*)st->linkedObject)->anim.currentMoveProgress = lbl_803E5668;
-                ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID,
-                                       playerObj->anim.currentMoveProgress, 0);
+                ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID, playerObj->anim.currentMoveProgress, 0);
                 ObjAnim_SetCurrentMove(st->linkedObject, PLATFORM1_IDLE_PULL_MOVE_ID,
                                        ((GameObject*)st->linkedObject)->anim.currentMoveProgress, 0);
                 st->prevTrackOffset = st->currentTrackOffset;
@@ -190,8 +189,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (playerObj->anim.currentMove != PLATFORM1_PLAYER_PULL_MOVE_ID)
         {
-            ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID,
-                                   playerObj->anim.currentMoveProgress, 0);
+            ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID, playerObj->anim.currentMoveProgress, 0);
         }
         totemObj = st->linkedObject;
         if (((GameObject*)totemObj)->anim.currentMove != PLATFORM1_IDLE_PULL_MOVE_ID)
@@ -226,7 +224,8 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 st->offsetVelocity = *(const f32*)&lbl_803E568C;
             }
-            if (st->currentTrackOffset >= PLATFORM1_TRACK_EXIT_NEG && st->currentTrackOffset <= PLATFORM1_TRACK_EXIT_POS)
+            if (st->currentTrackOffset >= PLATFORM1_TRACK_EXIT_NEG &&
+                st->currentTrackOffset <= PLATFORM1_TRACK_EXIT_POS)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
@@ -239,11 +238,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 list = ObjList_GetObjects(&idx4, &cnt4);
                 for (; idx4 < cnt4; idx4++)
                 {
-                    if ((GameObject*)list[idx4] != self &&
-                        ((GameObject*)list[idx4])->anim.seqId == SC_SEQ_TOTEMPOLE)
+                    if ((GameObject*)list[idx4] != self && ((GameObject*)list[idx4])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         totemObj = list[idx4];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 4);
+                        ((void (*)(int, int)) *
+                         (void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 4);
                         break;
                     }
                 }
@@ -266,11 +265,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 list = ObjList_GetObjects(&idx5, &cnt5);
                 for (; idx5 < cnt5; idx5++)
                 {
-                    if ((GameObject*)list[idx5] != self &&
-                        ((GameObject*)list[idx5])->anim.seqId == SC_SEQ_TOTEMPOLE)
+                    if ((GameObject*)list[idx5] != self && ((GameObject*)list[idx5])->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
                         totemObj = list[idx5];
-                        ((void (*)(int, int))*(void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 4);
+                        ((void (*)(int, int)) *
+                         (void**)((char*)*((GameObject*)totemObj)->anim.dll + SC_VT_HANDLE_EVENT))(totemObj, 4);
                         break;
                     }
                 }
@@ -293,15 +292,14 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                    player, ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E569C,
-                    timeDelta, 0) != 0 &&
+                    player, ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E569C, timeDelta, 0) != 0 &&
                 playerObj->anim.currentMoveProgress < lbl_803E5678)
             {
                 playerObj->anim.currentMoveProgress = lbl_803E567C + playerObj->anim.currentMoveProgress;
             }
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / lbl_803E569C,
-                timeDelta, 0) != 0)
+                    st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / lbl_803E569C, timeDelta,
+                    0) != 0)
             {
                 progress = ((GameObject*)st->linkedObject)->anim.currentMoveProgress;
                 if (progress < lbl_803E5678)
@@ -316,13 +314,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (diff < lbl_803E5678)
             {
-                st->playerSfxTimer = (f32)(int)
-                randomGetRange(0x28, 100);
+                st->playerSfxTimer = (f32)(int)randomGetRange(0x28, 100);
             }
             else
             {
-                st->playerSfxTimer = (f32)(int)
-                randomGetRange(0x78, 0xf0);
+                st->playerSfxTimer = (f32)(int)randomGetRange(0x78, 0xf0);
             }
             Sfx_PlayFromObject(player, PLATFORM1_PLAYER_SFX_ID);
         }
@@ -331,13 +327,11 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (diff > lbl_803E5678)
             {
-                st->platformSfxTimer = (f32)(int)
-                randomGetRange(0x28, 100);
+                st->platformSfxTimer = (f32)(int)randomGetRange(0x28, 100);
             }
             else
             {
-                st->platformSfxTimer = (f32)(int)
-                randomGetRange(0x78, 0xf0);
+                st->platformSfxTimer = (f32)(int)randomGetRange(0x78, 0xf0);
             }
             Sfx_PlayFromObject(obj, PLATFORM1_PLATFORM_SFX_ID);
         }
@@ -377,10 +371,19 @@ void sc_totemstrength_initialise(void)
 {
 }
 
-int sc_totemstrength_getExtraSize(void) { return 0x34; }
-int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
+int sc_totemstrength_getExtraSize(void)
+{
+    return 0x34;
+}
+int sc_totemstrength_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E567C); }
+void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E567C);
+}
 
 void sc_totemstrength_init(int* obj)
 {
@@ -388,7 +391,7 @@ void sc_totemstrength_init(int* obj)
     Platform1State* st = self->extra;
     self->animEventCallback = platform1_control;
     self->objectFlags |= (SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN | SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED);
-    self->anim.rotX = (s16) - 10496;
+    self->anim.rotX = (s16)-10496;
     st->currentTrackOffset = -10496;
     st->transitionStep = 0;
     st->linkedObject = 0;
@@ -462,8 +465,7 @@ void sc_totemstrength_update(u8* obj)
             {
                 mainSetBits(0xf1d, 1);
                 hudFn_8011f38c(1);
-                st->loopSfxHandle =
-                    (*gObjectTriggerInterface)->runSequence(0, obj, -1);
+                st->loopSfxHandle = (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             }
             else if (step == 2)
             {
@@ -478,7 +480,10 @@ void sc_totemstrength_update(u8* obj)
 }
 
 ObjectDescriptor gFElevControlObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)FElevControl_initialise,
     (ObjectDescriptorCallback)FElevControl_release,
     0,

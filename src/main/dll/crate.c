@@ -14,9 +14,9 @@
 #include "main/game_object.h"
 #include "main/dll/crate.h"
 
-#define SFXPLAYER_EVENT_ACTIVATE 1
-#define SFXPLAYER_EVENT_DEACTIVATE 2
-#define SFXPLAYER_EVENT_VARIANT 3
+#define SFXPLAYER_EVENT_ACTIVATE       1
+#define SFXPLAYER_EVENT_DEACTIVATE     2
+#define SFXPLAYER_EVENT_VARIANT        3
 #define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
 
 #define SFXPLAYER_BASE_VARIANT_A 0x672

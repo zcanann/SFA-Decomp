@@ -9,11 +9,12 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 /* Single render op of the lock icon model (ObjModel_GetRenderOp slot). */
-typedef struct CamcontrolLockIconRenderOp {
+typedef struct CamcontrolLockIconRenderOp
+{
     u8 pad00[0x24];
-    s32 textureId;          /* 0x24 */
-    u8 pad28;               /* 0x28 */
-    u8 distanceTier;        /* 0x29: tier at which this op switches to dim */
+    s32 textureId;   /* 0x24 */
+    u8 pad28;        /* 0x28 */
+    u8 distanceTier; /* 0x29: tier at which this op switches to dim */
 } CamcontrolLockIconRenderOp;
 
 #define LOCK_ICON_DIM_ALPHA_SCALE 0x60

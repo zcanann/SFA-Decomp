@@ -21,18 +21,18 @@
 extern int ObjMsg_Pop();
 extern void ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue();
-extern s8 lbl_803DBE08;       /* curve-system one-shot init flag */
-extern f32 lbl_803E4108;      /* render scale */
-extern s8 lbl_803DDB08;       /* deferred-message queue count */
-extern s8 lbl_803DDB09;       /* registered-target list count */
-extern int lbl_803DDB0C;      /* cached rom-curve handle */
+extern s8 lbl_803DBE08;  /* curve-system one-shot init flag */
+extern f32 lbl_803E4108; /* render scale */
+extern s8 lbl_803DDB08;  /* deferred-message queue count */
+extern s8 lbl_803DDB09;  /* registered-target list count */
+extern int lbl_803DDB0C; /* cached rom-curve handle */
 
 /* Registered prison-member entry (list keyed by the controller's map-event slot). */
 typedef struct CPTargetEntry
 {
-    u32 obj;    /* member GameObject* (compared/stored as a word) */
-    s16 value;  /* per-member value supplied with the register message */
-    u8 flags;   /* cleared on registration */
+    u32 obj;   /* member GameObject* (compared/stored as a word) */
+    s16 value; /* per-member value supplied with the register message */
+    u8 flags;  /* cleared on registration */
     u8 pad;
 } CPTargetEntry;
 
@@ -44,18 +44,18 @@ typedef struct CPDeferredMsg
     int data;
 } CPDeferredMsg;
 
-CPTargetEntry lbl_803AC7D8[20];  /* registered-target list */
-int lbl_803AC878[0x22];          /* deferred-message queue storage */
+CPTargetEntry lbl_803AC7D8[20]; /* registered-target list */
+int lbl_803AC878[0x22];         /* deferred-message queue storage */
 
 /* ObjMsg ids exchanged with prison members */
 enum
 {
-    CPMSG_ACK = 0xf0003,        /* controller -> member: registered */
-    CPMSG_REGISTER = 0xf0004,   /* member -> controller: register/update */
+    CPMSG_ACK = 0xf0003,      /* controller -> member: registered */
+    CPMSG_REGISTER = 0xf0004, /* member -> controller: register/update */
     CPMSG_IGNORED_5 = 0xf0005,
     CPMSG_IGNORED_6 = 0xf0006,
     CPMSG_IGNORED_7 = 0xf0007,
-    CPMSG_UNREGISTER = 0xf0008  /* member -> controller: remove */
+    CPMSG_UNREGISTER = 0xf0008 /* member -> controller: remove */
 };
 
 void CloudPrisonControl_free(void)
@@ -70,18 +70,31 @@ void CloudPrisonControl_release(void)
 {
 }
 
-int CloudPrisonControl_getExtraSize(void) { return 0x0; }
-int CloudPrisonControl_getObjectTypeId(void) { return 0x0; }
+int CloudPrisonControl_getExtraSize(void)
+{
+    return 0x0;
+}
+int CloudPrisonControl_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void CloudPrisonControl_initialise(void) { lbl_803DBE08 = 1; }
+void CloudPrisonControl_initialise(void)
+{
+    lbl_803DBE08 = 1;
+}
 
 void CloudPrisonControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4108);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4108);
 }
 
-void CloudPrisonControl_init(int obj) { ObjMsg_AllocQueue(obj, 0xa); }
+void CloudPrisonControl_init(int obj)
+{
+    ObjMsg_AllocQueue(obj, 0xa);
+}
 
 void CloudPrisonControl_update(int obj)
 {

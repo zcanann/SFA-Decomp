@@ -23,12 +23,12 @@ typedef struct WmPlanetsState
     s16 yawStep;      /* 0x02: model-spin rate, random 200..400 (timeDelta-scaled) */
     s16 orbitYaw;     /* 0x04: current orbit angle */
     s16 pad06;
-    s16 orbitPitch;   /* 0x08: orbit-plane tilt, random 0..2400, fixed at init */
+    s16 orbitPitch; /* 0x08: orbit-plane tilt, random 0..2400, fixed at init */
     s16 pad0A;
-    f32 orbitRadius;  /* 0x0C: arm length spun around the base point (0 = spin in place) */
-    f32 baseX;        /* 0x10: orbit centre = placement position */
-    f32 baseY;        /* 0x14 */
-    f32 baseZ;        /* 0x18 */
+    f32 orbitRadius; /* 0x0C: arm length spun around the base point (0 = spin in place) */
+    f32 baseX;       /* 0x10: orbit centre = placement position */
+    f32 baseY;       /* 0x14 */
+    f32 baseZ;       /* 0x18 */
 } WmPlanetsState;
 
 /* argument record for vecRotateZXY (angles in, vector in/out) */
@@ -68,9 +68,15 @@ STATIC_ASSERT(sizeof(WmPlanetsMapData) == 0x1C);
 extern void vecRotateZXY(void* angles, void* outVec);
 extern u32 lbl_802C2500[3]; /* (0.0f, 0.0f, 0.0f) */
 
-int WM_Planets_getExtraSize(void) { return sizeof(WmPlanetsState); }
+int WM_Planets_getExtraSize(void)
+{
+    return sizeof(WmPlanetsState);
+}
 
-int WM_Planets_getObjectTypeId(void) { return 0x0; }
+int WM_Planets_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_Planets_free(void)
 {

@@ -32,19 +32,19 @@ enum
 };
 
 /* the level's intro environment transition (run once) */
-#define GAMEBIT_VFP_INTRO_DONE 0xef6  /* global "intro already played" gate */
+#define GAMEBIT_VFP_INTRO_DONE  0xef6 /* global "intro already played" gate */
 #define GAMEBIT_VFP_SKY_PENDING 0xd72 /* request the day sky swap, cleared after */
-#define VFP_ENVFX_INTRO_0 0x10c
-#define VFP_ENVFX_INTRO_1 0x10d
-#define VFP_ENVFX_INTRO_2 0x10e
+#define VFP_ENVFX_INTRO_0       0x10c
+#define VFP_ENVFX_INTRO_1       0x10d
+#define VFP_ENVFX_INTRO_2       0x10e
 
 #define GAMEBIT_VFP_LATCH 0xdcf /* music-latch bit shared by both latches */
-#define VFP_MUSIC_A 0xe1
-#define VFP_MUSIC_B 0x96
+#define VFP_MUSIC_A       0xe1
+#define VFP_MUSIC_B       0x96
 
 #define VFP_TIMER_INIT 0x82
 
-#define VFPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
+#define VFPLEVELCONTROL_OBJFLAG_HIDDEN             0x4000
 #define VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef union VfpLevelControlLatch
@@ -62,8 +62,8 @@ typedef union VfpLevelControlLatch
 typedef struct VfpLevelControlState
 {
     u8 pad00[2];
-    s16 unk02[6];               /* 0x02: cleared at init, never read back */
-    s16 areaMode;               /* 0x0E: 1..2, from setup (defaults to 1) */
+    s16 unk02[6]; /* 0x02: cleared at init, never read back */
+    s16 areaMode; /* 0x0E: 1..2, from setup (defaults to 1) */
     u8 pad10[4];
     VfpLevelControlLatch latch; /* 0x14 */
 } VfpLevelControlState;
@@ -82,8 +82,8 @@ STATIC_ASSERT(offsetof(VfpLevelControlLatch, fields.sequenceStep) == 0x04);
 STATIC_ASSERT(offsetof(VfpLevelControlSetup, areaMode) == 0x1A);
 
 extern int coordsToMapCell(f32 x, f32 z);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int latchBit, int musicId);
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
+                                  int musicId);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern f32 lbl_803E6060;
 extern u32 ObjGroup_AddObject();
@@ -138,9 +138,15 @@ void fn_801F9804(int obj)
 }
 #pragma dont_inline reset
 
-int VFP_LevelControl_getExtraSize(void) { return 0x1c; }
+int VFP_LevelControl_getExtraSize(void)
+{
+    return 0x1c;
+}
 
-int VFP_LevelControl_getObjectTypeId(void) { return 0x0; }
+int VFP_LevelControl_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void VFP_LevelControl_free(int obj)
 {
@@ -192,13 +198,11 @@ void VFP_LevelControl_update(int obj)
             }
         }
         Obj_GetPlayerObject();
-        if (mainGetBit(0x4ec) == 0u && mainGetBit(0x9b1) != 0u &&
-            mainGetBit(0x9b2) != 0u)
+        if (mainGetBit(0x4ec) == 0u && mainGetBit(0x9b1) != 0u && mainGetBit(0x9b2) != 0u)
         {
             mainSetBits(0x4ec, 1);
         }
-        if (mainGetBit(0xd6d) != 0u && mainGetBit(0xd6e) != 0u &&
-            mainGetBit(0xd6f) != 0u && mainGetBit(0xd70) != 0u)
+        if (mainGetBit(0xd6d) != 0u && mainGetBit(0xd6e) != 0u && mainGetBit(0xd6f) != 0u && mainGetBit(0xd70) != 0u)
         {
             mainSetBits(0xcfb, 1);
         }

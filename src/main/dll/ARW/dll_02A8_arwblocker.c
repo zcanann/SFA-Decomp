@@ -53,9 +53,15 @@ int ARWBlocker_SeqFn(int obj)
     return 0;
 }
 
-int ARWBlocker_getExtraSize(void) { return 2; }
+int ARWBlocker_getExtraSize(void)
+{
+    return 2;
+}
 
-int ARWBlocker_getObjectTypeId(void) { return 0; }
+int ARWBlocker_getObjectTypeId(void)
+{
+    return 0;
+}
 
 #pragma peephole on
 void ARWBlocker_free(void)
@@ -83,11 +89,7 @@ void ARWBlocker_update(int obj)
         arwing = Obj_GetPlayerObject();
     if (Vec_distance((int)&objAnim->worldPosX, (int)&((GameObject*)arwing)->anim.worldPosX) < lbl_803E721C)
     {
-        int alpha = (int)
-        (lbl_803E7220 * timeDelta + (f32)(u32)
-        objAnim->alpha
-        )
-        ;
+        int alpha = (int)(lbl_803E7220 * timeDelta + (f32)(u32)objAnim->alpha);
         if (alpha > 0xff)
             alpha = 0xff;
         objAnim->alpha = alpha;

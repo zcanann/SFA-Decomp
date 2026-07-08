@@ -21,9 +21,9 @@
 
 typedef struct GmmazewellState
 {
-    u8 unk0;            /* 0x00: cleared at init, never read */
-    u8 savepointSet;    /* 0x01: savepoint stamped once player object is available */
-    u8 pad2[2];         /* 0x02 */
+    u8 unk0;             /* 0x00: cleared at init, never read */
+    u8 savepointSet;     /* 0x01: savepoint stamped once player object is available */
+    u8 pad2[2];          /* 0x02 */
     s32 pendingDialogue; /* 0x04: dialogue id queued for the next event 1 (-1 = none) */
 } GmmazewellState;
 
@@ -35,9 +35,9 @@ STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
  *   [10..18] reward bits granted when the matching event fires
  *   [20..28] follow-up bits
  *   [28..]   dialogue ids, viewed as s32 via gQuestBitTable32[14..21] */
-#define QUEST_BIT_COUNT 9
-#define QUEST_REWARD_BASE 10
-#define QUEST_FOLLOWUP_BASE 20
+#define QUEST_BIT_COUNT       9
+#define QUEST_REWARD_BASE     10
+#define QUEST_FOLLOWUP_BASE   20
 #define QUEST_DIALOGUE_BASE32 14
 
 /* music track toggled while the well is active (game bit is GAMEBIT_MAZEWELL_ACTIVE) */
@@ -49,15 +49,15 @@ STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
  * grant no cheat, row 8 is the unused/dead 9th token. */
 enum QuestWellRow
 {
-    QUESTWELL_CREDITS        = 0, /* ThornTail Shop      -> CHEAT_SHOW_CREDITS */
-    QUESTWELL_SEPIA          = 1, /* Cape Claw           -> CHEAT_SEPIA_MODE */
-    QUESTWELL_MUSIC_TEST     = 2, /* Ice Mountain        -> CHEAT_MUSIC_TEST */
-    QUESTWELL_DINO_LANGUAGE  = 3, /* Moon Mtn Pass       -> CHEAT_DINO_LANGUAGE (non-Japanese only) */
-    QUESTWELL_LIGHTFOOT      = 4, /* LightFoot Village   -> nothing */
-    QUESTWELL_OCEAN_FP       = 5, /* Ocean Force Point   -> nothing */
-    QUESTWELL_VOLCANO_FP     = 6, /* Volcano Force Point -> nothing */
-    QUESTWELL_SNOWHORN       = 7, /* SnowHorn Wastes     -> nothing */
-    QUESTWELL_UNUSED         = 8  /* Nowhere - dead 9th token */
+    QUESTWELL_CREDITS = 0,       /* ThornTail Shop      -> CHEAT_SHOW_CREDITS */
+    QUESTWELL_SEPIA = 1,         /* Cape Claw           -> CHEAT_SEPIA_MODE */
+    QUESTWELL_MUSIC_TEST = 2,    /* Ice Mountain        -> CHEAT_MUSIC_TEST */
+    QUESTWELL_DINO_LANGUAGE = 3, /* Moon Mtn Pass       -> CHEAT_DINO_LANGUAGE (non-Japanese only) */
+    QUESTWELL_LIGHTFOOT = 4,     /* LightFoot Village   -> nothing */
+    QUESTWELL_OCEAN_FP = 5,      /* Ocean Force Point   -> nothing */
+    QUESTWELL_VOLCANO_FP = 6,    /* Volcano Force Point -> nothing */
+    QUESTWELL_SNOWHORN = 7,      /* SnowHorn Wastes     -> nothing */
+    QUESTWELL_UNUSED = 8         /* Nowhere - dead 9th token */
 };
 
 int GM_MazeWell_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -75,7 +75,10 @@ int GM_MazeWell_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int GM_MazeWell_getExtraSize(void) { return sizeof(GmmazewellState); }
+int GM_MazeWell_getExtraSize(void)
+{
+    return sizeof(GmmazewellState);
+}
 
 void GM_MazeWell_free(void)
 {
@@ -104,8 +107,8 @@ void GM_MazeWell_update(unsigned int obj)
         player = Obj_GetPlayerObject();
         if (player != 0)
         {
-            (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0,
-                                             getCurMapLayer());
+            (*gMapEventInterface)
+                ->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0, getCurMapLayer());
             state->savepointSet = 1;
         }
     }

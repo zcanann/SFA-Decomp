@@ -9,8 +9,7 @@ extern f32 lbl_803E40C8;
 extern f32 lbl_803E40CC;
 extern f32 lbl_803E40D8;
 
-
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
+extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void OSReport(const char* msg, ...);
 extern const char sMoonrockTriggerIdentFormat[];
 
@@ -21,16 +20,17 @@ extern const char sMoonrockTriggerIdentFormat[];
  * here the block holds a clip plane (normal + D), the two segment endpoints the
  * RomCurve query was run against, a clip half-extent, and the 3x4 transform that
  * maps a hit point into trigger-local space. */
-typedef struct MmpTriggerPlaneState {
-    u8 header[0xC];      /* 0x00 */
-    f32 normalX;         /* 0x0C plane normal */
-    f32 normalY;         /* 0x10 */
-    f32 normalZ;         /* 0x14 */
-    f32 planeD;          /* 0x18 plane constant */
-    f32 ptA[3];          /* 0x1C near segment endpoint */
-    f32 ptB[3];          /* 0x28 far segment endpoint */
-    f32 clipHalfExtent;  /* 0x34 trigger-local half size */
-    f32 mtx[3][4];       /* 0x38 world->trigger-local transform */
+typedef struct MmpTriggerPlaneState
+{
+    u8 header[0xC];     /* 0x00 */
+    f32 normalX;        /* 0x0C plane normal */
+    f32 normalY;        /* 0x10 */
+    f32 normalZ;        /* 0x14 */
+    f32 planeD;         /* 0x18 plane constant */
+    f32 ptA[3];         /* 0x1C near segment endpoint */
+    f32 ptB[3];         /* 0x28 far segment endpoint */
+    f32 clipHalfExtent; /* 0x34 trigger-local half size */
+    f32 mtx[3][4];      /* 0x38 world->trigger-local transform */
 } MmpTriggerPlaneState;
 
 STATIC_ASSERT(offsetof(MmpTriggerPlaneState, normalX) == 0x0C);
@@ -55,11 +55,9 @@ void fn_80198A00(u8* obj, int seqArg)
         state->ptB[0], state->ptB[1], state->ptB[2], &queryType, 1,
         *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x38));
     frontBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
-        curveHit, state->ptB[0], state->ptB[1], state->ptB[2],
-        &hitDistance);
+        curveHit, state->ptB[0], state->ptB[1], state->ptB[2], &hitDistance);
     rearBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
-        curveHit, state->ptA[0], state->ptA[1], state->ptA[2],
-        &hitDistance);
+        curveHit, state->ptA[0], state->ptA[1], state->ptA[2], &hitDistance);
 
     if (frontBlocked != 0)
     {
@@ -105,10 +103,10 @@ int fn_80198B68(u8* obj, f32* point)
     pointY = point[1];
     pointZ = point[2];
 
-    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotX));
-    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotX));
-    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
-    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
+    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotX));
+    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotX));
+    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotY));
+    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotY));
 
     relX = pointX - ((GameObject*)obj)->anim.worldPosX;
     relY = pointY - ((GameObject*)obj)->anim.worldPosY;
@@ -131,8 +129,7 @@ int fn_80198B68(u8* obj, f32* point)
         localZ = -localZ;
     }
 
-    if ((localX <= (f32)(s32)(data[0x3a] << 1)) &&
-        (localY <= (f32)(s32)(data[0x3b] << 1)) &&
+    if ((localX <= (f32)(s32)(data[0x3a] << 1)) && (localY <= (f32)(s32)(data[0x3b] << 1)) &&
         (localZ <= (f32)(s32)(data[0x3c] << 1)))
     {
         return 1;
@@ -199,8 +196,7 @@ void fn_80198DE8(u8* obj, int seqArg)
         deltaY = farY - nearY;
         deltaZ = farZ - nearZ;
         ny = normalY * deltaY;
-        t = (((-normalX * nearX - prodY) - prodZ) - planeBase) /
-            ((ny + (normalX * deltaX)) + (normalZ * deltaZ));
+        t = (((-normalX * nearX - prodY) - prodZ) - planeBase) / ((ny + (normalX * deltaX)) + (normalZ * deltaZ));
 
         localPos[0] = t * deltaX + nearX;
         localPos[1] = t * deltaY + state->ptA[1];

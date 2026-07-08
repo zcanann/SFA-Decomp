@@ -15,7 +15,10 @@ void dll_12_func0A_nop(void)
 {
 }
 
-void dll_12_func09(void) { lbl_803DD458 = 0x3; }
+void dll_12_func09(void)
+{
+    lbl_803DD458 = 0x3;
+}
 
 void dll_12_func08_nop(void)
 {
@@ -25,7 +28,10 @@ void dll_12_func07_nop(void)
 {
 }
 
-int dll_12_func06_ret_0(void) { return 0x0; }
+int dll_12_func06_ret_0(void)
+{
+    return 0x0;
+}
 
 void dll_12_func04_nop(void)
 {

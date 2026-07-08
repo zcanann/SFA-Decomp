@@ -34,10 +34,8 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
     switch (runtime->behaviorState)
     {
     case SHTHORNTAIL_STATE_IDLE:
-        alertTriggered =
-            RandomTimer_UpdateRangeTrigger(&runtime->proximityAlertState,
-                                           SHTHORNTAIL_PROXIMITY_ALERT_MIN_TIME,
-                                           SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME);
+        alertTriggered = RandomTimer_UpdateRangeTrigger(
+            &runtime->proximityAlertState, SHTHORNTAIL_PROXIMITY_ALERT_MIN_TIME, SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME);
         if (alertTriggered != 0)
         {
             Sfx_PlayFromObject((u32)obj, SHTHORNTAIL_ALERT_VOLUME_ID);
@@ -94,8 +92,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
         }
         break;
     case SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT:
-        runtime->comboTimer = runtime->comboTimer -
-            (float)framesThisStep;
+        runtime->comboTimer = runtime->comboTimer - (float)framesThisStep;
         if (runtime->comboTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
             if (runtime->comboRepeatCount <= 0)
@@ -149,8 +146,7 @@ void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime
         }
         break;
     default:
-        OSPanic(sSHthorntailSourceFile, SHTHORNTAIL_INVALID_STATE_PANIC_LINE,
-                sThorntailEnteredInvalidState);
+        OSPanic(sSHthorntailSourceFile, SHTHORNTAIL_INVALID_STATE_PANIC_LINE, sThorntailEnteredInvalidState);
     }
     return;
 }
@@ -190,8 +186,8 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
             gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_EVENT_GAMEBIT);
             if (gameBitValue != 0)
             {
-                (*gMapEventInterface)->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT,
-                                                    SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
+                (*gMapEventInterface)
+                    ->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT, SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
                 runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
             }
             else
@@ -298,8 +294,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
         else
         {
             triggerIsSet = mainGetBit(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
-            if ((triggerIsSet == 0) &&
-                (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0))
+            if ((triggerIsSet == 0) && (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0))
             {
                 runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
                 runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;

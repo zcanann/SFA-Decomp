@@ -29,18 +29,17 @@ STATIC_ASSERT(sizeof(DrcreatorSetup) == 0x24);
 typedef struct DrcreatorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 gameBitId;    /* 0x18: copied into runtime gameBitId */
-    s16 behaviorMode; /* 0x1A switch selector: 3/9 run-sequence, 4 spawn-projectiles */
+    s16 gameBitId;     /* 0x18: copied into runtime gameBitId */
+    s16 behaviorMode;  /* 0x1A switch selector: 3/9 run-sequence, 4 spawn-projectiles */
     s16 spawnInterval; /* 0x1C: copied into runtime spawnInterval */
-    s8 rotXByte;      /* 0x1E: <<8 seeds anim.rotX */
-    s8 timerVariance; /* 0x1F: copied into runtime timerVariance */
-    u8 speedScale;    /* 0x20: projectile speed scalar, stored at runtime[0] */
+    s8 rotXByte;       /* 0x1E: <<8 seeds anim.rotX */
+    s8 timerVariance;  /* 0x1F: copied into runtime timerVariance */
+    u8 speedScale;     /* 0x20: projectile speed scalar, stored at runtime[0] */
 } DrcreatorPlacement;
 
 STATIC_ASSERT(offsetof(DrcreatorPlacement, behaviorMode) == 0x1A);
 STATIC_ASSERT(offsetof(DrcreatorPlacement, speedScale) == 0x20);
 STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x22);
-
 
 typedef struct DrcreatorSpawnProjectileCallbackState
 {
@@ -51,7 +50,6 @@ typedef struct DrcreatorSpawnProjectileCallbackState
     u8 padC[0x10 - 0xC];
 } DrcreatorSpawnProjectileCallbackState;
 
-
 typedef struct DrcreatorState
 {
     u8 pad0[0x2 - 0x0];
@@ -61,11 +59,11 @@ typedef struct DrcreatorState
     s16 spawnTimer;    /* 0x8 */
     s16 timerVariance; /* 0xA */
     u8 padC[0x24 - 0xC];
-    f32 velocityX;     /* 0x24 */
-    f32 velocityY;     /* 0x28 */
-    f32 velocityZ;     /* 0x2C */
+    f32 velocityX; /* 0x24 */
+    f32 velocityY; /* 0x28 */
+    f32 velocityZ; /* 0x2C */
     u8 pad30[0xC4 - 0x30];
-    s32 creatorObj;    /* 0xC4 */
+    s32 creatorObj; /* 0xC4 */
 } DrcreatorState;
 
 STATIC_ASSERT(offsetof(DrcreatorState, gameBitId) == 0x4);
@@ -74,7 +72,6 @@ STATIC_ASSERT(offsetof(DrcreatorState, velocityX) == 0x24);
 STATIC_ASSERT(offsetof(DrcreatorState, velocityY) == 0x28);
 STATIC_ASSERT(offsetof(DrcreatorState, velocityZ) == 0x2C);
 STATIC_ASSERT(offsetof(DrcreatorState, creatorObj) == 0xC4);
-
 
 int DR_Creator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -113,13 +110,13 @@ int DR_Creator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ((DrcreatorState*)projectile)->unk2 = 0;
                     ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
                     ((DrcreatorState*)projectile)->velocityX =
-                        lbl_803E69A8 * (f32)(int)randomGetRange(
-                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
+                        lbl_803E69A8 *
+                        (f32)(int)randomGetRange(-((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
                                                  ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
                     ((DrcreatorState*)projectile)->velocityY = lbl_803E69A8 * (f32) * (int*)runtime;
                     ((DrcreatorState*)projectile)->velocityZ =
-                        lbl_803E69A8 * (f32)(int)randomGetRange(
-                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
+                        lbl_803E69A8 *
+                        (f32)(int)randomGetRange(-((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
                                                  ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
                     ((DrcreatorState*)projectile)->creatorObj = obj;
                 }
@@ -130,9 +127,15 @@ int DR_Creator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int DR_Creator_getExtraSize(void) { return 0x1c; }
+int DR_Creator_getExtraSize(void)
+{
+    return 0x1c;
+}
 
-int DR_Creator_getObjectTypeId(void) { return 0x0; }
+int DR_Creator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DR_Creator_free(void)
 {

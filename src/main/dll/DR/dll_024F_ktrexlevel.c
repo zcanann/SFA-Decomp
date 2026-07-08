@@ -20,9 +20,15 @@
 #define KTREXLEVEL_ENVFX_B 0x18e
 #define KTREXLEVEL_ENVFX_C 0x190
 
-int KT_RexLevel_getExtraSize(void) { return 0x4; }
+int KT_RexLevel_getExtraSize(void)
+{
+    return 0x4;
+}
 
-int KT_RexLevel_getObjectTypeId(void) { return 0x0; }
+int KT_RexLevel_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void KT_RexLevel_free(void)
 {

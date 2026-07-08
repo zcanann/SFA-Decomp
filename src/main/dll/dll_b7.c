@@ -18,19 +18,21 @@
 #include "main/dll/dll_B7.h"
 #include "main/mm.h"
 
-extern BOOL Resource_Release(void *handleSlot);
-extern void *Resource_Acquire(u16 id, int unused);
+extern BOOL Resource_Release(void* handleSlot);
+extern void* Resource_Acquire(u16 id, int unused);
 
 static inline int camcontrol_findHandlerIndex(u16 actionId)
 {
     int handlerCount;
-    register CamcontrolHandlerEntry **handlerEntry;
+    register CamcontrolHandlerEntry** handlerEntry;
     int handlerIndex;
 
     handlerIndex = 0;
     handlerEntry = gCamcontrolHandlerEntries;
-    for (handlerCount = gCamcontrolHandlerCount; 0 < handlerCount; handlerCount--) {
-        if (actionId == (*handlerEntry)->actionId) {
+    for (handlerCount = gCamcontrolHandlerCount; 0 < handlerCount; handlerCount--)
+    {
+        if (actionId == (*handlerEntry)->actionId)
+        {
             return handlerIndex;
         }
         handlerEntry++;
@@ -39,17 +41,20 @@ static inline int camcontrol_findHandlerIndex(u16 actionId)
     return -1;
 }
 
-void camcontrol_activateHandler(u16 actionId, void *actionData)
+void camcontrol_activateHandler(u16 actionId, void* actionData)
 {
-    CamcontrolHandlerEntry *entry;
+    CamcontrolHandlerEntry* entry;
     int idx;
     int n;
     int priority;
 
-    if (gCamcontrolCurrentHandler != NULL) {
-        if (gCamcontrolActiveActionId != actionId) {
+    if (gCamcontrolCurrentHandler != NULL)
+    {
+        if (gCamcontrolActiveActionId != actionId)
+        {
             gCamcontrolCurrentHandler->handler->vtable->release(pCamera);
-            if (gCamcontrolCurrentHandler->priority == CAMCONTROL_HANDLER_PRIORITY_DYNAMIC) {
+            if (gCamcontrolCurrentHandler->priority == CAMCONTROL_HANDLER_PRIORITY_DYNAMIC)
+            {
                 idx = gCamcontrolCurrentHandlerIndex;
                 Resource_Release(gCamcontrolHandlerEntries[idx]->handler);
                 mm_free(gCamcontrolHandlerEntries[idx]);
@@ -65,8 +70,9 @@ void camcontrol_activateHandler(u16 actionId, void *actionData)
     idx = camcontrol_findHandlerIndex(actionId);
     gCamcontrolCurrentHandlerIndex = idx;
 
-    if (idx == -1) {
-        CamcontrolHandlerEntry *new_entry;
+    if (idx == -1)
+    {
+        CamcontrolHandlerEntry* new_entry;
         priority = gCamcontrolQueuedActionPriority;
         new_entry = mmAlloc(CAMCONTROL_HANDLER_ENTRY_SIZE, CAMCONTROL_ACTION_HEAP, 0);
         n = gCamcontrolHandlerCount;
@@ -79,12 +85,15 @@ void camcontrol_activateHandler(u16 actionId, void *actionData)
         gCamcontrolCurrentHandlerIndex = gCamcontrolHandlerCount - 1;
     }
 
-    if (gCamcontrolCurrentHandlerIndex != -1) {
+    if (gCamcontrolCurrentHandlerIndex != -1)
+    {
         entry = gCamcontrolHandlerEntries[gCamcontrolCurrentHandlerIndex];
         gCamcontrolCurrentHandler = entry;
         gCamcontrolActiveActionId = entry->actionId;
         entry->handler->vtable->activate(pCamera, gCamcontrolQueuedActionStartFlags, actionData);
-    } else {
+    }
+    else
+    {
         gCamcontrolCurrentHandler = NULL;
         gCamcontrolActiveActionId = -1;
     }

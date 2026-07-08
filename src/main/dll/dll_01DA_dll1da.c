@@ -37,8 +37,14 @@ typedef struct Dll1DAState
     u8 pad7[0x8 - 0x7];
 } Dll1DAState;
 
-int dll_1DA_getExtraSize(void) { return 0x8; }
-int dll_1DA_getObjectTypeId(void) { return 0x0; }
+int dll_1DA_getExtraSize(void)
+{
+    return 0x8;
+}
+int dll_1DA_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_1DA_free(void)
 {
@@ -47,7 +53,8 @@ void dll_1DA_free(void)
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AD8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AD8);
 }
 
 void dll_1DA_hitDetect(int obj)
@@ -108,7 +115,8 @@ void dll_1DA_update(int obj)
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
     }
     if (((GameObject*)obj)->anim.velocityX < lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityX > lbl_803E4AEC &&
-        ((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4AEC)
+        ((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4AE8 &&
+        ((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4AEC)
     {
         ((GameObject*)obj)->anim.velocityX = (k = lbl_803E4AF0);
         ((GameObject*)obj)->anim.velocityZ = k;
@@ -142,8 +150,7 @@ void dll_1DA_update(int obj)
     }
     ((GameObject*)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject*)obj)->anim.localPosY);
     hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ,
-                             &floorList, 0, 0x11);
+                                    ((GameObject*)obj)->anim.localPosZ, &floorList, 0, 0x11);
     ((Dll1DAState*)state)->grounded = 0;
     i = 0;
     for (; hitCount > 0; hitCount--)

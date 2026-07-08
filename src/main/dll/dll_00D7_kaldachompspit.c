@@ -18,7 +18,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
-#define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT 0xa
+#define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT   0xa
 
 #define KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -80,7 +80,10 @@ void KaldaChompMe_release(void);
 void KaldaChompMe_initialise(void);
 
 ObjectDescriptor gKaldaChompMeObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)KaldaChompMe_initialise,
     (ObjectDescriptorCallback)KaldaChompMe_release,
     0,
@@ -126,8 +129,14 @@ void kaldachompspit_burst(int obj)
 }
 #pragma dont_inline reset
 
-int KaldaChompSpit_getExtraSize(void) { return 0x4; }
-int KaldaChompSpit_getObjectTypeId(void) { return 0x0; }
+int KaldaChompSpit_getExtraSize(void)
+{
+    return 0x4;
+}
+int KaldaChompSpit_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void KaldaChompSpit_free(int* obj)
 {
@@ -140,7 +149,7 @@ void KaldaChompSpit_free(int* obj)
 
 void KaldaChompSpit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     u8* light = **(u8***)&((GameObject*)obj)->extra;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
     {
@@ -219,7 +228,8 @@ void KaldaChompSpit_update(int obj)
                 kaldachompspit_burst(obj);
                 return;
             }
-            if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject()) ||
+            if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                 Obj_GetPlayerObject()) ||
                 (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == getTrickyObject()))
             {
                 kaldachompspit_burst(obj);
@@ -238,8 +248,8 @@ void KaldaChompSpit_update(int obj)
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1,
-                                                 &objAnim->alpha);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1, &objAnim->alpha);
                 (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
             }
@@ -373,71 +383,27 @@ ObjectDescriptor gPollenObjDescriptor = {
 };
 
 PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
 
 PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
 };
 
 PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
 };
 
 PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {

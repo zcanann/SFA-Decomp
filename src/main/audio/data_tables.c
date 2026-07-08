@@ -96,16 +96,16 @@ typedef struct SAMPLE_INFO
 
 typedef struct SynthDataTables
 {
-    SDIR_TAB sdir[128]; /* 0x0000 dataSmpSDirTable */
-    DATA_TAB curve[2048]; /* 0x0600 dataCurveTable */
-    DATA_TAB keymap[256]; /* 0x4600 dataKeymapTable */
-    LAYER_TAB layer[256]; /* 0x4E00 dataLayerTable */
+    SDIR_TAB sdir[128];       /* 0x0000 dataSmpSDirTable */
+    DATA_TAB curve[2048];     /* 0x0600 dataCurveTable */
+    DATA_TAB keymap[256];     /* 0x4600 dataKeymapTable */
+    LAYER_TAB layer[256];     /* 0x4E00 dataLayerTable */
     MAC_MAINTAB macMain[512]; /* 0x5A00 dataMacroBucketTable */
-    MAC_SUBTAB macSub[2048]; /* 0x6200 dataMacroTable */
-    FX_GROUP fxGroup[128]; /* 0xA200 dataFXGroupTable */
-    SDIR_DATA getSampleKey; /* 0xA600 dataGetSampleSearchKey */
-    LAYER_TAB getLayerKey; /* 0xA620 dataGetLayerSearchKey */
-    FX_TAB getFXKey; /* 0xA62C dataGetFXSearchKey */
+    MAC_SUBTAB macSub[2048];  /* 0x6200 dataMacroTable */
+    FX_GROUP fxGroup[128];    /* 0xA200 dataFXGroupTable */
+    SDIR_DATA getSampleKey;   /* 0xA600 dataGetSampleSearchKey */
+    LAYER_TAB getLayerKey;    /* 0xA620 dataGetLayerSearchKey */
+    FX_TAB getFXKey;          /* 0xA62C dataGetFXSearchKey */
 } SynthDataTables;
 
 extern u8 dataSmpSDirTable[];
@@ -113,13 +113,13 @@ extern DATA_TAB dataCurveTable[2048];
 extern DATA_TAB dataKeymapTable[256];
 extern MAC_MAINTAB dataMacroBucketTable[512];
 
-#define dataSmpSDirs (((SynthDataTables *)dataSmpSDirTable)->sdir)
-#define dataLayerTab (((SynthDataTables *)dataSmpSDirTable)->layer)
-#define dataMacMainTab (((SynthDataTables *)dataSmpSDirTable)->macMain)
-#define dataMacSubTabmem (((SynthDataTables *)dataSmpSDirTable)->macSub)
-#define dataGetSampleSearchKey (((SynthDataTables *)dataSmpSDirTable)->getSampleKey)
-#define dataGetLayerSearchKey (((SynthDataTables *)dataSmpSDirTable)->getLayerKey)
-#define dataGetFXSearchKey (((SynthDataTables *)dataSmpSDirTable)->getFXKey)
+#define dataSmpSDirs           (((SynthDataTables*)dataSmpSDirTable)->sdir)
+#define dataLayerTab           (((SynthDataTables*)dataSmpSDirTable)->layer)
+#define dataMacMainTab         (((SynthDataTables*)dataSmpSDirTable)->macMain)
+#define dataMacSubTabmem       (((SynthDataTables*)dataSmpSDirTable)->macSub)
+#define dataGetSampleSearchKey (((SynthDataTables*)dataSmpSDirTable)->getSampleKey)
+#define dataGetLayerSearchKey  (((SynthDataTables*)dataSmpSDirTable)->getLayerKey)
+#define dataGetFXSearchKey     (((SynthDataTables*)dataSmpSDirTable)->getFXKey)
 
 extern u16 dataSmpSDirNum;
 extern u16 dataCurveNum;
@@ -153,7 +153,8 @@ s32 dataInsertLayer(u16 cid, void* layerdata, u16 size)
 
     {
         LAYER_TAB* c = &t->layer[0];
-        for (i = 0; i < dataLayerNum && c->id < cid; ++c, ++i);
+        for (i = 0; i < dataLayerNum && c->id < cid; ++c, ++i)
+            ;
     }
 
     if (i < dataLayerNum)
@@ -211,7 +212,8 @@ s32 dataRemoveLayer(u16 sid)
     num = dataLayerNum;
     {
         LAYER_TAB* c = &t->layer[0];
-        for (i = 0; i < num && sid != c->id; ++c, ++i);
+        for (i = 0; i < num && sid != c->id; ++c, ++i)
+            ;
     }
 
     if (i != num && --t->layer[i].refCount == 0)
@@ -245,7 +247,8 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
 
     {
         DATA_TAB* c = &t->curve[0];
-        for (i = 0; i < dataCurveNum && c->id < cid; ++c, ++i);
+        for (i = 0; i < dataCurveNum && c->id < cid; ++c, ++i)
+            ;
     }
 
     if (i < dataCurveNum)
@@ -302,7 +305,8 @@ s32 dataRemoveCurve(u16 sid)
     num = dataCurveNum;
     {
         DATA_TAB* c = &t->curve[0];
-        for (i = 0; i < num && sid != c->id; ++c, ++i);
+        for (i = 0; i < num && sid != c->id; ++c, ++i)
+            ;
     }
 
     if (i != num && --t->curve[i].refCount == 0)
@@ -336,7 +340,8 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
     u16 j;
     u16 k;
 
-    for (i = 0, p = t->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i);
+    for (i = 0, p = t->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
+        ;
 
     if (i == dataSmpSDirNum)
     {
@@ -617,8 +622,8 @@ void* dataGetMacro(u16 mid)
     {
         dataGetMacro_main = dataMacMainTab[dataGetMacro_bucket].subTabIndex;
         dataGetMacro_key.id = mid;
-        if ((dataGetMacro_result = (MAC_SUBTAB*)sndBSearch(
-            &dataGetMacro_key, &dataMacSubTabmem[dataGetMacro_main], num, 8, maccmp)) != NULL)
+        if ((dataGetMacro_result = (MAC_SUBTAB*)sndBSearch(&dataGetMacro_key, &dataMacSubTabmem[dataGetMacro_main], num,
+                                                           8, maccmp)) != NULL)
         {
             return dataGetMacro_result->data;
         }
@@ -641,9 +646,8 @@ s32 dataGetSample(u16 sid, SAMPLE_INFO* newsmp)
 
     for (i = 0; i < dataSmpSDirNum; ++i)
     {
-        if ((dataGetSample_result = (SDIR_DATA*)sndBSearch(
-            &t->getSampleKey, t->sdir[i].data, t->sdir[i].numSmp,
-            sizeof(SDIR_DATA), smpcmp)) != NULL)
+        if ((dataGetSample_result = (SDIR_DATA*)sndBSearch(&t->getSampleKey, t->sdir[i].data, t->sdir[i].numSmp,
+                                                           sizeof(SDIR_DATA), smpcmp)) != NULL)
         {
             if (dataGetSample_result->ref_cnt != 0xFFFF)
             {
@@ -658,8 +662,7 @@ s32 dataGetSample(u16 sid, SAMPLE_INFO* newsmp)
 
                 if (dataGetSample_result->extraData)
                 {
-                    newsmp->extraData = (void*)((u32) & (t->sdir[i].data)->id +
-                        dataGetSample_result->extraData);
+                    newsmp->extraData = (void*)((u32) & (t->sdir[i].data)->id + dataGetSample_result->extraData);
                 }
                 return 0;
             }
@@ -677,8 +680,8 @@ s32 curvecmp(void* p1, void* p2)
 void* dataGetCurve(u16 cid)
 {
     dataGetCurve_key.id = cid;
-    if ((dataGetCurve_result = (DATA_TAB*)sndBSearch(&dataGetCurve_key, dataCurveTable,
-                                                     dataCurveNum, sizeof(DATA_TAB), curvecmp)))
+    if ((dataGetCurve_result =
+             (DATA_TAB*)sndBSearch(&dataGetCurve_key, dataCurveTable, dataCurveNum, sizeof(DATA_TAB), curvecmp)))
     {
         return dataGetCurve_result->data;
     }
@@ -688,8 +691,8 @@ void* dataGetCurve(u16 cid)
 void* dataGetKeymap(u16 cid)
 {
     dataGetKeymap_key.id = cid;
-    if ((dataGetKeymap_result = (DATA_TAB*)sndBSearch(&dataGetKeymap_key, dataKeymapTable,
-                                                      dataKeymapNum, sizeof(DATA_TAB), curvecmp)))
+    if ((dataGetKeymap_result =
+             (DATA_TAB*)sndBSearch(&dataGetKeymap_key, dataKeymapTable, dataKeymapNum, sizeof(DATA_TAB), curvecmp)))
     {
         return dataGetKeymap_result->data;
     }
@@ -704,8 +707,8 @@ s32 layercmp(void* p1, void* p2)
 void* dataGetLayer(u16 cid, u16* count)
 {
     dataGetLayerSearchKey.id = cid;
-    if ((dataGetLayer_result = (LAYER_TAB*)sndBSearch(&dataGetLayerSearchKey, dataLayerTab,
-                                                      dataLayerNum, sizeof(LAYER_TAB), layercmp)))
+    if ((dataGetLayer_result =
+             (LAYER_TAB*)sndBSearch(&dataGetLayerSearchKey, dataLayerTab, dataLayerNum, sizeof(LAYER_TAB), layercmp)))
     {
         *count = dataGetLayer_result->num;
         return dataGetLayer_result->data;
@@ -732,8 +735,7 @@ FX_TAB* dataGetFX(u16 fid)
     for (i = (zero = 0); i < dataFXGroupNum; ++i)
     {
         tab = g[i].fxTab;
-        if ((ret = (FX_TAB*)sndBSearch(&t->getFXKey, tab, g[i].fxNum, sizeof(FX_TAB),
-                                       fxcmp)))
+        if ((ret = (FX_TAB*)sndBSearch(&t->getFXKey, tab, g[i].fxNum, sizeof(FX_TAB), fxcmp)))
         {
             return ret;
         }

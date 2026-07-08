@@ -46,7 +46,7 @@
 #include "main/audio/music_trigger_ids.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
-#define CAMMODE_WORLDMAP 0x4e /* dll_004E_cameramodeworldmap */
+#define CAMMODE_WORLDMAP   0x4e /* dll_004E_cameramodeworldmap */
 
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -54,8 +54,8 @@
 #define GAMEUI_TEXTURE_BLINK 1280
 
 /* GameCube controller button masks (confirm=A, cancel=B, pause=Start/menu) */
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_A    0x100
+#define PAD_BUTTON_B    0x200
 #define PAD_BUTTON_MENU 0x1000
 
 extern void saveGame_save();
@@ -94,7 +94,6 @@ extern s8 gHighScoreActiveTableId;
 extern u8 gHighScoreHighlightRow;
 extern int insertHighScore(u8, u8, int, s32);
 extern int getSaveFileName(void);
-
 
 extern u8 lbl_803A9440[0x18];
 extern u8 hudTextures[0x198];
@@ -209,7 +208,11 @@ extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
 extern char* getHighScoreEntry(u8 track, u8 row);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-extern struct { u16 unk0; u16 titleId; } gHighScoreTitleIdTable[];
+extern struct
+{
+    u16 unk0;
+    u16 titleId;
+} gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
 extern f32 gHighScorePulseAmplitude;
 extern f32 gHighScorePulseBias;
@@ -225,7 +228,7 @@ extern int lbl_803DD8E0;
 s16 lbl_803A8B48[0x98];
 extern GridEntry lbl_8031BD90[];
 extern void cMenuRotateFn_80124d80(void);
-extern void cMenuPlayTrickyCommandSfx(u8 * player);
+extern void cMenuPlayTrickyCommandSfx(u8* player);
 extern s8 padGetCY(int chan);
 extern u8 lbl_803A87F0[];
 extern u8 cMenuEnabled;
@@ -309,10 +312,10 @@ extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
 extern void gameTextLoadDir(int dirId);
 extern u8 getCurTaskHintTextMap(void);
-extern void hintTextFn_800ea174(u8 * buf);
+extern void hintTextFn_800ea174(u8* buf);
 extern void Obj_FreeObject(char* obj);
-extern int fn_80296C4C(u8 * player);
-extern void playerHeal(u8 * player);
+extern int fn_80296C4C(u8* player);
+extern void playerHeal(u8* player);
 extern void AudioStream_StopCurrent(void);
 extern void updateSavedHealth(void);
 extern u16* saveGameGetCurHint(void);
@@ -378,7 +381,6 @@ extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
 extern void Camera_ApplyCurrentViewport(int a);
 
-
 extern int lbl_803DD828;
 extern int lbl_803DD82C;
 extern f32 lbl_803E1E70;
@@ -387,8 +389,6 @@ extern int cameraGetTargetType(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int cMenuCountAvailableEntries(int bit, int x);
 extern int getHudHiddenFrameCount(void);
-
-
 
 extern u8 shouldOpenCMenu;
 int lbl_803A9320[0x11];
@@ -527,7 +527,8 @@ void fn_8012DDB8(u32 val)
 void setShowWorldMapHud(u8 param)
 {
     mapScreenVisible = param;
-    if (param != 0) return;
+    if (param != 0)
+        return;
     lbl_803DD774 = 0;
     gWorldMapVoiceoverTimer = 0;
     lbl_803DBA5C = -1;
@@ -541,7 +542,8 @@ void setShowWorldMapHud(u8 param)
 #pragma dont_inline on
 void gameTextFadeOut(void)
 {
-    if (lbl_803DD774 == 0) return;
+    if (lbl_803DD774 == 0)
+        return;
     if (lbl_803DD77F != 0 && lbl_803DD774 < 0x7f)
     {
         lbl_803DD774 += framesThisStep;
@@ -598,8 +600,10 @@ void timeListFn_8012df14(void)
  * was suppressed. */
 void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
 {
-    if (id == -1) return;
-    if (curGameText != 0xFFFF) return;
+    if (id == -1)
+        return;
+    if (curGameText != 0xFFFF)
+        return;
     gameTextGetBox(0x7c);
     lbl_803DD7A8 = 1;
     lbl_803DD8D0 = 0;
@@ -620,10 +624,10 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
 }
 
 /* pauseMenuSetupTitle `flags` dispatch bits (see comment below). */
-#define PAUSEMENU_TITLE_FLAG_SET_HINT   0x08 /* commit idx to hint index, consult GameBit table */
-#define PAUSEMENU_TITLE_FLAG_RESET      0x04 /* full reset: clear counter and return */
-#define PAUSEMENU_TITLE_FLAG_MIRROR     0x02 /* mirror active counter past peak, clear dir */
-#define PAUSEMENU_TITLE_FLAG_SET_DIR    0x01 /* set direction byte to 1 */
+#define PAUSEMENU_TITLE_FLAG_SET_HINT 0x08 /* commit idx to hint index, consult GameBit table */
+#define PAUSEMENU_TITLE_FLAG_RESET    0x04 /* full reset: clear counter and return */
+#define PAUSEMENU_TITLE_FLAG_MIRROR   0x02 /* mirror active counter past peak, clear dir */
+#define PAUSEMENU_TITLE_FLAG_SET_DIR  0x01 /* set direction byte to 1 */
 
 /* State setter with bit-flag dispatch.
  * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
@@ -659,14 +663,16 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
     if (flags & PAUSEMENU_TITLE_FLAG_MIRROR)
     {
         u16 cur = lbl_803DD774;
-        if (cur == 0) return;
+        if (cur == 0)
+            return;
         if (cur < 0x7f)
         {
             lbl_803DD774 = (u16)(0xff - cur);
         }
         {
             u32 clamped = lbl_803DD774;
-            if (clamped < 0xd9) clamped = 0xd9;
+            if (clamped < 0xd9)
+                clamped = 0xd9;
             lbl_803DD774 = (u16)clamped;
         }
         lbl_803DD77F = 0;
@@ -711,7 +717,8 @@ void timeListFn_8012be84(void)
     u8 buf[16];
 
     prev_state = lbl_803DD75B;
-    if (pauseMenuState != 0) return;
+    if (pauseMenuState != 0)
+        return;
 
     {
         u16 b = getButtonsJustPressed(0);
@@ -776,9 +783,11 @@ int pauseMenuIsFox(void)
     u8 is_zero;
 
     s = Obj_GetPlayerObject();
-    if (s == NULL) return 0;
+    if (s == NULL)
+        return 0;
     is_zero = objIsCurModelNotZero() == 0;
-    if (is_zero) return 0;
+    if (is_zero)
+        return 0;
     inner = ((GameObject*)s)->anim.parent;
     if (inner != NULL)
     {
@@ -840,8 +849,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     Camera_RebuildProjectionMatrix();
     {
         u16* obj = gRenderModeObj;
-        GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024,
-                      (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
+        GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }
 }
@@ -878,7 +886,8 @@ void pauseMenuInit(void)
             ((f32*)lbl_803A9410[i])[2] = 0.0f;
             {
                 void* p = lbl_803A9410[i];
-                if (((u32*)p)[0x13] > 0x90000000U) ((u32*)p)[0x13] = 0;
+                if (((u32*)p)[0x13] > 0x90000000U)
+                    ((u32*)p)[0x13] = 0;
             }
         }
     }
@@ -939,7 +948,8 @@ void npcTalkFn_8012e880(void)
     {
         s32 step = framesThisStep << 3;
         lbl_803DD8D0 = (s16)(lbl_803DD8D0 - step);
-        if (lbl_803DD8D0 < 0) lbl_803DD8D0 = 0;
+        if (lbl_803DD8D0 < 0)
+            lbl_803DD8D0 = 0;
     }
 
     if (lbl_803DD8D0 == 0)
@@ -979,8 +989,7 @@ void npcTalkFn_8012e880(void)
         lbl_803DD8CC = cur;
         if (cur <= 0.0f)
         {
-            lbl_803DD8CC = (f32)(s32)(s16)
-            lbl_803DD8CA;
+            lbl_803DD8CC = (f32)(s32)(s16)lbl_803DD8CA;
             ((s32*)lbl_803A9440)[1]++;
             {
                 u16* end = gameTextGet(curGameText);
@@ -1009,7 +1018,8 @@ void perspectiveFn_80129db4(void)
 {
     f32 saved_fov;
 
-    if (pauseMenuState == 0) return;
+    if (pauseMenuState == 0)
+        return;
     Camera_SetCurrentViewIndex(1);
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
@@ -1019,9 +1029,8 @@ void perspectiveFn_80129db4(void)
     Camera_UpdateViewMatrices();
     {
         u16* obj = gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C,
-                      (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
-                      lbl_803E1E3C, lbl_803E1E68);
+        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
+                      lbl_803E1E68);
     }
     shadowRenderFn_8006b558(((void**)lbl_803A9410)[lbl_803DBA64]);
     {
@@ -1077,8 +1086,10 @@ void pauseMenuDrawText(void)
     s16 mirrored;
     s32 v[4];
 
-    if (lbl_803DD774 == 0) return;
-    if (gWorldMapVoiceoverTimer != 0) return;
+    if (lbl_803DD774 == 0)
+        return;
+    if (gWorldMapVoiceoverTimer != 0)
+        return;
 
     saved = gameTextGetCharset();
     gameTextSetCharset(gPauseMenuTextCharset, 3);
@@ -1098,7 +1109,8 @@ void pauseMenuDrawText(void)
         mirrored = (s16)(0xff - lbl_803DD774);
     }
     alpha = (s16)(mirrored * 0xf);
-    if (alpha > 0xff) alpha = 0xff;
+    if (alpha > 0xff)
+        alpha = 0xff;
 
     target = cur;
     if (lbl_803DD774 > 0x7f)
@@ -1107,7 +1119,8 @@ void pauseMenuDrawText(void)
     }
     target = (s16)(target - 0x14);
     target = (s16)((target < 0 ? 0 : target) << 4);
-    if (target > 0x10e) target = 0x10e;
+    if (target > 0x10e)
+        target = 0x10e;
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
     gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
@@ -1118,7 +1131,8 @@ void pauseMenuDrawText(void)
         int blit_x = width + 0x28;
         s16 clamped;
         clamped = (s16)((target < blit_x) ? target : blit_x);
-        if (clamped < 0) clamped = 0;
+        if (clamped < 0)
+            clamped = 0;
         *(u16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (clamped >> 1));
     }
@@ -1142,7 +1156,8 @@ int pauseMenuGridFn_8012b4c4(void)
     s8 dir;
     int mag = cx;
 
-    if (mag < 0) mag = -mag;
+    if (mag < 0)
+        mag = -mag;
     if (mag >= 0xf)
     {
         dir = (cx < 0) ? -1 : ((cx > 0) ? 1 : 0);
@@ -1215,8 +1230,7 @@ void pauseMenuFn_8012b77c(void)
     v = (v < lbl_803E1F60) ? v : lbl_803E1F60;
     *(f32*)&lbl_803DD760 = v;
 
-    if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) &&
-        ((int)btn & PAD_BUTTON_B) && speed > lbl_803E2160)
+    if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) && ((int)btn & PAD_BUTTON_B) && speed > lbl_803E2160)
     {
         u8 i;
         buttonDisable(0, PAD_BUTTON_B);
@@ -1248,7 +1262,8 @@ void pauseMenuFn_8012b77c(void)
     }
 
     lbl_803DD784 -= framesThisStep * 0x50;
-    if (lbl_803DD784 < 0) lbl_803DD784 = 0;
+    if (lbl_803DD784 < 0)
+        lbl_803DD784 = 0;
     pauseMenuAnimateCarousel();
 }
 
@@ -1277,10 +1292,9 @@ void boxDrawFn_8012975c(void)
     {
         i = idx;
         drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
-                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha),
-                    (u16)(uv = i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av,
-                          (u16)uv, 0x18, 0x34, 1);
+                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha), (u16)(uv = i * 2 + 0xbb));
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av, (u16)uv, 0x18,
+                          0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
     }
@@ -1291,10 +1305,9 @@ void boxDrawFn_8012975c(void)
     {
         i = idx;
         drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
-                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha),
-                    (u16)(uv = i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av,
-                          (u16)uv, 0x18, 0x34, 1);
+                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha), (u16)(uv = i * 2 + 0xbb));
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av, (u16)uv, 0x18,
+                          0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
     }
@@ -1311,32 +1324,52 @@ void fn_80128120(int unused, int alpha)
     u8 litSegments;
     s8 i;
 
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20D8, yPos, alpha, lbl_803E1F34, 0);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20D8, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e, 1);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20DC, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e, 2);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20DC, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e, 3);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E4, yPos, alpha, lbl_803E1F34, 0x8, 0x20, 0);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E8, yPos, alpha, lbl_803E1F34, 0x8, 0x20, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E1FD0, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20F4, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20F4, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20FC, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20FC, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E2100, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20D8, yPos, alpha, lbl_803E1F34,
+                         0);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20D8, yPos, alpha, lbl_803E1F34,
+                    0x1c, 0x1e, 1);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20DC, yPos, alpha, lbl_803E1F34,
+                    0x1c, 0x1e, 2);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20DC, yPos, alpha, lbl_803E1F34,
+                    0x1c, 0x1e, 3);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E4, yPos, alpha, lbl_803E1F34, 0x8,
+                    0x20, 0);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E8, yPos, alpha, lbl_803E1F34, 0x8,
+                    0x20, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E1FD0, yPos, alpha, lbl_803E1F34,
+                         0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20F4, yPos, alpha, lbl_803E1F34,
+                         0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20F4, yPos, alpha, lbl_803E1F34,
+                         0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20FC, yPos, alpha, lbl_803E1F34,
+                         0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20FC, yPos, alpha, lbl_803E1F34,
+                         0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E2100, yPos, alpha, lbl_803E1F34,
+                         0);
 
     hintText = (u16)getNextTaskHintText();
-    if (hintText > 0xb3) litSegments = 6;
-    else if (hintText > 0xb0) litSegments = 5;
-    else if (hintText > 0x8a) litSegments = 4;
-    else if (hintText > 0x71) litSegments = 3;
-    else if (hintText > 0x48) litSegments = 2;
-    else if (hintText > 0x8) litSegments = 1;
-    else litSegments = 0;
+    if (hintText > 0xb3)
+        litSegments = 6;
+    else if (hintText > 0xb0)
+        litSegments = 5;
+    else if (hintText > 0x8a)
+        litSegments = 4;
+    else if (hintText > 0x71)
+        litSegments = 3;
+    else if (hintText > 0x48)
+        litSegments = 2;
+    else if (hintText > 0x8)
+        litSegments = 1;
+    else
+        litSegments = 0;
 
     for (i = 0; i < GAMEUI_HINT_BAR_SEGMENT_COUNT; i++)
     {
         int t = 0x11;
-        if (i >= litSegments) t = -1;
+        if (i >= litSegments)
+            t = -1;
         lbl_8031BB90[lbl_803DBA9C[i]].f0 = (s16)t;
     }
 }
@@ -1427,13 +1460,19 @@ void drawWorldMapHud(void)
             }
 
             {
-            TaskHintEntry* he = gTaskHintTable;
-            if (n >= he[base[0]].thresh) li_ = gGameUiTaskHintCandidates[0];
-            else if (n >= he[base[1]].thresh) li_ = gGameUiTaskHintCandidates[1];
-            else if (n >= he[base[2]].thresh) li_ = gGameUiTaskHintCandidates[2];
-            else if (n >= he[base[3]].thresh) li_ = gGameUiTaskHintCandidates[3];
-            else if (n >= he[base[4]].thresh) li_ = gGameUiTaskHintCandidates[4];
-            else li_ = -1;
+                TaskHintEntry* he = gTaskHintTable;
+                if (n >= he[base[0]].thresh)
+                    li_ = gGameUiTaskHintCandidates[0];
+                else if (n >= he[base[1]].thresh)
+                    li_ = gGameUiTaskHintCandidates[1];
+                else if (n >= he[base[2]].thresh)
+                    li_ = gGameUiTaskHintCandidates[2];
+                else if (n >= he[base[3]].thresh)
+                    li_ = gGameUiTaskHintCandidates[3];
+                else if (n >= he[base[4]].thresh)
+                    li_ = gGameUiTaskHintCandidates[4];
+                else
+                    li_ = -1;
             }
         }
 
@@ -1629,8 +1668,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             if (starred != 0)
             {
                 u8* box2 = gameTextGetBox(0x87);
-                drawTexture(((HudTextures*)hudTextures)->texF8,
-                            (f32)(*(s16*)(box2 + 0x14) + 0x64),
+                drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(*(s16*)(box2 + 0x14) + 0x64),
                             (f32)(*(s16*)(box2 + 0x16) + k * 0x1e + 0x57), 0xff, 0x100);
                 gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
             }
@@ -1805,8 +1843,7 @@ void pauseMenuRunSubmenu(int p1)
             pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 2, 0);
             return;
         }
-        if (sel >= 0 || (u8)p1 != 0 ||
-            (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
+        if (sel >= 0 || (u8)p1 != 0 || (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
         {
             if (lbl_803DD824[lbl_803DD7D8].f18 != 0)
             {
@@ -1915,8 +1952,7 @@ void cMenuRun(void)
         break;
     case 1:
     case 3:
-        if (mainGetBit(yButtonItem) == 0 ||
-            (gYButtonUsedBit > -1 && mainGetBit(gYButtonUsedBit) != 0))
+        if (mainGetBit(yButtonItem) == 0 || (gYButtonUsedBit > -1 && mainGetBit(gYButtonUsedBit) != 0))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
@@ -1939,8 +1975,10 @@ void cMenuRun(void)
 
     {
         int open;
-        if ((s8)cMenuOpen == 0) open = 0;
-        else open = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
+        if ((s8)cMenuOpen == 0)
+            open = 0;
+        else
+            open = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
         if (open)
         {
             s16 cur = gCMenuSelIndex;
@@ -1970,7 +2008,8 @@ void cMenuRun(void)
             if ((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c)
             {
                 int m = gCMenuScrollTimer;
-                if (m < 0) m = -m;
+                if (m < 0)
+                    m = -m;
                 if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
                 {
                     if ((s8)lbl_803DBA65 == 0)
@@ -1984,7 +2023,8 @@ void cMenuRun(void)
             if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
             {
                 int m = gCMenuScrollTimer;
-                if (m < 0) m = -m;
+                if (m < 0)
+                    m = -m;
                 if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
                 {
                     if ((s8)lbl_803DBA65 == 0)
@@ -2072,8 +2112,10 @@ void cMenuRun(void)
                     if (b2 & 0x900)
                     {
                         int open2;
-                        if ((s8)cMenuOpen == 0) open2 = 0;
-                        else open2 = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
+                        if ((s8)cMenuOpen == 0)
+                            open2 = 0;
+                        else
+                            open2 = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
                         if (open2)
                         {
                             u8 matched = 0;
@@ -2185,9 +2227,12 @@ void cMenuRun(void)
     {
         u8 isOpen = cMenuOpen;
         int notOpen;
-        if ((s8)isOpen != 0) notOpen = 0;
-        else if (gCMenuOpenAnim != 0) notOpen = 0;
-        else notOpen = 1;
+        if ((s8)isOpen != 0)
+            notOpen = 0;
+        else if (gCMenuOpenAnim != 0)
+            notOpen = 0;
+        else
+            notOpen = 1;
         if (notOpen)
         {
             cMenuState = 0;
@@ -2302,19 +2347,10 @@ void fn_80128470(int alpha)
         int vx = e->x + *(s8*)((char*)e + 0xb);
         u16 w16;
         s16 alpha;
-        int x1 = (int)
-        ((f32)vx - lbl_803E2110 - (f32)(u8)
-        cw
-        )
-        ;
+        int x1 = (int)((f32)vx - lbl_803E2110 - (f32)(u8)cw);
         s16 x2 = (s16)((u8)cw + vx);
         int vy = e->y;
-        int y1 = (int)
-        ((f32)(u32)
-        vy - lbl_803E2114 - (f32)(u8)
-        ch
-        )
-        ;
+        int y1 = (int)((f32)(u32)vy - lbl_803E2114 - (f32)(u8)ch);
         s16 y2 = (s16)((u8)ch + vy);
         s16 ph = (s16)((int)lbl_803DD748 & 0x3f);
         if (ph & 0x20)
@@ -2323,14 +2359,10 @@ void fn_80128470(int alpha)
         }
         alpha = (s16)(ph * (alpha16 * 0xc0 / 0x100 + 0x40) / 31);
         tex = (HudTextures*)hudTextures;
-        pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1,
-                             0x100, (u8)alpha, (w16 = w), 0);
-        drawFn_8011eb3c((int)tex->tex80, x2, (f32)(s16)y1,
-                        0x100, (u8)alpha, w16, 0x12, 0xa, 1);
-        drawFn_8011eb3c((int)tex->tex80, (f32)(s16)x1, y2,
-                        0x100, (u8)alpha, w16, 0x12, 0xa, 2);
-        drawFn_8011eb3c((int)tex->tex80, x2, y2,
-                        0x100, (u8)alpha, w16, 0x12, 0xa, 3);
+        pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)alpha, (w16 = w), 0);
+        drawFn_8011eb3c((int)tex->tex80, x2, (f32)(s16)y1, 0x100, (u8)alpha, w16, 0x12, 0xa, 1);
+        drawFn_8011eb3c((int)tex->tex80, (f32)(s16)x1, y2, 0x100, (u8)alpha, w16, 0x12, 0xa, 2);
+        drawFn_8011eb3c((int)tex->tex80, x2, y2, 0x100, (u8)alpha, w16, 0x12, 0xa, 3);
     }
     gameTextSetDrawFunc(0);
 }
@@ -2433,12 +2465,18 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     taskCount++;
                 }
-                if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[0];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[1];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[2];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[3];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[4];
-                else tmp = -1;
+                if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18))
+                    tmp = (s8)gGameUiTaskHintCandidates[0];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18))
+                    tmp = (s8)gGameUiTaskHintCandidates[1];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18))
+                    tmp = (s8)gGameUiTaskHintCandidates[2];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18))
+                    tmp = (s8)gGameUiTaskHintCandidates[3];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18))
+                    tmp = (s8)gGameUiTaskHintCandidates[4];
+                else
+                    tmp = -1;
                 li_ = (s8)tmp;
             }
             {
@@ -2623,8 +2661,9 @@ void pauseMenuFn_80129ee0(void)
         menuMin = 4;
     }
     if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
-        (player != 0 && coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
-            playerGetFocusObject(player) != 0))
+        (player != 0 &&
+         coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
+         playerGetFocusObject(player) != 0))
     {
         menuMax = 4;
     }
@@ -2721,308 +2760,306 @@ void pauseMenuFn_80129ee0(void)
         case 2:
             break;
         default:
+        {
+            int t = lbl_803DD78C + framesThisStep * 0x32;
+            if (t > 0x400)
             {
-                int t = lbl_803DD78C + framesThisStep * 0x32;
-                if (t > 0x400)
-                {
-                    t = 0x400;
-                }
-                lbl_803DD78C = t;
+                t = 0x400;
             }
-            break;
+            lbl_803DD78C = t;
+        }
+        break;
         }
         switch (state)
         {
         case 0:
+        {
+            int audioFree;
+            int camMode;
+            int canOpen;
+            camMode = (*gCameraInterface)->getMode();
+            canOpen = 1;
+            audioFree = 0;
+            if ((player == 0 || !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
+                getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0)
             {
-                int audioFree;
-                int camMode;
-                int canOpen;
-                camMode = (*gCameraInterface)->getMode();
-                canOpen = 1;
-                audioFree = 0;
-                if ((player == 0 || !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
-                    getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0)
+                audioFree = 1;
+            }
+            if (audioFree == 0 && camMode != 0x51)
+            {
+                canOpen = 0;
+            }
+            if ((btn & PAD_BUTTON_MENU) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
+                (*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C && canOpen != 0 && lbl_803DD75B == 0 &&
+                getHudHiddenFrameCount() == 0)
+            {
+                pauseMenuFrameCounter = 0x3c;
+                cutsceneFadeInOut(1);
+                setTimeStop(0xff);
+                buttonDisable(0, PAD_BUTTON_MENU);
+                pauseMenuInit();
+                lbl_803DBA64 = 5;
+                if (isArwing != 0)
                 {
-                    audioFree = 1;
+                    arwingHudVisible = 0;
                 }
-                if (audioFree == 0 && camMode != 0x51)
+                if (lbl_803DD772 != 0 || lbl_803DD770 != 0)
                 {
-                    canOpen = 0;
-                }
-                if ((btn & PAD_BUTTON_MENU) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
-                    (*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C &&
-                    canOpen != 0 && lbl_803DD75B == 0 && getHudHiddenFrameCount() == 0)
-                {
-                    pauseMenuFrameCounter = 0x3c;
-                    cutsceneFadeInOut(1);
-                    setTimeStop(0xff);
-                    buttonDisable(0, PAD_BUTTON_MENU);
-                    pauseMenuInit();
-                    lbl_803DBA64 = 5;
-                    if (isArwing != 0)
+                    lbl_803DD8DC = getCurGameText();
+                    if (lbl_803DD8E0 == lbl_803DD7D6)
                     {
-                        arwingHudVisible = 0;
+                        hintTextMapFn_800ea264();
                     }
-                    if (lbl_803DD772 != 0 || lbl_803DD770 != 0)
+                    pauseMenuState = 4;
+                    if (lbl_803DD8E0 == lbl_803DD7D6)
                     {
-                        lbl_803DD8DC = getCurGameText();
-                        if (lbl_803DD8E0 == lbl_803DD7D6)
-                        {
-                            hintTextMapFn_800ea264();
-                        }
-                        pauseMenuState = 4;
-                        if (lbl_803DD8E0 == lbl_803DD7D6)
-                        {
-                            hintTextMapFn_800ea264();
-                        }
-                        else
-                        {
-                            gameTextLoadDir(0xb);
-                        }
-                        gGameUiCurHintTextMap = 0xb;
-                        lbl_803DD764 = lbl_803E1E60;
+                        hintTextMapFn_800ea264();
                     }
                     else
                     {
-                        pauseMenuState = 1;
-                        lbl_803DD8DC = getCurGameText();
                         gameTextLoadDir(0xb);
                     }
+                    gGameUiCurHintTextMap = 0xb;
+                    lbl_803DD764 = lbl_803E1E60;
                 }
+                else
                 {
-                    s16 tm = lbl_803DD772;
-                    if (tm != 0 && player != 0 && !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) &&
-                        (u8)pauseMenuIsFox() != 0)
-                    {
-                        s16 nv;
-                        lbl_803DD772 += framesThisStep;
-                        nv = lbl_803DD772;
-                        if (nv >= 0x1518)
-                        {
-                            lbl_803DD772 = 0;
-                            lbl_803DD770 = 1;
-                            Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
-                        }
-                        else if ((nv >= 0xa && tm < 0xa) || (nv >= 0x708 && tm < 0x708))
-                        {
-                            lbl_803DD770 = 1;
-                        }
-                    }
+                    pauseMenuState = 1;
+                    lbl_803DD8DC = getCurGameText();
+                    gameTextLoadDir(0xb);
                 }
-                if (lbl_803DD770 != 0)
+            }
+            {
+                s16 tm = lbl_803DD772;
+                if (tm != 0 && player != 0 && !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) &&
+                    (u8)pauseMenuIsFox() != 0)
                 {
-                    f32 dt = lbl_803DD7DC;
-                    f32 nt = dt + timeDelta;
-                    lbl_803DD7DC = nt;
-                    if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C)
+                    s16 nv;
+                    lbl_803DD772 += framesThisStep;
+                    nv = lbl_803DD772;
+                    if (nv >= 0x1518)
                     {
-                        lbl_803DD7DC = 0.0f;
+                        lbl_803DD772 = 0;
+                        lbl_803DD770 = 1;
                         Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                     }
-                    lbl_803DD770 += framesThisStep;
-                    if (lbl_803DD770 > 0xff)
+                    else if ((nv >= 0xa && tm < 0xa) || (nv >= 0x708 && tm < 0x708))
                     {
-                        lbl_803DD770 = 0;
+                        lbl_803DD770 = 1;
                     }
                 }
-                break;
             }
+            if (lbl_803DD770 != 0)
+            {
+                f32 dt = lbl_803DD7DC;
+                f32 nt = dt + timeDelta;
+                lbl_803DD7DC = nt;
+                if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C)
+                {
+                    lbl_803DD7DC = 0.0f;
+                    Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
+                }
+                lbl_803DD770 += framesThisStep;
+                if (lbl_803DD770 > 0xff)
+                {
+                    lbl_803DD770 = 0;
+                }
+            }
+            break;
+        }
         case 1:
+        {
+            u16 b2;
+            padGetAnalogInput(0, &analogX, &analogY);
+            pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
+            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 && AudioStream_IsPreparing() == 0)
             {
-                u16 b2;
-                padGetAnalogInput(0, &analogX, &analogY);
-                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
-                if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 &&
-                    AudioStream_IsPreparing() == 0)
-                {
-                    ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
-                    lbl_803DD781 = 0;
-                }
-                if ((s8)analogX == 0 || lbl_803DD78C == 0 ||
-                    lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
-                {
-                    switch ((s8)lbl_803DBA64)
-                    {
-                    case 1:
-                    case 2:
-                    case 3:
-                    {
-                        char* anim = hud->anims[lbl_803DBA64];
-                        if (*(u32*)(anim + 0x4c) > 0x90000000)
-                        {
-                            *(u32*)(anim + 0x4c) = 0;
-                        }
-                    }
-                    }
-                    {
-                        u8 prev = lbl_803DBA64;
-                        *(u8*)&lbl_803DBA64 = prev + analogX;
-                        if ((s8)lbl_803DBA64 < menuMin)
-                        {
-                            lbl_803DBA64 = menuMax;
-                        }
-                        if ((s8)lbl_803DBA64 > menuMax)
-                        {
-                            lbl_803DBA64 = menuMin;
-                        }
-                        if ((s8)lbl_803DBA64 != prev)
-                        {
-                            Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
-                        }
-                    }
-                    switch ((s8)lbl_803DBA64)
-                    {
-                    case 1:
-                    case 2:
-                    case 3:
-                    {
-                        char* anim = hud->anims[lbl_803DBA64];
-                        if (*(u32*)(anim + 0x4c) > 0x90000000)
-                        {
-                            *(u32*)(anim + 0x4c) = 0;
-                        }
-                    }
-                    }
-                }
-                if (lbl_803DD786 < lbl_803DBAA2)
-                {
-                    lbl_803DD786 += framesThisStep;
-                    if (lbl_803DD786 >= lbl_803DBAA2)
-                    {
-                        pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
-                    }
-                }
-                else
-                {
-                    lbl_803DD784 += framesThisStep * 0x28;
-                    if (lbl_803DD784 > 0x400)
-                    {
-                        lbl_803DD784 = 0x400;
-                    }
-                }
-                b2 = btn;
-                if (b2 & PAD_BUTTON_A)
-                {
-                    u8 prev;
-                    Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
-                    buttonDisable(0, PAD_BUTTON_A);
-                    lbl_803DD7BC = 0.0f;
-                    lbl_803DD7C0 = 0.0f;
-                    lbl_803DD764 = lbl_803E1E60;
-                    lbl_803DD7D8 = 0;
-                    lbl_803DD768 = 0.0f;
-                    prev = lbl_803DBA64;
-                    switch ((s8)prev)
-                    {
-                    case 0:
-                        break;
-                    case 1:
-                        pauseMenuSetupTitle(0x2b1, prev, 2, 3);
-                        pauseMenuState = 5;
-                        lbl_803DD7C4 = 0;
-                        lbl_803DD7D8 = 2;
-                        AudioStream_Play(0x272f, AudioStream_StartPrepared);
-                        break;
-                    case 2:
-                        pauseMenuSetupTitle(0x2b1, prev, 2, 3);
-                        pauseMenuState = 3;
-                        lbl_803DD7C4 = 0;
-                        AudioStream_Play(randomGetRange(0, 1) + 0x2710, AudioStream_StartPrepared);
-                        break;
-                    case 3:
-                        pauseMenuSetupTitle(0x2b1, prev, 4, 3);
-                        pauseMenuState = 4;
-                        if (lbl_803DD8E0 == lbl_803DD7D6)
-                        {
-                            gGameUiCurHintTextMap = hintTextMapFn_800ea264();
-                        }
-                        else
-                        {
-                            gGameUiCurHintTextMap = getCurGameText();
-                        }
-                        AudioStream_Play(randomGetRange(0, 1) + 0x271d, AudioStream_StartPrepared);
-                        break;
-                    case 4:
-                        pauseMenuState = 6;
-                        lbl_803DD7D8 = 1;
-                        break;
-                    case 5:
-                        pauseMenuState = 7;
-                        lbl_803DD7D8 = 1;
-                        break;
-                    }
-                    if (tbl->flags11D0[pauseMenuState] != 0)
-                    {
-                        lbl_803DD820 = (f32)(u32)(hud->times190[pauseMenuState] * 0x3c);
-                        lbl_803DD81C = 1;
-                    }
-                }
-                pauseMenuAnimateCarousel();
-                if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0)
-                {
-                    Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
-                    Sfx_PlayFromObject(0, SFXTRIG_menu_fox_weapons_up);
-                    pauseMenuFrameCounter = 0x3c;
-                    gameTextLoadForMap_800571f0(1);
-                    cutsceneFadeInOut(0);
-                    buttonDisable(0, 0x1200);
-                    pauseMenuState = 2;
-                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 2, 3);
-                }
-                break;
+                ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
+                lbl_803DD781 = 0;
             }
+            if ((s8)analogX == 0 || lbl_803DD78C == 0 || lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
+            {
+                switch ((s8)lbl_803DBA64)
+                {
+                case 1:
+                case 2:
+                case 3:
+                {
+                    char* anim = hud->anims[lbl_803DBA64];
+                    if (*(u32*)(anim + 0x4c) > 0x90000000)
+                    {
+                        *(u32*)(anim + 0x4c) = 0;
+                    }
+                }
+                }
+                {
+                    u8 prev = lbl_803DBA64;
+                    *(u8*)&lbl_803DBA64 = prev + analogX;
+                    if ((s8)lbl_803DBA64 < menuMin)
+                    {
+                        lbl_803DBA64 = menuMax;
+                    }
+                    if ((s8)lbl_803DBA64 > menuMax)
+                    {
+                        lbl_803DBA64 = menuMin;
+                    }
+                    if ((s8)lbl_803DBA64 != prev)
+                    {
+                        Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
+                    }
+                }
+                switch ((s8)lbl_803DBA64)
+                {
+                case 1:
+                case 2:
+                case 3:
+                {
+                    char* anim = hud->anims[lbl_803DBA64];
+                    if (*(u32*)(anim + 0x4c) > 0x90000000)
+                    {
+                        *(u32*)(anim + 0x4c) = 0;
+                    }
+                }
+                }
+            }
+            if (lbl_803DD786 < lbl_803DBAA2)
+            {
+                lbl_803DD786 += framesThisStep;
+                if (lbl_803DD786 >= lbl_803DBAA2)
+                {
+                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
+                }
+            }
+            else
+            {
+                lbl_803DD784 += framesThisStep * 0x28;
+                if (lbl_803DD784 > 0x400)
+                {
+                    lbl_803DD784 = 0x400;
+                }
+            }
+            b2 = btn;
+            if (b2 & PAD_BUTTON_A)
+            {
+                u8 prev;
+                Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
+                buttonDisable(0, PAD_BUTTON_A);
+                lbl_803DD7BC = 0.0f;
+                lbl_803DD7C0 = 0.0f;
+                lbl_803DD764 = lbl_803E1E60;
+                lbl_803DD7D8 = 0;
+                lbl_803DD768 = 0.0f;
+                prev = lbl_803DBA64;
+                switch ((s8)prev)
+                {
+                case 0:
+                    break;
+                case 1:
+                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
+                    pauseMenuState = 5;
+                    lbl_803DD7C4 = 0;
+                    lbl_803DD7D8 = 2;
+                    AudioStream_Play(0x272f, AudioStream_StartPrepared);
+                    break;
+                case 2:
+                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
+                    pauseMenuState = 3;
+                    lbl_803DD7C4 = 0;
+                    AudioStream_Play(randomGetRange(0, 1) + 0x2710, AudioStream_StartPrepared);
+                    break;
+                case 3:
+                    pauseMenuSetupTitle(0x2b1, prev, 4, 3);
+                    pauseMenuState = 4;
+                    if (lbl_803DD8E0 == lbl_803DD7D6)
+                    {
+                        gGameUiCurHintTextMap = hintTextMapFn_800ea264();
+                    }
+                    else
+                    {
+                        gGameUiCurHintTextMap = getCurGameText();
+                    }
+                    AudioStream_Play(randomGetRange(0, 1) + 0x271d, AudioStream_StartPrepared);
+                    break;
+                case 4:
+                    pauseMenuState = 6;
+                    lbl_803DD7D8 = 1;
+                    break;
+                case 5:
+                    pauseMenuState = 7;
+                    lbl_803DD7D8 = 1;
+                    break;
+                }
+                if (tbl->flags11D0[pauseMenuState] != 0)
+                {
+                    lbl_803DD820 = (f32)(u32)(hud->times190[pauseMenuState] * 0x3c);
+                    lbl_803DD81C = 1;
+                }
+            }
+            pauseMenuAnimateCarousel();
+            if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0)
+            {
+                Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
+                Sfx_PlayFromObject(0, SFXTRIG_menu_fox_weapons_up);
+                pauseMenuFrameCounter = 0x3c;
+                gameTextLoadForMap_800571f0(1);
+                cutsceneFadeInOut(0);
+                buttonDisable(0, 0x1200);
+                pauseMenuState = 2;
+                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 2, 3);
+            }
+            break;
+        }
         case 2:
+        {
+            s16 t = (s16)(lbl_803DD78C - framesThisStep * 0x32);
+            lbl_803DD78C = t;
+            if (t < 0)
             {
-                s16 t = (s16)(lbl_803DD78C - framesThisStep * 0x32);
-                lbl_803DD78C = t;
-                if (t < 0)
+                int k;
+                lbl_803DD78C = 0;
+                if (isArwing != 0)
                 {
-                    int k;
-                    lbl_803DD78C = 0;
-                    if (isArwing != 0)
+                    arwingHudVisible = 1;
+                }
+                pauseMenuState = 0;
+                if (player == 0 || fn_80296C4C(player) == 0)
+                {
+                    AudioStream_StopCurrent();
+                }
+                {
+                    char** p;
+                    for (k = 0, p = &hud->anims[0]; k < 4; p++, k++)
                     {
-                        arwingHudVisible = 1;
-                    }
-                    pauseMenuState = 0;
-                    if (player == 0 || fn_80296C4C(player) == 0)
-                    {
-                        AudioStream_StopCurrent();
-                    }
-                    {
-                        char** p;
-                        for (k = 0, p = &hud->anims[0]; k < 4; p++, k++)
+                        if (*p != 0)
                         {
-                            if (*p != 0)
+                            *(int*)(*(char**)(*p + 0x64) + 0x4) = 0;
+                            *(int*)(*(char**)(*p + 0x64) + 0x8) = 0;
+                            if (*(u32*)(*p + 0x4c) > 0x90000000)
                             {
-                                *(int*)(*(char**)(*p + 0x64) + 0x4) = 0;
-                                *(int*)(*(char**)(*p + 0x64) + 0x8) = 0;
-                                if (*(u32*)(*p + 0x4c) > 0x90000000)
-                                {
-                                    *(u32*)(*p + 0x4c) = 0;
-                                }
-                                Obj_FreeObject(*p);
-                                *p = 0;
+                                *(u32*)(*p + 0x4c) = 0;
                             }
+                            Obj_FreeObject(*p);
+                            *p = 0;
                         }
                     }
-                    Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
-                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 4, 3);
                 }
-                else
-                {
-                    pauseMenuAnimateCarousel();
-                }
-                {
-                    s16 v = (s16)(lbl_803DD784 - framesThisStep * 0x50);
-                    lbl_803DD784 = v;
-                    if (v < 0)
-                    {
-                        lbl_803DD784 = 0;
-                    }
-                }
-                break;
+                Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
+                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 4, 3);
             }
+            else
+            {
+                pauseMenuAnimateCarousel();
+            }
+            {
+                s16 v = (s16)(lbl_803DD784 - framesThisStep * 0x50);
+                lbl_803DD784 = v;
+                if (v < 0)
+                {
+                    lbl_803DD784 = 0;
+                }
+            }
+            break;
+        }
         case 3:
             if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
             {
@@ -3038,8 +3075,7 @@ void pauseMenuFn_80129ee0(void)
                 if (lbl_803DD7C4 == 0)
                 {
                     hintTextFn_800ea174(hintBuf);
-                    if ((u8)r != 0 ||
-                        (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
+                    if ((u8)r != 0 || (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
                     {
                         lbl_803DD7D8 = lbl_803DD8E0;
                     }
@@ -3323,7 +3359,8 @@ void pauseMenuFn_80129ee0(void)
                 lbl_803DD758 = 0;
                 if (player != 0)
                 {
-                    lbl_803DD8E0 = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
+                    lbl_803DD8E0 =
+                        coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
                     if (lbl_803DD8E0 == 7)
                     {
                         for (lbl_803DD756 = 0; lbl_803DD756 < 4;)
@@ -3360,8 +3397,7 @@ void pauseMenuFn_80129ee0(void)
                     buttonDisable(0, PAD_BUTTON_A);
                     lbl_803DD764 = lbl_803E2168;
                 }
-                else if ((btn & PAD_BUTTON_B) && lbl_803DD764 > lbl_803E2160 &&
-                    lbl_803DD760 >= lbl_803E1F60)
+                else if ((btn & PAD_BUTTON_B) && lbl_803DD764 > lbl_803E2160 && lbl_803DD760 >= lbl_803E1F60)
                 {
                     buttonDisable(0, PAD_BUTTON_B);
                     lbl_803DD764 = lbl_803E2168;
@@ -3415,8 +3451,8 @@ void pauseMenuDoSave(void)
     Camera_RebuildProjectionMatrix();
     {
         u16* obj = gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
-                      lbl_803E1E3C, lbl_803E1E68);
+        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
+                      lbl_803E1E68);
     }
     for (i = 1; i < 6; i++)
     {
@@ -3529,9 +3565,7 @@ void fn_80128A7C(u8 i, int alpha, int flag)
             f32 pr;
             v = alpha;
             spd = (f32)(spd * (lbl_803E1F60 + lbl_803DD75C / lbl_803E2118));
-            spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
-                    lbl_803E1E94) +
-                lbl_803E2090;
+            spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94) + lbl_803E2090;
             dx = lbl_803E1F34 - x;
             pr = dx * lbl_803DD75C;
             x = (f32)(pr * lbl_803E2088 + x);
@@ -3577,8 +3611,7 @@ void fn_80128A7C(u8 i, int alpha, int flag)
                 ofs -= 0x14;
             }
             t1c0 = (int*)((u8*)&hud->textures1C0[0] + idv * 4);
-            pauseMenuDrawElement(*t1c0, x, y, ofs,
-                                 (u8)v, spd, flag);
+            pauseMenuDrawElement(*t1c0, x, y, ofs, (u8)v, spd, flag);
         }
     }
 }
@@ -3613,7 +3646,7 @@ void pauseMenuAnimateCarousel(void)
     if (player != NULL)
     {
         flag = (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
-            playerGetFocusObject(player) == 0);
+                playerGetFocusObject(player) == 0);
     }
     else
     {
@@ -3646,11 +3679,10 @@ void pauseMenuAnimateCarousel(void)
         lbl_803E2178 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 1000) / lbl_803E1E94);
     *(f32*)((u8*)lbl_803DD868[0] + 0x10) =
         (f32)(lbl_803E2180 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 400) / lbl_803E1E94) +
-            lbl_803E217C);
+              lbl_803E217C);
     {
         int d = 0x400 - lbl_803DD78C;
-        *(f32*)((u8*)lbl_803DD868[0] + 0x10) =
-            *(f32*)((u8*)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
+        *(f32*)((u8*)lbl_803DD868[0] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
     }
     *(f32*)((u8*)lbl_803DD868[1] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10);
     {
@@ -3684,17 +3716,15 @@ void pauseMenuAnimateCarousel(void)
                                                                      &animEvents);
         a = lbl_803E1E64 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
-        *(f32*)((u8*)lbl_803A9410[k] + 0xc) =
-            a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0xc);
+        *(f32*)((u8*)lbl_803A9410[k] + 0xc) = a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0xc);
         base = lbl_803E2050 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94) +
-            (*(f32*)((u8*)lbl_803DD868[0] + 0x10) + lbl_803E2010);
+               (*(f32*)((u8*)lbl_803DD868[0] + 0x10) + lbl_803E2010);
         a = lbl_803E1E64 - mathCosf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
         *(f32*)((u8*)lbl_803A9410[k] + 0x10) = a * lbl_803E2190 + base;
         a = lbl_803E1E64 * mathCosf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
-        *(f32*)((u8*)lbl_803A9410[k] + 0x14) =
-            a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0x14);
+        *(f32*)((u8*)lbl_803A9410[k] + 0x14) = a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0x14);
     }
 }
 
@@ -3769,10 +3799,13 @@ void CMenu_SetShouldClose(int val)
  * runs npcTalkFn_8012e880, returns 0. */
 int GameUI_run(void)
 {
-    if (gameUiResourcesLoaded == 0) return 0;
-    if (mapScreenVisible != 0) drawWorldMapHud();
+    if (gameUiResourcesLoaded == 0)
+        return 0;
+    if (mapScreenVisible != 0)
+        drawWorldMapHud();
     gameTextFadeOut();
-    if (cMenuEnabled != 0) cMenuRun();
+    if (cMenuEnabled != 0)
+        cMenuRun();
     npcTalkFn_8012e880();
     return 0;
 }
@@ -3846,7 +3879,8 @@ void GameUI_release(void)
 
     for (i = 0, p = g->hudTextures; i < 102; p++, i++)
     {
-        if (*p != 0) textureFree(*p);
+        if (*p != 0)
+            textureFree(*p);
     }
 
     gameUiResetMenuState();
@@ -4036,7 +4070,8 @@ void GameUI_update(void)
 
     if (player != 0)
     {
-        if (lbl_803DD75B != 0) timeListFn_8012be84();
+        if (lbl_803DD75B != 0)
+            timeListFn_8012be84();
 
         if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0)
@@ -4073,8 +4108,10 @@ void GameUI_update(void)
         }
 
         angDelta = (s16)(lbl_803DD79C - (u16)lbl_803DD79E);
-        if (angDelta > 0x8000) angDelta = (s16)(angDelta - 0xffff);
-        if (angDelta < -0x8000) angDelta = (s16)(angDelta + 0xffff);
+        if (angDelta > 0x8000)
+            angDelta = (s16)(angDelta - 0xffff);
+        if (angDelta < -0x8000)
+            angDelta = (s16)(angDelta + 0xffff);
 
         if (mainGetBit(GAMEBIT_IncomingCommunication))
         {
@@ -4091,19 +4128,27 @@ void GameUI_update(void)
         if (allowCStickTarget != 0)
         {
             int cxa, cya;
-            if ((s8)padGetCX(0) < 0) cxa = -padGetCX(0);
-            else cxa = padGetCX(0);
+            if ((s8)padGetCX(0) < 0)
+                cxa = -padGetCX(0);
+            else
+                cxa = padGetCX(0);
             if (cxa <= 5)
             {
-                if ((s8)padGetCY(0) < 0) cya = -padGetCY(0);
-                else cya = padGetCY(0);
-                if (cya <= 5) goto skipTarget;
+                if ((s8)padGetCY(0) < 0)
+                    cya = -padGetCY(0);
+                else
+                    cya = padGetCY(0);
+                if (cya <= 5)
+                    goto skipTarget;
             }
             {
                 int closed;
-                if (*(s8*)&cMenuOpen != 0) closed = 0;
-                else if (gCMenuOpenAnim != 0) closed = 0;
-                else closed = 1;
+                if (*(s8*)&cMenuOpen != 0)
+                    closed = 0;
+                else if (gCMenuOpenAnim != 0)
+                    closed = 0;
+                else
+                    closed = 1;
                 if (closed)
                 {
                     buttonDisable(0, 0xf0000);
@@ -4117,8 +4162,8 @@ void GameUI_update(void)
                         gCMenuButtons |= 0x40000;
                     }
                     else if (tricky != 0 && lbl_803A9320[1] != 0 && lbl_803A9320[9] <= 3 &&
-                        vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, (f32*)(tricky + 0x18)) <
-                        lbl_803E21D0)
+                             vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, (f32*)(tricky + 0x18)) <
+                                 lbl_803E21D0)
                     {
                         gCMenuButtons |= 0x80000;
                         trickyProximity = 1;
@@ -4167,9 +4212,12 @@ void GameUI_update(void)
             int closed;
             if ((flags & 0x20000) && tricky != 0 && (s8)cMenuState != 2)
             {
-                if (*(s8*)&cMenuOpen != 0) closed = 0;
-                else if (gCMenuOpenAnim != 0) closed = 0;
-                else closed = 1;
+                if (*(s8*)&cMenuOpen != 0)
+                    closed = 0;
+                else if (gCMenuOpenAnim != 0)
+                    closed = 0;
+                else
+                    closed = 1;
                 if (closed)
                 {
                     buttonDisable(0, 0x20000);
@@ -4184,9 +4232,12 @@ void GameUI_update(void)
             }
             if ((flags & 0x80000) && (s8)cMenuState != 3)
             {
-                if (*(s8*)&cMenuOpen != 0) closed = 0;
-                else if (gCMenuOpenAnim != 0) closed = 0;
-                else closed = 1;
+                if (*(s8*)&cMenuOpen != 0)
+                    closed = 0;
+                else if (gCMenuOpenAnim != 0)
+                    closed = 0;
+                else
+                    closed = 1;
                 if (closed)
                 {
                     buttonDisable(0, 0x80000);
@@ -4196,15 +4247,19 @@ void GameUI_update(void)
                     lbl_803DD8B7 = 0;
                     gCMenuCurSection = 0;
                     cMenuSelectFirstEnabledItem(0, 0);
-                    if (trickyProximity != 0) cMenuSelectItemByTarget(0, 0xc1, 0);
+                    if (trickyProximity != 0)
+                        cMenuSelectItemByTarget(0, 0xc1, 0);
                     goto afterDispatch;
                 }
             }
             if ((flags & 0x40000) && (s8)cMenuState != 4)
             {
-                if (*(s8*)&cMenuOpen != 0) closed = 0;
-                else if (gCMenuOpenAnim != 0) closed = 0;
-                else closed = 1;
+                if (*(s8*)&cMenuOpen != 0)
+                    closed = 0;
+                else if (gCMenuOpenAnim != 0)
+                    closed = 0;
+                else
+                    closed = 1;
                 if (closed)
                 {
                     buttonDisable(0, 0x40000);
@@ -4220,18 +4275,25 @@ void GameUI_update(void)
 
             {
                 int absCx = cx < 0 ? -cx : cx;
-                if (absCx < 0xf) goto camCheck;
+                if (absCx < 0xf)
+                    goto camCheck;
                 {
                     int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
-                    if (absPrev >= 0xf) goto camCheck;
+                    if (absPrev >= 0xf)
+                        goto camCheck;
                 }
-                if (gCMenuScrollTimer != 0) goto camCheck;
-                if (*(s8*)&cMenuOpen == 0) closed = 0;
-                else closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
-                if (!closed) goto camCheck;
+                if (gCMenuScrollTimer != 0)
+                    goto camCheck;
+                if (*(s8*)&cMenuOpen == 0)
+                    closed = 0;
+                else
+                    closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
+                if (!closed)
+                    goto camCheck;
                 {
                     int absAng = angDelta < 0 ? -angDelta : angDelta;
-                    if (absAng >= 0x2710) goto camCheck;
+                    if (absAng >= 0x2710)
+                        goto camCheck;
                 }
                 {
                     int dir = 1;
@@ -4244,8 +4306,10 @@ void GameUI_update(void)
                         lbl_803DD79A = 1;
                     }
                     next = (u8)(dir + st);
-                    if (next > 4) next = 2;
-                    if (next < 2) next = 4;
+                    if (next > 4)
+                        next = 2;
+                    if (next < 2)
+                        next = 4;
                     switch ((u8)next)
                     {
                     case 4:
@@ -4270,7 +4334,8 @@ void GameUI_update(void)
                 }
             }
         camCheck:
-            if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP) cMenuOpen = 0;
+            if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
+                cMenuOpen = 0;
         }
     afterDispatch:
 
@@ -4293,10 +4358,12 @@ void GameUI_update(void)
 
         lbl_803DD78E = cx;
         pauseMenuDrawStatus();
-        if (cMenuEnabled != 0) cMenuUpdateAnims();
+        if (cMenuEnabled != 0)
+            cMenuUpdateAnims();
         hudUpdateMinimapReveal();
         lbl_803DD8A8++;
-        if (lbl_803DD8A8 > 2) lbl_803DD8A8 = 2;
+        if (lbl_803DD8A8 > 2)
+            lbl_803DD8A8 = 2;
 
         {
             s16 sv = (*gCameraInterface)->getMinimapInfoText();
@@ -4309,9 +4376,12 @@ void GameUI_update(void)
             else
             {
                 int show;
-                if (lbl_803DD7A0 != 0) show = 0;
-                else if (lbl_803DD8D2 != 0) show = 0;
-                else show = 1;
+                if (lbl_803DD7A0 != 0)
+                    show = 0;
+                else if (lbl_803DD8D2 != 0)
+                    show = 0;
+                else
+                    show = 1;
                 if (show)
                 {
                     gMinimapInfoTextYCommitted = 0x140;
@@ -4394,9 +4464,18 @@ void textureFreeFn_8012fcec(void)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
-void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
-void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
+void Pause_SetDisabled(u8 v)
+{
+    pauseDisabled = v;
+}
+void Pause_ResetMenuFrameCounter(void)
+{
+    pauseMenuFrameCounter = 60;
+}
+void CMenu_SetFadeCounter(s16 v)
+{
+    cMenuFadeCounter = v;
+}
 
 void GameUI_initialise(void)
 {
@@ -4438,128 +4517,80 @@ void GameUI_initialise(void)
 
 u8 hudTextures[0x198];
 
-TaskHintEntry gTaskHintTable[] =
-{
-    { 0x02AA, 0x0487, 0x047A, { 0x00, 0x00 }, 0x28EA, 0x51CD, 0x51CA, { 0x00, 0x9C }, 0x0A66, 0x03, 0x00, 0x063C },
-    { 0x02A9, 0x0487, 0x0479, { 0x00, 0x00 }, 0x51C5, 0x51CD, 0x51C9, { 0x00, 0x9B }, 0x0A65, 0x02, 0x00, 0x05F3 },
-    { 0x03DF, 0x0477, 0x0000, { 0x00, 0x00 }, 0x28E9, 0x51C7, 0x0, { 0x00, 0x00 }, 0x0A63, 0x01, 0x00, 0x0000 },
-    { 0x02AB, 0x0487, 0x047B, { 0x00, 0x00 }, 0x51C6, 0x51CC, 0x51CB, { 0x00, 0x9D }, 0x0A67, 0x04, 0x00, 0x05F4 },
-    { 0x02A8, 0x0487, 0x0478, { 0x00, 0x00 }, 0x28EB, 0x51CC, 0x51C8, { 0x00, 0x9A }, 0x0A64, 0x01, 0x00, 0x04E9 },
+TaskHintEntry gTaskHintTable[] = {
+    {0x02AA, 0x0487, 0x047A, {0x00, 0x00}, 0x28EA, 0x51CD, 0x51CA, {0x00, 0x9C}, 0x0A66, 0x03, 0x00, 0x063C},
+    {0x02A9, 0x0487, 0x0479, {0x00, 0x00}, 0x51C5, 0x51CD, 0x51C9, {0x00, 0x9B}, 0x0A65, 0x02, 0x00, 0x05F3},
+    {0x03DF, 0x0477, 0x0000, {0x00, 0x00}, 0x28E9, 0x51C7, 0x0, {0x00, 0x00}, 0x0A63, 0x01, 0x00, 0x0000},
+    {0x02AB, 0x0487, 0x047B, {0x00, 0x00}, 0x51C6, 0x51CC, 0x51CB, {0x00, 0x9D}, 0x0A67, 0x04, 0x00, 0x05F4},
+    {0x02A8, 0x0487, 0x0478, {0x00, 0x00}, 0x28EB, 0x51CC, 0x51C8, {0x00, 0x9A}, 0x0A64, 0x01, 0x00, 0x04E9},
 };
 
-CMenuItemDef gCMenuCollectableItems[] =
-{
-    { 199, 180, -1, 581, -1, 16, 1028, 0xFF, 0x01 },
-    { 68, -1, -1, 373, -1, 7, 1029, 0xFF, 0x01 },
-    { 96, -1, -1, 374, -1, 1215, 1030, 0xFF, 0x01 },
-    { 81, -1, -1, 384, -1, 1217, 1033, 0xFF, 0x01 },
-    { 82, -1, -1, 385, -1, 1217, 1033, 0xFF, 0x01 },
-    { 83, -1, -1, 386, -1, 1217, 1033, 0xFF, 0x01 },
-    { 43, 42, -1, 373, -1, 19, 1035, 0xFF, 0x01 },
-    { 368, -1, -1, 419, -1, 11, 1036, 0xFF, 0x01 },
-    { 379, 385, -1, 1145, -1, 11, 1037, 0xFF, 0x01 },
-    { 382, 386, -1, 1145, -1, 11, 1037, 0xFF, 0x01 },
-    { 383, 387, -1, 1145, -1, 11, 1037, 0xFF, 0x01 },
-    { 384, 388, -1, 1145, -1, 11, 1037, 0xFF, 0x01 },
-    { 744, -1, 3260, 3101, -1, -1, 1041, 0xFF, 0x01 },
-    { 2106, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01 },
-    { 1981, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01 },
-    { 1983, -1, -1, 3100, -1, -1, 1041, 0xFF, 0x01 },
-    { 494, -1, 2406, 3210, -1, 29, 1045, 0xFF, 0x01 },
-    { 822, -1, -1, 1384, -1, -1, 1046, 0xFF, 0x01 },
-    { 318, -1, 2407, 3078, -1, 61, 1047, 0xFF, 0x01 },
-    { 1553, 1107, -1, 1384, -1, 7, 1046, 0xFF, 0x01 },
-    { 3360, 3350, -1, 3183, -1, 7, 1219, 0xFF, 0x01 },
-    { 2154, -1, -1, 1037, -1, 98, 1048, 0xFF, 0x01 },
-    { 2387, -1, 3765, 3207, -1, 109, 1049, 0xFF, 0x01 },
-    { 1398, -1, -1, 419, -1, 11, 1036, 0xFF, 0x01 },
-    { 418, 419, -1, 3103, -1, 11, 1130, 0xFF, 0x01 },
-    { 193, -1, 2408, 3209, -1, 12, 1051, 0xFF, 0x01 },
-    { 1644, -1, -1, 3219, -1, 87, 1052, 0xFF, 0x01 },
-    { 1645, -1, -1, 1175, -1, 86, 1053, 0xFF, 0x01 },
-    { 497, 537, -1, 1051, -1, 25, 1054, 0xFF, 0x01 },
-    { 499, 538, -1, 1052, -1, 25, 1055, 0xFF, 0x01 },
-    { 2208, 2210, -1, 581, -1, 16, 1028, 0xFF, 0x01 },
-    { 577, 578, -1, 373, -1, 25, 1055, 0xFF, 0x01 },
-    { 642, 643, -1, 373, -1, 25, 1055, 0xFF, 0x01 },
-    { 726, -1, -1, 373, -1, 29, 1061, 0xFF, 0x01 },
-    { 2077, 603, -1, 1323, -1, 0, 1056, 0xFF, 0x01 },
-    { 2078, 602, -1, 1322, -1, 0, 1057, 0xFF, 0x01 },
-    { 513, 514, -1, 936, -1, 27, 1058, 0xFF, 0x01 },
-    { 612, 579, -1, 982, -1, 28, 1059, 0xFF, 0x01 },
-    { 291, 555, 3260, 3100, -1, 96, 1041, 0xFF, 0x01 },
-    { 555, -1, 3260, 3100, -1, 97, 1041, 0xFF, 0x01 },
-    { 2107, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01 },
-    { 2108, -1, 3260, 3101, -1, -1, 1041, 0xFF, 0x01 },
-    { 404, -1, -1, 3222, -1, 261, 1060, 0xFF, 0x01 },
-    { 2807, -1, -1, 3069, -1, 265, 1132, 0xFF, 0x01 },
-    { 169, -1, -1, 3113, -1, 258, 1061, 0xFF, 0x01 },
-    { 2332, 2778, -1, 1051, -1, 100, 1054, 0xFF, 0x01 },
-    { 1013, -1, -1, 3097, -1, 100, 1062, 0xFF, 0x01 },
-    { 3109, 3045, -1, 3094, -1, -1, 1348, 0xFF, 0x01 },
-    { 3110, 1607, -1, 3095, -1, -1, 1348, 0xFF, 0x01 },
-    { 3111, 3038, -1, 3093, -1, -1, 1348, 0xFF, 0x01 },
-    { 3213, -1, -1, 3099, -1, -1, 1115, 0xFF, 0x01 },
-    { 3196, 3197, -1, 3228, -1, 97, 1150, 0xFF, 0x01 },
-    { 446, -1, -1, 3208, -1, -1, 1129, 0xFF, 0x01 },
-    { 3548, 3892, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3549, 3893, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3550, 3894, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3551, 3895, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3552, 3896, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3553, 3897, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3554, 3898, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { 3555, 3899, -1, 3230, -1, -1, 1353, 0xFF, 0x01 },
-    { -1, -1, -1, -1, 0, 0, 0, 0x00, 0x00 },
+CMenuItemDef gCMenuCollectableItems[] = {
+    {199, 180, -1, 581, -1, 16, 1028, 0xFF, 0x01},     {68, -1, -1, 373, -1, 7, 1029, 0xFF, 0x01},
+    {96, -1, -1, 374, -1, 1215, 1030, 0xFF, 0x01},     {81, -1, -1, 384, -1, 1217, 1033, 0xFF, 0x01},
+    {82, -1, -1, 385, -1, 1217, 1033, 0xFF, 0x01},     {83, -1, -1, 386, -1, 1217, 1033, 0xFF, 0x01},
+    {43, 42, -1, 373, -1, 19, 1035, 0xFF, 0x01},       {368, -1, -1, 419, -1, 11, 1036, 0xFF, 0x01},
+    {379, 385, -1, 1145, -1, 11, 1037, 0xFF, 0x01},    {382, 386, -1, 1145, -1, 11, 1037, 0xFF, 0x01},
+    {383, 387, -1, 1145, -1, 11, 1037, 0xFF, 0x01},    {384, 388, -1, 1145, -1, 11, 1037, 0xFF, 0x01},
+    {744, -1, 3260, 3101, -1, -1, 1041, 0xFF, 0x01},   {2106, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01},
+    {1981, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01},  {1983, -1, -1, 3100, -1, -1, 1041, 0xFF, 0x01},
+    {494, -1, 2406, 3210, -1, 29, 1045, 0xFF, 0x01},   {822, -1, -1, 1384, -1, -1, 1046, 0xFF, 0x01},
+    {318, -1, 2407, 3078, -1, 61, 1047, 0xFF, 0x01},   {1553, 1107, -1, 1384, -1, 7, 1046, 0xFF, 0x01},
+    {3360, 3350, -1, 3183, -1, 7, 1219, 0xFF, 0x01},   {2154, -1, -1, 1037, -1, 98, 1048, 0xFF, 0x01},
+    {2387, -1, 3765, 3207, -1, 109, 1049, 0xFF, 0x01}, {1398, -1, -1, 419, -1, 11, 1036, 0xFF, 0x01},
+    {418, 419, -1, 3103, -1, 11, 1130, 0xFF, 0x01},    {193, -1, 2408, 3209, -1, 12, 1051, 0xFF, 0x01},
+    {1644, -1, -1, 3219, -1, 87, 1052, 0xFF, 0x01},    {1645, -1, -1, 1175, -1, 86, 1053, 0xFF, 0x01},
+    {497, 537, -1, 1051, -1, 25, 1054, 0xFF, 0x01},    {499, 538, -1, 1052, -1, 25, 1055, 0xFF, 0x01},
+    {2208, 2210, -1, 581, -1, 16, 1028, 0xFF, 0x01},   {577, 578, -1, 373, -1, 25, 1055, 0xFF, 0x01},
+    {642, 643, -1, 373, -1, 25, 1055, 0xFF, 0x01},     {726, -1, -1, 373, -1, 29, 1061, 0xFF, 0x01},
+    {2077, 603, -1, 1323, -1, 0, 1056, 0xFF, 0x01},    {2078, 602, -1, 1322, -1, 0, 1057, 0xFF, 0x01},
+    {513, 514, -1, 936, -1, 27, 1058, 0xFF, 0x01},     {612, 579, -1, 982, -1, 28, 1059, 0xFF, 0x01},
+    {291, 555, 3260, 3100, -1, 96, 1041, 0xFF, 0x01},  {555, -1, 3260, 3100, -1, 97, 1041, 0xFF, 0x01},
+    {2107, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01},  {2108, -1, 3260, 3101, -1, -1, 1041, 0xFF, 0x01},
+    {404, -1, -1, 3222, -1, 261, 1060, 0xFF, 0x01},    {2807, -1, -1, 3069, -1, 265, 1132, 0xFF, 0x01},
+    {169, -1, -1, 3113, -1, 258, 1061, 0xFF, 0x01},    {2332, 2778, -1, 1051, -1, 100, 1054, 0xFF, 0x01},
+    {1013, -1, -1, 3097, -1, 100, 1062, 0xFF, 0x01},   {3109, 3045, -1, 3094, -1, -1, 1348, 0xFF, 0x01},
+    {3110, 1607, -1, 3095, -1, -1, 1348, 0xFF, 0x01},  {3111, 3038, -1, 3093, -1, -1, 1348, 0xFF, 0x01},
+    {3213, -1, -1, 3099, -1, -1, 1115, 0xFF, 0x01},    {3196, 3197, -1, 3228, -1, 97, 1150, 0xFF, 0x01},
+    {446, -1, -1, 3208, -1, -1, 1129, 0xFF, 0x01},     {3548, 3892, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
+    {3549, 3893, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {3550, 3894, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
+    {3551, 3895, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {3552, 3896, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
+    {3553, 3897, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {3554, 3898, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
+    {3555, 3899, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
 /* 8 CMenuItemDef entries (last is the -1 terminator) then a 6-word tail. */
-u8 gCMenuStaffAbilities[] =
-{
-    0x00, 0x2D, 0xFF, 0xFF, 0x09, 0x86, 0x0C, 0x7A, 0xFF, 0xFF, 0x00, 0x0D,
-    0x03, 0xFD, 0xFF, 0x00, 0x05, 0xCE, 0xFF, 0xFF, 0x09, 0x61, 0x0C, 0x7B,
-    0xFF, 0xFF, 0x00, 0x3C, 0x03, 0xFE, 0xFF, 0x00, 0x00, 0x40, 0xFF, 0xFF,
-    0x09, 0x69, 0x0C, 0x7C, 0xFF, 0xFF, 0x00, 0x0E, 0x03, 0xFF, 0xFF, 0x00,
-    0x01, 0x07, 0x0C, 0x55, 0x09, 0x6B, 0x0C, 0x08, 0xFF, 0xFF, 0x00, 0x0D,
-    0x04, 0x00, 0xFF, 0x00, 0x0C, 0x55, 0xFF, 0xFF, 0x09, 0x6B, 0x0C, 0x1A,
-    0xFF, 0xFF, 0x00, 0x0D, 0x05, 0x6B, 0xFF, 0x00, 0x05, 0xBD, 0xFF, 0xFF,
-    0x09, 0x60, 0x0C, 0x7D, 0xFF, 0xFF, 0x00, 0x3B, 0x04, 0x01, 0xFF, 0x00,
-    0x09, 0x57, 0xFF, 0xFF, 0x09, 0x64, 0x0C, 0x07, 0xFF, 0xFF, 0x00, 0x3E,
-    0x04, 0x02, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xDD,
-    0x00, 0x00, 0x00, 0x25, 0x00, 0x00, 0x03, 0x84, 0x00, 0x00, 0x02, 0x45,
-    0x00, 0x00, 0x03, 0x84, 0xFF, 0xFF, 0xFF, 0xFF,
+u8 gCMenuStaffAbilities[] = {
+    0x00, 0x2D, 0xFF, 0xFF, 0x09, 0x86, 0x0C, 0x7A, 0xFF, 0xFF, 0x00, 0x0D, 0x03, 0xFD, 0xFF, 0x00, 0x05, 0xCE, 0xFF,
+    0xFF, 0x09, 0x61, 0x0C, 0x7B, 0xFF, 0xFF, 0x00, 0x3C, 0x03, 0xFE, 0xFF, 0x00, 0x00, 0x40, 0xFF, 0xFF, 0x09, 0x69,
+    0x0C, 0x7C, 0xFF, 0xFF, 0x00, 0x0E, 0x03, 0xFF, 0xFF, 0x00, 0x01, 0x07, 0x0C, 0x55, 0x09, 0x6B, 0x0C, 0x08, 0xFF,
+    0xFF, 0x00, 0x0D, 0x04, 0x00, 0xFF, 0x00, 0x0C, 0x55, 0xFF, 0xFF, 0x09, 0x6B, 0x0C, 0x1A, 0xFF, 0xFF, 0x00, 0x0D,
+    0x05, 0x6B, 0xFF, 0x00, 0x05, 0xBD, 0xFF, 0xFF, 0x09, 0x60, 0x0C, 0x7D, 0xFF, 0xFF, 0x00, 0x3B, 0x04, 0x01, 0xFF,
+    0x00, 0x09, 0x57, 0xFF, 0xFF, 0x09, 0x64, 0x0C, 0x07, 0xFF, 0xFF, 0x00, 0x3E, 0x04, 0x02, 0xFF, 0x00, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xDD, 0x00,
+    0x00, 0x00, 0x25, 0x00, 0x00, 0x03, 0x84, 0x00, 0x00, 0x02, 0x45, 0x00, 0x00, 0x03, 0x84, 0xFF, 0xFF, 0xFF, 0xFF,
 };
 
-CMenuItemDef gCMenuTrickyAbilities[] =
-{
-    { 1, -1, 0, 3201, 3201, 0, 1015, 0x00, 0x00 },
-    { 32, -1, 5, 3204, 3204, 6, 1016, 0x00, 0x00 },
-    { 2, -1, 1, 3202, 3202, 1, 1017, 0x00, 0x00 },
-    { 16, -1, 4, 3203, 3203, 2, 1018, 0x00, 0x00 },
-    { 8, -1, 3, 3205, 3205, 4, 1020, 0x00, 0x00 },
-    { -1, -1, -1, -1, 0, 0, 0, 0x00, 0x00 },
+CMenuItemDef gCMenuTrickyAbilities[] = {
+    {1, -1, 0, 3201, 3201, 0, 1015, 0x00, 0x00}, {32, -1, 5, 3204, 3204, 6, 1016, 0x00, 0x00},
+    {2, -1, 1, 3202, 3202, 1, 1017, 0x00, 0x00}, {16, -1, 4, 3203, 3203, 2, 1018, 0x00, 0x00},
+    {8, -1, 3, 3205, 3205, 4, 1020, 0x00, 0x00}, {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
-CMenuSection gCMenuSections[] =
-{
-    { gCMenuCollectableItems, 0, 0, 0x80001, 0x80000 },
-    { (CMenuItemDef*)gCMenuStaffAbilities, 0, 0, 0x80002, 0x40000 },
-    { gCMenuTrickyAbilities, 0, 0, 0x80009, 0x20000 },
-    { NULL, 0, 0, 0x0, 0x0 },
+CMenuSection gCMenuSections[] = {
+    {gCMenuCollectableItems, 0, 0, 0x80001, 0x80000},
+    {(CMenuItemDef*)gCMenuStaffAbilities, 0, 0, 0x80002, 0x40000},
+    {gCMenuTrickyAbilities, 0, 0, 0x80009, 0x20000},
+    {NULL, 0, 0, 0x0, 0x0},
 };
 
-s16 gTrickyHudIconTextureIds[] = { 0x0C81, 0x0C82, 0x0C82, 0x0C85, 0x0C83, 0x0C84 };
+s16 gTrickyHudIconTextureIds[] = {0x0C81, 0x0C82, 0x0C82, 0x0C85, 0x0C83, 0x0C84};
 
-s16 gHudTextureIds[] =
-{
-    3012, 3013, 3016, 3017, 3018, 3019, 3020, 3038, 3039, 3061, 3108, 3109,
-    3110, 3111, 3070, 3071, 3072, 3073, 3021, 3022, 3023, 3024, 3025, 3057,
-    3040, 3041, 3042, 3043, 3184, 3044, 3026, 466, 3015, 3218, 3074, 3075,
-    3076, 3056, 3186, 3014, 3027, 3028, 3029, 3030, 3031, 3051, 3058, 3059,
-    3060, 3052, 3053, 3054, 1013, 1018, 1019, 1020, 1021, 1022, 1024, 1025,
-    1112, 1447, 421, 1077, 1078, 1080, 629, 616, 3065, 3066, 3067, 3068,
-    3048, 3046, 3049, 3050, 3115, 3084, 3104, 1434, 1435, 1436, 1437, 1438,
-    1453, 3035, 3036, 3037, 3032, 3033, 3034, 775, 3062, 3063, 3064, 1492,
-    1491, 1490, 3102, 3100, 3101, 3185,
+s16 gHudTextureIds[] = {
+    3012, 3013, 3016, 3017, 3018, 3019, 3020, 3038, 3039, 3061, 3108, 3109, 3110, 3111, 3070, 3071, 3072,
+    3073, 3021, 3022, 3023, 3024, 3025, 3057, 3040, 3041, 3042, 3043, 3184, 3044, 3026, 466,  3015, 3218,
+    3074, 3075, 3076, 3056, 3186, 3014, 3027, 3028, 3029, 3030, 3031, 3051, 3058, 3059, 3060, 3052, 3053,
+    3054, 1013, 1018, 1019, 1020, 1021, 1022, 1024, 1025, 1112, 1447, 421,  1077, 1078, 1080, 629,  616,
+    3065, 3066, 3067, 3068, 3048, 3046, 3049, 3050, 3115, 3084, 3104, 1434, 1435, 1436, 1437, 1438, 1453,
+    3035, 3036, 3037, 3032, 3033, 3034, 775,  3062, 3063, 3064, 1492, 1491, 1490, 3102, 3100, 3101, 3185,
 };

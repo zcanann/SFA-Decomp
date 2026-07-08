@@ -13,9 +13,8 @@
 /* anim.seqId variants driving the launch particle burst */
 #define BARRELPAD_SEQ_LAUNCH_ACTIVE    0x79  /* active launch burst */
 #define BARRELPAD_SEQ_LAUNCH_SECONDARY 0x748 /* secondary launch state */
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 typedef struct BarrelPadParticleArgs
 {
@@ -23,14 +22,23 @@ typedef struct BarrelPadParticleArgs
     f32 offset[3];
 } BarrelPadParticleArgs;
 
-int BarrelPad_getExtraSize(void) { return 0x0; }
-int BarrelPad_getObjectTypeId(void) { return 0x0; }
+int BarrelPad_getExtraSize(void)
+{
+    return 0x0;
+}
+int BarrelPad_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void BarrelPad_free(void)
 {
 }
 
-void BarrelPad_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
+void BarrelPad_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+}
 
 void BarrelPad_hitDetect(void)
 {
@@ -45,16 +53,14 @@ void BarrelPad_update(s16* obj)
         particleArgs.offset[0] = 0.0f;
         particleArgs.offset[1] = 8.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 12.0f,
-                              12.0f, 2.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 12.0f, 12.0f, 2.0f, &particleArgs, 0);
     }
     else if (((GameObject*)obj)->anim.seqId == BARRELPAD_SEQ_LAUNCH_SECONDARY)
     {
         particleArgs.offset[0] = 0.0f;
         particleArgs.offset[1] = 6.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.25f, 5, 2, 5, 7.0f,
-                              7.0f, 2.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst((int)obj, 5, 0.25f, 5, 2, 5, 7.0f, 7.0f, 2.0f, &particleArgs, 0);
     }
 }
 
@@ -65,8 +71,7 @@ void BarrelPad_init(s16* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-        def[0x1b] / 255.0f;
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / 255.0f;
         if (!((GameObject*)obj)->anim.rootMotionScale)
         {
             ((GameObject*)obj)->anim.rootMotionScale = 1.0f;

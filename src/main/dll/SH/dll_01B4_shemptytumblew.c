@@ -32,8 +32,7 @@ STATIC_ASSERT(offsetof(ShEmptyTumblewPlacement, scale) == 0x1c);
 
 void SH_EmptyTumbleW_update(int obj)
 {
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
-                                              &lbl_803DDC00);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280, &lbl_803DDC00);
 }
 
 void SH_EmptyTumbleW_init(s16* obj, ShEmptyTumblewPlacement* def)
@@ -45,6 +44,7 @@ void SH_EmptyTumbleW_init(s16* obj, ShEmptyTumblewPlacement* def)
     ((GameObject*)obj)->anim.rotX = def->rotXByte << 8;
     ((GameObject*)obj)->anim.rootMotionScale = def->scale;
     scale = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E5540 * scale), (int)(lbl_803E5544 * scale), (int)(lbl_803E5548 * scale));
+    ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E5540 * scale), (int)(lbl_803E5544 * scale),
+                               (int)(lbl_803E5548 * scale));
     ((GameObject*)obj)->objectFlags |= SHEMPTYTUMBLEW_OBJFLAG_HIDDEN;
 }

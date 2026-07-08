@@ -180,10 +180,20 @@ void DFP_LevelControl_setScale(int unused, u8* out)
     }
 }
 
-int DFP_LevelControl_getExtraSize(void) { return 0xc; }
-int DFP_LevelControl_getObjectTypeId(void) { return 0x0; }
+int DFP_LevelControl_getExtraSize(void)
+{
+    return 0xc;
+}
+int DFP_LevelControl_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void DFP_LevelControl_free(int obj) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(obj, DFPLEVELCONTROL_OBJGROUP); }
+void DFP_LevelControl_free(int obj)
+{
+    extern u64 ObjGroup_RemoveObject();
+    ObjGroup_RemoveObject(obj, DFPLEVELCONTROL_OBJGROUP);
+}
 
 void DFP_LevelControl_render(void)
 {
@@ -212,9 +222,8 @@ void DFP_LevelControl_update(int obj)
     b1 = mainGetBit(0xd5d);
     b2 = mainGetBit(0xd59);
     b3 = mainGetBit(0xd5a);
-    if ((b1 != 0 && ((u32)state->flags07 >> 7 & 1) == 0)
-        || (b2 != 0 && ((u32)state->flags07 >> 6 & 1) == 0)
-        || (b3 != 0 && ((u32)state->flags07 >> 5 & 1) == 0))
+    if ((b1 != 0 && ((u32)state->flags07 >> 7 & 1) == 0) || (b2 != 0 && ((u32)state->flags07 >> 6 & 1) == 0) ||
+        (b3 != 0 && ((u32)state->flags07 >> 5 & 1) == 0))
     {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }

@@ -45,8 +45,14 @@ void grimble_initialiseStateHandlerTables(void)
 #pragma dont_inline reset
 #pragma scheduling reset
 
-int cannonclaw_getExtraSize(void) { return 0x0; }
-int cannonclaw_getObjectTypeId(void) { return 0x0; }
+int cannonclaw_getExtraSize(void)
+{
+    return 0x0;
+}
+int cannonclaw_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void cannonclaw_free(void)
 {
@@ -61,7 +67,7 @@ void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E2F30);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E2F30);
             break;
         default:
             break;
@@ -74,23 +80,27 @@ void cannonclaw_hitDetect(void)
 }
 
 #define CANNONCLAW_OBJID_TRICKY 0x1723
-#define CANNONCLAW_MOVE_ARM 0x208
+#define CANNONCLAW_MOVE_ARM     0x208
 
 void cannonclaw_update(u8* obj)
 {
     u8* trickyState;
     getTrickyObject();
     trickyState = ObjList_FindObjectById(CANNONCLAW_OBJID_TRICKY);
-    if (((GameObject*)obj)->unkF4 != 0) return;
+    if (((GameObject*)obj)->unkF4 != 0)
+        return;
     if (((GameObject*)obj)->anim.currentMove != CANNONCLAW_MOVE_ARM)
     {
         ObjAnim_SetCurrentMove((int)obj, CANNONCLAW_MOVE_ARM, lbl_803E2F34, 0);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
-    if (trickyState == NULL) return;
-    if (mainGetBit(((GameObject*)trickyState)->anim.placementData[13]) == 0) return;
+    if (trickyState == NULL)
+        return;
+    if (mainGetBit(((GameObject*)trickyState)->anim.placementData[13]) == 0)
+        return;
     ((GameObject*)obj)->unkF4 = 1;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     ObjHits_DisableObject((u32)obj);
 }
 

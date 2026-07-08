@@ -21,9 +21,6 @@ extern CameraModePervState* lbl_803DD5C8;
 extern f32 lbl_803E1B98;
 extern f32 lbl_803E1B9C;
 
-
-
-
 void CameraModePerv_copyToCurrent(void)
 {
 }
@@ -46,12 +43,10 @@ void CameraModePerv_update(u8* obj)
         lbl_803DD5C8->timer = 20.0f;
     }
     camera->anim.localPosX =
-        target->anim.worldPosX -
-        5.0f * mathSinf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
+        target->anim.worldPosX - 5.0f * mathSinf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
     camera->anim.localPosY = lbl_803DD5C8->cameraY;
     camera->anim.localPosZ =
-        target->anim.worldPosZ -
-        5.0f * mathCosf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
+        target->anim.worldPosZ - 5.0f * mathCosf(3.1415927f * (f32)(s32)target->anim.rotX / 32768.0f);
     camera->anim.rotX = 0;
     camera->anim.rotY = -0x4000;
     camera->anim.rotZ = 0;

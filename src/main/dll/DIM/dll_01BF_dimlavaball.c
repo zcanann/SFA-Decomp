@@ -15,7 +15,7 @@
 #include "main/dll/imicemountainstate_struct.h"
 
 #define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DIMLAVABALL_OBJFLAG_HIDDEN 0x4000
+#define DIMLAVABALL_OBJFLAG_HIDDEN             0x4000
 
 /* Lava-ball sub-object id spawned by lavaball1bf_update (docblock: "the 0x18D lava-ball sub-object"). */
 #define DIMLAVABALL_SUBOBJ_ID 0x18d
@@ -62,8 +62,8 @@ typedef struct Lavaball18dSetup
     ObjPlacement head; /* 0x00..0x17 */
     s8 unk18;          /* 0x18: copied from placement[0x1C] */
     u8 pad19;
-    s16 childRot;      /* 0x1A rotation region; copied from placement[0x1A] */
-    s16 unk1C;         /* 0x1C: copied from placement[0x1B] */
+    s16 childRot; /* 0x1A rotation region; copied from placement[0x1A] */
+    s16 unk1C;    /* 0x1C: copied from placement[0x1B] */
     u8 pad1E[0x24 - 0x1E];
 } Lavaball18dSetup;
 
@@ -95,8 +95,10 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
 void lavaball1bf_clearPending(int* obj)
 {
     Lavaball1bfState* p = (Lavaball1bfState*)(int*)((GameObject*)obj)->extra;
-    if (p->gateA == 0) return;
-    if (p->pending == 0) return;
+    if (p->gateA == 0)
+        return;
+    if (p->pending == 0)
+        return;
     p->pending = 0;
 }
 
@@ -105,7 +107,8 @@ int lavaball1bf_trySetPending(int* obj)
     Lavaball1bfState* p;
     obj = (int*)(int*)((GameObject*)obj)->extra;
     p = (Lavaball1bfState*)obj;
-    if (p->gateA == 0) return 0;
+    if (p->gateA == 0)
+        return 0;
     if (p->pending == 0)
     {
         p->pending = 1;
@@ -114,8 +117,14 @@ int lavaball1bf_trySetPending(int* obj)
     return 0;
 }
 
-int lavaball1bf_getExtraSize(void) { return 0x1c; }
-int lavaball1bf_getObjectTypeId(void) { return 0x0; }
+int lavaball1bf_getExtraSize(void)
+{
+    return 0x1c;
+}
+int lavaball1bf_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void lavaball1bf_free(int obj, int mode)
 {
@@ -130,7 +139,8 @@ void lavaball1bf_free(int obj, int mode)
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4810);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4810);
 }
 
 void lavaball1bf_hitDetect(void)
@@ -177,13 +187,14 @@ void lavaball1bf_update(int* obj)
         sp->childRot = setup[0x1a];
         sp->unk1C = setup[0x1b];
         sp->head.mapId = ((ObjPlacement*)setup)->mapId;
-        *(int*)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(
-            s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+        *(int*)&state->spawnedObj =
+            ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
     spawned = state->spawnedObj;
     timer = state->fireTimer - timeDelta;
     state->fireTimer = timer;
-    if (timer <= lbl_803E4814 &&((int (*)(int*))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[9])(spawned) != 0)
+    if (timer <= lbl_803E4814 &&
+        ((int (*)(int*))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[9])(spawned) != 0)
     {
         if (state->gbState != 0)
         {
@@ -197,10 +208,10 @@ void lavaball1bf_update(int* obj)
             {
                 rot = setup[0x1a];
             }
-            ((void (*)(int*, int, int))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[8])(spawned, rot, setup[0x1b]);
+            ((void (*)(int*, int, int))((void**)*(void**)*(int*)&((GameObject*)spawned)->anim.dll)[8])(spawned, rot,
+                                                                                                       setup[0x1b]);
         }
-        state->fireTimer = state->firePeriod + (f32)(int)
-        randomGetRange(0, 0x3c);
+        state->fireTimer = state->firePeriod + (f32)(int)randomGetRange(0, 0x3c);
     }
 }
 

@@ -62,7 +62,7 @@ typedef struct DirectionalLightState
 } DirectionalLightState;
 
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
-#define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT 8
+#define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT      8
 
 STATIC_ASSERT(sizeof(DirectionalLightState) == 0x10);
 STATIC_ASSERT(offsetof(DirectionalLightState, light) == 0x08);
@@ -82,7 +82,8 @@ STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
 STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
 
-struct DirectionalLightObjDescriptorLayout {
+struct DirectionalLightObjDescriptorLayout
+{
     u32 reserved0;
     u32 reserved1;
     u32 reserved2;
@@ -108,7 +109,9 @@ struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
         (void (*)(void))directionallight_getObjectTypeId,
         (void (*)(void))directionallight_getExtraSize,
     },
-    "Mode: YAW\n\000\000Angle: %d\n\000\000Mode: PITCH\n\000\000\000\000Mode: DIFFUSE COLOUR RED\n\000\000\000Colour: %d\n\000Mode: DIFFUSE COLOUR GREEN\n\000Mode: DIFFUSE COLOUR BLUE\n\000\000Mode: SPECULAR COLOUR RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
+    "Mode: YAW\n\000\000Angle: %d\n\000\000Mode: PITCH\n\000\000\000\000Mode: DIFFUSE COLOUR RED\n\000\000\000Colour: "
+    "%d\n\000Mode: DIFFUSE COLOUR GREEN\n\000Mode: DIFFUSE COLOUR BLUE\n\000\000Mode: SPECULAR COLOUR "
+    "RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
 };
 
 void directionallight_debugEdit(int obj, int statePtr)
@@ -243,9 +246,15 @@ void directionallight_debugEdit(int obj, int statePtr)
     }
 }
 
-int directionallight_getExtraSize(void) { return sizeof(DirectionalLightState); }
+int directionallight_getExtraSize(void)
+{
+    return sizeof(DirectionalLightState);
+}
 
-int directionallight_getObjectTypeId(void) { return 0; }
+int directionallight_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void directionallight_free(int obj)
 {
@@ -276,10 +285,8 @@ void directionallight_update(int obj)
         return;
     }
 
-    ((GameObject*)obj)->anim.rotX =
-        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
-    ((GameObject*)obj)->anim.rotY =
-        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
+    ((GameObject*)obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
+    ((GameObject*)obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
 
     if (state->enabled != 0)
     {
@@ -337,10 +344,10 @@ void directionallight_init(int obj, int setup)
         }
         else
         {
-            modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
-                                             setupData->diffuseG, setupData->diffuseB, 0xff);
-            modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR,
-                                                   setupData->targetG, setupData->targetB, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR, setupData->diffuseG,
+                                             setupData->diffuseB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR, setupData->targetG,
+                                                   setupData->targetB, 0xff);
         }
 
         modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7250);

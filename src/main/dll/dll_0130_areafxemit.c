@@ -24,9 +24,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
-
-
-enum {
+enum
+{
     AREAFXEMIT_SEQEV_EMIT = 1
 };
 
@@ -48,18 +47,15 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
         {
             {
                 u16 sx = state->extentX;
-                args.vec[0] = (f32)(s32)
-                randomGetRange(-sx, sx);
+                args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
             }
             {
                 u16 sy = state->extentY;
-                args.vec[1] = (f32)(s32)
-                randomGetRange(-sy, sy);
+                args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
             }
             {
                 u16 sz = state->extentZ;
-                args.vec[2] = (f32)(s32)
-                randomGetRange(-sz, sz);
+                args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
             }
             vecRotateZXY(state->emitAngles, args.vec);
             {
@@ -89,37 +85,40 @@ typedef struct CFEmitterFxArgs
     f32 pos[3];
 } CFEmitterFxArgs;
 
-#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)               \
-    do {                                                      \
-        u16 range;                                            \
-        range = (state)->extentX;                             \
-        (pos)[0] = (f32)(s32)randomGetRange(-range, range);   \
-        range = (state)->extentY;                             \
-        (pos)[1] = (f32)(s32)randomGetRange(-range, range);   \
-        range = (state)->extentZ;                             \
-        (pos)[2] = (f32)(s32)randomGetRange(-range, range);   \
+#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        u16 range;                                                                                                     \
+        range = (state)->extentX;                                                                                      \
+        (pos)[0] = (f32)(s32)randomGetRange(-range, range);                                                            \
+        range = (state)->extentY;                                                                                      \
+        (pos)[1] = (f32)(s32)randomGetRange(-range, range);                                                            \
+        range = (state)->extentZ;                                                                                      \
+        (pos)[2] = (f32)(s32)randomGetRange(-range, range);                                                            \
     } while (0)
 
-#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6) \
-    (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (flags), (modelId), \
-        (void *)(arg6))
+#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6)                                             \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (flags), (modelId), (void*)(arg6))
 
-#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)      \
-    do {                                                          \
-        (rot)[0] = (state)->emitAngles[0];                       \
-        (rot)[1] = (state)->emitAngles[1];                       \
-        (rot)[2] = (state)->emitAngles[2];                       \
-        if ((obj)->objAnim.parent != NULL) {                      \
-            (rot)[2] += ((ObjAnimComponent *)(obj)->objAnim.parent)->rotZ; \
-        }                                                         \
-        vecRotateZXY((rot), (args)->pos);                         \
+#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (rot)[0] = (state)->emitAngles[0];                                                                             \
+        (rot)[1] = (state)->emitAngles[1];                                                                             \
+        (rot)[2] = (state)->emitAngles[2];                                                                             \
+        if ((obj)->objAnim.parent != NULL)                                                                             \
+        {                                                                                                              \
+            (rot)[2] += ((ObjAnimComponent*)(obj)->objAnim.parent)->rotZ;                                              \
+        }                                                                                                              \
+        vecRotateZXY((rot), (args)->pos);                                                                              \
     } while (0)
 
-#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                 \
-    do {                                                          \
-        (args)->pos[0] += (obj)->objAnim.localPosX;               \
-        (args)->pos[1] += (obj)->objAnim.localPosY;               \
-        (args)->pos[2] += (obj)->objAnim.localPosZ;               \
+#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (args)->pos[0] += (obj)->objAnim.localPosX;                                                                    \
+        (args)->pos[1] += (obj)->objAnim.localPosY;                                                                    \
+        (args)->pos[2] += (obj)->objAnim.localPosZ;                                                                    \
     } while (0)
 
 void areafxemit_emitEffect(AreaFxEmitObject* obj)
@@ -258,15 +257,25 @@ int AreaFxEmit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* anim
     return 0;
 }
 
-int AreaFxEmit_getExtraSize(void) { return sizeof(AreaFxEmitState); }
-int AreaFxEmit_getObjectTypeId(void) { return 0x0; }
+int AreaFxEmit_getExtraSize(void)
+{
+    return sizeof(AreaFxEmitState);
+}
+int AreaFxEmit_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void AreaFxEmit_free(AreaFxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void AreaFxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void AreaFxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
 
 void AreaFxEmit_hitDetect(void)
 {
@@ -285,8 +294,7 @@ void AreaFxEmit_update(AreaFxEmitObject* obj)
 
     state = obj->state;
     player = (ObjAnimComponent*)Obj_GetPlayerObject();
-    if ((player != NULL) &&
-        ((state->enableBit == -1) || (mainGetBit(state->enableBit) != 0)))
+    if ((player != NULL) && ((state->enableBit == -1) || (mainGetBit(state->enableBit) != 0)))
     {
         switch (state->suppressed)
         {
@@ -295,8 +303,7 @@ void AreaFxEmit_update(AreaFxEmitObject* obj)
             {
                 state->suppressed = 1;
             }
-            if ((state->emitCount >= 0) ||
-                ((state->emitCount < 0) && (obj->emitCooldown <= 0)))
+            if ((state->emitCount >= 0) || ((state->emitCount < 0) && (obj->emitCooldown <= 0)))
             {
                 xDelta = obj->objAnim.worldPosX - player->worldPosX;
                 yDelta = obj->objAnim.worldPosY - player->worldPosY;
@@ -310,8 +317,7 @@ void AreaFxEmit_update(AreaFxEmitObject* obj)
                 radius = state->triggerRadius;
                 if (distance <= radius || 0.0f == radius)
                 {
-                    if ((state->emitType >= 4) &&
-                        ((state->lastDistance > radius && (0.0f != radius))))
+                    if ((state->emitType >= 4) && ((state->lastDistance > radius && (0.0f != radius))))
                     {
                         areafxemit_emitBurst(obj, AREAFXEMIT_APPROACH_BURST_COUNT);
                     }

@@ -20,9 +20,9 @@
  * &radius param). The ignition ids 0x340/0x4bb are left raw - interchangeable
  * one-shot pair on the burst-start tick (state==1). */
 #define DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL 0x4ba
-#define DIMBOSSSPIT_PARTFX_BURST 0x4bc
-#define DIMBOSSSPIT_HIT_VOLUME_SLOT_5 5
-#define DIMBOSSSPIT_HIT_VOLUME_SLOT_9 9
+#define DIMBOSSSPIT_PARTFX_BURST        0x4bc
+#define DIMBOSSSPIT_HIT_VOLUME_SLOT_5   5
+#define DIMBOSSSPIT_HIT_VOLUME_SLOT_9   9
 
 typedef struct DIMbossspitUpdateBurstState
 {
@@ -101,13 +101,10 @@ void DIMbossspit_updateBurst(int obj)
         i = 0;
         do
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x340, NULL, 1, -1,
-                                             NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x340, NULL, 1, -1, NULL);
             i = i + 1;
-        }
-        while (i < 0x12);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x4bb, NULL, 1, -1,
-                                         NULL);
+        } while (i < 0x12);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x4bb, NULL, 1, -1, NULL);
         Sfx_PlayFromObject(obj, SFXwmap_name);
         Sfx_PlayFromObject(obj, SFXar_bblast16);
         CameraShake_SetAllMagnitudes(lbl_803E4D3C);
@@ -127,12 +124,7 @@ void DIMbossspit_updateBurst(int obj)
         }
         return;
     }
-    iVar = (int)
-    (lbl_803E4D48 * ((f32)(s32)
-    burstTimer * gDimBossSpitBurstAlphaScale
-    )
-    )
-    ;
+    iVar = (int)(lbl_803E4D48 * ((f32)(s32)burstTimer * gDimBossSpitBurstAlphaScale));
     alpha = 0xff - iVar;
     radius = 0x94 - (burstTimer >> 2);
     if (alpha >= 0)
@@ -155,13 +147,18 @@ void DIMbossspit_updateBurst(int obj)
             ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
         }
     }
-    (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_BURST, NULL, 1, -1,
-                                     &radius);
+    (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_BURST, NULL, 1, -1, &radius);
 }
 
-int DIMbossspit_getExtraSize(void) { return 0x8; }
+int DIMbossspit_getExtraSize(void)
+{
+    return 0x8;
+}
 
-int DIMbossspit_getObjectTypeId(void) { return 0x0; }
+int DIMbossspit_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DIMbossspit_free(int objArg)
 {
@@ -184,8 +181,7 @@ void DIMbossspit_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                      lbl_803E4D44);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4D44);
         light = ((DIMbossspitState*)light)->light;
         if (((light != 0) && (light->glowType != 0)) && (light->enabled != 0))
         {
@@ -227,19 +223,17 @@ void DIMbossspit_update(int obj)
         i = 0;
         do
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, 1, -1,
-                                             NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, 1, -1, NULL);
             i = i + 1;
-        }
-        while (i < 3);
+        } while (i < 3);
         if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
-            ((GameObject*)obj)->anim.localPosX = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                contactPosX;
-            ((GameObject*)obj)->anim.localPosY = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                contactPosY - lbl_803E4D50;
-            ((GameObject*)obj)->anim.localPosZ = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                contactPosZ;
+            ((GameObject*)obj)->anim.localPosX =
+                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosX;
+            ((GameObject*)obj)->anim.localPosY =
+                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY - lbl_803E4D50;
+            ((GameObject*)obj)->anim.localPosZ =
+                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
             *(s16*)state = 1;
         }
     }

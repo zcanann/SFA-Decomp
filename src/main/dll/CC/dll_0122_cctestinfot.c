@@ -81,28 +81,31 @@ extern void CFCrate_initialise(void);
 extern void FxEmit_initialise(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
-extern void Obj_SetActiveModelIndex(int *obj, int idx);
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
 extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
 
-#define CCTESTINFOT_OBJFLAG_HIDDEN 0x4000
+#define CCTESTINFOT_OBJFLAG_HIDDEN             0x4000
 #define CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct CctestinfotState
 {
-    f32 holdTimer;  /* 0x00: counts down while help text is shown */
-    u8 disguised;   /* 0x04: cached playerIsDisguised() result, hint-text index */
+    f32 holdTimer; /* 0x00: counts down while help text is shown */
+    u8 disguised;  /* 0x04: cached playerIsDisguised() result, hint-text index */
     u8 pad05[3];
 } CctestinfotState;
 
 STATIC_ASSERT(offsetof(CctestinfotState, disguised) == 0x4);
 STATIC_ASSERT(sizeof(CctestinfotState) == 0x8);
 
-int CCTestInfot_getExtraSize(void) { return sizeof(CctestinfotState); }
-
-void CCTestInfot_update(int *obj)
+int CCTestInfot_getExtraSize(void)
 {
-    CctestinfotState *state = ((GameObject*)obj)->extra;
+    return sizeof(CctestinfotState);
+}
+
+void CCTestInfot_update(int* obj)
+{
+    CctestinfotState* state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
     if (state->disguised != 0)
     {
@@ -138,10 +141,11 @@ void CCTestInfot_update(int *obj)
     }
 }
 
-void CCTestInfot_init(int obj, s8 *def)
+void CCTestInfot_init(int obj, s8* def)
 {
     u32 flags;
-    flags = (u32)((GameObject*)obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
+    flags =
+        (u32)((GameObject*)obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x1A] << 8);
     ((GameObject*)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
@@ -166,11 +170,101 @@ ObjectDescriptor gCCTestInfotObjDescriptor = {
 };
 
 /* descriptor/ptr table auto 0x80321db0-0x80321f70 */
-u32 gDeathGasObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)DeathGas_init, (u32)DeathGas_update, 0x00000000, 0x00000000, (u32)DeathGas_free, 0x00000000, (u32)DeathGas_getExtraSize };
-u32 gFuelCellObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)FuelCell_init, (u32)FuelCell_update, 0x00000000, (u32)FuelCell_render, (u32)FuelCell_free, 0x00000000, (u32)FuelCell_getExtraSize };
-u32 gDeathSeqObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)DeathSeq_initialise, (u32)DeathSeq_release, 0x00000000, (u32)DeathSeq_init, (u32)DeathSeq_update, (u32)DeathSeq_hitDetect, (u32)DeathSeq_render, (u32)DeathSeq_free, (u32)DeathSeq_getObjectTypeId, (u32)DeathSeq_getExtraSize };
-u32 lbl_80321E58[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_127_initialise_nop, (u32)dll_127_release_nop, 0x00000000, (u32)dll_127_init, (u32)dll_127_update, (u32)dll_127_hitDetect_nop, (u32)dll_127_render, (u32)dll_127_free_nop, (u32)dll_127_getObjectTypeId, (u32)dll_127_getExtraSize_ret_0 };
-u32 gCampFireObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)CampFire_init, (u32)CampFire_update, 0x00000000, (u32)CampFire_render, (u32)CampFire_free, (u32)CampFire_getObjectTypeId, (u32)CampFire_getExtraSize };
-u32 gKT_TorchObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)KT_Torch_initialise, (u32)KT_Torch_release, 0x00000000, (u32)KT_Torch_init, (u32)KT_Torch_update, (u32)KT_Torch_hitDetect, (u32)KT_Torch_render, (u32)KT_Torch_free, (u32)KT_Torch_getObjectTypeId, (u32)KT_Torch_getExtraSize };
-u32 gCFCrateObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)CFCrate_initialise, (u32)CFCrate_release, 0x00000000, (u32)CFCrate_init, (u32)CFCrate_update, (u32)CFCrate_hitDetect, (u32)CFCrate_render, (u32)CFCrate_free, (u32)CFCrate_getObjectTypeId, (u32)CFCrate_getExtraSize };
-u32 gFXEmitObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)FxEmit_initialise, (u32)FxEmit_release, 0x00000000, (u32)FxEmit_init, (u32)FxEmit_update, (u32)FxEmit_hitDetect, (u32)FxEmit_render, (u32)FxEmit_free, (u32)FxEmit_getObjectTypeId, (u32)FxEmit_getExtraSize };
+u32 gDeathGasObjDescriptor[14] = {0x00000000,           0x00000000,
+                                  0x00000000,           0x00090000,
+                                  0x00000000,           0x00000000,
+                                  0x00000000,           (u32)DeathGas_init,
+                                  (u32)DeathGas_update, 0x00000000,
+                                  0x00000000,           (u32)DeathGas_free,
+                                  0x00000000,           (u32)DeathGas_getExtraSize};
+u32 gFuelCellObjDescriptor[14] = {0x00000000,           0x00000000,
+                                  0x00000000,           0x00090000,
+                                  0x00000000,           0x00000000,
+                                  0x00000000,           (u32)FuelCell_init,
+                                  (u32)FuelCell_update, 0x00000000,
+                                  (u32)FuelCell_render, (u32)FuelCell_free,
+                                  0x00000000,           (u32)FuelCell_getExtraSize};
+u32 gDeathSeqObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  (u32)DeathSeq_initialise,
+                                  (u32)DeathSeq_release,
+                                  0x00000000,
+                                  (u32)DeathSeq_init,
+                                  (u32)DeathSeq_update,
+                                  (u32)DeathSeq_hitDetect,
+                                  (u32)DeathSeq_render,
+                                  (u32)DeathSeq_free,
+                                  (u32)DeathSeq_getObjectTypeId,
+                                  (u32)DeathSeq_getExtraSize};
+u32 lbl_80321E58[14] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00090000,
+                        (u32)dll_127_initialise_nop,
+                        (u32)dll_127_release_nop,
+                        0x00000000,
+                        (u32)dll_127_init,
+                        (u32)dll_127_update,
+                        (u32)dll_127_hitDetect_nop,
+                        (u32)dll_127_render,
+                        (u32)dll_127_free_nop,
+                        (u32)dll_127_getObjectTypeId,
+                        (u32)dll_127_getExtraSize_ret_0};
+u32 gCampFireObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  (u32)CampFire_init,
+                                  (u32)CampFire_update,
+                                  0x00000000,
+                                  (u32)CampFire_render,
+                                  (u32)CampFire_free,
+                                  (u32)CampFire_getObjectTypeId,
+                                  (u32)CampFire_getExtraSize};
+u32 gKT_TorchObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  (u32)KT_Torch_initialise,
+                                  (u32)KT_Torch_release,
+                                  0x00000000,
+                                  (u32)KT_Torch_init,
+                                  (u32)KT_Torch_update,
+                                  (u32)KT_Torch_hitDetect,
+                                  (u32)KT_Torch_render,
+                                  (u32)KT_Torch_free,
+                                  (u32)KT_Torch_getObjectTypeId,
+                                  (u32)KT_Torch_getExtraSize};
+u32 gCFCrateObjDescriptor[14] = {0x00000000,
+                                 0x00000000,
+                                 0x00000000,
+                                 0x00090000,
+                                 (u32)CFCrate_initialise,
+                                 (u32)CFCrate_release,
+                                 0x00000000,
+                                 (u32)CFCrate_init,
+                                 (u32)CFCrate_update,
+                                 (u32)CFCrate_hitDetect,
+                                 (u32)CFCrate_render,
+                                 (u32)CFCrate_free,
+                                 (u32)CFCrate_getObjectTypeId,
+                                 (u32)CFCrate_getExtraSize};
+u32 gFXEmitObjDescriptor[14] = {0x00000000,
+                                0x00000000,
+                                0x00000000,
+                                0x00090000,
+                                (u32)FxEmit_initialise,
+                                (u32)FxEmit_release,
+                                0x00000000,
+                                (u32)FxEmit_init,
+                                (u32)FxEmit_update,
+                                (u32)FxEmit_hitDetect,
+                                (u32)FxEmit_render,
+                                (u32)FxEmit_free,
+                                (u32)FxEmit_getObjectTypeId,
+                                (u32)FxEmit_getExtraSize};

@@ -39,9 +39,9 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 #define SHIPBATTLE_OBJECT_TYPE_ID 0xb
-#define SHIPBATTLE_FIRE_SEQ_ID 0x171
-#define SEQINDEX_PENDING -2
-#define CLASSID_SEQUENCE_OBJECT 0x10
+#define SHIPBATTLE_FIRE_SEQ_ID    0x171
+#define SEQINDEX_PENDING          -2
+#define CLASSID_SEQUENCE_OBJECT   0x10
 
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -57,16 +57,21 @@ extern void modelLightStruct_setLightKind(int light, int v);
 extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
-
-int ShipBattle_getExtraSize(void) { return 0x140; }
-int ShipBattle_getObjectTypeId(void) { return SHIPBATTLE_OBJECT_TYPE_ID; }
+int ShipBattle_getExtraSize(void)
+{
+    return 0x140;
+}
+int ShipBattle_getObjectTypeId(void)
+{
+    return SHIPBATTLE_OBJECT_TYPE_ID;
+}
 
 void ShipBattle_free(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     int light;
     (*gObjectTriggerInterface)->freeState((u8*)state);
-    ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
+    ((void (*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     light = ((GameObject*)obj)->unkF8;
     if (light != 0)
     {
@@ -131,7 +136,8 @@ void ShipBattle_update(int obj)
         {
             linkedObject = current;
         }
-        if (((GameObject*)current)->seqIndex == SEQINDEX_PENDING && ((GameObject*)current)->anim.classId == CLASSID_SEQUENCE_OBJECT &&
+        if (((GameObject*)current)->seqIndex == SEQINDEX_PENDING &&
+            ((GameObject*)current)->anim.classId == CLASSID_SEQUENCE_OBJECT &&
             groupId2 == *(s8*)&((ObjSeqState*)((GameObject*)current)->extra)->slot)
         {
             sameGroupCount++;
@@ -157,8 +163,7 @@ void ShipBattle_init(int obj, int def)
     state = ((GameObject*)obj)->extra;
     state->unk6A = ((ShipBattleObjectDef*)def)->unk1A;
     state->unk6E = -1;
-    state->unk24 =
-        lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
+    state->unk24 = lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
     state->unk28 = -1;
 
     chainIndex = ((GameObject*)obj)->unkF4;

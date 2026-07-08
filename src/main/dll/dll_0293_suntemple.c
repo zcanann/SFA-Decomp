@@ -31,23 +31,23 @@
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
-#define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE 0x01
-#define SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT 0x04
-#define SUNTEMPLE_FLAG_CLEAR_GATE_BIT 0x08
+#define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE      0x01
+#define SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT  0x04
+#define SUNTEMPLE_FLAG_CLEAR_GATE_BIT        0x08
 #define SUNTEMPLE_FLAG_GATE_REENABLES_HITBOX 0x10
-#define SUNTEMPLE_FLAG_PREEMPT_ARG_2 0x20
-#define SUNTEMPLE_FLAG_PREEMPT_ARG_3 0x40
-#define SUNTEMPLE_FLAG_PREEMPT_ARG_4 0x80
+#define SUNTEMPLE_FLAG_PREEMPT_ARG_2         0x20
+#define SUNTEMPLE_FLAG_PREEMPT_ARG_3         0x40
+#define SUNTEMPLE_FLAG_PREEMPT_ARG_4         0x80
 
-#define SUNTEMPLE_SEQUENCE_INVALID -1
-#define SUNTEMPLE_SEQ_WC_INV_USE 0x526
-#define SUNTEMPLE_SEQ_TIMER_LOCKOUT 0x830
-#define SUNTEMPLE_TEXTURE_LATCHED 0x100    /* coincidentally equal to SUNTEMPLE_BUTTON_DISABLE_MASK */
+#define SUNTEMPLE_SEQUENCE_INVALID    -1
+#define SUNTEMPLE_SEQ_WC_INV_USE      0x526
+#define SUNTEMPLE_SEQ_TIMER_LOCKOUT   0x830
+#define SUNTEMPLE_TEXTURE_LATCHED     0x100 /* coincidentally equal to SUNTEMPLE_BUTTON_DISABLE_MASK */
 #define SUNTEMPLE_BUTTON_DISABLE_MASK 0x100 /* coincidentally equal to SUNTEMPLE_TEXTURE_LATCHED */
-#define SUNTEMPLE_GAMEBIT_WC_INV_A 0x25a
-#define SUNTEMPLE_GAMEBIT_WC_INV_B 0x25b
-#define SUNTEMPLE_GAMEBIT_WC_INV_C 0x202
-#define SUNTEMPLE_GAMEBIT_WC_INV_D 0x243
+#define SUNTEMPLE_GAMEBIT_WC_INV_A    0x25a
+#define SUNTEMPLE_GAMEBIT_WC_INV_B    0x25b
+#define SUNTEMPLE_GAMEBIT_WC_INV_C    0x202
+#define SUNTEMPLE_GAMEBIT_WC_INV_D    0x243
 
 typedef struct SunTempleSetup
 {
@@ -117,9 +117,15 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int suntemple_getExtraSize(void) { return sizeof(SunTempleState); }
+int suntemple_getExtraSize(void)
+{
+    return sizeof(SunTempleState);
+}
 
-int suntemple_getObjectTypeId(void) { return 0; }
+int suntemple_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void suntemple_free(void)
 {
@@ -192,37 +198,34 @@ void suntemple_update(int obj)
 
         if ((gameObj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            if (cfg->readyEventId == -1 ||
-                (*gGameUIInterface)->isEventReady(cfg->readyEventId) != 0)
+            if (cfg->readyEventId == -1 || (*gGameUIInterface)->isEventReady(cfg->readyEventId) != 0)
             {
                 if (cfg->triggerSlot != -1)
                 {
                     if (gameObj->anim.seqId == SUNTEMPLE_SEQ_WC_INV_USE)
                     {
-                        if (state->mapEventMode == 1 &&
-                            ((u32)mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_A) != 0 || mainGetBit(
-                                SUNTEMPLE_GAMEBIT_WC_INV_B) != 0))
+                        if (state->mapEventMode == 1 && ((u32)mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_A) != 0 ||
+                                                         mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_B) != 0))
                         {
-                            (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot + 2, (void*)obj,
-                                                                    SUNTEMPLE_SEQUENCE_INVALID);
+                            (*gObjectTriggerInterface)
+                                ->runSequence(cfg->triggerSlot + 2, (void*)obj, SUNTEMPLE_SEQUENCE_INVALID);
                         }
-                        else if (state->mapEventMode == 2 &&
-                            ((u32)mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_C) != 0 || mainGetBit(
-                                SUNTEMPLE_GAMEBIT_WC_INV_D) != 0))
+                        else if (state->mapEventMode == 2 && ((u32)mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_C) != 0 ||
+                                                              mainGetBit(SUNTEMPLE_GAMEBIT_WC_INV_D) != 0))
                         {
-                            (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot + 2, (void*)obj,
-                                                                    SUNTEMPLE_SEQUENCE_INVALID);
+                            (*gObjectTriggerInterface)
+                                ->runSequence(cfg->triggerSlot + 2, (void*)obj, SUNTEMPLE_SEQUENCE_INVALID);
                         }
                         else
                         {
-                            (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot, (void*)obj,
-                                                                    SUNTEMPLE_SEQUENCE_INVALID);
+                            (*gObjectTriggerInterface)
+                                ->runSequence(cfg->triggerSlot, (void*)obj, SUNTEMPLE_SEQUENCE_INVALID);
                         }
                     }
                     else
                     {
-                        (*gObjectTriggerInterface)->runSequence(cfg->triggerSlot, (void*)obj,
-                                                                SUNTEMPLE_SEQUENCE_INVALID);
+                        (*gObjectTriggerInterface)
+                            ->runSequence(cfg->triggerSlot, (void*)obj, SUNTEMPLE_SEQUENCE_INVALID);
                     }
                 }
                 if ((cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT) == 0)
@@ -249,8 +252,7 @@ void suntemple_update(int obj)
     }
     else
     {
-        if (gameObj->unkF4 == 0 && cfg->triggerSlot != -1 &&
-            cfg->preemptSequenceId != 0)
+        if (gameObj->unkF4 == 0 && cfg->triggerSlot != -1 && cfg->preemptSequenceId != 0)
         {
             (*gObjectTriggerInterface)->preempt(obj, cfg->preemptSequenceId);
             flags = 1;

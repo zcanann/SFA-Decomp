@@ -29,7 +29,6 @@ extern f32 Vec_distance(int, int);
 extern f32 Vec_xzDistance(int, int);
 extern void playerAddHealth(int obj, int amount);
 
-
 extern int Obj_PredictInterceptPoint(int, f32, f32*, f32*);
 extern void PSVECSubtract(f32*, f32*, f32*);
 extern void PSVECNormalize(f32*, f32*);
@@ -39,13 +38,13 @@ extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* DrakorEnergyState.mode values (see file header comment) */
-#define DRAKORENERGY_PARTFX 0x357
-#define DRAKORENERGY_MODE_IDLE 0     /* wait for the placement game bit */
-#define DRAKORENERGY_MODE_FALLING 1  /* fall + bounce to a resting height */
-#define DRAKORENERGY_MODE_BOBBING 2  /* sine bob + seek the player */
-#define DRAKORENERGY_MODE_CHASING 3  /* intercept/chase, heal on contact */
+#define DRAKORENERGY_PARTFX         0x357
+#define DRAKORENERGY_MODE_IDLE      0 /* wait for the placement game bit */
+#define DRAKORENERGY_MODE_FALLING   1 /* fall + bounce to a resting height */
+#define DRAKORENERGY_MODE_BOBBING   2 /* sine bob + seek the player */
+#define DRAKORENERGY_MODE_CHASING   3 /* intercept/chase, heal on contact */
 #define DRAKORENERGY_MODE_COLLECTED 4 /* collected (hidden, no update) */
-#define DRAKORENERGY_MODE_RESET 5    /* one-frame reset back to IDLE */
+#define DRAKORENERGY_MODE_RESET     5 /* one-frame reset back to IDLE */
 
 typedef struct DrakorenergyPlacement
 {
@@ -90,10 +89,19 @@ void DrakorEnergy_func0B_nop(void)
 {
 }
 
-int drakorenergy_setScale(int* obj) { return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == DRAKORENERGY_MODE_IDLE; }
+int drakorenergy_setScale(int* obj)
+{
+    return ((DrakorEnergyState*)(int*)((GameObject*)obj)->extra)->mode == DRAKORENERGY_MODE_IDLE;
+}
 
-int drakorenergy_getExtraSize(void) { return sizeof(DrakorEnergyState); }
-int drakorenergy_getObjectTypeId(void) { return 0x0; }
+int drakorenergy_getExtraSize(void)
+{
+    return sizeof(DrakorEnergyState);
+}
+int drakorenergy_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void drakorenergy_free(void)
 {
@@ -139,7 +147,8 @@ void drakorenergy_update(int obj)
         if (((DrakorEnergyState*)blob)->startY - ((GameObject*)obj)->anim.localPosY > (v = lbl_803E627C))
         {
             ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBounceRestitution * -((GameObject*)obj)->anim.velocityY;
-            dist = (((GameObject*)obj)->anim.velocityY >= v) ? ((GameObject*)obj)->anim.velocityY : -((GameObject*)obj)->anim.velocityY;
+            dist = (((GameObject*)obj)->anim.velocityY >= v) ? ((GameObject*)obj)->anim.velocityY
+                                                             : -((GameObject*)obj)->anim.velocityY;
             if (dist < lbl_803E6284)
             {
                 ((DrakorEnergyState*)blob)->mode = DRAKORENERGY_MODE_BOBBING;
@@ -158,8 +167,9 @@ void drakorenergy_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, DRAKORENERGY_PARTFX, trio, 0, -1, NULL);
         break;
     case DRAKORENERGY_MODE_BOBBING:
-        ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBobAmplitude * mathSinf(
-            gDrakorEnergyPi * (f32)((DrakorEnergyState*)blob)->phase / gDrakorEnergyPhaseDivisor);
+        ((GameObject*)obj)->anim.velocityY =
+            gDrakorEnergyBobAmplitude *
+            mathSinf(gDrakorEnergyPi * (f32)((DrakorEnergyState*)blob)->phase / gDrakorEnergyPhaseDivisor);
         objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
         if (Vec_distance(obj + 0x18, player + 0x18) < gDrakorEnergySeekRange)

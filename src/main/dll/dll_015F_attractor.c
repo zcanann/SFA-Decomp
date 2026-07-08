@@ -53,9 +53,8 @@ void attractor_getTarget(GameObject* obj, void** out)
     case ATTRACTOR_MODE_FACE_PLAYER:
     {
         GameObject* player = (GameObject*)Obj_GetPlayerObject();
-        int angle = atan2i(
-            (int)(player->anim.localPosX - obj->anim.localPosX),
-            (int)(player->anim.localPosZ - obj->anim.localPosZ));
+        int angle = atan2i((int)(player->anim.localPosX - obj->anim.localPosX),
+                           (int)(player->anim.localPosZ - obj->anim.localPosZ));
         obj->anim.rotX = (s16)(angle + 0x8000);
         result = obj;
         break;
@@ -74,10 +73,19 @@ int attractor_setScale(int* obj)
     return 0;
 }
 
-int attractor_getExtraSize(void) { return 0x0; }
-int attractor_getObjectTypeId(void) { return 0x0; }
+int attractor_getExtraSize(void)
+{
+    return 0x0;
+}
+int attractor_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void attractor_free(int obj) { ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP); }
+void attractor_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP);
+}
 
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

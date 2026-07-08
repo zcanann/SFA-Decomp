@@ -14,17 +14,17 @@
 
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
 
-#define WCTREXSTATU_SETUP_TYPE_OFFSET 0x18
+#define WCTREXSTATU_SETUP_TYPE_OFFSET        0x18
 #define WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCTREXSTATU_SETUP_RAISED_BIT_OFFSET 0x1e
+#define WCTREXSTATU_SETUP_RAISED_BIT_OFFSET  0x1e
 
-#define WCTREXSTATU_RENDER_TYPE_BASE 0x400
-#define WCTREXSTATU_RENDER_TYPE_SHIFT 0xb
-#define WCTREXSTATU_TEXTURE_TRIGGERED 0x100
-#define WCTREXSTATU_PARTFX_VARIANT_0 0x73f
-#define WCTREXSTATU_PARTFX_VARIANT_1 0x740
-#define WCTREXSTATU_PARTFX_CHANCE 5
-#define WCTREXSTATU_PARTFX_KIND 2
+#define WCTREXSTATU_RENDER_TYPE_BASE      0x400
+#define WCTREXSTATU_RENDER_TYPE_SHIFT     0xb
+#define WCTREXSTATU_TEXTURE_TRIGGERED     0x100
+#define WCTREXSTATU_PARTFX_VARIANT_0      0x73f
+#define WCTREXSTATU_PARTFX_VARIANT_1      0x740
+#define WCTREXSTATU_PARTFX_CHANCE         5
+#define WCTREXSTATU_PARTFX_KIND           2
 #define WCTREXSTATU_PARTFX_INVALID_HANDLE -1
 
 #define WCTREXSTATU_MAPEVENT_RAISED 2
@@ -67,7 +67,10 @@ int wctrexstatu_interactCallback(int obj, int unused, ObjAnimUpdateState* animUp
 }
 #pragma opt_strength_reduction reset
 
-int wctrexstatu_getExtraSize(void) { return 0; }
+int wctrexstatu_getExtraSize(void)
+{
+    return 0;
+}
 
 int wctrexstatu_getObjectTypeId(int obj)
 {
@@ -103,15 +106,15 @@ void wctrexstatu_hitDetect(u8* obj)
     {
         if (objAnim->bankIndex == 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL,
-                                             WCTREXSTATU_PARTFX_KIND,
-                                             WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
+            (*gPartfxInterface)
+                ->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL, WCTREXSTATU_PARTFX_KIND,
+                              WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         }
         else
         {
-            (*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL,
-                                             WCTREXSTATU_PARTFX_KIND,
-                                             WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
+            (*gPartfxInterface)
+                ->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL, WCTREXSTATU_PARTFX_KIND,
+                              WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         }
     }
 }

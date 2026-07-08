@@ -48,7 +48,6 @@ enum
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 
-
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void skyFn_80088c94(int flags, int mode);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -163,7 +162,10 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
 }
 #pragma dont_inline reset
 
-int link_levcontrol_getExtraSize(void) { return sizeof(LinkLevControlState); }
+int link_levcontrol_getExtraSize(void)
+{
+    return sizeof(LinkLevControlState);
+}
 
 void link_levcontrol_free(int obj)
 {
@@ -183,7 +185,8 @@ void link_levcontrol_update(int* obj)
 {
     LinkLevControlState* state = ((GameObject*)obj)->extra;
     f32* player = Obj_GetPlayerObject();
-    if (player == NULL) return;
+    if (player == NULL)
+        return;
 
     if ((s32)state->areaCell != (s32)((GameObject*)obj)->anim.mapEventSlot)
     {

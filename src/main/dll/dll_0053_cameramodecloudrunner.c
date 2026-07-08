@@ -22,7 +22,6 @@
 #include "main/object_transform.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-
 extern int getAngle(float y, float x);
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern int playerGetFocusObject(int obj);
@@ -84,8 +83,7 @@ void CameraModeCloudRunner_update(u8* obj)
             mxin.angles[2] = *(s16*)(curve + 4);
             mxin.scale = 1.0f;
             setMatrixFromObjectPos(matrix, &mxin);
-            Matrix_TransformPoint(matrix, 0.0f, 65.0f, -10.0f,
-                                  &baseX, &baseY, &baseZ);
+            Matrix_TransformPoint(matrix, 0.0f, 65.0f, -10.0f, &baseX, &baseY, &baseZ);
         }
         else
         {
@@ -169,15 +167,12 @@ void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
         }
         lbl_803DD5B8->radius = computedRadius;
     }
-    getAngle(
-        ((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
-        ((GameObject*)camera)->anim.worldPosZ - lbl_803DD5B8->focusZ);
+    getAngle(((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
+             ((GameObject*)camera)->anim.worldPosZ - lbl_803DD5B8->focusZ);
     {
         int* target = ((int**)camera)[0xA4 / 4];
         f32* state = (f32*)lbl_803DD5B8;
-        getAngle(
-            ((GameObject*)target)->anim.worldPosX - state[0],
-            ((GameObject*)target)->anim.worldPosZ - state[2]);
+        getAngle(((GameObject*)target)->anim.worldPosX - state[0], ((GameObject*)target)->anim.worldPosZ - state[2]);
     }
 }
 

@@ -5,13 +5,13 @@ extern u8 salTimeOffset;
 extern u16 lbl_803DC618[4];
 extern u16 lbl_803DC620[4];
 
-#define DSP_VOICE_STRIDE 0xf4
-#define DSP_VOICE_PITCH_CHANGE_FLAG 0x8
-#define DSP_VOICE_SRC_TYPE_CHANGE_FLAG 0x100
+#define DSP_VOICE_STRIDE                0xf4
+#define DSP_VOICE_PITCH_CHANGE_FLAG     0x8
+#define DSP_VOICE_SRC_TYPE_CHANGE_FLAG  0x100
 #define DSP_VOICE_POLYPHASE_CHANGE_FLAG 0x80
-#define DSP_VOICE_ITD_ENABLED_FLAG 0x80000000
-#define DSP_VOICE_ITD_DISABLED_MASK 0x7fffffff
-#define DSP_VOICE_ITD_CENTER 0x10
+#define DSP_VOICE_ITD_ENABLED_FLAG      0x80000000
+#define DSP_VOICE_ITD_DISABLED_MASK     0x7fffffff
+#define DSP_VOICE_ITD_CENTER            0x10
 
 void hwSetPitch(int slot, u32 pitch)
 {

@@ -30,22 +30,22 @@
 typedef struct BabyCloudRunnerPlacement
 {
     ObjPlacement base;
-    s16 gateGameBit;        /* 0x18: -1 = none */
-    s16 rememberedGameBit;  /* 0x1A: -1 = none */
-    u8 targetGroup;         /* 0x1C: object group to follow */
-    u8 triggerIdMin;        /* 0x1D */
-    u8 triggerIdMax;        /* 0x1E */
-    u8 flags;               /* 0x1F: BABYCLOUDRUNNER_FLAG_* */
+    s16 gateGameBit;       /* 0x18: -1 = none */
+    s16 rememberedGameBit; /* 0x1A: -1 = none */
+    u8 targetGroup;        /* 0x1C: object group to follow */
+    u8 triggerIdMin;       /* 0x1D */
+    u8 triggerIdMax;       /* 0x1E */
+    u8 flags;              /* 0x1F: BABYCLOUDRUNNER_FLAG_* */
     u8 pad20[4];
 } BabyCloudRunnerPlacement;
 
 typedef struct BabyCloudRunnerState
 {
-    u8 mode;                    /* 0x00 */
-    u8 triggerId;               /* 0x01: trigger sequence index */
-    u8 rememberedGameBitValue;  /* 0x02 */
+    u8 mode;                   /* 0x00 */
+    u8 triggerId;              /* 0x01: trigger sequence index */
+    u8 rememberedGameBitValue; /* 0x02 */
     u8 pad03;
-    GameObject* target;         /* 0x04: followed object */
+    GameObject* target; /* 0x04: followed object */
 } BabyCloudRunnerState;
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x8);
@@ -59,24 +59,29 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
 STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 
 /* BabyCloudRunnerState.mode */
-#define BABYCLOUDRUNNER_MODE_UNINIT 0
-#define BABYCLOUDRUNNER_MODE_LATCHED 1
+#define BABYCLOUDRUNNER_MODE_UNINIT    0
+#define BABYCLOUDRUNNER_MODE_LATCHED   1
 #define BABYCLOUDRUNNER_MODE_WAIT_GATE 2
-#define BABYCLOUDRUNNER_MODE_FINISHED 3
+#define BABYCLOUDRUNNER_MODE_FINISHED  3
 
 /* BabyCloudRunnerPlacement.flags bits */
 #define BABYCLOUDRUNNER_FLAG_REMEMBERED_DONE 0x1
-#define BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT 0x2
-#define BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER 0x4
+#define BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT  0x2
+#define BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER  0x4
 
 extern f32 lbl_803E3848; /* render distance constant */
 extern f32 lbl_803E384C; /* initial max-distance for the nearest-object search */
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objRenderFn_80041018(int* obj);
 
-
-int dll_FC_getExtraSize_ret_8(void) { return sizeof(BabyCloudRunnerState); }
-int dll_FC_getObjectTypeId(void) { return 0x0; }
+int dll_FC_getExtraSize_ret_8(void)
+{
+    return sizeof(BabyCloudRunnerState);
+}
+int dll_FC_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_FC_free_nop(void)
 {
@@ -85,14 +90,17 @@ void dll_FC_free_nop(void)
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3848);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3848);
 }
 
 void dll_FC_hitDetect(int* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    if ((objAnim->modelInstance->flags & 1u) == 0u) return;
-    if (objAnim->hitVolumeTransforms == NULL) return;
+    if ((objAnim->modelInstance->flags & 1u) == 0u)
+        return;
+    if (objAnim->hitVolumeTransforms == NULL)
+        return;
     objRenderFn_80041018(obj);
 }
 
@@ -111,7 +119,8 @@ void dll_FC_update(int obj)
     if (state->target == NULL)
     {
         state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, obj, &maxDist);
-        if (state->target == NULL) goto end;
+        if (state->target == NULL)
+            goto end;
         if ((int)placement->rememberedGameBit == -1)
         {
             state->rememberedGameBitValue = 0;
@@ -142,8 +151,7 @@ void dll_FC_update(int obj)
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->mode = BABYCLOUDRUNNER_MODE_FINISHED;
         }
-        else if (((int)placement->gateGameBit != -1) &&
-            (mainGetBit((int)placement->gateGameBit) == 0))
+        else if (((int)placement->gateGameBit != -1) && (mainGetBit((int)placement->gateGameBit) == 0))
         {
             state->target->anim.resetHitboxFlags &= ~0x20;
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;

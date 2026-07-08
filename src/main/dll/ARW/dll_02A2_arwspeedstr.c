@@ -10,7 +10,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-
 typedef struct ARWSpeedStrState
 {
     f32 speed;
@@ -23,14 +22,14 @@ typedef struct ARWSpeedStrState
     u8 pad19[3];
 } ARWSpeedStrState;
 
-STATIC_ASSERT(sizeof(ARWSpeedStrState)== 0x1c);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, speed)== 0x00);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer)== 0x04);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, alpha)== 0x08);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX)== 0x0c);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY)== 0x10);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ)== 0x14);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, flags)== 0x18);
+STATIC_ASSERT(sizeof(ARWSpeedStrState) == 0x1c);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, speed) == 0x00);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer) == 0x04);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, alpha) == 0x08);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX) == 0x0c);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY) == 0x10);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
 
 typedef struct ARWSpeedStrVelocity
 {
@@ -39,13 +38,19 @@ typedef struct ARWSpeedStrVelocity
     f32 z;
 } ARWSpeedStrVelocity;
 
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x)== 0x00);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y)== 0x04);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z)== 0x08);
+STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x) == 0x00);
+STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y) == 0x04);
+STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z) == 0x08);
 
-int ARWSpeedStr_getExtraSize(void) { return 0x1c; }
+int ARWSpeedStr_getExtraSize(void)
+{
+    return 0x1c;
+}
 
-int ARWSpeedStr_getObjectTypeId(void) { return 0; }
+int ARWSpeedStr_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void ARWSpeedStr_free(void)
 {
@@ -66,11 +71,8 @@ void ARWSpeedStr_update(int obj)
     if (state->flags == 0)
     {
         f32 camOffset[3];
-        camOffset[0] = (f32)(int)
-        randomGetRange((int)-state->spreadX, state->spreadX);
-        camOffset[1] =
-            (f32)(int)
-        randomGetRange((int)-state->spreadY, state->spreadY);
+        camOffset[0] = (f32)(int)randomGetRange((int)-state->spreadX, state->spreadX);
+        camOffset[1] = (f32)(int)randomGetRange((int)-state->spreadY, state->spreadY);
         camOffset[2] = state->viewZ;
         PSMTXMultVec(Camera_GetInverseViewMatrix(), &camOffset[0], (f32*)((char*)obj + 12));
         ((GameObject*)obj)->anim.localPosX += playerMapOffsetX;

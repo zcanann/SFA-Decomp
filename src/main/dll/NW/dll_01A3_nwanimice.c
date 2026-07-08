@@ -12,14 +12,26 @@
 #include "main/game_object.h"
 #include "main/dll/NW/nw_shared.h"
 
-#define NWANIMICE_OBJFLAG_HIDDEN 0x4000
+#define NWANIMICE_OBJFLAG_HIDDEN             0x4000
 #define NWANIMICE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int nw_animice_SeqFn(void) { return 0x0; }
-int nw_animice_getExtraSize(void) { return 0x0; }
-int nw_animice_getObjectTypeId(void) { return 0x0; }
+int nw_animice_SeqFn(void)
+{
+    return 0x0;
+}
+int nw_animice_getExtraSize(void)
+{
+    return 0x0;
+}
+int nw_animice_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void nw_animice_free(int obj) { ObjGroup_RemoveObject(obj, NW_ANIMICE_GROUP_ID); }
+void nw_animice_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, NW_ANIMICE_GROUP_ID);
+}
 
 void nw_animice_render(void)
 {
@@ -36,7 +48,8 @@ void nw_animice_update(void)
 void nw_animice_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = nw_animice_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWANIMICE_OBJFLAG_HIDDEN | NWANIMICE_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (NWANIMICE_OBJFLAG_HIDDEN | NWANIMICE_OBJFLAG_HITDETECT_DISABLED));
     ObjGroup_AddObject((u32)obj, NW_ANIMICE_GROUP_ID);
 }
 

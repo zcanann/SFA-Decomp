@@ -32,8 +32,7 @@ extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z,
-                                void* outHits, int e, int f);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern f32 lbl_803E38B0;
@@ -50,8 +49,8 @@ extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 extern void vecRotateZXY(void* angles, void* outVec);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
-                              void* obj, int flags, int mask, int arg9, int arg10);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,
+                              int arg9, int arg10);
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
@@ -72,7 +71,7 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
 /* ObjMsg ids shared with the other collectible objects (magicgem/fuelcell) */
 #define DUSTER_MSG_REQUEST_PICKUP 0x7000a
-#define DUSTER_MSG_DEPOSIT 0x7000b
+#define DUSTER_MSG_DEPOSIT        0x7000b
 
 /* game bit guarding a single carried duster at a time */
 #define GAMEBIT_DUSTER_CARRIED 0xcc0
@@ -89,7 +88,10 @@ int duster_SeqFn(u8* obj)
     return 0;
 }
 
-int duster_getExtraSize(void) { return 0x20; }
+int duster_getExtraSize(void)
+{
+    return 0x20;
+}
 
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -98,7 +100,7 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E38B0);
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E38B0);
 }
 
 void duster_hitDetect(int obj)
@@ -107,8 +109,8 @@ void duster_hitDetect(int obj)
     u8 hit[0x54];
     int hitResult;
     state = ((GameObject*)obj)->extra;
-    hitResult = objBboxFn_800640cc((f32*)(obj + 128), (f32*)(obj + 12),
-                           gDusterObjHitDetectRadius, 2, hit, (void*)obj, 8, -1, 255, 0);
+    hitResult = objBboxFn_800640cc((f32*)(obj + 128), (f32*)(obj + 12), gDusterObjHitDetectRadius, 2, hit, (void*)obj,
+                                   8, -1, 255, 0);
     if (hitResult != 0)
     {
         state->priorityHit = 1;
@@ -175,10 +177,9 @@ void duster_update(int obj)
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
             mainSetBits(state->completeGameBit, 1);
             mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
-            mapState->collectedCount =
-                (mapState->maxCollectedCount < (next = mapState->collectedCount + 1))
-                    ? mapState->maxCollectedCount
-                    : next;
+            mapState->collectedCount = (mapState->maxCollectedCount < (next = mapState->collectedCount + 1))
+                                           ? mapState->maxCollectedCount
+                                           : next;
             state->complete = 1;
             break;
         }
@@ -202,9 +203,9 @@ void duster_update(int obj)
     state->priorityHit = 0;
     if (state->flags.floorCached == 0)
     {
-        floorHitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                             &floorHits, 0, 0);
+        floorHitCount =
+            hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                 ((GameObject*)obj)->anim.localPosZ, &floorHits, 0, 0);
         bestFloorDelta = gDusterObjFloorSearchMaxDelta;
         bestFloorIndex = -1;
         for (i = 0; i < floorHitCount; i++)
@@ -241,8 +242,8 @@ void duster_update(int obj)
 
     if (state->settleTimer == 0 && state->hitReactTimer == 0)
     {
-        if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL) != 0
-            ||
+        if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL) !=
+                0 ||
             state->priorityHit != 0)
         {
             Sfx_PlayFromObject(obj, SFXen_riverloop11);
@@ -338,10 +339,9 @@ void duster_update(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
                 mainSetBits(state->completeGameBit, 1);
                 mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
-                mapState->collectedCount =
-                    (mapState->maxCollectedCount < (next = mapState->collectedCount + 1))
-                        ? mapState->maxCollectedCount
-                        : next;
+                mapState->collectedCount = (mapState->maxCollectedCount < (next = mapState->collectedCount + 1))
+                                               ? mapState->maxCollectedCount
+                                               : next;
                 state->complete = 1;
                 ((GameObject*)obj)->anim.alpha = 1;
             }

@@ -24,7 +24,7 @@ extern u32 mapLoadDataFile(int mapId, int fileId);
 extern u32 piRomLoadSection();
 extern char sShaderDebugStrings[];
 #define MAP_BLOCK_LAYER_COUNT 5
-#define FRUSTUM_PLANE_COUNT 5
+#define FRUSTUM_PLANE_COUNT   5
 extern int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 typedef struct WarpVec
 {
@@ -204,16 +204,28 @@ test:
     return 0;
 }
 
-int return0_80056694(void) { return 0x0; }
-int return0_8005669C(void) { return 0x0; }
+int return0_80056694(void)
+{
+    return 0x0;
+}
+int return0_8005669C(void)
+{
+    return 0x0;
+}
 
 extern s8 curMapLayer;
 extern s8 curMapType;
 extern s16 lbl_803DCEB4;
 extern s16 lbl_803DCEB6;
 extern u32 renderFlags;
-s32 getCurMapLayer(void) { return curMapLayer; }
-s32 getCurMapType(void) { return curMapType; }
+s32 getCurMapLayer(void)
+{
+    return curMapLayer;
+}
+s32 getCurMapType(void)
+{
+    return curMapType;
+}
 
 void mapReloadWithFadeout(void)
 {
@@ -358,10 +370,10 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
     {
         float dot;
         plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-        dot = plane->distance
-            + (plane->normalZ * (center[2] - offZ)
-                + (center[1] * plane->normalY + plane->normalX * (center[0] - offX)));
-        if (radius + dot < *(f32*)&lbl_803DEBCC) return 0;
+        dot = plane->distance + (plane->normalZ * (center[2] - offZ) +
+                                 (center[1] * plane->normalY + plane->normalX * (center[0] - offX)));
+        if (radius + dot < *(f32*)&lbl_803DEBCC)
+            return 0;
     }
     return 1;
 }
@@ -389,7 +401,8 @@ extern f32 gShaderLoadCenterX;
 
 void loadMapForCameraPos(float x, float y, float z)
 {
-    if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0) return;
+    if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0)
+        return;
     gShaderLoadCenterX = x;
     gShaderLoadCenterY = y;
     gShaderLoadCenterZ = z;
@@ -435,13 +448,17 @@ extern void gameTextLoadDir(int dirId);
 void gameTextLoadForMap_800571f0(u8 force)
 {
     int curVal = gShaderCurMapEventId;
-    if (curVal == -1) return;
-    if (curVal == gShaderGameTextLoadedMapId && force == 0) return;
+    if (curVal == -1)
+        return;
+    if (curVal == gShaderGameTextLoadedMapId && force == 0)
+        return;
     gShaderGameTextLoadedMapId = curVal;
-    if (curVal >= 0x76) return;
+    if (curVal >= 0x76)
+        return;
     {
         s8 entry = gShaderMapTextDirTable[curVal];
-        if (entry == -1) return;
+        if (entry == -1)
+            return;
         gameTextLoadDir(entry);
     }
 }
@@ -526,7 +543,6 @@ extern int textureLoad(int id, int param);
 extern void MapBlock_initHits(void* blk, int blockId);
 extern void MapBlock_initShaders(void* blk);
 extern int return0_80060B90(void* blk);
-
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
@@ -621,10 +637,10 @@ extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
 extern f32* Camera_GetInverseViewRotationMatrix(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void PSMTXMultVec(f32 * mtx, _Vec3 * in, f32 * out);
+extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
 extern void PSVECScale(f32* in, _Vec3* out, f32 s);
 extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
-extern f32 PSVECDotProduct(_Vec3 * a, f32 * b);
+extern f32 PSVECDotProduct(_Vec3* a, f32* b);
 
 void playerVecFn_8005a9b0(void)
 {
@@ -649,10 +665,9 @@ void playerVecFn_8005a9b0(void)
     invRotMtx = Camera_GetInverseViewRotationMatrix();
     if (player != NULL)
     {
-        clipDist = -Camera_DistanceToCurrentViewPosition(
-            ((GameObject*)player)->anim.worldPosX,
-            ((GameObject*)player)->anim.worldPosY,
-            ((GameObject*)player)->anim.worldPosZ);
+        clipDist = -Camera_DistanceToCurrentViewPosition(((GameObject*)player)->anim.worldPosX,
+                                                         ((GameObject*)player)->anim.worldPosY,
+                                                         ((GameObject*)player)->anim.worldPosZ);
     }
     else
     {
@@ -687,7 +702,8 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     count = lbl_803DCE98;
     for (; i < count; i++)
     {
-        if (*arr == -1) break;
+        if (*arr == -1)
+            break;
         arr++;
     }
     if (i == count)
@@ -709,12 +725,12 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 /* 16-byte texture-override table entry (array at lbl_803DCE6C, 80 slots). */
 typedef struct TexOverrideEntry
 {
-    u32 key;    /* 0x00 */
-    int data0;  /* 0x04 */
-    int data1;  /* 0x08 */
-    s16 refs;   /* 0x0c */
-    u8 type;    /* 0x0e */
-    u8 pad;     /* 0x0f */
+    u32 key;   /* 0x00 */
+    int data0; /* 0x04 */
+    int data1; /* 0x08 */
+    s16 refs;  /* 0x0c */
+    u8 type;   /* 0x0e */
+    u8 pad;    /* 0x0f */
 } TexOverrideEntry;
 
 #pragma dont_inline on
@@ -728,8 +744,7 @@ void mapTextureOverrideRelease(int key, int type)
     {
         off = i * 0x10;
         entryKey = ((TexOverrideEntry*)lbl_803DCE6C)[i].key;
-        if (entryKey == key &&
-            ((TexOverrideEntry*)lbl_803DCE6C)[i].type == type &&
+        if (entryKey == key && ((TexOverrideEntry*)lbl_803DCE6C)[i].type == type &&
             ((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0)
         {
             ((TexOverrideEntry*)lbl_803DCE6C)[i].refs -= 1;
@@ -907,10 +922,8 @@ int mapProcessRomList(int slot)
     lbl_803DCEA0 = entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
-    *(f32*)((char*)lbl_803DCEA0 + 0x24) =
-        gMapBlockWorldSize * (f32)(rects[0] + *(s16*)((char*)lbl_803DCEA0 + 4));
-    *(f32*)((char*)lbl_803DCEA0 + 0x28) =
-        gMapBlockWorldSize * (f32)(rects[2] + *(s16*)((char*)lbl_803DCEA0 + 6));
+    *(f32*)((char*)lbl_803DCEA0 + 0x24) = gMapBlockWorldSize * (f32)(rects[0] + *(s16*)((char*)lbl_803DCEA0 + 4));
+    *(f32*)((char*)lbl_803DCEA0 + 0x28) = gMapBlockWorldSize * (f32)(rects[2] + *(s16*)((char*)lbl_803DCEA0 + 6));
     cur = lbl_803DCEA0;
     dz = *(f32*)(cur + 0x28);
     dx = *(f32*)(cur + 0x24);
@@ -985,8 +998,7 @@ void mapInitSetRects(s16* rect, u8* bitmap, int p3, int p4, int idx)
     int offset0 = *(int*)(lbl_803DCE7C + tabOff);
     int x, y;
 
-    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0,
-                *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
+    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
     *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
     rect[0] = p3 - *(s16*)(self + 4);
     rect[2] = p4 - *(s16*)(self + 6);
@@ -1043,8 +1055,8 @@ void playerUpdateFn_8005649c(void)
         }
         else
         {
-            Obj_TransformWorldPointToLocal(*(f32*)(cam + 0x44), *(f32*)(cam + 0x48), *(f32*)&((GameObject*)cam)->anim.placementData, &lx, &ly,
-                                           &lz);
+            Obj_TransformWorldPointToLocal(*(f32*)(cam + 0x44), *(f32*)(cam + 0x48),
+                                           *(f32*)&((GameObject*)cam)->anim.placementData, &lx, &ly, &lz);
             *(f32*)(lbl_80386648 + slot * 0x10 + 0) = lx;
             *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ly;
             *(f32*)(lbl_80386648 + slot * 0x10 + 8) = lz;
@@ -1318,8 +1330,7 @@ void initMaps(void)
                         (u8*)((char*)gShaderMapRomBuffers[4] + *(s16*)((char*)data + i2 * 12 + 6) * 64),
                         *(s16*)((char*)data + i2 * 12), *(s16*)((char*)data + i2 * 12 + 2),
                         *(s16*)((char*)data + i2 * 12 + 6));
-        ((s16*)gShaderMapRomBuffers[2])[*(s16*)((char*)data + i2 * 12 + 6) << 1] =
-            *(s16*)((char*)data + i2 * 12 + 8);
+        ((s16*)gShaderMapRomBuffers[2])[*(s16*)((char*)data + i2 * 12 + 6) << 1] = *(s16*)((char*)data + i2 * 12 + 8);
         ((s16*)gShaderMapRomBuffers[2])[(*(s16*)((char*)data + i2 * 12 + 6) << 1) + 1] =
             *(s16*)((char*)data + i2 * 12 + 0xa);
         i2++;
@@ -1510,35 +1521,24 @@ int mapCoordsToId(int x, int z, int layerIdx)
  * jumptable lands after it, matching the retail .data layout. */
 
 char sShaderDebugStrings[172] = {
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52,
-    0, 0, 0, 60, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 64,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 56,
-    0, 0, 0, 68, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 56,
-    0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 52,
-    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 60,
+    0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 64, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 68, 0, 0, 0, 52, 0, 0, 0, 60,
+    0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
+    0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
 };
 
 s8 gShaderMapTextDirTable[120] = {
-    42, 42, 18, -1, 69, -1, -1, 44, 44, 23, 40, 71, 7, 70, 27, -1,
-    9, -1, 36, 15, -1, 17, -1, 24, 24, 24, 0, 16, 5, 8, 25, 14,
-    37, 20, 22, -1, -1, -1, 1, 12, 39, 72, -1, 10, 4, -1, -1, -1,
-    6, -1, 13, 43, 19, -1, 38, -1, 29, -1, 1, 1, 1, 1, 1, -1,
-    -1, -1, -1, 30, 31, 32, 33, 26, 34, 35, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4,
-    -1, -1, -1, -1, -1, -1, 0, 0,
+    42, 42, 18, -1, 69, -1, -1, 44, 44, 23, 40, 71, 7,  70, 27, -1, 9,  -1, 36, 15, -1, 17, -1, 24,
+    24, 24, 0,  16, 5,  8,  25, 14, 37, 20, 22, -1, -1, -1, 1,  12, 39, 72, -1, 10, 4,  -1, -1, -1,
+    6,  -1, 13, 43, 19, -1, 38, -1, 29, -1, 1,  1,  1,  1,  1,  -1, -1, -1, -1, 30, 31, 32, 33, 26,
+    34, 35, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4,  -1, -1, -1, -1, -1, -1, 0,  0,
 };
 
 f32 sAabbCornerDirections[24] = {
-    1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f,
-    -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
-    -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
-    1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
+    1.0f,  1.0f, 1.0f, 1.0f,  -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
+    -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,  1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
 };
 
 /* Screen-space (x,y) sample offsets used by the sun occlusion depth probe:
@@ -1548,12 +1548,13 @@ int gSunOcclusionSampleOffsets[10] = {
 };
 
 /* Scene geometry draw-order table (referenced by lightmap.c). */
-u8 lbl_8030E65C[16] = { 7, 6, 5, 4, 3, 2, 1, 0, 8, 9, 10, 11, 12, 13, 14, 15 };
+u8 lbl_8030E65C[16] = {7, 6, 5, 4, 3, 2, 1, 0, 8, 9, 10, 11, 12, 13, 14, 15};
 
 /* Retail symbol lbl_8030E66C (0xD4 bytes): a second 16-entry draw-order table
  * (referenced by lightmap.c) followed by the objShouldLoad debug strings;
  * the splitter merged them into one object. */
-struct {
+struct
+{
     u8 drawOrder[16];
     char passLevelObject[28];
     char failManualLoad[24];
@@ -1563,7 +1564,7 @@ struct {
     char passInRange[24];
     char failOutOfRange[28];
 } lbl_8030E66C = {
-    { 0, 15, 1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 8, 7 },
+    {0, 15, 1, 14, 2, 13, 3, 12, 4, 11, 5, 10, 6, 9, 8, 7},
     "LOAD PASS: Level object\n",
     "LOAD FAIL: Manual load\n",
     "LOAD FAIL: Outside map x=%f y=%f z=%f\n",
@@ -1642,27 +1643,17 @@ extern u8 sceneDrawTransparentPolys[];
 extern u8 mapBlockBounds_HasCornerPastDepthThreshold[];
 
 void* jumptable_8030E81C[10] = {
-    sceneDrawTransparentPolys + 0x64,
-    sceneDrawTransparentPolys + 0x88,
-    sceneDrawTransparentPolys + 0xD0,
-    sceneDrawTransparentPolys + 0xF0,
-    sceneDrawTransparentPolys + 0x110,
-    sceneDrawTransparentPolys + 0x1B4,
-    sceneDrawTransparentPolys + 0x258,
-    sceneDrawTransparentPolys + 0x2FC,
-    sceneDrawTransparentPolys + 0x30C,
+    sceneDrawTransparentPolys + 0x64,  sceneDrawTransparentPolys + 0x88,  sceneDrawTransparentPolys + 0xD0,
+    sceneDrawTransparentPolys + 0xF0,  sceneDrawTransparentPolys + 0x110, sceneDrawTransparentPolys + 0x1B4,
+    sceneDrawTransparentPolys + 0x258, sceneDrawTransparentPolys + 0x2FC, sceneDrawTransparentPolys + 0x30C,
     sceneDrawTransparentPolys + 0x314,
 };
 
 void* jumptable_8030E844[8] = {
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x60,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0xC0,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x120,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x180,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x1E0,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x240,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x2A0,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x300,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x60,  mapBlockBounds_HasCornerPastDepthThreshold + 0xC0,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x120, mapBlockBounds_HasCornerPastDepthThreshold + 0x180,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x1E0, mapBlockBounds_HasCornerPastDepthThreshold + 0x240,
+    mapBlockBounds_HasCornerPastDepthThreshold + 0x2A0, mapBlockBounds_HasCornerPastDepthThreshold + 0x300,
 };
 
 int mapRectFn_8005a728(int bx, int bz, char* obj)
@@ -1875,7 +1866,8 @@ extern f32 lbl_803DEBD4;
 extern f32 lbl_803DEBD8;
 extern f32 lbl_803DEBDC;
 extern f32 Vec_distance(f32* a, f32* b);
-extern void Camera_ProjectWorldSphere( f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
+extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX,
+                                      f32* outRadiusY, f32* outRadiusZ);
 
 int objUpdateOpacity(char* obj)
 {
@@ -1939,8 +1931,8 @@ int objUpdateOpacity(char* obj)
         Camera_ProjectWorldSphere(((GameObject*)obj)->anim.worldPosX - playerMapOffsetX,
                                   ((GameObject*)obj)->anim.worldPosY,
                                   ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ,
-                                  ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale,
-                                  &o1, &o2, &o3, &sz, &o5, &o6);
+                                  ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale, &o1,
+                                  &o2, &o3, &sz, &o5, &o6);
         sz = __fabsf(sz);
         sz = sz * gMapBlockWorldSize;
         if (sz < 10.0f)
@@ -1967,11 +1959,9 @@ int objUpdateOpacity(char* obj)
         for (; i < FRUSTUM_PLANE_COUNT; i++)
         {
             FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-            if (prod
-                + (plane->distance
-                    + (plane->normalZ * (((GameObject*)obj)->anim.worldPosZ - offZ)
-                        + (((GameObject*)obj)->anim.worldPosY * plane->normalY
-                            + plane->normalX * (((GameObject*)obj)->anim.worldPosX - offX)))) <
+            if (prod + (plane->distance + (plane->normalZ * (((GameObject*)obj)->anim.worldPosZ - offZ) +
+                                           (((GameObject*)obj)->anim.worldPosY * plane->normalY +
+                                            plane->normalX * (((GameObject*)obj)->anim.worldPosX - offX)))) <
                 *(f32*)&lbl_803DEBCC)
                 return 0;
         }
@@ -2065,7 +2055,7 @@ void mapLoadUnloadObjects(int flag)
                             unload = 1;
                         }
                         else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
-                            *(void**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4)) == 0)
+                                 *(void**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4)) == 0)
                         {
                             unload = 1;
                         }
@@ -2077,7 +2067,7 @@ void mapLoadUnloadObjects(int flag)
                             unload = 1;
                         }
                         else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
-                            ((GameObject*)obj)->anim.mapEventSlot != gShaderCurMapEventId)
+                                 ((GameObject*)obj)->anim.mapEventSlot != gShaderCurMapEventId)
                         {
                             unload = 1;
                         }
@@ -2159,10 +2149,8 @@ void mapLoadUnloadObjects(int flag)
                                 char* pg = *(char**)(base + (0x83A8 + list[i] * 4));
                                 int ix2 = bit >> 3;
                                 int msk = 1 << (bit & 7);
-                                *(s8*)(*(int*)(pg + 0x10) + ix2) =
-                                    *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
-                                *(s8*)(*(int*)(pg + 0x10) + ix2) =
-                                    *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
+                                *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
+                                *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
                             }
                             Obj_SetupObject(objStart, 1, list[i], bit, 0);
                         }
@@ -2237,8 +2225,7 @@ void mapLoadUnloadObjects(int flag)
                             else
                             {
                                 vis = 1;
-                                if (((vis << (bit & 7)) &
-                                    *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
+                                if (((vis << (bit & 7)) & *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
                                     vis = 0;
                             }
                         }
@@ -2249,10 +2236,8 @@ void mapLoadUnloadObjects(int flag)
                                 char* pg3 = ((char**)(base + 0x83A8))[mid2];
                                 int ix3 = bit >> 3;
                                 int msk3 = 1 << (bit & 7);
-                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
-                                    *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
-                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
-                                    *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
                             }
                             Obj_SetupObject(cur, 1, mid2, bit, obj2);
                         }
@@ -2944,8 +2929,7 @@ void doPendingMapLoads(void)
                             if (*(void**)p4 != NULL)
                             {
                                 s16 sl = *(s16*)(p4 + 4);
-                                defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208),
-                                                    sl, 1);
+                                defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208), sl, 1);
                                 mm_free(*(void**)p4);
                                 ((int*)(base + 0x83A8))[sl] = 0;
                             }
@@ -2992,8 +2976,7 @@ void doPendingMapLoads(void)
                                                 *(u8*)(lbl_803DCE68 + cell2 * 16 + 12) -= 1;
                                         }
                                         if (*(u8*)(p + 0x29) != 0)
-                                            mapTextureOverrideRelease(*(int*)(p + 0x24),
-                                                                      *(u8*)(p + 0x29));
+                                            mapTextureOverrideRelease(*(int*)(p + 0x24), *(u8*)(p + 0x29));
                                         p += 8;
                                     }
                                 }
@@ -3024,8 +3007,6 @@ void doPendingMapLoads(void)
 #pragma opt_dead_assignments reset
 #pragma ppc_unroll_factor_limit 4
 #pragma opt_unroll_loops reset
-
-
 
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
@@ -3141,10 +3122,8 @@ void mapDebugRender(int* state)
 
     if (lbl_803DCDED != 0)
     {
-        bx = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0xc) - playerMapOffsetX) /
-            gMapBlockWorldSize);
-        bz = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
-            gMapBlockWorldSize);
+        bx = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0xc) - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) / gMapBlockWorldSize);
         tbl = (s8*)gMapBlockLayerTables[0];
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16)
         {
@@ -3162,10 +3141,8 @@ void mapDebugRender(int* state)
                 blk = *(char**)((char*)gMapBlocks + ci * 4);
             }
         }
-        sx = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0xc) /
-            gMapBlockWorldSize));
-        sz = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0x14) /
-            gMapBlockWorldSize));
+        sx = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0xc) / gMapBlockWorldSize));
+        sz = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0x14) / gMapBlockWorldSize));
         wx = (int)(*(f32*)((char*)lbl_803DCEA8 + 0xc) - sx);
         wz = (int)(*(f32*)((char*)lbl_803DCEA8 + 0x14) - sz);
         if (blk != 0)

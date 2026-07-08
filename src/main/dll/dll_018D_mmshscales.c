@@ -43,11 +43,11 @@ typedef struct MmshScalesState
  * object. ObjPlacement-style head (color block + position). */
 typedef struct MmshScalesSpawnSetup
 {
-    u8 pad0[4];   /* 0x00 */
-    u8 color[4];  /* 0x04 */
-    f32 posX;     /* 0x08 */
-    f32 posY;     /* 0x0c */
-    f32 posZ;     /* 0x10 */
+    u8 pad0[4];  /* 0x00 */
+    u8 color[4]; /* 0x04 */
+    f32 posX;    /* 0x08 */
+    f32 posY;    /* 0x0c */
+    f32 posZ;    /* 0x10 */
     u8 pad14[0x24 - 0x14];
 } MmshScalesSpawnSetup;
 
@@ -63,14 +63,20 @@ extern int* gTitleMenuControlInterfaceCopy;
 
 extern u8 lbl_803DB411;
 
-int MMSH_Scales_getExtraSize(void) { return 0x140; }
-int MMSH_Scales_getObjectTypeId(void) { return 0xb; }
+int MMSH_Scales_getExtraSize(void)
+{
+    return 0x140;
+}
+int MMSH_Scales_getObjectTypeId(void)
+{
+    return 0xb;
+}
 
 void MMSH_Scales_free(int obj, int keepChild)
 {
     void* child;
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
-    (*(void(**)(int, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, 0xffff, 0, 0, 0);
+    (*(void (**)(int, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, 0xffff, 0, 0, 0);
     child = ((GameObject*)obj)->childObjs[0];
     if ((child != NULL) && (keepChild == 0))
     {
@@ -81,7 +87,8 @@ void MMSH_Scales_free(int obj, int keepChild)
 void MMSH_Scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void MMSH_Scales_hitDetect(void)
@@ -99,8 +106,8 @@ void MMSH_Scales_update(int objArg)
     int i;
     int count;
 
-    if ((((GameObject*)objArg)->anim.placementData != NULL) && (*(short*)(*(int*)&((GameObject*)objArg)->anim.
-        placementData + 0x18) != -1))
+    if ((((GameObject*)objArg)->anim.placementData != NULL) &&
+        (*(short*)(*(int*)&((GameObject*)objArg)->anim.placementData + 0x18) != -1))
     {
         i = (*gObjectTriggerInterface)->update((u8*)objArg, (f32)(u32)lbl_803DB411);
         if ((i != 0) && (((GameObject*)objArg)->seqIndex == -2))
@@ -158,7 +165,8 @@ void MMSH_Scales_init(int* obj, s16* def)
         }
         ((GameObject*)obj)->unkF4 = def[12] + 1;
     }
-    if (Obj_IsLoadingLocked() == 0) return;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
     setup = Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ);
     setup->posX = ((GameObject*)obj)->anim.localPosX;
     setup->posY = ((GameObject*)obj)->anim.localPosY;

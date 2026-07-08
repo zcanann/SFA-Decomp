@@ -104,7 +104,8 @@ void fn_801E7DC8(int obj, int state, int count)
     f32 groundHeight;
     int setup;
 
-    if (Obj_IsLoadingLocked() == 0) return;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
 
     (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)obj)->anim.mapEventSlot, 6, 1);
 
@@ -158,8 +159,7 @@ void ShopKeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     fxParams[0] = lbl_803E59D8;
     if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)
-            (obj, p2, p3, p4, p5, lbl_803E59D8);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, state + 0x35c, 0);
     }
     if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
@@ -167,7 +167,6 @@ void ShopKeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, fxParams, 0x50, NULL);
     }
 }
-
 
 void ShopKeeper_hitDetect(void)
 {
@@ -177,9 +176,14 @@ void ShopKeeper_release(void)
 {
 }
 
-
-int ShopKeeper_getExtraSize(void) { return 0x9d8; }
-int ShopKeeper_getObjectTypeId(void) { return 0x0; }
+int ShopKeeper_getExtraSize(void)
+{
+    return 0x9d8;
+}
+int ShopKeeper_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void ShopKeeper_initialise(void)
 {
@@ -222,8 +226,7 @@ void ShopKeeper_update(int obj)
         ((ShopkeeperState*)state)->vendorObj = ObjGroup_FindNearestObject(SPSHOPKEEPER_TARGET_OBJGROUP, obj, &dist);
     }
     ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
-    (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068,
-                                &lbl_803DDC58);
+    (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
     ((GameObject*)obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
@@ -295,12 +298,12 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
                 ((ShopkeeperState*)state)->vendorObj);
             if (slot != -1)
             {
-                ((ShopkeeperState*)state)->price = (s16)(
-                    *(int (**)(int, int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x38))(
-                    ((ShopkeeperState*)state)->vendorObj, slot);
-                ((ShopkeeperState*)state)->unk9CE = (s16)(
-                    *(int (**)(int, int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x30))(
-                    ((ShopkeeperState*)state)->vendorObj, slot);
+                ((ShopkeeperState*)state)->price =
+                    (s16)(*(int (**)(int, int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll +
+                                                0x38))(((ShopkeeperState*)state)->vendorObj, slot);
+                ((ShopkeeperState*)state)->unk9CE =
+                    (s16)(*(int (**)(int, int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll +
+                                                0x30))(((ShopkeeperState*)state)->vendorObj, slot);
                 ((ShopkeeperState*)state)->priceShown = ((ShopkeeperState*)state)->price;
                 ((ShopkeeperState*)state)->unk9D2 = 0;
                 digit = ((ShopkeeperState*)state)->price;
@@ -320,7 +323,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             seq->conditionCallback = (ObjAnimSequenceConditionCallback)DRlaserturret_handlePromptChoice;
         }
         if ((*(int (**)(int))((char*)*((GameObject*)((ShopkeeperState*)state)->vendorObj)->anim.dll + 0x44))(
-            ((ShopkeeperState*)state)->vendorObj) != -1)
+                ((ShopkeeperState*)state)->vendorObj) != -1)
         {
             setAButtonIcon(0x12);
             setBButtonIcon(0xA);

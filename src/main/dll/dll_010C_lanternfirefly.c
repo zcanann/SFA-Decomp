@@ -76,8 +76,14 @@ extern f32 sqrtf(f32 value);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-int LanternFireFly_getExtraSize(void) { return 0x74; }
-int LanternFireFly_getObjectTypeId(void) { return 0x0; }
+int LanternFireFly_getExtraSize(void)
+{
+    return 0x74;
+}
+int LanternFireFly_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 /* LanternFireFly_modelMtxFn: receives (obj, anchorX, anchorY, anchorZ) and
  * stores the three floats into obj->extra at +0x54/+0x58/+0x5c. */
@@ -181,17 +187,17 @@ void LanternFireFly_free(u8* obj, int p2)
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AA0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AA0);
 }
 
 void LanternFireFly_hitDetect(void)
 {
 }
 
-#define LANTERN_SPAWN_FX(obj, id, a, b, c, d) \
-    (*gPartfxInterface)->spawnObject((void *)obj, id, a, b, c, d)
+#define LANTERN_SPAWN_FX(obj, id, a, b, c, d) (*gPartfxInterface)->spawnObject((void*)obj, id, a, b, c, d)
 
-#define LANTERN_FIREFLY_MODE(state) (((u32)(state)->modeFlags >> 6) & 3)
+#define LANTERN_FIREFLY_MODE(state)      (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
 
 void LanternFireFly_update(int obj)
@@ -238,9 +244,9 @@ void LanternFireFly_update(int obj)
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {
-        state->speed =
-            (f32)(lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
-                                              (void*)(Obj_GetPlayerObject() + 0x18)) + lbl_803E3AC0);
+        state->speed = (f32)(lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
+                                                         (void*)(Obj_GetPlayerObject() + 0x18)) +
+                             lbl_803E3AC0);
     }
     state->splineT += state->speed * timeDelta;
 
@@ -319,8 +325,7 @@ void LanternFireFly_update(int obj)
         {
             f32 atten;
 
-            atten = state->timer *
-                mathSinf((gLanternFireflyPi * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
+            atten = state->timer * mathSinf((gLanternFireflyPi * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
             Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep);
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }
@@ -336,7 +341,8 @@ void LanternFireFly_update(int obj)
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
 
-typedef struct LanternFireFlyModeBits {
+typedef struct LanternFireFlyModeBits
+{
     u8 mode : 2;
     u8 rest : 6;
 } LanternFireFlyModeBits;
@@ -418,17 +424,14 @@ void fn_801868D0(int obj)
 
     state = ((GameObject*)obj)->extra;
     state->offX = lbl_803E3AB8;
-    state->offY = (f32)(int)
-    randomGetRange(-state->wanderRange, state->wanderRange);
+    state->offY = (f32)(int)randomGetRange(-state->wanderRange, state->wanderRange);
     if (state->driftRangeZ < lbl_803E3ABC)
     {
         state->offZ = lbl_803E3AB8;
     }
     else
     {
-        state->offZ = state->driftRangeZ -
-            (f32)(int)
-        randomGetRange(0x14, (s16)(int)state->driftRangeZ);
+        state->offZ = state->driftRangeZ - (f32)(int)randomGetRange(0x14, (s16)(int)state->driftRangeZ);
     }
     angleDelta = randomGetRange(3000, 5000);
     state->randAngle += angleDelta;
@@ -464,14 +467,13 @@ void fn_801869DC(int obj)
     if (((LFF2*)&state->modeFlags)->mode == 1)
     {
         int player = Obj_GetPlayerObject();
-        state->speed =
-            lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
-                                        &((GameObject*)player)->anim.worldPosX) + lbl_803E3AC0;
+        state->speed = lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
+                                                   &((GameObject*)player)->anim.worldPosX) +
+                       lbl_803E3AC0;
     }
     else
     {
-        state->speed = lbl_803E3AC4 * (f32)(s32)
-        randomGetRange(0x3c, 0x5a);
+        state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
     }
     state->controlX[3] = state->offX;
     state->controlY[3] = state->offY;

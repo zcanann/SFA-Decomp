@@ -17,56 +17,55 @@
 
 #include "main/audio/sfx_ids.h"
 
-#define WCPRESSURES_EXTRA_SIZE 0x7c
-#define WCPRESSURES_TRACKED_COUNT 10
-#define WCPRESSURES_OBJECT_GROUP 0x31
-#define WCPRESSURES_RENDER_TYPE_BASE 0x400
+#define WCPRESSURES_EXTRA_SIZE        0x7c
+#define WCPRESSURES_TRACKED_COUNT     10
+#define WCPRESSURES_OBJECT_GROUP      0x31
+#define WCPRESSURES_RENDER_TYPE_BASE  0x400
 #define WCPRESSURES_RENDER_TYPE_SHIFT 0xb
 
-#define WCPRESSURES_SETUP_POS_X_OFFSET 0x08
-#define WCPRESSURES_SETUP_POS_Y_OFFSET 0x0c
-#define WCPRESSURES_SETUP_POS_Z_OFFSET 0x10
+#define WCPRESSURES_SETUP_POS_X_OFFSET          0x08
+#define WCPRESSURES_SETUP_POS_Y_OFFSET          0x0c
+#define WCPRESSURES_SETUP_POS_Z_OFFSET          0x10
 #define WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET 0x18
-#define WCPRESSURES_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCPRESSURES_SETUP_SOLVED_BIT_OFFSET 0x1a
-#define WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET 0x1c
+#define WCPRESSURES_SETUP_MODEL_INDEX_OFFSET    0x19
+#define WCPRESSURES_SETUP_SOLVED_BIT_OFFSET     0x1a
+#define WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET    0x1c
 #define WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET 0x1d
-#define WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET 0x20
+#define WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET   0x20
 
 #define WCPRESSURES_STATE_PRESS_TIMER 0x00
-#define WCPRESSURES_STATE_MODE 0x01
-#define WCPRESSURES_STATE_OBJECTS 0x04
-#define WCPRESSURES_STATE_SAVED_X 0x2c
-#define WCPRESSURES_STATE_SAVED_Z 0x30
+#define WCPRESSURES_STATE_MODE        0x01
+#define WCPRESSURES_STATE_OBJECTS     0x04
+#define WCPRESSURES_STATE_SAVED_X     0x2c
+#define WCPRESSURES_STATE_SAVED_Z     0x30
 
-#define WCPRESSURES_MODE_RAISED 0
-#define WCPRESSURES_MODE_RISING 1
-#define WCPRESSURES_MODE_PRESSED 2
+#define WCPRESSURES_MODE_RAISED   0
+#define WCPRESSURES_MODE_RISING   1
+#define WCPRESSURES_MODE_PRESSED  2
 #define WCPRESSURES_MODE_LOWERING 3
 
-#define WCPRESSURES_FOUND_TIMER 5
+#define WCPRESSURES_FOUND_TIMER  5
 #define WCPRESSURES_SOLVED_TIMER 0x1e
 
 #define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
-#define WCPRESSURES_OBJECT_Y_OFFSET 0x10
-#define WCPRESSURES_OBJECT_Z_OFFSET 0x14
+#define WCPRESSURES_OBJECT_Y_OFFSET     0x10
+#define WCPRESSURES_OBJECT_Z_OFFSET     0x14
 #define WCPRESSURES_OBJECT_STATE_OFFSET 0xb8
 
-#define WCPRESSURES_CALLBACK_NONE 0
+#define WCPRESSURES_CALLBACK_NONE           0
 #define WCPRESSURES_CALLBACK_SNAPSHOT_TILES 1
-#define WCPRESSURES_CALLBACK_RESET 2
+#define WCPRESSURES_CALLBACK_RESET          2
 
-#define WCPRESSURES_HITLIST_OFFSET 0x58
+#define WCPRESSURES_HITLIST_OFFSET         0x58
 #define WCPRESSURES_HITLIST_OBJECTS_OFFSET 0x100
-#define WCPRESSURES_HITLIST_COUNT_OFFSET 0x10f
+#define WCPRESSURES_HITLIST_COUNT_OFFSET   0x10f
 
 #define WCPRESSURES_TEXTURE_DEFAULT 0
 #define WCPRESSURES_TEXTURE_PRESSED 1
-#define WCPRESSURES_TEXTURE_SHIFT 8
+#define WCPRESSURES_TEXTURE_SHIFT   8
 
-#define WCPRESSURES_OBJFLAG_HIDDEN 0x4000
+#define WCPRESSURES_OBJFLAG_HIDDEN             0x4000
 #define WCPRESSURES_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 
 typedef struct WCPressuresSetup
 {
@@ -115,7 +114,10 @@ STATIC_ASSERT(offsetof(WCPressuresSetup, pressDepth) == WCPRESSURES_SETUP_PRESS_
 STATIC_ASSERT(offsetof(WCPressuresSetup, triggerHeight) == WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET);
 STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET);
 
-int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
+int wcpressures_getExtraSize(void)
+{
+    return WCPRESSURES_EXTRA_SIZE;
+}
 
 int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -167,7 +169,10 @@ int wcpressures_getObjectTypeId(int obj)
     return (modelIndex << WCPRESSURES_RENDER_TYPE_SHIFT) | WCPRESSURES_RENDER_TYPE_BASE;
 }
 
-void wcpressures_free(int obj) { ObjGroup_RemoveObject(obj, WCPRESSURES_OBJECT_GROUP); }
+void wcpressures_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, WCPRESSURES_OBJECT_GROUP);
+}
 
 void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -190,8 +195,7 @@ void wcpressures_update(int obj)
     int j;
     f32 thr;
 
-    if (setup->activateBit > 0 &&
-        mainGetBit(setup->activateBit) == 0)
+    if (setup->activateBit > 0 && mainGetBit(setup->activateBit) == 0)
     {
         logPrintf(sWCPressuresActivateFormat, setup->activateBit);
         return;
@@ -204,19 +208,15 @@ void wcpressures_update(int obj)
              i < (s8) * (u8*)(*(int*)(obj + WCPRESSURES_HITLIST_OFFSET) + WCPRESSURES_HITLIST_COUNT_OFFSET);
              off += 4, i++)
         {
-            int ent = *(int*)(*(int*)(obj + WCPRESSURES_HITLIST_OFFSET) +
-                off + WCPRESSURES_HITLIST_OBJECTS_OFFSET);
+            int ent = *(int*)(*(int*)(obj + WCPRESSURES_HITLIST_OFFSET) + off + WCPRESSURES_HITLIST_OBJECTS_OFFSET);
             if (((GameObject*)ent)->anim.localPosY - ((GameObject*)obj)->anim.localPosY >
-                (f32)(u32)
-                    setup->triggerHeight
-            )
+                (f32)(u32)setup->triggerHeight)
             {
                 WCPressuresState* s2 = *(WCPressuresState**)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
                 int slot;
 
-                for (j = 0; s2->objects[(u8)j] != NULL ||
-                     (u8)j == WCPRESSURES_TRACKED_COUNT - 1;
-                     j++);
+                for (j = 0; s2->objects[(u8)j] != NULL || (u8)j == WCPRESSURES_TRACKED_COUNT - 1; j++)
+                    ;
                 slot = (u8)j;
                 s2->objects[slot] = (GameObject*)ent;
                 s2->savedPos[slot].x = ((GameObject*)ent)->anim.localPosX;
@@ -234,8 +234,7 @@ void wcpressures_update(int obj)
             GameObject* val = s2->objects[slot];
             if ((u32)val != 0)
             {
-                if (s2->savedPos[slot].x == val->anim.localPosX &&
-                    s2->savedPos[slot].z == val->anim.localPosZ)
+                if (s2->savedPos[slot].x == val->anim.localPosX && s2->savedPos[slot].z == val->anim.localPosZ)
                 {
                     found = 1;
                 }
@@ -248,8 +247,7 @@ void wcpressures_update(int obj)
         if ((int)found != 0)
             state->pressTimer = WCPRESSURES_FOUND_TIMER;
     }
-    thr = setup->y - (f32)(u32)
-    setup->pressDepth;
+    thr = setup->y - (f32)(u32)setup->pressDepth;
     switch (state->mode)
     {
     case WCPRESSURES_MODE_RAISED:
@@ -285,10 +283,12 @@ void wcpressures_update(int obj)
         break;
     }
     {
-        ObjTextureRuntimeSlot *tex = objFindTexture((void *)obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
-        if (tex != 0) {
-            tex->textureId = state->mode == WCPRESSURES_MODE_PRESSED ? WCPRESSURES_TEXTURE_PRESSED
-                                                                      : WCPRESSURES_TEXTURE_DEFAULT;
+        ObjTextureRuntimeSlot* tex =
+            objFindTexture((void*)obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
+        if (tex != 0)
+        {
+            tex->textureId =
+                state->mode == WCPRESSURES_MODE_PRESSED ? WCPRESSURES_TEXTURE_PRESSED : WCPRESSURES_TEXTURE_DEFAULT;
             tex->textureId = tex->textureId << WCPRESSURES_TEXTURE_SHIFT;
         }
     }
@@ -340,8 +340,73 @@ void wcpressures_initialise(void)
 
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
 
-u32 gWCTrexStatuObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wctrexstatu_initialise, (u32)wctrexstatu_release, 0x00000000, (u32)wctrexstatu_init, (u32)wctrexstatu_update, (u32)wctrexstatu_hitDetect, (u32)wctrexstatu_render, (u32)wctrexstatu_free, (u32)wctrexstatu_getObjectTypeId, (u32)wctrexstatu_getExtraSize };
-u32 gSunTempleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)suntemple_initialise, (u32)suntemple_release, 0x00000000, (u32)suntemple_init, (u32)suntemple_update, (u32)suntemple_hitDetect, (u32)suntemple_render, (u32)suntemple_free, (u32)suntemple_getObjectTypeId, (u32)suntemple_getExtraSize };
-u32 gWCTempleObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wctemple_initialise, (u32)wctemple_release, 0x00000000, (u32)wctemple_init, (u32)wctemple_update, (u32)wctemple_hitDetect, (u32)wctemple_render, (u32)wctemple_free, (u32)wctemple_getObjectTypeId, (u32)wctemple_getExtraSize };
-u32 dll_299[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dll_299_initialise_nop, (u32)dll_299_release_nop, 0x00000000, (u32)dll_299_init, (u32)dll_299_update, (u32)dll_299_hitDetect_nop, (u32)dll_299_render_nop, (u32)dll_299_free, (u32)dll_299_getObjectTypeId, (u32)dll_299_getExtraSize_ret_2 };
-u32 gWCApertureSObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)wcapertures_initialise, (u32)wcapertures_release, 0x00000000, (u32)wcapertures_init, (u32)wcapertures_update, (u32)wcapertures_hitDetect, (u32)wcapertures_render, (u32)wcapertures_free, (u32)wcapertures_getObjectTypeId, (u32)wcapertures_getExtraSize };
+u32 gWCTrexStatuObjDescriptor[14] = {0x00000000,
+                                     0x00000000,
+                                     0x00000000,
+                                     0x00090000,
+                                     (u32)wctrexstatu_initialise,
+                                     (u32)wctrexstatu_release,
+                                     0x00000000,
+                                     (u32)wctrexstatu_init,
+                                     (u32)wctrexstatu_update,
+                                     (u32)wctrexstatu_hitDetect,
+                                     (u32)wctrexstatu_render,
+                                     (u32)wctrexstatu_free,
+                                     (u32)wctrexstatu_getObjectTypeId,
+                                     (u32)wctrexstatu_getExtraSize};
+u32 gSunTempleObjDescriptor[14] = {0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x00090000,
+                                   (u32)suntemple_initialise,
+                                   (u32)suntemple_release,
+                                   0x00000000,
+                                   (u32)suntemple_init,
+                                   (u32)suntemple_update,
+                                   (u32)suntemple_hitDetect,
+                                   (u32)suntemple_render,
+                                   (u32)suntemple_free,
+                                   (u32)suntemple_getObjectTypeId,
+                                   (u32)suntemple_getExtraSize};
+u32 gWCTempleObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  (u32)wctemple_initialise,
+                                  (u32)wctemple_release,
+                                  0x00000000,
+                                  (u32)wctemple_init,
+                                  (u32)wctemple_update,
+                                  (u32)wctemple_hitDetect,
+                                  (u32)wctemple_render,
+                                  (u32)wctemple_free,
+                                  (u32)wctemple_getObjectTypeId,
+                                  (u32)wctemple_getExtraSize};
+u32 dll_299[14] = {0x00000000,
+                   0x00000000,
+                   0x00000000,
+                   0x00090000,
+                   (u32)dll_299_initialise_nop,
+                   (u32)dll_299_release_nop,
+                   0x00000000,
+                   (u32)dll_299_init,
+                   (u32)dll_299_update,
+                   (u32)dll_299_hitDetect_nop,
+                   (u32)dll_299_render_nop,
+                   (u32)dll_299_free,
+                   (u32)dll_299_getObjectTypeId,
+                   (u32)dll_299_getExtraSize_ret_2};
+u32 gWCApertureSObjDescriptor[14] = {0x00000000,
+                                     0x00000000,
+                                     0x00000000,
+                                     0x00090000,
+                                     (u32)wcapertures_initialise,
+                                     (u32)wcapertures_release,
+                                     0x00000000,
+                                     (u32)wcapertures_init,
+                                     (u32)wcapertures_update,
+                                     (u32)wcapertures_hitDetect,
+                                     (u32)wcapertures_render,
+                                     (u32)wcapertures_free,
+                                     (u32)wcapertures_getObjectTypeId,
+                                     (u32)wcapertures_getExtraSize};

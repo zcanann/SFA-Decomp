@@ -164,7 +164,8 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
             buf.pos[2] = lbl_803E0A28 + posSource->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_803138A0, 0x10, &((u8*)(int)lbl_803138A0)[180], DLL6A_EFFECT_ID, 0);
+    (*gModgfxInterface)
+        ->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_803138A0, 0x10, &((u8*)(int)lbl_803138A0)[180], DLL6A_EFFECT_ID, 0);
 }
 
 void dll_6A_func01_nop(void)

@@ -37,14 +37,13 @@ void synthHandleVirtualSampleDone(u32 packed)
     }
     if (state->callback != NULL)
     {
-        state->callback(SYNTH_VIRTUAL_SAMPLE_DONE_CALLBACK_KIND,
-                        &state->entries[vid].callbackData);
+        state->callback(SYNTH_VIRTUAL_SAMPLE_DONE_CALLBACK_KIND, &state->entries[vid].callbackData);
     }
     entry = (u8*)state + entryOffset;
     *(u8*)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET) =
         SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE;
-    slots[*(u8*)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-        VIRTUAL_SAMPLE_VOICE_OFFSET)] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+    slots[*(u8*)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_VOICE_OFFSET)] =
+        SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
 void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
@@ -69,14 +68,12 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
         {
         case SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE:
             sample->callbackData.start =
-                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
-                SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
+                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) * SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
             sample->callbackData.size = elapsed - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = 0;
-            if ((d.len = ((int (*)(int, void*))state->callback)(
-                SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                &sample->callbackData)) != 0)
+            if ((d.len = ((int (*)(int, void*))state->callback)(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
+                                                                &sample->callbackData)) != 0)
             {
                 d.off = sample->position + d.len;
                 sample->position = d.off % state->loopSize;
@@ -92,15 +89,13 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
         {
         case SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE:
             sample->callbackData.start =
-                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
-                SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
+                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) * SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
             loopSizePtr = &state->loopSize;
             sample->callbackData.size = *loopSizePtr - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = 0;
-            if ((d.len = ((int (*)(int, void*))state->callback)(
-                SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                &sample->callbackData)) != 0)
+            if ((d.len = ((int (*)(int, void*))state->callback)(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
+                                                                &sample->callbackData)) != 0)
             {
                 d.off = sample->position + d.len;
                 sample->position = d.off % *loopSizePtr;
@@ -116,15 +111,13 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
         {
         case SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE:
             sample->callbackData.start =
-                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
-                SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
+                (sample->position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) * SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
             loopSizePtr = &state->loopSize;
             sample->callbackData.size = *loopSizePtr - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = elapsed;
-            if ((d.len = ((int (*)(int, void*))state->callback)(
-                SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                &sample->callbackData)) != 0)
+            if ((d.len = ((int (*)(int, void*))state->callback)(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
+                                                                &sample->callbackData)) != 0)
             {
                 d.off = sample->position + d.len;
                 sample->position = d.off % *loopSizePtr;

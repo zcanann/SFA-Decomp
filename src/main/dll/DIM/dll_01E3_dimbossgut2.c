@@ -13,7 +13,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define DIMBOSSGUT2_OBJGROUP 3
-#define DIMBOSSGUT2_PARTFX 0x32b
+#define DIMBOSSGUT2_PARTFX   0x32b
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -63,8 +63,6 @@ extern f32 lbl_803E4CF0;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
-
-
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;
@@ -110,7 +108,8 @@ void dimbossgut2_updateTracking(int obj, int state)
     pathWalker = ((Dimbossgut2State*)state)->curvePath;
     if ((((Dimbossgut2State*)state)->flags400 & 8) != 0)
     {
-        if ((Curve_AdvanceAlongPath(pathWalker, ((Dimbossgut2Curve*)curve)->f10) != 0) || (*(int*)(pathWalker + 0x10) != 0))
+        if ((Curve_AdvanceAlongPath(pathWalker, ((Dimbossgut2Curve*)curve)->f10) != 0) ||
+            (*(int*)(pathWalker + 0x10) != 0))
         {
             if ((*gRomCurveInterface)->goNextPoint((void*)pathWalker) != 0)
             {
@@ -138,8 +137,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             angleMag = -angleMag;
         }
-        angleScale = (f32)(s32)
-        angleMag * lbl_803E4CD4;
+        angleScale = (f32)(s32)angleMag * lbl_803E4CD4;
         if (angleScale > lbl_803E4CF0)
         {
             ((Dimbossgut2Curve*)curve)->f10 = ((Dimbossgut2Curve*)curve)->f10 / angleScale;
@@ -157,7 +155,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         player = Obj_GetPlayerObject();
         rel = (int)(u16)getAngle(-(((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX),
                                  -(((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ)) -
-            (int)(u16)((GameObject*)obj)->anim.rotX;
+              (int)(u16)((GameObject*)obj)->anim.rotX;
         if (rel > 0x8000)
         {
             rel = rel - 0xffff;
@@ -175,9 +173,18 @@ void DIM_BossGut2_func0B(void)
 {
 }
 
-int DIM_BossGut2_setScale(void) { return 0x0; }
-int DIM_BossGut2_getExtraSize(void) { return 0x42c; }
-int DIM_BossGut2_getObjectTypeId(void) { return 0x49; }
+int DIM_BossGut2_setScale(void)
+{
+    return 0x0;
+}
+int DIM_BossGut2_getExtraSize(void)
+{
+    return 0x42c;
+}
+int DIM_BossGut2_getObjectTypeId(void)
+{
+    return 0x49;
+}
 
 void DIM_BossGut2_free(int arg9)
 {
@@ -210,8 +217,7 @@ void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                      lbl_803E4CF0);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4CF0);
         light = (u8*)((Dimbossgut2Curve*)((Dimbossgut2State*)light)->curveData)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
         {
@@ -251,16 +257,15 @@ void DIM_BossGut2_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if ((((GameObject*)obj)->unkF4 == 0) &&
         ((((GameObject*)obj)->anim.parent != NULL ||
-            (tmpVar = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+          (tmpVar = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ),
-                tmpVar >= 0))))
+           tmpVar >= 0))))
     {
         msgC = 0;
         do
         {
             tmpVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
-        }
-        while (tmpVar != 0);
+        } while (tmpVar != 0);
         posData = (Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData;
         if ((posData->f0 < lbl_803E4CD0) && (posData->f10 < lbl_803E4CD4))
         {
@@ -269,18 +274,18 @@ void DIM_BossGut2_update(int obj)
             {
                 heightDiff = -heightDiff;
             }
-            if ((heightDiff < lbl_803E4CDC) &&
-                (stk.f4c = posData->fC, randomThreshold = randomGetRange(0x1e, 0x3c),
-                    (int)(u32)posData->timer16 > (int)randomThreshold))
+            if ((heightDiff < lbl_803E4CDC) && (stk.f4c = posData->fC, randomThreshold = randomGetRange(0x1e, 0x3c),
+                                                (int)(u32)posData->timer16 > (int)randomThreshold))
             {
                 xyScale = lbl_803E4CE0 * posData->f10;
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
-                    xyScale * mathSinf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
+                          xyScale * mathSinf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX /
+                                             gDimBossGut2AngleUnitToRadians);
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
-                    xyScale * mathCosf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
+                          xyScale * mathCosf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX /
+                                             gDimBossGut2AngleUnitToRadians);
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
-                (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1,
-                                                 NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1, NULL);
                 posData->timer16 = 0;
             }
         }

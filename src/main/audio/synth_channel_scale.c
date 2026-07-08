@@ -11,28 +11,28 @@ extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
 extern u8* synthVoice;
 extern u32 vidMakeNew(McmdVoiceState* svoice, u32 isMaster);
-extern void vidRemoveVoice(McmdVoiceState * svoice);
-extern void voiceRegister(McmdVoiceState * svoice);
+extern void vidRemoveVoice(McmdVoiceState* svoice);
+extern void voiceRegister(McmdVoiceState* svoice);
 
 typedef struct
 {
     u32* base; /* 0x00 */
-    u32* evt; /* 0x04 */
-    u32 cur; /* 0x08 */
+    u32* evt;  /* 0x04 */
+    u32 cur;   /* 0x08 */
     struct
     {
-        u32 step; /* +0x0 */
+        u32 step;  /* +0x0 */
         u32 delta; /* +0x4 */
-    } d[2]; /* 0x0c */
-    u32 unk1c; /* 0x1c */
+    } d[2];        /* 0x0c */
+    u32 unk1c;     /* 0x1c */
     struct
     {
         u32 acc; /* +0x0 */
         u32 out; /* +0x4 */
-    } o[2]; /* 0x20 */
-    u8 idx; /* 0x30 */
+    } o[2];      /* 0x20 */
+    u8 idx;      /* 0x30 */
     u8 pad31;
-    u16 vol; /* 0x32 */
+    u16 vol;   /* 0x32 */
     u32 pad34; /* 0x34 */
 } SynthStream; /* 0x38 */
 
@@ -40,8 +40,8 @@ typedef struct SynthSong
 {
     struct SynthSong* next; /* 0x000 */
     struct SynthSong* prev; /* 0x004 */
-    u8 active; /* 0x008 */
-    u8 index; /* 0x009 */
+    u8 active;              /* 0x008 */
+    u8 index;               /* 0x009 */
     u8 pad0a[0x118 - 0xa];
     u32* seqWnd; /* 0x118 */
     u8 pad11c[0xe6c - 0x11c];
@@ -51,7 +51,7 @@ typedef struct SynthSong
     u8 pad_eb1[0x31];
     u8 counter; /* 0xee2 */
     u8 pad_ee3[0x14e4 - 0xee3];
-    u32 multiMode; /* 0x14e4 */
+    u32 multiMode;           /* 0x14e4 */
     SynthStream streams[16]; /* 0x14e8 */
 } SynthSong;
 
@@ -185,13 +185,11 @@ void fn_8026EC44(u32 dt)
                 sum = gSynthCurrentVoice->streams[0].o[0].acc + gSynthCurrentVoice->streams[0].d[0].step;
                 gSynthCurrentVoice->streams[0].o[0].acc = sum & 0xffff;
                 sum = sum >> 16;
-                gSynthCurrentVoice->streams[0].o[0].out +=
-                    gSynthCurrentVoice->streams[0].d[0].delta + sum;
+                gSynthCurrentVoice->streams[0].o[0].out += gSynthCurrentVoice->streams[0].d[0].delta + sum;
                 sum = gSynthCurrentVoice->streams[0].o[1].acc + gSynthCurrentVoice->streams[0].d[1].step;
                 gSynthCurrentVoice->streams[0].o[1].acc = sum & 0xffff;
                 sum = sum >> 16;
-                gSynthCurrentVoice->streams[0].o[1].out +=
-                    gSynthCurrentVoice->streams[0].d[1].delta + sum;
+                gSynthCurrentVoice->streams[0].o[1].out += gSynthCurrentVoice->streams[0].d[1].delta + sum;
             }
             else
             {
@@ -211,13 +209,11 @@ void fn_8026EC44(u32 dt)
                             {
                                 u32* cv = (u32*)evt[1];
                                 st->cur = (u32)cv;
-                                synthSetStudioChannelScale((u32)cv >> 10,
-                                                           gSynthCurrentVoiceSlotIndex, ch);
+                                synthSetStudioChannelScale((u32)cv >> 10, gSynthCurrentVoiceSlotIndex, ch);
                             }
                             else
                             {
-                                synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex,
-                                                           ch);
+                                synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex, ch);
                                 st->cur = st->evt[1] << 10;
                             }
                             st->evt = st->evt + 2;
@@ -228,7 +224,7 @@ void fn_8026EC44(u32 dt)
                     freq = c0 * ((f32)st->cur * dt);
                     freq = freq * (c1 * (f32)(u32)st->vol);
                     val = range * freq;
-                val = sal_fmod(val, range, absRange);
+                    val = sal_fmod(val, range, absRange);
                     *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
                     *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
                     ret |= fn_8026E9D0(ch, dt);
@@ -252,13 +248,11 @@ void fn_8026EC44(u32 dt)
                     sum = gSynthCurrentVoice->streams[i].o[0].acc + gSynthCurrentVoice->streams[i].d[0].step;
                     gSynthCurrentVoice->streams[i].o[0].acc = sum & 0xffff;
                     sum = sum >> 16;
-                    gSynthCurrentVoice->streams[i].o[0].out +=
-                        gSynthCurrentVoice->streams[i].d[0].delta + sum;
+                    gSynthCurrentVoice->streams[i].o[0].out += gSynthCurrentVoice->streams[i].d[0].delta + sum;
                     sum = gSynthCurrentVoice->streams[i].o[1].acc + gSynthCurrentVoice->streams[i].d[1].step;
                     gSynthCurrentVoice->streams[i].o[1].acc = sum & 0xffff;
                     sum = sum >> 16;
-                    gSynthCurrentVoice->streams[i].o[1].out +=
-                        gSynthCurrentVoice->streams[i].d[1].delta + sum;
+                    gSynthCurrentVoice->streams[i].o[1].out += gSynthCurrentVoice->streams[i].d[1].delta + sum;
                 }
             }
             if ((ret == 0) && (cb == 0))
@@ -293,7 +287,7 @@ void fn_8026EC44(u32 dt)
 typedef struct
 {
     u8 callbacks[0x1400]; /* 0x0000: 0x100 nodes of 0x14 */
-    SynthSong songs[8]; /* 0x1400 */
+    SynthSong songs[8];   /* 0x1400 */
     u16 lastNotes[8][16]; /* 0xd740 */
 } SynthPool;
 
@@ -367,8 +361,7 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key)
     {
         bank = 8;
     }
-    *(u32*)(lbl_803BCD90 + bank * 0x40 + (key & 0xff) * 4) =
-        (u32)((value << 3) * 0x600) / 0xf0;
+    *(u32*)(lbl_803BCD90 + bank * 0x40 + (key & 0xff) * 4) = (u32)((value << 3) * 0x600) / 0xf0;
 }
 
 /*
@@ -379,7 +372,8 @@ int synthGetVoiceSlotChannelScale(u8* state)
     McmdVoiceState* v = (McmdVoiceState*)state;
     u32 bank;
     int key;
-    if ((bank = v->midiEvent) == 0xff) bank = 8;
+    if ((bank = v->midiEvent) == 0xff)
+        bank = 8;
     key = v->midiLayer;
     return *(int*)(lbl_803BCD90 + bank * 64 + key * 4);
 }
@@ -431,15 +425,15 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
     result = -1;
     for (i = 0, voice = (McmdVoiceState*)synthVoice; i < lbl_803BD150[0x210]; ++i, ++voice)
     {
-        if (voice->macroAllocating == 0 && voice->voiceHandle != 0xffffffff &&
-            voice->midiSlot == slot && voice->midiEvent == channel)
+        if (voice->macroAllocating == 0 && voice->voiceHandle != 0xffffffff && voice->midiSlot == slot &&
+            voice->midiEvent == channel)
         {
             if ((*(u64*)&voice->inputFlags & 2) != 0)
             {
                 sawHeldVoice = 1;
             }
-            if ((*(u64*)&voice->inputFlags & 0x10) != 0 &&
-                (*(u64*)&voice->inputFlags & 0x10000000008) != 8 && hwIsActive(i) != 0)
+            if ((*(u64*)&voice->inputFlags & 0x10) != 0 && (*(u64*)&voice->inputFlags & 0x10000000008) != 8 &&
+                hwIsActive(i) != 0)
             {
                 if (result == 0xffffffff && (*(u64*)&voice->inputFlags & 0x20002) == 0x20002)
                 {
@@ -448,11 +442,9 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                 }
 
                 selectedVoice = voice;
-                voice->portamentoCurPitch =
-                    ((u32)voice->key << 16) + ((s32)voice->fineTune << 16) / 100;
+                voice->portamentoCurPitch = ((u32)voice->key << 16) + ((s32)voice->fineTune << 16) / 100;
                 voice->registeredKey = voice->key;
-                voice->key =
-                    key + ((voice->key & 0xff) - voice->keyBase);
+                voice->key = key + ((voice->key & 0xff) - voice->keyBase);
                 voice->keyBase = key;
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;
@@ -479,8 +471,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
     if (result != 0xffffffff)
     {
         voiceRegister(selectedVoice);
-        inpSetMidiLastNote(selectedVoice->midiSlot, selectedVoice->midiEvent,
-                           selectedVoice->key & 0xff);
+        inpSetMidiLastNote(selectedVoice->midiSlot, selectedVoice->midiEvent, selectedVoice->key & 0xff);
         *outFlags = 0;
     }
     else

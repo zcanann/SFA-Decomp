@@ -11,8 +11,7 @@
 #define PROXIMITYMINE_PARTFX 0x51c
 
 extern void modelLightStruct_freeSlot(void* handle);
-extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
-                                 u32 fwdArg5, double scale);
+extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* effect);
 extern int fn_80080150(f32* p);
@@ -71,8 +70,7 @@ void ProximityMine_free(ProximityMineObject* obj)
     return;
 }
 
-void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3,
-                          u32 p4, u32 p5)
+void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 p5)
 {
     int mapBlock;
     ProximityMineEffect* effect;
@@ -85,8 +83,7 @@ void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3,
         obj->pendingTarget = NULL;
     }
     if (fn_80080150(&state->renderTimer) != 0 ||
-        (mapBlock = objPosToMapBlockIdx((double)obj->posX, (double)obj->posY,
-                                        (double)obj->posZ)) == -1)
+        (mapBlock = objPosToMapBlockIdx((double)obj->posX, (double)obj->posY, (double)obj->posZ)) == -1)
     {
         return;
     }
@@ -162,8 +159,8 @@ void ProximityMine_update(ProximityMineObject* obj)
         {
             if (objUpdateOpacity(state->targetObj) != 0)
             {
-                ObjPath_GetPointWorldPosition((int)state->targetObj, obj->pathIndex, &obj->posX,
-                                              &obj->posY, &obj->posZ, 0);
+                ObjPath_GetPointWorldPosition((int)state->targetObj, obj->pathIndex, &obj->posX, &obj->posY, &obj->posZ,
+                                              0);
             }
             else
             {
@@ -240,19 +237,19 @@ void ProximityMine_update(ProximityMineObject* obj)
         switch (state->mode)
         {
         case PROXIMITYMINE_MODE_WAITING:
-            {
-                f32 trigger;
-                ProximityMineObject* player;
+        {
+            f32 trigger;
+            ProximityMineObject* player;
 
-                trigger = obj->def->parameter;
-                player = Obj_GetPlayerObject();
-                if (Vec_distance(&obj->prevX, &player->prevX) < trigger)
-                {
-                    state->mode = PROXIMITYMINE_MODE_ARMED;
-                    s16toFloat(&state->resetTimer, 0x78);
-                }
-                break;
+            trigger = obj->def->parameter;
+            player = Obj_GetPlayerObject();
+            if (Vec_distance(&obj->prevX, &player->prevX) < trigger)
+            {
+                state->mode = PROXIMITYMINE_MODE_ARMED;
+                s16toFloat(&state->resetTimer, 0x78);
             }
+            break;
+        }
         case PROXIMITYMINE_MODE_EXPIRED:
             Sfx_StopObjectChannel((u32)obj, 0x40);
             if (timerCountDown(&state->renderTimer) != 0)
@@ -262,28 +259,28 @@ void ProximityMine_update(ProximityMineObject* obj)
             }
             break;
         case PROXIMITYMINE_MODE_LAUNCHING:
-            {
-                f32 dist;
-                f32 zero;
-                ProximityMineObject* player;
+        {
+            f32 dist;
+            f32 zero;
+            ProximityMineObject* player;
 
-                player = Obj_GetPlayerObject();
-                dist = Vec_xzDistance(&obj->prevX, &player->prevX);
-                state->mode = PROXIMITYMINE_MODE_FLIGHT;
-                obj->velocityX = lbl_803E6768;
-                obj->velocityY = sqrtf(dist) / lbl_803DC244 + lbl_803E677C * lbl_803DC248;
-                obj->velocityZ = lbl_803E6780 * lbl_803DC248 - sqrtf(dist) / lbl_803DC244;
-                zero = lbl_803E6768;
-                params.x = zero;
-                params.y = zero;
-                params.z = zero;
-                params.scale = lbl_803E6778;
-                params.rotZ = 0;
-                params.rotY = 0;
-                params.rotX = obj->angle;
-                vecRotateZXY(&params, &obj->velocityX);
-                Sfx_PlayFromObject((u32)obj, SFXsp_sabrepush164);
-            }
+            player = Obj_GetPlayerObject();
+            dist = Vec_xzDistance(&obj->prevX, &player->prevX);
+            state->mode = PROXIMITYMINE_MODE_FLIGHT;
+            obj->velocityX = lbl_803E6768;
+            obj->velocityY = sqrtf(dist) / lbl_803DC244 + lbl_803E677C * lbl_803DC248;
+            obj->velocityZ = lbl_803E6780 * lbl_803DC248 - sqrtf(dist) / lbl_803DC244;
+            zero = lbl_803E6768;
+            params.x = zero;
+            params.y = zero;
+            params.z = zero;
+            params.scale = lbl_803E6778;
+            params.rotZ = 0;
+            params.rotY = 0;
+            params.rotX = obj->angle;
+            vecRotateZXY(&params, &obj->velocityX);
+            Sfx_PlayFromObject((u32)obj, SFXsp_sabrepush164);
+        }
         case PROXIMITYMINE_MODE_FLIGHT:
             if (timerCountDown(&state->launchTimer) != 0)
             {
@@ -399,13 +396,11 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
         storeZeroToFloatParam(&state->lifespanTimer);
         state->mode = PROXIMITYMINE_MODE_WAITING;
         ObjHits_EnableObject((u32)obj);
-        state->triggerDistance = (f32)(s32)
-        def->parameter;
+        state->triggerDistance = (f32)(s32)def->parameter;
         storeZeroToFloatParam(&state->bounceTimer);
         break;
     }
-    state->verticalStep =
-        (lbl_803E679C * obj->height) / lbl_803DC230;
+    state->verticalStep = (lbl_803E679C * obj->height) / lbl_803DC230;
     state->targetObj = NULL;
     state->effectHandle = NULL;
     return;

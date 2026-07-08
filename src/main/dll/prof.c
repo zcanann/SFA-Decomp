@@ -59,53 +59,43 @@ void optionsMenu_openAudioPanel(void)
     if (isCheatUnlocked(2) != 0)
     {
         panels->audioEntries[0x10b] = 5;
-        *(u16*)(panels->audioEntries + 0x142) =
-            (u16)(*(u16*)(panels->audioEntries + 0x142) & ~OPTION_ENTRY_DISABLED);
+        *(u16*)(panels->audioEntries + 0x142) = (u16)(*(u16*)(panels->audioEntries + 0x142) & ~OPTION_ENTRY_DISABLED);
         panels->audioEntries[0x146] = 4;
     }
     else
     {
         panels->audioEntries[0x10b] = -1;
-        *(u16*)(panels->audioEntries + 0x142) =
-            (u16)(*(u16*)(panels->audioEntries + 0x142) | OPTION_ENTRY_DISABLED);
+        *(u16*)(panels->audioEntries + 0x142) = (u16)(*(u16*)(panels->audioEntries + 0x142) | OPTION_ENTRY_DISABLED);
     }
 
-    (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(
-        *gTitleMenuLinkInterface + 4))(panels->audioEntries, panels->audioCount, 0, 0, 0, 0,
-                                       0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+    (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(*gTitleMenuLinkInterface + 4))(
+        panels->audioEntries, panels->audioCount, 0, 0, 0, 0, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
 
     if (OSGetSoundMode() == 1)
     {
-        item = (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(
-            0x36c, 0x22, 0, 3, lbl_803DD708[9]);
+        item =
+            (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x36c, 0x22, 0, 3, lbl_803DD708[9]);
     }
     else
     {
-        item = (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(
-            0x36c, 0x22, 0, 3, 2);
+        item = (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(0x36c, 0x22, 0, 3, 2);
     }
     lbl_803A87D0[0] = item;
-    lbl_803A87D0[1] =
-        (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(
-            0x124, 0xb2, 0, 0x7f, lbl_803DD708[10], 0x3e);
-    lbl_803A87D0[2] =
-        (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(
-            0x124, 0xcc, 0, 0x7f, lbl_803DD708[11], 0x3e);
-    lbl_803A87D0[3] =
-        (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(
-            0x124, 0xe6, 0, 0x7f, lbl_803DD708[12], 0x3e);
-    ((TitleMenuItem*)lbl_803A87D0[3])->flags =
-        (u8)(((TitleMenuItem*)lbl_803A87D0[3])->flags | 0x40);
+    lbl_803A87D0[1] = (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(0x124, 0xb2, 0, 0x7f,
+                                                                                               lbl_803DD708[10], 0x3e);
+    lbl_803A87D0[2] = (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(0x124, 0xcc, 0, 0x7f,
+                                                                                               lbl_803DD708[11], 0x3e);
+    lbl_803A87D0[3] = (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(0x124, 0xe6, 0, 0x7f,
+                                                                                               lbl_803DD708[12], 0x3e);
+    ((TitleMenuItem*)lbl_803A87D0[3])->flags = (u8)(((TitleMenuItem*)lbl_803A87D0[3])->flags | 0x40);
     lbl_803A87D0[4] = 0;
     lbl_803A87D0[5] = 0;
 
     if (isCheatUnlocked(2) != 0)
     {
-        lbl_803A87D0[5] =
-            (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(
-                0x3cb, 0x27, 0, (s16)(return0x64_8000A378() - 1), 0);
-        ((TitleMenuItem*)lbl_803A87D0[5])->flags =
-            (u8)(((TitleMenuItem*)lbl_803A87D0[5])->flags | 0x80);
+        lbl_803A87D0[5] = (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(
+            0x3cb, 0x27, 0, (s16)(return0x64_8000A378() - 1), 0);
+        ((TitleMenuItem*)lbl_803A87D0[5])->flags = (u8)(((TitleMenuItem*)lbl_803A87D0[5])->flags | 0x80);
     }
 
     (*(void (**)(int, int))(*gTitleMenuItemInterface + 0x20))(lbl_803A87D0[0], 1);
@@ -150,8 +140,7 @@ void optionsMenu_openGeneralPanel(void)
         }
         entryOffset -= 0x3c;
         cheatId--;
-    }
-    while (cheatId > 1);
+    } while (cheatId > 1);
 
     lastUnlocked2 = 1;
     cheatId2 = 2;
@@ -167,20 +156,16 @@ void optionsMenu_openGeneralPanel(void)
         }
         entryOffset2 += 0x3c;
         cheatId2++;
-    }
-    while (cheatId2 < 4);
+    } while (cheatId2 < 4);
 
-    (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(
-        *gTitleMenuLinkInterface + 4))(panels->optionEntries, panels->optionCount, 0, 0, 0, 0,
-                                       0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+    (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(*gTitleMenuLinkInterface + 4))(
+        panels->optionEntries, panels->optionCount, 0, 0, 0, 0, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
 
     lbl_803A87D0[0] =
-        (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(
-            0x366, 0x22, 0, 1, lbl_803DD708[6]);
+        (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x366, 0x22, 0, 1, lbl_803DD708[6]);
     slot = &lbl_803A87D0[0];
-    slot[1] =
-        (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
-            0x36b, 0x23, 0, 1, (s16)(lbl_803DD708[8] == 0));
+    slot[1] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(0x36b, 0x23, 0, 1,
+                                                                                     (s16)(lbl_803DD708[8] == 0));
 
     cheatId = 0;
     do
@@ -200,8 +185,7 @@ void optionsMenu_openGeneralPanel(void)
         }
         slot++;
         cheatId++;
-    }
-    while (cheatId <= 1);
+    } while (cheatId <= 1);
 
     (*(void (**)(int, int))(*gTitleMenuItemInterface + 0x20))(lbl_803A87D0[0], 1);
     lbl_803DD706 = 2;

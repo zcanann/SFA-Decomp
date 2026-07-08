@@ -17,7 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 /* Andross body object id, located once and cached in androssObj. */
-#define ANDROSS_OBJ_ID 0x47b77
+#define ANDROSS_OBJ_ID              0x47b77
 #define ANDROSSHAND_HIT_VOLUME_SLOT 5
 
 /* Projectile spawned by the hand; role pinned by arwprojectile_setLifetime/placeForward + AndrossHandShotSetup cast. */
@@ -47,21 +47,21 @@ enum AndrossHandStateId
  */
 typedef struct AndrossHandState
 {
-    int androssObj;          /* 0x00: cached Andross body GameObject */
-    int arwingObj;           /* 0x04: cached player Arwing GameObject */
-    u8 pad08[0x14 - 0x08];   /* 0x08-0x13: unknown */
-    f32 animSpeed;           /* 0x14 */
-    f32 zSpringOffset;       /* 0x18 */
-    f32 zSpringVelocity;     /* 0x1C */
-    s16 shotTimer;           /* 0x20 */
-    u8 sideFlag;             /* 0x22: setup[0x1B], left/right hand select */
-    s8 handState;            /* 0x23: read signed, written via *(u8*)& */
-    s8 prevState;            /* 0x24: read signed, written via *(u8*)& */
-    u8 health;               /* 0x25 */
-    u8 hitCooldown;          /* 0x26 */
-    u8 startupDelay;         /* 0x27 */
-    u8 damageTextureState;   /* 0x28: 0 clean, 1 hit-flash, 2 destroyed */
-    u8 soundGate;            /* 0x29: one-shot gate for per-move sfx */
+    int androssObj;        /* 0x00: cached Andross body GameObject */
+    int arwingObj;         /* 0x04: cached player Arwing GameObject */
+    u8 pad08[0x14 - 0x08]; /* 0x08-0x13: unknown */
+    f32 animSpeed;         /* 0x14 */
+    f32 zSpringOffset;     /* 0x18 */
+    f32 zSpringVelocity;   /* 0x1C */
+    s16 shotTimer;         /* 0x20 */
+    u8 sideFlag;           /* 0x22: setup[0x1B], left/right hand select */
+    s8 handState;          /* 0x23: read signed, written via *(u8*)& */
+    s8 prevState;          /* 0x24: read signed, written via *(u8*)& */
+    u8 health;             /* 0x25 */
+    u8 hitCooldown;        /* 0x26 */
+    u8 startupDelay;       /* 0x27 */
+    u8 damageTextureState; /* 0x28: 0 clean, 1 hit-flash, 2 destroyed */
+    u8 soundGate;          /* 0x29: one-shot gate for per-move sfx */
     u8 pad2A[2];
 } AndrossHandState;
 
@@ -81,9 +81,15 @@ STATIC_ASSERT(offsetof(AndrossHandState, handState) == 0x23);
 STATIC_ASSERT(offsetof(AndrossHandState, soundGate) == 0x29);
 STATIC_ASSERT(sizeof(AndrossHandState) == 0x2C);
 
-int AndrossHand_getExtraSize(void) { return sizeof(AndrossHandState); }
+int AndrossHand_getExtraSize(void)
+{
+    return sizeof(AndrossHandState);
+}
 
-int AndrossHand_getObjectTypeId(void) { return 0; }
+int AndrossHand_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void AndrossHand_free(void)
 {
@@ -135,16 +141,14 @@ void AndrossHand_update(int obj)
             fScale = fScale * lbl_803E75B4;
         }
         prevVel = state->zSpringVelocity;
-        state->zSpringVelocity =
-            prevVel + ((-state->zSpringOffset / lbl_803DC4FC - prevVel) / lbl_803DC500);
+        state->zSpringVelocity = prevVel + ((-state->zSpringOffset / lbl_803DC4FC - prevVel) / lbl_803DC500);
         state->zSpringOffset = state->zSpringOffset + state->zSpringVelocity;
 
-        angle = gAndrossHandPi *
-            (f32)(s16)(int)((f32)((GameObject*)state->androssObj)->anim.rotX + fScale) / gAndrossHandHalfAngleScale;
+        angle = gAndrossHandPi * (f32)(s16)(int)((f32)((GameObject*)state->androssObj)->anim.rotX + fScale) /
+                gAndrossHandHalfAngleScale;
         fScale = mathSinf(angle);
         cosAngle = mathCosf(angle);
-        ((GameObject*)obj)->anim.localPosX =
-            lbl_803DC4F0 * fScale + ((GameObject*)state->androssObj)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosX = lbl_803DC4F0 * fScale + ((GameObject*)state->androssObj)->anim.localPosX;
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->androssObj)->anim.localPosY + lbl_803DC4F4;
         ((GameObject*)obj)->anim.localPosZ =
             state->zSpringOffset + (lbl_803DC4F0 * cosAngle + ((GameObject*)state->androssObj)->anim.localPosZ);
@@ -271,9 +275,8 @@ void AndrossHand_update(int obj)
                 doRumble(lbl_803E75C8);
             }
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75E0 && ((GameObject*)obj)->anim.currentMoveProgress
-            < lbl_803E75F8 &&
-            state->soundGate == 0)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75E0 &&
+            ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E75F8 && state->soundGate == 0)
         {
             state->soundGate = 1;
             Sfx_PlayFromObject(obj, SFXTRIG_and_chompf);
@@ -348,7 +351,6 @@ void AndrossHand_update(int obj)
 }
 #pragma opt_common_subs reset
 
-
 void AndrossHand_hitDetect(void)
 {
 }
@@ -403,8 +405,7 @@ void androsshand_handleDamage(int obj, int hand)
         cooldown = 0;
     }
     state->hitCooldown = cooldown;
-    if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 &&
-        state->hitCooldown == 0)
+    if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 && state->hitCooldown == 0)
     {
         switch (sphereIdx)
         {
@@ -497,4 +498,4 @@ void androsshand_spawnShot(int obj, int hand, int p3)
     }
 }
 
-f32 gAndrossHandMoveAnimSpeeds[7] = { 0.02f, 0.007f, 0.007f, 0.003f, 0.02f, 0.013f, 0.007f };
+f32 gAndrossHandMoveAnimSpeeds[7] = {0.02f, 0.007f, 0.007f, 0.003f, 0.02f, 0.013f, 0.007f};

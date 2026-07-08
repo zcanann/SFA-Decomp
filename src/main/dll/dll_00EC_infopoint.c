@@ -26,10 +26,10 @@ typedef struct InfopointObjectDef
 {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
-    u16 textId;             /* 0x18: game-text id passed to gameTextGet */
+    u16 textId; /* 0x18: game-text id passed to gameTextGet */
     u8 pad1A[0x1B - 0x1A];
     u8 unk1B;
-    u8 rotXByte;            /* 0x1C: rotX in 1/256 turns (<< 8 into anim.rotX) */
+    u8 rotXByte; /* 0x1C: rotX in 1/256 turns (<< 8 into anim.rotX) */
     u8 pad1D;
     u8 unk1E;
     u8 unk1F;
@@ -52,12 +52,16 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 1: state->flag = 0xff;
+        case 1:
+            state->flag = 0xff;
             break;
-        case 2: state->flag = 0;
+        case 2:
+            state->flag = 0;
             break;
-        case 3: break;
-        case 4: break;
+        case 3:
+            break;
+        case 4:
+            break;
         }
     }
     return 0;
@@ -65,8 +69,14 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma peephole reset
 #pragma scheduling reset
 
-int InfoPoint_getExtraSize(void) { return 0x20; }
-int InfoPoint_getObjectTypeId(void) { return 0x0; }
+int InfoPoint_getExtraSize(void)
+{
+    return 0x20;
+}
+int InfoPoint_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void InfoPoint_free(void)
 {
@@ -77,7 +87,8 @@ void InfoPoint_free(void)
 void InfoPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3B70);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3B70);
 }
 #pragma peephole reset
 #pragma scheduling reset

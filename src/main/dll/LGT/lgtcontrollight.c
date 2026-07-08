@@ -63,8 +63,7 @@ void fn_801F4C28(u8* obj, u8* rec)
     ((LgtFireFlyRec*)rec)->baseZ = lbl_803E5EB4;
     ((LgtFireFlyRec*)rec)->unk68 = 0;
     ((LgtFireFlyRec*)rec)->unk67 = 0;
-    ((LgtFireFlyRec*)rec)->angleStep =
-        randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
+    ((LgtFireFlyRec*)rec)->angleStep = randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
     ((LgtFireFlyRec*)rec)->angle = randomGetRange(0, FIREFLY_ANGLE_INIT_MAX);
     ((LgtFireFlyRec*)rec)->ampMax = FIREFLY_AMP_MAX;
     ((LgtFireFlyRec*)rec)->unk66 = 4;
@@ -99,8 +98,7 @@ void fn_801F4D54(int obj, u8* rec)
     }
     else
     {
-        ((LgtFireFlyRec*)rec)->offY =
-            (f32)(s32)(randomGetRange(0, ((LgtFireFlyRec*)rec)->ampMax));
+        ((LgtFireFlyRec*)rec)->offY = (f32)(s32)(randomGetRange(0, ((LgtFireFlyRec*)rec)->ampMax));
     }
     if (((LgtFireFlyRec*)rec)->radius < lbl_803E5EC8)
     {
@@ -110,11 +108,9 @@ void fn_801F4D54(int obj, u8* rec)
     {
         ((LgtFireFlyRec*)rec)->offZ =
             ((LgtFireFlyRec*)rec)->radius -
-            (f32)(s32)(randomGetRange(FIREFLY_RADIUS_MARGIN,
-                                      (s16)(s32)((LgtFireFlyRec*)rec)->radius));
+            (f32)(s32)(randomGetRange(FIREFLY_RADIUS_MARGIN, (s16)(s32)((LgtFireFlyRec*)rec)->radius));
     }
-    ((LgtFireFlyRec*)rec)->angle +=
-        (s16)randomGetRange(FIREFLY_ANGLE_ADVANCE_MIN, FIREFLY_ANGLE_ADVANCE_MAX);
+    ((LgtFireFlyRec*)rec)->angle += (s16)randomGetRange(FIREFLY_ANGLE_ADVANCE_MIN, FIREFLY_ANGLE_ADVANCE_MAX);
     rot.scratch1 = lbl_803E5EC4;
     rot.scratch2 = lbl_803E5EC4;
     rot.scratch3 = lbl_803E5EC4;
@@ -123,10 +119,7 @@ void fn_801F4D54(int obj, u8* rec)
     rot.rotX = 0;
     rot.rotZ = ((LgtFireFlyRec*)rec)->angle;
     vecRotateZXY(&rot, rec + 0x34);
-    ((LgtFireFlyRec*)rec)->offX =
-        ((LgtFireFlyRec*)rec)->offX + ((LgtFireFlyRec*)rec)->posX;
-    ((LgtFireFlyRec*)rec)->offY =
-        ((LgtFireFlyRec*)rec)->offY + ((LgtFireFlyRec*)rec)->posY;
-    ((LgtFireFlyRec*)rec)->offZ =
-        ((LgtFireFlyRec*)rec)->offZ + ((LgtFireFlyRec*)rec)->posZ;
+    ((LgtFireFlyRec*)rec)->offX = ((LgtFireFlyRec*)rec)->offX + ((LgtFireFlyRec*)rec)->posX;
+    ((LgtFireFlyRec*)rec)->offY = ((LgtFireFlyRec*)rec)->offY + ((LgtFireFlyRec*)rec)->posY;
+    ((LgtFireFlyRec*)rec)->offZ = ((LgtFireFlyRec*)rec)->offZ + ((LgtFireFlyRec*)rec)->posZ;
 }

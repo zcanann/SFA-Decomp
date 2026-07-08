@@ -47,18 +47,22 @@ void doNothing_onSaveSelectScreenExit(void)
 {
 }
 
-int return1_800202BC(void) { return 0x1; }
+int return1_800202BC(void)
+{
+    return 0x1;
+}
 int return0_8002969C(void);
 
 /* Top-level boot / soft-reset state machine (the global gameState). */
-typedef enum GameLoopState {
-  GAMELOOP_STATE_BOOTING = 0,            /* loading; the gameUpdate frame is skipped */
-  GAMELOOP_STATE_RUNNING = 1,            /* normal per-frame game update */
-  GAMELOOP_STATE_RESET_REQUESTED = 2,    /* soft reset: stop audio/rumble, begin transition */
-  GAMELOOP_STATE_RESET_FADE_OUT = 3,     /* fade-out timer countdown */
-  GAMELOOP_STATE_RESET_TEARDOWN = 4,     /* DVD/audio/VI teardown then OSResetSystem */
-  GAMELOOP_STATE_RESET_DONE = 5,         /* terminal, after OSResetSystem */
-  GAMELOOP_STATE_HARD_RESET_REQUESTED = 6 /* like RESET_REQUESTED but flags a hard reset */
+typedef enum GameLoopState
+{
+    GAMELOOP_STATE_BOOTING = 0,             /* loading; the gameUpdate frame is skipped */
+    GAMELOOP_STATE_RUNNING = 1,             /* normal per-frame game update */
+    GAMELOOP_STATE_RESET_REQUESTED = 2,     /* soft reset: stop audio/rumble, begin transition */
+    GAMELOOP_STATE_RESET_FADE_OUT = 3,      /* fade-out timer countdown */
+    GAMELOOP_STATE_RESET_TEARDOWN = 4,      /* DVD/audio/VI teardown then OSResetSystem */
+    GAMELOOP_STATE_RESET_DONE = 5,          /* terminal, after OSResetSystem */
+    GAMELOOP_STATE_HARD_RESET_REQUESTED = 6 /* like RESET_REQUESTED but flags a hard reset */
 } GameLoopState;
 
 extern u8 gameState;
@@ -77,7 +81,6 @@ extern u8 gGameLoopInitComplete;
 
 extern void checkReset(void);
 
-
 void main(void)
 {
     gameState = GAMELOOP_STATE_BOOTING;
@@ -89,8 +92,7 @@ void main(void)
     {
         checkReset();
         gameLoop();
-    }
-    while (1);
+    } while (1);
 }
 
 #pragma peephole off
@@ -191,9 +193,6 @@ void cutsceneExit(void)
     Sfx_SetObjectSoundsPaused(0);
 }
 
-
-
-
 extern void loadAsset(void* req);
 extern u8 gGameLoopReloadRequested;
 
@@ -240,9 +239,7 @@ void loadAsset(void* reqVoid)
         break;
     case 4:
         *(void**)req->dest =
-            loadCharacter((s16*)req->arg18, req->arg1c,
-                          req->arg24, req->arg20,
-                          (void*)req->arg14, req->arg28);
+            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
         break;
     case 3:
         *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
@@ -254,9 +251,7 @@ void loadAsset(void* reqVoid)
         *(void**)req->dest = (void*)((int (*)(int, int, void*))return0_8002969C)(req->resourceId, req->argC, tmp);
         break;
     case 7:
-        *(void**)req->dest =
-            loadAnimation(req->arg24, req->resourceId, (s16)req->argC,
-                          (u8*)req->arg20);
+        *(void**)req->dest = loadAnimation(req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
         break;
     }
 }
@@ -365,7 +360,6 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
     return 0;
 }
 
-
 #pragma dont_inline on
 void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
 {
@@ -381,7 +375,6 @@ void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
 
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
-
 void Obj_ApplyPendingParentLinks(void);
 
 extern u8* gGameBitTable;
@@ -390,7 +383,7 @@ extern u8* gGameBitSaveData;
 
 /* GameBit descriptor flags byte (gGameBitTable[id*4 + 2]). */
 #define GAMEBIT_FLAG_WIDTH_MASK 0x1f /* bit-run length: (mask)+1 bits stored for this entry */
-#define GAMEBIT_FLAG_SYNC 0x20       /* request a save-sync when this bit is written */
+#define GAMEBIT_FLAG_SYNC       0x20 /* request a save-sync when this bit is written */
 #define GAMEBIT_FLAG_BANK_SHIFT 6    /* top bits select one of four save-data banks */
 
 #pragma dont_inline off
@@ -459,9 +452,11 @@ u32 mainGetBit(int eventId)
     return result;
 }
 
-
 extern void gameBitFn_800ea2e0(u8 id);
-char sGameBitSetDuringSaveLoadWarning[204] = "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
+char sGameBitSetDuringSaveLoadWarning[204] =
+    "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is "
+    "loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit "
+    "passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #pragma optimization_level 3
 void mainSetBits(int eventId, int value)
@@ -569,7 +564,6 @@ int gameBitIncrement(int bit)
 
 void Obj_FlushDeferredFreeList(void);
 
-
 extern void mapSetup();
 extern void Music_Trigger(int id, int arg);
 extern u8 lbl_803DCA38;
@@ -628,12 +622,6 @@ extern void gameTextRun(void);
 extern u32 getButtonsHeld(int port);
 extern void viFn_8004a56c(int arg);
 
-
-
-
-
-
-
 extern void mapInitFn_8006fccc(void);
 extern void initGameTimer(void);
 
@@ -641,14 +629,9 @@ extern void _initCardAndDsp(void);
 extern void playerInitFuncPtrsEntry(void);
 extern void loadTaskTexts(void);
 
-
-
-
 extern int getDataFileSize(int id);
 
 extern void setDrawCloudsAndLights(int v);
-
-
 
 extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];
@@ -761,8 +744,7 @@ void init(void)
             *(u8*)lbl_803DCAFC = dtv;
         }
         GXFlush_(1, 0);
-    }
-    while ((filesDone == 0 || audioDone == 0) && gameState == GAMELOOP_STATE_BOOTING);
+    } while ((filesDone == 0 || audioDone == 0) && gameState == GAMELOOP_STATE_BOOTING);
     while (gameState != GAMELOOP_STATE_BOOTING)
     {
         mmFreeTick(0);
@@ -1021,8 +1003,7 @@ void gameLoop(void)
                 for (; i < gGameLoopButtonObjectCount; i++)
                 {
                     objRenderModelAndHitVolumes(*p, 0, 0, 0, 0, lbl_803DE7A8);
-                    if (((GameObject*)*p)->anim.seqId == 0x882 ||
-                        ((GameObject*)*p)->anim.seqId == 0x887)
+                    if (((GameObject*)*p)->anim.seqId == 0x882 || ((GameObject*)*p)->anim.seqId == 0x887)
                     {
                         objRenderFuzz();
                     }
@@ -1046,9 +1027,6 @@ void gameLoop(void)
 extern u8 lbl_803DCAC4;
 extern int gGameLoopPendingUiDllId;
 extern void setColor_803db5d0(int r, int g, int b);
-
-
-
 
 void doQueuedLoads(void)
 {
@@ -1207,16 +1185,14 @@ void cutsceneEnterExit(int entering, int affectSounds)
         {
             Sfx_SetObjectSoundsPaused(1);
         }
-        if ((s8)(u8)++hudHiddenFrameCount > 2
-        )
+        if ((s8)(u8)++hudHiddenFrameCount > 2)
         {
             hudHiddenFrameCount = 2;
         }
     }
     else
     {
-        if ((s8)(u8)--hudHiddenFrameCount <= 0
-        )
+        if ((s8)(u8)--hudHiddenFrameCount <= 0)
         {
             timeStop = 0;
             hudHiddenFrameCount = 0;
@@ -1318,8 +1294,7 @@ void askProgressiveScanMode(void)
         {
             sel = 0;
         }
-    }
-    while ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0 && counter < 600);
+    } while ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0 && counter < 600);
     box[0x10] = savedByte;
     waitNextFrame();
     GXFlush_(0, 0);
@@ -1356,8 +1331,7 @@ void askProgressiveScanMode(void)
     {
         VIWaitForRetrace();
         counter++;
-    }
-    while (counter < 100);
+    } while (counter < 100);
     VISetBlack(0);
     VIFlush();
     VIWaitForRetrace();
@@ -1384,8 +1358,7 @@ void askProgressiveScanMode(void)
         dvdCheckError();
         doNothing_endOfFrame();
         GXFlush_(0, 0);
-    }
-    while (counter < 0xf0);
+    } while (counter < 0xf0);
 }
 #pragma optimization_level reset
 
@@ -1543,4 +1516,5 @@ void checkReset(void)
     }
 }
 
-char sGameLoopResetMessages[0x50] = "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
+char sGameLoopResetMessages[0x50] =
+    "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";

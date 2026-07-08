@@ -14,7 +14,7 @@
 
 #include "main/audio/sfx_ids.h"
 
-#define DRENERGYDISC_OBJFLAG_HIDDEN 0x4000
+#define DRENERGYDISC_OBJFLAG_HIDDEN             0x4000
 #define DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct DrenergydiscPlacement
@@ -25,9 +25,15 @@ typedef struct DrenergydiscPlacement
     u8 pad22[0x28 - 0x22];
 } DrenergydiscPlacement;
 
-int DR_EnergyDisc_getExtraSize(void) { return 1; }
+int DR_EnergyDisc_getExtraSize(void)
+{
+    return 1;
+}
 
-int DR_EnergyDisc_getObjectTypeId(void) { return 0; }
+int DR_EnergyDisc_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void DR_EnergyDisc_free(void)
 {
@@ -105,7 +111,8 @@ void DR_EnergyDisc_init(u8* obj, u8* setup)
             texture->textureId = 0;
         }
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DRENERGYDISC_OBJFLAG_HIDDEN | DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags |
+                                            (DRENERGYDISC_OBJFLAG_HIDDEN | DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void DR_EnergyDisc_release(void)

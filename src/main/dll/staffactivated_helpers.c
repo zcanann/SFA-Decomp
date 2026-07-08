@@ -25,7 +25,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 
-
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern u8 Obj_IsLoadingLocked(void);
@@ -59,8 +58,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     if (state->liftReset == 0)
     {
         state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - state->liftVelocity);
-        state->liftHeight =
-            (s32)((f32)state->liftVelocity * timeDelta + state->liftHeight);
+        state->liftHeight = (s32)((f32)state->liftVelocity * timeDelta + state->liftHeight);
         if (state->liftHeight > state->peakLiftHeight)
         {
             state->peakLiftHeight = state->liftHeight;
@@ -91,15 +89,14 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     }
 
     prevHeight = state->previousLiftHeight;
-    if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
-        (prevHeight >= 0x40 && state->liftHeight < 0x40))
+    if ((prevHeight < 0x40 && state->liftHeight >= 0x40) || (prevHeight >= 0x40 && state->liftHeight < 0x40))
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt);
     }
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                              &state->hitCooldown);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitCooldown);
     state->previousLiftHeight = state->liftHeight;
-    ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->liftHeight / lbl_803E3BCC);
+    ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
+                                                                state->liftHeight / lbl_803E3BCC);
 }
 
 typedef struct PrisonGuardStateFlags
@@ -163,11 +160,9 @@ void staffactivated_spawnMapEventDebris(int obj)
     tricky = getTrickyObject();
     state = ((GameObject*)obj)->extra;
 
-    if ((*gMapEventInterface)->shouldNotSaveTime(setup->base.mapId) != 0 &&
-        Obj_IsLoadingLocked() != 0)
+    if ((*gMapEventInterface)->shouldNotSaveTime(setup->base.mapId) != 0 && Obj_IsLoadingLocked() != 0)
     {
-        (*gMapEventInterface)->addTime(setup->base.mapId,
-                                               lbl_803E3BD8 * setup->timedEventSeconds);
+        (*gMapEventInterface)->addTime(setup->base.mapId, lbl_803E3BD8 * setup->timedEventSeconds);
         if (tricky != 0)
         {
             trickyImpress(tricky);
@@ -189,7 +184,7 @@ void staffactivated_spawnMapEventDebris(int obj)
             ((GameObject*)spawnedObj)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
 
             lenSq = (((GameObject*)spawnedObj)->anim.velocityX * ((GameObject*)spawnedObj)->anim.velocityX) +
-                (((GameObject*)spawnedObj)->anim.velocityZ * ((GameObject*)spawnedObj)->anim.velocityZ);
+                    (((GameObject*)spawnedObj)->anim.velocityZ * ((GameObject*)spawnedObj)->anim.velocityZ);
             if (lenSq != lbl_803E3BDC)
             {
                 len = sqrtf(lenSq);
@@ -215,7 +210,7 @@ void staffactivated_spawnMapEventDebris(int obj)
             vecRotateZXY(&rotate, (void*)(spawnedObj + 0x24));
 
             yawDelta = ((GameObject*)spawnedObj)->anim.rotX -
-                getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);
+                       getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);
             if (yawDelta > 0x8000)
             {
                 yawDelta -= 0xffff;
@@ -234,6 +229,7 @@ u32 cfPrisonGuard_getPullRateMode(int obj)
 {
     u32 mode;
     mode = ((StaffActivatedSetup*)((GameObject*)obj)->anim.placementData)->size;
-    if (mode > 2) mode = 2;
+    if (mode > 2)
+        mode = 2;
     return mode;
 }

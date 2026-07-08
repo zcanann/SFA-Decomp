@@ -4,8 +4,8 @@
  * that homes on a target, glows, and triggers explosions on contact.
  */
 
-#define LAVA1BE_SEQID_DEBRIS   0x1fa
-#define LAVA1BE_PARTFX 0x1f5
+#define LAVA1BE_SEQID_DEBRIS 0x1fa
+#define LAVA1BE_PARTFX       0x1f5
 
 #define LAVA1BE_FLAG_HOMING_OFF 0x08
 #define LAVA1BE_FLAG_INACTIVE   0x10
@@ -28,10 +28,10 @@ typedef struct IMIceMountainState
 {
     u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
     u8 pad01[3];
-    s32 latchFlags; /* SCGameBitLatch record; bit 1 = latch fired this frame */
+    s32 latchFlags;   /* SCGameBitLatch record; bit 1 = latch fired this frame */
     s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
     u8 pad09;
-    s16 musicTrack; /* -1 or 26; Music_Trigger edge latch */
+    s16 musicTrack;   /* -1 or 26; Music_Trigger edge latch */
     u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
     u8 pad0D[3];
     f32 warningTextTimer; /* shows text 0x351 while above the floor value */
@@ -44,7 +44,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 ObjHits_DisableObject();
-
 
 void imicepillar_free(void);
 
@@ -60,14 +59,14 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIMLAVA_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define MODEL_LIGHT_KIND_POINT 2
+#define MODEL_LIGHT_KIND_POINT             2
 
 typedef struct Lavaball1bePlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 linkedId; /* 0x14: linked-object id, consumed and cleared (-1) at init */
-    s8 spawnRotX; /* 0x18: spawn yaw byte, placed in anim.rotX high byte */
-    u8 pad19;     /* 0x19 */
+    s32 linkedId;   /* 0x14: linked-object id, consumed and cleared (-1) at init */
+    s8 spawnRotX;   /* 0x18: spawn yaw byte, placed in anim.rotX high byte */
+    u8 pad19;       /* 0x19 */
     s16 velScaleY;  /* 0x1A: vertical launch-velocity scale */
     s16 velScaleXZ; /* 0x1C: horizontal launch-velocity scale */
     u8 pad1E[0x20 - 0x1E];
@@ -101,7 +100,6 @@ extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDi
 extern f32 gDimLavaLightAttenNear, gDimLavaLightAttenFar, gDimLavaGlowRadius;
 extern u8 gDimLavaDebrisBaseVec[];
 extern void vecRotateZXY(void* in, void* out);
-
 
 extern int ObjList_FindObjectById(int id);
 extern u8* objCreateLight(s16* obj, int b);
@@ -158,18 +156,22 @@ void lavaball1be_initialise(void)
 
 int lavaball1be_getExtraSize(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
+        return 0x0;
     return 0x14;
 }
 
 int lavaball1be_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
+        return 0x0;
     return 0x2;
 }
 
-u32 lavaball1be_isInactive(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE; }
-
+u32 lavaball1be_isInactive(int* obj)
+{
+    return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE;
+}
 
 void lavaball1be_free(int obj)
 {
@@ -219,7 +221,8 @@ void lavaball1be_init(s16* obj, u8* p)
         ((GameObject*)obj)->anim.velocityX = s.vec.x;
         ((GameObject*)obj)->anim.velocityY = s.vec.y;
         ((GameObject*)obj)->anim.velocityZ = s.vec.z;
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * gDimLavaDebrisRootMotionScale;
+        ((GameObject*)obj)->anim.rootMotionScale =
+            ((GameObject*)obj)->anim.rootMotionScale * gDimLavaDebrisRootMotionScale;
     }
     else
     {
@@ -236,11 +239,11 @@ void lavaball1be_init(s16* obj, u8* p)
         state->floorY = ((GameObject*)obj)->anim.localPosY;
         state->linkedId = placement->linkedId;
         placement->linkedId = -1;
-        ((GameObject*)obj)->anim.velocityX = vxz * -mathSinf(
-            gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+        ((GameObject*)obj)->anim.velocityX =
+            vxz * -mathSinf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
         ((GameObject*)obj)->anim.velocityY = vy;
-        ((GameObject*)obj)->anim.velocityZ = vxz * -mathCosf(
-            gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+        ((GameObject*)obj)->anim.velocityZ =
+            vxz * -mathCosf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
         sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
         if (sub != NULL)
         {
@@ -270,7 +273,7 @@ void lavaball1be_init(s16* obj, u8* p)
 
 void lavaball1be_update(s16* obj)
 {
-    extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+    extern void spawnExplosion(s16 * obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
     extern int Sfx_PlayFromObject(int* obj, int sfxId);
     extern void Obj_FreeObject(void* o);
     Lavaball1beState* state;
@@ -278,12 +281,12 @@ void lavaball1be_update(s16* obj)
 
     if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
-            localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
-            localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
-            localPosZ;
+        ((GameObject*)obj)->anim.localPosX =
+            ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY =
+            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosZ =
+            ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
         (*gPartfxInterface)->spawnObject(obj, LAVA1BE_PARTFX, NULL, 1, -1, NULL);
         ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
@@ -312,9 +315,7 @@ void lavaball1be_update(s16* obj)
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (steps << 6);
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY - (steps << 9);
             ((GameObject*)obj)->anim.velocityY = gDimLavaGravity * dt + ((GameObject*)obj)->anim.velocityY;
-            objMove((int)obj,
-                    ((GameObject*)obj)->anim.velocityX * dt,
-                    ((GameObject*)obj)->anim.velocityY * dt,
+            objMove((int)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
                     ((GameObject*)obj)->anim.velocityZ * dt);
             if (((GameObject*)obj)->anim.velocityY < lbl_803E47F8)
             {
@@ -402,11 +403,11 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
     ((GameObject*)obj)->anim.previousWorldPosZ = x;
     ((GameObject*)obj)->anim.previousLocalPosZ = x;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->spawnRotX << 8);
-    ((GameObject*)obj)->anim.velocityX = vxz * -mathSinf(
-        gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+    ((GameObject*)obj)->anim.velocityX =
+        vxz * -mathSinf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
     ((GameObject*)obj)->anim.velocityY = gDimLavaVelocityScale * vertSpeed;
-    ((GameObject*)obj)->anim.velocityZ = vxz * -mathCosf(
-        gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+    ((GameObject*)obj)->anim.velocityZ =
+        vxz * -mathCosf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
     ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     ObjHits_EnableObject(obj);
     state->flags &= ~LAVA1BE_FLAG_INACTIVE;

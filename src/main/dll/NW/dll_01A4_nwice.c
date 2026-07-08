@@ -2,7 +2,7 @@
 #include "main/objlib.h"
 #include "main/game_object.h"
 
-#define NWICE_OBJGROUP 0x3c
+#define NWICE_OBJGROUP      0x3c
 #define NWICE_LINK_OBJGROUP 0x3d /* scanned to find the paired ice object by linkId */
 
 typedef struct NwIcePlacement
@@ -19,9 +19,15 @@ typedef struct NwIceState
     int* linkedObj;
 } NwIceState;
 
-int NW_ice_getExtraSize(void) { return 0x4; }
+int NW_ice_getExtraSize(void)
+{
+    return 0x4;
+}
 
-void NW_ice_free(int obj) { ObjGroup_RemoveObject(obj, NWICE_OBJGROUP); }
+void NW_ice_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, NWICE_OBJGROUP);
+}
 
 void NW_ice_render(void)
 {
@@ -75,9 +81,7 @@ void NW_ice_update(int* obj)
         for (i = 0, scan = objects; i < count; scan++, i++)
         {
             candidate = *scan;
-            if ((obj != candidate) &&
-                (setup->linkId ==
-                    *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
+            if ((obj != candidate) && (setup->linkId == *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
             {
                 state->linkedObj = objects[i];
                 break;
@@ -86,4 +90,7 @@ void NW_ice_update(int* obj)
     }
 }
 
-void NW_ice_init(int obj) { ObjGroup_AddObject(obj, NWICE_OBJGROUP); }
+void NW_ice_init(int obj)
+{
+    ObjGroup_AddObject(obj, NWICE_OBJGROUP);
+}

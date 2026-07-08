@@ -12,7 +12,7 @@ extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
 extern u32 aramStream;
-extern void*(*aramChunkCallback)(void* src, u32 chunk);
+extern void* (*aramChunkCallback)(void* src, u32 chunk);
 extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;

@@ -11,18 +11,21 @@
 #include "main/sfa_shared_decls.h"
 extern void dataInit(int p1, void* p2);
 
-
-
-#define S3D_UNLINK_EMITTER(emitter)                         \
-    do {                                                    \
-        if ((emitter)->next != (Snd3DEmitter *)0x0) {       \
-            (emitter)->next->prev = (emitter)->prev;        \
-        }                                                   \
-        if ((emitter)->prev != (Snd3DEmitter *)0x0) {       \
-            (emitter)->prev->next = (emitter)->next;        \
-        } else {                                            \
-            s3dEmitterRoot = (emitter)->next;               \
-        }                                                   \
+#define S3D_UNLINK_EMITTER(emitter)                                                                                    \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((emitter)->next != (Snd3DEmitter*)0x0)                                                                     \
+        {                                                                                                              \
+            (emitter)->next->prev = (emitter)->prev;                                                                   \
+        }                                                                                                              \
+        if ((emitter)->prev != (Snd3DEmitter*)0x0)                                                                     \
+        {                                                                                                              \
+            (emitter)->prev->next = (emitter)->next;                                                                   \
+        }                                                                                                              \
+        else                                                                                                           \
+        {                                                                                                              \
+            s3dEmitterRoot = (emitter)->next;                                                                          \
+        }                                                                                                              \
     } while (0)
 
 extern u8 lbl_803BD150[];
@@ -99,14 +102,12 @@ void s3dHandle(void)
         {
             if ((flags & S3D_EMITTER_FLAG_PLAYING) != 0)
             {
-                if ((zeroDist == distance) &&
-                    ((flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
+                if ((zeroDist == distance) && ((flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
                 {
                     emitter->flags |= S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                     emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                 }
-                else if ((zeroDist == distance) &&
-                    ((flags & S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN) != 0))
+                else if ((zeroDist == distance) && ((flags & S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN) != 0))
                 {
                     S3D_UNLINK_EMITTER(emitter);
                     emitter->flags &= 0xffff;
@@ -128,13 +129,10 @@ void s3dHandle(void)
                     entry = emitter->entry;
                     if ((entry == (SndSpatialEntry*)0x0) || (entry->assignedVoice != 0xff))
                     {
-                        if ((emitter->handle = synthFXStart(emitter->fxId, S3D_DEFAULT_FX_VOLUME,
-                                                            S3D_DEFAULT_FX_PAN,
-                                                            entry != (SndSpatialEntry*)0x0
-                                                                ? entry->assignedVoice
-                                                                : emitter->studio,
-                                                            (flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0)) !=
-                            S3D_INVALID_FX_HANDLE)
+                        if ((emitter->handle =
+                                 synthFXStart(emitter->fxId, S3D_DEFAULT_FX_VOLUME, S3D_DEFAULT_FX_PAN,
+                                              entry != (SndSpatialEntry*)0x0 ? entry->assignedVoice : emitter->studio,
+                                              (flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0)) != S3D_INVALID_FX_HANDLE)
                         {
                             goto update_voice;
                         }
@@ -169,8 +167,7 @@ void s3dHandle(void)
                 {
                     s3dInsertSortedEmitter(emitter, distance);
                 }
-                if ((zeroDist == distance) &&
-                    ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
+                if ((zeroDist == distance) && ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
                 {
                     synthSendKeyOff(emitter->handle);
                     emitter->handle = S3D_INVALID_FX_HANDLE;
@@ -201,7 +198,7 @@ void s3dHandle(void)
         {
             entry = emitter->entry;
             if (((entry == (SndSpatialEntry*)0x0) ||
-                    ((entry != (SndSpatialEntry*)0x0) && (entry->assignedVoice != 0xff))) &&
+                 ((entry != (SndSpatialEntry*)0x0) && (entry->assignedVoice != 0xff))) &&
                 (zeroDist != distance))
             {
                 emitter->flags &= ~S3D_EMITTER_FLAG_WAITING_FOR_ROOM;

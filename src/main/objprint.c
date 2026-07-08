@@ -8,17 +8,17 @@
 #include "dolphin/gx/GXCull.h"
 #include "sfa_light_decls.h"
 
-#define GX_CULL_NONE 0
+#define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
-#define GX_CULL_BACK 2
+#define GX_CULL_BACK  2
 
-#define OBJPRINT_OBJECT(obj) ((ObjAnimComponent *)(obj))
-#define OBJPRINT_MODEL_INSTANCE(obj) (OBJPRINT_OBJECT(obj)->modelInstance)
-#define OBJPRINT_BANK_TABLE(obj) ((int **)OBJPRINT_OBJECT(obj)->banks)
+#define OBJPRINT_OBJECT(obj)            ((ObjAnimComponent*)(obj))
+#define OBJPRINT_MODEL_INSTANCE(obj)    (OBJPRINT_OBJECT(obj)->modelInstance)
+#define OBJPRINT_BANK_TABLE(obj)        ((int**)OBJPRINT_OBJECT(obj)->banks)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (OBJPRINT_OBJECT(obj)->bankIndex)
-#define OBJPRINT_ACTIVE_BANK(obj) ((int *)OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
-#define OBJPRINT_MODEL_COUNT(model) (((ObjDef *)(model))->modelCount)
-#define OBJPRINT_JOINT_COUNT(model) (((ObjDef *)(model))->jointCount)
+#define OBJPRINT_ACTIVE_BANK(obj)       ((int*)OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
+#define OBJPRINT_MODEL_COUNT(model)     (((ObjDef*)(model))->modelCount)
+#define OBJPRINT_JOINT_COUNT(model)     (((ObjDef*)(model))->jointCount)
 
 /*
  * Per-joint pose scratch written by the head/eye/tail tracking helpers in
@@ -138,8 +138,7 @@ void objAnimFn_80038f38(int obj, char* state)
             pi = OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)(*pi + 0xf9) != 0)
             {
-                ObjModel_SetBlendChannelTargets((int)pi, 2,
-                                                *(s8*)(*(int*)((char*)pi + 0x28) + 0x2d), -1,
+                ObjModel_SetBlendChannelTargets((int)pi, 2, *(s8*)(*(int*)((char*)pi + 0x28) + 0x2d), -1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
         }
@@ -153,9 +152,18 @@ void objAnimFn_80038f38(int obj, char* state)
 
 extern u32 lbl_803DCC10;
 extern u8 lbl_803DCC3C;
-void fn_8003B950(u32 x) { lbl_803DCC10 = x; }
-u8 fn_8003BB74(void) { return lbl_803DCC3C; }
-void fn_8003BB7C(u8 x) { lbl_803DCC3C = x; }
+void fn_8003B950(u32 x)
+{
+    lbl_803DCC10 = x;
+}
+u8 fn_8003BB74(void)
+{
+    return lbl_803DCC3C;
+}
+void fn_8003BB7C(u8 x)
+{
+    lbl_803DCC3C = x;
+}
 
 extern s16 lbl_803DCC18, lbl_803DCC16, lbl_803DCC14;
 extern u8 lbl_803DCC08;
@@ -209,7 +217,7 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
         {
             entries = *(int*)&((ObjDef*)m)->jointData;
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
-                (s32)*(u8*)(entries + entryIdx) == target)
+                (s32) * (u8*)(entries + entryIdx) == target)
             {
                 result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
             }
@@ -275,7 +283,8 @@ ObjTextureRuntimeSlot* objFindTexture(void* obj, int target, int unusedMaterialI
     {
         int count;
         ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
-        if (entries == NULL) return NULL;
+        if (entries == NULL)
+            return NULL;
         {
             int i;
             count = modelDef->textureSlotCount;
@@ -326,16 +335,7 @@ int fn_800399C0(s16* curve, s16* state)
     hi = curve[11];
     if (lo != hi)
     {
-        ratio = ((f32)(s32)
-        state[1] - (f32)(s32)
-        hi
-        )
-        /
-        ((f32)(s32)
-        lo - (f32)(s32)
-        hi
-        )
-        ;
+        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
     }
     else
     {
@@ -357,8 +357,7 @@ int fn_800399C0(s16* curve, s16* state)
         {
             rate = -rate;
         }
-        state[1] = rate * timeDelta + (f32)(s32)
-        state[1];
+        state[1] = rate * timeDelta + (f32)(s32)state[1];
     }
 
     if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
@@ -375,7 +374,8 @@ void fn_8003A168(int obj, int state)
     s16* found;
 
     found = objFindJointVecByKey(obj, 0);
-    if (found == NULL) return;
+    if (found == NULL)
+        return;
     if (found[0] != 0)
     {
         found[0] = (s16)((s32)found[0] * 3 / 4);
@@ -453,16 +453,22 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
         if (found != NULL)
         {
             v = found[0];
-            if (v < lo) v = lo;
-            else if (v > hi) v = hi;
+            if (v < lo)
+                v = lo;
+            else if (v > hi)
+                v = hi;
             found[0] = v;
             v = found[1];
-            if (v < lo) v = lo;
-            else if (v > hi) v = hi;
+            if (v < lo)
+                v = lo;
+            else if (v > hi)
+                v = hi;
             found[1] = v;
             v = found[2];
-            if (v < lo) v = lo;
-            else if (v > hi) v = hi;
+            if (v < lo)
+                v = lo;
+            else if (v > hi)
+                v = hi;
             found[2] = v;
         }
         keys++;
@@ -626,9 +632,8 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
         model = (int)OBJPRINT_ACTIVE_BANK(p1);
         if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
         {
-            ObjModel_SetBlendChannelTargets(model, 2,
-                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
-                                            count - 1, lbl_803DE99C / lbl_803DB464, 0);
+            ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
+                                            lbl_803DE99C / lbl_803DB464, 0);
             did = 1;
         }
         else
@@ -722,11 +727,13 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     int i;
     void (*vfn)(int, int, int, int, int, int);
 
-    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_FREED) != 0 ||
-        ((GameObject*)obj)->ownerObj != NULL) return;
-    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_FREED) != 0 || ((GameObject*)obj)->ownerObj != NULL)
+        return;
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
+        return;
     sub = *(void**)&((GameObject*)obj)->anim.parent;
-    if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
+    if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
+        return;
 
     doNothing_beforeRenderObject(4);
     ((GameObject*)obj)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
@@ -735,7 +742,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     {
         if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_HIDDEN) == 0)
         {
-            vfn = *(void(**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
+            vfn = *(void (**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL)
             {
                 vfn(obj, a, b, c, d, flag);
@@ -743,7 +750,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
         else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
         {
-            (*(void(*)(int))objRenderModel)(obj);
+            (*(void (*)(int))objRenderModel)(obj);
             if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
                 objRenderFn_80041018((int*)obj);
@@ -761,7 +768,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         default:
             if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
             {
-                (*(void(*)(int))objRenderModel)(obj);
+                (*(void (*)(int))objRenderModel)(obj);
                 if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
                     objRenderFn_80041018((int*)obj);
@@ -793,42 +800,41 @@ void objModelAndSoundFn_80039118(int obj, int p2)
 
     f32 t;
 
-    if (*(s32*)((char*)p2 + 0) < 0) return;
+    if (*(s32*)((char*)p2 + 0) < 0)
+        return;
     t = *(f32*)((char*)p2 + 8) - timeDelta;
     *(f32*)((char*)p2 + 8) = t;
     if (t < lbl_803DE9A4)
     {
-    frame = *(int*)((char*)p2 + 0);
-    if (frame >= *(int*)((char*)p2 + 4))
-    {
-        *(int*)((char*)p2 + 0) = -1;
-        model = (int)OBJPRINT_ACTIVE_BANK(obj);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
-        {
-            ObjModel_SetBlendChannelTargets(model, 2,
-                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
-                                            -1, lbl_803DE99C / lbl_803DB464, 0);
-        }
-    }
-    else
-    {
-        if (frame == 1)
-        {
-            Sfx_PlayFromObjectChannel((u32)obj, 0x10, *(u16*)((char*)p2 + 0x14));
-        }
-        kf = *(int**)((char*)p2 + 0x10);
         frame = *(int*)((char*)p2 + 0);
-        *(int*)((char*)p2 + 0) = frame + 1;
-        kfval = kf[frame];
-        model = (int)OBJPRINT_ACTIVE_BANK(obj);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+        if (frame >= *(int*)((char*)p2 + 4))
         {
-            ObjModel_SetBlendChannelTargets(model, 2,
-                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
-                                            kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
+            *(int*)((char*)p2 + 0) = -1;
+            model = (int)OBJPRINT_ACTIVE_BANK(obj);
+            if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+            {
+                ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), -1,
+                                                lbl_803DE99C / lbl_803DB464, 0);
+            }
         }
-        *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
-    }
+        else
+        {
+            if (frame == 1)
+            {
+                Sfx_PlayFromObjectChannel((u32)obj, 0x10, *(u16*)((char*)p2 + 0x14));
+            }
+            kf = *(int**)((char*)p2 + 0x10);
+            frame = *(int*)((char*)p2 + 0);
+            *(int*)((char*)p2 + 0) = frame + 1;
+            kfval = kf[frame];
+            model = (int)OBJPRINT_ACTIVE_BANK(obj);
+            if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+            {
+                ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), kfval - 1,
+                                                lbl_803DE99C / lbl_803DB464, 0);
+            }
+            *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
+        }
     }
 }
 
@@ -881,11 +887,10 @@ void fn_8003B0D0(int obj, int target, int state, int maxAngle)
     found = objFindJointVecByKey(obj, 0);
     if (found != NULL)
     {
-        *(s16*)((char*)state + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
-                                                            ((GameObject*)target)->anim.localPosX,
-                                                        ((GameObject*)obj)->anim.localPosZ -
-                                                            ((GameObject*)target)->anim.localPosZ) -
-                                          ((GameObject*)obj)->anim.rotX);
+        *(s16*)((char*)state + 0x14) =
+            (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX,
+                                ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ) -
+                  ((GameObject*)obj)->anim.rotX);
         maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
         if (*(s16*)((char*)state + 0x14) > maxAngle)
         {
@@ -949,15 +954,7 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
     hi = curve[11];
     if (lo != hi)
     {
-        ratio = ((f32)(s32) * state - (f32)(s32)
-        hi
-        )
-        /
-        ((f32)(s32)
-        lo - (f32)(s32)
-        hi
-        )
-        ;
+        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
     }
     else
     {
@@ -979,7 +976,7 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
         {
             rate = -rate;
         }
-        *state = rate * timeDelta + (f32)(s32) * state;
+        *state = rate * timeDelta + (f32)(s32)*state;
     }
 
     if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191)
@@ -991,11 +988,10 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 }
 #pragma dont_inline reset
 
-int fn_8003BB84(f32 * m, f32 * out);
+int fn_8003BB84(f32* m, f32* out);
 
 int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 {
-
 
     extern f32 gObjPrintHalfPi;
     extern f32 gObjPrintNegHalfPi;
@@ -1056,9 +1052,9 @@ int fn_8003BB84(f32* m, f32* out)
     v3[1] = m[9];
     v3[2] = m[10];
 
-    if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04)
-        || (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04)
-        || (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04))
+    if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04) ||
+        (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04) ||
+        (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04))
     {
         return 0;
     }
@@ -1461,8 +1457,7 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
                 void* jm;
                 char* t;
                 int joint;
-                joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off +
-                            OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
+                joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
                 jm = ObjModel_GetJointMatrix((int*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
                 *(volatile f32*)vp = *(f32*)(t + off + 0x18);
@@ -1542,19 +1537,19 @@ void characterDoEyeAnims(int obj, int state)
         switch (st & 0xf)
         {
         case 0:
+        {
+            s8 t = *(s8*)(state + 0x1f);
+            if (t > 0)
             {
-                s8 t = *(s8*)(state + 0x1f);
-                if (t > 0)
-                {
-                    *(s8*)(state + 0x1f) = t - framesThisStep;
-                }
-                else if ((int)randomGetRange(0, 1000) > 0x3de)
-                {
-                    *(u8*)(state + 0x1e) = 1;
-                    *(u8*)(state + 0x1f) = 0;
-                }
+                *(s8*)(state + 0x1f) = t - framesThisStep;
             }
-            break;
+            else if ((int)randomGetRange(0, 1000) > 0x3de)
+            {
+                *(u8*)(state + 0x1e) = 1;
+                *(u8*)(state + 0x1f) = 0;
+            }
+        }
+        break;
         case 1:
             if ((st & 0x80) != 0)
             {
@@ -1649,7 +1644,7 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
 
 void modelCalcVtxGroupMtxs(int def, int model)
 {
-    extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
     f32 ma[12];
     f32 mb[12];
     f32 trans[12];
@@ -1736,7 +1731,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     {
         src[0] = (s16)(src[0] + 0xffff);
     }
-    src[1] = p7 - (u16) - getAngle(dist, dy);
+    src[1] = p7 - (u16)-getAngle(dist, dy);
     if (src[1] > 0x8000)
     {
         src[1] = (s16)(src[1] - 0xffff);
@@ -1847,9 +1842,11 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
                              : d1);
             d2 = (s16)((s16)((fv[0] + dst[1]) >> 1) - fv[0]);
             t2 = (s16)(s32)(*(f32*)&gObjPrintDegToAngle * (f32)sp2[i]);
-            lim3 = (d2 < framesThisStep * (-t2 / (lbl_803DB460 << 1)))
-                       ? framesThisStep * (-t2 / (lbl_803DB460 << 1))
-                       : ((d2 > framesThisStep * (t2 / (lbl_803DB460 << 1))) ? framesThisStep * (t2 / (lbl_803DB460 << 1)) : d2);
+            lim3 =
+                (d2 < framesThisStep * (-t2 / (lbl_803DB460 << 1)))
+                    ? framesThisStep * (-t2 / (lbl_803DB460 << 1))
+                    : ((d2 > framesThisStep * (t2 / (lbl_803DB460 << 1))) ? framesThisStep * (t2 / (lbl_803DB460 << 1))
+                                                                          : d2);
             fv[0] += (s16)lim3;
             fv[1] += lim;
         }
@@ -1876,28 +1873,30 @@ typedef struct IndTexMtx23
 
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    extern u8*ObjModel_GetRenderOp(int m, int p);
+    extern u8* ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
-    extern u32*Shader_getLayer(u8* shader, int idx);
-    extern void selectTexture(u8* tex, int mapId);
-    extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
+    extern u32* Shader_getLayer(u8 * shader, int idx);
+    extern void selectTexture(u8 * tex, int mapId);
+    extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
+                                  GXBool normalize, u32 pt_texmtx);
 
     extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
     extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
     extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
     extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-    extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);
-    extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);
+    extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                                GXTevRegID out_reg);
+    extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                                GXTevRegID out_reg);
     extern void GXSetTevKColor(int id, ObjPrintGXColor c);
     extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
     extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
-    extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-    extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-    extern void GXLoadTexMtxImm(f32* m, int id, int type);
-    extern void**ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
+    extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
+    extern void GXLoadTexMtxImm(f32 * m, int id, int type);
+    extern void** ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-
 
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
 
@@ -2109,29 +2108,31 @@ typedef struct ObjPrintS10Color
 
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
-    extern u8*ObjModel_GetRenderOp(int m, int p);
+    extern u8* ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
-    extern u32*Shader_getLayer(u8* shader, int idx);
-    extern void selectTexture(u8* tex, int mapId);
-    extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
+    extern u32* Shader_getLayer(u8 * shader, int idx);
+    extern void selectTexture(u8 * tex, int mapId);
+    extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
+                                  GXBool normalize, u32 pt_texmtx);
 
     extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
     extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
     extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
     extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-    extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);
-    extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);
+    extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                                GXTevRegID out_reg);
+    extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                                GXTevRegID out_reg);
     extern void GXSetTevKColor(int id, ObjPrintGXColor c);
     extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
     extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
     extern void GXSetTevColorS10(int id, ObjPrintS10Color c);
-    extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-    extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-    extern void GXLoadTexMtxImm(f32* m, int id, int type);
-    extern void**ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
+    extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
+    extern void GXLoadTexMtxImm(f32 * m, int id, int type);
+    extern void** ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
-
 
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
 
@@ -2141,8 +2142,8 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
     extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);
-    extern f32*modelLightStruct_getProjectionTexMtx(int p);
-    extern void*modelLightStruct_getProjectionTexture(int p);
+    extern f32* modelLightStruct_getProjectionTexMtx(int p);
+    extern void* modelLightStruct_getProjectionTexture(int p);
 
     extern IndTexMtx23 lbl_802C1B10;
     extern IndTexMtx23 lbl_802C1B28;

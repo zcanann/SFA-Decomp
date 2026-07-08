@@ -20,22 +20,22 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
-#define GFLEVELCON_SEQEV_NONE 0
-#define GFLEVELCON_SEQEV_SKY_PRESET_A 1
-#define GFLEVELCON_SEQEV_SKY_PRESET_B 2
-#define GFLEVELCON_SEQEV_LIGHT_ON 3
-#define GFLEVELCON_SEQEV_LIGHT_OFF 4
-#define GFLEVELCON_SEQEV_SKY_PRESET_C 5
-#define GFLEVELCON_SEQEV_LOAD_MAP 6
+#define GFLEVELCON_SEQEV_NONE          0
+#define GFLEVELCON_SEQEV_SKY_PRESET_A  1
+#define GFLEVELCON_SEQEV_SKY_PRESET_B  2
+#define GFLEVELCON_SEQEV_LIGHT_ON      3
+#define GFLEVELCON_SEQEV_LIGHT_OFF     4
+#define GFLEVELCON_SEQEV_SKY_PRESET_C  5
+#define GFLEVELCON_SEQEV_LOAD_MAP      6
 #define GFLEVELCON_SEQEV_UNLOCK_LEVELS 7
-#define GFLEVELCON_SEQEV_START_PROMPT 8
-#define GFLEVELCON_SEQEV_CREDITS 9
-#define GFLEVELCON_SEQEV_SKY_PRESET_D 10
-#define GFLEVELCON_SEQEV_SKY_PRESET_E 11
+#define GFLEVELCON_SEQEV_START_PROMPT  8
+#define GFLEVELCON_SEQEV_CREDITS       9
+#define GFLEVELCON_SEQEV_SKY_PRESET_D  10
+#define GFLEVELCON_SEQEV_SKY_PRESET_E  11
 
 /* placement def ids of the linked objects gf_levelcon_findLinkedObjects
    caches into its state (point light + two scrolling textures) */
-#define GFLEVELCON_LINK_LIGHT 0x477E3
+#define GFLEVELCON_LINK_LIGHT    0x477E3
 #define GFLEVELCON_LINK_SCROLL_A 0x4A946
 #define GFLEVELCON_LINK_SCROLL_B 0x4A947
 
@@ -55,7 +55,7 @@
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_RING   0x859
 /* Object loaded at the nearest def-0x7e5 marker in fn_80239DD8, cached in
  * obj->extra+0x10 and faded in. */
-#define GFLEVELCON_CHILD_OBJ_MARKER_ATTACH     0x608
+#define GFLEVELCON_CHILD_OBJ_MARKER_ATTACH 0x608
 
 /* env-effect ids activated alongside the sky presets (index-style; each id is
  * shared by two presets - A/D, B/E, C - so roles stay opaque) */
@@ -68,7 +68,7 @@
 typedef struct GfProjectileSetup
 {
     ObjPlacement head; /* 0x00 */
-    u8 roll;        /* 0x18: cleared to 0 */
+    u8 roll;           /* 0x18: cleared to 0 */
     u8 pitch;          /* 0x19 */
     u8 yawHi;          /* 0x1a */
 } GfProjectileSetup;
@@ -212,9 +212,15 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int gf_levelcon_getExtraSize(void) { return 0x10; }
+int gf_levelcon_getExtraSize(void)
+{
+    return 0x10;
+}
 
-int gf_levelcon_getObjectTypeId(void) { return 0; }
+int gf_levelcon_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void gf_levelcon_hitDetect(void)
 {
@@ -537,11 +543,11 @@ void fn_8023A3E4(int objArg, int hitState)
         texIdx = (&lbl_803DC4C8)[idx];
         if ((u32)texIdx < 2 && state == 1)
             adjusted = 0;
-        tex = objFindTexture((void *)obj, texIdx * 2, 0);
+        tex = objFindTexture((void*)obj, texIdx * 2, 0);
         tex->textureId = adjusted << 8;
         if ((u32)texIdx == 2 && state == 1)
             state = 0;
-        tex = objFindTexture((void *)obj, texIdx * 2 + 1, 0);
+        tex = objFindTexture((void*)obj, texIdx * 2 + 1, 0);
         tex->textureId = state << 8;
     }
 }

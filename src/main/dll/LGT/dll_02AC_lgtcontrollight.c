@@ -32,8 +32,8 @@ typedef struct ControlLightState
     u8 pad0A[2];
 } ControlLightState;
 
-#define CONTROLLIGHT_MODE_DIRECT 0
-#define CONTROLLIGHT_MODE_INVERTED 1
+#define CONTROLLIGHT_MODE_DIRECT      0
+#define CONTROLLIGHT_MODE_INVERTED    1
 #define CONTROLLIGHT_LAST_BIT_INVALID 0xff
 
 STATIC_ASSERT(sizeof(ControlLightState) == 0x0C);
@@ -46,9 +46,15 @@ STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
 STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ControlLightSetup) == 0x20);
 
-int ControlLight_getExtraSize(void) { return sizeof(ControlLightState); }
+int ControlLight_getExtraSize(void)
+{
+    return sizeof(ControlLightState);
+}
 
-int ControlLight_getObjectTypeId(void) { return 0; }
+int ControlLight_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void ControlLight_free(void)
 {
@@ -90,48 +96,46 @@ void ControlLight_update(int obj)
         switch (state->invertMode)
         {
         case CONTROLLIGHT_MODE_DIRECT:
+        {
+            f32 radius = state->radius;
+            int count;
+            int i;
+            GameObject* lightObj;
+            GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
+            GameObject** lightIter;
+            for (i = 0, lightIter = objs; i < count; i++)
             {
-                f32 radius = state->radius;
-                int count;
-                int i;
-                GameObject* lightObj;
-                GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
-                GameObject** lightIter;
-                for (i = 0, lightIter = objs; i < count; i++)
+                lightObj = *lightIter;
+                if (Vec_distance((int)&self->anim.worldPosX, (int)&lightObj->anim.worldPosX) < radius)
                 {
-                    lightObj = *lightIter;
-                    if (Vec_distance((int)&self->anim.worldPosX,
-                                     (int)&lightObj->anim.worldPosX) < radius)
-                    {
-                        pointlight_setEffectState((int)lightObj, bit);
-                    }
-                    lightIter++;
+                    pointlight_setEffectState((int)lightObj, bit);
                 }
-                break;
+                lightIter++;
             }
+            break;
+        }
         case CONTROLLIGHT_MODE_INVERTED:
+        {
+            f32 radius = state->radius;
+            int count;
+            int invBit;
+            int i;
+            GameObject* lightObj;
+            GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
+            GameObject** lightIter;
+            i = 0, lightIter = objs;
+            invBit = bit == 0;
+            for (; i < count; i++)
             {
-                f32 radius = state->radius;
-                int count;
-                int invBit;
-                int i;
-                GameObject* lightObj;
-                GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
-                GameObject** lightIter;
-                i = 0, lightIter = objs;
-                invBit = bit == 0;
-                for (; i < count; i++)
+                lightObj = *lightIter;
+                if (Vec_distance((int)&self->anim.worldPosX, (int)&lightObj->anim.worldPosX) < radius)
                 {
-                    lightObj = *lightIter;
-                    if (Vec_distance((int)&self->anim.worldPosX,
-                                     (int)&lightObj->anim.worldPosX) < radius)
-                    {
-                        pointlight_setEffectState((int)lightObj, (u8)invBit);
-                    }
-                    lightIter++;
+                    pointlight_setEffectState((int)lightObj, (u8)invBit);
                 }
-                break;
+                lightIter++;
             }
+            break;
+        }
         }
     }
 

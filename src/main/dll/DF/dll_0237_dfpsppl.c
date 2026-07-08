@@ -37,8 +37,7 @@ void DFPSpPl_update(LaserObject* obj)
     int mode;
 
     if ((obj->state->completionLatched == '\0') &&
-        (activationGameBitSet = mainGetBit((int)obj->state->activationGameBit),
-            activationGameBitSet != 0))
+        (activationGameBitSet = mainGetBit((int)obj->state->activationGameBit), activationGameBitSet != 0))
     {
         obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED);
     }
@@ -72,17 +71,14 @@ void DFPSpPl_update(LaserObject* obj)
                 mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
                 obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
-                (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_A,
-                                               LASEROBJ_SEQUENCE_B_MODE_A);
-                (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_B,
-                                               LASEROBJ_SEQUENCE_B_MODE_B);
+                (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_A, LASEROBJ_SEQUENCE_B_MODE_A);
+                (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_B, LASEROBJ_SEQUENCE_B_MODE_B);
             }
             break;
         }
     }
     return;
 }
-
 
 void DFPSpPl_init(LaserObject* obj, LaserObjectMapData* mapData)
 {

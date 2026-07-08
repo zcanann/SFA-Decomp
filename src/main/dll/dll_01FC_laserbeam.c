@@ -34,15 +34,15 @@
 extern void textureFree(u8* tex);
 extern ModgfxInterface** gModgfxInterface;
 
-#define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
-#define LASERBEAM_MSG_PLAYER_HIT 0x60003 /* message the player on a standard beam hit */
-#define LASERBEAM_MSG_PLAYER_BURST 0x60004 /* knock the player back with a burst hit */
-#define LASERBEAM_PARTFX_HIT 0x198 /* spark burst spawned on the player when the beam connects */
-#define LASERBEAM_MODGFX_RESOURCE_ID 0x81 /* modgfx beam effect resource -> gLaserBeamObjModgfxResource */
-#define LASERBEAM_TEXTURE_KIND30 0x3e9 /* beam texture for beamKind 30 -> b->texture */
-#define LASERBEAM_TEXTURE_KIND1 0x23d /* beam texture for beamKind 1 -> b->texture */
-#define LASERBEAM_TEXTURE_DEFAULT 0xd9 /* beam texture for other beamKinds -> b->texture */
+#define LASERBEAM_MSG_PLAYER_HIT     0x60003 /* message the player on a standard beam hit */
+#define LASERBEAM_MSG_PLAYER_BURST   0x60004 /* knock the player back with a burst hit */
+#define LASERBEAM_PARTFX_HIT         0x198   /* spark burst spawned on the player when the beam connects */
+#define LASERBEAM_MODGFX_RESOURCE_ID 0x81    /* modgfx beam effect resource -> gLaserBeamObjModgfxResource */
+#define LASERBEAM_TEXTURE_KIND30     0x3e9   /* beam texture for beamKind 30 -> b->texture */
+#define LASERBEAM_TEXTURE_KIND1      0x23d   /* beam texture for beamKind 1 -> b->texture */
+#define LASERBEAM_TEXTURE_DEFAULT    0xd9    /* beam texture for other beamKinds -> b->texture */
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
@@ -62,8 +62,14 @@ STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
-int LaserBeam_getExtraSize(void) { return 0x50; }
-int LaserBeam_getObjectTypeId(void) { return 0; }
+int LaserBeam_getExtraSize(void)
+{
+    return 0x50;
+}
+int LaserBeam_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void LaserBeam_free(int* obj)
 {
@@ -89,8 +95,8 @@ void LaserBeam_hitDetect(void)
 typedef struct LaserBeamPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 spawnYaw; /* 0x18: seeded into the object header (obj[0] = spawnYaw << 8) */
-    u8 beamKind; /* 0x19: laser variant (2/3/30) */
+    s8 spawnYaw;    /* 0x18: seeded into the object header (obj[0] = spawnYaw << 8) */
+    u8 beamKind;    /* 0x19: laser variant (2/3/30) */
     s16 beamLength; /* 0x1A: beam reach - added to beamZ for the endpoint and squared for the hit radius */
     s16 firePeriod; /* 0x1C: fire cadence override (0 = randomised) */
     s16 disableGameBit;
@@ -112,12 +118,12 @@ typedef struct LightSourceState
     u8 pad08[4];
     f32 sparkTimer;
     int gameBit; /* 0x10: -1 none */
-    u8 mode; /* 0x14: 1 = hit-toggleable */
+    u8 mode;     /* 0x14: 1 = hit-toggleable */
     u8 fxType;
     u8 fxArg;
     u8 lit; /* 0x17 */
     u8 litPrev;
-    u8 sparks; /* 0x19 */
+    u8 sparks;    /* 0x19 */
     u8 loopFlags; /* 0x1a: LightSourceFlagByte */
     u8 pad1B;
 } LightSourceState;
@@ -215,14 +221,14 @@ void LaserBeam_update(int obj2)
                 {
                     if (gLaserBeamObjModgfxResource != NULL)
                     {
-                        (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
-                            obj2, 2, 0, 0x10004, -1, 0);
+                        (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(obj2, 2, 0,
+                                                                                                     0x10004, -1, 0);
                     }
                 }
                 else if (beamKind != 30 && beamKind != 0)
                 {
-                    (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
-                        obj2, 0, 0, 0x10004, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(obj2, 0, 0, 0x10004,
+                                                                                                 -1, 0);
                 }
             }
             if (b->fireTimer < 0x28)
@@ -242,7 +248,7 @@ void LaserBeam_update(int obj2)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
+                            (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                                 obj2, 3, 0, 0x10004, -1, 0);
                         }
                     }
@@ -250,16 +256,15 @@ void LaserBeam_update(int obj2)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            b->emitterSlot =
-                                (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
-                                    obj2, 30, 0, 0x10004, -1, 0);
+                            b->emitterSlot = (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource +
+                                                                                       4))(obj2, 30, 0, 0x10004, -1, 0);
                         }
                     }
                     else if (beamKind != 0)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
+                            (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
                                 obj2, 1, 0, 0x10004, -1, 0);
                         }
                     }
@@ -273,9 +278,8 @@ void LaserBeam_update(int obj2)
                             }
                             if (gLaserBeamObjModgfxResource != NULL)
                             {
-                                b->emitterSlot =
-                                    (*(s16 (**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
-                                        obj2, 0, 0, 0x10004, -1, 0);
+                                b->emitterSlot = (*(s16(**)(int, int, int, int, int, int))(
+                                    *gLaserBeamObjModgfxResource + 4))(obj2, 0, 0, 0x10004, -1, 0);
                             }
                         }
                     }
@@ -307,8 +311,8 @@ void LaserBeam_update(int obj2)
         (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
     }
     if ((dot + (sinv * ((GameObject*)player)->anim.localPosX + cosv * ((GameObject*)player)->anim.localPosZ) >
-            lbl_803E5D10 &&
-            b->beamKind != 2) ||
+             lbl_803E5D10 &&
+         b->beamKind != 2) ||
         b->beamKind == 30)
     {
         b->sweepYaw -= framesThisStep;
@@ -353,8 +357,8 @@ void LaserBeam_update(int obj2)
             dzp = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj2)->anim.localPosZ;
             if (dx * dx + dzp * dzp < dz2)
             {
-                lat = dot + (sinv * ((GameObject*)player)->anim.localPosX + cosv * ((GameObject*)player)->anim.
-                    localPosZ);
+                lat =
+                    dot + (sinv * ((GameObject*)player)->anim.localPosX + cosv * ((GameObject*)player)->anim.localPosZ);
                 a = lat;
                 if (lat < lbl_803E5D10)
                 {
@@ -381,7 +385,8 @@ void LaserBeam_update(int obj2)
                     else
                     {
                         if (dot + (sinv * ((GameObject*)player)->anim.previousLocalPosX +
-                            cosv * ((GameObject*)player)->anim.previousLocalPosZ) < lbl_803E5D10)
+                                   cosv * ((GameObject*)player)->anim.previousLocalPosZ) <
+                            lbl_803E5D10)
                         {
                             spread = lbl_803E5D40;
                         }
@@ -403,8 +408,8 @@ void LaserBeam_update(int obj2)
                         Sfx_PlayFromObject((int)player, sfx);
                         for (i = 0; i < 4; i++)
                         {
-                            (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), LASERBEAM_PARTFX_HIT,
-                                                             NULL, 4, -1, NULL);
+                            (*gPartfxInterface)
+                                ->spawnObject(Obj_GetPlayerObject(), LASERBEAM_PARTFX_HIT, NULL, 4, -1, NULL);
                         }
                         b->targetX = sinv * spread + ((GameObject*)player)->anim.localPosX;
                         b->targetZ = cosv * spread + ((GameObject*)player)->anim.localPosZ;
@@ -443,12 +448,11 @@ void LaserBeam_update(int obj2)
     b->beamX2 = b->beamX;
     b->beamZ2 = b->beamZ + dz;
     b->rangeOffset = 8;
-    ((GameObject*)obj2)->anim.currentMoveProgress = lbl_803E5D48 * timeDelta + ((GameObject*)obj2)->anim.
-        currentMoveProgress;
+    ((GameObject*)obj2)->anim.currentMoveProgress =
+        lbl_803E5D48 * timeDelta + ((GameObject*)obj2)->anim.currentMoveProgress;
     if (((GameObject*)obj2)->anim.currentMoveProgress > lbl_803E5D18)
     {
-        ((GameObject*)obj2)->anim.currentMoveProgress = ((GameObject*)obj2)->anim.currentMoveProgress -
-            lbl_803E5D18;
+        ((GameObject*)obj2)->anim.currentMoveProgress = ((GameObject*)obj2)->anim.currentMoveProgress - lbl_803E5D18;
     }
 }
 

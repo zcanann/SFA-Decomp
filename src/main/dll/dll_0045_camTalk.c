@@ -9,17 +9,15 @@
 #include "string.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
-
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern CameraModeBikeState* gCamTalkBikeState;
-
 
 extern void vecRotateZXY(void* params, void* outVec);
 extern u32 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern GameObject* getSbGalleon(void);
-extern int DBprotection_getCameraState(GameObject * obj);
+extern int DBprotection_getCameraState(GameObject* obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E1780;
@@ -87,21 +85,14 @@ void CameraModeBike_update(CameraObject* camera)
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
         xformIn.yaw = target->anim.rotX;
-        xformIn.pitch = (u16)(int)
-        gCamTalkBikeState->pitchTarget;
+        xformIn.pitch = (u16)(int)gCamTalkBikeState->pitchTarget;
         xformIn.roll = 0;
         setMatrixFromObjectPos(mtxBuf, &xformIn);
-        Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780,
-                              &posZ, &posY, &posX);
+        Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780, &posZ, &posY, &posX);
         camera->anim.rotX = 0x8000 - target->anim.rotX;
         gCamTalkBikeState->smoothedYawOffset +=
-            lbl_803E1790 *
-            ((f32)(lbl_803E1794 * gCamTalkBikeState->turnInput) - gCamTalkBikeState->smoothedYawOffset);
-        rotVal = (int)
-        ((f32)(s32)
-        camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset
-        )
-        ;
+            lbl_803E1790 * ((f32)(lbl_803E1794 * gCamTalkBikeState->turnInput) - gCamTalkBikeState->smoothedYawOffset);
+        rotVal = (int)((f32)(s32)camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset);
         camera->anim.rotX = rotVal;
         rotVal = (int)(lbl_803E1798 - gCamTalkBikeState->pitchTarget);
         angleDelta = rotVal - (u16)camera->anim.rotY;
@@ -121,10 +112,10 @@ void CameraModeBike_update(CameraObject* camera)
         followDist = -gCamTalkBikeState->heightInput / lbl_803E17A4;
         kFollowA = lbl_803E17A8;
         kFollowB = lbl_803E17B0;
-        clampedHeight = (followDist < lbl_803E1780) ? lbl_803E1780 : ((followDist > lbl_803E1788) ? lbl_803E1788 : followDist);
+        clampedHeight =
+            (followDist < lbl_803E1780) ? lbl_803E1780 : ((followDist > lbl_803E1788) ? lbl_803E1788 : followDist);
         gCamTalkBikeState->followDistance +=
-            kFollowA *
-            ((kFollowB * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance);
+            kFollowA * ((kFollowB * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance);
         followDist = gCamTalkBikeState->followDistance;
         sinPitch = followDist * sinPitch;
         cosPitch = followDist * cosPitch;
@@ -144,15 +135,11 @@ void CameraModeBike_update(CameraObject* camera)
             angleDelta = angleDelta + 0xFFFF;
         }
         sinYaw = (f32)(s32)angleDelta * timeDelta;
-        rotVal = (int)
-        (sinYaw * lbl_803E17B4 + (f32)(s32)
-        *(s16*)((char*)&camera->anim.rotZ)
-        )
-        ;
+        rotVal = (int)(sinYaw * lbl_803E17B4 + (f32)(s32) * (s16*)((char*)&camera->anim.rotZ));
         camera->anim.rotZ = rotVal;
-        Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
-                                       camera->anim.worldPosZ, &camera->anim.localPosX, &camera->anim.localPosY,
-                                       &camera->anim.localPosZ, (u32)camera->anim.parent);
+        Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                       &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
+                                       (u32)camera->anim.parent);
     }
     return;
 }
@@ -186,8 +173,7 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
     if (self->anim.classId == 1)
     {
         cameraGetPrevPos2((int)self, &prevPosX, &prevPosY, &prevPosZ);
-        if (((resetClamp != 0) || (lbl_803DD548->camPosX != prevPosX)) ||
-            (lbl_803DD548->camPosZ != prevPosZ))
+        if (((resetClamp != 0) || (lbl_803DD548->camPosX != prevPosX)) || (lbl_803DD548->camPosZ != prevPosZ))
         {
             lbl_803DD548->clampedPosY = prevPosY;
         }
@@ -258,7 +244,7 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
     lbl_803DD548->yawCurve.start = (float)(int)self->anim.rotX;
     targetYaw = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
-                     (double)(lbl_803DD548->posZCurve.end - target->anim.worldPosZ));
+                         (double)(lbl_803DD548->posZCurve.end - target->anim.worldPosZ));
     lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - targetYaw);
     tangent = lbl_803E17C4;
     lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;

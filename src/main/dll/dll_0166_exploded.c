@@ -2,7 +2,6 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -16,8 +15,8 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/engine_shared.h"
 
 /* ExplodedObjectState.explodePhase */
-#define EXPLODED_PHASE_IDLE 0   /* settled; no physics */
-#define EXPLODED_PHASE_ACTIVE 1 /* debris physics stepping until settled */
+#define EXPLODED_PHASE_IDLE    0 /* settled; no physics */
+#define EXPLODED_PHASE_ACTIVE  1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E43F4;
@@ -46,17 +45,27 @@ void exploded_initialise(void)
 {
 }
 
-int exploded_getExtraSize(void) { return 0x6c; }
+int exploded_getExtraSize(void)
+{
+    return 0x6c;
+}
 
-u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)(int*)((GameObject*)obj)->extra)->explodePhase; }
+u8 exploded_setScale(int* obj)
+{
+    return ((ExplodedObjectState*)(int*)((GameObject*)obj)->extra)->explodePhase;
+}
 
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43F4);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43F4);
 }
 
-u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
+u32 exploded_getObjectTypeId(ExplodedObject* obj)
+{
+    return (obj->mapData->objectTypeTag << 11) | 0x400;
+}
 
 void exploded_update(int* obj)
 {
@@ -115,18 +124,10 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
     ExplodedObjectState* state;
     obj->objectTypeTag = data->objectTypeTag;
     state = obj->state;
-    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)
-    data->scaleByte
-    )
-    /
-    lbl_803E4428;
+    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)data->scaleByte) / lbl_803E4428;
     exploded_initDebrisState(obj, data, extra, state);
-    if (data->initialVelocityX != 0 ||
-        data->initialVelocityY != 0 ||
-        data->initialVelocityZ != 0 ||
-        data->accelerationX != 0 ||
-        data->accelerationY != 0 ||
-        data->accelerationZ != 0)
+    if (data->initialVelocityX != 0 || data->initialVelocityY != 0 || data->initialVelocityZ != 0 ||
+        data->accelerationX != 0 || data->accelerationY != 0 || data->accelerationZ != 0)
     {
         state->explodePhase = EXPLODED_PHASE_ACTIVE;
     }
@@ -136,8 +137,8 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
     }
 }
 
-void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
-                              int computeModelCenter, ExplodedObjectState* state)
+void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, int computeModelCenter,
+                              ExplodedObjectState* state)
 {
     extern void Model_GetVertexPosition(int, int, f32*);
     extern void vecRotateYXZ(int, int);
@@ -207,18 +208,12 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
     obj->angleY = data->initialAngleY;
     obj->angleZ = data->initialAngleZ;
 
-    obj->velocityX = (f32)(s32)
-    data->initialVelocityX / 100.0f;
-    obj->velocityY = (f32)(s32)
-    data->initialVelocityY / 100.0f;
-    obj->velocityZ = (f32)(s32)
-    data->initialVelocityZ / 100.0f;
-    state->spinX = (f32)(s32)
-    data->spinX;
-    state->spinY = (f32)(s32)
-    data->spinY;
-    state->spinZ = (f32)(s32)
-    data->spinZ;
+    obj->velocityX = (f32)(s32)data->initialVelocityX / 100.0f;
+    obj->velocityY = (f32)(s32)data->initialVelocityY / 100.0f;
+    obj->velocityZ = (f32)(s32)data->initialVelocityZ / 100.0f;
+    state->spinX = (f32)(s32)data->spinX;
+    state->spinY = (f32)(s32)data->spinY;
+    state->spinZ = (f32)(s32)data->spinZ;
 
     {
         u16 off = *(u16*)&data->floorOffset;
@@ -229,23 +224,16 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
         }
         else
         {
-            state->floorHeight = obj->y + (f32)(s16)
-            off;
+            state->floorHeight = obj->y + (f32)(s16)off;
         }
     }
 
-    state->spinVelocityX = (f32)(s32)
-    data->spinVelocityX / 10.0f;
-    state->spinVelocityY = (f32)(s32)
-    data->spinVelocityY / 10.0f;
-    state->spinVelocityZ = (f32)(s32)
-    data->spinVelocityZ / 10.0f;
-    state->accelerationX = (f32)(s32)
-    data->accelerationX / 1000.0f;
-    state->accelerationY = (f32)(s32)
-    data->accelerationY / 1000.0f;
-    state->accelerationZ = (f32)(s32)
-    data->accelerationZ / 1000.0f;
+    state->spinVelocityX = (f32)(s32)data->spinVelocityX / 10.0f;
+    state->spinVelocityY = (f32)(s32)data->spinVelocityY / 10.0f;
+    state->spinVelocityZ = (f32)(s32)data->spinVelocityZ / 10.0f;
+    state->accelerationX = (f32)(s32)data->accelerationX / 1000.0f;
+    state->accelerationY = (f32)(s32)data->accelerationY / 1000.0f;
+    state->accelerationZ = (f32)(s32)data->accelerationZ / 1000.0f;
 
     state->elapsedFrames = 0;
     if (*(u16*)&data->lifetimeFrames != 0)

@@ -20,8 +20,14 @@ extern f32 lbl_803E31E4;
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
-int MikaBombShadow_getExtraSize(void) { return 0x4; }
-int MikaBombShadow_getObjectTypeId(void) { return 0x0; }
+int MikaBombShadow_getExtraSize(void)
+{
+    return 0x4;
+}
+int MikaBombShadow_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void MikaBombShadow_free(void)
 {
@@ -51,10 +57,12 @@ void MikaBombShadow_update(int* obj)
     f32 alpha;
 
     owner = ((GameObject*)obj)->ownerObj;
-    scaleFactor = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / *(f32*)((GameObject*)obj)->extra;
+    scaleFactor = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) /
+                           *(f32*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * scaleFactor + fz;
     alpha = scaleFactor * lbl_803E31E0;
-    if (alpha > fz) alpha = fz;
+    if (alpha > fz)
+        alpha = fz;
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * alpha;
 }
 
@@ -86,7 +94,10 @@ void MikaBombShadow_initialise(void)
 }
 
 ObjectDescriptor gMikaBombShadowObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBombShadow_initialise,
     (ObjectDescriptorCallback)MikaBombShadow_release,
     0,

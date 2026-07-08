@@ -25,16 +25,15 @@ typedef struct DrcagewithPlacement
     u8 pad6[0x18 - 0x6];
     s8 initRotXByte; /* 0x18: signed byte, <<8 into anim.rotX at init */
     u8 pad19[0x1A - 0x19];
-    s16 unk1A; /* 0x1A: int->float setup value (unk10) */
-    s16 unk1C; /* 0x1C: int->float setup value (unk8) */
+    s16 unk1A;         /* 0x1A: int->float setup value (unk10) */
+    s16 unk1C;         /* 0x1C: int->float setup value (unk8) */
     s16 openedGameBit; /* 0x1E: game bit set when this cage is opened */
 } DrcagewithPlacement;
-
 
 typedef struct DrcagewithState
 {
     GameObject* spawnedObject; /* 0x0: spawned rope/winch object */
-    s32 linkedObject; /* 0x4: linked rope object, freed via Obj_FreeObject */
+    s32 linkedObject;          /* 0x4: linked rope object, freed via Obj_FreeObject */
     f32 unk8;
     u8 padC[0x10 - 0xC];
     f32 unk10;
@@ -42,7 +41,7 @@ typedef struct DrcagewithState
     f32 unk18;
     f32 unk1C;
     f32 unk20;
-    f32 angularVel;   /* 0x24: damped angular velocity */
+    f32 angularVel; /* 0x24: damped angular velocity */
     u8 pad28[0x34 - 0x28];
 } DrcagewithState;
 
@@ -55,7 +54,6 @@ STATIC_ASSERT(offsetof(DrcagewithState, spawnedObject) == 0x0);
 STATIC_ASSERT(offsetof(DrcagewithState, linkedObject) == 0x4);
 STATIC_ASSERT(offsetof(DrcagewithState, angularVel) == 0x24);
 STATIC_ASSERT(sizeof(DrcagewithState) == 0x34);
-
 
 int DR_CageWith_setScale(int obj)
 {
@@ -77,9 +75,15 @@ int DR_CageWith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState*
     return 0;
 }
 
-int DR_CageWith_getExtraSize(void) { return 0x34; }
+int DR_CageWith_getExtraSize(void)
+{
+    return 0x34;
+}
 
-int DR_CageWith_getObjectTypeId(void) { return 0x0; }
+int DR_CageWith_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DR_CageWith_free(int obj, int arg)
 {
@@ -116,10 +120,9 @@ void DR_CageWith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
             {
                 ((GameObject*)linkedObj)->anim.rotY = ((DrcagewithState*)state)->spawnedObject->anim.rotY;
                 ((GameObject*)linkedObj)->anim.rotZ = ((DrcagewithState*)state)->spawnedObject->anim.rotZ;
-                ObjPath_GetPointWorldPosition((int)((DrcagewithState*)state)->spawnedObject, 0,
-                                              &((GameObject*)linkedObj)->anim.localPosX,
-                                              &((GameObject*)linkedObj)->anim.localPosY,
-                                              &((GameObject*)linkedObj)->anim.localPosZ, 0);
+                ObjPath_GetPointWorldPosition(
+                    (int)((DrcagewithState*)state)->spawnedObject, 0, &((GameObject*)linkedObj)->anim.localPosX,
+                    &((GameObject*)linkedObj)->anim.localPosY, &((GameObject*)linkedObj)->anim.localPosZ, 0);
                 objRenderModelAndHitVolumes(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
             }
         }
@@ -194,9 +197,10 @@ void DR_CageWith_hitDetect(int obj)
         angVel = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
         angVel = angVel * lbl_803E69FC;
         angVel = interpolate(angVel - ((DrcagewithState*)state)->angularVel, lbl_803E6A00, timeDelta);
-        clamped = (angVel < gDrCageWithAngVelRateMin * timeDelta)
-                      ? gDrCageWithAngVelRateMin * timeDelta
-                      : ((angVel > gDrCageWithAngVelRateMax * timeDelta) ? gDrCageWithAngVelRateMax * timeDelta : angVel);
+        clamped =
+            (angVel < gDrCageWithAngVelRateMin * timeDelta)
+                ? gDrCageWithAngVelRateMin * timeDelta
+                : ((angVel > gDrCageWithAngVelRateMax * timeDelta) ? gDrCageWithAngVelRateMax * timeDelta : angVel);
         ((DrcagewithState*)state)->angularVel = ((DrcagewithState*)state)->angularVel + clamped;
         for (i = 0, div = lbl_803E6A0C; i < 9; i++)
         {

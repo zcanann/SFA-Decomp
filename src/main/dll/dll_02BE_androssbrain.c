@@ -24,8 +24,8 @@ enum
     BRAIN_DEFEATED = 2
 };
 
-#define BRAIN_MAX_HEALTH 0x50
-#define ANDROSSBRAIN_HIT_VOLUME_SLOT 5
+#define BRAIN_MAX_HEALTH                0x50
+#define ANDROSSBRAIN_HIT_VOLUME_SLOT    5
 #define ANDROSSBRAIN_AIRMETER_BGTEXTURE 0x643
 
 enum
@@ -36,12 +36,12 @@ enum
 
 typedef struct AndrossBrainState
 {
-    GameObject* andross; /* objId ANDROSS_OBJ_ID, main andross object */
+    GameObject* andross;   /* objId ANDROSS_OBJ_ID, main andross object */
     GameObject* lightning; /* objId ANDROSSLIGH_OBJ_ID, androssligh target */
     u8 pad08[0x1C - 0x08];
     s8 brainState; /* BRAIN_* */
     s8 prevState;
-    u8 health; /* decrements per hit */
+    u8 health;     /* decrements per hit */
     u8 flashTimer; /* frames of red flash / hit cooldown */
     u8 pad20[0x28 - 0x20];
 } AndrossBrainState;
@@ -53,7 +53,6 @@ STATIC_ASSERT(offsetof(AndrossBrainState, brainState) == 0x1C);
 STATIC_ASSERT(offsetof(AndrossBrainState, prevState) == 0x1D);
 STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
 STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
-
 
 void androssbrain_setState(int obj, int newState, u8 force)
 {
@@ -78,9 +77,15 @@ void androssbrain_setState(int obj, int newState, u8 force)
     }
 }
 
-int AndrossBrain_getExtraSize(void) { return 0x28; }
+int AndrossBrain_getExtraSize(void)
+{
+    return 0x28;
+}
 
-int AndrossBrain_getObjectTypeId(void) { return 0; }
+int AndrossBrain_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void AndrossBrain_free(void)
 {
@@ -194,5 +199,3 @@ void AndrossBrain_init(int obj)
     state->health = BRAIN_MAX_HEALTH;
     ObjHits_SetTargetMask(obj, 4);
 }
-
-

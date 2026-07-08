@@ -57,25 +57,33 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 /* AlphaanimatorPlacement.modeFlags & 3 - alpha-fade mode */
-#define ALPHAANIM_MODE_ONESHOT 0   /* ramp to target once, set completeBit, stop */
-#define ALPHAANIM_MODE_PINGPONG 1  /* bounce between startAlpha and targetAlpha */
-#define ALPHAANIM_MODE_GATED 2     /* direction follows live gate bit; sfx on gate flip */
-#define ALPHAANIM_MODE_TIMED 3     /* timeDelta float fade (fadeA/fadeMax) */
+#define ALPHAANIM_MODE_ONESHOT  0 /* ramp to target once, set completeBit, stop */
+#define ALPHAANIM_MODE_PINGPONG 1 /* bounce between startAlpha and targetAlpha */
+#define ALPHAANIM_MODE_GATED    2 /* direction follows live gate bit; sfx on gate flip */
+#define ALPHAANIM_MODE_TIMED    3 /* timeDelta float fade (fadeA/fadeMax) */
 
-int AlphaAnimator_getExtraSize(void) { return 0x1c; }
-int AlphaAnimator_getObjectTypeId(void) { return 0x0; }
+int AlphaAnimator_getExtraSize(void)
+{
+    return 0x1c;
+}
+int AlphaAnimator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void AlphaAnimator_free(int* obj)
 {
     AlphaAnimatorState* o = (AlphaAnimatorState*)((GameObject*)obj)->extra;
     void* p = o->buf;
-    if (p != NULL) mm_free(p);
+    if (p != NULL)
+        mm_free(p);
 }
 
 #pragma peephole off
 void AlphaAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (visible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void AlphaAnimator_hitDetect(void)
@@ -149,8 +157,7 @@ void AlphaAnimator_update(int* obj)
     if (mode == ALPHAANIM_MODE_GATED)
     {
         s->gateVal = mainGetBit(d->gateBit);
-        if ((s8)s->doneCount > 2 &&
-            (s8)s->gateVal != (s8)s->prevGate)
+        if ((s8)s->doneCount > 2 && (s8)s->gateVal != (s8)s->prevGate)
         {
             if ((d->modeFlags >> 2) != 0)
             {
@@ -188,8 +195,7 @@ void AlphaAnimator_update(int* obj)
     case ALPHAANIM_MODE_ONESHOT:
         if (d->startAlpha > d->targetAlpha)
         {
-            s->alphaLevel =
-                (s16)(s->alphaLevel - d->rate * framesThisStep);
+            s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
             if (s->alphaLevel <= d->targetAlpha)
             {
                 s->alphaLevel = d->targetAlpha;
@@ -202,8 +208,7 @@ void AlphaAnimator_update(int* obj)
         }
         else
         {
-            s->alphaLevel =
-                (s16)(s->alphaLevel + d->rate * framesThisStep);
+            s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
             if (s->alphaLevel >= d->targetAlpha)
             {
                 s->alphaLevel = d->targetAlpha;
@@ -218,19 +223,15 @@ void AlphaAnimator_update(int* obj)
     case ALPHAANIM_MODE_PINGPONG:
         if (d->startAlpha > d->targetAlpha)
         {
-            s->alphaLevel =
-                (s16)(s->alphaLevel - d->rate * framesThisStep);
+            s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
             if (s->alphaLevel < d->targetAlpha)
             {
-                s->alphaLevel =
-                    (s16)(d->startAlpha -
-                        (int)(d->targetAlpha - s->alphaLevel));
+                s->alphaLevel = (s16)(d->startAlpha - (int)(d->targetAlpha - s->alphaLevel));
             }
         }
         else
         {
-            s->alphaLevel =
-                (s16)(s->alphaLevel + d->rate * framesThisStep);
+            s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
             lvl = s->alphaLevel;
             if (lvl > d->startAlpha)
             {
@@ -244,8 +245,7 @@ void AlphaAnimator_update(int* obj)
         {
             if (d->startAlpha > d->targetAlpha)
             {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel - d->rate * framesThisStep);
+                s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
                 if (s->alphaLevel > d->targetAlpha)
                 {
                     return;
@@ -259,8 +259,7 @@ void AlphaAnimator_update(int* obj)
             }
             else
             {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel + d->rate * framesThisStep);
+                s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
                 if (s->alphaLevel < d->targetAlpha)
                 {
                     return;
@@ -277,8 +276,7 @@ void AlphaAnimator_update(int* obj)
         {
             if (d->startAlpha > d->targetAlpha)
             {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel + d->rate * framesThisStep);
+                s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
                 if (s->alphaLevel < d->startAlpha)
                 {
                     return;
@@ -292,8 +290,7 @@ void AlphaAnimator_update(int* obj)
             }
             else
             {
-                s->alphaLevel =
-                    (s16)(s->alphaLevel - d->rate * framesThisStep);
+                s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
                 if (s->alphaLevel > d->startAlpha)
                 {
                     return;
@@ -315,8 +312,7 @@ void AlphaAnimator_update(int* obj)
             rate = -rate;
         }
         absRate = (f32)rate / 10.0f;
-        s->fadeA =
-            absRate * timeDelta + s->fadeA;
+        s->fadeA = absRate * timeDelta + s->fadeA;
         if (s->fadeA > s->fadeMax)
         {
             s->fadeA = s->fadeMax;

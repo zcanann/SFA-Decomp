@@ -14,11 +14,15 @@ extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);
 
-extern void vecRotateZXY(s16 * rotation, f32 * outVec);
-typedef struct RingIdPair { u32 a; u32 b; } RingIdPair;
+extern void vecRotateZXY(s16* rotation, f32* outVec);
+typedef struct RingIdPair
+{
+    u32 a;
+    u32 b;
+} RingIdPair;
 
 /* .sdata2 constant pool */
-static const RingIdPair lbl_803E6450 = { 0x00040005, 0x0006000B };
+static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
 static const f32 lbl_803E6458 = 1.0f;
 static const f32 lbl_803E645C = 30.0f;
 static const f32 lbl_803E6460 = 0.0f;
@@ -27,20 +31,20 @@ static const f32 lbl_803E6468 = 93.0f;
 static const f64 lbl_803E6470 = 4503599627370496.0;
 static const f32 lbl_803E6478 = 0.5f;
 
-#define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
-#define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
-#define SFXPLAYER_EFFECT_RING_COUNT 4
+#define SFXPLAYER_OBJECT_FLAGS_OFFSET     0xB0
+#define SFXPLAYER_OBJECT_STATE_OFFSET     0xB8
+#define SFXPLAYER_EFFECT_RING_COUNT       4
 #define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
-#define SFXPLAYER_MODE_SEQUENCE 2
-#define SFXPLAYER_RING_START_SFX 0x459
-#define SFXPLAYER_TIMEOUT_RESET_SFX 0x1CE
-#define SFXPLAYER_GAMEBIT_RING_ACTIVE 0xEDF
-#define SFXPLAYER_RING_VISUAL_SETUP_SIZE 0x2C
-#define SFXPLAYER_RING_VISUAL_OBJECT_ID 0x6E8
-#define SFXPLAYER_RING_HIT_SETUP_SIZE 4
-#define SFXPLAYER_RING_HIT_OBJECT_ID 0x71C
-#define SFXPLAYER_RING_SETUP_MODE 5
-#define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
+#define SFXPLAYER_MODE_SEQUENCE           2
+#define SFXPLAYER_RING_START_SFX          0x459
+#define SFXPLAYER_TIMEOUT_RESET_SFX       0x1CE
+#define SFXPLAYER_GAMEBIT_RING_ACTIVE     0xEDF
+#define SFXPLAYER_RING_VISUAL_SETUP_SIZE  0x2C
+#define SFXPLAYER_RING_VISUAL_OBJECT_ID   0x6E8
+#define SFXPLAYER_RING_HIT_SETUP_SIZE     4
+#define SFXPLAYER_RING_HIT_OBJECT_ID      0x71C
+#define SFXPLAYER_RING_SETUP_MODE         5
+#define SFXPLAYER_EFFECT_RING_ROT_STEP    0x3FFF
 
 /* Obj_AllocObjectSetup(0x2C,...) ring-visual spawn buffer composed in
  * sfxplayer_ensureEffectHandlePair. Head is the common ObjPlacement
@@ -75,18 +79,20 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
 extern int ObjHits_GetPriorityHit(int obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
-#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep) \
-    do { \
-        if ((void *)(handleExpr) != NULL) { \
-            *(f32 *)((handleExpr) + 0xc) = lbl_803E6460; \
-            *(f32 *)((handleExpr) + 0x10) = lbl_803E6464; \
-            *(f32 *)((handleExpr) + 0x14) = lbl_803E6468; \
-            (rot)[0] = (s16)(*(s16 *)(obj) + (angleStep)); \
-            vecRotateZXY((rot), (f32 *)((handleExpr) + 0xc)); \
-            *(f32 *)((handleExpr) + 0xc) += *(f32 *)((obj) + 0xc); \
-            *(f32 *)((handleExpr) + 0x10) += *(f32 *)((obj) + 0x10); \
-            *(f32 *)((handleExpr) + 0x14) += *(f32 *)((obj) + 0x14); \
-        } \
+#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep)                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((void*)(handleExpr) != NULL)                                                                               \
+        {                                                                                                              \
+            *(f32*)((handleExpr) + 0xc) = lbl_803E6460;                                                                \
+            *(f32*)((handleExpr) + 0x10) = lbl_803E6464;                                                               \
+            *(f32*)((handleExpr) + 0x14) = lbl_803E6468;                                                               \
+            (rot)[0] = (s16)(*(s16*)(obj) + (angleStep));                                                              \
+            vecRotateZXY((rot), (f32*)((handleExpr) + 0xc));                                                           \
+            *(f32*)((handleExpr) + 0xc) += *(f32*)((obj) + 0xc);                                                       \
+            *(f32*)((handleExpr) + 0x10) += *(f32*)((obj) + 0x10);                                                     \
+            *(f32*)((handleExpr) + 0x14) += *(f32*)((obj) + 0x14);                                                     \
+        }                                                                                                              \
     } while (0)
 
 void TrickyCurve_updateEffectHandleRing(int obj)
@@ -103,8 +109,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     if (state->flags.bit10 != 0 && state->flags.bit20 == 0 && state->variantSfxTimer > 0x32)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
-        if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
-            SFXPLAYER_MODE_SEQUENCE)
+        if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == SFXPLAYER_MODE_SEQUENCE)
         {
             *(s16*)obj += (int)((lbl_803E6458 + state->ringCount) * (lbl_803E645C * timeDelta));
         }
@@ -132,8 +137,10 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING], obj, buf.rotation, i * SFXPLAYER_EFFECT_RING_ROT_STEP);
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], obj, buf.rotation, i * SFXPLAYER_EFFECT_RING_ROT_STEP);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING], obj, buf.rotation,
+                                           i * SFXPLAYER_EFFECT_RING_ROT_STEP);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], obj, buf.rotation,
+                                           i * SFXPLAYER_EFFECT_RING_ROT_STEP);
     }
 }
 
@@ -169,8 +176,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk1A = 0;
         ((SfxplayerRingVisualSetup*)setup)->unk18 = 0;
         ((SfxplayerRingVisualSetup*)setup)->unk19 = 0;
-        if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
-            SFXPLAYER_MODE_SEQUENCE)
+        if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == SFXPLAYER_MODE_SEQUENCE)
         {
             ringIds = (s16*)ringIdWords;
             ((SfxplayerRingVisualSetup*)setup)->ringId = ringIds[ringIndex & 0xff];
@@ -188,8 +194,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
         ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
         *(int*)((int)handles + handleOffset) =
-            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
-                            ((GameObject*)obj)->anim.mapEventSlot, -1,
+            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, ((GameObject*)obj)->anim.mapEventSlot, -1,
                             *(int*)&((GameObject*)obj)->anim.parent);
     }
 
@@ -207,8 +212,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
-                                ((GameObject*)obj)->anim.mapEventSlot, -1,
+        *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
     }
 
@@ -244,8 +248,14 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
     return 0;
 }
 
-int sfxplayer_getExtraSize(void) { return 0xa; }
-int sfxplayer_getObjectTypeId(void) { return 0x0; }
+int sfxplayer_getExtraSize(void)
+{
+    return 0xa;
+}
+int sfxplayer_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void sfxplayer_free(int obj, int arg1)
 {
@@ -275,7 +285,6 @@ void sfxplayer_free(int obj, int arg1)
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
-
 void sfxplayer_render(void)
 {
 }
@@ -284,22 +293,22 @@ void sfxplayer_hitDetect(void)
 {
 }
 
-#define SFXPLAYER_OBJECT_CALLBACK_OFFSET 0xBC
-#define SFXPLAYER_CONFIG_MAP_ID_OFFSET 0x18
-#define SFXPLAYER_CONFIG_MODE_OFFSET 0x19
-#define SFXPLAYER_CONFIG_EVENT_ID_OFFSET 0x1E
-#define SFXPLAYER_CONFIG_FIELD20_OFFSET 0x20
-#define SFXPLAYER_COMPLETE_RING_COUNT 4
-#define SFXPLAYER_TIMER_ID 0x1D
-#define SFXPLAYER_TIMER_SHORT_FRAMES 0x96
-#define SFXPLAYER_TIMER_LONG_FRAMES 0xB4
-#define SFXPLAYER_MODE_SINGLE 1
+#define SFXPLAYER_OBJECT_CALLBACK_OFFSET  0xBC
+#define SFXPLAYER_CONFIG_MAP_ID_OFFSET    0x18
+#define SFXPLAYER_CONFIG_MODE_OFFSET      0x19
+#define SFXPLAYER_CONFIG_EVENT_ID_OFFSET  0x1E
+#define SFXPLAYER_CONFIG_FIELD20_OFFSET   0x20
+#define SFXPLAYER_COMPLETE_RING_COUNT     4
+#define SFXPLAYER_TIMER_ID                0x1D
+#define SFXPLAYER_TIMER_SHORT_FRAMES      0x96
+#define SFXPLAYER_TIMER_LONG_FRAMES       0xB4
+#define SFXPLAYER_MODE_SINGLE             1
 #define SFXPLAYER_GAMEBIT_SINGLE_COMPLETE 0x9F7
-#define SFXPLAYER_SFX_COMPLETE 0x7E
-#define SFXPLAYER_SFX_TIMEOUT_RESET 0x1CE
-#define SFXPLAYER_SFX_RING_HIT 0x409
-#define SFXPLAYER_HIT_TYPE_RING_TARGET 0x13
-#define SFXPLAYER_OBJECT_FLAGS 0x6000
+#define SFXPLAYER_SFX_COMPLETE            0x7E
+#define SFXPLAYER_SFX_TIMEOUT_RESET       0x1CE
+#define SFXPLAYER_SFX_RING_HIT            0x409
+#define SFXPLAYER_HIT_TYPE_RING_TARGET    0x13
+#define SFXPLAYER_OBJECT_FLAGS            0x6000
 
 void sfxplayer_update(int obj)
 {
@@ -317,7 +326,7 @@ void sfxplayer_update(int obj)
     {
         if (state->ringCount == SFXPLAYER_COMPLETE_RING_COUNT)
         {
-            Sfx_PlayFromObject(0,SFXPLAYER_SFX_COMPLETE);
+            Sfx_PlayFromObject(0, SFXPLAYER_SFX_COMPLETE);
             flags->bit20 = 1;
             flags->bit10 = 0;
             flags->bit40 = 0;
@@ -340,11 +349,11 @@ void sfxplayer_update(int obj)
                     mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
                     if (mode == SFXPLAYER_MODE_SINGLE)
                     {
-                        gameTimerInit(SFXPLAYER_TIMER_ID,SFXPLAYER_TIMER_SHORT_FRAMES);
+                        gameTimerInit(SFXPLAYER_TIMER_ID, SFXPLAYER_TIMER_SHORT_FRAMES);
                     }
                     else
                     {
-                        gameTimerInit(SFXPLAYER_TIMER_ID,SFXPLAYER_TIMER_LONG_FRAMES);
+                        gameTimerInit(SFXPLAYER_TIMER_ID, SFXPLAYER_TIMER_LONG_FRAMES);
                     }
                     timerSetToCountUp();
                 }
@@ -364,7 +373,7 @@ void sfxplayer_update(int obj)
                         Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
                     }
                     handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
-                    Sfx_PlayFromObject(obj,SFXPLAYER_SFX_TIMEOUT_RESET);
+                    Sfx_PlayFromObject(obj, SFXPLAYER_SFX_TIMEOUT_RESET);
                 }
                 state->ringCount = 0;
                 flags->bit40 = 0;
@@ -378,7 +387,8 @@ void sfxplayer_update(int obj)
                 if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                 {
                     hitObj = 0;
-                    hitType = ObjHits_GetPriorityHit(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], &hitObj, 0x0, 0x0);
+                    hitType =
+                        ObjHits_GetPriorityHit(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], &hitObj, 0x0, 0x0);
                     if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET)
                     {
                         mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
@@ -394,7 +404,7 @@ void sfxplayer_update(int obj)
                                 Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
                             }
                             handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
-                            Sfx_PlayFromObject(0,SFXPLAYER_SFX_RING_HIT);
+                            Sfx_PlayFromObject(0, SFXPLAYER_SFX_RING_HIT);
                             state->ringCount++;
                         }
                     }
@@ -411,8 +421,7 @@ void sfxplayer_init(int obj, int config)
 
     state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
     *(s16*)obj = (s16)((s8) * (u8*)(config + SFXPLAYER_CONFIG_MAP_ID_OFFSET) << 8);
-    *(void (**)(void))(obj + SFXPLAYER_OBJECT_CALLBACK_OFFSET) =
-        (void (*)(void))TrickyCurve_activateEffectHandleRing;
+    *(void (**)(void))(obj + SFXPLAYER_OBJECT_CALLBACK_OFFSET) = (void (*)(void))TrickyCurve_activateEffectHandleRing;
     state->config19 = *(u8*)(config + SFXPLAYER_CONFIG_MODE_OFFSET);
     state->eventId = *(s16*)(config + SFXPLAYER_CONFIG_EVENT_ID_OFFSET);
     state->config20 = *(s16*)(config + SFXPLAYER_CONFIG_FIELD20_OFFSET);

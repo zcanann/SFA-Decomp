@@ -5,8 +5,14 @@
  */
 #include "main/dll_000A_expgfx.h"
 
-int Dummy108_getExtraSize(void) { return 0x0; }
-int Dummy108_getObjectTypeId(void) { return 0x0; }
+int Dummy108_getExtraSize(void)
+{
+    return 0x0;
+}
+int Dummy108_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void Dummy108_free(void)
 {
@@ -37,7 +43,10 @@ void Dummy108_initialise(void)
 }
 
 ObjectDescriptor gDummy108ObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Dummy108_initialise,
     (ObjectDescriptorCallback)Dummy108_release,
     0,

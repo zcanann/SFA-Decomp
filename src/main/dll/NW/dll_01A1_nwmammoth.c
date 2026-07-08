@@ -13,11 +13,11 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#define NWMAMMOTH_PARTFX 0x7f0
+#define NWMAMMOTH_PARTFX               0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
-#define NWMAMMOTH_OBJFLAG_RENDERED 0x800
+#define NWMAMMOTH_OBJFLAG_RENDERED     0x800
 /* object group scanned for the nearest target (player group) */
-#define NWMAMMOTH_TARGET_OBJGROUP 0xf
+#define NWMAMMOTH_TARGET_OBJGROUP    0xf
 #define NWMAMMOTH_AIRMETER_BGTEXTURE 0x5d0 /* air-meter background texture id */
 enum NwMammothRuntimeFlag
 {
@@ -99,7 +99,8 @@ void fn_801CEE0C(int obj, int p2)
     extern u8 lbl_803DBF7C[4];
     NwMammothState* state = (NwMammothState*)p2;
 
-    if (fn_801CE078(obj, p2) != 0) return;
+    if (fn_801CE078(obj, p2) != 0)
+        return;
 
     switch (state->stateIndex)
     {
@@ -232,8 +233,7 @@ int fn_801CE078(int* obj, u8* st)
         if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_ANIM_ENDED)
         {
             state->stateIndex = 0x15;
-            state->stateTimer = (f32)(s32)
-            randomGetRange(0, 300);
+            state->stateTimer = (f32)(s32)randomGetRange(0, 300);
         }
         break;
     case 0x15:
@@ -312,27 +312,27 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     switch (state->stateIndex)
     {
     case 8:
+    {
+        Curve* cv = (Curve*)&state->curveState;
+        if (Curve_AdvanceAlongPath(cv, state->pathSpeed) != 0 || cv->idx != 0)
         {
-            Curve* cv = (Curve*)&state->curveState;
-            if (Curve_AdvanceAlongPath(cv, state->pathSpeed) != 0 || cv->idx != 0)
-            {
-                (*gRomCurveInterface)->goNextPoint(cv);
-            }
-            {
-                f32 dx = cv->sample[0] - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = cv->sample[2] - ((GameObject*)obj)->anim.localPosZ;
-                ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
-                                             (ObjAnimComponent*)obj, &state->animStepScale);
-            }
-            ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);
-            ((GameObject*)obj)->anim.localPosX = cv->sample[0];
-            ((GameObject*)obj)->anim.localPosZ = cv->sample[2];
-            if (state->pathSpeed <= lbl_803E520C)
-            {
-                state->stateIndex = 7;
-            }
-            break;
+            (*gRomCurveInterface)->goNextPoint(cv);
         }
+        {
+            f32 dx = cv->sample[0] - ((GameObject*)obj)->anim.localPosX;
+            f32 dz = cv->sample[2] - ((GameObject*)obj)->anim.localPosZ;
+            ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj,
+                                         &state->animStepScale);
+        }
+        ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);
+        ((GameObject*)obj)->anim.localPosX = cv->sample[0];
+        ((GameObject*)obj)->anim.localPosZ = cv->sample[2];
+        if (state->pathSpeed <= lbl_803E520C)
+        {
+            state->stateIndex = 7;
+        }
+        break;
+    }
     case 7:
         if (state->pathSpeed > lbl_803E5250)
         {
@@ -437,95 +437,97 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         state->stateIndex = 0xd;
         break;
     case 0xd:
+    {
+        int n = 4;
+        if (mainGetBit(0x120) == 0)
         {
-            int n = 4;
-            if (mainGetBit(0x120) == 0)
+            n = 3;
+        }
+        if (mainGetBit(0x121) == 0)
+        {
+            n -= 1;
+        }
+        {
+            int i = 0;
+            for (; i < n; i++)
             {
-                n = 3;
-            }
-            if (mainGetBit(0x121) == 0)
-            {
-                n -= 1;
-            }
-            {
-                int i = 0;
-                for (; i < n; i++)
+                if (mainGetBit(gNwMammothBushGameBits[i]) != 0)
                 {
-                    if (mainGetBit(gNwMammothBushGameBits[i]) != 0)
+                    mainSetBits(gNwMammothBushGameBits[i], 0);
+                }
+                {
+                    int* o2 = ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
+                    if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
                     {
-                        mainSetBits(gNwMammothBushGameBits[i], 0);
+                        fn_8014C66C(o2, (int*)state->playerObject);
                     }
+                    else
                     {
-                        int* o2 = ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
-                        if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
+                        tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
+                        if (tw == NULL || vec3f_distanceSquared(&((GameObject*)tw)->anim.worldPosX, &o2[6]) >=
+                                              gNwMammothTumbleweedDistSqThreshold)
                         {
-                            fn_8014C66C(o2, (int*)state->playerObject);
-                        }
-                        else
-                        {
-                            tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
-                            if (tw == NULL || vec3f_distanceSquared(&((GameObject*)tw)->anim.worldPosX, &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
+                            if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX,
+                                                      &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, &o2[6]) >=
-                                    gNwMammothTumbleweedDistSqThreshold)
-                                {
-                                    fn_8014C66C(o2, obj);
-                                }
-                                else
-                                {
-                                    fn_8014C66C(o2, (int*)state->playerObject);
-                                }
+                                fn_8014C66C(o2, obj);
                             }
                             else
                             {
-                                fn_8014C66C(o2, tw);
+                                fn_8014C66C(o2, (int*)state->playerObject);
                             }
                         }
-                    }
-                }
-            }
-            {
-                tw2 = tumbleweedbush_findNearestActive(&state->spawnPosX);
-                if (tw2 != NULL)
-                {
-                    int* tk = getTrickyObject();
-                    /* Tricky DLL interface +0x28: bark at the bush */
-                    (*(void (**)(int*, int*, int, int))((char*)*((GameObject*)tk)->anim.dll + 0x28))(
-                        tk, obj, 1, 1);
-                }
-                state->triggerList = lbl_803DBFA8;
-                if (state->trackedObject == NULL)
-                {
-                    short* cfg = ((GameObject*)obj)->anim.placementData;
-                    if (tw2 != NULL && ((GameObject*)tw2)->anim.seqId == 0x3fb)
-                    {
-                        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)tw2)->anim.worldPosX) < (f32)(s32)(cfg[0xc] * cfg[0xc]))
+                        else
                         {
-                            if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
-                            {
-                                Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_snowstep);
-                            }
-                            /* Tumbleweed bush DLL interface +0x30: is the bush busy? +0x2C: send it rolling to a target position */
-                            if ((*(int (**)(int*))((char*)*((GameObject*)tw2)->anim.dll + 0x30))(tw2) == 0)
-                            {
-                                (*(void (**)(int*, f32*))((char*)*((GameObject*)tw2)->anim.dll + 0x2c))(
-                                    tw2, &state->spawnPosX);
-                                state->trackedObject = tw2;
-                                state->stateIndex = 0xe;
-                            }
+                            fn_8014C66C(o2, tw);
                         }
                     }
                 }
             }
-            if (!(state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE))
-            {
-                (*gGameUIInterface)->initAirMeter(0xc8, NWMAMMOTH_AIRMETER_BGTEXTURE);
-                state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
-            }
-            break;
         }
+        {
+            tw2 = tumbleweedbush_findNearestActive(&state->spawnPosX);
+            if (tw2 != NULL)
+            {
+                int* tk = getTrickyObject();
+                /* Tricky DLL interface +0x28: bark at the bush */
+                (*(void (**)(int*, int*, int, int))((char*)*((GameObject*)tk)->anim.dll + 0x28))(tk, obj, 1, 1);
+            }
+            state->triggerList = lbl_803DBFA8;
+            if (state->trackedObject == NULL)
+            {
+                short* cfg = ((GameObject*)obj)->anim.placementData;
+                if (tw2 != NULL && ((GameObject*)tw2)->anim.seqId == 0x3fb)
+                {
+                    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)tw2)->anim.worldPosX) <
+                        (f32)(s32)(cfg[0xc] * cfg[0xc]))
+                    {
+                        if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
+                        {
+                            Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_snowstep);
+                        }
+                        /* Tumbleweed bush DLL interface +0x30: is the bush busy? +0x2C: send it rolling to a target position */
+                        if ((*(int (**)(int*))((char*)*((GameObject*)tw2)->anim.dll + 0x30))(tw2) == 0)
+                        {
+                            (*(void (**)(int*, f32*))((char*)*((GameObject*)tw2)->anim.dll + 0x2c))(tw2,
+                                                                                                    &state->spawnPosX);
+                            state->trackedObject = tw2;
+                            state->stateIndex = 0xe;
+                        }
+                    }
+                }
+            }
+        }
+        if (!(state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE))
+        {
+            (*gGameUIInterface)->initAirMeter(0xc8, NWMAMMOTH_AIRMETER_BGTEXTURE);
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
+        }
+        break;
+    }
     case 0xe:
-        if (getXZDistance(&state->spawnPosX, (char*)&((GameObject*)state->trackedObject)->anim.worldPosX) < gNwMammothCaptureDist)
+        if (getXZDistance(&state->spawnPosX, (char*)&((GameObject*)state->trackedObject)->anim.worldPosX) <
+            gNwMammothCaptureDist)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
             fn_80163980(*(int*)&state->trackedObject);
@@ -562,7 +564,8 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         state->stateIndex = 0x13;
         break;
     case 0x11:
-        if (!(((GameObject*)state->playerObject)->objectFlags & NWMAMMOTH_OBJFLAG_PARENT_SLACK) && state->airMeterValue >= gNwMammothAirMeterFull)
+        if (!(((GameObject*)state->playerObject)->objectFlags & NWMAMMOTH_OBJFLAG_PARENT_SLACK) &&
+            state->airMeterValue >= gNwMammothAirMeterFull)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_menuups16k);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -642,17 +645,10 @@ void NW_mammoth_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
     {
-        ObjPath_GetPointWorldPosition(obj, i,
-                                      (char*)node + i * 0xc + 0x45c,
-                                      (char*)node + i * 0xc + 0x460,
-                                      (char*)node + i * 0xc + 0x464,
-                                      0);
+        ObjPath_GetPointWorldPosition(obj, i, (char*)node + i * 0xc + 0x45c, (char*)node + i * 0xc + 0x460,
+                                      (char*)node + i * 0xc + 0x464, 0);
     }
-    ObjPath_GetPointWorldPosition(obj, 4,
-                                  (char*)node + 0xc,
-                                  (char*)node + 0x10,
-                                  (char*)node + 0x14,
-                                  0);
+    ObjPath_GetPointWorldPosition(obj, 4, (char*)node + 0xc, (char*)node + 0x10, (char*)node + 0x14, 0);
 }
 
 enum NwMammothStateFlag
@@ -673,7 +669,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     extern void fn_801CED2C(int obj, void* state, void* objDef);
     extern void fn_801CEE0C(int obj, void* state, void* objDef);
     extern f32 vec3f_distanceSquared(f32 * obj, f32 * p2);
-    extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
+    extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     int triggerIndex;
     f32 stepScale;
@@ -721,8 +717,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
             hitReactEntries = &table->normalHitReactEntry;
         }
         state->hitReactState =
-            ObjHitReact_Update((int)obj, hitReactEntries, 1, state->hitReactState,
-                               &state->hitReactStepScale);
+            ObjHitReact_Update((int)obj, hitReactEntries, 1, state->hitReactState, &state->hitReactStepScale);
         if (state->hitReactState != 0)
         {
             fn_8003A168((int)obj, state->eyeAnimState);
@@ -730,8 +725,8 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
             return;
         }
     }
-    state->playerDistanceSq = vec3f_distanceSquared(&obj->worldPosX,
-                                                    &((NwMammothObject*)state->playerObject)->worldPosX);
+    state->playerDistanceSq =
+        vec3f_distanceSquared(&obj->worldPosX, &((NwMammothObject*)state->playerObject)->worldPosX);
     switch (mapData->behaviorMode)
     {
     case 0:
@@ -788,8 +783,8 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     {
         state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
     }
-    objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState,
-                        lbl_803E5210, *(f32*)&lbl_803E5210);
+    objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState, lbl_803E5210,
+                        *(f32*)&lbl_803E5210);
     fn_801CDF94((int)obj, state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
@@ -851,8 +846,7 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     case 3:
         curveParam = NW_MAMMOTH_CURVE_PARAM;
         state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
-        if ((u8)(*gRomCurveInterface)->initCurve(
-            &state->curveState, obj, lbl_803E5254, &curveParam, -1) == 0)
+        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, lbl_803E5254, &curveParam, -1) == 0)
         {
             obj->localPosX = state->curveState.pointX;
             obj->localPosZ = state->curveState.pointZ;
@@ -871,7 +865,8 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
             state->stateIndex = 0xc;
             if (state->uiMessageCount >= 3)
             {
-                ((NwMammothGameUiInterface*)*gGameUIInterface)->showMessage(NW_MAMMOTH_UI_MESSAGE_ID, NW_MAMMOTH_UI_MESSAGE_TEXT_ID);
+                ((NwMammothGameUiInterface*)*gGameUIInterface)
+                    ->showMessage(NW_MAMMOTH_UI_MESSAGE_ID, NW_MAMMOTH_UI_MESSAGE_TEXT_ID);
                 state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_UI_MESSAGE);
                 state->stateIndex = 0x11;
             }
@@ -886,52 +881,39 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     {
         u8* path = state->pathState;
         (*gPathControlInterface)->init(path, 3, 2, 1);
-        (*gPathControlInterface)->setup(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT,
-                                        gNwMammothPathSetupDataA, gNwMammothPathSetupDataB, &pathParam);
+        (*gPathControlInterface)
+            ->setup(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA, gNwMammothPathSetupDataB,
+                    &pathParam);
         (*gPathControlInterface)->attachObject(obj, path);
     }
     ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
 
-
-
-u8 gNwMammothPathSetupDataB[] =
-{
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x25,
-    0x00, 0x24, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x29,
-    0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x00, 0x00, 0x04, 0x00, 0x05,
-    0x00, 0x06, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x00, 0x00, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0xBC, 0x23, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3C, 0x03, 0x12, 0x6F, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
+u8 gNwMammothPathSetupDataB[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x25,
+    0x00, 0x24, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x29, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23,
+    0x00, 0x00, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
+    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3,
+    0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0xBC, 0x23, 0xD7, 0x0A,
+    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3C, 0x03,
+    0x12, 0x6F, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
     0x3B, 0xC4, 0x9B, 0xA6, 0x3B, 0x44, 0x9B, 0xA6, 0x3B, 0xC4, 0x9B, 0xA6,
 };
 
-u8 gNwMammothPathSetupDataA[] =
-{
-    0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00,
-    0x41, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00,
-    0x41, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00,
-    0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00,
+u8 gNwMammothPathSetupDataA[] = {
+    0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x41, 0xA0, 0x00, 0x00, 0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00,
 };
 
-u8 gNwMammothTables[40] = {
-    0x02, 0xDA, 0x03, 0x75, 0x00, 0x30, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00,
-    0x3C, 0x44, 0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00, 0x02, 0xDA, 0x03, 0x75,
-    0x00, 0x31, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x44, 0x9B, 0xA6,
-    0x00, 0x00, 0x00, 0x00
-};
-u8 lbl_803268B4[24] = {
-    0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04, 0x00, 0x29, 0x29, 0x28,
-    0x28, 0x28, 0x29, 0x29, 0x29, 0x29, 0x29, 0x04, 0x09, 0x03, 0x09, 0x00
-};
-int gNwMammothBushObjectIds[4] = { 0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD };
-int gNwMammothBushGameBits[4] = { 0xF22, 0xF23, 0xF24, 0xF25 };
+u8 gNwMammothTables[40] = {0x02, 0xDA, 0x03, 0x75, 0x00, 0x30, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x44,
+                           0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00, 0x02, 0xDA, 0x03, 0x75, 0x00, 0x31, 0xFF, 0xFF,
+                           0x00, 0x00, 0x00, 0x00, 0x3C, 0x44, 0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00};
+u8 lbl_803268B4[24] = {0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04, 0x00, 0x29, 0x29, 0x28,
+                       0x28, 0x28, 0x29, 0x29, 0x29, 0x29, 0x29, 0x04, 0x09, 0x03, 0x09, 0x00};
+int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
+int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
 
 /*__DATA_EXTERNS__*/
 extern void sh_tricky_getExtraSize();
@@ -959,12 +941,53 @@ extern void NW_tricky_free();
 extern void NW_tricky_update();
 extern void NW_tricky_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gNW_mammothObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, NW_mammoth_init, NW_mammoth_update, (void*)0x00000000, NW_mammoth_render, NW_mammoth_free, (void*)0x00000000, NW_mammoth_getExtraSize };
-void* jumptable_80326924[11] = { (void*)((u8*)fn_801CE2BC + 0x5C), (void*)((u8*)fn_801CE2BC + 0xD4), (void*)((u8*)fn_801CE2BC + 0xF0), (void*)((u8*)fn_801CE2BC + 0x190), (void*)((u8*)fn_801CE2BC + 0x1D4), (void*)((u8*)fn_801CE2BC + 0x434), (void*)((u8*)fn_801CE2BC + 0x470), (void*)((u8*)fn_801CE2BC + 0x50C), (void*)((u8*)fn_801CE2BC + 0x550), (void*)((u8*)fn_801CE2BC + 0x5DC), (void*)((u8*)fn_801CE2BC + 0x644) };
-void* gNW_trickyObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, NW_tricky_init, NW_tricky_update, (void*)0x00000000, (void*)0x00000000, NW_tricky_free, (void*)0x00000000, NW_tricky_getExtraSize };
-void* gNW_animiceObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, nw_animice_initialise, nw_animice_release, (void*)0x00000000, nw_animice_init, nw_animice_update, nw_animice_hitDetect, nw_animice_render, nw_animice_free, nw_animice_getObjectTypeId, nw_animice_getExtraSize };
-void* gNW_iceObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, NW_ice_init, NW_ice_update, (void*)0x00000000, NW_ice_render, NW_ice_free, (void*)0x00000000, NW_ice_getExtraSize };
-u8 lbl_803269F8[308] = { 0, 4, 71, 213, 0, 4, 71, 214, 0, 4, 71, 213, 0, 4, 71, 214, 0, 4, 71, 213, 0, 4, 71, 214, 0, 4, 71, 213, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 8, 0, 0, 0, 11, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 180, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 182, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 181, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183, 0, 183 };
-void* gNW_levcontrolObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, nw_levcontrol_init, nw_levcontrol_update, (void*)0x00000000, (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000, nw_levcontrol_getExtraSize };
-void* jumptable_80326B64[13] = { (void*)((u8*)nw_levcontrol_update + 0x330), (void*)((u8*)nw_levcontrol_update + 0x378), (void*)((u8*)nw_levcontrol_update + 0x3CC), (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x400), (void*)((u8*)nw_levcontrol_update + 0x420), (void*)((u8*)nw_levcontrol_update + 0x43C), (void*)((u8*)nw_levcontrol_update + 0x544), (void*)((u8*)nw_levcontrol_update + 0x564) };
-void* gSH_trickyObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, sh_tricky_init, sh_tricky_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, sh_tricky_getExtraSize };
+void* gNW_mammothObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, (void*)0x00090000,
+                                      (void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, NW_mammoth_init,
+                                      NW_mammoth_update, (void*)0x00000000,      NW_mammoth_render, NW_mammoth_free,
+                                      (void*)0x00000000, NW_mammoth_getExtraSize};
+void* jumptable_80326924[11] = {
+    (void*)((u8*)fn_801CE2BC + 0x5C),  (void*)((u8*)fn_801CE2BC + 0xD4),  (void*)((u8*)fn_801CE2BC + 0xF0),
+    (void*)((u8*)fn_801CE2BC + 0x190), (void*)((u8*)fn_801CE2BC + 0x1D4), (void*)((u8*)fn_801CE2BC + 0x434),
+    (void*)((u8*)fn_801CE2BC + 0x470), (void*)((u8*)fn_801CE2BC + 0x50C), (void*)((u8*)fn_801CE2BC + 0x550),
+    (void*)((u8*)fn_801CE2BC + 0x5DC), (void*)((u8*)fn_801CE2BC + 0x644)};
+void* gNW_trickyObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
+                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, NW_tricky_init,
+                                     NW_tricky_update,  (void*)0x00000000,     (void*)0x00000000, NW_tricky_free,
+                                     (void*)0x00000000, NW_tricky_getExtraSize};
+void* gNW_animiceObjDescriptor[14] = {(void*)0x00000000,          (void*)0x00000000,      (void*)0x00000000,
+                                      (void*)0x00090000,          nw_animice_initialise,  nw_animice_release,
+                                      (void*)0x00000000,          nw_animice_init,        nw_animice_update,
+                                      nw_animice_hitDetect,       nw_animice_render,      nw_animice_free,
+                                      nw_animice_getObjectTypeId, nw_animice_getExtraSize};
+void* gNW_iceObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, (void*)0x00090000,
+                                  (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, NW_ice_init,
+                                  NW_ice_update,     (void*)0x00000000,  NW_ice_render,     NW_ice_free,
+                                  (void*)0x00000000, NW_ice_getExtraSize};
+u8 lbl_803269F8[308] = {
+    0,  4,   71, 213, 0, 4,   71, 214, 0, 4,   71, 213, 0, 4,   71, 214, 0, 4,   71, 213, 0, 4,   71, 214, 0, 4,
+    71, 213, 0,  0,   0, 2,   0,  0,   0, 3,   0,  0,   0, 4,   0,  0,   0, 5,   0,  0,   0, 6,   0,  0,   0, 7,
+    0,  0,   0,  1,   0, 0,   0,  3,   0, 0,   0,  4,   0, 0,   0,  5,   0, 0,   0,  6,   0, 0,   0,  7,   0, 0,
+    0,  8,   0,  0,   0, 11,  0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180,
+    0,  180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  180, 0, 180,
+    0,  180, 0,  180, 0, 180, 0,  180, 0, 180, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182,
+    0,  182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182,
+    0,  182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  182, 0, 182, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181,
+    0,  181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181,
+    0,  181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  183, 0, 183, 0,  183, 0, 183,
+    0,  183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183,
+    0,  183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183};
+void* gNW_levcontrolObjDescriptor[14] = {
+    (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000,  (void*)0x00090000,         (void*)0x00000000,
+    (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
+    (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
+void* jumptable_80326B64[13] = {(void*)((u8*)nw_levcontrol_update + 0x330), (void*)((u8*)nw_levcontrol_update + 0x378),
+                                (void*)((u8*)nw_levcontrol_update + 0x3CC), (void*)((u8*)nw_levcontrol_update + 0x3F4),
+                                (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4),
+                                (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4),
+                                (void*)((u8*)nw_levcontrol_update + 0x400), (void*)((u8*)nw_levcontrol_update + 0x420),
+                                (void*)((u8*)nw_levcontrol_update + 0x43C), (void*)((u8*)nw_levcontrol_update + 0x544),
+                                (void*)((u8*)nw_levcontrol_update + 0x564)};
+void* gSH_trickyObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
+                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, sh_tricky_init,
+                                     sh_tricky_update,  (void*)0x00000000,     (void*)0x00000000, (void*)0x00000000,
+                                     (void*)0x00000000, sh_tricky_getExtraSize};

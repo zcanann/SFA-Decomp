@@ -13,11 +13,11 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-#define DLL_219_MOVING_OBJECT_ID 0x3a6
+#define DLL_219_MOVING_OBJECT_ID   0x3a6
 #define DLL_219_INERT_OBJECT_ID_LO 0x3ad
 #define DLL_219_INERT_OBJECT_ID_HI 0x3ae
 
-#define DLL_219_OBJFLAG_HIDDEN 0x4000
+#define DLL_219_OBJFLAG_HIDDEN             0x4000
 #define DLL_219_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct Dll219State
@@ -28,26 +28,32 @@ typedef struct Dll219State
 typedef struct Dll219Setup
 {
     ObjPlacement placement;
-    s8 rotX;        /* 0x18 */
+    s8 rotX; /* 0x18 */
     u8 pad19[0x1e - 0x19];
-    s16 gameBit;    /* 0x1e */
+    s16 gameBit; /* 0x1e */
 } Dll219Setup;
 
 typedef struct Dll219Object
 {
     u8 pad00[0xc];
-    f32 x;              /* 0x0c: current world X */
+    f32 x; /* 0x0c: current world X */
     u8 pad10[0x46 - 0x10];
-    s16 objectId;       /* 0x46 */
+    s16 objectId; /* 0x46 */
     u8 pad48[0x4c - 0x48];
     ObjPlacement* setup; /* 0x4c */
     u8 pad50[0xb8 - 0x50];
     Dll219State* state; /* 0xb8 */
 } Dll219Object;
 
-int dll_219_getExtraSize_ret_4(void) { return 0x4; }
+int dll_219_getExtraSize_ret_4(void)
+{
+    return 0x4;
+}
 
-int dll_219_getObjectTypeId(void) { return 0x0; }
+int dll_219_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_219_free(int obj)
 {

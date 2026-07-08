@@ -12,12 +12,12 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-#define ARWARWINGBO_OBJGROUP 0x52
-#define ARWARWINGBO_PARTFX 0x79e
+#define ARWARWINGBO_OBJGROUP        0x52
+#define ARWARWINGBO_PARTFX          0x79e
 #define ARWARWINGBO_HIT_VOLUME_SLOT 5
 
 #define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
-#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_B                     0x200
 
 typedef union ArwingBombControl
 {
@@ -46,9 +46,15 @@ STATIC_ASSERT(offsetof(ArwingBombSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ArwingBombSetup, rotY) == 0x19);
 STATIC_ASSERT(offsetof(ArwingBombSetup, rotX) == 0x1A);
 
-int arwarwingbo_getExtraSize(void) { return 0xc; }
+int arwarwingbo_getExtraSize(void)
+{
+    return 0xc;
+}
 
-int arwarwingbo_getObjectTypeId(void) { return 0; }
+int arwarwingbo_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void arwarwingbo_free(int obj)
 {
@@ -106,10 +112,8 @@ void arwarwingbo_update(int obj)
             ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
         }
-        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1,
-                                         &objAnim->velocityX);
-        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1,
-                                         &objAnim->velocityX);
+        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
+        (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
     }
     else
     {
@@ -132,8 +136,7 @@ void arwarwingbo_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
     }
-    objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
-            objAnim->velocityZ * timeDelta);
+    objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta, objAnim->velocityZ * timeDelta);
 }
 
 void arwarwingbo_init(int obj, int setup)

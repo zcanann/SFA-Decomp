@@ -26,15 +26,15 @@ extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
 extern u32 SCGameBitLatch_Update();
 
-#define NWLEVCONTROL_OBJFLAG_HIDDEN 0x4000
+#define NWLEVCONTROL_OBJFLAG_HIDDEN             0x4000
 #define NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* level-init env effect (index-style; immediate vs deferred by save-load status) */
 #define NWLEVCONTROL_ENVFX_A 0x23c
 
 /* SnowHorn Wastes music tracks (Music_Trigger ids). */
-#define NWLEVCONTROL_MUSIC_TRACK 0x1a       /* day/night ambient track */
-#define NWLEVCONTROL_MUSIC_TIMER_END 0xaf   /* timed-challenge completion track */
+#define NWLEVCONTROL_MUSIC_TRACK     0x1a /* day/night ambient track */
+#define NWLEVCONTROL_MUSIC_TIMER_END 0xaf /* timed-challenge completion track */
 
 extern void gameTextShow(int a);
 extern f32 lbl_803E5278;
@@ -56,29 +56,29 @@ extern void gameTimerStop(void);
  * numeric. */
 enum NwLevControlMode
 {
-    NWLEVCONTROL_MODE_WAIT_START = 0,   /* wait for rescue bit 0x19d, then run seq 0 */
-    NWLEVCONTROL_MODE_INIT_START = 1,   /* resumed-start: preempt+run seq, arm progression */
-    NWLEVCONTROL_MODE_WALK_TABLE = 2,   /* walk target-object table, arm challenge timer */
-    NWLEVCONTROL_MODE_WALK_FINAL = 8,   /* final table check, latch completion flag */
-    NWLEVCONTROL_MODE_WAIT_MENU_LOCK = 9, /* wait for the menu-lock flag to be set */
-    NWLEVCONTROL_MODE_TIMER_STEP = 10,  /* menu-locked: init/count-up/stop the timer */
-    NWLEVCONTROL_MODE_CLEANUP = 0xb,    /* clear game bit 0xecd */
+    NWLEVCONTROL_MODE_WAIT_START = 0,        /* wait for rescue bit 0x19d, then run seq 0 */
+    NWLEVCONTROL_MODE_INIT_START = 1,        /* resumed-start: preempt+run seq, arm progression */
+    NWLEVCONTROL_MODE_WALK_TABLE = 2,        /* walk target-object table, arm challenge timer */
+    NWLEVCONTROL_MODE_WALK_FINAL = 8,        /* final table check, latch completion flag */
+    NWLEVCONTROL_MODE_WAIT_MENU_LOCK = 9,    /* wait for the menu-lock flag to be set */
+    NWLEVCONTROL_MODE_TIMER_STEP = 10,       /* menu-locked: init/count-up/stop the timer */
+    NWLEVCONTROL_MODE_CLEANUP = 0xb,         /* clear game bit 0xecd */
     NWLEVCONTROL_MODE_RESCUE_RETRIGGER = 0xc /* post-rescue re-trigger, then cleanup */
 };
 
 /* obj+0xB8 per-class state block (getExtraSize == 0x14). */
 typedef struct NwLevControlState
 {
-    f32 countdown;       /* 0x00 hint-message countdown */
-    u8 mode;             /* 0x04 state-machine mode */
-    u8 timerMinutes;     /* 0x05 challenge timer minutes */
+    f32 countdown;   /* 0x00 hint-message countdown */
+    u8 mode;         /* 0x04 state-machine mode */
+    u8 timerMinutes; /* 0x05 challenge timer minutes */
     u8 pad06[0x08 - 0x06];
-    u32 flags;           /* 0x08 progression flag bits */
-    u8 seqId;            /* 0x0C trigger sequence id */
-    u8 nextMode;         /* 0x0D mode to enter after the timer step */
-    u8 tableIndex;       /* 0x0E walk index into the target-object table */
+    u32 flags;     /* 0x08 progression flag bits */
+    u8 seqId;      /* 0x0C trigger sequence id */
+    u8 nextMode;   /* 0x0D mode to enter after the timer step */
+    u8 tableIndex; /* 0x0E walk index into the target-object table */
     u8 pad0F[0x10 - 0x0F];
-    s16 dayNightMusic;   /* 0x10 day/night music marker */
+    s16 dayNightMusic; /* 0x10 day/night music marker */
     u8 pad12[0x14 - 0x12];
 } NwLevControlState;
 STATIC_ASSERT(sizeof(NwLevControlState) == 0x14);
@@ -105,7 +105,7 @@ void nw_levcontrol_update(int objArg)
         state->countdown = state->countdown - timeDelta;
         if (state->countdown < lbl_803E5278)
         {
-            state->countdown = *(f32 *)&lbl_803E5278;
+            state->countdown = *(f32*)&lbl_803E5278;
         }
     }
     status = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
@@ -160,8 +160,8 @@ void nw_levcontrol_update(int objArg)
     SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, NWLEVCONTROL_MUSIC_TIMER_END);
     gameBit = mainGetBit(0x398);
     if ((gameBit != 0) &&
-        (status = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), status == 0)
-    )
+        (status = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f),
+         status == 0))
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
     }
@@ -244,8 +244,7 @@ void nw_levcontrol_update(int objArg)
                     gameTimerInit(0x15, (u32)state->timerMinutes + extra);
                     timerSetToCountUp();
                 }
-                (*gObjectTriggerInterface)->runSequence(state->seqId, (void*)obj,
-                                                        -1);
+                (*gObjectTriggerInterface)->runSequence(state->seqId, (void*)obj, -1);
                 state->mode = state->nextMode;
             }
             break;
@@ -273,7 +272,8 @@ void nw_levcontrol_init(int* obj)
     NwLevControlState* state = ((GameObject*)obj)->extra;
 
     Obj_GetPlayerObject();
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWLEVCONTROL_OBJFLAG_HIDDEN | NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags |
+                                            (NWLEVCONTROL_OBJFLAG_HIDDEN | NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
 
     if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
     {

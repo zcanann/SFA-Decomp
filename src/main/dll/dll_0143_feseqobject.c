@@ -46,9 +46,9 @@ enum
     FESEQOBJECT_MSG_OUT_3 = 0x130003
 };
 
-#define FESEQOBJECT_SEQUENCE_BIT 0x75
-#define FESEQOBJECT_CONTROL_SEQ_ID 0xf7
-#define FESEQOBJECT_CONTROL_GROUP 3
+#define FESEQOBJECT_SEQUENCE_BIT    0x75
+#define FESEQOBJECT_CONTROL_SEQ_ID  0xf7
+#define FESEQOBJECT_CONTROL_GROUP   3
 #define OBJSEQ_CONTROL_SUPPRESS_MSG 0x80
 
 /* partfx spawned by anim-events 2..6 (docblock: "spawn partfx 0x85 with effect variant 0..4"). */
@@ -175,8 +175,14 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int FEseqobject_getExtraSize(void) { return 0x1; }
-int FEseqobject_getObjectTypeId(void) { return 0x0; }
+int FEseqobject_getExtraSize(void)
+{
+    return 0x1;
+}
+int FEseqobject_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void FEseqobject_free(void)
 {
@@ -185,7 +191,8 @@ void FEseqobject_free(void)
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56B4);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56B4);
 }
 
 void FEseqobject_hitDetect(void)

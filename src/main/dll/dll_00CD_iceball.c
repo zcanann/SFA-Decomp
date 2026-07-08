@@ -38,13 +38,11 @@ extern f32 lbl_803E2E50;
 
 #define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
 
-
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_8015FBEC(int obj)
 {
-
 
     s16 mode = ((GameObject*)obj)->anim.seqId;
     int i;
@@ -88,7 +86,6 @@ static inline u8 scarab_isObjectInList(void* obj)
 
 void fn_8015FCCC(int obj)
 {
-
 
     s16 type;
     int n;
@@ -147,17 +144,27 @@ void fn_8015FCCC(int obj)
 #pragma scheduling on
 #pragma peephole on
 
-int IceBall_getExtraSize(void) { return 0x2; }
-int IceBall_getObjectTypeId(void) { return 0x0; }
+int IceBall_getExtraSize(void)
+{
+    return 0x2;
+}
+int IceBall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 #pragma scheduling off
 #pragma peephole off
-void IceBall_free(void) { Camera_DisableViewYOffset(); }
+void IceBall_free(void)
+{
+    Camera_DisableViewYOffset();
+}
 
 void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visible32 = visible;
-    if (visible32 != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
+    if (visible32 != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
 }
 #pragma scheduling on
 #pragma peephole on
@@ -188,14 +195,15 @@ void IceBall_update(u16* obj, int unused)
     ((GameObject*)objInt)->anim.rotX += 910;
     ((GameObject*)objInt)->anim.rotZ += 910;
     ((GameObject*)objInt)->anim.rotY += 910;
-    objMove(objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta, ((GameObject*)objInt)->anim.velocityY * timeDelta,
-            ((GameObject*)objInt)->anim.velocityZ * timeDelta);
+    objMove(objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta,
+            ((GameObject*)objInt)->anim.velocityY * timeDelta, ((GameObject*)objInt)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot(objInt, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius(objInt, 5);
     ObjHits_EnableObject(objInt);
     if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject != 0 &&
-        ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject() ||
-            (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == getTrickyObject()))
+        ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject ==
+             Obj_GetPlayerObject() ||
+         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == getTrickyObject()))
     {
         fn_8015FCCC(objInt);
         ((GameObject*)objInt)->anim.alpha = 0;
@@ -258,8 +266,23 @@ extern void dll_CB_init();
 extern void dll_CB_release_nop();
 extern void dll_CB_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-u8 lbl_80320008[120] = { 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2 };
-u8 lbl_80320080[32] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0 };
-void* dll_CB[16] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x000B0000, dll_CB_initialise, dll_CB_release_nop, (void*)0x00000000, dll_CB_init, dll_CB_update, dll_CB_hitDetect, dll_CB_render, dll_CB_free, dll_CB_getObjectTypeId, dll_CB_getExtraSize_ret_1040, dll_CB_setScale, dll_CB_func0B_nop };
-u8 lbl_803200E0[120] = { 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7 };
-u8 lbl_80320158[32] = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0 };
+u8 lbl_80320008[120] = {0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0,
+                        0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2,
+                        0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0,
+                        0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2};
+u8 lbl_80320080[32] = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+                       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,   0};
+void* dll_CB[16] = {(void*)0x00000000,      (void*)0x00000000,
+                    (void*)0x00000000,      (void*)0x000B0000,
+                    dll_CB_initialise,      dll_CB_release_nop,
+                    (void*)0x00000000,      dll_CB_init,
+                    dll_CB_update,          dll_CB_hitDetect,
+                    dll_CB_render,          dll_CB_free,
+                    dll_CB_getObjectTypeId, dll_CB_getExtraSize_ret_1040,
+                    dll_CB_setScale,        dll_CB_func0B_nop};
+u8 lbl_803200E0[120] = {0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0,
+                        0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7,
+                        0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0,
+                        0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7};
+u8 lbl_80320158[32] = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+                       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,   0};

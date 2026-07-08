@@ -32,20 +32,18 @@ extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 
-
-#define DIMBOSSSPIT_MODEL_ACTIVE_FLAG 0x1
+#define DIMBOSSSPIT_MODEL_ACTIVE_FLAG    0x1
 #define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8
 
-#define DIMBOSSSPIT_GAMEBIT_ACTIVE 0x20e
-#define DIMBOSSSPIT_GAMEBIT_ROUTE_LOW 0x268
+#define DIMBOSSSPIT_GAMEBIT_ACTIVE     0x20e
+#define DIMBOSSSPIT_GAMEBIT_ROUTE_LOW  0x268
 #define DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH 0x311
 
-#define DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD 7
+#define DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD  7
 #define DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD 3
-#define DIMBOSSSPIT_RUMBLE_SFX 0x189
+#define DIMBOSSSPIT_RUMBLE_SFX            0x189
 
-void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate,
-                                         DIMbosstonsilState* state,
+void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state,
                                          DIMbosstonsilState* updateState)
 {
     f32 timer;
@@ -57,13 +55,12 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
 
     updateState->effectActive = 1;
 
-    (*(void (**)(u8*, DIMbosstonsilState*, double, int))(*(int*)gBaddieControlInterface + 0x2C))(
-        obj, updateState, (double)timer, 1);
+    (*(void (**)(u8*, DIMbosstonsilState*, double, int))(*(int*)gBaddieControlInterface + 0x2C))(obj, updateState,
+                                                                                                 (double)timer, 1);
 
     vt = (u8*)*(int*)gBaddieControlInterface;
-    ((void (*)(u8*, DIMbosstonsilState*, u8*, s16, u8*, int, int, int))*(void**)(vt + 0x54))(
-        obj, updateState, state->animPoints, state->animFrame,
-        &state->hitReactMode, 0, 0, 0);
+    ((void (*)(u8*, DIMbosstonsilState*, u8*, s16, u8*, int, int, int)) *
+     (void**)(vt + 0x54))(obj, updateState, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0);
 
     if (lbl_803E4C90 != lbl_803DDBA4)
     {
@@ -74,8 +71,8 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
             lbl_803DDBA4 = lbl_803E4C90;
             updateState->animFinished = 0;
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
             mainSetBits(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
             if (gDIMbosstonsilRoutePhase >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD)
             {
@@ -95,8 +92,10 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
     if (lbl_803DDBA0 >= lbl_803DDB9C)
     {
         Sfx_PlayFromObject((u32)obj, DIMBOSSSPIT_RUMBLE_SFX);
-        if (timer > lbl_803E4CBC) timer = lbl_803E4CBC;
-        if (timer < lbl_803E4C9C) timer = lbl_803E4C9C;
+        if (timer > lbl_803E4CBC)
+            timer = lbl_803E4CBC;
+        if (timer < lbl_803E4C9C)
+            timer = lbl_803E4C9C;
         lbl_803DDB9C = lbl_803DDB9C + timer;
         doRumble(lbl_803E4CC0);
     }
@@ -112,8 +111,8 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
             lbl_803DDB98 = lbl_803E4C90;
             updateState->animFinished = 0;
             (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
             mainSetBits(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
             if (gDIMbosstonsilRoutePhase == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD)
             {

@@ -57,7 +57,7 @@ typedef struct ProjectedLightState
 } ProjectedLightState;
 
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
-#define PROJECTEDLIGHT_PROJECTION_ORTHO 0
+#define PROJECTEDLIGHT_PROJECTION_ORTHO      0
 
 STATIC_ASSERT(sizeof(ProjectedLightState) == 0x8);
 STATIC_ASSERT(offsetof(ProjectedLightState, texture) == 0x04);
@@ -81,9 +81,15 @@ STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeB) == 0x3E);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, orthoDepthNibbles) == 0x3F);
 STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
-int ProjectedLight_getExtraSize(void) { return sizeof(ProjectedLightState); }
+int ProjectedLight_getExtraSize(void)
+{
+    return sizeof(ProjectedLightState);
+}
 
-int ProjectedLight_getObjectTypeId(void) { return 0; }
+int ProjectedLight_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void ProjectedLight_free(int obj)
 {
@@ -110,10 +116,8 @@ void ProjectedLight_update(int obj)
 {
     ProjectedLightSetup* setup = (ProjectedLightSetup*)((GameObject*)obj)->anim.placementData;
 
-    ((GameObject*)obj)->anim.rotX =
-        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
-    ((GameObject*)obj)->anim.rotY =
-        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
+    ((GameObject*)obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
+    ((GameObject*)obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
     ((GameObject*)obj)->anim.rotZ =
         (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)((GameObject*)obj)->anim.rotZ);
 }
@@ -141,8 +145,8 @@ void ProjectedLight_init(int obj, int setup)
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_PROJECTED);
         modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
         modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
-        modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
-                                         setupData->diffuseG, setupData->diffuseB, setupData->alpha);
+        modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR, setupData->diffuseG, setupData->diffuseB,
+                                         setupData->alpha);
         modelLightStruct_setDistanceAttenuation(state->light, (f32)(u32)setupData->distanceNear,
                                                 (f32)(u32)setupData->distanceFar);
         modelLightStruct_setProjectedLightChannelPreference(state->light, setupData->channelPreference);
@@ -186,8 +190,8 @@ void ProjectedLight_init(int obj, int setup)
                 nearDepth = lbl_803E7260;
                 farDepth = nearDepth;
             }
-            modelLightStruct_setupOrthoProjection(state->light, halfWidth, -halfWidth,
-                                                  -halfHeight, halfHeight, nearDepth, farDepth);
+            modelLightStruct_setupOrthoProjection(state->light, halfWidth, -halfWidth, -halfHeight, halfHeight,
+                                                  nearDepth, farDepth);
         }
         else
         {
@@ -209,8 +213,8 @@ void ProjectedLight_init(int obj, int setup)
         modelLightStruct_setProjectionNearZ(state->light, (f32)(u32)setupData->nearZ);
         modelLightStruct_setProjectionFarZ(state->light, (f32)(u32)setupData->farZ);
         modelLightStruct_startColorFade(state->light, setupData->colorFadeSpeed, setupData->colorFadeFrames);
-        modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR, setupData->targetG,
-                                               setupData->targetB, setupData->targetAlpha);
+        modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR, setupData->targetG, setupData->targetB,
+                                               setupData->targetAlpha);
     }
 }
 #pragma opt_common_subs reset

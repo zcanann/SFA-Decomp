@@ -2,21 +2,21 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-#define WCTEMPLE_DIA_EXTRA_SIZE 0x14
-#define WCTEMPLE_DIA_STAGE_COUNT 3
-#define WCTEMPLE_DIA_ALL_STAGES_MASK 7
+#define WCTEMPLE_DIA_EXTRA_SIZE       0x14
+#define WCTEMPLE_DIA_STAGE_COUNT      3
+#define WCTEMPLE_DIA_ALL_STAGES_MASK  7
 #define WCTEMPLE_DIA_VISIBLE_OVERRIDE 0x100
 
-#define WCTEMPLE_DIA_SETUP_TYPE_OFFSET 0x18
+#define WCTEMPLE_DIA_SETUP_TYPE_OFFSET        0x18
 #define WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET 0x1e
+#define WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET  0x1e
 
 #define WCTEMPLE_DIA_STATE_CURRENT_SPEED 0x00
-#define WCTEMPLE_DIA_STATE_TARGET_SPEED 0x04
-#define WCTEMPLE_DIA_STATE_STAGE_MASK 0x08
-#define WCTEMPLE_DIA_STATE_FLAGS 0x09
-#define WCTEMPLE_DIA_STATE_TARGET_TABLE 0x0c
-#define WCTEMPLE_DIA_STATE_GAMEBITS 0x10
+#define WCTEMPLE_DIA_STATE_TARGET_SPEED  0x04
+#define WCTEMPLE_DIA_STATE_STAGE_MASK    0x08
+#define WCTEMPLE_DIA_STATE_FLAGS         0x09
+#define WCTEMPLE_DIA_STATE_TARGET_TABLE  0x0c
+#define WCTEMPLE_DIA_STATE_GAMEBITS      0x10
 
 #define WCTEMPLE_DIA_FLAG_SOLVED 1
 
@@ -66,7 +66,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
     int slot;
 
     block = (int)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                            ((GameObject*)obj)->anim.localPosZ));
+                                                 ((GameObject*)obj)->anim.localPosZ));
     if ((void*)block != NULL)
     {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++)
@@ -108,9 +108,15 @@ int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-int wctempledia_getExtraSize(void) { return WCTEMPLE_DIA_EXTRA_SIZE; }
+int wctempledia_getExtraSize(void)
+{
+    return WCTEMPLE_DIA_EXTRA_SIZE;
+}
 
-int wctempledia_getObjectTypeId(void) { return 0; }
+int wctempledia_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void wctempledia_free(void)
 {
@@ -157,8 +163,7 @@ void wctempledia_update(int obj)
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
     {
-        if ((state->stageMask & (1 << i)) == 0 &&
-            mainGetBit(state->gamebits[i]) != 0)
+        if ((state->stageMask & (1 << i)) == 0 && mainGetBit(state->gamebits[i]) != 0)
         {
             int found = 0;
             for (j = 0; j < i; j++)

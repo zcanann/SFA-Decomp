@@ -37,7 +37,8 @@ int MagicLight_SeqFn(int* obj)
     int* player;
     f32 dist;
 
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW) return 0;
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
+        return 0;
 
     state = ((GameObject*)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
@@ -59,12 +60,16 @@ int MagicLight_SeqFn(int* obj)
 #pragma scheduling on
 int MagicLight_getExtraSize(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW) return 0x0;
+    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
+        return 0x0;
     return 0x14;
 }
 
 #pragma scheduling off
-int MagicLight_getObjectTypeId(void) { return 0x0; }
+int MagicLight_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void MagicLight_free(int obj)
 {

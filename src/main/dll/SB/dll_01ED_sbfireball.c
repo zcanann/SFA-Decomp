@@ -32,8 +32,14 @@ enum
 /* obj->unkF4 life timer set at init, decremented by framesThisStep */
 #define SB_FIREBALL_LIFETIME 0x4b0
 
-int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
-int SB_FireBall_getObjectTypeId(void) { return 0x0; }
+int SB_FireBall_getExtraSize(void)
+{
+    return SB_FIREBALL_EXTRA_SIZE;
+}
+int SB_FireBall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_FireBall_free(int obj)
 {
@@ -106,8 +112,8 @@ void SB_FireBall_update(GameObject* obj)
         obj->anim.localPosZ += state->velZ * timeDelta;
 
         particleArgs[2] = 3.0f;
-        objfx_spawnFlaggedTrailBurst((int*)obj, 0.8f, SB_FIREBALL_SETUP_SIZE,
-                                     SB_FIREBALL_SETUP_MODEL_ID, SB_FIREBALL_SETUP_PARAM, NULL);
+        objfx_spawnFlaggedTrailBurst((int*)obj, 0.8f, SB_FIREBALL_SETUP_SIZE, SB_FIREBALL_SETUP_MODEL_ID,
+                                     SB_FIREBALL_SETUP_PARAM, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, NULL);
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY)

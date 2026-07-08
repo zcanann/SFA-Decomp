@@ -79,10 +79,8 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
         cur->z = (f32)(s32)(randomGetRange(0, 0x41) + 0x78);
         cur++;
     }
-    rz = (f32)(s32)
-    randomGetRange(-0x36b0, 0x36b0);
-    ry = (f32)(s32)
-    randomGetRange(-0x2ee0, 0x2ee0);
+    rz = (f32)(s32)randomGetRange(-0x36b0, 0x36b0);
+    ry = (f32)(s32)randomGetRange(-0x2ee0, 0x2ee0);
     cur[0].state = 0;
     cur[0].id = 0;
     cur[0].tex = NULL;
@@ -102,10 +100,8 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[2].tex = &gScreenFx9APartTexA;
     cur[2].flags = 2;
     cur[2].x = lbl_803E1374;
-    cur[2].y = lbl_803E137C * (f32)(s32)
-    randomGetRange(0, 0x32) + lbl_803E1378;
-    cur[2].z = lbl_803E137C * (f32)(s32)
-    randomGetRange(4, 6) + lbl_803E1380;
+    cur[2].y = lbl_803E137C * (f32)(s32)randomGetRange(0, 0x32) + lbl_803E1378;
+    cur[2].z = lbl_803E137C * (f32)(s32)randomGetRange(4, 6) + lbl_803E1380;
     cur[3].state = 1;
     cur[3].id = 1;
     cur[3].tex = &gScreenFx9APartTexB;
@@ -131,22 +127,16 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[6].id = 0;
     cur[6].tex = NULL;
     cur[6].flags = 0x80;
-    cur[6].x = (f32)(s32)
-    randomGetRange(-32000, 32000);
-    cur[6].y = ry * (f32)(s32)
-    randomGetRange(-1, 1);
-    cur[6].z = rz * (f32)(s32)
-    randomGetRange(-1, 1);
+    cur[6].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[6].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[6].z = rz * (f32)(s32)randomGetRange(-1, 1);
     cur[7].state = 2;
     cur[7].id = 0;
     cur[7].tex = NULL;
     cur[7].flags = 0x80;
-    cur[7].x = (f32)(s32)
-    randomGetRange(-32000, 32000);
-    cur[7].y = ry * (f32)(s32)
-    randomGetRange(-1, 1);
-    cur[7].z = rz * (f32)(s32)
-    randomGetRange(-1, 1);
+    cur[7].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[7].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[7].z = rz * (f32)(s32)randomGetRange(-1, 1);
     cur[8].state = 2;
     cur[8].id = 0;
     cur[8].tex = &gScreenFx9APartTexB;
@@ -158,12 +148,9 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[9].id = 0;
     cur[9].tex = NULL;
     cur[9].flags = 0x80;
-    cur[9].x = (f32)(s32)
-    randomGetRange(-32000, 32000);
-    cur[9].y = ry * (f32)(s32)
-    randomGetRange(-1, 1);
-    cur[9].z = rz * (f32)(s32)
-    randomGetRange(-1, 1);
+    cur[9].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[9].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[9].z = rz * (f32)(s32)randomGetRange(-1, 1);
     cur[10].state = 3;
     cur[10].id = 0;
     cur[10].tex = &gScreenFx9APartTexB;
@@ -175,12 +162,9 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[11].id = 0;
     cur[11].tex = NULL;
     cur[11].flags = 0x80;
-    cur[11].x = (f32)(s32)
-    randomGetRange(-32000, 32000);
-    cur[11].y = ry * (f32)(s32)
-    randomGetRange(-1, 1);
-    cur[11].z = rz * (f32)(s32)
-    randomGetRange(-1, 1);
+    cur[11].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[11].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[11].z = rz * (f32)(s32)randomGetRange(-1, 1);
     cur[12].state = 4;
     cur[12].id = 0;
     cur[12].tex = &gScreenFx9APartTexB;

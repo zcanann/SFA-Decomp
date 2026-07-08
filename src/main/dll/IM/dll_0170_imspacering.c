@@ -16,8 +16,14 @@ extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47B8;
 
-int IMSpaceRing_getExtraSize(void) { return 0x0; }
-int IMSpaceRing_getObjectTypeId(void) { return 0x0; }
+int IMSpaceRing_getExtraSize(void)
+{
+    return 0x0;
+}
+int IMSpaceRing_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void IMSpaceRing_free(void)
 {
@@ -26,7 +32,8 @@ void IMSpaceRing_free(void)
 void IMSpaceRing_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E47B8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E47B8);
 }
 
 void IMSpaceRing_hitDetect(void)
@@ -48,10 +55,8 @@ void IMSpaceRing_update(GameObject* obj)
     if (lbl_803DDB48 != NULL)
     {
         obj->anim.alpha = lbl_803DDB48->anim.alpha;
-        objMove((int)obj,
-                lbl_803DDB48->anim.localPosX - obj->anim.localPosX,
-                lbl_803DDB48->anim.localPosY - obj->anim.localPosY,
-                lbl_803DDB48->anim.localPosZ - obj->anim.localPosZ);
+        objMove((int)obj, lbl_803DDB48->anim.localPosX - obj->anim.localPosX,
+                lbl_803DDB48->anim.localPosY - obj->anim.localPosY, lbl_803DDB48->anim.localPosZ - obj->anim.localPosZ);
     }
 }
 

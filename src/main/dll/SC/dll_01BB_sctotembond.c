@@ -53,21 +53,21 @@ extern void fn_8011F6D4(u32 x);
 
 /* Camera modes driven by the totem-bond sequence (cameramode DLL numbers). */
 #define SC_TOTEMBOND_CAMMODE_VIEWFINDER 0x44
-#define SC_TOTEMBOND_CAMMODE_DEFAULT 0x42
+#define SC_TOTEMBOND_CAMMODE_DEFAULT    0x42
 
 /* LightFoot Village map-event id ("swapcircle"); mode 6 advances the village */
 #define SC_TOTEMBOND_MAP_SWAPCIRCLE 0xe
 
-#define SC_TOTEMBOND_ORB_COUNT 8
-#define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
-#define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b
-#define SC_TOTEMBOND_ORB_TRIGGER_EVENT 0x64c
-#define SC_TOTEMBOND_ORB_ANGLE_STEP 0x2000
-#define SC_TOTEMBOND_EVENT_START_ORBS 0x01
-#define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
+#define SC_TOTEMBOND_ORB_COUNT          8
+#define SC_TOTEMBOND_ORB_SETUP_SIZE     0x38
+#define SC_TOTEMBOND_ORB_OBJECT_ID      0x27b
+#define SC_TOTEMBOND_ORB_TRIGGER_EVENT  0x64c
+#define SC_TOTEMBOND_ORB_ANGLE_STEP     0x2000
+#define SC_TOTEMBOND_EVENT_START_ORBS   0x01
+#define SC_TOTEMBOND_EVENT_ORBS_ACTIVE  0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
 
-#define SC_TOTEMBOND_OBJFLAG_HIDDEN 0x4000
+#define SC_TOTEMBOND_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /*
@@ -109,12 +109,12 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
         while (i < SC_TOTEMBOND_ORB_COUNT)
         {
             definition = obj->definition;
-            setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
-            ((ObjPlacement*)setup)->posX = radius * mathSinf(
-                (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
+            setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE, SC_TOTEMBOND_ORB_OBJECT_ID);
+            ((ObjPlacement*)setup)->posX =
+                radius * mathSinf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
             ((ObjPlacement*)setup)->posY = obj->y;
-            ((ObjPlacement*)setup)->posZ = radius * mathCosf(
-                (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
+            ((ObjPlacement*)setup)->posZ =
+                radius * mathCosf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
             setup[0x04] = definition[0x04];
             setup[0x05] = (definition[0x05] & ~1) | 4;
             setup[0x06] = definition[0x06];
@@ -164,8 +164,7 @@ u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* a
             for (; startForEvent2 < countForEvent2; startForEvent2++)
             {
                 if ((ScTotemBondObject*)objects[startForEvent2] != obj &&
-                    ((ScTotemBondObject*)objects[startForEvent2])->objectType ==
-                        SC_SEQ_TOTEMPOLE)
+                    ((ScTotemBondObject*)objects[startForEvent2])->objectType == SC_SEQ_TOTEMPOLE)
                 {
                     (*(VtableFn*)(**(int**)(objects[startForEvent2] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent2], 2);
@@ -179,8 +178,7 @@ u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* a
             for (; startForEvent3 < countForEvent3; startForEvent3++)
             {
                 if ((ScTotemBondObject*)objects[startForEvent3] != obj &&
-                    ((ScTotemBondObject*)objects[startForEvent3])->objectType ==
-                        SC_SEQ_TOTEMPOLE)
+                    ((ScTotemBondObject*)objects[startForEvent3])->objectType == SC_SEQ_TOTEMPOLE)
                 {
                     (*(VtableFn*)(**(int**)(objects[startForEvent3] + 0x68) + SC_VT_HANDLE_EVENT))(
                         objects[startForEvent3], 1);
@@ -206,13 +204,20 @@ void sc_totembond_initialise(void)
 {
 }
 
-int sc_totembond_getExtraSize(void) { return 0x28; }
-int sc_totembond_getObjectTypeId(void) { return 0x0; }
+int sc_totembond_getExtraSize(void)
+{
+    return 0x28;
+}
+int sc_totembond_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5650);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5650);
 }
 
 void sc_totembond_free(int obj)
@@ -329,21 +334,10 @@ void sc_totembond_update(ScTotemBondObject* obj)
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 }
             }
-            if ((int)((u32)(u16)obj->yaw >> 13
-            )
-            !=
-            state->ringIndex
-            )
+            if ((int)((u32)(u16)obj->yaw >> 13) != state->ringIndex)
             {
-                obj->yaw = (s16) - ((gTotemBondRingRotateSpeed * timeDelta) - (f32)(s32)
-                obj->yaw
-                )
-                ;
-                if ((int)((u32)(u16)obj->yaw >> 13
-                )
-                ==
-                state->ringIndex
-                )
+                obj->yaw = (s16) - ((gTotemBondRingRotateSpeed * timeDelta) - (f32)(s32)obj->yaw);
+                if ((int)((u32)(u16)obj->yaw >> 13) == state->ringIndex)
                 {
                     mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
                 }

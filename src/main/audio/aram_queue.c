@@ -2,7 +2,6 @@
 
 #pragma exceptions on
 
-
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D41E4[];
 
@@ -78,13 +77,9 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
             queue->slots[queue->head].arqCallback = aramQueueCallback;
             queue->slots[queue->head].callback = (void (*)(void*))callback;
             queue->slots[queue->head].callbackArg = (void*)callbackArg;
-            ARQPostRequest(&queue->slots[queue->head],
-                           queue->slots[queue->head].owner,
-                           queue->slots[queue->head].type,
-                           queue->slots[queue->head].priority,
-                           queue->slots[queue->head].src,
-                           queue->slots[queue->head].dst,
-                           queue->slots[queue->head].size,
+            ARQPostRequest(&queue->slots[queue->head], queue->slots[queue->head].owner, queue->slots[queue->head].type,
+                           queue->slots[queue->head].priority, queue->slots[queue->head].src,
+                           queue->slots[queue->head].dst, queue->slots[queue->head].size,
                            queue->slots[queue->head].arqCallback);
             queue->count += 1;
             queue->head = (queue->head + 1) % 0x10;

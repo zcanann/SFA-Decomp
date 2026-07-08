@@ -40,12 +40,13 @@
  * shared float-conversion pool (byte-affecting). The struct still documents the
  * full recovered layout.
  */
-typedef struct ExplosionSetup {
-    ObjPlacement head; /* 0x00: common placement head (position via GameObject anim view) */
-    u8 pad18;          /* 0x18: class byte (unwritten here) */
-    s8 unk19;          /* 0x19 */
+typedef struct ExplosionSetup
+{
+    ObjPlacement head;     /* 0x00: common placement head (position via GameObject anim view) */
+    u8 pad18;              /* 0x18: class byte (unwritten here) */
+    s8 unk19;              /* 0x19 */
     u8 pad1A[0x1C - 0x1A]; /* 0x1A: scaled s16 value, written raw (see note) */
-    s16 flags;         /* 0x1C: flag word, written raw (see note) */
+    s16 flags;             /* 0x1C: flag word, written raw (see note) */
     u8 pad1E[0x24 - 0x1E];
 } ExplosionSetup;
 
@@ -243,8 +244,8 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fv
     (*gPartfxInterface)->spawnObject(obj, table2.v[a], &params, 2, -1, NULL);
 }
 
-void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
-                                 f32 mult, void* origin, int flags)
+void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mult, void* origin,
+                                 int flags)
 {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0xd0);
@@ -325,8 +326,8 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
     }
 }
 
-void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
-                           f32 angBase, f32 lo, f32 hi, void* origin, int flags)
+void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 angBase, f32 lo, f32 hi,
+                           void* origin, int flags)
 {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0x8c);
@@ -372,15 +373,13 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
             break;
         case 4:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = gObjFxPi * (f32)(u32)
-            val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathCosf(a));
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
         case 5:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = gObjFxPi * (f32)(u32)
-            val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathSinf(a));
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
@@ -410,8 +409,8 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
     }
 }
 
-void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
-                         f32 mulX, f32 mulY, f32 mulZ, void* origin, int flags)
+void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mulX, f32 mulY, f32 mulZ,
+                         void* origin, int flags)
 {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0x48);
@@ -448,23 +447,20 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
             break;
         case 3:
             params.vec[0] -= lbl_803DF358;
-            params.vec[1] =
-                (lbl_803DF354 - params.vec[1] * (params.vec[1] * params.vec[1])) - lbl_803DF358;
+            params.vec[1] = (lbl_803DF354 - params.vec[1] * (params.vec[1] * params.vec[1])) - lbl_803DF358;
             params.vec[2] -= lbl_803DF358;
             break;
         case 4:
             params.vec[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.vec[1]);
-            a = gObjFxPi * (f32)(u32)
-            val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
             params.vec[1] = lbl_803DF358 * mathCosf(a);
             params.vec[2] -= lbl_803DF358;
             break;
         case 5:
             params.vec[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.vec[1]);
-            a = gObjFxPi * (f32)(u32)
-            val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
             params.vec[1] = lbl_803DF358 * mathSinf(a);
             params.vec[2] -= lbl_803DF358;
             break;
@@ -584,8 +580,8 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
 
 void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32 fa, f32 fb)
 {
-    extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
-    extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *sx, int *sy, int *sz);
+    extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 * ox, f32 * oy, f32 * oz);
+    extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* sx, int* sy, int* sz);
     PartfxParams params;
     f32 lvec[6];
     f32 proj[3];
@@ -636,20 +632,20 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             }
             break;
         case 4:
+        {
+            int flags = 2;
+            if ((((GameObject*)obj)->anim.flags & 0x40080) != 0)
             {
-                int flags = 2;
-                if ((((GameObject*)obj)->anim.flags & 0x40080) != 0)
-                {
-                    flags |= 0x20000000;
-                }
-                params.f6 = 0xc0e;
-                params.pad[2] = 0;
-                for (i = 0; i < n; i++)
-                {
-                    (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
-                }
-                break;
+                flags |= 0x20000000;
             }
+            params.f6 = 0xc0e;
+            params.pad[2] = 0;
+            for (i = 0; i < n; i++)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
+            }
+            break;
+        }
         }
     }
 
@@ -661,19 +657,16 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             lvec[4] = ((GameObject*)light)->anim.localPosY;
             lvec[5] = ((GameObject*)light)->anim.localPosZ;
             vecRotateZXY(obj, &lvec[3]);
-            Camera_ProjectWorldPointWithOffset(
-                ((GameObject*)obj)->anim.worldPosX + lvec[3] - playerMapOffsetX,
-                ((GameObject*)obj)->anim.worldPosY + lvec[4],
-                ((GameObject*)obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ, lbl_803DF384,
-                &proj[2], &proj[1], &proj[0]);
+            Camera_ProjectWorldPointWithOffset(((GameObject*)obj)->anim.worldPosX + lvec[3] - playerMapOffsetX,
+                                               ((GameObject*)obj)->anim.worldPosY + lvec[4],
+                                               ((GameObject*)obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ,
+                                               lbl_803DF384, &proj[2], &proj[1], &proj[0]);
         }
         else
         {
             Camera_ProjectWorldPointWithOffset(
-                ((GameObject*)obj)->anim.worldPosX - playerMapOffsetX,
-                ((GameObject*)obj)->anim.worldPosY,
-                ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384,
-                &proj[2], &proj[1], &proj[0]);
+                ((GameObject*)obj)->anim.worldPosX - playerMapOffsetX, ((GameObject*)obj)->anim.worldPosY,
+                ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384, &proj[2], &proj[1], &proj[0]);
         }
         Camera_NdcToScreen(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
         depth = depthReadRequestPoll(screen[2], screen[1], obj);
@@ -1027,62 +1020,59 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
     params.f6 = 0xc0a;
     if ((u8)type)
     {
-    switch (type & 0xff)
-    {
-    case 1:
-        params.vec[0] = scale * randomGetRange(-10, 10);
-        params.vec[1] = scale * randomGetRange(-10, 10);
-        params.vec[2] = scale * randomGetRange(-10, 10);
-        (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &extraScale);
-        break;
-    case 2:
-        params.vec[0] = scale * randomGetRange(-10, 10);
-        params.vec[1] = scale * randomGetRange(-10, 10);
-        params.vec[2] = scale * randomGetRange(-10, 10);
-        (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &extraScale);
-        break;
-    case 3:
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &extraScale, 0x19, NULL);
-        break;
-    case 4:
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &extraScale, 0x19, NULL);
-        break;
-    case 5:
-        params.f6 = 0xc0a;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &extraScale, 0x32, &params);
-        break;
-    case 6:
-        params.f6 = 0xc0d;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &extraScale, 0x50, &params);
-        break;
-    case 7:
-        params.f6 = 0x605;
-        params.pad[2] = 1;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
-        zoff = lbl_803DF35C;
-        break;
-    case 8:
-        params.f6 = 0x605;
-        params.pad[2] = 0;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
-        zoff = lbl_803DF35C;
-        break;
-    }
+        switch (type & 0xff)
+        {
+        case 1:
+            params.vec[0] = scale * randomGetRange(-10, 10);
+            params.vec[1] = scale * randomGetRange(-10, 10);
+            params.vec[2] = scale * randomGetRange(-10, 10);
+            (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &extraScale);
+            break;
+        case 2:
+            params.vec[0] = scale * randomGetRange(-10, 10);
+            params.vec[1] = scale * randomGetRange(-10, 10);
+            params.vec[2] = scale * randomGetRange(-10, 10);
+            (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &extraScale);
+            break;
+        case 3:
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &extraScale, 0x19, NULL);
+            break;
+        case 4:
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &extraScale, 0x19, NULL);
+            break;
+        case 5:
+            params.f6 = 0xc0a;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &extraScale, 0x32, &params);
+            break;
+        case 6:
+            params.f6 = 0xc0d;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &extraScale, 0x50, &params);
+            break;
+        case 7:
+            params.f6 = 0x605;
+            params.pad[2] = 1;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
+            zoff = lbl_803DF35C;
+            break;
+        case 8:
+            params.f6 = 0x605;
+            params.pad[2] = 0;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
+            zoff = lbl_803DF35C;
+            break;
+        }
     }
 
     if (light != NULL)
     {
         modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(light, ((GameObject*)obj)->anim.worldPosX,
-                                     ((GameObject*)obj)->anim.worldPosY + zoff,
-                                     ((GameObject*)obj)->anim.worldPosZ);
+                                     ((GameObject*)obj)->anim.worldPosY + zoff, ((GameObject*)obj)->anim.worldPosZ);
         cbuf = (u8*)&colors;
         cbuf1 = (u8*)&colors + 1;
         cbuf2 = (u8*)&colors + 2;
-        modelLightStruct_setDiffuseColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3],
-                                         cbuf2[(u8)type * 3], 0xff);
-        modelLightStruct_setSpecularColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3],
-                                          cbuf2[(u8)type * 3], 0xff);
+        modelLightStruct_setDiffuseColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3], cbuf2[(u8)type * 3], 0xff);
+        modelLightStruct_setSpecularColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3], cbuf2[(u8)type * 3], 0xff);
         modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, lbl_803DF398);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
@@ -1099,106 +1089,106 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
 
     if (type != 0)
     {
-    switch (type)
-    {
-    case 1:
-        args[0] = 1;
-        for (i = 10; i != 0; i--)
+        switch (type)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+        case 1:
+            args[0] = 1;
+            for (i = 10; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 2:
+            args[0] = 2;
+            for (i = 13; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 6; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 3:
+            args[0] = 3;
+            for (i = 30; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 8; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 4:
+            for (i = 7; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
+            }
+            break;
+        case 5:
+            args[0] = 4;
+            for (i = 10; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 6:
+            args[0] = 5;
+            for (i = 10; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 7:
+            args[0] = 6;
+            for (i = 10; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 8:
+            args[0] = 7;
+            for (i = 10; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 9:
+            args[0] = 8;
+            for (i = 10; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; i != 0; i--)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
         }
-        for (i = 4; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 2:
-        args[0] = 2;
-        for (i = 13; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 6; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 3:
-        args[0] = 3;
-        for (i = 30; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, args);
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 8; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 4:
-        for (i = 7; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
-        }
-        break;
-    case 5:
-        args[0] = 4;
-        for (i = 10; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 4; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 6:
-        args[0] = 5;
-        for (i = 10; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 4; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 7:
-        args[0] = 6;
-        for (i = 10; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 4; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 8:
-        args[0] = 7;
-        for (i = 10; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 4; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    case 9:
-        args[0] = 8;
-        for (i = 10; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, args);
-        }
-        for (i = 4; i != 0; i--)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
-        }
-        break;
-    }
     }
 
     if (light != NULL)
@@ -1232,9 +1222,8 @@ void fn_8009A8C8(u8* obj, f32 thresh)
         return;
     }
     {
-        f32 d = Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX,
-                                                     ((GameObject*)obj)->anim.worldPosY,
-                                                     ((GameObject*)obj)->anim.worldPosZ);
+        f32 d = Camera_DistanceToCurrentViewPosition(
+            ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ);
         if (d <= thresh)
         {
             f32 t = lbl_803DF354 - d / thresh;
@@ -1244,8 +1233,8 @@ void fn_8009A8C8(u8* obj, f32 thresh)
     }
 }
 
-void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8 flag4,
-                             u8 flag8, u8 flag10, u8 doShake, u8 flag20, u8 f1cinit)
+void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
+                             u8 flag20, u8 f1cinit)
 {
     u8* obj;
     if (Obj_IsLoadingLocked() != 0)
@@ -1295,8 +1284,7 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
     }
 }
 
-void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
-                    u8 flag20, u8 f1cinit)
+void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20, u8 f1cinit)
 {
     u8* obj;
     if (Obj_IsLoadingLocked() != 0)

@@ -28,18 +28,30 @@ STATIC_ASSERT(offsetof(Dll2A3State, rotXSpeed) == 0x04);
 STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
 STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
 
-int dll_2A3_getExtraSize_ret_12(void) { return sizeof(Dll2A3State); }
+int dll_2A3_getExtraSize_ret_12(void)
+{
+    return sizeof(Dll2A3State);
+}
 
-int dll_2A3_getObjectTypeId(void) { return 0x0; }
+int dll_2A3_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void dll_2A3_free(void) { lbl_803DDD90 = lbl_803DDD90 - 1; }
+void dll_2A3_free(void)
+{
+    lbl_803DDD90 = lbl_803DDD90 - 1;
+}
 
 void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7118);
 }
 
-void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
+void dll_2A3_hitDetect(void)
+{
+    lbl_803DDD94 = 0;
+}
 
 void dll_2A3_update(int obj)
 {

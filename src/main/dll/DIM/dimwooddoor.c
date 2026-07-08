@@ -12,7 +12,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define DIMWOODDOOR_OBJFLAG_PARENT_SLACK 0x1000
-#define DIMWOODDOOR_CHILD_OBJ_SHARD 0x1d6 /* debris shard projectile spawned by DIMwooddoor_spawnShard */
+#define DIMWOODDOOR_CHILD_OBJ_SHARD      0x1d6 /* debris shard projectile spawned by DIMwooddoor_spawnShard */
 
 typedef struct DIMWoodDoorConfig
 {
@@ -63,7 +63,6 @@ extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
 
-
 extern int randomGetRange(int lo, int hi);
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
@@ -93,8 +92,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     f32 angle;
 
     config = *(DIMWoodDoorConfig**)&((GameObject*)obj)->anim.placementData;
-    if (Obj_IsLoadingLocked() == 0 ||
-        (state = ((GameObject*)obj)->extra)->shouldSpawnShard == 0 ||
+    if (Obj_IsLoadingLocked() == 0 || (state = ((GameObject*)obj)->extra)->shouldSpawnShard == 0 ||
         state->launchDelay > 0)
     {
         return;

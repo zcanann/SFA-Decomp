@@ -71,10 +71,10 @@ extern void staffToggle(int obj, int a);
 extern int getCurMapLayer(void);
 extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int latchBit, int musicId);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit,
-                                          int clearIfClearBit, int latchBit, int musicId);
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
+                                  int musicId);
+extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
+                                          int musicId);
 extern int loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
@@ -100,9 +100,15 @@ int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int cflevelcontrol_getExtraSize(void) { return 0x10; }
+int cflevelcontrol_getExtraSize(void)
+{
+    return 0x10;
+}
 
-int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
+int cflevelcontrol_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void cflevelcontrol_free(int obj)
 {
@@ -111,7 +117,8 @@ void cflevelcontrol_free(int obj)
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43E8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43E8);
 }
 
 void cflevelcontrol_hitDetect(void)
@@ -196,7 +203,8 @@ void cflevelcontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    if (mainGetBit(GAMEBIT_CF_NotRecoveredStaff) != 0 && (((GameObject*)player)->objectFlags & CFLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
+    if (mainGetBit(GAMEBIT_CF_NotRecoveredStaff) != 0 &&
+        (((GameObject*)player)->objectFlags & CFLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         mainSetBits(GAMEBIT_CF_HaveStaff, 0);
     }

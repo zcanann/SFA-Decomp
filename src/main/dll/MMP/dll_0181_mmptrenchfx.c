@@ -24,14 +24,19 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 #define MMPTRENCHFX_PARTFX_EMIT 0x71F
 #define MMPTRENCHFX_PARTFX_TICK 0x720
 
-
 extern char lbl_803AC930[];
 extern f32 lbl_803E45C0;
 extern f32 lbl_803E45B0;
 extern f32 lbl_803E45B4;
 
-int mmp_trenchfx_getExtraSize(void) { return 0x30; }
-int mmp_trenchfx_getObjectTypeId(void) { return 0x0; }
+int mmp_trenchfx_getExtraSize(void)
+{
+    return 0x30;
+}
+int mmp_trenchfx_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void mmp_trenchfx_free(int obj)
 {
@@ -39,7 +44,11 @@ void mmp_trenchfx_free(int obj)
 }
 
 #pragma peephole off
-void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
 
 void mmp_trenchfx_hitDetect(void)
 {
@@ -55,40 +64,30 @@ void mmp_trenchfx_update(int obj)
         if (state->emitCooldown < lbl_803E45B0)
         {
             state->fxScale = lbl_803E45B4;
-            state->fxX = (f32)(int)
-            randomGetRange(-state->extentX, state->extentX);
-            state->fxY = (f32)(int)
-            randomGetRange(-state->extentY, state->extentY);
-            state->fxZ = (f32)(int)
-            randomGetRange(-state->extentZ, state->extentZ);
+            state->fxX = (f32)(int)randomGetRange(-state->extentX, state->extentX);
+            state->fxY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
+            state->fxZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
             vecRotateZXY((void*)state->emitAngles, &state->fxX);
             state->fxX += ((GameObject*)obj)->anim.localPosX;
             state->fxY += ((GameObject*)obj)->anim.localPosY;
             state->fxZ += ((GameObject*)obj)->anim.localPosZ;
-            state->emitCooldown = (f32)(int)
-            randomGetRange(0x64, 0xC8);
-            state->emitTimer = (f32)(int)
-            randomGetRange(0x32, 0x64);
+            state->emitCooldown = (f32)(int)randomGetRange(0x64, 0xC8);
+            state->emitTimer = (f32)(int)randomGetRange(0x32, 0x64);
         }
         state->emitTimer -= timeDelta;
         if (state->emitTimer > lbl_803E45B0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->fxUnk10, 0x200001,
-                                             -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->fxUnk10, 0x200001, -1, NULL);
         }
         *(f32*)(lbl_803AC930 + 8) = lbl_803E45B4;
-        *(f32*)(lbl_803AC930 + 0xC) = (f32)(int)
-        randomGetRange(-state->extentX, state->extentX);
-        *(f32*)(lbl_803AC930 + 0x10) = (f32)(int)
-        randomGetRange(-state->extentY, state->extentY);
-        *(f32*)(lbl_803AC930 + 0x14) = (f32)(int)
-        randomGetRange(-state->extentZ, state->extentZ);
+        *(f32*)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-state->extentX, state->extentX);
+        *(f32*)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-state->extentY, state->extentY);
+        *(f32*)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
         vecRotateZXY((void*)state->emitAngles, (void*)(lbl_803AC930 + 0xC));
         *(f32*)(lbl_803AC930 + 0xC) += ((GameObject*)obj)->anim.localPosX;
         *(f32*)(lbl_803AC930 + 0x10) += ((GameObject*)obj)->anim.localPosY;
         *(f32*)(lbl_803AC930 + 0x14) += ((GameObject*)obj)->anim.localPosZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, lbl_803AC930, 0x200001, -1,
-                                         NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, lbl_803AC930, 0x200001, -1, NULL);
     }
 }
 #pragma scheduling reset

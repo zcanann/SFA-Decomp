@@ -22,14 +22,14 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define TITLE_MENU_FLAG_ENABLED        0x01
-#define TITLE_MENU_FLAG_WRAP           0x02
-#define TITLE_MENU_FLAG_MOVED_LEFT     0x04
-#define TITLE_MENU_FLAG_MOVED_RIGHT    0x08
-#define TITLE_MENU_FLAG_CHANGED        0x10
-#define TITLE_MENU_FLAG_A_TOGGLE_PENDING       0x20
-#define TITLE_MENU_FLAG_VOLUME_PREVIEW 0x40
-#define TITLE_MENU_FLAG_MUSIC_PREVIEW  0x80
+#define TITLE_MENU_FLAG_ENABLED          0x01
+#define TITLE_MENU_FLAG_WRAP             0x02
+#define TITLE_MENU_FLAG_MOVED_LEFT       0x04
+#define TITLE_MENU_FLAG_MOVED_RIGHT      0x08
+#define TITLE_MENU_FLAG_CHANGED          0x10
+#define TITLE_MENU_FLAG_A_TOGGLE_PENDING 0x20
+#define TITLE_MENU_FLAG_VOLUME_PREVIEW   0x40
+#define TITLE_MENU_FLAG_MUSIC_PREVIEW    0x80
 
 #define TITLE_MENU_KIND_SLIDER 0
 #define TITLE_MENU_KIND_TOGGLE 1
@@ -47,10 +47,8 @@ extern s8 lbl_803DD920;
 extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
-extern void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* cached menu textures */
-extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];     /* texture asset ids for the cache */
-
-
+extern void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT]; /* cached menu textures */
+extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* texture asset ids for the cache */
 
 extern void Music_PlayTrackByIndex(int index);
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
@@ -110,16 +108,13 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     switch (item->kind)
     {
     case TITLE_MENU_KIND_SLIDER:
-        drawTexture(lbl_803A9DB8[1], item->x, item->y,
-                    (u8)(((u8)alpha * 0xb4) >> 8), 0x100);
+        drawTexture(lbl_803A9DB8[1], item->x, item->y, (u8)(((u8)alpha * 0xb4) >> 8), 0x100);
 
         texture = lbl_803A9DB8[0];
         markerX = (f32)(int)((f32)item->extra.textId *
-            ((f32)(item->value - item->minValue) /
-                (f32)(item->maxValue - item->minValue)) +
-            item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
-        drawTexture(texture, markerX, (f32)(item->y - 4),
-                    (u8)(((u8)alpha * 0xff) >> 8), 0x100);
+                                 ((f32)(item->value - item->minValue) / (f32)(item->maxValue - item->minValue)) +
+                             item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
+        drawTexture(texture, markerX, (f32)(item->y - 4), (u8)(((u8)alpha * 0xff) >> 8), 0x100);
         break;
     case TITLE_MENU_KIND_TOGGLE:
         if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0)
@@ -150,8 +145,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         {
             drawAlpha = (u8)alpha;
         }
-        drawTexture(lbl_803A9DB8[textureIndex], item->x, item->y,
-                    drawAlpha, 0x100);
+        drawTexture(lbl_803A9DB8[textureIndex], item->x, item->y, drawAlpha, 0x100);
         break;
     case TITLE_MENU_KIND_WINDOW:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
@@ -185,9 +179,8 @@ void TitleMenuItem_update(TitleMenuItem* item)
         return;
     }
 
-    item->flags = (u8)(item->flags & ~(TITLE_MENU_FLAG_MOVED_LEFT |
-        TITLE_MENU_FLAG_MOVED_RIGHT |
-        TITLE_MENU_FLAG_CHANGED));
+    item->flags =
+        (u8)(item->flags & ~(TITLE_MENU_FLAG_MOVED_LEFT | TITLE_MENU_FLAG_MOVED_RIGHT | TITLE_MENU_FLAG_CHANGED));
     oldValue = item->value;
     item->frameDelay = 4;
 
@@ -232,12 +225,10 @@ void TitleMenuItem_update(TitleMenuItem* item)
         stickX = padGetStickX(0);
         sliderDelta = (s16)(stickX / 16) * 0xa0;
 
-        if (((s16)sliderDelta != 0) &&
-            (!(lbl_803DD91C < item->minValue) || ((s16)sliderDelta >= 0)) &&
+        if (((s16)sliderDelta != 0) && (!(lbl_803DD91C < item->minValue) || ((s16)sliderDelta >= 0)) &&
             (!(lbl_803DD91C > item->maxValue) || ((s16)sliderDelta <= 0)))
         {
-            lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) +
-                lbl_803DD918);
+            lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) + lbl_803DD918);
             Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep);
         }
         else
@@ -263,8 +254,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         }
         break;
     default:
-        if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE_PENDING) == 0) &&
-            ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0))
+        if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE_PENDING) == 0) && ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0))
         {
             Sfx_PlayFromObject(0, SFXsp_sa_def02);
             item->value = (s16)(item->value ^ 1);
@@ -300,8 +290,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         item->flags = (u8)(item->flags | TITLE_MENU_FLAG_CHANGED);
     }
 
-    if (((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) &&
-        ((item->flags & TITLE_MENU_FLAG_CHANGED) != 0))
+    if (((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) && ((item->flags & TITLE_MENU_FLAG_CHANGED) != 0))
     {
         Music_PlayTrackByIndex(item->value);
     }
@@ -335,8 +324,7 @@ void TitleMenuItem_initialise(void)
     slots[5] = NULL;
 }
 
-TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue,
-                                              s16 maxValue, s16 value)
+TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue, s16 maxValue, s16 value)
 {
     TitleMenuItem* item;
 
@@ -386,8 +374,7 @@ TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s1
     return item;
 }
 
-TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxValue,
-                                            s16 value, int textId)
+TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxValue, s16 value, int textId)
 {
     TitleMenuItem* item;
 

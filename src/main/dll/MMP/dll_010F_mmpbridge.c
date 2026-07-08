@@ -13,23 +13,29 @@
 #include "main/dll/dll_80220608_shared.h"
 
 #define BRIDGE_TEX_OFFSET_START 0x800
-#define BRIDGE_TEX_OFFSET_MAX 0x131f
+#define BRIDGE_TEX_OFFSET_MAX   0x131f
 
-#define MMPBRIDGE_OBJFLAG_HIDDEN 0x4000
+#define MMPBRIDGE_OBJFLAG_HIDDEN             0x4000
 #define MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct MmpBridgePlacement
 {
     u8 pad0[0x18];
-    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1E - 0x19];
-    s16 enableBit;     /* 0x1E: gamebit that deploys the bridge */
+    s16 enableBit; /* 0x1E: gamebit that deploys the bridge */
 } MmpBridgePlacement;
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
-int mmp_bridge_getExtraSize(void) { return 0x0; }
-int mmp_bridge_getObjectTypeId(void) { return 0x0; }
+int mmp_bridge_getExtraSize(void)
+{
+    return 0x0;
+}
+int mmp_bridge_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void mmp_bridge_free(void)
 {

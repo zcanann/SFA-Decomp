@@ -12,10 +12,10 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-#define MAGICMAKER_SPAWN_GAMEBIT 0x26b /* set-by-others trigger; cleared each spawn attempt */
-#define MAGICMAKER_CREATURE_GROUP 4    /* object group scanned for existing creatures */
-#define MAGICMAKER_CREATURE_TYPE_COUNT 6 /* number of creature type IDs in lbl_80325CE8 */
-#define MAGICMAKER_MAX_CREATURES 10    /* spawn only while fewer than this many exist */
+#define MAGICMAKER_SPAWN_GAMEBIT       0x26b /* set-by-others trigger; cleared each spawn attempt */
+#define MAGICMAKER_CREATURE_GROUP      4     /* object group scanned for existing creatures */
+#define MAGICMAKER_CREATURE_TYPE_COUNT 6     /* number of creature type IDs in lbl_80325CE8 */
+#define MAGICMAKER_MAX_CREATURES       10    /* spawn only while fewer than this many exist */
 
 typedef struct MagicmakerPlacement
 {
@@ -64,8 +64,14 @@ extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
-int magicmaker_getExtraSize(void) { return 0x0; }
-int magicmaker_getObjectTypeId(void) { return 0x0; }
+int magicmaker_getExtraSize(void)
+{
+    return 0x0;
+}
+int magicmaker_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void magicmaker_free(void)
 {
@@ -74,7 +80,8 @@ void magicmaker_free(void)
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4D88);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4D88);
 }
 
 void magicmaker_hitDetect(void)
@@ -121,11 +128,11 @@ void magicmaker_update(int obj)
                     ((MagicmakerSetup*)objSetup)->unk1A = 0x14;
                     ((MagicmakerSetup*)objSetup)->unk2C = -1;
                     ((MagicmakerSetup*)objSetup)->unk1C = -1;
-                    ((ObjPlacement*)objSetup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
-                    randomGetRange(-0x15e, 0x15e);
+                    ((ObjPlacement*)objSetup)->posX =
+                        ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x15e, 0x15e);
                     ((ObjPlacement*)objSetup)->posY = lbl_803E4D8C + ((GameObject*)obj)->anim.localPosY;
-                    ((ObjPlacement*)objSetup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-                    randomGetRange(-0x15e, 0x15e);
+                    ((ObjPlacement*)objSetup)->posZ =
+                        ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x15e, 0x15e);
                     ((MagicmakerSetup*)objSetup)->gameBit = -1;
                     ((ObjPlacement*)objSetup)->color[0] = ((MagicmakerPlacement*)placement)->colorR;
                     ((ObjPlacement*)objSetup)->color[2] = ((MagicmakerPlacement*)placement)->colorB;
@@ -133,7 +140,7 @@ void magicmaker_update(int obj)
                     ((ObjPlacement*)objSetup)->color[3] = ((MagicmakerPlacement*)placement)->colorA;
                     ((MagicmakerSetup*)objSetup)->unk2E = 3;
                     spawnedObj = Obj_SetupObject(objSetup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                             *(int*)&((GameObject*)obj)->anim.parent);
+                                                 *(int*)&((GameObject*)obj)->anim.parent);
                     if (spawnedObj != NULL)
                     {
                         i = 3;
@@ -141,8 +148,7 @@ void magicmaker_update(int obj)
                         {
                             hitDetectFn_80097070(spawnedObj, lbl_803E4D88, 2, 2, 0x64, 0);
                             i--;
-                        }
-                        while (i != 0);
+                        } while (i != 0);
                     }
                 }
             }

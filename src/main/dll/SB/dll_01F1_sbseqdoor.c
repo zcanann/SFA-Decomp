@@ -22,7 +22,7 @@
 extern f32 lbl_803E5920;
 
 /* The sequence-door seqId and the GameBit that arms it. */
-#define SB_SEQDOOR_SEQ_ID 0x173
+#define SB_SEQDOOR_SEQ_ID      0x173
 #define SB_SEQDOOR_ARM_GAMEBIT 0xA4B
 
 /* anim.resetHitboxMode bit forced on each update tick. */
@@ -32,7 +32,7 @@ extern f32 lbl_803E5920;
 typedef struct SBSeqDoorPlacement
 {
     u8 pad0[0x18];
-    s8 rotXByte;  /* 0x18: heading, scaled to anim.rotX (<<8) */
+    s8 rotXByte;   /* 0x18: heading, scaled to anim.rotX (<<8) */
     s8 bankSelect; /* 0x19: nonzero picks bank index 1 */
     u8 unk1A;
     u8 pad1B[0x20 - 0x1B];
@@ -53,8 +53,14 @@ int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-int SB_SeqDoor_getExtraSize(void) { return 0x0; }
-int SB_SeqDoor_getObjectTypeId(void) { return 0x0; }
+int SB_SeqDoor_getExtraSize(void)
+{
+    return 0x0;
+}
+int SB_SeqDoor_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_SeqDoor_free(void)
 {

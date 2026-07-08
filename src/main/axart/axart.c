@@ -129,16 +129,16 @@ void AXARTAddSound(AXART_SOUND* sound)
             auxB += ((AXART_AUXB_VOLUME_ENV*)articulator)->attenuation;
             break;
         case AXART_TYPE_VOLUME_MOD:
-            atten += (s32)(
-                ((AXART_VOLUME_MOD*)articulator)->attenuation * ((AXART_VOLUME_MOD*)articulator)->lfo.output);
+            atten +=
+                (s32)(((AXART_VOLUME_MOD*)articulator)->attenuation * ((AXART_VOLUME_MOD*)articulator)->lfo.output);
             break;
         case AXART_TYPE_AUX_A_VOLUME_MOD:
-            auxA += (s32)(
-                ((AXART_AUXA_VOLUME_MOD*)articulator)->attenuation * ((AXART_AUXA_VOLUME_MOD*)articulator)->lfo.output);
+            auxA += (s32)(((AXART_AUXA_VOLUME_MOD*)articulator)->attenuation *
+                          ((AXART_AUXA_VOLUME_MOD*)articulator)->lfo.output);
             break;
         case AXART_TYPE_AUX_B_VOLUME_MOD:
-            auxB += (s32)(
-                ((AXART_AUXB_VOLUME_MOD*)articulator)->attenuation * ((AXART_AUXA_VOLUME_MOD*)articulator)->lfo.output);
+            auxB += (s32)(((AXART_AUXB_VOLUME_MOD*)articulator)->attenuation *
+                          ((AXART_AUXA_VOLUME_MOD*)articulator)->lfo.output);
             break;
         case AXART_TYPE_LPF:
             AXARTLpf((AXART_LPF*)articulator, sound->axvpb);

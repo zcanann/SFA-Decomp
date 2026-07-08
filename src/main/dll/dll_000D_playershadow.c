@@ -152,7 +152,8 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
         {
             PlayerShadowTriHit* hit = &hits[j];
             u8 surfType = hit->surfaceType;
-            if ((s8)surfType == 0x12 || (u8)(surfType - 0x10) <= 1 || (u8)(surfType - 0x14) <= 1 || (s8)surfType == 0x17)
+            if ((s8)surfType == 0x12 || (u8)(surfType - 0x10) <= 1 || (u8)(surfType - 0x14) <= 1 ||
+                (s8)surfType == 0x17)
             {
                 int rt;
                 p0x = obj->anim.localPosX + ((f32)hit->vertX[0] - offsX);
@@ -323,8 +324,7 @@ void playerShadow_renderObject(void* obj)
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
     fn_80069958(&tileInfo);
-    fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount,
-                ((GameObject*)obj)->anim.localPosX - tileInfo[0],
+    fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount, ((GameObject*)obj)->anim.localPosX - tileInfo[0],
                 ((GameObject*)obj)->anim.localPosZ - tileInfo[2], obj);
 }
 

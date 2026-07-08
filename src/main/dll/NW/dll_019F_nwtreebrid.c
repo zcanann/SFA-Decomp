@@ -25,26 +25,25 @@ extern f32 lbl_803E51FC;
 
 typedef struct TreeBirdState
 {
-    s16 gameBit;            /* 0x00: game bit that arms / fires the trigger */
-    s16 triggerId;          /* 0x02: which trigger sequence to run */
-    s16 immediateTrigger;   /* 0x04: preempt trigger id, set if already armed */
-    u8 triggerLatched;      /* 0x06: trigger has fired; stop re-firing */
-    u8 searchDelay;         /* 0x07: frames left to keep searching for target */
-    void* targetObj;        /* 0x08: object dragged along the path each frame */
+    s16 gameBit;          /* 0x00: game bit that arms / fires the trigger */
+    s16 triggerId;        /* 0x02: which trigger sequence to run */
+    s16 immediateTrigger; /* 0x04: preempt trigger id, set if already armed */
+    u8 triggerLatched;    /* 0x06: trigger has fired; stop re-firing */
+    u8 searchDelay;       /* 0x07: frames left to keep searching for target */
+    void* targetObj;      /* 0x08: object dragged along the path each frame */
 } TreeBirdState;
 
 typedef struct NwTreeBirdMapData
 {
     u8 pad00[0x18];
-    s8 rotXByte;            /* 0x18: rotX in 1/256 turns */
-    s8 triggerVariant;      /* 0x19: selects particle / trigger variant */
-    s16 rotY;              /* 0x1A */
-    s16 rotZ;              /* 0x1C */
-    s16 gameBit;            /* 0x1E */
+    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
+    s8 triggerVariant; /* 0x19: selects particle / trigger variant */
+    s16 rotY;          /* 0x1A */
+    s16 rotZ;          /* 0x1C */
+    s16 gameBit;       /* 0x1E */
 } NwTreeBirdMapData;
 
-#define TREEBIRD_SPAWN_PARTICLE(obj,id) \
-  (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
+#define TREEBIRD_SPAWN_PARTICLE(obj, id) (*gPartfxInterface)->spawnObject((void*)(obj), (id), 0, 1, -1, 0)
 
 int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -66,8 +65,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 TREEBIRD_SPAWN_PARTICLE(obj, 0xcc);
                 j--;
-            }
-            while (j != 0);
+            } while (j != 0);
             break;
         case 2:
             j = 100;
@@ -77,8 +75,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     TREEBIRD_SPAWN_PARTICLE(obj, 0xd3);
                     j--;
-                }
-                while (j != 0);
+                } while (j != 0);
             }
             else if (state->triggerId == 0)
             {
@@ -86,8 +83,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     TREEBIRD_SPAWN_PARTICLE(obj, 0xcd);
                     j--;
-                }
-                while (j != 0);
+                } while (j != 0);
             }
             else if (state->triggerId == 1)
             {
@@ -95,8 +91,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     TREEBIRD_SPAWN_PARTICLE(obj, 0xcf);
                     j--;
-                }
-                while (j != 0);
+                } while (j != 0);
             }
             break;
         case 3:
@@ -107,8 +102,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     TREEBIRD_SPAWN_PARTICLE(obj, 0xd4);
                     j--;
-                }
-                while (j != 0);
+                } while (j != 0);
             }
             else if (state->triggerId == 0)
             {
@@ -116,8 +110,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     TREEBIRD_SPAWN_PARTICLE(obj, 0xce);
                     j--;
-                }
-                while (j != 0);
+                } while (j != 0);
             }
             else if (state->triggerId == 1)
             {
@@ -125,8 +118,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     TREEBIRD_SPAWN_PARTICLE(obj, 0xd0);
                     j--;
-                }
-                while (j != 0);
+                } while (j != 0);
             }
             break;
         }

@@ -30,19 +30,19 @@ typedef struct DfshObjCreatorSetup
     s16 unk1A;         /* 0x1A */
     s16 unk1C;         /* 0x1C */
     u8 pad1E[0x22 - 0x1E];
-    s16 unk22;         /* 0x22 */
+    s16 unk22; /* 0x22 */
     u8 pad24[0x27 - 0x24];
-    u8 unk27;          /* 0x27 */
-    u8 pad28;          /* 0x28 */
-    u8 unk29;          /* 0x29 */
-    s8 rotByte;        /* 0x2A: object yaw byte (anim.rotX >> 8) */
-    u8 unk2B;          /* 0x2B */
+    u8 unk27;   /* 0x27 */
+    u8 pad28;   /* 0x28 */
+    u8 unk29;   /* 0x29 */
+    s8 rotByte; /* 0x2A: object yaw byte (anim.rotX >> 8) */
+    u8 unk2B;   /* 0x2B */
     u8 pad2C[0x2E - 0x2C];
-    s8 unk2E;          /* 0x2E */
-    u8 pad2F;          /* 0x2F */
-    s16 unk30;         /* 0x30 */
+    s8 unk2E;  /* 0x2E */
+    u8 pad2F;  /* 0x2F */
+    s16 unk30; /* 0x30 */
     u8 pad32[0x34 - 0x32];
-    u16 unk34;         /* 0x34 */
+    u16 unk34; /* 0x34 */
     u8 pad36[0x38 - 0x36];
 } DfshObjCreatorSetup;
 
@@ -56,8 +56,14 @@ STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk30) == 0x30);
 STATIC_ASSERT(offsetof(DfshObjCreatorSetup, unk34) == 0x34);
 STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
 
-int DFSH_ObjCreator_getExtraSize(void) { return 0x4; }
-int DFSH_ObjCreator_getObjectTypeId(void) { return 0x0; }
+int DFSH_ObjCreator_getExtraSize(void)
+{
+    return 0x4;
+}
+int DFSH_ObjCreator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DFSH_ObjCreator_free(void)
 {
@@ -66,7 +72,8 @@ void DFSH_ObjCreator_free(void)
 void DFSH_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4EB8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4EB8);
 }
 
 void DFSH_ObjCreator_hitDetect(void)
@@ -96,10 +103,8 @@ void DFSH_ObjCreator_update(int obj)
     if (((GameObject*)obj)->unkF8 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
     {
         resource = Resource_Acquire(0x82, 1);
-        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
-            obj, 0, 0, 1, -1, 0);
-        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
-            obj, 1, 0, 1, -1, 0);
+        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
+        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(obj, 1, 0, 1, -1, 0);
         Sfx_PlayFromObject(obj, SFXsc_gemrun1022);
         Resource_Release(resource);
         state->spawnTimerStep = 1;
@@ -108,8 +113,7 @@ void DFSH_ObjCreator_update(int obj)
 
     if (state->spawnTimerStep != 0)
     {
-        state->spawnTimer =
-            (s16)(state->spawnTimer - state->spawnTimerStep * (int)timeDelta);
+        state->spawnTimer = (s16)(state->spawnTimer - state->spawnTimerStep * (int)timeDelta);
     }
 
     if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0)

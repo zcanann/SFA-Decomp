@@ -26,8 +26,8 @@
 typedef struct LandedArwingTriggerLaunchTargetState
 {
     u8 pad0[0x3F0 - 0x0];
-    s16 launchMoveId;       /* 0x3F0 */
-    s16 triggerGameBit;     /* 0x3F2 */
+    s16 launchMoveId;   /* 0x3F0 */
+    s16 triggerGameBit; /* 0x3F2 */
     u8 pad3F4[0x405 - 0x3F4];
     u8 unk405;
     u8 pad406[0x408 - 0x406];
@@ -63,14 +63,17 @@ extern f32 lbl_803E3000;
 /* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
 #define LANDED_ARWING_FLAG_BOUNCE 0x4000
 
-int LandedArwing_ReturnZero(void) { return 0; }
+int LandedArwing_ReturnZero(void)
+{
+    return 0;
+}
 
 int LandedArwing_TriggerLaunchTarget(int obj, int target)
 {
     int* aux = ((GameObject*)obj)->extra;
     if (*(s8*)(target + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
-        (*(int(**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(
+        (*(int (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(
             obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->launchMoveId, -1, 0);
         (*gPlayerInterface)->spawnPartfx((void*)obj, (void*)target, 0x3c, 0xa, 0);
         mainSetBits((int)((LandedArwingTriggerLaunchTargetState*)aux)->triggerGameBit, 1);
@@ -99,8 +102,10 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->objectPairHitVolume = 0;
     *stateWord = *stateWord | LANDED_ARWING_FLAG_BOUNCE;
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (horizontalDamping = gBackpackBounceDampingHorizontal);
-    ((GameObject*)obj)->anim.velocityY = gBackpackBounceDampingVertical * (((GameObject*)obj)->anim.velocityY - lbl_803E2FEC);
+    ((GameObject*)obj)->anim.velocityX =
+        ((GameObject*)obj)->anim.velocityX * (horizontalDamping = gBackpackBounceDampingHorizontal);
+    ((GameObject*)obj)->anim.velocityY =
+        gBackpackBounceDampingVertical * (((GameObject*)obj)->anim.velocityY - lbl_803E2FEC);
     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * horizontalDamping;
     objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
@@ -142,8 +147,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     }
     else
     {
-        ((GameObject*)obj)->anim.alpha =
-            (u8)(255 - (s32)(lbl_803E2FF8 * ((GameObject*)obj)->anim.currentMoveProgress));
+        ((GameObject*)obj)->anim.alpha = (u8)(255 - (s32)(lbl_803E2FF8 * ((GameObject*)obj)->anim.currentMoveProgress));
     }
     return 0;
 }
@@ -200,23 +204,23 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
     }
     goto use_player_reflect_position;
 use_object_position:
-    {
-        x = ((GameObject*)obj)->anim.localPosX;
-        y = ((GameObject*)obj)->anim.localPosY;
-        z = ((GameObject*)obj)->anim.localPosZ;
-        scale = lbl_803E2FDC;
-        goto update_action;
-    }
+{
+    x = ((GameObject*)obj)->anim.localPosX;
+    y = ((GameObject*)obj)->anim.localPosY;
+    z = ((GameObject*)obj)->anim.localPosZ;
+    scale = lbl_803E2FDC;
+    goto update_action;
+}
 use_player_reflect_position:
-    {
-        x = ((GameObject*)obj)->anim.localPosX - lbl_803E3000 * (playerObj->anim.localPosX - ((GameObject*)obj)->anim.
-            localPosX);
-        y = ((GameObject*)obj)->anim.localPosY - lbl_803E3000 * (playerObj->anim.localPosY - ((GameObject*)obj)->anim.
-            localPosY);
-        z = ((GameObject*)obj)->anim.localPosZ - lbl_803E3000 * (playerObj->anim.localPosZ - ((GameObject*)obj)->anim.
-            localPosZ);
-        scale = lbl_803E2FF4;
-    }
+{
+    x = ((GameObject*)obj)->anim.localPosX -
+        lbl_803E3000 * (playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
+    y = ((GameObject*)obj)->anim.localPosY -
+        lbl_803E3000 * (playerObj->anim.localPosY - ((GameObject*)obj)->anim.localPosY);
+    z = ((GameObject*)obj)->anim.localPosZ -
+        lbl_803E3000 * (playerObj->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
+    scale = lbl_803E2FF4;
+}
 update_action:
     updateConstrainedChaseVelocity(obj, x, y, z, scale);
     if (state->surfaceMode == LANDED_ARWING_SCRIPT_MODE)

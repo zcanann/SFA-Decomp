@@ -12,14 +12,14 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
 
-#define SHTRICKY_OBJFLAG_HIDDEN 0x4000
+#define SHTRICKY_OBJFLAG_HIDDEN             0x4000
 #define SHTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-#define SHTRICKY_STATE_WAIT_TRIGGER 0
-#define SHTRICKY_STATE_HAND_CONTROL 1
-#define SHTRICKY_STATE_POLL_TASK 2
+#define SHTRICKY_STATE_WAIT_TRIGGER   0
+#define SHTRICKY_STATE_HAND_CONTROL   1
+#define SHTRICKY_STATE_POLL_TASK      2
 #define SHTRICKY_STATE_WATCH_COMPLETE 3
-#define SHTRICKY_STATE_DONE 4
+#define SHTRICKY_STATE_DONE           4
 
 int sh_tricky_getExtraSize(void)
 {
@@ -53,8 +53,7 @@ void sh_tricky_update(int* obj)
         state[0] = SHTRICKY_STATE_POLL_TASK;
         break;
     case SHTRICKY_STATE_POLL_TASK:
-        if (((int (*)(int*, int*))(*(int*)(*(int*)(tricky[0x1a]) + 0x38)))(tricky, obj) !=
-            0)
+        if (((int (*)(int*, int*))(*(int*)(*(int*)(tricky[0x1a]) + 0x38)))(tricky, obj) != 0)
         {
             state[0] = SHTRICKY_STATE_WATCH_COMPLETE;
         }
@@ -83,5 +82,6 @@ void sh_tricky_init(int* obj)
     {
         *state = SHTRICKY_STATE_WAIT_TRIGGER;
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SHTRICKY_OBJFLAG_HIDDEN | SHTRICKY_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (SHTRICKY_OBJFLAG_HIDDEN | SHTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }

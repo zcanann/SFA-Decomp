@@ -22,17 +22,15 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-
 /*
  * Placement flag bits in data[0x1c] (documented in the file header). These
  * are private to this object type's placement record, so they live here.
  */
-#define SFXPLAYER_FLAG_FORCE_POINT 0x1     /* force point (positional) sound form */
-#define SFXPLAYER_FLAG_TRIGGER_ON_SET 0x2  /* play the pair when the gate bit goes on */
-#define SFXPLAYER_FLAG_TRIGGER_ON_CLEAR 0x4 /* play the pair when the gate bit goes off */
-#define SFXPLAYER_FLAG_ROM_CURVE 0x8       /* feed a rom-curve channel each frame */
-#define SFXPLAYER_FLAG_AT_OBJECT 0x10      /* play at the object's position */
-
+#define SFXPLAYER_FLAG_FORCE_POINT      0x1  /* force point (positional) sound form */
+#define SFXPLAYER_FLAG_TRIGGER_ON_SET   0x2  /* play the pair when the gate bit goes on */
+#define SFXPLAYER_FLAG_TRIGGER_ON_CLEAR 0x4  /* play the pair when the gate bit goes off */
+#define SFXPLAYER_FLAG_ROM_CURVE        0x8  /* feed a rom-curve channel each frame */
+#define SFXPLAYER_FLAG_AT_OBJECT        0x10 /* play at the object's position */
 
 /*
  * Per-instance runtime state stored in GameObject::extra
@@ -44,7 +42,8 @@
  */
 typedef struct SfxplayerObjState
 {
-    union {
+    union
+    {
         int gameBitState;
         f32 delayTimer;
     };
@@ -64,31 +63,39 @@ extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
 
-int sfxplayerObj_getExtraSize(void) { return 0x8; }
+int sfxplayerObj_getExtraSize(void)
+{
+    return 0x8;
+}
 
 void sfxplayerObj_free(u8* obj)
 {
     u8* data = *(u8**)&((GameObject*)obj)->anim.placementData;
     SfxplayerObjState* state = ((GameObject*)obj)->extra;
     u8 flag = state->flags;
-    if ((flag & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) return;
+    if ((flag & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0)
+        return;
     state->flags = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
     if (data[0x1d] == SFXPLAYER_MODE_LOOPED)
     {
         u16 sfx1 = *(u16*)(data + 0x1a);
-        if (sfx1 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx1);
+        if (sfx1 != 0)
+            Sfx_RemoveLoopedObjectSound(obj, sfx1);
         {
             u16 sfx2 = *(u16*)(data + 0x22);
-            if (sfx2 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx2);
+            if (sfx2 != 0)
+                Sfx_RemoveLoopedObjectSound(obj, sfx2);
         }
     }
     else
     {
         u16 sfx1 = *(u16*)(data + 0x1a);
-        if (sfx1 != 0) Sfx_StopFromObject(obj, sfx1);
+        if (sfx1 != 0)
+            Sfx_StopFromObject(obj, sfx1);
         {
             u16 sfx2 = *(u16*)(data + 0x22);
-            if (sfx2 != 0) Sfx_StopFromObject(obj, sfx2);
+            if (sfx2 != 0)
+                Sfx_StopFromObject(obj, sfx2);
         }
     }
 }
@@ -96,19 +103,27 @@ void sfxplayerObj_free(u8* obj)
 static inline void sfxplayerStartSound(u8* obj, u8* data, SfxplayerObjState* state, u16 soundId)
 {
     u8* soundObj;
-    if (soundId != 0) {
+    if (soundId != 0)
+    {
         soundObj = obj;
         state->flags = state->flags | SFXPLAYER_RUNTIME_ACTIVE_FLAG;
-        if ((data[0x1c] & SFXPLAYER_FLAG_AT_OBJECT) == 0) {
+        if ((data[0x1c] & SFXPLAYER_FLAG_AT_OBJECT) == 0)
+        {
             soundObj = NULL;
         }
-        if (soundObj == NULL || (data[0x1c] & SFXPLAYER_FLAG_FORCE_POINT) != 0) {
-            if (data[0x1d] == SFXPLAYER_MODE_LOOPED) {
+        if (soundObj == NULL || (data[0x1c] & SFXPLAYER_FLAG_FORCE_POINT) != 0)
+        {
+            if (data[0x1d] == SFXPLAYER_MODE_LOOPED)
+            {
                 Sfx_AddLoopedObjectSound(soundObj, soundId);
-            } else {
+            }
+            else
+            {
                 Sfx_PlayFromObject(soundObj, soundId);
             }
-        } else {
+        }
+        else
+        {
             Sfx_PlayAtPositionFromObject(((GameObject*)soundObj)->anim.localPosX,
                                          ((GameObject*)soundObj)->anim.localPosY,
                                          ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId);
@@ -118,28 +133,35 @@ static inline void sfxplayerStartSound(u8* obj, u8* data, SfxplayerObjState* sta
 
 #define SFXPLAYER_START_SOUND(sfxExpr) sfxplayerStartSound(obj, data, state, (sfxExpr))
 
-#define SFXPLAYER_STOP_PAIR() \
-    do { \
-        if (data[0x1d] == SFXPLAYER_MODE_LOOPED) { \
-            soundId = *(u16 *)(data + 0x1a); \
-            if (soundId != 0) { \
-                Sfx_RemoveLoopedObjectSound(obj, soundId); \
-            } \
-            soundId = *(u16 *)(data + 0x22); \
-            if (soundId != 0) { \
-                Sfx_RemoveLoopedObjectSound(obj, soundId); \
-            } \
-        } \
-        else { \
-            soundId = *(u16 *)(data + 0x1a); \
-            if (soundId != 0) { \
-                Sfx_StopFromObject(obj, soundId); \
-            } \
-            soundId = *(u16 *)(data + 0x22); \
-            if (soundId != 0) { \
-                Sfx_StopFromObject(obj, soundId); \
-            } \
-        } \
+#define SFXPLAYER_STOP_PAIR()                                                                                          \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (data[0x1d] == SFXPLAYER_MODE_LOOPED)                                                                       \
+        {                                                                                                              \
+            soundId = *(u16*)(data + 0x1a);                                                                            \
+            if (soundId != 0)                                                                                          \
+            {                                                                                                          \
+                Sfx_RemoveLoopedObjectSound(obj, soundId);                                                             \
+            }                                                                                                          \
+            soundId = *(u16*)(data + 0x22);                                                                            \
+            if (soundId != 0)                                                                                          \
+            {                                                                                                          \
+                Sfx_RemoveLoopedObjectSound(obj, soundId);                                                             \
+            }                                                                                                          \
+        }                                                                                                              \
+        else                                                                                                           \
+        {                                                                                                              \
+            soundId = *(u16*)(data + 0x1a);                                                                            \
+            if (soundId != 0)                                                                                          \
+            {                                                                                                          \
+                Sfx_StopFromObject(obj, soundId);                                                                      \
+            }                                                                                                          \
+            soundId = *(u16*)(data + 0x22);                                                                            \
+            if (soundId != 0)                                                                                          \
+            {                                                                                                          \
+                Sfx_StopFromObject(obj, soundId);                                                                      \
+            }                                                                                                          \
+        }                                                                                                              \
     } while (0)
 
 void sfxplayerObj_update(u8* obj)
@@ -158,17 +180,17 @@ void sfxplayerObj_update(u8* obj)
         {
             focusObj = (*gCameraInterface)->getCamera();
             ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
-                7, *(s8*)(data + 0x20),
-                ((GameObject*)focusObj)->anim.worldPosX, ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ,
-                obj + 0x0c, obj + 0x10, obj + 0x14);
+                7, *(s8*)(data + 0x20), ((GameObject*)focusObj)->anim.worldPosX,
+                ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ, obj + 0x0c,
+                obj + 0x10, obj + 0x14);
         }
         else
         {
             focusObj = Obj_GetPlayerObject();
             ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
-                7, *(s8*)(data + 0x20),
-                ((GameObject*)focusObj)->anim.worldPosX, ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ,
-                obj + 0x0c, obj + 0x10, obj + 0x14);
+                7, *(s8*)(data + 0x20), ((GameObject*)focusObj)->anim.worldPosX,
+                ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ, obj + 0x0c,
+                obj + 0x10, obj + 0x14);
         }
     }
 
@@ -189,8 +211,8 @@ void sfxplayerObj_update(u8* obj)
                     state->gameBitState = 0;
                     if ((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_CLEAR) != 0)
                     {
-                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                        SFXPLAYER_START_SOUND(*(u16*)(data + 0x1a));
+                        SFXPLAYER_START_SOUND(*(u16*)(data + 0x22));
                     }
                 }
             }
@@ -199,21 +221,20 @@ void sfxplayerObj_update(u8* obj)
                 state->gameBitState = 1;
                 if ((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_SET) != 0)
                 {
-                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                    SFXPLAYER_START_SOUND(*(u16*)(data + 0x1a));
+                    SFXPLAYER_START_SOUND(*(u16*)(data + 0x22));
                 }
             }
         }
         break;
     case SFXPLAYER_MODE_LOOPED:
-        if ((*(s16*)(data + 0x18) == -1) ||
-            (((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_SET) != 0) && (bitState != 0)) ||
+        if ((*(s16*)(data + 0x18) == -1) || (((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_SET) != 0) && (bitState != 0)) ||
             (((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_CLEAR) != 0) && (bitState == 0)))
         {
             if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0)
             {
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                SFXPLAYER_START_SOUND(*(u16*)(data + 0x1a));
+                SFXPLAYER_START_SOUND(*(u16*)(data + 0x22));
             }
         }
         else if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
@@ -223,17 +244,15 @@ void sfxplayerObj_update(u8* obj)
         }
         break;
     case SFXPLAYER_MODE_RANDOM_DELAY:
-        if ((*(s16*)(data + 0x18) == -1) ||
-            (((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_SET) != 0) && (bitState != 0)) ||
+        if ((*(s16*)(data + 0x18) == -1) || (((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_SET) != 0) && (bitState != 0)) ||
             (((data[0x1c] & SFXPLAYER_FLAG_TRIGGER_ON_CLEAR) != 0) && (bitState == 0)))
         {
             state->delayTimer -= timeDelta;
             if (state->delayTimer <= lbl_803E40B8)
             {
-                state->delayTimer = (f32)(s32)
-                randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                state->delayTimer = (f32)(s32)randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
+                SFXPLAYER_START_SOUND(*(u16*)(data + 0x1a));
+                SFXPLAYER_START_SOUND(*(u16*)(data + 0x22));
             }
         }
         else if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
@@ -245,7 +264,6 @@ void sfxplayerObj_update(u8* obj)
     }
 }
 
-
 void sfxplayerObj_init(u8* obj, u8* data)
 {
     SfxplayerObjState* state = ((GameObject*)obj)->extra;
@@ -255,23 +273,23 @@ void sfxplayerObj_init(u8* obj, u8* data)
     switch (mode)
     {
     case SFXPLAYER_MODE_GAMEBIT:
+    {
+        s16 bit = *(s16*)(data + 0x18);
+        if (bit > 0)
         {
-            s16 bit = *(s16*)(data + 0x18);
-            if (bit > 0)
-            {
-                state->gameBitState = mainGetBit(bit);
-            }
-            break;
+            state->gameBitState = mainGetBit(bit);
         }
+        break;
+    }
     case SFXPLAYER_MODE_LOOPED:
         break;
     case SFXPLAYER_MODE_RANDOM_DELAY:
-        {
-            int delay = randomGetRange(data[0x1e], data[0x1f]);
-            f32 delayF = delay;
-            delayF = lbl_803E40BC * delayF;
-            state->delayTimer = delayF;
-            break;
-        }
+    {
+        int delay = randomGetRange(data[0x1e], data[0x1f]);
+        f32 delayF = delay;
+        delayF = lbl_803E40BC * delayF;
+        state->delayTimer = delayF;
+        break;
+    }
     }
 }

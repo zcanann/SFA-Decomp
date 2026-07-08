@@ -32,7 +32,7 @@ typedef struct WaterSpikeMotion
     /* 0x08 */ f32 targetY; /* desired height offset */
     /* 0x0C */ f32 baseY;   /* rest height the spike bobs around */
     /* 0x10 */ u8 pad10[4];
-    /* 0x14 */ s16 phase;   /* bob phase angle, advanced +0x400/frame */
+    /* 0x14 */ s16 phase; /* bob phase angle, advanced +0x400/frame */
 } WaterSpikeMotion;
 
 void fn_801BEEA0(s16* obj, u8* state)
@@ -47,8 +47,7 @@ void fn_801BEEA0(s16* obj, u8* state)
     motion->phase += 0x400;
     heightDelta = heightDelta + (f32)(int)cos16(motion->phase) / lbl_803E4D00;
 
-    motion->ySpeed = timeDelta * (heightDelta / lbl_803E4D04 - motion->targetY)
-        + motion->ySpeed;
+    motion->ySpeed = timeDelta * (heightDelta / lbl_803E4D04 - motion->targetY) + motion->ySpeed;
 
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + motion->ySpeed;
 
@@ -59,7 +58,7 @@ void fn_801BEEA0(s16* obj, u8* state)
     {
         turnDelta = (s16)((turnDelta - 0x10000) + 1);
     }
-    if (turnDelta < (s16) - 0x8000)
+    if (turnDelta < (s16)-0x8000)
     {
         turnDelta = (s16)((turnDelta + 0x10000) - 1);
     }

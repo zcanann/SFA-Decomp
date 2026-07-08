@@ -18,10 +18,15 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* parent galleon anim.seqId selecting the rigging-animation behavior */
 #define SB_GALLEON_SEQID 0x139
 
+int SB_ShipMast_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int SB_ShipMast_getExtraSize(void) { return 0x0; }
-
-int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
+int SB_ShipMast_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_ShipMast_free(void)
 {
@@ -47,7 +52,8 @@ void SB_ShipMast_update(GameObject* obj)
     f32 speed;
 
     parent = obj->anim.parent;
-    if (parent == NULL) return;
+    if (parent == NULL)
+        return;
     phase = parent->unkF4;
     obj->anim.localPosX = 0.0f;
     obj->anim.localPosY = 0.0f;

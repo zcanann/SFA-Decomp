@@ -5,11 +5,11 @@
 #include "main/audio/data_tables.h"
 #include "main/sfa_shared_decls.h"
 
-extern void sndConvertTicks(u32 * p, McmdVoiceState * state);
+extern void sndConvertTicks(u32* p, McmdVoiceState* state);
 extern s32 sndConvert2Ms(u32 v);
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
-#define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)
+#define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
 #define MAC_FLAG64(hi, lo) (((u64)(hi) << 32) | (u64)(lo))
 
 /*
@@ -84,13 +84,7 @@ void mcmdScaleVolume(McmdVoiceState* svoice, McmdCommandArgs* cstep, s32 start_v
     }
 
     curve = (u16)(u8)(cstep->flags >> 0x18);
-    curve |= (((u16)(u8)
-    cstep->value
-    )
-    <<
-    8
-    )
-    ;
+    curve |= (((u16)(u8)cstep->value) << 8);
     tvol = TranslateVolume(tvol, curve);
     svoice->volumeTarget = tvol;
     svoice->volumeStart = start_vol;

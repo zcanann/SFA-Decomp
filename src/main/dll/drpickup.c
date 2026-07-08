@@ -59,9 +59,7 @@ void fn_801EC1AC(int obj, int state)
         target = ((DRPickupState*)state)->liftZVelTarget;
     }
     rate = (target - ((DRPickupState*)state)->liftZVel) * lbl_803E5C28;
-    clampedRate = (rate < lbl_803E5C2C)
-                      ? lbl_803E5C2C
-                      : ((rate > lbl_803E5B8C) ? lbl_803E5B8C : rate);
+    clampedRate = (rate < lbl_803E5C2C) ? lbl_803E5C2C : ((rate > lbl_803E5B8C) ? lbl_803E5B8C : rate);
     *(f32*)(state + 0x430) = clampedRate * timeDelta + *(f32*)((int)state + 0x430);
 
     target = lbl_803E5AE8;
@@ -72,15 +70,12 @@ void fn_801EC1AC(int obj, int state)
         if (v49c >= target)
         {
             f32 nv = -vy53c;
-            target = (nv < -v49c * oneOverTimeDelta)
-                         ? -v49c * oneOverTimeDelta
-                         : ((nv > target) ? target : nv);
+            target = (nv < -v49c * oneOverTimeDelta) ? -v49c * oneOverTimeDelta : ((nv > target) ? target : nv);
         }
         else
         {
-            target = (vy53c < target)
-                         ? target
-                         : ((vy53c > -v49c * oneOverTimeDelta) ? -v49c * oneOverTimeDelta : vy53c);
+            target =
+                (vy53c < target) ? target : ((vy53c > -v49c * oneOverTimeDelta) ? -v49c * oneOverTimeDelta : vy53c);
         }
     }
     {
@@ -90,22 +85,17 @@ void fn_801EC1AC(int obj, int state)
     }
     ((DRPickupState*)state)->localOffsetZ = (*(f32*)(state + 0x430) + target) * timeDelta;
 
-    Matrix_TransformPoint((void*)(state + 0x6c),
-                          ((DRPickupState*)state)->localOffsetX,
-                          ((DRPickupState*)state)->localOffsetY,
-                          ((DRPickupState*)state)->localOffsetZ,
-                          &out[0], &out[1], &out[2]);
-    Matrix_TransformPoint((void*)(state + 0x12c),
-                          out[0], out[1], out[2],
-                          &out[0], &out[1], &out[2]);
+    Matrix_TransformPoint((void*)(state + 0x6c), ((DRPickupState*)state)->localOffsetX,
+                          ((DRPickupState*)state)->localOffsetY, ((DRPickupState*)state)->localOffsetZ, &out[0],
+                          &out[1], &out[2]);
+    Matrix_TransformPoint((void*)(state + 0x12c), out[0], out[1], out[2], &out[0], &out[1], &out[2]);
     PSVECAdd(out, (void*)(state + 0x494), (void*)(state + 0x494));
 
     ((DRPickupState*)state)->angVel414 =
         (-((DRPickupState*)state)->angAccelGain * ((DRPickupState*)state)->angAccelScale) * timeDelta +
         ((DRPickupState*)state)->angVel414;
     ((DRPickupState*)state)->angVel414 =
-        powfBitEstimate(((DRPickupState*)state)->angVelDamping, timeDelta) *
-        ((DRPickupState*)state)->angVel414;
+        powfBitEstimate(((DRPickupState*)state)->angVelDamping, timeDelta) * ((DRPickupState*)state)->angVel414;
 
     {
         f32 lim;
@@ -116,8 +106,7 @@ void fn_801EC1AC(int obj, int state)
     }
 
     {
-        f32 newF = (f32)(s32) * (s16*)(state + 0x40e) +
-            ((DRPickupState*)state)->angVel414 * timeDelta;
+        f32 newF = (f32)(s32) * (s16*)(state + 0x40e) + ((DRPickupState*)state)->angVel414 * timeDelta;
         s32 delta;
         ((DRPickupState*)state)->angle40E = newF;
         delta = (s32)(((DRPickupState*)state)->angVel414 * ((DRPickupState*)state)->angleScale);
@@ -131,8 +120,7 @@ void fn_801EC1AC(int obj, int state)
             delta = delta + 0xFFFF;
         }
         ((DRPickupState*)state)->angAccum410 =
-            (u32)(s32)((f32)delta * ((DRPickupState*)state)->angAccumGain +
-                (f32)(s32) * (u32*)((int)state + 0x410));
+            (u32)(s32)((f32)delta * ((DRPickupState*)state)->angAccumGain + (f32)(s32) * (u32*)((int)state + 0x410));
     }
     {
         s32 delta = (s32) * (s16*)(state + 0x40e) - (s32)(u16) * (s16*)(state + 0x40c);
@@ -144,8 +132,8 @@ void fn_801EC1AC(int obj, int state)
         {
             delta = delta + 0xFFFF;
         }
-        ((DRPickupState*)state)->angle40C = (s16)((f32)delta * ((DRPickupState*)state)->angleGain +
-            (f32)(s32) * (s16*)((int)state + 0x40c));
+        ((DRPickupState*)state)->angle40C =
+            (s16)((f32)delta * ((DRPickupState*)state)->angleGain + (f32)(s32) * (s16*)((int)state + 0x40c));
     }
 
     if (flags->b7 != 0)
@@ -154,12 +142,10 @@ void fn_801EC1AC(int obj, int state)
             (-((DRPickupState*)state)->spinDecel) * timeDelta + ((DRPickupState*)state)->spinVel;
         {
             f32 v = ((DRPickupState*)state)->spinVel;
-            ((DRPickupState*)state)->spinVel = (v < lbl_803E5C30)
-                                         ? lbl_803E5C30
-                                         : ((v > lbl_803E5B48) ? lbl_803E5B48 : v);
+            ((DRPickupState*)state)->spinVel =
+                (v < lbl_803E5C30) ? lbl_803E5C30 : ((v > lbl_803E5B48) ? lbl_803E5B48 : v);
         }
-        *(s16*)(obj + 0x2) = (f32)(s32) * (s16*)(obj + 0x2) +
-            ((DRPickupState*)state)->spinVel * timeDelta;
+        *(s16*)(obj + 0x2) = (f32)(s32) * (s16*)(obj + 0x2) + ((DRPickupState*)state)->spinVel * timeDelta;
     }
 
     if (flags->b1 == 0)
@@ -190,9 +176,7 @@ void fn_801EC1AC(int obj, int state)
     {
         f32 v = ((DRPickupState*)state)->accumY;
         f32 lim = -((DRPickupState*)state)->clampLimitY;
-        ((DRPickupState*)state)->accumY = (v < lim)
-                                     ? lim
-                                     : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
+        ((DRPickupState*)state)->accumY = (v < lim) ? lim : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
         v = ((DRPickupState*)state)->accumY;
         if (v < lbl_803E5B8C)
         {

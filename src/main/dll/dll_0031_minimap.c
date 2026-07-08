@@ -53,8 +53,8 @@ extern void dll_3F_initialise(void);
 #define MINIMAP_TEXTURE_COMPASS 0xBE5
 
 /* gMinimapViewMode selector (see file header): the three HUD view modes. */
-#define MINIMAP_VIEW_MODE_MAP 0
-#define MINIMAP_VIEW_MODE_RADAR 1
+#define MINIMAP_VIEW_MODE_MAP       0
+#define MINIMAP_VIEW_MODE_RADAR     1
 #define MINIMAP_VIEW_MODE_AREA_NAME 2
 
 typedef struct MinimapRow
@@ -100,36 +100,19 @@ extern MinimapRow lbl_8031C4E0[];
 extern MinimapRow lbl_8031C4F4[];
 
 MinimapMapEntry gMinimapCellTable[25] = {
-    { lbl_8031C328, 0x059E, 0x13, 1 },
-    { lbl_8031C33C, 0x059E, 0x1B, 1 },
-    { lbl_8031C350, 0x05A2, 0x0E, 1 },
-    { lbl_8031C364, 0x05A2, 0x47, 1 },
-    { lbl_8031C378, 0x05A3, 0x07, 1 },
-    { lbl_8031C38C, 0x05A3, 0x43, 1 },
-    { lbl_8031C3A0, 0x0835, 0x12, 1 },
-    { lbl_8031C3B4, 0x0835, 0x45, 1 },
-    { lbl_8031C3C8, 0x082E, 0x0D, 1 },
-    { lbl_8031C3DC, 0x05A1, 0x0C, 1 },
-    { lbl_8031C3DC, 0x05A1, 0x10, 1 },
-    { lbl_8031C3DC, 0x05A1, 0x0F, 1 },
-    { lbl_8031C3F0, 0x05A1, 0x2B, 1 },
-    { lbl_8031C404, 0x07E5, 0x0B, 1 },
-    { lbl_8031C418, 0x059D, 0x04, 2 },
-    { lbl_8031C440, 0x059D, 0x46, 1 },
-    { lbl_8031C454, 0x05A3, 0x08, 1 },
-    { lbl_8031C468, 0x05A0, 0x0A, 1 },
-    { lbl_8031C47C, 0x05A0, 0x38, 1 },
-    { lbl_8031C490, 0x07E9, 0x32, 1 },
-    { lbl_8031C4A4, 0x07E9, 0x15, 1 },
-    { lbl_8031C4B8, 0x07E9, 0x49, 1 },
-    { lbl_8031C4CC, 0x082F, 0x1D, 1 },
-    { lbl_8031C4E0, 0x082F, 0x48, 1 },
-    { lbl_8031C4F4, 0x07DD, 0x02, 1 },
+    {lbl_8031C328, 0x059E, 0x13, 1}, {lbl_8031C33C, 0x059E, 0x1B, 1}, {lbl_8031C350, 0x05A2, 0x0E, 1},
+    {lbl_8031C364, 0x05A2, 0x47, 1}, {lbl_8031C378, 0x05A3, 0x07, 1}, {lbl_8031C38C, 0x05A3, 0x43, 1},
+    {lbl_8031C3A0, 0x0835, 0x12, 1}, {lbl_8031C3B4, 0x0835, 0x45, 1}, {lbl_8031C3C8, 0x082E, 0x0D, 1},
+    {lbl_8031C3DC, 0x05A1, 0x0C, 1}, {lbl_8031C3DC, 0x05A1, 0x10, 1}, {lbl_8031C3DC, 0x05A1, 0x0F, 1},
+    {lbl_8031C3F0, 0x05A1, 0x2B, 1}, {lbl_8031C404, 0x07E5, 0x0B, 1}, {lbl_8031C418, 0x059D, 0x04, 2},
+    {lbl_8031C440, 0x059D, 0x46, 1}, {lbl_8031C454, 0x05A3, 0x08, 1}, {lbl_8031C468, 0x05A0, 0x0A, 1},
+    {lbl_8031C47C, 0x05A0, 0x38, 1}, {lbl_8031C490, 0x07E9, 0x32, 1}, {lbl_8031C4A4, 0x07E9, 0x15, 1},
+    {lbl_8031C4B8, 0x07E9, 0x49, 1}, {lbl_8031C4CC, 0x082F, 0x1D, 1}, {lbl_8031C4E0, 0x082F, 0x48, 1},
+    {lbl_8031C4F4, 0x07DD, 0x02, 1},
 };
 
 void Minimap_drawCompassBlip(void);
 void fn_8013351C(void);
-
 
 extern void* Obj_GetPlayerObject(void);
 extern s16 Camera_GetViewportYOffset(void);
@@ -327,10 +310,8 @@ int Minimap_update(void)
             for (; k < gMinimapCellTable[i].count; k++)
             {
                 row = &rows[k];
-                if (fx >= row->x0 && fx < row->x1 &&
-                    fz >= row->z0 && fz < row->z1 &&
-                    (s16)yi >= row->y0 && (s16)yi < row->y1 &&
-                    mainGetBit(row->gameBit) != 0)
+                if (fx >= row->x0 && fx < row->x1 && fz >= row->z0 && fz < row->z1 && (s16)yi >= row->y0 &&
+                    (s16)yi < row->y1 && mainGetBit(row->gameBit) != 0)
                 {
                     j = 0;
                     v = rows[k].mapId;
@@ -348,10 +329,14 @@ int Minimap_update(void)
                         {
                             if (marker == rows[j].mapId)
                             {
-                                gMinimapRegionMinX = (rows[j].x0 < gMinimapRegionMinX) ? rows[j].x0 : gMinimapRegionMinX;
-                                gMinimapRegionMaxX = (rows[j].x1 > gMinimapRegionMaxX) ? rows[j].x1 : gMinimapRegionMaxX;
-                                gMinimapRegionMinZ = (rows[j].z0 < gMinimapRegionMinZ) ? rows[j].z0 : gMinimapRegionMinZ;
-                                gMinimapRegionMaxZ = (rows[j].z1 > gMinimapRegionMaxZ) ? rows[j].z1 : gMinimapRegionMaxZ;
+                                gMinimapRegionMinX =
+                                    (rows[j].x0 < gMinimapRegionMinX) ? rows[j].x0 : gMinimapRegionMinX;
+                                gMinimapRegionMaxX =
+                                    (rows[j].x1 > gMinimapRegionMaxX) ? rows[j].x1 : gMinimapRegionMaxX;
+                                gMinimapRegionMinZ =
+                                    (rows[j].z0 < gMinimapRegionMinZ) ? rows[j].z0 : gMinimapRegionMinZ;
+                                gMinimapRegionMaxZ =
+                                    (rows[j].z1 > gMinimapRegionMaxZ) ? rows[j].z1 : gMinimapRegionMaxZ;
                             }
                         }
                         gMinimapTexU = rows[k].texU;
@@ -365,51 +350,58 @@ int Minimap_update(void)
         {
             marker = 0;
         }
-        if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
-            (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
+        if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER || (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
             (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
-            objIsCurModelNotZero((int)player) == 0 ||
-            pauseMenuState != 0 || lbl_803DD75B != 0)
+            objIsCurModelNotZero((int)player) == 0 || pauseMenuState != 0 || lbl_803DD75B != 0)
         {
             marker = 0;
             gMinimapFadeAlpha -= 0x20;
             n = gMinimapFadeAlpha;
-            if (n < 0) n = 0;
-            else if (n > 0xff) n = 0xff;
+            if (n < 0)
+                n = 0;
+            else if (n > 0xff)
+                n = 0xff;
             gMinimapFadeAlpha = n;
             gMinimapBoxWidth -= 10;
             n = gMinimapBoxWidth;
-            if (n < 0) n = 0;
-            else if (n > 500) n = 500;
+            if (n < 0)
+                n = 0;
+            else if (n > 500)
+                n = 500;
             gMinimapBoxWidth = n;
             gMinimapBoxHeight -= 10;
             n = gMinimapBoxHeight;
-            if (n < 0) n = 0;
-            else if (n > 500) n = 500;
+            if (n < 0)
+                n = 0;
+            else if (n > 500)
+                n = 500;
             gMinimapBoxHeight = n;
         }
         else
         {
             gMinimapBoxHeight += 10;
             n = gMinimapBoxHeight;
-            if (n < 0) n = 0;
-            else if (n > 100) n = 100;
+            if (n < 0)
+                n = 0;
+            else if (n > 100)
+                n = 100;
             gMinimapBoxHeight = n;
             gMinimapFadeAlpha += 0x20;
             n = gMinimapFadeAlpha;
-            if (n < 0) n = 0;
-            else if (n > 0xff) n = 0xff;
+            if (n < 0)
+                n = 0;
+            else if (n > 0xff)
+                n = 0xff;
             gMinimapFadeAlpha = n;
         }
         if ((int)lbl_803DD92C == marker)
         {
             gMinimapContentAlpha += 0x20;
-            gMinimapContentAlpha =
-                (s16)((gMinimapContentAlpha < 0)
-                          ? 0
-                          : (s16)((gMinimapContentAlpha > gMinimapFadeAlpha) ? gMinimapFadeAlpha
-                                                                             : gMinimapContentAlpha));
+            gMinimapContentAlpha = (s16)((gMinimapContentAlpha < 0) ? 0
+                                                                    : (s16)((gMinimapContentAlpha > gMinimapFadeAlpha)
+                                                                                ? gMinimapFadeAlpha
+                                                                                : gMinimapContentAlpha));
         }
         else
         {
@@ -454,8 +446,7 @@ int Minimap_update(void)
             box[4] = (u16)(gMinimapBoxWidth - 8);
             lbl_803DD938 = 0x1b8 - gMinimapBoxHeight;
             ((s16*)box)[0xb] = lbl_803DD938;
-            drawHudBox(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight,
-                       gMinimapFadeAlpha & 0xff, 1);
+            drawHudBox(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight, gMinimapFadeAlpha & 0xff, 1);
             GXSetScissor(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight);
             switch (gMinimapViewMode)
             {
@@ -520,16 +511,12 @@ int Minimap_update(void)
                     ((u8*)&col)[2] = 0x84;
                     cwRect = col;
                     hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
-                    drawPartialTexture(minimapTexture,
-                                       (gMinimapF50 - panx) - frac,
-                                       ((f32)(int)lbl_803DD938 - pany) - fv,
-                                       gMinimapContentAlpha & 0xff,
-                                       (int)(gMinimapF256 * *(f32*)&gMinimapZoom),
-                                       texW - u, texH - vv, u, vv);
-                    cx = 0.5f +
-                        ((gMinimapZoom * (xrel * gMinimapWorldToTexScale) + gMinimapF50) - ox - panx);
-                    cy = 0.5f +
-                        ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)lbl_803DD938) - oy - pany);
+                    drawPartialTexture(minimapTexture, (gMinimapF50 - panx) - frac,
+                                       ((f32)(int)lbl_803DD938 - pany) - fv, gMinimapContentAlpha & 0xff,
+                                       (int)(gMinimapF256 * *(f32*)&gMinimapZoom), texW - u, texH - vv, u, vv);
+                    cx = 0.5f + ((gMinimapZoom * (xrel * gMinimapWorldToTexScale) + gMinimapF50) - ox - panx);
+                    cy =
+                        0.5f + ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)lbl_803DD938) - oy - pany);
                     ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0;
                     ((u8*)&col)[1] = 0;
@@ -538,16 +525,18 @@ int Minimap_update(void)
                     fv = gMinimapFNeg6_67;
                     gMinimapArrowScale1 = fv;
                     gMinimapArrowScale2 = fv;
-                    c1 = gMinimapArrowScale0 * mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
-                    s1 = gMinimapArrowScale0 * mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
+                    c1 = gMinimapArrowScale0 *
+                         mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
+                    s1 = gMinimapArrowScale0 *
+                         mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
                     c2 = gMinimapArrowScale1 *
-                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
                     s2 = gMinimapArrowScale1 *
-                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
                     c3 = gMinimapArrowScale2 *
-                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
+                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
                     s3 = gMinimapArrowScale2 *
-                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
+                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
                     cwTri1 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
                     ((u8*)&col)[3] = gMinimapContentAlpha;
@@ -557,13 +546,13 @@ int Minimap_update(void)
                     c1 = gMinimapFNeg6 * mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
                     s1 = gMinimapFNeg6 * mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
                     c2 = gMinimapFNeg4 *
-                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
                     s2 = gMinimapFNeg4 *
-                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
+                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
                     c3 = gMinimapFNeg4 *
-                        mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
+                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
                     s3 = gMinimapFNeg4 *
-                        mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
+                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
                     cwTri2 = col;
                     hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
                 }
@@ -642,8 +631,7 @@ int Minimap_update(void)
                 break;
             }
             GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawTexture(lbl_803DD940, gMinimapF32, (f32)(int)(lbl_803DD938 - 0x14),
-                        gMinimapFadeAlpha & 0xff, 0x100);
+            drawTexture(lbl_803DD940, gMinimapF32, (f32)(int)(lbl_803DD938 - 0x14), gMinimapFadeAlpha & 0xff, 0x100);
             if (gMinimapFadeAlpha != 0)
             {
                 ((u8*)&col2)[3] = gMinimapContentAlpha;
@@ -657,35 +645,32 @@ int Minimap_update(void)
                     {
                         t = (f32)(sv = xc - 0x14);
                         cwL = col2;
-                        hudDrawTriangle(gMinimapF44, t,
-                                        gMinimapF52, (f32)sv,
-                                        gMinimapF48, (f32)(xc - 0x1a), &cwL);
+                        hudDrawTriangle(gMinimapF44, t, gMinimapF52, (f32)sv, gMinimapF48, (f32)(xc - 0x1a), &cwL);
                     }
                     if (gMinimapZoom > gMinimapMinZoom)
                     {
                         t = (f32)(sv = xc + 0x14);
                         cwR = col2;
-                        hudDrawTriangle(gMinimapF44, t,
-                                        gMinimapF52, (f32)sv,
-                                        gMinimapF48, (f32)(xc + 0x1a), &cwR);
+                        hudDrawTriangle(gMinimapF44, t, gMinimapF52, (f32)sv, gMinimapF48, (f32)(xc + 0x1a), &cwR);
                     }
                 }
                 t = (f32)(xl = xc - 4);
                 e = (f32)(xr = xc + 4);
                 a = (f32)(sv = xc);
                 cwM = col2;
-                hudDrawTriangle(gMinimapF28, t, gMinimapF28, e,
-                                gMinimapF22, a, &cwM);
+                hudDrawTriangle(gMinimapF28, t, gMinimapF28, e, gMinimapF22, a, &cwM);
                 cwB = col2;
-                hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr,
-                                gMinimapF74, xc, &cwB);
+                hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr, gMinimapF74, xc, &cwB);
             }
         }
     }
     return 0;
 }
 
-u16 getMinimapY(void) { return lbl_803DD938; }
+u16 getMinimapY(void)
+{
+    return lbl_803DD938;
+}
 
 int TitleScreen_getObjectTypeId(u8* obj);
 
@@ -792,7 +777,8 @@ static inline void Minimap_freeObjectSlots(void** slots, int count)
 
 void Minimap_release(void)
 {
-    if (minimapTexture != NULL) textureFree(minimapTexture);
+    if (minimapTexture != NULL)
+        textureFree(minimapTexture);
     textureFree(lbl_803DD940);
     Minimap_freeObjectSlots(lbl_803DBBC8, 2);
     minimapTexture = NULL;
@@ -861,9 +847,7 @@ void fn_8013351C(void)
     s2 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
     y = lbl_803DD938 + 0x32;
     c2 = col;
-    hudDrawTriangle(gMinimapF110 - c0, y - s0,
-                    gMinimapF110 - c1, y - s1,
-                    gMinimapF110 - cc2, y - s2, &c2);
+    hudDrawTriangle(gMinimapF110 - c0, y - s0, gMinimapF110 - c1, y - s1, gMinimapF110 - cc2, y - s2, &c2);
 }
 
 void Minimap_frameStart(void)
@@ -883,12 +867,9 @@ void Minimap_frameStart(void)
 
     sfx = 0;
     player = (int)Obj_GetPlayerObject();
-    if ((void*)player == NULL ||
-        (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
-        Camera_GetViewportYOffset() != 0 ||
-        (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
-        objIsCurModelNotZero(player) == 0 ||
-        pauseMenuState != 0)
+    if ((void*)player == NULL || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
+        Camera_GetViewportYOffset() != 0 || (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
+        objIsCurModelNotZero(player) == 0 || pauseMenuState != 0)
     {
         if (gMinimapZoomSfxActive != 0)
         {
@@ -988,13 +969,15 @@ void Minimap_frameStart(void)
                 {
                     gMinimapZoomStep = gMinimapOne;
                 }
-                t = (gMinimapZoomStep < gMinimapZoomStepMin) ? gMinimapZoomStepMin
-                    : ((gMinimapZoomStep > gMinimapZoomStepMax) ? gMinimapZoomStepMax : gMinimapZoomStep);
+                t = (gMinimapZoomStep < gMinimapZoomStepMin)
+                        ? gMinimapZoomStepMin
+                        : ((gMinimapZoomStep > gMinimapZoomStepMax) ? gMinimapZoomStepMax : gMinimapZoomStep);
                 gMinimapZoomStep = t;
                 old = gMinimapZoom;
                 gMinimapZoom = old * t;
-                t = (gMinimapZoom < gMinimapMinZoom) ? gMinimapMinZoom
-                    : ((gMinimapZoom > gMinimapMaxZoom) ? gMinimapMaxZoom : gMinimapZoom);
+                t = (gMinimapZoom < gMinimapMinZoom)
+                        ? gMinimapMinZoom
+                        : ((gMinimapZoom > gMinimapMaxZoom) ? gMinimapMaxZoom : gMinimapZoom);
                 gMinimapZoom = t;
                 if (t != old)
                 {
@@ -1035,7 +1018,8 @@ void Minimap_frameStart(void)
                         gMinimapBlipPulse = 0;
                     }
                     slot = Camera_GetCurrentViewSlot();
-                    targetAngle = getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
+                    targetAngle =
+                        getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
                                  ((GameObject*)lbl_803DD934)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
                     targetAngle = *slot + targetAngle;
                     angleDelta = targetAngle - (u16)((GameObject*)lbl_803DBBC8[1])->anim.rotZ;
@@ -1080,5 +1064,23 @@ void Minimap_frameStart(void)
     }
 }
 
-u32 lbl_8031C5D0[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00040000, (u32)Minimap_initialise, (u32)Minimap_release, 0x00000000, (u32)Minimap_frameStart, (u32)Minimap_update, 0x00000000 };
-u32 lbl_8031C5F8[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)dll_3F_initialise, (u32)dll_3F_release, 0x00000000, (u32)dll_3F_frameStart_ret_0, (u32)dll_3F_frameEnd_nop, (u32)dll_3F_updateTimerReadout };
+u32 lbl_8031C5D0[10] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00040000,
+                        (u32)Minimap_initialise,
+                        (u32)Minimap_release,
+                        0x00000000,
+                        (u32)Minimap_frameStart,
+                        (u32)Minimap_update,
+                        0x00000000};
+u32 lbl_8031C5F8[10] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00050000,
+                        (u32)dll_3F_initialise,
+                        (u32)dll_3F_release,
+                        0x00000000,
+                        (u32)dll_3F_frameStart_ret_0,
+                        (u32)dll_3F_frameEnd_nop,
+                        (u32)dll_3F_updateTimerReadout};

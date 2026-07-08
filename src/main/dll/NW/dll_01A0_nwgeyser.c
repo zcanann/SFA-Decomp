@@ -22,10 +22,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/audio/sfx.h"
 
-
-
-extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
-                                void* scratch, f32 scaleX, f32 scaleZ);
+extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
+                                f32 scaleZ);
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
 extern u8 lbl_803268B4[];
@@ -43,9 +41,9 @@ void fn_801CDF94(int obj, int state, int flag);
 #define SFX_GEYSER_LOOP_A 0x372
 #define SFX_GEYSER_LOOP_B 0x373
 
-#define NWGEYSER_OBJFLAG_HIDDEN 0x4000
+#define NWGEYSER_OBJFLAG_HIDDEN             0x4000
 #define NWGEYSER_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define NWGEYSER_OBJFLAG_UPDATE_DISABLED 0x8000
+#define NWGEYSER_OBJFLAG_UPDATE_DISABLED    0x8000
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -96,11 +94,15 @@ void nw_geyser_update(int obj)
 
 void nw_geyser_init(int obj)
 {
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
     ((GameObject*)obj)->animEventCallback = NW_geyser_SeqFn;
 }
 
-char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }
+char* fn_801CDE70(int* obj)
+{
+    return *(char**)&((GameObject*)obj)->extra + 0xc;
+}
 
 int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -127,8 +129,7 @@ int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
-    objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
-                        lbl_803E5210, *(f32*)&lbl_803E5210);
+    objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch, lbl_803E5210, *(f32*)&lbl_803E5210);
     if (animUpdate->eventCount != 0)
     {
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags & ~0x400);
@@ -139,12 +140,16 @@ int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void fn_801CDF94(int obj, int state, int flag)
 {
-    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL && ((NwMammothState*)state)->playerDistanceSq < lbl_803E5214)
+    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
+        ((NwMammothState*)state)->playerDistanceSq < lbl_803E5214)
     {
         ((NwMammothState*)state)->eyeTarget.enabled = 1;
-        ((NwMammothState*)state)->eyeTarget.targetX = ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
-        ((NwMammothState*)state)->eyeTarget.targetY = ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
-        ((NwMammothState*)state)->eyeTarget.targetZ = ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
+        ((NwMammothState*)state)->eyeTarget.targetX =
+            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
+        ((NwMammothState*)state)->eyeTarget.targetY =
+            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
+        ((NwMammothState*)state)->eyeTarget.targetZ =
+            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
     }
     else
     {

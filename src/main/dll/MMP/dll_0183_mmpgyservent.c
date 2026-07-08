@@ -17,21 +17,26 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-#define MMPGYSERVENT_PARTFX_GEYSER 0x724
-#define MMPGYSERVENT_OBJFLAG_HIDDEN 0x4000
+#define MMPGYSERVENT_PARTFX_GEYSER              0x724
+#define MMPGYSERVENT_OBJFLAG_HIDDEN             0x4000
 #define MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct MmpGyserventPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 disableBit;    /* 0x1E: gamebit that switches the vent off */
-    u8 unk20;          /* 0x20 */
+    s16 disableBit; /* 0x1E: gamebit that switches the vent off */
+    u8 unk20;       /* 0x20 */
     u8 pad21[0x28 - 0x21];
 } MmpGyserventPlacement;
 
-
-int mmp_gyservent_getExtraSize(void) { return 0x0; }
-int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
+int mmp_gyservent_getExtraSize(void)
+{
+    return 0x0;
+}
+int mmp_gyservent_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void mmp_gyservent_free(void)
 {
@@ -50,14 +55,16 @@ void mmp_gyservent_hitDetect(void)
 void mmp_gyservent_update(int obj)
 {
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (mainGetBit(((MmpGyserventPlacement*)def)->disableBit) != 0) return;
+    if (mainGetBit(((MmpGyserventPlacement*)def)->disableBit) != 0)
+        return;
     ((GameObject*)obj)->unkF4 -= framesThisStep;
     if (((GameObject*)obj)->unkF4 < 0)
     {
         ((GameObject*)obj)->unkF4 = randomGetRange(0x46, 0xF0);
         ((GameObject*)obj)->unkF8 = randomGetRange(0x1E, 0x3C);
     }
-    if (((GameObject*)obj)->unkF8 == 0) return;
+    if (((GameObject*)obj)->unkF8 == 0)
+        return;
     ((GameObject*)obj)->unkF8 -= framesThisStep;
     if (((GameObject*)obj)->unkF8 <= 0)
     {

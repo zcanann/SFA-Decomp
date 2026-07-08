@@ -106,7 +106,8 @@ int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if (mainGetBit(GAMEBIT_CFBASE_1) != 0 && mainGetBit(GAMEBIT_CFBASE_2) != 0 && mainGetBit(GAMEBIT_CFBASE_3) != 0)
+            if (mainGetBit(GAMEBIT_CFBASE_1) != 0 && mainGetBit(GAMEBIT_CFBASE_2) != 0 &&
+                mainGetBit(GAMEBIT_CFBASE_3) != 0)
             {
                 mainSetBits(GAMEBIT_CF_ALL_BASES, 1);
             }
@@ -116,9 +117,15 @@ int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int CFPowerBase_getExtraSize(void) { return sizeof(CfPowerBaseState); }
+int CFPowerBase_getExtraSize(void)
+{
+    return sizeof(CfPowerBaseState);
+}
 
-int CFPowerBase_getObjectTypeId(void) { return 0x1; }
+int CFPowerBase_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void CFPowerBase_free(void)
 {
@@ -127,7 +134,8 @@ void CFPowerBase_free(void)
 void CFPowerBase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E41D0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E41D0);
 }
 
 void CFPowerBase_hitDetect(void)
@@ -142,11 +150,13 @@ void CFPowerBase_update(int* obj)
     CfPowerBaseState* sub = ((GameObject*)obj)->extra;
     if (mainGetBit(sub->litBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     if (((GameObject*)obj)->unkF4 != 0)
     {
@@ -158,8 +168,8 @@ void CFPowerBase_update(int* obj)
     {
         if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0)
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-                ((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+            ((GameObject*)obj)->anim.resetHitboxFlags =
+                (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
             mainSetBits(sub->litBit, 0);
             mainSetBits(0x973, 0);
             (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
@@ -199,15 +209,18 @@ void CFPowerBase_init(int* obj, u8* params)
     ObjMsg_AllocQueue(obj, 2);
     if (mainGetBit(sub->litBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     if (mainGetBit(sub->typeBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        ((GameObject*)obj)->anim.resetHitboxFlags =
+            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->unkF4 = 1;
     }
 }

@@ -34,7 +34,7 @@ STATIC_ASSERT(offsetof(IMMultiSeqPlacement, polarityMask) == 0x30);
 /* state->flags: SeqFn latched a step advance for update() to consume */
 #define IMMULTISEQ_LATCH_ADVANCE_BIT 0x01
 
-#define IMMULTISEQ_OBJFLAG_HIDDEN 0x4000
+#define IMMULTISEQ_OBJFLAG_HIDDEN             0x4000
 #define IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* IMMultiSeq_SeqFn: end-of-sequence predicate. With a valid trigger id,
@@ -75,15 +75,25 @@ int IMMultiSeq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int IMMultiSeq_getExtraSize(void) { return 0x2; }
-int IMMultiSeq_getObjectTypeId(void) { return 0x0; }
+int IMMultiSeq_getExtraSize(void)
+{
+    return 0x2;
+}
+int IMMultiSeq_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void IMMultiSeq_free(int obj) { ObjGroup_RemoveObject(obj, IMMULTISEQ_OBJGROUP); }
+void IMMultiSeq_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, IMMULTISEQ_OBJGROUP);
+}
 
 void IMMultiSeq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A8);
 }
 
 void IMMultiSeq_hitDetect(void)
@@ -118,7 +128,7 @@ void IMMultiSeq_update(int* obj)
         {
             state->step = 4;
         }
-        else if ((u32)!((def->polarityMask >> state->step) & 1) == mainGetBit(bitId))
+        else if ((u32) !((def->polarityMask >> state->step) & 1) == mainGetBit(bitId))
         {
             s8 triggerId = def->triggerIds[state->step];
             if (triggerId != -1)
@@ -155,7 +165,8 @@ void IMMultiSeq_init(int* obj, IMMultiSeqPlacement* params)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
     ((GameObject*)obj)->animEventCallback = IMMultiSeq_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (IMMULTISEQ_OBJFLAG_HIDDEN | IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (IMMULTISEQ_OBJFLAG_HIDDEN | IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED));
     objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {

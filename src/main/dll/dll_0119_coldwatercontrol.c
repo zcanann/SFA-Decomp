@@ -23,22 +23,26 @@ extern int fn_80295C40(int obj);
 extern f32 lbl_803E3B68; /* timer reset / initial value */
 extern f32 lbl_803E3B6C; /* repeat-hit period */
 
-#define GAMEBIT_COLDWATER_ARM 0x1bf
+#define GAMEBIT_COLDWATER_ARM  0x1bf
 #define GAMEBIT_COLDWATER_DONE 0x1bd
 
 #define COLDWATER_HIT_PRIORITY 0x1c
 
-#define COLDWATER_OBJFLAG_HIDDEN 0x4000
+#define COLDWATER_OBJFLAG_HIDDEN             0x4000
 #define COLDWATER_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-typedef struct ColdwaterControlState {
+typedef struct ColdwaterControlState
+{
     f32 timer;       /* 0x00 immersion timer */
     void* playerObj; /* 0x04 cached player object */
 } ColdwaterControlState;
 STATIC_ASSERT(sizeof(ColdwaterControlState) == 0x8);
 STATIC_ASSERT(offsetof(ColdwaterControlState, playerObj) == 0x4);
 
-int ColdWaterControl_getExtraSize(void) { return 0x8; }
+int ColdWaterControl_getExtraSize(void)
+{
+    return 0x8;
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -86,5 +90,6 @@ void ColdWaterControl_init(int obj)
 {
     ColdwaterControlState* p = (ColdwaterControlState*)((GameObject*)obj)->extra;
     p->timer = lbl_803E3B68;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (COLDWATER_OBJFLAG_HIDDEN | COLDWATER_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (COLDWATER_OBJFLAG_HIDDEN | COLDWATER_OBJFLAG_HITDETECT_DISABLED));
 }

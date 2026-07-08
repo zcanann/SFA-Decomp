@@ -20,8 +20,8 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/objhits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
-#define DBHOLECONTROL1_OBJGROUP 0x1e
-#define DBEGG_OBJGROUP 0x24
+#define DBHOLECONTROL1_OBJGROUP  0x1e
+#define DBEGG_OBJGROUP           0x24
 #define DBHOLECONTROL1_CHILD_OBJ 1337
 
 /*
@@ -71,7 +71,6 @@ typedef struct Dbholecontrol1Placement
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
-
 
 int dbstealerworm_stateHandlerB04(int obj, int p);
 
@@ -138,11 +137,11 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
     extern u64 ObjGroup_RemoveObject();
-    extern void*mapRomListFindItem(int, int, int, int, int);
+    extern void* mapRomListFindItem(int, int, int, int, int);
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);
     extern void loadObjectAtObject(int, int);
-    extern int*ObjGroup_GetObjects(int, int*);
+    extern int* ObjGroup_GetObjects(int, int*);
     extern void ObjMsg_SendToObjects(int, int, int, int, int);
     extern int lbl_803DDCE0;
     int newObj;
@@ -157,10 +156,13 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if (mainGetBit((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0) continue;
-            if (Obj_IsLoadingLocked() == 0) continue;
+            if (mainGetBit((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0)
+                continue;
+            if (Obj_IsLoadingLocked() == 0)
+                continue;
             res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
-            if (res == NULL) continue;
+            if (res == NULL)
+                continue;
             newObj = Obj_AllocObjectSetup(56, DBHOLECONTROL1_CHILD_OBJ);
             memcpy(newObj, res, 56);
             ((GameObject*)newObj)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
@@ -186,15 +188,26 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int dbholecontrol1_getExtraSize(void) { return 0xc; }
-int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
+int dbholecontrol1_getExtraSize(void)
+{
+    return 0xc;
+}
+int dbholecontrol1_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void dbholecontrol1_free(int obj) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP); }
+void dbholecontrol1_free(int obj)
+{
+    extern u64 ObjGroup_RemoveObject();
+    ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP);
+}
 
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 enabled = visible;
-    if (enabled != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
+    if (enabled != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6390);
 }
 
 void dbholecontrol1_hitDetect(void)

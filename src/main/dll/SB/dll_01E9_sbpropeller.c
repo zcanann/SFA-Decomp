@@ -27,12 +27,12 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_OTHER_SEQ_ID 0x9a
 
 /* propeller sound effects (SB-specific ids, no shared name) */
-#define SB_PROPELLER_SFX_LOOP 0x2c6
-#define SB_PROPELLER_SFX_HIT 0x2c7
+#define SB_PROPELLER_SFX_LOOP      0x2c6
+#define SB_PROPELLER_SFX_HIT       0x2c7
 #define SB_PROPELLER_SFX_DESTROYED 0x2c8
 
 /* partfx emitted once the propeller is destroyed (health <= 0) */
-#define SB_PROPELLER_PARTFX_SMOKE 0x9f   /* smokeTimer-gated smoke burst at the hub */
+#define SB_PROPELLER_PARTFX_SMOKE  0x9f  /* smokeTimer-gated smoke burst at the hub */
 #define SB_PROPELLER_PARTFX_DEBRIS 0x7aa /* bankIndex==1 debris trail from path point 0 */
 
 extern int randomGetRange(int lo, int hi);
@@ -54,20 +54,28 @@ extern f32 lbl_803E5824;
 extern u32 lbl_803DDC40;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-u32 sbGetPropeller(void) { return lbl_803DDC40; }
+u32 sbGetPropeller(void)
+{
+    return lbl_803DDC40;
+}
 
-int SB_Propeller_getExtraSize(void) { return sizeof(SBPropellerState); }
+int SB_Propeller_getExtraSize(void)
+{
+    return sizeof(SBPropellerState);
+}
 
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5810);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5810);
 }
 
 void SB_Propeller_hitDetect(GameObject* obj)
 {
     GameObject* o = obj;
-    if (o->anim.seqId != SB_PROPELLER_SEQ_ID) return;
+    if (o->anim.seqId != SB_PROPELLER_SEQ_ID)
+        return;
     o->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
@@ -153,13 +161,13 @@ void SB_Propeller_update(int obj)
         {
             o->unkF4 = 0;
         }
-        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0))
-                        && (o->unkF4 == 0))
-                    && (((void*)hit != NULL && ((void*)hit != (void*)Obj_GetPlayerObject()))))
-                && ((((GameObject*)hit)->anim.seqId != SB_PROPELLER_SEQ_ID
-                    && ((((GameObject*)hit)->anim.seqId != SB_OTHER_SEQ_ID
-                        && ((o->unkF4 = 0x14, objAnim->parent != NULL)))))))
-            && ((camA == 2 || (camA == 5)))) && (objAnim->seqId == SB_PROPELLER_SEQ_ID))
+        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)) && (o->unkF4 == 0)) &&
+               (((void*)hit != NULL && ((void*)hit != (void*)Obj_GetPlayerObject())))) &&
+              ((((GameObject*)hit)->anim.seqId != SB_PROPELLER_SEQ_ID &&
+                ((((GameObject*)hit)->anim.seqId != SB_OTHER_SEQ_ID &&
+                  ((o->unkF4 = 0x14, objAnim->parent != NULL))))))) &&
+             ((camA == 2 || (camA == 5)))) &&
+            (objAnim->seqId == SB_PROPELLER_SEQ_ID))
         {
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             Sfx_PlayFromObject(obj, SB_PROPELLER_SFX_HIT);
@@ -185,8 +193,7 @@ void SB_Propeller_update(int obj)
         {
             ((ObjHitsPriorityState*)objAnim->hitReactState)->objectPairPriority = 0;
         }
-        objAnim->rotZ = -(state->spinRate * timeDelta - (
-            f32)objAnim->rotZ);
+        objAnim->rotZ = -(state->spinRate * timeDelta - (f32)objAnim->rotZ);
     }
 }
 
@@ -210,4 +217,3 @@ void SB_Propeller_init(GameObject* obj, int placement)
     }
     return;
 }
-

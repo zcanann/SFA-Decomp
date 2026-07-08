@@ -14,12 +14,12 @@
 #include "main/frame_timing.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_A                                 0x100
 
 typedef struct Dim2prisonmammothPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 rotByte; /* 0x18 packed into rotX as (s16)(rotByte << 8) at init */
+    s8 rotByte;      /* 0x18 packed into rotX as (s16)(rotByte << 8) at init */
     s8 spawnVariant; /* 0x19 spawn variant selector (stateHandler00) */
     u8 pad1A[0x20 - 0x1A];
 } Dim2prisonmammothPlacement;
@@ -60,14 +60,17 @@ extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
 extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;
-extern int *gPlayerInterface;
-int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState *animUpdate);
+extern int* gPlayerInterface;
+int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate);
 
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 extern void saveGame_saveObjectPos(int obj);
 
-int dim2prisonmammoth_defaultStateHandler(void) { return 0x0; }
+int dim2prisonmammoth_defaultStateHandler(void)
+{
+    return 0x0;
+}
 
 int dim2prisonmammoth_stateHandler03(int obj, int state)
 {
@@ -156,10 +159,12 @@ int dim2prisonmammoth_stateHandler00(int* obj)
     switch ((s8)((Dim2prisonmammothPlacement*)sub)->spawnVariant)
     {
     case 0:
-        if ((u32)mainGetBit(548) != 0) return 3;
+        if ((u32)mainGetBit(548) != 0)
+            return 3;
         return 2;
     case 1:
-        if ((u32)mainGetBit(GAMEBIT_DIM_ReachedBottom) != 0) return 3;
+        if ((u32)mainGetBit(GAMEBIT_DIM_ReachedBottom) != 0)
+            return 3;
         return 3;
     default:
         return 0;
@@ -190,16 +195,21 @@ int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
     v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
 
-    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     return 0;
 }
 
-int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
+int dim2prisonmammoth_getExtraSize(void)
+{
+    return 0x604;
+}
 
-int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
+int dim2prisonmammoth_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void dim2prisonmammoth_free(void)
 {
@@ -229,8 +239,10 @@ void dim2prisonmammoth_update(int obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if (((&gPrisonMammothStateFlagsTable)[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
     {
-        ((Dim2prisonmammothState*)inner)->hitReactState = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
-            obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState, (f32*)(inner + 0x390));
+        ((Dim2prisonmammothState*)inner)->hitReactState =
+            ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
+                obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState,
+                (f32*)(inner + 0x390));
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
             fn_8003A168(obj, inner + 0x35c);
@@ -247,8 +259,7 @@ void dim2prisonmammoth_update(int obj)
     v.angles[2] = ((GameObject*)obj)->anim.rotZ;
     v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
-    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     ((Dim2prisonmammothState*)inner)->unk354 = 0;

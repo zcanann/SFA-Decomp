@@ -91,24 +91,28 @@ extern f32 lbl_803E49FC;
 typedef struct Dll1CESpawnSetup
 {
     u8 pad0[0x4 - 0x0];
-    u8 color[4];             /* 0x04 */
-    f32 posX;                /* 0x08 */
-    f32 posY;                /* 0x0c */
-    f32 posZ;                /* 0x10 */
+    u8 color[4]; /* 0x04 */
+    f32 posX;    /* 0x08 */
+    f32 posY;    /* 0x0c */
+    f32 posZ;    /* 0x10 */
     u8 pad14[0x1a - 0x14];
-    u8 field1A;              /* 0x1a */
-    u8 rotByte;              /* 0x1b */
-    s16 field1C;             /* 0x1c */
+    u8 field1A;  /* 0x1a */
+    u8 rotByte;  /* 0x1b */
+    s16 field1C; /* 0x1c */
     u8 pad1E[0x24 - 0x1e];
-    s16 field24;             /* 0x24 */
+    s16 field24; /* 0x24 */
     u8 pad26[0x2c - 0x26];
-    s16 field2C;             /* 0x2c */
+    s16 field2C; /* 0x2c */
 } Dll1CESpawnSetup;
 
-
-
-int dll_1CE_getExtraSize(void) { return 0xc; }
-int dll_1CE_getObjectTypeId(void) { return 0x0; }
+int dll_1CE_getExtraSize(void)
+{
+    return 0xc;
+}
+int dll_1CE_getObjectTypeId(void)
+{
+    return 0x0;
+}
 int dimmagicbridge_getExtraSize(void);
 
 void dll_1CE_free(void)
@@ -124,9 +128,9 @@ void dll_1CE_free(void)
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49E8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49E8);
 }
-
 
 #pragma peephole on
 void dll_1CE_hitDetect(void)
@@ -145,7 +149,8 @@ void dll_1CE_update(int* obj)
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
     Dll1CEState* sub = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
-    if (((GameObject*)obj)->anim.alpha == 0) return;
+    if (((GameObject*)obj)->anim.alpha == 0)
+        return;
     if ((s8)sub->igniteCountdown <= 0)
     {
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -165,7 +170,8 @@ void dll_1CE_update(int* obj)
             }
         }
     }
-    if (((GameObject*)obj)->anim.seqId == 0x334) return;
+    if (((GameObject*)obj)->anim.seqId == 0x334)
+        return;
     {
         int off;
         int i;
@@ -178,22 +184,27 @@ void dll_1CE_update(int* obj)
         for (i = 0; i < count; i++)
         {
             int* o = *(int**)((char*)list + off + 0x100);
-            if (((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_A || ((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_B)
+            if (((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_A ||
+                ((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_B)
             {
                 found = 1;
                 break;
             }
             off += 4;
         }
-        if (!found) return;
+        if (!found)
+            return;
     }
     {
-        if ((s8)(sub->igniteCountdown -= 1) > 0) return;
+        if ((s8)(sub->igniteCountdown -= 1) > 0)
+            return;
     }
     mainSetBits(((Dll1CEPlacement*)q)->gameBitId, 1);
     sub->opened = 1;
-    if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != mainGetBit(0x46d)) return;
-    if (Obj_IsLoadingLocked() == 0) return;
+    if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != mainGetBit(0x46d))
+        return;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
     {
         int* no = Obj_AllocObjectSetup(0x30, DLL1CE_CONTENTS_SUBTYPE);
         ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
@@ -217,9 +228,7 @@ void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
     ObjHitsPriorityState* hitState;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL1CE_OBJFLAG_HITDETECT_DISABLED);
     sub = ((GameObject*)obj)->extra;
     sub->igniteCountdown = 1;
@@ -276,5 +285,31 @@ extern u8 dimmagicbridge_initialise[];
 extern u8 dimmagicbridge_release[];
 extern u8 dimmagicbridge_render[];
 
-u32 gDIMMagicBridgeObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)dimmagicbridge_initialise, (u32)dimmagicbridge_release, 0x00000000, (u32)dimmagicbridge_init, (u32)dimmagicbridge_update, (u32)dimmagicbridge_hitDetect, (u32)dimmagicbridge_render, (u32)dimmagicbridge_free, (u32)dimmagicbridge_getObjectTypeId, (u32)dimmagicbridge_getExtraSize };
-u32 gDIM_LevelControlObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, (u32)dim_levelcontrol_init, (u32)dim_levelcontrol_update, 0x00000000, (u32)dim_levelcontrol_render, (u32)dim_levelcontrol_free, 0x00000000, (u32)dim_levelcontrol_getExtraSize };
+u32 gDIMMagicBridgeObjDescriptor[14] = {0x00000000,
+                                        0x00000000,
+                                        0x00000000,
+                                        0x00090000,
+                                        (u32)dimmagicbridge_initialise,
+                                        (u32)dimmagicbridge_release,
+                                        0x00000000,
+                                        (u32)dimmagicbridge_init,
+                                        (u32)dimmagicbridge_update,
+                                        (u32)dimmagicbridge_hitDetect,
+                                        (u32)dimmagicbridge_render,
+                                        (u32)dimmagicbridge_free,
+                                        (u32)dimmagicbridge_getObjectTypeId,
+                                        (u32)dimmagicbridge_getExtraSize};
+u32 gDIM_LevelControlObjDescriptor[14] = {0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00090000,
+                                          0x00000000,
+                                          0x00000000,
+                                          0x00000000,
+                                          (u32)dim_levelcontrol_init,
+                                          (u32)dim_levelcontrol_update,
+                                          0x00000000,
+                                          (u32)dim_levelcontrol_render,
+                                          (u32)dim_levelcontrol_free,
+                                          0x00000000,
+                                          (u32)dim_levelcontrol_getExtraSize};

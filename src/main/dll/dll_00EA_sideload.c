@@ -29,7 +29,7 @@ typedef struct SideloadPlacement
     f32 posZ; /* 0x10 */
     u8 pad14[0x18 - 0x14];
     s16 armGameBit; /* 0x18: arming game bit */
-    u8 yawByte; /* 0x1A: spawn yaw, shifted << 8 into the child's s16 rotation */
+    u8 yawByte;     /* 0x1A: spawn yaw, shifted << 8 into the child's s16 rotation */
     u8 pad1B[0x3C - 0x1B];
     s16 unk3C;
     u8 pad3E[0x48 - 0x3E];
@@ -64,8 +64,8 @@ void sideload_update(int self)
     short* p;
 
     state = *(int*)&((GameObject*)self)->anim.placementData;
-    if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
-        (getTrickyObject() == 0) && (mainGetBit((int)((SideloadPlacement*)state)->armGameBit) != 0))
+    if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) && (getTrickyObject() == 0) &&
+        (mainGetBit((int)((SideloadPlacement*)state)->armGameBit) != 0))
     {
         obj = Obj_AllocObjectSetup(0x18, SIDELOAD_CHILD_OBJ);
         *(u8*)((char*)obj + 4) = 2;

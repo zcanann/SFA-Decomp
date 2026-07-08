@@ -2,10 +2,10 @@
 
 // DVDGetDriveStatus() drive-status codes
 #define DVD_STATE_FATAL_ERROR -1
-#define DVD_STATE_NO_DISK 4
-#define DVD_STATE_COVER_OPEN 5
-#define DVD_STATE_WRONG_DISK 6
-#define DVD_STATE_RETRY 11
+#define DVD_STATE_NO_DISK     4
+#define DVD_STATE_COVER_OPEN  5
+#define DVD_STATE_WRONG_DISK  6
+#define DVD_STATE_RETRY       11
 
 void dvdCheckError(void)
 {
@@ -109,8 +109,7 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
 {
     u8 resetSeen = 0;
     gDvdReadCallbackResult = 0;
-    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 ||
-        gDvdReadCallbackResult == -3)
+    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
     {
         DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
         while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)

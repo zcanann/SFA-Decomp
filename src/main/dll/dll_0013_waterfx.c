@@ -23,49 +23,49 @@
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-#define WATERFX_POOL_SIZE 30
+#define WATERFX_POOL_SIZE    30
 #define WATERFX_MAX_SPLASHES 10
 
-#define WATERFX_TEXTURE_RIPPLE 0x56   /* gWaterfxRippleTexture */
+#define WATERFX_TEXTURE_RIPPLE  0x56  /* gWaterfxRippleTexture */
 #define WATERFX_TEXTURE_SPLASH0 0xc2a /* gWaterfxSplashTexture0 */
 #define WATERFX_TEXTURE_SPLASH1 0xc2c /* gWaterfxSplashTexture1 */
-#define WATERFX_TEXTURE_WAKE 0xc2d    /* gWaterfxWakeTexture */
+#define WATERFX_TEXTURE_WAKE    0xc2d /* gWaterfxWakeTexture */
 
-#define GX_BM_BLEND 1
-#define GX_BL_SRCALPHA 4
+#define GX_BM_BLEND       1
+#define GX_BL_SRCALPHA    4
 #define GX_BL_INVSRCALPHA 5
-#define GX_LO_NOOP 5
-#define GX_ALWAYS 7
-#define GX_AOP_AND 0
-#define GX_CULL_NONE 0
-#define GX_CULL_FRONT 1
-#define GX_CULL_BACK 2
-#define GX_VA_PNMTXIDX 0
-#define GX_VA_TEX0MTXIDX 1
-#define GX_PNMTX0 0
-#define GX_VA_POS 9
-#define GX_VA_CLR0 11
-#define GX_VA_TEX0 13
-#define GX_DIRECT 1
-#define GX_INDEX16 3
-#define GX_POINTS 0xb8
-#define GX_TRIANGLESTRIP 152
-#define GX_VTXFMT2 2
-#define GX_TEVSTAGE0 0
-#define GX_TEXCOORD_NULL 0xff
-#define GX_TEXMAP_NULL 0xff
-#define GX_COLOR0A0 4
-#define GX_CC_KONST 0xe
-#define GX_CC_ZERO 0xf
-#define GX_CA_KONST 6
-#define GX_CA_ZERO 7
-#define GX_TEV_SWAP0 0
-#define GX_TEV_ADD 0
-#define GX_TB_ZERO 0
-#define GX_CS_SCALE_1 0
-#define GX_TRUE 1
-#define GX_TEVPREV 0
-#define GX_TEV_KCSEL_K0 0xc
+#define GX_LO_NOOP        5
+#define GX_ALWAYS         7
+#define GX_AOP_AND        0
+#define GX_CULL_NONE      0
+#define GX_CULL_FRONT     1
+#define GX_CULL_BACK      2
+#define GX_VA_PNMTXIDX    0
+#define GX_VA_TEX0MTXIDX  1
+#define GX_PNMTX0         0
+#define GX_VA_POS         9
+#define GX_VA_CLR0        11
+#define GX_VA_TEX0        13
+#define GX_DIRECT         1
+#define GX_INDEX16        3
+#define GX_POINTS         0xb8
+#define GX_TRIANGLESTRIP  152
+#define GX_VTXFMT2        2
+#define GX_TEVSTAGE0      0
+#define GX_TEXCOORD_NULL  0xff
+#define GX_TEXMAP_NULL    0xff
+#define GX_COLOR0A0       4
+#define GX_CC_KONST       0xe
+#define GX_CC_ZERO        0xf
+#define GX_CA_KONST       6
+#define GX_CA_ZERO        7
+#define GX_TEV_SWAP0      0
+#define GX_TEV_ADD        0
+#define GX_TB_ZERO        0
+#define GX_CS_SCALE_1     0
+#define GX_TRUE           1
+#define GX_TEVPREV        0
+#define GX_TEV_KCSEL_K0   0xc
 #define GX_TEV_KASEL_K0_A 0x1c
 
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
@@ -113,8 +113,9 @@ void waterfx_setupSplashDropPointRender(void)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetCullMode(GX_CULL_NONE);
-    (*gSkyInterface)->getCurrentAmbientAndLightColors(
-        &col[0], &col[1], &col[2], &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
+    (*gSkyInterface)
+        ->getCurrentAmbientAndLightColors(&col[0], &col[1], &col[2], &ignoredLightColor, &ignoredLightColor,
+                                          &ignoredLightColor);
     col[0] = (col[0] >> 2) + 0x80;
     col[1] = (col[1] >> 2) + 0x80;
     col[2] = (col[2] >> 2) + 0x80;
@@ -277,7 +278,7 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
     i = 0;
     base = gWaterfxSplashPool;
     p = base;
-    while (i < WATERFX_MAX_SPLASHES && (p->active != 0 || p->f10 < *(f32 *)&lbl_803DF2EC))
+    while (i < WATERFX_MAX_SPLASHES && (p->active != 0 || p->f10 < *(f32*)&lbl_803DF2EC))
     {
         p++;
         i++;
@@ -361,25 +362,26 @@ void waterfx_func05(int obj, int renderParam)
             fn_8007CAF4((int)gWaterfxRippleTexture);
         }
         {
-        int oPool, o32, o64;
-        for (i = 0, oPool = 0, o32 = 0, o64 = oPool; i < WATERFX_POOL_SIZE; oPool += 0x1c, o32 += 0x20, o64 += 0x40, i++)
-        {
-            WaterEntry7* e = (WaterEntry7*)((char*)gWaterfxRipplePool + oPool);
-            if (e->active != 0)
+            int oPool, o32, o64;
+            for (i = 0, oPool = 0, o32 = 0, o64 = oPool; i < WATERFX_POOL_SIZE;
+                 oPool += 0x1c, o32 += 0x20, o64 += 0x40, i++)
             {
-                setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
-                dp.x = e->x;
-                dp.y = e->y;
-                dp.z = e->z;
-                dp.f10 = e->f10;
-                dp.f8 = e->f14;
-                dp.fc = 0;
-                dp.fa = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
-                fn_8007D670();
-                drawFn_8005cf8c((char*)gWaterfxRippleVtx + o64, (char*)gWaterfxRippleVtxDesc + o32, 2);
+                WaterEntry7* e = (WaterEntry7*)((char*)gWaterfxRipplePool + oPool);
+                if (e->active != 0)
+                {
+                    setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
+                    dp.x = e->x;
+                    dp.y = e->y;
+                    dp.z = e->z;
+                    dp.f10 = e->f10;
+                    dp.f8 = e->f14;
+                    dp.fc = 0;
+                    dp.fa = 0;
+                    Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                    fn_8007D670();
+                    drawFn_8005cf8c((char*)gWaterfxRippleVtx + o64, (char*)gWaterfxRippleVtxDesc + o32, 2);
+                }
             }
-        }
         }
         i = 0;
         if ((int)gWaterfxSplashCount != 0)
@@ -545,11 +547,13 @@ void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surfa
             {
                 if (speed > lbl_803DF33C)
                 {
-                    waterfx_spawnSplashBurst(objHeader, px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, lbl_803DF300);
+                    waterfx_spawnSplashBurst(objHeader, px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz,
+                                             lbl_803DF300);
                 }
             }
             gWaterfxRippleScale = lbl_803DF318;
-            waterfx_spawnRipple(px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, *(s16*)objHeader, lbl_803DF300, 4);
+            waterfx_spawnRipple(px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, *(s16*)objHeader,
+                                lbl_803DF300, 4);
             gWaterfxPendingImpactPosition[0] = px;
             gWaterfxPendingImpactPosition[1] = *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4);
             gWaterfxPendingImpactPosition[2] = pz;

@@ -78,8 +78,8 @@ extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern f32 gShLevelControlHudTextDuration;
 
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_B 0x200
+#define PAD_BUTTON_A    0x100
+#define PAD_BUTTON_B    0x200
 #define PAD_BUTTON_MENU 0x1000
 
 /* GameObject.objectFlags bit set on the player while a parent object holds it
@@ -105,11 +105,11 @@ void SH_LevelControl_free(void)
     }
 }
 
-#define SCTOTEMLOGPUZ_RESET_GAMEBIT 0xBF8
-#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
+#define SCTOTEMLOGPUZ_RESET_GAMEBIT          0xBF8
+#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET  5
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
-#define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
-#define SHLEVELCONTROL_AIRMETER_BGTEXTURE 0x5db /* air-meter background texture id */
+#define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS       0x20000000
+#define SHLEVELCONTROL_AIRMETER_BGTEXTURE    0x5db /* air-meter background texture id */
 
 int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* updateState)
 {
@@ -146,7 +146,8 @@ void mapUnloadFn_801d7c94(void* obj, void* p2)
         runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
         mainSetBits(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
     }
-    if (runtime->eventCountdown == 0) return;
+    if (runtime->eventCountdown == 0)
+        return;
 
     if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET)
     {
@@ -176,8 +177,8 @@ dec:
 #pragma dont_inline reset
 
 #pragma opt_common_subs off
-void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
-                           s16 clearIfClearBit, s16 latchBit, int musicId)
+void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit, s16 latchBit,
+                           int musicId)
 {
 
     extern void Music_Trigger(int id, int arg);
@@ -191,7 +192,8 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
     {
         if (clearIfSetBitValid == 0 || mainGetBit(clearIfSetBit) == 0)
         {
-            if (mainGetBit(latchBit) != 0) goto end;
+            if (mainGetBit(latchBit) != 0)
+                goto end;
         }
         if (clearIfSetBitValid != 0)
         {
@@ -212,7 +214,8 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
     {
         if (clearIfClearBitValid == 0 || mainGetBit(clearIfClearBit) == 0)
         {
-            if (mainGetBit(latchBit) == 0) goto end;
+            if (mainGetBit(latchBit) == 0)
+                goto end;
         }
         if (clearIfSetBitValid != 0)
         {
@@ -234,8 +237,8 @@ end:
 }
 
 #pragma opt_common_subs reset
-void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
-                                   s16 clearIfClearBit, s16 latchBit, int musicId)
+void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit,
+                                   s16 latchBit, int musicId)
 {
 
     mainSetBits(latchBit, !mainGetBit(latchBit));
@@ -308,12 +311,12 @@ void SH_LevelControl_setMusic(short* obj)
 
 typedef struct ShLevelcontrolState
 {
-    u32 flags; /* flag word; bit 2 cleared on substate transitions */
+    u32 flags;      /* flag word; bit 2 cleared on substate transitions */
     u8 waitCounter; /* counter incremented before a gated action fires */
-    u8 mapAct; /* map-event act selecting the active sub-event handler */
-    u8 eventState; /* bloop-event substate machine 0..7 */
+    u8 mapAct;      /* map-event act selecting the active sub-event handler */
+    u8 eventState;  /* bloop-event substate machine 0..7 */
     u8 pad7;
-    f32 timer8; /* air-meter countdown */
+    f32 timer8;       /* air-meter countdown */
     f32 hudTextTimer; /* countdown for the on-screen hint text */
     s16 unk10;
     s16 musicLatch; /* current map music/ambient id latch (0xcc/0xf2/0xdb/-1) */
@@ -321,7 +324,7 @@ typedef struct ShLevelcontrolState
 } ShLevelcontrolState;
 
 /* flags word bits (shared physical field with ShopkeeperLevelControlState.flags) */
-#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2          /* re-apply map music on next tick; cleared at substate/music transitions */
+#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2 /* re-apply map music on next tick; cleared at substate/music transitions */
 #define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40 /* ThornTail intro event already fired */
 #define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80 /* early cutscene sequence begun */
 
@@ -474,8 +477,8 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 #pragma scheduling on
 #pragma peephole on
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
-#define SHOPKEEPER_LOADING_FLAG 0x1000
-#define SHOPKEEPER_OBJFLAG_HIDDEN 0x4000
+#define SHOPKEEPER_LOADING_FLAG        0x1000
+#define SHOPKEEPER_OBJFLAG_HIDDEN      0x4000
 
 typedef struct ShopkeeperObject
 {
@@ -485,27 +488,27 @@ typedef struct ShopkeeperObject
     u16 flagsB0;
 } ShopkeeperObject;
 
-#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
-    (*gObjectTriggerInterface)->runSequence((triggerId), (void *)(obj), (arg))
-#define SCREEN_TRANSITION_START(transitionId, value) \
-    (*gScreenTransitionInterface)->start((transitionId), (value))
-#define SCREEN_TRANSITION_FINISHED() \
-    (*gScreenTransitionInterface)->isFinished()
-#define MAP_EVENT_TRIGGER(mapId, eventId, value, arg) \
+#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg)                                                                    \
+    (*gObjectTriggerInterface)->runSequence((triggerId), (void*)(obj), (arg))
+#define SCREEN_TRANSITION_START(transitionId, value) (*gScreenTransitionInterface)->start((transitionId), (value))
+#define SCREEN_TRANSITION_FINISHED()                 (*gScreenTransitionInterface)->isFinished()
+#define MAP_EVENT_TRIGGER(mapId, eventId, value, arg)                                                                  \
     (*gMapEventInterface)->savePoint((mapId), (eventId), (value), (arg))
-#define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-#define SHOPKEEPER_APPLY_MAP_OVERRIDE(state, enabledBit)      \
-    if (mainGetBit((enabledBit)) != 0) {                     \
-        if ((state)->mapOverride != 0xcc) {                   \
-            (state)->mapOverride = 0xcc;                      \
-            mainSetBits(GAMEBIT_SH_Entered00C0, 1);                             \
-            (state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;\
-        }                                                     \
-    } else if ((state)->mapOverride == 0xcc) {                \
-        (state)->mapOverride = -1;                            \
+#define MAP_EVENT_GET_ANIM(mapId, eventId)        (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
+#define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+#define SHOPKEEPER_APPLY_MAP_OVERRIDE(state, enabledBit)                                                               \
+    if (mainGetBit((enabledBit)) != 0)                                                                                 \
+    {                                                                                                                  \
+        if ((state)->mapOverride != 0xcc)                                                                              \
+        {                                                                                                              \
+            (state)->mapOverride = 0xcc;                                                                               \
+            mainSetBits(GAMEBIT_SH_Entered00C0, 1);                                                                    \
+            (state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;                                                         \
+        }                                                                                                              \
+    }                                                                                                                  \
+    else if ((state)->mapOverride == 0xcc)                                                                             \
+    {                                                                                                                  \
+        (state)->mapOverride = -1;                                                                                     \
     }
 
 #pragma scheduling off
@@ -549,10 +552,8 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
         break;
     }
 
-    if ((state->flags & SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED) == 0 &&
-        mainGetBit(GAMEBIT_SH_FireWeed_190) != 0 &&
-        mainGetBit(GAMEBIT_SH_FireWeed_191) != 0 &&
-        mainGetBit(GAMEBIT_SH_FireWeed_192) != 0)
+    if ((state->flags & SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED) == 0 && mainGetBit(GAMEBIT_SH_FireWeed_190) != 0 &&
+        mainGetBit(GAMEBIT_SH_FireWeed_191) != 0 && mainGetBit(GAMEBIT_SH_FireWeed_192) != 0)
     {
         if (mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) == 0)
         {
@@ -647,12 +648,12 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
         }
     }
 
-    if ((u8)MAP_EVENT_GET_ANIM(((ShopkeeperObject *)obj)->mapId, 6) == 0)
+    if ((u8)MAP_EVENT_GET_ANIM(((ShopkeeperObject*)obj)->mapId, 6) == 0)
     {
         playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
         if (playerHasSpell((int)playerObj, 0) != 0)
         {
-            MAP_EVENT_SET_ANIM(((ShopkeeperObject *)obj)->mapId, 6, 1);
+            MAP_EVENT_SET_ANIM(((ShopkeeperObject*)obj)->mapId, 6, 1);
         }
     }
 }
@@ -724,7 +725,7 @@ void SH_LevelControl_update(int obj)
     val = mainGetBit(GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED);
     if ((val != 0) &&
         (animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b),
-            animEvt == '\0'))
+         animEvt == '\0'))
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b, 1);
     }
@@ -1004,7 +1005,8 @@ void SH_LevelControl_init(int obj)
         ((ShLevelcontrolState*)state)->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
     }
 
-    ((ShLevelcontrolState*)state)->mapAct = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    ((ShLevelcontrolState*)state)->mapAct =
+        (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
 
     ((ShLevelcontrolState*)state)->musicLatch = -1;
     Music_Trigger(MUSICTRIG_fox_arwing, 0);
@@ -1028,5 +1030,24 @@ void SH_LevelControl_init(int obj)
 }
 
 /* descriptor/ptr table auto 0x803277a8-0x80327818 */
-u32 gWarpStoneLiftObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)warpstonelift_initialise, (u32)warpstonelift_release, 0x00000000, (u32)warpstonelift_init, (u32)warpstonelift_update, (u32)warpstonelift_hitDetect, (u32)warpstonelift_render, (u32)warpstonelift_free, (u32)warpstonelift_getObjectTypeId, (u32)warpstonelift_getExtraSize };
-u32 gSH_staffObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, (u32)sh_staff_update, 0x00000000, (u32)sh_staff_render, (u32)sh_staff_free, 0x00000000, (u32)sh_staff_getExtraSize };
+u32 gWarpStoneLiftObjDescriptor[14] = {0x00000000,
+                                       0x00000000,
+                                       0x00000000,
+                                       0x00090000,
+                                       (u32)warpstonelift_initialise,
+                                       (u32)warpstonelift_release,
+                                       0x00000000,
+                                       (u32)warpstonelift_init,
+                                       (u32)warpstonelift_update,
+                                       (u32)warpstonelift_hitDetect,
+                                       (u32)warpstonelift_render,
+                                       (u32)warpstonelift_free,
+                                       (u32)warpstonelift_getObjectTypeId,
+                                       (u32)warpstonelift_getExtraSize};
+u32 gSH_staffObjDescriptor[14] = {0x00000000,           0x00000000,
+                                  0x00000000,           0x00090000,
+                                  0x00000000,           0x00000000,
+                                  0x00000000,           0x00000000,
+                                  (u32)sh_staff_update, 0x00000000,
+                                  (u32)sh_staff_render, (u32)sh_staff_free,
+                                  0x00000000,           (u32)sh_staff_getExtraSize};

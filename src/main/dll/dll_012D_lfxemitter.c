@@ -20,7 +20,10 @@ int lfxemitter_func0B(LfxEmitterObject* obj)
     return state->config != NULL;
 }
 
-int lfxemitter_setScale(void) { return -1; }
+int lfxemitter_setScale(void)
+{
+    return -1;
+}
 
 void fn_8018FF48(u16* src, u16* dst)
 {
@@ -56,8 +59,14 @@ void fn_8018FF48(u16* src, u16* dst)
     *(u8*)(dst + 0x14) = *(u8*)(src + 0x14);
 }
 
-int lfxemitter_getExtraSize(void) { return 0x124; }
-int lfxemitter_getObjectTypeId(void) { return 0x0; }
+int lfxemitter_getExtraSize(void)
+{
+    return 0x124;
+}
+int lfxemitter_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void lfxemitter_free(LfxEmitterObject* obj)
 {
@@ -69,7 +78,6 @@ void lfxemitter_free(LfxEmitterObject* obj)
     }
     ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
-
 
 void lfxemitter_render(void)
 {
@@ -93,8 +101,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
 
     if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0)
     {
-        if ((Curve_AdvanceAlongPath(&state->curve, state->curveSpeed) != 0) ||
-            (state->curve.atSegmentEnd != 0))
+        if ((Curve_AdvanceAlongPath(&state->curve, state->curveSpeed) != 0) || (state->curve.atSegmentEnd != 0))
         {
             (*gRomCurveInterface)->goNextPoint(&state->curve);
         }
@@ -113,8 +120,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
         }
     }
 
-    if ((player != NULL) &&
-        ((state->enableBit == -1) || (mainGetBit(state->enableBit) != 0)))
+    if ((player != NULL) && ((state->enableBit == -1) || (mainGetBit(state->enableBit) != 0)))
     {
         if (state->hasLifeTimer != 0)
         {
@@ -138,7 +144,8 @@ void lfxemitter_update(LfxEmitterObject* obj)
             else
             {
                 state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
-                getTabEntry(state->config, MLDF_FILEID_LACTIONS_BIN, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
+                getTabEntry(state->config, MLDF_FILEID_LACTIONS_BIN, state->configIndex * LFXEMITTER_CONFIG_BYTES,
+                            LFXEMITTER_CONFIG_BYTES);
                 if (state->config != NULL)
                 {
                     fn_8018FF48((u16*)state->config, (u16*)&lbl_803AC7B0);

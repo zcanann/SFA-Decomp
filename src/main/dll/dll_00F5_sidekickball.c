@@ -30,8 +30,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
-#define SIDEKICKBALL_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the ball */
+#define SIDEKICKBALL_OBJFLAG_PARENT_SLACK       0x1000
+#define SIDEKICKBALL_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the ball */
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_Y 0x800
@@ -59,8 +59,8 @@ extern u32 buttonGetDisabled(int port);
 extern void OSReport(const char* msg, ...);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8002A5DC(int obj);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern void PSVECNormalize(f32 * src, f32 * dst);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern void PSVECNormalize(f32* src, f32* dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void logPrintf(char* fmt, ...);
 extern const f32 gSidekickBallRestitution;
@@ -87,11 +87,20 @@ enum SidekickBallMode
     SIDEKICK_BALL_FADING = 5,
 };
 
-int SidekickBall_getExtraSize(void) { return 0x2cc; }
+int SidekickBall_getExtraSize(void)
+{
+    return 0x2cc;
+}
 
-int fn_801793A4(int* obj) { return *((u8*)(int*)((GameObject*)obj)->extra + 0x274) == 0; }
+int fn_801793A4(int* obj)
+{
+    return *((u8*)(int*)((GameObject*)obj)->extra + 0x274) == 0;
+}
 
-void SidekickBall_free(int obj) { mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1); }
+void SidekickBall_free(int obj)
+{
+    mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
+}
 
 void SidekickBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -105,7 +114,8 @@ void fn_8017962C(int* obj)
 {
     SidekickBallState* state = ((GameObject*)obj)->extra;
     u8 mode = state->ballMode;
-    if (mode != SIDEKICK_BALL_THROWN && mode != SIDEKICK_BALL_HELD) return;
+    if (mode != SIDEKICK_BALL_THROWN && mode != SIDEKICK_BALL_HELD)
+        return;
     state->fadeTimer = lbl_803E369C;
 }
 
@@ -113,7 +123,8 @@ int fn_80179650(int* obj)
 {
     int result = 0;
     u8 mode = (*(SidekickBallState**)&((GameObject*)obj)->extra)->ballMode;
-    if (mode == SIDEKICK_BALL_HELD || mode == SIDEKICK_BALL_MOVING) result = 1;
+    if (mode == SIDEKICK_BALL_HELD || mode == SIDEKICK_BALL_MOVING)
+        result = 1;
     return result;
 }
 
@@ -156,12 +167,14 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     player = Obj_GetPlayerObject();
     playerState = ((GameObject*)player)->extra;
 
-    if (params->triggerArmed == 1) return;
+    if (params->triggerArmed == 1)
+        return;
 
     if (params->triggerHit == 0)
     {
         params->triggerHit = 1;
-        if (params->triggerHit == 0) return;
+        if (params->triggerHit == 0)
+            return;
         params->sendHoldMessage[0] = 1;
         return;
     }
@@ -187,20 +200,21 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     {
         params->triggerHit = 2;
     }
-    if (params->triggerHit != 2) goto end;
-    if (((GameObject*)obj)->unkF8 != 0) goto end;
+    if (params->triggerHit != 2)
+        goto end;
+    if (((GameObject*)obj)->unkF8 != 0)
+        goto end;
 
-    if (fn_8029669C(player) == 0) goto fading;
+    if (fn_8029669C(player) == 0)
+        goto fading;
 
     params->triggerHit = 0;
     params->triggerArmed = 1;
 
     {
         f32 k = lbl_803E3688;
-        ((GameObject*)obj)->anim.velocityY =
-            k * (lbl_803E3690 * *(f32*)((char*)playerState + 0x298) + lbl_803E368C);
-        ((GameObject*)obj)->anim.velocityZ =
-            k * (lbl_803E3698 * *(f32*)((char*)playerState + 0x298) + lbl_803E3694);
+        ((GameObject*)obj)->anim.velocityY = k * (lbl_803E3690 * *(f32*)((char*)playerState + 0x298) + lbl_803E368C);
+        ((GameObject*)obj)->anim.velocityZ = k * (lbl_803E3698 * *(f32*)((char*)playerState + 0x298) + lbl_803E3694);
     }
 
     ((GameObject*)lcl)->anim.localPosX = lbl_803E369C;
@@ -243,7 +257,7 @@ end:
 void SidekickBall_update(u8* self)
 {
     extern int ObjTrigger_IsSet(u8 * obj);
-    extern void trickyBallFn_801793b8(int obj, u8 *state);
+    extern void trickyBallFn_801793b8(int obj, u8* state);
     SidekickBallState* state;
     u8* player;
     u8* other;
@@ -258,20 +272,17 @@ void SidekickBall_update(u8* self)
 
     player = Obj_GetPlayerObject();
     other = getTrickyObject();
-    if (player == NULL
-        || (((GameObject*)player)->objectFlags & SIDEKICKBALL_OBJFLAG_PARENT_SLACK) != 0
-        || other == NULL
-        || (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
-            otherStatusMask = otherStatusZeroWord >> 5,
-            (otherStatusMask & 0x1000) != 0)
-        || mainGetBit(GAMEBIT_NoBallsAllowed) != 0)
+    if (player == NULL || (((GameObject*)player)->objectFlags & SIDEKICKBALL_OBJFLAG_PARENT_SLACK) != 0 ||
+        other == NULL ||
+        (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
+         otherStatusMask = otherStatusZeroWord >> 5, (otherStatusMask & 0x1000) != 0) ||
+        mainGetBit(GAMEBIT_NoBallsAllowed) != 0)
     {
         Obj_FreeObject(self);
         return;
     }
 
-    if (state->ballMode == SIDEKICK_BALL_THROWN ||
-        state->ballMode == SIDEKICK_BALL_HELD ||
+    if (state->ballMode == SIDEKICK_BALL_THROWN || state->ballMode == SIDEKICK_BALL_HELD ||
         state->ballMode == SIDEKICK_BALL_MOVING)
     {
         state->fadeTimer = state->fadeTimer + timeDelta;
@@ -293,9 +304,7 @@ void SidekickBall_update(u8* self)
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         gotHit = 0;
-        if ((buttonGetDisabled(0) & 0x100) == 0u
-            && ((GameObject*)self)->unkF8 == 0
-            && ObjTrigger_IsSet(self) != 0)
+        if ((buttonGetDisabled(0) & 0x100) == 0u && ((GameObject*)self)->unkF8 == 0 && ObjTrigger_IsSet(self) != 0)
         {
             ObjHits_DisableObject((u32)self);
             gotHit = 1;
@@ -430,8 +439,7 @@ u8 trickyBallMove(u8* obj)
         ((GameObject*)obj)->anim.velocityY += lbl_803E36BC * timeDelta;
         OSReport(sSidekickBallYVelDepthFormat, ((GameObject*)obj)->anim.velocityY, state->floorDepth);
         if ((((GameObject*)obj)->anim.velocityY < lbl_803E36C0) &&
-            (((GameObject*)obj)->anim.velocityY > lbl_803E36C4) &&
-            (state->floorDepth < lbl_803E36A0))
+            (((GameObject*)obj)->anim.velocityY > lbl_803E36C4) && (state->floorDepth < lbl_803E36A0))
         {
             return 1;
         }
@@ -473,9 +481,8 @@ u8 trickyBallMove(u8* obj)
             reflectedY *= invSpeed;
             reflectedZ *= invSpeed;
         }
-        dot = lbl_803E36D0 *
-        ((reflectedX * collisionNormal[0]) + (reflectedY * collisionNormal[1]) +
-            (reflectedZ * collisionNormal[2]));
+        dot = lbl_803E36D0 * ((reflectedX * collisionNormal[0]) + (reflectedY * collisionNormal[1]) +
+                              (reflectedZ * collisionNormal[2]));
         logPrintf(sSidekickBallDotFormat, dot);
         if (dot > lbl_803E369C)
         {
@@ -485,8 +492,7 @@ u8 trickyBallMove(u8* obj)
             ((GameObject*)obj)->anim.velocityX -= reflectedX;
             ((GameObject*)obj)->anim.velocityY -= reflectedY;
             ((GameObject*)obj)->anim.velocityZ -= reflectedZ;
-            if ((state->floorY == lbl_803E369C) && (speed < lbl_803E36D4) &&
-                (state->hasCollisionNormal != 0))
+            if ((state->floorY == lbl_803E369C) && (speed < lbl_803E36D4) && (state->hasCollisionNormal != 0))
             {
                 return 2;
             }
@@ -544,7 +550,10 @@ void area_release(void);
 void area_initialise(void);
 
 ObjectDescriptor gAreaObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)area_initialise,
     (ObjectDescriptorCallback)area_release,
     0,
@@ -564,4 +573,17 @@ char sSidekickBallYVelDepthFormat[] = "yvel %f, depth %f\n";
 char sSidekickBallDotFormat[] = " dot %f ";
 
 /* .data fill (reconstructed to match dll_00F5_sidekickball.o) */
-ObjectDescriptor gSidekickBallObjDescriptor = { 0, 0, 0, 0x90000, 0, 0, 0, (ObjectDescriptorCallback)SidekickBall_init, (ObjectDescriptorCallback)SidekickBall_update, 0, (ObjectDescriptorCallback)SidekickBall_render, (ObjectDescriptorCallback)SidekickBall_free, 0, SidekickBall_getExtraSize };
+ObjectDescriptor gSidekickBallObjDescriptor = {0,
+                                               0,
+                                               0,
+                                               0x90000,
+                                               0,
+                                               0,
+                                               0,
+                                               (ObjectDescriptorCallback)SidekickBall_init,
+                                               (ObjectDescriptorCallback)SidekickBall_update,
+                                               0,
+                                               (ObjectDescriptorCallback)SidekickBall_render,
+                                               (ObjectDescriptorCallback)SidekickBall_free,
+                                               0,
+                                               SidekickBall_getExtraSize};

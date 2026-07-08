@@ -14,40 +14,40 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define WCTEMPLEBRI_EXTRA_SIZE 0x68
-#define WCTEMPLEBRI_RENDER_TYPE_BASE 0x400
+#define WCTEMPLEBRI_EXTRA_SIZE        0x68
+#define WCTEMPLEBRI_RENDER_TYPE_BASE  0x400
 #define WCTEMPLEBRI_RENDER_TYPE_SHIFT 0xb
 
-#define WCTEMPLEBRI_SETUP_TYPE_OFFSET 0x18
+#define WCTEMPLEBRI_SETUP_TYPE_OFFSET        0x18
 #define WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET 0x1e
+#define WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET  0x1e
 
-#define WCTEMPLEBRI_STATE_MAX_Y 0x00
+#define WCTEMPLEBRI_STATE_MAX_Y          0x00
 #define WCTEMPLEBRI_STATE_SORTED_OFFSETS 0x04
-#define WCTEMPLEBRI_STATE_PART_FLAGS 0x40
-#define WCTEMPLEBRI_STATE_PART_COUNT 0x4f
-#define WCTEMPLEBRI_STATE_PART_ALPHA 0x50
-#define WCTEMPLEBRI_STATE_ACTIVE 0x5f
-#define WCTEMPLEBRI_STATE_WAVE_PHASE_A 0x60
-#define WCTEMPLEBRI_STATE_WAVE_PHASE_B 0x62
-#define WCTEMPLEBRI_STATE_FLAGS 0x66
+#define WCTEMPLEBRI_STATE_PART_FLAGS     0x40
+#define WCTEMPLEBRI_STATE_PART_COUNT     0x4f
+#define WCTEMPLEBRI_STATE_PART_ALPHA     0x50
+#define WCTEMPLEBRI_STATE_ACTIVE         0x5f
+#define WCTEMPLEBRI_STATE_WAVE_PHASE_A   0x60
+#define WCTEMPLEBRI_STATE_WAVE_PHASE_B   0x62
+#define WCTEMPLEBRI_STATE_FLAGS          0x66
 
-#define WCTEMPLEBRI_FLAG_SOLVED 1
+#define WCTEMPLEBRI_FLAG_SOLVED       1
 #define WCTEMPLEBRI_GLOBAL_ACTIVE_BIT 0xedb
 
-#define WCTEMPLEBRI_PAYLOAD_TRIGGER 1
+#define WCTEMPLEBRI_PAYLOAD_TRIGGER    1
 #define WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG 0x20
 
-#define WCTEMPLEBRI_ALPHA_OPAQUE 0xff
-#define WCTEMPLEBRI_WARP_WRAP 0x2710
-#define WCTEMPLEBRI_UV0_V_STEP 0x14
-#define WCTEMPLEBRI_UV0_U_STEP 0xa
-#define WCTEMPLEBRI_UV1_V_STEP 0x1e
+#define WCTEMPLEBRI_ALPHA_OPAQUE      0xff
+#define WCTEMPLEBRI_WARP_WRAP         0x2710
+#define WCTEMPLEBRI_UV0_V_STEP        0x14
+#define WCTEMPLEBRI_UV0_U_STEP        0xa
+#define WCTEMPLEBRI_UV1_V_STEP        0x1e
 #define WCTEMPLEBRI_WAVE_A_STEP_SHIFT 8
 #define WCTEMPLEBRI_WAVE_B_STEP_SHIFT 7
-#define WCTEMPLEBRI_WAVE_WRAP 0xffff
+#define WCTEMPLEBRI_WAVE_WRAP         0xffff
 
-#define WCTEMPLEBRI_OBJFLAG_HIDDEN 0x4000
+#define WCTEMPLEBRI_OBJFLAG_HIDDEN             0x4000
 #define WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct WCTempleBriSetup
@@ -98,17 +98,22 @@ void wctemplebri_updateModelWarp(int obj, int p2)
 
     tex = objFindTexture((void*)obj, 0, 0);
     tex->offsetT += WCTEMPLEBRI_UV0_V_STEP;
-    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
+    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
+        tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
     tex->offsetS += WCTEMPLEBRI_UV0_U_STEP;
-    if (tex->offsetS > WCTEMPLEBRI_WARP_WRAP) tex->offsetS -= WCTEMPLEBRI_WARP_WRAP;
+    if (tex->offsetS > WCTEMPLEBRI_WARP_WRAP)
+        tex->offsetS -= WCTEMPLEBRI_WARP_WRAP;
     tex = objFindTexture((void*)obj, 1, 0);
     tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
-    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP) tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
+    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
+        tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
     phase = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
-    if (phase > WCTEMPLEBRI_WAVE_WRAP) phase = (phase - 0x10000) + 1;
+    if (phase > WCTEMPLEBRI_WAVE_WRAP)
+        phase = (phase - 0x10000) + 1;
     state->wavePhaseA = phase;
     phase = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
-    if (phase > WCTEMPLEBRI_WAVE_WRAP) phase = (phase - 0x10000) + 1;
+    if (phase > WCTEMPLEBRI_WAVE_WRAP)
+        phase = (phase - 0x10000) + 1;
     state->wavePhaseB = phase;
 }
 
@@ -138,11 +143,7 @@ int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
             mainSetBits(setup->solvedBit, 1);
         }
         {
-            int a = (int)
-            ((f32)(u32)
-            objAnim->alpha + timeDelta
-            )
-            ;
+            int a = (int)((f32)(u32)objAnim->alpha + timeDelta);
             if (a < 0)
                 a = 0;
             else if (a > WCTEMPLEBRI_ALPHA_OPAQUE)
@@ -161,18 +162,17 @@ int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
         int idx = wave + state->wavePhaseA;
         if (base[0] > 0)
-            curr[0] =
-                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) +
-                    (f32)base[0]);
+            curr[0] = (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) + (f32)base[0]);
         else
-            curr[0] =
-                (s16)((f32)base[0] -
-                    lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
+            curr[0] = (s16)((f32)base[0] - lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
     }
     return 0;
 }
 
-int wctemplebri_getExtraSize(void) { return WCTEMPLEBRI_EXTRA_SIZE; }
+int wctemplebri_getExtraSize(void)
+{
+    return WCTEMPLEBRI_EXTRA_SIZE;
+}
 
 int wctemplebri_getObjectTypeId(int obj)
 {
@@ -239,13 +239,9 @@ void wctemplebri_update(int obj)
         int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
         int idx = wave + state->wavePhaseA;
         if (base[0] > 0)
-            curr[0] =
-                (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) +
-                    (f32)base[0]);
+            curr[0] = (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) + (f32)base[0]);
         else
-            curr[0] =
-                (s16)((f32)base[0] -
-                    lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
+            curr[0] = (s16)((f32)base[0] - lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
     }
     if (state->active != 0)
     {
@@ -256,11 +252,7 @@ void wctemplebri_update(int obj)
             mainSetBits(setup->solvedBit, 1);
         }
         {
-            int a = (int)
-            ((f32)(u32)
-            objAnim->alpha + timeDelta
-            )
-            ;
+            int a = (int)((f32)(u32)objAnim->alpha + timeDelta);
             if (a < 0)
                 a = 0;
             else if (a > WCTEMPLEBRI_ALPHA_OPAQUE)
@@ -277,8 +269,7 @@ void wctemplebri_update(int obj)
     if ((void*)Obj_GetPlayerObject() != NULL)
     {
         if (PSVECDistance((void*)&((GameObject*)obj)->anim.worldPosX,
-            &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
-            lbl_803E6E94)
+                          &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E6E94)
         {
             mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
         }
@@ -323,8 +314,7 @@ void wctemplebri_init(int obj, int initData)
             if (a < b)
             {
                 state->sortedOffsets[k] = b;
-                state->sortedOffsets[k + 1] = (f32)(int)
-                a;
+                state->sortedOffsets[k + 1] = (f32)(int)a;
                 done = 0;
             }
         }

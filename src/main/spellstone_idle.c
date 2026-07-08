@@ -1,2 +1,5 @@
 
-int spellstone_idleCallback(void) { return 0x0; }
+int spellstone_idleCallback(void)
+{
+    return 0x0;
+}

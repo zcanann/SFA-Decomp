@@ -99,20 +99,18 @@ void dll_54_update(u8* obj)
         nx = dx / dist;
         nz = dz / dist;
         fx = -(140.0f * nx - gCameraModeNpcSpeakState->originObj->anim.worldPosX) -
-            gCameraModeNpcSpeakState->playerObj->anim.worldPosX;
+             gCameraModeNpcSpeakState->playerObj->anim.worldPosX;
         fz = -(140.0f * nz - gCameraModeNpcSpeakState->originObj->anim.worldPosZ) -
-            gCameraModeNpcSpeakState->playerObj->anim.worldPosZ;
+             gCameraModeNpcSpeakState->playerObj->anim.worldPosZ;
         d2 = sqrtf(fx * fx + fz * fz);
         t = (200.0f - d2) / 200.0f;
         camera->fov = 45.0f + 70.0f * t;
         h = -30.0f + 350.0f * t;
         camera->anim.worldPosX = -(nx * h - gCameraModeNpcSpeakState->originObj->anim.worldPosX);
-        camera->anim.worldPosY =
-            (20.0f + gCameraModeNpcSpeakState->originObj->anim.worldPosY) + 60.0f * t;
+        camera->anim.worldPosY = (20.0f + gCameraModeNpcSpeakState->originObj->anim.worldPosY) + 60.0f * t;
         camera->anim.worldPosZ = -(nz * h - gCameraModeNpcSpeakState->originObj->anim.worldPosZ);
         camera->anim.rotX = -getAngle(dx, dz);
-        camera->anim.rotY =
-            -getAngle(-(100.0f * (dist / 400.0f) - dy), sqrtf(xx + zz));
+        camera->anim.rotY = -getAngle(-(100.0f * (dist / 400.0f) - dy), sqrtf(xx + zz));
 
         if (gCameraModeNpcSpeakState->transitionDone == 0)
         {

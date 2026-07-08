@@ -29,7 +29,7 @@
 #include "main/gamebit_ids.h"
 
 /* group owned by another DLL, queried here */
-#define SIDEREPEL_OBJGROUP 0x40 /* DLL 0xEB siderepel */
+#define SIDEREPEL_OBJGROUP      0x40 /* DLL 0xEB siderepel */
 #define SKEETLA_TARGET_OBJGROUP 5
 
 /* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
@@ -82,7 +82,7 @@ extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags);
-extern void trickyApplyObjectAvoidanceToStep(f32 * start, f32 * end, f32 * guardPoint);
+extern void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
@@ -184,8 +184,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         state->contactTimer += timeDelta;
         if (state->contactTimer >= lbl_803E242C)
         {
-            if (vec3f_distanceSquared((f32*)(obj + 0x18),
-                                      (f32*)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430)
+            if (vec3f_distanceSquared((f32*)(obj + 0x18), (f32*)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430)
             {
                 state->contactTimer -= lbl_803E242C;
                 ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7f;
@@ -193,8 +192,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
             }
         }
     }
-    else if ((state->lastContactObj != NULL) &&
-        (lastContactObj == state->lastContactObj))
+    else if ((state->lastContactObj != NULL) && (lastContactObj == state->lastContactObj))
     {
         state->contactTimer += timeDelta;
         if (state->contactTimer >= *(f32*)&lbl_803E23E0)
@@ -210,8 +208,8 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     state->lastContactObj = lastContactObj;
-    hitKind = ObjHits_PollPriorityHitWithCooldown((int)obj, &state->hitCooldown,
-                                                  (int*)&lastContactObj, (hitPosPtr = hitPos));
+    hitKind =
+        ObjHits_PollPriorityHitWithCooldown((int)obj, &state->hitCooldown, (int*)&lastContactObj, (hitPosPtr = hitPos));
     state->light = hitKind;
 
     switch (state->light)
@@ -268,7 +266,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
 }
 
 #pragma peephole on
-int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker *route, f32 speed)
+int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker* route, f32 speed)
 {
     f32 limit;
     f32 maxSq, dist, step;
@@ -422,12 +420,12 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
 
     state = ((GameObject*)obj)->extra;
     if (((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
-            (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ)) > lbl_803E23EC)
+         (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ)) > lbl_803E23EC)
     {
         yaw = getAngle(-((TrickyState*)state)->dirX, -((TrickyState*)state)->dirZ);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
-        ((TrickyState*)state)->dirX = -mathSinf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
-        ((TrickyState*)state)->dirZ = -mathCosf((lbl_803E2454 * (f32)(int) * (s16*)obj) / lbl_803E2458);
+        ((TrickyState*)state)->dirX = -mathSinf((lbl_803E2454 * (f32)(int)*(s16*)obj) / lbl_803E2458);
+        ((TrickyState*)state)->dirZ = -mathCosf((lbl_803E2454 * (f32)(int)*(s16*)obj) / lbl_803E2458);
     }
 }
 
@@ -467,9 +465,8 @@ int trickyMove(u8* obj, f32* targetPos)
 
     ((TrickyState*)state)->dirX = targetPos[0] - ((GameObject*)obj)->anim.worldPosX;
     ((TrickyState*)state)->dirZ = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;
-    length =
-        sqrtf((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
-            (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ));
+    length = sqrtf((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
+                   (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ));
     if (lbl_803E23DC != length)
     {
         ((TrickyState*)state)->dirX /= length;
@@ -488,11 +485,9 @@ int trickyMove(u8* obj, f32* targetPos)
     }
     else
     {
-        prospectivePos[0] =
-            timeDelta * (((TrickyState*)state)->dirX * moveSpeed) + ((GameObject*)obj)->anim.worldPosX;
+        prospectivePos[0] = timeDelta * (((TrickyState*)state)->dirX * moveSpeed) + ((GameObject*)obj)->anim.worldPosX;
         prospectivePos[1] = ((GameObject*)obj)->anim.worldPosY;
-        prospectivePos[2] =
-            timeDelta * (((TrickyState*)state)->dirZ * moveSpeed) + ((GameObject*)obj)->anim.worldPosZ;
+        prospectivePos[2] = timeDelta * (((TrickyState*)state)->dirZ * moveSpeed) + ((GameObject*)obj)->anim.worldPosZ;
     }
 
     adjustedPos[0] = prospectivePos[0];
@@ -503,9 +498,8 @@ int trickyMove(u8* obj, f32* targetPos)
     {
         ((TrickyState*)state)->dirX = adjustedPos[0] - ((GameObject*)obj)->anim.worldPosX;
         ((TrickyState*)state)->dirZ = adjustedPos[2] - ((GameObject*)obj)->anim.worldPosZ;
-        length =
-            sqrtf((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
-                (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ));
+        length = sqrtf((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
+                       (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ));
         if (lbl_803E23DC != length)
         {
             ((TrickyState*)state)->dirX /= length;
@@ -527,15 +521,13 @@ int trickyMove(u8* obj, f32* targetPos)
 
         if (((TrickyState*)state)->stateIndex == 1)
         {
-            if ((skeetla_pathSpeedDelta(obj) >= lbl_803E23DC
-                     ? skeetla_pathSpeedDelta(obj)
-                     : -skeetla_pathSpeedDelta(obj)) > lbl_803E23DC)
+            if ((skeetla_pathSpeedDelta(obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta(obj)
+                                                             : -skeetla_pathSpeedDelta(obj)) > lbl_803E23DC)
             {
                 ((TrickyState*)state)->sfxIntervalTimer -= timeDelta;
                 if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
                 {
-                    ((TrickyState*)state)->sfxIntervalTimer = (f32)(int)
-                    randomGetRange(600, 1200);
+                    ((TrickyState*)state)->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
                     if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
                     {
                         if (moveSpeed > lbl_803E23E8)
@@ -722,8 +714,10 @@ static void* skeetla_validateRouteEntry(void* entry)
     {
         return NULL;
     }
-    if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (mainGetBit(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
-        ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (mainGetBit(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
+    if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) &&
+         (mainGetBit(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
+        ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) &&
+         (mainGetBit(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
     {
         entry = NULL;
     }
@@ -851,7 +845,8 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     {
         if (routes[i] != 0)
         {
-            fn_8004B31C(state + 0x538 + i * 0x30, routes[i], *(int*)&((TrickyState*)state)->targetPosPtr, pathId, routeFlags[i]);
+            fn_8004B31C(state + 0x538 + i * 0x30, routes[i], *(int*)&((TrickyState*)state)->targetPosPtr, pathId,
+                        routeFlags[i]);
         }
     }
 
@@ -921,8 +916,8 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 
     if (entry == NULL)
     {
-        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->walkGroup,
-                                                  routeFlagValue & 0xff);
+        entry =
+            trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->walkGroup, routeFlagValue & 0xff);
         if (entry == NULL)
         {
             entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->walkGroup);
@@ -1002,9 +997,9 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
             continue;
         }
         if (((((ObjfsaRomCurveDef*)curve)->requiredBit != -1) &&
-                (mainGetBit(((ObjfsaRomCurveDef*)curve)->requiredBit) == 0)) ||
+             (mainGetBit(((ObjfsaRomCurveDef*)curve)->requiredBit) == 0)) ||
             ((((ObjfsaRomCurveDef*)curve)->forbiddenBit != -1) &&
-                (mainGetBit(((ObjfsaRomCurveDef*)curve)->forbiddenBit) != 0)))
+             (mainGetBit(((ObjfsaRomCurveDef*)curve)->forbiddenBit) != 0)))
         {
             continue;
         }
@@ -1014,7 +1009,8 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         {
             f32 sq0 = (p[2] - cz) * (p[2] - cz);
             f32 sq1 = (p[0] - ((ObjfsaRomCurveDef*)curve)->x) * (p[0] - ((ObjfsaRomCurveDef*)curve)->x);
-            f32 sq2 = (((GameObject*)obj)->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x) * (((GameObject*)obj)->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x);
+            f32 sq2 = (((GameObject*)obj)->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x) *
+                      (((GameObject*)obj)->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x);
             f32 sq3 = (((GameObject*)obj)->anim.worldPosZ - cz) * (((GameObject*)obj)->anim.worldPosZ - cz);
             score = sq0 + (sq1 + (sq2 + sq3));
         }
@@ -1079,10 +1075,10 @@ typedef struct SkeetlaParticleSpawnArgs
 
 #define SKEETLA_LINKED_SOURCE_ID_OBJ_A 0x1ca
 #define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
-#define SKEETLA_PARTICLE_SPARK_A 0xca
-#define SKEETLA_PARTICLE_SPARK_B 0xcb
-#define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
-#define SKEETLA_PARTICLE_RANDOM_RATE 4
+#define SKEETLA_PARTICLE_SPARK_A       0xca
+#define SKEETLA_PARTICLE_SPARK_B       0xcb
+#define SKEETLA_PARTICLE_SPAWN_FLAGS   0x200001
+#define SKEETLA_PARTICLE_RANDOM_RATE   4
 
 void skeetla_spawnLinkedSparks(u8* obj)
 {
@@ -1099,13 +1095,11 @@ void skeetla_spawnLinkedSparks(u8* obj)
     args.objectId = ((GameObject*)obj)->anim.rotX;
     if (((GameObject*)linkedObj)->anim.seqId == SKEETLA_LINKED_SOURCE_ID_OBJ_A)
     {
-        args.sourceId =
-            (u8)(*(u32 (**)(u8*))(*(int*)(*(int*)&((GameObject*)linkedObj)->anim.dll) + 0x28))(linkedObj);
+        args.sourceId = (u8)(*(u32(**)(u8*))(*(int*)(*(int*)&((GameObject*)linkedObj)->anim.dll) + 0x28))(linkedObj);
     }
     else if (((GameObject*)linkedObj)->anim.seqId == SKEETLA_LINKED_SOURCE_ID_OBJ_B)
     {
-        args.sourceId =
-            (u8)(*(u32 (**)(u8*))(*(int*)(*(int*)&((GameObject*)linkedObj)->anim.dll) + 0x28))(linkedObj);
+        args.sourceId = (u8)(*(u32(**)(u8*))(*(int*)(*(int*)&((GameObject*)linkedObj)->anim.dll) + 0x28))(linkedObj);
     }
     else
     {
@@ -1114,13 +1108,11 @@ void skeetla_spawnLinkedSparks(u8* obj)
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args,
-                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args,
-                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
 
     args.x = ((TrickyState*)state)->sparkPos1X;
@@ -1130,13 +1122,11 @@ void skeetla_spawnLinkedSparks(u8* obj)
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args,
-                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args,
-                                         SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
 }
 

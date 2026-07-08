@@ -22,13 +22,12 @@
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
-#define DIMWOODDOOR2_MAP_CUE_OPEN  0x338
-#define DIMWOODDOOR2_KEY_MOVE_A    0x18f
-#define DIMWOODDOOR2_KEY_MOVE_B    0x1d6
+#define DIMWOODDOOR2_MAP_CUE_OPEN 0x338
+#define DIMWOODDOOR2_KEY_MOVE_A   0x18f
+#define DIMWOODDOOR2_KEY_MOVE_B   0x1d6
 
-#define DIMWOODDOOR2_OBJFLAG_HIDDEN 0x4000
+#define DIMWOODDOOR2_OBJFLAG_HIDDEN             0x4000
 #define DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 
 extern f32 lbl_803E49D0;
 extern f32 lbl_803E49D4;
@@ -37,8 +36,14 @@ extern f32 lbl_803E49DC;
 extern f32 lbl_803E49E0;
 extern f32 lbl_803E49E4;
 
-int dimwooddoor2_getExtraSize(void) { return 0xc; }
-int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
+int dimwooddoor2_getExtraSize(void)
+{
+    return 0xc;
+}
+int dimwooddoor2_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dimwooddoor2_free(void)
 {
@@ -49,7 +54,8 @@ void dimwooddoor2_free(void)
 void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49D0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49D0);
 }
 
 void dimwooddoor2_hitDetect(void)
@@ -72,10 +78,12 @@ void dimwooddoor2_update(int* obj)
             sub->riseSpeed = (sub->riseSpeed < ceil) ? sub->riseSpeed : ceil;
         }
     }
-    if ((s8)sub->burnState <= 0 && *(s16*)placement == DIMWOODDOOR2_MAP_CUE_OPEN && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
+    if ((s8)sub->burnState <= 0 && *(s16*)placement == DIMWOODDOOR2_MAP_CUE_OPEN &&
+        ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
     {
         int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
-        if (v < 0) v = 0;
+        if (v < 0)
+            v = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         ((GameObject*)obj)->anim.alpha = v;
@@ -89,7 +97,8 @@ void dimwooddoor2_update(int* obj)
         for (i = 0; i < (int)*(s8*)(*(int*)(objAddr + 0x58) + 0x10f); i++)
         {
             int o = *(int*)(*(int*)(objAddr + 0x58) + i * 4 + 0x100);
-            if (((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_A || ((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_B)
+            if (((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_A ||
+                ((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_B)
             {
                 found = 1;
                 break;
@@ -111,10 +120,9 @@ void dimwooddoor2_init(u8* obj, u8* params)
     DimWoodDoor2State* sub;
     ObjHitsPriorityState* hitState;
     f32 fz;
-    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags |
+                                            (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
     sub = ((GameObject*)obj)->extra;
     sub->burnState = 3;
     fz = lbl_803E49D4;

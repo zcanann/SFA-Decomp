@@ -133,8 +133,8 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 0xb:
                 ((Torch1CDState*)state)->flameFrame = 100;
-                ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18 / 4]
-                    (3, 0x2d, 0x50, (u8)((Torch1CDState*)state)->flameFrame, 0);
+                ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18 / 4](
+                    3, 0x2d, 0x50, (u8)((Torch1CDState*)state)->flameFrame, 0);
                 break;
             }
         }
@@ -147,13 +147,20 @@ void dll_19B_hitDetect(void)
 {
 }
 
-int dll_19B_getExtraSize(void) { return 0x18; }
-int dll_19B_getObjectTypeId(void) { return 0x0; }
+int dll_19B_getExtraSize(void)
+{
+    return 0x18;
+}
+int dll_19B_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5188);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5188);
 }
 
 void dll_19B_free(int* obj)
@@ -187,7 +194,7 @@ typedef struct Dll19BState
     u8 phase;           /* 0x13 */
     u8 pendingEvent;    /* 0x14 */
     u8 pad15[0x16 - 0x15];
-    u8 displayedFlag;   /* 0x16 */
+    u8 displayedFlag; /* 0x16 */
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
@@ -262,8 +269,8 @@ void dll_19B_update(int obj)
             st->timer = 0;
             if (st->displayedFlag == 0)
             {
-                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x2c, 0x50, st->brightnessB, 0);
+                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50,
+                                                                                                  st->brightnessB, 0);
                 st->displayedFlag = 1;
             }
         }
@@ -308,12 +315,12 @@ void dll_19B_update(int obj)
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
                     void* handle = Resource_Acquire(0x83, 1);
-                    (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 {
                     void* handle = Resource_Acquire(0x84, 1);
-                    (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 mainSetBits(0x126, 0);
@@ -398,7 +405,7 @@ void dll_19B_update(int obj)
             mainSetBits(0x127, 1);
             {
                 void* handle = Resource_Acquire(0x6a, 1);
-                st->gfxHandle = (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                st->gfxHandle = (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
                 Resource_Release(handle);
             }
             mainSetBits(0x1d8, 0);
@@ -417,7 +424,6 @@ void dll_19B_release(void)
 void dll_19B_initialise(void)
 {
 }
-
 
 void dll_19B_init(u8* obj, u8* params)
 {
@@ -450,14 +456,14 @@ void dll_19B_init(u8* obj, u8* params)
     sub->brightnessA = 0xc;
     sub->brightnessB = 0x1e;
     sub->timer = 0xc8;
-    ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
+    ((void (*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
     sub->brightnessAVel = 0;
     sub->brightnessBVel = 0;
     sub->displayedFlag = 0;
     sub->unk10 = 0xc8;
     sub->countdown = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
-    sub->gfxHandle = ((s16(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
+    sub->gfxHandle = ((s16 (*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
@@ -501,9 +507,27 @@ extern void dll_19C_update();
 extern void dll_19C_release();
 extern void dll_19C_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* jumptable_8032668C[7] = { (void*)((u8*)dll_19B_update + 0x380), (void*)((u8*)dll_19B_update + 0x490), (void*)((u8*)dll_19B_update + 0x4B0), (void*)((u8*)dll_19B_update + 0x5E4), (void*)((u8*)dll_19B_update + 0x6C0), (void*)((u8*)dll_19B_update + 0x7D0), (void*)((u8*)dll_19B_update + 0x72C) };
-void* dll_19C[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_19C_initialise, dll_19C_release, (void*)0x00000000, dll_19C_init, dll_19C_update, dll_19C_hitDetect, dll_19C_render, dll_19C_free, dll_19C_getObjectTypeId, dll_19C_getExtraSize };
-void* dll_19D[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_19D_initialise, dll_19D_release, (void*)0x00000000, dll_19D_init, dll_19D_update, dll_19D_hitDetect, dll_19D_render, dll_19D_free, dll_19D_getObjectTypeId, dll_19D_getExtraSize };
-void* dll_19E[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dll_19E_initialise, dll_19E_release, (void*)0x00000000, dll_19E_init, dll_19E_update, dll_19E_hitDetect, dll_19E_render, dll_19E_free, dll_19E_getObjectTypeId, dll_19E_getExtraSize };
-void* gTreeBirdObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, treebird_init, treebird_update, (void*)0x00000000, treebird_render, (void*)0x00000000, (void*)0x00000000, treebird_getExtraSize };
-void* gNW_geyserObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, nw_geyser_init, nw_geyser_update, (void*)0x00000000, (void*)0x00000000, nw_geyser_free, (void*)0x00000000, (void*)0x00000000 };
+void* jumptable_8032668C[7] = {(void*)((u8*)dll_19B_update + 0x380), (void*)((u8*)dll_19B_update + 0x490),
+                               (void*)((u8*)dll_19B_update + 0x4B0), (void*)((u8*)dll_19B_update + 0x5E4),
+                               (void*)((u8*)dll_19B_update + 0x6C0), (void*)((u8*)dll_19B_update + 0x7D0),
+                               (void*)((u8*)dll_19B_update + 0x72C)};
+void* dll_19C[14] = {(void*)0x00000000,       (void*)0x00000000,   (void*)0x00000000, (void*)0x00090000,
+                     dll_19C_initialise,      dll_19C_release,     (void*)0x00000000, dll_19C_init,
+                     dll_19C_update,          dll_19C_hitDetect,   dll_19C_render,    dll_19C_free,
+                     dll_19C_getObjectTypeId, dll_19C_getExtraSize};
+void* dll_19D[14] = {(void*)0x00000000,       (void*)0x00000000,   (void*)0x00000000, (void*)0x00090000,
+                     dll_19D_initialise,      dll_19D_release,     (void*)0x00000000, dll_19D_init,
+                     dll_19D_update,          dll_19D_hitDetect,   dll_19D_render,    dll_19D_free,
+                     dll_19D_getObjectTypeId, dll_19D_getExtraSize};
+void* dll_19E[14] = {(void*)0x00000000,       (void*)0x00000000,   (void*)0x00000000, (void*)0x00090000,
+                     dll_19E_initialise,      dll_19E_release,     (void*)0x00000000, dll_19E_init,
+                     dll_19E_update,          dll_19E_hitDetect,   dll_19E_render,    dll_19E_free,
+                     dll_19E_getObjectTypeId, dll_19E_getExtraSize};
+void* gTreeBirdObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,    (void*)0x00000000, (void*)0x00090000,
+                                    (void*)0x00000000, (void*)0x00000000,    (void*)0x00000000, treebird_init,
+                                    treebird_update,   (void*)0x00000000,    treebird_render,   (void*)0x00000000,
+                                    (void*)0x00000000, treebird_getExtraSize};
+void* gNW_geyserObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000,
+                                     (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, nw_geyser_init,
+                                     nw_geyser_update,  (void*)0x00000000, (void*)0x00000000, nw_geyser_free,
+                                     (void*)0x00000000, (void*)0x00000000};

@@ -69,8 +69,14 @@ typedef struct MikabombState
     u8 padB2[0xB8 - 0xB2];
 } MikabombState;
 
-int MikaBomb_getExtraSize(void) { return 0x10; }
-int MikaBomb_getObjectTypeId(void) { return 0x0; }
+int MikaBomb_getExtraSize(void)
+{
+    return 0x10;
+}
+int MikaBomb_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void MikaBomb_free(int obj, int mode)
 {
@@ -86,7 +92,8 @@ void MikaBomb_free(int obj, int mode)
 void MikaBomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E31C0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E31C0);
 }
 
 void MikaBomb_hitDetect(void)
@@ -126,8 +133,7 @@ void MikaBomb_update(int* obj)
         {
             ((GameObject*)obj)->anim.velocityY = gMikaBombMinFallVelocity;
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
     }
 
@@ -138,7 +144,8 @@ void MikaBomb_update(int* obj)
         ObjHits_SetHitVolumeSlot(obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject())
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                (int)Obj_GetPlayerObject())
         {
             if (((GameObject*)obj)->anim.alpha == 0xff)
             {
@@ -147,10 +154,13 @@ void MikaBomb_update(int* obj)
                 localB = lbl_803E31A0;
                 Sfx_PlayFromObject(obj, SFXen_weetinklp22);
                 rnd = randomGetRange(0, 2);
-                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(obj, rnd, 0, 2, -1, &localB);
-                ObjHitbox_SetSphereRadius(
-                    obj, (s32)(gMikaBombHitSphereRadiusScale * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
-                CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration, gMikaBombCameraShakeFalloff);
+                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
+                    obj, rnd, 0, 2, -1, &localB);
+                ObjHitbox_SetSphereRadius(obj,
+                                          (s32)(gMikaBombHitSphereRadiusScale *
+                                                (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
+                CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
+                                  gMikaBombCameraShakeFalloff);
                 ((GameObject*)obj)->anim.alpha = 0xfe;
                 Obj_FreeObject((int*)*st);
                 *st = 0;
@@ -167,10 +177,13 @@ void MikaBomb_update(int* obj)
                 localA = lbl_803E31A0;
                 Sfx_PlayFromObject(obj, SFXen_weetinklp22);
                 rnd = randomGetRange(0, 2);
-                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(obj, rnd, 0, 2, -1, &localA);
-                ObjHitbox_SetSphereRadius(
-                    obj, (s32)(gMikaBombHitSphereRadiusScale * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
-                CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration, gMikaBombCameraShakeFalloff);
+                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
+                    obj, rnd, 0, 2, -1, &localA);
+                ObjHitbox_SetSphereRadius(obj,
+                                          (s32)(gMikaBombHitSphereRadiusScale *
+                                                (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
+                CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
+                                  gMikaBombCameraShakeFalloff);
                 ((GameObject*)obj)->anim.alpha = 0xfe;
                 Obj_FreeObject((int*)*st);
                 *st = 0;
@@ -230,7 +243,10 @@ void MikaBomb_initialise(void)
 }
 
 ObjectDescriptor gMikaBombObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBomb_initialise,
     (ObjectDescriptorCallback)MikaBomb_release,
     0,

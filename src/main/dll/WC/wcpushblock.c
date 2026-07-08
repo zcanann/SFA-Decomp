@@ -22,19 +22,19 @@
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
 
-#define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
+#define WCPUSHBLOCK_SPAWN_OBJECT_ID  0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
 #define WCPUSHBLOCK_SPAWN_PATH_POINT 4
-#define WCPUSHBLOCK_SPAWN_SFX 0x127
+#define WCPUSHBLOCK_SPAWN_SFX        0x127
 #define WCPUSHBLOCK_SPAWN_IDLE_TIMER 0x5a
 
-#define WCPUSHBLOCK_INPUT_SCALE 70
+#define WCPUSHBLOCK_INPUT_SCALE       70
 #define WCPUSHBLOCK_PITCH_INPUT_SCALE 0x1770
-#define WCPUSHBLOCK_ROLL_INPUT_SCALE 0x2ee0
-#define WCPUSHBLOCK_ANGLE_DAMP_SHIFT 5
-#define WCPUSHBLOCK_MAX_PITCH 0x1f40
-#define WCPUSHBLOCK_MAX_ROLL 0x32c8
-#define WCPUSHBLOCK_RIDE_MOVE_ID 0xf
+#define WCPUSHBLOCK_ROLL_INPUT_SCALE  0x2ee0
+#define WCPUSHBLOCK_ANGLE_DAMP_SHIFT  5
+#define WCPUSHBLOCK_MAX_PITCH         0x1f40
+#define WCPUSHBLOCK_MAX_ROLL          0x32c8
+#define WCPUSHBLOCK_RIDE_MOVE_ID      0xf
 
 typedef struct WCPushBlockObjectSetup
 {
@@ -124,11 +124,10 @@ typedef struct WCPushBlockCloudActionInterface
 extern u8 Obj_IsLoadingLocked(void);
 extern void vecRotateZXY(void* angles, void* out);
 extern void* Obj_AllocObjectSetup(int size, int b);
-extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer,
-                                          int linkId, void* parent);
-extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY,
-                                          f32* outZ, int useInputPosition);
-
+extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer, int linkId,
+                                          void* parent);
+extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY, f32* outZ,
+                                          int useInputPosition);
 
 extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern f32 lbl_803E5C70;
@@ -176,8 +175,7 @@ void WCPushBlock_SpawnFromPath(s16* path)
     setup->linkB = 0xff;
     setup->placementMode = 2;
     setup->group = 1;
-    ObjPath_GetPointWorldPosition(path, WCPUSHBLOCK_SPAWN_PATH_POINT, &setup->x, &setup->y,
-                                  &setup->z, 0);
+    ObjPath_GetPointWorldPosition(path, WCPUSHBLOCK_SPAWN_PATH_POINT, &setup->x, &setup->y, &setup->z, 0);
 
     block = Obj_SetupObject(setup, 5, -1, -1, NULL);
     if (block == NULL)
@@ -271,8 +269,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
         state->cloudYawDrift = (s16)(-(t * timeDelta - state->cloudYawDrift));
     }
     state->cloudYawDrift =
-        (s16)(state->cloudYawDrift -
-            ((state->cloudYawDrift * framesThisStep) >> WCPUSHBLOCK_ANGLE_DAMP_SHIFT));
+        (s16)(state->cloudYawDrift - ((state->cloudYawDrift * framesThisStep) >> WCPUSHBLOCK_ANGLE_DAMP_SHIFT));
 
     pitchDelta = targetPitch - (u16)obj->pitch;
     if (pitchDelta > 0x8000)
@@ -296,8 +293,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
         rollDelta = (rollDelta + 0x10000) - 1;
     }
 
-    state->pushRoll =
-        (s16)(lbl_803E5CA8 * ((f32)rollDelta * timeDelta) + (f32) * (s16*)(int)&state->pushRoll);
+    state->pushRoll = (s16)(lbl_803E5CA8 * ((f32)rollDelta * timeDelta) + (f32) * (s16*)(int)&state->pushRoll);
 
     pitch = obj->pitch;
     if (pitch < -WCPUSHBLOCK_MAX_PITCH)
@@ -329,8 +325,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
         ObjAnim_SetCurrentMove((int)obj, WCPUSHBLOCK_RIDE_MOVE_ID, lbl_803E5C70, 0);
     }
 
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC,
-                                                                     timeDelta, NULL) != 0)
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC, timeDelta, NULL) != 0)
     {
         state->rideState = 0;
     }

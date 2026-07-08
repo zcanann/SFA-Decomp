@@ -18,12 +18,12 @@
 #include "dolphin/gx/GXLighting.h"
 #include "sfa_light_decls.h"
 
-#define GX_CULL_NONE 0
+#define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
-#define GX_CULL_BACK 2
-#define GX_LEQUAL 3
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_B 0x200
+#define GX_CULL_BACK  2
+#define GX_LEQUAL     3
+#define PAD_BUTTON_A  0x100
+#define PAD_BUTTON_B  0x200
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_80259858();
@@ -115,46 +115,46 @@ struct MldfTables
     s16 owners[0x60];         /* mapId owning the slot, -1 = free */
 };
 
-#define MLDF_MAP_NAME(i) (nm->mapNames[i])
+#define MLDF_MAP_NAME(i)  (nm->mapNames[i])
 #define MLDF_FILE_NAME(i) (nm->fileNames[i])
-#define MLDF_ADJ(i) (nm->adjacency[i])
-#define MLDF_REMAP (nm->remapGroups)
+#define MLDF_ADJ(i)       (nm->adjacency[i])
+#define MLDF_REMAP        (nm->remapGroups)
 /* Constant-index accessors (typed member form). */
-#define MLDF_ID(s) (tbl->ids[s])
-#define MLDF_SIZE(s) (tbl->sizes[s])
-#define MLDF_PTR(s) (tbl->ptrs[s])
+#define MLDF_ID(s)    (tbl->ids[s])
+#define MLDF_SIZE(s)  (tbl->sizes[s])
+#define MLDF_PTR(s)   (tbl->ptrs[s])
 #define MLDF_OWNER(s) (tbl->owners[s])
 /* Runtime-index accessors. One-shot accesses use the idx-left flat spelling
    (slwi; addis tbl; add) or plain member form; the hot ptr/size slots go through
    per-block biased locals (see slotPtrAddr/slotSizeAddr) so the CSE web keeps the
    ha-sum (tbl + 0x20000 + slot*4) and each access folds the lo displacement. */
-#define MLDF_ID_RT(s) (*(int *)(((s) << 2) + ((u32)&tbl->ids[0])))
-#define MLDF_OWNER_RT(s) (*(s16 *)(((s) << 1) + ((u32)&tbl->owners[0])))
-#define MLDF_FINFO4(s4) (tbl->fileInfo[slot])
-#define MLDF_SP_ID(p) (tbl->ids[slot])
-#define MLDF_SP_SIZE(p) (*(int *)(slotSizeAddr - 0x6D68))
+#define MLDF_ID_RT(s)    (*(int*)(((s) << 2) + ((u32) & tbl->ids[0])))
+#define MLDF_OWNER_RT(s) (*(s16*)(((s) << 1) + ((u32) & tbl->owners[0])))
+#define MLDF_FINFO4(s4)  (tbl->fileInfo[slot])
+#define MLDF_SP_ID(p)    (tbl->ids[slot])
+#define MLDF_SP_SIZE(p)  (*(int*)(slotSizeAddr - 0x6D68))
 /* first store of the block also establishes the biased size base; embedding the
    assignment in the lvalue makes MWCC evaluate the RHS (file length) first, as target */
-#define MLDF_SP_SIZE_INIT(p) (*(int *)((slotSizeAddr = (slot << 2) + ((u32)&tbl->sizes[0] + 0x6D68)) - 0x6D68))
-#define MLDF_SP_PTR(p) (*(u32 *)(slotPtrAddr - 0x6A28))
+#define MLDF_SP_SIZE_INIT(p) (*(int*)((slotSizeAddr = (slot << 2) + ((u32) & tbl->sizes[0] + 0x6D68)) - 0x6D68))
+#define MLDF_SP_PTR(p)       (*(u32*)(slotPtrAddr - 0x6A28))
 /* re-deref through the biased local `slotPtrAddr` on every use; the -0x6A28 displacement
    (== &tbl->ptrs[0] relative to tbl + 0x20000) matches target addressing */
-#define MLDF_QPTR (*(u32 *)(slotPtrAddr - 0x6A28))
+#define MLDF_QPTR (*(u32*)(slotPtrAddr - 0x6A28))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
    follows at +0x10. "DIR"-tagged data is stored raw. */
 struct ZlbHeader
 {
-    char tag[4];          /* "ZLB" (sZlbBlockTag) / "DIR" (sDirBlockTag) */
+    char tag[4]; /* "ZLB" (sZlbBlockTag) / "DIR" (sDirBlockTag) */
     u32 unk4;
     u32 decompressedSize; /* +0x08 */
     int compressedSize;   /* +0x0c */
 };
-#define ZLB_HDR(buf) ((struct ZlbHeader *)(buf))
+#define ZLB_HDR(buf) ((struct ZlbHeader*)(buf))
 
 /* DVDFileInfo.length: byte length of the opened file (fi: handle held as int,
    or a local byte-array DVDFileInfo) */
-#define DVD_FI_LENGTH(fi) (*(int *)((fi) + 0x34))
+#define DVD_FI_LENGTH(fi) (*(int*)((fi) + 0x34))
 
 /* header of a packed rom section (romlist blocks, MAPS.BIN sections) */
 struct PackHeader
@@ -680,105 +680,110 @@ u32 mapLoadDataFile(int mapId, int fileId)
         break;
     case 0x26:
     case 0x48:
+    {
+        int idx;
+        int* grp;
+        int n;
+        result = MLDF_PTR(0x26);
+        if ((result != 0) && (MLDF_OWNER(0x26) == mapId))
         {
-            int idx;
-            int* grp;
-            int n;
-            result = MLDF_PTR(0x26);
-            if ((result != 0) && (MLDF_OWNER(0x26) == mapId))
+            return result;
+        }
+        result = MLDF_PTR(0x48);
+        if ((result != 0) && (MLDF_OWNER(0x48) == mapId))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x26) == -1)
             {
-                return result;
+                slot = 0x26;
             }
-            result = MLDF_PTR(0x48);
-            if ((result != 0) && (MLDF_OWNER(0x48) == mapId))
+            else if (MLDF_OWNER(0x48) == -1)
             {
-                return result;
+                slot = 0x48;
             }
+            else
             {
-                if (MLDF_OWNER(0x26) == -1)
+                return 0;
+            }
+            slotPtrAddr = (slot << 2) + ((u32)&tbl->ptrs[0] + 0x6A28);
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            idx = 0;
+            grp = MLDF_REMAP;
+            for (n = 0xf; n != 0; n--)
+            {
+                if (mapId == grp[0])
+                    goto remap_found;
+                idx = idx + 1;
+                if (mapId == grp[1])
+                    goto remap_found;
+                idx = idx + 1;
+                if (mapId == grp[2])
+                    goto remap_found;
+                idx = idx + 1;
+                if (mapId == grp[3])
+                    goto remap_found;
+                idx = idx + 1;
+                if (mapId == grp[4])
+                    goto remap_found;
+                grp = grp + 5;
+                idx = idx + 1;
+            }
+        remap_found:
+            piRomLoadSection(0, idx, 0);
+            if (mapId > 4)
+            {
+                sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId + 1);
+            }
+            else
+            {
+                sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId);
+            }
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                if (sync != 0)
                 {
-                    slot = 0x26;
-                }
-                else if (MLDF_OWNER(0x48) == -1)
-                {
-                    slot = 0x48;
-                }
-                else
-                {
-                    return 0;
-                }
-                slotPtrAddr = (slot << 2) + ((u32)&tbl->ptrs[0] + 0x6A28);
-                if (MLDF_SP_PTR(x) != 0)
-                {
-                    mm_free((void*)MLDF_SP_PTR(x));
-                    MLDF_SP_PTR(x) = 0;
-                }
-                idx = 0;
-                grp = MLDF_REMAP;
-                for (n = 0xf; n != 0; n--)
-                {
-                    if (mapId == grp[0]) goto remap_found;
-                    idx = idx + 1;
-                    if (mapId == grp[1]) goto remap_found;
-                    idx = idx + 1;
-                    if (mapId == grp[2]) goto remap_found;
-                    idx = idx + 1;
-                    if (mapId == grp[3]) goto remap_found;
-                    idx = idx + 1;
-                    if (mapId == grp[4]) goto remap_found;
-                    grp = grp + 5;
-                    idx = idx + 1;
-                }
-            remap_found:
-                piRomLoadSection(0, idx, 0);
-                if (mapId > 4)
-                {
-                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId + 1);
-                }
-                else
-                {
-                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId);
-                }
-                fi = AtomicSList_Pop(lbl_803DCC8C);
-                ok = DVDOpen(buf, (void*)fi);
-                if (ok == 0)
-                {
-                    return 0;
-                }
-                else
-                {
-                    MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
-                    MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                    DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                    if (sync != 0)
+                    DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
                     {
-                        DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                        DVDClose((void*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
-                        if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
-                        {
-                            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
-                        }
+                        mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
+                    }
+                }
+                else
+                {
+                    if (slot == 0x26)
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x20000;
                     }
                     else
                     {
-                        if (slot == 0x26)
-                        {
-                            lbl_803DCC80 = lbl_803DCC80 | 0x20000;
-                        }
-                        else
-                        {
-                            lbl_803DCC80 = lbl_803DCC80 | 0x80000;
-                        }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+                        lbl_803DCC80 = lbl_803DCC80 | 0x80000;
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    MLDF_FINFO4(x) = fi;
+                    DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
                 }
+                MLDF_OWNER_RT(slot) = mapId;
+                return MLDF_SP_PTR(x);
             }
-            break;
         }
+        break;
+    }
     case 0x2b:
     case 0x46:
         result = MLDF_PTR(0x2b);
@@ -1463,10 +1468,6 @@ u32 mapLoadDataFile(int mapId, int fileId)
     return result;
 }
 
-
-
-
-
 extern void mmFreeTick(int arg);
 
 extern u8 gDvdErrorPauseActive;
@@ -1490,10 +1491,10 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                               u32 flagBits)
 {
     struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
-    u32 tab0 = 0;    /* TAB ptr of the primary slot of the pair, 0 = not ready */
-    u32 tab1 = 0;    /* TAB ptr of the alternate slot of the pair */
-    u8 frame = 0;    /* run a full frame per wait iteration once dvd error UI is up */
-    u32 hiSel;       /* caller's slot-select bit; cases 0x51/0x4f reuse it as the TAB ptr */
+    u32 tab0 = 0; /* TAB ptr of the primary slot of the pair, 0 = not ready */
+    u32 tab1 = 0; /* TAB ptr of the alternate slot of the pair */
+    u8 frame = 0; /* run a full frame per wait iteration once dvd error UI is up */
+    u32 hiSel;    /* caller's slot-select bit; cases 0x51/0x4f reuse it as the TAB ptr */
     int entryOff;
     int flags;
     int intr;
@@ -1505,8 +1506,8 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     int tmp;
     u32 decompSize;
     int entryByteOff;
-    u32 qptr;        /* MLDF_QPTR from the guard, reused for the first use of each branch */
-    char buf[0x3c];  /* DVDFileInfo */
+    u32 qptr;       /* MLDF_QPTR from the guard, reused for the first use of each branch */
+    char buf[0x3c]; /* DVDFileInfo */
 
     switch (fileId)
     {
@@ -1802,8 +1803,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else if (entryOff < (((int*)(tab1 - 4))[entryIndex] & 0xffffff))
@@ -1813,14 +1813,12 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while (entryOff != (((int*)tab1)[prev] & 0xffffff));
+                    } while (entryOff != (((int*)tab1)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
@@ -1830,8 +1828,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
@@ -1849,8 +1846,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else if (entryOff < (((int*)(tab0 - 4))[entryIndex] & 0xffffff))
@@ -1860,14 +1856,12 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while (entryOff != (((int*)tab0)[prev] & 0xffffff));
+                    } while (entryOff != (((int*)tab0)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
@@ -1877,8 +1871,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
@@ -1896,8 +1889,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else if (entryOff < (((int*)(tab0 - 4))[entryIndex] & 0xffffff))
@@ -1907,14 +1899,12 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while (entryOff != (((int*)tab0)[prev] & 0xffffff));
+                    } while (entryOff != (((int*)tab0)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
@@ -1924,8 +1914,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
@@ -1943,8 +1932,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else if (entryOff < (((int*)(tab1 - 4))[entryIndex] & 0xffffff))
@@ -1954,14 +1942,12 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while (entryOff != (((int*)tab1)[prev] & 0xffffff));
+                    } while (entryOff != (((int*)tab1)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
@@ -1971,8 +1957,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
@@ -2099,8 +2084,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileId = 0x51;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(hiSel + 4))[entryIndex] & 0xfffffff) -
-                    (((u32*)hiSel)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(hiSel + 4))[entryIndex] & 0xfffffff) - (((u32*)hiSel)[entryIndex] & 0xfffffff);
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
@@ -2184,7 +2168,8 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if (tab1 != 0 && (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->mergeTex0 + entryByteOff) & 0x80000000) != 0))
+        if (tab1 != 0 &&
+            (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->mergeTex0 + entryByteOff) & 0x80000000) != 0))
         {
             fileId = 0x4d;
             if (sizeOut != NULL)
@@ -2197,8 +2182,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2208,13 +2192,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (tab0 != 0 && (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->mergeTex0 + entryByteOff) & 0x40000000) != 0))
+        else if (tab0 != 0 &&
+                 (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->mergeTex0 + entryByteOff) & 0x40000000) != 0))
         {
             fileId = 0x23;
             if (sizeOut != NULL)
@@ -2227,8 +2211,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2238,8 +2221,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2257,8 +2239,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2268,8 +2249,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2287,8 +2267,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2298,8 +2277,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2376,7 +2354,8 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if (tab1 != 0 && (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->mergeTex1 + entryByteOff) & 0x80000000) != 0))
+        if (tab1 != 0 &&
+            (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->mergeTex1 + entryByteOff) & 0x80000000) != 0))
         {
             fileId = 0x4b;
             if (sizeOut != NULL)
@@ -2389,8 +2368,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2400,13 +2378,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (tab0 != 0 && (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->mergeTex1 + entryByteOff) & 0x40000000) != 0))
+        else if (tab0 != 0 &&
+                 (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->mergeTex1 + entryByteOff) & 0x40000000) != 0))
         {
             fileId = 0x20;
             if (sizeOut != NULL)
@@ -2419,8 +2397,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2430,8 +2407,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2449,8 +2425,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2460,8 +2435,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2479,8 +2453,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2490,8 +2463,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2512,8 +2484,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = tab0;
                         tab0 = tab0 + 1;
-                    }
-                    while ((((int*)hiSel)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)hiSel)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(hiSel - 4))[tab0] & 0xffffff) - offsetFlags;
                 }
                 else
@@ -2523,8 +2494,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                     {
                         prev = i;
                         i = i + 1;
-                    }
-                    while ((((int*)hiSel)[prev] & 0xffffff) <= offsetFlags);
+                    } while ((((int*)hiSel)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(hiSel - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
@@ -2540,123 +2510,123 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     qptr = MLDF_QPTR;
     if (qptr != 0)
     {
-    if (fileId == 0xd || fileId == 0x55)
-    {
-        if (qptr == 0)
+        if (fileId == 0xd || fileId == 0x55)
         {
-            return 0;
+            if (qptr == 0)
+            {
+                return 0;
+            }
+            memcpy((void*)destBuf, (void*)(qptr + offsetFlags), length);
         }
-        memcpy((void*)destBuf, (void*)(qptr + offsetFlags), length);
-    }
-    else if (fileId == 0x1b || fileId == 0x54)
-    {
-        if (qptr == 0)
+        else if (fileId == 0x1b || fileId == 0x54)
         {
-            return 0;
+            if (qptr == 0)
+            {
+                return 0;
+            }
+            fileBuf = qptr + offsetFlags;
+            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            {
+                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
+                zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                              &decompSize);
+                DCStoreRange((void*)destBuf, decompSize);
+            }
+            else
+            {
+                return 0;
+            }
         }
-        fileBuf = qptr + offsetFlags;
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+        else if (fileId == 0x25 || fileId == 0x47)
         {
+            if (qptr == 0)
+            {
+                return 0;
+            }
+            fileBuf = qptr + offsetFlags;
+            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            {
+                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
+                zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                              &decompSize);
+                DCStoreRange((void*)destBuf, decompSize);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else if (fileId == 0x2b || fileId == 0x46)
+        {
+            struct PackHeader* hdr = (struct PackHeader*)(qptr + offsetFlags);
+            if (hdr->magic == 0xe0e0e0e0)
+            {
+                memcpy((void*)destBuf, (void*)(((int)hdr + hdr->auxSize + 0x18 - qptr) + qptr), hdr->decompressedSize);
+            }
+            else if (hdr->magic == 0xfacefeed)
+            {
+                zlbDecompress((void*)(((int)hdr + hdr->auxSize + 0x28 - qptr) + qptr), hdr->compressedSize - 0x10,
+                              destBuf, &hdr->decompressedSize);
+                DCStoreRange((void*)destBuf, hdr->decompressedSize);
+            }
+        }
+        else if (fileId == 0x23 || fileId == 0x4d)
+        {
+            fileBuf = qptr + (offsetFlags & 0xffffff);
             decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
-                          &decompSize);
+            zlbDecompress((void*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, destBuf, &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
+        }
+        else if (fileId == 0x20 || fileId == 0x4b)
+        {
+            entryIndex = offsetFlags & 0xffffff;
+            fileBuf = qptr + entryIndex;
+            if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
+            {
+                return MLDF_QPTR + (entryIndex + 0x20);
+            }
+            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            {
+                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
+                zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                              &decompSize);
+                DCStoreRange((void*)destBuf, decompSize);
+            }
+        }
+        else if (fileId == 0x4f)
+        {
+            entryIndex = offsetFlags & 0xffffff;
+            fileBuf = qptr + entryIndex;
+            if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
+            {
+                return MLDF_QPTR + (entryIndex + 0x20);
+            }
+            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            {
+                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
+                zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                              &decompSize);
+                DCStoreRange((void*)destBuf, decompSize);
+            }
+        }
+        else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
+        {
+            fileBuf = qptr + offsetFlags;
+            tmp = return0_8002A5B8(fileBuf);
+            if (tmp != 0)
+            {
+                ObjModel_UnpackResourcePayload(fileBuf, *sizeOut, destBuf,
+                                               ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut));
+            }
+            else
+            {
+                memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
+            }
         }
         else
         {
-            return 0;
+            memcpy((void*)destBuf, (void*)(qptr + offsetFlags), length);
         }
-    }
-    else if (fileId == 0x25 || fileId == 0x47)
-    {
-        if (qptr == 0)
-        {
-            return 0;
-        }
-        fileBuf = qptr + offsetFlags;
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
-        {
-            decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
-                          &decompSize);
-            DCStoreRange((void*)destBuf, decompSize);
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else if (fileId == 0x2b || fileId == 0x46)
-    {
-        struct PackHeader* hdr = (struct PackHeader*)(qptr + offsetFlags);
-        if (hdr->magic == 0xe0e0e0e0)
-        {
-            memcpy((void*)destBuf, (void*)(((int)hdr + hdr->auxSize + 0x18 - qptr) + qptr),
-                   hdr->decompressedSize);
-        }
-        else if (hdr->magic == 0xfacefeed)
-        {
-            zlbDecompress((void*)(((int)hdr + hdr->auxSize + 0x28 - qptr) + qptr),
-                          hdr->compressedSize - 0x10, destBuf, &hdr->decompressedSize);
-            DCStoreRange((void*)destBuf, hdr->decompressedSize);
-        }
-    }
-    else if (fileId == 0x23 || fileId == 0x4d)
-    {
-        fileBuf = qptr + (offsetFlags & 0xffffff);
-        decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-        zlbDecompress((void*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, destBuf, &decompSize);
-        DCStoreRange((void*)destBuf, decompSize);
-    }
-    else if (fileId == 0x20 || fileId == 0x4b)
-    {
-        entryIndex = offsetFlags & 0xffffff;
-        fileBuf = qptr + entryIndex;
-        if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
-        {
-            return MLDF_QPTR + (entryIndex + 0x20);
-        }
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
-        {
-            decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
-                          &decompSize);
-            DCStoreRange((void*)destBuf, decompSize);
-        }
-    }
-    else if (fileId == 0x4f)
-    {
-        entryIndex = offsetFlags & 0xffffff;
-        fileBuf = qptr + entryIndex;
-        if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
-        {
-            return MLDF_QPTR + (entryIndex + 0x20);
-        }
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
-        {
-            decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
-                          &decompSize);
-            DCStoreRange((void*)destBuf, decompSize);
-        }
-    }
-    else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
-    {
-        fileBuf = qptr + offsetFlags;
-        tmp = return0_8002A5B8(fileBuf);
-        if (tmp != 0)
-        {
-            ObjModel_UnpackResourcePayload(fileBuf, *sizeOut, destBuf, ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut));
-        }
-        else
-        {
-            memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
-        }
-    }
-    else
-    {
-        memcpy((void*)destBuf, (void*)(qptr + offsetFlags), length);
-    }
     }
     else if (fileId == 0x20 || fileId == 0x4b)
     {
@@ -2748,8 +2718,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
         hdr = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
         if (hdr->magic == 0xfacefeed)
         {
-            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, destBuf,
-                          &hdr->decompressedSize);
+            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, destBuf, &hdr->decompressedSize);
             DCStoreRange((void*)destBuf, hdr->decompressedSize);
         }
     }
@@ -2919,9 +2888,15 @@ void FUN_8004812c(int tex, int arg)
 }
 
 extern u8 lbl_803DCD28;
-u8 isHeavyFogEnabled(void) { return lbl_803DCD28; }
+u8 isHeavyFogEnabled(void)
+{
+    return lbl_803DCD28;
+}
 
-void disableHeavyFog(void) { lbl_803DCD28 = 0x0; }
+void disableHeavyFog(void)
+{
+    lbl_803DCD28 = 0x0;
+}
 
 extern f32 lbl_803DCD44;
 extern f32 lbl_803DCD40;
@@ -3266,7 +3241,8 @@ extern f32 lbl_803DCD3C;
 
 int mapGetDirIdx(int idx)
 {
-    if (idx >= 0x4b) return 5;
+    if (idx >= 0x4b)
+        return 5;
     return sMapFileNameIndexRemapTable[idx];
 }
 
@@ -3288,7 +3264,10 @@ void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e)
     lbl_803DCD31 = mode;
 }
 
-void* Shader_getLayer(char* base, int idx) { return base + idx * 8 + 0x24; }
+void* Shader_getLayer(char* base, int idx)
+{
+    return base + idx * 8 + 0x24;
+}
 
 extern u8 lbl_803DCCB0;
 extern void gxPerfFn_8004a77c(int);
@@ -3402,8 +3381,10 @@ extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map
 extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
 extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
 extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
-extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);
-extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID out_reg);
+extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                            GXTevRegID out_reg);
+extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                            GXTevRegID out_reg);
 
 void fn_80050F2C(void)
 {
@@ -3428,32 +3409,32 @@ int fn_8004AA24(int* ctx, int* ref)
     switch (((s8*)node)[0x19])
     {
     case 0x24:
+    {
+        u8 idx = ((u8*)ref)[0xc];
+        if ((idx & 0x80) == 0)
         {
-            u8 idx = ((u8*)ref)[0xc];
-            if ((idx & 0x80) == 0)
+            if (((u8*)node)[3] != 0)
             {
-                if (((u8*)node)[3] != 0)
+                return target == ((u8*)node)[3];
+            }
+            else
+            {
+                int* p;
+                int* arr;
+                int i;
+                arr = (int*)*(int*)((char*)ctx[0] + (idx << 4));
+                for (i = 0, p = arr; i < 4; i++)
                 {
-                    return target == ((u8*)node)[3];
-                }
-                else
-                {
-                    int* p;
-                    int* arr;
-                    int i;
-                    arr = (int*)*(int*)((char*)ctx[0] + (idx << 4));
-                    for (i = 0, p = arr; i < 4; i++)
+                    if ((u32)node[5] == *(u32*)((char*)p + 0x1c))
                     {
-                        if ((u32)node[5] == *(u32*)((char*)p + 0x1c))
-                        {
-                            return target == ((u8*)arr)[i + 4];
-                        }
-                        p++;
+                        return target == ((u8*)arr)[i + 4];
                     }
+                    p++;
                 }
             }
-            return 0;
         }
+        return 0;
+    }
     default:
         return target == (int)node;
     }
@@ -3481,7 +3462,8 @@ void fn_8004AAD4(u8* arr, int size, int idx)
             }
         }
         childptr = arr + child * 8;
-        if (key >= *(u32*)childptr) break;
+        if (key >= *(u32*)childptr)
+            break;
         *(u32*)(arr + idx * 8) = *(u32*)childptr;
         *(u16*)(arr + idx * 8 + 4) = *(u16*)(childptr + 4);
         idx = child;
@@ -3574,25 +3556,25 @@ void fn_8004AFA0(int* q, int* elem, int idx)
                 switch (*(s8*)(obj + 0x19))
                 {
                 case 0x24:
+                {
+                    s16 ev1;
+                    s16 ev2;
+                    mainGetBit(0x4e2);
+                    ev1 = *(s16*)(obj + 0x30);
+                    if (ev1 == -1 || mainGetBit(ev1) != 0)
                     {
-                        s16 ev1;
-                        s16 ev2;
-                        mainGetBit(0x4e2);
-                        ev1 = *(s16*)(obj + 0x30);
-                        if (ev1 == -1 || mainGetBit(ev1) != 0)
+                        ev2 = *(s16*)(obj + 0x32);
+                        if (ev2 == -1 || mainGetBit(ev2) == 0)
                         {
-                            ev2 = *(s16*)(obj + 0x32);
-                            if (ev2 == -1 || mainGetBit(ev2) == 0)
+                            if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
                             {
-                                if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
-                                {
-                                    f32 d = vec3f_distanceSquared((f32*)(node + 8), (f32*)(obj + 8));
-                                    fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
-                                }
+                                f32 d = vec3f_distanceSquared((f32*)(node + 8), (f32*)(obj + 8));
+                                fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
                             }
                         }
-                        break;
                     }
+                    break;
+                }
                 default:
                     lbl_803DCD08 = obj;
                     break;
@@ -3870,7 +3852,8 @@ extern u8 lbl_803779A0[];
 void textureFn_8004c264(u8* tex, int mapId)
 {
     void* base;
-    if (tex == NULL) return;
+    if (tex == NULL)
+        return;
     base = &tex[32];
     if (tex[72] != 0)
     {
@@ -3890,7 +3873,8 @@ void textureFn_8004c264(u8* tex, int mapId)
 void selectTexture(u8* tex, int mapId)
 {
     void* base;
-    if (tex == NULL) return;
+    if (tex == NULL)
+        return;
     base = &tex[0x20];
     if (tex[0x48] != 0)
     {
@@ -3954,8 +3938,7 @@ void checkLoadBlock(int a, int* pc, int* p8)
     int saved;
     char* blk;
     u32 t25, t47;
-    if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) ||
-        (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0))
+    if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) || (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0))
     {
         saved = OSDisableInterrupts();
         flags = lbl_803DCC80;
@@ -4007,8 +3990,7 @@ void loadVoxMaps(int a, int* pc, int* p8)
     int saved;
     char* blk;
     u32 t1b, t54;
-    if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) ||
-        (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0))
+    if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) || (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0))
     {
         saved = OSDisableInterrupts();
         flags = lbl_803DCC80;
@@ -4109,8 +4091,10 @@ extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
 extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
-extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx, GXBool normalize, u32 pt_texmtx);
-extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue, GXTevColorChan alpha);
+extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
+                              GXBool normalize, u32 pt_texmtx);
+extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
+                                  GXTevColorChan alpha);
 extern u8 lbl_803DCD68;
 extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
@@ -4313,11 +4297,13 @@ extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
 extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 extern u32 randomGetRange(int min, int max);
-extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
+extern void newshadows_getReflectionScrollOffsets(f32* x, f32* y);
 extern float mathSinf(float x);
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
 extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
-extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
+extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format,
+                             GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
+                             GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
 void textureFn_8004c330(void* p1, void* mtx)
 {
@@ -4352,8 +4338,7 @@ void textureFn_8004c330(void* p1, void* mtx)
                 v1 = randomGetRange(0x80, 0xff);
                 v2 = v1 - randomGetRange(0, 0x40);
                 v3 = v1 - randomGetRange(0x40, 0x80);
-                *(u16*)(dst + 0x60) =
-                    ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
+                *(u16*)(dst + 0x60) = ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
             }
         }
         DCFlushRange(lbl_803DCD2C + 0x60, *(u32*)(lbl_803DCD2C + 0x44));
@@ -5352,7 +5337,6 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     return result;
 }
 
-
 extern struct piIndMtx lbl_802C1E10;
 extern f32 lbl_80396820[3][4];
 extern void selectReflectionTexture(int id);
@@ -5411,7 +5395,7 @@ void fn_8004D6D8(void)
     lbl_803DCD68++;
 }
 
-extern void fn_8006C540(u8 * *out);
+extern void fn_8006C540(u8** out);
 
 void fn_8004F380(f32 scale, int* colorIn, f32* pos)
 {
@@ -5421,7 +5405,10 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
     int color;
     int id;
     f32 f;
-    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7) { return; }
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
+    {
+        return;
+    }
     {
         f = 0.5f / scale;
         matA[0][0] = f;
@@ -5503,7 +5490,10 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
     int color;
     int id;
     f32 f;
-    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7) { return; }
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
+    {
+        return;
+    }
     {
         f = 0.5f / scale;
         matA[0][0] = f;
@@ -5587,7 +5577,10 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
     int color;
     int id;
     f32 f;
-    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0x10 || lbl_803DCD69 >= 7) { return; }
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0x10 || lbl_803DCD69 >= 7)
+    {
+        return;
+    }
     {
         if (scale < 0.1f)
         {
@@ -5678,10 +5671,10 @@ void fn_8005011C(int objInst)
     GXSetTevDirect(lbl_803DCD90 + 1);
     GXSetTevDirect(lbl_803DCD90 + 2);
     GXSetTevDirect(lbl_803DCD90 + 3);
-    PSMTXConcat((f32 (*)[4])(objInst + 0x30), Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32(*)[4])(objInst + 0x30), Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
-    PSMTXConcat((f32 (*)[4])objInst, Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32(*)[4])objInst, Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
     GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80 + 3);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
@@ -5904,8 +5897,8 @@ void fn_8004D230(void)
     f32 t;
 
     obj1 = (u8*)fn_8006C754();
-    C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4,
-                    lbl_803DEADC, lbl_803DEADC, lbl_803DEADC, lbl_803DEADC);
+    C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4, lbl_803DEADC, lbl_803DEADC,
+                    lbl_803DEADC, lbl_803DEADC);
     GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevDirect(lbl_803DCD90);
@@ -6126,8 +6119,7 @@ void loadDataFiles(int arg)
             int vi = 0x50;
             do
             {
-            }
-            while (++vi < 0x57);
+            } while (++vi < 0x57);
         }
         printHeapStats(1);
     }
@@ -6180,13 +6172,14 @@ void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
 {
     char* base = (char*)lbl_8035F3E8;
     char* e;
-    if (*(void**)(base + 0x74) == NULL) return;
-    if (*(void**)(base + 0x78) == NULL) return;
+    if (*(void**)(base + 0x74) == NULL)
+        return;
+    if (*(void**)(base + 0x78) == NULL)
+        return;
     e = *(char**)(base + 0x74) + idx;
     *out1 = *(s16*)(e + 0x1c);
     *out2 = *(s16*)(e + 0x1e);
-    *out3 = *(int*)(*(char**)(base + 0x74) +
-        *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
+    *out3 = *(int*)(*(char**)(base + 0x74) + *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
 }
 
 void trickyVoxAllocFn_8004b5d4(int* out)
@@ -6233,7 +6226,8 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
     u8 fileInfo[0x3c];
     int asize;
     void* tmp;
-    if (size == 0) return 0;
+    if (size == 0)
+        return 0;
     if (lbl_8035F3E8[id] != 0)
     {
         {
@@ -6424,7 +6418,7 @@ extern void OSReport(const char* msg, ...);
 extern int GXReadDrawSync(void);
 extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
-extern void GXGetGPStatus(u8 * a, u8 * b, u8 * c, u8 * d, u8 * e);
+extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
 
 extern void modelFn_800292e0(void);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
@@ -6494,12 +6488,12 @@ int initLoadFiles(void)
         }
         lbl_803DCC98 = 0;
         himem = (u8*)tbl + 0x20000;
-        ptrs = (u32*)(himem - 27176);  /* tbl->ptrs */
+        ptrs = (u32*)(himem - 27176);   /* tbl->ptrs */
         owners = (s16*)(himem - 26824); /* tbl->owners */
         ids = (int*)(himem - 28360);    /* tbl->ids */
         names = sResourceFileNameTable;
-        sizes = (int*)(himem - 28008);  /* tbl->sizes */
-        flags = himem - 28448;          /* tbl->loadedFlags */
+        sizes = (int*)(himem - 28008); /* tbl->sizes */
+        flags = himem - 28448;         /* tbl->loadedFlags */
         for (i = 0; i <= 0x57; i++)
         {
             switch (i)
@@ -6611,8 +6605,7 @@ void waitNextFrame(void)
     u32 frames;
 
     OSStopStopwatch(lbl_8035F680);
-    lbl_803DCCC0 = OSCheckStopwatch(lbl_8035F680) /
-        (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
+    lbl_803DCCC0 = OSCheckStopwatch(lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
     OSResetStopwatch(lbl_8035F680);
     OSStartStopwatch(lbl_8035F680);
     timeDelta = physicsTimeScale * lbl_803DEAA0 * lbl_803DCCC0;
@@ -6634,8 +6627,7 @@ void waitNextFrame(void)
     }
     frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
     lbl_803DB411 = frames;
-    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)
-    lbl_803DB411;
+    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)lbl_803DB411;
     framesThisStep = frames;
     if (lbl_803DB411 < 1)
     {
@@ -6645,8 +6637,8 @@ void waitNextFrame(void)
     lbl_803DCCDC = OSGetCurrentThread();
     if (*(u16*)(lbl_803DCCDC + 0x2c8) != 2)
     {
-        OSReport(sThreadStateAttrSuspendFormat, *(u16*)(lbl_803DCCDC + 0x2c8),
-                 *(u16*)(lbl_803DCCDC + 0x2ca), *(int*)(lbl_803DCCDC + 0x2cc));
+        OSReport(sThreadStateAttrSuspendFormat, *(u16*)(lbl_803DCCDC + 0x2c8), *(u16*)(lbl_803DCCDC + 0x2ca),
+                 *(int*)(lbl_803DCCDC + 0x2cc));
     }
     if ((u32)Queue_GetCount(lbl_8035F730) > 1)
     {
@@ -6802,8 +6794,7 @@ void logGpuHang(void)
     {
         OSReport(strs + 0x40144);
     }
-    else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 &&
-        cmdIdle != 0)
+    else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
     {
         OSReport(strs + 0x4016c);
     }
@@ -6900,8 +6891,7 @@ void gpuErrorHandler(void)
         {
             debugPrintfxy(0x32, 0x8c, strs + 0x40090);
         }
-        else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 &&
-            rdIdle != 0 && cmdIdle != 0)
+        else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
         {
             debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
         }
@@ -6912,9 +6902,6 @@ void gpuErrorHandler(void)
         debugPrintfxy(0x32, 0xa0, &sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
     }
 }
-
-
-
 
 extern void* OSInitAlloc(void* lo, void* hi, int numHeaps);
 extern int OSCreateHeap(void* start, void* end);
@@ -6938,7 +6925,6 @@ extern int VIWaitForRetrace();
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
-
 
 extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
 extern void GXLoadPosMtxImm(void* mtx, int id);
@@ -6975,7 +6961,7 @@ void videoInit(void)
     lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
-    lbl_803DCCB8 = GXSetDispCopyYScale((f32) gRenderModeObj->xfbHeight /  gRenderModeObj->efbHeight);
+    lbl_803DCCB8 = GXSetDispCopyYScale((f32)gRenderModeObj->xfbHeight / gRenderModeObj->efbHeight);
     fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
     externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
     externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
@@ -6995,8 +6981,8 @@ void videoInit(void)
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoFn_800499e8);
-    GXSetViewport(lbl_803DEA70, lbl_803DEA70,  gRenderModeObj->fbWidth,  gRenderModeObj->xfbHeight,
-                  lbl_803DEA70, lbl_803DEA78);
+    GXSetViewport(lbl_803DEA70, lbl_803DEA70, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, lbl_803DEA70,
+                  lbl_803DEA78);
     GXSetFieldMode(gRenderModeObj->field_rendering, (u32)(gRenderModeObj->xfbHeight - gRenderModeObj->viHeight) >> 31);
     GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     GXSetDispCopyDst(gRenderModeObj->fbWidth, (u16)lbl_803DCCB8);
@@ -7103,7 +7089,8 @@ extern u8 lbl_8030CDA0[];
 extern u8 lbl_8030CDC0[];
 extern u8 lbl_8030CDE0[];
 extern u8 gInflateCodeLengthOrder[];
-typedef struct {
+typedef struct
+{
     u16 base;
     u16 extra;
 } InflateBaseExtra;
@@ -7122,11 +7109,11 @@ extern u16 lbl_8035F860[0x8000];
 extern u8 lbl_8036F860[0x20];
 extern u8 lbl_8036F880[0x8000];
 
-#define ZROT1(b) ((u32)__rlwnm((b), sh, 31, 31))
-#define ZROT8(b) ((u32)__rlwnm((b), sh, 24, 31))
-#define ZGB8() (ZROT8(src[0]) | src[1] << (8 - pos))
-#define ZGB16() (ZROT8(src[0]) | src[1] << (8 - pos) | src[2] << (0x10 - pos))
-#define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 0x20 - pos)
+#define ZROT1(b)   ((u32)__rlwnm((b), sh, 31, 31))
+#define ZROT8(b)   ((u32)__rlwnm((b), sh, 24, 31))
+#define ZGB8()     (ZROT8(src[0]) | src[1] << (8 - pos))
+#define ZGB16()    (ZROT8(src[0]) | src[1] << (8 - pos) | src[2] << (0x10 - pos))
+#define ZADV(n)    (pos += (n), src += pos >> 3, pos &= 7, sh = 0x20 - pos)
 #define ZW(tbl, i) (*(u16*)(((u8*)(tbl) + (i)) + (i)))
 
 int zlbDecompress(void* srcv, int size, int dstv, void* outp)
@@ -7197,8 +7184,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 u8 v = *src;
                 src += 1;
                 *++dst = v;
-            }
-            while (--len != 0);
+            } while (--len != 0);
         }
         else
         {
@@ -7225,48 +7211,42 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 {
                     *p8 = zero;
                     p8++;
-                }
-                while (--cnt != 0);
+                } while (--cnt != 0);
                 cnt = 0x13;
                 p8 = lbl_80377880;
                 do
                 {
                     *p8 = zero;
                     p8++;
-                }
-                while (--cnt != 0);
+                } while (--cnt != 0);
                 cnt = 0x10;
                 p16 = lbl_80377894;
                 do
                 {
                     *p16 = zeroh;
                     p16++;
-                }
-                while (--cnt != 0);
+                } while (--cnt != 0);
                 cnt = 0x120;
                 p8 = lenBitsP;
                 do
                 {
                     *p8 = zero;
                     p8++;
-                }
-                while (--cnt != 0);
+                } while (--cnt != 0);
                 cnt = 0x10;
                 p16 = lbl_803778B4;
                 do
                 {
                     *p16 = zeroh;
                     p16++;
-                }
-                while (--cnt != 0);
+                } while (--cnt != 0);
                 cnt = 0x20;
                 p8 = distBitsP;
                 do
                 {
                     *p8 = zero;
                     p8++;
-                }
-                while (--cnt != 0);
+                } while (--cnt != 0);
                 hlit = (ZGB8() & 0x1f) + 0x101;
                 ZADV(5);
                 hdist = (ZGB8() & 0x1f) + 1;
@@ -7404,10 +7384,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                             curCnt = lbl_803778B4;
                             n = 0;
                         }
-                    }
-                    while (--rep != 0);
-                }
-                while (curLens == lenBitsP || n < hdist);
+                    } while (--rep != 0);
+                } while (curLens == lenBitsP || n < hdist);
                 {
                     u16* cnts94 = lbl_80377894;
                     u16* scan;
@@ -7578,15 +7556,12 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                         do
                         {
                             *++dst = *++from;
-                        }
-                        while (--len2 != 0);
+                        } while (--len2 != 0);
                     }
                 }
-            }
-            while (sym != 0x100);
+            } while (sym != 0x100);
         }
-    }
-    while (final == 0);
+    } while (final == 0);
     return 0;
 }
 #pragma optimize_for_size reset
@@ -7677,29 +7652,36 @@ extern char sResourceFileNameEnvfxactBin[];
 extern char sResourceFileNameNull[];
 
 char* sResourceFileNameTable[90] = {
-    sResourceFileNameAudioTab, sResourceFileNameAudioBin, sResourceFileNameSfxTab, sResourceFileNameSfxBin,
-    sResourceFileNameAmbientTab, sResourceFileNameAmbientBin, sResourceFileNameMusicTab, sResourceFileNameMusicBin,
-    sResourceFileNameMpegTab, sResourceFileNameMpegBin, sResourceFileNameMusicactBin, sResourceFileNameCamactioBin,
-    sResourceFileNameLactionsBin, sResourceFileNameAnimcurvBin, sResourceFileNameAnimcurvTab, sResourceFileNameObjseq2cTab,
-    sResourceFileNameFontsBin, sResourceFileNameCachefonBin, sResourceFileNameCachefonBin, sResourceFileNameGametextBin,
-    sResourceFileNameGametextTab, sResourceFileNameGlobalmaBin, sResourceFileNameTablesBin, sResourceFileNameTablesTab,
-    sResourceFileNameScreensBin, sResourceFileNameScreensTab, sResourceFileNameVoxmapTab, sResourceFileNameVoxmapBin,
-    sResourceFileNameWarptabBin, sResourceFileNameMapsBin, sResourceFileNameMapsTab, sResourceFileNameMapinfoBin,
-    sResourceFileNameTex1Bin, sResourceFileNameTex1Tab, sResourceFileNameTextableBin, sResourceFileNameTex0Bin,
-    sResourceFileNameTex0Tab, sResourceFileNameBlocksBin, sResourceFileNameBlocksTab, sResourceFileNameTrkblkTab,
-    sResourceFileNameHitsBin, sResourceFileNameHitsTab, sResourceFileNameModelsTab, sResourceFileNameModelsBin,
-    sResourceFileNameModelindBin, sResourceFileNameModanimTab, sResourceFileNameModanimBin, sResourceFileNameAnimTab,
-    sResourceFileNameAnimBin, sResourceFileNameAmapTab, sResourceFileNameAmapBin, sResourceFileNameBittableBin,
-    sResourceFileNameWeapondaBin, sResourceFileNameVoxobjTab, sResourceFileNameVoxobjBin, sResourceFileNameModlinesBin,
-    sResourceFileNameModlinesTab, sResourceFileNameSavegameBin, sResourceFileNameSavegameTab, sResourceFileNameObjseqBin,
-    sResourceFileNameObjseqTab, sResourceFileNameObjectsTab, sResourceFileNameObjectsBin, sResourceFileNameObjindexBin,
-    sResourceFileNameObjeventBin, sResourceFileNameObjhitsBin, sResourceFileNameDllsBin, sResourceFileNameDllsTab,
-    sResourceFileNameDllsimpoBin, sResourceFileNameModelsTab, sResourceFileNameModelsBin, sResourceFileNameBlocksBin,
-    sResourceFileNameBlocksTab, sResourceFileNameAnimTab, sResourceFileNameAnimBin, sResourceFileNameTex1Bin,
-    sResourceFileNameTex1Tab, sResourceFileNameTex0Bin, sResourceFileNameTex0Tab, sResourceFileNameTexpreBin,
-    sResourceFileNameTexpreTab, sResourceFileNamePreanimBin, sResourceFileNamePreanimTab, sResourceFileNameVoxmapTab,
-    sResourceFileNameVoxmapBin, sResourceFileNameAnimcurvBin, sResourceFileNameAnimcurvTab, sResourceFileNameEnvfxactBin,
-    sResourceFileNameNull, sResourceFileNameNull,
+    sResourceFileNameAudioTab,    sResourceFileNameAudioBin,    sResourceFileNameSfxTab,
+    sResourceFileNameSfxBin,      sResourceFileNameAmbientTab,  sResourceFileNameAmbientBin,
+    sResourceFileNameMusicTab,    sResourceFileNameMusicBin,    sResourceFileNameMpegTab,
+    sResourceFileNameMpegBin,     sResourceFileNameMusicactBin, sResourceFileNameCamactioBin,
+    sResourceFileNameLactionsBin, sResourceFileNameAnimcurvBin, sResourceFileNameAnimcurvTab,
+    sResourceFileNameObjseq2cTab, sResourceFileNameFontsBin,    sResourceFileNameCachefonBin,
+    sResourceFileNameCachefonBin, sResourceFileNameGametextBin, sResourceFileNameGametextTab,
+    sResourceFileNameGlobalmaBin, sResourceFileNameTablesBin,   sResourceFileNameTablesTab,
+    sResourceFileNameScreensBin,  sResourceFileNameScreensTab,  sResourceFileNameVoxmapTab,
+    sResourceFileNameVoxmapBin,   sResourceFileNameWarptabBin,  sResourceFileNameMapsBin,
+    sResourceFileNameMapsTab,     sResourceFileNameMapinfoBin,  sResourceFileNameTex1Bin,
+    sResourceFileNameTex1Tab,     sResourceFileNameTextableBin, sResourceFileNameTex0Bin,
+    sResourceFileNameTex0Tab,     sResourceFileNameBlocksBin,   sResourceFileNameBlocksTab,
+    sResourceFileNameTrkblkTab,   sResourceFileNameHitsBin,     sResourceFileNameHitsTab,
+    sResourceFileNameModelsTab,   sResourceFileNameModelsBin,   sResourceFileNameModelindBin,
+    sResourceFileNameModanimTab,  sResourceFileNameModanimBin,  sResourceFileNameAnimTab,
+    sResourceFileNameAnimBin,     sResourceFileNameAmapTab,     sResourceFileNameAmapBin,
+    sResourceFileNameBittableBin, sResourceFileNameWeapondaBin, sResourceFileNameVoxobjTab,
+    sResourceFileNameVoxobjBin,   sResourceFileNameModlinesBin, sResourceFileNameModlinesTab,
+    sResourceFileNameSavegameBin, sResourceFileNameSavegameTab, sResourceFileNameObjseqBin,
+    sResourceFileNameObjseqTab,   sResourceFileNameObjectsTab,  sResourceFileNameObjectsBin,
+    sResourceFileNameObjindexBin, sResourceFileNameObjeventBin, sResourceFileNameObjhitsBin,
+    sResourceFileNameDllsBin,     sResourceFileNameDllsTab,     sResourceFileNameDllsimpoBin,
+    sResourceFileNameModelsTab,   sResourceFileNameModelsBin,   sResourceFileNameBlocksBin,
+    sResourceFileNameBlocksTab,   sResourceFileNameAnimTab,     sResourceFileNameAnimBin,
+    sResourceFileNameTex1Bin,     sResourceFileNameTex1Tab,     sResourceFileNameTex0Bin,
+    sResourceFileNameTex0Tab,     sResourceFileNameTexpreBin,   sResourceFileNameTexpreTab,
+    sResourceFileNamePreanimBin,  sResourceFileNamePreanimTab,  sResourceFileNameVoxmapTab,
+    sResourceFileNameVoxmapBin,   sResourceFileNameAnimcurvBin, sResourceFileNameAnimcurvTab,
+    sResourceFileNameEnvfxactBin, sResourceFileNameNull,        sResourceFileNameNull,
 };
 
 extern char sMapFileNameFrontend[];
@@ -7821,35 +7803,35 @@ extern char sMapFileNameDbstepstone[];
 extern char sMapFileNameVfppushblock[];
 
 char* sMapFileNameTable[117] = {
-    sMapFileNameFrontend, sMapFileNameFrontend2, sMapFileNameDragrock, sMapFileNameKrazoapalace,
-    sMapFileNameTemple, sMapFileNameHightop, sMapFileNameDiscovery, sMapFileNameHollow,
-    sMapFileNameHollow2, sMapFileNameMazecave, sMapFileNameWastes, sMapFileNameWarlock,
-    sMapFileNameFortress, sMapFileNameWallcity, sMapFileNameSwapcircle, sMapFileNameCloudtreasure,
-    sMapFileNameClouddungeon, sMapFileNameCloudtrap, sMapFileNameMoonpass, sMapFileNameSnowmines,
-    sMapFileNameKrashrin2, sMapFileNameKraztest, sMapFileNameKrazchamber, sMapFileNameNewicemount,
-    sMapFileNameNewicemount2, sMapFileNameNewicemount3, sMapFileNameAnimtest, sMapFileNameSnowmines2,
-    sMapFileNameSnowmines3, sMapFileNameCapeclaw, sMapFileNameInsidegal, sMapFileNameDfshrine,
-    sMapFileNameMmshrine, sMapFileNameEcshrine, sMapFileNameGpshrine, sMapFileNameDiamondbay,
-    sMapFileNameEarthwalker, sMapFileNameWillow, sMapFileNameArwing, sMapFileNameDbshrine,
-    sMapFileNameNwshrine, sMapFileNameCcshrine, sMapFileNameWgshrine, sMapFileNameCloudrace,
-    sMapFileNameFinalboss, sMapFileNameWminsert, sMapFileNameSnowmines4, sMapFileNameSnowmines5,
-    sMapFileNameTrexboss, sMapFileNameMikelava, sMapFileNameDfptop, sMapFileNameSwapstore,
-    sMapFileNameDragbot, sMapFileNameKamdrag, sMapFileNameMagicave, sMapFileNameDuster,
-    sMapFileNameLinkb, sMapFileNameCloudjoin, sMapFileNameArwingtoplanet, sMapFileNameArwingdarkice,
-    sMapFileNameArwingcloud, sMapFileNameArwingcity, sMapFileNameArwingdragon, sMapFileNameGamefront,
-    sMapFileNameLinklevel, sMapFileNameGreatfox, sMapFileNameLinka, sMapFileNameLinkc,
-    sMapFileNameLinkd, sMapFileNameLinke, sMapFileNameLinkf, sMapFileNameLinkg,
-    sMapFileNameLinkh, sMapFileNameLinkj, sMapFileNameLinki, sMapFileNameDfpodium,
-    sMapFileNameDfcradle, sMapFileNameDfcavehatch1, sMapFileNameDfcavehatch2, sMapFileNameScstatue,
-    sMapFileNameGalleonship, sMapFileNameCfgalleon, sMapFileNameCfgangplank, sMapFileNameNwtreebridge,
-    sMapFileNameCfdungeonblock, sMapFileNameCloudrunnermap, sMapFileNameCcbridge, sMapFileNameCfcolumn,
-    sMapFileNameNwboulder, sMapFileNameCfprisondoor, sMapFileNameCfprisoncage, sMapFileNameNwtreebridge2,
-    sMapFileNameDim2iceblock1, sMapFileNameDimpushblock, sMapFileNameDim2iceblock2, sMapFileNameDimhornplinth,
-    sMapFileNameNwshcolpush, sMapFileNameDim2lift, sMapFileNameDim2icefloe, sMapFileNameDim2icefloe1,
-    sMapFileNameDim2icefloe2, sMapFileNameCfliftplat, sMapFileNameImspacecraft, sMapFileNameDimbossgut,
-    sMapFileNameWmcolrise, sMapFileNameVfpslide1, sMapFileNameVfpslide2, sMapFileNameDrpushcart,
-    sMapFileNameDrliftplat, sMapFileNameDim2stonepillar, sMapFileNameBossdrakorflatr, sMapFileNameWcbouncycrate,
-    sMapFileNameWcpushblock, sMapFileNameWctemplelift, sMapFileNameKamColumn, sMapFileNameDbstepstone,
+    sMapFileNameFrontend,       sMapFileNameFrontend2,       sMapFileNameDragrock,        sMapFileNameKrazoapalace,
+    sMapFileNameTemple,         sMapFileNameHightop,         sMapFileNameDiscovery,       sMapFileNameHollow,
+    sMapFileNameHollow2,        sMapFileNameMazecave,        sMapFileNameWastes,          sMapFileNameWarlock,
+    sMapFileNameFortress,       sMapFileNameWallcity,        sMapFileNameSwapcircle,      sMapFileNameCloudtreasure,
+    sMapFileNameClouddungeon,   sMapFileNameCloudtrap,       sMapFileNameMoonpass,        sMapFileNameSnowmines,
+    sMapFileNameKrashrin2,      sMapFileNameKraztest,        sMapFileNameKrazchamber,     sMapFileNameNewicemount,
+    sMapFileNameNewicemount2,   sMapFileNameNewicemount3,    sMapFileNameAnimtest,        sMapFileNameSnowmines2,
+    sMapFileNameSnowmines3,     sMapFileNameCapeclaw,        sMapFileNameInsidegal,       sMapFileNameDfshrine,
+    sMapFileNameMmshrine,       sMapFileNameEcshrine,        sMapFileNameGpshrine,        sMapFileNameDiamondbay,
+    sMapFileNameEarthwalker,    sMapFileNameWillow,          sMapFileNameArwing,          sMapFileNameDbshrine,
+    sMapFileNameNwshrine,       sMapFileNameCcshrine,        sMapFileNameWgshrine,        sMapFileNameCloudrace,
+    sMapFileNameFinalboss,      sMapFileNameWminsert,        sMapFileNameSnowmines4,      sMapFileNameSnowmines5,
+    sMapFileNameTrexboss,       sMapFileNameMikelava,        sMapFileNameDfptop,          sMapFileNameSwapstore,
+    sMapFileNameDragbot,        sMapFileNameKamdrag,         sMapFileNameMagicave,        sMapFileNameDuster,
+    sMapFileNameLinkb,          sMapFileNameCloudjoin,       sMapFileNameArwingtoplanet,  sMapFileNameArwingdarkice,
+    sMapFileNameArwingcloud,    sMapFileNameArwingcity,      sMapFileNameArwingdragon,    sMapFileNameGamefront,
+    sMapFileNameLinklevel,      sMapFileNameGreatfox,        sMapFileNameLinka,           sMapFileNameLinkc,
+    sMapFileNameLinkd,          sMapFileNameLinke,           sMapFileNameLinkf,           sMapFileNameLinkg,
+    sMapFileNameLinkh,          sMapFileNameLinkj,           sMapFileNameLinki,           sMapFileNameDfpodium,
+    sMapFileNameDfcradle,       sMapFileNameDfcavehatch1,    sMapFileNameDfcavehatch2,    sMapFileNameScstatue,
+    sMapFileNameGalleonship,    sMapFileNameCfgalleon,       sMapFileNameCfgangplank,     sMapFileNameNwtreebridge,
+    sMapFileNameCfdungeonblock, sMapFileNameCloudrunnermap,  sMapFileNameCcbridge,        sMapFileNameCfcolumn,
+    sMapFileNameNwboulder,      sMapFileNameCfprisondoor,    sMapFileNameCfprisoncage,    sMapFileNameNwtreebridge2,
+    sMapFileNameDim2iceblock1,  sMapFileNameDimpushblock,    sMapFileNameDim2iceblock2,   sMapFileNameDimhornplinth,
+    sMapFileNameNwshcolpush,    sMapFileNameDim2lift,        sMapFileNameDim2icefloe,     sMapFileNameDim2icefloe1,
+    sMapFileNameDim2icefloe2,   sMapFileNameCfliftplat,      sMapFileNameImspacecraft,    sMapFileNameDimbossgut,
+    sMapFileNameWmcolrise,      sMapFileNameVfpslide1,       sMapFileNameVfpslide2,       sMapFileNameDrpushcart,
+    sMapFileNameDrliftplat,     sMapFileNameDim2stonepillar, sMapFileNameBossdrakorflatr, sMapFileNameWcbouncycrate,
+    sMapFileNameWcpushblock,    sMapFileNameWctemplelift,    sMapFileNameKamColumn,       sMapFileNameDbstepstone,
     sMapFileNameVfppushblock,
 };
 
@@ -8046,41 +8028,35 @@ char sMapFileNameBossdrakor[] = "bossdrakor";
 char sMapFileNameBosstrex[] = "bosstrex";
 
 char* sMapFileNameByMapIdTable[] = {
-    sMapFileNameAnimtest, sMapFileNameAnimtest, sMapFileNameAnimtest, sMapFileNameArwing,
-    sMapFileNameDragrock, sMapFileNameAnimtest, sMapFileNameDfptop, sMapFileNameVolcano,
-    sMapFileNameAnimtest, sMapFileNameMazecave, sMapFileNameDragrockbot, sMapFileNameDfalls,
-    sMapFileNameSwaphol, sMapFileNameShipbattle, sMapFileNameNwastes, sMapFileNameWarlock,
-    sMapFileNameShop, sMapFileNameAnimtest, sMapFileNameCrfort, sMapFileNameSwapholbot,
-    sMapFileNameWallcity, sMapFileNameLightfoot, sMapFileNameCloudtreasure, sMapFileNameAnimtest,
-    sMapFileNameClouddungeon, sMapFileNameMmpass, sMapFileNameDarkicemines, sMapFileNameAnimtest,
-    sMapFileNameDesert, sMapFileNameAnimtest, sMapFileNameIcemountain, sMapFileNameAnimtest,
-    sMapFileNameAnimtest, sMapFileNameAnimtest, sMapFileNameDarkicemines2, sMapFileNameBossgaldon,
-    sMapFileNameAnimtest, sMapFileNameInsidegal, sMapFileNameMagiccave, sMapFileNameDfshrine,
-    sMapFileNameMmshrine, sMapFileNameEcshrine, sMapFileNameGpshrine, sMapFileNameDbshrine,
-    sMapFileNameNwshrine, sMapFileNameWorldmap, sMapFileNameAnimtest, sMapFileNameCapeclaw,
-    sMapFileNameDbay, sMapFileNameAnimtest, sMapFileNameCloudrace, sMapFileNameBossdrakor,
-    sMapFileNameAnimtest, sMapFileNameBosstrex, sMapFileNameLinkb, sMapFileNameCloudjoin,
-    sMapFileNameArwingtoplanet, sMapFileNameArwingdarkice, sMapFileNameArwingcloud, sMapFileNameArwingcity,
-    sMapFileNameArwingdragon, sMapFileNameGamefront, sMapFileNameLinklevel, sMapFileNameGreatfox,
-    sMapFileNameLinka, sMapFileNameLinkc, sMapFileNameLinkd, sMapFileNameLinke,
-    sMapFileNameLinkf, sMapFileNameLinkg, sMapFileNameLinkh, sMapFileNameLinkj,
+    sMapFileNameAnimtest,       sMapFileNameAnimtest,      sMapFileNameAnimtest,      sMapFileNameArwing,
+    sMapFileNameDragrock,       sMapFileNameAnimtest,      sMapFileNameDfptop,        sMapFileNameVolcano,
+    sMapFileNameAnimtest,       sMapFileNameMazecave,      sMapFileNameDragrockbot,   sMapFileNameDfalls,
+    sMapFileNameSwaphol,        sMapFileNameShipbattle,    sMapFileNameNwastes,       sMapFileNameWarlock,
+    sMapFileNameShop,           sMapFileNameAnimtest,      sMapFileNameCrfort,        sMapFileNameSwapholbot,
+    sMapFileNameWallcity,       sMapFileNameLightfoot,     sMapFileNameCloudtreasure, sMapFileNameAnimtest,
+    sMapFileNameClouddungeon,   sMapFileNameMmpass,        sMapFileNameDarkicemines,  sMapFileNameAnimtest,
+    sMapFileNameDesert,         sMapFileNameAnimtest,      sMapFileNameIcemountain,   sMapFileNameAnimtest,
+    sMapFileNameAnimtest,       sMapFileNameAnimtest,      sMapFileNameDarkicemines2, sMapFileNameBossgaldon,
+    sMapFileNameAnimtest,       sMapFileNameInsidegal,     sMapFileNameMagiccave,     sMapFileNameDfshrine,
+    sMapFileNameMmshrine,       sMapFileNameEcshrine,      sMapFileNameGpshrine,      sMapFileNameDbshrine,
+    sMapFileNameNwshrine,       sMapFileNameWorldmap,      sMapFileNameAnimtest,      sMapFileNameCapeclaw,
+    sMapFileNameDbay,           sMapFileNameAnimtest,      sMapFileNameCloudrace,     sMapFileNameBossdrakor,
+    sMapFileNameAnimtest,       sMapFileNameBosstrex,      sMapFileNameLinkb,         sMapFileNameCloudjoin,
+    sMapFileNameArwingtoplanet, sMapFileNameArwingdarkice, sMapFileNameArwingcloud,   sMapFileNameArwingcity,
+    sMapFileNameArwingdragon,   sMapFileNameGamefront,     sMapFileNameLinklevel,     sMapFileNameGreatfox,
+    sMapFileNameLinka,          sMapFileNameLinkc,         sMapFileNameLinkd,         sMapFileNameLinke,
+    sMapFileNameLinkf,          sMapFileNameLinkg,         sMapFileNameLinkh,         sMapFileNameLinkj,
     sMapFileNameLinki,
 };
 
 u32 sMapFileNameIndexRemapTable[] = {
-    13, 5, 4, 5, 7, 5, 5, 12, 19, 9, 14, 15, 18, 20, 21,
-    22, 24, 5, 25, 26, 5, 28, 5, 30, 31, 32, 5, 34, 35, 47,
-    37, 39, 40, 41, 42, 48, 5, 5, 3, 43, 44, 45, 5, 50, 51,
-    5, 5, 5, 53, 5, 6, 16, 10, 5, 38, 55, 54, 5, 56, 57,
-    58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
+    13, 5,  4,  5,  7,  5,  5,  12, 19, 9,  14, 15, 18, 20, 21, 22, 24, 5,  25, 26, 5,  28, 5,  30, 31,
+    32, 5,  34, 35, 47, 37, 39, 40, 41, 42, 48, 5,  5,  3,  43, 44, 45, 5,  50, 51, 5,  5,  5,  53, 5,
+    6,  16, 10, 5,  38, 55, 54, 5,  56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
 };
 
 s16 sMapFileNameAdjacencyTable[] = {
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, -1, -1,
-    -1, 15, -1, -1, 12, -1, -1, 12, -1, -1, -1, -1,
-    18, -1, -1, -1, 6, -1, -1, -1, -1, -1, -1, 34,
-    -1, -1, -1, 25, 21, 15, 20, 14, 15, -1, -1, -1,
-    5, -1, -1, -1, -1, 20, 30, -1, -1, -1, -1, -1,
-    -1, -1, -1, 15, -1, 14, -1, 12, 7, 12, 21, 47,
-    -1, -1, -1, 0,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, -1, -1, -1, 15, -1, -1, 12, -1, -1, 12, -1, -1, -1, -1, 18, -1,
+    -1, -1, 6,  -1, -1, -1, -1, -1, -1, 34, -1, -1, -1, 25, 21, 15, 20, 14, 15, -1, -1, -1, 5,  -1, -1, -1,
+    -1, 20, 30, -1, -1, -1, -1, -1, -1, -1, -1, 15, -1, 14, -1, 12, 7,  12, 21, 47, -1, -1, -1, 0,
 };

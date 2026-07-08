@@ -34,15 +34,18 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 typedef struct LampObjectDef
 {
     u8 pad0[0x18 - 0x0];
-    s8 rotXSwing;           /* 0x18: rotX byte for the non-static swing seq */
+    s8 rotXSwing; /* 0x18: rotX byte for the non-static swing seq */
     u8 pad19[0x1A - 0x19];
-    u8 rotXStatic;          /* 0x1A: rotX byte for the static seq */
+    u8 rotXStatic; /* 0x1A: rotX byte for the static seq */
     u8 pad1B[0x20 - 0x1B];
 } LampObjectDef;
 
-#define LAMP_SEQ_STATIC 0x3e4    /* seqId using the static rotX byte (no swing) */
+#define LAMP_SEQ_STATIC 0x3e4 /* seqId using the static rotX byte (no swing) */
 
-int Lamp_getExtraSize(void) { return 0x1; }
+int Lamp_getExtraSize(void)
+{
+    return 0x1;
+}
 
 void Lamp_free(int* obj)
 {
@@ -53,7 +56,8 @@ void Lamp_free(int* obj)
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -117,11 +121,9 @@ void Lamp_update(int obj)
         if (((GameObject*)obj)->unkF8 == 0)
         {
             ((GameObject*)obj)->unkF8 = 1;
-            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / 100.0f,
-                                    (ObjAnimComponent*)obj);
+            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / 100.0f, (ObjAnimComponent*)obj);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.003f,
-                                                                     timeDelta, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.003f, timeDelta, NULL);
     }
 
     if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)

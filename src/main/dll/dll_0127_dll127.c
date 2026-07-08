@@ -26,8 +26,14 @@ STATIC_ASSERT(offsetof(Dll127Placement, bankIndex) == 0x18);
 STATIC_ASSERT(offsetof(Dll127Placement, swayMag) == 0x19);
 STATIC_ASSERT(offsetof(Dll127Placement, yawBits) == 0x1a);
 
-int dll_127_getExtraSize_ret_0(void) { return 0x0; }
-int dll_127_getObjectTypeId(void) { return 0x13; }
+int dll_127_getExtraSize_ret_0(void)
+{
+    return 0x0;
+}
+int dll_127_getObjectTypeId(void)
+{
+    return 0x13;
+}
 
 void dll_127_free_nop(void)
 {
@@ -36,7 +42,8 @@ void dll_127_free_nop(void)
 void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
-    if (isVisible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (isVisible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_127_hitDetect_nop(void)

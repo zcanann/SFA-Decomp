@@ -40,12 +40,12 @@ typedef struct WmSpiritPlaceState
 typedef struct WmSpiritPlaceMapData
 {
     ObjPlacement base;
-    s8 rotXByte;            /* 0x18: rotX in 1/256 turns */
-    s8 setupParam;          /* 0x19 */
-    s16 rotYAngle;          /* 0x1A: rotY in 1/256 turns */
-    s16 heightOffset;       /* 0x1C */
-    s16 sequenceGameBit;    /* 0x1E */
-    s16 promptGameBit;      /* 0x20 */
+    s8 rotXByte;         /* 0x18: rotX in 1/256 turns */
+    s8 setupParam;       /* 0x19 */
+    s16 rotYAngle;       /* 0x1A: rotY in 1/256 turns */
+    s16 heightOffset;    /* 0x1C */
+    s16 sequenceGameBit; /* 0x1E */
+    s16 promptGameBit;   /* 0x20 */
 } WmSpiritPlaceMapData;
 
 STATIC_ASSERT(offsetof(WmSpiritPlaceState, promptGameBit) == 0x0C);
@@ -78,13 +78,13 @@ enum
 
 /* state->fxFlags: spawn the spirit particle fx each SeqFn tick */
 #define WMSPIRITPLACE_FX_ACTIVE 0x1
-#define WMSPIRITPLACE_PARTFX 0x7d8
+#define WMSPIRITPLACE_PARTFX    0x7d8
 
 /* Env-fx ids re-activated on the SKY_RESTORE seq event (getEnvfxAct 3rd arg) */
 #define WMSPIRITPLACE_ENVFX_A 0x84
 #define WMSPIRITPLACE_ENVFX_B 0x8a
 
-#define WMSPIRITPLACE_OBJFLAG_HIDDEN 0x4000
+#define WMSPIRITPLACE_OBJFLAG_HIDDEN             0x4000
 #define WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* sequence event opcodes consumed by WM_spiritplace_SeqFn */
@@ -166,7 +166,8 @@ int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
     }
 
     actor->sequenceEventActive = 0;
-    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+    ((GameObject*)obj)->anim.resetHitboxFlags =
+        (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     actor->freeCallback = (ObjAnimSequenceFreeCallback)wmspiritplace_onSeqFree;
 
     for (i = 0; i < actor->eventCount; i++)
@@ -263,9 +264,15 @@ int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
     return 0;
 }
 
-int WM_spiritplace_getExtraSize(void) { return sizeof(WmSpiritPlaceState); }
+int WM_spiritplace_getExtraSize(void)
+{
+    return sizeof(WmSpiritPlaceState);
+}
 
-int WM_spiritplace_getObjectTypeId(void) { return 0x0; }
+int WM_spiritplace_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void WM_spiritplace_free(void)
 {
@@ -584,7 +591,8 @@ void WM_spiritplace_init(GameObject* obj, WmSpiritPlaceMapData* placement)
     state->promptGameBit = placement->promptGameBit;
     state->setupParam = placement->setupParam;
     state->sequenceStarted = 0;
-    obj->objectFlags = (u16)(obj->objectFlags | (WMSPIRITPLACE_OBJFLAG_HIDDEN | WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags =
+        (u16)(obj->objectFlags | (WMSPIRITPLACE_OBJFLAG_HIDDEN | WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED));
     state->mapEventMode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
 
     if (obj->anim.placement->mapId == WMSPIRITPLACE_MAP_2)

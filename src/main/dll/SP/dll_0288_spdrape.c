@@ -17,7 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-#define SPDRAPE_OBJFLAG_HIDDEN 0x4000
+#define SPDRAPE_OBJFLAG_HIDDEN             0x4000
 #define SPDRAPE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* indices into a swing-direction move table (gSpDrapeSwingLeftMoveTable / gSpDrapeSwingRightMoveTable) */
@@ -30,7 +30,7 @@ enum
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern f32 gSpDrapeSwingLeftMoveTable; /* swing-left move-id table */
+extern f32 gSpDrapeSwingLeftMoveTable;  /* swing-left move-id table */
 extern f32 gSpDrapeSwingRightMoveTable; /* swing-right move-id table */
 extern f32 lbl_803E5AA0;
 extern f32 gSpDrapeNearRadiusSq; /* squared player-proximity radius */
@@ -121,7 +121,7 @@ void spdrape_hitDetect(void)
 
 void spdrape_update(int obj)
 {
-    extern f32 getXZDistance(f32* a, f32* b);
+    extern f32 getXZDistance(f32 * a, f32 * b);
     extern void* Obj_GetPlayerObject(void);
     extern int randomGetRange(int lo, int hi);
     f32* state;
@@ -141,7 +141,9 @@ void spdrape_update(int obj)
         {
             if (player != 0)
             {
-                if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ) < lbl_803E5AA0)
+                if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX +
+                                state[2] * ((GameObject*)player)->anim.localPosZ) <
+                    lbl_803E5AA0)
                 {
                     ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
                 }
@@ -162,13 +164,15 @@ void spdrape_update(int obj)
         {
             if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > gSpDrapeLeaveRadius)
             {
-                ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0, 0);
+                ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE],
+                                       lbl_803E5AA0, 0);
                 Sfx_PlayFromObject(obj, SFXTRIG_cagesqk11);
                 *state = lbl_803E5AB0;
             }
             else
             {
-                ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_HOLD], lbl_803E5AA0, 0);
+                ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_HOLD],
+                                       lbl_803E5AA0, 0);
                 *state = lbl_803E5AB4;
             }
         }
@@ -178,7 +182,8 @@ void spdrape_update(int obj)
         Sfx_PlayFromObject(obj, SFXTRIG_wickhit16);
         if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > gSpDrapeLeaveRadius)
         {
-            ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0, 0);
+            ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0,
+                                   0);
             Sfx_StopObjectChannel(obj, 0x40);
             Sfx_PlayFromObject(obj, SFXTRIG_cagesqk11);
             *state = lbl_803E5AB0;
@@ -186,12 +191,14 @@ void spdrape_update(int obj)
         break;
     case 3: /* closing: re-open if the player returns, else settle to idle */
     case 6:
-        if ((((GameObject*)obj)->anim.currentMoveProgress > gSpDrapeReopenProgress) && (getXZDistance(
-            &((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < gSpDrapeNearRadiusSq))
+        if ((((GameObject*)obj)->anim.currentMoveProgress > gSpDrapeReopenProgress) &&
+            (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < gSpDrapeNearRadiusSq))
         {
             if (player != 0)
             {
-                if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ) < lbl_803E5AA0)
+                if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX +
+                                state[2] * ((GameObject*)player)->anim.localPosZ) <
+                    lbl_803E5AA0)
                 {
                     ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
                 }
@@ -212,13 +219,12 @@ void spdrape_update(int obj)
         }
         break;
     }
-    ((SpdrapeState*)state)->moveActive = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
-        obj, *state, timeDelta, NULL);
+    ((SpdrapeState*)state)->moveActive =
+        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, *state, timeDelta, NULL);
 }
 
 void spdrape_init(int* obj, u8* def)
 {
-
 
     extern void* Obj_GetPlayerObject(void);
     extern int randomGetRange(int lo, int hi);
@@ -230,8 +236,8 @@ void spdrape_init(int* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((SpdrapeObjectDef*)def)->facingByte << 8);
     if (((SpdrapeObjectDef*)def)->motionScaleNum != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(s32)((SpdrapeObjectDef*)def)->motionScaleNum / lbl_803E5AC4 *
-            lbl_803E5AC0;
+        ((GameObject*)obj)->anim.rootMotionScale =
+            (f32)(s32)((SpdrapeObjectDef*)def)->motionScaleNum / lbl_803E5AC4 * lbl_803E5AC0;
     }
     state[0] = lbl_803E5ABC;
     state[1] = mathSinf(gSpDrapePi * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
@@ -241,8 +247,9 @@ void spdrape_init(int* obj, u8* def)
     player = Obj_GetPlayerObject();
     if (player != NULL)
     {
-        if (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ + state[
-            3] < lbl_803E5AA0)
+        if (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ +
+                state[3] <
+            lbl_803E5AA0)
         {
             ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
         }

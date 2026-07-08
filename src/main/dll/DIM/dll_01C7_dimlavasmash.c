@@ -16,10 +16,8 @@
 
 #define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-
 extern f32 lbl_803E48F8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);
@@ -64,8 +62,14 @@ void dimlavasmash_update(int* obj)
     }
 }
 
-int dimlavasmash_getExtraSize(void) { return 0x3; }
-int dimlavasmash_getObjectTypeId(void) { return 0x0; }
+int dimlavasmash_getExtraSize(void)
+{
+    return 0x3;
+}
+int dimlavasmash_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 typedef struct DimlavasmashPlacement
 {
@@ -77,7 +81,7 @@ typedef struct DimlavasmashPlacement
 
 typedef struct DimlavasmashState
 {
-    s8 unk0; /* 0x0 init source: def.unk1C */
+    s8 unk0;           /* 0x0 init source: def.unk1C */
     u8 surfaceLayerId; /* surface material/layer index passed to setBlockSurfaceFlags */
     u8 state;
     u8 pad3[0x7 - 0x3];
@@ -135,7 +139,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 #pragma opt_propagation reset
 #pragma dont_inline reset
 
-#define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397  /* dimlavaball cannonball (0x18d) */
+#define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397 /* dimlavaball cannonball (0x18d) */
 
 int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -159,8 +163,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     ((DimlavasmashState*)state)->state = 2;
                     Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
-                    objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
-                                        ((GameObject*)obj)->anim.localPosY,
+                    objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ);
                     block = mapGetBlock();
                     if ((void*)block != NULL)
@@ -186,7 +189,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 typedef struct DimlavasmashObjectDef
 {
     u8 pad0[0x18 - 0x0];
-    s16 rotByte; /* 0x18 rotation byte (read raw as def[0x18] into anim.rotX) */
+    s16 rotByte;        /* 0x18 rotation byte (read raw as def[0x18] into anim.rotX) */
     s16 surfaceLayerId; /* 0x1A def source for state.surfaceLayerId */
     s16 unk1C;
     s16 gameBit;

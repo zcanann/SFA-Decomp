@@ -75,12 +75,12 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 typedef struct Dll22CMapData
 {
     ObjPlacement base;
-    s8 rotXByte;  /* 0x18: rotX in 1/256 turns */
-    s8 unk19;     /* 0x19 */
+    s8 rotXByte;     /* 0x18: rotX in 1/256 turns */
+    s8 unk19;        /* 0x19 */
     s16 raiseHeight; /* 0x1A */
-    s16 raiseMode; /* 0x1C: -> state raiseMode */
-    s16 gameBit2; /* 0x1E */
-    s16 gameBit;  /* 0x20 */
+    s16 raiseMode;   /* 0x1C: -> state raiseMode */
+    s16 gameBit2;    /* 0x1E */
+    s16 gameBit;     /* 0x20 */
 } Dll22CMapData;
 
 STATIC_ASSERT(offsetof(Dll22CMapData, rotXByte) == 0x18);
@@ -92,15 +92,24 @@ STATIC_ASSERT(offsetof(Dll22CMapData, gameBit) == 0x20);
 extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 
 /* Dll22CState.mode rise/hold/fall cycle (see file-header comment). */
-#define DLL22C_MODE_ARMED   0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */
+#define DLL22C_MODE_ARMED      0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */
 #define DLL22C_MODE_HOLD_SETUP 1 /* one-frame: arm the 100-frame pauseTimer -> HOLD */
-#define DLL22C_MODE_HOLD    2 /* hold, then pick DESCEND or ASCEND by player Y */
-#define DLL22C_MODE_DESCEND 3 /* fall to posY-1228.0f, then -> HOLD */
-#define DLL22C_MODE_ASCEND  4 /* rise to posY+60.0f, then -> HOLD */
+#define DLL22C_MODE_HOLD       2 /* hold, then pick DESCEND or ASCEND by player Y */
+#define DLL22C_MODE_DESCEND    3 /* fall to posY-1228.0f, then -> HOLD */
+#define DLL22C_MODE_ASCEND     4 /* rise to posY+60.0f, then -> HOLD */
 
-int dll_22C_SeqFn(void) { return 0x0; }
-int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
-int dll_22C_getObjectTypeId(void) { return 0x0; }
+int dll_22C_SeqFn(void)
+{
+    return 0x0;
+}
+int dll_22C_getExtraSize_ret_16(void)
+{
+    return 0x10;
+}
+int dll_22C_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_22C_free(int p1)
 {
@@ -110,7 +119,8 @@ void dll_22C_free(int p1)
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (visible != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_22C_hitDetect_nop(void)
@@ -122,9 +132,8 @@ void dll_22C_update(int obj)
     /* block-scope to override the engine_shared.h prototypes' return/param
        types (GameObject* return, signed args) the codegen here depends on. */
 
-    extern f32 Vec_xzDistance(f32* a, f32* b);
+    extern f32 Vec_xzDistance(f32 * a, f32 * b);
     extern int Sfx_IsPlayingFromObjectChannel(int, int);
-
 
     GameObject* object = (GameObject*)obj;
     ObjPlacement* placement = object->anim.placement;

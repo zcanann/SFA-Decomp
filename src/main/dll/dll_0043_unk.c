@@ -30,9 +30,9 @@
 #define PAD_TRIGGER_Z 0x10
 
 /* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
-#define CAMMODE_DEFAULT   0x42 /* dll_0042 - default/release camera */
+#define CAMMODE_DEFAULT    0x42 /* dll_0042 - default/release camera */
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
-#define CAMMODE_COMBAT    0x49 /* dll_0049_cameramodecombat (follow) */
+#define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
@@ -97,8 +97,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
             goto done;
         }
-        if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
-            (objFn_802962b4((int)target) != 0))
+        if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) && (objFn_802962b4((int)target) != 0))
         {
             actionPayload.x = gCamcontrolPathState->actionParamX;
             actionPayload.z = gCamcontrolPathState->actionParamZ;
@@ -139,7 +138,7 @@ void camclimb_update(CameraObject* cam)
     f32 relY;
     f32 relZ;
     f32 relDistXZ;
-    f32 *pYaddr;
+    f32* pYaddr;
 
     if (gCamcontrolPathState->active != 0)
     {
@@ -151,17 +150,19 @@ void camclimb_update(CameraObject* cam)
         {
             for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex++)
             {
-                Obj_TransformLocalPointToWorld(gCamcontrolPathState->pointsX[pointIndex],
-                                               gCamcontrolPathState->pointsY[pointIndex], gCamcontrolPathState->pointsZ[pointIndex],
-                                               &gCamcontrolPathState->pointsX[pointIndex], &gCamcontrolPathState->pointsY[pointIndex],
-                                               &gCamcontrolPathState->pointsZ[pointIndex], gCamcontrolPathState->localFrameObj);
+                Obj_TransformLocalPointToWorld(
+                    gCamcontrolPathState->pointsX[pointIndex], gCamcontrolPathState->pointsY[pointIndex],
+                    gCamcontrolPathState->pointsZ[pointIndex], &gCamcontrolPathState->pointsX[pointIndex],
+                    &gCamcontrolPathState->pointsY[pointIndex], &gCamcontrolPathState->pointsZ[pointIndex],
+                    gCamcontrolPathState->localFrameObj);
             }
             for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex++)
             {
-                Obj_TransformWorldPointToLocal(gCamcontrolPathState->pointsX[pointIndex],
-                                               gCamcontrolPathState->pointsY[pointIndex], gCamcontrolPathState->pointsZ[pointIndex],
-                                               &gCamcontrolPathState->pointsX[pointIndex], &gCamcontrolPathState->pointsY[pointIndex],
-                                               &gCamcontrolPathState->pointsZ[pointIndex], *(int*)&cam->anim.parent);
+                Obj_TransformWorldPointToLocal(
+                    gCamcontrolPathState->pointsX[pointIndex], gCamcontrolPathState->pointsY[pointIndex],
+                    gCamcontrolPathState->pointsZ[pointIndex], &gCamcontrolPathState->pointsX[pointIndex],
+                    &gCamcontrolPathState->pointsY[pointIndex], &gCamcontrolPathState->pointsZ[pointIndex],
+                    *(int*)&cam->anim.parent);
             }
             gCamcontrolPathState->localFrameObj = *(int*)&cam->anim.parent;
         }
@@ -171,14 +172,13 @@ void camclimb_update(CameraObject* cam)
         cam->anim.localPosX = localPosX;
         cam->anim.localPosZ = localPosZ[0];
         defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-        Obj_TransformLocalPointToWorld(cam->anim.localPosX, cam->anim.localPosY,
-                                       cam->anim.localPosZ, &cam->anim.worldPosX, &cam->anim.worldPosY,
-                                       &cam->anim.worldPosZ, *(int*)&cam->anim.parent);
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))
-            (cam, target, (double)gCamStaffAnimCurveMin, (double)gCamStaffAnimCurveMax);
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
-                                                         &gCamcontrolPathState->curveMin,
-                                                         &gCamcontrolPathState->curveMax);
+        Obj_TransformLocalPointToWorld(cam->anim.localPosX, cam->anim.localPosY, cam->anim.localPosZ,
+                                       &cam->anim.worldPosX, &cam->anim.worldPosY, &cam->anim.worldPosZ,
+                                       *(int*)&cam->anim.parent);
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))(cam, target, (double)gCamStaffAnimCurveMin,
+                                                             (double)gCamStaffAnimCurveMax);
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3, &gCamcontrolPathState->curveMin,
+                                                             &gCamcontrolPathState->curveMax);
         if ((cam->anim.currentMove != 0) || (cam->cameraCollisionActive != 0))
         {
             gCamcontrolPathState->initialiseCurve[4] = gCamcontrolPathState->initialiseCurve[4] + timeDelta;
@@ -209,16 +209,15 @@ void camclimb_update(CameraObject* cam)
             yawDelta = yawDelta + 0xffff;
         }
         cam->anim.rotX += yawDelta;
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x18))
-            (cam, (double)target->anim.worldPosY, (double)relDistXZ);
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x18))(cam, (double)target->anim.worldPosY, (double)relDistXZ);
         if (needsReset != 0)
         {
             (*gCameraInterface)->setMode(CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         }
         camcontrol_updatePathTargetAction(cam, target);
-        Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY,
-                                       cam->anim.worldPosZ, &cam->anim.localPosX, &cam->anim.localPosY,
-                                       &cam->anim.localPosZ, *(int*)&cam->anim.parent);
+        Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
+                                       &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
+                                       *(int*)&cam->anim.parent);
     }
     return;
 }
@@ -269,9 +268,9 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
     memset(gCamcontrolPathState, 0, sizeof(CamcontrolPathState));
 
     view = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(void (**)(f32*, f32*, f32*, int, f32*))(**(int**)(view + 4) + 0x20))
-    (&gCamcontrolPathState->actionParamX, &gCamcontrolPathState->pad08,
-     &gCamcontrolPathState->actionParamZ, 0, &gCamcontrolPathState->actionParamY);
+    (*(void (**)(f32*, f32*, f32*, int, f32*))(**(int**)(view + 4) + 0x20))(
+        &gCamcontrolPathState->actionParamX, &gCamcontrolPathState->pad08, &gCamcontrolPathState->actionParamZ, 0,
+        &gCamcontrolPathState->actionParamY);
 
     gCamcontrolPathState->active = 0;
     gCamcontrolPathState->localFrameObj = *(int*)&camera->anim.parent;
@@ -315,7 +314,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
     else
     {
         pathRadius = gCamcontrolPathState->actionParamX * gCamcontrolPathState->actionParamX -
-            gCamcontrolPathState->actionParamZ * gCamcontrolPathState->actionParamZ;
+                     gCamcontrolPathState->actionParamZ * gCamcontrolPathState->actionParamZ;
         if (pathRadius < lbl_803E176C)
         {
             pathRadius = lbl_803E176C;
@@ -323,8 +322,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         pathRadius = sqrtf(pathRadius);
 
         localPos[0] = (sinFacing * pathRadius) + target->anim.worldPosX;
-        localPos[1] = gCamcontrolPathState->actionParamZ +
-            (target->anim.worldPosY + gCamcontrolPathState->actionParamY);
+        localPos[1] =
+            gCamcontrolPathState->actionParamZ + (target->anim.worldPosY + gCamcontrolPathState->actionParamY);
         localPos[2] = (cosFacing * pathRadius) + target->anim.worldPosZ;
 
         if (settings[3] != 0)
@@ -332,8 +331,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
             camcontrol_getTargetPosition(camera, &target->anim, localPos, NULL);
         }
 
-        Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0],
-                                       &localPos[1], &localPos[2], *(int*)&camera->anim.parent);
+        Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0], &localPos[1], &localPos[2],
+                                       *(int*)&camera->anim.parent);
 
         for (pointCount = 0; pointCount < 3; pointCount++)
         {
@@ -397,8 +396,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         gCamcontrolPathState->pathCurve.eval = Curve_EvalBSpline;
         gCamcontrolPathState->pathCurve.coeffFn = Curve_BuildBSplineCoeffs;
 
-        camcontrol_buildPathPoints(baseX, baseZ,
-                                   camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
+        camcontrol_buildPathPoints(baseX, baseZ, camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    localPos[1], pathAngle, 0x1555, &pointCount);
 
         i = pointCount;
@@ -423,10 +421,9 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         }
 
         pathScale = gCamcontrolPathState->pathCurve.pathLength;
-        (*gCameraInterface)->initialise(pathScale,
-                                        &gCamcontrolPathState->initialiseCurve[0],
-                                        lbl_803E1774, lbl_803E1770, lbl_803E1744,
-                                        lbl_803E1778);
+        (*gCameraInterface)
+            ->initialise(pathScale, &gCamcontrolPathState->initialiseCurve[0], lbl_803E1774, lbl_803E1770, lbl_803E1744,
+                         lbl_803E1778);
 
         gCamcontrolPathState->curveMin = gCamStaffAnimCurveMin;
         gCamcontrolPathState->curveMax = gCamStaffAnimCurveMax;

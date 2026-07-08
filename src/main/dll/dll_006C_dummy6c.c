@@ -6,7 +6,10 @@
  * objects, state, or behaviour live here.
  */
 
-int Dummy6C_func03_ret_0(void) { return 0x0; }
+int Dummy6C_func03_ret_0(void)
+{
+    return 0x0;
+}
 
 void Dummy6C_release(void)
 {

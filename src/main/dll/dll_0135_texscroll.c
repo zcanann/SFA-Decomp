@@ -10,8 +10,14 @@
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"
 
-int texscroll_getExtraSize(void) { return TEXSCROLL_EXTRA_STATE_BYTES; }
-int texscroll_getObjectTypeId(void) { return 0x0; }
+int texscroll_getExtraSize(void)
+{
+    return TEXSCROLL_EXTRA_STATE_BYTES;
+}
+int texscroll_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void texscroll_free(void)
 {
@@ -20,7 +26,8 @@ void texscroll_free(void)
 void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void texscroll_hitDetect(void)
@@ -34,7 +41,8 @@ void texscroll_update(void)
 void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags)
 {
     TexScrollState* state = obj->state;
-    if (state == NULL) return;
+    if (state == NULL)
+        return;
     state->initLock = 1;
     state->stepX = (s16)(s32)placement->stepX;
     state->stepY = (s16)(s32)placement->stepY;

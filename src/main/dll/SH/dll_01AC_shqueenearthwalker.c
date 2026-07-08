@@ -25,11 +25,11 @@
 #define SHQUEENEARTHWALKER_TARGET_OBJGROUP 0xf
 
 /* QueenEarthWalkerState::flags bits (shared with dll_801d4198.c) */
-#define QEW_FLAG_STARTED 0x1    /* first update ran; per-act logic engaged */
+#define QEW_FLAG_STARTED   0x1  /* first update ran; per-act logic engaged */
 #define QEW_FLAG_TARGETING 0x2  /* targeting the player */
-#define QEW_FLAG_LATCHED 0x4    /* player position captured */
+#define QEW_FLAG_LATCHED   0x4  /* player position captured */
 #define QEW_FLAG_EYE_ANIMS 0x8  /* run characterDoEyeAnims vs the bite */
-#define QEW_FLAG_ACTIVE 0x10    /* feed sequence completed; suppress idle attacks */
+#define QEW_FLAG_ACTIVE    0x10 /* feed sequence completed; suppress idle attacks */
 #define QEW_FLAG_INIT_DONE 0x20 /* per-frame anim-event handshake (cleared each update) */
 
 extern int ObjTrigger_IsSetById();
@@ -39,7 +39,7 @@ extern int fn_8003B500(void* obj, void* p2, f32 f1);
 extern int fn_8003B228(void* obj, void* p2);
 extern int characterDoEyeAnims(void* obj, void* p2);
 extern int cMenuGetSelectedItem(void);
-extern int getYButtonItem(s16 * outTrigger);
+extern int getYButtonItem(s16* outTrigger);
 extern void* getTrickyObject(void);
 extern int playerHasSpell(void* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
@@ -236,8 +236,8 @@ void sh_queenearthwalker_update(void* obj)
         {
             eventIndex = randomGetRange(1, *((QueenEarthWalkerState*)state)->eventTable);
             ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
-            (*gObjectTriggerInterface)->runSequence(
-                ((u8*)((QueenEarthWalkerState*)state)->eventTable)[eventIndex], obj, -1);
+            (*gObjectTriggerInterface)
+                ->runSequence(((u8*)((QueenEarthWalkerState*)state)->eventTable)[eventIndex], obj, -1);
         }
     }
 
@@ -271,9 +271,8 @@ void queenFeedFn_801d44a4(void* obj, void* state)
             if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
             {
                 tricky = getTrickyObject();
-                if (tricky != NULL &&
-                    getXZDistance((f32*)((u8*)tricky + 0x18), &((GameObject*)obj)->anim.worldPosX) <
-                    gQueenEarthWalkerTrickyFeedDistance)
+                if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &((GameObject*)obj)->anim.worldPosX) <
+                                          gQueenEarthWalkerTrickyFeedDistance)
                 {
                     Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
                 }
@@ -351,7 +350,8 @@ void openPortalFn_801d4364(void* obj, void* state)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (playerHasSpell(player, 3) != 0 &&
-            getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < gQueenEarthWalkerPortalSpellDistance)
+            getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
+                gQueenEarthWalkerPortalSpellDistance)
         {
             mainSetBits(0x23b, 1);
         }

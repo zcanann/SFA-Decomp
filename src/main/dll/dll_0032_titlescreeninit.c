@@ -98,7 +98,8 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = ((gTitleScreenInitAlphaMax * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
+            alpha = ((gTitleScreenInitAlphaMax * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) /
+                     gTitleScreenInitFadeFrames);
         }
 
         textureSlot = gTitleScreenInitLoadingTextures[0];
@@ -123,7 +124,8 @@ void runLoadingScreens(void)
         int alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x10e)
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0xf0)) / gTitleScreenInitFadeFrames);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0xf0)) /
+                          gTitleScreenInitFadeFrames);
         }
         else if (gTitleScreenInitLoadingFrameCounter < 0x1c2)
         {
@@ -131,7 +133,8 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) /
+                          gTitleScreenInitFadeFrames);
         }
         drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xa)) >> 1),
                     (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xc)) >> 1),
@@ -142,7 +145,8 @@ void runLoadingScreens(void)
         int alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x1fe)
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0x1e0)) / gTitleScreenInitFadeFrames);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0x1e0)) /
+                          gTitleScreenInitFadeFrames);
         }
         else if (gTitleScreenInitLoadingFrameCounter < 0x23a)
         {
@@ -150,7 +154,8 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
+            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) /
+                          gTitleScreenInitFadeFrames);
         }
         drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xa)) >> 1),
                     (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xc)) >> 1),
@@ -167,7 +172,8 @@ void runLoadingScreens(void)
         gTitleScreenInitLoadingFrameCounter++;
     }
 
-    if ((gTitleScreenInitDvdErrorLatched != 0) && (gTitleScreenInitLoadingFrameCounter > 0x258) && (*(u8*)&gDvdErrorPauseActive == 0))
+    if ((gTitleScreenInitDvdErrorLatched != 0) && (gTitleScreenInitLoadingFrameCounter > 0x258) &&
+        (*(u8*)&gDvdErrorPauseActive == 0))
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShowStr(gameTextGetStr(TITLESCREENINIT_TEXT_DVD_ERROR), 0, 0x118, 300);
@@ -197,17 +203,15 @@ static inline void initLoadingScreenTexturesBody(void)
         textureHeader->tmemAddr = 0;
         textureHeader->preloaded = 0;
         texObj = (GXTexObj*)textureHeader->texObj;
-        GXInitTexObj(texObj, textureHeader->imageData, textureHeader->width,
-                     textureHeader->height, textureHeader->format,
-                     textureHeader->wrapS, textureHeader->wrapT, 0);
-        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter,
-                        lbl_803E1CF0, lbl_803E1CF0, lbl_803E1CF0, 0, 0, 0);
+        GXInitTexObj(texObj, textureHeader->imageData, textureHeader->width, textureHeader->height,
+                     textureHeader->format, textureHeader->wrapS, textureHeader->wrapT, 0);
+        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, lbl_803E1CF0, lbl_803E1CF0,
+                        lbl_803E1CF0, 0, 0, 0);
         GXInitTexObjUserData(texObj, textureHeader);
         textureFormat = GXGetTexObjFmt(texObj);
         textureWidth = GXGetTexObjWidth(texObj);
         textureHeight = GXGetTexObjHeight(texObj);
-        textureHeader->bufferSize =
-            GXGetTexBufferSize(textureWidth, textureHeight, textureFormat, 0, 0);
+        textureHeader->bufferSize = GXGetTexBufferSize(textureWidth, textureHeight, textureFormat, 0, 0);
         textureSize = (*textureSlot)->bufferSize + 0x60;
         arenaHi += textureSize;
     }

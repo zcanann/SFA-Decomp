@@ -87,13 +87,9 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
         return DR_LASERTURRET_STATE_CONTINUE;
     }
     shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
-    obj->y =
-        state->bobAmplitude *
-        mathSinf(
-            (double)(gDrLaserTurretPi *
-                (float)(u32)state->bobPhase /
-                gDrLaserTurretBobPhaseScale)) +
-        state->bobBaseY;
+    obj->y = state->bobAmplitude *
+                 mathSinf((double)(gDrLaserTurretPi * (float)(u32)state->bobPhase / gDrLaserTurretBobPhaseScale)) +
+             state->bobBaseY;
     sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)
     {
@@ -179,8 +175,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         }
     }
     state->actionTimer = state->actionTimer - timeDelta;
-    if (state->actionTimer <= lbl_803E59DC &&
-        (state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) == 0)
+    if (state->actionTimer <= lbl_803E59DC && (state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) == 0)
     {
         Sfx_PlayFromObject((int)obj, DR_LASERTURRET_SFX_ACTION);
         if (obj->currentMove == DR_LASERTURRET_ANIM_ALERT)
@@ -238,13 +233,9 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
             minDist = dist;
         }
     }
-    obj->y =
-        state->bobAmplitude *
-        mathSinf(
-            (double)(gDrLaserTurretPi *
-                (float)(u32)state->bobPhase /
-                gDrLaserTurretBobPhaseScale)) +
-        state->bobBaseY;
+    obj->y = state->bobAmplitude *
+                 mathSinf((double)(gDrLaserTurretPi * (float)(u32)state->bobPhase / gDrLaserTurretBobPhaseScale)) +
+             state->bobBaseY;
     sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)
     {
@@ -324,7 +315,8 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
         texture->textureId = ((cv / 10) % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         cv = cv / 100;
-        if (cv > DR_LASERTURRET_MAX_DIGIT) cv = DR_LASERTURRET_MAX_DIGIT;
+        if (cv > DR_LASERTURRET_MAX_DIGIT)
+            cv = DR_LASERTURRET_MAX_DIGIT;
         texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
         texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
     }
@@ -360,7 +352,8 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
             texture->textureId = ((cv / 10) % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             cv = cv / 100;
-            if (cv > DR_LASERTURRET_MAX_DIGIT) cv = DR_LASERTURRET_MAX_DIGIT;
+            if (cv > DR_LASERTURRET_MAX_DIGIT)
+                cv = DR_LASERTURRET_MAX_DIGIT;
             texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
             texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }

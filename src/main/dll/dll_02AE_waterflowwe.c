@@ -20,10 +20,10 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define WATERFLOWWE_FOLIAGE_GROUP 0x14
-#define WATERFLOWWE_OBJECT_CURRENT_GROUP 0x50
-#define WATERFLOWWE_OBJECT_FLAGS_INIT 0x2000
-#define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED 0x02
+#define WATERFLOWWE_FOLIAGE_GROUP               0x14
+#define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
+#define WATERFLOWWE_OBJECT_FLAGS_INIT           0x2000
+#define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
 #define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
 
 typedef struct WaterFlowWeState
@@ -115,7 +115,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
                 dx = other->anim.localPosX - object->anim.localPosX;
                 dz = other->anim.localPosZ - object->anim.localPosZ;
                 distance = sqrtf(dx * dx + dz * dz);
-                radius = gWaterFlowRadiusPerCell * (f32)(u32)((FoliageCurrentSetup*)other->anim.placementData)->currentRadius;
+                radius = gWaterFlowRadiusPerCell *
+                         (f32)(u32)((FoliageCurrentSetup*)other->anim.placementData)->currentRadius;
                 if (distance < radius)
                 {
                     strength = (radius - distance) / radius;
@@ -134,7 +135,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
         s16 currentAngle;
 
         other = objects[i];
-        objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / gWaterFlowStrengthScale;
+        objectStrength =
+            (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / gWaterFlowStrengthScale;
 
         hasCurrent = 1;
         dy = other->anim.localPosY - object->anim.localPosY;
@@ -185,9 +187,15 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     }
 }
 
-int waterflowwe_getExtraSize(void) { return sizeof(WaterFlowWeState); }
+int waterflowwe_getExtraSize(void)
+{
+    return sizeof(WaterFlowWeState);
+}
 
-int waterflowwe_getObjectTypeId(void) { return 0; }
+int waterflowwe_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void waterflowwe_init(int obj, u8* setup)
 {

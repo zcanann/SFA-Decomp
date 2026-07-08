@@ -28,11 +28,11 @@ enum
 
 typedef struct AndrosslighState
 {
-    void* anchor;  /* 0x00: light-anchor object (id 0x47dd9), position source */
-    void* bolt;    /* 0x04: lightningCreate handle, NULL when not built */
-    f32 boltAge;   /* 0x08: phase accumulator advancing the bolt */
-    s8 state;      /* 0x0C: ANDROSSLIGH_* */
-    u8 prevState;  /* 0x0D: previous frame's state */
+    void* anchor; /* 0x00: light-anchor object (id 0x47dd9), position source */
+    void* bolt;   /* 0x04: lightningCreate handle, NULL when not built */
+    f32 boltAge;  /* 0x08: phase accumulator advancing the bolt */
+    s8 state;     /* 0x0C: ANDROSSLIGH_* */
+    u8 prevState; /* 0x0D: previous frame's state */
     u8 padE[0x10 - 0x0E];
 } AndrosslighState;
 
@@ -44,7 +44,7 @@ STATIC_ASSERT(offsetof(AndrosslighState, prevState) == 0xD);
 
 void androssligh_updateBeam(int obj, int beam)
 {
-    extern void PSVECAdd(f32* a, f32* b, f32* ab);
+    extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
     f32 start[3];
     f32 end[3];
     f32 tmp[3];
@@ -77,8 +77,7 @@ void androssligh_updateBeam(int obj, int beam)
     PSVECAdd(end, tmp, end);
     if (*(void**)(beam + 4) == NULL)
     {
-        *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C,
-                                                 lbl_803DC520, lbl_803DC524, 0);
+        *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C, lbl_803DC520, lbl_803DC524, 0);
         *(f32*)(beam + 8) = lbl_803E7608;
     }
     else
@@ -112,9 +111,15 @@ void androssligh_setState(int obj, int newState, u8 force)
     state->state = newState;
 }
 
-int androssligh_getExtraSize(void) { return sizeof(AndrosslighState); }
+int androssligh_getExtraSize(void)
+{
+    return sizeof(AndrosslighState);
+}
 
-int androssligh_getObjectTypeId(void) { return 0; }
+int androssligh_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void androssligh_free(void)
 {

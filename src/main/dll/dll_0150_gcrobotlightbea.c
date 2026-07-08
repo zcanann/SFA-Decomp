@@ -55,7 +55,6 @@ extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
-
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
@@ -88,10 +87,19 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 #pragma scheduling off
 #pragma peephole off
 
-u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1; }
+u32 fn_801A0174(int* obj)
+{
+    return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1;
+}
 
-int gcrobotlightbea_getExtraSize(void) { return 0xc; }
-int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
+int gcrobotlightbea_getExtraSize(void)
+{
+    return 0xc;
+}
+int gcrobotlightbea_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void gcrobotlightbea_free(int* obj)
 {
@@ -119,20 +127,26 @@ void gcrobotlightbea_hitDetect(int obj)
     void* hit;
     GcRobotLightBeaState* sub = ((GameObject*)obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
-    if (((GameObject*)obj)->ownerObj == NULL) return;
+    if (((GameObject*)obj)->ownerObj == NULL)
+        return;
     if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) == 0)
     {
         hit = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
-        if (hit == NULL) return;
+        if (hit == NULL)
+            return;
     }
-    if (hit != Obj_GetPlayerObject()) return;
-    if (playerIsDisguised(hit) != 0) return;
+    if (hit != Obj_GetPlayerObject())
+        return;
+    if (playerIsDisguised(hit) != 0)
+        return;
     vec[0] = ((ObjHitsPriorityState*)hit)->primaryRadiusSquared;
     vec[1] = 10.0f + ((ObjHitsPriorityState*)hit)->localPosX;
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
-    if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0) return;
+    if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0)
+        return;
     if (((GameObject*)obj)->unkF4 != 0 ||
-        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(obj + 0xc, vec, 1.0f, 0, out, obj, 4, -1, 0, 0) == 0)
+        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(obj + 0xc, vec, 1.0f, 0, out,
+                                                                                          obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
@@ -164,11 +178,8 @@ void gcrobotlightbea_update(int* obj)
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {
-        modelLightStruct_setDiffuseColor(sub->light,
-                                         (s32)(0.7f * (f32)(u32)r_byte),
-                                         (s32)(0.7f * (f32)(u32)g_byte),
-                                         (s32)(0.7f * (f32)(u32)b_byte),
-                                         0xff);
+        modelLightStruct_setDiffuseColor(sub->light, (s32)(0.7f * (f32)(u32)r_byte), (s32)(0.7f * (f32)(u32)g_byte),
+                                         (s32)(0.7f * (f32)(u32)b_byte), 0xff);
         modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }

@@ -18,7 +18,7 @@
 #include "main/objlib.h"
 
 /* object group this column joins */
-#define WMCOLUMN_OBJGROUP 4
+#define WMCOLUMN_OBJGROUP        4
 #define WMCOLUMN_TARGET_OBJGROUP 0x10
 
 #define WMCOLUMN_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -26,20 +26,16 @@
 typedef struct WmColumnPlacement
 {
     u8 pad0[0x18 - 0x0];
-    u8 rotXByte;    /* 0x18: rotX in 1/256 turns */
-    u8 modelIndex;  /* 0x19: bank index; the column variant's seqId is
+    u8 rotXByte;   /* 0x18: rotX in 1/256 turns */
+    u8 modelIndex; /* 0x19: bank index; the column variant's seqId is
                        500 + modelIndex (500 = retail type 'GPSHpickobj',
                        this DLL; 499 = its 'GPSH_Scene' spot object) */
     u8 pad1A[0x1E - 0x1A];
-    s16 gameBit;    /* 0x1E: set while this column sits on its scene
+    s16 gameBit; /* 0x1E: set while this column sits on its scene
                        spot, -1 = none */
 } WmColumnPlacement;
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
-
-
-
-
 
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Obj_GetPlayerObject(void);

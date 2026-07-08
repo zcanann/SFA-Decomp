@@ -14,20 +14,25 @@ extern McmdVoiceState* synthVoice;
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
  */
-#define VID_UNLINK(field) \
-    if (s->field->prev != 0) { \
-        s->field->prev->next = s->field->next; \
-    } else { \
-        vidRoot = s->field->next; \
-    } \
-    if (s->field->next != 0) { \
-        s->field->next->prev = s->field->prev; \
-    } \
-    s->field->next = vidFree; \
-    if (vidFree != 0) { \
-        ((McmdVidListNode *)vidFree)->prev = s->field; \
-    } \
-    s->field->prev = 0; \
+#define VID_UNLINK(field)                                                                                              \
+    if (s->field->prev != 0)                                                                                           \
+    {                                                                                                                  \
+        s->field->prev->next = s->field->next;                                                                         \
+    }                                                                                                                  \
+    else                                                                                                               \
+    {                                                                                                                  \
+        vidRoot = s->field->next;                                                                                      \
+    }                                                                                                                  \
+    if (s->field->next != 0)                                                                                           \
+    {                                                                                                                  \
+        s->field->next->prev = s->field->prev;                                                                         \
+    }                                                                                                                  \
+    s->field->next = vidFree;                                                                                          \
+    if (vidFree != 0)                                                                                                  \
+    {                                                                                                                  \
+        ((McmdVidListNode*)vidFree)->prev = s->field;                                                                  \
+    }                                                                                                                  \
+    s->field->prev = 0;                                                                                                \
     vidFree = s->field
 
 void vidRemoveVoice(int state)
@@ -38,12 +43,10 @@ void vidRemoveVoice(int state)
         voiceUnregister(state);
         if (s->voicePrevHandle != 0xffffffff)
         {
-            synthVoice[s->voicePrevHandle & 0xff].voiceNextHandle =
-                s->voiceNextHandle;
+            synthVoice[s->voicePrevHandle & 0xff].voiceNextHandle = s->voiceNextHandle;
             if (s->voiceNextHandle != 0xffffffff)
             {
-                synthVoice[s->voiceNextHandle & 0xff].voicePrevHandle =
-                    s->voicePrevHandle;
+                synthVoice[s->voiceNextHandle & 0xff].voicePrevHandle = s->voicePrevHandle;
             }
             VID_UNLINK(vidListNode);
             s->vidListNode = 0;
@@ -52,8 +55,7 @@ void vidRemoveVoice(int state)
         {
             s->vidListNode->internalId = s->voiceNextHandle;
             synthVoice[s->voiceNextHandle & 0xff].voicePrevHandle = 0xffffffff;
-            synthVoice[s->voiceNextHandle & 0xff].vidMasterListNode =
-                s->vidMasterListNode;
+            synthVoice[s->voiceNextHandle & 0xff].vidMasterListNode = s->vidMasterListNode;
             if (s->vidListNode != s->vidMasterListNode)
             {
                 VID_UNLINK(vidListNode);
@@ -107,8 +109,7 @@ u32 vidMakeNew(int state, int returnNewId)
     {
         nextId = vidCurrentId;
         vidCurrentId = nextId + 1;
-    }
-    while (nextId == 0xffffffffU);
+    } while (nextId == 0xffffffffU);
 
     cursor = vidRoot;
     prev = 0;
@@ -124,8 +125,7 @@ u32 vidMakeNew(int state, int returnNewId)
             {
                 nextId = vidCurrentId;
                 vidCurrentId = nextId + 1;
-            }
-            while (nextId == 0xffffffffU);
+            } while (nextId == 0xffffffffU);
         }
         prev = node;
         cursor = (int**)*node;
@@ -174,8 +174,10 @@ static int* get_vidlist(u32 id)
     node = vidRoot;
     while (node != NULL)
     {
-        if (*(u32*)(node + 2) == id) return node;
-        if (*(u32*)(node + 2) > id) break;
+        if (*(u32*)(node + 2) == id)
+            return node;
+        if (*(u32*)(node + 2) > id)
+            break;
         node = *(int**)node;
     }
     return NULL;
@@ -215,8 +217,8 @@ typedef struct VoicePrioRootRec
 typedef struct VoicePrioBlockRec
 {
     u8 vidNodes[0x8C0];
-    VoicePrioVoiceRec prioVoices[64]; /* 0x8C0 */
-    u8 prioVoicesRoot[256]; /* 0x9C0 */
+    VoicePrioVoiceRec prioVoices[64];   /* 0x8C0 */
+    u8 prioVoicesRoot[256];             /* 0x9C0 */
     VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
 } VoicePrioBlockRec;
 

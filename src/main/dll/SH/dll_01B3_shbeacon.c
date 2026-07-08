@@ -26,9 +26,9 @@
 /* flame child object spawned on ignition, cached in ShBeaconState.childObj */
 #define SHBEACON_CHILD_OBJ_FLAME 0x55
 
-#define SHBEACON_OBJFLAG_HIDDEN 0x4000
+#define SHBEACON_OBJFLAG_HIDDEN   0x4000
 #define SHBEACON_OBJFLAG_RENDERED 0x800
-#define SHBEACON_OBJFLAG_FREED 0x40
+#define SHBEACON_OBJFLAG_FREED    0x40
 
 typedef struct ShBeaconPlacement
 {
@@ -47,13 +47,11 @@ typedef enum ShBeaconMode
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
-
 
 extern f32 lbl_803DDBF8;
 
@@ -78,7 +76,10 @@ int fn_801DA9CC(int obj)
     return 1;
 }
 
-int sh_beacon_getExtraSize(void) { return 0x18; }
+int sh_beacon_getExtraSize(void)
+{
+    return 0x18;
+}
 
 void sh_beacon_free(int obj, int keepChild)
 {
@@ -173,7 +174,8 @@ void sh_beacon_update(int obj)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
         }
-        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) && (mainGetBit(GAMEBIT_ITEM_FireWeed_Count) == 0))
+        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) &&
+                 (mainGetBit(GAMEBIT_ITEM_FireWeed_Count) == 0))
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -209,7 +211,8 @@ void sh_beacon_update(int obj)
         {
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_LIT;
             mainSetBits(((ShBeaconPlacement*)def)->litGameBit, 1);
-            if ((mainGetBit(GAMEBIT_SH_FireWeed_190) != 0) && (mainGetBit(GAMEBIT_SH_FireWeed_191) != 0) && (mainGetBit(GAMEBIT_SH_FireWeed_192) != 0))
+            if ((mainGetBit(GAMEBIT_SH_FireWeed_190) != 0) && (mainGetBit(GAMEBIT_SH_FireWeed_191) != 0) &&
+                (mainGetBit(GAMEBIT_SH_FireWeed_192) != 0))
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             }

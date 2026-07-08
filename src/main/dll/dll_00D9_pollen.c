@@ -41,7 +41,7 @@ void Pollen_burst(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern void* Obj_AllocObjectSetup(int size, int b);
-    extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
+    extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     extern f32 lbl_803E3144;
     int burstCounter;
     PollenExtra* extra;
@@ -70,26 +70,19 @@ void Pollen_burst(int obj)
             ((GameObject*)fragment)->anim.rotX = randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
             ((GameObject*)fragment)->anim.velocityX =
                 lbl_803E3144 *
-                (f32)(s32)
-            randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
-                           POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
                 ((GameObject*)obj)->anim.velocityX;
             ((GameObject*)fragment)->anim.velocityY =
                 lbl_803E3148 *
-                (f32)(s32)
-            randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
-                           POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
                 ((GameObject*)obj)->anim.velocityY;
             ((GameObject*)fragment)->anim.velocityZ =
                 lbl_803E3144 *
-                (f32)(s32)
-            randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
-                           POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
                 ((GameObject*)obj)->anim.velocityZ;
             *(int*)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = obj;
         }
-    }
-    while (burstCounter-- != 0);
+    } while (burstCounter-- != 0);
     extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
 }
 #pragma dont_inline reset
@@ -112,9 +105,12 @@ void Pollen_hitDetect(int obj)
     if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
     {
         f32 fz;
-        ((GameObject*)obj)->anim.localPosX = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosX;
-        ((GameObject*)obj)->anim.localPosY = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY;
-        ((GameObject*)obj)->anim.localPosZ = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
+        ((GameObject*)obj)->anim.localPosX =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosX;
+        ((GameObject*)obj)->anim.localPosY =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY;
+        ((GameObject*)obj)->anim.localPosZ =
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
         fz = lbl_803E313C;
         ((GameObject*)obj)->anim.velocityX = fz;
         ((GameObject*)obj)->anim.velocityY = fz;
@@ -124,13 +120,20 @@ void Pollen_hitDetect(int obj)
     }
 }
 
-int Pollen_getExtraSize(void) { return sizeof(PollenExtra); }
-int Pollen_getObjectTypeId(void) { return 0x0; }
+int Pollen_getExtraSize(void)
+{
+    return sizeof(PollenExtra);
+}
+int Pollen_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void Pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3138);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3138);
 }
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
@@ -185,71 +188,27 @@ ObjectDescriptor gPollenObjDescriptor = {
 };
 
 PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
 
 PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
 };
 
 PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
 };
 
 PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
@@ -273,8 +232,7 @@ void Pollen_init(int obj)
 {
     PollenExtra* extra = *(PollenExtra**)&((GameObject*)obj)->extra;
     extra->phaseX = randomGetRange(-0x8000, 0x7fff);
-    extra->driftVelocity = lbl_803E3148 * (f32)(s32)
-    randomGetRange(0xfa0, 0x1388);
+    extra->driftVelocity = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
     extra->phaseY = randomGetRange(-0x8000, 0x7fff);
     extra->settleVelocity = lbl_803E313C;
     extra->phaseSpeed = randomGetRange(0xe6, 0x1f4);
@@ -317,7 +275,8 @@ void Pollen_update(int obj)
         ObjHitbox_SetSphereRadius(obj, 7);
         ObjHits_EnableObject((u32)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject() ||
+            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                 (int)Obj_GetPlayerObject() ||
              ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
         {
             Camera_EnableViewYOffset();
@@ -333,8 +292,7 @@ void Pollen_update(int obj)
             do
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, POLLEN_PARTFX_MOTE, NULL, 1, -1, NULL);
-            }
-            while (i-- != 0);
+            } while (i-- != 0);
         }
     }
     if (((GameObject*)obj)->anim.alpha == 0 && extra->fragmentSpawnTimer == 0)

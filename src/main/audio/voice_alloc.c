@@ -30,17 +30,14 @@ typedef struct AllocVoice
     u8 pad11E[0x404 - 0x11E];
 } AllocVoice;
 
-#define ALLOC_VOICE ((AllocVoice*)synthVoice)
+#define ALLOC_VOICE     ((AllocVoice*)synthVoice)
 #define VOICE_CFLAGS(i) (*(u64*)&ALLOC_VOICE[i].cFlagsHi)
 
-#define VB_PRIO_HEAD(vb, p) \
-    (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
-#define VB_PRIO_LINK_NEXT(vb, i) \
-    (((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))->next)
-#define VB_PRIO_SORT_NEXT(vb, p) \
-    (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
-#define AV_PRIO(i)   (*(u8*)((u8*)&ALLOC_VOICE[0].prio + (i) * 0x404))
-#define AV_FXFLAG(i) (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
+#define VB_PRIO_HEAD(vb, p)      (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
+#define VB_PRIO_LINK_NEXT(vb, i) (((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))->next)
+#define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
+#define AV_PRIO(i)               (*(u8*)((u8*)&ALLOC_VOICE[0].prio + (i) * 0x404))
+#define AV_FXFLAG(i)             (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
 
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
@@ -61,8 +58,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
     {
         if (fxFlag)
         {
-            type_alloc = (voiceFxRunning >= lbl_803BD150[0x212] &&
-                lbl_803BD150[0x210] > lbl_803BD150[0x212]);
+            type_alloc = (voiceFxRunning >= lbl_803BD150[0x212] && lbl_803BD150[0x210] > lbl_803BD150[0x212]);
 
             if (lbl_803BD150[0x212] <= maxVoices)
             {
@@ -73,8 +69,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
         }
         else
         {
-            type_alloc = (voiceMusicRunning >= lbl_803BD150[0x211] &&
-                lbl_803BD150[0x210] > lbl_803BD150[0x211]);
+            type_alloc = (voiceMusicRunning >= lbl_803BD150[0x211] && lbl_803BD150[0x210] > lbl_803BD150[0x211]);
 
             if (lbl_803BD150[0x211] <= maxVoices)
             {
@@ -88,8 +83,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             prioNode = voicePrioSortRootListRoot;
             while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
             {
-                for (i = VB_PRIO_HEAD(vb, prioNode); i != 0xff;
-                     i = VB_PRIO_LINK_NEXT(vb, i))
+                for (i = VB_PRIO_HEAD(vb, prioNode); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
                 {
                     if (allocId != ALLOC_VOICE[i].allocId)
                         continue;
@@ -152,8 +146,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
                 while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
                 {
-                    for (i = VB_PRIO_HEAD(vb, prioNode); i != 0xff;
-                         i = VB_PRIO_LINK_NEXT(vb, i))
+                    for (i = VB_PRIO_HEAD(vb, prioNode); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
                     {
                         if (ALLOC_VOICE[i].block != 0)
                             continue;

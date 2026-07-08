@@ -23,24 +23,24 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-#define OBJECT_CAMMODE_TITLE 0x57   /* cameramode DLL dll_0057_cameramodetitle */
+#define OBJECT_CAMMODE_TITLE   0x57 /* cameramode DLL dll_0057_cameramodetitle */
 #define OBJECT_CAMMODE_DEFAULT 0x42 /* default gameplay cameramode DLL */
 
 /* GameObject::objectFlags lifecycle bits */
 #define OBJECT_FLAG_IN_UPDATE_LIST 0x10 /* registered in gObjList / gObjUpdateList */
-#define OBJECT_FLAG_FREED 0x40          /* Obj_FreeObject ran (double-free guard) */
+#define OBJECT_FLAG_FREED          0x40 /* Obj_FreeObject ran (double-free guard) */
 
 /* ObjGroup ids (registered/unregistered in Obj_SetupObject / Obj_FreeObject) */
-#define OBJECT_OBJGROUP_HITBOX 6      /* joined when modelInstance flags & 0x40 (SKIP_RESET_UPDATE) */
-#define OBJECT_OBJGROUP_GROUP8 8      /* joined when modelInstance->group8RegistrationCount > 0 */
+#define OBJECT_OBJGROUP_HITBOX 6 /* joined when modelInstance flags & 0x40 (SKIP_RESET_UPDATE) */
+#define OBJECT_OBJGROUP_GROUP8 8 /* joined when modelInstance->group8RegistrationCount > 0 */
 
 extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void* memset(void* dst, int val, int n);
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
+extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
+extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
@@ -59,7 +59,7 @@ extern int gObjCount;
 extern void* gObjList;
 extern const f32 lbl_803DE890;
 extern void mtx44Transpose(f32* src, f32* dst);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
+extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern const f32 lbl_803DE8B8;
@@ -69,11 +69,12 @@ extern void** gObjDeferredFreeList;
 extern void Obj_RegisterObject(u8* obj, int b);
 extern char sObjSetupObjectLoadingLockedWarning[];
 extern char sObjDebugStrings[];
-extern void objLoadPlayerFromSave(u8 * obj);
+extern void objLoadPlayerFromSave(u8* obj);
 extern s16 gObjPartitionPivot;
 extern int gObjSeqToObjIdMax;
 extern s16* gObjSeqToObjIdTable;
-char sObjUnknownTypeUsingDummyObjectWarning[] = "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
+char sObjUnknownTypeUsingDummyObjectWarning[] =
+    "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
 
@@ -93,19 +94,17 @@ extern void* textureFn_8006c5c4(void);
 extern u8* gObjFileRefCount;
 extern u8* gObjFileBufferTable;
 char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
-extern void playerUpdateWhileTimeStopped(u8 * obj);
+extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
-extern void playerUpdate(u8 * obj);
+extern void playerUpdate(u8* obj);
 extern u32 gObjUpdateFlags;
 
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 
 u8 gObjCameraSetupBlock[32] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0xFF, 0x3C, 0x00, 0x5A, 0x00, 0x55, 0x1E, 0x14,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x3C, 0x00, 0x5A, 0x00, 0x55, 0x1E, 0x14,
 };
 extern s16 gObjPlayerSpawnIdTable[2];
 extern f32 lbl_803DE8BC;
@@ -127,8 +126,8 @@ extern void* lbl_803DCBC0;
 extern int* gObjFileOffsetTable;
 extern int gObjFileCount;
 extern int loadModLines(int n, s16* out);
-extern void intersectModLineBuild(u8 * buf);
-extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
+extern void intersectModLineBuild(u8* buf);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
@@ -146,9 +145,9 @@ void fn_8002B85C(void)
 
 void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
 
-u16 modelFileHeaderGetCullDistance(u8 * modelFile);
+u16 modelFileHeaderGetCullDistance(u8* modelFile);
 
-void ObjModel_ClearRenderAttachment(u8 * model);
+void ObjModel_ClearRenderAttachment(u8* model);
 
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 
@@ -172,8 +171,7 @@ void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
         {
             for (renderOpIndex = 0; renderOpIndex < modelFile->renderOpCount; renderOpIndex++)
             {
-                ((ObjModelRenderOpLite*)ObjModel_GetRenderOp((u8*)modelFile, renderOpIndex))
-                    ->alpha = alpha;
+                ((ObjModelRenderOpLite*)ObjModel_GetRenderOp((u8*)modelFile, renderOpIndex))->alpha = alpha;
             }
         }
     }
@@ -666,27 +664,27 @@ int objMove(u8* obj, f32 dx, f32 dy, f32 dz)
     return 0;
 }
 
-void mtx44Transpose(f32 * src, f32 * dst);
+void mtx44Transpose(f32* src, f32* dst);
 
 void setMatrixFromObjectTransposed(void* obj, f32* out);
 
 void objFn_8002b67c(u8* obj)
 {
-    ObjHitVolumeRuntimeBounds *dst;
-    ObjDefHitVolume *src;
+    ObjHitVolumeRuntimeBounds* dst;
+    ObjDefHitVolume* src;
     int idx;
 
     if (obj == NULL)
     {
         return;
     }
-    dst = ((GameObject *)obj)->anim.hitVolumeBounds;
+    dst = ((GameObject*)obj)->anim.hitVolumeBounds;
     if (dst == NULL)
     {
         return;
     }
-    src = ((GameObject *)obj)->anim.modelInstance->hitVolumes;
-    idx = ((GameObject *)obj)->hitVolumeIndex;
+    src = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
+    idx = ((GameObject*)obj)->hitVolumeIndex;
     src += idx;
     dst += idx;
     dst->bounds[0] = src->bounds[0];
@@ -698,12 +696,12 @@ void objFn_8002b67c(u8* obj)
 
 int objApplyVelocity(u8* obj)
 {
-    ((GameObject*)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)
-        obj)->anim.velocityX));
-    ((GameObject*)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelY + ((GameObject*)
-        obj)->anim.velocityY));
-    ((GameObject*)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelZ + ((GameObject*)
-        obj)->anim.velocityZ));
+    ((GameObject*)obj)->anim.localPosX +=
+        timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)obj)->anim.velocityX));
+    ((GameObject*)obj)->anim.localPosY +=
+        timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelY + ((GameObject*)obj)->anim.velocityY));
+    ((GameObject*)obj)->anim.localPosZ +=
+        timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelZ + ((GameObject*)obj)->anim.velocityZ));
     return 1;
 }
 
@@ -755,8 +753,7 @@ void Obj_FlushDeferredFreeList(void)
     gObjDeferredFreeCount = 0;
 }
 
-void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound,
-                                  u8 radiusOrHeight, u8 flags)
+void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags)
 {
     ObjHitVolumeRuntimeBounds* bounds;
     if (obj == NULL)
@@ -838,7 +835,7 @@ void* loadObjectAtObject(u8* src, int arg1)
     return obj;
 }
 
-void ObjModel_Release(u8 * model);
+void ObjModel_Release(u8* model);
 
 void Obj_RunInitCallback(u8* obj, int cb, int unused)
 {
@@ -914,8 +911,7 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
             }
             else
             {
-                fileLoadToBufferOffset(MLDF_FILEID_WEAPONDA_BIN, weaponDaTable->entries, da2,
-                                       weaponDaTable->byteCount);
+                fileLoadToBufferOffset(MLDF_FILEID_WEAPONDA_BIN, weaponDaTable->entries, da2, weaponDaTable->byteCount);
             }
             return;
         }
@@ -1134,12 +1130,12 @@ typedef struct LoadedObj
 } LoadedObj;
 
 /* loadCharacter model-load config word (flags29), passed to ObjModel_Load etc. */
-#define OBJLOAD_FLAG_HAS_SHADOW 0x0002   /* modelDef->shadowType != 0 */
-#define OBJLOAD_FLAG_ANIM_EVENTS 0x0040  /* allocate anim move-event table */
-#define OBJLOAD_FLAG_WEAPON_DA 0x0100    /* allocate weapon-DA table */
-#define OBJLOAD_FLAG_SINGLE_MODEL 0x0200 /* skip multi-model loop (modelDef->flags & 1) */
+#define OBJLOAD_FLAG_HAS_SHADOW    0x0002 /* modelDef->shadowType != 0 */
+#define OBJLOAD_FLAG_ANIM_EVENTS   0x0040 /* allocate anim move-event table */
+#define OBJLOAD_FLAG_WEAPON_DA     0x0100 /* allocate weapon-DA table */
+#define OBJLOAD_FLAG_SINGLE_MODEL  0x0200 /* skip multi-model loop (modelDef->flags & 1) */
 #define OBJLOAD_FLAG_INDEXED_MODEL 0x0400 /* load one model at index (flags29>>11 & 0xf) */
-#define OBJLOAD_FLAG_SHADOW_TYPE3 0x8000  /* modelDef->shadowType == 3 */
+#define OBJLOAD_FLAG_SHADOW_TYPE3  0x8000 /* modelDef->shadowType == 3 */
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
@@ -1472,8 +1468,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0)
     {
         tmp = roundUpTo4(cursor);
-        cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank*)*(u8**)obj->models,
-                                       obj->hitReactState, tmp, (ObjAnimComponent*)obj);
+        cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank*)*(u8**)obj->models, obj->hitReactState, tmp,
+                                       (ObjAnimComponent*)obj);
     }
     if (modelDef->hitVolumeCount != 0)
     {
@@ -1496,8 +1492,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 void objFreeObjDef(u8* obj, int flag)
 {
     int defs[40];
-    void(*fp)(u8 *, int);
-    void(*cb)(u8 *);
+    void (*fp)(u8*, int);
+    void (*cb)(u8*);
     BoneParticleEffectSpawnFn cb2;
     int i;
     int count;
@@ -1683,7 +1679,8 @@ void objFreeObjDef(u8* obj, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(s16*)&((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
+    if ((*(s16*)&((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) &&
+        *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
@@ -1697,7 +1694,7 @@ void Obj_UpdateObject(u8* obj)
     ObjHitsPriorityState* childHitState;
     u8* t;
     BoneParticleEffectSpawnFn cb;
-    void(*cb2)(u8 *);
+    void (*cb2)(u8*);
 
     object = (ObjAnimComponent*)obj;
     if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_FREED)
@@ -1718,14 +1715,14 @@ void Obj_UpdateObject(u8* obj)
         case 0x4f3:
         case 0x882:
         case 0x887:
-            cb2 = (void (*)(u8*))*(int*)((u8*)*object->dll + 8);
+            cb2 = (void (*)(u8*)) * (int*)((u8*)*object->dll + 8);
             cb2(obj);
             break;
         }
         return;
     }
-    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
-        colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE))
+    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL &&
+        (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE))
     {
         Obj_TickModelColorFadeRecursive(obj);
     }
@@ -1760,8 +1757,8 @@ void Obj_UpdateObject(u8* obj)
     ((GameObject*)obj)->externalVelX = object->velocityX;
     ((GameObject*)obj)->externalVelY = object->velocityY;
     ((GameObject*)obj)->externalVelZ = object->velocityZ;
-    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL && (((GameObject*)obj)->
-        colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN))
+    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL &&
+        (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN))
     {
         ((GameObject*)obj)->colorFadeFrames = (s16)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
         if (((GameObject*)obj)->colorFadeFrames <= 0)
@@ -1790,7 +1787,7 @@ void Obj_UpdateObject(u8* obj)
             {
                 goto skip;
             }
-            cb2 = (void (*)(u8*))*(int*)((u8*)*object->dll + 8);
+            cb2 = (void (*)(u8*)) * (int*)((u8*)*object->dll + 8);
             if (cb2 != 0)
             {
                 cb2(obj);
@@ -1850,8 +1847,7 @@ void Obj_UpdateAllObjects(u8 flags)
         Obj_UpdateObject((u8*)obj);
         obj = *(int*)(obj + off);
     }
-    while (obj != 0 &&
-        (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
+    while (obj != 0 && (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
     {
         Obj_UpdateObject((u8*)obj);
         *(s8*)(obj + 0x35) = Obj_BuildTransformMatrixSlot(obj);
@@ -1909,7 +1905,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     {
                         goto next;
                     }
-                    cb = (void (*)(int))*(int*)((u8*)*((GameObject*)obj3)->anim.dll + 0xc);
+                    cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)obj3)->anim.dll + 0xc);
                     if (cb == 0)
                     {
                         goto next;
@@ -1917,7 +1913,8 @@ void Obj_UpdateAllObjects(u8 flags)
                     cb(obj3);
                     break;
                 }
-                Obj_GetWorldPosition((u32)obj3, &((GameObject *)obj3)->anim.worldPosX, &((GameObject *)obj3)->anim.worldPosY, &((GameObject *)obj3)->anim.worldPosZ);
+                Obj_GetWorldPosition((u32)obj3, &((GameObject*)obj3)->anim.worldPosX,
+                                     &((GameObject*)obj3)->anim.worldPosY, &((GameObject*)obj3)->anim.worldPosZ);
             }
         next:;
         }
@@ -1940,7 +1937,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     {
                         goto done;
                     }
-                    cb = (void (*)(int))*(int*)((u8*)*((GameObject*)child)->anim.dll + 0xc);
+                    cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)child)->anim.dll + 0xc);
                     if (cb == 0)
                     {
                         goto done;
@@ -1948,7 +1945,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     cb(child);
                     break;
                 }
-                Obj_GetWorldPosition((u32)child, (f32 *)(child + 0x18), (f32 *)(child + 0x1c), (f32 *)(child + 0x20));
+                Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c), (f32*)(child + 0x20));
             }
         }
     done:
@@ -2041,11 +2038,10 @@ void mapSetupPlayer(void)
                 }
             }
         }
-        *(f32*)(base + 8) = lbl_803DE8BC * mathSinf((gObjPi * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4)
-            + x;
+        *(f32*)(base + 8) = lbl_803DE8BC * mathSinf((gObjPi * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4) + x;
         *(f32*)(base + 0xc) = lbl_803DE8C8 + y;
-        *(f32*)(base + 0x10) = lbl_803DE8BC * mathCosf(
-            (gObjPi * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
+        *(f32*)(base + 0x10) =
+            lbl_803DE8BC * mathCosf((gObjPi * (f32)(*(s8*)((u8*)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
         uiDll = getCurUiDll();
         if ((u32)(uiDll - 2) <= 4 || uiDll == 7)
         {
@@ -2200,9 +2196,8 @@ void Obj_RegisterObject(u8* obj, int flags)
     object = (ObjAnimComponent*)obj;
     if (object->parent != NULL)
     {
-        Obj_TransformLocalPointToWorld(object->localPosX, object->localPosY, object->localPosZ,
-                                       &object->worldPosX, &object->worldPosY, &object->worldPosZ,
-                                       (u32)object->parent);
+        Obj_TransformLocalPointToWorld(object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
+                                       &object->worldPosY, &object->worldPosZ, (u32)object->parent);
     }
     else
     {
@@ -2523,7 +2518,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         {
             goto none;
         }
-        cb = (int (*)(void*, int))*(int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c);
+        cb = (int (*)(void*, int)) * (int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c);
         if (cb == 0)
         {
             goto none;
@@ -2582,7 +2577,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     return roundUpTo32(size);
 }
 
-void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
+void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
 
 void fn_8002A5DC(u8* obj)
 {
@@ -2602,10 +2597,12 @@ void fn_8002A5DC(u8* obj)
 
     len = lbl_803DE888 * ((GameObject*)obj)->anim.hitboxScale;
     denom = len * ((GameObject*)obj)->anim.rootMotionScale;
-    dx = ((((GameObject*)obj)->anim.previousLocalPosZ - gMapSavedPlayerOffsetZ) - (((GameObject*)obj)->anim.localPosZ -
-        playerMapOffsetZ)) / denom;
-    dz = ((((GameObject*)obj)->anim.localPosX - gMapSavedPlayerOffsetX) - (((GameObject*)obj)->anim.previousLocalPosX -
-        playerMapOffsetX)) / denom;
+    dx = ((((GameObject*)obj)->anim.previousLocalPosZ - gMapSavedPlayerOffsetZ) -
+          (((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ)) /
+         denom;
+    dz = ((((GameObject*)obj)->anim.localPosX - gMapSavedPlayerOffsetX) -
+          (((GameObject*)obj)->anim.previousLocalPosX - playerMapOffsetX)) /
+         denom;
     sum = dz * dz + dx * dx;
     if (sum > lbl_803DE88C)
     {
@@ -2686,8 +2683,7 @@ void modelInitBones(f32 scale, void* model)
             for (; i < *(u8*)(*(u8**)m + 0xf3); srcP++, off += 4, boneOff += 0x1c, sumP++, i++)
             {
                 *(f32*)(*(u8**)(tbl + 4) + off) = sc * *srcP;
-                *(f32*)(*(u8**)(tbl + 8) + off) =
-                    *(f32*)(*(u8**)(tbl + 4) + off) * *(f32*)(*(u8**)(tbl + 4) + off);
+                *(f32*)(*(u8**)(tbl + 8) + off) = *(f32*)(*(u8**)(tbl + 4) + off) * *(f32*)(*(u8**)(tbl + 4) + off);
                 bone = *(u8**)(hdr + 0x3c) + boneOff;
                 parent = *(s8*)bone;
                 vx = *(f32*)(bone + 4);
@@ -2749,15 +2745,12 @@ int loadModLines(int idx, s16* outCount)
 }
 
 char sObjDebugStrings[] = {
-    0x4C, 0x4F, 0x41, 0x44, 0x45, 0x44, 0x20, 0x4F, 0x42, 0x4A, 0x45, 0x43,
-    0x54, 0x20, 0x25, 0x73, 0x0A, 0x00, 0x00, 0x00, 0x3D, 0x3D, 0x3D, 0x3D,
-    0x3D, 0x3D, 0x3D, 0x20, 0x20, 0x4F, 0x42, 0x4A, 0x46, 0x52, 0x45, 0x45,
-    0x41, 0x4C, 0x4C, 0x20, 0x0A, 0x00, 0x00, 0x00, 0x0A, 0x0A, 0x0A, 0x0A,
-    0x0A, 0x0A, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x4C, 0x4F, 0x41, 0x44, 0x49,
-    0x4E, 0x47, 0x20, 0x43, 0x48, 0x41, 0x52, 0x41, 0x43, 0x54, 0x45, 0x52,
-    0x20, 0x20, 0x20, 0x20, 0x20, 0x6D, 0x61, 0x70, 0x74, 0x79, 0x70, 0x65,
-    0x20, 0x25, 0x64, 0x20, 0x20, 0x70, 0x6C, 0x61, 0x79, 0x65, 0x72, 0x6E,
-    0x6F, 0x20, 0x25, 0x64, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x00,
+    0x4C, 0x4F, 0x41, 0x44, 0x45, 0x44, 0x20, 0x4F, 0x42, 0x4A, 0x45, 0x43, 0x54, 0x20, 0x25, 0x73, 0x0A, 0x00,
+    0x00, 0x00, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D, 0x20, 0x20, 0x4F, 0x42, 0x4A, 0x46, 0x52, 0x45, 0x45,
+    0x41, 0x4C, 0x4C, 0x20, 0x0A, 0x00, 0x00, 0x00, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x20, 0x20, 0x20,
+    0x20, 0x4C, 0x4F, 0x41, 0x44, 0x49, 0x4E, 0x47, 0x20, 0x43, 0x48, 0x41, 0x52, 0x41, 0x43, 0x54, 0x45, 0x52,
+    0x20, 0x20, 0x20, 0x20, 0x20, 0x6D, 0x61, 0x70, 0x74, 0x79, 0x70, 0x65, 0x20, 0x25, 0x64, 0x20, 0x20, 0x70,
+    0x6C, 0x61, 0x79, 0x65, 0x72, 0x6E, 0x6F, 0x20, 0x25, 0x64, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x00,
 };
 
 char sObjSetupObjectLoadingLockedWarning[] = "<objSetupObject>  loading is locked can't setup objno %d\n";

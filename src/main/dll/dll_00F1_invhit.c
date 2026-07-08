@@ -22,17 +22,17 @@
 #include "main/dll/player_target.h"
 #include "main/engine_shared.h"
 
-#define INVHIT_OBJFLAG_HIDDEN 0x4000
+#define INVHIT_OBJFLAG_HIDDEN             0x4000
 #define INVHIT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-#define INVHIT_MODE_PROXIMITY_DAMAGE 0 /* scan player/Tricky, bump hit counters in range */
-#define INVHIT_MODE_ATTACH 1           /* attach to owner's hit list */
-#define INVHIT_MODE_PASSIVE_VOLUME 2   /* passive shape/radius hit volume */
-#define INVHIT_MODE_PUBLISH_POS 3      /* publish world position while player exists */
+#define INVHIT_MODE_PROXIMITY_DAMAGE  0 /* scan player/Tricky, bump hit counters in range */
+#define INVHIT_MODE_ATTACH            1 /* attach to owner's hit list */
+#define INVHIT_MODE_PASSIVE_VOLUME    2 /* passive shape/radius hit volume */
+#define INVHIT_MODE_PUBLISH_POS       3 /* publish world position while player exists */
 #define INVHIT_MODE_HOMING_PROJECTILE 4 /* homing/tethered projectile toward owner target */
-#define INVHIT_MODE_LOCKON_GATE 5      /* like publish, gated on player lock-on target */
-#define INVHIT_MODE_FIXED_RADIUS 6     /* fixed primary-radius hit volume */
-#define INVHIT_MODE_SELF_FREE 7        /* self-free once owner hit list drops it */
+#define INVHIT_MODE_LOCKON_GATE       5 /* like publish, gated on player lock-on target */
+#define INVHIT_MODE_FIXED_RADIUS      6 /* fixed primary-radius hit volume */
+#define INVHIT_MODE_SELF_FREE         7 /* self-free once owner hit list drops it */
 
 typedef struct InvHitState
 {
@@ -53,7 +53,7 @@ extern f32 lbl_803E35E8;
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
 
 extern void* getTrickyObject(void);
- /* single-precision override for codegen */
+/* single-precision override for codegen */
 extern f32 lbl_803AC780[];
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 lbl_803E35EC;
@@ -72,10 +72,19 @@ void InvHit_initialise(void)
 {
 }
 
-int InvHit_getExtraSize(void) { return 0xc; }
-int InvHit_getObjectTypeId(void) { return 0x0; }
+int InvHit_getExtraSize(void)
+{
+    return 0xc;
+}
+int InvHit_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
-void InvHit_render(int* obj, int a, int b, int c, int d) { objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E35E8); }
+void InvHit_render(int* obj, int a, int b, int c, int d)
+{
+    objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E35E8);
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -178,7 +187,8 @@ void InvHit_init(int* obj, u8* def)
         }
         break;
     }
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | (INVHIT_OBJFLAG_HIDDEN | INVHIT_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->objectFlags =
+        ((GameObject*)obj)->objectFlags | (INVHIT_OBJFLAG_HIDDEN | INVHIT_OBJFLAG_HITDETECT_DISABLED);
 }
 #pragma opt_common_subs reset
 
@@ -194,32 +204,32 @@ void InvHit_update(int* obj)
     switch (state->mode)
     {
     case INVHIT_MODE_PROXIMITY_DAMAGE:
+    {
+        char* victim = Obj_GetPlayerObject();
+        while (victim != NULL)
         {
-            char* victim = Obj_GetPlayerObject();
-            while (victim != NULL)
+            f32 dx = ((GameObject*)obj)->anim.localPosX - ((PushableState*)victim)->cullDistance;
+            f32 dy = ((GameObject*)obj)->anim.localPosY - ((PushableState*)victim)->scale;
+            f32 dz = ((GameObject*)obj)->anim.localPosZ - ((PushableState*)victim)->timer_0x14;
+            f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
+            if (dist < (f32)((GameObject*)obj)->unkF8)
             {
-                f32 dx = ((GameObject*)obj)->anim.localPosX - ((PushableState*)victim)->cullDistance;
-                f32 dy = ((GameObject*)obj)->anim.localPosY - ((PushableState*)victim)->scale;
-                f32 dz = ((GameObject*)obj)->anim.localPosZ - ((PushableState*)victim)->timer_0x14;
-                f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                if (dist < (f32)((GameObject*)obj)->unkF8)
-                {
-                    u8* victimHits = *(u8**)&((GameObject*)victim)->anim.hitReactState;
-                    victimHits[0x71] += 1;
-                    ((ObjHitsPriorityState*)victimHits)->flags = ((ObjHitsPriorityState*)victimHits)->flags & ~1;
-                    (*(u8**)&((GameObject*)obj)->anim.hitReactState)[0x71] += 1;
-                }
-                if (((GameObject*)victim)->anim.classId == 1)
-                {
-                    victim = (char*)getTrickyObject();
-                }
-                else
-                {
-                    victim = NULL;
-                }
+                u8* victimHits = *(u8**)&((GameObject*)victim)->anim.hitReactState;
+                victimHits[0x71] += 1;
+                ((ObjHitsPriorityState*)victimHits)->flags = ((ObjHitsPriorityState*)victimHits)->flags & ~1;
+                (*(u8**)&((GameObject*)obj)->anim.hitReactState)[0x71] += 1;
             }
-            break;
+            if (((GameObject*)victim)->anim.classId == 1)
+            {
+                victim = (char*)getTrickyObject();
+            }
+            else
+            {
+                victim = NULL;
+            }
         }
+        break;
+    }
     case INVHIT_MODE_PUBLISH_POS:
         if (Obj_GetPlayerObject() != NULL)
         {
@@ -229,110 +239,110 @@ void InvHit_update(int* obj)
         }
         break;
     case INVHIT_MODE_LOCKON_GATE:
+    {
+        void* pl = Obj_GetPlayerObject();
+        u32 v = Player_GetTargetObject((int)pl);
+        if (pl != NULL && v != 0)
         {
-            void* pl = Obj_GetPlayerObject();
-            u32 v = Player_GetTargetObject((int)pl);
-            if (pl != NULL && v != 0)
-            {
-                lbl_803AC780[0] = ((GameObject*)obj)->anim.worldPosX;
-                lbl_803AC780[1] = ((GameObject*)obj)->anim.worldPosY;
-                lbl_803AC780[2] = ((GameObject*)obj)->anim.worldPosZ;
-            }
-            break;
+            lbl_803AC780[0] = ((GameObject*)obj)->anim.worldPosX;
+            lbl_803AC780[1] = ((GameObject*)obj)->anim.worldPosY;
+            lbl_803AC780[2] = ((GameObject*)obj)->anim.worldPosZ;
         }
+        break;
+    }
     case INVHIT_MODE_ATTACH:
         ObjList_ContainsObject(((GameObject*)obj)->unkF4);
         break;
     case INVHIT_MODE_SELF_FREE:
-        {
-            ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
-            char* ownerHitSlot;
-            char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
-            int j;
+    {
+        ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+        char* ownerHitSlot;
+        char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
+        int j;
 
-            j = 0;
-            ownerHitSlot = ownerHitState;
-            for (; j < *(s8*)(ownerHitState + 0x71); j++)
+        j = 0;
+        ownerHitSlot = ownerHitState;
+        for (; j < *(s8*)(ownerHitState + 0x71); j++)
+        {
+            if (*(int**)(ownerHitSlot + 0x7c) == obj)
             {
-                if (*(int**)(ownerHitSlot + 0x7c) == obj)
-                {
-                    hitState->flags = hitState->flags & ~1;
-                    Obj_FreeObject(obj);
-                }
-                ownerHitSlot += 4;
+                hitState->flags = hitState->flags & ~1;
+                Obj_FreeObject(obj);
             }
-            break;
+            ownerHitSlot += 4;
         }
+        break;
+    }
     case INVHIT_MODE_HOMING_PROJECTILE:
+    {
+        char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
+        f32** hits[2];
+        f32 dx2;
+        f32 dz2;
+        f32 reach;
+        int cnt;
+        f32 thr;
+        int i;
+
+        ((GameObject*)obj)->unkF8 -= framesThisStep;
+        if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
         {
-            char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
-            f32** hits[2];
-            f32 dx2;
-            f32 dz2;
-            f32 reach;
-            int cnt;
-            f32 thr;
-            int i;
-
-            ((GameObject*)obj)->unkF8 -= framesThisStep;
-            if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
-            {
-                ((ObjHitsPriorityState*)hitState)->flags = 0;
-            }
-            targetObj = *(char**)&((GameObject*)obj)->unkF4;
-            if (targetObj != NULL)
-            {
-                f32 dx;
-                f32 dz;
-                f32 smoothTime;
-                f32 qt;
-                f32 dist;
-
-                if (ObjList_ContainsObject((int)targetObj) == 0) break;
-                dx = ((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-                dz = ((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-                smoothTime = lbl_803E35EC;
-                qt = dx / smoothTime;
-                ((GameObject*)obj)->anim.localPosX = qt * timeDelta + ((GameObject*)obj)->anim.localPosX;
-                qt = dz / smoothTime;
-                ((GameObject*)obj)->anim.localPosZ = qt * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-                dx = ((GameObject*)targetObj)->anim.localPosX - state->anchorX;
-                dz = ((GameObject*)targetObj)->anim.localPosZ - state->anchorZ;
-                reach = lbl_803E35F0 + sqrtf(dx * dx + dz * dz);
-                dx2 = ((GameObject*)obj)->anim.localPosX - state->anchorX;
-                dz2 = ((GameObject*)obj)->anim.localPosZ - state->anchorZ;
-                dist = sqrtf(dx2 * dx2 + dz2 * dz2);
-                if (dist > reach)
-                {
-                    f32 r = reach / dist;
-                    dx2 = dx2 * r;
-                    dz2 = dz2 * r;
-                    ((GameObject*)obj)->anim.localPosX = state->anchorX + dx2;
-                    ((GameObject*)obj)->anim.localPosZ = state->anchorZ + dz2;
-                }
-                (*gPartfxInterface)->spawnObject(obj, 0x25, NULL, 0, -1,
-                                                 NULL);
-                (*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
-                                                 NULL);
-            }
-            {
-                s8 tmp = (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                       ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
-                i = 0;
-                cnt = tmp;
-            }
-            thr = lbl_803E35F4;
-            for (; i < cnt; i++)
-            {
-                f32 h = *hits[0][i];
-                f32 oy = ((GameObject*)obj)->anim.localPosY;
-                if (h < thr + oy && h > oy - thr)
-                {
-                    ((GameObject*)obj)->anim.localPosY = h;
-                    i = cnt;
-                }
-            }
-            break;
+            ((ObjHitsPriorityState*)hitState)->flags = 0;
         }
+        targetObj = *(char**)&((GameObject*)obj)->unkF4;
+        if (targetObj != NULL)
+        {
+            f32 dx;
+            f32 dz;
+            f32 smoothTime;
+            f32 qt;
+            f32 dist;
+
+            if (ObjList_ContainsObject((int)targetObj) == 0)
+                break;
+            dx = ((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+            dz = ((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+            smoothTime = lbl_803E35EC;
+            qt = dx / smoothTime;
+            ((GameObject*)obj)->anim.localPosX = qt * timeDelta + ((GameObject*)obj)->anim.localPosX;
+            qt = dz / smoothTime;
+            ((GameObject*)obj)->anim.localPosZ = qt * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+            dx = ((GameObject*)targetObj)->anim.localPosX - state->anchorX;
+            dz = ((GameObject*)targetObj)->anim.localPosZ - state->anchorZ;
+            reach = lbl_803E35F0 + sqrtf(dx * dx + dz * dz);
+            dx2 = ((GameObject*)obj)->anim.localPosX - state->anchorX;
+            dz2 = ((GameObject*)obj)->anim.localPosZ - state->anchorZ;
+            dist = sqrtf(dx2 * dx2 + dz2 * dz2);
+            if (dist > reach)
+            {
+                f32 r = reach / dist;
+                dx2 = dx2 * r;
+                dz2 = dz2 * r;
+                ((GameObject*)obj)->anim.localPosX = state->anchorX + dx2;
+                ((GameObject*)obj)->anim.localPosZ = state->anchorZ + dz2;
+            }
+            (*gPartfxInterface)->spawnObject(obj, 0x25, NULL, 0, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1, NULL);
+        }
+        {
+            s8 tmp =
+                (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                         ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
+            i = 0;
+            cnt = tmp;
+        }
+        thr = lbl_803E35F4;
+        for (; i < cnt; i++)
+        {
+            f32 h = *hits[0][i];
+            f32 oy = ((GameObject*)obj)->anim.localPosY;
+            if (h < thr + oy && h > oy - thr)
+            {
+                ((GameObject*)obj)->anim.localPosY = h;
+                i = cnt;
+            }
+        }
+        break;
+    }
     }
 }

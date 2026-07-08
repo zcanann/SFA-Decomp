@@ -43,8 +43,14 @@ int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int GCRobotBlast_getExtraSize(void) { return sizeof(GCRobotBlastState); }
-int GCRobotBlast_getObjectTypeId(void) { return 0x0; }
+int GCRobotBlast_getExtraSize(void)
+{
+    return sizeof(GCRobotBlastState);
+}
+int GCRobotBlast_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void GCRobotBlast_free(void)
 {

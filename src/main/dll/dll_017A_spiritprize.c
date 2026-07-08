@@ -46,11 +46,11 @@ extern f32 lbl_803E4EB4;
 typedef struct SpiritPrizePlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 mapId;          /* 0x14: placement map id; == DISABLED sentinel means inert */
-    s16 triggerOrder;   /* 0x18: trigger sequence index; -1 = none, stored as obj->unkF4 = +1 */
-    s16 mapParam1A;     /* 0x1a: copied to state->mapParam1A */
+    s32 mapId;        /* 0x14: placement map id; == DISABLED sentinel means inert */
+    s16 triggerOrder; /* 0x18: trigger sequence index; -1 = none, stored as obj->unkF4 = +1 */
+    s16 mapParam1A;   /* 0x1a: copied to state->mapParam1A */
     u8 pad1C[0x24 - 0x1C];
-    u8 scaleParam;      /* 0x24: feeds spawnScale = base / (base + scaleParam) */
+    u8 scaleParam; /* 0x24: feeds spawnScale = base / (base + scaleParam) */
     u8 pad25[0x40 - 0x25];
 } SpiritPrizePlacement;
 
@@ -111,7 +111,8 @@ void SpiritPrize_init(int* obj, u8* init)
 
     placement = (SpiritPrizePlacement*)init;
     state = ((GameObject*)obj)->extra;
-    if (placement->mapId == SPIRITPRIZE_PLACEMENT_DISABLED) return;
+    if (placement->mapId == SPIRITPRIZE_PLACEMENT_DISABLED)
+        return;
     state->mapParam1A = placement->mapParam1A;
     state->targetObjectId = -1;
     state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)placement->scaleParam);
@@ -158,8 +159,14 @@ afterTrigger:;
     state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
 }
 
-int SpiritPrize_getExtraSize(void) { return sizeof(SpiritPrizeState); }
-int SpiritPrize_getObjectTypeId(void) { return 0x8; }
+int SpiritPrize_getExtraSize(void)
+{
+    return sizeof(SpiritPrizeState);
+}
+int SpiritPrize_getObjectTypeId(void)
+{
+    return 0x8;
+}
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -239,7 +246,8 @@ void SpiritPrize_update(int obj)
             {
                 matchingObj = childObj;
             }
-            if (((GameObject*)childObj)->seqIndex == -2 && ((GameObject*)childObj)->anim.classId == SPIRITPRIZE_CLASS_ID &&
+            if (((GameObject*)childObj)->seqIndex == -2 &&
+                ((GameObject*)childObj)->anim.classId == SPIRITPRIZE_CLASS_ID &&
                 prizeId == (s8)((SpiritPrizeState*)*(int*)&((GameObject*)childObj)->extra)->prizeId)
             {
                 duplicateCount++;
@@ -261,10 +269,10 @@ void SpiritPrize_update(int obj)
         int player;
 
         player = Obj_GetPlayerObject();
-        state->sfxTimer = (f32)(s32)
-        randomGetRange(0xb4, 0xf0);
+        state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
         if (((GameObject*)obj)->anim.mapEventSlot == -1 &&
-            ((void*)player == NULL || coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xb))
+            ((void*)player == NULL ||
+             coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xb))
         {
             Sfx_PlayFromObject(obj, SFXTRIG_pda);
         }

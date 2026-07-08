@@ -21,11 +21,11 @@ extern ModgfxInterface** gModgfxInterface;
 
 typedef struct
 {
-    u32 mode; /* +0x00 */
+    u32 mode;    /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    void* tex;   /* +0x10 */
+    u16 flags;   /* +0x14 */
+    u8 layer;    /* +0x16 */
 } GfxCmd;
 
 /* lbl_80318260: shared texture + halfword table; lbl_803E1418..1440:
@@ -50,21 +50,21 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
     {
-        GfxCmd* cmds; /* +0x00 */
-        int sourceObj; /* +0x04 */
-        u8 pad0[0x18]; /* +0x08 */
-        f32 col[3]; /* +0x20 */
-        f32 pos[3]; /* +0x2c */
-        f32 scale; /* +0x38 */
-        u32 unk_3c; /* +0x3c */
-        u32 unk_40; /* +0x40 */
-        s16 variant; /* +0x44 */
-        s16 unk_46[7]; /* +0x46 */
-        u32 spawnFlags; /* +0x54 */
+        GfxCmd* cmds;                              /* +0x00 */
+        int sourceObj;                             /* +0x04 */
+        u8 pad0[0x18];                             /* +0x08 */
+        f32 col[3];                                /* +0x20 */
+        f32 pos[3];                                /* +0x2c */
+        f32 scale;                                 /* +0x38 */
+        u32 unk_3c;                                /* +0x3c */
+        u32 unk_40;                                /* +0x40 */
+        s16 variant;                               /* +0x44 */
+        s16 unk_46[7];                             /* +0x46 */
+        u32 spawnFlags;                            /* +0x54 */
         u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c; /* +0x58..+0x5c */
-        s8 count; /* +0x5d */
-        u8 pad1[2]; /* +0x5e */
-        GfxCmd entries[32]; /* +0x60 */
+        s8 count;                                  /* +0x5d */
+        u8 pad1[2];                                /* +0x5e */
+        GfxCmd entries[32];                        /* +0x60 */
     } buf;
     u8* base = (u8*)(int)lbl_80318260;
     GfxCmd* e = buf.entries;
@@ -214,7 +214,6 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80318260, 0x18, &base[0xd4], DLL9E_EFFECT_ID, 0);
 }
-
 
 void dll_9E_func01_nop(void)
 {

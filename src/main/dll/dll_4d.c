@@ -26,7 +26,7 @@
 
 /* title-menu item-interface vtable slots */
 #define TITLE_MENU_ITEM_CREATE_ROW 3 /* create a menu row, returns widget */
-#define TITLE_MENU_ITEM_FOCUS_ROW 8
+#define TITLE_MENU_ITEM_FOCUS_ROW  8
 
 /* title-menu link-interface vtable slots */
 #define TITLE_MENU_LINK_RESET_PANEL 2
@@ -39,7 +39,7 @@ extern u8 lbl_803DBA28;
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern u8 lbl_803DD706;
-extern u8* lbl_803DD708; /* save-file struct; [2] = subtitles enabled */
+extern u8* lbl_803DD708;    /* save-file struct; [2] = subtitles enabled */
 extern int lbl_803A87D0[8]; /* created menu-row widgets of the active panel */
 
 extern int saveFileStruct_isCheatActive(u8 idx);
@@ -64,8 +64,9 @@ void languageMenuInit(void)
         panel->entries[panel->count - 2].pad18[3] = panel->count - 1;
         panel->entries[panel->count - 1].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
 
-        lbl_803A87D0[1] = ((int (**)(int, int, int, int, s16))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_CREATE_ROW](
-            0x36b, 0x23, 0, 1, (s16)(saveFileStruct_isCheatActive(LANGUAGE_MENU_CHEAT_ID) == 0));
+        lbl_803A87D0[1] =
+            ((int (**)(int, int, int, int, s16))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_CREATE_ROW](
+                0x36b, 0x23, 0, 1, (s16)(saveFileStruct_isCheatActive(LANGUAGE_MENU_CHEAT_ID) == 0));
     }
     else
     {
@@ -75,10 +76,9 @@ void languageMenuInit(void)
 
     ((void (**)(int, int))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_FOCUS_ROW](lbl_803A87D0[0], 1);
 
-    ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
-        gTitleMenuLinkInterface->vtable)[TITLE_MENU_LINK_LAYOUT_ROWS](
-        panel->entries, panel->count, 0, 0, 0, 0, 0x14, 0xc8,
-        0xff, 0xff, 0xff, 0xff);
+    ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int,
+                int))gTitleMenuLinkInterface->vtable)[TITLE_MENU_LINK_LAYOUT_ROWS](
+        panel->entries, panel->count, 0, 0, 0, 0, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
 
     lbl_803DD706 = 2;
 }

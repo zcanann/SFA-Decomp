@@ -223,11 +223,13 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     if (variant == 0)
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803146D8, 0x18, &base[0xd4], DLL74_EFFECT_ID_VARIANT0, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803146D8, 0x18, &base[0xd4], DLL74_EFFECT_ID_VARIANT0, 0);
     }
     else
     {
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803146D8, 0x18, &base[0xd4], DLL74_EFFECT_ID_DEFAULT, 0);
+        (*gModgfxInterface)
+            ->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803146D8, 0x18, &base[0xd4], DLL74_EFFECT_ID_DEFAULT, 0);
     }
 }
 

@@ -25,13 +25,13 @@
 #define MODEL_LIGHT_KIND_POINT 2
 
 #define LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define LIGHTSOURCE_OBJFLAG_RENDERED 0x800
+#define LIGHTSOURCE_OBJFLAG_RENDERED           0x800
 
 /* anim.seqIds selecting the Arwing-mounted variant (docblock: "seqId
  * 0x705/0x712 select the Arwing-mounted variant ...; seqId 0x717 takes the
  * same zero-Y-offset fx path in update"). */
-#define LIGHTSOURCE_SEQID_ARWING_A 0x705
-#define LIGHTSOURCE_SEQID_ARWING_B 0x712
+#define LIGHTSOURCE_SEQID_ARWING_A  0x705
+#define LIGHTSOURCE_SEQID_ARWING_B  0x712
 #define LIGHTSOURCE_SEQID_ARWING_FX 0x717
 
 #define LIGHTSOURCE_PARTFX_SPARK 0x7cb
@@ -67,8 +67,14 @@ extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
 extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
 extern u8 gLightSourceColorTable[];
 
-int lightsource_getExtraSize(void) { return 0x1c; }
-int lightsource_getObjectTypeId(void) { return 0x1; }
+int lightsource_getExtraSize(void)
+{
+    return 0x1c;
+}
+int lightsource_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void lightsource_free(int obj)
 {
@@ -107,9 +113,6 @@ typedef struct LightSourceFlagByte
 
 void lightsource_update(int obj)
 {
-
-
-
 
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
     LightSourceState* b;
@@ -209,7 +212,8 @@ void lightsource_update(int obj)
         }
         ((LightGlow*)b->light)->glowAlpha = sum;
     }
-    if (((GameObject*)obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_A && ((GameObject*)obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_B)
+    if (((GameObject*)obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_A &&
+        ((GameObject*)obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_B)
     {
         if (b->lit != 0)
         {
@@ -334,11 +338,9 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
-            modelLightStruct_setDiffuseTargetColor(state->light,
-                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase]),
+            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)colors.c[colorBase]),
                                                    (int)(0.8f * (f32)(u32)colors.c[colorBase + 1]),
-                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]),
-                                                   0xff);
+                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]), 0xff);
             lightSetField4D(state->light, 1);
 
             if (setup->flags & LIGHTSOURCE_FLAG_CREATE_GLOW)
@@ -347,15 +349,14 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
                 {
                     colorBase = state->fxType * 3;
                     modelLightStruct_setupGlow(state->light, 0, colors.c[colorBase], colors.c[colorBase + 1],
-                                               colors.c[colorBase + 2],
-                                               0x8c, 0.6f * (250.0f * obj->anim.rootMotionScale));
+                                               colors.c[colorBase + 2], 0x8c,
+                                               0.6f * (250.0f * obj->anim.rootMotionScale));
                 }
                 else
                 {
                     colorBase = state->fxType * 3;
                     modelLightStruct_setupGlow(state->light, 0, colors.c[colorBase], colors.c[colorBase + 1],
-                                               colors.c[colorBase + 2],
-                                               0x8c, 250.0f * obj->anim.rootMotionScale);
+                                               colors.c[colorBase + 2], 0x8c, 250.0f * obj->anim.rootMotionScale);
                 }
                 modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
             }

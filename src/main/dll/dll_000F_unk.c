@@ -215,8 +215,7 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
     if ((flags & 0x200000) == 0)
     {
         ((GameObject*)p)->anim.velocityY = ((GameObject*)p)->anim.velocityY * lbl_803E058C;
-        ((GameObject*)p)->anim.velocityY =
-            -(((BaddieState*)ctx)->gravity * t) + ((GameObject*)p)->anim.velocityY;
+        ((GameObject*)p)->anim.velocityY = -(((BaddieState*)ctx)->gravity * t) + ((GameObject*)p)->anim.velocityY;
     }
     b = *(s8*)((char*)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0)
@@ -232,13 +231,12 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
         if ((ctx[0] & 0x10000) != 0)
         {
             Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, *(f32*)((char*)ctx + 0x288),
-                                  -((BaddieState*)ctx)->animSpeedA, &outX, &((GameObject*)p)->anim.velocityY,
-                                  &outZ);
+                                  -((BaddieState*)ctx)->animSpeedA, &outX, &((GameObject*)p)->anim.velocityY, &outZ);
         }
         else
         {
-            Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, lbl_803E0570,
-                                  -((BaddieState*)ctx)->animSpeedA, &outX, &outY, &outZ);
+            Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, lbl_803E0570, -((BaddieState*)ctx)->animSpeedA,
+                                  &outX, &outY, &outZ);
         }
         ((GameObject*)p)->anim.velocityX = outX;
         ((GameObject*)p)->anim.velocityZ = outZ;
@@ -252,12 +250,11 @@ void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
     *(f32*)&((BaddieState*)ctx)->trackedObj = ((BaddieState*)ctx)->inputMagnitude;
-    ((BaddieState*)ctx)->inputMagnitude =
-        sqrtf(((BaddieState*)ctx)->moveInputX * ((BaddieState*)ctx)->moveInputX +
-            ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
+    ((BaddieState*)ctx)->inputMagnitude = sqrtf(((BaddieState*)ctx)->moveInputX * ((BaddieState*)ctx)->moveInputX +
+                                                ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
     if (((BaddieState*)ctx)->inputMagnitude > lbl_803E0578)
     {
-        ((BaddieState*)ctx)->inputMagnitude = *(f32 *)&lbl_803E0578;
+        ((BaddieState*)ctx)->inputMagnitude = *(f32*)&lbl_803E0578;
     }
     ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
     gPlayerMoveTargetYaw = getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
@@ -363,8 +360,7 @@ void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
             ObjAnim_SetCurrentMove((int)obj, gPlayerMoveFastMoveId, ((GameObject*)obj)->anim.currentMoveProgress, 0);
             ((BaddieState*)ctx)->moveDone = 0;
         }
-        else if (speedA < lbl_803E0570 && ((GameObject*)obj)->anim.currentMove != (int)
-            gPlayerMoveSlowMoveId)
+        else if (speedA < lbl_803E0570 && ((GameObject*)obj)->anim.currentMove != (int)gPlayerMoveSlowMoveId)
         {
             ObjAnim_SetCurrentMove((int)obj, gPlayerMoveSlowMoveId, ((GameObject*)obj)->anim.currentMoveProgress, 0);
             ((BaddieState*)ctx)->moveDone = 0;
@@ -431,10 +427,12 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
             vx = lbl_803E0570;
             vz = vx;
         }
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX
-            + (t * (vx - ((GameObject*)obj)->anim.velocityX)) / ((BaddieState*)state)->velSmoothTime;
-        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ
-            + (t * (vz - ((GameObject*)obj)->anim.velocityZ)) / ((BaddieState*)state)->velSmoothTime;
+        ((GameObject*)obj)->anim.velocityX =
+            ((GameObject*)obj)->anim.velocityX +
+            (t * (vx - ((GameObject*)obj)->anim.velocityX)) / ((BaddieState*)state)->velSmoothTime;
+        ((GameObject*)obj)->anim.velocityZ =
+            ((GameObject*)obj)->anim.velocityZ +
+            (t * (vz - ((GameObject*)obj)->anim.velocityZ)) / ((BaddieState*)state)->velSmoothTime;
     }
     else
     {
@@ -451,11 +449,11 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityZ = z;
     }
-    c = mathSinf((gPlayerMovePi * (f32) * obj) / gPlayerMoveHalfCircleAngle);
-    s = mathCosf((gPlayerMovePi * (f32) * obj) / gPlayerMoveHalfCircleAngle);
+    c = mathSinf((gPlayerMovePi * (f32)*obj) / gPlayerMoveHalfCircleAngle);
+    s = mathCosf((gPlayerMovePi * (f32)*obj) / gPlayerMoveHalfCircleAngle);
     ((BaddieState*)state)->animSpeedB = ((GameObject*)obj)->anim.velocityX * s - ((GameObject*)obj)->anim.velocityZ * c;
-    ((BaddieState*)state)->animSpeedA = -((GameObject*)obj)->anim.velocityZ * s - ((GameObject*)obj)->anim.velocityX *
-        c;
+    ((BaddieState*)state)->animSpeedA =
+        -((GameObject*)obj)->anim.velocityZ * s - ((GameObject*)obj)->anim.velocityX * c;
 }
 #pragma opt_common_subs reset
 
@@ -492,9 +490,7 @@ void player_findCurve(int* obj, int* state, int p3)
     f32 px = ((GameObject*)obj)->anim.localPosX;
     f32 py = ((GameObject*)obj)->anim.localPosY;
     f32 pz = ((GameObject*)obj)->anim.localPosZ;
-    *(int*)((char*)state + 0x33c) =
-        (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344),
-                                    px, py, pz);
+    *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344), px, py, pz);
 }
 #pragma optimization_level reset
 
@@ -554,8 +550,7 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
             diff += 0xffff;
         }
         ((GameObject*)obj)->anim.rotX =
-            (s16)(((GameObject*)obj)->anim.rotX +
-                (int)((f32)diff * timeDelta / (lbl_803E0584 * spd)));
+            (s16)(((GameObject*)obj)->anim.rotX + (int)((f32)diff * timeDelta / (lbl_803E0584 * spd)));
     }
 }
 #pragma opt_common_subs reset
@@ -615,8 +610,8 @@ void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags)
     f32 stopVal;
 
     buf.flag = 0;
-    *(s8*)&((BaddieState*)obj)->moveDone = ObjAnim_AdvanceCurrentMove(
-        ((BaddieState*)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList*)&buf);
+    *(s8*)&((BaddieState*)obj)->moveDone =
+        ObjAnim_AdvanceCurrentMove(((BaddieState*)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList*)&buf);
 
     ((BaddieState*)obj)->eventFlags = 0;
     i = 0;
@@ -733,8 +728,7 @@ void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
         {
             done = 1;
         }
-    }
-    while (done == 0);
+    } while (done == 0);
     ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
     if (flag30 == 0)
     {
@@ -831,8 +825,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         {
             done = 1;
         }
-    }
-    while (done == 0);
+    } while (done == 0);
 
     if (changed == 0)
     {
@@ -851,8 +844,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         ((BaddieState*)state)->eventFlags = 0;
         for (i = 0; i < (s8)animEvents[0x1b]; i++)
         {
-            ((BaddieState*)state)->eventFlags |= 1 << (s32)(s8)
-            animEvents[0x13 + i];
+            ((BaddieState*)state)->eventFlags |= 1 << (s32)(s8)animEvents[0x13 + i];
         }
         *(u32*)state &= 0xfffeffff;
     }
@@ -871,7 +863,8 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 void player_setState(void* ctx, void* p, int new_state)
 {
     void* q;
-    if (((BaddieState*)p)->controlMode == new_state) goto end;
+    if (((BaddieState*)p)->controlMode == new_state)
+        goto end;
     ((BaddieState*)p)->prevControlMode = ((BaddieState*)p)->controlMode;
     ((BaddieState*)p)->controlMode = new_state;
     {
@@ -891,10 +884,14 @@ end:
     ((BaddieState*)p)->moveEventFlags = 0;
     *(s16*)((char*)p + 0x278) = 0;
     q = ((GameObject*)ctx)->anim.hitReactState;
-    if (q != 0) *(u8*)((char*)q + 0x70) = 0;
+    if (q != 0)
+        *(u8*)((char*)q + 0x70) = 0;
 }
 
-void player_setOverride(u32 x) { playerOverride = x; }
+void player_setOverride(u32 x)
+{
+    playerOverride = x;
+}
 
 void player_updateVel(char* p, char* obj, int unused)
 {
@@ -905,17 +902,21 @@ void player_updateVel(char* p, char* obj, int unused)
         fsin = mathCosf(gPlayerMovePi * (float)(s32)((GameObject*)p)->anim.rotX / gPlayerMoveHalfCircleAngle);
         if (((s32)(s8) * (obj + 0x34c) & 8) != 0)
         {
-            ((BaddieState*)obj)->animSpeedA = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
+            ((BaddieState*)obj)->animSpeedA =
+                -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
             ((BaddieState*)obj)->animSpeedC = ((BaddieState*)obj)->animSpeedA;
         }
         else
         {
-            ((BaddieState*)obj)->animSpeedB = ((GameObject*)p)->anim.velocityX * fsin - ((GameObject*)p)->anim.velocityZ * fcos;
-            ((BaddieState*)obj)->animSpeedA = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
+            ((BaddieState*)obj)->animSpeedB =
+                ((GameObject*)p)->anim.velocityX * fsin - ((GameObject*)p)->anim.velocityZ * fcos;
+            ((BaddieState*)obj)->animSpeedA =
+                -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
             if (((s32)(s8) * (obj + 0x34c) & 4) != 0)
             {
-                ((BaddieState*)obj)->animSpeedC = sqrtf(((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX +
-                    ((GameObject*)p)->anim.velocityZ * ((GameObject*)p)->anim.velocityZ);
+                ((BaddieState*)obj)->animSpeedC =
+                    sqrtf(((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX +
+                          ((GameObject*)p)->anim.velocityZ * ((GameObject*)p)->anim.velocityZ);
             }
         }
         *(s8*)(obj + 0x34c) = 0;
@@ -994,14 +995,14 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         setMatrixFromObjectPos(matrix, &localTransform);
 
         attachment = *(int*)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0570, *(f32*)&lbl_803E0570, lbl_803E0588,
-                              (f32*)(attachment + 0x0), (f32*)(attachment + 0x4), (f32*)(attachment + 0x8));
+        Matrix_TransformPoint(matrix, lbl_803E0570, *(f32*)&lbl_803E0570, lbl_803E0588, (f32*)(attachment + 0x0),
+                              (f32*)(attachment + 0x4), (f32*)(attachment + 0x8));
         attachment = *(int*)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, *(f32*)&lbl_803E0570,
-                              (f32*)(attachment + 0xc), (f32*)(attachment + 0x10), (f32*)(attachment + 0x14));
+        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, *(f32*)&lbl_803E0570, (f32*)(attachment + 0xc),
+                              (f32*)(attachment + 0x10), (f32*)(attachment + 0x14));
         attachment = *(int*)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, *(f32*)&lbl_803E0570,
-                              (f32*)(attachment + 0x18), (f32*)(attachment + 0x1c), (f32*)(attachment + 0x20));
+        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, *(f32*)&lbl_803E0570, (f32*)(attachment + 0x18),
+                              (f32*)(attachment + 0x1c), (f32*)(attachment + 0x20));
     }
 
     if ((*(int*)state & 0x1000000) == 0)
@@ -1026,7 +1027,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     gPlayerMoveOverridePosX = ((GameObject*)pos)->anim.localPosX;
     gPlayerMoveOverridePosZ = ((GameObject*)pos)->anim.localPosZ;
-    mapBlock = objPosToMapBlockIdx(((GameObject*)pos)->anim.worldPosX, ((GameObject*)pos)->anim.worldPosY, ((GameObject*)pos)->anim.worldPosZ);
+    mapBlock = objPosToMapBlockIdx(((GameObject*)pos)->anim.worldPosX, ((GameObject*)pos)->anim.worldPosY,
+                                   ((GameObject*)pos)->anim.worldPosZ);
     if (mapBlock == -1 && ((GameObject*)pos)->anim.parent == NULL)
     {
         *(u32*)state |= 0x200000;
@@ -1094,8 +1096,12 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         {
             if (((s32) * (s8*)(state + 0x264) & 2) != 0 || *(u8*)(state + 0x262) != 0)
             {
-                ((GameObject*)pos)->anim.velocityX = (((GameObject*)pos)->anim.localPosX - *(f32*)((int)((GameObject*)pos)->anim.hitReactState + 0x10)) / dt;
-                ((GameObject*)pos)->anim.velocityZ = (((GameObject*)pos)->anim.localPosZ - *(f32*)((int)((GameObject*)pos)->anim.hitReactState + 0x18)) / dt;
+                ((GameObject*)pos)->anim.velocityX =
+                    (((GameObject*)pos)->anim.localPosX - *(f32*)((int)((GameObject*)pos)->anim.hitReactState + 0x10)) /
+                    dt;
+                ((GameObject*)pos)->anim.velocityZ =
+                    (((GameObject*)pos)->anim.localPosZ - *(f32*)((int)((GameObject*)pos)->anim.hitReactState + 0x18)) /
+                    dt;
             }
             *(u32*)state &= 0xff7fffff;
         }

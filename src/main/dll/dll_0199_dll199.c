@@ -50,21 +50,28 @@ void dll_199_hitDetect(void)
 {
 }
 
-int dll_199_getExtraSize(void) { return 0x14; }
-int dll_199_getObjectTypeId(void) { return 0x0; }
+int dll_199_getExtraSize(void)
+{
+    return 0x14;
+}
+int dll_199_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5158);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5158);
 }
 
 void dll_199_free(int* obj)
 {
     extern void* gTitleMenuControlInterface;
     (*gModgfxInterface)->detachSource(obj);
-    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
-    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
+    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
+    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }
 
 void dll_199_initialise(void);
@@ -118,63 +125,63 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     {
         eventId = animUpdate->eventIds[i];
         if (eventId != 0)
-        switch (eventId)
-        {
-        case 0xb:
-            ((Dll197State*)st)->menuState = 7;
-            break;
-        case 1:
-            getEnvfxAct(obj, obj, DLL199_ENVFX_A, 0);
-            break;
-        case 2:
-            if (lbl_803DB610 == -1)
+            switch (eventId)
             {
-                getEnvfxAct(obj, obj, DLL199_ENVFX_B, 0);
+            case 0xb:
+                ((Dll197State*)st)->menuState = 7;
+                break;
+            case 1:
+                getEnvfxAct(obj, obj, DLL199_ENVFX_A, 0);
+                break;
+            case 2:
+                if (lbl_803DB610 == -1)
+                {
+                    getEnvfxAct(obj, obj, DLL199_ENVFX_B, 0);
+                }
+                else
+                {
+                    getEnvfxAct(obj, obj, (u16)lbl_803DB610, 0);
+                }
+                break;
+            case 3:
+                ((Dll197State*)st)->unk10 = 1;
+                break;
+            case 4:
+                ((Dll197State*)st)->menuState = 4;
+                ((Dll197State*)st)->unk10 = 2;
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
+                mainSetBits(0x1cf, 0);
+                mainSetBits(0x126, 1);
+                ((Dll197State*)st)->scrollVel = -3;
+                break;
+            case 5:
+                ((Dll197State*)st)->unk10 = 3;
+                ((Dll197State*)st)->scrollVel = -3;
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
+                break;
+            case 6:
+                mainSetBits(0x1cf, 1);
+                break;
+            case 7:
+                mainSetBits(0x1cf, 0);
+                ((Dll197State*)st)->scrollVel = -3;
+                break;
+            case 9:
+                mainSetBits(0x128, 1);
+                if (lbl_803DDBD8 == 0)
+                {
+                    lbl_803DDBD8 = return0_8005669C(1);
+                }
+                break;
+            case 8:
+                mainSetBits(0x127, 1);
+                break;
+            case 10:
+                ((Dll197State*)st)->scrollPos = 100;
+                (**(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
+                    3, 0x2d, 0x50, ((Dll197State*)st)->scrollPos & 0xff, 0);
+                break;
             }
-            else
-            {
-                getEnvfxAct(obj, obj, (u16)lbl_803DB610, 0);
-            }
-            break;
-        case 3:
-            ((Dll197State*)st)->unk10 = 1;
-            break;
-        case 4:
-            ((Dll197State*)st)->menuState = 4;
-            ((Dll197State*)st)->unk10 = 2;
-            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
-            mainSetBits(0x1cf, 0);
-            mainSetBits(0x126, 1);
-            ((Dll197State*)st)->scrollVel = -3;
-            break;
-        case 5:
-            ((Dll197State*)st)->unk10 = 3;
-            ((Dll197State*)st)->scrollVel = -3;
-            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
-            break;
-        case 6:
-            mainSetBits(0x1cf, 1);
-            break;
-        case 7:
-            mainSetBits(0x1cf, 0);
-            ((Dll197State*)st)->scrollVel = -3;
-            break;
-        case 9:
-            mainSetBits(0x128, 1);
-            if (lbl_803DDBD8 == 0)
-            {
-                lbl_803DDBD8 = return0_8005669C(1);
-            }
-            break;
-        case 8:
-            mainSetBits(0x127, 1);
-            break;
-        case 10:
-            ((Dll197State*)st)->scrollPos = 100;
-            (**(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                3, 0x2d, 0x50, ((Dll197State*)st)->scrollPos & 0xff, 0);
-            break;
-        }
         animUpdate->eventIds[i] = 0;
     }
     switch ((int)((Dll197State*)st)->menuState)
@@ -281,8 +288,8 @@ void dll_199_update(int obj)
             state[1] = 0;
             if (((Dll199State*)state)->triggered == 0)
             {
-                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface +
-                    0x18))(3, 0x2c, 0x50, state[4], 0);
+                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4],
+                                                                                             0);
                 ((Dll199State*)state)->triggered = 1;
             }
         }
@@ -379,8 +386,8 @@ void dll_199_update(int obj)
             state[5] = -3;
             break;
         case 6:
-            (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
-                3, 0x35, 0x50, state[4] & 0xff, 0);
+            (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x35, 0x50, state[4] & 0xff,
+                                                                                         0);
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, 0xffffffff);
             dist = lbl_803E5174;
@@ -415,8 +422,8 @@ void dll_199_update(int obj)
             if (mainGetBit(0x1ce) != 0)
             {
                 state[4] = 1;
-                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
-                    3, 0x2c, 0x50, state[4] & 0xff, 0);
+                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50,
+                                                                                             state[4] & 0xff, 0);
                 state[5] = 1;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 ((Dll199State*)state)->phase = 5;
@@ -424,8 +431,8 @@ void dll_199_update(int obj)
             else
             {
                 mainSetBits(0x126, 0);
-                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
-                    3, 0x2a, 0x50, state[4] & 0xff, 0);
+                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2a, 0x50,
+                                                                                             state[4] & 0xff, 0);
                 state[5] = 1;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 0xffffffff);
             }
@@ -438,8 +445,8 @@ void dll_199_update(int obj)
             mainSetBits(0x1cf, 0);
             mainSetBits(0x127, 0);
             ((Dll199State*)state)->phase = 5;
-            (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(
-                3, 0x2c, 0x50, state[4] & 0xff, 0);
+            (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4] & 0xff,
+                                                                                         0);
             mainSetBits(0x1ce, 1);
             (*gMapEventInterface)->setMapAct(DLL199_MAP_SHRINE, 6);
             break;

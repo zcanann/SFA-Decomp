@@ -40,22 +40,22 @@ STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 extern float mathSinf(float x);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int* obj, int group);
-extern u8 lbl_803DDAE8;     /* live-instance refcount */
-extern void* lbl_803DDAEC;  /* per-cell RGB color field */
-extern void* lbl_803DDAF0;  /* per-grid phase table */
-extern void* lbl_803DDAF4;  /* per-cell height field */
-extern u8 lbl_803DDAF8;     /* phases-advanced-this-frame latch */
-extern f32 lbl_803E3F40; /* grid step scale */
-extern f32 lbl_803E3F44; /* 0.0f sentinel / color-split zero */
-extern f32 lbl_803E3F48; /* wave scale */
-extern f32 lbl_803E3F4C; /* wave divisor */
-extern f32 lbl_803E3F50; /* R ramp base */
-extern f32 lbl_803E3F54; /* R ramp slope */
-extern f32 lbl_803E3F58; /* G ramp base */
-extern f32 lbl_803E3F5C; /* G ramp slope */
-extern f32 lbl_803E3F60; /* B ramp base */
-extern f32 lbl_803E3F64; /* B ramp slope */
-extern f32 lbl_803E3F70; /* model scale */
+extern u8 lbl_803DDAE8;    /* live-instance refcount */
+extern void* lbl_803DDAEC; /* per-cell RGB color field */
+extern void* lbl_803DDAF0; /* per-grid phase table */
+extern void* lbl_803DDAF4; /* per-cell height field */
+extern u8 lbl_803DDAF8;    /* phases-advanced-this-frame latch */
+extern f32 lbl_803E3F40;   /* grid step scale */
+extern f32 lbl_803E3F44;   /* 0.0f sentinel / color-split zero */
+extern f32 lbl_803E3F48;   /* wave scale */
+extern f32 lbl_803E3F4C;   /* wave divisor */
+extern f32 lbl_803E3F50;   /* R ramp base */
+extern f32 lbl_803E3F54;   /* R ramp slope */
+extern f32 lbl_803E3F58;   /* G ramp base */
+extern f32 lbl_803E3F5C;   /* G ramp slope */
+extern f32 lbl_803E3F60;   /* B ramp base */
+extern f32 lbl_803E3F64;   /* B ramp slope */
+extern f32 lbl_803E3F70;   /* model scale */
 
 void fn_801923F8(int* cfgArg);
 
@@ -188,16 +188,25 @@ void fn_801923F8(int* cfgArg)
     }
 }
 
-int waveanimator_getExtraSize(void) { return sizeof(WaveAnimatorState); }
-int waveanimator_getObjectTypeId(void) { return 0x0; }
+int waveanimator_getExtraSize(void)
+{
+    return sizeof(WaveAnimatorState);
+}
+int waveanimator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void waveanimator_free(int* obj)
 {
     if (--lbl_803DDAE8 == 0)
     {
-        if (lbl_803DDAF4 != NULL) mm_free(lbl_803DDAF4);
-        if (lbl_803DDAF0 != NULL) mm_free(lbl_803DDAF0);
-        if (lbl_803DDAEC != NULL) mm_free(lbl_803DDAEC);
+        if (lbl_803DDAF4 != NULL)
+            mm_free(lbl_803DDAF4);
+        if (lbl_803DDAF0 != NULL)
+            mm_free(lbl_803DDAF0);
+        if (lbl_803DDAEC != NULL)
+            mm_free(lbl_803DDAEC);
     }
     ObjGroup_RemoveObject(obj, WAVEANIMATOR_OBJGROUP);
 }
@@ -205,7 +214,8 @@ void waveanimator_free(int* obj)
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F70);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F70);
 }
 
 void waveanimator_hitDetect(int* obj)

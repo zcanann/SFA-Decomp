@@ -13,7 +13,7 @@
 typedef struct CfMagicWallMapData
 {
     ObjPlacement base;
-    s8 rotXByte;   /* 0x18: rotX in 1/256 turns */
+    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19;
     s16 fadeRange; /* 0x1A: distance over which alpha ramps */
     u8 pad1C[4];
@@ -35,9 +35,15 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E43D8; /* render scale */
 extern f32 lbl_803E43DC; /* 255.0f - full alpha */
 
-int cfmagicwall_getExtraSize(void) { return 0x0; }
+int cfmagicwall_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int cfmagicwall_getObjectTypeId(void) { return 0x0; }
+int cfmagicwall_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void cfmagicwall_free(void)
 {
@@ -46,7 +52,8 @@ void cfmagicwall_free(void)
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43D8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43D8);
 }
 
 void cfmagicwall_hitDetect(void)
@@ -77,15 +84,15 @@ void cfmagicwall_update(int obj)
             f32 fadeDistance;
             range = (f32)(s32)((CfMagicWallMapData*)placement)->fadeRange;
             playerDistance = Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)(player + 0x18));
-            fadeDistance = Camera_DistanceToCurrentViewPosition(
-                ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                ((GameObject*)obj)->anim.localPosZ);
+            fadeDistance = Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.localPosX,
+                                                                ((GameObject*)obj)->anim.localPosY,
+                                                                ((GameObject*)obj)->anim.localPosZ);
 
             if (fadeDistance < playerDistance)
             {
-                fadeDistance = Camera_DistanceToCurrentViewPosition(
-                    ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ);
+                fadeDistance = Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.localPosX,
+                                                                    ((GameObject*)obj)->anim.localPosY,
+                                                                    ((GameObject*)obj)->anim.localPosZ);
             }
             else
             {

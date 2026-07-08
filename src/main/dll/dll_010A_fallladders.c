@@ -31,18 +31,18 @@
 /* sequence id during which the object reacts to the two game bits */
 #define FALLLADDERS_SEQ_ID 0x548
 
-#define FALLLADDERS_OBJFLAG_HIDDEN 0x4000
+#define FALLLADDERS_OBJFLAG_HIDDEN             0x4000
 #define FALLLADDERS_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 typedef struct FallLaddersObjectDef
 {
     ObjPlacement base;
-    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
-    s8 modelIndex;     /* 0x19: active model index */
-    s16 restYOffset;   /* 0x1A: rest-Y offset added above the floor */
-    s16 unk1C;         /* 0x1C: never read in this TU */
-    s16 lowerGameBit;  /* 0x1E: trigger-sequence-1 / settled game bit */
-    s16 upperGameBit;  /* 0x20: fall / trigger-sequence-0 game bit */
+    s8 rotXByte;      /* 0x18: rotX in 1/256 turns */
+    s8 modelIndex;    /* 0x19: active model index */
+    s16 restYOffset;  /* 0x1A: rest-Y offset added above the floor */
+    s16 unk1C;        /* 0x1C: never read in this TU */
+    s16 lowerGameBit; /* 0x1E: trigger-sequence-1 / settled game bit */
+    s16 upperGameBit; /* 0x20: fall / trigger-sequence-0 game bit */
     u8 pad22[0x28 - 0x22];
 } FallLaddersObjectDef;
 
@@ -64,9 +64,18 @@ typedef struct FallLaddersState
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
-int Fall_Ladders_SeqFn(void) { return 0x0; }
-int Fall_Ladders_getExtraSize(void) { return 0xc; }
-int Fall_Ladders_getObjectTypeId(void) { return 0x0; }
+int Fall_Ladders_SeqFn(void)
+{
+    return 0x0;
+}
+int Fall_Ladders_getExtraSize(void)
+{
+    return 0xc;
+}
+int Fall_Ladders_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void Fall_Ladders_free(int obj)
 {

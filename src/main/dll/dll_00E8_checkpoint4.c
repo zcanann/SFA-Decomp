@@ -29,8 +29,14 @@ void checkpoint4_setScale(void)
 {
 }
 
-int checkpoint4_getExtraSize(void) { return 0x40; }
-int checkpoint4_getObjectTypeId(void) { return 0x10; }
+int checkpoint4_getExtraSize(void)
+{
+    return 0x40;
+}
+int checkpoint4_getObjectTypeId(void)
+{
+    return 0x10;
+}
 
 void checkpoint4_free(void)
 {
@@ -59,7 +65,7 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     Checkpoint4State* state;
     Checkpoint4MatrixBuildTransform transform;
     f32 matrix[16];
-    extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+    extern void Matrix_TransformPoint(f32 * matrix, f32 x, f32 y, f32 z, f32 * outX, f32 * outY, f32 * outZ);
 
     state = checkpoint->state;
     radius = (f32)(int)placement->radius;
@@ -78,12 +84,11 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     transform.y = lbl_803E342C;
     transform.z = lbl_803E342C;
     setMatrixFromObjectPos(matrix, &transform);
-    Matrix_TransformPoint(matrix, lbl_803E342C, lbl_803E342C, lbl_803E3420,
-                          &state->planeNormalX, &state->planeNormalY, &state->planeNormalZ);
+    Matrix_TransformPoint(matrix, lbl_803E342C, lbl_803E342C, lbl_803E3420, &state->planeNormalX, &state->planeNormalY,
+                          &state->planeNormalZ);
     yy = checkpoint->objAnim.localPosY * state->planeNormalY;
-    state->planeDistance =
-        -(yy + checkpoint->objAnim.localPosX * state->planeNormalX +
-            checkpoint->objAnim.localPosZ * state->planeNormalZ);
+    state->planeDistance = -(yy + checkpoint->objAnim.localPosX * state->planeNormalX +
+                             checkpoint->objAnim.localPosZ * state->planeNormalZ);
     state->triggerRadius = lbl_803E3430 * checkpoint->objAnim.rootMotionScale;
     i = 0;
     do
@@ -91,8 +96,7 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
         heading = randomGetRange(0, CHECKPOINT4_RANDOM_HEADING_MAX);
         state->randomHeadings[i] = heading;
         i++;
-    }
-    while (i < CHECKPOINT4_RANDOM_HEADING_COUNT);
+    } while (i < CHECKPOINT4_RANDOM_HEADING_COUNT);
     checkpoint->checkpointIndex = placement->checkpointIndex;
     checkpoint->objectFlags |= CHECKPOINT4_OBJECT_FLAGS_ENABLED;
 }
@@ -135,7 +139,10 @@ extern void siderepel_init();
 
 ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     {
-        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
         (ObjectDescriptorCallback)checkpoint4_initialise,
         (ObjectDescriptorCallback)checkpoint4_release,
         0,
@@ -151,10 +158,42 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void* gSideloadObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, sideload_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
-void* gSiderepelObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, siderepel_init, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, siderepel_free, (void*)0x00000000, siderepel_getExtraSize };
-void* gSetuppointObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, setuppoint_init, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
-u8 lbl_80320C58[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gCollectibleObjDescriptor[21] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00100000, collectible_initialise, collectible_release, (void*)0x00000000, collectible_init, collectible_update, collectible_hitDetect, collectible_render, collectible_free, collectible_getObjectTypeId, collectible_getExtraSize, collectible_getIsHidden, collectible_setDisabled, collectible_getHitRegionId, collectible_startBounceMotion, collectible_setVisibilityBitClear, collectible_getVisibilityBitClear, collectible_setPosition };
-u8 lbl_80320CB8[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gMagicGemObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, MagicDust_init, MagicDust_update, (void*)0x00000000, MagicDust_render, MagicDust_free, (void*)0x00000000, MagicDust_getExtraSize };
+void* gSideloadObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000,
+                                    (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
+                                    sideload_update,   (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
+                                    (void*)0x00000000, (void*)0x00000000};
+void* gSiderepelObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
+                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, siderepel_init,
+                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, siderepel_free,
+                                     (void*)0x00000000, siderepel_getExtraSize};
+void* gSetuppointObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000,
+                                      (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, setuppoint_init,
+                                      (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
+                                      (void*)0x00000000, (void*)0x00000000};
+u8 lbl_80320C58[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+void* gCollectibleObjDescriptor[21] = {(void*)0x00000000,
+                                       (void*)0x00000000,
+                                       (void*)0x00000000,
+                                       (void*)0x00100000,
+                                       collectible_initialise,
+                                       collectible_release,
+                                       (void*)0x00000000,
+                                       collectible_init,
+                                       collectible_update,
+                                       collectible_hitDetect,
+                                       collectible_render,
+                                       collectible_free,
+                                       collectible_getObjectTypeId,
+                                       collectible_getExtraSize,
+                                       collectible_getIsHidden,
+                                       collectible_setDisabled,
+                                       collectible_getHitRegionId,
+                                       collectible_startBounceMotion,
+                                       collectible_setVisibilityBitClear,
+                                       collectible_getVisibilityBitClear,
+                                       collectible_setPosition};
+u8 lbl_80320CB8[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+void* gMagicGemObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
+                                    (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, MagicDust_init,
+                                    MagicDust_update,  (void*)0x00000000,     MagicDust_render,  MagicDust_free,
+                                    (void*)0x00000000, MagicDust_getExtraSize};

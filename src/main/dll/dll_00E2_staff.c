@@ -62,7 +62,6 @@ void MikaBomb_free(int obj, int mode);
 int MikaBomb_getExtraSize(void);
 int MikaBomb_getObjectTypeId(void);
 
-
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
     0,
@@ -115,71 +114,27 @@ ObjectDescriptor gPollenObjDescriptor = {
 };
 
 PollenFragmentConfig lbl_80320538 = {
-    0x0000,
-    0x049F,
-    0x00B9,
-    0x04BA,
-    0x04BA,
-    -1,
-    0.2f,
-    0x0000,
-    0xC000,
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
 
 PollenFragmentConfig lbl_8032054C = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x7000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
 };
 
 PollenFragmentConfig lbl_80320560 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320574 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    -1,
-    0.2f,
-    0x0000,
-    0x2000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
 };
 
 PollenFragmentConfig lbl_80320588 = {
-    0x02FA,
-    0x02FB,
-    0x0496,
-    0x068F,
-    0x068F,
-    0x068F,
-    0.4f,
-    0x0026,
-    0x3000,
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
 };
 
 PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538,
-    &lbl_8032054C,
-    &lbl_80320560,
-    &lbl_80320574,
-    &lbl_80320588,
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
@@ -296,8 +251,14 @@ void Shield_initialise(void);
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
-int staff_getExtraSize(void) { return 0xc0; }
-int staff_getObjectTypeId(void) { return 0x9; }
+int staff_getExtraSize(void)
+{
+    return 0xc0;
+}
+int staff_getObjectTypeId(void)
+{
+    return 0x9;
+}
 int Fireball_getExtraSize(void);
 int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
@@ -308,13 +269,6 @@ int Shield_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);
 
 extern void GCbaddieShield_update(int* obj);
-
-
-
-
-
-
-
 
 extern void Shield_update(int* obj);
 
@@ -328,7 +282,10 @@ extern int* Obj_GetActiveModel(int obj);
 void Shield_init(int* obj, void* initData);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBomb_initialise,
     (ObjectDescriptorCallback)MikaBomb_release,
     0,
@@ -342,7 +299,10 @@ ObjectDescriptor gMikaBombObjDescriptor = {
 };
 
 ObjectDescriptor gMikaBombShadowObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)MikaBombShadow_initialise,
     (ObjectDescriptorCallback)MikaBombShadow_release,
     0,
@@ -356,7 +316,10 @@ ObjectDescriptor gMikaBombShadowObjDescriptor = {
 };
 
 ObjectDescriptor gStaticCameraObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)StaticCamera_initialise,
     (ObjectDescriptorCallback)StaticCamera_release,
     0,
@@ -370,7 +333,10 @@ ObjectDescriptor gStaticCameraObjDescriptor = {
 };
 
 ObjectDescriptor gGCbaddieShieldObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)GCbaddieShield_initialise,
     (ObjectDescriptorCallback)GCbaddieShield_release,
     0,
@@ -384,7 +350,10 @@ ObjectDescriptor gGCbaddieShieldObjDescriptor = {
 };
 
 ObjectDescriptor gBaddieInterestPObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)BaddieInterestP_initialise,
     (ObjectDescriptorCallback)BaddieInterestP_release,
     0,
@@ -398,22 +367,14 @@ ObjectDescriptor gBaddieInterestPObjDescriptor = {
 };
 
 u32 lbl_80320700[] = {
-    0xFFFFFFFF,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 ObjectDescriptor gAnimatedObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -427,60 +388,19 @@ ObjectDescriptor gAnimatedObjDescriptor = {
 };
 
 u32 lbl_80320768[] = {
-    0x00000000,
-    0x3FD5A1CB,
-    0xC0253F7D,
-    0x3C23D70A,
-    0x06100000,
-    0x402F3B64,
-    0x3F4B020C,
-    0xBFFA1CAC,
-    0x3C23D70A,
-    0x09200000,
-    0x402EB852,
-    0x3F476C8B,
-    0xBF73B646,
-    0x3C23D70A,
-    0x07200000,
-    0x4032E148,
-    0xBF795810,
-    0xBFF8F5C3,
-    0x3C23D70A,
-    0x09200000,
-    0x4033F7CF,
-    0xBF810625,
-    0xBF747AE1,
-    0x3C23D70A,
-    0x07200000,
-    0xC02F3B64,
-    0x3F4B020C,
-    0xBFFC28F6,
-    0x3C23D70A,
-    0x09200000,
-    0xC02EB852,
-    0x3F476C8B,
-    0xBF73B646,
-    0x3C23D70A,
-    0x07200000,
-    0xC032E148,
-    0xBF795810,
-    0xBFFC49BA,
-    0x3C23D70A,
-    0x09200000,
-    0xC033F7CF,
-    0xBF810625,
-    0xBF747AE1,
-    0x3C23D70A,
-    0x07200000,
-    0x00000000,
-    0x3ECF5C29,
-    0x403CED91,
-    0x3C23D70A,
-    0x08400000,
+    0x00000000, 0x3FD5A1CB, 0xC0253F7D, 0x3C23D70A, 0x06100000, 0x402F3B64, 0x3F4B020C, 0xBFFA1CAC, 0x3C23D70A,
+    0x09200000, 0x402EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0x4032E148, 0xBF795810, 0xBFF8F5C3,
+    0x3C23D70A, 0x09200000, 0x4033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000, 0xC02F3B64, 0x3F4B020C,
+    0xBFFC28F6, 0x3C23D70A, 0x09200000, 0xC02EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0xC032E148,
+    0xBF795810, 0xBFFC49BA, 0x3C23D70A, 0x09200000, 0xC033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000,
+    0x00000000, 0x3ECF5C29, 0x403CED91, 0x3C23D70A, 0x08400000,
 };
 
 ObjectDescriptor gDIM2RoofRubObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -494,7 +414,10 @@ ObjectDescriptor gDIM2RoofRubObjDescriptor = {
 };
 
 ObjectDescriptor gDepthOfFieldPointObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
@@ -510,19 +433,14 @@ ObjectDescriptor gDepthOfFieldPointObjDescriptor = {
 extern u16 lbl_803208A0[];
 
 u32 lbl_803208E8[] = {
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0x01020000,
-    0,
-    0,
+    0, 0, 0, 0, 0, 0, 0x01020000, 0, 0,
 };
 
 ObjectDescriptor23 gStaffObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_23_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_23_SLOTS,
     (ObjectDescriptorCallback)staff_initialise,
     (ObjectDescriptorCallback)staff_release,
     0,
@@ -556,7 +474,10 @@ u32 lbl_80320978[] = {
 
 ObjectDescriptor10WithPadding gFireballObjDescriptor = {
     {
-        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
         (ObjectDescriptorCallback)Fireball_initialise,
         (ObjectDescriptorCallback)Fireball_release,
         0,
@@ -572,19 +493,14 @@ ObjectDescriptor10WithPadding gFireballObjDescriptor = {
 };
 
 u32 lbl_803209C0[] = {
-    0x0000004F,
-    0xFFC40000,
-    0x0000001F,
-    0x0000004F,
-    0x00C4FF00,
-    0x00000005,
-    0x0000004F,
-    0x00C4FF00,
-    0x0000001E,
+    0x0000004F, 0xFFC40000, 0x0000001F, 0x0000004F, 0x00C4FF00, 0x00000005, 0x0000004F, 0x00C4FF00, 0x0000001E,
 };
 
 ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
     (ObjectDescriptorCallback)flamethrowerspe_initialise,
     (ObjectDescriptorCallback)flamethrowerspe_release,
     0,
@@ -601,26 +517,14 @@ ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
 };
 
 f32 lbl_80320A28[] = {
-    0.5f,
-    0.55f,
-    0.65f,
-    0.7f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.5f,
-    0.3f,
-    0.3f,
-    0.3f,
-    0.3f,
+    0.5f, 0.55f, 0.65f, 0.7f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.3f, 0.3f, 0.3f, 0.3f,
 };
 
 ObjectDescriptor gShieldObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Shield_initialise,
     (ObjectDescriptorCallback)Shield_release,
     0,
@@ -634,18 +538,17 @@ ObjectDescriptor gShieldObjDescriptor = {
 };
 
 u32 jumptable_80320AA0[] = {
-    (u32)((char*)staffFn_80170380 + 0x10C),
-    (u32)((char*)staffFn_80170380 + 0x184),
-    (u32)((char*)staffFn_80170380 + 0x35C),
-    (u32)((char*)staffFn_80170380 + 0x3D0),
-    (u32)((char*)staffFn_80170380 + 0x584),
-    (u32)((char*)staffFn_80170380 + 0x550),
-    (u32)((char*)staffFn_80170380 + 0x65C),
-    (u32)((char*)staffFn_80170380 + 0x84),
+    (u32)((char*)staffFn_80170380 + 0x10C), (u32)((char*)staffFn_80170380 + 0x184),
+    (u32)((char*)staffFn_80170380 + 0x35C), (u32)((char*)staffFn_80170380 + 0x3D0),
+    (u32)((char*)staffFn_80170380 + 0x584), (u32)((char*)staffFn_80170380 + 0x550),
+    (u32)((char*)staffFn_80170380 + 0x65C), (u32)((char*)staffFn_80170380 + 0x84),
 };
 
 ObjectDescriptor12 gCurveObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
     0,
     0,
     0,
@@ -661,21 +564,14 @@ ObjectDescriptor12 gCurveObjDescriptor = {
 };
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)restartmarker_init,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0, (ObjectDescriptorCallback)restartmarker_init, 0, 0, 0, 0, 0, 0,
 };
 
 ObjectDescriptor dll_F7 = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)dll_F7_initialise,
     (ObjectDescriptorCallback)dll_F7_release,
     0,
@@ -690,7 +586,10 @@ ObjectDescriptor dll_F7 = {
 
 ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     {
-        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
         (ObjectDescriptorCallback)checkpoint4_initialise,
         (ObjectDescriptorCallback)checkpoint4_release,
         0,
@@ -709,9 +608,9 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 typedef struct StaffState
 {
     u8 pad00[0x48];
-    void* activeSlot;     /* 0x48: active swipe slot pointer */
+    void* activeSlot; /* 0x48: active swipe slot pointer */
     u8 pad4C[4];
-    f32 moveSpeed;        /* 0x50: current-move advance speed */
+    f32 moveSpeed; /* 0x50: current-move advance speed */
     f32 geometryPointAX;
     u8 pad58[4];
     f32 geometryPointAY;
@@ -739,9 +638,15 @@ typedef struct StaffState
     u8 hudSuppressed;     /* 0xBC */
 } StaffState;
 
-s16 staff_getHitReactValue(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue; }
+s16 staff_getHitReactValue(int* obj)
+{
+    return ((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue;
+}
 
-s32 staff_getSwipeTextureIndex(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->swipeTextureIndex; }
+s32 staff_getSwipeTextureIndex(int* obj)
+{
+    return ((StaffState*)(int*)((GameObject*)obj)->extra)->swipeTextureIndex;
+}
 
 void objSetAnimField48to0(int* obj)
 {
@@ -749,7 +654,10 @@ void objSetAnimField48to0(int* obj)
     *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x48) = v;
 }
 
-void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj); }
+void playerRenderQuakeSpell(int* obj)
+{
+    quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj);
+}
 
 #pragma dont_inline on
 void staffSetGlow(int* obj, u8 attackType, u8 enable)
@@ -768,10 +676,10 @@ void staff_func10(int* obj, s32 v)
 void staff_setHitReactValue(int* obj, s32 v)
 {
     s16* p = &((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue;
-    if (v > 0xff) v = 0xff;
+    if (v > 0xff)
+        v = 0xff;
     *p = v;
 }
-
 
 extern int getHudHiddenFrameCount(void);
 
@@ -858,12 +766,9 @@ void staff_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-
 extern int textureFree(int tex);
 extern void* gStaffSwipeResource;
 extern void* gStaffSwipeTextures[2];
-
-
 
 void staff_release(void)
 {
@@ -888,7 +793,6 @@ void staff_release(void)
 void MikaBombShadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
-
 
 extern int mmAlloc(int size, int a, int b);
 extern f32 lbl_803E3328;
@@ -976,21 +880,18 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
 
 void dll_F7_init(int* obj, int* params);
 
-
-
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 
 void MikaBomb_init(int* obj);
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
+extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-
 
 void Shield_update(int* obj);
 
@@ -1128,14 +1029,15 @@ void superQuakeFn_8016d9fc(f32* pos)
         ((ObjPlacement*)setup)->posX = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX;
         ((ObjPlacement*)setup)->posY = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY;
         ((ObjPlacement*)setup)->posZ = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
-        ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object = Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
-                                                        ((GameObject*)player)->anim.parent);
+        ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object =
+            Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1, ((GameObject*)player)->anim.parent);
         if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
         {
             ((ObjAnimComponent*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->bankIndex = 1;
         }
         ObjHitbox_SetSphereRadius((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 1);
-        ObjHits_SetHitVolumeSlot((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
+        ObjHits_SetHitVolumeSlot((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object,
+                                 STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
         ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.rootMotionScale = lbl_803E32D0;
         ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.alpha = 0xff;
     }
@@ -1187,10 +1089,11 @@ void staff_hitDetectGeometry(int* obj)
         }
         if (idx == 14)
         {
-            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
-                                         hitState->contactPosZ, SFXTRIG_foot_water_walk_1);
-            (*gWaterfxInterface)->spawnSplashBurst(
-                obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, lbl_803E32B4);
+            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
+                                         SFXTRIG_foot_water_walk_1);
+            (*gWaterfxInterface)
+                ->spawnSplashBurst(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
+                                   lbl_803E32B4);
             ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                 hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, 0, lbl_803E32B4, 2);
         }
@@ -1205,11 +1108,10 @@ void staff_hitDetectGeometry(int* obj)
             v.y = hitState->contactPosY;
             v.z = hitState->contactPosZ;
             ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(
-                OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v,
-                OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
-                (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
-            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
-                                         hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
+                OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
+                OBJHITREACT_HIT_EFFECT_NO_SOURCE, (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
+            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
+                                         (u16)((s16*)lbl_803208A0)[idx]);
         }
     }
 }
@@ -1249,20 +1151,20 @@ extern void GXSetVtxDesc(int a, int b);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXBegin(int type, int fmt, int n);
 
-#define GX_BM_BLEND 1
-#define GX_BL_ONE 1
+#define GX_BM_BLEND    1
+#define GX_BL_ONE      1
 #define GX_BL_SRCALPHA 4
-#define GX_LO_NOOP 5
-#define GX_LEQUAL 3
-#define GX_ALWAYS 7
-#define GX_AOP_AND 0
-#define GX_CULL_NONE 0
-#define GX_VA_POS 9
-#define GX_VA_CLR0 11
-#define GX_VA_TEX0 13
-#define GX_DIRECT 1
-#define GX_QUADS 128
-#define GX_VTXFMT2 2
+#define GX_LO_NOOP     5
+#define GX_LEQUAL      3
+#define GX_ALWAYS      7
+#define GX_AOP_AND     0
+#define GX_CULL_NONE   0
+#define GX_VA_POS      9
+#define GX_VA_CLR0     11
+#define GX_VA_TEX0     13
+#define GX_DIRECT      1
+#define GX_QUADS       128
+#define GX_VTXFMT2     2
 
 extern f32 lbl_803E3294;
 
@@ -1345,8 +1247,8 @@ void staff_update(int* obj)
     int n;
     int* model = Obj_GetActiveModel((int)obj);
     *(u16*)((char*)model + 0x18) &= ~0x8;
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-        (int)obj, ((StaffState*)state)->moveSpeed, timeDelta, NULL);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, ((StaffState*)state)->moveSpeed, timeDelta,
+                                                                 NULL);
 
     swp = (SwipeRecord*)state;
     for (n = 3; n != 0; n--)
@@ -1382,7 +1284,7 @@ void staff_update(int* obj)
                 }
                 else
                 {
-                    *(s16*)(vp + 0x10) = -(lbl_803E332C * timeDelta - (f32)(int) * (s16*)(vp + 0x10));
+                    *(s16*)(vp + 0x10) = -(lbl_803E332C * timeDelta - (f32)(int)*(s16*)(vp + 0x10));
                     *(s16*)(vp + 0x24) = *(s16*)(vp + 0x10);
                 }
                 {
@@ -1436,8 +1338,10 @@ void staff_update(int* obj)
             ObjHits_SetHitVolumeSlot((int)q->object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
             fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + lbl_803E32E4;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = fade;
-            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * lbl_803E32E8;
-            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * lbl_803E32EC;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius =
+                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * lbl_803E32E8;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale =
+                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * lbl_803E32EC;
             ((GameObject*)q->object)->anim.alpha = fade;
             ((GameObject*)q->object)->anim.rootMotionScale += lbl_803E32F0;
             if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < lbl_803E3288)
@@ -1490,7 +1394,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
         {
             ang += **(s16**)&((GameObject*)obj)->anim.parent;
         }
-        angle = (gStaffPi * (f32)(int) - ang) / gStaffAngleUnitScale;
+        angle = (gStaffPi * (f32)(int)-ang) / gStaffAngleUnitScale;
         sinv = mathSinf(angle);
         cosv = mathCosf(angle);
         model2 = *(u8**)((char*)Obj_GetActiveModel((int)obj) + 0x2c);
@@ -1624,9 +1528,21 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         *(f32*)(vp + 0) = Curve_EvalBSpline(ptBx, frac, NULL);
                         *(f32*)(vp + 4) = Curve_EvalBSpline(ptBy, frac, NULL);
                         *(f32*)(vp + 8) = Curve_EvalBSpline(ptBz, frac, NULL);
-                        { f32 cur = *(f32*)(vp + 0); f32 bx = ((StaffState*)swipe)->anchorX; *(f32*)(vp + 0) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx)); }
-                        { f32 cur = *(f32*)(vp + 4); f32 bx = ((StaffState*)swipe)->anchorY; *(f32*)(vp + 4) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx)); }
-                        { f32 cur = *(f32*)(vp + 8); f32 bx = ((StaffState*)swipe)->anchorZ; *(f32*)(vp + 8) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx)); }
+                        {
+                            f32 cur = *(f32*)(vp + 0);
+                            f32 bx = ((StaffState*)swipe)->anchorX;
+                            *(f32*)(vp + 0) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx));
+                        }
+                        {
+                            f32 cur = *(f32*)(vp + 4);
+                            f32 bx = ((StaffState*)swipe)->anchorY;
+                            *(f32*)(vp + 4) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx));
+                        }
+                        {
+                            f32 cur = *(f32*)(vp + 8);
+                            f32 bx = ((StaffState*)swipe)->anchorZ;
+                            *(f32*)(vp + 8) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx));
+                        }
                         vidx = ibase + frac;
                         *(f32*)(vp + 0xc) = vidx;
                         {
@@ -1651,9 +1567,21 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         *(f32*)(vp + 0x14) = Curve_EvalBSpline(ptAx, frac, NULL);
                         *(f32*)(vp + 0x18) = Curve_EvalBSpline(ptAy, frac, NULL);
                         *(f32*)(vp + 0x1c) = Curve_EvalBSpline(ptAz, frac, NULL);
-                        { f32 cur = *(f32*)(vp + 0x14); f32 bx = ((StaffState*)swipe)->anchorX; *(f32*)(vp + 0x14) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx)); }
-                        { f32 cur = *(f32*)(vp + 0x18); f32 bx = ((StaffState*)swipe)->anchorY; *(f32*)(vp + 0x18) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx)); }
-                        { f32 cur = *(f32*)(vp + 0x1c); f32 bx = ((StaffState*)swipe)->anchorZ; *(f32*)(vp + 0x1c) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx)); }
+                        {
+                            f32 cur = *(f32*)(vp + 0x14);
+                            f32 bx = ((StaffState*)swipe)->anchorX;
+                            *(f32*)(vp + 0x14) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx));
+                        }
+                        {
+                            f32 cur = *(f32*)(vp + 0x18);
+                            f32 bx = ((StaffState*)swipe)->anchorY;
+                            *(f32*)(vp + 0x18) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx));
+                        }
+                        {
+                            f32 cur = *(f32*)(vp + 0x1c);
+                            f32 bx = ((StaffState*)swipe)->anchorZ;
+                            *(f32*)(vp + 0x1c) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx));
+                        }
                         *(f32*)(vp + 0x20) = vidx;
                         {
                             f32 k = lbl_803E32F4;
@@ -1747,12 +1675,14 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             }
             if (((StaffState*)state)->glowAttackType == 7)
             {
-                objfx_spawnArcedBurst(obj, lbl_803E3294, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * burstScale),
+                objfx_spawnArcedBurst(obj, lbl_803E3294, ((StaffState*)state)->glowAttackType,
+                                      ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * burstScale),
                                       lbl_803E3294, lbl_803E3294, lbl_803E329C * power, 0, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, lbl_803E3288, ((StaffState*)state)->glowAttackType, ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * burstScale),
+                objfx_spawnArcedBurst(obj, lbl_803E3288, ((StaffState*)state)->glowAttackType,
+                                      ((StaffState*)state)->glowEnable, 1, (int)(lbl_803E3298 * burstScale),
                                       lbl_803E3288, lbl_803E3288, lbl_803E329C * power, 0, 0);
             }
         }
@@ -1871,56 +1801,56 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                 fxB.f1 = *(f32*)(pos2 + 0xc);
                 fxB.f2 = *(f32*)(pos2 + 0x10);
                 fxB.f3 = *(f32*)(pos2 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj,
-                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj,
-                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj,
-                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj,
-                                                 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
                 fxA.count = 9;
                 fxA.id = 0xc95;
                 fxA.f0 = lbl_803E32CC * (power / lbl_803E32C8) + lbl_803E32AC;
                 fxB.f1 = *(f32*)(pos2 + 0xc);
                 fxB.f2 = *(f32*)(pos2 + 0x10);
                 fxB.f3 = *(f32*)(pos2 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj,
-                                                 0x7ba, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7ba, &fxB, 0x200001, -1, &fxA);
             }
             break;
         case 134:
+        {
+            f32 progress;
+            u16 idv;
+            if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
             {
-                f32 progress;
-                u16 idv;
-                if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
-                {
-                    idv = 0xc75;
-                }
-                else
-                {
-                    idv = 0xc0e;
-                }
-                fxB.id = idv;
-                progress = ((GameObject*)obj2)->anim.currentMoveProgress;
-                if (progress < lbl_803E32D0)
-                {
-                    fxB.f1 = lbl_803E32D4;
-                    fxB.count = 9;
-                    fxB.f0 = lbl_803E3288;
-                    fxB.f2 = lbl_803E32B4;
-                    (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
-                }
-                else if (progress < lbl_803E32D8)
-                {
-                    fxB.f1 = lbl_803E32C4 * (lbl_803E32DC * (progress - lbl_803E32D0) - lbl_803E3294);
-                    fxB.count = 9;
-                    fxB.f0 = lbl_803E3288;
-                    fxB.f2 = lbl_803E32B4;
-                    (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
-                }
-                break;
+                idv = 0xc75;
             }
+            else
+            {
+                idv = 0xc0e;
+            }
+            fxB.id = idv;
+            progress = ((GameObject*)obj2)->anim.currentMoveProgress;
+            if (progress < lbl_803E32D0)
+            {
+                fxB.f1 = lbl_803E32D4;
+                fxB.count = 9;
+                fxB.f0 = lbl_803E3288;
+                fxB.f2 = lbl_803E32B4;
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
+            }
+            else if (progress < lbl_803E32D8)
+            {
+                fxB.f1 = lbl_803E32C4 * (lbl_803E32DC * (progress - lbl_803E32D0) - lbl_803E3294);
+                fxB.count = 9;
+                fxB.f0 = lbl_803E3288;
+                fxB.f2 = lbl_803E32B4;
+                (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_TRAIL, &fxB, 2, -1, NULL);
+            }
+            break;
+        }
         }
     }
 }

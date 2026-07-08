@@ -43,16 +43,16 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
         f32 col[3];
         f32 pos[3];
         f32 scale;
-        u32 v3c; /* 0x3c */
-        u32 v40; /* 0x40 */
+        u32 v3c;      /* 0x3c */
+        u32 v40;      /* 0x40 */
         s16 variantB; /* 0x44 */
         s16 hw[7];
         u32 flags;
         u8 variantA; /* 0x58 */
-        u8 v59; /* 0x59 */
-        u8 v5a; /* 0x5a */
-        u8 v5b; /* 0x5b */
-        u8 v5c; /* 0x5c: reserved (preserves count at 0x5d) */
+        u8 v59;      /* 0x59 */
+        u8 v5a;      /* 0x5a */
+        u8 v5b;      /* 0x5b */
+        u8 v5c;      /* 0x5c: reserved (preserves count at 0x5d) */
         s8 count;
         u8 pad1[2];
         GfxCmd entries[32];
@@ -107,7 +107,7 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     e[2].y = lbl_803E1570;
     if (sourceObj != 0)
     {
-        e[2].z = (f32) * sourceObj;
+        e[2].z = (f32)*sourceObj;
     }
     else
     {

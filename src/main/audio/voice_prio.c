@@ -5,25 +5,19 @@
 
 #pragma exceptions on
 
-
-
 extern u8 vidListNodes[];
 extern u16 voicePrioSortRootListRoot;
 
-#define VB_PRIO_HEAD(vb, p) \
-    (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
-#define VB_PRIO_LINK(vb, i) \
-    ((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))
+#define VB_PRIO_HEAD(vb, p) (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
+#define VB_PRIO_LINK(vb, i) ((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))
 typedef struct VoicePrioPrev
 {
     u16 prev;
     u16 pad;
 } VoicePrioPrev;
 
-#define VB_PRIO_SORT_NEXT(vb, p) \
-    (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
-#define VB_PRIO_SORT_PREV(vb, p) \
-    (((VoicePrioPrev *)((u8 *)&(vb)->prioritySortLinks[0] + 2))[p].prev)
+#define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
+#define VB_PRIO_SORT_PREV(vb, p) (((VoicePrioPrev*)((u8*)&(vb)->prioritySortLinks[0] + 2))[p].prev)
 
 /*
  * Insert the voice into the new priority group's list and keep the global

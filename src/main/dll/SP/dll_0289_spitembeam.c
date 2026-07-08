@@ -24,9 +24,9 @@ enum
 #define SPITEMBEAM_SCROLL_STEP 8
 #define SPITEMBEAM_SCROLL_WRAP 0x400
 
-#define SPITEMBEAM_OBJFLAG_HIDDEN 0x4000
+#define SPITEMBEAM_OBJFLAG_HIDDEN             0x4000
 #define SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define SPITEMBEAM_OBJFLAG_UPDATE_DISABLED 0x8000
+#define SPITEMBEAM_OBJFLAG_UPDATE_DISABLED    0x8000
 
 #define SPITEMBEAM_TARGET_OBJGROUP 9
 
@@ -42,8 +42,14 @@ typedef struct SpitembeamPlacement
 
 STATIC_ASSERT(sizeof(SpitembeamPlacement) == 0x20);
 
-int spitembeam_getExtraSize(void) { return 0x0; }
-int spitembeam_getObjectTypeId(void) { return 0x0; }
+int spitembeam_getExtraSize(void)
+{
+    return 0x0;
+}
+int spitembeam_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void spitembeam_free(void)
 {
@@ -73,13 +79,14 @@ void spitembeam_update(int* obj)
     }
     else
     {
-        if (((int(*)(int*, s16))(**(int***)((char*)shop + 0x68))[SHOP_IFACE_IS_AVAILABLE])(
+        if (((int (*)(int*, s16))(**(int***)((char*)shop + 0x68))[SHOP_IFACE_IS_AVAILABLE])(
                 shop, ((SpitembeamPlacement*)def)->itemIndex) == 0 ||
-            ((int(*)(int*, s16))(**(int***)((char*)shop + 0x68))[SHOP_IFACE_IS_BOUGHT])(
+            ((int (*)(int*, s16))(**(int***)((char*)shop + 0x68))[SHOP_IFACE_IS_BOUGHT])(
                 shop, ((SpitembeamPlacement*)def)->itemIndex) != 0)
         {
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SPITEMBEAM_OBJFLAG_UPDATE_DISABLED);
+            ((GameObject*)obj)->objectFlags =
+                (u16)(((GameObject*)obj)->objectFlags | SPITEMBEAM_OBJFLAG_UPDATE_DISABLED);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
@@ -95,7 +102,8 @@ void spitembeam_update(int* obj)
 
 void spitembeam_init(int obj)
 {
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
+    ((GameObject*)obj)->objectFlags =
+        (u16)(((GameObject*)obj)->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void spitembeam_release(void)
@@ -125,10 +133,6 @@ ObjectDescriptor gSPitembeamObjDescriptor = {
 
 /* used by dll_0255 (snowbike) as a base+offset table; placed in this unit by link order */
 f32 lbl_803284E0[19] = {
-    -6.5f, 0.0f, -13.0f,
-    6.5f, 0.0f, -13.0f,
-    6.5f, 0.0f, 13.0f,
-    -6.5f, 0.0f, 13.0f,
-    1.0f, 1.0f, 1.0f, 1.0f,
-    0.0f, 0.0f, 0.0f,
+    -6.5f, 0.0f,  -13.0f, 6.5f, 0.0f, -13.0f, 6.5f, 0.0f, 13.0f, -6.5f,
+    0.0f,  13.0f, 1.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f,
 };

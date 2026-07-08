@@ -311,8 +311,7 @@ int cMenuSetItems(s16* items, char useTricky)
         idsW2++;
         texW++;
         i++;
-    }
-    while (i < CMENU_ITEM_SLOT_COUNT);
+    } while (i < CMENU_ITEM_SLOT_COUNT);
     if (getLoadedFileFlags(0) == 0)
     {
         i = 0;
@@ -325,8 +324,7 @@ int cMenuSetItems(s16* items, char useTricky)
             ids++;
             texP2++;
             i++;
-        }
-        while (i < CMENU_ITEM_SLOT_COUNT);
+        } while (i < CMENU_ITEM_SLOT_COUNT);
     }
     return count;
 }
@@ -371,10 +369,8 @@ void drawTrickyHudOverlay(int obj)
     }
     drawViewFinderHud();
     if ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER &&
-        (((GameObject*)player)->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 &&
-        pauseMenuState == 0 &&
-        (void*)tricky != 0 &&
-        getHudHiddenFrameCount() == 0)
+        (((GameObject*)player)->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
+        (void*)tricky != 0 && getHudHiddenFrameCount() == 0)
     {
         (*(int (**)(int, int*))(*(int*)(*(int*)(tricky + 0x68)) + 0x48))(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
@@ -467,8 +463,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
         slot = 2;
         break;
     }
-    *(f32*)(gCMenuRingFrontObjs[slot] + 0x10) =
-        lbl_803E1E40 + (f32)(-gCMenuScrollTimer * lbl_803DBA30) / lbl_803E201C;
+    *(f32*)(gCMenuRingFrontObjs[slot] + 0x10) = lbl_803E1E40 + (f32)(-gCMenuScrollTimer * lbl_803DBA30) / lbl_803E201C;
     sy = lbl_803DBAC8;
     sx = lbl_803DBAC4;
     lbl_803DBAA4 = Camera_GetFovY();
@@ -491,8 +486,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
         used[i] = 0;
         vals[i] = mathCosf(lbl_803E1EC8 * (f32) * (s16*)gCMenuRingObjs[i] / lbl_803E1E94);
         i++;
-    }
-    while (i < 3);
+    } while (i < 3);
     j = 0;
     do
     {
@@ -536,8 +530,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
         }
         used[sel] = 1;
         j++;
-    }
-    while (j < 3);
+    } while (j < 3);
     Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0)
     {
@@ -645,11 +638,9 @@ void cMenuRotateFn_80124d80(void)
         {
             d3 = (s16)(d3 + 0xFFFF);
         }
-        best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2))
-                   ? (d1 < 0 ? -d1 : d1)
-                   : (d2 < 0 ? -d2 : d2);
+        best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2)) ? (d1 < 0 ? -d1 : d1) : (d2 < 0 ? -d2 : d2);
         best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
-        r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
+        r = (s16)(int)-(lbl_803E2030 * best - lbl_803E2028);
         lbl_803DD8D4 = (r > 0) ? r : 0;
     }
     cur = lbl_803DD79C;
@@ -690,10 +681,8 @@ void cMenuRotateFn_80124d80(void)
     {
         d3 = (s16)(d3 + 0xFFFF);
     }
-    best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2))
-               ? (d1 < 0 ? -d1 : d1)
-               : (d2 < 0 ? -d2 : d2);
+    best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2)) ? (d1 < 0 ? -d1 : d1) : (d2 < 0 ? -d2 : d2);
     best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
-    r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
+    r = (s16)(int)-(lbl_803E2030 * best - lbl_803E2028);
     lbl_803DD8D4 = (r > 0) ? r : 0;
 }

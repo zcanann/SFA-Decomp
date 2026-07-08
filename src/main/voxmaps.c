@@ -1,7 +1,7 @@
 #include "main/engine_shared.h"
 #include "main/pi_dolphin.h"
 
-#define VOXMAP_SLOT_COUNT 6
+#define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
 
 #pragma dont_inline on
@@ -221,7 +221,9 @@ void voxmaps_resetLoadedMaps(void)
     VoxMapSlotOrigin* slotOrigin;
     int i;
 
-    for (slotOrigin = gVoxMaps.slotOrigin, i = 0, mapBuffer = gVoxMaps.mapBuffer, blockId = gVoxMaps.blockId, timer = gVoxMaps.timer, slotInUse = gVoxMapsSlotInUse; i < VOXMAP_SLOT_COUNT; i++)
+    for (slotOrigin = gVoxMaps.slotOrigin, i = 0, mapBuffer = gVoxMaps.mapBuffer, blockId = gVoxMaps.blockId,
+        timer = gVoxMaps.timer, slotInUse = gVoxMapsSlotInUse;
+         i < VOXMAP_SLOT_COUNT; i++)
     {
         if (*mapBuffer != NULL)
         {
@@ -461,8 +463,8 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
                         unsigned int occ;
                         if (routeNodeDirty != 0)
                         {
-                            routeNode = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, tileX, ySlot,
-                                                                  tileZ);
+                            routeNode =
+                                (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, tileX, ySlot, tileZ);
                             routeNodeDirty = 0;
                         }
                         occ = (routeNode[localZ64 & 3] >> ((localX64 & 3) << 1)) & 3;
@@ -804,14 +806,14 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
             u8* rc = occ[dir];
             sumCur = rc[0];
             {
-            u8* rn = occ[next];
-            sumNext = rn[0];
-            sumCur += rc[1];
-            sumNext += rn[1];
-            sumCur += rc[2];
-            sumNext += rn[2];
-            sumCur += rc[3];
-            sumNext += rn[3];
+                u8* rn = occ[next];
+                sumNext = rn[0];
+                sumCur += rc[1];
+                sumNext += rn[1];
+                sumCur += rc[2];
+                sumNext += rn[2];
+                sumCur += rc[3];
+                sumNext += rn[3];
             }
             if (next == 2 && sumNext == 0)
             {
@@ -1187,14 +1189,6 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
     int dx2, dy2;
     int dx, dy;
 
-
-
-
-
-
-
-
-
     xstep = 2;
     dx = ((VoxPos*)start)->x - cur.x;
     if (dx < 0)
@@ -1280,8 +1274,7 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 }
                 if (!blocked)
                 {
-                    if ((buf[next][0] & 2) || (buf[next][1] & 2) || (buf[next][2] & 2) || (buf[next][3]
-                        & 2))
+                    if ((buf[next][0] & 2) || (buf[next][1] & 2) || (buf[next][2] & 2) || (buf[next][3] & 2))
                     {
                         blocked = 1;
                     }
@@ -1304,13 +1297,17 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                     {
                         if (next == 1)
                         {
-                            if (sumA >= sumB) adj--;
-                            else sumA = sumB;
+                            if (sumA >= sumB)
+                                adj--;
+                            else
+                                sumA = sumB;
                         }
                         else
                         {
-                            if (sumA > sumB) adj--;
-                            else sumA = sumB;
+                            if (sumA > sumB)
+                                adj--;
+                            else
+                                sumA = sumB;
                         }
                         if (sumA <= 1)
                         {
@@ -1429,8 +1426,7 @@ int fn_80011EB0(RouteState* state, int count)
                                                    gVoxMapsTransformObj);
                 }
                 state->pathPoints[idx * 3 + 0] = (f32)((int)local[0] + 5);
-                state->pathPoints[idx * 3 + 1] = (f32)(int)
-                local[1];
+                state->pathPoints[idx * 3 + 1] = (f32)(int)local[1];
                 state->pathPoints[idx++ * 3 + 2] = (f32)((int)local[2] + 5);
                 cur = cand;
             }
@@ -1453,11 +1449,11 @@ int fn_80011EB0(RouteState* state, int count)
         local[2] = (f32)(lastClear->y * 10 + 5);
         if (gVoxMapsTransformObj != 0)
         {
-            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], gVoxMapsTransformObj);
+            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2],
+                                           gVoxMapsTransformObj);
         }
         state->pathPoints[idx * 3 + 0] = (f32)((int)local[0] + 5);
-        state->pathPoints[idx * 3 + 1] = (f32)(int)
-        local[1];
+        state->pathPoints[idx * 3 + 1] = (f32)(int)local[1];
         state->pathPoints[idx++ * 3 + 2] = (f32)((int)local[2] + 5);
         if (idx >= 10)
         {
@@ -1470,6 +1466,11 @@ int fn_80011EB0(RouteState* state, int count)
     return idx;
 }
 
-char sVoxMapsDebugStrings[380] = "Childnode Null\n\000overflow in 'genVoxelCircle'\n\000\000\000VOXMAP: attempt to load invalid object voxmap '%d'\n\000VOXMAP: Size overflow on object voxmap load->Ignoring defined voxmap\n\000\000\000<voxLoadVoxMapActual>  Warning voxRomTab is NULL\n\000\000\000VOXMAP: Size overflow on load->Ignoring defined voxmap\n\000<voxLoadVoxMapActual>  Warning uncompressedSize is 0\n\000\000\000 WARNING: Voxmap has no mem available \n";
+char sVoxMapsDebugStrings[380] =
+    "Childnode Null\n\000overflow in 'genVoxelCircle'\n\000\000\000VOXMAP: attempt to load invalid object voxmap "
+    "'%d'\n\000VOXMAP: Size overflow on object voxmap load->Ignoring defined voxmap\n\000\000\000<voxLoadVoxMapActual> "
+    " Warning voxRomTab is NULL\n\000\000\000VOXMAP: Size overflow on load->Ignoring defined "
+    "voxmap\n\000<voxLoadVoxMapActual>  Warning uncompressedSize is 0\n\000\000\000 WARNING: Voxmap has no mem "
+    "available \n";
 
 char sVoxmapsRouteNodesListOverflow[] = "VOXMAPS: route nodes list overflow\n";

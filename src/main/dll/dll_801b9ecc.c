@@ -13,18 +13,20 @@ extern u8 gDIMbossAnimController[];
 extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
 extern f32 lbl_803E4BB8;
 
-typedef void (*Dim2QueryTargetMoveFn)(int obj, void* targetObj, int queryFlags, u16* animId,
-                                      s16* outParam, u16* targetDistance);
+typedef void (*Dim2QueryTargetMoveFn)(int obj, void* targetObj, int queryFlags, u16* animId, s16* outParam,
+                                      u16* targetDistance);
 typedef u8 (*Dim2CheckTargetRangeFn)(int obj, BaddieState* state, f32 rangeScale);
 typedef void (*Dim2RequestControlModeFn)(int obj, BaddieState* state, int controlMode);
 
-typedef struct Dim2BaddieControlInterface {
+typedef struct Dim2BaddieControlInterface
+{
     u8 pad00[0x14];
     Dim2QueryTargetMoveFn queryTargetMove;
     Dim2CheckTargetRangeFn checkTargetRange;
 } Dim2BaddieControlInterface;
 
-typedef struct Dim2PlayerInterface {
+typedef struct Dim2PlayerInterface
+{
     u8 pad00[0x14];
     Dim2RequestControlModeFn requestControlMode;
 } Dim2PlayerInterface;
@@ -41,11 +43,11 @@ static inline Dim2PlayerInterface* DIM2_GetPlayerInterface(void)
 
 typedef struct DimAnimTable
 {
-    u8 pad[0x168];     /* 0x000 */
-    s16 surprised[6];  /* 0x168: far random "surprised" anim ids */
-    s16 group3[8];     /* 0x174: hitPoints==3 round-robin anim ids */
-    s16 group2[8];     /* 0x184: hitPoints==2 round-robin anim ids */
-    s16 group1[8];     /* 0x194: hitPoints==1 round-robin anim ids */
+    u8 pad[0x168];    /* 0x000 */
+    s16 surprised[6]; /* 0x168: far random "surprised" anim ids */
+    s16 group3[8];    /* 0x174: hitPoints==3 round-robin anim ids */
+    s16 group2[8];    /* 0x184: hitPoints==2 round-robin anim ids */
+    s16 group1[8];    /* 0x194: hitPoints==1 round-robin anim ids */
 } DimAnimTable;
 
 #pragma scheduling off
@@ -62,8 +64,8 @@ int fn_801B9ECC(int a, int obj)
     base = (DimAnimTable*)lbl_80325960;
     if ((s8)state->moveDone != 0 || (s8)state->moveJustStartedB != 0)
     {
-        DIM2_GetBaddieControlInterface()->queryTargetMove(a, state->targetObj, 0x10, targetAnim,
-                                                          &targetParam, &targetDistance);
+        DIM2_GetBaddieControlInterface()->queryTargetMove(a, state->targetObj, 0x10, targetAnim, &targetParam,
+                                                          &targetDistance);
         state->moveDone = 0;
         if (targetDistance < 0x5a)
         {

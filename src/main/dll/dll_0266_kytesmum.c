@@ -40,21 +40,21 @@ extern void DR_Creator_release(void);
 
 extern void DR_Creator_initialise(void);
 
-#define KYTESMUM_OBJGROUP 0x3
+#define KYTESMUM_OBJGROUP        0x3
 #define KYTESMUM_TARGET_OBJGROUP 0x1
 
 #define KYTESMUM_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 #define PAD_BUTTON_A 0x100
 
-#define KYTESMUM_OBJECT_TYPE_ID 0x43
-#define KYTESMUM_EXTRA_SIZE 0x6ec
+#define KYTESMUM_OBJECT_TYPE_ID  0x43
+#define KYTESMUM_EXTRA_SIZE      0x6ec
 #define KYTESMUM_HIT_VOLUME_SLOT 0xb
 
-#define KYTESMUM_MODE_QUEST_A 0    /* shares the quest-state path with mode 3 */
+#define KYTESMUM_MODE_QUEST_A    0 /* shares the quest-state path with mode 3 */
 #define KYTESMUM_MODE_STATIONARY 1
-#define KYTESMUM_MODE_ROAMING 2
-#define KYTESMUM_MODE_QUEST_B 3
+#define KYTESMUM_MODE_ROAMING    2
+#define KYTESMUM_MODE_QUEST_B    3
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 
@@ -91,9 +91,11 @@ typedef struct KytesMumRuntime
 
 typedef struct KytesMumObject
 {
-    union {
+    union
+    {
         ObjAnimComponent anim;
-        struct {
+        struct
+        {
             s16 yaw;
             u8 pad02[0x4c - 0x2];
             KytesMumSetup* setup;
@@ -123,9 +125,15 @@ STATIC_ASSERT(offsetof(KytesMumObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(KytesMumObject, runtime) == 0xB8);
 STATIC_ASSERT(offsetof(KytesMumObject, interactionCallback) == 0xBC);
 
-int kytesmum_getExtraSize(void) { return KYTESMUM_EXTRA_SIZE; }
+int kytesmum_getExtraSize(void)
+{
+    return KYTESMUM_EXTRA_SIZE;
+}
 
-int kytesmum_getObjectTypeId(void) { return KYTESMUM_OBJECT_TYPE_ID; }
+int kytesmum_getObjectTypeId(void)
+{
+    return KYTESMUM_OBJECT_TYPE_ID;
+}
 
 void kytesmum_hitDetect(void)
 {
@@ -182,8 +190,7 @@ void kytesmum_update(int obj)
         if (absDiff < 0x400)
         {
             kytesMum->yaw = (s16)(setup->yaw << 8);
-            ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[randomGetRange(0, 1)],
-                                   lbl_803E698C, 0);
+            ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[randomGetRange(0, 1)], lbl_803E698C, 0);
             runtime->animSpeed = lbl_803E699C;
         }
     }
@@ -206,8 +213,8 @@ void kytesmum_update(int obj)
     nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, obj, &nearDist);
     if ((void*)nearest != NULL)
     {
-        (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(
-            nearest, obj, 1, 2);
+        (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(nearest, obj, 1,
+                                                                                                     2);
     }
 }
 
@@ -358,14 +365,13 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
             buttonDisable(0, PAD_BUTTON_A);
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 4;
-            (*gObjectTriggerInterface)
-                ->runSequence(randomGetRange(0, 1), (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 1), (void*)obj, -1);
         }
     }
-    if ((tricky != 0 && Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) <
-            gKytesMumFleeDistance) ||
+    if ((tricky != 0 &&
+         Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) < gKytesMumFleeDistance) ||
         (player != 0 && Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            gKytesMumFleeDistance))
+                            gKytesMumFleeDistance))
     {
         if (((GameObject*)obj)->anim.currentMove != 9)
         {
@@ -469,13 +475,11 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
 }
 #pragma reset
 
-u8 gKytesMumMoveSets[] =
-{
-    0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00,
-    0x00, 0x04, 0x00, 0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x03, 0x35, 0x10, 0x00, 0x00, 0x00, 0x03, 0x36, 0x10, 0x00, 0x00, 0x00,
-    0x03, 0x37, 0x05, 0x00, 0x00, 0x00, 0x03, 0x38, 0x05, 0x00, 0x00, 0x00,
+u8 gKytesMumMoveSets[] = {
+    0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
+    0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x35, 0x10, 0x00, 0x00, 0x00, 0x03, 0x36, 0x10,
+    0x00, 0x00, 0x00, 0x03, 0x37, 0x05, 0x00, 0x00, 0x00, 0x03, 0x38, 0x05, 0x00, 0x00, 0x00,
 };
 
 int gKytesMumQuestIdleSfxTable[] = {
@@ -485,4 +489,17 @@ int gKytesMumQuestIdleSfxTable[] = {
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";
 
 /* descriptor/ptr table auto 0x8032a878-0x8032a8b0 */
-u32 gDrCreatorObjDescriptor[14] = { 0x00000000, 0x00000000, 0x00000000, 0x00090000, (u32)DR_Creator_initialise, (u32)DR_Creator_release, 0x00000000, (u32)DR_Creator_init, (u32)DR_Creator_update, (u32)DR_Creator_hitDetect, (u32)DR_Creator_render, (u32)DR_Creator_free, (u32)DR_Creator_getObjectTypeId, (u32)DR_Creator_getExtraSize };
+u32 gDrCreatorObjDescriptor[14] = {0x00000000,
+                                   0x00000000,
+                                   0x00000000,
+                                   0x00090000,
+                                   (u32)DR_Creator_initialise,
+                                   (u32)DR_Creator_release,
+                                   0x00000000,
+                                   (u32)DR_Creator_init,
+                                   (u32)DR_Creator_update,
+                                   (u32)DR_Creator_hitDetect,
+                                   (u32)DR_Creator_render,
+                                   (u32)DR_Creator_free,
+                                   (u32)DR_Creator_getObjectTypeId,
+                                   (u32)DR_Creator_getExtraSize};

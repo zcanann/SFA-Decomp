@@ -21,21 +21,29 @@ void render_copyPackedU64Tail(u64* dst, u32 packed)
 
     switch (packed & 7)
     {
-    case 0: *dst = src;
+    case 0:
+        *dst = src;
         break;
-    case 1: *dst = (*dst & 0xff00000000000000ULL) | (src >> 8);
+    case 1:
+        *dst = (*dst & 0xff00000000000000ULL) | (src >> 8);
         break;
-    case 2: *dst = (*dst & 0xffff000000000000ULL) | (src >> 16);
+    case 2:
+        *dst = (*dst & 0xffff000000000000ULL) | (src >> 16);
         break;
-    case 3: *dst = (*dst & 0xffffff0000000000ULL) | (src >> 24);
+    case 3:
+        *dst = (*dst & 0xffffff0000000000ULL) | (src >> 24);
         break;
-    case 4: *dst = (*dst & 0xffffffff00000000ULL) | (src >> 32);
+    case 4:
+        *dst = (*dst & 0xffffffff00000000ULL) | (src >> 32);
         break;
-    case 5: *dst = (*dst & 0xffffffffff000000ULL) | (src >> 40);
+    case 5:
+        *dst = (*dst & 0xffffffffff000000ULL) | (src >> 40);
         break;
-    case 6: *dst = (*dst & 0xffffffffffff0000ULL) | (src >> 48);
+    case 6:
+        *dst = (*dst & 0xffffffffffff0000ULL) | (src >> 48);
         break;
-    case 7: *dst = (*dst & 0xffffffffffffff00ULL) | (src >> 56);
+    case 7:
+        *dst = (*dst & 0xffffffffffffff00ULL) | (src >> 56);
         break;
     }
 }
@@ -50,21 +58,29 @@ void render_copyPackedU64Head(u64* dst, u32 packed)
 
     switch (packed & 7)
     {
-    case 0: *dst = src;
+    case 0:
+        *dst = src;
         break;
-    case 1: *dst = (*dst & 0xffULL) | (src << 8);
+    case 1:
+        *dst = (*dst & 0xffULL) | (src << 8);
         break;
-    case 2: *dst = (*dst & 0xffffULL) | (src << 16);
+    case 2:
+        *dst = (*dst & 0xffffULL) | (src << 16);
         break;
-    case 3: *dst = (*dst & 0xffffffULL) | (src << 24);
+    case 3:
+        *dst = (*dst & 0xffffffULL) | (src << 24);
         break;
-    case 4: *dst = (*dst & 0xffffffffULL) | (src << 32);
+    case 4:
+        *dst = (*dst & 0xffffffffULL) | (src << 32);
         break;
-    case 5: *dst = (*dst & 0xffffffffffULL) | (src << 40);
+    case 5:
+        *dst = (*dst & 0xffffffffffULL) | (src << 40);
         break;
-    case 6: *dst = (*dst & 0xffffffffffffULL) | (src << 48);
+    case 6:
+        *dst = (*dst & 0xffffffffffffULL) | (src << 48);
         break;
-    case 7: *dst = (*dst & 0xffffffffffffffULL) | (src << 56);
+    case 7:
+        *dst = (*dst & 0xffffffffffffffULL) | (src << 56);
         break;
     }
 }
@@ -160,23 +176,30 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             u8 nib = *p & 0xf;
             int base = lbl_802C18C0[idx];
             int delta = 0;
-            if (nib & 1) {
+            if (nib & 1)
+            {
                 delta = base >> 2;
             }
-            if (nib & 2) {
+            if (nib & 2)
+            {
                 delta += base >> 1;
             }
-            if (nib & 4) {
+            if (nib & 4)
+            {
                 delta += base;
             }
-            if (nib & 8) {
+            if (nib & 8)
+            {
                 delta = -delta;
             }
             acc += delta;
             idx += lbl_802C1A24[nib];
-            if (idx < 0) {
+            if (idx < 0)
+            {
                 idx = 0;
-            } else if (idx > 0x58) {
+            }
+            else if (idx > 0x58)
+            {
                 idx = 0x58;
             }
             {
@@ -199,23 +222,30 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             u8 nib = (*p++ >> 4) & 0xf;
             int base = lbl_802C18C0[idx];
             int delta = 0;
-            if (nib & 1) {
+            if (nib & 1)
+            {
                 delta = base >> 2;
             }
-            if (nib & 2) {
+            if (nib & 2)
+            {
                 delta += base >> 1;
             }
-            if (nib & 4) {
+            if (nib & 4)
+            {
                 delta += base;
             }
-            if (nib & 8) {
+            if (nib & 8)
+            {
                 delta = -delta;
             }
             acc += delta;
             idx += lbl_802C1A24[nib];
-            if (idx < 0) {
+            if (idx < 0)
+            {
                 idx = 0;
-            } else if (idx > 0x58) {
+            }
+            else if (idx > 0x58)
+            {
                 idx = 0x58;
             }
             {
@@ -240,23 +270,30 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
         u8 nib = *p++ & 0xf;
         int base = lbl_802C18C0[idx];
         int delta = 0;
-        if (nib & 1) {
+        if (nib & 1)
+        {
             delta = base >> 2;
         }
-        if (nib & 2) {
+        if (nib & 2)
+        {
             delta += base >> 1;
         }
-        if (nib & 4) {
+        if (nib & 4)
+        {
             delta += base;
         }
-        if (nib & 8) {
+        if (nib & 8)
+        {
             delta = -delta;
         }
         acc += delta;
         idx += lbl_802C1A24[nib];
-        if (idx < 0) {
+        if (idx < 0)
+        {
             idx = 0;
-        } else if (idx > 0x58) {
+        }
+        else if (idx > 0x58)
+        {
             idx = 0x58;
         }
         {
@@ -323,19 +360,19 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
 
 /* Refill the two parallel 64-bit bitstream windows from the next
    byte-aligned position once the consumed bit count overruns 64. */
-#define RENDER_BITS_REFILL(nb)                       \
-    bitpos -= (nb);                                  \
-    bufA = bitpos >> 3;                              \
-    posA += bufA;                                    \
-    addrB = bufA + curB;                             \
-    curB = addrB;                                    \
-    bitpos &= 7;                                     \
-    render_copyPackedU64Head(&bufA, posA);           \
-    render_copyPackedU64Tail(&bufA, posA + 7);       \
-    render_copyPackedU64Head(&bufB, addrB);          \
-    render_copyPackedU64Tail(&bufB, addrB + 7);      \
-    bufA <<= (bitpos & 0xFFFFFFFF);                  \
-    bufB <<= (bitpos & 0xFFFFFFFF);                  \
+#define RENDER_BITS_REFILL(nb)                                                                                         \
+    bitpos -= (nb);                                                                                                    \
+    bufA = bitpos >> 3;                                                                                                \
+    posA += bufA;                                                                                                      \
+    addrB = bufA + curB;                                                                                               \
+    curB = addrB;                                                                                                      \
+    bitpos &= 7;                                                                                                       \
+    render_copyPackedU64Head(&bufA, posA);                                                                             \
+    render_copyPackedU64Tail(&bufA, posA + 7);                                                                         \
+    render_copyPackedU64Head(&bufB, addrB);                                                                            \
+    render_copyPackedU64Tail(&bufB, addrB + 7);                                                                        \
+    bufA <<= (bitpos & 0xFFFFFFFF);                                                                                    \
+    bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
     bitpos += (nb);
 
 void fn_80007F78(u8* anim, u16* dst, u16* out)
@@ -355,7 +392,11 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     u32 addrB;
     u64 maskConst = 0xFFF0;
     int i;
-    union { s64 v; int w[2]; } frac;
+    union
+    {
+        s64 v;
+        int w[2];
+    } frac;
 
     addrB = posA + curB;
     end = (u32)(dst + 3);
@@ -459,14 +500,13 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     storeSecond:
         *dst = sample;
         dst++;
-    }
-    while ((u64)(u32)
-    dst != end
-    )
-    ;
+    } while ((u64)(u32)dst != end);
 }
 
-int return0xFFFF_80008B6C(void) { return -0x1; }
+int return0xFFFF_80008B6C(void)
+{
+    return -0x1;
+}
 
 s16 renderModeSetOrGet(int mode)
 {

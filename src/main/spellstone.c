@@ -15,15 +15,12 @@
 extern f32 Vec_distance(void* posA, void* posB);
 
 extern void Obj_RemoveFromUpdateList(void* obj);
-extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
-                                 u32 fwdArg5, double scale);
-
+extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 
 extern s16 lbl_803DC228;
 extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
-
 
 int spellstone_getState(SpellStoneObject* obj)
 {
@@ -61,8 +58,7 @@ void spellstone_free(SpellStoneObject* obj)
     return;
 }
 
-void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3,
-                       u32 p4, u32 p5, char visible)
+void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     SpellStoneState* state;
 
@@ -175,4 +171,3 @@ ObjectDescriptor12 gSpellStoneObjDescriptor = {
     (ObjectDescriptorCallback)spellstone_setState,
     (ObjectDescriptorCallback)spellstone_getState,
 };
-

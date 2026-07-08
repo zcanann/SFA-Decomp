@@ -12,9 +12,15 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-int Dummy29E_getExtraSize(void) { return 0x0; }
+int Dummy29E_getExtraSize(void)
+{
+    return 0x0;
+}
 
-int Dummy29E_getObjectTypeId(void) { return 0x0; }
+int Dummy29E_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void Dummy29E_free(void)
 {

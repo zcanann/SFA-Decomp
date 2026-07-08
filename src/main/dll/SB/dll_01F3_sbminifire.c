@@ -56,9 +56,14 @@ extern int gSbMiniFireResourceVariant;
 extern void fn_80053ED0(int);
 extern void fn_80053EBC(int);
 
-
-int SB_MiniFire_getExtraSize(void) { return 0x2; }
-int SB_MiniFire_getObjectTypeId(void) { return 0x0; }
+int SB_MiniFire_getExtraSize(void)
+{
+    return 0x2;
+}
+int SB_MiniFire_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void SB_MiniFire_free(GameObject* obj)
 {
@@ -72,7 +77,7 @@ void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0)
     {
         fn_80053ED0(8);
-        ((void(*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, 1.0f);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, 1.0f);
         fn_80053EBC(8);
     }
 }
@@ -98,8 +103,7 @@ void SB_MiniFire_update(GameObject* obj)
     if (obj->unkF4 <= 0x3c)
     {
         buf[2] = obj->unkF4 / 60.0f;
-        obj->anim.alpha =
-            (u8)(int)(255.0f * ((f32)obj->unkF4 / 60.0f));
+        obj->anim.alpha = (u8)(int)(255.0f * ((f32)obj->unkF4 / 60.0f));
     }
     *(s16*)((char*)buf + 4) = 0;
     *(s16*)((char*)buf + 2) = 0;
@@ -131,15 +135,14 @@ void SB_MiniFire_init(GameObject* obj)
     void* resource;
 
     obj->unkF4 = 180;
-    obj->anim.velocityX =
-        -(0.01f * (f32)(s32)randomGetRange(20, 40) + 0.8f);
+    obj->anim.velocityX = -(0.01f * (f32)(s32)randomGetRange(20, 40) + 0.8f);
     obj->anim.velocityY = 0.0f;
     obj->anim.velocityZ = -0.3f;
     obj->anim.rootMotionScale *= 0.8f;
 
     resource = Resource_Acquire(117, 1);
-    (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(
-        (int)obj, gSbMiniFireResourceVariant, 0, 0x10002, -1, 0);
+    (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, gSbMiniFireResourceVariant, 0, 0x10002,
+                                                                      -1, 0);
     gSbMiniFireResourceVariant++;
     if (gSbMiniFireResourceVariant > 3)
     {

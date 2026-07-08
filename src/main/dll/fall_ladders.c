@@ -95,7 +95,8 @@ void fn_801540A0(int obj, int p)
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
     {
-        fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 0x3c, 0);
+        fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX,
+                    ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 0x3c, 0);
     }
     else
     {
@@ -118,10 +119,11 @@ void fn_801540A0(int obj, int p)
         Baddie_SetMove(obj, p, 1, lbl_803E296C, 0, 3);
     }
     else if ((((BaddieState*)p)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
-        (Baddie_SetMove(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(p + 0x328)))
+             (Baddie_SetMove(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(p + 0x328)))
     {
         *(f32*)(p + 0x328) = lbl_803E2974;
-        fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 1, 0);
+        fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX,
+                    ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 1, 0);
         Sfx_PlayFromObject(obj, SFXfox_healthgasp2);
     }
     ((GameObject*)obj)->anim.rotY = ((BaddieState*)p)->spawnRotY;
@@ -147,8 +149,8 @@ void fn_80154584(int obj, int p)
     {
         if ((Curve_AdvanceAlongPath(curve, ((BaddieState*)p)->pathStep) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
-            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)p, (void*)obj, lbl_803E29B0,
-                                             (int*)&lbl_803DBCD0, -1) != 0)
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)p, (void*)obj, lbl_803E29B0, (int*)&lbl_803DBCD0, -1) !=
+                0)
         {
             ((BaddieState*)p)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
@@ -163,8 +165,8 @@ void fn_80154584(int obj, int p)
             *(f32*)(p + 0x324) = lbl_803E2990;
         }
     }
-    ((GameObject*)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) - (
-        f32)((GameObject*)obj)->anim.rotY);
+    ((GameObject*)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) -
+                                      (f32)((GameObject*)obj)->anim.rotY);
     fn_8014CD1C(obj, p, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     if ((((BaddieState*)p)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
@@ -191,8 +193,8 @@ void fn_80154584(int obj, int p)
         }
     }
     ((BaddieState*)p)->seqEntryIndex += 1;
-    ((GameObject*)obj)->anim.rotY = lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) + (
-        f32)((GameObject*)obj)->anim.rotY;
+    ((GameObject*)obj)->anim.rotY =
+        lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(p + 0x33a)) + (f32)((GameObject*)obj)->anim.rotY;
     fn_80154328(obj, p);
 }
 
@@ -223,14 +225,13 @@ void fn_80154328(int obj, int p)
         tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
-        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
-            tx, *(f32*)(p + 0x32c), tz, 0, lbl_803E2990, 3);
-        if (sqrtf(
-            ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.velocityZ
-            * ((GameObject*)obj)->anim.velocityZ) > lbl_803E29A4)
+        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(tx, *(f32*)(p + 0x32c), tz, 0,
+                                                                                    lbl_803E2990, 3);
+        if (sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                  ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) > lbl_803E29A4)
         {
-            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(
-                obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
+            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(obj, stk.pos[0], stk.pos[1], stk.pos[2],
+                                                                              SFXstaff_proj_putaway);
         }
     }
 }
@@ -240,7 +241,8 @@ void fn_80154328(int obj, int p)
 void Baddie_HandleHitReaction(int obj, u8* state, int unused, int cmd)
 {
     int objCopy = obj;
-    if (cmd == 17 || cmd == 16) return;
+    if (cmd == 17 || cmd == 16)
+        return;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
     {
         ((BaddieState*)state)->reactionFlags |= 8;

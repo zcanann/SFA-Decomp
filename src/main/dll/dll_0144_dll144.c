@@ -44,8 +44,14 @@ int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int dll_144_getExtraSize(void) { return 0x0; }
-int dll_144_getObjectTypeId(void) { return 0x0; }
+int dll_144_getExtraSize(void)
+{
+    return 0x0;
+}
+int dll_144_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_144_free(void)
 {
@@ -54,7 +60,8 @@ void dll_144_free(void)
 void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56C0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56C0);
 }
 
 void dll_144_hitDetect(void)
@@ -80,7 +87,10 @@ void dll_144_initialise(void)
 }
 
 ObjectDescriptor gFElevControlObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)FElevControl_initialise,
     (ObjectDescriptorCallback)FElevControl_release,
     0,

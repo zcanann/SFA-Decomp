@@ -15,7 +15,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
 void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
-#define Baddie_SetMove(obj, state, moveId, speed, p5, flags) \
+#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -33,7 +33,7 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define MAGICPLANT_CHILD_OBJ 0x51b
 /* The magic-plant's one particle-fx effect (spawned per hit-count in the
    attack handler). */
-#define MAGICPLANT_PARTFX 0x802
+#define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
@@ -88,7 +88,7 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
-extern f32 PSVECMag(f32 * v);
+extern f32 PSVECMag(f32* v);
 extern s16 getAngle(float y, float x);
 
 void mikaladon_init(int obj, int state)
@@ -173,10 +173,11 @@ void fn_80153040(int obj, int state)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
-                                                     &lbl_803DBCB8, -1) != 0)
+                if ((*gRomCurveInterface)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, &lbl_803DBCB8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+                    ((BaddieState*)state)->controlFlags =
+                        ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
@@ -228,15 +229,16 @@ void fn_80153248(int obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState*)state)->pathStep) != 0
-            || curve->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState*)state)->pathStep) != 0 ||
+            curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
-                                                     &lbl_803DBCB8, -1) != 0)
+                if ((*gRomCurveInterface)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, &lbl_803DBCB8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+                    ((BaddieState*)state)->controlFlags =
+                        ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
@@ -371,18 +373,15 @@ void fn_80153640(int obj, int state)
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
-            ((GameObject*)newObj)->anim.velocityX = 0.02f *
-                (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX -
-                 fx->posX);
+            ((GameObject*)newObj)->anim.velocityX =
+                0.02f * (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX - fx->posX);
             {
-                ((GameObject*)newObj)->anim.velocityY = 0.02f *
-                    ((lbl_803E28F0 +
-                      ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY +
-                      (f32)(s32)randomGetRange(-10, 10)) -
-                     fx->posY);
-                ((GameObject*)newObj)->anim.velocityZ = 0.02f *
-                    (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ -
-                     fx->posZ);
+                ((GameObject*)newObj)->anim.velocityY =
+                    0.02f * ((lbl_803E28F0 + ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY +
+                              (f32)(s32)randomGetRange(-10, 10)) -
+                             fx->posY);
+                ((GameObject*)newObj)->anim.velocityZ =
+                    0.02f * (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ - fx->posZ);
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
@@ -437,8 +436,8 @@ void fn_8015383C(int obj, int state)
     vec[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
     vec[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY;
     vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
-    if (PSVECMag(vec) < lbl_803E2900
-        && (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & MAGICPLANT_OBJFLAG_PARENT_SLACK) == 0)
+    if (PSVECMag(vec) < lbl_803E2900 &&
+        (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & MAGICPLANT_OBJFLAG_PARENT_SLACK) == 0)
     {
         worldPos[0] = ((GameObject*)obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + ((GameObject*)obj)->anim.localPosY;
@@ -455,12 +454,17 @@ void fn_8015383C(int obj, int state)
         if (hit != 0)
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
-            fn_8014CF7C(obj, state, ((GameObject*)trackedObj)->anim.localPosX, ((GameObject*)trackedObj)->anim.localPosZ, 0x14, 0);
+            fn_8014CF7C(obj, state, ((GameObject*)trackedObj)->anim.localPosX,
+                        ((GameObject*)trackedObj)->anim.localPosZ, 0x14, 0);
             angle = (s16)(getAngle(vec[0], vec[2]) - (u16)((GameObject*)obj)->anim.rotX);
-            if (angle > 0x8000) angle = (angle - 0x10000) + 1;
-            if (angle < -0x8000) angle = (angle + 0x10000) - 1;
-            if (angle < 0) angle = -angle;
-            if (angle < 1000) losDetected = 1;
+            if (angle > 0x8000)
+                angle = (angle - 0x10000) + 1;
+            if (angle < -0x8000)
+                angle = (angle + 0x10000) - 1;
+            if (angle < 0)
+                angle = -angle;
+            if (angle < 1000)
+                losDetected = 1;
         }
     }
     else
@@ -488,9 +492,10 @@ void fn_8015383C(int obj, int state)
             else if (((GameObject*)obj)->anim.currentMove != 5 && losDetected)
             {
                 mode = 5;
-                ((BaddieState*)state)->seqEntryIndex = gMagicPlantSeqEntryTable[((BaddieState*)state)->inWhirlpoolGroup & 3];
-                ((BaddieState*)state)->inWhirlpoolGroup = (u8)(
-                    (*(s8*)&((BaddieState*)state)->inWhirlpoolGroup + 1) & 0xc3);
+                ((BaddieState*)state)->seqEntryIndex =
+                    gMagicPlantSeqEntryTable[((BaddieState*)state)->inWhirlpoolGroup & 3];
+                ((BaddieState*)state)->inWhirlpoolGroup =
+                    (u8)((*(s8*)&((BaddieState*)state)->inWhirlpoolGroup + 1) & 0xc3);
             }
             else
             {
@@ -517,8 +522,7 @@ void fn_8015383C(int obj, int state)
     if (((GameObject*)obj)->anim.currentMove == 5)
     {
         f32 sct = ((GameObject*)obj)->anim.currentMoveProgress;
-        if ((double)sct >= lbl_803E2918
-            && (double)sct < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
+        if ((double)sct >= lbl_803E2918 && (double)sct < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
         {
             fn_80153640(obj, state);
             goto sharedTail;
@@ -538,7 +542,8 @@ sharedTail:
 void fn_80153BFC(int obj, int state)
 {
     ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0xbf;
-    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
+        ((GameObject*)obj)->anim.currentMove != 1)
     {
         Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
@@ -600,7 +605,7 @@ void weevil_updateWhileFrozen(int obj, int state, int attacker, int msgFlag)
     }
 
 checkedKind:
-    {
+{
     u32 condV = cond;
     if (msgFlag == 0x10)
     {
@@ -630,7 +635,7 @@ checkedKind:
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
     }
-    }
+}
 }
 
 void fn_80153E0C(int obj, int state)
@@ -648,10 +653,11 @@ void fn_80153E0C(int obj, int state)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950,
-                                                     &lbl_803DBCC8, -1) != 0)
+                if ((*gRomCurveInterface)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950, &lbl_803DBCC8, -1) != 0)
                 {
-                    ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+                    ((BaddieState*)state)->controlFlags =
+                        ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }

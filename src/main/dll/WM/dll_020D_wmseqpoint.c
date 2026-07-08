@@ -80,7 +80,7 @@ enum
 /* spirit 1's pair (gWM_seqpointSpiritTargets[0..1]), hardcoded on the
    WMSEQPOINT_SEQ_SPIRIT_1 path */
 #define WMSEQPOINT_SPIRIT_1_GAMEBIT 0xD1B
-#define WMSEQPOINT_SPIRIT_1_OBJID 0x4AEB1
+#define WMSEQPOINT_SPIRIT_1_OBJID   0x4AEB1
 
 #define WMSEQPOINT_SPIRIT_COUNT 5
 
@@ -90,10 +90,10 @@ enum
 #define WMSEQPOINT_ENVFX_NIGHT_B 0x22c
 #define WMSEQPOINT_ENVFX_NIGHT_C 0x229
 #define WMSEQPOINT_ENVFX_NIGHT_D 0x22a
-#define WMSEQPOINT_ENVFX_DAY_A 0x217
-#define WMSEQPOINT_ENVFX_DAY_B 0x216
-#define WMSEQPOINT_ENVFX_DAY_C 0x84
-#define WMSEQPOINT_ENVFX_DAY_D 0x8a
+#define WMSEQPOINT_ENVFX_DAY_A   0x217
+#define WMSEQPOINT_ENVFX_DAY_B   0x216
+#define WMSEQPOINT_ENVFX_DAY_C   0x84
+#define WMSEQPOINT_ENVFX_DAY_D   0x8a
 
 void wmseqpoint_onSeqFree(int obj);
 int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor);
@@ -110,11 +110,7 @@ void wmseqpoint_initialise(void);
 /* {game bit, placement id} per released-spirit indicator; bits 0xD1B-0xD1F
    are granted by the spirit places (see dll_020C_wmspiritplace.c) */
 int gWM_seqpointSpiritTargets[10] = {
-    0xD1B, 0x4AEB1,
-    0xD1C, 0x4AEB2,
-    0xD1D, 0x4AEB3,
-    0xD1E, 0x4AEB4,
-    0xD1F, 0x4AEB5,
+    0xD1B, 0x4AEB1, 0xD1C, 0x4AEB2, 0xD1D, 0x4AEB3, 0xD1E, 0x4AEB4, 0xD1F, 0x4AEB5,
 };
 
 ObjectDescriptor gWM_seqpointObjDescriptor = {
@@ -248,9 +244,15 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
     return 0;
 }
 
-int wmseqpoint_getExtraSize(void) { return 0x10; }
+int wmseqpoint_getExtraSize(void)
+{
+    return 0x10;
+}
 
-int wmseqpoint_getObjectTypeId(void) { return 0x0; }
+int wmseqpoint_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void wmseqpoint_free(void)
 {
@@ -309,7 +311,8 @@ void wmseqpoint_update(int obj)
     switch (state->triggerMode)
     {
     case WMSEQPOINT_TRIGGER_PROXIMITY:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius)
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            state->triggerRadius)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
             state->doneLatch = 1;
@@ -340,7 +343,8 @@ void wmseqpoint_update(int obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_SET:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+                state->triggerRadius &&
             state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) != 0)
         {
             if (state->sequenceId == WMSEQPOINT_SEQ_SPIRIT_1)
@@ -358,7 +362,8 @@ void wmseqpoint_update(int obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_CLEAR:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+                state->triggerRadius &&
             state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);

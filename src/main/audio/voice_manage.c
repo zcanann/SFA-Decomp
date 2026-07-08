@@ -79,7 +79,8 @@ void voiceInitPriorityTables(void)
  */
 void voiceBreakAndFree(u32 voice)
 {
-    if (voice == SYNTH_INVALID_VOICE) return;
+    if (voice == SYNTH_INVALID_VOICE)
+        return;
     if (hwIsActive(voice) != 0)
     {
         hwBreak(voice);
@@ -158,17 +159,21 @@ int voiceIsRegistered(int state)
     u8 slot;
     u8 channel;
     u8 voiceIdx;
-    if (voice == SYNTH_INVALID_VOICE) goto fail;
+    if (voice == SYNTH_INVALID_VOICE)
+        goto fail;
     slot = voiceState->midiSlot;
-    if (slot == SYNTH_INVALID_VOICE_U8) goto fail;
+    if (slot == SYNTH_INVALID_VOICE_U8)
+        goto fail;
     channel = voiceState->midiChannel;
     voiceIdx = voice;
     if (channel == SYNTH_INVALID_VOICE_U8)
     {
-        if (voiceDirectSlots[voiceIdx] == voiceIdx) return 1;
+        if (voiceDirectSlots[voiceIdx] == voiceIdx)
+            return 1;
         goto fail;
     }
-    if (voiceIdx == voiceMidiKeySlots[channel][slot]) return 1;
+    if (voiceIdx == voiceMidiKeySlots[channel][slot])
+        return 1;
 fail:
     return 0;
 }
@@ -183,9 +188,11 @@ void voiceRegister(int state)
     u8 slot;
     u8 channel;
     u8 voiceIdx;
-    if (voice == SYNTH_INVALID_VOICE) return;
+    if (voice == SYNTH_INVALID_VOICE)
+        return;
     slot = voiceState->midiSlot;
-    if (slot == SYNTH_INVALID_VOICE_U8) return;
+    if (slot == SYNTH_INVALID_VOICE_U8)
+        return;
     channel = voiceState->midiChannel;
     voiceIdx = voice;
     if (channel == SYNTH_INVALID_VOICE_U8)

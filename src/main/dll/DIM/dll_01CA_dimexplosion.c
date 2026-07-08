@@ -30,8 +30,8 @@
 #include "main/frame_timing.h"
 
 #define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define MODEL_LIGHT_KIND_POINT 2
-#define DIMEXPLOSION_PARTFX 0x5e
+#define MODEL_LIGHT_KIND_POINT                  2
+#define DIMEXPLOSION_PARTFX                     0x5e
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -96,23 +96,22 @@ extern FbTexTbl gExplosionTexTable;
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
 
-
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXBegin(int prim, int fmt, int n);
 
-#define GX_PNMTX0 0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
-#define GX_VA_POS 9
+#define GX_PNMTX0  0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
+#define GX_VA_POS  9
 #define GX_VA_TEX0 13
-#define GX_DIRECT 1
-#define GX_QUADS 0x80
+#define GX_DIRECT  1
+#define GX_QUADS   0x80
 #define GX_VTXFMT2 2
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
+extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
+extern void PSMTXMultVecSR(f32* m, f32* in, f32* out);
 
 extern int fn_8000FA70(void);
 extern int fn_8000FA90(void);
@@ -266,7 +265,10 @@ void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out)
 
 #pragma scheduling on
 #pragma peephole on
-int explosion_getExtraSize(void) { return sizeof(ExplosionState); }
+int explosion_getExtraSize(void)
+{
+    return sizeof(ExplosionState);
+}
 
 #pragma scheduling off
 int explosion_getObjectTypeId(int obj)
@@ -326,15 +328,13 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 int k;
                 u8 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
-                PSMTXRotRad(
-                    m1, 0x7a, (f32)((6.2832 * (f64)(int)((ExplosionDebris*)cursor)->spinAngle) / 65536.0));
-                PSMTXRotRad(
-                    m3, 0x78, (f32)((6.2832 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / 65536.0));
+                PSMTXRotRad(m1, 0x7a, (f32)((6.2832 * (f64)(int)((ExplosionDebris*)cursor)->spinAngle) / 65536.0));
+                PSMTXRotRad(m3, 0x78, (f32)((6.2832 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / 65536.0));
                 PSMTXConcat(m3, m1, m3);
-                PSMTXRotRad(
-                    m2, 0x79, (f32)((6.2832 * (f64)(int)(0x10000 - (fn_8000FA90() & 0xffff))) / 65536.0));
+                PSMTXRotRad(m2, 0x79, (f32)((6.2832 * (f64)(int)(0x10000 - (fn_8000FA90() & 0xffff))) / 65536.0));
                 PSMTXConcat(m2, m3, m2);
-                PSMTXScale(m4, ((ExplosionDebris*)cursor)->scale, ((ExplosionDebris*)cursor)->scale, ((ExplosionDebris*)cursor)->scale);
+                PSMTXScale(m4, ((ExplosionDebris*)cursor)->scale, ((ExplosionDebris*)cursor)->scale,
+                           ((ExplosionDebris*)cursor)->scale);
                 PSMTXConcat(m4, m2, m4);
                 PSMTXTrans(mE, ((ExplosionDebris*)cursor)->posX - playerMapOffsetX, ((ExplosionDebris*)cursor)->posY,
                            ((ExplosionDebris*)cursor)->posZ - playerMapOffsetZ);
@@ -342,16 +342,16 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, GX_PNMTX0);
                 ((u8*)&colA)[3] = ((ExplosionDebris*)cursor)->alpha;
-                cv = gExplosionDebrisColorScale * (255.0f * expf(
-                    (3.0f * ((f32)((ExplosionDebris*)cursor)->lifetime - (f32)((ExplosionDebris*)cursor)->age)) /
-                    (f32)((ExplosionDebris*)cursor)->lifetime));
+                cv = gExplosionDebrisColorScale *
+                     (255.0f *
+                      expf((3.0f * ((f32)((ExplosionDebris*)cursor)->lifetime - (f32)((ExplosionDebris*)cursor)->age)) /
+                           (f32)((ExplosionDebris*)cursor)->lifetime));
                 ((u8*)&colB)[0] = cv;
                 ((u8*)&colB)[1] = cv;
                 ((u8*)&colB)[2] = cv;
                 ((u8*)&colB)[3] = cv;
-                explosion_computeColor((f32)((ExplosionDebris*)cursor)->age,
-                            (f32)((ExplosionDebris*)cursor)->lifetime,
-                            ((ExplosionState*)state)->modelKind, (u8*)&colA);
+                explosion_computeColor((f32)((ExplosionDebris*)cursor)->age, (f32)((ExplosionDebris*)cursor)->lifetime,
+                                       ((ExplosionState*)state)->modelKind, (u8*)&colA);
                 tex = (void**)((int*)gExplosionTextures)[((ExplosionState*)state)->modelKind];
                 for (k = 0; k < ((ExplosionDebris*)cursor)->texVariant; k++)
                 {
@@ -389,13 +389,13 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             cursor += 0x30;
         }
-        if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
-            state)->rayMode != 0)
+        if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames &&
+            *(u8*)&((ExplosionState*)state)->rayMode != 0)
         {
             for (i = 0, cursor = state; i < ((ExplosionState*)state)->rayMode; cursor += 4, i++)
             {
-                ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)cursor)->rayYawA;
-                ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)cursor)->rayPitchA;
+                ((GameObject*)obj)->anim.rotY = (s16) * (u16*)&((ExplosionState*)cursor)->rayYawA;
+                ((GameObject*)obj)->anim.rotX = (s16) * (u16*)&((ExplosionState*)cursor)->rayPitchA;
                 objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
@@ -436,12 +436,13 @@ void explosion_update(int obj)
         {
             f32 sp = ((ExplosionDebris*)cursor)->speed;
             f32 ev = expf(
-                (lbl_803E4934 * ((f32)((ExplosionDebris*)cursor)->lifetime - (f32)((ExplosionDebris*)cursor)->age)) / (
-                    f32)(int)((ExplosionDebris*)cursor)->lifetime);
+                (lbl_803E4934 * ((f32)((ExplosionDebris*)cursor)->lifetime - (f32)((ExplosionDebris*)cursor)->age)) /
+                (f32)(int)((ExplosionDebris*)cursor)->lifetime);
             f32 d = sp - ((ExplosionDebris*)cursor)->baseScale;
             f32 t = d * ev;
             ((ExplosionDebris*)cursor)->scale = sp - gExplosionDebrisSpeedScale * t;
-            ev = expf((lbl_803E493C * (f32)((ExplosionDebris*)cursor)->age) / (f32)((ExplosionDebris*)cursor)->lifetime);
+            ev =
+                expf((lbl_803E493C * (f32)((ExplosionDebris*)cursor)->age) / (f32)((ExplosionDebris*)cursor)->lifetime);
             t = lbl_803E4938 * ev;
             *(s8*)&((ExplosionDebris*)cursor)->alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
             if (((ExplosionDebris*)cursor)->age >= ((ExplosionDebris*)cursor)->lifetime)
@@ -450,16 +451,18 @@ void explosion_update(int obj)
             }
             else
             {
-                *(s16*)&((ExplosionDebris*)cursor)->spinAngle += framesThisStep * *(s16*)&((ExplosionDebris*)cursor)->spinSpeed;
+                *(s16*)&((ExplosionDebris*)cursor)->spinAngle +=
+                    framesThisStep * *(s16*)&((ExplosionDebris*)cursor)->spinSpeed;
                 if (((ExplosionDebris*)cursor)->texVariant >= 4)
                 {
                     ((ExplosionDebris*)cursor)->texVariant -= 4;
                 }
                 if (((ExplosionDebris*)cursor)->generation < 5)
                 {
-                    if ((f32)((ExplosionDebris*)cursor)->age / (f32)((ExplosionDebris*)cursor)->lifetime < lbl_803E4998
-                        &&
-                        (((ExplosionDebris*)cursor)->spawnTimer -= framesThisStep, ((ExplosionDebris*)cursor)->spawnTimer <= 0))
+                    if ((f32)((ExplosionDebris*)cursor)->age / (f32)((ExplosionDebris*)cursor)->lifetime <
+                            lbl_803E4998 &&
+                        (((ExplosionDebris*)cursor)->spawnTimer -= framesThisStep,
+                         ((ExplosionDebris*)cursor)->spawnTimer <= 0))
                     {
                         int st2;
                         u8 gen;
@@ -468,11 +471,12 @@ void explosion_update(int obj)
                         gen = ((ExplosionDebris*)cursor)->generation;
                         sp2 = ((ExplosionDebris*)cursor)->speed;
                         st2 = *(int*)&((GameObject*)obj)->extra;
-                        vpos[0] = ((ExplosionDebris*)cursor)->scale * (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
+                        vpos[0] = ((ExplosionDebris*)cursor)->scale *
+                                  (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
                         vpos[1] = lbl_803E4960;
                         vpos[2] = lbl_803E4960;
-                        PSMTXRotRad(
-                            m, 0x7a, (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
+                        PSMTXRotRad(m, 0x7a,
+                                    (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
                         PSMTXConcat(Camera_GetInverseViewRotationMatrix(), m, m);
                         PSMTXMultVecSR(m, vpos, vpos);
                         vpos[0] += ((ExplosionDebris*)cursor)->posX;
@@ -511,8 +515,7 @@ void explosion_update(int obj)
                 f32 grav = ((ExplosionState*)state)->driftYSpeed;
                 u32 ft = framesThisStep;
                 f32 n974 = -(grav * (f32)(u32)ft - d->velY);
-                d->posY = -(lbl_803E499C * (grav * (f32)(int)(ft * ft))
-                                       - (d->velY * (f32)(u32)ft + d->posY));
+                d->posY = -(lbl_803E499C * (grav * (f32)(int)(ft * ft)) - (d->velY * (f32)(u32)ft + d->posY));
                 d->velY = n974;
                 d->posX += d->velX * (f32)(u32)framesThisStep;
                 d->posZ += d->velZ * (f32)(u32)framesThisStep;
@@ -588,7 +591,7 @@ void explosion_update(int obj)
                             ang[0] = sv;
                             ang[3] = sv5;
                         }
-                            break;
+                        break;
                         }
                     }
                     (*gPartfxInterface)->spawnObject((void*)obj, DIMEXPLOSION_PARTFX, &fake, 0x200001, -1, ang);
@@ -626,7 +629,8 @@ void explosion_update(int obj)
                 ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * (frac * ((ExplosionState*)state)->scale);
                 ((GameObject*)obj)->anim.alpha = lbl_803E4938 - lbl_803E4938 * frac;
             }
-            if (((ExplosionState*)state)->halfLifeFired == 0 && ((ExplosionState*)state)->frameCounter >= (((ExplosionState*)state)->lifeFrames >> 1))
+            if (((ExplosionState*)state)->halfLifeFired == 0 &&
+                ((ExplosionState*)state)->frameCounter >= (((ExplosionState*)state)->lifeFrames >> 1))
             {
                 u32 k;
                 u16 r0v = randomGetRange(0x1000, 0x6000);
@@ -663,14 +667,15 @@ void explosion_init(int obj, int p2)
     }
     else
     {
-        scale = (f32)(int) * (s16*)((char*)p2 + 0x1a) * lbl_803E4974;
+        scale = (f32)(int)*(s16*)((char*)p2 + 0x1a) * lbl_803E4974;
         if (scale > lbl_803E49A8)
         {
             scale = lbl_803E49A8;
         }
     }
-    ((ExplosionSpawnFlameSpdFirst)explosion_spawnFlame)(obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX,
-                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+    ((ExplosionSpawnFlameSpdFirst)explosion_spawnFlame)(
+        obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ);
     ((GameObject*)obj)->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
     ((ExplosionState*)state)->modelKind = *(s16*)((char*)p2 + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
@@ -684,8 +689,8 @@ void explosion_init(int obj, int p2)
     }
     ((ExplosionState*)state)->nearGround = 0;
     if (((HitDetectFloatsFirst)hitDetectFn_800658a4)(obj, ((GameObject*)obj)->anim.localPosX,
-                             lbl_803E49B0 + ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ, state + 0x960, 0) == 0)
+                                                     lbl_803E49B0 + ((GameObject*)obj)->anim.localPosY,
+                                                     ((GameObject*)obj)->anim.localPosZ, state + 0x960, 0) == 0)
     {
         if (((ExplosionState*)state)->groundY < lbl_803E49B4)
         {
@@ -704,29 +709,31 @@ void explosion_init(int obj, int p2)
         {
             if (((ExplosionState*)state)->nearGround != 0)
             {
-                f32 mag = (f32)(int)randomGetRange(0x14, 0x28) *lbl_803E49C0;
+                f32 mag = (f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0;
                 mag = lbl_803E49BC * mag + lbl_803E49BC;
                 vsp[0] = mag;
                 vsp[1] = lbl_803E4960;
                 vsp[2] = lbl_803E4960;
-                PSMTXRotRad(
-                    mB, 0x7a, (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0x2000, 0x6000) / lbl_803E49C4)));
+                PSMTXRotRad(mB, 0x7a,
+                            (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0x2000, 0x6000) / lbl_803E49C4)));
                 PSMTXRotRad(mA, 0x79, (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, vsp, vsp);
             }
             else
             {
-                f32 mag = (f32)(int)randomGetRange(0x14, 0x28) *lbl_803E49C0;
+                f32 mag = (f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0;
                 u8 idx = i % 4;
                 mag = lbl_803E49BC * mag + lbl_803E49BC;
                 vsp[0] = mag * gExplosionSpreadDirs[idx * 3];
                 vsp[1] = mag * gExplosionSpreadDirs[idx * 3 + 1];
                 vsp[2] = mag * gExplosionSpreadDirs[idx * 3 + 2];
-                PSMTXRotRad(mB, 0x7a,
-                            (f32)(lbl_803E4968 * (f64)(((f32)(int)randomGetRange(0, 0x8000) - lbl_803E49C8) / lbl_803E49C4)));
-                PSMTXRotRad(mA, 0x78,
-                            (f32)(lbl_803E4968 * (f64)(((f32)(int)randomGetRange(0, 0x8000) - lbl_803E49C8) / lbl_803E49C4)));
+                PSMTXRotRad(
+                    mB, 0x7a,
+                    (f32)(lbl_803E4968 * (f64)(((f32)(int)randomGetRange(0, 0x8000) - lbl_803E49C8) / lbl_803E49C4)));
+                PSMTXRotRad(
+                    mA, 0x78,
+                    (f32)(lbl_803E4968 * (f64)(((f32)(int)randomGetRange(0, 0x8000) - lbl_803E49C8) / lbl_803E49C4)));
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, vsp, vsp);
             }
@@ -842,10 +849,7 @@ void explosion_initialise(void)
 #pragma peephole on
 
 f32 gExplosionSpreadDirs[] = {
-    1.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
-    -1.0f, 0.0f, 0.0f,
-    0.0f, -1.0f, 0.0f,
+    1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
 };
 
 /*__DATA_EXTERNS__*/
@@ -859,5 +863,22 @@ extern void dimwooddoor2_init();
 extern void dimwooddoor2_release();
 extern void dimwooddoor2_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gExplosionObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, explosion_initialise, explosion_release, (void*)0x00000000, explosion_init, explosion_update, explosion_hitDetect, explosion_render, explosion_free, explosion_getObjectTypeId, explosion_getExtraSize };
-void* gDIMWoodDoor2ObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, dimwooddoor2_initialise, dimwooddoor2_release, (void*)0x00000000, dimwooddoor2_init, dimwooddoor2_update, dimwooddoor2_hitDetect, dimwooddoor2_render, dimwooddoor2_free, dimwooddoor2_getObjectTypeId, dimwooddoor2_getExtraSize };
+void* gExplosionObjDescriptor[14] = {(void*)0x00000000,         (void*)0x00000000,     (void*)0x00000000,
+                                     (void*)0x00090000,         explosion_initialise,  explosion_release,
+                                     (void*)0x00000000,         explosion_init,        explosion_update,
+                                     explosion_hitDetect,       explosion_render,      explosion_free,
+                                     explosion_getObjectTypeId, explosion_getExtraSize};
+void* gDIMWoodDoor2ObjDescriptor[14] = {(void*)0x00000000,
+                                        (void*)0x00000000,
+                                        (void*)0x00000000,
+                                        (void*)0x00090000,
+                                        dimwooddoor2_initialise,
+                                        dimwooddoor2_release,
+                                        (void*)0x00000000,
+                                        dimwooddoor2_init,
+                                        dimwooddoor2_update,
+                                        dimwooddoor2_hitDetect,
+                                        dimwooddoor2_render,
+                                        dimwooddoor2_free,
+                                        dimwooddoor2_getObjectTypeId,
+                                        dimwooddoor2_getExtraSize};

@@ -38,15 +38,15 @@ STATIC_ASSERT(offsetof(SeqObjectPlacement, warpMapId) == 0x24);
 STATIC_ASSERT(sizeof(SeqObjectState) == 0x3);
 STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
 
-#define SEQOBJECT_STATE_OPEN 0x01
+#define SEQOBJECT_STATE_OPEN             0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
-#define SEQOBJECT_STATE_SEQUENCE_DONE 0x04
+#define SEQOBJECT_STATE_SEQUENCE_DONE    0x04
 
-#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR 0x01
+#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR     0x01
 #define SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE 0x02
-#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE 0x04
-#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE 0x08
-#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
+#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE   0x04
+#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE     0x08
+#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM      0x10
 
 /* sequence-event opcodes consumed by SeqObject_SeqFn */
 enum
@@ -65,7 +65,7 @@ void objCallOnloadCallback(int* obj)
 {
     if (obj != NULL)
     {
-        ((void(*)(int*, int*, int))((void**)*(*(int***)&((GameObject*)obj)->anim.dll))[1])(
+        ((void (*)(int*, int*, int))((void**)*(*(int***)&((GameObject*)obj)->anim.dll))[1])(
             obj, *(int**)&((GameObject*)obj)->anim.placementData, 0);
     }
 }
@@ -88,24 +88,24 @@ int SeqObject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
         switch (op)
         {
         case SEQOBJECT_SEQEV_SET_OPEN_BIT:
+        {
+            u8 flags = def->flags;
+            if ((flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) == 0 &&
+                (flags & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0)
             {
-                u8 flags = def->flags;
-                if ((flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) == 0 &&
-                    (flags & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0)
-                {
-                    mainSetBits(def->openGameBit, 1);
-                }
-                break;
+                mainSetBits(def->openGameBit, 1);
             }
+            break;
+        }
         case SEQOBJECT_SEQEV_WARP:
+        {
+            u8 mapId = def->warpMapId;
+            if (mapId != 0)
             {
-                u8 mapId = def->warpMapId;
-                if (mapId != 0)
-                {
-                    warpToMap(mapId, 0);
-                }
-                break;
+                warpToMap(mapId, 0);
             }
+            break;
+        }
         case SEQOBJECT_SEQEV_SET_CAM:
             (*gObjectTriggerInterface)->setCamVars(86, 1, 0, 0);
             break;
@@ -115,15 +115,25 @@ int SeqObject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int SeqObject_getExtraSize(void) { return sizeof(SeqObjectState); }
-int SeqObject_getObjectTypeId(void) { return 0; }
+int SeqObject_getExtraSize(void)
+{
+    return sizeof(SeqObjectState);
+}
+int SeqObject_getObjectTypeId(void)
+{
+    return 0;
+}
 
-void SeqObject_free(int obj) { ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP); }
+void SeqObject_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP);
+}
 
 void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
 }
 
 void SeqObject_update(int* obj)
@@ -177,8 +187,7 @@ void SeqObject_update(int* obj)
                     (*gObjectTriggerInterface)->runSequence(def->triggerId, obj, -1);
                 }
                 if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) == 0 &&
-                    (def->flags & (SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE |
-                        SEQOBJECT_FLAG_SET_SOURCE_ON_DONE)) == 0)
+                    (def->flags & (SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE | SEQOBJECT_FLAG_SET_SOURCE_ON_DONE)) == 0)
                 {
                     mainSetBits(def->openGameBit, 1);
                 }
@@ -190,8 +199,7 @@ void SeqObject_update(int* obj)
         (*gObjectTriggerInterface)->preempt((int)obj, def->preemptSequenceId);
         if ((def->flags & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(def->triggerId, obj,
-                                                    def->sequenceParam);
+            (*gObjectTriggerInterface)->runSequence(def->triggerId, obj, def->sequenceParam);
         }
         else
         {
@@ -199,8 +207,7 @@ void SeqObject_update(int* obj)
         }
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
-    else if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0 &&
-        mainGetBit(def->openGameBit) == 0)
+    else if ((def->flags & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0 && mainGetBit(def->openGameBit) == 0)
     {
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
     }

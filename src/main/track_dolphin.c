@@ -15,58 +15,58 @@
 #include "main/track_dolphin.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
-#define GX_FALSE 0
-#define GX_TG_MTX2x4 1
-#define GX_TG_TEX0 4
-#define GX_IDENTITY 0x3c
-#define GX_PTIDENTITY 0x7d
+#define GX_FALSE          0
+#define GX_TG_MTX2x4      1
+#define GX_TG_TEX0        4
+#define GX_IDENTITY       0x3c
+#define GX_PTIDENTITY     0x7d
 #define GX_TEV_KASEL_K0_A 0x1c
 
-#define GX_CULL_NONE 0
-#define GX_CULL_FRONT 1
-#define GX_CULL_BACK 2
-#define GX_LEQUAL 3
-#define GX_COLOR0A0 4
-#define GX_COLOR1A1 5
-#define GX_COLOR_NULL 0xff
-#define GX_DISABLE 0
-#define GX_ENABLE 1
-#define GX_SRC_REG 0
-#define GX_DF_NONE 0
-#define GX_AF_NONE 2
-#define GX_TEVSTAGE0 0
-#define GX_TEXCOORD0 0
-#define GX_TEXMAP0 0
-#define GX_CC_ZERO 0xf
-#define GX_CA_TEXA 4
-#define GX_CA_KONST 6
-#define GX_CA_ZERO 7
-#define GX_TEV_ADD 0
-#define GX_TB_ZERO 0
-#define GX_CS_SCALE_1 0
-#define GX_TEVPREV 0
-#define GX_BM_BLEND 1
-#define GX_BL_SRCALPHA 4
+#define GX_CULL_NONE      0
+#define GX_CULL_FRONT     1
+#define GX_CULL_BACK      2
+#define GX_LEQUAL         3
+#define GX_COLOR0A0       4
+#define GX_COLOR1A1       5
+#define GX_COLOR_NULL     0xff
+#define GX_DISABLE        0
+#define GX_ENABLE         1
+#define GX_SRC_REG        0
+#define GX_DF_NONE        0
+#define GX_AF_NONE        2
+#define GX_TEVSTAGE0      0
+#define GX_TEXCOORD0      0
+#define GX_TEXMAP0        0
+#define GX_CC_ZERO        0xf
+#define GX_CA_TEXA        4
+#define GX_CA_KONST       6
+#define GX_CA_ZERO        7
+#define GX_TEV_ADD        0
+#define GX_TB_ZERO        0
+#define GX_CS_SCALE_1     0
+#define GX_TEVPREV        0
+#define GX_BM_BLEND       1
+#define GX_BL_SRCALPHA    4
 #define GX_BL_INVSRCALPHA 5
-#define GX_LO_NOOP 5
-#define GX_FOG_NONE 0
-#define GX_VA_POS 9
-#define GX_VA_CLR0 11
-#define GX_VA_TEX0 13
-#define GX_VA_TEX1 14
-#define GX_DIRECT 1
-#define GX_KCOLOR0 0
-#define GX_QUADS 0x80
-#define GX_TRIANGLES 0x90
-#define GX_VTXFMT0 0
-#define GX_VTXFMT2 2
-#define GX_VTXFMT6 6
-#define GX_PNMTX0 0
-#define GX_PNMTX9 0x1b
-#define GX_INDEX8 2
-#define GX_INDEX16 3
-#define GX_TEXMTX2 0x24
-#define GX_MTX3x4 0
+#define GX_LO_NOOP        5
+#define GX_FOG_NONE       0
+#define GX_VA_POS         9
+#define GX_VA_CLR0        11
+#define GX_VA_TEX0        13
+#define GX_VA_TEX1        14
+#define GX_DIRECT         1
+#define GX_KCOLOR0        0
+#define GX_QUADS          0x80
+#define GX_TRIANGLES      0x90
+#define GX_VTXFMT0        0
+#define GX_VTXFMT2        2
+#define GX_VTXFMT6        6
+#define GX_PNMTX0         0
+#define GX_PNMTX9         0x1b
+#define GX_INDEX8         2
+#define GX_INDEX16        3
+#define GX_TEXMTX2        0x24
+#define GX_MTX3x4         0
 
 typedef struct TrackP6Entry
 {
@@ -106,14 +106,14 @@ extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, in
 extern void vecRotateZXY(void* xf, f32* out);
 f32 lbl_8038D7DC[0x19];
 extern s16 gShadowVisibleCount;
-extern f32 PSVECDotProduct(f32 * a, f32 * b);
-extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
+extern f32 PSVECDotProduct(f32* a, f32* b);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern const f32 lbl_803DEC6C;
 extern const f32 lbl_803DEC70;
 extern const f32 lbl_803DEC74;
-extern void PSVECNormalize(f32 * src, f32 * dst);
-extern f32 PSVECSquareMag(f32 * v);
+extern void PSVECNormalize(f32* src, f32* dst);
+extern f32 PSVECSquareMag(f32* v);
 extern f32 sqrtf(f32 x);
 f32 gPrevSunDir[3];
 extern s16 gSunMagnitude;
@@ -143,8 +143,7 @@ extern f32 lbl_803DF944;
 extern f32 lbl_803DF948;
 extern f32 lbl_803DF96C;
 
-void mapBlockRender_setVtxDcrs(flag, obj, sh, bs)
-u8 flag;
+void mapBlockRender_setVtxDcrs(flag, obj, sh, bs) u8 flag;
 int* obj;
 int sh;
 
@@ -286,12 +285,12 @@ void renderMapBlock(int* o, u8 type)
         count = *(u16*)((char*)o + 0x84);
         flag = 1;
     }
-    if ((u16)count == 0) return;
+    if ((u16)count == 0)
+        return;
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, (char*)o + 0xc, m);
-    if ((u32)(u8)flag != 0
-    )
-    setupToRenderMapBlock(o, m);
+    if ((u32)(u8)flag != 0)
+        setupToRenderMapBlock(o, m);
     modelRenderInstrsState_init(state, ptr, (u16)count << 3, (u16)count << 3);
     ptr = 0;
     while (!ptr)
@@ -320,22 +319,22 @@ void renderMapBlock(int* o, u8 type)
             mapBlockRender_callList(flag, 0, o, shader, state, m);
             break;
         case 4:
-            {
-                u32 word2;
-                int cnt;
-                int j;
-                u8* bp2;
-                int pos2 = pos + 4;
-                bp2 = (u8*)(state[0] + (pos2 >> 3));
-                word2 = bp2[0];
-                word2 |= bp2[1] << 8;
-                word2 |= bp2[2] << 16;
-                state[4] = pos2 + 4;
-                cnt = (word2 >> (pos2 & 7)) & 0xf;
-                for (j = 0; j < cnt; j++)
-                    ((int *)state)[4] = state[4] + 8;
-                break;
-            }
+        {
+            u32 word2;
+            int cnt;
+            int j;
+            u8* bp2;
+            int pos2 = pos + 4;
+            bp2 = (u8*)(state[0] + (pos2 >> 3));
+            word2 = bp2[0];
+            word2 |= bp2[1] << 8;
+            word2 |= bp2[2] << 16;
+            state[4] = pos2 + 4;
+            cnt = (word2 >> (pos2 & 7)) & 0xf;
+            for (j = 0; j < cnt; j++)
+                ((int*)state)[4] = state[4] + 8;
+            break;
+        }
         case 5:
             ptr = 1;
             break;
@@ -372,39 +371,33 @@ void FUN_80064384(int param)
             {
                 scaled = 0x3fc0;
             }
-            *(char*)(texAddr + (col & 7) + (col >> 3) * 0x20 + colBase + rowBase) =
-                (char)(scaled * col >> 0xc);
+            *(char*)(texAddr + (col & 7) + (col >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * col >> 0xc);
             colN = col + 1;
             scaled = scale;
             if (0x3fc0 < scale)
             {
                 scaled = 0x3fc0;
             }
-            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) =
-                (char)(scaled * colN >> 0xc);
+            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * colN >> 0xc);
             colN = col + 2;
             scaled = scale;
             if (0x3fc0 < scale)
             {
                 scaled = 0x3fc0;
             }
-            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) =
-                (char)(scaled * colN >> 0xc);
+            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * colN >> 0xc);
             colN = col + 3;
             scaled = scale;
             if (0x3fc0 < scale)
             {
                 scaled = 0x3fc0;
             }
-            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) =
-                (char)(scaled * colN >> 0xc);
+            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * colN >> 0xc);
             col = col + 4;
             blockCount = blockCount + -1;
-        }
-        while (blockCount != 0);
+        } while (blockCount != 0);
         row = row + 1;
-    }
-    while (row < 0x40);
+    } while (row < 0x40);
     FUN_80017790(DAT_803ddc38 + 0x60, texAddr, 0);
     DAT_803ddc00 = param;
     return;
@@ -414,19 +407,40 @@ void doNothing_80062A50(void)
 {
 }
 
-int return0_80060B90(void) { return 0x0; }
+int return0_80060B90(void)
+{
+    return 0x0;
+}
 
 extern s8 gShadowFlag;
 extern u8 mapBlockFlag;
-void fn_800628CC(void) { gShadowFlag = 0x1; }
-void setMapBlockFlag(void) { mapBlockFlag = 0x1; }
+void fn_800628CC(void)
+{
+    gShadowFlag = 0x1;
+}
+void setMapBlockFlag(void)
+{
+    mapBlockFlag = 0x1;
+}
 
-void* mapBlockFn_800606ec(int* obj, int idx) { return (char*)((int**)obj)[0x50 / 4] + idx * 0x14; }
-void* fn_800606FC(int* obj, int idx) { return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c; }
-void* fn_8006070C(int* obj, int idx) { return (char*)((int**)obj)[0x64 / 4] + idx * 0x44; }
+void* mapBlockFn_800606ec(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x50 / 4] + idx * 0x14;
+}
+void* fn_800606FC(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c;
+}
+void* fn_8006070C(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x64 / 4] + idx * 0x44;
+}
 
 #pragma dont_inline on
-void* fn_800606DC(int* obj, int idx) { return (char*)((int**)obj)[0x4c / 4] + idx * 8; }
+void* fn_800606DC(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x4c / 4] + idx * 8;
+}
 #pragma dont_inline reset
 
 extern u32 gSunFlareScissorX;
@@ -471,19 +485,19 @@ TrackBlockDescriptor gTrackBlockDescriptors[20];
  * by field and as an s16 index off the record base. */
 typedef struct TrackTriangle
 {
-    f32 planeD;       /* 0x00 plane equation constant */
-    f32 planeN[3];    /* 0x04 plane normal xyz */
-    s16 vx[3];        /* 0x10 vertex x coords */
-    s16 vy[3];        /* 0x16 vertex y coords */
-    s16 vz[3];        /* 0x1c vertex z coords */
-    u8 pad22[2];      /* 0x22 */
-    f32 edgeN0[3];    /* 0x24 edge 0 outward normal */
-    f32 edgeN1[3];    /* 0x30 edge 1 outward normal */
-    f32 edgeN2[3];    /* 0x3c edge 2 outward normal */
-    u8 surfaceType;   /* 0x48 copied into intersect-line records */
-    s8 flags;         /* 0x49 0x10 = disabled, 0x4 = force */
-    u8 minMaxY;       /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
-    u8 edgeOutBits;   /* 0x4b per-edge outside bits from last query */
+    f32 planeD;     /* 0x00 plane equation constant */
+    f32 planeN[3];  /* 0x04 plane normal xyz */
+    s16 vx[3];      /* 0x10 vertex x coords */
+    s16 vy[3];      /* 0x16 vertex y coords */
+    s16 vz[3];      /* 0x1c vertex z coords */
+    u8 pad22[2];    /* 0x22 */
+    f32 edgeN0[3];  /* 0x24 edge 0 outward normal */
+    f32 edgeN1[3];  /* 0x30 edge 1 outward normal */
+    f32 edgeN2[3];  /* 0x3c edge 2 outward normal */
+    u8 surfaceType; /* 0x48 copied into intersect-line records */
+    s8 flags;       /* 0x49 0x10 = disabled, 0x4 = force */
+    u8 minMaxY;     /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
+    u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
 } TrackTriangle;
 
 /* MapTriGroup -- 0x14-byte per-block triangle group header streamed from the
@@ -492,23 +506,23 @@ typedef struct TrackTriangle
  * firstTri, so walkers read group[1].firstTri as their end bound. */
 typedef struct MapTriGroup
 {
-    u16 firstTri;     /* 0x00 first MapTriIndex this group owns */
-    s16 minX;         /* 0x02 bounds in block-local units */
-    s16 maxX;         /* 0x04 */
-    s16 minY;         /* 0x06 */
-    s16 maxY;         /* 0x08 */
-    s16 minZ;         /* 0x0a */
-    s16 maxZ;         /* 0x0c */
-    u8 pad0E[2];      /* 0x0e */
-    u32 flags;        /* 0x10 surface kind/filter bits */
+    u16 firstTri; /* 0x00 first MapTriIndex this group owns */
+    s16 minX;     /* 0x02 bounds in block-local units */
+    s16 maxX;     /* 0x04 */
+    s16 minY;     /* 0x06 */
+    s16 maxY;     /* 0x08 */
+    s16 minZ;     /* 0x0a */
+    s16 maxZ;     /* 0x0c */
+    u8 pad0E[2];  /* 0x0e */
+    u32 flags;    /* 0x10 surface kind/filter bits */
 } MapTriGroup;
 
 /* MapTriIndex -- 8-byte triangle: three vertex indices into the block's
  * packed s16 vertex pool plus a 16-bit x/z grid-cell coverage mask. */
 typedef struct MapTriIndex
 {
-    u16 vert[3];      /* 0x00 vertex pool indices */
-    u16 cellMask;     /* 0x06 low byte = x cells, high byte = z cells */
+    u16 vert[3];  /* 0x00 vertex pool indices */
+    u16 cellMask; /* 0x06 low byte = x cells, high byte = z cells */
 } MapTriIndex;
 
 #pragma dont_inline on
@@ -549,7 +563,8 @@ void mapGetBlocks(void** outPtr, u32* outVal)
 void playerShadowFn_80062a30(int* obj)
 {
     ObjModelState* p = ((GameObject*)obj)->anim.modelState;
-    if (p == NULL) return;
+    if (p == NULL)
+        return;
     p->flags &= ~0x2020;
 }
 
@@ -599,7 +614,8 @@ extern u8 lbl_803DCF4D;
 int fn_80065640(void)
 {
     int r = 0;
-    if ((s8)mapBlockFlag != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0) r = 1;
+    if ((s8)mapBlockFlag != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0)
+        r = 1;
     return r;
 }
 
@@ -626,11 +642,11 @@ void objFn_80065604(void)
     {
         u8* p = (u8*)(gMapDynamicSlots + idx);
         cur = p[20];
-        if (cur != 0) p[20]--;
+        if (cur != 0)
+            p[20]--;
         idx += sizeof(MapDynamicSlot);
         i++;
-    }
-    while (i < MAP_DYNAMIC_SLOT_COUNT);
+    } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
 
 #pragma peephole on
@@ -669,7 +685,8 @@ void queueGlowRender(ModelLightStruct* light)
     f32 offsetZ;
     f32 offsetX;
 
-    if (lbl_803DCE06 >= 100) return;
+    if (lbl_803DCE06 >= 100)
+        return;
 
     i = 0;
     offsetZ = playerMapOffsetZ;
@@ -677,10 +694,8 @@ void queueGlowRender(ModelLightStruct* light)
     for (; i < 5; i++)
     {
         FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-        f32 dot = light->worldY * plane->normalY
-            + plane->normalX * (light->worldX - offsetX)
-            + plane->normalZ * (light->worldZ - offsetZ)
-            + plane->distance + lbl_803DEBCC;
+        f32 dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
+                  plane->normalZ * (light->worldZ - offsetZ) + plane->distance + lbl_803DEBCC;
         if (dot < lbl_803DEBCC)
         {
             visible = 0;
@@ -689,14 +704,15 @@ void queueGlowRender(ModelLightStruct* light)
     }
     visible = 1;
 check:
+{
+    u8 vis = visible;
+    if (vis == 0 && light->glowAlpha == 0)
+        return;
+    if (vis == 0)
     {
-        u8 vis = visible;
-        if (vis == 0 && light->glowAlpha == 0) return;
-        if (vis == 0)
-        {
-            light->glowAlphaStep = -0x10;
-        }
+        light->glowAlphaStep = -0x10;
     }
+}
     idx = lbl_803DCE06++;
     gGlowLightList[idx] = (int)light;
 }
@@ -786,14 +802,14 @@ extern void memcpy(void* dst, void* src, int n);
  * a kind of 0x14 marks a consumed scratch entry. */
 typedef struct IntersectLine
 {
-    u8 end0;       /* 0x0 per-endpoint byte from the source segment */
-    u8 end1;       /* 0x1 */
-    u8 flags;      /* 0x2 bit 0x10 is toggled on import */
-    s8 kind;       /* 0x3 low 6 bits group key; 0x14 = consumed */
-    s16 pt[2];     /* 0x4 indices into the shared point pool */
-    s16 adj[2];    /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
-    s16 param;     /* 0xc s16 payload from the source segment */
-    u8 pad0E[2];   /* 0xe */
+    u8 end0;     /* 0x0 per-endpoint byte from the source segment */
+    u8 end1;     /* 0x1 */
+    u8 flags;    /* 0x2 bit 0x10 is toggled on import */
+    s8 kind;     /* 0x3 low 6 bits group key; 0x14 = consumed */
+    s16 pt[2];   /* 0x4 indices into the shared point pool */
+    s16 adj[2];  /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
+    s16 param;   /* 0xc s16 payload from the source segment */
+    u8 pad0E[2]; /* 0xe */
 } IntersectLine;
 
 void intersectModLineBuild(int* obj)
@@ -813,7 +829,8 @@ void intersectModLineBuild(int* obj)
     {
         IntersectLine* line;
         int i;
-        if (gIntersectLineCount >= 0x5dc) break;
+        if (gIntersectLineCount >= 0x5dc)
+            break;
         line = (IntersectLine*)((u8*)lbl_803DCF34 + gIntersectLineCount * 0x10);
         line->end0 = sp[0xc];
         line->end1 = sp[0xd];
@@ -920,8 +937,7 @@ void intersectModLineBuild(int* obj)
                 }
             }
         }
-        memcpy((char*)*(int*)((char*)obj + 0x34) + li * 0x10,
-               (char*)lbl_803DCF34 + best * 0x10, 0x10);
+        memcpy((char*)*(int*)((char*)obj + 0x34) + li * 0x10, (char*)lbl_803DCF34 + best * 0x10, 0x10);
         *(u8*)(lbl_803DCF34 + best * 0x10 + 3) = 0x14;
     }
     if ((s16)prev != -1)
@@ -1049,23 +1065,24 @@ void MapBlock_init(int obj)
 {
     int off;
     int i;
-    if (*(u32*)&((GameObject*)obj)->anim.hitReactState != 0) *(int*)&((GameObject*)obj)->anim.hitReactState = obj + *(
-        int*)&((GameObject*)obj)->anim.hitReactState;
-    if (*(u32*)&((GameObject*)obj)->anim.placementData != 0) *(int*)&((GameObject*)obj)->anim.placementData = obj + *(
-        int*)&((GameObject*)obj)->anim.placementData;
-    if (*(u32*)&((GameObject*)obj)->anim.modelInstance != 0) *(int*)&((GameObject*)obj)->anim.modelInstance = obj + *(
-        int*)&((GameObject*)obj)->anim.modelInstance;
+    if (*(u32*)&((GameObject*)obj)->anim.hitReactState != 0)
+        *(int*)&((GameObject*)obj)->anim.hitReactState = obj + *(int*)&((GameObject*)obj)->anim.hitReactState;
+    if (*(u32*)&((GameObject*)obj)->anim.placementData != 0)
+        *(int*)&((GameObject*)obj)->anim.placementData = obj + *(int*)&((GameObject*)obj)->anim.placementData;
+    if (*(u32*)&((GameObject*)obj)->anim.modelInstance != 0)
+        *(int*)&((GameObject*)obj)->anim.modelInstance = obj + *(int*)&((GameObject*)obj)->anim.modelInstance;
     *(int*)(obj + 0x58) = obj + *(int*)(obj + 0x58);
     *(int*)&((GameObject*)obj)->anim.weaponDaTable = obj + *(int*)&((GameObject*)obj)->anim.weaponDaTable;
     *(int*)&((GameObject*)obj)->anim.eventTable = obj + *(int*)&((GameObject*)obj)->anim.eventTable;
-    if (*(u32*)&((GameObject*)obj)->anim.hitVolumeBounds != 0) *(int*)&((GameObject*)obj)->anim.hitVolumeBounds = obj + *(int*)&((GameObject*)obj)->anim.hitVolumeBounds;
-    if (*(u32*)&((GameObject*)obj)->anim.banks != 0) *(int*)&((GameObject*)obj)->anim.banks = obj + *(int*)&((GameObject
-        *)obj)->anim.banks;
-    if (*(u32*)&((GameObject*)obj)->anim.previousLocalPosX != 0) *(int*)&((GameObject*)obj)->anim.previousLocalPosX =
-        obj + *(int*)&((GameObject*)obj)->anim.previousLocalPosX;
+    if (*(u32*)&((GameObject*)obj)->anim.hitVolumeBounds != 0)
+        *(int*)&((GameObject*)obj)->anim.hitVolumeBounds = obj + *(int*)&((GameObject*)obj)->anim.hitVolumeBounds;
+    if (*(u32*)&((GameObject*)obj)->anim.banks != 0)
+        *(int*)&((GameObject*)obj)->anim.banks = obj + *(int*)&((GameObject*)obj)->anim.banks;
+    if (*(u32*)&((GameObject*)obj)->anim.previousLocalPosX != 0)
+        *(int*)&((GameObject*)obj)->anim.previousLocalPosX = obj + *(int*)&((GameObject*)obj)->anim.previousLocalPosX;
     *(int*)&((GameObject*)obj)->anim.dll = obj + *(int*)&((GameObject*)obj)->anim.dll;
-    if (*(u32*)&((GameObject*)obj)->anim.modelState != 0) *(int*)&((GameObject*)obj)->anim.modelState = obj + *(int*)&((
-        GameObject*)obj)->anim.modelState;
+    if (*(u32*)&((GameObject*)obj)->anim.modelState != 0)
+        *(int*)&((GameObject*)obj)->anim.modelState = obj + *(int*)&((GameObject*)obj)->anim.modelState;
     for (i = 0, off = 0; i < *(u8*)(obj + 0xa1); i++)
     {
         *(int*)(*(int*)&((GameObject*)obj)->anim.dll + off) = obj + *(int*)(*(int*)&((GameObject*)obj)->anim.dll + off);
@@ -1092,14 +1109,14 @@ void MapBlock_initHits(int obj, int index)
     for (i = 0, off = 0; i < *(u16*)(obj + 0x9c); i++)
     {
         entry = *(int*)&((GameObject*)obj)->anim.textureSlots + off;
-        if (*(s16*)(entry + 0) < 0 || *(s16*)(entry + 2) < 0 ||
-            *(s16*)(entry + 0) > 0x280 || *(s16*)(entry + 2) > 0x280)
+        if (*(s16*)(entry + 0) < 0 || *(s16*)(entry + 2) < 0 || *(s16*)(entry + 0) > 0x280 ||
+            *(s16*)(entry + 2) > 0x280)
         {
             *(u8*)(entry + 0xf) = 0x40;
         }
         entry = *(int*)&((GameObject*)obj)->anim.textureSlots + off;
-        if (*(s16*)(entry + 8) < 0 || *(s16*)(entry + 0xa) < 0 ||
-            *(s16*)(entry + 8) > 0x280 || *(s16*)(entry + 0xa) > 0x280)
+        if (*(s16*)(entry + 8) < 0 || *(s16*)(entry + 0xa) < 0 || *(s16*)(entry + 8) > 0x280 ||
+            *(s16*)(entry + 0xa) > 0x280)
         {
             *(u8*)(entry + 0xf) = 0x40;
         }
@@ -1183,7 +1200,8 @@ void MapBlock_initShaders(int obj)
             ref = *(int*)&((ObjModelState*)sh)->overrideWorldPosY;
             if (ref != -1)
             {
-                *(int*)&((ObjModelState*)sh)->overrideWorldPosY = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[ref];
+                *(int*)&((ObjModelState*)sh)->overrideWorldPosY =
+                    ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[ref];
                 ref = *(u8*)(sh + 0x29);
                 if ((u32)ref != 0u)
                 {
@@ -1267,12 +1285,18 @@ void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
         f32 x = scale * pts[0] + base[0];
         f32 y = scale * pts[1] + base[1];
         f32 z = scale * pts[2] + base[2];
-        if (x < out[0]) out[0] = x;
-        if (x > out[3]) out[3] = x;
-        if (y < out[1]) out[1] = y;
-        if (y > out[4]) out[4] = y;
-        if (z < out[2]) out[2] = z;
-        if (z > out[5]) out[5] = z;
+        if (x < out[0])
+            out[0] = x;
+        if (x > out[3])
+            out[3] = x;
+        if (y < out[1])
+            out[1] = y;
+        if (y > out[4])
+            out[4] = y;
+        if (z < out[2])
+            out[2] = z;
+        if (z > out[5])
+            out[5] = z;
         pts += 3;
     }
 }
@@ -1297,11 +1321,10 @@ int objShadowFn_80062378(void* obj, u8 param)
         lo = 400;
         hi = 500;
     }
-    inv = (Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX,
-                                                ((GameObject*)obj)->anim.worldPosY,
+    inv = (Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                                 ((GameObject*)obj)->anim.worldPosZ) -
-            lo) /
-        (f32)(hi - lo);
+           lo) /
+          (f32)(hi - lo);
     if (inv < 0.0f)
     {
         inv = 0.0f;
@@ -1372,7 +1395,13 @@ int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag
     if (n != 0)
     {
         cur = y - *(f32*)arr[0];
-        if (cur >= __AR_Callback) {} else { cur = -cur; }
+        if (cur >= __AR_Callback)
+        {
+        }
+        else
+        {
+            cur = -cur;
+        }
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
@@ -1407,7 +1436,13 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
     if (n != 0)
     {
         cur = y - *(f32*)arr[0];
-        if (cur >= __AR_Callback) {} else { cur = -cur; }
+        if (cur >= __AR_Callback)
+        {
+        }
+        else
+        {
+            cur = -cur;
+        }
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
@@ -1543,7 +1578,7 @@ int fn_800626C8(int* obj, int delta)
             *alphaStep = 0x4000;
         }
     }
-    f31 = lbl_803DEC90[0] * (f32) * alphaStep;
+    f31 = lbl_803DEC90[0] * (f32)*alphaStep;
     f31 = lbl_803DB654 * f31;
     {
         f32 tint = objShadowFn_80062378(obj, modelState->shadowTintA);
@@ -1673,8 +1708,7 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     }
     gShadowOffsetZ = c * param;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] +
-        gPrevSunDir[2] * gPrevSunDir[2];
+    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
     lenv = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
     mag = lenv * lenp;
     if (mag != lbl_803DEC58)
@@ -1717,9 +1751,8 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
     {
         int vis = 1;
         int i = n * 3;
-        f32 dot = modelState->shadowOffsetX * input[0] +
-            modelState->shadowOffsetY * input[1] +
-            modelState->shadowOffsetZ * input[2];
+        f32 dot = modelState->shadowOffsetX * input[0] + modelState->shadowOffsetY * input[1] +
+                  modelState->shadowOffsetZ * input[2];
         if (dot < lbl_803DEC58)
         {
             vis = -1;
@@ -1822,18 +1855,30 @@ void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endP
     boundsOut[5] = -1000000;
     for (i = pointCount; i != 0; i--)
     {
-        if (startPoints[0] - radii[0] < boundsOut[0]) boundsOut[0] = (int)(startPoints[0] - radii[0]);
-        if (startPoints[0] + radii[0] > boundsOut[3]) boundsOut[3] = (int)(startPoints[0] + radii[0]);
-        if (startPoints[1] - radii[0] < boundsOut[1]) boundsOut[1] = (int)(startPoints[1] - radii[0]);
-        if (startPoints[1] + radii[0] > boundsOut[4]) boundsOut[4] = (int)(startPoints[1] + radii[0]);
-        if (startPoints[2] - radii[0] < boundsOut[2]) boundsOut[2] = (int)(startPoints[2] - radii[0]);
-        if (startPoints[2] + radii[0] > boundsOut[5]) boundsOut[5] = (int)(startPoints[2] + radii[0]);
-        if (endPoints[0] - radii[0] < boundsOut[0]) boundsOut[0] = (int)(endPoints[0] - radii[0]);
-        if (endPoints[0] + radii[0] > boundsOut[3]) boundsOut[3] = (int)(endPoints[0] + radii[0]);
-        if (endPoints[1] - radii[0] < boundsOut[1]) boundsOut[1] = (int)(endPoints[1] - radii[0]);
-        if (endPoints[1] + radii[0] > boundsOut[4]) boundsOut[4] = (int)(endPoints[1] + radii[0]);
-        if (endPoints[2] - radii[0] < boundsOut[2]) boundsOut[2] = (int)(endPoints[2] - radii[0]);
-        if (endPoints[2] + radii[0] > boundsOut[5]) boundsOut[5] = (int)(endPoints[2] + radii[0]);
+        if (startPoints[0] - radii[0] < boundsOut[0])
+            boundsOut[0] = (int)(startPoints[0] - radii[0]);
+        if (startPoints[0] + radii[0] > boundsOut[3])
+            boundsOut[3] = (int)(startPoints[0] + radii[0]);
+        if (startPoints[1] - radii[0] < boundsOut[1])
+            boundsOut[1] = (int)(startPoints[1] - radii[0]);
+        if (startPoints[1] + radii[0] > boundsOut[4])
+            boundsOut[4] = (int)(startPoints[1] + radii[0]);
+        if (startPoints[2] - radii[0] < boundsOut[2])
+            boundsOut[2] = (int)(startPoints[2] - radii[0]);
+        if (startPoints[2] + radii[0] > boundsOut[5])
+            boundsOut[5] = (int)(startPoints[2] + radii[0]);
+        if (endPoints[0] - radii[0] < boundsOut[0])
+            boundsOut[0] = (int)(endPoints[0] - radii[0]);
+        if (endPoints[0] + radii[0] > boundsOut[3])
+            boundsOut[3] = (int)(endPoints[0] + radii[0]);
+        if (endPoints[1] - radii[0] < boundsOut[1])
+            boundsOut[1] = (int)(endPoints[1] - radii[0]);
+        if (endPoints[1] + radii[0] > boundsOut[4])
+            boundsOut[4] = (int)(endPoints[1] + radii[0]);
+        if (endPoints[2] - radii[0] < boundsOut[2])
+            boundsOut[2] = (int)(endPoints[2] - radii[0]);
+        if (endPoints[2] + radii[0] > boundsOut[5])
+            boundsOut[5] = (int)(endPoints[2] + radii[0]);
         startPoints += 3;
         endPoints += 3;
         radii += 1;
@@ -1906,16 +1951,13 @@ int objShadowFn_80062498(int* obj, int param2)
         fn_80069968((s32*)&idxOut, (u32*)&alphaOut);
 
         alpha = alphaOut;
-        idxOut = fn_80060C14(obj, alpha,
-                             gShadowDrawScratch, gShadowVolumeBuffer, idxOut,
-                             (f32)(int)vtx[0], (f32)(int)vtx[2], param2,
-                             modelState->flags & 0x40000);
+        idxOut = fn_80060C14(obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
+                             (f32)(int)vtx[2], param2, modelState->flags & 0x40000);
         lbl_803DCEE0 = alpha;
         lbl_803DCEF0 = idxOut;
         lbl_803DCEE4 = (int)vtx;
         trackDolphin_buildShadowVolumePlanes(obj, buf48, bufA8);
-        fn_80061DD8(obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache,
-                    (f32*)gShadowDrawScratch, 0x555);
+        fn_80061DD8(obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache, (f32*)gShadowDrawScratch, 0x555);
     }
     objDrawFn_80061f0c(cache, modelState, obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
@@ -1958,8 +2000,7 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
     }
     else
     {
-        cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27,
-                                       f30, f28, f26, a, b);
+        cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27, f30, f28, f26, a, b);
     }
     if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
     {
@@ -1975,45 +2016,59 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
             int hdr;
             f32 r, c;
 
-            if (flag80 && (resetObj->modelInstance->flags & 0x01000000)) continue;
+            if (flag80 && (resetObj->modelInstance->flags & 0x01000000))
+                continue;
             hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
-            if (hitState == NULL) continue;
+            if (hitState == NULL)
+                continue;
             transformState = ((ObjHitbox*)resetObj)->transformState;
-            if (transformState == NULL) continue;
-            if (transformState->resetFrames != 0) continue;
-            if (transformState->pad10E != 0) continue;
+            if (transformState == NULL)
+                continue;
+            if (transformState->resetFrames != 0)
+                continue;
+            if (transformState->pad10E != 0)
+                continue;
             model = (int*)resetObj->banks[(s8)hitState->stateIndex];
-            if (model == NULL) continue;
+            if (model == NULL)
+                continue;
             hdr = *(int*)model;
-            if (*(u16*)(hdr + 0xf0) == 0) continue;
-            r = (f32)(u32)(u16)
-            modelFileHeaderGetCullDistance((void*)hdr);
+            if (*(u16*)(hdr + 0xf0) == 0)
+                continue;
+            r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void*)hdr);
             c = resetObj->worldPosX;
-            if (f30 < c - r) continue;
-            if (f31 > c + r) continue;
+            if (f30 < c - r)
+                continue;
+            if (f31 > c + r)
+                continue;
             c = resetObj->worldPosY;
-            if (f28 < c - r) continue;
-            if (f29 > c + r) continue;
+            if (f28 < c - r)
+                continue;
+            if (f29 > c + r)
+                continue;
             c = resetObj->worldPosZ;
-            if (f26 < c - r) continue;
-            if (f27 > c + r) continue;
+            if (f26 < c - r)
+                continue;
+            if (f27 > c + r)
+                continue;
 
-            desc->currentCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices
-                + ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2) << 4);
-            desc->currentMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices
-                + (((ObjHitbox*)resetObj)->transformState->activeMatrixIndex << 4);
-            desc->alternateCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices
-                + (((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2) << 4);
-            desc->alternateMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices
-                + ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) << 4);
+            desc->currentCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                           ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2) << 4);
+            desc->currentMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                  (((ObjHitbox*)resetObj)->transformState->activeMatrixIndex << 4);
+            desc->alternateCollisionMatrix =
+                (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                (((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2) << 4);
+            desc->alternateMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                    ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) << 4);
 
             desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
             desc->object = resetObj;
-            cur = fn_80067B84(cur, desc, (int)model, a, lbl_803DECC4,
-                              f31, f29, f27, f30, f28, f26);
+            cur = fn_80067B84(cur, desc, (int)model, a, lbl_803DECC4, f31, f29, f27, f30, f28, f26);
             desc++;
-            if ((u32)cur >= gTrackTriangleBufferEnd) break;
-            if (desc >= descEnd) break;
+            if ((u32)cur >= gTrackTriangleBufferEnd)
+                break;
+            if (desc >= descEnd)
+                break;
         }
     }
     gTrackTriangleCount = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
@@ -2060,16 +2115,16 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
                 if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
                 {
                     ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - ((GameObject*)obj)
-                        ->anim.localPosY;
+                    ((TrackP6Entry*)vertsOut)->relY0 =
+                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - ((GameObject*)obj)->anim.localPosY;
                     ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]) - fz;
                     ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]) - ((GameObject*)obj)
-                        ->anim.localPosY;
+                    ((TrackP6Entry*)vertsOut)->relY1 =
+                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]) - ((GameObject*)obj)->anim.localPosY;
                     ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]) - fz;
                     ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]) - ((GameObject*)obj)
-                        ->anim.localPosY;
+                    ((TrackP6Entry*)vertsOut)->relY2 =
+                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]) - ((GameObject*)obj)->anim.localPosY;
                     ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]) - fz;
                     outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
                     outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
@@ -2152,9 +2207,11 @@ extern f32 lbl_803DCF58;
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
-    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, nx, step_y, dot, proj, vy4, vy5, disc, dy, ny, len2;
+    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, nx, step_y, dot, proj, vy4,
+        vy5, disc, dy, ny, len2;
 
-    if (__AR_Callback == r) return 0;
+    if (__AR_Callback == r)
+        return 0;
 
     px = p4[0];
     dx = px - cx;
@@ -2190,9 +2247,12 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             denom = lbl_803DECB8 * len2;
             t1 = t1 / denom;
             t2 = (nB - root) / denom;
-            if (t1 < __AR_Callback) t1 = lbl_803DECC0;
-            if (t2 < *(f32*)&__AR_Callback) t2 = lbl_803DECC0;
-            if (t2 < t1) t1 = t2;
+            if (t1 < __AR_Callback)
+                t1 = lbl_803DECC0;
+            if (t2 < *(f32*)&__AR_Callback)
+                t2 = lbl_803DECC0;
+            if (t2 < t1)
+                t1 = t2;
             t = t1;
             if (t >= *(f32*)(int)&__AR_Callback && t <= lbl_803DECC4)
             {
@@ -2225,7 +2285,6 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 
 extern f32 __PADFixBits;
 
-
 #pragma optimization_level 2
 #pragma opt_propagation off
 void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
@@ -2245,17 +2304,25 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
     int gf;
     int bf;
 
-    if (src1 == NULL) return;
-    if (src2 == NULL) return;
-    if (dst == NULL) return;
+    if (src1 == NULL)
+        return;
+    if (src2 == NULL)
+        return;
+    if (dst == NULL)
+        return;
     fmt = *(u8*)(src1 + 0x16);
-    if (fmt != 4 && fmt != 6) return;
-    if (*(u8*)(src2 + 0x16) != fmt) return;
-    if (*(u8*)(dst + 0x16) != fmt) return;
+    if (fmt != 4 && fmt != 6)
+        return;
+    if (*(u8*)(src2 + 0x16) != fmt)
+        return;
+    if (*(u8*)(dst + 0x16) != fmt)
+        return;
     w = *(u16*)(src1 + 0xa);
-    if (w != *(u16*)(src2 + 0xa)) return;
+    if (w != *(u16*)(src2 + 0xa))
+        return;
     h = *(u16*)(src1 + 0xc);
-    if (h != *(u16*)(src2 + 0xc)) return;
+    if (h != *(u16*)(src2 + 0xc))
+        return;
     if (w != *(u16*)(dst + 0xa) || h != *(u16*)(dst + 0xc))
     {
         return;
@@ -2276,25 +2343,36 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                     int i6 = (j & 3) * 2;
                     int i4;
                     int i12;
-                    u8 *p;
+                    u8* p;
                     u16 outv;
                     p = src1 + i6;
                     i4 = (j >> 2) * 0x20;
-                    p += i4; p += i5;
+                    p += i4;
+                    p += i5;
                     i12 = (int)*(u16*)(src1 + 0xa) * im * 2;
                     p += i12;
                     texA = *(u16*)(p + 0x60);
                     redA = (u8)(((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13));
-                    p = src2 + i6; p += i4; p += i5; p += i12;
+                    p = src2 + i6;
+                    p += i4;
+                    p += i5;
+                    p += i12;
                     texB = *(u16*)(p + 0x60);
                     redB = (u8)(((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13));
-                    bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8)
-                        + ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
+                    bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8) +
+                               ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) &
+                          0xf8) >>
+                         3;
                     rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
-                    gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
-                        + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
+                    gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8) +
+                               ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) &
+                          0xfc)
+                         << 3;
                     outv = bf | (rf | gf);
-                    p = dst + i6; p += i4; p += i5; p += i12;
+                    p = dst + i6;
+                    p += i4;
+                    p += i5;
+                    p += i12;
                     *(u16*)(p + 0x60) = outv;
                 }
             }
@@ -2316,21 +2394,28 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                     int aLo, bLo, aHi, bHi;
                     ad = src1 + i9;
                     i12 = (j >> 2) * 0x40;
-                    ad += i12; ad += i4;
+                    ad += i12;
+                    ad += i4;
                     i6 = (int)*(u16*)(src1 + 0xa) * i5 * 2;
                     ad += i6;
-                    bd = src2 + i9; bd += i12; bd += i4; bd += i6;
-                    aLo = (u8)*(u16*)(ad + 0x60);
-                    bLo = (u8)*(u16*)(bd + 0x60);
+                    bd = src2 + i9;
+                    bd += i12;
+                    bd += i4;
+                    bd += i6;
+                    aLo = (u8) * (u16*)(ad + 0x60);
+                    bLo = (u8) * (u16*)(bd + 0x60);
                     texA = *(u16*)(ad + 0x80);
                     aHi = (u8)((int)(texA & 0xff00) >> 8);
                     texB = *(u16*)(bd + 0x80);
                     bHi = (u8)((int)(texB & 0xff00) >> 8);
-                    cd = dst + i9; cd += i12; cd += i4; cd += 0x60;
+                    cd = dst + i9;
+                    cd += i12;
+                    cd += i4;
+                    cd += 0x60;
                     *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
                     *(u16*)(cd + (int)*(u16*)(src1 + 0xa) * i5 * 2 + 0x20) =
-                        ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8)
-                        | (u8)(((int)(wA * (u8)texA) >> 8) + ((int)(wB * (u8)texB) >> 8));
+                        ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
+                        (u8)(((int)(wA * (u8)texA) >> 8) + ((int)(wB * (u8)texB) >> 8));
                 }
             }
         }
@@ -2353,10 +2438,13 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     u8 dirBuf[16];
 
     oldParent = *(u8**)&((GameObject*)obj)->anim.parent;
-    if (oldParent == newParent) return;
+    if (oldParent == newParent)
+        return;
 
-    if (oldParent != NULL) Obj_BuildTransformMatrices(oldParent);
-    if (newParent != NULL) Obj_BuildTransformMatrices(newParent);
+    if (oldParent != NULL)
+        Obj_BuildTransformMatrices(oldParent);
+    if (newParent != NULL)
+        Obj_BuildTransformMatrices(newParent);
 
     if (((GameObject*)obj)->anim.classId == 1)
     {
@@ -2368,12 +2456,14 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     hitReact = *(u8**)&((GameObject*)obj)->anim.hitReactState;
     if (oldParent != NULL)
     {
-        Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                       &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ, (u32)oldParent);
+        Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                       ((GameObject*)obj)->anim.localPosZ, &((GameObject*)obj)->anim.worldPosX,
+                                       &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ,
+                                       (u32)oldParent);
         Obj_TransformLocalPointToWorld(*(f32*)(obj + 0x80), *(f32*)(obj + 0x84), *(f32*)(obj + 0x88),
                                        (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), (u32)oldParent);
-        Obj_TransformLocalVectorToWorld(((GameObject*)obj)->anim.velocityX, __AR_Callback, ((GameObject*)obj)->anim.velocityZ,
-                                        &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
+        Obj_TransformLocalVectorToWorld(((GameObject*)obj)->anim.velocityX, __AR_Callback,
+                                        ((GameObject*)obj)->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
         yawSum = *(s16*)oldParent + ((GameObject*)obj)->anim.rotX;
     }
     else
@@ -2387,18 +2477,20 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     {
         if (*(u8**)(obj + 0x30) != NULL)
         {
-            Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
-                                           &((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
-                                           (u32)*(u8**)(obj + 0x30));
+            Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                                           ((GameObject*)obj)->anim.worldPosZ, &((GameObject*)obj)->anim.localPosX,
+                                           &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
+                                           (u32) * (u8**)(obj + 0x30));
             Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x8c), *(f32*)(obj + 0x90), *(f32*)(obj + 0x94),
                                            (f32*)(obj + 0x80), (f32*)(obj + 0x84), (f32*)(obj + 0x88),
-                                           (u32)*(u8**)(obj + 0x30));
-            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ,
-                                            (f32*)(obj + 0x24), (f32*)dirBuf, (f32*)(obj + 0x2c),
-                                            (u32)*(u8**)(obj + 0x30));
+                                           (u32) * (u8**)(obj + 0x30));
+            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ, (f32*)(obj + 0x24), (f32*)dirBuf,
+                                            (f32*)(obj + 0x2c), (u32) * (u8**)(obj + 0x30));
             yawSum = yawSum - *(s16*)(*(u8**)(obj + 0x30));
-            if (yawSum > 0x8000) yawSum -= 0xffff;
-            if (yawSum < -0x8000) yawSum += 0xffff;
+            if (yawSum > 0x8000)
+                yawSum -= 0xffff;
+            if (yawSum < -0x8000)
+                yawSum += 0xffff;
             ((GameObject*)obj)->anim.rotX = yawSum;
         }
         else
@@ -2433,7 +2525,6 @@ extern s8 lbl_803DCF60;
 extern const f32 lbl_803DECE8;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
-
 int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int submode)
 {
     u8* base = gIntersectSegmentTypeTable;
@@ -2457,8 +2548,10 @@ int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int 
     }
     else
     {
-        if (mode == -1) mode = 0;
-        else mode = 1;
+        if (mode == -1)
+            mode = 0;
+        else
+            mode = 1;
     }
 
     lbl_803DCF68 = (int)(base + 0xdc);
@@ -2467,19 +2560,18 @@ int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int 
     end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
     for (; desc < end; desc++)
     {
-        if (lbl_803DCF60 >= 0x23) break;
+        if (lbl_803DCF60 >= 0x23)
+            break;
         if (desc->object != NULL)
         {
             Matrix_TransformPoint(desc->currentMatrix, x, __AR_Callback, z, &tx, &ty, &tz);
             fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
-                        (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c),
-                        desc, tx, tz, mode);
+                        (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, tx, tz, mode);
         }
         else
         {
             fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
-                        (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c),
-                        desc, x, z, mode);
+                        (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, x, z, mode);
         }
     }
 
@@ -2544,15 +2636,18 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
 
         if (fl & 0x10)
         {
-            if (!(fl & 0x4)) continue;
+            if (!(fl & 0x4))
+                continue;
         }
         vec[0] = tri->planeN[0];
         vec[1] = tri->planeN[1];
         vec[2] = tri->planeN[2];
         if (!(vec[1] > __AR_Callback))
         {
-            if (allowDown == 0) continue;
-            if (__AR_Callback == vec[1]) continue;
+            if (allowDown == 0)
+                continue;
+            if (__AR_Callback == vec[1])
+                continue;
         }
         planeY = -(vec[0] * qx + vec[2] * qz + tri->planeD) / vec[1];
         (vxp = vxs)[0] = (f32)tri->vx[0];
@@ -2575,16 +2670,14 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
                 c30 = lbl_803DECC0;
                 c31 = __AR_Callback;
 
-                if (nxt > 2) nxt = 0;
+                if (nxt > 2)
+                    nxt = 0;
                 vxp[3] = c30 * vec[0] + vxp[i];
                 vyp[3] = c30 * vec[1] + vyp[i];
                 vzp[3] = c30 * vec[2] + vzp[i];
-                nx = vyp[3] * (vzp[i] - vzp[nxt]) + (vyp[i] * (vzp[nxt] - vzp[3]) + vyp[nxt] * (vzp[3] - vzp[
-                    i]));
-                ny = vzp[3] * (vxp[i] - vxp[nxt]) + (vzp[i] * (vxp[nxt] - vxp[3]) + vzp[nxt] * (vxp[3] - vxp[
-                    i]));
-                nz = vxp[3] * (vyp[i] - vyp[nxt]) + (vxp[i] * (vyp[nxt] - vyp[3]) + vxp[nxt] * (vyp[3] - vyp[
-                    i]));
+                nx = vyp[3] * (vzp[i] - vzp[nxt]) + (vyp[i] * (vzp[nxt] - vzp[3]) + vyp[nxt] * (vzp[3] - vzp[i]));
+                ny = vzp[3] * (vxp[i] - vxp[nxt]) + (vzp[i] * (vxp[nxt] - vxp[3]) + vzp[nxt] * (vxp[3] - vxp[i]));
+                nz = vxp[3] * (vyp[i] - vyp[nxt]) + (vxp[i] * (vyp[nxt] - vyp[3]) + vxp[nxt] * (vyp[3] - vyp[i]));
                 mag = sqrtf(nx * nx + ny * ny + nz * nz);
                 if (mag > c31)
                 {
@@ -2593,19 +2686,21 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
                     ny *= s;
                     nz *= s;
                 }
-                if (-(nx * vxp[i] + ny * vyp[i] + nz * vzp[i]) +
-                    (nx * qx + ny * planeY + nz * qz) > lbl_803DECE4)
+                if (-(nx * vxp[i] + ny * vyp[i] + nz * vzp[i]) + (nx * qx + ny * planeY + nz * qz) > lbl_803DECE4)
                 {
                     inside = 0;
                     break;
                 }
             }
         }
-        if (inside == 0) continue;
-        if ((s8)lbl_803DCF60 >= 0x23) break;
+        if (inside == 0)
+            continue;
+        if ((s8)lbl_803DCF60 >= 0x23)
+            break;
         if (((TrackBlockDescriptor*)desc)->object != NULL)
         {
-            Matrix_TransformPoint(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, qx, planeY, qz, &ox, &planeY, &oz);
+            Matrix_TransformPoint(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, qx, planeY, qz, &ox, &planeY,
+                                  &oz);
             Matrix_TransformVector(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, vec, vec);
         }
         *(f32*)(lbl_803DCF68 + 0) = planeY;
@@ -2663,12 +2758,12 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
     {
         f32 p1 = *(f32*)(p + 1);
         if (p1 < __AR_Size && p1 > lbl_803DECEC)
-    {
-        switch ((u8)type)
         {
-        case 1:
-        case 8:
-        case 0xa:
+            switch ((u8)type)
+            {
+            case 1:
+            case 8:
+            case 0xa:
             {
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
@@ -2689,7 +2784,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                 }
                 break;
             }
-        default:
+            default:
             {
                 f32 dot, t, dotL;
                 b[0] = b[0] - f1p * p[0];
@@ -2702,15 +2797,15 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                 b[1] = t * p[1] + b[1];
                 b[2] = t * p[2] + b[2];
                 break;
+            }
             }
         }
-    }
-    else
-    {
-        switch ((u8)type)
+        else
         {
-        case 5:
-        case 8:
+            switch ((u8)type)
+            {
+            case 5:
+            case 8:
             {
                 f32 dot, t, dotL;
                 b[0] = b[0] - f1p * p[0];
@@ -2724,8 +2819,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                 b[2] = t * p[2] + b[2];
                 break;
             }
-        case 0xb:
-        default:
+            case 0xb:
+            default:
             {
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
@@ -2739,8 +2834,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                 }
                 break;
             }
+            }
         }
-    }
     }
     return 1;
 }
@@ -2757,7 +2852,8 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 
     Vec3_Cross(rayDir, T + 6, nrm);
     len = Vec3_Normalize(nrm);
-    if (__AR_Callback == len) return 0;
+    if (__AR_Callback == len)
+        return 0;
     e[0] = rayOrig[0] - T[0];
     e[1] = rayOrig[1] - T[1];
     e[2] = rayOrig[2] - T[2];
@@ -2780,7 +2876,8 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
             f32 dd = rayDir[1] * tmp14[1];
             f32 dn = dd + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
             f32 r = s / dn;
-            if (r < *(f32*)&__AR_Callback) r = -r;
+            if (r < *(f32*)&__AR_Callback)
+                r = -r;
             len = len - r;
         }
         zero = __AR_Callback;
@@ -2796,8 +2893,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
                 hit[2] = rayOrig[2] + hit[2];
                 {
                     f32 d2 = T[7] * T[1];
-                    f12 = (hit[0] * T[6] + hit[1] * T[7] + hit[2] * T[8]) -
-                        (d2 + T[6] * T[0] + T[8] * T[2]);
+                    f12 = (hit[0] * T[6] + hit[1] * T[7] + hit[2] * T[8]) - (d2 + T[6] * T[0] + T[8] * T[2]);
                 }
                 if (f12 >= zero)
                 {
@@ -2815,7 +2911,8 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
                         Vec3_Normalize(outNrm);
                         {
                             f32 dh = *(f32*)((u8*)hit + 4) * outNrm[1];
-                            outNrm[3] = T[9] - (dh + *(f32*)((u8*)hit + 0) * outNrm[0] + *(f32*)((u8*)hit + 8) * outNrm[2]);
+                            outNrm[3] =
+                                T[9] - (dh + *(f32*)((u8*)hit + 0) * outNrm[0] + *(f32*)((u8*)hit + 8) * outNrm[2]);
                         }
                         out29[0] = *(f32*)((u8*)hit + 0);
                         out29[1] = *(f32*)((u8*)hit + 4);
@@ -2830,7 +2927,8 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     return 0;
 }
 
-extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg);
+extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
+                             int flagsArg);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
 u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, void* results)
@@ -2841,7 +2939,8 @@ u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, v
     u8 hitCount;
     TrackBlockDescriptor* tbl = gTrackBlockDescriptors;
 
-    if (count > 4) count = 4;
+    if (count > 4)
+        count = 4;
     *(u16*)((u8*)results + 0x6c) = 0;
 
     i = 0;
@@ -2857,15 +2956,49 @@ u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, v
             b = lbl_803DECC4;
             while (i < lim)
             {
-                fp[0] = a; fp[1] = b; fp[2] = a; fp[3] = a; pp[0x17] = NULL;
-                fp[4] = a; fp[5] = b; fp[6] = a; fp[7] = a; pp[0x18] = NULL;
-                fp[8] = a; fp[9] = b; fp[10] = a; fp[11] = a; pp[0x19] = NULL;
-                fp[12] = a; fp[13] = b; fp[14] = a; fp[15] = a; pp[0x1a] = NULL;
-                fp[16] = a; fp[17] = b; fp[18] = a; fp[19] = a; pp[0x1b] = NULL;
-                fp[20] = a; fp[21] = b; fp[22] = a; fp[23] = a; pp[0x1c] = NULL;
-                fp[24] = a; fp[25] = b; fp[26] = a; fp[27] = a; pp[0x1d] = NULL;
-                fp[28] = a; fp[29] = b; fp[30] = a; fp[31] = a; pp[0x1e] = NULL;
-                fp += 32; pp += 8; i += 8;
+                fp[0] = a;
+                fp[1] = b;
+                fp[2] = a;
+                fp[3] = a;
+                pp[0x17] = NULL;
+                fp[4] = a;
+                fp[5] = b;
+                fp[6] = a;
+                fp[7] = a;
+                pp[0x18] = NULL;
+                fp[8] = a;
+                fp[9] = b;
+                fp[10] = a;
+                fp[11] = a;
+                pp[0x19] = NULL;
+                fp[12] = a;
+                fp[13] = b;
+                fp[14] = a;
+                fp[15] = a;
+                pp[0x1a] = NULL;
+                fp[16] = a;
+                fp[17] = b;
+                fp[18] = a;
+                fp[19] = a;
+                pp[0x1b] = NULL;
+                fp[20] = a;
+                fp[21] = b;
+                fp[22] = a;
+                fp[23] = a;
+                pp[0x1c] = NULL;
+                fp[24] = a;
+                fp[25] = b;
+                fp[26] = a;
+                fp[27] = a;
+                pp[0x1d] = NULL;
+                fp[28] = a;
+                fp[29] = b;
+                fp[30] = a;
+                fp[31] = a;
+                pp[0x1e] = NULL;
+                fp += 32;
+                pp += 8;
+                i += 8;
             }
         }
         {
@@ -2876,18 +3009,23 @@ u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, v
             b = lbl_803DECC4;
             while (i < count)
             {
-                fp[0] = a; fp[1] = b; fp[2] = a; fp[3] = a; pp[0x17] = NULL;
-                fp += 4; pp += 1; i++;
+                fp[0] = a;
+                fp[1] = b;
+                fp[2] = a;
+                fp[3] = a;
+                pp[0x17] = NULL;
+                fp += 4;
+                pp += 1;
+                i++;
             }
         }
     }
 
     {
         extern int hitDetect_800667ec();
-        hitCount = hitDetect_800667ec(0,
-                               (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
-                               (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c),
-                               startPos, endPos, count, results, 0);
+        hitCount = hitDetect_800667ec(0, (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
+                                      (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c), startPos, endPos,
+                                      count, results, 0);
     }
 
     fp = results;
@@ -3232,7 +3370,8 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         int* vbuf;
         ((MapBlockData*)blockData)->allocHandle = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
         vbuf = *(int**)&((MapBlockData*)blockData)->allocHandle;
-        if (vbuf == NULL) return;
+        if (vbuf == NULL)
+            return;
         vbuf[0] = (int)vbuf + 8;
         *(int*)(((MapBlockData*)blockData)->allocHandle + 4) = slot * 3;
         i = 0;
@@ -3328,7 +3467,7 @@ extern void gxTextureFn_800794e0(void);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
-extern void skyBuildSunModelMatrix(f32 * out);
+extern void skyBuildSunModelMatrix(f32* out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
@@ -3407,12 +3546,12 @@ void renderGlows(void)
             occ = 0;
             for (i = 0; i < 5; i++)
             {
-                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i * 2], sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
+                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i * 2],
+                                             sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
                 if (sz <= d && pauseMenuGetState() == 0)
                     occ++;
             }
-            fade = (f32)(u32)
-            occ / flushFlag_803DEBE4 - gSunFlareFade;
+            fade = (f32)(u32)occ / flushFlag_803DEBE4 - gSunFlareFade;
             if (fade > Initialized_803DEC30)
                 fade = Initialized_803DEC30;
             else if (fade < EnabledBits_803DEC34)
@@ -3428,8 +3567,7 @@ void renderGlows(void)
                 fn_8008912C();
                 selectTexture(0, 0);
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
-                sunDot = (f32)(u32)
-                sky * sunDot;
+                sunDot = (f32)(u32)sky * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(displayOffsetH_803DEBFC * sunDot));
                 alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
                 sunDot = RecalibrateBits_803DEC3C * sunDot * WaitingBits_803DEC40;
@@ -3465,8 +3603,7 @@ void renderGlows(void)
         {
             ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
             int d;
-            Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY,
-                                               e->worldZ - playerMapOffsetZ,
+            Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
             d = depthReadRequestPoll(sx, sy, e);
@@ -3487,19 +3624,9 @@ void renderGlows(void)
                 f32 cx, cy, cz;
                 selectTexture((int)e->glowTexture, 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
-                    (int)
-                ((f32)(u32)
-                e->glowColor[1] * e->activeIntensity
-                )
-                ,
-                (int)
-                ((f32)(u32)
-                e->glowColor[2] * e->activeIntensity
-                )
-                ,
-                (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8)
-                )
-                ;
+                                (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
+                                (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),
+                                (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8));
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 cx = e->viewX - e->glowScale;
                 cy = e->viewY - e->glowScale;
@@ -3618,7 +3745,6 @@ void initTextures(void)
 }
 #pragma opt_common_subs reset
 
-
 extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 extern u8 lbl_803DCF4C;
@@ -3664,22 +3790,26 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         int* e;
         s16 k;
 
-        if (o == self) continue;
-        if ((s8) * (u8*)((char*)o + 0x35) <= -1) continue;
-        if (*(u32*)(*(int*)&((GameObject*)o)->anim.modelInstance + 0x34) == 0) continue;
+        if (o == self)
+            continue;
+        if ((s8) * (u8*)((char*)o + 0x35) <= -1)
+            continue;
+        if (*(u32*)(*(int*)&((GameObject*)o)->anim.modelInstance + 0x34) == 0)
+            continue;
         p54 = *(int**)&((GameObject*)o)->anim.hitReactState;
-        if (p54 != NULL && (((ObjHitsPriorityState*)p54)->flags & 1) == 0) continue;
+        if (p54 != NULL && (((ObjHitsPriorityState*)p54)->flags & 1) == 0)
+            continue;
         dx = ((GameObject*)o)->anim.localPosX - w0[0];
         dy = ((GameObject*)o)->anim.localPosY - w0[1];
         dz = ((GameObject*)o)->anim.localPosZ - w0[2];
-        hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks
-            + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
+        hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
         rad = (f32)((u16)modelFileHeaderGetCullDistance((void*)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;
         {
             f32 ddy = dy * dy;
-            if (ddy + dx * dx + dz * dz < rad) hit = 1;
+            if (ddy + dx * dx + dz * dz < rad)
+                hit = 1;
         }
         if (hit == 0)
         {
@@ -3688,10 +3818,12 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             dz = ((GameObject*)o)->anim.localPosZ - w1[2];
             {
                 f32 ddy = dy * dy;
-                if (ddy + dx * dx + dz * dz < rad) hit = 1;
+                if (ddy + dx * dx + dz * dz < rad)
+                    hit = 1;
             }
         }
-        if (hit == 0) continue;
+        if (hit == 0)
+            continue;
         if ((u8)slot != 0xff)
         {
             char* fl;
@@ -3699,8 +3831,8 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             fl = (char*)gMapDynamicSlots;
             do
             {
-                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self &&
-                    *(u32*)(fl + 4) == (u32)o && *(u8*)(fl + 0x15) == (u8)slot)
+                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
+                    *(u8*)(fl + 0x15) == (u8)slot)
                 {
                     *(u8*)(fl + 0x14) = 0;
                     e = (int*)fl;
@@ -3708,8 +3840,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
                 }
                 fl += 0x18;
                 k++;
-            }
-            while (k < 0x40);
+            } while (k < 0x40);
         }
         e = NULL;
     haveEntry:
@@ -3744,8 +3875,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
                 }
                 fl += 0x18;
                 k++;
-            }
-            while (k < 0x40);
+            } while (k < 0x40);
             e = NULL;
         stored:
             if (e == NULL)
@@ -3777,28 +3907,24 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
         *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
         *(f32*)((char*)out + 0x38) = -(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4) +
-            *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14));
+                                       *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14));
         if (*(u32*)out != 0)
         {
             Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
-                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
-                                           (f32*)((int)out + 0xc), (f32*)((int)out + 0x14),
-                                           (u32)*(int*)out);
+                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
+                                           (f32*)((int)out + 0x14), (u32) * (int*)out);
             Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
-                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8),
-                                           (f32*)((int)out + 0x10), (f32*)((int)out + 0x18),
-                                           (u32)*(int*)out);
+                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
+                                           (f32*)((int)out + 0x18), (u32) * (int*)out);
         }
         if ((u32)mtx != 0)
         {
             Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
-                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
-                                           (f32*)((int)out + 0xc), (f32*)((int)out + 0x14),
-                                           mtx);
+                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
+                                           (f32*)((int)out + 0x14), mtx);
             Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
-                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8),
-                                           (f32*)((int)out + 0x10), (f32*)((int)out + 0x18),
-                                           mtx);
+                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
+                                           (f32*)((int)out + 0x18), mtx);
         }
         *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
         *(f32*)((char*)out + 0x20) = __AR_Callback;
@@ -3813,7 +3939,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
         *(f32*)((char*)out + 0x40) = *(f32*)((char*)out + 0x10) + hy;
         *(f32*)((char*)out + 0x28) = -(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4) +
-            *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14));
+                                       *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14));
     }
     if (lbl_803DCF4C != 0)
     {
@@ -3835,8 +3961,8 @@ extern const f32 lbl_803DECF0;
 extern const f32 lbl_803DECF4;
 extern const f32 lbl_803DECF8;
 
-int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale,
-                f32 x0, f32 y0d, f32 z0, f32 x1, f32 y1d, f32 z1)
+int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale, f32 x0, f32 y0d, f32 z0, f32 x1,
+                f32 y1d, f32 z1)
 {
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
@@ -3861,18 +3987,30 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
     x0 = x1;
     z1 = za;
     z0 = z1;
-    if (xb < x1) x0 = xb;
-    if (xb > x1) x1 = xb;
-    if (zb < z0) z0 = zb;
-    if (zb > z1) z1 = zb;
-    if (xc < x0) x0 = xc;
-    if (xc > x1) x1 = xc;
-    if (zc < z0) z0 = zc;
-    if (zc > z1) z1 = zc;
-    if (xd < x0) x0 = xd;
-    if (xd > x1) x1 = xd;
-    if (zd < z0) z0 = zd;
-    if (zd > z1) z1 = zd;
+    if (xb < x1)
+        x0 = xb;
+    if (xb > x1)
+        x1 = xb;
+    if (zb < z0)
+        z0 = zb;
+    if (zb > z1)
+        z1 = zb;
+    if (xc < x0)
+        x0 = xc;
+    if (xc > x1)
+        x1 = xc;
+    if (zc < z0)
+        z0 = zc;
+    if (zc > z1)
+        z1 = zc;
+    if (xd < x0)
+        x0 = xd;
+    if (xd > x1)
+        x1 = xd;
+    if (zd < z0)
+        z0 = zd;
+    if (zd > z1)
+        z1 = zd;
 
     count = *(u16*)(hdr + 0xf0);
     i = 0;
@@ -3887,14 +4025,22 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
         u32 bf = *(u32*)(blk + 0x10);
         int tEnd, t;
 
-        if (bf & 0x100000) continue;
-        if ((bf & 0x8000000) && flag20 == 0) continue;
-        if (x0 > bs[2] * scale) continue;
-        if (x1 < bs[1] * scale) continue;
-        if (y0 > bs[4] * scale) continue;
-        if (y1 < bs[3] * scale) continue;
-        if (z0 > bs[6] * scale) continue;
-        if (z1 < bs[5] * scale) continue;
+        if (bf & 0x100000)
+            continue;
+        if ((bf & 0x8000000) && flag20 == 0)
+            continue;
+        if (x0 > bs[2] * scale)
+            continue;
+        if (x1 < bs[1] * scale)
+            continue;
+        if (y0 > bs[4] * scale)
+            continue;
+        if (y1 < bs[3] * scale)
+            continue;
+        if (z0 > bs[6] * scale)
+            continue;
+        if (z1 < bs[5] * scale)
+            continue;
 
         tEnd = *(u16*)(blk + 0x14);
         t = *(u16*)blk;
@@ -3933,8 +4079,10 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                     fy = v[1] * scale * lbl_803DECF8;
                     fz = v[2] * scale * lbl_803DECF8;
                 }
-                if (fx > tMaxX) tMaxX = fx;
-                if (fx < tMinX) tMinX = fx;
+                if (fx > tMaxX)
+                    tMaxX = fx;
+                if (fx < tMinX)
+                    tMinX = fx;
                 if (fy > tMaxY)
                 {
                     tMaxY = fy;
@@ -3945,20 +4093,28 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                     tMinY = fy;
                     minYi = j;
                 }
-                if (fz > tMaxZ) tMaxZ = fz;
-                if (fz < tMinZ) tMinZ = fz;
+                if (fz > tMaxZ)
+                    tMaxZ = fz;
+                if (fz < tMinZ)
+                    tMinZ = fz;
                 *(s16*)(vout + 0x10) = fx;
                 *(s16*)(vout + 0x16) = fy;
                 *(s16*)(vout + 0x1c) = fz;
                 tw++;
                 vout += 2;
             }
-            if (tMinY > y1) continue;
-            if (tMaxY < y0) continue;
-            if (tMinX > x1) continue;
-            if (tMaxX < x0) continue;
-            if (tMinZ > z1) continue;
-            if (tMaxZ < z0) continue;
+            if (tMinY > y1)
+                continue;
+            if (tMaxY < y0)
+                continue;
+            if (tMinX > x1)
+                continue;
+            if (tMaxX < x0)
+                continue;
+            if (tMinZ > z1)
+                continue;
+            if (tMaxZ < z0)
+                continue;
 
             xs = ((TrackTriangle*)cur)->vx;
             ys = ((TrackTriangle*)cur)->vy;
@@ -3971,7 +4127,8 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
             nzi = xs[0] * (ys[1] - ys[2]) + (xs[1] * (ys[2] - ys[0]) + xs[2] * (ys[0] - ys[1]));
             fnz = nzi;
             len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
-            if (!(len > __AR_Callback)) continue;
+            if (!(len > __AR_Callback))
+                continue;
             inv = lbl_803DECC4 / len;
             *(f32*)(cur + 4) = fnx * inv;
             *(f32*)(cur + 8) = fny * inv;
@@ -3979,16 +4136,19 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
 
             if (flag8)
             {
-                if (*(f32*)(cur + 8) >= __AR_Size) continue;
-                if (*(f32*)(cur + 8) <= lbl_803DECEC) continue;
+                if (*(f32*)(cur + 8) >= __AR_Size)
+                    continue;
+                if (*(f32*)(cur + 8) <= lbl_803DECEC)
+                    continue;
             }
             if (flag4)
             {
-                if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC) continue;
+                if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC)
+                    continue;
             }
 
-            ((TrackTriangle*)cur)->planeD = -(*(f32*)(cur + 0xc) * zs[0]
-                + (*(f32*)(cur + 4) * xs[0] + *(f32*)(cur + 8) * ys[0]));
+            ((TrackTriangle*)cur)->planeD =
+                -(*(f32*)(cur + 0xc) * zs[0] + (*(f32*)(cur + 4) * xs[0] + *(f32*)(cur + 8) * ys[0]));
 
             {
                 int k22 = 0;
@@ -4003,7 +4163,8 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                     int k = j2 + 1;
                     f32 px, py, pz;
                     f32 ex, ey, ez;
-                    if (k > 2) k = 0;
+                    if (k > 2)
+                        k = 0;
                     px = *(f32*)(cur + 4) + xw[0];
                     py = *(f32*)(cur + 8) + yw[0];
                     pz = *(f32*)(cur + 0xc) + zw[0];
@@ -4029,7 +4190,8 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                     yw++;
                     zw++;
                 }
-                if (deg) continue;
+                if (deg)
+                    continue;
             }
 
             *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)fn_80060668((int*)blk);
@@ -4051,8 +4213,8 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
 extern u8* mapGetBlockAtPos(int x, int z, int layer);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern float fastFloorf(float x);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern f32 PSVECMag(f32 * v);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern f32 PSVECMag(f32* v);
 extern int gMapBlockOriginWorldX;
 extern int gMapBlockOriginWorldZ;
 
@@ -4156,8 +4318,7 @@ u8 doEdges;
             }
         }
         layer++;
-    }
-    while (layer < 5);
+    } while (layer < 5);
 
     if (count == 0)
     {
@@ -4222,10 +4383,14 @@ u8 doEdges;
         relz1 = z1 - descp[2];
         descp[0] = descp[0] + gMapBlockOriginWorldX;
         descp[2] = descp[2] + gMapBlockOriginWorldZ;
-        if (relx0 < 0) relx0 = 0;
-        if (relx1 > 0x280) relx1 = 0x280;
-        if (relz0 < 0) relz0 = 0;
-        if (relz1 > 0x280) relz1 = 0x280;
+        if (relx0 < 0)
+            relx0 = 0;
+        if (relx1 > 0x280)
+            relx1 = 0x280;
+        if (relz0 < 0)
+            relz0 = 0;
+        if (relz1 > 0x280)
+            relz1 = 0x280;
         dxoff = descp[0] - firstp[0];
         dzoff = descp[2] - firstp[2];
 
@@ -4233,12 +4398,14 @@ u8 doEdges;
         bit = 1;
         for (pos = 0; pos != 0x280; pos += 0x50)
         {
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            if (relx0 <= pos + 0x50 && relx1 >= pos)
+                mask |= bit;
             bit = bit << 1;
         }
         for (pos = 0; pos != 0x280; pos += 0x50)
         {
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            if (relz0 <= pos + 0x50 && relz1 >= pos)
+                mask |= bit;
             bit = bit << 1;
         }
         tri0 = *(u8**)(blk + 0x50);
@@ -4253,28 +4420,41 @@ u8 doEdges;
             int t0;
             u8* vq;
 
-            if ((tf & 0x10) && f40) continue;
-            if (!(tf & 4) && f80) continue;
+            if ((tf & 0x10) && f40)
+                continue;
+            if (!(tf & 4) && f80)
+                continue;
             if (tf & 8)
             {
-                if (tf & 1) continue;
-                if (f200) continue;
+                if (tf & 1)
+                    continue;
+                if (f200)
+                    continue;
                 type = 4;
-                if (f120 == 0) type |= 0x10;
+                if (f120 == 0)
+                    type |= 0x10;
             }
             else
             {
-                if ((tf & 2) && f20 == 0) continue;
+                if ((tf & 2) && f20 == 0)
+                    continue;
                 type = 2;
             }
             yoff = *(s16*)(blk + 0x8e);
-            if (((MapTriGroup*)tri)->minY + yoff > y1) continue;
-            if (((MapTriGroup*)tri)->maxY + yoff < y0) continue;
-            if (((MapTriGroup*)tri)->minX > relx1) continue;
-            if (((MapTriGroup*)tri)->maxX < relx0) continue;
-            if (((MapTriGroup*)tri)->minZ > relz1) continue;
-            if (((MapTriGroup*)tri)->maxZ < relz0) continue;
-            if (tf & 4) type |= 8;
+            if (((MapTriGroup*)tri)->minY + yoff > y1)
+                continue;
+            if (((MapTriGroup*)tri)->maxY + yoff < y0)
+                continue;
+            if (((MapTriGroup*)tri)->minX > relx1)
+                continue;
+            if (((MapTriGroup*)tri)->maxX < relx0)
+                continue;
+            if (((MapTriGroup*)tri)->minZ > relz1)
+                continue;
+            if (((MapTriGroup*)tri)->maxZ < relz0)
+                continue;
+            if (tf & 4)
+                type |= 8;
             typeb = fn_80060668((int*)tri);
             t0 = ((MapTriGroup*)tri)->firstTri;
             vq = (u8*)(bb + t0 * 8);
@@ -4293,8 +4473,10 @@ u8 doEdges;
                 int j;
                 f32 mag;
 
-                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff) == 0) continue;
-                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff00) == 0) continue;
+                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff) == 0)
+                    continue;
+                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff00) == 0)
+                    continue;
                 vp = (s16*)(vb + ((MapTriIndex*)vq)->vert[0] * 6);
                 minX = vp[0] >> 3;
                 maxX = minX;
@@ -4320,8 +4502,10 @@ u8 doEdges;
                     x = vp[0] >> 3;
                     yy = (vp[1] >> 3) + *(s16*)(blk + 0x8e);
                     z = vp[2] >> 3;
-                    if (x > maxX) maxX = x;
-                    else if (x < minX) minX = x;
+                    if (x > maxX)
+                        maxX = x;
+                    else if (x < minX)
+                        minX = x;
                     if (yy > maxY)
                     {
                         maxY = yy;
@@ -4332,8 +4516,10 @@ u8 doEdges;
                         minY = yy;
                         minYi = j;
                     }
-                    if (z > maxZ) maxZ = z;
-                    else if (z < minZ) minZ = z;
+                    if (z > maxZ)
+                        maxZ = z;
+                    else if (z < minZ)
+                        minZ = z;
                     *(s16*)(vo + 0x10) = x + dxoff;
                     *(s16*)(vo + 0x16) = yy;
                     *(s16*)(vo + 0x1c) = z + dzoff;
@@ -4344,18 +4530,25 @@ u8 doEdges;
                     vo += 2;
                     vf += 3;
                 }
-                if (minY > y1) continue;
-                if (maxY < y0) continue;
-                if (minX > relx1) continue;
-                if (maxX < relx0) continue;
-                if (minZ > relz1) continue;
-                if (maxZ < relz0) continue;
+                if (minY > y1)
+                    continue;
+                if (maxY < y0)
+                    continue;
+                if (minX > relx1)
+                    continue;
+                if (maxX < relx0)
+                    continue;
+                if (minZ > relz1)
+                    continue;
+                if (maxZ < relz0)
+                    continue;
 
                 PSVECSubtract(v0, vertp, e0);
                 PSVECSubtract(vertp, verts2, e1);
                 PSVECCrossProduct(e0, e1, (f32*)(cur + 4));
                 mag = PSVECMag((f32*)(cur + 4));
-                if (!(mag > __AR_Callback)) continue;
+                if (!(mag > __AR_Callback))
+                    continue;
                 {
                     f32 inv = lbl_803DECC4 / mag;
                     PSVECScale((f32*)(cur + 4), (f32*)(cur + 4), inv);
@@ -4364,13 +4557,16 @@ u8 doEdges;
                 {
                     if (*(f32*)(cur + 8) >= __AR_Size || *(f32*)(cur + 8) <= lbl_803DECEC)
                     {
-                        if (type != 4) continue;
-                        if (f100 == 0) continue;
+                        if (type != 4)
+                            continue;
+                        if (f100 == 0)
+                            continue;
                     }
                 }
                 if (f4)
                 {
-                    if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC) continue;
+                    if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC)
+                        continue;
                 }
                 ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((f32*)(cur + 4), v0);
                 if (doEdges)
@@ -4405,9 +4601,9 @@ u8 doEdges;
                         }
                         ep += 3;
                         j2++;
-                    }
-                    while (j2 < 3);
-                    if (deg) continue;
+                    } while (j2 < 3);
+                    if (deg)
+                        continue;
                 }
                 {
                     u32 tf2 = ((MapTriGroup*)tri)->flags;
@@ -4420,7 +4616,8 @@ u8 doEdges;
                     {
                         t2 = typeb;
                     }
-                    if (tf2 & 0x20) type |= 0x40;
+                    if (tf2 & 0x20)
+                        type |= 0x40;
                     *(s8*)&((TrackTriangle*)cur)->surfaceType = t2;
                     ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
                     ((TrackTriangle*)cur)->flags = type;
@@ -4495,9 +4692,9 @@ void trackIntersect(void)
             u8* p = idx + base;
             for (gx = 0; gx < 0x10; gx++, p++)
             {
-                if ((s8) * p >= 0)
+                if ((s8)*p >= 0)
                 {
-                    u8* blk = mapGetBlock((s8) * p);
+                    u8* blk = mapGetBlock((s8)*p);
                     int tn, toff;
                     f32 fx0;
                     tn = 0;
@@ -4679,8 +4876,8 @@ extern const f32 lbl_803DECD4;
 extern f32 lbl_803DB660;
 
 #pragma optimization_level 2
-int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj,
-                 int pmask, int seg, int ytol, int self)
+int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
+                 int self)
 {
     f32* A = ptA;
     f32 fracs[5];
@@ -4746,7 +4943,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         vp = (int)lbl_803DCF38;
     }
 
-    flag1 = (s8)!(flags & 1);
+    flag1 = (s8) !(flags & 1);
     flag2 = (s8)(flags & 2);
     flag4 = flags & 4;
 
@@ -4821,13 +5018,16 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             {
                 rec = rp;
             }
-            if ((mask & ~(s8)rec[2]) == 0) continue;
-            if ((s8)rec[3] & 0x40) continue;
+            if ((mask & ~(s8)rec[2]) == 0)
+                continue;
+            if ((s8)rec[3] & 0x40)
+                continue;
             i0 = *(s16*)(rec + 4);
             i1 = *(s16*)(rec + 6);
             if ((s8)rec[3] & 0x80)
             {
-                if ((u8)flag4 != 0) continue;
+                if ((u8)flag4 != 0)
+                    continue;
                 lineType = 0;
             }
             else
@@ -4846,15 +5046,19 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             bx2 = vb[0];
             by2 = vb[1];
             bz2 = vb[2];
-            if (ax2 < minX && bx2 < minX) continue;
-            if (ax2 > maxX && bx2 > maxX) continue;
-            if (az2 < minZ && bz2 < minZ) continue;
-            if (az2 > maxZ && bz2 > maxZ) continue;
+            if (ax2 < minX && bx2 < minX)
+                continue;
+            if (ax2 > maxX && bx2 > maxX)
+                continue;
+            if (az2 < minZ && bz2 < minZ)
+                continue;
+            if (az2 > maxZ && bz2 > maxZ)
+                continue;
 
             ylo = ay2;
-            if (by2 < ay2) ylo = by2;
-            ylo = ylo - (f32)(s8)
-            ytol;
+            if (by2 < ay2)
+                ylo = by2;
+            ylo = ylo - (f32)(s8)ytol;
             if ((s8)rec[2] & 0x80)
             {
                 ha = (f32) * (s16*)rec;
@@ -4862,21 +5066,22 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             }
             else
             {
-                ha = (f32)(s8)
-                rec[0];
-                hb = (f32)(s8)
-                rec[1];
+                ha = (f32)(s8)rec[0];
+                hb = (f32)(s8)rec[1];
             }
             yhi = ay2 + ha;
-            if (by2 + hb > ay2 + ha) yhi = by2 + hb;
-            yhi = yhi + (f32)(s8)
-            ytol;
-            if (A[1] < ylo) continue;
-            if (A[1] > yhi) continue;
+            if (by2 + hb > ay2 + ha)
+                yhi = by2 + hb;
+            yhi = yhi + (f32)(s8)ytol;
+            if (A[1] < ylo)
+                continue;
+            if (A[1] > yhi)
+                continue;
 
             dx = bx2 - ax2;
             dz = bz2 - az2;
-            if (__AR_Callback == dx * dx + dz * dz) continue;
+            if (__AR_Callback == dx * dx + dz * dz)
+                continue;
             len = sqrtf(dx * dx + dz * dz);
             dx = dx / len;
             dz = dz / len;
@@ -4921,9 +5126,11 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                     dp = ld;
                     for (n = 0; n < 2; n++)
                     {
-                        if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback) *mp |= mb;
+                        if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback)
+                            *mp |= mb;
                         mb = (s16)(mb << 1);
-                        if (dp[1] + (px * bp[1] + pz * ap[1]) < __AR_Callback) *mp |= mb;
+                        if (dp[1] + (px * bp[1] + pz * ap[1]) < __AR_Callback)
+                            *mp |= mb;
                         mb = (s16)(mb << 1);
                         ap += 2;
                         bp += 2;
@@ -5061,7 +5268,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                     }
                 }
             }
-            if (found) break;
+            if (found)
+                break;
         }
         if (found)
         {
@@ -5258,10 +5466,9 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
             {
                 if (desc->object != NULL)
                 {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2],
-                                          &ws[0], &ws[1], &ws[2]);
-                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2],
-                                          &we[0], &we[1], &we[2]);
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], &ws[1],
+                                          &ws[2]);
+                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], &we[1], &we[2]);
                 }
                 else
                 {
@@ -5285,15 +5492,18 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     f32 dE, dS;
                     u8 b;
                     tri->edgeOutBits = 0;
-                    if (tri->flags & 0x10) continue;
+                    if (tri->flags & 0x10)
+                        continue;
                     plane[0] = tri->planeN[0];
                     plane[1] = tri->planeN[1];
                     plane[2] = tri->planeN[2];
                     plane[3] = tri->planeD;
                     dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
-                    if (!(dE <= (*(f32*)&__AR_Callback))) continue;
+                    if (!(dE <= (*(f32*)&__AR_Callback)))
+                        continue;
                     dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
-                    if ((dS <= (*(f32*)&__AR_Callback) && dE >= (*(f32*)&__AR_Callback)) || (dS >= (*(f32*)&__AR_Callback) && dE <= (*(f32*)&__AR_Callback)))
+                    if ((dS <= (*(f32*)&__AR_Callback) && dE >= (*(f32*)&__AR_Callback)) ||
+                        (dS >= (*(f32*)&__AR_Callback) && dE <= (*(f32*)&__AR_Callback)))
                     {
                         f32 lo, hi;
                         if (dS != dE)
@@ -5307,30 +5517,35 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         PSVECScale(delta, hitpt, frac);
                         PSVECAdd(hitpt, ws, hitpt);
                         lo = ts[(tri->minMaxY & 0xf) + 0xb] - maxStep;
-                        if (hitpt[1] < lo) continue;
+                        if (hitpt[1] < lo)
+                            continue;
                         hi = ts[(tri->minMaxY >> 4) + 0xb] + maxStep;
-                        if (hitpt[1] > hi) continue;
+                        if (hitpt[1] > hi)
+                            continue;
                         edge0[0] = tri->edgeN0[0];
                         edge0[1] = tri->edgeN0[1];
                         edge0[2] = tri->edgeN0[2];
-                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1]))
-                            + PSVECDotProduct(edge0, hitpt);
+                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1])) +
+                                   PSVECDotProduct(edge0, hitpt);
                         edge1[0] = tri->edgeN1[0];
                         edge1[1] = tri->edgeN1[1];
                         edge1[2] = tri->edgeN1[2];
-                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1]))
-                            + PSVECDotProduct(edge1p, hitpt);
+                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1])) +
+                                   PSVECDotProduct(edge1p, hitpt);
                         edge2[0] = tri->edgeN2[0];
                         edge2[1] = tri->edgeN2[1];
                         edge2[2] = tri->edgeN2[2];
-                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
-                            + PSVECDotProduct(edge2p, hitpt);
+                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
+                                   PSVECDotProduct(edge2p, hitpt);
                         b = 0;
                         if (radius > (*(f32*)&__AR_Callback))
                         {
-                            if (edge0[3] > (*(f32*)&__AR_Callback)) b |= 1;
-                            if (edge1[3] > (*(f32*)&__AR_Callback)) b |= 2;
-                            if (edge2[3] > (*(f32*)&__AR_Callback)) b |= 4;
+                            if (edge0[3] > (*(f32*)&__AR_Callback))
+                                b |= 1;
+                            if (edge1[3] > (*(f32*)&__AR_Callback))
+                                b |= 2;
+                            if (edge2[3] > (*(f32*)&__AR_Callback))
+                                b |= 4;
                         }
                         if (b == 0)
                         {
@@ -5344,38 +5559,45 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         edge0[0] = tri->edgeN0[0];
                         edge0[1] = tri->edgeN0[1];
                         edge0[2] = tri->edgeN0[2];
-                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1]))
-                            + PSVECDotProduct(edge0, ws);
+                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1])) +
+                                   PSVECDotProduct(edge0, ws);
                         edge1[0] = tri->edgeN1[0];
                         edge1[1] = tri->edgeN1[1];
                         edge1[2] = tri->edgeN1[2];
-                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1]))
-                            + PSVECDotProduct(edge1p, ws);
+                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1])) +
+                                   PSVECDotProduct(edge1p, ws);
                         edge2[0] = tri->edgeN2[0];
                         edge2[1] = tri->edgeN2[1];
                         edge2[2] = tri->edgeN2[2];
-                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
-                            + PSVECDotProduct(edge2p, ws);
+                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
+                                   PSVECDotProduct(edge2p, ws);
                         b = 0;
-                        if (edge0[3] > (*(f32*)&__AR_Callback)) b |= 1;
-                        if (edge1[3] > (*(f32*)&__AR_Callback)) b |= 2;
-                        if (edge2[3] > (*(f32*)&__AR_Callback)) b |= 4;
+                        if (edge0[3] > (*(f32*)&__AR_Callback))
+                            b |= 1;
+                        if (edge1[3] > (*(f32*)&__AR_Callback))
+                            b |= 2;
+                        if (edge2[3] > (*(f32*)&__AR_Callback))
+                            b |= 4;
                         tri->edgeOutBits = b;
                     }
                 }
-                if ((*(f32*)&__AR_Callback) == mag) goto found_hit;
+                if ((*(f32*)&__AR_Callback) == mag)
+                    goto found_hit;
                 for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
                     u8 bit;
-                    if (tri->edgeOutBits == 0) continue;
+                    if (tri->edgeOutBits == 0)
+                        continue;
                     for (bit = 0; bit < 3; bit++)
                     {
                         s16* vs;
                         u8 k;
-                        if ((tri->edgeOutBits & (1 << bit)) == 0) continue;
+                        if ((tri->edgeOutBits & (1 << bit)) == 0)
+                            continue;
                         k = bit + 1;
-                        if (k > 2) k = 0;
+                        if (k > 2)
+                            k = 0;
                         vs = (s16*)((u8*)tri + bit * 2);
                         va[0] = vs[8];
                         va[1] = vs[0xb];
@@ -5386,7 +5608,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         vb[2] = vs[0xe];
                         PSVECSubtract(vbp, va, evecp);
                         rdatap[2] = Vec3_Normalize(evecp);
-                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&__AR_Callback), hitpt, plane, &frac))
+                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&__AR_Callback), hitpt, plane,
+                                                 &frac))
                         {
                             hit = 1;
                             goto found_hit;
@@ -5397,16 +5620,19 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
                     u8 bit;
-                    if (tri->edgeOutBits == 0) continue;
+                    if (tri->edgeOutBits == 0)
+                        continue;
                     for (bit = 0; bit < 3; bit++)
                     {
                         s16* vs;
                         u8 k;
                         int ok;
                         f32 dotv, sq, disc, root, tt, rr, rr2;
-                        if ((tri->edgeOutBits & (1 << bit)) == 0) continue;
+                        if ((tri->edgeOutBits & (1 << bit)) == 0)
+                            continue;
                         k = bit + 1;
-                        if (k > 2) k = 0;
+                        if (k > 2)
+                            k = 0;
                         vs = (s16*)((u8*)tri + bit * 2);
                         va[0] = vs[8];
                         va[1] = vs[0xb];
@@ -5567,8 +5793,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     f32 pen;
                     if (objmtx != 0)
                     {
-                        Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2],
-                                              &cur[0], &cur[1], &cur[2]);
+                        Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2], &cur[0], &cur[1],
+                                              &cur[2]);
                     }
                     else
                     {
@@ -5579,8 +5805,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     fn_800660C8(svWorld, cur, svHit, norm4, type, pen, maxStep);
                     if (objmtx != 0)
                     {
-                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2],
-                                              &cur[0], &cur[1], &cur[2]);
+                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
+                                              &cur[1], &cur[2]);
                     }
                     else
                     {
@@ -5596,8 +5822,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     *(int*)(slotp + 0x5c) = objmtx;
                 }
             }
-        }
-        while (found != 0);
+        } while (found != 0);
     slot_done:
         if (bounces != 0)
         {
@@ -5619,8 +5844,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         ep2 += 3;
         sp1 += 3;
         sp2 += 3;
-    }
-    while (i < count);
+    } while (i < count);
     return (u8)(retLo | (retHi << 4));
 }
 #pragma opt_common_subs reset

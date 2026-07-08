@@ -10,19 +10,25 @@
 #include "main/gamebits.h"
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
-#define CCGASVENT_GROUP 0x3f
+#define CCGASVENT_GROUP           0x3f
 #define CCGASVENT_TARGET_OBJGROUP 5
-#define CCGASVENT_GAS_GAMEBIT 0x1c0
-#define CCGASVENT_PARTFX_GAS 0x3df
+#define CCGASVENT_GAS_GAMEBIT     0x1c0
+#define CCGASVENT_PARTFX_GAS      0x3df
 
 /* ccgasvent_update state machine */
-#define CCGASVENT_STATE_IDLE 0     /* player near: dormant, watching distance */
+#define CCGASVENT_STATE_IDLE     0 /* player near: dormant, watching distance */
 #define CCGASVENT_STATE_SPAWNING 1 /* player far enough: emitting gas each tick */
 
-int ccgasvent_getExtraSize(void) { return 0x1; }
+int ccgasvent_getExtraSize(void)
+{
+    return 0x1;
+}
 
 #pragma scheduling off
-void ccgasvent_free(int obj) { ObjGroup_RemoveObject(obj, CCGASVENT_GROUP); }
+void ccgasvent_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, CCGASVENT_GROUP);
+}
 #pragma scheduling reset
 
 void ccgasvent_render(void)
@@ -63,4 +69,7 @@ void ccgasvent_update(int* obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-void ccgasvent_init(int obj) { ObjGroup_AddObject(obj, CCGASVENT_GROUP); }
+void ccgasvent_init(int obj)
+{
+    ObjGroup_AddObject(obj, CCGASVENT_GROUP);
+}

@@ -19,41 +19,47 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#define RING_OBJ_ARW_GOLD 0x060b
+#define RING_OBJ_ARW_GOLD   0x060b
 #define RING_OBJ_ARW_SILVER 0x060c
-#define RING_OBJ_WC_SUN 0x07fb
-#define RING_OBJ_WC_MOON 0x07fc
+#define RING_OBJ_WC_SUN     0x07fb
+#define RING_OBJ_WC_MOON    0x07fc
 #define RING_OBJ_AND_SILVER 0x0819
 
 #define RING_MODE_SILVER 0
 /* mode 1 is unused/internal (no object type maps to it) */
-#define RING_MODE_GOLD 2
+#define RING_MODE_GOLD    2
 #define RING_MODE_WC_MOON 3
-#define RING_MODE_WC_SUN 4
+#define RING_MODE_WC_SUN  4
 
-#define RING_ROUTE_MOVING_AXIS_B 1 /* shares the moving-axis update with RING_ROUTE_MOVING_AXIS_A */
+#define RING_ROUTE_MOVING_AXIS_B   1 /* shares the moving-axis update with RING_ROUTE_MOVING_AXIS_A */
 #define RING_ROUTE_STATIONARY_SHOT 2
-#define RING_ROUTE_MOVING_SHOT_A 3
-#define RING_ROUTE_MOVING_AXIS_A 4
-#define RING_ROUTE_MOVING_SHOT_B 5
+#define RING_ROUTE_MOVING_SHOT_A   3
+#define RING_ROUTE_MOVING_AXIS_A   4
+#define RING_ROUTE_MOVING_SHOT_B   5
 
-#define RING_PHASE_HIDDEN 0
-#define RING_PHASE_ACTIVE 1
+#define RING_PHASE_HIDDEN         0
+#define RING_PHASE_ACTIVE         1
 #define RING_PHASE_PULL_TO_ARWING 2
-#define RING_PHASE_COLLECTED 3
+#define RING_PHASE_COLLECTED      3
 
-#define RING_ALPHA_OPAQUE 0xff
-#define RING_SCORE_VALUE 0xf
-#define RING_SHOT_TYPE_A 0x604
-#define RING_SHOT_TYPE_B 0x605
-#define RING_PARTFX_FLAGS 0x200001
-#define RING_MODEL_DEFAULT 0
-#define RING_MODEL_ALT 1
+#define RING_ALPHA_OPAQUE   0xff
+#define RING_SCORE_VALUE    0xf
+#define RING_SHOT_TYPE_A    0x604
+#define RING_SHOT_TYPE_B    0x605
+#define RING_PARTFX_FLAGS   0x200001
+#define RING_MODEL_DEFAULT  0
+#define RING_MODEL_ALT      1
 #define RING_OBJFLAG_HIDDEN 0x4000
 
-int ring_getExtraSize(void) { return sizeof(RingState); }
+int ring_getExtraSize(void)
+{
+    return sizeof(RingState);
+}
 
-int ring_getObjectTypeId(void) { return 0; }
+int ring_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void ring_free(int obj)
 {
@@ -201,7 +207,8 @@ void ring_update(int obj)
         return;
     case RING_PHASE_ACTIVE:
         alpha = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + lbl_803E70B4 * timeDelta);
-        if (alpha > RING_ALPHA_OPAQUE) alpha = RING_ALPHA_OPAQUE;
+        if (alpha > RING_ALPHA_OPAQUE)
+            alpha = RING_ALPHA_OPAQUE;
         ((GameObject*)obj)->anim.alpha = alpha;
         bit = setup->activateBit;
         if (bit > -1)
@@ -214,7 +221,8 @@ void ring_update(int obj)
         case RING_ROUTE_MOVING_SHOT_A:
         case RING_ROUTE_MOVING_SHOT_B:
             if (ObjHits_GetPriorityHit(obj, &hitA, 0, 0) != 0 && (void*)(hit = hitA) != NULL &&
-                (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A || ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
+                (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A ||
+                 ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -231,7 +239,8 @@ void ring_update(int obj)
             break;
         case RING_ROUTE_STATIONARY_SHOT:
             if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (void*)(hit = hitB) != NULL &&
-                (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A || ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
+                (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A ||
+                 ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -258,8 +267,7 @@ void ring_update(int obj)
                 Ring_onCollect(obj, state, arwing);
             }
         }
-        ((GameObject*)obj)->anim.rotX =
-            (f32)(int)((GameObject*)obj)->anim.rotX + lbl_803E70B8 * timeDelta;
+        ((GameObject*)obj)->anim.rotX = (f32)(int)((GameObject*)obj)->anim.rotX + lbl_803E70B8 * timeDelta;
         break;
     case RING_PHASE_PULL_TO_ARWING:
         if (state->pullTimer > lbl_803E70A0)
@@ -269,13 +277,12 @@ void ring_update(int obj)
                 ((GameObject*)obj)->anim.velocityX =
                     oneOverTimeDelta * (((GameObject*)arwing)->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
                 ((GameObject*)obj)->anim.velocityY =
-                    oneOverTimeDelta *
-                    (state->arwingYOffset + (((GameObject*)arwing)->anim.localPosY - ((GameObject*)obj)->anim.localPosY));
+                    oneOverTimeDelta * (state->arwingYOffset +
+                                        (((GameObject*)arwing)->anim.localPosY - ((GameObject*)obj)->anim.localPosY));
                 ((GameObject*)obj)->anim.velocityZ =
                     oneOverTimeDelta * (((GameObject*)arwing)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
                 objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                        ((GameObject*)obj)->anim.velocityY * timeDelta,
-                        ((GameObject*)obj)->anim.velocityZ * timeDelta);
+                        ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
             }
             {
                 f32 sixty;
@@ -285,41 +292,36 @@ void ring_update(int obj)
                         (s16)(((GameObject*)obj)->anim.rotX + lbl_8032B720[state->mode].f10);
                     {
                         f32 frac = (state->pullTimer - sixty) / sixty;
-                        ((GameObject*)obj)->anim.rootMotionScale = frac *
-                            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+                        ((GameObject*)obj)->anim.rootMotionScale =
+                            frac * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                     }
                     if (lbl_803E70C0 != state->pullTimer)
                     {
                         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-                        for (ang = -0x7fff; ang < 0x7fff;
-                             ang += lbl_8032B720[state->mode].f8)
+                        for (ang = -0x7fff; ang < 0x7fff; ang += lbl_8032B720[state->mode].f8)
                         {
-                            dir[0] = 10.0f *
-                                mathCosf(3.1415927f *
-                                    (f32)(ang +
-                                        (int)(state->pullTimer *
-                                            lbl_8032B720[state->mode].f14)) /
-                                    32768.0f);
-                            dir[1] = 10.0f *
-                                mathSinf(3.1415927f *
-                                    (f32)(ang +
-                                        (int)(state->pullTimer *
-                                            lbl_8032B720[state->mode].f14)) /
-                                    32768.0f);
+                            dir[0] =
+                                10.0f * mathCosf(3.1415927f *
+                                                 (f32)(ang + (int)(state->pullTimer * lbl_8032B720[state->mode].f14)) /
+                                                 32768.0f);
+                            dir[1] =
+                                10.0f * mathSinf(3.1415927f *
+                                                 (f32)(ang + (int)(state->pullTimer * lbl_8032B720[state->mode].f14)) /
+                                                 32768.0f);
                             dir[2] = 0.0f;
                             PSMTXMultVecSR(mtx, dir, dir);
                             spawnBuf[3] = dir[0] + ((GameObject*)obj)->anim.localPosX;
                             spawnBuf[4] = dir[1] + ((GameObject*)obj)->anim.localPosY;
                             spawnBuf[5] = dir[2] + ((GameObject*)obj)->anim.localPosZ;
-                            (*gPartfxInterface)->spawnObject((void*)obj, lbl_8032B720[state->mode].f0,
-                                                             spawnBuf, RING_PARTFX_FLAGS, -1,
-                                                             (void*)(obj + 0x24));
-                            (*gPartfxInterface)->spawnObject((void*)obj, lbl_8032B720[state->mode].f0,
-                                                             spawnBuf, RING_PARTFX_FLAGS, -1,
-                                                             (void*)(obj + 0x24));
-                            (*gPartfxInterface)->spawnObject((void*)obj, lbl_8032B720[state->mode].f0,
-                                                             spawnBuf, RING_PARTFX_FLAGS, -1,
-                                                             (void*)(obj + 0x24));
+                            (*gPartfxInterface)
+                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                              (void*)(obj + 0x24));
+                            (*gPartfxInterface)
+                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                              (void*)(obj + 0x24));
+                            (*gPartfxInterface)
+                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                              (void*)(obj + 0x24));
                         }
                     }
                     state->flags.bit40 = 1;
@@ -330,8 +332,8 @@ void ring_update(int obj)
                     {
                         for (ang = 0; ang < lbl_8032B720[state->mode].fc; ang++)
                         {
-                            (*gPartfxInterface)->spawnObject((void*)obj, lbl_8032B720[state->mode].f4,
-                                                             NULL, 2, -1, NULL);
+                            (*gPartfxInterface)
+                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f4, NULL, 2, -1, NULL);
                         }
                     }
                     state->flags.bit40 = 0;

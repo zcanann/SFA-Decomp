@@ -26,9 +26,15 @@ STATIC_ASSERT(offsetof(CntCounterSetup, doneGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CntCounterSetup, decrementGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CntCounterSetup) == 0x24);
 
-int CntCounter_getExtraSize(void) { return 8; }
+int CntCounter_getExtraSize(void)
+{
+    return 8;
+}
 
-int CntCounter_getObjectTypeId(void) { return 0; }
+int CntCounter_getObjectTypeId(void)
+{
+    return 0;
+}
 
 void CntCounter_free(int obj)
 {

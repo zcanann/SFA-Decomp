@@ -36,8 +36,8 @@ typedef struct Dll109State
 
 typedef enum Dll109Phase
 {
-    DLL109_PHASE_INTACT = 0,  /* carryable/active; waits for a priority hit */
-    DLL109_PHASE_BREAKING = 1, /* just broke: spawn debris, disable, snap to placement */
+    DLL109_PHASE_INTACT = 0,     /* carryable/active; waits for a priority hit */
+    DLL109_PHASE_BREAKING = 1,   /* just broke: spawn debris, disable, snap to placement */
     DLL109_PHASE_RESPAWNING = 2, /* respawn timer + off-screen wait, then reset */
 } Dll109Phase;
 
@@ -59,8 +59,14 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
-int dll_109_getExtraSize_ret_16(void) { return 0x10; }
-int dll_109_getObjectTypeId(void) { return 0x0; }
+int dll_109_getExtraSize_ret_16(void)
+{
+    return 0x10;
+}
+int dll_109_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_109_free(int obj)
 {
@@ -100,7 +106,7 @@ void carryable_break_respawn_update(int obj)
         (*gCarryableInterface)->getAnimState(obj, (int)state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            (*(void (*)(int, Dll109State*))*(int*)((u8*)*gCarryableInterface + 0x30))(obj, state);
+            (*(void (*)(int, Dll109State*)) * (int*)((u8*)*gCarryableInterface + 0x30))(obj, state);
             Sfx_PlayFromObject(obj, SFXen_rfall5_c);
             ObjHitbox_SetSphereRadius(obj, 0x28);
             ObjHits_SetHitVolumeSlot(obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
@@ -133,8 +139,8 @@ void carryable_break_respawn_update(int obj)
         if (state->timer > 300.0f)
         {
             if (ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.
-                                            rootMotionScale) == 0)
+                                            ((GameObject*)obj)->anim.hitboxScale *
+                                                ((GameObject*)obj)->anim.rootMotionScale) == 0)
             {
                 ObjHits_EnableObject(obj);
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;

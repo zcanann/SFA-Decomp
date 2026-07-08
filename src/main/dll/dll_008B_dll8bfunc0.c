@@ -22,8 +22,7 @@ extern u8 lbl_80316728[];
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL8B_EFFECT_ID 0xd9
 
-void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
-                   f32* scalePtr)
+void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scalePtr)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80316728;

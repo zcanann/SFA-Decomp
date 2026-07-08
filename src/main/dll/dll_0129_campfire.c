@@ -13,7 +13,6 @@ extern void ModelLightStruct_free(void* effect);
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
@@ -32,23 +31,30 @@ extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 /* CampfireExtra - the per-class extra state block (GameObject.extra) for the
  * campfire object class; CampFire_getExtraSize() returns 0x14. Single-owner;
  * offsets mirror the observed deref widths in this unit. */
-typedef struct CampfireExtra {
-    void *light;     /* 0x00 ModelLightStruct handle (objCreateLight result) */
-    f32 dayTimer;    /* 0x04 flicker/sound timer used in the daytime branch */
-    f32 nightTimer;  /* 0x08 timer used in the night branch */
-    s16 gameBit;     /* 0x0C gamebit index (from spawn descriptor +0x18) */
+typedef struct CampfireExtra
+{
+    void* light;    /* 0x00 ModelLightStruct handle (objCreateLight result) */
+    f32 dayTimer;   /* 0x04 flicker/sound timer used in the daytime branch */
+    f32 nightTimer; /* 0x08 timer used in the night branch */
+    s16 gameBit;    /* 0x0C gamebit index (from spawn descriptor +0x18) */
     u8 unk0E[2];
-    u8 unk10;        /* 0x10 (from spawn descriptor +0x1b) */
-    u8 flags;        /* 0x11 bit0 = gamebit 0x8c set, bit2 = gameBit set */
-    u8 sfxPlaying;   /* 0x12 looped-sound active flag */
+    u8 unk10;      /* 0x10 (from spawn descriptor +0x1b) */
+    u8 flags;      /* 0x11 bit0 = gamebit 0x8c set, bit2 = gameBit set */
+    u8 sfxPlaying; /* 0x12 looped-sound active flag */
     u8 unk13;
 } CampfireExtra;
 
 STATIC_ASSERT(offsetof(CampfireExtra, gameBit) == 0xC);
 STATIC_ASSERT(sizeof(CampfireExtra) == 0x14);
 
-int CampFire_getExtraSize(void) { return 0x14; }
-int CampFire_getObjectTypeId(void) { return 0x1; }
+int CampFire_getExtraSize(void)
+{
+    return 0x14;
+}
+int CampFire_getObjectTypeId(void)
+{
+    return 0x1;
+}
 
 void CampFire_free(int obj)
 {
@@ -76,8 +82,7 @@ void CampFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         effect = state->light;
-        if (((effect != 0) && (*(u8*)((int)effect + 0x2f8) != 0)) &&
-            (*(u8*)((int)effect + 0x4c) != 0))
+        if (((effect != 0) && (*(u8*)((int)effect + 0x2f8) != 0)) && (*(u8*)((int)effect + 0x4c) != 0))
         {
             queueGlowRender(effect);
         }
@@ -201,10 +206,10 @@ void CampFire_init(int obj, int p2)
     }
     state->unk10 = *(u8*)(p2 + 0x1b);
     {
-        f32 scale = ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+        f32 scale =
+            ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         int hitState = *(int*)&((GameObject*)obj)->anim.hitReactState;
-        ObjHitbox_SetCapsuleBounds(obj,
-                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
+        ObjHitbox_SetCapsuleBounds(obj, (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
                                    (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
                                    (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetB * scale));
     }

@@ -16,11 +16,11 @@
 /* GfxCmd/GfxBuf are duplicated from dll_0093; should be unified in a shared header. */
 typedef struct
 {
-    u32 mode; /* +0x00 */
+    u32 mode;    /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    void* tex;   /* +0x10 */
+    u16 flags;   /* +0x14 */
+    u8 layer;    /* +0x16 */
 } GfxCmd;
 
 extern ModgfxInterface** gModgfxInterface;
@@ -43,30 +43,30 @@ void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 as
 
 typedef struct
 {
-    GfxCmd* cmds; /* +0x00 */
-    int ctx; /* +0x04 */
-    u8 pad0[0x18]; /* +0x08 */
-    f32 col[3]; /* +0x20 */
-    f32 pos[3]; /* +0x2c */
-    f32 scale; /* +0x38 */
-    u32 v3c; /* +0x3c */
-    u32 v40; /* +0x40 */
-    s16 v44; /* +0x44 */
-    s16 hw[7]; /* +0x46 */
-    u32 flags; /* +0x54 */
+    GfxCmd* cmds;          /* +0x00 */
+    int ctx;               /* +0x04 */
+    u8 pad0[0x18];         /* +0x08 */
+    f32 col[3];            /* +0x20 */
+    f32 pos[3];            /* +0x2c */
+    f32 scale;             /* +0x38 */
+    u32 v3c;               /* +0x3c */
+    u32 v40;               /* +0x40 */
+    s16 v44;               /* +0x44 */
+    s16 hw[7];             /* +0x46 */
+    u32 flags;             /* +0x54 */
     u8 v58, v59, v5a, v5b; /* +0x58..+0x5b */
-    u8 pad5c[1]; /* +0x5c layout-only; never written by dll_93/94 */
-    s8 count; /* +0x5d */
-    u8 pad1[2]; /* +0x5e */
-    GfxCmd entries[32]; /* +0x60 */
+    u8 pad5c[1];           /* +0x5c layout-only; never written by dll_93/94 */
+    s8 count;              /* +0x5d */
+    u8 pad1[2];            /* +0x5e */
+    GfxCmd entries[32];    /* +0x60 */
 } GfxBuf;
 
 #pragma inline_max_size(2000)
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL94_EFFECT_ID 0x3c
 
-static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int posSource,
-                                     u32 flags, int arg5, f32* extraArgs)
+static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, int arg5,
+                                     f32* extraArgs)
 {
     GfxBuf buf;
     GfxCmd* e;
@@ -181,9 +181,12 @@ static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int p
     {
         if ((u32)sourceObj != 0 && (u32)posSource != 0)
         {
-            buf.pos[0] = lbl_803E126C + (((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
-            buf.pos[1] = lbl_803E126C + (((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
-            buf.pos[2] = lbl_803E126C + (((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[0] =
+                lbl_803E126C + (((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
+            buf.pos[1] =
+                lbl_803E126C + (((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
+            buf.pos[2] =
+                lbl_803E126C + (((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
         }
         else if ((u32)sourceObj != 0)
         {
@@ -202,8 +205,7 @@ static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int p
     base++;
 }
 
-void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5,
-                   f32* extraArgs)
+void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
 {
     dll_94_func03Body(lbl_80317488, sourceObj, variant, posSource, flags, arg5, extraArgs);
 }

@@ -10,8 +10,8 @@
 #include "main/game_object.h"
 
 #define DRGENERATOR_OBJGROUP 0x3
-#define TIMER_OBJGROUP 0x4c
-#define DRGENERATOR_PARTFX 0x690
+#define TIMER_OBJGROUP       0x4c
+#define DRGENERATOR_PARTFX   0x690
 
 typedef struct DrgeneratorPlacement
 {
@@ -24,7 +24,6 @@ typedef struct DrgeneratorPlacement
 STATIC_ASSERT(offsetof(DrgeneratorPlacement, completionGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(DrgeneratorPlacement, watchGameBit) == 0x20);
 STATIC_ASSERT(sizeof(DrgeneratorPlacement) == 0x28);
-
 
 typedef struct DrgeneratorState
 {
@@ -39,7 +38,6 @@ typedef struct DrgeneratorState
 STATIC_ASSERT(offsetof(DrgeneratorState, timerDuration) == 0x198);
 STATIC_ASSERT(offsetof(DrgeneratorState, hitsRemaining) == 0x19A);
 STATIC_ASSERT(sizeof(DrgeneratorState) == 0x19C);
-
 
 int drgenerator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -58,9 +56,15 @@ int drgenerator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int drgenerator_getExtraSize(void) { return 0x19c; }
+int drgenerator_getExtraSize(void)
+{
+    return 0x19c;
+}
 
-int drgenerator_getObjectTypeId(void) { return 0x0; }
+int drgenerator_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void drgenerator_free(int obj)
 {
@@ -89,8 +93,7 @@ void drgenerator_hitDetect(int obj)
     {
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, 0, &hitVolume, &hitPosX, &hitPosY,
-                                           &hitPosZ) != 5)
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, 0, &hitVolume, &hitPosX, &hitPosY, &hitPosZ) != 5)
     {
         return;
     }
@@ -176,8 +179,7 @@ loop:
     do
     {
         (*gPartfxInterface)->spawnObject((void*)obj, DRGENERATOR_PARTFX, NULL, 1, -1, NULL);
-    }
-    while (n-- != 0);
+    } while (n-- != 0);
 }
 
 void drgenerator_init(int obj, char* arg)
@@ -240,4 +242,3 @@ void drgenerator_release(void)
 void drgenerator_initialise(void)
 {
 }
-

@@ -14,32 +14,32 @@
 #include "main/objlib.h"
 #include "main/audio/music_trigger_ids.h"
 
-#define DBSHSHRINE_OBJGROUP 0xb
+#define DBSHSHRINE_OBJGROUP   0xb
 #define DBSHSHRINE_MAP_SHRINE 0xb
 
 #define DBSH_SHRINE_STATE_WAITING 0
-#define DBSH_SHRINE_STATE_RISING 1
-#define DBSH_SHRINE_STATE_ACTIVE 2
+#define DBSH_SHRINE_STATE_RISING  1
+#define DBSH_SHRINE_STATE_ACTIVE  2
 #define DBSH_SHRINE_STATE_CLOSING 4
-#define DBSH_SHRINE_STATE_RESET 5
+#define DBSH_SHRINE_STATE_RESET   5
 
-#define DBSH_SHRINE_OBJ_FLAG_ACTIVE 0x4000
+#define DBSH_SHRINE_OBJ_FLAG_ACTIVE    0x4000
 #define DBSH_SHRINE_MAP_FLAG_TRIGGERED 0x1
 
-#define DBSH_SHRINE_GB_APPROACH 0xdd3
-#define DBSH_SHRINE_GB_FIRST_RISE 0x15f
-#define DBSH_SHRINE_GB_RISE_DONE 0x16a
-#define DBSH_SHRINE_GB_CLOSE_A 0x16b
-#define DBSH_SHRINE_GB_CLOSE_B 0x16c
-#define DBSH_SHRINE_GB_RESET_A 0xc72
-#define DBSH_SHRINE_GB_RESET_B 0xc73
+#define DBSH_SHRINE_GB_APPROACH    0xdd3
+#define DBSH_SHRINE_GB_FIRST_RISE  0x15f
+#define DBSH_SHRINE_GB_RISE_DONE   0x16a
+#define DBSH_SHRINE_GB_CLOSE_A     0x16b
+#define DBSH_SHRINE_GB_CLOSE_B     0x16c
+#define DBSH_SHRINE_GB_RESET_A     0xc72
+#define DBSH_SHRINE_GB_RESET_B     0xc73
 #define DBSH_SHRINE_GB_SCENE_BLOCK 0xcbb
-#define DBSH_SHRINE_GB_ACTIVE 0xefa
+#define DBSH_SHRINE_GB_ACTIVE      0xefa
 #define DBSH_SHRINE_GB_INITIALIZED 0xf08
 
-#define DBSH_SHRINE_ENVFX_A 0xd4
-#define DBSH_SHRINE_ENVFX_B 0xd5
-#define DBSH_SHRINE_ENVFX_C 0x222
+#define DBSH_SHRINE_ENVFX_A  0xd4
+#define DBSH_SHRINE_ENVFX_B  0xd5
+#define DBSH_SHRINE_ENVFX_C  0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
 extern void skyFn_80088c94(int flags, int mode);
@@ -63,12 +63,9 @@ extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
-#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
-    (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
-#define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
+#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
+#define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
+#define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {

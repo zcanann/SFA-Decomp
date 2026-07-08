@@ -29,8 +29,14 @@ extern u16 getYButtonItem(s16* out);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 
-int warpstonelift_getExtraSize(void) { return 0x1; }
-int warpstonelift_getObjectTypeId(void) { return 0x0; }
+int warpstonelift_getExtraSize(void)
+{
+    return 0x1;
+}
+int warpstonelift_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void warpstonelift_free(void)
 {
@@ -39,7 +45,8 @@ void warpstonelift_free(void)
 void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E54C8);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E54C8);
 }
 
 void warpstonelift_hitDetect(void)

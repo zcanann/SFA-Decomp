@@ -19,31 +19,31 @@
 /* one modgfx command entry; mirrors ScreenFxPart's layout */
 typedef struct
 {
-    u32 mode; /* +0x00 */
+    u32 mode;    /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
-    u8 layer; /* +0x16 */
+    void* tex;   /* +0x10 */
+    u16 flags;   /* +0x14 */
+    u8 layer;    /* +0x16 */
 } GfxCmd;
 
 /* command buffer handed to spawnEffect; mirrors ScreenFxHdr + inline entries */
 typedef struct
 {
-    GfxCmd* cmds; /* +0x00 */
-    int ctx; /* +0x04: source object */
-    u8 pad0[0x18]; /* +0x08..+0x1f */
-    f32 col[3]; /* +0x20 */
-    f32 pos[3]; /* +0x2c */
-    f32 scale; /* +0x38 */
-    u32 unk_3c; /* +0x3c */
-    u32 unk_40; /* +0x40 */
-    s16 unk_44; /* +0x44 */
-    s16 hw[7]; /* +0x46: anim params from the table */
-    u32 flags; /* +0x54 */
+    GfxCmd* cmds;                              /* +0x00 */
+    int ctx;                                   /* +0x04: source object */
+    u8 pad0[0x18];                             /* +0x08..+0x1f */
+    f32 col[3];                                /* +0x20 */
+    f32 pos[3];                                /* +0x2c */
+    f32 scale;                                 /* +0x38 */
+    u32 unk_3c;                                /* +0x3c */
+    u32 unk_40;                                /* +0x40 */
+    s16 unk_44;                                /* +0x44 */
+    s16 hw[7];                                 /* +0x46: anim params from the table */
+    u32 flags;                                 /* +0x54 */
     u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c; /* +0x58..+0x5c */
-    s8 count; /* +0x5d: entry count */
-    u8 pad1[2]; /* +0x5e */
-    GfxCmd entries[32]; /* +0x60 */
+    s8 count;                                  /* +0x5d: entry count */
+    u8 pad1[2];                                /* +0x5e */
+    GfxCmd entries[32];                        /* +0x60 */
 } GfxBuf;
 
 extern ModgfxInterface** gModgfxInterface;
@@ -224,8 +224,8 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
         anim = DLL98_EFFECT_ID_DEFAULT;
     }
     (*gModgfxInterface)
-        ->spawnEffect(&buf, 0, 0x12, (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10,
-                      table + 0x168, anim, 0);
+        ->spawnEffect(&buf, 0, 0x12, (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10, table + 0x168,
+                      anim, 0);
 }
 
 void dll_98_func01_nop(void)

@@ -24,9 +24,12 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 
     voice = (DSPvoice*)(dspVoice + slot * 0xf4);
 
-    if (vol >= 1.0f) vol = 1.0f;
-    if (auxa >= 1.0f) auxa = 1.0f;
-    if (auxb >= 1.0f) auxb = 1.0f;
+    if (vol >= 1.0f)
+        vol = 1.0f;
+    if (auxa >= 1.0f)
+        auxa = 1.0f;
+    if (auxb >= 1.0f)
+        auxb = 1.0f;
 
     aux_entry = (DSPstudioinfo*)(lbl_803CC1E0 + voice->studio * 0xbc);
 
@@ -34,17 +37,13 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
         extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol,
                                         f32 auxa, f32 auxb);
         u32 f0w = voice->flags;
-        salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0,
-                            aux_entry->type == 1, vol, auxa, auxb);
+        salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0, aux_entry->type == 1, vol, auxa, auxb);
     }
 
     v0 = (s32)(lbl_803E78E4 * out[0]);
     v1 = (s32)(lbl_803E78E4 * out[1]);
     v2 = (s32)(lbl_803E78E4 * out[2]);
-    if (voice->lastUpdate.vol == 0xff
-        || voice->volL != (u16)v0
-        || voice->volR != (u16)v1
-        || voice->volS != (u16)v2)
+    if (voice->lastUpdate.vol == 0xff || voice->volL != (u16)v0 || voice->volR != (u16)v1 || voice->volS != (u16)v2)
     {
         voice->volL = v0;
         voice->volR = v1;
@@ -56,10 +55,7 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
     v0 = (s32)(lbl_803E78E4 * out[3]);
     v1 = (s32)(lbl_803E78E4 * out[4]);
     v2 = (s32)(lbl_803E78E4 * out[5]);
-    if (voice->lastUpdate.volA == 0xff
-        || voice->volLa != (u16)v0
-        || voice->volRa != (u16)v1
-        || voice->volSa != (u16)v2)
+    if (voice->lastUpdate.volA == 0xff || voice->volLa != (u16)v0 || voice->volRa != (u16)v1 || voice->volSa != (u16)v2)
     {
         voice->volLa = v0;
         voice->volRa = v1;
@@ -71,10 +67,7 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
     v0 = (s32)(lbl_803E78E4 * out[6]);
     v1 = (s32)(lbl_803E78E4 * out[7]);
     v2 = (s32)(lbl_803E78E4 * out[8]);
-    if (voice->lastUpdate.volB == 0xff
-        || voice->volLb != (u16)v0
-        || voice->volRb != (u16)v1
-        || voice->volSb != (u16)v2)
+    if (voice->lastUpdate.volB == 0xff || voice->volLb != (u16)v0 || voice->volRb != (u16)v1 || voice->volSb != (u16)v2)
     {
         voice->volLb = v0;
         voice->volRb = v1;

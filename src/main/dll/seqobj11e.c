@@ -49,7 +49,7 @@ extern u32 ObjLink_AttachChild();
 #pragma opt_common_subs off
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int p, int p3, int msg)
 {
-    extern void fn_8014D08C(GameObject* obj, int p, int type, f32 t, int a, int b);
+    extern void fn_8014D08C(GameObject * obj, int p, int type, f32 t, int a, int b);
     extern f32 lbl_803E2810;
     extern f32 lbl_803E2814;
     int sub;
@@ -75,7 +75,6 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int p, int p3, int msg)
 
 /* fn_80152514: main update: child-zap timer, curve follow, heading steps,
  * landing sfx, light-pulse fx, child spark spawn. */
-
 
 extern void Obj_FreeObject(int* obj);
 
@@ -151,8 +150,8 @@ void fn_80152514(int* obj, u8* state)
         {
             if ((*gRomCurveInterface)->goNextPoint(path) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2824,
-                                                     (int*)&lbl_803DBCA8, -1) != 0)
+                if ((*gRomCurveInterface)
+                        ->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2824, (int*)&lbl_803DBCA8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
@@ -253,8 +252,8 @@ void fn_80152514(int* obj, u8* state)
     {
         int* child2;
 
-        if (*(s8*)((char*)def + 0x2e) != -1 &&
-            (child2 = ((GameObject*)obj)->childObjs[0]) != 0 && fn_801A0174(child2) != 0)
+        if (*(s8*)((char*)def + 0x2e) != -1 && (child2 = ((GameObject*)obj)->childObjs[0]) != 0 &&
+            fn_801A0174(child2) != 0)
         {
             ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 0x16, 2, 0);
             gcRobotLight_init((int)obj, 0x3b2);
@@ -412,13 +411,14 @@ void fn_80152B90(int* obj, u8* state)
 
 int gcRobotLight_init(int obj, int p2)
 {
-    extern u8*Obj_SetupObject(u8* obj, int a, int b, int c, int d);
+    extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     int sub;
     u8* setup;
 
     sub = *(int*)&((GameObject*)obj)->anim.placementData;
     Obj_GetPlayerObject();
-    if (Obj_IsLoadingLocked() == 0) return 0;
+    if (Obj_IsLoadingLocked() == 0)
+        return 0;
     setup = Obj_AllocObjectSetup(36, p2);
     *(s16*)(setup + 0) = p2;
     ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
@@ -515,11 +515,11 @@ void guardClaw_init(int* obj, u8* state)
 typedef struct
 {
     f32 animSpeed; /* 0x0 */
-    u32 unk4; /* 0x4 */
-    u8 anim; /* 0x8 */
-    u8 next; /* 0x9 */
-    u8 alt; /* 0xa */
-    u8 flagB; /* 0xb */
+    u32 unk4;      /* 0x4 */
+    u8 anim;       /* 0x8 */
+    u8 next;       /* 0x9 */
+    u8 alt;        /* 0xa */
+    u8 flagB;      /* 0xb */
 } Seq11ERow;
 
 extern Seq11ERow gSeq11EStateTable[];
@@ -533,7 +533,8 @@ void fn_80152040(int* obj, u8* state)
 
     if (((BaddieState*)state)->seqEntryIndex == 2 && mainGetBit(*(s16*)((char*)def + 0x1c)) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
         {
             fn_80151C68(obj, state);
@@ -541,7 +542,8 @@ void fn_80152040(int* obj, u8* state)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
     flags = ((BaddieState*)state)->controlFlags;
     if (flags & BADDIE_CONTROL_JUST_TRIGGERED)
@@ -573,8 +575,7 @@ void fn_80152040(int* obj, u8* state)
         }
         else if (((BaddieState*)state)->seqEntryIndex == 2)
         {
-            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0 ||
-                !(((BaddieState*)state)->controlFlags & 0x20000000))
+            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0 || !(((BaddieState*)state)->controlFlags & 0x20000000))
             {
                 ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
             }
@@ -597,8 +598,8 @@ void fn_80152040(int* obj, u8* state)
         anim = ((GameObject*)obj)->anim.currentMove;
         if (anim != (animTbl = (u8*)gSeq11EStateTable + 8)[((BaddieState*)state)->seqEntryIndex * 12])
         {
-            if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 && animTbl[((BaddieState*)state)->seqEntryIndex
-                * 12] != 4)
+            if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 &&
+                animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 4)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
             }
@@ -613,10 +614,6 @@ void fn_80152040(int* obj, u8* state)
 }
 
 Seq11ERow gSeq11EStateTable[6] = {
-    { 3.0f, 0x1, 0, 1, 4, 1 },
-    { 2.0f, 0x0, 1, 2, 2, 1 },
-    { 3.0f, 0x1, 2, 3, 3, 1 },
-    { 2.0f, 0x0, 7, 0, 4, 1 },
-    { 2.0f, 0x0, 3, 5, 5, 0 },
-    { 3.5f, 0x1, 4, 5, 5, 0 },
+    {3.0f, 0x1, 0, 1, 4, 1}, {2.0f, 0x0, 1, 2, 2, 1}, {3.0f, 0x1, 2, 3, 3, 1},
+    {2.0f, 0x0, 7, 0, 4, 1}, {2.0f, 0x0, 3, 5, 5, 0}, {3.5f, 0x1, 4, 5, 5, 0},
 };

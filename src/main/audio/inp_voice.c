@@ -4,7 +4,7 @@
 
 int inpGetSurPanning(McmdVoiceState* state)
 {
-    extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
+    extern int _GetInputValue(McmdVoiceState * state, McmdInputSlot * slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
     flags = state->inputDirtyFlags;
@@ -18,7 +18,7 @@ int inpGetSurPanning(McmdVoiceState* state)
 
 int inpGetPitchBend(McmdVoiceState* state)
 {
-    extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
+    extern int _GetInputValue(McmdVoiceState * state, McmdInputSlot * slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
     flags = state->inputDirtyFlags;

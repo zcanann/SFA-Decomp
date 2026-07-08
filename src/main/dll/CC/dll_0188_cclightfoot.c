@@ -9,29 +9,29 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/frame_timing.h"
 
-#define GAMEBIT_LIGHTFOOT_TRIGGERED 9
-#define GAMEBIT_CC_COMPLETE 0x24
-#define CCLIGHTFOOT_TARGET_ACTOR_A 0x45d7d
-#define CCLIGHTFOOT_TARGET_ACTOR_B 0x45d7f
-#define CCLIGHTFOOT_CHILD_OBJ_MARKER 0x6f1 /* attached child marker (state->childObj, ObjLink_AttachChild) */
+#define GAMEBIT_LIGHTFOOT_TRIGGERED         9
+#define GAMEBIT_CC_COMPLETE                 0x24
+#define CCLIGHTFOOT_TARGET_ACTOR_A          0x45d7d
+#define CCLIGHTFOOT_TARGET_ACTOR_B          0x45d7f
+#define CCLIGHTFOOT_CHILD_OBJ_MARKER        0x6f1 /* attached child marker (state->childObj, ObjLink_AttachChild) */
 #define CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED 0x8000
 
 /* CcLightfootState.state - LightFoot combat/lifecycle machine */
-#define CCLIGHTFOOT_STATE_INIT         0    /* spawn: set up child marker, cache targets */
-#define CCLIGHTFOOT_STATE_INTRO        1    /* intro: turn to face target during move window */
-#define CCLIGHTFOOT_STATE_APPROACH     2    /* pick approach: close -> ENGAGE else CLOSE */
-#define CCLIGHTFOOT_STATE_CLOSE        3    /* closing distance to target */
-#define CCLIGHTFOOT_STATE_ENGAGE       4    /* in range: run reaction picker */
-#define CCLIGHTFOOT_STATE_GUARD        5    /* guard: watch target windup (move 0x19) */
-#define CCLIGHTFOOT_STATE_GUARD_HELD   6    /* guard committed until target move changes */
-#define CCLIGHTFOOT_STATE_STRIKE_WATCH 7    /* watch target strike (0x18 progress -> PARRY) */
-#define CCLIGHTFOOT_STATE_PARRY        8    /* parry target mid-strike */
-#define CCLIGHTFOOT_STATE_PARRY_HELD   9    /* parry held until strike ends */
-#define CCLIGHTFOOT_STATE_RECOVER      0xa  /* recover: re-watch strike/windup */
-#define CCLIGHTFOOT_STATE_REACT        0xb  /* one-shot reaction dispatch */
-#define CCLIGHTFOOT_STATE_DORMANT      0xc  /* dormant: poll trigger / completion gamebit */
-#define CCLIGHTFOOT_STATE_DORMANT_TURN 0xd  /* dormant, turning to face; back to DORMANT */
-#define CCLIGHTFOOT_STATE_DESPAWN      0xe  /* free child, hide, disable update, return */
+#define CCLIGHTFOOT_STATE_INIT         0   /* spawn: set up child marker, cache targets */
+#define CCLIGHTFOOT_STATE_INTRO        1   /* intro: turn to face target during move window */
+#define CCLIGHTFOOT_STATE_APPROACH     2   /* pick approach: close -> ENGAGE else CLOSE */
+#define CCLIGHTFOOT_STATE_CLOSE        3   /* closing distance to target */
+#define CCLIGHTFOOT_STATE_ENGAGE       4   /* in range: run reaction picker */
+#define CCLIGHTFOOT_STATE_GUARD        5   /* guard: watch target windup (move 0x19) */
+#define CCLIGHTFOOT_STATE_GUARD_HELD   6   /* guard committed until target move changes */
+#define CCLIGHTFOOT_STATE_STRIKE_WATCH 7   /* watch target strike (0x18 progress -> PARRY) */
+#define CCLIGHTFOOT_STATE_PARRY        8   /* parry target mid-strike */
+#define CCLIGHTFOOT_STATE_PARRY_HELD   9   /* parry held until strike ends */
+#define CCLIGHTFOOT_STATE_RECOVER      0xa /* recover: re-watch strike/windup */
+#define CCLIGHTFOOT_STATE_REACT        0xb /* one-shot reaction dispatch */
+#define CCLIGHTFOOT_STATE_DORMANT      0xc /* dormant: poll trigger / completion gamebit */
+#define CCLIGHTFOOT_STATE_DORMANT_TURN 0xd /* dormant, turning to face; back to DORMANT */
+#define CCLIGHTFOOT_STATE_DESPAWN      0xe /* free child, hide, disable update, return */
 
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 
@@ -41,14 +41,14 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 /* Per-object Lightfoot state block (obj->extra, cclightfoot_getExtraSize = 0x18). */
 typedef struct CcLightfootState
 {
-    int childObj;   /* 0x00: spawned child marker object handle */
-    int playerObj;  /* 0x04: cached player object */
-    int targetA;    /* 0x08: target actor A object */
-    int targetB;    /* 0x0C: target actor B object */
-    u8 state;       /* 0x10: state-machine state */
-    u8 flags;       /* 0x11: bit0 = hit/advance landed, bit1 = facing target off-axis */
-    u8 pad[2];      /* 0x12 */
-    f32 sfxTimer;   /* 0x14: countdown to next idle sfx */
+    int childObj;  /* 0x00: spawned child marker object handle */
+    int playerObj; /* 0x04: cached player object */
+    int targetA;   /* 0x08: target actor A object */
+    int targetB;   /* 0x0C: target actor B object */
+    u8 state;      /* 0x10: state-machine state */
+    u8 flags;      /* 0x11: bit0 = hit/advance landed, bit1 = facing target off-axis */
+    u8 pad[2];     /* 0x12 */
+    f32 sfxTimer;  /* 0x14: countdown to next idle sfx */
 } CcLightfootState;
 
 STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
@@ -66,7 +66,10 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
-int cclightfoot_getExtraSize(void) { return 0x18; }
+int cclightfoot_getExtraSize(void)
+{
+    return 0x18;
+}
 
 void cclightfoot_init(int* obj, int* def)
 {
@@ -152,10 +155,10 @@ int CClightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 2:
-                (*gWaterfxInterface)->spawnSplashBurst(
-                    (void*)obj, ((GameObject*)obj)->anim.worldPosX,
-                    ((GameObject*)obj)->anim.worldPosY,
-                    ((GameObject*)obj)->anim.worldPosZ, lbl_803E4670);
+                (*gWaterfxInterface)
+                    ->spawnSplashBurst((void*)obj, ((GameObject*)obj)->anim.worldPosX,
+                                       ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
+                                       lbl_803E4670);
                 break;
             }
         }
@@ -193,7 +196,7 @@ STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
 
 void cclightfoot_update(int obj)
 {
-    extern f32 getXZDistance(f32* a, f32* b);
+    extern f32 getXZDistance(f32 * a, f32 * b);
     extern u32 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)gCcLightfootAnimTable;
     u32 fallback;
@@ -265,10 +268,10 @@ void cclightfoot_update(int obj)
                 oNear = state->targetB;
                 oFar = state->targetA;
             }
-            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4684
-                    || (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetA
-                    || (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetB)
-                && playerIsDisguised(state->playerObj) == 0)
+            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4684 ||
+                 (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetA ||
+                 (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetB) &&
+                playerIsDisguised(state->playerObj) == 0)
             {
                 if ((void*)Player_GetTargetObject(state->playerObj) == (void*)oFar)
                 {
@@ -304,58 +307,58 @@ void cclightfoot_update(int obj)
         }
         goto cc_endif;
     cc_else:
+    {
+        o2 = state->targetA;
+        if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
         {
-            o2 = state->targetA;
-            if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
-            {
-                valid = 0;
-            }
-            else
-            {
-                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
-            }
-            if (valid != 0)
-            {
-                fallback = state->targetA;
-            }
-            o2 = state->targetB;
-            if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
-            {
-                valid = 0;
-            }
-            else
-            {
-                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
-            }
-            if (valid != 0)
-            {
-                fallback = state->targetB;
-            }
-            if (fallback != 0)
-            {
-                dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(fallback + 0x18));
-                if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist
-                        && (void*)Player_GetTargetObject(state->playerObj) != (void*)fallback)
-                    || playerIsDisguised(state->playerObj) != 0)
-                {
-                    fn_8014C66C(fallback, obj);
-                }
-                else
-                {
-                    fn_8014C66C(fallback, state->playerObj);
-                }
-                targetObj = fallback;
-                dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));
-            }
-            else
-            {
-                targetObj = state->playerObj;
-                dist = gCcLightfootDistSentinel;
-            }
+            valid = 0;
         }
+        else
+        {
+            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+        }
+        if (valid != 0)
+        {
+            fallback = state->targetA;
+        }
+        o2 = state->targetB;
+        if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
+        {
+            valid = 0;
+        }
+        else
+        {
+            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+        }
+        if (valid != 0)
+        {
+            fallback = state->targetB;
+        }
+        if (fallback != 0)
+        {
+            dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(fallback + 0x18));
+            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist &&
+                 (void*)Player_GetTargetObject(state->playerObj) != (void*)fallback) ||
+                playerIsDisguised(state->playerObj) != 0)
+            {
+                fn_8014C66C(fallback, obj);
+            }
+            else
+            {
+                fn_8014C66C(fallback, state->playerObj);
+            }
+            targetObj = fallback;
+            dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));
+        }
+        else
+        {
+            targetObj = state->playerObj;
+            dist = gCcLightfootDistSentinel;
+        }
+    }
     cc_endif:;
         angle = getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
-                              -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
+                         -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
         diff = (s16)(((GameObject*)obj)->anim.rotX - (u16)angle);
         if (diff > 0x8000)
         {
@@ -383,8 +386,7 @@ void cclightfoot_update(int obj)
         state->sfxTimer -= timeDelta;
         if (state->sfxTimer < lbl_803E4680)
         {
-            state->sfxTimer = (f32)(int)
-            randomGetRange(0xb4, 0x12c);
+            state->sfxTimer = (f32)(int)randomGetRange(0xb4, 0x12c);
             Sfx_PlayFromObject(obj, SFXTRIG_trwhin4);
         }
     }
@@ -400,28 +402,29 @@ void cclightfoot_update(int obj)
             if (Obj_IsLoadingLocked() != 0)
             {
                 state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
-                                           *(int*)&((GameObject*)obj)->anim.parent);
+                                                  *(int*)&((GameObject*)obj)->anim.parent);
                 ObjLink_AttachChild(obj, state->childObj, 0);
             }
             state->playerObj = (int)Obj_GetPlayerObject();
             state->targetA = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
             state->targetB = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_B);
             state->state = CCLIGHTFOOT_STATE_INTRO;
-            state->sfxTimer = (f32)(int)
-            randomGetRange(0xb4, 0x12c);
+            state->sfxTimer = (f32)(int)randomGetRange(0xb4, 0x12c);
         }
         break;
     case CCLIGHTFOOT_STATE_INTRO:
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E467C && ((GameObject*)obj)->anim.currentMoveProgress
-            < lbl_803E4688)
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E467C &&
+            ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E4688)
         {
             if (diff > 0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(gCcLightfootTurnRate * timeDelta));
+                ((GameObject*)obj)->anim.rotX =
+                    (s16)(((GameObject*)obj)->anim.rotX - (int)(gCcLightfootTurnRate * timeDelta));
             }
             else if (diff < -0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(gCcLightfootTurnRate * timeDelta));
+                ((GameObject*)obj)->anim.rotX =
+                    (s16)(((GameObject*)obj)->anim.rotX + (int)(gCcLightfootTurnRate * timeDelta));
             }
             else
             {
@@ -491,8 +494,7 @@ void cclightfoot_update(int obj)
         break;
     case CCLIGHTFOOT_STATE_PARRY:
         move = ((GameObject*)targetObj)->anim.currentMove;
-        if (move != 0x18 ||
-            (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
+        if (move != 0x18 || (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
         {
             state->state = CCLIGHTFOOT_STATE_RECOVER;
         }
@@ -503,8 +505,7 @@ void cclightfoot_update(int obj)
         break;
     case CCLIGHTFOOT_STATE_PARRY_HELD:
         move = ((GameObject*)targetObj)->anim.currentMove;
-        if (move != 0x18 ||
-            (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
+        if (move != 0x18 || (move == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
         {
             state->state = CCLIGHTFOOT_STATE_RECOVER;
         }
@@ -548,16 +549,18 @@ void cclightfoot_update(int obj)
         }
         break;
     case CCLIGHTFOOT_STATE_DORMANT_TURN:
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E467C && ((GameObject*)obj)->anim.currentMoveProgress
-            < lbl_803E4688)
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E467C &&
+            ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E4688)
         {
             if (diff > 0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - (int)(gCcLightfootTurnRate * timeDelta));
+                ((GameObject*)obj)->anim.rotX =
+                    (s16)(((GameObject*)obj)->anim.rotX - (int)(gCcLightfootTurnRate * timeDelta));
             }
             else if (diff < -0x400)
             {
-                ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(gCcLightfootTurnRate * timeDelta));
+                ((GameObject*)obj)->anim.rotX =
+                    (s16)(((GameObject*)obj)->anim.rotX + (int)(gCcLightfootTurnRate * timeDelta));
             }
             else
             {
@@ -624,8 +627,7 @@ void cclightfoot_update(int obj)
             }
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[state->state],
-                                                                    timeDelta,
+    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[state->state], timeDelta,
                                                                     NULL) != 0)
     {
         state->flags |= 1;
@@ -637,10 +639,8 @@ void cclightfoot_update(int obj)
 }
 
 u8 gCcLightfootAnimTable[92] = {
-    1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 0, 1, 1, 0,
-    0, 3, 1, 5, 4, 6, 8, 6, 7, 9, 7, 2, 0, 3, 0, 0,
-    60, 35, 215, 10, 60, 117, 194, 143, 60, 163, 215, 10, 60, 163, 215, 10,
-    60, 163, 215, 10, 60, 163, 215, 10, 60, 35, 215, 10, 188, 163, 215, 10,
-    61, 76, 204, 205, 60, 35, 215, 10, 188, 163, 215, 10, 60, 35, 215, 10,
-    60, 35, 215, 10, 60, 117, 194, 143, 60, 163, 215, 10,
+    1,   1,   1,  1,   1,   1,   1,  3,   1,   1,   3,  1,   0,   1,   1,   0,   0,   3,   1,   5,   4,   6,   8,
+    6,   7,   9,  7,   2,   0,   3,  0,   0,   60,  35, 215, 10,  60,  117, 194, 143, 60,  163, 215, 10,  60,  163,
+    215, 10,  60, 163, 215, 10,  60, 163, 215, 10,  60, 35,  215, 10,  188, 163, 215, 10,  61,  76,  204, 205, 60,
+    35,  215, 10, 188, 163, 215, 10, 60,  35,  215, 10, 60,  35,  215, 10,  60,  117, 194, 143, 60,  163, 215, 10,
 };

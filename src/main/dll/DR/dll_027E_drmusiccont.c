@@ -29,12 +29,20 @@ typedef struct DrmusiccontState
     f32 stingerTimer; /* 0x04 */
 } DrmusiccontState;
 
+int drmusiccont_getExtraSize(void)
+{
+    return 4;
+}
 
-int drmusiccont_getExtraSize(void) { return 4; }
+int drmusiccont_getObjectTypeId(void)
+{
+    return 0;
+}
 
-int drmusiccont_getObjectTypeId(void) { return 0; }
-
-void drmusiccont_free(int obj) { cloudClearOverridePosition(obj); }
+void drmusiccont_free(int obj)
+{
+    cloudClearOverridePosition(obj);
+}
 
 void drmusiccont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -86,7 +94,8 @@ void drmusiccont_update(int obj)
     u32 bit2;
     u32 bit3;
 
-    cloudSetOverridePosition(obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY, gDrMusicControlCloudOverridePosZ);
+    cloudSetOverridePosition(obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
+                             gDrMusicControlCloudOverridePosZ);
     if (((GameObject*)obj)->unkF4 == 0)
     {
         if ((u32)mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)

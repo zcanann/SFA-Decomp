@@ -37,13 +37,13 @@
 typedef struct HagabonPlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 mapEventId;         /* 0x14: map-event id for save-time gating / addTime */
+    s32 mapEventId; /* 0x14: map-event id for save-time gating / addTime */
     u8 pad18[0x19 - 0x18];
-    s8 chaseRadiusScale;    /* 0x19 */
-    s16 curveStepRaw;       /* 0x1A */
-    s16 timeReward;         /* 0x1C: minutes added to the map timer on a hit */
-    s16 startInactive;      /* 0x1E: when nonzero the baddie never auto-chases */
-    s16 armGameBit;         /* 0x20: -1 = none; bit that arms/latches the spawn */
+    s8 chaseRadiusScale; /* 0x19 */
+    s16 curveStepRaw;    /* 0x1A */
+    s16 timeReward;      /* 0x1C: minutes added to the map timer on a hit */
+    s16 startInactive;   /* 0x1E: when nonzero the baddie never auto-chases */
+    s16 armGameBit;      /* 0x20: -1 = none; bit that arms/latches the spawn */
     u8 pad22[0x28 - 0x22];
 } HagabonPlacement;
 
@@ -59,7 +59,7 @@ extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
-extern f32 lbl_803DDA58;          /* last-seen curve point cache, shared with swarmbaddie */
+extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
 extern f32 lbl_803E2608;
 extern f32 lbl_803E260C;
 extern f32 lbl_803E2610;
@@ -134,11 +134,9 @@ void fn_8014E1DC(int obj, HagabonState* state)
     curve = state->curve;
     flags = &state->flags;
 
-    if (((Curve_AdvanceAlongPath(curve, state->curveStep) != 0) ||
-            (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
+    if (((Curve_AdvanceAlongPath(curve, state->curveStep) != 0) || (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608,
-                                          &lbl_803DBC70, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608, &lbl_803DBC70, -1) != 0))
     {
         *flags &= ~HAGABON_FLAG_PATH_NEEDS_LINK;
     }
@@ -149,61 +147,45 @@ void fn_8014E1DC(int obj, HagabonState* state)
     *(u16*)&state->wavePhaseB += (u16)(lbl_803E2610 * timeDelta);
     *(u16*)&state->wavePhaseC += (u16)(lbl_803E2614 * timeDelta);
 
-    waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) /
-        lbl_803E2620
-    )
-    ;
-    waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) /
-        lbl_803E2620
-    )
-    ;
+    waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) / lbl_803E2620);
+    waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
     waveA = waveB + waveA;
     ((GameObject*)obj)->anim.rotZ = lbl_803E2618 * waveA;
 
-    waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) /
-        lbl_803E2620
-    )
-    ;
-    waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) /
-        lbl_803E2620
-    )
-    ;
+    waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) / lbl_803E2620);
+    waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
     waveA = waveB + waveA;
     ((GameObject*)obj)->anim.rotY = lbl_803E2618 * waveA;
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
-        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (state->player->anim.localPosX - ((GameObject*)obj)->anim.
-            localPosX);
-        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 *
-        ((lbl_803E2628 + state->player->anim.localPosY) -
-            ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (state->player->anim.localPosZ - ((GameObject*)obj)->anim.
-            localPosZ);
+        ((GameObject*)obj)->anim.velocityX +=
+            lbl_803E2624 * (state->player->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
+        ((GameObject*)obj)->anim.velocityY +=
+            lbl_803E2624 * ((lbl_803E2628 + state->player->anim.localPosY) - ((GameObject*)obj)->anim.localPosY);
+        ((GameObject*)obj)->anim.velocityZ +=
+            lbl_803E2624 * (state->player->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
     }
     else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
     {
-        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
-        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
+        ((GameObject*)obj)->anim.velocityX +=
+            lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
+        ((GameObject*)obj)->anim.velocityY +=
+            lbl_803E2624 * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY);
+        ((GameObject*)obj)->anim.velocityZ +=
+            lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
-        waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) /
-            lbl_803E2620
-        )
-        ;
-        waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) /
-            lbl_803E2620
-        )
-        ;
+        ((GameObject*)obj)->anim.velocityX +=
+            lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
+        waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) / lbl_803E2620);
+        waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
         waveA = waveB + waveA;
-        waveA = ((lbl_803E262C * waveA) +
-                *(f32*)(curve + 0x6c)) -
-            ((GameObject*)obj)->anim.localPosY;
+        waveA = ((lbl_803E262C * waveA) + *(f32*)(curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.velocityY += lbl_803E2624 * waveA;
-        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
+        ((GameObject*)obj)->anim.velocityZ +=
+            lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
     }
 
     ((GameObject*)obj)->anim.velocityX *= (damp = lbl_803E2630);
@@ -236,9 +218,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         ((GameObject*)obj)->anim.velocityZ = *(f32*)&lbl_803E2638;
     }
 
-    objMove(obj,
-            ((GameObject*)obj)->anim.velocityX * timeDelta,
-            ((GameObject*)obj)->anim.velocityY * timeDelta,
+    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
                                                                 (ObjAnimEventList*)animEvents);
@@ -296,8 +276,8 @@ void Hagabon_init(int obj, int data, int skip_alloc)
         {
             memset(*(void**)&state->curve, 0, 0x108);
         }
-        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius,
-                                             &lbl_803DBC70, -1) == 0)
+        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, &lbl_803DBC70, -1) ==
+            0)
         {
             state->flags |= HAGABON_FLAG_PATH_NEEDS_LINK;
         }
@@ -320,8 +300,7 @@ void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)
-                (obj, p2, p3, p4, p5, lbl_803E2650);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E2650);
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E2650, 3,
@@ -337,8 +316,14 @@ void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int Hagabon_getExtraSize(void) { return 0x28; }
-int Hagabon_getObjectTypeId(void) { return 0xb; }
+int Hagabon_getExtraSize(void)
+{
+    return 0x28;
+}
+int Hagabon_getObjectTypeId(void)
+{
+    return 0xb;
+}
 
 #pragma fp_contract off
 void Hagabon_update(int obj)
@@ -415,8 +400,8 @@ void Hagabon_update(int obj)
     }
     else
     {
-        if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume,
-                                               &lightPos[0], &lightPos[1], &lightPos[2]) != 0)
+        if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume, &lightPos[0], &lightPos[1],
+                                               &lightPos[2]) != 0)
         {
             Sfx_StopObjectChannel(obj, 0x7f);
             state->flags |= HAGABON_FLAG_FADE_OUT;
@@ -427,8 +412,9 @@ void Hagabon_update(int obj)
             lightPos[0] += playerMapOffsetX;
             lightPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E2660, effectPos, 3, 0);
-            (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->mapEventId,
-                                                   (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
+            (*gMapEventInterface)
+                ->addTime(((HagabonPlacement*)data)->mapEventId,
+                          (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
             if (((HagabonPlacement*)data)->armGameBit != -1)
             {
                 mainSetBits(((HagabonPlacement*)data)->armGameBit, 1);
@@ -466,8 +452,8 @@ void Hagabon_update(int obj)
         state->flags &= ~HAGABON_FLAG_PATH_RETURN;
     }
     if (((state->flags & (HAGABON_FLAG_CHASE | HAGABON_FLAG_PATH_RETURN)) == 0) &&
-        (((HagabonPlacement*)data)->startInactive == 0) &&
-        (state->player != 0) && (state->playerDistance < state->chaseRadius))
+        (((HagabonPlacement*)data)->startInactive == 0) && (state->player != 0) &&
+        (state->playerDistance < state->chaseRadius))
     {
         state->flags |= HAGABON_FLAG_CHASE;
     }

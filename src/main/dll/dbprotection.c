@@ -32,18 +32,18 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
-#define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
-#define DBPROTECTION_GAMEBIT_CYCLE_A_DONE 0xa3e
-#define DBPROTECTION_GAMEBIT_CYCLE_B_DONE 0xa3f
+#define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING  0xa3c
+#define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING  0xa3d
+#define DBPROTECTION_GAMEBIT_CYCLE_A_DONE     0xa3e
+#define DBPROTECTION_GAMEBIT_CYCLE_B_DONE     0xa3f
 #define DBPROTECTION_GAMEBIT_TRANSITION_ARMED 0x9f
-#define DBPROTECTION_GAMEBIT_TRANSITION_USED 0xa0
+#define DBPROTECTION_GAMEBIT_TRANSITION_USED  0xa0
 #define DBPROTECTION_GAMEBIT_TRANSITION_READY 0x91c
-#define DBPROTECTION_GAMEBIT_MUTE_SFX 0xa71
-#define DBPROTECTION_ENVFX_A 0x467e7
-#define DBPROTECTION_ENVFX_B 0x467e8
-#define DBPROTECTION_PLAYER_ENVFX_FLASH 0x96
-#define DBPROTECTION_PLAYER_ENVFX_SWAP 0x8a
+#define DBPROTECTION_GAMEBIT_MUTE_SFX         0xa71
+#define DBPROTECTION_ENVFX_A                  0x467e7
+#define DBPROTECTION_ENVFX_B                  0x467e8
+#define DBPROTECTION_PLAYER_ENVFX_FLASH       0x96
+#define DBPROTECTION_PLAYER_ENVFX_SWAP        0x8a
 /* seqId of the "tricky" target object the galleon flight driver locks onto (docblock: "locates the tricky target object (seqId 0x8C)") */
 #define DBPROTECTION_TRICKY_TARGET_SEQID 0x8C
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
@@ -57,7 +57,6 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
-
 
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
@@ -136,26 +135,16 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-#define SCREEN_TRANSITION_FADE(kind, value) \
-  (*gScreenTransitionInterface)->start((kind), (value))
-#define SCREEN_TRANSITION_START(kind, value) \
-  (*gScreenTransitionInterface)->step((kind), (value))
-#define SCREEN_TRANSITION_READY() \
-  (*gScreenTransitionInterface)->isFinished()
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-  (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define CLOUD_ACTION_SET(a, b) \
-  (*gCloudActionInterface)->func12Nop((a), (b))
-#define CLOUD_ACTION_ENABLE(flag) \
-  (*gCloudActionInterface)->func10Nop((flag))
-#define DBPROT_CAMERA_SHAKE(amount, arg) \
-  (*gCameraInterface)->releaseAction((amount), (arg))
-#define DBPROT_MAP_EVENT(layer, a, b) \
-  (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
-#define DBPROT_CLOUD_SET_A(flag) \
-  (*gCloudActionInterface)->func10Nop((flag))
-#define DBPROT_CLOUD_SET_B(flag) \
-  (*gCloudActionInterface)->func11Nop((flag))
+#define SCREEN_TRANSITION_FADE(kind, value)       (*gScreenTransitionInterface)->start((kind), (value))
+#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
+#define SCREEN_TRANSITION_READY()                 (*gScreenTransitionInterface)->isFinished()
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
+#define CLOUD_ACTION_SET(a, b)                    (*gCloudActionInterface)->func12Nop((a), (b))
+#define CLOUD_ACTION_ENABLE(flag)                 (*gCloudActionInterface)->func10Nop((flag))
+#define DBPROT_CAMERA_SHAKE(amount, arg)          (*gCameraInterface)->releaseAction((amount), (arg))
+#define DBPROT_MAP_EVENT(layer, a, b)             (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
+#define DBPROT_CLOUD_SET_A(flag)                  (*gCloudActionInterface)->func10Nop((flag))
+#define DBPROT_CLOUD_SET_B(flag)                  (*gCloudActionInterface)->func11Nop((flag))
 
 void fn_801DFA28(u8* obj)
 {
@@ -235,7 +224,8 @@ void fn_801DFA28(u8* obj)
         Sfx_StopFromObject((int)obj, SFXwp_cahit2_c);
     }
     tricky = ((SBGalleonState*)state)->targetObj;
-    if (tricky == NULL) goto end;
+    if (tricky == NULL)
+        goto end;
     if ((tricky != NULL) && (*(int*)(tricky + 0xF4) == 0))
     {
         fn_801EED5C((int)tricky, (f32*)(state + 0x50), (f32*)(state + 0x54), (f32*)(state + 0x58));
@@ -264,8 +254,7 @@ void fn_801DFA28(u8* obj)
         if (((SBGalleonState*)state)->wanderTimerA <= lbl_803E56CC)
         {
             ((SBGalleonState*)state)->wanderFlagA ^= 1;
-            ((SBGalleonState*)state)->wanderTimerA = (f32)(int)
-            randomGetRange(0xB4, 300);
+            ((SBGalleonState*)state)->wanderTimerA = (f32)(int)randomGetRange(0xB4, 300);
         }
         if (((SBGalleonState*)state)->wanderFlagA != 0)
         {
@@ -279,8 +268,7 @@ void fn_801DFA28(u8* obj)
         if (((SBGalleonState*)state)->wanderTimerB <= lbl_803E56CC)
         {
             ((SBGalleonState*)state)->wanderFlagB ^= 1;
-            ((SBGalleonState*)state)->wanderTimerB = (f32)(int)
-            randomGetRange(0xB4, 300);
+            ((SBGalleonState*)state)->wanderTimerB = (f32)(int)randomGetRange(0xB4, 300);
         }
         if (((SBGalleonState*)state)->wanderFlagB != 0)
         {
@@ -310,9 +298,9 @@ void fn_801DFA28(u8* obj)
         ((GameObject*)obj)->unkF4 = 1;
         tx = ((SBGalleonState*)state)->homeX - lbl_803E56DC;
         tz = lbl_803E56E0 * mathCosf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
-            ((SBGalleonState*)state)->homeZ;
+             ((SBGalleonState*)state)->homeZ;
         ty = lbl_803E56F0 * mathSinf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
-            (((SBGalleonState*)state)->homeY - lbl_803E56EC);
+             (((SBGalleonState*)state)->homeY - lbl_803E56EC);
         ((SBGalleonState*)state)->bobPhase = ((SBGalleonState*)state)->bobPhase + framesThisStep * 0xB6;
         dx = tx - ((GameObject*)obj)->anim.localPosX;
         dy = ty - ((GameObject*)obj)->anim.localPosY;
@@ -710,18 +698,18 @@ void fn_801DFA28(u8* obj)
         c = ((SBGalleonState*)state)->phase;
         if ((c == 3) || (c == 4))
         {
-            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (((SBGalleonState*)state)->turnRate *
-                framesThisStep) / 0x3C;
+            ((GameObject*)obj)->anim.rotX =
+                ((GameObject*)obj)->anim.rotX + (((SBGalleonState*)state)->turnRate * framesThisStep) / 0x3C;
         }
         else if ((c == 6) || (c == 2))
         {
-            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (((SBGalleonState*)state)->turnRate *
-                framesThisStep) / 0x78;
+            ((GameObject*)obj)->anim.rotX =
+                ((GameObject*)obj)->anim.rotX + (((SBGalleonState*)state)->turnRate * framesThisStep) / 0x78;
         }
         else
         {
-            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (((SBGalleonState*)state)->turnRate *
-                framesThisStep) / 0x3C;
+            ((GameObject*)obj)->anim.rotX =
+                ((GameObject*)obj)->anim.rotX + (((SBGalleonState*)state)->turnRate * framesThisStep) / 0x3C;
         }
         wrap = angY - (((GameObject*)obj)->anim.rotY & 0xFFFF);
         if (wrap > 0x8000)
@@ -778,7 +766,7 @@ void fn_801DFA28(u8* obj)
         ((GameObject*)obj)->anim.localPosX = ((SBGalleonState*)state)->posX + ((SBGalleonState*)state)->swayX;
         ((GameObject*)obj)->anim.localPosY = ((SBGalleonState*)state)->posY + ((SBGalleonState*)state)->swayY;
         ((GameObject*)obj)->anim.localPosZ = ((SBGalleonState*)state)->posZ + ((SBGalleonState*)state)->swayZ +
-            (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->refZ);
+                                             (((GameObject*)tricky)->anim.localPosZ - ((SBGalleonState*)state)->refZ);
         if (((SBGalleonState*)state)->stage >= 7)
         {
             if (((SBGalleonState*)state)->fadeTimer == 0)
@@ -803,7 +791,7 @@ void fn_801DFA28(u8* obj)
                 ((GameObject*)obj)->anim.localPosY = lbl_803E57AC;
                 ((GameObject*)obj)->anim.localPosZ = *(f32*)(spawnData + 0x10);
                 Sfx_StopObjectChannel((int)obj, 1);
-                DBPROT_MAP_EVENT(*(u8 *)(obj + 0x34), 2, 1);
+                DBPROT_MAP_EVENT(*(u8*)(obj + 0x34), 2, 1);
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
                 goto end;
             }
@@ -816,56 +804,59 @@ void fn_801DFA28(u8* obj)
     if (((SBGalleonState*)state)->phase < 2)
     {
         ((SBGalleonState*)state)->posX =
-            ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftX * timeDelta) + ((SBGalleonState*)
-                state)->posX;
+            ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftX * timeDelta) +
+            ((SBGalleonState*)state)->posX;
         ((SBGalleonState*)state)->posY =
-            ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftY * timeDelta) + ((SBGalleonState*)
-                state)->posY;
+            ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftY * timeDelta) +
+            ((SBGalleonState*)state)->posY;
         ((SBGalleonState*)state)->posZ =
-            ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftZ * timeDelta) + ((SBGalleonState*)
-                state)->posZ;
+            ((SBGalleonState*)state)->moveScale * (((SBGalleonState*)state)->driftZ * timeDelta) +
+            ((SBGalleonState*)state)->posZ;
         ((SBGalleonState*)state)->moveScale += lbl_803E57B0;
         if (((SBGalleonState*)state)->moveScale > lbl_803E57A4)
         {
             ((SBGalleonState*)state)->moveScale = *(f32*)&lbl_803E57A4;
         }
         blendK = lbl_803E57B4;
-        ((SBGalleonState*)state)->swayScaleSmooth += blendK * (timeDelta * (ambA - ((SBGalleonState*)state)->swayScaleSmooth));
-        ((SBGalleonState*)state)->rollScaleSmooth += blendK * (timeDelta * (ambC - ((SBGalleonState*)state)->rollScaleSmooth));
-        ((SBGalleonState*)state)->swayResponseSmooth += blendK * (timeDelta * (ambB - ((SBGalleonState*)state)->swayResponseSmooth));
+        ((SBGalleonState*)state)->swayScaleSmooth +=
+            blendK * (timeDelta * (ambA - ((SBGalleonState*)state)->swayScaleSmooth));
+        ((SBGalleonState*)state)->rollScaleSmooth +=
+            blendK * (timeDelta * (ambC - ((SBGalleonState*)state)->rollScaleSmooth));
+        ((SBGalleonState*)state)->swayResponseSmooth +=
+            blendK * (timeDelta * (ambB - ((SBGalleonState*)state)->swayResponseSmooth));
         if (((SBGalleonState*)state)->phase == 0)
         {
             zRatio = (f32) * (s16*)(int)(tricky + 0x2) / ((SBGalleonState*)state)->swayScaleSmooth;
             ((SBGalleonState*)state)->swayZ +=
                 timeDelta * (((SBGalleonState*)state)->swayResponseSmooth *
-                    ((f32) - *(s16*)(int)(tricky + 0x4) / ((SBGalleonState*)state)->swayScaleSmooth - ((SBGalleonState*)state)->
-                        swayZ));
+                             ((f32) - *(s16*)(int)(tricky + 0x4) / ((SBGalleonState*)state)->swayScaleSmooth -
+                              ((SBGalleonState*)state)->swayZ));
             ((SBGalleonState*)state)->swayY +=
                 timeDelta * (((SBGalleonState*)state)->swayResponseSmooth * (zRatio - ((SBGalleonState*)state)->swayY));
             zero = lbl_803E56CC;
             ((SBGalleonState*)state)->swayX = zero;
             ((SBGalleonState*)state)->swayY = zero;
             rollA = (s16)(-((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->rollScaleSmooth);
-            rollB = (s16)(lbl_803E57B8 * (-((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->rollScaleSmooth));
+            rollB =
+                (s16)(lbl_803E57B8 * (-((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->rollScaleSmooth));
         }
         else
         {
-            ((SBGalleonState*)state)->swayZ -= timeDelta * (((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->
-                swayResponseSmooth);
-            ((SBGalleonState*)state)->swayY -= timeDelta * (((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->
-                swayResponseSmooth);
+            ((SBGalleonState*)state)->swayZ -=
+                timeDelta * (((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->swayResponseSmooth);
+            ((SBGalleonState*)state)->swayY -=
+                timeDelta * (((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->swayResponseSmooth);
             rollA = 0;
             rollB = rollA;
         }
-        ((GameObject*)obj)->anim.localPosX = ((SBGalleonState*)state)->swayX * ((SBGalleonState*)state)->moveScale + ((
-            SBGalleonState*)state)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->moveScale + ((
-            SBGalleonState*)state)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->moveScale + ((
-            SBGalleonState*)state)->posZ;
-        ((SBGalleonState*)state)->rollLatch =
-            ((SBGalleonState*)state)->rollLatch + ((framesThisStep * (rollA - ((SBGalleonState*)state)->rollLatch)) >>
-                5);
+        ((GameObject*)obj)->anim.localPosX =
+            ((SBGalleonState*)state)->swayX * ((SBGalleonState*)state)->moveScale + ((SBGalleonState*)state)->posX;
+        ((GameObject*)obj)->anim.localPosY =
+            ((SBGalleonState*)state)->swayY * ((SBGalleonState*)state)->moveScale + ((SBGalleonState*)state)->posY;
+        ((GameObject*)obj)->anim.localPosZ =
+            ((SBGalleonState*)state)->swayZ * ((SBGalleonState*)state)->moveScale + ((SBGalleonState*)state)->posZ;
+        ((SBGalleonState*)state)->rollLatch = ((SBGalleonState*)state)->rollLatch +
+                                              ((framesThisStep * (rollA - ((SBGalleonState*)state)->rollLatch)) >> 5);
         ((GameObject*)obj)->anim.rotY =
             ((GameObject*)obj)->anim.rotY + ((framesThisStep * (rollB - ((GameObject*)obj)->anim.rotY)) >> 5);
         ((GameObject*)obj)->anim.rotX = ((SBGalleonState*)state)->rollLatch + 0x4000;
@@ -927,7 +918,10 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     }
 }
 
-int DBprotection_getCameraState(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x70); }
+int DBprotection_getCameraState(int* obj)
+{
+    return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x70);
+}
 
 void DBprotection_updateShield(int* obj)
 {
@@ -938,8 +932,7 @@ void DBprotection_updateShield(int* obj)
     ((GameObject*)obj)->unkF4 = 7;
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
-        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
-        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0)
+        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 && mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0)
     {
         lbl_803DDC2C = 1;
         mainSetBits(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);

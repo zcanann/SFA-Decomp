@@ -7,7 +7,6 @@
 #include "main/sfa_extern_decls.h"
 #include "dolphin/gx/GXGeometry.h"
 
-
 /* gSPScarabObjDescriptor drift copy removed: retail home is the
  * dll_0287_spscarab target obj (defines it at .data+0, byte-equal; src twin
  * already matches). Retail dll_801e991c obj carries no .data. */
@@ -53,20 +52,20 @@ extern void GXSetCullMode(int mode);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXSetCurrentMtx(u32 id);
 
-#define GX_BM_BLEND 1
-#define GX_BL_SRCALPHA 4
+#define GX_BM_BLEND       1
+#define GX_BL_SRCALPHA    4
 #define GX_BL_INVSRCALPHA 5
-#define GX_LO_NOOP 5
-#define GX_LEQUAL 3
-#define GX_ALWAYS 7
-#define GX_AOP_AND 0
-#define GX_CULL_NONE 0
-#define GX_VA_POS 9
-#define GX_VA_CLR0 11
-#define GX_VA_TEX0 13
-#define GX_DIRECT 1
-#define GX_QUADS 0x80
-#define GX_VTXFMT2 2
+#define GX_LO_NOOP        5
+#define GX_LEQUAL         3
+#define GX_ALWAYS         7
+#define GX_AOP_AND        0
+#define GX_CULL_NONE      0
+#define GX_VA_POS         9
+#define GX_VA_CLR0        11
+#define GX_VA_TEX0        13
+#define GX_DIRECT         1
+#define GX_QUADS          0x80
+#define GX_VTXFMT2        2
 
 extern int lbl_803DDC60;
 extern ShColor lbl_803E5AE4;

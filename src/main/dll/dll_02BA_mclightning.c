@@ -14,13 +14,11 @@ int mclightning_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
         case MCLIGHTNING_PHASE_READ_PARAM_A:
             state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_B;
-            state->boltParamA = lbl_803E7440 * (f32)(u32)
-            animUpdate->eventIds[i];
+            state->boltParamA = lbl_803E7440 * (f32)(u32)animUpdate->eventIds[i];
             break;
         case MCLIGHTNING_PHASE_READ_PARAM_B:
             state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_C;
-            state->boltParamB = lbl_803E7440 * (f32)(u32)
-            animUpdate->eventIds[i];
+            state->boltParamB = lbl_803E7440 * (f32)(u32)animUpdate->eventIds[i];
             break;
         case MCLIGHTNING_PHASE_READ_PARAM_C:
             state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_D;
@@ -43,7 +41,10 @@ int mclightning_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int mclightning_getExtraSize(void) { return 0x1c; }
+int mclightning_getExtraSize(void)
+{
+    return 0x1c;
+}
 
 void mclightning_free(int obj)
 {
@@ -79,9 +80,8 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         {
             McLightningState* foundState;
             state->boltHandle =
-                lightningCreate(&((GameObject*)obj)->anim.localPosX, (f32*)(objs[i] + 0xc),
-                                state->boltParamA, state->boltParamB, state->boltParamC,
-                                state->boltParamD, 0);
+                lightningCreate(&((GameObject*)obj)->anim.localPosX, (f32*)(objs[i] + 0xc), state->boltParamA,
+                                state->boltParamB, state->boltParamC, state->boltParamD, 0);
             state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;
             state->boltFrameTimer = lbl_803E7450;
             if (state->flags.spawnFlags & 1)
@@ -97,17 +97,15 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             }
             if (state->flags.spawnFlags & 2)
             {
-                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5,
-                                                        int p6, f32 f2, void* p8, int p9);
-                objfx_spawnDirectionalBurst(obj, 5, state->burstEffectChance, 1, 1, 0x64,
-                                            lbl_803E7454, 0, 0);
+                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2,
+                                                        void* p8, int p9);
+                objfx_spawnDirectionalBurst(obj, 5, state->burstEffectChance, 1, 1, 0x64, lbl_803E7454, 0, 0);
             }
             if (foundState->flags.spawnFlags & 2)
             {
-                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5,
-                                                        int p6, f32 f2, void* p8, int p9);
-                objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64,
-                                            lbl_803E7454, 0, 0);
+                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2,
+                                                        void* p8, int p9);
+                objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64, lbl_803E7454, 0, 0);
             }
         }
     }
@@ -120,8 +118,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             state->boltFrameTimer += timeDelta;
             frame = (u16)(lbl_803E7458 + state->boltFrameTimer);
             *(u16*)((int)state->boltHandle + 0x20) = frame;
-            if (*(u16*)((int)state->boltHandle + 0x20) >=
-                *(u16*)((int)state->boltHandle + 0x22))
+            if (*(u16*)((int)state->boltHandle + 0x20) >= *(u16*)((int)state->boltHandle + 0x22))
             {
                 mm_free(state->boltHandle);
                 state->boltHandle = NULL;

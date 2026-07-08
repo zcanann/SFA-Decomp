@@ -36,15 +36,15 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
    and damage state the update() machine drives. */
 typedef struct SBShipGunState
 {
-    u32 cloudRunner;   /* 0x00: cached CloudRunner object (target) */
-    s16 yawAngle;      /* 0x04: aim yaw (binary angle) */
-    s16 pitchAngle;    /* 0x06: aim pitch/elevation (binary angle) */
-    s16 fireTimer;     /* 0x08: frames until the next cannonball */
-    u8 phase;          /* 0x0A: state-machine phase (see enum) */
-    s8 hitCount;       /* 0x0B: damaging hits taken in current stage */
-    u8 health;         /* 0x0C: hit-points within the current stage */
-    u8 active;         /* 0x0D: cleared while the WM-galleon alias is parent */
-    u8 volleyCount;    /* 0x0E: shots fired in the current volley */
+    u32 cloudRunner; /* 0x00: cached CloudRunner object (target) */
+    s16 yawAngle;    /* 0x04: aim yaw (binary angle) */
+    s16 pitchAngle;  /* 0x06: aim pitch/elevation (binary angle) */
+    s16 fireTimer;   /* 0x08: frames until the next cannonball */
+    u8 phase;        /* 0x0A: state-machine phase (see enum) */
+    s8 hitCount;     /* 0x0B: damaging hits taken in current stage */
+    u8 health;       /* 0x0C: hit-points within the current stage */
+    u8 active;       /* 0x0D: cleared while the WM-galleon alias is parent */
+    u8 volleyCount;  /* 0x0E: shots fired in the current volley */
     u8 padF[0x10 - 0xF];
 } SBShipGunState;
 
@@ -58,8 +58,6 @@ STATIC_ASSERT(offsetof(SBShipGunState, health) == 0xC);
 STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
 STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
-
-
 
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 
@@ -82,7 +80,10 @@ extern f32 gSbShipGunFireCameraShakeMagnitude;
 extern f32 lbl_803E58A8;
 extern f32 gSbShipGunNearSfxRangeThreshold;
 
-int SB_ShipGun_getExtraSize(void) { return 0x10; }
+int SB_ShipGun_getExtraSize(void)
+{
+    return 0x10;
+}
 
 void SB_ShipGun_free(GameObject* obj)
 {
@@ -98,10 +99,12 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     parent = ((GameObject*)obj)->anim.parent;
     if (parent != NULL)
     {
-        if (parent->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) return;
+        if (parent->anim.seqId == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
+            return;
     }
     vis = visible;
-    if (vis == 0 || state[0xc] == 0 || ((SBShipGunState*)state)->active == 0) return;
+    if (vis == 0 || state[0xc] == 0 || ((SBShipGunState*)state)->active == 0)
+        return;
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5888);
 }
 
@@ -112,11 +115,11 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 typedef struct SBShipGunPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 modelField;  /* 0x04 */
-    u8 flagsField;  /* 0x05 */
-    u8 byte6;       /* 0x06 */
-    u8 byte7;       /* 0x07 */
-    f32 spawnX; /* 0x08: cannonball muzzle world position */
+    u8 modelField; /* 0x04 */
+    u8 flagsField; /* 0x05 */
+    u8 byte6;      /* 0x06 */
+    u8 byte7;      /* 0x07 */
+    f32 spawnX;    /* 0x08: cannonball muzzle world position */
     f32 spawnY;
     f32 spawnZ;
     u8 pad14[0x18 - 0x14];
@@ -153,13 +156,12 @@ enum
 
 void SB_ShipGun_update(int obj)
 {
-    extern f32 Vec_distance(f32* a, f32* b);
-
-
+    extern f32 Vec_distance(f32 * a, f32 * b);
 
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern void* Obj_GetPlayerObject(void);
-    extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
+    extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                              int useInputPosition);
     char phase;
     float boost;
     GameObject* player;
@@ -222,8 +224,7 @@ void SB_ShipGun_update(int obj)
             }
         }
         galleon = (int)((GameObject*)obj)->anim.parent;
-        if (((void*)galleon != NULL) &&
-            (((GameObject*)galleon)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE))
+        if (((void*)galleon != NULL) && (((GameObject*)galleon)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE))
         {
             galleonStage = SB_GALLEON_VTBL(galleon)->getStage(galleon);
         }
@@ -237,8 +238,7 @@ void SB_ShipGun_update(int obj)
         switch (phase)
         {
         case SB_SHIPGUN_PHASE_IDLE:
-            if (((void*)galleon != NULL) &&
-                (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
+            if (((void*)galleon != NULL) && (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
             {
                 if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
@@ -254,130 +254,122 @@ void SB_ShipGun_update(int obj)
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             break;
         case SB_SHIPGUN_PHASE_ACTIVE:
+        {
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
+            placement = SB_GALLEON_VTBL(galleon)->getPhase(galleon);
+            if ((placement == 0) && (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
             {
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
-                placement = SB_GALLEON_VTBL(galleon)->getPhase(galleon);
-                if ((placement == 0) &&
-                    (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
+                Obj_SetModelColorFadeRecursive(obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
+                Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_A);
+                ((SBShipGunState*)state)->hitCount += 1;
+                if (((SBShipGunState*)state)->hitCount == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
                 {
-                    Obj_SetModelColorFadeRecursive(obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
-                    Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_A);
-                    ((SBShipGunState*)state)->hitCount += 1;
-                    if (((SBShipGunState*)state)->hitCount == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
-                    {
-                        *(s8*)&((SBShipGunState*)state)->health -= 1;
-                        ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
-                        if ((void*)galleon != NULL)
-                        {
-                            SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
-                        }
-                    }
-                    else if (((SBShipGunState*)state)->hitCount == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
-                    {
-                        Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_B);
-                        *(s8*)&((SBShipGunState*)state)->health -= 1;
-                        ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
-                        if ((void*)galleon != NULL)
-                        {
-                            SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
-                        }
-                    }
-                }
-                if (((void*)galleon != NULL) && (placement != 0))
-                {
+                    *(s8*)&((SBShipGunState*)state)->health -= 1;
                     ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
-                }
-                fdx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-                fdz = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-                ((SBShipGunState*)state)->yawAngle = (short)
-                (((u32)(u16)
-                getAngle(-fdz, fdx) & 0xffff
-                )
-                <<
-                1
-                )
-                ;
-                fdy = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-                dist = sqrtf(fdx * fdx + fdz * fdz);
-                ((SBShipGunState*)state)->pitchAngle = getAngle(-fdy, dist);
-                if (((SBShipGunState*)state)->pitchAngle > SB_SHIPGUN_MAX_PITCH)
-                {
-                    ((SBShipGunState*)state)->pitchAngle = SB_SHIPGUN_MAX_PITCH;
-                }
-                else if (((SBShipGunState*)state)->pitchAngle < -SB_SHIPGUN_MAX_PITCH)
-                {
-                    ((SBShipGunState*)state)->pitchAngle = -SB_SHIPGUN_MAX_PITCH;
-                }
-                ((SBShipGunState*)state)->fireTimer -= framesThisStep;
-                if ((((SBShipGunState*)state)->fireTimer < 0) && (Obj_IsLoadingLocked() != 0))
-                {
-                    Obj_GetWorldPosition(obj, &posX, &posY, &posZ);
-                    spawnArgs.posX = lbl_803E588C;
-                    spawnArgs.posY = lbl_803E588C;
-                    spawnArgs.posZ = lbl_803E588C;
-                    spawnArgs.scale = lbl_803E5888;
-                    spawnArgs.rot[0] = ((SBShipGunState*)state)->yawAngle;
-                    spawnArgs.rot[1] = 0;
-                    spawnArgs.rot[2] = 0;
-                    offset.x = lbl_803E5890;
-                    offset.y = lbl_803E5894;
-                    offset.z = lbl_803E588C;
-                    vecRotateZXY(spawnArgs.rot, &offset.x);
-                    placement = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,
-                                                       SB_CANNONBALL_ALIAS_OBJECT_TYPE);
-                    ((SBShipGunPlacement*)placement)->spawnX = posX;
-                    ((SBShipGunPlacement*)placement)->spawnY = posY;
-                    ((SBShipGunPlacement*)placement)->spawnZ = posZ;
-                    ((SBShipGunPlacement*)placement)->modelField = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
-                    ((SBShipGunPlacement*)placement)->flagsField = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
-                    ((SBShipGunPlacement*)placement)->byte6 = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-                    ((SBShipGunPlacement*)placement)->byte7 = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-                    spawned = Obj_SetupObject((void*)placement, 5, 0xffffffff, 0xffffffff, 0);
-                    placement = *state;
-                    fdx = ((SBShipGunPlacement*)placement)->targetX - ((GameObject*)obj)->anim.worldPosX;
-                    fdy = ((SBShipGunPlacement*)placement)->targetY - (((GameObject*)obj)->anim.worldPosY - lbl_803E5898);
-                    fdz = ((SBShipGunPlacement*)placement)->targetZ - ((GameObject*)obj)->anim.worldPosZ;
-                    posX = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
-                    posX = lbl_803E589C / posX;
-                    spawned->anim.velocityX = fdx * posX;
-                    spawned->anim.velocityY = fdy * posX;
-                    spawned->anim.velocityZ = fdz * posX;
-                    boost = gSbShipGunCannonballSpeedBoost;
-                    spawned->anim.localPosX = boost * spawned->anim.velocityX + spawned->anim.localPosX;
-                    spawned->anim.localPosY = boost * spawned->anim.velocityY + spawned->anim.localPosY;
-                    spawned->anim.localPosZ = boost * spawned->anim.velocityZ + spawned->anim.localPosZ;
-                    spawned->anim.rotX = getAngle(spawned->anim.velocityX, spawned->anim.velocityZ);
-                    spawned->unkF4 = SB_SHIPGUN_CANNONBALL_LIFETIME;
-                    spawned->unkF8 = *state;
-                    Camera_EnableViewYOffset();
-                    CameraShake_SetAllMagnitudes(gSbShipGunFireCameraShakeMagnitude);
-                    Sfx_PlayFromObject(obj, SB_SHIPGUN_FIRE_ANIM);
-                    ((SBShipGunState*)state)->volleyCount += 1;
-                    if (((SBShipGunState*)state)->volleyCount == SB_SHIPGUN_VOLLEY_SIZE)
+                    if ((void*)galleon != NULL)
                     {
-                        if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
-                        {
-                            randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                            ((SBShipGunState*)state)->fireTimer = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
-                        }
-                        else
-                        {
-                            randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                            ((SBShipGunState*)state)->fireTimer = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
-                        }
-                        ((SBShipGunState*)state)->volleyCount = 0;
+                        SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
                     }
-                    else if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
+                }
+                else if (((SBShipGunState*)state)->hitCount == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
+                {
+                    Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_B);
+                    *(s8*)&((SBShipGunState*)state)->health -= 1;
+                    ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+                    if ((void*)galleon != NULL)
                     {
-                        ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_FAST_FIRE_DELAY;
-                    }
-                    else
-                    {
-                        ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_SLOW_FIRE_DELAY;
+                        SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
                     }
                 }
             }
-            break;
+            if (((void*)galleon != NULL) && (placement != 0))
+            {
+                ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+            }
+            fdx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+            fdz = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+            ((SBShipGunState*)state)->yawAngle = (short)(((u32)(u16)getAngle(-fdz, fdx) & 0xffff) << 1);
+            fdy = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+            dist = sqrtf(fdx * fdx + fdz * fdz);
+            ((SBShipGunState*)state)->pitchAngle = getAngle(-fdy, dist);
+            if (((SBShipGunState*)state)->pitchAngle > SB_SHIPGUN_MAX_PITCH)
+            {
+                ((SBShipGunState*)state)->pitchAngle = SB_SHIPGUN_MAX_PITCH;
+            }
+            else if (((SBShipGunState*)state)->pitchAngle < -SB_SHIPGUN_MAX_PITCH)
+            {
+                ((SBShipGunState*)state)->pitchAngle = -SB_SHIPGUN_MAX_PITCH;
+            }
+            ((SBShipGunState*)state)->fireTimer -= framesThisStep;
+            if ((((SBShipGunState*)state)->fireTimer < 0) && (Obj_IsLoadingLocked() != 0))
+            {
+                Obj_GetWorldPosition(obj, &posX, &posY, &posZ);
+                spawnArgs.posX = lbl_803E588C;
+                spawnArgs.posY = lbl_803E588C;
+                spawnArgs.posZ = lbl_803E588C;
+                spawnArgs.scale = lbl_803E5888;
+                spawnArgs.rot[0] = ((SBShipGunState*)state)->yawAngle;
+                spawnArgs.rot[1] = 0;
+                spawnArgs.rot[2] = 0;
+                offset.x = lbl_803E5890;
+                offset.y = lbl_803E5894;
+                offset.z = lbl_803E588C;
+                vecRotateZXY(spawnArgs.rot, &offset.x);
+                placement =
+                    (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE, SB_CANNONBALL_ALIAS_OBJECT_TYPE);
+                ((SBShipGunPlacement*)placement)->spawnX = posX;
+                ((SBShipGunPlacement*)placement)->spawnY = posY;
+                ((SBShipGunPlacement*)placement)->spawnZ = posZ;
+                ((SBShipGunPlacement*)placement)->modelField = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
+                ((SBShipGunPlacement*)placement)->flagsField = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
+                ((SBShipGunPlacement*)placement)->byte6 = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+                ((SBShipGunPlacement*)placement)->byte7 = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+                spawned = Obj_SetupObject((void*)placement, 5, 0xffffffff, 0xffffffff, 0);
+                placement = *state;
+                fdx = ((SBShipGunPlacement*)placement)->targetX - ((GameObject*)obj)->anim.worldPosX;
+                fdy = ((SBShipGunPlacement*)placement)->targetY - (((GameObject*)obj)->anim.worldPosY - lbl_803E5898);
+                fdz = ((SBShipGunPlacement*)placement)->targetZ - ((GameObject*)obj)->anim.worldPosZ;
+                posX = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
+                posX = lbl_803E589C / posX;
+                spawned->anim.velocityX = fdx * posX;
+                spawned->anim.velocityY = fdy * posX;
+                spawned->anim.velocityZ = fdz * posX;
+                boost = gSbShipGunCannonballSpeedBoost;
+                spawned->anim.localPosX = boost * spawned->anim.velocityX + spawned->anim.localPosX;
+                spawned->anim.localPosY = boost * spawned->anim.velocityY + spawned->anim.localPosY;
+                spawned->anim.localPosZ = boost * spawned->anim.velocityZ + spawned->anim.localPosZ;
+                spawned->anim.rotX = getAngle(spawned->anim.velocityX, spawned->anim.velocityZ);
+                spawned->unkF4 = SB_SHIPGUN_CANNONBALL_LIFETIME;
+                spawned->unkF8 = *state;
+                Camera_EnableViewYOffset();
+                CameraShake_SetAllMagnitudes(gSbShipGunFireCameraShakeMagnitude);
+                Sfx_PlayFromObject(obj, SB_SHIPGUN_FIRE_ANIM);
+                ((SBShipGunState*)state)->volleyCount += 1;
+                if (((SBShipGunState*)state)->volleyCount == SB_SHIPGUN_VOLLEY_SIZE)
+                {
+                    if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
+                    {
+                        randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                        ((SBShipGunState*)state)->fireTimer = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
+                    }
+                    else
+                    {
+                        randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                        ((SBShipGunState*)state)->fireTimer = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
+                    }
+                    ((SBShipGunState*)state)->volleyCount = 0;
+                }
+                else if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
+                {
+                    ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_FAST_FIRE_DELAY;
+                }
+                else
+                {
+                    ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_SLOW_FIRE_DELAY;
+                }
+            }
+        }
+        break;
         case SB_SHIPGUN_PHASE_DEATH_TRIGGER:
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (*(char*)&((SBShipGunState*)state)->health == '\0')
@@ -391,25 +383,24 @@ void SB_ShipGun_update(int obj)
             }
             break;
         case SB_SHIPGUN_PHASE_EXPLODED:
+        {
+            spawnArgs.scale = lbl_803E58A8;
+            spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+            ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
+            spawnArgs.posX = spawnArgs.posX - ((GameObject*)obj)->anim.worldPosX;
+            spawnArgs.posY = spawnArgs.posY - ((GameObject*)obj)->anim.worldPosY;
+            spawnArgs.posZ = spawnArgs.posZ - ((GameObject*)obj)->anim.worldPosZ;
+            for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
             {
-                spawnArgs.scale = lbl_803E58A8;
-                spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-                ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
-                spawnArgs.posX = spawnArgs.posX - ((GameObject*)obj)->anim.worldPosX;
-                spawnArgs.posY = spawnArgs.posY - ((GameObject*)obj)->anim.worldPosY;
-                spawnArgs.posZ = spawnArgs.posZ - ((GameObject*)obj)->anim.worldPosZ;
-                for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
-                {
-                    (*gPartfxInterface)->spawnObject(
-                        (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, spawnArgs.rot,
-                        SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
-                }
+                (*gPartfxInterface)
+                    ->spawnObject((void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, spawnArgs.rot,
+                                  SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
             }
-            break;
+        }
+        break;
         case SB_SHIPGUN_PHASE_SMOLDERING:
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
-            if (((void*)galleon != NULL) &&
-                (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
+            if (((void*)galleon != NULL) && (galleon = SB_GALLEON_VTBL(galleon)->getPhase(galleon), galleon == 0))
             {
                 if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
@@ -433,9 +424,9 @@ void SB_ShipGun_update(int obj)
             spawnArgs.posZ = spawnArgs.posZ - ((GameObject*)obj)->anim.worldPosZ;
             for (placement = 0; placement < (int)(u32)framesThisStep; placement = placement + 1)
             {
-                (*gPartfxInterface)->spawnObject(
-                    (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, spawnArgs.rot,
-                    SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, spawnArgs.rot,
+                                  SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
             }
             break;
         }

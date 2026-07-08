@@ -51,8 +51,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-
-
 FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/audio/sfx_ids.h"
@@ -125,16 +123,21 @@ void dll_1D6_initialise(void)
 {
 }
 
-
-int dll_1D6_getExtraSize(void) { return 0x20; }
-int dll_1D6_getObjectTypeId(void) { return 0x0; }
+int dll_1D6_getExtraSize(void)
+{
+    return 0x20;
+}
+int dll_1D6_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A78);
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A78);
 }
-
 
 void dll_1D6_free(int* obj)
 {
@@ -147,7 +150,6 @@ void dll_1D6_free(int* obj)
     mm_free(state->bufB);
     (&gDll1D6SlotInUse)[state->slot] = 0;
 }
-
 
 void dll_1D6_init(int* obj, u8* params)
 {
@@ -190,8 +192,7 @@ void dll_1D6_init(int* obj, u8* params)
     extra->bufA = mmAlloc(40, 18, 0);
     getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (&gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
     extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN,
-                ((&gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
+    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN, ((&gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
     ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
 }
 
@@ -215,10 +216,8 @@ void dll_1D6_update(int* obj)
         if ((extra->flags1D & 4) == 0)
         {
             extra->flags1D |= 4;
-            extra->bobPhase = (f32)(int)
-            randomGetRange(20, 40);
-            extra->bobRate = (f32)(int)
-            randomGetRange(6, 10) / lbl_803E4A7C;
+            extra->bobPhase = (f32)(int)randomGetRange(20, 40);
+            extra->bobRate = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
         }
         extra->downTimer -= framesThisStep;
         extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
@@ -314,8 +313,7 @@ void dll_1D6_update(int* obj)
                     char* mrow = (char*)model + 4;
                     row = *(int**)(mrow + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4);
                 }
-                lim = ((GameObject*)obj)->anim.rootMotionScale *
-                    (f32)(int) * (s16*)((char*)row + extra->hitRow * 16);
+                lim = ((GameObject*)obj)->anim.rootMotionScale * (f32)(int)*(s16*)((char*)row + extra->hitRow * 16);
                 if (lx <= lim)
                 {
                     ObjHits_RecordObjectHit((int)player, (int)obj, 11, 4, 0);
@@ -325,18 +323,15 @@ void dll_1D6_update(int* obj)
     }
     if ((extra->flags1D & 4) != 0)
     {
-        extra->bobPhase =
-            extra->bobRate * timeDelta + extra->bobPhase;
+        extra->bobPhase = extra->bobRate * timeDelta + extra->bobPhase;
         if (extra->bobPhase > lbl_803E4A90)
         {
-            extra->bobRate = -(f32)(int)
-            randomGetRange(6, 10) / lbl_803E4A7C;
+            extra->bobRate = -(f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
             extra->bobPhase = lbl_803E4A90;
         }
         else if (extra->bobPhase < lbl_803E4A7C)
         {
-            extra->bobRate = (f32)(int)
-            randomGetRange(6, 10) / lbl_803E4A7C;
+            extra->bobRate = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
             extra->bobPhase = lbl_803E4A7C;
         }
     }
