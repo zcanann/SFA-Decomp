@@ -1833,9 +1833,9 @@ void crawler_updateC(s16* obj, u8* state)
                 ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x20;
                 if (((FCVars*)state)->reactStep != 0)
                 {
-                    i = ((FCVars*)state)->reactStep * 0x10;
-                    Baddie_SetMove((int*)obj, state, ((u8*)seq + i)[8], *(f32*)((int)seq + i), 0,
-                                *(int*)((char*)seq + i + 4) & 0xff);
+                    Baddie_SetMove((int*)obj, state, seq[((FCVars*)state)->reactStep].moveId,
+                                seq[((FCVars*)state)->reactStep].spd, 0,
+                                seq[((FCVars*)state)->reactStep].mask & 0xff);
                     ((FCVars*)state)->flagsC = seq[((FCVars*)state)->reactStep].flagC;
                     ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
                     ((FCVars*)state)->reactStep = seq[((FCVars*)state)->reactStep].next9;
