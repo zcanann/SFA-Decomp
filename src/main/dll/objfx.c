@@ -182,7 +182,7 @@ void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d)
     (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)res + 4)))(0, 1, &s1, 0x401, -1, args);
 }
 
-void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* p7, f32 fval)
+void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* origin, f32 fval)
 {
     PartfxParams params;
     Tbl11 table = *(Tbl11*)lbl_802C2114;
@@ -196,11 +196,11 @@ void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* p7, f32 fval)
     }
     params.f8 = fval;
     params.f6 = table.v[b];
-    if (p7 != NULL)
+    if (origin != NULL)
     {
-        params.vec[0] = ((GameObject*)p7)->anim.localPosX;
-        params.vec[1] = ((GameObject*)p7)->anim.localPosY;
-        params.vec[2] = ((GameObject*)p7)->anim.localPosZ;
+        params.vec[0] = ((GameObject*)origin)->anim.localPosX;
+        params.vec[1] = ((GameObject*)origin)->anim.localPosY;
+        params.vec[2] = ((GameObject*)origin)->anim.localPosZ;
     }
     else
     {
@@ -214,7 +214,7 @@ void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* p7, f32 fval)
     }
 }
 
-void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fval)
+void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* origin, f32 fval)
 {
     PartfxParams params;
     Tbl11 table1 = *(Tbl11*)lbl_802C20EC;
@@ -229,11 +229,11 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fv
     }
     params.f8 = fval;
     params.f6 = table1.v[b];
-    if (p7 != NULL)
+    if (origin != NULL)
     {
-        params.vec[0] = ((GameObject*)p7)->anim.localPosX;
-        params.vec[1] = ((GameObject*)p7)->anim.localPosY;
-        params.vec[2] = ((GameObject*)p7)->anim.localPosZ;
+        params.vec[0] = ((GameObject*)origin)->anim.localPosX;
+        params.vec[1] = ((GameObject*)origin)->anim.localPosY;
+        params.vec[2] = ((GameObject*)origin)->anim.localPosZ;
     }
     else
     {
@@ -761,7 +761,7 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
     }
 }
 
-void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval)
+void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int f6val, int f4val, int origin, f32 fval)
 {
     PartfxFlags params;
     int i;
@@ -775,8 +775,8 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f3
     {
         count = framesThisStep;
     }
-    params.f6 = p5;
-    params.f4 = p6;
+    params.f6 = f6val;
+    params.f4 = f4val;
     params.f8 = fval;
     if (mode == 0)
     {
@@ -789,7 +789,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f3
         params.b = 0;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
         }
         break;
     case 2:
@@ -797,7 +797,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f3
         params.b = 0;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
         }
         break;
     case 3:
@@ -805,7 +805,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f3
         params.b = 1;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
         }
         break;
     case 4:
@@ -813,7 +813,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f3
         params.b = 1;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)p7);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
         }
         break;
     }

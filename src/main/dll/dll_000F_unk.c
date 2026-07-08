@@ -106,7 +106,7 @@ void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f3
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
-void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
+void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
 {
     f32 dx, dz, dist, max;
 
@@ -150,7 +150,7 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 }
 #pragma opt_common_subs reset
 
-void player_applyVelocityStep(int* p, int* ctx, f32 t)
+void player_applyVelocityStep(int* obj, int* ctx, f32 t)
 {
     int flags;
     int b;
@@ -166,14 +166,14 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
     }
     if ((flags & 0x200000) == 0)
     {
-        ((GameObject*)p)->anim.velocityY = ((GameObject*)p)->anim.velocityY * lbl_803E058C;
-        ((GameObject*)p)->anim.velocityY = -(((BaddieState*)ctx)->gravity * t) + ((GameObject*)p)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E058C;
+        ((GameObject*)obj)->anim.velocityY = -(((BaddieState*)ctx)->gravity * t) + ((GameObject*)obj)->anim.velocityY;
     }
     b = *(s8*)((char*)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0)
     {
-        desc.ang[0] = ((GameObject*)p)->anim.rotX;
-        desc.ang[1] = ((GameObject*)p)->anim.rotY;
+        desc.ang[0] = ((GameObject*)obj)->anim.rotX;
+        desc.ang[1] = ((GameObject*)obj)->anim.rotY;
         desc.ang[2] = 0;
         desc.sc[0] = lbl_803E0588;
         desc.sc[1] = lbl_803E0570;
@@ -183,18 +183,18 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
         if ((ctx[0] & 0x10000) != 0)
         {
             Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, *(f32*)((char*)ctx + 0x288),
-                                  -((BaddieState*)ctx)->animSpeedA, &outX, &((GameObject*)p)->anim.velocityY, &outZ);
+                                  -((BaddieState*)ctx)->animSpeedA, &outX, &((GameObject*)obj)->anim.velocityY, &outZ);
         }
         else
         {
             Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, lbl_803E0570, -((BaddieState*)ctx)->animSpeedA,
                                   &outX, &outY, &outZ);
         }
-        ((GameObject*)p)->anim.velocityX = outX;
-        ((GameObject*)p)->anim.velocityZ = outZ;
+        ((GameObject*)obj)->anim.velocityX = outX;
+        ((GameObject*)obj)->anim.velocityZ = outZ;
     }
-    objMove(p, ((GameObject*)p)->anim.velocityX * t, ((GameObject*)p)->anim.velocityY * t,
-            ((GameObject*)p)->anim.velocityZ * t);
+    objMove(obj, ((GameObject*)obj)->anim.velocityX * t, ((GameObject*)obj)->anim.velocityY * t,
+            ((GameObject*)obj)->anim.velocityZ * t);
 }
 
 #pragma opt_propagation off
@@ -251,27 +251,27 @@ void fn_800D8414(int* obj, int* ctx)
 }
 #pragma opt_propagation reset
 
-void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
+void player_updateParticles(int* obj, int unused, int effectId, int count, int mode)
 {
-    while (count != 0 && p1 != NULL)
+    while (count != 0 && obj != NULL)
     {
         if (mode == 0)
         {
-            (*gPartfxInterface)->spawnObject(p1, p3, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 2, -1, NULL);
         }
         else if (mode == 1)
         {
-            (*gPartfxInterface)->spawnObject(p1, p3, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 2, -1, NULL);
         }
         else if (mode == 2)
         {
-            (*gPartfxInterface)->spawnObject(p1, p3, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 4, -1, NULL);
         }
         count--;
     }
 }
 
-void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mode)
+void player_doProjGfx(int* obj, int unusedA, int resIdBase, int count, int unusedB, int mode)
 {
     /* res: acquired projectile-gfx resource; its vtable slot [+4] is the
      * per-instance spawn entry, dispatched `count` times with a mode-selected
@@ -281,15 +281,15 @@ void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mod
     {
         if (mode == 0)
         {
-            (*(void (*)(int*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(p1, 0, 0, 1, -1, 0);
+            (*(void (*)(int*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, 0, 1, -1, 0);
         }
         else if (mode == 1)
         {
-            (*(void (*)(int*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(p1, 0, 0, 2, -1, 0);
+            (*(void (*)(int*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, 0, 2, -1, 0);
         }
         else if (mode == 2)
         {
-            (*(void (*)(int*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(p1, 0, 0, 4, -1, 0);
+            (*(void (*)(int*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, 0, 4, -1, 0);
         }
         count--;
     }
@@ -437,12 +437,12 @@ void player_updateCurve(int* obj, int* state, f32 t)
 #pragma dont_inline reset
 
 #pragma optimization_level 1
-void player_findCurve(int* obj, int* state, int p3)
+void player_findCurve(int* obj, int* state, int curveId)
 {
     f32 px = ((GameObject*)obj)->anim.localPosX;
     f32 py = ((GameObject*)obj)->anim.localPosY;
     f32 pz = ((GameObject*)obj)->anim.localPosZ;
-    *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(&p3, 1, *(s8*)((char*)state + 0x344), px, py, pz);
+    *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(&curveId, 1, *(s8*)((char*)state + 0x344), px, py, pz);
 }
 #pragma optimization_level reset
 
@@ -628,7 +628,7 @@ void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags)
     gPlayerMoveAdvanced = 1;
 }
 
-void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
+void fn_800D915C(int gameObj, int* obj, f32 fval, void* fnTable)
 {
     int i;
     s16 startState;
@@ -646,7 +646,7 @@ void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
     {
         done = 0;
         startState = ((BaddieState*)obj)->substate;
-        result = ((int (*)(int, int*, f32))((int**)fnTable)[startState])(p1, obj, fval);
+        result = ((int (*)(int, int*, f32))((int**)fnTable)[startState])(gameObj, obj, fval);
         if (result > 0)
         {
             ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
