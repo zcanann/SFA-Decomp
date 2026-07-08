@@ -102,7 +102,7 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             case 4:
                 ((Torch1CDState*)state)->unk13 = 4;
                 ((Torch1CDState*)state)->unk14 = 2;
-                mainSetBits(0x129, 1);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 mainSetBits(0x1d2, 0);
                 mainSetBits(0x126, 1);
                 ((Torch1CDState*)state)->flameFrameVel = -3;
@@ -111,7 +111,7 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((Torch1CDState*)state)->unk13 = 6;
                 ((Torch1CDState*)state)->unk14 = 3;
                 ((Torch1CDState*)state)->flameFrameVel = -3;
-                mainSetBits(0x129, 1);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 break;
             case 6:
                 mainSetBits(0x1d2, 1);
@@ -303,7 +303,7 @@ void dll_19B_update(int obj)
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st->activationDist)
             {
                 st->phase = DLL19B_PHASE_WAIT_EVENT;
-                mainSetBits(0x129, 0);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
                     void* handle = Resource_Acquire(0x83, 1);
@@ -363,7 +363,7 @@ void dll_19B_update(int obj)
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
-                mainSetBits(0x129, 1);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 st->phase = DLL19B_PHASE_DONE;
             }
             else
@@ -392,7 +392,7 @@ void dll_19B_update(int obj)
             st->phase = DLL19B_PHASE_IDLE;
             st->pendingEvent = 0;
             st->timer = 400;
-            mainSetBits(0x129, 1);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
             mainSetBits(0x126, 1);
             mainSetBits(0x127, 1);
             {
@@ -438,13 +438,13 @@ void dll_19B_init(u8* obj, u8* params)
     sub->unlockCount = 0;
     ((GameObject*)obj)->animEventCallback = dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    mainSetBits(0x129, 1);
+    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     mainSetBits(0x1d2, 0);
     mainSetBits(0x126, 1);
     mainSetBits(0x127, 1);
-    mainSetBits(0x2d, 1);
-    mainSetBits(0x40, 1);
-    mainSetBits(0x1d7, 1);
+    mainSetBits(GAMEBIT_STAFF_ABILITY_FIRE_BLASTER, 1);
+    mainSetBits(GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE, 1);
+    mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
     mainSetBits(0x1d8, 0);
     sub->brightnessA = 0xc;
     sub->brightnessB = 0x1e;
