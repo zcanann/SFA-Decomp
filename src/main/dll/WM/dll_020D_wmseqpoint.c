@@ -12,6 +12,7 @@
  * DLLs (0x143) and the palace sun (0x21D).
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
@@ -191,18 +192,18 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
                 switch (actor->eventIds[i])
                 {
                 case 1:
-                    mainSetBits(0x143, 1);
+                    mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 1);
                     break;
                 case 2:
-                    mainSetBits(0x143, 0);
+                    mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 0);
                     break;
                 case 5:
-                    mainSetBits(0x21d, 1);
+                    mainSetBits(GAMEBIT_WM_SpiritHead1Fired, 1);
                     break;
                 case 4:
-                    mainSetBits(0x21d, 1);
+                    mainSetBits(GAMEBIT_WM_SpiritHead1Fired, 1);
                     objSetAnimStateFlags(player, 8, 0);
-                    mainSetBits(0x277, 1);
+                    mainSetBits(GAMEBIT_ITEM_Spirit1_Used, 1);
                     break;
                 default:
                     break;
