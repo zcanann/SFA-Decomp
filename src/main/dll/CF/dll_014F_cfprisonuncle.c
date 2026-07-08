@@ -133,14 +133,14 @@ void cfprisonuncle_update(int* obj)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
     void* player;
-    int m2, objectIndex, objectCount, m1, m3;
+    int msgArg, objectIndex, objectCount, msgType, msgFlag;
     int* objects;
     int i;
     if (sub == NULL)
         return;
     if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0)
         return;
-    if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
+    if (ObjMsg_Pop(obj, &msgType, &msgArg, &msgFlag) != 0)
     {
         *(void**)&sub->target = NULL;
     }
