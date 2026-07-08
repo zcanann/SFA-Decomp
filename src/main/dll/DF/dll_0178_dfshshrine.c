@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/gamebit_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
@@ -193,8 +194,8 @@ int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 7:
                 objSetAnimStateFlags(player, 1, 1);
-                mainSetBits(0xbfd, 1);
-                mainSetBits(0x956, 1);
+                mainSetBits(GAMEBIT_ITEM_TestCombatSpirit_Got, 1);
+                mainSetBits(GAMEBIT_FlewToPlanet, 1);
                 (*gMapEventInterface)->setMapAct(DFSHSHRINE_MAP_SHRINE, 2);
                 break;
             case 0xe:
@@ -243,7 +244,7 @@ void DFSH_Shrine_free(int obj)
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
-    mainSetBits(0xefa, 0);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
     mainSetBits(0xcbb, 1);
 }
 
@@ -355,7 +356,7 @@ void DFSH_Shrine_update(int objArg)
         obj->anim.worldPosY = obj->anim.localPosY;
         obj->anim.worldPosZ = obj->anim.localPosZ;
         playerAddRemoveMagic(player, 0x14);
-        mainSetBits(0x1d7, 1);
+        mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
         gDfShShrinePendingReward = 0;
     }
     SCGameBitLatch_UpdateInverted(state->musicLatch, 1, -1, -1, 0xcbb, 8);
@@ -391,7 +392,7 @@ void DFSH_Shrine_update(int objArg)
             state->mode = DFSHRINE_MODE_BEGIN_TRANS;
             Music_Trigger(MUSICTRIG_DIM_Snow, 1);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            mainSetBits(0x129, 0);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
         }
         break;
     case DFSHRINE_MODE_BEGIN_TRANS:
@@ -466,7 +467,7 @@ void DFSH_Shrine_update(int objArg)
         state->mode = DFSHRINE_MODE_POST_FINISH;
         break;
     case DFSHRINE_MODE_POST_FINISH:
-        if (objGetAnimStateFlags(player, 1) != 0 || mainGetBit(0xbfd) != 0u)
+        if (objGetAnimStateFlags(player, 1) != 0 || mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0u)
         {
             state->mode = DFSHRINE_MODE_RESET;
         }
@@ -481,7 +482,7 @@ void DFSH_Shrine_update(int objArg)
             audioStopByMask(3);
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
-        mainSetBits(0x129, 1);
+        mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
         mainSetBits(0xb76, 0);
         break;
     case DFSHRINE_MODE_RESET:
@@ -489,7 +490,7 @@ void DFSH_Shrine_update(int objArg)
         DFSH_FLAGS(state)->openedBySequence = 0;
         state->rewardIndex = 0;
         state->rewardTimer = lbl_803E4E8C;
-        mainSetBits(0x129, 1);
+        mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
         mainSetBits(0xb70, 0);
         mainSetBits(0xb71, 0);
         mainSetBits(0xb76, 0);
@@ -546,7 +547,7 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     state->transitionTimer = 0;
     ((GameObject*)obj)->animEventCallback = DFSH_Shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    mainSetBits(0x129, 1);
+    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     state->rewardIndex = 0;
     state->rewardTimer = lbl_803E4E8C;
     unlockLevel(mapGetDirIdx(0x1f), 1, 0);
@@ -555,8 +556,8 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
         state->light = objCreateLight(NULL, 1);
     }
     ((GameObject*)obj)->unkF4 = 1;
-    mainSetBits(0xe70, 1);
-    mainSetBits(0xefa, 1);
+    mainSetBits(GAMEBIT_MMP_EnteredKrazoaShrine, 1);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
 
 
