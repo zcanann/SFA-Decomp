@@ -144,7 +144,7 @@ void linkb_levcontrol_update(int* obj)
             }
             break;
         case LINKBLEVCONTROL_STAGE_1:
-            if (mainGetBit(0xc1) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0)
             {
                 if (!(((GameObject*)player)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
@@ -211,16 +211,16 @@ void linkb_levcontrol_update(int* obj)
         {
             state->timer = state->timer + timeDelta;
         }
-        if (mainGetBit(0x4e3) == 1 && cur[0] >= 4)
+        if (mainGetBit(GAMEBIT_TrickyTalk) == 1 && cur[0] >= 4)
         {
-            mainSetBits(0x4e3, 0xff);
+            mainSetBits(GAMEBIT_TrickyTalk, 0xff);
         }
         if (state->timer >= lbl_803E47C8)
         {
             state->timer = state->timer - lbl_803E47C8;
-            if (mainGetBit(0x4e3) == 0xff && cur[0] < 4)
+            if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff && cur[0] < 4)
             {
-                mainSetBits(0x4e3, 1);
+                mainSetBits(GAMEBIT_TrickyTalk, 1);
             }
         }
     }
