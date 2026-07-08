@@ -1,5 +1,6 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
@@ -693,7 +694,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
         {
-            mainSetBits(0x642, 1);
+            mainSetBits(GAMEBIT_TumbleweedRelated642, 1);
             ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
         }
     }
