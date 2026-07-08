@@ -377,18 +377,6 @@ extern SubtitleCmd* subtitleParseControlCmds(int str, int* count);
 int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 
-u16* FUN_80017460(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
-                  u64 fwdArg8, u32 arg9, int arg10, u32 arg11, u32 arg12, u32 arg13, u32 arg14, u32 arg15, u32 arg16)
-{
-    return 0;
-}
-
-u16* FUN_80017468(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
-                  u64 fwdArg8, u32 arg9, u32 arg10, u32 arg11, u32 arg12, u32 arg13, u32 arg14, u32 arg15, u32 arg16)
-{
-    return 0;
-}
-
 /*
  * Retail .data begins here with the disc-error/loading screens'
  * self-contained resources: the SJIS->glyph remap table, the built-in font
@@ -1492,26 +1480,7 @@ void* gameTextGet(int textId)
 }
 #pragma peephole reset
 
-u32
 #pragma scheduling on
-FUN_80017500(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
-             u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, int arg9)
-{
-    return 0;
-}
-
-u32 FUN_8001786c(u64 fwdArg1, double fwdArg2, double fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7,
-                 u64 fwdArg8, u32 arg9, u32 arg10, u32 arg11, u32 arg12)
-{
-    return 0;
-}
-
-u8* FUN_80017998(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4, u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8,
-                 u32 arg9)
-{
-    return 0;
-}
-
 int getCurLanguage(void)
 {
     return curLanguage;
