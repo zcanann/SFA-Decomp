@@ -16,6 +16,7 @@
 #include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define PAD_BUTTON_B 0x200
 
@@ -176,19 +177,19 @@ int warpstone_testEvent(u32 p1, u32 p2, int option)
             loadMapAndParent(0x42);
             lockLevel(mapGetDirIdx(0x42), 0);
             lockLevel(mapGetDirIdx(7), 1);
-            if (mainGetBit(0xbfd) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            else if (mainGetBit(0xff) != 0)
+            else if (mainGetBit(GAMEBIT_ITEM_SpiritTestFear_Got) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            else if (mainGetBit(0xc6e) != 0)
+            else if (mainGetBit(GAMEBIT_ITEM_SpiritTestStrength_Got) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            else if (mainGetBit(0xc85) != 0)
+            else if (mainGetBit(GAMEBIT_ITEM_Spirit5_Got) != 0)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
@@ -286,11 +287,11 @@ int warpstone_SeqFn(int obj, u32 p2, int animObj)
         }
         {
             int hit;
-            if (mainGetBit(0x2e8) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_Got) != 0)
             {
                 hit = 1;
             }
-            else if (mainGetBit(0x123) != 0)
+            else if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got) != 0)
             {
                 hit = 1;
             }
@@ -341,7 +342,7 @@ int warpstone_SeqFn(int obj, u32 p2, int animObj)
         case 7:
             CMenu_SetFadeCounter(0);
             loadUiDll(1);
-            mainSetBits(0x884, 1);
+            mainSetBits(GAMEBIT_SH_WarpStoneRelated0884, 1);
             warpToMap(0x7e, 1);
             break;
 
@@ -373,7 +374,7 @@ int warpstone_SeqFn(int obj, u32 p2, int animObj)
                 (*(void (**)(int))(*(int*)dll16 + 0x10))(animUpdate->eventIds[i] - 0xd);
             }
             mainSetBits(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE, 1);
-            mainSetBits(0x887, 1);
+            mainSetBits(GAMEBIT_SH_SawWarpStoneIntro, 1);
             break;
 
         case 0x12:
@@ -481,7 +482,7 @@ void warpstone_update(int obj)
         }
     }
 
-    if (mainGetBit(0xc7d) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_RockCandy_Used) != 0)
     {
         if (randFn_80080100(lbl_803DC038) != 0)
         {
@@ -572,7 +573,7 @@ void warpstone_update(int obj)
 
     objAnimFn_80038f38(obj, (int*)(state + 0x14));
     characterDoEyeAnims(obj, (void*)(state + 0x44));
-    if (mainGetBit(0x887) == 0)
+    if (mainGetBit(GAMEBIT_SH_SawWarpStoneIntro) == 0)
     {
         ((WarpstoneState*)state)->activated = 0;
     }
@@ -636,7 +637,7 @@ void warpstone_init(int obj, u8* setup)
     ((WarpstoneState*)state)->gameBitE = 0x15a;
     ((WarpstoneState*)state)->gameBit10 = 0x886;
     ObjHits_EnableObject((u32)obj);
-    if (mainGetBit(0x887) != 0 && mainGetBit(0x15a) != 0)
+    if (mainGetBit(GAMEBIT_SH_SawWarpStoneIntro) != 0 && mainGetBit(GAMEBIT_SH_WarpStoneRelated015A) != 0)
     {
         ((WarpstoneState*)state)->activated = 1;
     }
