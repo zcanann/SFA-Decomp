@@ -78,7 +78,7 @@ void cclightfoot_init(int* obj, int* def)
     ((GameObject*)obj)->animEventCallback = CClightfoot_SeqFn;
 }
 
-void cclightfoot_free(int* obj, int p2)
+void cclightfoot_free(int* obj, int flag)
 {
     extern u32 ObjLink_DetachChild();
     CcLightfootState* state = ((GameObject*)obj)->extra;
@@ -89,7 +89,7 @@ void cclightfoot_free(int* obj, int p2)
         {
             ObjLink_DetachChild(obj, (int)sub);
         }
-        if (p2 == 0)
+        if (flag == 0)
         {
             Obj_FreeObject(state->childObj);
         }
