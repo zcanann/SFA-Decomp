@@ -167,11 +167,11 @@ int tumbleweed_func0E(int obj)
     return ((BackpackState*)((GameObject*)obj)->extra)->phase == TUMBLEWEED_PHASE_HOMING;
 }
 
-void tumbleweed_render2(int* obj, int p2)
+void tumbleweed_render2(int* obj, int targetPos)
 {
     int* state = ((GameObject*)obj)->extra;
     ((TumbleweedState*)state)->mode = TUMBLEWEED_PHASE_HOMING;
-    *(int*)&((BackpackState*)state)->targetPos = p2;
+    *(int*)&((BackpackState*)state)->targetPos = targetPos;
     ((BackpackState*)state)->speed = timeDelta * lbl_803E2F98;
     ObjHits_DisableObject((u32)obj);
 }

@@ -52,7 +52,7 @@ extern f32 lbl_803E308C;
 extern int* gBaddieControlInterface;
 extern void Obj_FreeObject(int obj);
 
-int kaldachom_stateHandlerB05(int obj, int p)
+int kaldachom_stateHandlerB05(int obj, int baddieState)
 {
     int state;
     KaldaChomControl* control;
@@ -60,30 +60,31 @@ int kaldachom_stateHandlerB05(int obj, int p)
 
     state = *(int*)&((GameObject*)obj)->extra;
     control = ((CfDoorlightState*)state)->control;
-    if (((GroundBaddieState*)p)->baddie.controlMode == BADDIE_CONTROL_MODE_PULLUP)
+    if (((GroundBaddieState*)baddieState)->baddie.controlMode == BADDIE_CONTROL_MODE_PULLUP)
     {
         control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
         if (control->pullupSfxTimer <= lbl_803E3060)
         {
-            ((GroundBaddieState*)p)->baddie.moveDone = 1;
+            ((GroundBaddieState*)baddieState)->baddie.moveDone = 1;
         }
     }
-    if ((s8)((GroundBaddieState*)p)->baddie.moveDone != 0 || (s8)((GroundBaddieState*)p)->baddie.moveJustStartedB != 0)
+    if ((s8)((GroundBaddieState*)baddieState)->baddie.moveDone != 0 ||
+        (s8)((GroundBaddieState*)baddieState)->baddie.moveJustStartedB != 0)
     {
         if (((int (*)(int, int, f32, int))((void**)*(int*)gBaddieControlInterface)[0x11])(
-                obj, p, (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
+                obj, baddieState, (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
         {
             return 5;
         }
         def = *(int*)&((GameObject*)obj)->anim.placementData;
         if ((int)randomGetRange(0, AGGRO_CHANCE_RANGE) < (int)((KaldachomPlacement*)def)->aggroChance)
         {
-            (*gPlayerInterface)->setState((void*)obj, (void*)p, 3);
+            (*gPlayerInterface)->setState((void*)obj, (void*)baddieState, 3);
         }
         else
         {
             control->pullupSfxTimer = (f32)(int)randomGetRange(0x12c, 0x258);
-            (*gPlayerInterface)->setState((void*)obj, (void*)p, 2);
+            (*gPlayerInterface)->setState((void*)obj, (void*)baddieState, 2);
         }
     }
     return 0;
@@ -110,14 +111,14 @@ int kaldachom_stateHandlerB03(int obj, GroundBaddieState* state)
     return 0;
 }
 
-int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
+int kaldachom_stateHandlerB02(int obj, GroundBaddieState* state)
 {
     int sub = *(int*)&((GameObject*)obj)->extra;
 
-    if ((s32)(s8)p2->baddie.moveJustStartedB != 0)
+    if ((s32)(s8)state->baddie.moveJustStartedB != 0)
     {
         ((CfDoorlightState*)sub)->control->soundFlags = 0;
-        (*gPlayerInterface)->setState((void*)obj, p2, 7);
+        (*gPlayerInterface)->setState((void*)obj, state, 7);
         ObjHits_DisableObject(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -125,7 +126,7 @@ int kaldachom_stateHandlerB02(int obj, GroundBaddieState* p2)
         ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
         ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
     }
-    else if ((s32)(s8)p2->baddie.moveDone != 0)
+    else if ((s32)(s8)state->baddie.moveDone != 0)
     {
         if (((GameObject*)obj)->anim.placementData == NULL)
         {
@@ -190,29 +191,29 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int kaldachom_stateHandlerA07(int obj, int p)
+int kaldachom_stateHandlerA07(int obj, int baddieState)
 {
     int state;
     KaldaChomControl* control;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)&((GroundBaddieState*)p)->baddie.stateTag = 3;
-    ((GroundBaddieState*)p)->baddie.moveSpeed = lbl_803E3084;
+    *(u8*)&((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
+    ((GroundBaddieState*)baddieState)->baddie.moveSpeed = lbl_803E3084;
     {
         f32 fz = lbl_803E3060;
-        ((GroundBaddieState*)p)->baddie.animSpeedA = fz;
-        ((GroundBaddieState*)p)->baddie.animSpeedB = fz;
-        if (*(char*)&((GroundBaddieState*)p)->baddie.moveJustStartedA != '\0')
+        ((GroundBaddieState*)baddieState)->baddie.animSpeedA = fz;
+        ((GroundBaddieState*)baddieState)->baddie.animSpeedB = fz;
+        if (*(char*)&((GroundBaddieState*)baddieState)->baddie.moveJustStartedA != '\0')
         {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
-            *(s8*)&((GroundBaddieState*)p)->baddie.moveDone = 0;
+            *(s8*)&((GroundBaddieState*)baddieState)->baddie.moveDone = 0;
         }
     }
     {
-        int v = *(int*)&((GroundBaddieState*)p)->baddie.eventFlags;
+        int v = *(int*)&((GroundBaddieState*)baddieState)->baddie.eventFlags;
         if ((v & 0x1000) != 0)
         {
-            *(int*)&((GroundBaddieState*)p)->baddie.eventFlags = v & ~0x1000;
+            *(int*)&((GroundBaddieState*)baddieState)->baddie.eventFlags = v & ~0x1000;
             kaldachompme_setLinkedMouthMode((u8*)obj, 2);
         }
     }
