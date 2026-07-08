@@ -151,7 +151,7 @@ void DR_CageWith_hitDetect(int obj)
 
     if (((GameObject*)obj)->anim.seqId == 2154 || ((GameObject*)obj)->anim.seqId == 2155)
     {
-        if (mainGetBit(1545) != 0)
+        if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
@@ -178,7 +178,7 @@ void DR_CageWith_hitDetect(int obj)
     }
     if (bf31->b0 == 0)
     {
-        if (mainGetBit(1545) != 0)
+        if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
