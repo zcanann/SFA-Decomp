@@ -73,7 +73,7 @@ void arwlevelcon_onSeqFree(int obj)
     arwingHudSetVisible(1);
 }
 
-int arwlevelcon_SeqFn(int obj, int p2, int data)
+int arwlevelcon_SeqFn(int obj, int unused, int data)
 {
     int i;
     int textId;

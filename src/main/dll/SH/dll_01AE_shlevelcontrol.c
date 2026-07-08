@@ -145,13 +145,13 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
 }
 
 #pragma dont_inline on
-void mapUnloadFn_801d7c94(void* obj, void* p2)
+void mapUnloadFn_801d7c94(void* obj, void* state)
 {
 
     SCTotemLogPuzzleObject* puzzleObj;
     SCTotemLogPuzzleRuntime* runtime;
     puzzleObj = (SCTotemLogPuzzleObject*)obj;
-    runtime = (SCTotemLogPuzzleRuntime*)p2;
+    runtime = (SCTotemLogPuzzleRuntime*)state;
 
     if ((u32)mainGetBit(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0)
     {

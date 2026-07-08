@@ -151,7 +151,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int warpstone_testEvent(u32 p1, u32 p2, int option)
+int warpstone_testEvent(u32 obj, u32 unused, int option)
 {
     s8 horizontal;
     s8 vertical;

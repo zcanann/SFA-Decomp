@@ -198,7 +198,7 @@ void arwproximit_update(int obj)
         modelLightStruct_updateGlowAlpha(state->light);
 }
 
-void arwproximit_init(int obj, int setup, int p3)
+void arwproximit_init(int obj, int setup, int flag)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ARWProximitState* state = ((GameObject*)obj)->extra;
@@ -206,7 +206,7 @@ void arwproximit_init(int obj, int setup, int p3)
 
     state->spinSpeed = randomGetRange(0x64, 0x12c);
     state->textVariant = mapData->textVariant;
-    if (p3 == 0)
+    if (flag == 0)
     {
         ((GameObject*)obj)->anim.rotY = randomGetRange(0, 0xffff);
         ((GameObject*)obj)->anim.rotZ = randomGetRange(0, 0xffff);
