@@ -117,11 +117,11 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 3:
         {
-            int r;
+            int timer;
             state->eventFlags = state->eventFlags & ~ASTEROIDRE_FX_IMPACT;
             state->eventFlags = state->eventFlags | 0x50;
-            r = randomGetRange(10, 60);
-            state->periodicFxTimer = r;
+            timer = randomGetRange(10, 60);
+            state->periodicFxTimer = timer;
             state->phase = MMP_ASTEROID_PHASE_RISING;
             mainSetBits(GAMEBIT_MMPAsteroidRelated087B, state->phase);
             break;
