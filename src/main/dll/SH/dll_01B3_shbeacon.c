@@ -173,7 +173,7 @@ void sh_beacon_update(int obj)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
         }
-        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) && (mainGetBit(0x194) == 0))
+        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) && (mainGetBit(GAMEBIT_ITEM_FireWeed_Count) == 0))
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -189,7 +189,7 @@ void sh_beacon_update(int obj)
     }
     else
     {
-        if ((mainGetBit(0x193) != 0) || (((ShBeaconPlacement*)def)->litGameBit != 0x95))
+        if ((mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0) || (((ShBeaconPlacement*)def)->litGameBit != 0x95))
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         }
@@ -209,7 +209,7 @@ void sh_beacon_update(int obj)
         {
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_LIT;
             mainSetBits(((ShBeaconPlacement*)def)->litGameBit, 1);
-            if ((mainGetBit(0x190) != 0) && (mainGetBit(0x191) != 0) && (mainGetBit(0x192) != 0))
+            if ((mainGetBit(GAMEBIT_SH_FireWeed_190) != 0) && (mainGetBit(GAMEBIT_SH_FireWeed_191) != 0) && (mainGetBit(GAMEBIT_SH_FireWeed_192) != 0))
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             }
