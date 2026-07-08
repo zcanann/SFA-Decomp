@@ -709,7 +709,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
     }
     if (((GameObject*)obj)->seqIndex != -1 &&
         (((GameObject*)obj)->anim.seqId == 0x16d || ((GameObject*)obj)->anim.seqId == 0x170) &&
-        mainGetBit(0x3a3) != 0)
+        mainGetBit(GAMEBIT_IM_BikeRelated03A3) != 0)
     {
         (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
