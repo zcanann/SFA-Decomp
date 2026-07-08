@@ -82,7 +82,7 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_
 STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
 STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
-int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int wcapertures_interactCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     WCAperturesState* state = ((GameObject*)obj)->extra;

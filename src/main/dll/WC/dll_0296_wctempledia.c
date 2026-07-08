@@ -92,7 +92,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
     }
 }
 
-int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int wctempledia_interactCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
 

@@ -54,7 +54,7 @@ extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void objRenderFn_80041018(int obj);
 
-int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
+int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)obj)->anim.placementData;
     WarpPadState* state = ((GameObject*)obj)->extra;
