@@ -16,6 +16,7 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 extern u32 Music_Trigger();
@@ -149,8 +150,8 @@ void nw_levcontrol_update(int objArg)
     SCGameBitLatch_Update(&state->flags, 0x20, -1, -1, 0x393, 0x36);
     SCGameBitLatch_Update(&state->flags, 0x40, -1, -1, 0xcbb, 0xc4);
     timerActive = 0;
-    gameBit = mainGetBit(0x19f);
-    rescueBit = mainGetBit(0x19d);
+    gameBit = mainGetBit(GAMEBIT_SnowHornArtifact19F);
+    rescueBit = mainGetBit(GAMEBIT_SnowHornArtifact19D);
     if (((rescueBit ^ gameBit) != 0) && (timerRunning = gameTimerIsRunning(), timerRunning != 0))
     {
         timerActive = 1;
@@ -174,7 +175,7 @@ void nw_levcontrol_update(int objArg)
         switch (state->mode)
         {
         case NWLEVCONTROL_MODE_WAIT_START:
-            gameBit = mainGetBit(0x19d);
+            gameBit = mainGetBit(GAMEBIT_SnowHornArtifact19D);
             if (gameBit != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -234,7 +235,7 @@ void nw_levcontrol_update(int objArg)
                     state->flags = state->flags & ~4;
                     gameTimerStop();
                     Music_Trigger((int*)NWLEVCONTROL_MUSIC_TIMER_END, 0);
-                    mainSetBits(0x19f, 1);
+                    mainSetBits(GAMEBIT_SnowHornArtifact19F, 1);
                 }
                 else
                 {
@@ -274,11 +275,11 @@ void nw_levcontrol_init(int* obj)
     Obj_GetPlayerObject();
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWLEVCONTROL_OBJFLAG_HIDDEN | NWLEVCONTROL_OBJFLAG_HITDETECT_DISABLED));
 
-    if (mainGetBit(0x19f) != 0)
+    if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
     {
         state->mode = NWLEVCONTROL_MODE_RESCUE_RETRIGGER;
     }
-    else if (mainGetBit(0x19d) != 0)
+    else if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
     {
         state->mode = NWLEVCONTROL_MODE_INIT_START;
     }
