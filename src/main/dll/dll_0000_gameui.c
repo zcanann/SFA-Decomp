@@ -1405,24 +1405,24 @@ void drawWorldMapHud(void)
             }
             fi = -1;
         haveIdx:
-            n = mainGetBit(0x63c);
-            t = mainGetBit(0x4e9);
-            n += mainGetBit(0x5f3);
-            n += mainGetBit(0x5f4);
+            n = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
+            t = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
+            n += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
+            n += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
             n += t;
-            if (mainGetBit(0x123))
+            if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
             {
                 n++;
             }
-            if (mainGetBit(0x2e8))
+            if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_Got))
             {
                 n++;
             }
-            if (mainGetBit(0x83b))
+            if (mainGetBit(GAMEBIT_ITEM_FireSpellStone2_Got))
             {
                 n++;
             }
-            if (mainGetBit(0x83c))
+            if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone2_Got))
             {
                 n++;
             }
@@ -1900,7 +1900,7 @@ void cMenuRun(void)
     switch (yButtonState)
     {
     case 2:
-        if (!mainGetBit(0x4e4))
+        if (!mainGetBit(GAMEBIT_Tricky_Usable))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
@@ -2413,24 +2413,24 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 tmp = -1;
             haveIdx2:
                 fi = (s8)tmp;
-                taskCount = mainGetBit(0x63c);
-                taskPartial = mainGetBit(0x4e9);
-                taskCount += mainGetBit(0x5f3);
-                taskCount += mainGetBit(0x5f4);
+                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
+                taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
+                taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
+                taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
                 taskCount = taskPartial + taskCount;
-                if (mainGetBit(0x123))
+                if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
                 {
                     taskCount++;
                 }
-                if (mainGetBit(0x2e8))
+                if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_Got))
                 {
                     taskCount++;
                 }
-                if (mainGetBit(0x83b))
+                if (mainGetBit(GAMEBIT_ITEM_FireSpellStone2_Got))
                 {
                     taskCount++;
                 }
-                if (mainGetBit(0x83c))
+                if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone2_Got))
                 {
                     taskCount++;
                 }
@@ -3157,21 +3157,21 @@ void pauseMenuFn_80129ee0(void)
                 }
                 {
                     s16 texId = 0xbf0;
-                    if (mainGetBit(0x1ee))
+                    if (mainGetBit(GAMEBIT_ITEM_DinoHorn_Got))
                     {
                         texId = 0xc8a;
                     }
                     hud->textures3A8[0x14] = (int)textureLoadAsset(texId);
                     hud->texIds358[0x14] = texId;
                     texId = 0xbf0;
-                    if (mainGetBit(0x13e))
+                    if (mainGetBit(GAMEBIT_ITEM_FireflyLantern_Got))
                     {
                         texId = 0xc06;
                     }
                     hud->textures3A8[0x15] = (int)textureLoadAsset(texId);
                     hud->texIds358[0x15] = texId;
                     texId = 0xbf0;
-                    if (mainGetBit(0xc64))
+                    if (mainGetBit(GAMEBIT_ITEM_Viewfinder_Got))
                     {
                         texId = 0xc05;
                     }
@@ -3320,7 +3320,7 @@ void pauseMenuFn_80129ee0(void)
         case 0xb:
             if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
             {
-                int have = mainGetBit(0x3f5);
+                int have = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
                 lbl_803DD758 = 0;
                 if (player != 0)
                 {
@@ -3354,7 +3354,7 @@ void pauseMenuFn_80129ee0(void)
                     if (lbl_803DD758 == 2)
                     {
                         int rem = have - tbl->tokens[lbl_803DD756].thresh;
-                        mainSetBits(0x3f5, rem);
+                        mainSetBits(GAMEBIT_ITEM_FuelCell_Count, rem);
                         mainSetBits(tbl->tokens[lbl_803DD756].bitB, 1);
                     }
                     gPauseMenuTokenConfirmFlag = 1;
@@ -4077,7 +4077,7 @@ void GameUI_update(void)
         if (angDelta > 0x8000) angDelta = (s16)(angDelta - 0xffff);
         if (angDelta < -0x8000) angDelta = (s16)(angDelta + 0xffff);
 
-        if (mainGetBit(0x9d5))
+        if (mainGetBit(GAMEBIT_IncomingCommunication))
         {
             int hint = (u16)getNextTaskHintText();
             if (hint > lbl_803DD730)
@@ -4086,7 +4086,7 @@ void GameUI_update(void)
                 lbl_803DBA64 = 3;
                 lbl_803DD730 = hint;
             }
-            mainSetBits(0x9d5, 0);
+            mainSetBits(GAMEBIT_IncomingCommunication, 0);
         }
 
         if (allowCStickTarget != 0)
@@ -4124,7 +4124,7 @@ void GameUI_update(void)
                         gCMenuButtons |= 0x80000;
                         trickyProximity = 1;
                     }
-                    else if (tricky != 0 && mainGetBit(0x4e4) && cameraGetTargetType() == 8)
+                    else if (tricky != 0 && mainGetBit(GAMEBIT_Tricky_Usable) && cameraGetTargetType() == 8)
                     {
                         gCMenuButtons |= 0x20000;
                     }
