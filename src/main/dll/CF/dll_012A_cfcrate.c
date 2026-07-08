@@ -163,7 +163,7 @@ void CFCrate_update(int obj)
     CfCcrateState* state;
     int viewslot;
     int cam;
-    int tmp;
+    int rotDelta;
     short id;
 
     Obj_GetPlayerObject();
@@ -286,14 +286,14 @@ void CFCrate_update(int obj)
     case 0x828:
         if ((mainGetBit(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
-            if (((GameObject*)obj)->anim.rotZ + (tmp = (s32)(lbl_803E3E00 * timeDelta)) > 0x7fff)
+            if (((GameObject*)obj)->anim.rotZ + (rotDelta = (s32)(lbl_803E3E00 * timeDelta)) > 0x7fff)
             {
                 state->gameBit2Latch = 1;
                 ((GameObject*)obj)->anim.rotZ = 0x7fff;
             }
             else
             {
-                ((GameObject*)obj)->anim.rotZ = (short)(((GameObject*)obj)->anim.rotZ + tmp);
+                ((GameObject*)obj)->anim.rotZ = (short)(((GameObject*)obj)->anim.rotZ + rotDelta);
             }
         }
         break;
