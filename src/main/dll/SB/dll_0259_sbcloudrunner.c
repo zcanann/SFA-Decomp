@@ -27,6 +27,7 @@
 #include "main/texture.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 #define SBCLOUDRUNNER_OBJGROUP 0xa
 
@@ -126,8 +127,6 @@ extern f32 lbl_803E5C70;
 extern void objSetMtxFn_800412d4(u32 x);
 
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;

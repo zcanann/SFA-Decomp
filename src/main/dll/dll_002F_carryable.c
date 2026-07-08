@@ -23,6 +23,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 
 #define PAD_BUTTON_A 0x100
 #define CARRYABLE_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the prop */
@@ -58,7 +59,6 @@ extern void buttonDisable(int port, u32 mask);
 extern int isTrickyNear(void* player);
 
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern f32 timeDelta;
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 extern void saveGame_saveObjectPos(int* obj);
 

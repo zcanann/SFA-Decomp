@@ -31,6 +31,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 
 #define LARGECRATE_OBJFLAG_PARENT_SLACK 0x1000
 #define LARGECRATE_LINKED_ID_BASE 0x40000
@@ -59,8 +60,6 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 
 extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);

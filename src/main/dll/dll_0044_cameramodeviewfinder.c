@@ -31,6 +31,7 @@
 #include "main/rcp_dolphin.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define PAD_BUTTON_B 0x200
 #define PAD_TRIGGER_Z 0x010
@@ -63,7 +64,6 @@ extern void logPrintf(char* fmt, ...);
 extern char sCam5BYDebugFormat;
 extern void* memset(void* dst, int v, int n);
 extern ViewfinderState* lbl_803DD548;
-extern f32 timeDelta;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;

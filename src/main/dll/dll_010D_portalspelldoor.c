@@ -9,6 +9,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
 
 extern void LanternFireFly_modelMtxFn(void);
 
@@ -101,7 +102,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern u8 framesThisStep;
 extern int Obj_GetPlayerObject(void);
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;

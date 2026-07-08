@@ -42,6 +42,7 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_00CA_icebaddie.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 /* object groups this ice baddie joins */
 #define ICEBADDIE_OBJGROUP 3
@@ -146,8 +147,6 @@ extern f32 lbl_803E2DA8;
 extern f32 lbl_803E2DAC;
 extern f32 lbl_803E2DB0;
 extern f32 lbl_803E2DB4;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803E2CE8;
 extern f32 lbl_803E2CEC;
 extern f32 lbl_803E2CF0;

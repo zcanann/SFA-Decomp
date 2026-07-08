@@ -26,11 +26,11 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
+#include "main/frame_timing.h"
 extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int playerGetFlags3F0Bit5(int obj);
-extern f32 timeDelta;
 
 /* ROM curve query key for the fish path curves; first entry of this TU's
  * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read

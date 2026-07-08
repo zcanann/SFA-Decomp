@@ -26,6 +26,7 @@
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
+#include "main/objlib.h"
 
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP 0x40 /* DLL 0xEB siderepel */
@@ -85,7 +86,6 @@ extern void trickyApplyObjectAvoidanceToStep(f32 * start, f32 * end, f32 * guard
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
-extern void* ObjList_GetObjects(int* outA, int* outB);
 extern void** ObjGroup_GetObjects(int group, int* countOut);
 
 #pragma peephole off

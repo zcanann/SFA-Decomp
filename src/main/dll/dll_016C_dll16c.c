@@ -21,6 +21,8 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
@@ -65,7 +67,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Obj_FreeObject(int*);
 void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible,
                                     int opacity, int reissueMove);
@@ -77,7 +78,6 @@ extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern u8 lbl_802C2308[];
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern u8 framesThisStep;
 extern f32 lbl_803E4748;
 extern f32 lbl_803E474C;
 extern f32 lbl_803E4758;

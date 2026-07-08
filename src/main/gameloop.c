@@ -28,10 +28,10 @@
 #include "main/rcp_dolphin.h"
 #include "main/lightmap.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/textrender.h"
 extern u64 camcontrol_setAButtonIconForTarget();
 extern u64 runLoadingScreens();
-
-extern f32 timeDelta;
 
 void* gameTextGetStr(int textId);
 
@@ -50,7 +50,6 @@ void doNothing_onSaveSelectScreenExit(void)
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
-extern u8 framesThisStep;
 /* Top-level boot / soft-reset state machine (the global gameState). */
 typedef enum GameLoopState {
   GAMELOOP_STATE_BOOTING = 0,            /* loading; the gameUpdate frame is skipped */
@@ -186,8 +185,6 @@ int mmSetFreeDelay(int v);
 int testAndSet_onlyUseHeap3(int v);
 
 void* getCache(void);
-
-extern void gameTextLoadDir(int dirId);
 
 void cutsceneExit(void)
 {

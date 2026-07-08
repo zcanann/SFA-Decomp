@@ -3,6 +3,7 @@
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/engine_shared.h"
+#include "main/gameplay_runtime.h"
 
 #define ECSHCUP_TARGET_OBJGROUP 0xb
 
@@ -12,7 +13,6 @@
 #define ECSHCUP_PARTFX_TRANSITION 0x271
 #define ECSHCUP_HIT_VOLUME_SLOT 10
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E5060;
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern u32 ObjHits_SyncObjectPositionIfDirty();

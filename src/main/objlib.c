@@ -8,6 +8,7 @@
 #include "main/gameplay_runtime.h"
 #include "string.h"
 #include "main/sfa_extern_decls.h"
+#include "main/frame_timing.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
@@ -85,7 +86,6 @@ extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE968;
 extern f32 OBJLIB_UNIT_SCALE;
-extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE970;

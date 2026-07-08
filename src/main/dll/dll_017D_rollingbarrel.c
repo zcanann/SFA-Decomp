@@ -6,27 +6,26 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
+#include "main/objhits.h"
 #define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
-extern int randomGetRange(int lo, int hi);
 
 
 extern int getAngle(float y, float x);
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);
-extern void ObjHits_DisableObject(u32 objPtr);
 extern void ObjHits_EnableObject(u32 objPtr);
 extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_FreeObject(int obj);
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 timeDelta;
 extern s16 gRollingBarrelExplodingCount;
 extern int gRollingBarrelCurveInitPair;
 typedef struct { int a, b; } RollingBarrelInitPair;

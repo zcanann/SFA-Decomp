@@ -23,7 +23,8 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-extern int randomGetRange(int lo, int hi);
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 
 extern int Obj_GetPlayerObject(void);
@@ -35,7 +36,6 @@ extern void trickyImpress(int obj);
 extern f32 sqrtf(f32 value);
 extern void vecRotateZXY(void* rotation, void* vec);
 extern u16 getAngle(f32 x, f32 z);
-extern f32 timeDelta;
 extern const f32 lbl_803E3BBC;
 extern const f32 lbl_803E3BC4;
 extern f32 lbl_803E3BC8;

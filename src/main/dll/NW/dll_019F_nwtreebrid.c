@@ -16,10 +16,10 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/gameplay_runtime.h"
 
 #define NWTREEBRID_TARGET_OBJGROUP 4
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
 

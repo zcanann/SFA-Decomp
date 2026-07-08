@@ -8,10 +8,8 @@
 #include "main/mm.h"
 #include "main/pi_dolphin.h"
 #include "main/dll/objfsa.h"
+#include "main/frame_timing.h"
 extern void Obj_FreeObject(int obj);
-
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 extern LfxEmitterConfig lbl_803AC7B0;
 

@@ -16,6 +16,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DFSHSHRINE_MAP_SHRINE 0xb
 
@@ -44,7 +45,6 @@ extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-extern f32 timeDelta;
 extern f32 lbl_803E4E50;
 extern f32 lbl_803E4E54;
 extern f32 lbl_803E4E58;

@@ -16,6 +16,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/modgfx.h"
+#include "main/frame_timing.h"
 
 #define PARTFX_STAGE_COUNT 7
 
@@ -128,8 +129,6 @@ void Effect5_func05(void);
 
 void* lbl_803109B8[10] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00050000, Effect5_initialise, Effect5_release, (void*)0x00000000, Effect5_func03_nop, Effect5_func04, Effect5_func05 };
 
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern float mathSinf(float x);
 extern f32 gEffect5AnimProgressC;
 extern f32 gEffect5AnimProgressD;

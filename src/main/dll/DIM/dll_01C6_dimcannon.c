@@ -19,6 +19,8 @@
 #include "main/dll/dll_801b1d84.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -33,7 +35,6 @@
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;
@@ -46,8 +47,6 @@ extern void DIMwooddoor_spawnShard(int* obj, int p2);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void* playerGetFocusObject(void* player);
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern int lbl_803DBF10;
 extern int lbl_803DBF0C;
 extern f32 lbl_803E48EC;

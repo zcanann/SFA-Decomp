@@ -16,6 +16,7 @@
 #include "main/player_control_interface.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 
@@ -35,7 +36,6 @@ extern u32 gDIMbossHitDetectAnimTable[];
 extern void* getTrickyObject(void);
 extern u32* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
-extern f32 timeDelta;
 extern f32 lbl_803E4BC8;
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4BEC;

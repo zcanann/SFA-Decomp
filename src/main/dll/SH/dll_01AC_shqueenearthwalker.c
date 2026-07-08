@@ -19,6 +19,7 @@
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gameplay_runtime.h"
 
 #define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
 /* object group scanned for the nearest target (player group) */
@@ -40,7 +41,6 @@ extern int fn_8003B228(void* obj, void* p2);
 extern int characterDoEyeAnims(void* obj, void* p2);
 extern int cMenuGetSelectedItem(void);
 extern int getYButtonItem(s16 * outTrigger);
-extern void* getTrickyObject(void);
 extern int playerHasSpell(void* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);

@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "main/sfa_shared_decls.h"
+#include "main/gameplay_runtime.h"
 
 /* Per-object extra state for the doorf4 door (DoorF4_getExtraSize == 0x24). */
 typedef struct DoorF4State
@@ -79,10 +80,8 @@ extern void ObjMsg_SendToNearbyObjects();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 lbl_803E3680;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;

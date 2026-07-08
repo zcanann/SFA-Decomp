@@ -24,6 +24,7 @@
 #include "main/objhits.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
@@ -43,7 +44,6 @@ extern int getAngle(float y, float x);
 extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32);
 extern u32 lbl_803DBCD0;
-extern f32 timeDelta;
 extern f32 lbl_803E2990;
 extern f32 lbl_803E2994;
 extern f32 lbl_803E29A0;

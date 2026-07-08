@@ -26,6 +26,7 @@
 #include "dolphin/gx/GXTransform.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
+#include "main/frame_timing.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX 0x152
@@ -72,12 +73,10 @@ extern u16 lbl_803DD77C;
 extern int lbl_803DD7E0;
 extern f32 lbl_803DBAA4;
 extern u8* gRenderModeObj;
-extern u8 framesThisStep;
 extern u8 gHeadDisplayEntryTable[];
 extern int gHeadDisplayModelObjs[];
 extern f32 lbl_8031BFA8[];
 extern int hudTextures[];
-extern f32 timeDelta;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E68;
 extern const f32 lbl_803E2010;

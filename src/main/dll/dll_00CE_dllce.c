@@ -31,6 +31,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/gameplay_runtime.h"
 
 /* object group this object belongs to */
 #define DLLCE_OBJGROUP 3
@@ -43,7 +44,6 @@
 /* spray burst spawned 10x when the baddie-control fx flag bit 4 is set */
 #define DLLCE_PARTFX_SPRAY 0x343
 #define DLLCE_HIT_VOLUME_SLOT 10
-extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_SetHitVolumeSlot();
 extern void ObjHits_EnableObject();

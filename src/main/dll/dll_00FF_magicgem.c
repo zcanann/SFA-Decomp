@@ -7,6 +7,9 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 #define MAGICGEM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAGICGEM_MSG_IN_RANGE               0x7000a /* sent to player when in pickup range */
 #define MAGICGEM_MSG_PICKUP                 0x7000b /* collect: award magic + burst */
@@ -15,9 +18,7 @@
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
-extern void ObjLink_DetachChild(int obj, int child);
 extern f32 lbl_803E34B0;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
@@ -25,7 +26,6 @@ extern void playerAddRemoveMagic(int obj, int amount);
 
 extern f32 getXZDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(int obj);
-extern u8 framesThisStep;
 extern char sMagicGemCollectedMessage[];
 
 extern int Obj_GetActiveModel(int obj);
@@ -39,7 +39,6 @@ extern const f32 lbl_803E34F0;
 extern const f32 lbl_803E34F4;
 extern const f32 lbl_803E34F8;
 extern const f32 lbl_803E34FC;
-extern f32 timeDelta;
 extern const f32 lbl_803E34B4;
 extern const f32 gMagicGemActivateDistSq;
 extern const f32 gMagicGemVelocityDamping;
@@ -52,8 +51,6 @@ extern const f32 gMagicGemBounceRestitutionY;
 extern const f32 gMagicGemBounceRestitutionXZ;
 extern const f32 gMagicGemPickupYRange;
 extern const f32 gMagicGemPickupRadiusBase;
-extern int randomGetRange(int lo, int hi);
-extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(int obj, f32 a, f32 b, f32 c);

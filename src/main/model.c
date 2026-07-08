@@ -10,6 +10,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/pi_dolphin.h"
 #include "main/objprint_dolphin.h"
+#include "main/frame_timing.h"
 #define GX_BM_BLEND 1
 #define GX_BL_ONE 1
 #define GX_BL_SRCALPHA 4
@@ -22,7 +23,6 @@ extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-extern f32 timeDelta;
 int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
 

@@ -22,6 +22,7 @@
 #include "main/dll/CC/dll_0186_ccgasventcontrol.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define CCGASVENTCONTROL_CAMMODE_DEFAULT 0x42
@@ -67,7 +68,6 @@ extern f32 lbl_803E4620;
 
 extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
-extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);

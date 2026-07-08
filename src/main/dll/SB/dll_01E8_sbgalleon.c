@@ -35,6 +35,7 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
+#include "main/frame_timing.h"
 
 #define SBGALLEON_OBJGROUP 3
 
@@ -54,7 +55,6 @@ extern void gameTextShow(int a);
 extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
-extern f32 timeDelta;
 extern void setDrawLights(int v);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
@@ -86,7 +86,6 @@ extern f32 lbl_803E57B4;
 extern f32 lbl_803E57E0;
 extern f32 lbl_803E57F0;
 extern f32 lbl_803E5724;
-extern u8 framesThisStep;
 extern u32 gSbGalleon;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E57FC;

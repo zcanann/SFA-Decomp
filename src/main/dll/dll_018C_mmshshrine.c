@@ -19,6 +19,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int arg, int addToList);
@@ -43,9 +45,7 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int objGetAnimStateFlags(int obj, int flag);
 
 extern void fn_801C4664(int obj);
-extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
-extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
 extern f32 lbl_803E4F54;

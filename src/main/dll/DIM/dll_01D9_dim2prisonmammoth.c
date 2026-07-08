@@ -11,6 +11,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define PAD_BUTTON_A 0x100
@@ -64,7 +65,6 @@ int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState *animUpdate);
 
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
-extern f32 timeDelta;
 extern void saveGame_saveObjectPos(int obj);
 
 int dim2prisonmammoth_defaultStateHandler(void) { return 0x0; }

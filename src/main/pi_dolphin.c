@@ -17,6 +17,7 @@
 #include "dolphin/os/OSArena.h"
 #include "dolphin/gx/GXLighting.h"
 #include "sfa_light_decls.h"
+#include "main/frame_timing.h"
 
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
@@ -1470,9 +1471,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
 extern void mmFreeTick(int arg);
 
 extern u8 gDvdErrorPauseActive;
-extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-extern u8 framesThisStep;
 extern char sZlbBlockTag;
 extern int return0_8002A5B8(int p);
 

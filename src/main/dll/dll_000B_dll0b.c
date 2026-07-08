@@ -25,6 +25,7 @@
 #include "main/dll/dll_000B_dll0b.h"
 #include "main/objlib.h"
 #include "dolphin/gx/GXEnum.h"
+#include "main/frame_timing.h"
 
 #define DLL0B_OBJFLAG_RENDERED 0x800
 
@@ -414,8 +415,6 @@ void fn_800A1040(s16 sequenceId, int forceAll)
 extern void Sfx_PlayFromObject(void* obj, int id);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
 

@@ -16,6 +16,8 @@
  */
 #include "main/objlib.h"
 #include "main/objtexture.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 #define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_READY_FLAG 0x2
@@ -63,7 +65,6 @@ extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 gTotemPuzzleAngleStep;
 extern f32 lbl_803E55F4;
 extern f32 lbl_803E55F8;
@@ -213,7 +214,6 @@ void sc_totempuzzle_hitDetect(void)
 extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 timeDelta;
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
 extern const f32 lbl_803E5620;
@@ -224,7 +224,6 @@ s16 gTotemPuzzleStepAngles[6] = {-8192, 0, 8192, 16384, 24576, -32768};
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 extern void sc_totempuzzle_animEventCallback(int obj);
-extern int randomGetRange(int lo, int hi);
 
 void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {

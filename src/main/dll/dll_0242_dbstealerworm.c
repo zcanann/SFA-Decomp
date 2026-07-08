@@ -33,7 +33,6 @@
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -46,6 +45,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/vecmath.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gameplay_runtime.h"
 
 #define DBSTEALERWORM_OBJGROUP 3
 #define DBEGG_OBJGROUP 0x24

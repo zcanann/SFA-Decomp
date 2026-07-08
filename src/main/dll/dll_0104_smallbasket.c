@@ -39,6 +39,10 @@
 #include "main/audio/sfx_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
+#include "main/objhits.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe
 
 extern void largecrate_getExtraSize(void);
@@ -97,7 +101,6 @@ typedef struct SmallBasketThrowSetup
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
 
-extern int randomGetRange(int lo, int hi);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
@@ -132,18 +135,14 @@ void SmallBasket_render(int obj, int p2, int p3, int p4,
                         int p5, char visible);
 extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4,
                                  int p5, double scale);
-extern void* Obj_GetPlayerObject(void);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32* a, f32* b);
 
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHits_ClearHitVolumes(int objPtr);
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 objPtr);
 
 
@@ -157,8 +156,6 @@ extern int fn_802966B4(int obj);
 extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
 extern void fn_801814D0(int obj, int player, int state);
 extern f32 getXZDistance(f32* a, f32* b);
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E3934;
 extern const f32 lbl_803E3978;
 extern const f32 lbl_803E397C;

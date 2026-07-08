@@ -28,6 +28,10 @@
 #include "main/dll/dll_00FD.h"
 #include "main/mm.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
+#include "main/objlib.h"
 
 /* the two object groups this plant joins */
 #define MAGICPLANT_OBJGROUP_A 0x34
@@ -37,9 +41,7 @@
 #define MAGICPLANT_HIT_BURST_COUNT 0x14 /* 20 hit-burst particles */
 #define MAGICPLANT_IDLE_TIMER_MIN 300   /* frames between idle-sway retriggers (lo..hi) */
 #define MAGICPLANT_IDLE_TIMER_MAX 600
-extern int randomGetRange(int lo, int hi);
 
-extern void* Obj_GetPlayerObject(void);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -47,18 +49,12 @@ extern int Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, vo
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern void Obj_Shatter(int obj);
 extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* gCameraInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -70,8 +66,6 @@ extern f32 gMagicPlantIdleAnimStep;
 extern f32 lbl_803E3890;
 extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern s16 gMagicPlantGemDefIds[4];
 
 typedef struct MagicPlantChildSetup

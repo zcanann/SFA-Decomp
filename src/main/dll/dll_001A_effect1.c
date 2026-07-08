@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 void Effect1_func03_nop(void)
 {
@@ -43,8 +44,6 @@ static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
-extern f32 timeDelta;
-extern u8 framesThisStep;
 
 extern f32 lbl_803DF720;
 extern f32 lbl_803DF724;

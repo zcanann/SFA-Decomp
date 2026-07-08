@@ -17,6 +17,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define CFCRATE_HIT_VOLUME_SLOT 0x13
 
@@ -46,8 +47,6 @@ STATIC_ASSERT(offsetof(CfccratePlacement, param1A) == 0x1A);
 STATIC_ASSERT(offsetof(CfccratePlacement, param1C) == 0x1C);
 STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E3DD8;
 extern void Obj_FreeObject(int obj);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);

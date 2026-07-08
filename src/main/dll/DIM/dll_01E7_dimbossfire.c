@@ -14,6 +14,7 @@
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 #define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
@@ -23,7 +24,6 @@ extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
 extern void ObjHits_DisableObject(u32 objPtr);
-extern f32 timeDelta;
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern void lightSetFieldBC_8001db14(ModelLightStruct* p, u8 v);

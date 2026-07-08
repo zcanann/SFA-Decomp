@@ -25,6 +25,7 @@ extern float mathCosf(float x);
 #include "main/dll/modgfx.h"
 #include "string.h"
 #include "main/object_transform.h"
+#include "main/frame_timing.h"
 
 typedef struct Dll19Placement
 {
@@ -56,7 +57,6 @@ extern u32 ObjMsg_AllocQueue();
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -98,7 +98,6 @@ extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
 extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
-extern u8 framesThisStep;
 
 int dll_19_func1B(int obj)
 {

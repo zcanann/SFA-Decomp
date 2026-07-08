@@ -15,6 +15,7 @@
 #include "main/camera.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define SPDRAPE_OBJFLAG_HIDDEN 0x4000
 #define SPDRAPE_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -29,8 +30,6 @@ enum
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 gSpDrapeSwingLeftMoveTable; /* swing-left move-id table */
 extern f32 gSpDrapeSwingRightMoveTable; /* swing-right move-id table */
 extern f32 lbl_803E5AA0;

@@ -20,6 +20,7 @@
 #include "main/dll/dll_015A_explodable.h"
 #include "main/game_object.h"
 #include "main/sfa_shared_decls.h"
+#include "main/gameplay_runtime.h"
 
 extern void attractor_getTarget(void);
 
@@ -115,7 +116,6 @@ extern void exploded_initialise(void);
 extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
-extern int randomGetRange(int lo, int hi);
 
 #define EXPLODABLE_OBJFLAG_HIDDEN 0x4000
 

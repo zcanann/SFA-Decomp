@@ -27,6 +27,9 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 
 #define CFGUARDIAN_OBJGROUP 0x16
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
@@ -159,10 +162,6 @@ extern f32 lbl_803E415C;
 extern int Curve_AdvanceAlongPath(int p1);
 extern int getAngle(float y, float x);
 extern int ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
@@ -181,11 +180,8 @@ extern void objSeqInitFn_80080078(void* p, int n);
 extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
-extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
-extern f32 timeDelta;
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-extern u8 framesThisStep;
 extern int cfguardian_updateMain();
 extern void dll_2E_func06(int* a, int* b, int c);
 extern f32 sqrtf(f32 x);

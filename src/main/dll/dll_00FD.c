@@ -8,18 +8,18 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/dll_00FE_magicplant.h"
+#include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
 
 #define DLL00FD_OBJFLAG_HIDDEN 0x4000
 extern void objRenderFn_80041018(void);
 extern f32 lbl_803E3850;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern s16 getAngle(f32 dx, f32 dz);
 
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E3854;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;

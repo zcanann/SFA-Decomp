@@ -15,6 +15,7 @@
 #include "main/objhits.h"
 #include "main/dll/dll_0106_scarab.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 /* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicgem) */
 #define SCARAB_MSG_IN_RANGE 0x7000a /* sent to player when the scarab is in grab range */
@@ -30,8 +31,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern u32 gScarabMoneyValues;
 extern f32 lbl_803E39F4;
 extern f32 lbl_803E39F8;

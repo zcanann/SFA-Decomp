@@ -11,6 +11,7 @@
  */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 
 #define MAGICMAKER_SPAWN_GAMEBIT 0x26b /* set-by-others trigger; cleared each spawn attempt */
 #define MAGICMAKER_CREATURE_GROUP 4    /* object group scanned for existing creatures */
@@ -52,8 +53,6 @@ STATIC_ASSERT(offsetof(MagicmakerSetup, unk2C) == 0x2C);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk2E) == 0x2E);
 STATIC_ASSERT(sizeof(MagicmakerSetup) == 0x30);
 
-extern int randomGetRange(int lo, int hi);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 Obj_IsLoadingLocked(void);
 extern void mainSetBits(int eventId, int value);
 extern int* ObjGroup_GetObjects(int group, int* countOut);

@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/resource.h"
+#include "main/gameplay_runtime.h"
 
 #define TREASURECHEST_TARGET_OBJGROUP 4
 
@@ -70,7 +71,6 @@ int TreasureChest_getObjectTypeId(void)
 }
 
 extern f32 lbl_803E3C20;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20); }
 
 extern void* lbl_803DDAE0;

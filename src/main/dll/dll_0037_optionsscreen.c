@@ -21,6 +21,7 @@
 #include "main/engine_shared.h"
 #include "main/dll/savedata_struct.h"
 #include "main/dll/debug/prof.h"
+#include "main/textrender.h"
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
@@ -46,7 +47,6 @@ extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void titleScreenShowCopyright(u8 arg);
-extern void gameTextLoadDir(int dirId);
 extern s8 lbl_803DD706;        /* render-stale countdown */
 extern s8 lbl_803DD70C;        /* last top-level item index (read by other DLL) */
 extern u8* lbl_803DD708;       /* save-file struct base */

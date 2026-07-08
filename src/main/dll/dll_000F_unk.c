@@ -21,6 +21,7 @@
 #include "string.h"
 #include "main/vecmath.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -38,7 +39,6 @@ extern u8 lbl_803DD450;
 extern f32 gPlayerMoveOverridePosZ;
 extern f32 gPlayerMoveOverridePosX;
 extern u32 playerOverride;
-extern f32 timeDelta;
 extern const f32 lbl_803E0570;
 extern const f32 lbl_803E0574;
 extern const f32 lbl_803E0578;

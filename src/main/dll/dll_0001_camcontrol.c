@@ -35,6 +35,7 @@
 #include "string.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 extern void camcontrol_updateVerticalBounds(void);
 
@@ -99,7 +100,6 @@ extern f32 enemy_getHealthFraction(register int obj); /* target reticle distance
 extern f32 sqrtf(f32 x);
 u8 gCamcontrolStateStorage[0x148];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
-extern f32 timeDelta;
 extern f32 gCamcontrolSavedFocusWorldZ;
 extern f32 gCamcontrolSavedFocusWorldY;
 extern f32 gCamcontrolSavedFocusWorldX;

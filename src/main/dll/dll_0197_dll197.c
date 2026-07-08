@@ -21,6 +21,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
+#include "main/frame_timing.h"
 
 /* partfx ids (docblock: "spawns 0x1a3 spark particles" on activation;
  * render "emitting the 0x1f7 sparkle particle"). */
@@ -38,7 +39,6 @@ extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 extern ModgfxInterface** gModgfxInterface;
-extern u8 framesThisStep;
 extern int gDll197ResourceParamTemplate[];
 extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 extern f32 lbl_803E5120;

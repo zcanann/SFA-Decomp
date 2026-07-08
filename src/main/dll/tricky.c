@@ -33,6 +33,8 @@
 #include "main/lightmap.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
+#include "main/frame_timing.h"
+#include "main/textrender.h"
 
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -257,7 +259,6 @@ extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);
 
 
-extern void gameTextLoadDir(int dirId);
 extern f32 lbl_803E1E60;
 extern f32 lbl_803DD764;
 extern int lbl_803DD8DC;
@@ -544,7 +545,6 @@ void GameUI_func14(s16 a, int b, int c)
     }
 }
 
-extern u8 framesThisStep;
 extern const f32 hudElementOpacity;
 extern f32 lbl_803E1F9C;
 extern f32 lbl_803E1FA0;
@@ -1257,7 +1257,6 @@ extern s16 cMenuFadeCounter;
 extern f32 lbl_803DD844, lbl_803DD83C;
 extern const f32 gTrickyHudNearestObjMaxDist;
 extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
-extern f32 timeDelta;
 
 /* overlay for lbl_803A87F0; offsets verified against maybetemplate.c */
 typedef struct TrickyHud

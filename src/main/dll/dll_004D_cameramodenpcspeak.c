@@ -18,6 +18,7 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_transform.h"
+#include "main/frame_timing.h"
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
@@ -25,7 +26,6 @@ extern float mathCosf(float x);
 extern int getFocusedNpc(void);
 extern u32 Obj_GetYawDeltaToObject(); /* #57 */
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-extern f32 timeDelta;
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 

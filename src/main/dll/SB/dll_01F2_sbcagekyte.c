@@ -19,7 +19,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
-extern u8 framesThisStep;
+#include "main/frame_timing.h"
 
 /* anim.resetHitboxMode bit forced on each SeqFn / update tick. */
 #define SB_CAGEKYTE_HITBOX_RESET_BIT 0x8

@@ -28,6 +28,8 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/frame_timing.h"
+#include "main/textrender.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -61,7 +63,6 @@ typedef struct SaveSelectPanel
 /* texture asset loaded into gSaveSelectTexture */
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
 
-extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
 
 extern s8 gSaveSelectPanelIndex;
@@ -117,7 +118,6 @@ extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;
 extern f32 gSaveSelectPositionScale;
 extern f32 lbl_803E1D74;
-extern u8 framesThisStep;
 extern int mmSetFreeDelay(int v);
 extern void Music_Trigger(int id, int arg);
 extern void trySaveGame(int slot);

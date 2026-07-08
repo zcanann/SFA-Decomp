@@ -14,12 +14,12 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/engine_shared.h"
+#include "main/gameplay_runtime.h"
 
 /* ExplodedObjectState.explodePhase */
 #define EXPLODED_PHASE_IDLE 0   /* settled; no physics */
 #define EXPLODED_PHASE_ACTIVE 1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E43F4;
 extern f32 lbl_803E4428;
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);

@@ -23,6 +23,7 @@
 #include "main/objtexture.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
+#include "main/frame_timing.h"
 
 #define PRESSURESWITCHFB_PARTFX 0x7c3
 #define PRESSURESWITCHFB_STATE_IDLE 0
@@ -63,7 +64,6 @@
 
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject();
-extern f32 timeDelta;
 extern int fn_80295C5C(void* player);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E3758;

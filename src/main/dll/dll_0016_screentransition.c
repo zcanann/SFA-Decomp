@@ -2,6 +2,7 @@
 #include "main/screen_transition.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_0016_screentransition.h"
+#include "main/frame_timing.h"
 
 extern u8 gScreenTransitionDone;
 u8 screenTransition_func07(void) { return gScreenTransitionDone; }
@@ -76,8 +77,6 @@ void screenTransition_fadeOut(int duration, int type)
 
 #pragma peephole reset
 #pragma scheduling reset
-
-extern f32 timeDelta;
 
 #pragma scheduling off
 #pragma peephole off

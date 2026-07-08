@@ -28,7 +28,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
-extern f32 timeDelta;
+#include "main/frame_timing.h"
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);

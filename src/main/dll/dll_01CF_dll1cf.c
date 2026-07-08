@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
+#include "main/gameplay_runtime.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -43,7 +44,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 /* objectFlags bits set in dll_1CF_init. */
 #define DLL1CF_OBJECT_FLAGS 0xe000
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4A30;
 
 typedef struct Dll1CFObjectDef

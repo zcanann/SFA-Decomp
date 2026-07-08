@@ -22,6 +22,8 @@
 #include "main/dll/MMP/dll_0182_mmpmoonrock.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gameplay_runtime.h"
+#include "main/frame_timing.h"
 
 #define MMPMOONROCK_OBJGROUP 4
 #define MMPMOONROCK_HIT_VOLUME_SLOT 14
@@ -56,8 +58,6 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 timeDelta;
 
 #pragma scheduling on
 #pragma peephole on

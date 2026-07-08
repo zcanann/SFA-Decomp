@@ -30,6 +30,8 @@
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
@@ -62,7 +64,6 @@ typedef struct AnimObjD2DripSetup
     s16 index;         /* 0x1a */
 } AnimObjD2DripSetup;
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern int randomGetRange(int lo, int hi);
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
@@ -82,7 +83,6 @@ extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int
 extern f32 getXZDistance(f32* a, f32* b);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
-extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2410;

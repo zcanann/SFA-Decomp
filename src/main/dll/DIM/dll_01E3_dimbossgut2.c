@@ -11,6 +11,7 @@
 #include "main/dll/mmsh_waterspike.h"
 #include "main/objhits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/frame_timing.h"
 
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX 0x32b
@@ -60,8 +61,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void queueGlowRender(void* light);
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 
 

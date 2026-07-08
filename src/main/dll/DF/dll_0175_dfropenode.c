@@ -14,6 +14,7 @@
 #include "main/texture.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DFROPENODE_OBJGROUP 0x17
 
@@ -36,7 +37,6 @@ extern void fn_80078740(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
-extern u8 framesThisStep;
 extern void* gRopeNodeTextures;
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];

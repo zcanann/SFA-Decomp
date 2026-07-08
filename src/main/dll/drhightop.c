@@ -27,6 +27,7 @@
 #include "main/vecmath.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
@@ -47,9 +48,7 @@ extern f32 sqrtf(f32);
 extern void fn_8009A8C8();
 extern int arrayIndexOf(int* arr, int count, int target);
 extern void SnowBike_resetToRomListPosition();
-extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
-extern f32 timeDelta;
 extern char lbl_803AD088[];
 extern int gDrHighTopHitObjectKinds[];
 extern int lbl_803DC0BC;

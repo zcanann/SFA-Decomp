@@ -5,6 +5,8 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
+#include "main/objlib.h"
 
 typedef struct TrickyguardspotPlacement
 {
@@ -15,8 +17,6 @@ typedef struct TrickyguardspotPlacement
 } TrickyguardspotPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern u8 framesThisStep;
-extern void ObjGroup_AddObject(u32 obj, int group);
 
 int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
 

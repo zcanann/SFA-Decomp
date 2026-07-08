@@ -26,6 +26,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_011B_landedarwing.h"
+#include "main/frame_timing.h"
 
 /* group owned by another DLL, queried here */
 #define STAFFACTIVATED_OBJ_GROUP 0x41 /* DLL 0x11C staffactivated */
@@ -107,7 +108,6 @@ extern int playerGetFocusObject(int obj);
 
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
-extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);

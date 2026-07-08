@@ -36,6 +36,8 @@
 #include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
 #include "main/gamebit_ids.h"
+#include "main/frame_timing.h"
+#include "main/objlib.h"
 
 typedef struct TrickyImpressState
 {
@@ -63,7 +65,6 @@ typedef struct TrickyImpressState
 } TrickyImpressState;
 
 extern u64 ObjLink_DetachChild();
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern u32 mainGetBit(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern const f32 lbl_803E23E8;
@@ -86,7 +87,6 @@ extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 extern int* Obj_GetActiveModel(int obj);
 extern f32 lbl_803E2408;
-extern f32 timeDelta;
 extern u32 gDebugPrintOriginX;
 extern u32 gDebugPrintOriginY;
 extern u16 debugPrintXpos;

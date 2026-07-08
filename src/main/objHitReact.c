@@ -6,8 +6,8 @@
 #include "main/objfx.h"
 #include "main/objlib.h"
 #include "main/resource.h"
+#include "main/frame_timing.h"
 
-extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 

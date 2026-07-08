@@ -26,6 +26,7 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
+#include "main/frame_timing.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -53,7 +54,6 @@ extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
 extern int* gBaddieControlInterface;
-extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern const f32 lbl_803E2FDC;

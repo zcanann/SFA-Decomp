@@ -10,8 +10,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
-
-extern f32 timeDelta;
+#include "main/frame_timing.h"
 
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 
