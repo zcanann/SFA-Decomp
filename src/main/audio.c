@@ -2084,7 +2084,7 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
 }
 
 #pragma dont_inline on
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
 {
     int idx;
     void* buf;
@@ -2103,9 +2103,9 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5
     buf = mmAlloc(size, 0, NULL);
     *outBuf = buf;
     entry->fn = (void (*)(int, int, int))cb;
-    entry->a = p5;
-    entry->b = p6;
-    entry->c = p7;
+    entry->a = cbArg1;
+    entry->b = cbArg2;
+    entry->c = cbArg3;
     DCFlushRange(buf, size);
     gAudioArqRequestDone = 0;
     ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
