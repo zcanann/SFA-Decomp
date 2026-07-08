@@ -497,7 +497,7 @@ void landed_arwing_update(int obj)
             int def;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
             nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(0xc92) != 0)
+            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
@@ -525,7 +525,7 @@ void landed_arwing_update(int obj)
             int nearest;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
             nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(0xc92) != 0)
+            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
