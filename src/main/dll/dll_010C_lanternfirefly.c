@@ -171,7 +171,7 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
  * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, LANTERNFIREFLY_OBJGROUP)
  * and dispatch vtable[6] of *gExpgfxInterface. */
 
-void LanternFireFly_free(u8* obj, int p2)
+void LanternFireFly_free(u8* obj, int flag)
 {
     LanternFireFlyState* sub = ((GameObject*)obj)->extra;
     if (*(void**)&sub->light != NULL)
@@ -179,7 +179,7 @@ void LanternFireFly_free(u8* obj, int p2)
         ModelLightStruct_free(*(void**)&sub->light);
         *(void**)&sub->light = NULL;
     }
-    if (p2 == 0 && *(void**)&sub->light != NULL && ((sub->modeFlags >> 6) & 3) != 1u)
+    if (flag == 0 && *(void**)&sub->light != NULL && ((sub->modeFlags >> 6) & 3) != 1u)
     {
         lbl_803DDAD8 = 0;
     }
