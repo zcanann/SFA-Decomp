@@ -16,6 +16,7 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
@@ -209,9 +210,9 @@ void WM_LevelControl_free(int obj)
 {
     ObjGroup_RemoveObject((u32)obj, WMLEVELCONTROL_OBJGROUP);
     Music_Trigger(MUSICTRIG_drako_3, 0);
-    mainSetBits(0xa7f, 0);
-    mainSetBits(0x372, 1);
-    mainSetBits(0x390, 1);
+    mainSetBits(GAMEBIT_WMRelated0A7F, 0);
+    mainSetBits(GAMEBIT_KrazTest1Related0372, 1);
+    mainSetBits(GAMEBIT_KrazTest1Related0390, 1);
 }
 
 void WM_LevelControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -251,7 +252,7 @@ void WM_LevelControl_update(int obj)
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;
         if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
-            (mode6 = mainGetBit(0xa7f), mode6 == 0))
+            (mode6 = mainGetBit(GAMEBIT_WMRelated0A7F), mode6 == 0))
         {
             SCGameBitLatch_UpdateInverted(&state->latch, 0x10, -1, -1, 0xa7f, 0xa6);
             SCGameBitLatch_Update(&state->latch, 2, -1, -1, 0xa7f, 0xa8);
@@ -291,44 +292,44 @@ void WM_LevelControl_init(int obj)
         (*gMapEventInterface)->setObjGroupStatus(WMLEVELCONTROL_MAP_LIGHTFOOT, 0, 1);
         break;
     case 2:
-        mainSetBits(0xd1b, 1);
-        mainSetBits(0xe6f, 1);
-        mainSetBits(0xf43, 1);
-        mainSetBits(0xf44, 0);
+        mainSetBits(GAMEBIT_WMRelated0D1B, 1);
+        mainSetBits(GAMEBIT_SH_ReturnedToWarpStone, 1);
+        mainSetBits(GAMEBIT_WM_Warp3Enabled, 1);
+        mainSetBits(GAMEBIT_WM_Warp4Enabled, 0);
         break;
     case 3:
-        mainSetBits(0xd1b, 1);
-        mainSetBits(0xd1c, 1);
-        mainSetBits(0xa7f, 1);
-        mainSetBits(0xf43, 0);
-        mainSetBits(0xf44, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1B, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1C, 1);
+        mainSetBits(GAMEBIT_WMRelated0A7F, 1);
+        mainSetBits(GAMEBIT_WM_Warp3Enabled, 0);
+        mainSetBits(GAMEBIT_WM_Warp4Enabled, 1);
         break;
     case 4:
-        mainSetBits(0xd1b, 1);
-        mainSetBits(0xd1c, 1);
-        mainSetBits(0xd1d, 1);
-        mainSetBits(0xa7f, 1);
-        mainSetBits(0xf43, 0);
-        mainSetBits(0xf44, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1B, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1C, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1D, 1);
+        mainSetBits(GAMEBIT_WMRelated0A7F, 1);
+        mainSetBits(GAMEBIT_WM_Warp3Enabled, 0);
+        mainSetBits(GAMEBIT_WM_Warp4Enabled, 1);
         state->unk04 = -1;
         break;
     case 5:
-        mainSetBits(0xd1b, 1);
-        mainSetBits(0xd1c, 1);
-        mainSetBits(0xd1d, 1);
-        mainSetBits(0xd1e, 1);
-        mainSetBits(0xf43, 0);
-        mainSetBits(0xf44, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1B, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1C, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1D, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1E, 1);
+        mainSetBits(GAMEBIT_WM_Warp3Enabled, 0);
+        mainSetBits(GAMEBIT_WM_Warp4Enabled, 1);
         break;
     case 6:
-        mainSetBits(0xd1b, 1);
-        mainSetBits(0xd1c, 1);
-        mainSetBits(0xd1d, 1);
-        mainSetBits(0xd1e, 1);
-        mainSetBits(0xd1f, 1);
-        mainSetBits(0x164, 1);
-        mainSetBits(0xf43, 0);
-        mainSetBits(0xf44, 0);
+        mainSetBits(GAMEBIT_WMRelated0D1B, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1C, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1D, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1E, 1);
+        mainSetBits(GAMEBIT_WMRelated0D1F, 1);
+        mainSetBits(GAMEBIT_WMRelated0164, 1);
+        mainSetBits(GAMEBIT_WM_Warp3Enabled, 0);
+        mainSetBits(GAMEBIT_WM_Warp4Enabled, 0);
         break;
     case 7:
         state->unk08 = 700;
