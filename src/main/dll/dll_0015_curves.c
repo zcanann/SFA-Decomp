@@ -1731,9 +1731,9 @@ u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
     {
         return mainGetBit(bit);
     }
-    if ((mainGetBit(0xbfd) != 0) || (mainGetBit(0xff) != 0) ||
-        (mainGetBit(GAMEBIT_K1_SPIRIT_COLLECTED) != 0) || (mainGetBit(0xc85) != 0) ||
-        (mainGetBit(0xc6e) != 0) || (mainGetBit(0x174) != 0))
+    if ((mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0) || (mainGetBit(GAMEBIT_ITEM_SpiritTestFear_Got) != 0) ||
+        (mainGetBit(GAMEBIT_K1_SPIRIT_COLLECTED) != 0) || (mainGetBit(GAMEBIT_ITEM_Spirit5_Got) != 0) ||
+        (mainGetBit(GAMEBIT_ITEM_SpiritTestStrength_Got) != 0) || (mainGetBit(GAMEBIT_ITEM_Spirit6_Got) != 0))
     {
         return 1;
     }
