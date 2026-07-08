@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
 #define CCPEDSTAL_OBJFLAG_HIDDEN 0x4000
@@ -66,7 +67,7 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
             if (ObjTrigger_IsSetById(obj, 0xa9) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                gameBitDecrement(0xa9);
+                gameBitDecrement(GAMEBIT_ITEM_FireGem_Count);
                 doMark = 1;
                 goto check;
             }
@@ -112,7 +113,7 @@ void ccpedstal_updateAltVariant(int obj, u8* state2)
         if (ObjTrigger_IsSet(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-            gameBitIncrement(0xa9);
+            gameBitIncrement(GAMEBIT_ITEM_FireGem_Count);
             doMark = 1;
             goto check;
         }
