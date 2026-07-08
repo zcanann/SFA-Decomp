@@ -507,9 +507,9 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(int obj, int kind)
     return found;
 }
 
-void characterDoEyeMovements(int obj, int p4, f32 unused);
+void characterDoEyeMovements(int obj, int state, f32 unused);
 
-void fn_8003B228(int obj, int p2)
+void fn_8003B228(int obj, int state)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -529,7 +529,7 @@ void fn_8003B228(int obj, int p2)
     }
     foundA->textureId = val;
     foundB->textureId = val;
-    *(u8*)(p2 + 0x1e) = 1;
+    *(u8*)(state + 0x1e) = 1;
 }
 
 extern void* ObjModel_GetJointMatrix(int* model, int joint);
@@ -576,17 +576,17 @@ void modelInitMtxs(int def, int model)
 extern void fn_80039DF8(int obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
-void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
+void objAudioFn_800393f8(u32 obj, int state, u16 sfx, int pitch, int volume, u8 force)
 {
-    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0)
+    if (force == 0 && Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
     {
         return;
     }
-    Sfx_PlayFromObjectChannel(p1, 0x10, p3);
-    *(f32*)((char*)p2 + 0xc) = p5;
-    *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
-    *(u8*)((char*)p2 + 0) = 1;
-    *(f32*)((char*)p2 + 4) = lbl_803DE99C;
+    Sfx_PlayFromObjectChannel(obj, 0x10, sfx);
+    *(f32*)((char*)state + 0xc) = volume;
+    *(s16*)((char*)state + 0x14) = (s16)(-pitch);
+    *(u8*)((char*)state + 0) = 1;
+    *(f32*)((char*)state + 4) = lbl_803DE99C;
 }
 
 void fn_8003B500(int obj, s16* state)
@@ -608,7 +608,7 @@ void fn_8003B500(int obj, s16* state)
 extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
 extern f32 lbl_803DB464;
 
-void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
+void objSoundFn_800392f0(int obj, int state, int soundDef, u8 force)
 {
     u16 sfx;
     s16 pitch;
@@ -616,20 +616,20 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
     int model;
     int did;
 
-    pitch = *(s16*)((char*)p3 + 2);
-    sfx = (u16) * (s16*)((char*)p3 + 0);
-    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel((u32)p1, 0x10) == 0)
+    pitch = *(s16*)((char*)soundDef + 2);
+    sfx = (u16) * (s16*)((char*)soundDef + 0);
+    if (force != 0 || Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
     {
-        Sfx_PlayFromObjectChannel((u32)p1, 0x10, sfx);
-        *(f32*)((char*)p2 + 0xc) = lbl_803DE9C8;
-        *(s16*)((char*)p2 + 0x14) = (s16)(-pitch);
-        *(u8*)((char*)p2 + 0) = 1;
-        *(f32*)((char*)p2 + 4) = lbl_803DE99C;
+        Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
+        *(f32*)((char*)state + 0xc) = lbl_803DE9C8;
+        *(s16*)((char*)state + 0x14) = (s16)(-pitch);
+        *(u8*)((char*)state + 0) = 1;
+        *(f32*)((char*)state + 4) = lbl_803DE99C;
     }
-    count = *(u8*)((char*)p3 + 4);
+    count = *(u8*)((char*)soundDef + 4);
     if (count != 0)
     {
-        model = (int)OBJPRINT_ACTIVE_BANK(p1);
+        model = (int)OBJPRINT_ACTIVE_BANK(obj);
         if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
         {
             ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
@@ -642,7 +642,7 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
         }
         if (did != 0)
         {
-            *(s16*)((char*)p3 + 2) = 0;
+            *(s16*)((char*)soundDef + 2) = 0;
         }
     }
 }
@@ -684,7 +684,7 @@ void objPosFn_80039510(int obj, int key, int out)
 extern void PSMTXConcat(void* a, void* b, void* c);
 extern f32 lbl_803DEA04;
 
-void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
+void modelMtxFn_8003be38(int def, int p2, int mtxA, int mtxB)
 {
     int cache;
     int count;
@@ -695,7 +695,7 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     f32 fill;
 
     cache = (int)getCache();
-    count = (s32)(u32) * (u8*)((char*)p1 + 0xf3) + (s32)(u32) * (u8*)((char*)p1 + 0xf4);
+    count = (s32)(u32) * (u8*)((char*)def + 0xf3) + (s32)(u32) * (u8*)((char*)def + 0xf4);
     dstA = cache + 0x2700;
     mid = cache;
     dstB = cache + 0x12c0;
@@ -704,8 +704,8 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     fill = lbl_803DEA04;
     for (; i < count; i++)
     {
-        PSMTXConcat((void*)p3, (void*)dstA, (void*)mid);
-        PSMTXConcat((void*)mid, (void*)p4, (void*)dstB);
+        PSMTXConcat((void*)mtxA, (void*)dstA, (void*)mid);
+        PSMTXConcat((void*)mid, (void*)mtxB, (void*)dstB);
         *(f32*)((char*)dstB + 0xc) = fill;
         *(f32*)((char*)dstB + 0x1c) = fill;
         *(f32*)((char*)dstB + 0x2c) = fill;
@@ -791,7 +791,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
 
 extern f32 timeDelta;
 
-void objModelAndSoundFn_80039118(int obj, int p2)
+void objModelAndSoundFn_80039118(int obj, int state)
 {
     int frame;
     int model;
@@ -800,16 +800,16 @@ void objModelAndSoundFn_80039118(int obj, int p2)
 
     f32 t;
 
-    if (*(s32*)((char*)p2 + 0) < 0)
+    if (*(s32*)((char*)state + 0) < 0)
         return;
-    t = *(f32*)((char*)p2 + 8) - timeDelta;
-    *(f32*)((char*)p2 + 8) = t;
+    t = *(f32*)((char*)state + 8) - timeDelta;
+    *(f32*)((char*)state + 8) = t;
     if (t < lbl_803DE9A4)
     {
-        frame = *(int*)((char*)p2 + 0);
-        if (frame >= *(int*)((char*)p2 + 4))
+        frame = *(int*)((char*)state + 0);
+        if (frame >= *(int*)((char*)state + 4))
         {
-            *(int*)((char*)p2 + 0) = -1;
+            *(int*)((char*)state + 0) = -1;
             model = (int)OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
             {
@@ -821,11 +821,11 @@ void objModelAndSoundFn_80039118(int obj, int p2)
         {
             if (frame == 1)
             {
-                Sfx_PlayFromObjectChannel((u32)obj, 0x10, *(u16*)((char*)p2 + 0x14));
+                Sfx_PlayFromObjectChannel((u32)obj, 0x10, *(u16*)((char*)state + 0x14));
             }
-            kf = *(int**)((char*)p2 + 0x10);
-            frame = *(int*)((char*)p2 + 0);
-            *(int*)((char*)p2 + 0) = frame + 1;
+            kf = *(int**)((char*)state + 0x10);
+            frame = *(int*)((char*)state + 0);
+            *(int*)((char*)state + 0) = frame + 1;
             kfval = kf[frame];
             model = (int)OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
@@ -833,7 +833,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
                 ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), kfval - 1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
-            *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
+            *(f32*)((char*)state + 8) = *(f32*)((char*)state + 8) + *(f32*)((char*)state + 0xc);
         }
     }
 }
@@ -1587,7 +1587,7 @@ void characterDoEyeAnims(int obj, int state)
     }
 }
 
-void characterDoEyeMovements(int obj, int p4, f32 unused)
+void characterDoEyeMovements(int obj, int state, f32 unused)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -1603,39 +1603,39 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     }
 
     flag = 0;
-    t = *(s16*)(p4 + 0x22);
+    t = *(s16*)(state + 0x22);
     if (t == 0)
     {
         flag = 1;
     }
     if (t > 0)
     {
-        if (foundA->offsetS >= *(int*)(p4 + 0x24))
+        if (foundA->offsetS >= *(int*)(state + 0x24))
         {
             flag = 1;
         }
     }
     if (t < 0)
     {
-        if (foundA->offsetS <= *(int*)(p4 + 0x24))
+        if (foundA->offsetS <= *(int*)(state + 0x24))
         {
             flag = 1;
         }
     }
     if (flag != 0)
     {
-        *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
-        *(s16*)(p4 + 0x22) = (*(int*)(p4 + 0x24) < foundA->offsetS) ? -0x96 : 0x96;
-        *(s8*)(p4 + 0x20) = randomGetRange(0x1e, 0x64);
+        *(int*)(state + 0x24) = randomGetRange(-0x3e8, 0x3e8);
+        *(s16*)(state + 0x22) = (*(int*)(state + 0x24) < foundA->offsetS) ? -0x96 : 0x96;
+        *(s8*)(state + 0x20) = randomGetRange(0x1e, 0x64);
     }
-    timer = *(s8*)(p4 + 0x20);
+    timer = *(s8*)(state + 0x20);
     if (timer > 0)
     {
-        *(s8*)(p4 + 0x20) = timer - framesThisStep;
+        *(s8*)(state + 0x20) = timer - framesThisStep;
     }
     else
     {
-        foundA->offsetS = (s16)(foundA->offsetS + *(s16*)(p4 + 0x22) * framesThisStep);
+        foundA->offsetS = (s16)(foundA->offsetS + *(s16*)(state + 0x22) * framesThisStep);
         foundA->offsetT = 0;
         foundB->offsetS = foundA->offsetS;
         foundB->offsetT = 0;
