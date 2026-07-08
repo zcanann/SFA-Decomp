@@ -20,6 +20,7 @@
 #include "main/mapEvent.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
@@ -134,14 +135,14 @@ void dim_levelcontrol_update(int obj)
     st->b6 = b;
     st->b5 = c;
     st->b4 = d;
-    if (!st->b3 && mainGetBit(0xa21) != 0)
+    if (!st->b3 && mainGetBit(GAMEBIT_DIM_CannonRelated0A21) != 0)
     {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         st->b3 = 1;
     }
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((u32)mainGetBit(0xa82) == 0 ||
+        if ((u32)mainGetBit(GAMEBIT_DIM_FlewTo) == 0 ||
             ((u32)mainGetBit(0x17) != 0 && mainGetBit(0xead) == 0))
         {
             if (((GameObject*)obj)->unkF4 == 2)
@@ -163,7 +164,7 @@ void dim_levelcontrol_update(int obj)
     }
     if (st->groupStatus != 0)
     {
-        if ((u32)mainGetBit(0x651) == 0)
+        if ((u32)mainGetBit(GAMEBIT_ITEM_DinoHorn_651) == 0)
         {
             (*gMapEventInterface)->setObjGroupStatus(0x13, 0xd, 0);
             st->groupStatus = 0;
@@ -171,7 +172,7 @@ void dim_levelcontrol_update(int obj)
     }
     else
     {
-        if ((u32)mainGetBit(0x651) != 0)
+        if ((u32)mainGetBit(GAMEBIT_ITEM_DinoHorn_651) != 0)
         {
             (*gMapEventInterface)->setObjGroupStatus(0x13, 0xd, 1);
             st->groupStatus = 1;
@@ -189,23 +190,23 @@ void dim_levelcontrol_update(int obj)
     }
     if (st->dialogueFired == 0)
     {
-        t = mainGetBit(0x3e2);
-        t2 = mainGetBit(0x3e3);
+        t = mainGetBit(GAMEBIT_DIM_TriggerLostInBlizzard);
+        t2 = mainGetBit(GAMEBIT_NW_SnowHorn03E3);
         st->dialogueFired = (u8)(t2 & t);
         if (st->dialogueFired != 0)
         {
             (*gGameUIInterface)->showNpcDialogue(0x4ba, 0x14, 0x8c, 1);
         }
     }
-    t = mainGetBit(0x3e2);
+    t = mainGetBit(GAMEBIT_DIM_TriggerLostInBlizzard);
     {
-        int gb = !mainGetBit(0x3e3);
+        int gb = !mainGetBit(GAMEBIT_NW_SnowHorn03E3);
         t = gb & t;
     }
     t2 = t & 0xff;
     if (t2 != st->saveState)
     {
-        mainSetBits(0x3e8, t2);
+        mainSetBits(GAMEBIT_DIM_LostInBlizzard, t2);
         st->saveState = t2;
     }
     if (!(u8)mainGetBit(0x8a5) && mainGetBit(0x89d) != 0)
@@ -278,7 +279,7 @@ void dim_levelcontrol_init(int obj)
     st->b6 = mainGetBit(0xd0c);
     st->b5 = mainGetBit(0xd0d);
     st->b4 = mainGetBit(0xd0e);
-    st->b3 = mainGetBit(0xa21);
+    st->b3 = mainGetBit(GAMEBIT_DIM_CannonRelated0A21);
     (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 1);
     ((GameObject*)obj)->objectFlags |= (DIMLEVELCONTROL_OBJFLAG_HIDDEN | DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     unlockLevel(0, 0, 1);
