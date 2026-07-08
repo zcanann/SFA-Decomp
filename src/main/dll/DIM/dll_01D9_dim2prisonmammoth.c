@@ -159,7 +159,7 @@ int dim2prisonmammoth_stateHandler00(int* obj)
         if ((u32)mainGetBit(548) != 0) return 3;
         return 2;
     case 1:
-        if ((u32)mainGetBit(707) != 0) return 3;
+        if ((u32)mainGetBit(GAMEBIT_DIM_ReachedBottom) != 0) return 3;
         return 3;
     default:
         return 0;
