@@ -26,6 +26,7 @@
 #include "main/object_descriptor.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
+#include "main/gamebit_ids.h"
 
 #define CFGUARDIAN_OBJGROUP 0x16
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
@@ -708,7 +709,7 @@ int cfguardian_updateMain(int obj)
             ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
-        if (mainGetBit(0x43) != 0)
+        if (mainGetBit(GAMEBIT_CF_SavedQueen) != 0)
         {
             sub->questState = CFGUARDIAN_TALK_2;
             sub->chatterAlt = 0;
@@ -786,13 +787,13 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        if (mainGetBit(0x4b7) != 0)
+        if (mainGetBit(GAMEBIT_TargetRelated04B7) != 0)
         {
             (*gCameraInterface)->setTarget(obj);
             (*gObjectTriggerInterface)->runSequence(0xb, (void*)obj, -1);
-            mainSetBits(0x4b7, 0);
+            mainSetBits(GAMEBIT_TargetRelated04B7, 0);
         }
-        if (mainGetBit(0x49a) != 0)
+        if (mainGetBit(GAMEBIT_SpellStoneRelated049A) != 0)
         {
             sub->questState = CFGUARDIAN_CUTSCENE_PERCH_B;
         }
@@ -802,11 +803,11 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        if (mainGetBit(0x4b7) != 0)
+        if (mainGetBit(GAMEBIT_TargetRelated04B7) != 0)
         {
             (*gCameraInterface)->setTarget(obj);
             (*gObjectTriggerInterface)->runSequence(0xa, (void*)obj, -1);
-            mainSetBits(0x4b7, 0);
+            mainSetBits(GAMEBIT_TargetRelated04B7, 0);
         }
         if (mainGetBit(0x4aa) != 0)
         {
@@ -831,7 +832,7 @@ int cfguardian_updateMain(int obj)
         buttonDisable(0, PAD_BUTTON_A);
         if ((*gGameUIInterface)->isEventReady(0x2e8) != 0)
         {
-            mainSetBits(0x4ab, 1);
+            mainSetBits(GAMEBIT_WaterSpellStone1_4AB, 1);
         }
         else if (sub->chatterState == GUARDIAN_CHATTER_READY)
         {
@@ -857,14 +858,14 @@ int cfguardian_updateMain(int obj)
             }
         }
     }
-    if (mainGetBit(0x902) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_902) != 0)
     {
         int* tbl2 = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
         if (tbl2[0] != -1)
         {
             sub->chatterState = GUARDIAN_CHATTER_PLAYING;
             (*gObjectTriggerInterface)->runSequence(tbl2[0], (void*)obj, -1);
-            mainSetBits(0x902, 0);
+            mainSetBits(GAMEBIT_ITEM_WaterSpellStone1_902, 0);
         }
     }
     {
