@@ -134,7 +134,7 @@ extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E2598;
 
-extern void fn_8015983C(void);
+extern void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg);
 extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
 extern int getAngle(float y, float x);
@@ -704,7 +704,7 @@ void baddieAfterUpdateBonesCb(int obj, int* bones)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x7C8:
-        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, fn_8015983C);
+        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, crawler_rotateVectorYaw);
         break;
     default:
         playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, NULL);
