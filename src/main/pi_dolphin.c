@@ -6818,7 +6818,7 @@ extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
 extern u8 enableDebugText;
-extern char lbl_803DB5DC;
+extern char sProgramCounterFormat;
 
 void gpuErrorHandler(void)
 {
@@ -6909,7 +6909,7 @@ void gpuErrorHandler(void)
         {
             debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
         }
-        debugPrintfxy(0x32, 0xa0, &lbl_803DB5DC, *(int*)(lbl_803DCCDC + 0x198));
+        debugPrintfxy(0x32, 0xa0, &sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
     }
 }
 
