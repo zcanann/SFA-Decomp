@@ -20,6 +20,7 @@
 #include "main/dll/FRONT/title_menu.h"
 #include "main/engine_shared.h"
 #include "main/dll/savedata_struct.h"
+#include "main/dll/debug/prof.h"
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
@@ -52,8 +53,6 @@ extern u8* lbl_803DD708;       /* save-file struct base */
 extern s8 lbl_803DD705;        /* exit-in-progress flag */
 extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;        /* initial panel selector */
-extern void fn_8011CA74(void);
-extern void fn_8011C7B4(void);
 extern s8 lbl_803DD704;        /* exit fade countdown */
 extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
 extern void setDrawCloudsAndLights(int v);
@@ -132,11 +131,11 @@ void OptionsScreen_initialise(void)
     lbl_803DD708 = getSaveFileStruct();
     if (lbl_803DD6F8 == 0)
     {
-        fn_8011CA74();
+        optionsMenu_openGeneralPanel();
     }
     else if (lbl_803DD6F8 == 1)
     {
-        fn_8011C7B4();
+        optionsMenu_openAudioPanel();
     }
     else
     {
