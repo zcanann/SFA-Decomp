@@ -483,11 +483,11 @@ void fn_801A7D74(int obj, u8 place, u8 mode)
             }
             if (pedestalCount >= 3)
             {
-                mainSetBits(0x89B, 1);
+                mainSetBits(GAMEBIT_MMP_MovedMeteor, 1);
             }
             else
             {
-                mainSetBits(0x89B, 0);
+                mainSetBits(GAMEBIT_MMP_MovedMeteor, 0);
             }
             if (pedestalCount > 3)
             {
