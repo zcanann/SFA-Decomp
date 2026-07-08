@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
+#include "main/gamebit_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
@@ -102,7 +103,7 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 1:
             state->eventFlags = 13;
             state->phase = MMP_ASTEROID_PHASE_RISING;
-            mainSetBits(0x87b, state->phase);
+            mainSetBits(GAMEBIT_MMPAsteroidRelated087B, state->phase);
             ((GameObject*)obj)->anim.alpha = 0xff;
             break;
         case 2:
@@ -118,7 +119,7 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 r = randomGetRange(10, 60);
                 state->periodicFxTimer = r;
                 state->phase = MMP_ASTEROID_PHASE_RISING;
-                mainSetBits(0x87b, state->phase);
+                mainSetBits(GAMEBIT_MMPAsteroidRelated087B, state->phase);
                 break;
             }
         case 4:
