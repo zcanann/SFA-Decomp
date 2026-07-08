@@ -95,7 +95,7 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
             case 7:
                 objSetAnimStateFlags(player, 2, 1);
                 mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 1);
-                mainSetBits(0xc6e, 1);
+                mainSetBits(GAMEBIT_ITEM_SpiritTestStrength_Got, 1);
                 (*gMapEventInterface)->setMapAct(DBSHSHRINE_MAP_SHRINE, 3);
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(10), 0);
