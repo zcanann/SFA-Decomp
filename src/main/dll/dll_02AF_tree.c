@@ -103,10 +103,10 @@ int tree_getExtraSize(void)
     return sizeof(TreeState);
 }
 
-void tree_spawnAmbientEffect(int obj, int p2, s8 index)
+void tree_spawnAmbientEffect(int obj, int state, s8 index)
 {
     TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
-    TreeState* state = (TreeState*)p2;
+    TreeState* ts = (TreeState*)state;
     TreeAmbientEffectSetup* effectSetup;
     int idx;
     int newObj;
@@ -120,9 +120,9 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
         effectSetup->base.color[1] = setup->base.color[1];
         effectSetup->base.color[3] = setup->base.color[3] - 0xa;
         idx = index;
-        effectSetup->base.posX = state->ambientEffectPos[idx][0];
-        effectSetup->base.posY = state->ambientEffectPos[idx][1];
-        effectSetup->base.posZ = state->ambientEffectPos[idx][2];
+        effectSetup->base.posX = ts->ambientEffectPos[idx][0];
+        effectSetup->base.posY = ts->ambientEffectPos[idx][1];
+        effectSetup->base.posZ = ts->ambientEffectPos[idx][2];
         effectSetup->animFrame = randomGetRange(0x708, 0x1770);
         effectSetup->unk1E = 0;
         effectSetup->colorA[0] = 0xa;
@@ -133,7 +133,7 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
         effectSetup->verticalDrift = -0x28;
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
-        state->ambientEffectHandles[idx] = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+        ts->ambientEffectHandles[idx] = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                            *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
