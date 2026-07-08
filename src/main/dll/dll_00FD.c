@@ -7,6 +7,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/dll_00FE_magicplant.h"
 
 #define DLL00FD_OBJFLAG_HIDDEN 0x4000
 extern void objRenderFn_80041018(void);
@@ -251,9 +252,9 @@ void magicPlantDropGem(int obj, void* setup, void* stateArg)
 
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)
     {
-        state->mode = 2;
+        state->mode = MAGICPLANT_MODE_FADE_OUT;
         state->moveStepScale = lbl_803E3880;
-        ObjAnim_SetCurrentMove(obj, 2, lbl_803E385C, 0);
+        ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_BURST, lbl_803E385C, 0);
     }
 }
 
