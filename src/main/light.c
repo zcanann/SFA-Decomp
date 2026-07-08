@@ -1,5 +1,6 @@
 /* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
 #include "main/dll/VF/vf_shared.h"
+#include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
@@ -269,12 +270,12 @@ void VFP_coreplat_init(int obj, int data)
     *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
     if (((GameObject*)obj)->anim.seqId == 0x3cb)
     {
-        if (mainGetBit(0x4e9) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale =
                 lbl_803E6144 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         }
-        if (mainGetBit(0x63c) != 0)
+        if (mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale =
                 lbl_803E6148 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -630,9 +631,9 @@ int SeqPoint_SeqFn(int obj, int param2, ObjAnimUpdateState* ctx)
             switch (ctx->eventIds[i])
             {
             case 20:
-                mainSetBits(0x500, 0);
-                mainSetBits(0xd72, 1);
-                mainSetBits(0xd44, 1);
+                mainSetBits(GAMEBIT_VFP_ObjGroups, 0);
+                mainSetBits(GAMEBIT_VFPRelated0D72, 1);
+                mainSetBits(GAMEBIT_VFPLightRelated0D44, 1);
                 (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
                 (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
                 (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 22, 1);
