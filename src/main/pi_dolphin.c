@@ -6437,7 +6437,7 @@ extern void Queue_Pop(void* q, void* out);
 extern void GXDisableBreakPt(void);
 extern void GXPeekZ(int x, int y, void* out);
 extern f32 lbl_803DCCC0;
-extern f32 lbl_803DEA9C;
+extern f32 physicsTimeScale;
 extern f32 lbl_803DEAA0;
 extern f32 lbl_803DEA74;
 extern f32 lbl_803DEA7C;
@@ -6615,7 +6615,7 @@ void waitNextFrame(void)
         (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
     OSResetStopwatch(lbl_8035F680);
     OSStartStopwatch(lbl_8035F680);
-    timeDelta = lbl_803DEA9C * lbl_803DEAA0 * lbl_803DCCC0;
+    timeDelta = physicsTimeScale * lbl_803DEAA0 * lbl_803DCCC0;
     if (gDvdErrorPauseActive != 0)
     {
         timeDelta = lbl_803DEA70;
@@ -6817,7 +6817,7 @@ extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
-extern u8 lbl_803DDA28;
+extern u8 enableDebugText;
 extern char lbl_803DB5DC;
 
 void gpuErrorHandler(void)
@@ -6877,7 +6877,7 @@ void gpuErrorHandler(void)
         }
         break;
     }
-    if (lbl_803DDA28 != 0 && (void*)lbl_803DCCDC != NULL && (u32)lbl_803DCCAC > 600)
+    if (enableDebugText != 0 && (void*)lbl_803DCCDC != NULL && (u32)lbl_803DCCAC > 600)
     {
         debugPrintfxy(0x32, 100, strs + 0x40000);
         GXReadXfRasMetric(&botPerf0, (int*)&botClks, &botPerf1, (int*)&botClks2);
