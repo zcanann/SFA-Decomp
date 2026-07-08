@@ -77,14 +77,14 @@ void IMSpaceRingGen_update(GameObject* obj)
         int* objs = ObjList_GetObjects(&objIndex, &objCount);
         for (objIndex = 0; objIndex < objCount; objIndex++)
         {
-            GameObject* o = (GameObject*)objs[objIndex];
-            if (o->anim.seqId == SEQID_RING_A)
+            GameObject* candidate = (GameObject*)objs[objIndex];
+            if (candidate->anim.seqId == SEQID_RING_A)
             {
-                state->ringA = o;
+                state->ringA = candidate;
             }
-            if (o->anim.seqId == SEQID_RING_B)
+            if (candidate->anim.seqId == SEQID_RING_B)
             {
-                state->ringB = o;
+                state->ringB = candidate;
             }
         }
     }
