@@ -34,7 +34,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
@@ -46,6 +45,7 @@ extern void fn_8014C678(int obj, int p, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int p, int c, f32 a, f32 b, int d);
 extern void fn_80154328(int obj, int p);
 extern f64 lbl_803DBCD0;
+extern f32 timeDelta;
 extern f32 lbl_803E2940;
 extern f32 lbl_803E2944;
 extern f32 lbl_803E2948;

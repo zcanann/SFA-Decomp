@@ -17,7 +17,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
-#include "main/frame_timing.h"
 #define POLLENFRAGMENT_HIT_VOLUME_SLOT 0x16
 extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject();
@@ -61,6 +60,8 @@ extern f32 lbl_803E319C;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 lbl_803DBD48;
 extern f32 lbl_803DBD4C;
 extern const f32 lbl_803E315C;

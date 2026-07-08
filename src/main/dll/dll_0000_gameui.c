@@ -45,8 +45,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/textrender.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 #define CAMMODE_WORLDMAP 0x4e /* dll_004E_cameramodeworldmap */
@@ -74,6 +72,7 @@ extern s16 gMinimapInfoTextY;
 extern s16 gMinimapInfoTextX;
 extern CMenuSection gCMenuSections[];
 extern s16 gCMenuActivatedId;
+extern u8 framesThisStep;
 extern s32 lbl_803DBA5C;
 extern f32 lbl_803DBAA4;
 extern u8 lbl_803DD75B;
@@ -107,6 +106,7 @@ extern u8 gPauseMenuHintIndex;
 extern u8 gPauseMenuTextCharset;
 extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
+extern f32 timeDelta;
 extern void setJoypadDisabled(void);
 extern void* gameTextGet(int textId);
 extern void* lbl_803A9410[6];
@@ -308,6 +308,7 @@ extern int getCurSeqNo(void);
 extern u8 AudioStream_IsPreparing(void);
 extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
+extern void gameTextLoadDir(int dirId);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8 * buf);
 extern void Obj_FreeObject(char* obj);

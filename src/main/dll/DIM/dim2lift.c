@@ -14,7 +14,6 @@
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
 #include "main/sfa_shared_decls.h"
-#include "main/gameplay_runtime.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10
@@ -23,6 +22,7 @@
 /* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
 #define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
 
+extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
 

@@ -21,7 +21,6 @@
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 #define OBJECT_CAMMODE_TITLE 0x57   /* cameramode DLL dll_0057_cameramodetitle */
 #define OBJECT_CAMMODE_DEFAULT 0x42 /* default gameplay cameramode DLL */
@@ -34,6 +33,8 @@
 #define OBJECT_OBJGROUP_HITBOX 6      /* joined when modelInstance flags & 0x40 (SKIP_RESET_UPDATE) */
 #define OBJECT_OBJGROUP_GROUP8 8      /* joined when modelInstance->group8RegistrationCount > 0 */
 
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;

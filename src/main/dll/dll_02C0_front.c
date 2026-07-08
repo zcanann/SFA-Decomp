@@ -30,8 +30,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 #define TITLE_SCREEN_TEXTURE_COUNT 19
 
@@ -201,6 +199,7 @@ void TitleScreen_initialise(void)
 
 extern u8 gTitleScreenCreditsStarted;
 extern int gTitleScreenCreditsEndTriggered;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* When visible and ready, render via objRenderFn; once the credits flag
  * fires, set the one-shot trigger 0x57 and release the attract-mode movie
@@ -308,6 +307,7 @@ extern u16 gTitleScreenCreditTimer;
 extern u16 gTitleScreenCreditIndex;
 extern s16 gTitleScreenCreditDelay;
 extern int getCurUiDll(void);
+extern f32 timeDelta;
 
 /* Reset the per-frame state group: latch showCredits = 1 and zero five
  * halfword/byte counters. */

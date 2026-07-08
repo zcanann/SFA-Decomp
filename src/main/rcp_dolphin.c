@@ -11,7 +11,6 @@
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
-#include "main/frame_timing.h"
 
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
@@ -817,6 +816,8 @@ void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, vo
     selectTexture((int)cur, 0);
     selectTexture((int)result, 1);
 }
+
+extern u8 framesThisStep;
 
 void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
 {

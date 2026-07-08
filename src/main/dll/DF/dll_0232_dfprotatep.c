@@ -6,7 +6,6 @@
 #include "main/dll/sfxplayer.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 Obj_IsLoadingLocked(void);
@@ -16,6 +15,7 @@ extern void Obj_FreeObject(int obj);
 
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 typedef struct RingIdPair { u32 a; u32 b; } RingIdPair;
+extern f32 timeDelta;
 
 /* .sdata2 constant pool */
 static const RingIdPair lbl_803E6450 = { 0x00040005, 0x0006000B };

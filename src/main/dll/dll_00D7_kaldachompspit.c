@@ -17,7 +17,6 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT 0xa
 
@@ -53,6 +52,7 @@ extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
+extern f32 timeDelta;
 extern f32 lbl_803E30E0;
 extern f32 lbl_803E30F0;
 extern f32 lbl_803E30F4;

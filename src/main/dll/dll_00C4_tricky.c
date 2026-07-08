@@ -17,7 +17,6 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
@@ -167,6 +166,7 @@ extern int gTrickyNearestObject;
 extern u32 lbl_803DBC40;
 extern u32 lbl_803DBC48;
 extern f32 lbl_803DC074;
+extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u16 lbl_803E23C0;
 extern f32 lbl_803E23DC;

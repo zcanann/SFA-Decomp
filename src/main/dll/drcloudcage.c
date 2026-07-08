@@ -25,7 +25,6 @@
 #include "main/checkpoint_interface.h"
 #include "main/vecmath.h"
 #include "string.h"
-#include "main/frame_timing.h"
 
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
@@ -40,6 +39,7 @@ extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy,
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
+extern f32 timeDelta;
 extern f32 gDrCloudCageWindVolume;
 extern u8 lbl_803AD088[];
 extern struct DRCloudCagePoints gDrCloudCagePointTemplate;

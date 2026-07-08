@@ -11,8 +11,6 @@
  */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 void MikaBomb_hitDetect(void);
 
@@ -21,6 +19,7 @@ void MikaBomb_free(int obj, int mode);
 int MikaBomb_getExtraSize(void);
 int MikaBomb_getObjectTypeId(void);
 
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int KaldaChompSpit_getObjectTypeId(void);
 extern int KaldaChompSpit_getExtraSize(void);
 
@@ -160,6 +159,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
+extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"

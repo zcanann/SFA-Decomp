@@ -23,14 +23,15 @@
 #include "main/engine_shared.h"
 #include "main/dll/genprops.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/gameplay_runtime.h"
 #define POLLEN_HIT_VOLUME_SLOT 0x16
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void* getTrickyObject(void);
 
 #define POLLEN_PARTFX_MOTE 0x4ba
 

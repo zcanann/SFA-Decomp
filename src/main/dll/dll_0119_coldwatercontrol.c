@@ -18,8 +18,8 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 extern int fn_80295C40(int obj);
+extern f32 timeDelta;
 extern f32 lbl_803E3B68; /* timer reset / initial value */
 extern f32 lbl_803E3B6C; /* repeat-hit period */
 

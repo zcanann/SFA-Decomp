@@ -11,13 +11,12 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/gamebits.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 #define DFPTARGETBLOCK_OBJFLAG_HIDDEN 0x4000
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E6488;
 extern const f32 lbl_803E648C;
 extern const f32 lbl_803E6490;
@@ -31,6 +30,7 @@ extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObjec
                                   int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
+extern f32 timeDelta;
 extern f32 gTargetBlockHomeX;
 extern f32 gTargetBlockHomeZ;
 extern const f32 lbl_803E6494;

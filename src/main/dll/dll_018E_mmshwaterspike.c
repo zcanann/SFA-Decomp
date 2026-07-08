@@ -10,7 +10,6 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
-#include "main/frame_timing.h"
 #define MMSHWATERSPIKE_HIT_VOLUME_SLOT 9
 
 /* placement block read via anim.placementData */
@@ -37,6 +36,7 @@ extern void* ObjList_FindObjectById(int id);
 extern void logPrintf(char* fmt, ...);
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern u8 framesThisStep;
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;

@@ -21,33 +21,36 @@
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
-#include "main/objlib.h"
 
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 #define BABYCLOUDRUNNER_OBJGROUP 3
 #define BABYCLOUDRUNNER_OBJGROUP_SECONDARY 0x20
 #define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE 0x5d1 /* HUD air-meter background texture id */
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
+extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
 extern u32 objAnimFn_80038f38();
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4228;
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;
 extern u8 gBabyCloudRunnerMutterSfxTable;
 extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
+extern void storeZeroToFloatParam(void* p);
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
+extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E4218;
 extern f32 lbl_803E423C;
 extern f32 lbl_803E4240;
+extern f32 timeDelta;
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -58,6 +61,7 @@ extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void* getTrickyObject(void);
 extern f32 lbl_803E4248;
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);

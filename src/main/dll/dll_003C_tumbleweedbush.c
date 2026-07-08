@@ -23,7 +23,6 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
-#include "main/frame_timing.h"
 
 extern void TitleMenuItem_setAButtonToggle(void);
 
@@ -76,6 +75,7 @@ extern s8 gTumbleweedBushPulseDir;             /* highlight pulse direction */
 extern s8 gTumbleweedBushInputEnabled;             /* input enabled after first update */
 extern const char* gTumbleweedBushDefaultText;    /* default message text */
 extern void* saveFileSelect_saveSlots;
+extern u8 framesThisStep;
 extern void OSReport(const char* msg, ...);
 extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error format string */
 extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-range error format strings */

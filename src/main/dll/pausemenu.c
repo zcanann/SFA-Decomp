@@ -14,14 +14,13 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "main/model.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "main/frame_timing.h"
-#include "main/textrender.h"
 extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
 extern u8 hudTextures[0x198];
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextLoadDir(int dirId);
 extern void gameTextFn_80016810(int a, int b, int c);
 
 extern float mathCosf(float x);
@@ -47,6 +46,7 @@ extern u16 getNextTaskHintText(void);
 extern void fn_80128120(void* obj, u8 v);
 extern void fn_80128470(int v);
 extern f32 hudElementOpacity;
+extern f32 timeDelta;
 extern u8 pauseMenuState;
 extern u8 pauseMenuTextDrawFn[];
 extern u8 lbl_8031AE20[];

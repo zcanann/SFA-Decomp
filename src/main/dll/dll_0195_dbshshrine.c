@@ -13,7 +13,6 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
 
 #define DBSHSHRINE_OBJGROUP 0xb
 #define DBSHSHRINE_MAP_SHRINE 0xb
@@ -60,6 +59,7 @@ extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5,
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void* objCreateLight(int arg, u8 addToList);
+extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 

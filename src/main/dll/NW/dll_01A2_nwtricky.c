@@ -13,7 +13,6 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
-#include "main/frame_timing.h"
 
 #define NWTRICKY_OBJFLAG_PARENT_SLACK 0x1000
 #define NWTRICKY_OBJFLAG_HIDDEN 0x4000
@@ -22,6 +21,7 @@
 /* anim.seqId of the SnowHorn herd objects Tricky herds (docblock: "the
  * SnowHorn herd objects (seqId 0x13a)"). */
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
+extern f32 timeDelta;
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 enemy_getHealthFraction(int* obj);

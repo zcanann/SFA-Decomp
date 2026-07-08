@@ -27,7 +27,6 @@
 #include "main/gameplay_runtime.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -72,6 +71,7 @@ STATIC_ASSERT(offsetof(TrickyCurveNode, z) == 0x10);
 STATIC_ASSERT(offsetof(TrickyCurveNode, id) == 0x14);
 STATIC_ASSERT(offsetof(TrickyCurveNode, links) == 0x1c);
 
+extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E2408;

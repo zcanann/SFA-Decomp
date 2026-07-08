@@ -1,5 +1,6 @@
 /* DLL 0x10E - DeathSeq [8018BC48-8018BC50) */
 #include "main/objseq.h"
+extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
@@ -7,7 +8,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/rcp_dolphin.h"
 #include "sfa_light_decls.h"
-#include "main/frame_timing.h"
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern void setPendingMapLoad(int v);

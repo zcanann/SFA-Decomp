@@ -6,7 +6,6 @@
 #include "main/objseq.h"
 #include "main/obj_placement.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 
 /* object group queried to find this object's target */
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e
@@ -107,6 +106,7 @@ extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, in
 
 
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
+extern u8 framesThisStep;
 extern f32 lbl_803E6720;
 extern f32 lbl_803E6724;
 extern f32 lbl_803E6728;

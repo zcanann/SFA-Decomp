@@ -29,7 +29,6 @@
 #include "main/dll/duster.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 
 #define ENEMY_OBJFLAG_PARENT_SLACK 0x1000
 #define ENEMY_OBJFLAG_FREED 0x40
@@ -131,6 +130,7 @@ extern f32 lbl_803E257C;
 extern f32 lbl_803E25CC;
 extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
+extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E2598;
 

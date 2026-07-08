@@ -14,7 +14,6 @@
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 
 #define DIMBOSSTONSIL_OBJGROUP 3
 #define DIMBOSSTONSIL_PARTFX 0x4bd
@@ -33,6 +32,7 @@ extern void Sfx_PlayFromObject(void* obj, int sfxId);
 
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
+extern f32 timeDelta;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
 extern f32 lbl_803E4C90;

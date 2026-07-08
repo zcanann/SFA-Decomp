@@ -31,7 +31,6 @@
 #include "main/vecmath.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -65,6 +64,8 @@ extern int getAngle(float y, float x);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern s8 lbl_803DDC2C;
 extern f32 lbl_803E56CC;
 extern f32 gDBprotPi;

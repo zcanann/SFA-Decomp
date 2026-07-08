@@ -25,7 +25,6 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 
 #define WARPPAD_OBJFLAG_PARENT_SLACK 0x1000
 extern int ObjTrigger_IsSet(int obj);
@@ -37,6 +36,8 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803E3E98;
 extern f32 lbl_803E3E9C;
 extern f32 gWarpPadProximityBurstDistSq;

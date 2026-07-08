@@ -20,8 +20,6 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -39,12 +37,16 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_DisableObject();
+extern void* Obj_GetPlayerObject(void);
 extern void* gRockfallResource;
 extern f32 lbl_803E4708;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
 extern f32 Vec_distance(f32* a, f32* b);
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern u8 gRockfallCfgTable[];
 extern f32 gRockfallScaleDivisor;
 extern void fn_800628CC(int* obj);

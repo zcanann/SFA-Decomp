@@ -12,8 +12,6 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 /* env-effect ids fired when the shrine intro countdown expires (index-style; roles opaque) */
 #define GPSH_SHRINE_ENVFX_A 0xcc
@@ -64,12 +62,15 @@ extern void DBSH_Symbol_init(void);
 #define GPSHSHRINE_OBJGROUP 0xb
 #define GPSHSHRINE_MAP_SHRINE 0xb
 #define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
+extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
 
+extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
 extern void objSetAnimStateFlags(int* player, int a, int b);

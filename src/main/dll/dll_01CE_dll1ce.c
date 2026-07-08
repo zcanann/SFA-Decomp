@@ -24,7 +24,6 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 
 extern void dimmagicbridge_update(void);
 
@@ -78,6 +77,7 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 extern f32 lbl_803E49E8;
 extern void* lbl_803DDB78;
 extern f32 lbl_803E49F0;
+extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);

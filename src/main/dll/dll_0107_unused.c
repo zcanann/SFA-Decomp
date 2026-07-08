@@ -15,7 +15,6 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 #define UNUSED_HIT_VOLUME_SLOT 0xe
 
 /* object group this object joins */
@@ -36,6 +35,8 @@ extern void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, 
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);

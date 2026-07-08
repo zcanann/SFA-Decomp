@@ -21,7 +21,6 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 #define ICEBALL_HIT_VOLUME_SLOT 10
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
@@ -31,6 +30,7 @@ extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
+extern f32 timeDelta;
 extern f32 lbl_803E2E54;
 extern f32 lbl_803E2E58;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);

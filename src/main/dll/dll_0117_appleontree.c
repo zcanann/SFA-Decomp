@@ -15,7 +15,6 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 /* AppleOnTree_update animState machine: an apple's lifecycle from hanging on
  * the tree through falling, resting, being knocked loose, and despawning. */
@@ -93,6 +92,7 @@ extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E37C8;
 extern f32 gAppleOnTreePickupXZRange;
 extern f32 gAppleOnTreePickupRange;
+extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E37D4;

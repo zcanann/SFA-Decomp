@@ -8,7 +8,6 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
-#include "main/frame_timing.h"
 
 extern void warpstone_getExtraSize(void);
 
@@ -38,6 +37,7 @@ extern void characterDoEyeAnims(int obj, int p2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 
+extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;

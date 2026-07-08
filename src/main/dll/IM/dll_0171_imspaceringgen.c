@@ -15,9 +15,10 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
-#include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
+extern int randomGetRange(int lo, int hi);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
+extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);

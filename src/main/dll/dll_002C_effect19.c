@@ -16,7 +16,8 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern float mathSinf(float x);
 extern f32 gEffect19ScrollPhase2;
 extern f32 gEffect19ScrollPhase3;

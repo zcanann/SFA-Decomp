@@ -1,9 +1,9 @@
 #include "main/dfplightni.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
-#include "main/frame_timing.h"
 extern void lightningRender(void* state);
 extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int frameCount, int colorAngle, int flags);
+extern f32 timeDelta;
 extern f32 gDfpLightningTimerMax;
 extern f32 lbl_803E64E4;
 extern f32 gDfpLightningTimerInactiveMax;

@@ -17,7 +17,6 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/frame_timing.h"
 
 #define PAD_BUTTON_B 0x200
 
@@ -69,6 +68,7 @@ void warpstone_free(int obj, int mode)
 }
 
 extern int randFn_80080100(int n);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E54A0;
@@ -246,6 +246,7 @@ extern void CMenu_SetFadeCounter(s16 v);
 extern void warpToMap(int idx, s8 transType);
 extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
+extern f32 timeDelta;
 
 int warpstone_SeqFn(int obj, u32 p2, int animObj)
 {

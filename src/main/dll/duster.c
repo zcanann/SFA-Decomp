@@ -40,7 +40,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/objfsa.h"
-#include "main/frame_timing.h"
 
 /* object-type id of the pollen-spit projectile spawned by pollenFn_80155b10
  * (see file docblock). */
@@ -95,6 +94,7 @@ extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern u32 fn_80295CBC();
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
+extern f32 timeDelta;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 extern const f32 lbl_803E2A20;

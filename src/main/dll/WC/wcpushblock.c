@@ -20,7 +20,6 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
@@ -131,6 +130,8 @@ extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, 
 
 
 extern WCPushBlockCloudActionInterface** gCloudActionInterface;
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803E5C70;
 extern f32 lbl_803E5C74;
 extern f32 lbl_803E5C78;

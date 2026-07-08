@@ -29,14 +29,13 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SIDEKICKBALL_MSG_PLAYER_GRAB 0x100010 /* tells player to grab/hold the ball */
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_Y 0x800
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
 extern f32 gSidekickBallFadeDuration;
@@ -53,6 +52,8 @@ extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
 extern u32 mainGetBit(int eventId);
 extern f32 sqrtf(f32 x);
+extern f32 timeDelta;
+extern void* getTrickyObject(void);
 extern void Obj_FreeObject(u8* obj);
 extern u32 buttonGetDisabled(int port);
 extern void OSReport(const char* msg, ...);
@@ -75,6 +76,7 @@ extern const f32 lbl_803E36D4;
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
 extern u8 gSidekickBallPathPointData[];
+extern void* Obj_GetPlayerObject(void);
 
 enum SidekickBallMode
 {

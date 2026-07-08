@@ -10,8 +10,6 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/object_descriptor.h"
-#include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -21,6 +19,7 @@
 
 #define DLL199_MAP_SHRINE 0xb /* NW shrine map-event id (setMapAct) */
 
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5158;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
@@ -37,6 +36,7 @@ extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);
 extern f32 Vec_distance(f32* a, f32* b);
+extern u8 framesThisStep;
 extern f32 lbl_803E515C;
 extern f32 lbl_803E5160;
 extern f32 lbl_803E5164;

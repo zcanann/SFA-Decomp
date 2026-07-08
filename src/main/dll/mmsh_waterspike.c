@@ -15,8 +15,9 @@
  */
 #include "main/dll/mmsh_waterspike.h"
 #include "main/game_object.h"
-#include "main/frame_timing.h"
 
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D08;

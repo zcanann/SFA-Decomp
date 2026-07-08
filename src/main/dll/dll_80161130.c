@@ -16,10 +16,10 @@
 #include "main/dll/grimble_state.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
+extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int* obj);
+extern f32 timeDelta;
 extern int getAngle(float y, float x);
 extern void** gBaddieControlInterface;
 extern void** gPlayerInterface;

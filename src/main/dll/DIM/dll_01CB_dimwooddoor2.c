@@ -18,7 +18,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -30,6 +29,8 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 #define DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803E49D0;
 extern f32 lbl_803E49D4;
 extern f32 lbl_803E49D8;

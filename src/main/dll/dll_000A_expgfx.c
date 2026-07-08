@@ -12,7 +12,6 @@
 #include "main/texture.h"
 #include "dolphin/os/OSFastCast.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 extern void dll_0B_func18(void);
 
@@ -107,6 +106,7 @@ extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
+extern f32 timeDelta;
 extern f32 gExpgfxFrameTimerA;
 extern f32 gExpgfxFrameTimerB;
 extern f32 gExpgfxFrameTimerC;
@@ -127,6 +127,7 @@ extern const f32 gExpgfxSlotMotionStep;
 extern f32 fn_80138F78(void* tricky);
 extern f32 fn_8029610C(void* player);
 extern void vecRotateZXY(void* params, void* vec);
+extern u8 framesThisStep;
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;

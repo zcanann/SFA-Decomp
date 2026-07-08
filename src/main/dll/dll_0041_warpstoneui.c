@@ -17,7 +17,6 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0000_gameui.h"
-#include "main/frame_timing.h"
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int a, int b, int c);
@@ -35,6 +34,7 @@ extern int gWarpStoneUiMenuActive;
 extern f32 lbl_803E22E0;
 extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
+extern f32 timeDelta;
 extern int lbl_803DBBF8;
 extern int lbl_803DBBFC;
 extern int lbl_803DBC00;

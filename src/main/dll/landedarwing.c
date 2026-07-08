@@ -12,7 +12,6 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 
 /* raw offsets — kept as-is to match staffAction.c handlers */
 #define BADDIESTATE_HANDLER_TICK_FLAG 0x34d
@@ -24,6 +23,8 @@ extern void fn_80165B3C(int obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int sub);
 extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E3004;

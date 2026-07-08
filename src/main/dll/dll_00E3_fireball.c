@@ -18,9 +18,6 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
-#include "main/objlib.h"
 #define FIREBALL_HIT_VOLUME_SLOT 14
 
 /* object group this object joins while active */
@@ -30,6 +27,7 @@
 
 #define FIREBALL_ROT_COUNT 5
 
+extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -38,6 +36,10 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 
@@ -109,6 +111,8 @@ typedef struct FireballState
 #define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6e8
 
 extern u32 ObjHits_ClearHitVolumes();
+extern void ObjGroup_RemoveObject(u32 obj, int group);
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern int* Obj_GetActiveModel(int obj);
 extern const f32 lbl_803E3330;

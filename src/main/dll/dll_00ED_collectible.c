@@ -35,13 +35,14 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 extern void saveGame_saveObjectPos(int obj);
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern float mathSinf(float x);
 extern float mathCosf(float x);

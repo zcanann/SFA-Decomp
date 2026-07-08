@@ -37,7 +37,6 @@
 #include "main/shader.h"
 #include "main/sfa_shared_decls.h"
 #include "main/gamebit_ids.h"
-#include "main/frame_timing.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP 0x4c /* DLL 0x2B5 timer */
@@ -193,6 +192,7 @@ extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
 extern void objSeqMoveFn_80199188(int obj, int target);
 extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
+extern u8 framesThisStep;
 
 void Trigger_render(void)
 {

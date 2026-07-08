@@ -24,7 +24,6 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 
 /* The "ball" is the Tricky cannonball's TrickyState extra block: substate is
  * the init-done byte, speed the roll speed, stateFlags the flag word, route the
@@ -43,6 +42,7 @@ extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, i
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
+extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23F4;

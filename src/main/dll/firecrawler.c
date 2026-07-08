@@ -41,8 +41,6 @@
 #include "main/dll/firecrawler.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 /* group owned by another DLL, queried here */
 #define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
@@ -151,6 +149,7 @@ extern u8 gSnowwormSeqIndexReset[4];
 extern u8 gSnowwormSeqIndexMax[4];
 extern u8 lbl_803DBD30[4];
 extern int getAngle(float y, float x);
+extern f32 timeDelta;
 extern f32 lbl_803E2B2C;
 extern f32 lbl_803E2B28;
 extern f32 lbl_803E2B34;
@@ -192,6 +191,7 @@ extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
 extern int fn_80295C88(void* player);
+extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E2B3C;
 extern f32 lbl_803E2B48;
 extern f32 lbl_803E2B50;

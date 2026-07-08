@@ -6,7 +6,6 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
-#include "main/gameplay_runtime.h"
 
 /* object group this object belongs to */
 #define FIREFLYLANTERN_OBJGROUP 0xf
@@ -15,6 +14,7 @@
 #define FIREFLYLANTERN_CHILD_OBJ_FIREFLY 1084
 
 extern int gameBitDecrement(int bit);
+extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern f32 lbl_803E3AF0;
 extern u8 Obj_IsLoadingLocked(void);

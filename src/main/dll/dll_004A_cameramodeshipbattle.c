@@ -1,11 +1,12 @@
 /* DLL 0x4A - CameraModeShipBattle [8010BF08-8010C0D8) */
 #include "main/mm.h"
 
+extern f32 timeDelta;
+
 #include "main/camera_object.h"
 #include "main/dll/CAM/camshipbattle_state.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
-#include "main/frame_timing.h"
 
 extern CameraModeShipBattleState* gCamShipBattleState;
 extern f32 lbl_803E1948;

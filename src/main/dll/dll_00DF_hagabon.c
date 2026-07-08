@@ -29,8 +29,6 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #define HAGABON_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -59,6 +57,7 @@ typedef struct HagabonPlacement
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58;          /* last-seen curve point cache, shared with swarmbaddie */
 extern f32 lbl_803E2608;
@@ -86,8 +85,10 @@ extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
 extern int lbl_803DBC70;
+extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);

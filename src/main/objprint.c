@@ -7,7 +7,6 @@
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXCull.h"
 #include "sfa_light_decls.h"
-#include "main/frame_timing.h"
 
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
@@ -470,6 +469,8 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
     }
 }
 
+extern u8 framesThisStep;
+
 static inline ObjTextureRuntimeSlot* characterFindEyeJoint(int obj, int kind)
 {
     ObjTextureSlotDef* list;
@@ -780,6 +781,8 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         walk += 4;
     }
 }
+
+extern f32 timeDelta;
 
 void objModelAndSoundFn_80039118(int obj, int p2)
 {

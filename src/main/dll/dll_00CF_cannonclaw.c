@@ -12,11 +12,12 @@
 #include "main/dll/scarab.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 extern void* gGrimbleStateHandlersA[10];
 extern void* gGrimbleStateHandlersB[6];
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void* getTrickyObject(void);
 extern void* ObjList_FindObjectById(int id);
+extern f32 timeDelta;
 extern f32 lbl_803E2F30;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;

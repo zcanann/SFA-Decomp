@@ -17,7 +17,6 @@
 #include "main/lightmap.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
 
@@ -46,6 +45,7 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int setBit, int textId);
 
 
+extern f32 timeDelta;
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 

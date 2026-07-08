@@ -24,7 +24,6 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
-#include "main/frame_timing.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT 0x468
 #define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7
@@ -79,6 +78,7 @@ STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 extern int objGetAnimState80A(int obj);
 
 extern u8 gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
+extern f32 timeDelta;                   /* engine frame-step seconds */
 extern f32 lbl_803E6448;                /* burst partfx scale constant */
 
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \

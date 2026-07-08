@@ -30,7 +30,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
-#include "main/gameplay_runtime.h"
 
 #define DLL1DB_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -43,6 +42,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4B08; /* render scale */
 extern f32 lbl_803E4B0C;
 extern f32 lbl_803E4B10;

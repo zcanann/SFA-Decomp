@@ -29,7 +29,6 @@
 #include "string.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
-#include "main/frame_timing.h"
 
 extern void TitleScreenInit_render(void);
 extern void n_rareware_render(void);
@@ -55,6 +54,7 @@ extern f32 sqrtf(f32 x);
 extern u8 gMoveLibDefaultMoveData[];
 extern f32 lbl_803E1C88;
 extern f32 lbl_803E1C8C;
+extern f32 timeDelta;
 extern f32 lbl_803E1C90;
 extern void vecRotateZXY(s16 * angles, f32 * vec);
 extern f32 lbl_803E1CC8;
@@ -65,6 +65,7 @@ extern int Curve_AdvanceAlongPath(RomCurveWalker *curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E1CB0;
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern u8 framesThisStep;
 extern f32 lbl_803E1CC4;
 extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);

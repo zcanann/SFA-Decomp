@@ -26,7 +26,6 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 /* object group this object belongs to */
 #define KALDACHOM_OBJGROUP 3
@@ -69,6 +68,7 @@ extern void* gKaldaChomStateHandlersA[];
 extern u32* gPlayerInterface;
 extern u32* gBaddieControlInterface;
 extern void* gKaldachomEffectResource;
+extern f32 timeDelta;
 extern f32 lbl_803E3060;
 extern f32 lbl_803E307C;
 extern f32 lbl_803E3078;

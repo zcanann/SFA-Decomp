@@ -15,7 +15,6 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 
 #define MMPGYSERVENT_PARTFX_GEYSER 0x724
 #define MMPGYSERVENT_OBJFLAG_HIDDEN 0x4000
@@ -29,6 +28,8 @@ typedef struct MmpGyserventPlacement
     u8 pad21[0x28 - 0x21];
 } MmpGyserventPlacement;
 
+
+extern u8 framesThisStep;
 
 int mmp_gyservent_getExtraSize(void) { return 0x0; }
 int mmp_gyservent_getObjectTypeId(void) { return 0x0; }

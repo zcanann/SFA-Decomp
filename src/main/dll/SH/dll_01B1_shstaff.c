@@ -16,7 +16,6 @@
  */
 #include "main/game_object.h"
 #include "main/dll/player_objects.h"
-#include "main/frame_timing.h"
 
 int sh_staff_getExtraSize(void) { return 0x74; }
 
@@ -136,6 +135,7 @@ extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * dst);
 extern void objSetMtxFn_800412d4(f32 * mtx);
 extern void objRenderModel(int obj);
+extern f32 timeDelta;
 extern f32 lbl_803E54D0;
 extern f32 lbl_803E54D4;
 extern f32 lbl_803E54D8;

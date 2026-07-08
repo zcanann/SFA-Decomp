@@ -16,10 +16,12 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 
 /* object id sideload_update defers into existence once its arming game bit is set */
 #define SIDELOAD_CHILD_OBJ 0x24
+
+extern void* Obj_GetPlayerObject(void);
+extern void* getTrickyObject(void);
 
 typedef struct SideloadPlacement
 {

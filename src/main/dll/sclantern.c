@@ -11,12 +11,12 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objlib.h"
-#include "main/frame_timing.h"
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern u32 Obj_GetPlayerObject();
 extern ObjAnimEventList gSClanternObjAnimEvents;
+extern f32 timeDelta;
 extern f32 lbl_803E5498;
 
 #define SCLANTERN_EVENT_LEFT_SPARK_A 1

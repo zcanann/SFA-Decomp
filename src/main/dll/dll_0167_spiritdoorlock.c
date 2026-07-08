@@ -33,7 +33,6 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
-#include "main/frame_timing.h"
 
 /* per-file extern decls (homes: engine_shared / dll_80220608_shared /
    objhits / sky_80080E58_shared / gameplay_runtime); the spelling is
@@ -50,6 +49,8 @@ extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern int gSpiritDoorLockOrbitOffsetBase[4];
 extern s16 gSpiritDoorLockSpinSpeed;
 extern s32 gSpiritDoorLockTexScrollSpeed;

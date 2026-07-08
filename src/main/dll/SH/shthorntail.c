@@ -15,7 +15,8 @@
 #include "main/objlib.h"
 #include "main/vecmath.h"
 #include "main/dll/SH/shthorntail_ai.h"
-#include "main/frame_timing.h"
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_PROXIMITY_ALERT_MIN_TIME;
 extern f32 SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME;

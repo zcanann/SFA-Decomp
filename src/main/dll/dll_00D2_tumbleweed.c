@@ -10,7 +10,6 @@
 #include "main/objlib.h"
 #include "main/sky_interface.h"
 #include "main/object_descriptor.h"
-#include "main/frame_timing.h"
 
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
 #define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
@@ -21,6 +20,7 @@
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
 
+extern f32 timeDelta;
 extern f32 lbl_803E2F5C;
 extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;

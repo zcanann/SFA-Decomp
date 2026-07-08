@@ -9,8 +9,6 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/savedata_struct.h"
-#include "main/frame_timing.h"
-#include "main/textrender.h"
 extern int saveFileStruct_isCheatActive(u8 idx);
 
 /*
@@ -1109,6 +1107,7 @@ extern int gGameTextFallbackBuf;
 extern u8* gGameTextLastEntry;
 extern int gCurTextBuffer;
 extern int gGameTextBufferIndex;
+extern f32 timeDelta;
 extern f32 gGameTextFadeLimit;
 extern char lbl_803DB3D4;
 extern char* sMapDirectoryNameTable[];
@@ -1361,6 +1360,8 @@ FUN_80017998(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
     return 0;
 }
 
+extern u8 framesThisStep;
+
 int getGameState(void);
 
 int getHudHiddenFrameCount(void);
@@ -1439,6 +1440,7 @@ int mmSetFreeDelay(int v);
 int testAndSet_onlyUseHeap3(int v);
 
 
+extern void gameTextLoadDir(int dirId);
 extern u8 lbl_803DC980;
 
 void gameTextInit(void)

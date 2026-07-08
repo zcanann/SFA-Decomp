@@ -25,7 +25,6 @@
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
 extern f32 lbl_803DFEC8;
@@ -64,6 +63,8 @@ extern f32 gEffect10SineValueB;
 extern f32 gEffect10SineValueA;
 extern f32 gEffect10Pi;
 extern f32 gEffect10SinePhaseScale;
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern float mathSinf(float x);
 
 /* flags arg bits */

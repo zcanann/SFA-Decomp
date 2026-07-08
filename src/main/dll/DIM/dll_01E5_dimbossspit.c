@@ -12,8 +12,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objlib.h"
 #include "main/objhits.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -52,8 +50,12 @@ typedef struct DIMbossspitState
 } DIMbossspitState;
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
+extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4D44;
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);

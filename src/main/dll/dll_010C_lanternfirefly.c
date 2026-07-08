@@ -11,8 +11,6 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/objlib.h"
 
 /* object group this object joins while active */
 #define LANTERNFIREFLY_OBJGROUP 0x30
@@ -35,6 +33,9 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
+extern void ObjGroup_AddObject(u32 obj, int group);
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 lbl_803E3AA0;
 extern f32 lbl_803E3AA4;
 extern f32 lbl_803E3AA8;

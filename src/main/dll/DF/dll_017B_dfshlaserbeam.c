@@ -10,10 +10,11 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/objlib.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+extern int randomGetRange(int lo, int hi);
+extern f32 timeDelta;
 extern ModgfxInterface** gModgfxInterface;
 extern void* gLaserBeamEffectResource;
+extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern int getAngle(float y, float x);
@@ -24,6 +25,7 @@ extern u8 padGetStickX(int port);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int objGetAnimState80A(void* obj);
+extern u8 framesThisStep;
 extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;

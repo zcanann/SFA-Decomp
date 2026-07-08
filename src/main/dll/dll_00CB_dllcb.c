@@ -23,7 +23,6 @@
 #include "main/objseq.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
-#include "main/frame_timing.h"
 
 /* object group this object belongs to */
 #define DLLCB_OBJGROUP 3
@@ -52,6 +51,7 @@ extern u64 ObjGroup_RemoveObject();
 #pragma peephole off
 
 extern void Obj_FreeObject(int* obj);
+extern f32 timeDelta;
 
 int fn_801601C4(int obj, GroundBaddieState* p)
 {
@@ -500,6 +500,7 @@ int fn_80160690(short* out, u8* obj)
     return 0;
 }
 
+extern u8 framesThisStep;
 extern f32 lbl_803E2E7C;
 extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;

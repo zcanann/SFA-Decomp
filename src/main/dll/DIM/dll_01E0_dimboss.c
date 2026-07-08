@@ -13,7 +13,6 @@
 #include "main/gamebits.h"
 #include "main/pi_dolphin.h"
 #include "main/sfa_shared_decls.h"
-#include "main/frame_timing.h"
 
 #define DIMBOSS_OBJGROUP 3
 
@@ -69,6 +68,7 @@ extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
 extern void queueGlowRender(void* effect);
 extern void dll_2E_func06(DIMbossObject* obj, void* animController, int p3);
 extern u32 dll_2E_func03();
+extern f32 timeDelta;
 extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;

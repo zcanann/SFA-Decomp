@@ -16,7 +16,6 @@
 #include "main/frustum.h"
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
-#include "main/frame_timing.h"
 
 /* home TU: SHThorntail DLL 0x1AD (gSHthorntailDataTables, the tuning
    floats and the debug string); the rest are engine-wide imports. */
@@ -31,6 +30,7 @@ extern void fn_8014C66C(SHthorntailObject * obj, SHthorntailObject * other);
 extern void OSReport(const char* msg, ...);
 extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
+extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ;
 extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;

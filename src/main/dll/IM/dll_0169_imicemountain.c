@@ -22,8 +22,6 @@
 #include "main/gamebit_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -49,6 +47,7 @@ extern void gameBitFn_800ea2e0(int idx);
 
 extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
 
@@ -64,6 +63,7 @@ extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
+extern f32 timeDelta;
 extern f32 lbl_803E46DC;
 
 int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);

@@ -17,7 +17,6 @@
 #include "main/sfa_extern_decls.h"
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
-#include "main/frame_timing.h"
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
 extern ModgfxInterface** gModgfxInterface;
@@ -856,6 +855,7 @@ typedef struct
     u8 r, g, b, a;
 } GXColor8;
 
+extern u8 framesThisStep;
 extern int* Obj_GetActiveModel(int* obj);
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int* obj, int* model);
@@ -1786,6 +1786,7 @@ extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
 extern int textureAnimFn_80053f2c(void* tex, void* a, void* b);
 
+extern f32 timeDelta;
 extern s32 lbl_803DCE00;
 
 #pragma fp_contract off

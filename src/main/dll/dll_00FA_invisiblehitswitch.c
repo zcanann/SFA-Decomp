@@ -1,8 +1,8 @@
 /* DLL 0x00FA (invisiblehitswitch) — Invisible hit switch object [0x8017A8EC-0x8017AC2C). */
 #include "main/dll/tFrameAnimator.h"
 #include "main/objlib.h"
-#include "main/frame_timing.h"
 
+extern u8 framesThisStep;
 
 #include "main/game_object.h"
 #include "main/gamebits.h"
@@ -45,6 +45,7 @@ typedef struct InvisibleHitSwitchState
     u8 pad24[0x28 - 0x24];
 } InvisibleHitSwitchState;
 
+extern f32 timeDelta;
 extern const f32 lbl_803E3730;
 extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;

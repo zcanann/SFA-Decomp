@@ -19,7 +19,6 @@
 #include "main/track_dolphin.h"
 #include "main/objprint_dolphin.h"
 #include "dolphin/os/OSCache.h"
-#include "main/textrender.h"
 extern void* ObjGroup_GetObjects();
 extern u32 mapLoadDataFile(int mapId, int fileId);
 extern u32 piRomLoadSection();
@@ -431,6 +430,7 @@ void* mapBlockFn_800592e4(void)
 extern int gShaderGameTextLoadedMapId;
 extern int gShaderCurMapEventId;
 extern s8 gShaderMapTextDirTable[];
+extern void gameTextLoadDir(int dirId);
 
 void gameTextLoadForMap_800571f0(u8 force)
 {

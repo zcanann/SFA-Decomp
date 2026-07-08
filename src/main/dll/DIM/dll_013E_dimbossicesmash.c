@@ -4,13 +4,12 @@
  * per-setup lifetime window, and emits two trail particles per frame while
  * fully opaque. */
 #include "main/game_object.h"
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 
 /* ice-debris particle spawned along the smash sweep between the previous and current position */
 #define DIMBOSSICESMASH_PARTFX 1000
@@ -44,6 +43,8 @@ typedef struct DimbossicesmashPlacement
     s16 homingTargetZ;  /* homing target Z */
 } DimbossicesmashPlacement;
 
+extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 sqrtf(f32);
 extern void Obj_FreeObject(u8* obj);
 extern u8 lbl_803DDB00;

@@ -7,7 +7,6 @@
  * GAMEBIT_CC_COMPLETE marks full completion. Nothing else in the game writes
  * the trigger latch. */
 #include "main/dll/DIM/dimlogfire.h"
-#include "main/frame_timing.h"
 
 #define GAMEBIT_LIGHTFOOT_TRIGGERED 9
 #define GAMEBIT_CC_COMPLETE 0x24
@@ -34,6 +33,7 @@
 #define CCLIGHTFOOT_STATE_DESPAWN      0xe  /* free child, hide, disable update, return */
 
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
+extern f32 timeDelta;
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);

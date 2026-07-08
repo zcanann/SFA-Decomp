@@ -12,7 +12,6 @@
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 #define NWMAMMOTH_PARTFX 0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED 0x800
@@ -32,6 +31,7 @@ extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 objAudioFn_8006ef38();
 
+extern f32 timeDelta;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
 extern f32 oneOverTimeDelta;

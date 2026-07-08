@@ -1,13 +1,14 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
+extern int randomGetRange(int lo, int hi);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #define CAMPFIRE_HIT_VOLUME_SLOT 0x1f
 extern void ModelLightStruct_free(void* effect);
 

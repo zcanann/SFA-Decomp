@@ -16,7 +16,6 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
 
 /* CloudSpawnParams.flags58 / NewCloud.flags144A — spawn command / trigger bits */
 #define NEWCLOUD_CMD_SPIN       0x1  /* enable cloud spin */
@@ -48,6 +47,8 @@ typedef struct LightningEffect
 extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1D8;
 extern const f32 lbl_803DF1DC;

@@ -28,7 +28,6 @@
 #include "main/pad.h"
 #include "main/curve.h"
 #include "sfa_light_decls.h"
-#include "main/frame_timing.h"
 
 #define PAD_TRIGGER_Z 0x10
 #define PAD_TRIGGER_L 0x40
@@ -55,6 +54,7 @@ extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 
 extern u8 gCutCamBboxBlocked;       /* last bbox-hit result */
+extern u8 framesThisStep;
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
 extern f32 lbl_803E1688;      /* 4.0f  - collision probe / trace radius */
 extern f32 lbl_803E168C;      /* 3.1415927f (pi); angle-units -> radians with lbl_803E1690 */

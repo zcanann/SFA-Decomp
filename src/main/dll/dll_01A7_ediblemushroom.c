@@ -11,7 +11,6 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
-#include "main/frame_timing.h"
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN 0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 #define EDIBLEMUSHROOM_OBJFLAG_RENDERED 0x800
@@ -42,6 +41,7 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
 extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
+extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 s16 gEdibleMushroomMoveIdTable[12] = {0, 1, 6, 2, 3, 4, 0, 5, 6, 7, -1, 0};
 

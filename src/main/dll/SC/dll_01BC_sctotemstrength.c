@@ -18,7 +18,6 @@
 #include "main/pad.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
-#include "main/gameplay_runtime.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -36,6 +35,7 @@ extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(u8 x);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int gTotemStrengthDeactivateTimer;
 extern int lbl_803DC070;
 extern const f32 lbl_803E5668;

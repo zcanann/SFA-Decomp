@@ -15,7 +15,6 @@
 #include "main/effect_interfaces.h"
 #include "main/objlib.h"
 #include "main/dll/DB/DBstealerworm.h"
-#include "main/frame_timing.h"
 
 #define SBSHIPHEAD_OBJGROUP 3
 #define SBSHIPHEAD_PARTFX 0x7aa
@@ -35,9 +34,11 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 timeDelta;
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern int Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
 extern u32 getSbGalleon(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);

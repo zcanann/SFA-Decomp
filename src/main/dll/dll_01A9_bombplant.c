@@ -10,8 +10,6 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #define BOMBPLANT_HIT_VOLUME_SLOT 5
 #define BOMBPLANT_PARTFX 0x7f1
 #define BOMBPLANT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -31,6 +29,8 @@ extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 lbl_803E5370;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
@@ -45,12 +45,14 @@ extern f32 gBombPlantSporeOffsetScale;
 extern f32 gBombPlantGrowRateMin;
 extern f32 gBombPlantGrowDuration;
 extern int objIsFrozen(u8* obj);
+extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern u32 ObjHitbox_SetCapsuleBounds();
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_MarkObjectPositionDirty();
 extern u32 ObjHits_EnableObject();
+extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern f32 gBombPlantTriggerDistSq;

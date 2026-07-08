@@ -9,7 +9,6 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 
 typedef struct WmLaserTargetPlacement
 {
@@ -38,6 +37,7 @@ typedef struct WmLaserTargetState
 STATIC_ASSERT(sizeof(WmLaserTargetState) == 0x4);
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5D90; /* 1.0: render scale */
 
 int WM_LaserTarget_getExtraSize(void) { return sizeof(WmLaserTargetState); }

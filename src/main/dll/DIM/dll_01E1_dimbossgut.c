@@ -6,11 +6,11 @@
  */
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/game_object.h"
-#include "main/frame_timing.h"
 extern void objSetSlot(u8* obj, s8 slot);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3,
                                  u32 p4, u32 p5, double scale);
 
+extern f32 timeDelta;
 extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;

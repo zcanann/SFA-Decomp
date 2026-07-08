@@ -10,9 +10,6 @@
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/audio/sfx.h"
-#include "main/objlib.h"
 
 #define SNOWBIKE_OBJGROUP 0xa
 #define SNOWBIKE_AIRMETER_BGTEXTURE 0x5cd
@@ -89,6 +86,7 @@ typedef struct SnowBikeSetTypeState
     u8 pad4C4[0x4C8 - 0x4C4];
 } SnowBikeSetTypeState;
 
+extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5AE8;
@@ -126,6 +124,7 @@ extern f32 PSVECMag(f32 * v);
 extern void doRumble(f32 duration);
 extern int arrayIndexOf(s16* arr, int n, int value);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, u8 vol, f32 v);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
@@ -154,6 +153,7 @@ extern u32 lbl_803E5AE0;
 extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
 extern void SnowBike_SeqFn();
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern f32 lbl_803DC0B8;
 extern f32 lbl_803DC0C0;
 extern f32 lbl_803DC0C4;
@@ -169,6 +169,7 @@ extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
 extern void Obj_SetModelSlotIndex(int obj, int slot);
+extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int drshackle_updateAttachedPosition(int obj, u8* state);
 extern void fn_801EBD60(int obj, u8* state);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
@@ -184,6 +185,7 @@ extern char padGetStickX(int pad);
 extern char padGetStickY(int pad);
 extern u32 getButtonsHeld(int port);
 extern int getAngle(float y, float x);
+extern f32 timeDelta;
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
 extern f32 gSnowBikeBamToDeg;

@@ -6,7 +6,6 @@
 #include "main/camera.h"
 #include "main/texture.h"
 #include "main/modellight.h"
-#include "main/frame_timing.h"
 #define GX_COLOR0 0
 #define GX_DF_NONE 0
 #define GX_DF_CLAMP 2
@@ -22,6 +21,7 @@
 
 #define MODELLIGHT_DEFAULT_GLOW_TEXTURE_ID 0x605
 
+extern f32 timeDelta;
 void objSetEventName(u8* obj, void* name)
 {
     ((GameObject*)obj)->anim.eventTable = name;

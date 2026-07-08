@@ -46,8 +46,6 @@
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 
 #define DBEGG_OBJGROUP 0x24
 #define DBEGG_SIBLING_OBJGROUP 0x14
@@ -63,6 +61,7 @@ extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E61CC;
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
@@ -111,12 +110,14 @@ typedef enum DbEggMode
     DBEGG_MODE_HOMING = 0xD,       /* homing back to its target reposition point */
 } DbEggMode;
 extern u32 FUN_80006824();
+extern int randomGetRange(int lo, int hi);
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
 extern void Obj_RemoveFromUpdateList(int obj);
+extern f32 timeDelta;
 
 typedef struct DbeggPlacement
 {

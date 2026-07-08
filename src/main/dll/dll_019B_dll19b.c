@@ -7,7 +7,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
-#include "main/frame_timing.h"
 
 #define DLL19B_TARGET_OBJGROUP 0xe
 
@@ -36,6 +35,8 @@ extern f32 lbl_803E5194;
 extern f32 lbl_803E5198;
 extern f32 lbl_803E519C;
 extern f32 lbl_803E51A0;
+extern f32 timeDelta;
+extern u8 framesThisStep;
 
 /* Romlist placement for the 0x19B torch object. The standard ObjPlacement
  * header occupies 0x00..0x18; this class stores a packed activation-distance

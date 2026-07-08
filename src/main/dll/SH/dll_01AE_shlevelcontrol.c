@@ -23,7 +23,6 @@
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/frame_timing.h"
 
 extern void warpstonelift_getExtraSize(void);
 
@@ -51,6 +50,7 @@ extern int mapUnload(int mapId, int flags);
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 extern f32 gShLevelControlBloopTimeLimit;
 extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
+extern f32 timeDelta;
 extern void logPrintf(char* fmt, ...);
 
 extern int ObjList_FindObjectById(int objectId);

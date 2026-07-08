@@ -17,11 +17,11 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern f32 lbl_803E4FF8;
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
+extern u8 framesThisStep;
 
 #define ECSH_SHRINE_RESOURCE 0x82  /* shrine setup resource (Resource_Acquire id) */
 #define ECSH_SHRINE_OBJ_TYPE 0x11  /* object type id of the spawned shrine */

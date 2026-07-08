@@ -40,8 +40,6 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #define STAFF_QUAKE_HIT_VOLUME_SLOT 17
 
 /* object group the staff joins while active */
@@ -198,6 +196,9 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
+
+extern f32 timeDelta;
+extern void* Obj_GetPlayerObject(void);
 
 typedef struct StaffSwipeSlot
 {

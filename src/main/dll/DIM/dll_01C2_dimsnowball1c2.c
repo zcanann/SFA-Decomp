@@ -7,8 +7,6 @@
 #include "main/dll/dimicewallstate_struct.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/gameplay_runtime.h"
-#include "main/frame_timing.h"
 #define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMSNOWBALL1C2_OBJFLAG_HIDDEN 0x4000
 
@@ -52,7 +50,10 @@ typedef struct Dimsnowball1c2Setup
     s16 childZOffset;  /* 0x1C <- def->childZOffset + random */
 } Dimsnowball1c2Setup;
 
+extern int randomGetRange(int lo, int hi);
 extern f32 lbl_803E4860;
+extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern u8 framesThisStep;
 extern u8 Obj_IsLoadingLocked(void);
 extern u32 playerGetFocusObject(int player);
 extern void* Obj_AllocObjectSetup(int size, int b);
