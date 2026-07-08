@@ -434,7 +434,7 @@ void tumbleweed_updateStateMachine(int obj)
             {
                 if (popMsg == TUMBLEWEED_MSG_PICKUP)
                 {
-                    gameBitIncrement(0x194);
+                    gameBitIncrement(GAMEBIT_ITEM_FireWeed_Count);
                     Sfx_PlayFromObject(obj, SFXen_treadlpc);
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
