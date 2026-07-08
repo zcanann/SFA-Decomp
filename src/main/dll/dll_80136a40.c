@@ -410,7 +410,7 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
     u8* p;
-    u8* p2;
+    u8* termCursor;
     u8 tag;
     u8 term;
     n = gDebugRecordCount + 1;
@@ -442,9 +442,9 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
         *q = a;
     }
     term = 0;
-    p2 = debugLogEnd;
-    debugLogEnd = p2 + 1;
-    *p2 = term;
+    termCursor = debugLogEnd;
+    debugLogEnd = termCursor + 1;
+    *termCursor = term;
 }
 #pragma optimization_level reset
 
