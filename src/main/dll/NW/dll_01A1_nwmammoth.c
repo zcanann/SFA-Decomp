@@ -89,7 +89,7 @@ int NW_mammoth_getExtraSize(void)
     return 0x48c;
 }
 
-void fn_801CEE0C(int obj, int p2)
+void fn_801CEE0C(int obj, int baddie)
 {
     extern int fn_801CE078(int, int);
     extern int gameBitDecrement(int bit);
@@ -97,9 +97,9 @@ void fn_801CEE0C(int obj, int p2)
     extern u8 lbl_803DBF74[4];
     extern u8 lbl_803DBF78[4];
     extern u8 lbl_803DBF7C[4];
-    NwMammothState* state = (NwMammothState*)p2;
+    NwMammothState* state = (NwMammothState*)baddie;
 
-    if (fn_801CE078(obj, p2) != 0)
+    if (fn_801CE078(obj, baddie) != 0)
         return;
 
     switch (state->stateIndex)
@@ -150,12 +150,12 @@ void fn_801CEE0C(int obj, int p2)
     }
 }
 
-void fn_801CED2C(int obj, int p2)
+void fn_801CED2C(int obj, int baddie)
 {
     extern u8 lbl_803DBFB4[4];
     extern u8 lbl_803DBFB8[4];
     extern u8 lbl_803DBFBC[4];
-    NwMammothState* state = (NwMammothState*)p2;
+    NwMammothState* state = (NwMammothState*)baddie;
 
     switch (state->stateIndex)
     {

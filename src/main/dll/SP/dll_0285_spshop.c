@@ -116,13 +116,13 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
     *out_b4 = b[4];
 }
 
-/* Increment-and-store: obj->_b8[2] += p3,
- * obj->_b8[3] += p2. */
-void shop_func16(int* obj, int p2, int p3)
+/* Increment-and-store: obj->_b8[2] += delta2,
+ * obj->_b8[3] += delta3. */
+void shop_func16(int* obj, int delta3, int delta2)
 {
     s8* b = ((GameObject*)obj)->extra;
-    b[2] = (s8)(b[2] + p3);
-    b[3] = (s8)(b[3] + p2);
+    b[2] = (s8)(b[2] + delta2);
+    b[3] = (s8)(b[3] + delta3);
 }
 
 /* Shop state reset/seed: zero obj->_b8[2]
@@ -275,13 +275,13 @@ int shop_isItemAvailable(int obj, int idx)
     return result;
 }
 
-void shop_func0B(int* obj, int v, int p3)
+void shop_func0B(int* obj, int v, int seqId)
 {
     s8* state = ((GameObject*)obj)->extra;
     state[0] = v;
     if (v != 0)
     {
-        (*gObjectTriggerInterface)->runSequence(p3, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(seqId, obj, -1);
     }
 }
 
