@@ -1014,9 +1014,9 @@ void SH_LevelControl_init(int obj)
     Music_Trigger(MUSICTRIG_wcity_day, 0);
     Music_Trigger(MUSICTRIG_trex_boss_1, 0);
     Music_Trigger(MUSICTRIG_drako_3, 0);
-    mainSetBits(3213, 1);
+    mainSetBits(GAMEBIT_ITEM_PDA_Got, 1);
 
-    if (mainGetBit(319) == 0)
+    if (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) == 0)
     {
         extern s16 lbl_80327618[];
         for (i = 0; i < 18; i++)
