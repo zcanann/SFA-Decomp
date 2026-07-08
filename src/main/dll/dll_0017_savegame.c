@@ -403,7 +403,7 @@ s8 slot;
     SaveGame_gplaySetObjGroupStatus(0x1d, 0x1f, 1);
     SaveGame_gplaySetObjGroupStatus(0x13, 0, 1);
     SaveGame_gplaySetObjGroupStatus(0x13, 0x16, 1);
-    mainSetBits(0x967, 1);
+    mainSetBits(GAMEBIT_ITEM_Firefly_Disabled, 1);
 
     SAVEGAME_CHARACTER_POSITION(gSaveGameData)->x = defaultPos.x;
     *(f32*)(gSaveGameData + gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
@@ -1144,7 +1144,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     }
     if (flag != 0)
     {
-        mainSetBits(0x970, 1);
+        mainSetBits(GAMEBIT_CF_DoStandUpAnim, 1);
         if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1)
         {
             playerAddHealth((u8*)Obj_GetPlayerObject(), -1);
@@ -1159,7 +1159,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     ((SaveGameCharacterPosition *)((u8 *)pRestartPoint + SAVEGAME_CHARACTER_POSITION_OFFSET))
         [gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET]]
             .map = b691;
-    mainSetBits(0x970, 0);
+    mainSetBits(GAMEBIT_CF_DoStandUpAnim, 0);
     if (flag != 0 && healed != 0)
     {
         playerAddHealth((u8*)Obj_GetPlayerObject(), 1);
