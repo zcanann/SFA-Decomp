@@ -23,18 +23,18 @@ typedef struct PlayerMoveBuf
 } PlayerMoveBuf;
 
 void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd);
-void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5);
+void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused);
 void player_applyVelocityStep(int* p, int* ctx, f32 t);
 void fn_800D8414(int* obj, int* ctx);
-void player_updateParticles(int* p1, int p2, int p3, int count, int mode);
-void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mode);
+void player_updateParticles(int* obj, int unused, int effectId, int count, int mode);
+void player_doProjGfx(int* obj, int unusedA, int resIdBase, int count, int unusedB, int mode);
 void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB);
 void player_setAnimIds(int unused1, int unused2, u32 a, u32 b);
 void player_clearXZvel(int* obj, int* state);
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale);
 void dll_0F_func19_nop(void);
 void player_updateCurve(int* obj, int* state, f32 t);
-void player_findCurve(int* obj, int* state, int p3);
+void player_findCurve(int* obj, int* state, int curveId);
 void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable);
 void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable);
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd);

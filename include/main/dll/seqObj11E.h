@@ -32,6 +32,6 @@ STATIC_ASSERT(offsetof(Seq11EChildSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(Seq11EChildSetup, unk20) == 0x20);
 STATIC_ASSERT(sizeof(Seq11EChildSetup) == 0x24);
 
-int gcRobotLight_init(int obj, int p2);
+int gcRobotLight_init(int obj, int childId);
 
 #endif

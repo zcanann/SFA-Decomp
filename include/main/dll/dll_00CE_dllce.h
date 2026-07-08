@@ -13,7 +13,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 
-void fn_8015ED1C(int p1, int p2, int p3);
-void fn_8015EB6C(int obj, int p2, int p3);
+void fn_8015ED1C(int obj, int state, int target);
+void fn_8015EB6C(int obj, int state, int target);
 
 #endif
