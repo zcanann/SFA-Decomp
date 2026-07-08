@@ -10,6 +10,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
@@ -199,20 +200,20 @@ void shop_buyItem(int obj, int price)
         playerAddHealth(player, 0x1c);
         break;
     case SHOP_ITEM_BOMB_SPORE:
-        gameBitIncrement(0x66c);
+        gameBitIncrement(GAMEBIT_ITEM_BombSpore_Count);
         break;
     case SHOP_ITEM_MOON_SEED:
-        gameBitIncrement(0x86a);
+        gameBitIncrement(GAMEBIT_ITEM_MoonSeed_Count);
         break;
     case SHOP_ITEM_GRUBTUB_FUNGUS:
-        gameBitIncrement(0xc1);
+        gameBitIncrement(GAMEBIT_ITEM_TrickyFood_Count);
         break;
     case SHOP_ITEM_FIREFLY:
-        gameBitIncrement(0x13d);
-        gameBitIncrement(0x5d6);
+        gameBitIncrement(GAMEBIT_ITEM_Firefly_Count);
+        gameBitIncrement(GAMEBIT_ITEM_FireflyNotShown_Count);
         break;
     case SHOP_ITEM_FUEL_CELL:
-        gameBitIncrement(0x3f5);
+        gameBitIncrement(GAMEBIT_ITEM_FuelCell_Count);
         break;
     }
 
