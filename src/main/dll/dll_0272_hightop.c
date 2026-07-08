@@ -21,6 +21,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gamebit_ids.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -251,7 +252,7 @@ int hightop_stateHandler06(int obj, u8* state)
     {
         runtime->flags |= 1;
     }
-    if (mainGetBit(0x632) != 0)
+    if (mainGetBit(GAMEBIT_DR_RescuedHighTop) != 0)
     {
         return 8;
     }
@@ -856,7 +857,7 @@ int hightop_stateHandler04(int obj, int stateArg)
         }
         fn_80039264((char*)state + 0xb48);
     }
-    count = mainGetBit(0x9c7) + mainGetBit(0x9c9) + mainGetBit(0x9cb) + mainGetBit(0x9cd);
+    count = mainGetBit(GAMEBIT_DR_HighTopSwitch1) + mainGetBit(GAMEBIT_DR_HighTopSwitch2) + mainGetBit(GAMEBIT_DR_HighTopSwitch3) + mainGetBit(GAMEBIT_DR_HighTopSwitch4);
     if (mainGetBit(0x62b) != 0)
     {
         HighTopRuntime* state2;
@@ -1109,7 +1110,7 @@ int hightop_stateHandler09(int obj, int stateArg)
             ((HightopPlacement*)stateArg)->unk2A0 = lbl_803E6AAC;
         }
         ((HightopPlacement*)stateArg)->unk2A0 = lbl_803E6AAC;
-        prevCount = mainGetBit(0x3f0) - 1;
+        prevCount = mainGetBit(GAMEBIT_ITEM_CCGoldBar_Used) - 1;
         state->savedControlMode = 9;
         for (i = 0; i < 4; i++)
         {
@@ -1117,7 +1118,7 @@ int hightop_stateHandler09(int obj, int stateArg)
         }
         if (prevCount == 3)
         {
-            mainSetBits(0x3f4, 1);
+            mainSetBits(GAMEBIT_ITEM_HighTopGold_Found, 1);
             return 0xb;
         }
     }
@@ -1148,7 +1149,7 @@ int hightop_stateHandler09(int obj, int stateArg)
     {
         s16 yItem;
         getYButtonItem(&yItem);
-        if ((mainGetBit(0xaf7) != 0 && cMenuGetSelectedItem() != -1) || yItem == 0xaf7)
+        if ((mainGetBit(GAMEBIT_ITEM_CCGoldBar_Count) != 0 && cMenuGetSelectedItem() != -1) || yItem == 0xaf7)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }
@@ -1159,10 +1160,10 @@ int hightop_stateHandler09(int obj, int stateArg)
     }
     if (ObjTrigger_IsSetById(obj, 0xaf7) != 0)
     {
-        int total = mainGetBit(0x3f0);
-        total = total + mainGetBit(0xaf7);
-        mainSetBits(0x3f0, total);
-        mainSetBits(0xaf7, 0);
+        int total = mainGetBit(GAMEBIT_ITEM_CCGoldBar_Used);
+        total = total + mainGetBit(GAMEBIT_ITEM_CCGoldBar_Count);
+        mainSetBits(GAMEBIT_ITEM_CCGoldBar_Used, total);
+        mainSetBits(GAMEBIT_ITEM_CCGoldBar_Count, 0);
         if (randFn_80080100(5 - total) != 0)
         {
             state->substate = 2;
@@ -1233,9 +1234,9 @@ int hightop_stateHandler10(int obj, int stateArg)
         rt->substate = 3;
         *(int*)((char*)stateArg + 0) |= 0x1000000;
     }
-    if (mainGetBit(0x1c3) != 0)
+    if (mainGetBit(GAMEBIT_ITEM_NWKey_Got2) != 0)
     {
-        if ((int)mainGetBit(0xee) == 2)
+        if ((int)mainGetBit(GAMEBIT_CC_ActNo) == 2)
         {
             rt->substate = 7;
         }
