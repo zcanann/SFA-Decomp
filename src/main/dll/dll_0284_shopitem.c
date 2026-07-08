@@ -237,7 +237,7 @@ void shopitem_onSeqFree(int obj)
     }
 }
 
-int shopitem_SeqFn(int obj, int p2, ObjSeqState* seq)
+int shopitem_SeqFn(int obj, int unused, ObjSeqState* seq)
 {
     int sub = *(int*)&((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
