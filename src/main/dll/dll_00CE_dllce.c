@@ -745,7 +745,7 @@ void dll_CE_init(int obj, u8* p, int flags)
     ObjHits_DisableObject(obj);
 }
 
-void dll_CE_update(int obj, int p2, int p3)
+void dll_CE_update(int obj, int unusedA, int unusedB)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void fn_8015ED1C(int p1, int p2, int p3);
@@ -900,11 +900,11 @@ void ChukChuk_setScale(int obj, int v);
 
 void IceBall_init(void* obj);
 
-int fn_8015E00C(int p1, u8* obj)
+int fn_8015E00C(int obj, u8* state)
 {
-    if ((s8)((GroundBaddieState*)obj)->baddie.hitPoints < 1)
+    if ((s8)((GroundBaddieState*)state)->baddie.hitPoints < 1)
         return 3;
-    if ((s8)((GroundBaddieState*)obj)->baddie.moveDone != 0)
+    if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
         return 6;
     return 0;
 }

@@ -90,7 +90,7 @@ void lightfoot_initialise(void)
     lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
 
-void lightfoot_free(int obj, int p2)
+void lightfoot_free(int obj, int flag)
 {
     void* child;
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -104,7 +104,7 @@ void lightfoot_free(int obj, int p2)
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
-            if (p2 == 0)
+            if (flag == 0)
             {
                 Obj_FreeObject((int)child);
             }
@@ -281,20 +281,20 @@ void lightfoot_update(int obj)
     }
 }
 
-void lightfoot_init(int obj, int p2, int p3)
+void lightfoot_init(int obj, int def, int flag)
 {
     u8* base = (u8*)lbl_80334EE8;
     int inner = *(int*)&((GameObject*)obj)->extra;
-    ObjPlacement* plc = (ObjPlacement*)p2;
+    ObjPlacement* plc = (ObjPlacement*)def;
     int sub;
     u8 flags = 0x16;
 
-    if (p3 != 0)
+    if (flag != 0)
     {
         flags |= 1;
     }
     (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
+        obj, def, inner, 5, 3, 0x108, flags, lbl_803E8228);
     ((GameObject*)obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;
@@ -302,8 +302,8 @@ void lightfoot_init(int obj, int p2, int p3)
     sub = ((LightfootState*)inner)->subObj;
     ((LightfootSub*)sub)->unk26 = -1;
     ((LightfootSub*)sub)->unk28 = ((LightfootSub*)sub)->unk26;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (*(s8*)((char*)p2 + 0x28) & 0x7));
-    if (*(s16*)((char*)p2 + 0x1a) == 0x64c)
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (*(s8*)((char*)def + 0x28) & 0x7));
+    if (*(s16*)((char*)def + 0x1a) == 0x64c)
     {
         ((GroundBaddieState*)inner)->baddie.controlMode = 2;
         ((GroundBaddieState*)inner)->baddie.substate = 1;
