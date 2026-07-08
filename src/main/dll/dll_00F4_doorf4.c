@@ -307,7 +307,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.seqId == 200)
             {
-                if (mainGetBit(0x57) != 0)
+                if (mainGetBit(GAMEBIT_CF_PowerOn) != 0)
                 {
                     getEnvfxAct(0, 0, DOORF4_ENVFX_A, 0);
                 }
