@@ -2342,7 +2342,6 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
 extern int getHudHiddenFrameCount(void);
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
-extern u8 isHeavyFogEnabled(void);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
 extern u16 lbl_803DCFA0;
@@ -2531,7 +2530,6 @@ extern void objRenderShadowIfVisible(int* obj, int a, int b, int c, int d, int e
 extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
 
 extern void GXSetScissor(int a, int b, int c, int d);
-extern void setDisplayCopyFilter(void);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
 extern f32 gNewShadowFovY, lbl_803DED34;
