@@ -28,6 +28,7 @@
 #include "main/objlib.h"
 #include "main/dll/dll_00E5_shield.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -41,7 +42,6 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses

@@ -19,6 +19,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
 #include "main/mldf_fileid.h"
+#include "main/frame_timing.h"
+#include "main/mm.h"
 
 typedef struct ObjSeqBgCmd {
     int object;
@@ -64,7 +66,6 @@ typedef struct ObjCurveKey {
     s16 frame;
 } ObjCurveKey;
 
-extern void *mmAlloc(int size, int heap, int flags);
 extern void *ObjList_FindObjectById(int id);
 extern void **ObjList_GetObjects(void *unused, int *count);
 extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
@@ -141,8 +142,6 @@ extern s16 getAngle(f32 x, f32 z);
 extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *values, f32 *coefficients));
 extern void Curve_BuildHermiteCoeffs(f32 *values, f32 *coefficients);
 extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
 extern f32 lbl_803DF008;

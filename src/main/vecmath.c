@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
+#include "main/frame_timing.h"
 extern float powfBitEstimate(float x, float y);
-extern f32 timeDelta;
 
 extern double lbl_803DE7D8;
 extern float fcos16(int angle);

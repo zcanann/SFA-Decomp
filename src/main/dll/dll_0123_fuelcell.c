@@ -1,12 +1,12 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
-extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define FUELCELL_OBJGROUP 0x4f
 extern int randomGetRange(int lo, int hi);

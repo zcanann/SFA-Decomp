@@ -14,6 +14,7 @@
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #define WISPBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -58,7 +59,6 @@ extern f32 lbl_803E26F8;
 extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
-extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
 extern void objMove(int obj, f32 x, f32 y, f32 z);

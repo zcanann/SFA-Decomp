@@ -28,6 +28,7 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/frame_timing.h"
 
 #define GCMENU_ITEM_ICON_COUNT 7
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
@@ -37,7 +38,6 @@ extern int playerGetMoney(void* player);
 
 extern s8 lbl_803DD7A0;
 extern short lbl_803DD7A2;
-extern u8 framesThisStep;
 extern short lbl_803DD8D2;
 extern short gMinimapRevealMax;
 extern short lbl_803DBA6E;
@@ -89,7 +89,6 @@ extern u8 pauseMenuState;
 extern u8 cMenuEnabled;
 extern int airMeter;
 extern f32 hudElementOpacity;
-extern f32 timeDelta;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1FA0;
 extern f32 gHudElemOpacityFloor;

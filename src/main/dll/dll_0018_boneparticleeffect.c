@@ -11,6 +11,7 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/frame_timing.h"
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
@@ -122,8 +123,6 @@ extern f32 lbl_803DF4C0;
 extern f32 lbl_803DF4C4;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 typedef u8 BoneFxJRow[16];
 
 typedef struct BoneFxVtx

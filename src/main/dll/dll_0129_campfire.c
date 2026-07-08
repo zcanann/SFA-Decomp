@@ -88,7 +88,6 @@ void CampFire_update(int obj)
 {
 
     extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-    extern void* Obj_GetPlayerObject(void);
     CampfireExtra* state;
     int type;
     int mode;

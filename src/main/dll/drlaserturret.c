@@ -25,6 +25,7 @@
 #include "main/pad.h"
 #include "main/gameplay_runtime.h"
 #include "sfa_light_decls.h"
+#include "main/frame_timing.h"
 extern int Stack_IsFull(void* stack);
 extern int Stack_Push(void* stack, void* value);
 
@@ -39,8 +40,6 @@ extern float mathSinf(float x);
 extern int playerGetMoney(void* player);
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern s16 gDrLaserTurretIdleAnimMoves[1];
 __declspec(section ".sdata") extern f32 gDrLaserTurretIdleAnimStepScales[3];
 

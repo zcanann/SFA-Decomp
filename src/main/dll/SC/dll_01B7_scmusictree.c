@@ -8,6 +8,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define SCMUSICTREE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -84,8 +85,6 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, 
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);
 extern f32 sqrtf(f32 x);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);

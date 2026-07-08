@@ -33,6 +33,7 @@
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
+#include "main/frame_timing.h"
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -52,7 +53,6 @@ extern void setSubtitlesEnabled(u8 enabled);
 extern void setRumbleEnabled(u8 enabled);
 extern void audioSetSoundMode(int mode, u8 forceFlag);
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
-extern u8 framesThisStep;
 extern SaveData saveData;
 extern u8 gSaveGameData[];
 extern s32 sCurvesCachedHitCount;

@@ -27,14 +27,12 @@ extern int getSaveGameLoadStatus(void);
 
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
-extern void envFxActFn_800887f8(u8 value);
 extern u8 lbl_803238D8[];
 
 /* env-effect id activated on level init (immediate when save already loaded,
  * else deferred; index-style, role opaque) */
 #define LINKBLEVCONTROL_ENVFX_A 0x23c
 
-extern void* getTrickyObject(void);
 extern void fn_80138908(int* tricky, int mode);
 extern f32 lbl_803E47C8;
 

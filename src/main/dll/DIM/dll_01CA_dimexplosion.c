@@ -27,6 +27,7 @@
 #include "main/audio/sfx.h"
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MODEL_LIGHT_KIND_POINT 2
@@ -50,7 +51,6 @@ extern void textureFree(int tex);
 extern int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
 extern int Obj_GetActiveModel(int obj);
 extern void ModelLightStruct_free(void*);
-extern u8 framesThisStep;
 
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;

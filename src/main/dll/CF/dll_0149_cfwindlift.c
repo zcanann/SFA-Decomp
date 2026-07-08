@@ -14,6 +14,8 @@
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/gameplay_runtime.h"
+#include "main/frame_timing.h"
 
 extern void CFPowerBase_getExtraSize(void);
 extern void CFMainCrystal_getExtraSize(void);
@@ -122,10 +124,6 @@ extern void* ObjGroup_GetObjects();
 extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void* Obj_GetPlayerObject(void);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803E4190;
 extern const f32 lbl_803E416C;
 extern void Music_Trigger(int id, int arg);

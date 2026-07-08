@@ -20,6 +20,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
 
@@ -111,7 +112,6 @@ void lightsource_update(int obj)
 
 
     extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
-    extern f32 timeDelta;
     LightSourceState* b;
     LightGlow* t;
     s16 sum;

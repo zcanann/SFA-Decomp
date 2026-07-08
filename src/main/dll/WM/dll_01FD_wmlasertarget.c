@@ -10,6 +10,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/frame_timing.h"
 
 typedef struct WmLaserTargetPlacement
 {
@@ -59,7 +60,6 @@ void WM_LaserTarget_hitDetect(void)
 
 void WM_LaserTarget_update(int* obj)
 {
-    extern u8 framesThisStep;
 
     u8* def;
     WmLaserTargetState* sub;

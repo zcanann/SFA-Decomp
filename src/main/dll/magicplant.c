@@ -26,6 +26,7 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 /* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
    named spawn-fn / kind name -> suffixless per role-gate). */
@@ -50,7 +51,6 @@ extern f32 lbl_803E28C4;
 extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
 extern int lbl_803DBCB8;
-extern f32 timeDelta;
 
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);

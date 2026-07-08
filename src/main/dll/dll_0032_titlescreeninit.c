@@ -31,7 +31,6 @@ extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern int mapUnload(int mapId, int flags);
 extern int loadMapAndParent(int mapId);
 extern void loadSunAndMoon(void);
-extern void loadUiDll(int index);
 extern int gTitleScreenInitLoadingTextures[];
 extern u8 gDvdErrorPauseActive;
 extern u8 lbl_803DC968;

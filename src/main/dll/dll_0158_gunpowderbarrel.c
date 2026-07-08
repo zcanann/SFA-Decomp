@@ -31,6 +31,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST 5
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY 0xe
 
@@ -73,7 +74,6 @@ extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
 
-extern f32 timeDelta;
 extern f32 lbl_803E42C0;
 extern f32 lbl_803E42C4;
 extern f32 lbl_803E4308;
@@ -112,7 +112,6 @@ extern int fn_8029669C(u8 * player);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void* Obj_GetPlayerObject(void);
-extern u8 framesThisStep;
 extern f32 lbl_803E4338;
 extern f32 gGunpowderBarrelPi;
 extern f32 gGunpowderBarrelHalfAngleUnit;

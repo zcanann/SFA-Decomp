@@ -15,6 +15,7 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct CfPowerBaseMapData
 {
@@ -57,7 +58,6 @@ extern int ObjMsg_Pop();
 extern int ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E41D0;
 
 int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);

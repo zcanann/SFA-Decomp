@@ -18,6 +18,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 #define FIREBALL_HIT_VOLUME_SLOT 14
 
 /* object group this object joins while active */
@@ -38,8 +39,6 @@ extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 

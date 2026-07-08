@@ -14,6 +14,7 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
+#include "main/frame_timing.h"
 
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
 typedef struct Dll1FFState
@@ -97,7 +98,6 @@ void dll_1FF_update(int obj)
 
     extern void buttonDisable(int port, u32 mask);
     extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-    extern f32 timeDelta;
     extern const f32 lbl_803E5D84;
     extern const f32 lbl_803E5D88;
     extern const f32 lbl_803E5D8C;

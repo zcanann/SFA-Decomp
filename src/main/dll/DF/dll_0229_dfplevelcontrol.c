@@ -16,6 +16,7 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/audio/sfx.h"
 
 #define DFPLEVELCONTROL_OBJGROUP 0x9
 
@@ -35,7 +36,6 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 void fn_80204098(int obj)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern u8 lbl_803DC183;
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     void* player;
@@ -196,7 +196,6 @@ void DFP_LevelControl_hitDetect(void)
 void DFP_LevelControl_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
     extern void fn_80204098(int);
     extern void SCGameBitLatch_Update(void*, int, int, int, int, int);

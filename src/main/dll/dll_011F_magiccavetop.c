@@ -8,6 +8,7 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define MAGICCAVETOP_CAMMODE_DEFAULT 0x42
@@ -60,7 +61,6 @@ typedef struct MagiccavetopState
     f32 timer;
 } MagiccavetopState;
 
-extern f32 timeDelta;
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
 

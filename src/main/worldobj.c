@@ -6,6 +6,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "main/objlib.h"
 #include "main/camera.h"
+#include "main/frame_timing.h"
 
 typedef struct
 {
@@ -87,7 +88,6 @@ extern float mathCosf(float x);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern int getAngle(float y, float x);
-extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern int gAudioStreamCurrentId;
 extern void Obj_FreeObject(int obj);

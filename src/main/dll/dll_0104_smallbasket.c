@@ -39,6 +39,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe
 
 extern void largecrate_getExtraSize(void);
@@ -157,8 +158,6 @@ extern int fn_802966B4(int obj);
 extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
 extern void fn_801814D0(int obj, int player, int state);
 extern f32 getXZDistance(f32* a, f32* b);
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E3934;
 extern const f32 lbl_803E3978;
 extern const f32 lbl_803E397C;
