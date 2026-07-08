@@ -282,7 +282,7 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 break;
             case 7:
                 objSetAnimStateFlags(player, 8, 1);
-                mainSetBits(0x143, 1);
+                mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 1);
                 mainSetBits(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
                 break;
             case 13:
@@ -418,9 +418,9 @@ void ecsh_shrine_free(int* obj)
         *(void**)inner = NULL;
     }
     ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
-    mainSetBits(0xefa, 0);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
     mainSetBits(0xcbb, 1);
-    mainSetBits(0xa7f, 1);
+    mainSetBits(GAMEBIT_WMRelated0A7F, 1);
 }
 
 /* Number of cups in the shuffle puzzle (cupSlotMap[6], cupPos holds 6 (x,z) pairs). */
@@ -541,7 +541,7 @@ void ecsh_shrine_update(s16* obj)
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
                 sub[0x2f] = 1;
-                mainSetBits(0x129, 0);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 {
@@ -576,7 +576,7 @@ void ecsh_shrine_update(s16* obj)
                 ((EcshShrineState*)sub)->animState = 6;
                 Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                 ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
-                mainSetBits(0xb9d, 1);
+                mainSetBits(GAMEBIT_ECSH_TestObservRunning, 1);
                 (*gScreenTransitionInterface)->step(0x78, 1);
             }
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -830,11 +830,11 @@ void ecsh_shrine_update(s16* obj)
             sub[0x2f] = 8;
             break;
         case 6:
-            mainSetBits(0xb9d, 0);
+            mainSetBits(GAMEBIT_ECSH_TestObservRunning, 0);
             audioStopByMask(3);
             if (objGetAnimStateFlags(player, 8) != 0)
             {
-                mainSetBits(0x129, 1);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 sub[0x2f] = 7;
             }
             else
@@ -844,7 +844,7 @@ void ecsh_shrine_update(s16* obj)
             }
             break;
         case 7:
-            mainSetBits(0x129, 0);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
             sub[0x2f] = 8;
             break;
         case 8:
@@ -857,12 +857,12 @@ void ecsh_shrine_update(s16* obj)
             sub[0x2e] = 0;
             sub[0x30] = 0;
             ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FF0;
-            mainSetBits(0x129, 1);
-            mainSetBits(0xb9d, 0);
+            mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
+            mainSetBits(GAMEBIT_ECSH_TestObservRunning, 0);
             mainSetBits(0xa6d, 0);
             mainSetBits(0xa6f, 0);
             mainSetBits(0xa70, 0);
-            mainSetBits(0x143, 0);
+            mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 0);
             sub[0x30] = 0;
             ((EcshShrineState*)sub)->matchFlag = -1;
             break;
@@ -904,9 +904,9 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->gameBitLatchState = 0;
     ((GameObject*)obj)->animEventCallback = ecsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
-    mainSetBits(0xba5, 1);
-    mainSetBits(0x129, 1);
-    mainSetBits(0x143, 0);
+    mainSetBits(GAMEBIT_ECSH_Entered, 1);
+    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
+    mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 0);
     ((EcshShrineState*)sub)->unk18 = 0xc;
     ((EcshShrineState*)sub)->unk1C = 0x1e;
     ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD0;
@@ -921,7 +921,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     {
         *(int*)sub = objCreateLight(0, 1);
     }
-    mainSetBits(0xefa, 1);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
 
 /* descriptor/ptr table auto 0x80326328-0x80326398 */
