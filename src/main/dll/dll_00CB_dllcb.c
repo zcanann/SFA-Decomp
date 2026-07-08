@@ -101,58 +101,58 @@ int fn_80160534(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801601C4(int obj, GroundBaddieState* p)
+int fn_801601C4(int obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
-    char* wp;
+    char* routePath;
     f32 zero;
 
     sub = ((GameObject*)obj)->extra;
-    if (*(void**)&p->baddie.targetObj != NULL)
+    if (*(void**)&state->baddie.targetObj != NULL)
     {
-        (*gPlayerInterface)->setState((void*)obj, p, 1);
-        wp = (char*)sub->route35C;
+        (*gPlayerInterface)->setState((void*)obj, state, 1);
+        routePath = (char*)sub->route35C;
         zero = lbl_803E2E68;
-        p->baddie.moveInputX = zero;
-        p->baddie.moveInputZ = zero;
-        memcpy(wp, &((GameObject*)obj)->anim.localPosX, 12);
-        memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)p->baddie.targetObj)->anim.localPosX, 12);
-        voxmaps_updateRoutePath(wp, (char*)(sub->route35C + 0x28));
-        if (p->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)
+        state->baddie.moveInputX = zero;
+        state->baddie.moveInputZ = zero;
+        memcpy(routePath, &((GameObject*)obj)->anim.localPosX, 12);
+        memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 12);
+        voxmaps_updateRoutePath(routePath, (char*)(sub->route35C + 0x28));
+        if (state->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)
         {
             return 5;
         }
-        if (*(u8*)(wp + 0x25) == 0)
+        if (*(u8*)(routePath + 0x25) == 0)
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, p, *(f32*)(wp + 0x18), *(f32*)(wp + 0x20), lbl_803E2E68,
+                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), lbl_803E2E68,
                                   *(f32*)&lbl_803E2E68, lbl_803E2E70);
         }
         else
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, p, *(f32*)(wp + 0x18), *(f32*)(wp + 0x20), lbl_803E2E74, lbl_803E2E78,
-                                  lbl_803E2E70);
+                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), lbl_803E2E74,
+                                  lbl_803E2E78, lbl_803E2E70);
         }
     }
     else
     {
-        (*gPlayerInterface)->setState((void*)obj, p, 0);
-        *(s8*)&p->baddie.moveDone = 0;
+        (*gPlayerInterface)->setState((void*)obj, state, 0);
+        *(s8*)&state->baddie.moveDone = 0;
     }
     return 0;
 }
 
-int fn_8016043C(int obj, GroundBaddieState* p)
+int fn_8016043C(int obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
 
-    if (*(char*)&p->baddie.moveJustStartedB != '\0')
+    if (*(char*)&state->baddie.moveJustStartedB != '\0')
     {
-        (*gPlayerInterface)->setState((void*)obj, p, 3);
-        *(int*)&p->baddie.targetObj = 0;
-        *(s8*)&p->baddie.physicsActive = 0;
-        *(s8*)&p->baddie.hasTarget = 0;
+        (*gPlayerInterface)->setState((void*)obj, state, 3);
+        *(int*)&state->baddie.targetObj = 0;
+        *(s8*)&state->baddie.physicsActive = 0;
+        *(s8*)&state->baddie.hasTarget = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -171,41 +171,41 @@ int fn_8016043C(int obj, GroundBaddieState* p)
 }
 
 #pragma dont_inline on
-void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
+void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
 {
     extern void* gDllCBMoveHandlers[];
     int setup;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(s8*)&p->baddie.moveDone = 1;
+    *(s8*)&state->baddie.moveDone = 1;
     if ((*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
-            obj, (u8*)p, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
+            obj, (u8*)state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
     {
-        *(int*)&p->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
-        *(s8*)&p->baddie.hasTarget = 0;
+        *(int*)&state->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
+        *(s8*)&state->baddie.hasTarget = 0;
         if (((DllCBPlacement*)setup)->trackYieldEnable != -1)
         {
-            if (p2 != NULL)
+            if (seq != NULL)
             {
-                (*gObjectTriggerInterface)->yield((ObjSeqState*)p2, ((DllCBPlacement*)setup)->trackYieldId);
+                (*gObjectTriggerInterface)->yield((ObjSeqState*)seq, ((DllCBPlacement*)setup)->trackYieldId);
             }
             *(s8*)&((GroundBaddieState*)sub)->subMode = 1;
         }
         else
         {
-            *(int*)&p->baddie.targetObj = 0;
+            *(int*)&state->baddie.targetObj = 0;
         }
     }
-    (*(void (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (u8*)p, lbl_803E2E9C, 1);
+    (*(void (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (u8*)state, lbl_803E2E9C, 1);
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
-    (*gPlayerInterface)->update((void*)obj, p, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
+    (*gPlayerInterface)->update((void*)obj, state, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
     *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
+void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
 {
     char* targetObj;
     int stateResult;
@@ -219,28 +219,28 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     {
         *(int*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj)->anim.parent;
     }
-    targetObj = *(char**)&p->baddie.targetObj;
+    targetObj = *(char**)&state->baddie.targetObj;
     if (targetObj != NULL)
     {
         d.x = ((GameObject*)targetObj)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
         d.y = ((GameObject*)targetObj)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
         d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        p->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        state->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     characterDoEyeAnims(obj, sub->route35C + 0x50);
     if ((sub->configFlags & 1) == 0)
     {
         (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(
-            obj, (u8*)p, (u8*)&sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
+            obj, (u8*)state, (u8*)&sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
     }
     (*(void (**)(int*, u8*, u8*, int, u8*, int, int, int))(*(int*)gBaddieControlInterface + 0x54))(
-        obj, (u8*)p, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0);
+        obj, (u8*)state, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0);
     stateResult = (*(int (**)(int*, u8*, u8*, int, u8*, u8*, int, int))(*(int*)gBaddieControlInterface + 0x50))(
-        obj, (u8*)p, sub->route35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
+        obj, (u8*)state, sub->route35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
     if (stateResult >= 4)
     {
         *(s8*)&sub->subMode = 2;
-        *(int*)&p->baddie.targetObj = Obj_GetPlayerObject();
+        *(int*)&state->baddie.targetObj = Obj_GetPlayerObject();
     }
 }
 #pragma dont_inline reset

@@ -106,9 +106,9 @@ int dll_16C_getObjectTypeId(void)
 
 void dll_16C_free(int* obj)
 {
-    int* p = (int*)((GameObject*)obj)->childObjs[0];
-    if (p != NULL)
-        Obj_FreeObject(p);
+    int* child = (int*)((GameObject*)obj)->childObjs[0];
+    if (child != NULL)
+        Obj_FreeObject(child);
 }
 
 #pragma scheduling off
@@ -129,7 +129,7 @@ void dll_16C_hitDetect(void* obj)
 void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll16CState* extra;
-    int* p;
+    int* linkedObj;
     int hit;
 
     if (((GameObject*)obj)->anim.seqId != DLL16C_RENDER_GATE_SEQID)
@@ -140,11 +140,11 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
                 return;
         }
         extra = ((GameObject*)obj)->extra;
-        p = extra->linkedObj;
+        linkedObj = extra->linkedObj;
         hit = 0;
-        if (p != NULL)
+        if (linkedObj != NULL)
         {
-            if ((*(int (**)(int*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
+            if ((*(int (**)(int*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
             {
                 hit = 1;
             }
@@ -152,8 +152,8 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
         if (hit != 0)
         {
             ((GameObject*)obj)->anim.flags |= 8;
-            visible = objUpdateOpacity(p);
-            dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, extra->opacity, 1);
+            visible = objUpdateOpacity(linkedObj);
+            dll_16C_syncSubObjectTransform(obj, linkedObj, p1, p2, p3, p4, visible, extra->opacity, 1);
         }
         else
         {
@@ -197,12 +197,12 @@ void dll_16C_init(void* obj, void* arg2)
  * from a small id table, then run the map-event sub-object state callbacks. */
 int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int* p;
+    int* linkedObj;
     int* extra = ((GameObject*)obj)->extra;
     s16 ids[5];
 
     ((Dll16CState*)extra)->opacity = 0xff;
-    p = (int*)*extra;
+    linkedObj = (int*)*extra;
     if (animUpdate->triggerCommand == 3)
     {
         ((Dll16CState*)extra)->subObjIndex = -1;
@@ -237,13 +237,13 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
 
-    if (p != NULL && animUpdate->triggerCommand == 2)
+    if (linkedObj != NULL && animUpdate->triggerCommand == 2)
     {
         ((Dll16CState*)extra)->unk04 = lbl_803E4758;
         ((Dll16CState*)extra)->snapX = ((Dll16CState*)extra)->pathPointX;
         ((Dll16CState*)extra)->snapY = ((Dll16CState*)extra)->pathPointY;
         ((Dll16CState*)extra)->snapZ = ((Dll16CState*)extra)->pathPointZ;
-        (*(void (**)(int*, int))(**(int**)((char*)p + 0x68) + 0x3c))(p, 2);
+        (*(void (**)(int*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
         if (((GameObject*)obj)->anim.modelState != NULL)
         {
@@ -252,15 +252,15 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->hitVolumePair &= ~4;
         animUpdate->triggerCommand = 0;
     }
-    else if (p != NULL && animUpdate->triggerCommand == 1)
+    else if (linkedObj != NULL && animUpdate->triggerCommand == 1)
     {
-        (*(void (**)(int*, int))(**(int**)((char*)p + 0x68) + 0x3c))(p, 0);
+        (*(void (**)(int*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 0);
         animUpdate->triggerCommand = 0;
     }
 
-    if (p != NULL)
+    if (linkedObj != NULL)
     {
-        if ((*(int (**)(int*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
+        if ((*(int (**)(int*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
         {
             animUpdate->hitVolumePair &= ~3;
         }
