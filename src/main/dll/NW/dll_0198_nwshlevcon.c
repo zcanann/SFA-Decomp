@@ -45,7 +45,7 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
             case 1:
                 objSetAnimStateFlags(player, 0x10, 1);
-                mainSetBits(0x174, 1);
+                mainSetBits(GAMEBIT_ITEM_Spirit6_Got, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 4, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1d, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1e, 1);
@@ -100,7 +100,7 @@ void nwsh_levcon_init(int* obj)
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(MUSICTRIG_ewt_chase, 1);
     ((GameObject*)obj)->unkF4 = 1;
-    mainSetBits(0xea2, 1);
+    mainSetBits(GAMEBIT_K6_Entered, 1);
     mainSetBits(0xefd, 1);
 }
 
