@@ -28,6 +28,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebit_ids.h"
 
 #include "main/dll/ARW/arwing_state.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -395,9 +396,9 @@ void arwarwing_warpByCourse(int obj)
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
     case 0x3a:
-        if ((u32)mainGetBit(0xc85) != 0)
+        if ((u32)mainGetBit(GAMEBIT_ITEM_Spirit5_Got) != 0)
         {
-            mainSetBits(0x405, 0);
+            mainSetBits(GAMEBIT_WM_ObjGroups, 0);
             (*gMapEventInterface)->setMapAct(ARWARWING_MAPEVENT_SHRINE, 5);
             (*gMapEventInterface)->setObjGroupStatus(ARWARWING_MAPEVENT_SHRINE, 0xa, 1);
             (*gMapEventInterface)->setObjGroupStatus(ARWARWING_MAPEVENT_SHRINE, 0xb, 1);
@@ -733,7 +734,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
-    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && mainGetBit(0x9d6) == 0 && mainGetBit(0x9d8) == 0)
+    if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && mainGetBit(GAMEBIT_ArwingRelated09D6) == 0 && mainGetBit(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED) == 0)
     {
         sum = lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ);
         vol = (f32)(sum * lbl_803E6F50);
@@ -1122,7 +1123,7 @@ void arwarwing_handlePathDamage(int obj, int state)
         {
             arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
             if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
-                mainSetBits(0xe74, 1);
+                mainSetBits(GAMEBIT_ArwingRelated0E74, 1);
             else
                 ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
             ((ArwingState*)state)->modeTimer = lbl_803E6F30;
@@ -1204,7 +1205,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
     {
         arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
         if (((GameObject*)obj)->anim.mapEventSlot == 0x26)
-            mainSetBits(0xe74, 1);
+            mainSetBits(GAMEBIT_ArwingRelated0E74, 1);
         ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
         ((ArwingState*)state)->modeTimer = lbl_803E6F30;
         Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
@@ -1310,7 +1311,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             setLoadedFileFlags_blocks1();
             break;
         case 5:
-            if (((ArwingState*)state)->levelIndex == 0 && mainGetBit(0xc85))
+            if (((ArwingState*)state)->levelIndex == 0 && mainGetBit(GAMEBIT_ITEM_Spirit5_Got))
             {
                 loadMapAndParent(0xb);
                 lockLevel(mapGetDirIdx(0xb), 0);
@@ -1329,27 +1330,27 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (*gMapEventInterface)->setObjGroupStatus(0x13, 0x16, 1);
                 break;
             case 0x3d:
-                mainSetBits(0x36a, 0);
+                mainSetBits(GAMEBIT_WC_ObjGroups, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0xa, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 1);
-                mainSetBits(0xe05, 0);
+                mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 0);
                 break;
             case 0x3c:
-                mainSetBits(0x458, 0);
-                mainSetBits(0x47c, 0);
-                mainSetBits(0x4a3, 0);
+                mainSetBits(GAMEBIT_CF_ObjGroups, 0);
+                mainSetBits(GAMEBIT_CD_ObjGroups, 0);
+                mainSetBits(GAMEBIT_CF_ObjGroups2, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0xc, 0, 1);
-                mainSetBits(0xd73, 0);
+                mainSetBits(GAMEBIT_CFRelated0D73, 0);
                 break;
             case 0x3e:
-                mainSetBits(0x5db, 0);
+                mainSetBits(GAMEBIT_DR_ObjGroups, 0);
                 (*gMapEventInterface)->setObjGroupStatus(2, 0xf, 1);
                 (*gMapEventInterface)->setObjGroupStatus(2, 0x10, 1);
-                mainSetBits(0xe7b, 0);
-                mainSetBits(0x9e9, 0);
+                mainSetBits(GAMEBIT_DRArwingRelated0E7B, 0);
+                mainSetBits(GAMEBIT_DR_FlewTo, 0);
                 break;
             }
             break;
