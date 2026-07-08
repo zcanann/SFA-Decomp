@@ -348,13 +348,13 @@ void ktrex_initialise(void)
     ktrex_initialiseStateHandlerTables();
 }
 
-int ktrex_stateHandlerB00(int obj, u8* p2)
+int ktrex_stateHandlerB00(int obj, u8* baddie)
 {
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)baddie[0x27a] != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E67B8, 0);
     }
-    *(f32*)(p2 + 0x2a0) = lbl_803E6808;
+    *(f32*)(baddie + 0x2a0) = lbl_803E6808;
     return 0;
 }
 
