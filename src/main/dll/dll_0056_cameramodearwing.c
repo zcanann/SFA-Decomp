@@ -70,14 +70,6 @@ extern int getAngle(float y, float x);
 
 #pragma scheduling off
 #pragma peephole off
-void CameraModeForceBehind_func06_nop(void)
-{
-}
-
-void CameraModeForceBehind_func05_nop(void)
-{
-}
-
 void CameraModeArwing_release(void)
 {
 }
