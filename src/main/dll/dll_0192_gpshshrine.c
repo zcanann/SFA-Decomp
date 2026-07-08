@@ -122,7 +122,7 @@ void gpsh_shrine_free(int* obj)
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
-    mainSetBits(0xefa, 0);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
     mainSetBits(0xcbb, mainGetBit(0xc91) == 0);
 }
 
@@ -197,7 +197,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             case 7:
                 objSetAnimStateFlags(player, 0x80, 1);
                 mainSetBits(0x12b, 1);
-                mainSetBits(0xc85, 1);
+                mainSetBits(GAMEBIT_ITEM_Spirit5_Got, 1);
                 (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);
                 break;
             case 14:
@@ -393,7 +393,7 @@ void gpsh_shrine_update(int obj)
                 if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
                 {
                     ((GpshShrineState*)data)->puzzleState = 5;
-                    mainSetBits(0x129, 0);
+                    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                     mainSetBits(0x5af, 0);
                     mainSetBits(0xdd2, 1);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -477,7 +477,7 @@ void gpsh_shrine_update(int obj)
             case 3:
                 if (objGetAnimStateFlags((int)player, 0x80))
                 {
-                    mainSetBits(0x129, 1);
+                    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                     ((GpshShrineState*)data)->puzzleState = 4;
                 }
                 else
@@ -485,21 +485,21 @@ void gpsh_shrine_update(int obj)
                     audioStopByMask(3);
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                     ((GpshShrineState*)data)->puzzleState = 4;
-                    mainSetBits(0x36a, 0);
+                    mainSetBits(GAMEBIT_WC_ObjGroups, 0);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, GPSHSHRINE_OBJGROUP, 1);
                     mainSetBits(0xc91, 1);
-                    mainSetBits(0xe05, 0);
+                    mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 0);
                 }
                 break;
             case 4:
                 ((GpshShrineState*)data)->puzzleState = 0;
                 ((GpshShrineFlags*)((char*)data + 0x15))->b80 = 0;
                 mainSetBits(0xdd2, 0);
-                mainSetBits(0x129, 1);
+                mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 mainSetBits(0x149, 0);
                 mainSetBits(0x14c, 0);
                 mainSetBits(0x14d, 0);
@@ -536,7 +536,7 @@ void gpsh_shrine_init(int* obj, int* def)
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
     state[0x14] = 0;
     ((GpshShrineFlags*)(state + 0x15))->b80 = 0;
-    mainSetBits(0x129, 1);
+    mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     mainSetBits(0x12b, 0);
     mainSetBits(0x149, 0);
     mainSetBits(0x14c, 0);
@@ -549,8 +549,8 @@ void gpsh_shrine_init(int* obj, int* def)
     {
         *(void**)state = objCreateLight(0, 1);
     }
-    mainSetBits(0xea1, 1);
-    mainSetBits(0xefa, 1);
+    mainSetBits(GAMEBIT_WC_EnteredShrine, 1);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
 
 void gpsh_shrine_release(void)
