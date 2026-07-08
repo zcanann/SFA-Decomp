@@ -187,7 +187,7 @@ void DIMCannon_init(int* obj, int* arg)
         if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED)
         {
             int v = 0;
-            if (mainGetBit(0xc17) && mainGetBit(0xa21))
+            if (mainGetBit(GAMEBIT_DIM_CannonRelated0C17) && mainGetBit(GAMEBIT_DIM_CannonRelated0A21))
             {
                 v = 1;
             }
@@ -509,7 +509,7 @@ int DIMCannon_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             }
             DIMwooddoor_spawnShard(obj, 1);
             if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED && ((DimCannonState*)state)->hasActivated == 0 &&
-                mainGetBit(0xc17) && mainGetBit(0xa21))
+                mainGetBit(GAMEBIT_DIM_CannonRelated0C17) && mainGetBit(GAMEBIT_DIM_CannonRelated0A21))
             {
                 ((DimCannonState*)state)->hasActivated = 1;
                 ((DimCannonState*)state)->shutdownTimer = 1;
