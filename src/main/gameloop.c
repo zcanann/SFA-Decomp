@@ -837,8 +837,8 @@ void init(void)
     initFn_800534f8();
     titleScreenDrawFn_80093db4();
     testAndSet_onlyUseHeap3(0);
-    loadAssetFileById((int)&gGameBitTable, 0x33);
-    gGameBitCount = (s16)(getDataFileSize(0x33) >> 1);
+    loadAssetFileById((int)&gGameBitTable, MLDF_FILEID_BITTABLE_BIN);
+    gGameBitCount = (s16)(getDataFileSize(MLDF_FILEID_BITTABLE_BIN) >> 1);
     gGameBitSaveData = (*gMapEventInterface)->getLast();
     lbl_803DCA3F = 1;
     loadUiDll(2);
