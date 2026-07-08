@@ -6,6 +6,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/mm.h"
+#include "main/pi_dolphin.h"
 #include "main/dll/objfsa.h"
 extern void Obj_FreeObject(int obj);
 
@@ -139,7 +140,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
             else
             {
                 state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
-                getTabEntry(state->config, 0xc, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
+                getTabEntry(state->config, MLDF_FILEID_LACTIONS_BIN, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
                 if (state->config != NULL)
                 {
                     fn_8018FF48((u16*)state->config, (u16*)&lbl_803AC7B0);
