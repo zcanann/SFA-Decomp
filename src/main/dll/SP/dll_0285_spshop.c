@@ -345,7 +345,7 @@ void shop_update(int obj)
     int player;
 
     player = (int)Obj_GetPlayerObject();
-    if ((void*)Player_GetStaffObject(player) != NULL && mainGetBit(0x18b) == 0u)
+    if ((void*)Player_GetStaffObject(player) != NULL && mainGetBit(GAMEBIT_STAFF_ACQUIRED) == 0u)
     {
         staffToggle(player, 0);
     }
@@ -355,12 +355,12 @@ void shop_update(int obj)
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0, 1);
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 1);
         (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
-        mainSetBits(0x617, 1);
+        mainSetBits(GAMEBIT_SHOP_Unk0617, 1);
         skyFn_80088c94(7, 1);
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    if ((u32)mainGetBit(0xd21) != 0u && ((GameObject*)obj)->unkF8 == 0)
+    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && ((GameObject*)obj)->unkF8 == 0)
     {
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, SPSHOP_ENVFX_A, 0);
@@ -369,7 +369,7 @@ void shop_update(int obj)
         return;
     }
 
-    if ((u32)mainGetBit(0xd21) == 0u && ((GameObject*)obj)->unkF8 != 0)
+    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) == 0u && ((GameObject*)obj)->unkF8 != 0)
     {
         ((GameObject*)obj)->unkF8 = 0;
     }
@@ -390,7 +390,7 @@ static inline void shop_initBody(int obj, int objDef)
     }
     Music_Trigger(MUSICTRIG_communicator, 1);
     ((GameObject*)obj)->unkF8 = 0;
-    mainSetBits(0xefe, 1);
+    mainSetBits(GAMEBIT_PlayerInShop, 1);
 }
 #pragma inline_max_size reset
 
