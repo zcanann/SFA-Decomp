@@ -357,7 +357,7 @@ void dll_16C_update(int* obj)
         }
     }
 
-    if (((GameObject*)obj)->anim.seqId == DLL16C_RENDER_GATE_SEQID || mainGetBit(0x3a2) != 0)
+    if (((GameObject*)obj)->anim.seqId == DLL16C_RENDER_GATE_SEQID || mainGetBit(GAMEBIT_IM_BikeRelated03A2) != 0)
     {
         int* sub = extra->linkedObj;
         f32 b;
