@@ -34,7 +34,7 @@ typedef struct DfpseqpointPlacement
     f32 posZ; /* 0x10 */
     s32 mapId; /* 0x14 */
     u8 pad18[0x19 - 0x18];
-    u8 unk19;
+    u8 triggerMode;
     u8 pad1A[0x1E - 0x1A];
     s8 unk1E;
     u8 pad1F[0x24 - 0x1F];
