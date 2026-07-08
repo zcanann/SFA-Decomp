@@ -113,7 +113,7 @@ done:
 
 void camcontrol_releasePathState(void)
 {
-    FUN_80017814(gCamcontrolPathState);
+    mm_free(gCamcontrolPathState);
     gCamcontrolPathState = NULL;
 }
 
