@@ -14,7 +14,7 @@
  * CloudRunner has been freed from his cage (0x4D) */
 int CFPerch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    if (mainGetBit(0x4d) != 0)
+    if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0)
     {
         animUpdate->sequenceControlFlags = OBJSEQ_CONTROL_SET_LATCH_A;
     }
