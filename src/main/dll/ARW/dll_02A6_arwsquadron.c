@@ -201,10 +201,10 @@ void ARWSquadron_init(int obj, int setup)
     SquadFlags* flags;
     ArwSquadronState* state;
     ArwSquadronSetup* setupData;
-    int tmp;
+    int curveMode;
     f32 fxScale;
 
-    tmp = lbl_803E7160;
+    curveMode = lbl_803E7160;
     state = *(ArwSquadronState**)&((GameObject*)obj)->extra;
     setupData = (ArwSquadronSetup*)setup;
     flags = &state->flags.init;
@@ -308,13 +308,13 @@ void ARWSquadron_init(int obj, int setup)
     {
         if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER || state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
         {
-            tmp = 0x28;
+            curveMode = 0x28;
         }
         else
         {
-            tmp = 2;
+            curveMode = 2;
         }
-        if ((*gRomCurveInterface)->initCurve(state, (void*)obj, lbl_803E71D4, &tmp, -1) == 0)
+        if ((*gRomCurveInterface)->initCurve(state, (void*)obj, lbl_803E71D4, &curveMode, -1) == 0)
         {
             flags->b40 = 1;
             ((GameObject*)obj)->anim.localPosX = state->curveX;

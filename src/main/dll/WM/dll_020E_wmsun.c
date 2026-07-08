@@ -152,7 +152,7 @@ extern float mathSinf(float x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16* ang, WmSunVec3* vec);
 
-int wmsun_animEventCallback(int p1, int p2, ObjAnimUpdateState* actor)
+int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)
 {
     actor->hitVolumePair = -1;
     actor->sequenceEventActive = 0;

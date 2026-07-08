@@ -35,13 +35,13 @@ int sh_staff_getExtraSize(void)
 }
 
 #pragma opt_strength_reduction on
-void sh_staff_free(int* obj, int p2)
+void sh_staff_free(int* obj, int flag)
 {
     int* state = ((GameObject*)obj)->extra;
     int* child;
     int i;
 
-    if (p2 != 0)
+    if (flag != 0)
         return;
 
     i = 0;

@@ -247,7 +247,7 @@ int warpstone_testEvent(u32 p1, u32 p2, int option)
     return 0;
 }
 
-int warpstone_SeqFn(int obj, u32 p2, int animObj)
+int warpstone_SeqFn(int obj, u32 unused, int animObj)
 {
     extern int playerFn_801d6d58(void);
     int state = *(int*)&((GameObject*)obj)->extra;

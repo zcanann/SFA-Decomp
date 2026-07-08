@@ -264,7 +264,7 @@ void fn_801EED80(void* obj)
     objSetMtxFn_800412d4(ObjPath_GetPointModelMtx((int)obj, 3));
 }
 
-void fn_801EEDC0(int p1, f32* out, int* outInt)
+void fn_801EEDC0(int obj, f32* out, int* outInt)
 {
     *out = lbl_803E5C70;
     *outInt = 0;

@@ -246,7 +246,7 @@ void ShopKeeper_init(int obj)
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
 
-int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
+int fn_801E76A0(int obj, int unused, ObjSeqState* seq, s8 advance)
 {
     int state;
     int digit;
