@@ -95,10 +95,10 @@ int dll_22C_getObjectTypeId(void)
     return 0x0;
 }
 
-void dll_22C_free(int p1)
+void dll_22C_free(int obj)
 {
-    (*gExpgfxInterface)->freeSource2((u32)p1);
-    getLActions(p1, p1, 0, 0, 0, 0);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+    getLActions(obj, obj, 0, 0, 0, 0);
 }
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -279,10 +279,10 @@ void dll_22C_update(int obj)
     }
 }
 
-void dll_22C_init(int obj, char* p)
+void dll_22C_init(int obj, char* def)
 {
     Dll22CState* state;
-    Dll22CMapData* md = (Dll22CMapData*)p;
+    Dll22CMapData* md = (Dll22CMapData*)def;
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = dll_22C_SeqFn;
