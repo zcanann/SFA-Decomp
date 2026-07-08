@@ -47,7 +47,7 @@ void androssligh_updateBeam(int obj, int beam)
     extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
     f32 start[3];
     f32 end[3];
-    f32 tmp[3];
+    f32 offset[3];
 
     start[0] = ((GameObject*)obj)->anim.localPosX - lbl_803DC528;
     start[1] = ((GameObject*)obj)->anim.localPosY;
@@ -55,26 +55,26 @@ void androssligh_updateBeam(int obj, int beam)
     end[0] = ((GameObject*)obj)->anim.localPosX + lbl_803DC528;
     end[1] = start[1];
     end[2] = start[2];
-    tmp[0] = start[0] - playerMapOffsetX;
-    tmp[1] = start[1];
-    tmp[2] = start[0] - playerMapOffsetZ;
-    PSMTXMultVec(Camera_GetViewMatrix(), tmp, tmp);
-    tmp[0] = -tmp[0];
-    tmp[1] = -tmp[1];
-    tmp[2] = -tmp[2];
-    PSVECScale(tmp, tmp, lbl_803DC52C);
-    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
-    PSVECAdd(start, tmp, start);
-    tmp[0] = end[0] - playerMapOffsetX;
-    tmp[1] = end[1];
-    tmp[2] = end[0] - playerMapOffsetZ;
-    PSMTXMultVec(Camera_GetViewMatrix(), tmp, tmp);
-    tmp[0] = -tmp[0];
-    tmp[1] = -tmp[1];
-    tmp[2] = -tmp[2];
-    PSVECScale(tmp, tmp, lbl_803DC52C);
-    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
-    PSVECAdd(end, tmp, end);
+    offset[0] = start[0] - playerMapOffsetX;
+    offset[1] = start[1];
+    offset[2] = start[0] - playerMapOffsetZ;
+    PSMTXMultVec(Camera_GetViewMatrix(), offset, offset);
+    offset[0] = -offset[0];
+    offset[1] = -offset[1];
+    offset[2] = -offset[2];
+    PSVECScale(offset, offset, lbl_803DC52C);
+    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), offset, offset);
+    PSVECAdd(start, offset, start);
+    offset[0] = end[0] - playerMapOffsetX;
+    offset[1] = end[1];
+    offset[2] = end[0] - playerMapOffsetZ;
+    PSMTXMultVec(Camera_GetViewMatrix(), offset, offset);
+    offset[0] = -offset[0];
+    offset[1] = -offset[1];
+    offset[2] = -offset[2];
+    PSVECScale(offset, offset, lbl_803DC52C);
+    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), offset, offset);
+    PSVECAdd(end, offset, end);
     if (*(void**)(beam + 4) == NULL)
     {
         *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C, lbl_803DC520, lbl_803DC524, 0);
