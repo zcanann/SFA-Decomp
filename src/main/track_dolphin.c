@@ -5336,6 +5336,7 @@ char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
+#pragma opt_propagation off
 u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
 {
     TrackBlockDescriptor* descBase;
@@ -5816,5 +5817,6 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     } while (i < count);
     return (u8)(retLo | (retHi << 4));
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs reset
 #pragma opt_strength_reduction reset
