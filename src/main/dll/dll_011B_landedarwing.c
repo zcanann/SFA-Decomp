@@ -104,41 +104,6 @@ extern void arwarwinggu_setTextureFrame(GameObject* obj, int arg);
 extern void arwarwinggu_applyTextureFrame(int obj);
 extern int playerGetFocusObject(int obj);
 
-int landed_arwing_getExtraSize(void)
-{
-    return 0x1c;
-}
-
-extern f32 timeDelta;
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
-extern void objRenderModelAndHitVolumes(f32);
-extern void Obj_FreeObject(int obj);
-
-void landed_arwing_free(int obj)
-{
-    int o = obj;
-    int* p = (int*)((GameObject*)o)->extra;
-    if (*(void**)&p[0x10 / 4] != NULL)
-    {
-        Obj_FreeObject(p[0x10 / 4]);
-        ObjLink_DetachChild(o, p[0x10 / 4]);
-    }
-}
-
-extern f32 lbl_803E3BA4;
-
-void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-    {
-        objRenderModelAndHitVolumes(lbl_803E3BA4);
-        landed_arwing_renderPathEffects(obj);
-    }
-}
-
 typedef struct LandedArwingFxPoint
 {
     f32 scale;
@@ -177,52 +142,13 @@ typedef struct LandedArwingState
     f32 hitEffectCooldown;
 } LandedArwingState;
 
-typedef struct LandedArwingHitFlagBits
-{
-    u8 damaged : 1;
-    u8 impactHandled : 1;
-    u8 gameBit24Set : 1;
-    u8 reactionDone : 1;
-    u8 rest : 4;
-} LandedArwingHitFlagBits;
-
-void landed_arwing_init(GameObject* obj, int param);
-void landed_arwing_update(int obj);
-
-LandedArwingFxPoint gLandedArwingPathFxTable[] = {
-    {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
-};
-
-ObjectDescriptor gLanded_ArwingObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)landed_arwing_init,
-    (ObjectDescriptorCallback)landed_arwing_update,
-    0,
-    (ObjectDescriptorCallback)landed_arwing_render,
-    (ObjectDescriptorCallback)landed_arwing_free,
-    0,
-    landed_arwing_getExtraSize,
-};
-
+extern LandedArwingFxPoint gLandedArwingPathFxTable[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
-extern f32 lbl_803E3BA0;
-extern f32 lbl_803E3BA8;
-extern f32 lbl_803E3BAC;
-extern f32 lbl_803E3BB0;
-extern f32 lbl_803E3BB8;
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BC0;
-extern f32 lbl_803E3BC4;
 extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int arg4, int arg5, int arg6, void* pos);
 extern void objfx_spawnLightPulse(int obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
 
+#pragma dont_inline on
 void landed_arwing_renderPathEffects(int obj)
 {
     LandedArwingState* state;
@@ -274,6 +200,84 @@ void landed_arwing_renderPathEffects(int obj)
         objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path7Fx, scratch.effectPos);
     }
 }
+#pragma dont_inline reset
+
+int landed_arwing_getExtraSize(void)
+{
+    return 0x1c;
+}
+
+extern f32 timeDelta;
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
+extern void objRenderModelAndHitVolumes(f32);
+extern void Obj_FreeObject(int obj);
+
+void landed_arwing_free(int obj)
+{
+    int o = obj;
+    int* p = (int*)((GameObject*)o)->extra;
+    if (*(void**)&p[0x10 / 4] != NULL)
+    {
+        Obj_FreeObject(p[0x10 / 4]);
+        ObjLink_DetachChild(o, p[0x10 / 4]);
+    }
+}
+
+extern f32 lbl_803E3BA4;
+
+void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+    {
+        objRenderModelAndHitVolumes(lbl_803E3BA4);
+        landed_arwing_renderPathEffects(obj);
+    }
+}
+
+typedef struct LandedArwingHitFlagBits
+{
+    u8 damaged : 1;
+    u8 impactHandled : 1;
+    u8 gameBit24Set : 1;
+    u8 reactionDone : 1;
+    u8 rest : 4;
+} LandedArwingHitFlagBits;
+
+void landed_arwing_init(GameObject* obj, int param);
+void landed_arwing_update(int obj);
+
+LandedArwingFxPoint gLandedArwingPathFxTable[] = {
+    {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
+};
+
+ObjectDescriptor gLanded_ArwingObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)landed_arwing_init,
+    (ObjectDescriptorCallback)landed_arwing_update,
+    0,
+    (ObjectDescriptorCallback)landed_arwing_render,
+    (ObjectDescriptorCallback)landed_arwing_free,
+    0,
+    landed_arwing_getExtraSize,
+};
+
+extern f32 lbl_803E3BA0;
+extern f32 lbl_803E3BA8;
+extern f32 lbl_803E3BAC;
+extern f32 lbl_803E3BB0;
+extern f32 lbl_803E3BB8;
+extern f32 lbl_803E3BBC;
+extern f32 lbl_803E3BC0;
+extern f32 lbl_803E3BC4;
 
 #define MAP_EVENT_STATUS(mapId)         (*gMapEventInterface)->getMapAct((mapId))
 #define MAP_EVENT_SET(mapId, value)     (*gMapEventInterface)->setMapAct((mapId), (value))
