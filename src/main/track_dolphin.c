@@ -3210,6 +3210,7 @@ void objDrawFn_80061654(int obj, int placementObj)
 }
 #pragma peephole reset
 
+#pragma opt_lifetimes off
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
 {
     f32* verts = buf48;
@@ -3307,6 +3308,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x1b] = -nrm[2];
     planes[0x1c] = -(planes[0x1b] * verts[2] + planes[0x19] * verts[0] + planes[0x1a] * verts[1]);
 }
+#pragma opt_lifetimes reset
 
 #pragma ppc_unroll_speculative off
 #pragma opt_strength_reduction off
