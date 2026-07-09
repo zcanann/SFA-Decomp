@@ -33,7 +33,7 @@
  */
 typedef struct CameraObject {
     ObjAnimComponent anim;
-    u16 unkB0; /* flag word, shared with GameObject (camera.c tests bit 8) */
+    u16 objectFlags; /* 0xB0 GameObject flag word (camera.c tests bit 8 via GameObject cast) */
     u8 padB2[2];
     f32 fov;
     f32 probePosX; /* swept-collision anchor, seeded from anim.worldPos */
