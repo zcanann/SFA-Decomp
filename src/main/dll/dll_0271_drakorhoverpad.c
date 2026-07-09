@@ -497,6 +497,7 @@ ret1:
     return 1;
 }
 
+#pragma opt_dead_assignments off
 #pragma opt_common_subs off
 #pragma fp_contract off
 void drakorhoverpad_updateMain(int obj)
@@ -693,6 +694,7 @@ void drakorhoverpad_updateMain(int obj)
 }
 #pragma fp_contract reset
 #pragma opt_common_subs reset
+#pragma opt_dead_assignments reset
 
 int drakorhoverpad_handlePathPointEvent(int obj, u8 eventCode, u8 subCode, void* out)
 {
