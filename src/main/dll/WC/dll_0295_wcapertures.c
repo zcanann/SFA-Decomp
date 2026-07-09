@@ -85,7 +85,7 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OF
 int wcapertures_interactCallback(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
-    WCAperturesState* state = ((GameObject*)obj)->extra;
+    WCAperturesState* state = (obj)->extra;
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -103,7 +103,7 @@ int wcapertures_getExtraSize(void)
 int wcapertures_getObjectTypeId(struct GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = *(s8*)&((WCAperturesSetup*)((GameObject*)obj)->anim.placementData)->modelIndex;
+    int modelIndex = *(s8*)&((WCAperturesSetup*)(obj)->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount)
@@ -115,7 +115,7 @@ int wcapertures_getObjectTypeId(struct GameObject *obj)
 
 void wcapertures_free(struct GameObject *obj)
 {
-    WCAperturesState* state = ((GameObject*)obj)->extra;
+    WCAperturesState* state = (obj)->extra;
     void* light = state->light;
 
     if (light != NULL)
@@ -151,7 +151,7 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wcapertures_hitDetect(struct GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCAperturesState* state = ((GameObject*)obj)->extra;
+    WCAperturesState* state = (obj)->extra;
 
     if (state->mode == WCAPERTURES_MODE_OPEN)
     {
@@ -175,9 +175,9 @@ void wcapertures_hitDetect(struct GameObject *obj)
 
 void wcapertures_update(struct GameObject *obj)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    WCAperturesSetup* setup = (WCAperturesSetup*)((GameObject*)obj)->anim.placementData;
-    WCAperturesState* state = ((GameObject*)obj)->extra;
+    ObjAnimComponent* objAnim = &(obj)->anim;
+    WCAperturesSetup* setup = (WCAperturesSetup*)(obj)->anim.placementData;
+    WCAperturesState* state = (obj)->extra;
     int player = Obj_GetPlayerObject();
     void* light;
     int alpha, target;
@@ -199,7 +199,7 @@ void wcapertures_update(struct GameObject *obj)
             fn_802969F0(player) == WCAPERTURES_PLAYER_STATE)
         {
             state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
-            if (Camera_GetFovY() <= lbl_803E6E38 && (((GameObject*)obj)->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))
+            if (Camera_GetFovY() <= lbl_803E6E38 && ((obj)->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))
             {
                 mainSetBits(setup->openBit, 1);
                 state->mode = WCAPERTURES_MODE_OPEN;

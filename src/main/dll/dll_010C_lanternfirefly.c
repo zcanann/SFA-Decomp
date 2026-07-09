@@ -419,7 +419,7 @@ void fn_801868D0(struct GameObject *obj)
     s16 angleDelta;
     f32 fz;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     state->offX = lbl_803E3AB8;
     state->offY = (f32)(int)randomGetRange(-state->wanderRange, state->wanderRange);
     if (state->driftRangeZ < lbl_803E3ABC)
@@ -451,7 +451,7 @@ void fn_801869DC(struct GameObject *obj)
     } LFF2;
     LanternFireFlyState* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     state->controlX[0] = state->controlX[1];
     state->controlY[0] = state->controlY[1];
     state->controlZ[0] = state->controlZ[1];
@@ -464,7 +464,7 @@ void fn_801869DC(struct GameObject *obj)
     if (((LFF2*)&state->modeFlags)->mode == 1)
     {
         int player = Obj_GetPlayerObject();
-        state->speed = lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
+        state->speed = lbl_803E3AC4 * Vec_distance((void*)&(obj)->anim.worldPosX,
                                                    &((GameObject*)player)->anim.worldPosX) +
                        lbl_803E3AC0;
     }

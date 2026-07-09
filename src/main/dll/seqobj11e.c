@@ -415,7 +415,7 @@ int gcRobotLight_init(struct GameObject *obj, int childId)
     int sub;
     u8* setup;
 
-    sub = *(int*)&((GameObject*)obj)->anim.placementData;
+    sub = *(int*)&(obj)->anim.placementData;
     Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() == 0)
         return 0;
@@ -425,13 +425,13 @@ int gcRobotLight_init(struct GameObject *obj, int childId)
     ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
     ((ObjPlacement*)setup)->color[1] = 1;
     ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)sub)->color[3];
-    ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-    ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-    ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+    ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+    ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
+    ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
     ((Seq11EChildSetup*)setup)->unk19 = 0;
     ((Seq11EChildSetup*)setup)->unk20 = 149;
-    return (int)Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                *(int*)&((GameObject*)obj)->anim.parent);
+    return (int)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
+                                *(int*)&(obj)->anim.parent);
 }
 
 /* scheduling stays off; only peephole flips on for the next two handlers */
@@ -460,7 +460,7 @@ void gcRobotPatrol_init(struct GameObject *obj, int state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
     *(f32*)(state + 0x32c) = lbl_803E2814;
-    ((GameObject*)obj)->anim.hitboxScale = lbl_803E2860;
+    (obj)->anim.hitboxScale = lbl_803E2860;
     Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
 

@@ -31,7 +31,7 @@ int DR_LightBea_getObjectTypeId(void)
 
 void DR_LightBea_free(struct GameObject *obj)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     LightningEffect* buffer = state->handle;
 
     if (buffer != NULL)
@@ -124,7 +124,7 @@ void DR_LightBea_update(int obj)
 
 void DR_LightBea_init(struct GameObject *obj)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     state->flags.bit80 = 0;
     state->handle = NULL;
     state->flags.bit40 = 0;

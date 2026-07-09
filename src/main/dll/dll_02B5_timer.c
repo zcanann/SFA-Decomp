@@ -106,7 +106,7 @@ void timer_forceStart(int obj)
 
 void timer_addDuration(struct GameObject *obj, int duration)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     if (fn_80080150((int)state) != 0)
     {
         state->countdownTimer = state->countdownTimer + duration;

@@ -92,7 +92,7 @@ void SpiritPrize_free(struct GameObject *obj)
     SpiritPrizeState* state;
     void* light;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     light = state->light;
     if (light != NULL)
     {

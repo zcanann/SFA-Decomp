@@ -43,12 +43,12 @@ static const f32 gVfpLift1RaisedHeight = 307.0f;
 
 static inline VfpLiftState* vfplift_getState(struct GameObject *obj)
 {
-    return ((GameObject*)obj)->extra;
+    return (obj)->extra;
 }
 
 static inline f32 vfplift_getModelY(struct GameObject *obj)
 {
-    VfpLiftPlacement* setup = *(VfpLiftPlacement**)&((GameObject*)obj)->anim.placementData;
+    VfpLiftPlacement* setup = *(VfpLiftPlacement**)&(obj)->anim.placementData;
 
     return setup->base.posY;
 }
@@ -60,8 +60,8 @@ static inline void vfplift_trigger(int triggerId, int obj)
 
 static inline void vfplift_setObjectHitEnabled(struct GameObject *obj)
 {
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+    *(u8*)&(obj)->anim.resetHitboxMode =
+        (*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
 }
 
 static inline f32 vfplift23_getRaisedOffset(int objType)

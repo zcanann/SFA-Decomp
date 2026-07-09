@@ -265,7 +265,7 @@ void Hagabon_free(int obj)
 
 void Hagabon_init(struct GameObject *obj, int data, int skip_alloc)
 {
-    HagabonState* state = ((GameObject*)obj)->extra;
+    HagabonState* state = (obj)->extra;
     HagabonPlacement* placement = (HagabonPlacement*)data;
     state->curveStep = (f32)(s32)placement->curveStepRaw / lbl_803E266C;
     state->animSpeed = lbl_803E2670;
@@ -287,7 +287,7 @@ void Hagabon_init(struct GameObject *obj, int data, int skip_alloc)
     {
         if (mainGetBit(placement->armGameBit) != 0)
         {
-            ((GameObject*)obj)->unkF4 = 1;
+            (obj)->unkF4 = 1;
         }
     }
 }

@@ -112,8 +112,8 @@ void DR_CageControl_update(int obj)
 
 void DR_CageControl_init(struct GameObject *obj, char* arg)
 {
-    char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = DR_CageControl_SeqFn;
+    char* state = (obj)->extra;
+    (obj)->animEventCallback = DR_CageControl_SeqFn;
     if (mainGetBit(((CageControlPlacement*)arg)->armGameBit) != 0)
     {
         ((BitFlags8*)(state + 0x4))->b2 = 1;

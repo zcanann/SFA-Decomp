@@ -115,7 +115,7 @@ void fn_801F3F18(struct GameObject *obj)
     L.color = vecs[2];
     L.light = vecs[3];
 
-    if ((u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 7)
+    if ((u8)(*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == 7)
     {
         return;
     }
@@ -131,10 +131,10 @@ void fn_801F3F18(struct GameObject *obj)
 
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((((GameObject*)obj)->unkF4 & 4) == 0)
+    if (((obj)->unkF4 & 4) == 0)
     {
         skyFn_80089710(1, 1, 0);
-        ((GameObject*)obj)->unkF4 |= 4;
+        (obj)->unkF4 |= 4;
     }
     else
     {
@@ -287,7 +287,7 @@ void WM_LevelControl_init(struct GameObject *obj)
 
     ObjGroup_AddObject((u32)obj, WMLEVELCONTROL_OBJGROUP);
     unlockLevel(mapGetDirIdx(0xb), 0, 0);
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     state->unk0B = 0;
     state->unk06 = 0x1e;
     state->messageTimer = gWmLevelControlIntroMessageDuration;
@@ -296,7 +296,7 @@ void WM_LevelControl_init(struct GameObject *obj)
     /* the 0xD1B..0xD1F chain marks how many Krazoa spirits the palace
        has received (wmspiritplace's progression); 0xF43/0xF44 pick the
        ambience variant. All cross-TU bits without established names. */
-    mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
     switch (mode)
     {
     case 1:

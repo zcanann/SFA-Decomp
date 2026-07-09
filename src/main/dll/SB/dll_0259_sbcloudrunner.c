@@ -245,7 +245,7 @@ void fn_801EEDE0(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
 /* Forward to the laser-locked target's DLL vtable (slot 0x24). */
 void shipBattleFn_801eed24(struct GameObject *obj)
 {
-    void* target = *(void**)&((SBCloudRunnerState*)((GameObject*)obj)->extra)->targetObj;
+    void* target = *(void**)&((SBCloudRunnerState*)(obj)->extra)->targetObj;
     void* vt = *((GameObject*)target)->anim.dll;
     void (*fn)(void*) = *(void (**)(void*))((char*)vt + 0x24);
     fn(target);
@@ -481,15 +481,15 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
 
 int SB_CloudRunner_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    SBCloudRunnerState* state = ((GameObject*)obj)->extra;
+    SBCloudRunnerState* state = (obj)->extra;
     int player = Obj_GetPlayerObject();
     int i;
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)SB_CloudRunner_onSeqFree;
-    state->spawnPosX = ((GameObject*)obj)->anim.localPosX;
-    state->spawnPosY = ((GameObject*)obj)->anim.localPosY;
-    state->spawnPosZ = ((GameObject*)obj)->anim.localPosZ;
-    state->rotXAccum = (s16)(((GameObject*)obj)->anim.rotX - 0x4000);
-    state->rotZ = ((GameObject*)obj)->anim.rotZ;
+    state->spawnPosX = (obj)->anim.localPosX;
+    state->spawnPosY = (obj)->anim.localPosY;
+    state->spawnPosZ = (obj)->anim.localPosZ;
+    state->rotXAccum = (s16)((obj)->anim.rotX - 0x4000);
+    state->rotZ = (obj)->anim.rotZ;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         if (animUpdate->eventIds[i] == 1)
@@ -500,7 +500,7 @@ int SB_CloudRunner_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState*
         }
     }
     animUpdate->sequenceEventActive = 0;
-    ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+    (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     return 0;
 }
 

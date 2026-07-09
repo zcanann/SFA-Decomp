@@ -214,7 +214,7 @@ int dll_200_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUp
     int i;
     int state;
 
-    mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
     switch (mode)
     {
     case 0:
@@ -225,13 +225,13 @@ int dll_200_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUp
     case 2:
         break;
     case 4:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&(obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         break;
     case 6:
-        state = *(int*)&((GameObject*)obj)->extra;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        state = *(int*)&(obj)->extra;
+        *(u8*)&(obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         for (i = 0; i < animUpdate->eventCount; i++)
         {
             switch (animUpdate->eventIds[i])

@@ -43,7 +43,7 @@ int imspacethruster_getObjectTypeId(void)
 
 void imspacethruster_free(struct GameObject *obj)
 {
-    ImSpaceThrusterState* state = ((GameObject*)obj)->extra;
+    ImSpaceThrusterState* state = (obj)->extra;
     if (state->bufA != 0)
         mm_free(state->bufA);
     if (state->bufB != 0)

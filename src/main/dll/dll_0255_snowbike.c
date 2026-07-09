@@ -222,10 +222,10 @@ u8 SnowBike_func0B(int* obj)
 
 void SnowBike_mount(struct GameObject *obj, f32* x, f32* y, f32* z)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    ((SnowBikeMountState*)state)->mountPosX = ((GameObject*)obj)->anim.localPosX;
-    ((SnowBikeMountState*)state)->mountPosY = ((GameObject*)obj)->anim.localPosY;
-    ((SnowBikeMountState*)state)->mountPosZ = ((GameObject*)obj)->anim.localPosZ;
+    int state = *(int*)&(obj)->extra;
+    ((SnowBikeMountState*)state)->mountPosX = (obj)->anim.localPosX;
+    ((SnowBikeMountState*)state)->mountPosY = (obj)->anim.localPosY;
+    ((SnowBikeMountState*)state)->mountPosZ = (obj)->anim.localPosZ;
     *x = ((SnowBikeMountState*)state)->mountPosX;
     *y = ((SnowBikeMountState*)state)->mountPosY;
     *z = ((SnowBikeMountState*)state)->mountPosZ;
@@ -233,7 +233,7 @@ void SnowBike_mount(struct GameObject *obj, f32* x, f32* y, f32* z)
 
 void SnowBike_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     *x = ((SnowBikeMountState*)state)->modelMtxPosX;
     *y = ((SnowBikeMountState*)state)->modelMtxPosY;
     *z = ((SnowBikeMountState*)state)->modelMtxPosZ;
@@ -241,7 +241,7 @@ void SnowBike_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
 
 void SnowBike_resetToRomListPosition(struct GameObject *obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int* table;
     void* found;
     f32 zero;
@@ -252,27 +252,27 @@ void SnowBike_resetToRomListPosition(struct GameObject *obj)
     {
         if (((SnowBikeMountState*)state)->romListGroupIndex != 0)
         {
-            ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)found + 0x8);
-            ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)found + 0xc);
-            ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)found + 0x10);
-            ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)((char*)found + 0x29)) << 8);
+            (obj)->anim.localPosX = *(f32*)((char*)found + 0x8);
+            (obj)->anim.localPosY = *(f32*)((char*)found + 0xc);
+            (obj)->anim.localPosZ = *(f32*)((char*)found + 0x10);
+            (obj)->anim.rotX = (s16)((*(u8*)((char*)found + 0x29)) << 8);
         }
-        (*gCheckpointInterface)->findRouteForObject((GameObject*)obj, (CheckpointRouteState*)(state + 0x28), 0);
-        ((SnowBikeMountState*)state)->savedPosX = ((GameObject*)obj)->anim.localPosX;
-        ((SnowBikeMountState*)state)->savedPosY = ((GameObject*)obj)->anim.localPosY;
-        ((SnowBikeMountState*)state)->savedPosZ = ((GameObject*)obj)->anim.localPosZ;
-        ((SnowBikeMountState*)state)->savedRotX = ((GameObject*)obj)->anim.rotX;
+        (*gCheckpointInterface)->findRouteForObject(obj, (CheckpointRouteState*)(state + 0x28), 0);
+        ((SnowBikeMountState*)state)->savedPosX = (obj)->anim.localPosX;
+        ((SnowBikeMountState*)state)->savedPosY = (obj)->anim.localPosY;
+        ((SnowBikeMountState*)state)->savedPosZ = (obj)->anim.localPosZ;
+        ((SnowBikeMountState*)state)->savedRotX = (obj)->anim.rotX;
         zero = lbl_803E5AE8;
         ((SnowBikeMountState*)state)->velocityX = zero;
         ((SnowBikeMountState*)state)->velocityY = zero;
         ((SnowBikeMountState*)state)->velocityZ = zero;
         (*gPathControlInterface)->attachObject((void*)obj, (void*)(state + 0x178));
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosX = ((GameObject*)obj)->anim.worldPosX;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosY = ((GameObject*)obj)->anim.worldPosY;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosX = (obj)->anim.localPosX;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosY = (obj)->anim.localPosY;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosZ = (obj)->anim.localPosZ;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->worldPosX = (obj)->anim.worldPosX;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->worldPosY = (obj)->anim.worldPosY;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->worldPosZ = (obj)->anim.worldPosZ;
         ((SnowBikeMountState*)state)->unk3D3 = 1;
     }
 }
@@ -415,7 +415,7 @@ void SnowBike_setRiderMode(int obj, int type)
 
 void SnowBike_func12(struct GameObject *obj, f32* outFloat, s32* outBool)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     f32 value, r;
     *outFloat = ((SnowBikeMountState*)state)->unk414 / lbl_803E5C48;
     value = *outFloat;
@@ -425,7 +425,7 @@ void SnowBike_func12(struct GameObject *obj, f32* outFloat, s32* outBool)
 
 f32 SnowBike_func13(struct GameObject *obj, f32* out)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     f32 speed;
     *out = lbl_803E5BB8;
     speed = sqrtf(((SnowBikeMountState*)state)->velocityZ * ((SnowBikeMountState*)state)->velocityZ +
@@ -441,7 +441,7 @@ f32 SnowBike_func13(struct GameObject *obj, f32* out)
 
 u32 SnowBike_setScale(struct GameObject *obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     u32 bit = (((SnowBikeMountState*)state)->flags >> 1) & 1;
     if (bit != 0)
     {
@@ -452,12 +452,12 @@ u32 SnowBike_setScale(struct GameObject *obj)
 
 void fn_801EC9BC(struct GameObject *obj)
 {
-    (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&((GameObject*)obj)->extra + 0x28));
+    (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&(obj)->extra + 0x28));
 }
 
 u32 fn_801EC9F4(struct GameObject *obj)
 {
-    int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&((GameObject*)obj)->extra + 0x28));
+    int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&(obj)->extra + 0x28));
     if (result == 3)
     {
         if (lbl_803DC0BC == -1)

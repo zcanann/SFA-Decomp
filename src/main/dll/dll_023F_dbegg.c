@@ -236,7 +236,7 @@ void dbegg_free(int obj)
 #pragma peephole on
 int dbegg_setScale(struct GameObject *obj)
 {
-    u8* inner = ((GameObject*)obj)->extra;
+    u8* inner = (obj)->extra;
     return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED ? 1 : 0;
 }
 
@@ -307,7 +307,7 @@ void dbegg_setupFromDef(int obj, u8* state)
 #pragma peephole on
 int dbegg_setLaunchVelocity(struct GameObject *obj, f32* v)
 {
-    u8* inner = ((GameObject*)obj)->extra;
+    u8* inner = (obj)->extra;
     if (((DbEggState*)inner)->mode == 0xb)
     {
         ((DbEggState*)inner)->launchVelX = v[0];

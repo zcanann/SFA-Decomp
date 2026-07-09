@@ -42,7 +42,7 @@ void ControlLight_render(void)
 void ControlLight_init(struct GameObject *obj, int setup)
 {
     ControlLightSetup* setupData = (ControlLightSetup*)setup;
-    ControlLightState* state = ((GameObject*)obj)->extra;
+    ControlLightState* state = (obj)->extra;
 
     state->gameBit = setupData->gameBit;
     state->radius = setupData->radius;
@@ -57,7 +57,7 @@ void ControlLight_update(struct GameObject *obj)
     u8 newBit;
     u32 bit;
     ControlLightState* state;
-    GameObject* self = (GameObject*)obj;
+    GameObject* self = obj;
     state = self->extra;
     newBit = mainGetBit(state->gameBit);
     bit = newBit;

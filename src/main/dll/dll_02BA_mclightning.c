@@ -6,7 +6,7 @@
 
 int mclightning_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    McLightningState* state = ((GameObject*)obj)->extra;
+    McLightningState* state = (obj)->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -31,7 +31,7 @@ int mclightning_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* an
         case MCLIGHTNING_PHASE_READ_TARGET:
             state->flags.phase = MCLIGHTNING_PHASE_ARMED;
             state->targetLinkId = animUpdate->eventIds[i];
-            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             break;
         default:
             state->flags.phase = MCLIGHTNING_PHASE_ABORTED;
@@ -131,7 +131,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void mclightning_update(struct GameObject *obj)
 {
-    McLightningState* state = ((GameObject*)obj)->extra;
+    McLightningState* state = (obj)->extra;
 
     if (state->boltHandle != NULL)
     {
@@ -139,7 +139,7 @@ void mclightning_update(struct GameObject *obj)
         state->boltHandle = NULL;
     }
     state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_A;
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
 }
 
 void mclightning_init(int obj, u8* setup)

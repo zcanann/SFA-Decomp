@@ -152,19 +152,19 @@ void ShipBattle_init(struct GameObject *obj, int def)
     int light;
     int chainIndex;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     state->unk6A = ((ShipBattleObjectDef*)def)->unk1A;
     state->unk6E = -1;
     state->unk24 = lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
     state->unk28 = -1;
 
-    chainIndex = ((GameObject*)obj)->unkF4;
+    chainIndex = (obj)->unkF4;
     if (chainIndex == 0)
     {
         if (((ShipBattleObjectDef*)def)->segmentIndex != 1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
-            ((GameObject*)obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+            (obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
             goto light_setup;
         }
     }
@@ -178,12 +178,12 @@ void ShipBattle_init(struct GameObject *obj, int def)
             {
                 (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
             }
-            ((GameObject*)obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+            (obj)->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
         }
     }
 
 light_setup:
-    if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
+    if ((obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
         light = objCreateLight((int*)obj, 1);
         if ((u32)light != 0)
@@ -192,7 +192,7 @@ light_setup:
             modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
             modelLightStruct_setDistanceAttenuation(light, 30.0f, 80.0f);
         }
-        ((GameObject*)obj)->unkF8 = light;
+        (obj)->unkF8 = light;
     }
 
     lbl_803DDC50[0] = lbl_803E5958;

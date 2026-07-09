@@ -1738,7 +1738,7 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
     s16 item[4];
 
     flag = 0;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     n = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
     if (n != 0)
     {
@@ -1754,7 +1754,7 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
     }
     if (flag != 0)
     {
-        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+        if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
         {
             if ((*gGameUIInterface)->isEventReady(0xc1) != 0)
             {
@@ -1762,7 +1762,7 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
                 c = *(*(u8**)state + 1);
                 if (a == c)
                 {
-                    b = ((GameObject*)obj)->extra;
+                    b = (obj)->extra;
                     ((TrickyState*)b)->stateFlags |= 0x4000;
                     ((TrickyState*)b)->stateFlags |= 1;
                     if (lbl_803E23DC == ((TrickyState*)b)->waterLevel)
@@ -1818,7 +1818,7 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
                     {
                         ((TrickyState*)state)->progressValue = *(*(u8**)state + 1);
                     }
-                    b = ((GameObject*)obj)->extra;
+                    b = (obj)->extra;
                     ((TrickyState*)b)->stateFlags |= 0x4000;
                     if (lbl_803E23DC == ((TrickyState*)b)->waterLevel)
                     {
@@ -1858,8 +1858,8 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
         }
     }
     else
@@ -1867,10 +1867,10 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
         gu = mainGetBit(GAMEBIT_TrickyTalk);
         if (gu != 0xff && cMenuGetSelectedItem() == -1)
         {
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+            if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 mainSetBits(GAMEBIT_TrickyTalk, 0xff);
-                b = ((GameObject*)obj)->extra;
+                b = (obj)->extra;
                 g = gu;
                 ((TrickyState*)b)->stateFlags |= 0x4000;
                 if (g != 2)
@@ -1910,8 +1910,8 @@ int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
                 buttonDisable(0, PAD_BUTTON_A);
                 return 1;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
         }
     }
     return 0;

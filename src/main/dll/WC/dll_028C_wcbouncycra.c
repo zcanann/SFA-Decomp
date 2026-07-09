@@ -153,7 +153,7 @@ void WCBouncyCra_update(int obj)
 
 void WCBouncyCra_init(struct GameObject *obj, int setup)
 {
-    WCBouncyCrateState* state = ((GameObject*)obj)->extra;
+    WCBouncyCrateState* state = (obj)->extra;
 
     state->homeY = ((ObjPlacement*)setup)->posY;
     state->cooldown = WBOUNCY_RESET_COOLDOWN;

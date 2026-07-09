@@ -102,20 +102,20 @@ void Pollen_free(int obj)
 
 void Pollen_hitDetect(struct GameObject *obj)
 {
-    if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+    if ((*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactFlags != 0)
     {
         f32 fz;
-        ((GameObject*)obj)->anim.localPosX =
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosX;
-        ((GameObject*)obj)->anim.localPosY =
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY;
-        ((GameObject*)obj)->anim.localPosZ =
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
+        (obj)->anim.localPosX =
+            (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosX;
+        (obj)->anim.localPosY =
+            (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosY;
+        (obj)->anim.localPosZ =
+            (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosZ;
         fz = lbl_803E313C;
-        ((GameObject*)obj)->anim.velocityX = fz;
-        ((GameObject*)obj)->anim.velocityY = fz;
-        ((GameObject*)obj)->anim.velocityZ = fz;
-        ((GameObject*)obj)->anim.alpha = 0;
+        (obj)->anim.velocityX = fz;
+        (obj)->anim.velocityY = fz;
+        (obj)->anim.velocityZ = fz;
+        (obj)->anim.alpha = 0;
         ObjHits_DisableObject((u32)obj);
     }
 }
@@ -230,7 +230,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 void Pollen_init(struct GameObject *obj)
 {
-    PollenExtra* extra = *(PollenExtra**)&((GameObject*)obj)->extra;
+    PollenExtra* extra = *(PollenExtra**)&(obj)->extra;
     extra->phaseX = randomGetRange(-0x8000, 0x7fff);
     extra->driftVelocity = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
     extra->phaseY = randomGetRange(-0x8000, 0x7fff);
@@ -238,10 +238,10 @@ void Pollen_init(struct GameObject *obj)
     extra->phaseSpeed = randomGetRange(0xe6, 0x1f4);
     extra->unk10 = 0;
     extra->fragmentSpawnTimer = 0;
-    ((GameObject*)obj)->anim.alpha = 0xff;
+    (obj)->anim.alpha = 0xff;
     ObjHits_DisableObject((u32)obj);
     {
-        int* p = *(int**)&((GameObject*)obj)->anim.modelState;
+        int* p = *(int**)&(obj)->anim.modelState;
         if (p != NULL)
         {
             *(int*)&((ObjModelState*)p)->flags = *(int*)&((ObjModelState*)p)->flags | 0x810;

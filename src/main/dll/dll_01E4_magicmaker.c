@@ -67,7 +67,7 @@ void magicmaker_update(struct GameObject *obj)
     char* objSetup;
     int groupObj;
 
-    placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    placement = *(int*)&(obj)->anim.placementData;
     if (Obj_IsLoadingLocked() != 0)
     {
         if ((u32)mainGetBit(MAGICMAKER_SPAWN_GAMEBIT) != 0u)
@@ -96,18 +96,18 @@ void magicmaker_update(struct GameObject *obj)
                     ((MagicmakerSetup*)objSetup)->unk2C = -1;
                     ((MagicmakerSetup*)objSetup)->unk1C = -1;
                     ((ObjPlacement*)objSetup)->posX =
-                        ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x15e, 0x15e);
-                    ((ObjPlacement*)objSetup)->posY = lbl_803E4D8C + ((GameObject*)obj)->anim.localPosY;
+                        (obj)->anim.localPosX + (f32)(int)randomGetRange(-0x15e, 0x15e);
+                    ((ObjPlacement*)objSetup)->posY = lbl_803E4D8C + (obj)->anim.localPosY;
                     ((ObjPlacement*)objSetup)->posZ =
-                        ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x15e, 0x15e);
+                        (obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x15e, 0x15e);
                     ((MagicmakerSetup*)objSetup)->gameBit = -1;
                     ((ObjPlacement*)objSetup)->color[0] = ((MagicmakerPlacement*)placement)->colorR;
                     ((ObjPlacement*)objSetup)->color[2] = ((MagicmakerPlacement*)placement)->colorB;
                     ((ObjPlacement*)objSetup)->color[1] = ((MagicmakerPlacement*)placement)->colorG;
                     ((ObjPlacement*)objSetup)->color[3] = ((MagicmakerPlacement*)placement)->colorA;
                     ((MagicmakerSetup*)objSetup)->unk2E = 3;
-                    spawnedObj = Obj_SetupObject(objSetup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                                 *(int*)&((GameObject*)obj)->anim.parent);
+                    spawnedObj = Obj_SetupObject(objSetup, 5, (obj)->anim.mapEventSlot, -1,
+                                                 *(int*)&(obj)->anim.parent);
                     if (spawnedObj != NULL)
                     {
                         i = 3;

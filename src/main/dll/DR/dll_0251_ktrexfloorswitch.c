@@ -68,14 +68,14 @@ void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 
 void KT_RexFloorSwitch_init(struct GameObject *obj, char* placement)
 {
-    char* extra = ((GameObject*)obj)->extra;
+    char* extra = (obj)->extra;
     int curve;
-    ((GameObject*)obj)->anim.rotX = (s16)(((KtrexfloorswitchPlacement*)placement)->rotByte << 8);
+    (obj)->anim.rotX = (s16)(((KtrexfloorswitchPlacement*)placement)->rotByte << 8);
     ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
-    ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->unkF8 = 1;
+    (obj)->unkF4 = 1;
+    (obj)->unkF8 = 1;
     {
-        KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
+        KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData;
         curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
             pl->curveX, pl->baseHeight, pl->curveZ, &gKTrexFloorSwitchCurveFindResult, 1, 0);
     }
@@ -84,8 +84,8 @@ void KT_RexFloorSwitch_init(struct GameObject *obj, char* placement)
         curve = (int)(*gRomCurveInterface)->getById(curve);
         if ((u32)curve != 0)
         {
-            ((GameObject*)obj)->anim.localPosX = *(f32*)(curve + 0x8);
-            ((GameObject*)obj)->anim.localPosZ = *(f32*)(curve + 0x10);
+            (obj)->anim.localPosX = *(f32*)(curve + 0x8);
+            (obj)->anim.localPosZ = *(f32*)(curve + 0x10);
         }
     }
 }

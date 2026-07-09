@@ -64,7 +64,7 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 void fn_801F9804(struct GameObject *obj)
 {
     s16* p;
-    VfpLevelControlState* state = ((GameObject*)obj)->extra;
+    VfpLevelControlState* state = (obj)->extra;
     s16 bits[4];
     s16 i;
 

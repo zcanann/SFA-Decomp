@@ -206,11 +206,11 @@ void dll_FC_init(struct GameObject *obj, int objDef)
     BabyCloudRunnerState* state;
     BabyCloudRunnerPlacement* placement;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     placement = (BabyCloudRunnerPlacement*)objDef;
     state->mode = BABYCLOUDRUNNER_MODE_UNINIT;
     state->triggerId = placement->triggerIdMax;
-    ((GameObject*)obj)->objectFlags |= BABYCLOUDRUNNER_OBJFLAG_HIDDEN;
+    (obj)->objectFlags |= BABYCLOUDRUNNER_OBJFLAG_HIDDEN;
 }
 
 void dll_FC_release_nop(void)

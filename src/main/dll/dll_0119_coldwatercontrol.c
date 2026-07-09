@@ -82,8 +82,8 @@ void ColdWaterControl_update(int obj)
 #pragma scheduling on
 void ColdWaterControl_init(struct GameObject *obj)
 {
-    ColdwaterControlState* p = (ColdwaterControlState*)((GameObject*)obj)->extra;
+    ColdwaterControlState* p = (ColdwaterControlState*)(obj)->extra;
     p->timer = lbl_803E3B68;
-    ((GameObject*)obj)->objectFlags =
-        (u16)(((GameObject*)obj)->objectFlags | (COLDWATER_OBJFLAG_HIDDEN | COLDWATER_OBJFLAG_HITDETECT_DISABLED));
+    (obj)->objectFlags =
+        (u16)((obj)->objectFlags | (COLDWATER_OBJFLAG_HIDDEN | COLDWATER_OBJFLAG_HITDETECT_DISABLED));
 }

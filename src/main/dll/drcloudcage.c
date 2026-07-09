@@ -571,7 +571,7 @@ f32 fn_801EA678(struct GameObject *obj, int state)
         if (lbl_803DC0BC == -1)
         {
             rank = Obj_GetPlayerObject();
-            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(rank + 0x18));
+            d = Vec_distance((int*)&(obj)->anim.worldPosX, (int*)(rank + 0x18));
             d = d * lbl_803E5AF8;
         }
         else

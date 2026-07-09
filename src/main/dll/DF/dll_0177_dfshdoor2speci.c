@@ -50,8 +50,8 @@ int DFSH_Door2Speci_SeqFn(struct GameObject *obj)
     u32 phaseStep;
     f32 phase;
 
-    extra = ((GameObject*)obj)->extra;
-    objDef = *(int*)&((GameObject*)obj)->anim.placementData;
+    extra = (obj)->extra;
+    objDef = *(int*)&(obj)->anim.placementData;
     switch (extra->state)
     {
     case DFSH_DOOR2SPECI_STATE_WAIT_FOR_GAMEBIT:
@@ -126,8 +126,8 @@ void DFSH_Door2Speci_init(struct GameObject *obj, int def)
     int state;
     ObjTextureRuntimeSlot* texture;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = DFSH_Door2Speci_SeqFn;
+    state = *(int*)&(obj)->extra;
+    (obj)->animEventCallback = DFSH_Door2Speci_SeqFn;
     if (mainGetBit((int)*(short*)(def + 0x22)) != 0)
     {
         *(unsigned char*)(state + 3) = 2;

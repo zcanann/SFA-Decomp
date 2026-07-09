@@ -243,9 +243,9 @@ void dll_1DB_update(int obj)
 
 void dll_1DB_init(struct GameObject *obj, void* p)
 {
-    void* sub = ((GameObject*)obj)->extra;
+    void* sub = (obj)->extra;
     s16 t = (s16)((s32)((Dll1DBPlacement*)p)->rotXByte << 8);
-    ((GameObject*)obj)->anim.rotX = t;
+    (obj)->anim.rotX = t;
     if (mainGetBit(((Dll1DBPlacement*)p)->boardedBit) != 0)
     {
         ((Dll1DBState*)sub)->state = STATE_BOTTOM;
@@ -254,7 +254,7 @@ void dll_1DB_init(struct GameObject *obj, void* p)
     {
         ((Dll1DBState*)sub)->state = STATE_TOP;
     }
-    ((GameObject*)obj)->objectFlags |= DLL1DB_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->objectFlags |= DLL1DB_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_1DB_release(void)

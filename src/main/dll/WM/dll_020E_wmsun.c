@@ -177,22 +177,22 @@ void wmsun_updateGlare(struct GameObject *obj)
 
     dir = gWmSunGlareDir;
     sun = gWmSunGlareSun;
-    ((GameObject*)obj)->anim.rotX += 400;
+    (obj)->anim.rotX += 400;
     g.vx = lbl_803E5F20;
     g.vy = lbl_803E5F20;
     g.vz = lbl_803E5F20;
     g.intensity = lbl_803E5F24;
     g.ang[2] = 0;
     g.ang[1] = 0;
-    g.ang[0] = ((GameObject*)obj)->anim.rotX;
+    g.ang[0] = (obj)->anim.rotX;
     cam = Camera_GetCurrentViewSlot();
     if ((void*)cam != NULL)
     {
         g.ang[0] = 0x8000 - *(s16*)cam;
         vecRotateZXY(g.ang, &sun);
-        dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
-        dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(cam + 0x10);
-        dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
+        dx = (obj)->anim.localPosX - *(f32*)(cam + 0xc);
+        dy = (obj)->anim.localPosY - *(f32*)(cam + 0x10);
+        dz = (obj)->anim.localPosZ - *(f32*)(cam + 0x14);
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (*(f32*)&lbl_803E5F20 != len)
         {
@@ -218,8 +218,8 @@ void wmsun_updateGlare(struct GameObject *obj)
         hy = *(f32*)&lbl_803E5F20;
         if (cosang > hy)
         {
-            dot = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
-            hz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
+            dot = (obj)->anim.localPosX - *(f32*)(cam + 0xc);
+            hz = (obj)->anim.localPosZ - *(f32*)(cam + 0x14);
             hlen = sqrtf(hz * hz + (dot * dot + hy));
             if (*(f32*)&lbl_803E5F20 != hlen)
             {
@@ -319,7 +319,7 @@ int wmsun_getObjectTypeId(void)
 
 void wmsun_free(struct GameObject *obj)
 {
-    WmSunState* state = ((GameObject*)obj)->extra;
+    WmSunState* state = (obj)->extra;
     if (state->glareParams != NULL)
     {
         mm_free(state->glareParams);
@@ -567,7 +567,7 @@ void wmsun_update(int obj)
 void wmsun_init(struct GameObject *obj, int params)
 {
     ObjAnimComponent* objAnim;
-    WmSunState* state = ((GameObject*)obj)->extra;
+    WmSunState* state = (obj)->extra;
     WmSunMapData* mapData;
     u8 mapAct;
     int bank;
@@ -577,26 +577,26 @@ void wmsun_init(struct GameObject *obj, int params)
 
     objAnim = (ObjAnimComponent*)obj;
     mapData = (WmSunMapData*)params;
-    ((GameObject*)obj)->animEventCallback = wmsun_animEventCallback;
-    mapAct = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    (obj)->animEventCallback = wmsun_animEventCallback;
+    mapAct = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
     if (mapAct == 3 && mainGetBit(0x21b) == 0)
     {
         mainSetBits(0x21b, 1);
     }
     state->glareParams = NULL;
     state->renderEnabled = 1;
-    mode = ((GameObject*)obj)->anim.seqId;
+    mode = (obj)->anim.seqId;
     if (mode == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
-        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+        (obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
         state->riseStep = 100;
         if (mapData->rootMotionScaleParam >= 1000)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
+            (obj)->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
         }
         else
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
+            (obj)->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
         }
     }
     else if (mode == WMSUN_SEQID_SUN) /* WM_sun */
@@ -606,14 +606,14 @@ void wmsun_init(struct GameObject *obj, int params)
         lbl_803DDCAC = 800;
         lbl_803DDCAA = 800;
         gWmSunQuakeTimer = 800;
-        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+        (obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
         if (mapData->rootMotionScaleParam >= 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
+            (obj)->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
         }
         else
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24;
+            (obj)->anim.rootMotionScale = lbl_803E5F24;
         }
         *(u8*)&objAnim->bankIndex = mapData->bankIndex;
         bank = objAnim->bankIndex;
@@ -650,7 +650,7 @@ void wmsun_init(struct GameObject *obj, int params)
         objAnim->alpha = 0;
         if (mapData->rootMotionScaleParam != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale =
+            (obj)->anim.rootMotionScale =
                 lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam / lbl_803E5F8C);
         }
     }

@@ -306,21 +306,21 @@ int DR_EarthWarrior_getObjectTypeId(void)
 
 void DR_EarthWarrior_func15(struct GameObject *obj, f32* x, f32* y, f32* z)
 {
-    *x = ((GameObject*)obj)->anim.localPosX;
-    *y = ((GameObject*)obj)->anim.localPosY;
-    *z = ((GameObject*)obj)->anim.localPosZ;
+    *x = (obj)->anim.localPosX;
+    *y = (obj)->anim.localPosY;
+    *z = (obj)->anim.localPosZ;
 }
 
 int DR_EarthWarrior_stateHandler00(struct GameObject *obj)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     inner->sub.flags98C |= 0x20;
     return 2;
 }
 
 void DR_EarthWarrior_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     *x = inner->sub.posX;
     *y = inner->sub.posY;
     *z = inner->sub.posZ;
@@ -328,7 +328,7 @@ void DR_EarthWarrior_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
 
 int DR_EarthWarrior_func11(struct GameObject *obj)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     if (inner->sub.unk993 != 0)
     {
         return 1;
@@ -338,7 +338,7 @@ int DR_EarthWarrior_func11(struct GameObject *obj)
 
 int DR_EarthWarrior_func14(struct GameObject *obj)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     if (inner->sub.unk992 != 0)
     {
         return 2;
@@ -348,7 +348,7 @@ int DR_EarthWarrior_func14(struct GameObject *obj)
 
 void DR_EarthWarrior_func18(struct GameObject *obj, f32* a, int* b)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     *a = (f32)(s32)inner->sub.aimAccumY;
     *b = inner->sub.aimAccumX;
 }
@@ -420,7 +420,7 @@ void DR_EarthWarrior_initialise(void)
 
 f32 DR_EarthWarrior_func19(struct GameObject *obj, f32* out)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     f32 animSpeed;
     animSpeed = 0.001f * inner->baddie.animSpeedC + 0.005f;
     *out = -((animSpeed < 0.005f) ? 0.005f : ((animSpeed > 0.01f) ? 0.01f : animSpeed));
@@ -482,7 +482,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
 
 void DR_EarthWarrior_func17(struct GameObject *obj, int param)
 {
-    EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    EarthWarriorState* inner = (obj)->extra;
     inner->sub.rideState = param;
     if (param == 0)
     {
@@ -494,8 +494,8 @@ void DR_EarthWarrior_func17(struct GameObject *obj, int param)
     }
     else
     {
-        EarthWarriorState* inner2 = ((GameObject*)obj)->extra;
-        int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+        EarthWarriorState* inner2 = (obj)->extra;
+        int placement = *(int*)&(obj)->anim.placementData;
         ((ByteFlags*)&inner2->sub.flags994)->b02 = 1;
         (*gGameUIInterface)
             ->initAirMeter(((DREarthWarriorPlacement*)placement)->airMeterMax, DREARTHWARRIOR_AIRMETER_BGTEXTURE);

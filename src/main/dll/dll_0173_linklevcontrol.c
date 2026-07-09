@@ -166,7 +166,7 @@ int link_levcontrol_getExtraSize(void)
 
 void link_levcontrol_free(struct GameObject *obj)
 {
-    switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
+    switch ((s32)(obj)->anim.mapEventSlot)
     {
     case AREA_CELL_45:
         Music_Trigger(MUSICTRIG_underwater, 0);

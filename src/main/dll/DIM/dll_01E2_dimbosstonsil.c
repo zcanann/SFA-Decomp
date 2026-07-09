@@ -227,7 +227,7 @@ void DIMbosstonsil_func0B(void)
 
 int DIMbosstonsil_setScale(struct GameObject *obj)
 {
-    return (*(DIMbosstonsilState**)&((GameObject*)obj)->extra)->scale;
+    return (*(DIMbosstonsilState**)&(obj)->extra)->scale;
 }
 
 int DIMbosstonsil_getExtraSize(void)

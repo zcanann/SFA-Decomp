@@ -41,7 +41,7 @@ int FogControl_getObjectTypeId(void)
 
 void FogControl_free(struct GameObject *obj)
 {
-    FogControlState* st = ((GameObject*)obj)->extra;
+    FogControlState* st = (obj)->extra;
     if (st->on)
     {
         disableHeavyFog();
@@ -56,8 +56,8 @@ void FogControl_hitDetect(void)
  * target and feed the heavy fog params. */
 void FogControl_update(struct GameObject *obj)
 {
-    u8* setup = (u8*)((GameObject*)obj)->anim.placement;
-    FogControlState* st = ((GameObject*)obj)->extra;
+    u8* setup = (u8*)(obj)->anim.placement;
+    FogControlState* st = (obj)->extra;
     u8 cv;
     u8 run;
     f32 fogY;
@@ -121,7 +121,7 @@ void FogControl_update(struct GameObject *obj)
             fogY =
                 st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
                 (f32)((FogcontrolPlacement*)setup)->fogBase;
-            fogY = ((GameObject*)obj)->anim.localPosY + fogY;
+            fogY = (obj)->anim.localPosY + fogY;
             enableHeavyFog(
                 fogY,
                 ((f32)((FogcontrolPlacement*)setup)->fogBottom + fogY) - (f32)((FogcontrolPlacement*)setup)->fogTop,
@@ -137,8 +137,8 @@ void FogControl_init(struct GameObject *obj, FogcontrolPlacement* placement)
     u8 cv;
     f32 fogY;
 
-    st = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | FOGCONTROL_OBJFLAG_HIDDEN);
+    st = (obj)->extra;
+    (obj)->objectFlags = (u16)((obj)->objectFlags | FOGCONTROL_OBJFLAG_HIDDEN);
     st->on = 0;
     st->full = 0;
     st->blend = 0.0f;
@@ -158,7 +158,7 @@ void FogControl_init(struct GameObject *obj, FogcontrolPlacement* placement)
             st->on = 1;
             st->blend = 1.0f;
             fogY = st->blend * ((f32)placement->fogTop - placement->fogBase) + placement->fogBase;
-            fogY = ((GameObject*)obj)->anim.localPosY + fogY;
+            fogY = (obj)->anim.localPosY + fogY;
             enableHeavyFog(fogY, ((f32)placement->fogBottom + fogY) - placement->fogTop, placement->fogRed,
                            placement->fogGreen / 65535.0f, 0.0001f, *(u8*)&placement->flags & FOG_FLAG_MODE);
         }

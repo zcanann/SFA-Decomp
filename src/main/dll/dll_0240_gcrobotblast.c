@@ -72,10 +72,10 @@ void GCRobotBlast_update(void)
 
 void GCRobotBlast_init(struct GameObject *obj, s8* def)
 {
-    GCRobotBlastState* state = ((GameObject*)obj)->extra;
+    GCRobotBlastState* state = (obj)->extra;
     state->mode = def[0x19];
     ((BlastFlags4*)&state->flags04)->b80 = 0;
-    ((GameObject*)obj)->animEventCallback = GCRobotBlast_SeqFn;
+    (obj)->animEventCallback = GCRobotBlast_SeqFn;
 }
 
 void GCRobotBlast_release(void)

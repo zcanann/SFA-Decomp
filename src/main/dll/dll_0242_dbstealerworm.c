@@ -629,7 +629,7 @@ int dbstealerworm_stateHandlerB03(int obj, int baddie)
 
 int dbstealerworm_stateHandlerB01(struct GameObject *obj, int baddie)
 {
-    GroundBaddieState* state = ((GameObject*)obj)->extra;
+    GroundBaddieState* state = (obj)->extra;
     if ((s8)((BaddieState*)baddie)->hitPoints < 1)
         return 3;
     if ((s8)((BaddieState*)baddie)->moveDone != 0)
@@ -691,7 +691,7 @@ int dbstealerworm_stateHandlerA00(int obj, int baddie)
 
 int dbstealerworm_func0B(struct GameObject *obj, u8 msg, int* out)
 {
-    GroundBaddieState* state = ((GameObject*)obj)->extra;
+    GroundBaddieState* state = (obj)->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)state->control;
     int result = 0;
     u8 configFlags;

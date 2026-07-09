@@ -1913,12 +1913,12 @@ void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, floa
 
 void ObjPath_GetPointLocalPosition(struct GameObject *obj, int pointIndex, float* xOut, float* yOut, float* zOut)
 {
-    *xOut = ((ObjPathPoint*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
+    *xOut = ((ObjPathPoint*)(*(int*)(*(int*)&(obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
                              pointIndex * sizeof(ObjPathPoint)))
                 ->x;
-    *yOut = *(f32*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 +
+    *yOut = *(f32*)(*(int*)(*(int*)&(obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 +
                     pointIndex * sizeof(ObjPathPoint));
-    *zOut = *(f32*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 +
+    *zOut = *(f32*)(*(int*)(*(int*)&(obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 +
                     pointIndex * sizeof(ObjPathPoint));
     return;
 }
@@ -1928,7 +1928,7 @@ void ObjPath_GetPointLocalMtx(struct GameObject *obj, int pointIndex, float* mtx
     ObjPathPoint* pathPoint;
     ObjPathTransform transform;
 
-    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET));
+    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&(obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET));
     transform.x = pathPoint[pointIndex].x;
     pathPoint += pointIndex;
     transform.y = pathPoint->y;

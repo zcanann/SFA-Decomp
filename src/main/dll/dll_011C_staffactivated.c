@@ -82,7 +82,7 @@ void staffactivated_calcInteractionTargetXZ(struct GameObject *obj, f32* outX, f
     StaffActivatedState* state;
     GameObject* gobj;
 
-    gobj = (GameObject*)obj;
+    gobj = obj;
     state = gobj->extra;
     mode = ((StaffActivatedSetup*)gobj->anim.placementData)->mode;
 

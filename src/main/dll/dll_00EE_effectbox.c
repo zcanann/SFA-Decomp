@@ -85,8 +85,8 @@ void EffectBox_update(struct GameObject *obj)
     f32 proj;
     int gb;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    gb = ((GameObject*)obj)->unkF8;
+    def = *(int*)&(obj)->anim.placementData;
+    gb = (obj)->unkF8;
     if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != mainGetBit(gb)))
     {
         cosY = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
@@ -133,9 +133,9 @@ void EffectBox_update(struct GameObject *obj)
             dx = ((GameObject*)other)->anim.localPosX;
             dy = ((GameObject*)other)->anim.localPosY;
             dz = ((GameObject*)other)->anim.localPosZ;
-            dx = dx - ((GameObject*)obj)->anim.localPosX;
-            dy = dy - ((GameObject*)obj)->anim.localPosY;
-            dz = dz - ((GameObject*)obj)->anim.localPosZ;
+            dx = dx - (obj)->anim.localPosX;
+            dy = dy - (obj)->anim.localPosY;
+            dz = dz - (obj)->anim.localPosZ;
             proj = dx * cosY + dz * sinY;
             if ((proj > negExtX) && (proj < extX))
             {

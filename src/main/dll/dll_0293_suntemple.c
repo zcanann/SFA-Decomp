@@ -83,7 +83,7 @@ STATIC_ASSERT(sizeof(SunTempleState) == 2);
 
 int suntemple_interactCallback(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    GameObject* gameObj = (GameObject*)obj;
+    GameObject* gameObj = obj;
     SunTempleSetup* cfg = (SunTempleSetup*)gameObj->anim.placementData;
     int i;
     SunVec3 restartPos = *(SunVec3*)lbl_802C25D8;

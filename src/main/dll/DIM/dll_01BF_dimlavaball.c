@@ -129,7 +129,7 @@ int lavaball1bf_getObjectTypeId(void)
 void lavaball1bf_free(struct GameObject *obj, int mode)
 {
     extern void Obj_FreeObject(void* o);
-    Lavaball1bfState* inner = ((GameObject*)obj)->extra;
+    Lavaball1bfState* inner = (obj)->extra;
     if (mode == 0 && inner->spawnedObj != 0)
     {
         Obj_FreeObject(inner->spawnedObj);

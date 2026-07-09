@@ -85,7 +85,7 @@ int DFP_ObjCreator_getObjectTypeId(void)
 
 void DFP_ObjCreator_free(struct GameObject *obj, int flag)
 {
-    DfpObjCreatorState* state = ((GameObject*)obj)->extra;
+    DfpObjCreatorState* state = (obj)->extra;
     if (flag == 0)
     {
         if (*(void**)&state->spawnedObj != NULL)
@@ -111,8 +111,8 @@ void DFP_ObjCreator_update(struct GameObject *obj)
 
     extern void* Obj_AllocObjectSetup(int size, int id);
     extern u8* Obj_SetupObject(u8*, int, int, int, int);
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
-    DfpObjCreatorState* state = ((GameObject*)obj)->extra;
+    int data = *(int*)&(obj)->anim.placementData;
+    DfpObjCreatorState* state = (obj)->extra;
     u8* setup;
     u8* newObj;
 
@@ -136,8 +136,8 @@ void DFP_ObjCreator_update(struct GameObject *obj)
                 ((DfpobjcreatorSetup*)setup)->gameBit = -1;
                 ((DfpobjcreatorSetup*)setup)->gameBit2 = -1;
                 ((DfpobjcreatorSetup*)setup)->objDefId = 0xdc;
-                newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                         *(int*)&((GameObject*)obj)->anim.parent);
+                newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
+                                         *(int*)&(obj)->anim.parent);
                 ((GameObject*)newObj)->unkF4 = *(s8*)(data + 0x1e);
             }
             break;
@@ -147,8 +147,8 @@ void DFP_ObjCreator_update(struct GameObject *obj)
 
 void DFP_ObjCreator_init(struct GameObject *obj, s8* def)
 {
-    DfpObjCreatorState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
+    DfpObjCreatorState* state = (obj)->extra;
+    (obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
     state->gameBit = ((DfpobjcreatorObjectDef*)def)->gameBit;
     state->spawnPeriod = ((DfpobjcreatorObjectDef*)def)->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;

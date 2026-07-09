@@ -57,7 +57,7 @@ int Lock_DoorLock_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* 
 {
     int def;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    def = *(int*)&(obj)->anim.placementData;
     if (animUpdate->triggerCommand != 0)
     {
         if (((((DoorlockPlacement*)def)->modeBits & 4) != 0) && (animUpdate->triggerCommand == 1))
@@ -70,7 +70,7 @@ int Lock_DoorLock_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* 
         }
         animUpdate->triggerCommand = 0;
     }
-    ((GameObject*)obj)->unkF8 = 0;
+    (obj)->unkF8 = 0;
     return 0;
 }
 

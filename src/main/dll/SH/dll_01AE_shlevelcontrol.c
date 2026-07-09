@@ -328,7 +328,7 @@ void SH_LevelControl_runBloopEvent(struct GameObject *obj, int state)
     u8 bloopsRemaining;
     u8 j;
 
-    if (((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0) &&
+    if (((u8)(*gMapEventInterface)->getObjGroupStatus((obj)->anim.mapEventSlot, 0) == 0) &&
         (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) == 0))
     {
         ((ShLevelcontrolState*)state)->eventState = 0;
@@ -385,7 +385,7 @@ void SH_LevelControl_runBloopEvent(struct GameObject *obj, int state)
             {
                 (*gGameUIInterface)->runAirMeter((int)((ShLevelcontrolState*)state)->timer8);
             }
-            else if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) != 0)
+            else if ((u8)(*gMapEventInterface)->getObjGroupStatus((obj)->anim.mapEventSlot, 0) != 0)
             {
                 (*gGameUIInterface)->airMeterShutdown();
                 (*gScreenTransitionInterface)->start(0x14, 1);
@@ -960,22 +960,22 @@ void SH_LevelControl_update(int obj)
 void SH_LevelControl_init(struct GameObject *obj)
 {
 
-    int* state = ((GameObject*)obj)->extra;
+    int* state = (obj)->extra;
     int i;
     u32 objectFlags;
 
-    ((GameObject*)obj)->animEventCallback = SH_LevelControl_SeqFn;
-    objectFlags = (u32)((GameObject*)obj)->objectFlags | SHOPKEEPER_OBJFLAG_HIDDEN;
-    ((GameObject*)obj)->objectFlags = objectFlags;
-    ((GameObject*)obj)->unkF8 = 3;
+    (obj)->animEventCallback = SH_LevelControl_SeqFn;
+    objectFlags = (u32)(obj)->objectFlags | SHOPKEEPER_OBJFLAG_HIDDEN;
+    (obj)->objectFlags = objectFlags;
+    (obj)->unkF8 = 3;
 
     if (getSaveGameLoadStatus() != 0)
     {
-        ((GameObject*)obj)->unkF4 = 2;
+        (obj)->unkF4 = 2;
     }
     else
     {
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
 
     ((ShLevelcontrolState*)state)->unk10 = -1;
@@ -987,7 +987,7 @@ void SH_LevelControl_init(struct GameObject *obj)
     }
 
     ((ShLevelcontrolState*)state)->mapAct =
-        (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+        (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
 
     ((ShLevelcontrolState*)state)->musicLatch = -1;
     Music_Trigger(MUSICTRIG_fox_arwing, 0);

@@ -61,7 +61,7 @@ void CampFire_free(struct GameObject *obj)
     CampfireExtra* state;
     void* effect;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     effect = state->light;
     if (effect != 0)

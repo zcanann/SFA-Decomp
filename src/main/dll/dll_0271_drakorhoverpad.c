@@ -973,13 +973,13 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 eventCode, u8 subCode, void*
 
 int drakorhoverpad_setScale(struct GameObject *obj)
 {
-    u8* p = ((GameObject*)obj)->extra;
+    u8* p = (obj)->extra;
     return (p[0x179] >> 2) & 1;
 }
 
 int drakorhoverpad_render2(struct GameObject *obj)
 {
-    u8* p = ((GameObject*)obj)->extra;
+    u8* p = (obj)->extra;
     return ((p[0x179] >> 2) & 1) == 0;
 }
 
@@ -991,9 +991,9 @@ void drakorhoverpad_func12(int obj, f32* outFloat, int* outFlag)
 
 void drakorhoverpad_modelMtxFn(struct GameObject *obj, f32* ox, f32* oy, f32* oz)
 {
-    *ox = ((GameObject*)obj)->anim.localPosX;
-    *oy = lbl_803E6A40 + ((GameObject*)obj)->anim.localPosY;
-    *oz = ((GameObject*)obj)->anim.localPosZ;
+    *ox = (obj)->anim.localPosX;
+    *oy = lbl_803E6A40 + (obj)->anim.localPosY;
+    *oz = (obj)->anim.localPosZ;
 }
 
 f32 drakorhoverpad_func13(int obj, f32* out)
@@ -1013,7 +1013,7 @@ void drakorhoverpad_func17(struct GameObject *obj, int sel, int* out)
     switch (sel)
     {
     case 2:
-        *out = ((GameObject*)obj)->anim.rotX;
+        *out = (obj)->anim.rotX;
         break;
     case 3:
         *out = 0x1000;
@@ -1046,7 +1046,7 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
 
 void drakorhoverpad_resetPendingMotion(struct GameObject *obj)
 {
-    u8* p = ((GameObject*)obj)->extra;
+    u8* p = (obj)->extra;
     Flags377* g = (Flags377*)(p + 0x179);
     if (g->p6 != 0)
     {

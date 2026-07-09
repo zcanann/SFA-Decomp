@@ -180,7 +180,7 @@ u32 lavaball1be_isInactive(int* obj)
 
 void lavaball1be_free(struct GameObject *obj)
 {
-    Lavaball1beState* inner = ((GameObject*)obj)->extra;
+    Lavaball1beState* inner = (obj)->extra;
     if (inner->light != 0)
     {
         ModelLightStruct_free(inner->light);

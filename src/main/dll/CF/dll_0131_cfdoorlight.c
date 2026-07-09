@@ -46,8 +46,8 @@ void CF_DoorLight_update(struct GameObject *obj)
     CfDoorLightMapData* def;
     ObjTextureRuntimeSlot* textureFrame;
 
-    state = ((GameObject*)obj)->extra;
-    def = (CfDoorLightMapData*)((GameObject*)obj)->anim.placement;
+    state = (obj)->extra;
+    def = (CfDoorLightMapData*)(obj)->anim.placement;
     if (state->flags.active == 0 && mainGetBit(def->triggerEvent) != 0 && state->flags.done == 0)
     {
         state->flags.active = 1;

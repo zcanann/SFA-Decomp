@@ -84,8 +84,8 @@ int PressureSwitchFB_SeqFn(struct GameObject *obj, int unused, int stateParam)
     int trackedObjectSlot;
     u8 i;
 
-    runtime = *(int*)&((GameObject*)obj)->extra;
-    config = *(int*)&((GameObject*)obj)->anim.placementData;
+    runtime = *(int*)&(obj)->extra;
+    config = *(int*)&(obj)->anim.placementData;
     if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) == PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS)
     {
         for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++)
@@ -112,18 +112,18 @@ int PressureSwitchFB_SeqFn(struct GameObject *obj, int unused, int stateParam)
             *(int*)(trackedObjectSlot + 0xc) = 0;
             *(int*)(trackedObjectSlot + 0x10) = 0;
         }
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
+        (obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
+        (obj)->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
+        (obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
         mainSetBits(*(s16*)(config + PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET), 0);
         *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) = PRESSURESWITCHFB_STATE_IDLE;
     }
-    objType = ((GameObject*)obj)->anim.seqId;
+    objType = (obj)->anim.seqId;
     if ((((objType != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) && (objType != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
          (objType != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
         (objType != PRESSURESWITCHFB_OBJ_CC_PRESSURE))
     {
-        *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = ((GameObject*)obj)->anim.localPosY;
+        *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = (obj)->anim.localPosY;
     }
     return 0;
 }

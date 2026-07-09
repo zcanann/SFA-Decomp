@@ -299,16 +299,16 @@ void fn_801A7CC4(int obj)
 
 void fn_801A80F0(struct GameObject *obj, u8 flag)
 {
-    MmpMoonrockState* state = ((GameObject*)obj)->extra;
+    MmpMoonrockState* state = (obj)->extra;
     if (flag != 0)
     {
         state->flags |= MOONROCK_FLAG_FROZEN;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else
     {
         state->flags &= ~MOONROCK_FLAG_FROZEN;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     }
 }
 

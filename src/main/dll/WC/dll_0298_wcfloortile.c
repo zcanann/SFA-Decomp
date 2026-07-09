@@ -100,10 +100,10 @@ void wcfloortile_hitDetect(void)
 
 void wcfloortile_init(struct GameObject *obj)
 {
-    WcFloorTileState* state = ((GameObject*)obj)->extra;
+    WcFloorTileState* state = (obj)->extra;
 
-    ((GameObject*)obj)->anim.rotX = -0x4000;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 0x1800;
+    (obj)->anim.rotX = -0x4000;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->flags |= 0x1800;
     state->flags |= 2;
 }
 
@@ -246,28 +246,28 @@ void arwarwing_clampToFlightBounds(struct GameObject *obj, int state)
     lx = arwing->homeX - arwing->flightHalfWidth;
     hy = arwing->homeY + arwing->flightUpperHeight;
     ly = arwing->homeY - arwing->flightLowerHeight;
-    if (((GameObject*)obj)->anim.localPosX > hx)
+    if ((obj)->anim.localPosX > hx)
     {
-        ((GameObject*)obj)->anim.localPosX = hx;
+        (obj)->anim.localPosX = hx;
         arwing->velX = lbl_803E6ECC;
     }
-    else if (((GameObject*)obj)->anim.localPosX < lx)
+    else if ((obj)->anim.localPosX < lx)
     {
-        ((GameObject*)obj)->anim.localPosX = lx;
+        (obj)->anim.localPosX = lx;
         arwing->velX = lbl_803E6ECC;
     }
-    if (((GameObject*)obj)->anim.localPosY > hy)
+    if ((obj)->anim.localPosY > hy)
     {
-        ((GameObject*)obj)->anim.localPosY = hy;
+        (obj)->anim.localPosY = hy;
         arwing->velY = lbl_803E6ECC;
     }
-    else if (((GameObject*)obj)->anim.localPosY < ly)
+    else if ((obj)->anim.localPosY < ly)
     {
-        ((GameObject*)obj)->anim.localPosY = ly;
+        (obj)->anim.localPosY = ly;
         arwing->velY = lbl_803E6ECC;
     }
-    arwing->camPos[0] = ((GameObject*)obj)->anim.localPosX - arwing->homeX;
-    arwing->camPos[1] = ((GameObject*)obj)->anim.localPosY - arwing->homeY;
+    arwing->camPos[0] = (obj)->anim.localPosX - arwing->homeX;
+    arwing->camPos[1] = (obj)->anim.localPosY - arwing->homeY;
     arwing->camPos[2] = lbl_803E6ECC;
 }
 
@@ -482,11 +482,11 @@ void arwarwing_updateThrusters(struct GameObject *obj, int state)
     ArwProjPosSrc src;
 
     slot = Camera_GetCurrentViewSlot();
-    src.pos[0] = ((GameObject*)obj)->anim.localPosX;
-    src.pos[1] = ((GameObject*)obj)->anim.localPosY;
-    src.pos[2] = ((GameObject*)obj)->anim.localPosZ;
-    src.rot[0] = ((GameObject*)obj)->anim.rotX;
-    src.rot[1] = ((GameObject*)obj)->anim.rotY;
+    src.pos[0] = (obj)->anim.localPosX;
+    src.pos[1] = (obj)->anim.localPosY;
+    src.pos[2] = (obj)->anim.localPosZ;
+    src.rot[0] = (obj)->anim.rotX;
+    src.rot[1] = (obj)->anim.rotY;
     src.rot[2] = 0;
     src.scale = lbl_803E6ED0;
     setMatrixFromObjectPos(mtx, &src);
@@ -601,9 +601,9 @@ void arwarwing_updateBarrelRoll(struct GameObject *obj, int state)
     ((ArwingState*)state)->barrelRollAngle =
         (int)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
               (f32)((ArwingState*)state)->barrelRollAngle);
-    ((GameObject*)obj)->anim.rotZ =
+    (obj)->anim.rotZ =
         (s16)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
-              (f32) * &((GameObject*)obj)->anim.rotZ);
+              (f32) * &(obj)->anim.rotZ);
     if (((ArwingState*)state)->barrelRollDirection > (zero = lbl_803E6ECC))
     {
         {

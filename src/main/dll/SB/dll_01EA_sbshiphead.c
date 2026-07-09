@@ -297,7 +297,7 @@ void SB_ShipHead_update(int obj)
 
 void SB_ShipHead_init(struct GameObject *obj)
 {
-    SBShipHeadState* state = ((GameObject*)obj)->extra;
+    SBShipHeadState* state = (obj)->extra;
     ObjGroup_AddObject((u32)obj, SBSHIPHEAD_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 10);
     state->health = 4;

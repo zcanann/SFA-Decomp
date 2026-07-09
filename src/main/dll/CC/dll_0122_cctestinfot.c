@@ -121,11 +121,11 @@ void CCTestInfot_init(struct GameObject *obj, s8* def)
 {
     u32 flags;
     flags =
-        (u32)((GameObject*)obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->objectFlags = flags;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x1A] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
+        (u32)(obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags = flags;
+    (obj)->anim.rotX = (s16)((s32)(u8)def[0x1A] << 8);
+    (obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
+    (obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
 }
 
 ObjectDescriptor gCCTestInfotObjDescriptor = {

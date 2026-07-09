@@ -30,8 +30,8 @@ int fn_801A27B8(struct GameObject *obj, int id)
 {
     MapBlockData* block;
 
-    block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                            ((GameObject*)obj)->anim.localPosZ));
+    block = mapGetBlock(objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY,
+                                            (obj)->anim.localPosZ));
     if (block == NULL || (block->flags4 & 0x8) == 0)
     {
         return 0;

@@ -292,7 +292,7 @@ void fn_801627F4(struct GameObject *obj)
     int facing;
     char* sub;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     ptr = ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);
     if (count != 0)
     {
@@ -302,8 +302,8 @@ void fn_801627F4(struct GameObject *obj)
         for (i = 0; i < count; i++)
         {
             if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(*(int*)(*(int*)(ptr[i] + 0x68)) + 0x30))(
-                    ptr[i], ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ, &dist, &hitY, &unk) != 0 &&
+                    ptr[i], (obj)->anim.localPosX, (obj)->anim.localPosY,
+                    (obj)->anim.localPosZ, &dist, &hitY, &unk) != 0 &&
                 dist < ((GrimbleControl*)sub)->nearestDist)
             {
                 ((GrimbleControl*)sub)->candidatePathObj = ptr[i];
@@ -325,10 +325,10 @@ void fn_801627F4(struct GameObject *obj)
             ((GrimbleControl*)sub)->savedPathProgress = ((GrimbleControl*)sub)->pathProgress;
             ((GrimbleControl*)sub)->unk46 = 0;
             ((GrimbleControl*)sub)->anchorPosY = ((GrimbleControl*)sub)->homePosY;
-            ((GrimbleControl*)sub)->currentPosY = ((GameObject*)obj)->anim.localPosY;
+            ((GrimbleControl*)sub)->currentPosY = (obj)->anim.localPosY;
             ((GrimbleControl*)sub)->posYDelta =
                 ((GrimbleControl*)sub)->anchorPosY - ((GrimbleControl*)sub)->currentPosY;
-            diff = ((GameObject*)obj)->anim.rotX - (u16)((GrimbleControl*)sub)->baseRotX;
+            diff = (obj)->anim.rotX - (u16)((GrimbleControl*)sub)->baseRotX;
             if (diff > 0x8000)
             {
                 diff -= 0xffff;
@@ -343,7 +343,7 @@ void fn_801627F4(struct GameObject *obj)
                 facing = 1;
             }
             ((GrimbleControl*)sub)->reversed = facing;
-            ((GameObject*)obj)->anim.rotX =
+            (obj)->anim.rotX =
                 ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed << 15);
             progress = ((GrimbleControl*)sub)->pathProgress - (f32)((((GrimbleControl*)sub)->reversed << 1) - 1) *
                                                                   ((f32)(int)randomGetRange(0xa, 0x3c) / lbl_803E2F24);

@@ -80,26 +80,26 @@ void directionallight_debugEdit(struct GameObject *obj, int statePtr)
     case 0:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
         {
-            ((GameObject*)obj)->anim.rotX -= 0x3e8;
+            (obj)->anim.rotX -= 0x3e8;
         }
         if ((buttons & PAD_BUTTON_RIGHT) != 0)
         {
-            ((GameObject*)obj)->anim.rotX += 0x3e8;
+            (obj)->anim.rotX += 0x3e8;
         }
         logPrintf(desc + 0x38);
-        logPrintf(desc + 0x44, ((GameObject*)obj)->anim.rotX);
+        logPrintf(desc + 0x44, (obj)->anim.rotX);
         break;
     case 1:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
         {
-            ((GameObject*)obj)->anim.rotY -= 0x3e8;
+            (obj)->anim.rotY -= 0x3e8;
         }
         if ((buttons & PAD_BUTTON_RIGHT) != 0)
         {
-            ((GameObject*)obj)->anim.rotY += 0x3e8;
+            (obj)->anim.rotY += 0x3e8;
         }
         logPrintf(desc + 0x50);
-        logPrintf(desc + 0x44, ((GameObject*)obj)->anim.rotY);
+        logPrintf(desc + 0x44, (obj)->anim.rotY);
         break;
     case 2:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -188,7 +188,7 @@ int directionallight_getObjectTypeId(void)
 
 void directionallight_free(struct GameObject *obj)
 {
-    DirectionalLightState* state = ((GameObject*)obj)->extra;
+    DirectionalLightState* state = (obj)->extra;
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);

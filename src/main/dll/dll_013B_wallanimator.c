@@ -92,7 +92,7 @@ f32 wallanimator_setScale(struct GameObject *obj, int target)
     WallanimatorState* state;
     f32 scale;
 
-    placementDesc = *(int*)&((GameObject*)obj)->anim.placementData;
+    placementDesc = *(int*)&(obj)->anim.placementData;
     count = 6;
     do
     {
@@ -106,25 +106,25 @@ f32 wallanimator_setScale(struct GameObject *obj, int target)
         offset[2] -= 25.0f;
         vecRotateZXY((void*)obj, offset);
         spawn.rot[2] = ((WallanimatorPlacement*)placementDesc)->spawnRotZ;
-        spawn.rot[0] = ((GameObject*)obj)->anim.rotX;
-        spawn.pos[0] = ((GameObject*)obj)->anim.worldPosX + offset[0];
-        spawn.pos[1] = 15.0f + (((GameObject*)obj)->anim.worldPosY + offset[1]);
-        spawn.pos[2] = ((GameObject*)obj)->anim.worldPosZ + offset[2];
+        spawn.rot[0] = (obj)->anim.rotX;
+        spawn.pos[0] = (obj)->anim.worldPosX + offset[0];
+        spawn.pos[1] = 15.0f + ((obj)->anim.worldPosY + offset[1]);
+        spawn.pos[2] = (obj)->anim.worldPosZ + offset[2];
         (*gPartfxInterface)->spawnObject((void*)obj, WALLANIMATOR_PARTFX_DEBRIS, spawn.rot, 0x200001, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, WALLANIMATOR_PARTFX_DUST, spawn.rot, 0x200001, -1, NULL);
         count--;
     } while (count != 0);
 
-    state = ((GameObject*)obj)->extra;
-    deltaY = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    state = (obj)->extra;
+    deltaY = ((GameObject*)target)->anim.localPosY - (obj)->anim.localPosY;
     if ((deltaY < -20.0f) || (deltaY > 20.0f))
     {
         scale = 0.0f;
     }
     else
     {
-        deltaX = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-        deltaZ = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+        deltaX = ((GameObject*)target)->anim.localPosX - (obj)->anim.localPosX;
+        deltaZ = ((GameObject*)target)->anim.localPosZ - (obj)->anim.localPosZ;
         if (deltaX * deltaX + deltaZ * deltaZ > 2500.0f)
         {
             scale = 0.0f;

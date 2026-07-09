@@ -488,8 +488,8 @@ int dll_28B_stateHandler3(struct GameObject *obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedA != 0)
     {
         ((BaddieState*)ai)->moveSpeed = gWcEarthWalkerChaseMoveSpeed;
-        getAngle(((GameObject*)obj)->anim.localPosX - player->anim.localPosX,
-                 ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ);
+        getAngle((obj)->anim.localPosX - player->anim.localPosX,
+                 (obj)->anim.localPosZ - player->anim.localPosZ);
     }
     return 0;
 }
@@ -497,15 +497,15 @@ int dll_28B_stateHandler3(struct GameObject *obj, int ai)
 int dll_28B_stateHandler2(struct GameObject *obj, int ai)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    Dll28BAiState* state = *(Dll28BAiState**)&((GameObject*)obj)->extra;
+    Dll28BAiState* state = *(Dll28BAiState**)&(obj)->extra;
 
-    ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (state->route.posX - ((GameObject*)obj)->anim.localPosX);
-    ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (state->route.posZ - ((GameObject*)obj)->anim.localPosZ);
-    ((GameObject*)obj)->anim.localPosX = state->route.posX;
-    ((GameObject*)obj)->anim.localPosZ = state->route.posZ;
+    (obj)->anim.velocityX = oneOverTimeDelta * (state->route.posX - (obj)->anim.localPosX);
+    (obj)->anim.velocityZ = oneOverTimeDelta * (state->route.posZ - (obj)->anim.localPosZ);
+    (obj)->anim.localPosX = state->route.posX;
+    (obj)->anim.localPosZ = state->route.posZ;
     ewObj->facingAngle = getAngle(-state->route.tangentX, -state->route.tangentZ);
-    ObjAnim_SampleRootCurvePhase(sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-                                       ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
+    ObjAnim_SampleRootCurvePhase(sqrtf((obj)->anim.velocityX * (obj)->anim.velocityX +
+                                       (obj)->anim.velocityZ * (obj)->anim.velocityZ),
                                  (ObjAnimComponent*)obj, &((BaddieState*)ai)->moveSpeed);
     return 0;
 }

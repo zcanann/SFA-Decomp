@@ -276,8 +276,8 @@ void Vortex_init(int obj, int initData)
 
 void Vortex_update(struct GameObject *obj)
 {
-    VortexState* state = ((GameObject*)obj)->extra;
-    VortexSetup* setup = (VortexSetup*)((GameObject*)obj)->anim.placementData;
+    VortexState* state = (obj)->extra;
+    VortexSetup* setup = (VortexSetup*)(obj)->anim.placementData;
     u32 active;
 
     state->flags.active = 0;
@@ -286,7 +286,7 @@ void Vortex_update(struct GameObject *obj)
         state->flags.active = mainGetBit(setup->activeGameBit);
     }
 
-    if (((GameObject*)obj)->anim.seqId == 0x29a || ((GameObject*)obj)->anim.seqId == 0x829)
+    if ((obj)->anim.seqId == 0x29a || (obj)->anim.seqId == 0x829)
     {
         if (state->flags.active != 0)
         {

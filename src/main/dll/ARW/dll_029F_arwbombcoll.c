@@ -59,10 +59,10 @@ void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void ARWBombColl_init(struct GameObject *obj, int setup)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ObjAnimComponent* objAnim = &(obj)->anim;
     ARWBombCollSetup* mapData = (ARWBombCollSetup*)setup;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
+    (obj)->anim.rotX = (s16)(mapData->rotX << 8);
     objAnim->alpha = 0;
 }
 
@@ -80,13 +80,13 @@ void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState* state)
     if (mode == 1 || mode == 3)
     {
         f32 edge, cur, lim;
-        ((GameObject*)obj)->anim.localPosX = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosX;
-        cur = ((GameObject*)obj)->anim.localPosX;
+        (obj)->anim.localPosX = state->pullHeight * timeDelta + (obj)->anim.localPosX;
+        cur = (obj)->anim.localPosX;
         lim = state->origX;
         edge = lim + (f32)(u32)state->linkId;
         if (cur > edge)
         {
-            ((GameObject*)obj)->anim.localPosX = edge - (cur - edge);
+            (obj)->anim.localPosX = edge - (cur - edge);
             state->pullHeight = -state->pullHeight;
         }
         else
@@ -94,7 +94,7 @@ void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState* state)
             edge = lim - (f32)(u32)state->linkId;
             if (cur < edge)
             {
-                ((GameObject*)obj)->anim.localPosX = edge - (cur - edge);
+                (obj)->anim.localPosX = edge - (cur - edge);
                 state->pullHeight = -state->pullHeight;
             }
         }
@@ -102,13 +102,13 @@ void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState* state)
     else if (mode == 4 || mode == 5)
     {
         f32 edge, cur, lim;
-        ((GameObject*)obj)->anim.localPosY = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosY;
-        cur = ((GameObject*)obj)->anim.localPosY;
+        (obj)->anim.localPosY = state->pullHeight * timeDelta + (obj)->anim.localPosY;
+        cur = (obj)->anim.localPosY;
         lim = state->origY;
         edge = lim + (f32)(u32)state->linkId;
         if (cur > edge)
         {
-            ((GameObject*)obj)->anim.localPosY = edge - (cur - edge);
+            (obj)->anim.localPosY = edge - (cur - edge);
             state->pullHeight = -state->pullHeight;
         }
         else
@@ -116,7 +116,7 @@ void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState* state)
             edge = lim - (f32)(u32)state->linkId;
             if (cur < edge)
             {
-                ((GameObject*)obj)->anim.localPosY = edge - (cur - edge);
+                (obj)->anim.localPosY = edge - (cur - edge);
                 state->pullHeight = -state->pullHeight;
             }
         }
@@ -126,7 +126,7 @@ void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState* state)
 void Ring_onCollect(struct GameObject *obj, RingState* state, int arwing)
 {
     GameObject* arwingObj = (GameObject*)arwing;
-    int setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    int setup = *(int*)&(obj)->anim.placementData;
     u8 mode = state->mode;
     if (mode == 0)
     {
@@ -180,7 +180,7 @@ void Ring_onCollect(struct GameObject *obj, RingState* state, int arwing)
 
 int arwbombcoll_checkArwingCollision(struct GameObject *obj, RingState* state, int arwing)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ObjAnimComponent* objAnim = &(obj)->anim;
     ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
     RingFlags* f = &state->flags;
     if (f->bit10)

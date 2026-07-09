@@ -50,7 +50,7 @@ extern f32 Vec_distance(f32* a, f32* b);
 
 int LevelName_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = (obj)->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -150,8 +150,8 @@ void LevelName_init(struct GameObject *obj, int objDef)
     int* state;
     int* text;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = LevelName_SeqFn;
+    state = (obj)->extra;
+    (obj)->animEventCallback = LevelName_SeqFn;
     text = (int*)gameTextGet(*(int*)(objDef + 0x1c));
     ((TFrameAnimatorState*)state)->unk4 = **(int**)(text + 2);
     ((TFrameAnimatorState*)state)->duration = 0x64;
@@ -168,7 +168,7 @@ void LevelName_init(struct GameObject *obj, int objDef)
             ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_IDLE;
         }
     }
-    ((GameObject*)obj)->objectFlags |= LEVELNAME_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->objectFlags |= LEVELNAME_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void LevelName_release(void)

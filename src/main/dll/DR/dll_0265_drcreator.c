@@ -160,8 +160,8 @@ void DR_Creator_update(int obj)
 
 void DR_Creator_init(struct GameObject *obj, char* arg)
 {
-    char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);
+    char* state = (obj)->extra;
+    (obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);
     ((DrcreatorState*)state)->gameBitId = ((DrcreatorPlacement*)arg)->gameBitId;
     ((DrcreatorState*)state)->spawnInterval = ((DrcreatorPlacement*)arg)->spawnInterval;
     ((DrcreatorState*)state)->spawnTimer = randomGetRange(0, ((DrcreatorState*)state)->spawnInterval);
@@ -169,7 +169,7 @@ void DR_Creator_init(struct GameObject *obj, char* arg)
     *(int*)state = ((DrcreatorPlacement*)arg)->speedScale;
     ((BitFlags8*)(state + 0x18))->b0 = 1;
     mainSetBits(0x5dd, 0);
-    ((GameObject*)obj)->animEventCallback = DR_Creator_SeqFn;
+    (obj)->animEventCallback = DR_Creator_SeqFn;
 }
 
 void DR_Creator_release(void)

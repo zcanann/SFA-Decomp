@@ -72,7 +72,7 @@ int sh_beacon_SeqFn(int obj)
 
 int fn_801DA9CC(struct GameObject *obj)
 {
-    ((ShBeaconState*)*(int*)&((GameObject*)obj)->extra)->fadeTimer = 6.0f;
+    ((ShBeaconState*)*(int*)&(obj)->extra)->fadeTimer = 6.0f;
     return 1;
 }
 
@@ -83,7 +83,7 @@ int sh_beacon_getExtraSize(void)
 
 void sh_beacon_free(struct GameObject *obj, int keepChild)
 {
-    int extra = *(int*)&((GameObject*)obj)->extra;
+    int extra = *(int*)&(obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if (keepChild == 0)
     {

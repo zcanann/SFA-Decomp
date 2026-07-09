@@ -124,10 +124,10 @@ void warpstonelift_update(u8* obj)
 
 void warpstonelift_init(struct GameObject *obj, s8* def)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = (obj)->extra;
     int i;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->unkF4 = 0;
+    (obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
+    (obj)->unkF4 = 0;
     for (i = 0; i < 2; i++)
     {
         if (mainGetBit(lbl_803DC058[i]) != 0)
@@ -139,10 +139,10 @@ void warpstonelift_init(struct GameObject *obj, s8* def)
     {
     case WARPSTONELIFT_STATE_IDLE:
     case WARPSTONELIFT_STATE_SWAPPED:
-        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 3);
         break;
     case WARPSTONELIFT_STATE_OFFERING:
-        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
         break;
     }
 }

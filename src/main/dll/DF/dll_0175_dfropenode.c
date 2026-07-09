@@ -87,8 +87,8 @@ int dfropenode_findNearestRopePoint(struct GameObject *obj, f32 worldX, f32 worl
     f32 distance;
     int result;
 
-    extra = ((GameObject*)obj)->extra;
-    if ((((DfropenodePlacement*)((GameObject*)obj)->anim.placementData)->flags18 & 1) == 0)
+    extra = (obj)->extra;
+    if ((((DfropenodePlacement*)(obj)->anim.placementData)->flags18 & 1) == 0)
     {
         return 0;
     }
@@ -101,9 +101,9 @@ int dfropenode_findNearestRopePoint(struct GameObject *obj, f32 worldX, f32 worl
         return 0;
     }
     *distanceOut = gRopeNodeMaxDistance;
-    localX = worldX - ((GameObject*)obj)->anim.localPosX;
-    localY = worldY - ((GameObject*)obj)->anim.localPosY;
-    localZ = worldZ - ((GameObject*)obj)->anim.localPosZ;
+    localX = worldX - (obj)->anim.localPosX;
+    localY = worldY - (obj)->anim.localPosY;
+    localZ = worldZ - (obj)->anim.localPosZ;
     {
         i = 0;
         result = 0;
@@ -179,7 +179,7 @@ void dfropenode_advancePhaseByDistance(struct GameObject *obj, float* phase, f32
     f32 dz;
     f32 len;
 
-    extra = ((GameObject*)obj)->extra;
+    extra = (obj)->extra;
     ph = *phase;
     raw = (s32)ph;
     idx = (s8)raw;
@@ -353,7 +353,7 @@ void dfropenode_free(struct GameObject *obj)
     int count;
     int i;
 
-    node = ((GameObject*)obj)->extra;
+    node = (obj)->extra;
     ObjGroup_RemoveObject((u32)obj, DFROPENODE_OBJGROUP);
     if (((DFropenodeExtra*)node)->rope != NULL && ((DFropenodeExtra*)node)->rope != NULL)
     {

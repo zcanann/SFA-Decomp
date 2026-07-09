@@ -34,7 +34,7 @@ extern void* gameTextGet(int textId);
 #pragma peephole off
 int InfoPoint_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    InfopointState* state = ((GameObject*)obj)->extra;
+    InfopointState* state = (obj)->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {

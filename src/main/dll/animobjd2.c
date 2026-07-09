@@ -608,8 +608,8 @@ void* trickyFindCirclingTarget(struct GameObject *obj, void* state)
     {
         if (list[i] == target)
         {
-            d1 = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
-            d2 = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
+            d1 = Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
+            d2 = Vec_xzDistance(&(obj)->anim.worldPosX,
                                 &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
             d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
                                 &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);

@@ -298,8 +298,8 @@ void XyzAnimator_update(struct GameObject *obj)
     extern int mapBlockFn_80060678(void);
     extern u8* mapBlockFn_800606ec(int block, int idx);
     extern int* mapGetBlock(int idx);
-    u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    u8* state = ((GameObject*)obj)->extra;
+    u8* setup = *(u8**)&(obj)->anim.placementData;
+    u8* state = (obj)->extra;
     int block;
     u8* row;
     int i;
@@ -307,8 +307,8 @@ void XyzAnimator_update(struct GameObject *obj)
     int alloc, stride;
     int t;
 
-    block = (int)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                                 ((GameObject*)obj)->anim.localPosZ));
+    block = (int)mapGetBlock(objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY,
+                                                 (obj)->anim.localPosZ));
     if ((u32)block == 0)
     {
         ((XyzAnimatorState*)state)->loopCount = 0;

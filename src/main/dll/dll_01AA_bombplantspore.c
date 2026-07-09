@@ -105,7 +105,7 @@ void BombPlantSpore_free(struct GameObject *obj)
     void* state;
     void* light;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     (*gExpgfxInterface)->freeSource((u32)obj);
     light = ((BombPlantSporeState*)state)->light;
     if (light != NULL)
@@ -124,7 +124,7 @@ void bombplantspore_startDriftBurst(struct GameObject *obj, void* state)
     void* params;
     s32 angleDelta;
 
-    params = ((GameObject*)obj)->anim.placementData;
+    params = (obj)->anim.placementData;
     baseAngle = ((BombplantsporeStartDriftBurstPlacement*)params)->baseAngle;
 
     ((BombPlantSporeState*)state)->spinTimer = (f32)(int)randomGetRange(0x1e, 0x2d);
@@ -169,7 +169,7 @@ void bombplantspore_updateDrift(struct GameObject *obj, void* state)
     void* params;
     s32 angleDelta;
 
-    params = ((GameObject*)obj)->anim.placementData;
+    params = (obj)->anim.placementData;
     baseAngle = ((BombplantsporeUpdateDriftPlacement*)params)->baseAngle;
 
     if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)

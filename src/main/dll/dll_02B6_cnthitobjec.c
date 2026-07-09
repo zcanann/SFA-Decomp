@@ -191,7 +191,7 @@ int mcupgrade_SeqFn(struct GameObject *obj, int unused, CntHitObjectAnimEvent* e
     if (event->explosionCount != 0)
     {
         (*gGameUIInterface)
-            ->showNpcDialogue(((CntHitObjectSetup*)((GameObject*)obj)->anim.placementData)->startHealth, 0x14, 0x8c, 0);
+            ->showNpcDialogue(((CntHitObjectSetup*)(obj)->anim.placementData)->startHealth, 0x14, 0x8c, 0);
     }
     return 0;
 }

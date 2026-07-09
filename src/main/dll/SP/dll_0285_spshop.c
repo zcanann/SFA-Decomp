@@ -145,7 +145,7 @@ void shop_buyItem(struct GameObject *obj, int price)
     s16 boughtBit;
 
     player = (int)Obj_GetPlayerObject();
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     mapEventState = (int)(*gMapEventInterface)->getCurCharacterState();
     playerAddMoney(player, -price);
 

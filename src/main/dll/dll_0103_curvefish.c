@@ -296,11 +296,11 @@ void CurveFish_init(struct GameObject *obj, u8* setup)
 {
     int state;
     u32 flags;
-    state = *(int*)&((GameObject*)obj)->extra;
-    flags = ((GameObject*)obj)->objectFlags;
+    state = *(int*)&(obj)->extra;
+    flags = (obj)->objectFlags;
     flags |= 0x6000;
-    ((GameObject*)obj)->objectFlags = flags;
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
+    (obj)->objectFlags = flags;
+    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
                                                ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / 100.0f);
     ((CurveFishState*)state)->mode = CURVEFISH_MODE_SPAWN;
     ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / 100.0f;

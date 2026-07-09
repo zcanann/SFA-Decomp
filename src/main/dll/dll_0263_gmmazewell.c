@@ -52,7 +52,7 @@ enum QuestWellRow
 
 int GM_MazeWell_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    GmmazewellState* state = ((GameObject*)obj)->extra;
+    GmmazewellState* state = (obj)->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -184,9 +184,9 @@ checkValue:
 
 void GM_MazeWell_init(struct GameObject *obj)
 {
-    GmmazewellState* state = ((GameObject*)obj)->extra;
+    GmmazewellState* state = (obj)->extra;
     state->unk0 = 0;
     mainSetBits(GAMEBIT_MAZEWELL_ACTIVE, 1);
     Music_Trigger(MUSIC_MAZEWELL, 1);
-    ((GameObject*)obj)->animEventCallback = GM_MazeWell_SeqFn;
+    (obj)->animEventCallback = GM_MazeWell_SeqFn;
 }

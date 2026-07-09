@@ -159,7 +159,7 @@ void kytesmum_free(int obj)
 int kytesmum_spawnInteractionCallback(struct GameObject *obj)
 {
     Obj_GetPlayerObject();
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
     {
         buttonDisable(0, PAD_BUTTON_A);
         if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)

@@ -145,7 +145,7 @@ void pollenfragment_initialise(void)
 
 void pollenfragment_free(struct GameObject *obj)
 {
-    int* inner = ((GameObject*)obj)->extra;
+    int* inner = (obj)->extra;
     if ((void*)inner[6] != NULL)
     {
         ModelLightStruct_free((void*)inner[6]);

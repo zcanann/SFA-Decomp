@@ -170,9 +170,9 @@ void snowclaw_initialise(void)
 
 void snowclaw_free(struct GameObject *obj)
 {
-    if (((GameObject*)obj)->childObjs[0] != NULL)
+    if ((obj)->childObjs[0] != NULL)
     {
-        Obj_FreeObject(*(int*)&((GameObject*)obj)->childObjs[0]);
+        Obj_FreeObject(*(int*)&(obj)->childObjs[0]);
     }
 }
 
@@ -367,26 +367,26 @@ void snowclaw_syncMountTransform(struct GameObject *obj, int sub, int p2, int p3
                                                                                                   -1);
         *(u8*)(sub + 0x37) = saved;
     }
-    ((GameObject*)obj)->anim.previousWorldPosX = ((GameObject*)obj)->anim.worldPosX;
-    ((GameObject*)obj)->anim.previousWorldPosY = ((GameObject*)obj)->anim.worldPosY;
-    ((GameObject*)obj)->anim.previousWorldPosZ = ((GameObject*)obj)->anim.worldPosZ;
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+    (obj)->anim.previousWorldPosX = (obj)->anim.worldPosX;
+    (obj)->anim.previousWorldPosY = (obj)->anim.worldPosY;
+    (obj)->anim.previousWorldPosZ = (obj)->anim.worldPosZ;
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
+    (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
     (*(void (**)(int, f32*, f32*, f32*))((char*)*((GameObject*)sub)->anim.dll + 0x28))(sub, &newPosX, &newPosY,
                                                                                        &newPosZ);
-    ((GameObject*)obj)->anim.localPosX = newPosX;
-    ((GameObject*)obj)->anim.localPosY = newPosY;
-    ((GameObject*)obj)->anim.localPosZ = newPosZ;
-    ((GameObject*)obj)->anim.rotX = ((GameObject*)sub)->anim.rotX;
-    ((GameObject*)obj)->anim.rotY = ((GameObject*)sub)->anim.rotY;
-    ((GameObject*)obj)->anim.rotZ = ((GameObject*)sub)->anim.rotZ;
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)sub)->anim.velocityX;
-    ((GameObject*)obj)->anim.velocityY = ((GameObject*)sub)->anim.velocityY;
-    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)sub)->anim.velocityZ;
+    (obj)->anim.localPosX = newPosX;
+    (obj)->anim.localPosY = newPosY;
+    (obj)->anim.localPosZ = newPosZ;
+    (obj)->anim.rotX = ((GameObject*)sub)->anim.rotX;
+    (obj)->anim.rotY = ((GameObject*)sub)->anim.rotY;
+    (obj)->anim.rotZ = ((GameObject*)sub)->anim.rotZ;
+    (obj)->anim.worldPosX = (obj)->anim.localPosX;
+    (obj)->anim.worldPosY = (obj)->anim.localPosY;
+    (obj)->anim.worldPosZ = (obj)->anim.localPosZ;
+    (obj)->anim.velocityX = ((GameObject*)sub)->anim.velocityX;
+    (obj)->anim.velocityY = ((GameObject*)sub)->anim.velocityY;
+    (obj)->anim.velocityZ = ((GameObject*)sub)->anim.velocityZ;
 }
 #pragma dont_inline reset
 

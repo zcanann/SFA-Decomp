@@ -230,7 +230,7 @@ void wmseqpoint_update(struct GameObject *obj)
     extern u8 getSkyColorFn_80088e08(int skyId);
 
     player = (int)Obj_GetPlayerObject();
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
 
     if (state->disableGameBit != -1)
     {
@@ -259,7 +259,7 @@ void wmseqpoint_update(struct GameObject *obj)
     switch (state->triggerMode)
     {
     case WMSEQPOINT_TRIGGER_PROXIMITY:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (Vec_distance((void*)&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             state->triggerRadius)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
@@ -291,7 +291,7 @@ void wmseqpoint_update(struct GameObject *obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_SET:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (Vec_distance((void*)&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
                 state->triggerRadius &&
             state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) != 0)
         {
@@ -310,7 +310,7 @@ void wmseqpoint_update(struct GameObject *obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_CLEAR:
-        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (Vec_distance((void*)&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
                 state->triggerRadius &&
             state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) == 0)
         {
@@ -343,10 +343,10 @@ void wmseqpoint_init(struct GameObject *obj, int setup)
     WmSeqPointState* state;
     WmSeqPointMapData* mapData;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     mapData = (WmSeqPointMapData*)setup;
-    ((GameObject*)obj)->animEventCallback = wmseqpoint_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+    (obj)->animEventCallback = wmseqpoint_SeqFn;
+    (obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
     state->triggerRadius = mapData->triggerRadius;
     state->sequenceId = mapData->sequenceId;
     state->doneLatch = 0;

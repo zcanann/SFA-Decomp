@@ -72,10 +72,10 @@ void mmp_gyservent_update(int obj)
 
 void mmp_gyservent_init(struct GameObject *obj)
 {
-    ((GameObject*)obj)->objectFlags |= (MMPGYSERVENT_OBJFLAG_HIDDEN | MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED);
-    *(u32*)&((GameObject*)obj)->unkF4 = randomGetRange(0xa, 0xc8);
-    ((GameObject*)obj)->anim.alpha = 0;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    (obj)->objectFlags |= (MMPGYSERVENT_OBJFLAG_HIDDEN | MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED);
+    *(u32*)&(obj)->unkF4 = randomGetRange(0xa, 0xc8);
+    (obj)->anim.alpha = 0;
+    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
 }
 
 void mmp_gyservent_release(void)

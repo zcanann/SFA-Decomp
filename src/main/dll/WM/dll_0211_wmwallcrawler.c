@@ -165,7 +165,7 @@ typedef struct
 
 int wmwallcrawler_animEventCallback(struct GameObject *obj)
 {
-    ((WmwallcrawlerState*)((GameObject*)obj)->extra)->mode = WMWALLCRAWLER_MODE_DESCEND;
+    ((WmwallcrawlerState*)(obj)->extra)->mode = WMWALLCRAWLER_MODE_DESCEND;
     return 0;
 }
 
@@ -187,12 +187,12 @@ void wmwallcrawler_alignToFloorNormal(struct GameObject *obj, f32* floorData)
     mtx.m8 = lbl_803E5FB4;
     mtx.r2 = 0;
     mtx.r1 = 0;
-    mtx.r0 = ((GameObject*)obj)->anim.rotX;
+    mtx.r0 = (obj)->anim.rotX;
     vecRotateZXY(&mtx, in);
     ang = getAngle(in[0], in[1]);
     ang2 = getAngle(in[2], in[1]);
-    ((GameObject*)obj)->anim.rotY = ang2;
-    ((GameObject*)obj)->anim.rotZ = ang;
+    (obj)->anim.rotY = ang2;
+    (obj)->anim.rotZ = ang;
 }
 #pragma dont_inline reset
 

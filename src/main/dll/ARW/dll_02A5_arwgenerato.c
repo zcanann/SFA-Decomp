@@ -60,7 +60,7 @@ void arwgenerato_update(int obj)
 
 void arwgenerato_init(struct GameObject *obj, int setup)
 {
-    ARWGeneratorState* state = ((GameObject*)obj)->extra;
+    ARWGeneratorState* state = (obj)->extra;
     ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)setup;
 
     state->spawnTimer = (f32)(u32)mapData->spawnInterval;

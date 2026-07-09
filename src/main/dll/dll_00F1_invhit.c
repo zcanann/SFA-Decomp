@@ -90,7 +90,7 @@ void InvHit_render(int* obj, int a, int b, int c, int d)
 #pragma peephole off
 void InvHit_free(struct GameObject *obj)
 {
-    char* inner = ((GameObject*)obj)->extra;
+    char* inner = (obj)->extra;
     switch (((InvHitState*)inner)->mode)
     {
     case INVHIT_MODE_HOMING_PROJECTILE:

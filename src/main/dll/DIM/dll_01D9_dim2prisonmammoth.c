@@ -274,7 +274,7 @@ void dim2prisonmammoth_initialise(void)
 
 void fn_802BC788(struct GameObject *obj, int b)
 {
-    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&((GameObject*)obj)->extra + 0x14f8), 0);
+    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&(obj)->extra + 0x14f8), 0);
 }
 
 ObjHitReactEntry gPrisonMammothHitReactEntry[] = {
