@@ -242,42 +242,38 @@ typedef struct KeymapEntry
 int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section,
                 u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd)
 {
-    u32 fullKey;
-    u8* keymap;
-    s32 idx;
-    s32 panTmp;
-    s32 note;
-    s32 kk;
-    s32 pp;
+    u8 o;
+    KeymapEntry* keymap;
+    s32 p;
+    s32 k;
     u32 handle;
     u32 ok;
     u32 rejected;
-    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32 * rejected);
+    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
-    if ((keymap = dataGetKeymap(id)) != 0)
+    if ((keymap = (KeymapEntry*)dataGetKeymap(id)) != 0)
     {
-        idx = (key & 0x7F) * 8;
-        fullKey = key & 0xFF;
-        if (((KeymapEntry*)(keymap + idx))->id != 0xFFFF)
+        o = key & 0x7F;
+        if (keymap[o].id != 0xFFFF)
         {
-            if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) != 0x4000)
+            if ((keymap[o].id & 0xC000) != 0x4000)
             {
-                if ((((KeymapEntry*)(keymap + idx))->panning & 0x80) == 0)
+                if ((keymap[o].panning & 0x80) == 0)
                 {
-                    panTmp = keymap[fullKey * 8 + 3] - 0x40;
-                    panTmp += pan;
-                    if (panTmp < 0)
+                    p = keymap[key].panning - 0x40;
+                    p += pan;
+                    if (p < 0)
                     {
                         pan = 0;
                     }
-                    else if (panTmp > 0x7F)
+                    else if (p > 0x7F)
                     {
                         pan = 0x7F;
                     }
                     else
                     {
-                        pan = panTmp;
+                        pan = p;
                     }
                 }
                 else
@@ -285,37 +281,31 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     pan = 0x80;
                 }
 
-                note = (fullKey & 0x7F) + ((s8*)((u32)keymap + idx))[2];
-                if (note > 0x7F)
+                k = (key & 0x7F) + keymap[o].transpose;
+                if (k > 0x7F)
                 {
-                    kk = 0x7F;
+                    k = 0x7F;
                 }
-                else if (note < 0)
+                else if (k < 0)
                 {
-                    kk = 0;
-                }
-                else
-                {
-                    kk = note;
+                    k = 0;
                 }
 
-                prio += *(s16*)&keymap[idx + 4];
-                pp = prio;
-                if (pp > 0xFF)
+                prio += keymap[o].prioOffset;
+                if (prio > 0xFF)
                 {
-                    pp = 0xFF;
+                    prio = 0xFF;
                 }
                 else if (prio < 0)
                 {
-                    pp = 0;
+                    prio = 0;
                 }
-                prio = pp;
 
-                if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) == 0)
+                if ((keymap[o].id & 0xC000) == 0)
                 {
                     if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
                     {
-                        handle = audioFn_8026f630(kk & 0x7F, midi, midiSet, vidFlag, &rejected);
+                        handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
                         ok = !rejected;
                     }
                     else
@@ -331,11 +321,11 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     {
                         return handle;
                     }
-                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, kk | (fullKey & 0x80),
+                    return macStart(keymap[o].id, prio, maxVoices, allocId, k | (key & 0x80),
                                     vol, pan, midi, midiSet, section, step, trackid, vidFlag, vGroup, studio, itd);
                 }
-                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId,
-                                             kk | (fullKey & 0x80), vol, pan, midi, midiSet, section, step, trackid,
+                return audioLayerFn_8026f8b8(keymap[o].id, prio, maxVoices, allocId, k | (key & 0x80), vol, pan, midi,
+                                             midiSet, section, step, trackid,
                                              vidFlag, vGroup, studio, itd);
             }
         }
