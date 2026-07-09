@@ -54,6 +54,7 @@ extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void objRenderFn_80041018(int obj);
 
+#pragma opt_loop_invariants off
 int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)obj)->anim.placementData;
@@ -245,6 +246,7 @@ int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     warpPadFn_8019042c((int)obj);
     return 0;
 }
+#pragma opt_loop_invariants reset
 
 int Transporter_getExtraSize(void)
 {
