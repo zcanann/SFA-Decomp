@@ -218,12 +218,12 @@ int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwi
 #pragma opt_common_subs off
 void ARWBombColl_update(int obj)
 {
+    int arw;
     ObjAnimComponent* objAnim;
     ArwBombFlags* flags;
     ARWBombCollState* state;
     int arwingCheck;
     f32 minLifetime;
-    int arw;
 
     arw = getArwing();
     objAnim = &((GameObject*)obj)->anim;
