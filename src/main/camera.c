@@ -179,12 +179,12 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     u8* base;
     u32 ancestors[4];
     ObjMatrixBuildTransform inverseTransform;
-    u32 current;
+    f32* inverseYawMatrix;
     s32 matrixIndex;
     f32* yawMatrix;
-    f32* inverseYawMatrix;
-    f32 savedScale;
     s8 ancestorCount;
+    u32 current;
+    f32 savedScale;
     s8 hasParent;
 
     current = obj;
