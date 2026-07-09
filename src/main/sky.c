@@ -1315,6 +1315,7 @@ void dll_06_func09(s32* x, s32* y, s32* z)
 }
 
 #pragma opt_propagation off
+#pragma opt_common_subs off
 void sky2_run(void)
 {
     SkyRotQ q;
@@ -1721,6 +1722,7 @@ void sky2_run(void)
         i++;
     } while (i < 2);
 }
+#pragma opt_common_subs reset
 #pragma opt_propagation reset
 
 void sky2_onMapSetup(void)
