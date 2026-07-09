@@ -347,10 +347,12 @@ void DoSetPitch(McmdVoiceState* svoice)
  */
 void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
-    McmdAdsrData adsr;
-    McmdAdsrCurve* adsr_ptr;
+    f32 attackProd;
+    f32 decayProd;
     s32 ascale;
     s32 dscale;
+    McmdAdsrData adsr;
+    McmdAdsrCurve* adsr_ptr;
 
     if ((adsr_ptr = (McmdAdsrCurve*)dataGetCurve(cstep->flags >> 8)) != NULL)
     {
@@ -378,14 +380,14 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
             if (ascale != 0x80000000)
             {
-                f32 prod = lbl_803E77F4 * svoice->volumeBase;
-                adsr.dls.atime += (s32)(prod * ascale);
+                attackProd = lbl_803E77F4 * svoice->volumeBase;
+                adsr.dls.atime += (s32)(attackProd * ascale);
             }
 
             if (dscale != 0x80000000)
             {
-                f32 prod = lbl_803E77F8 * svoice->keyBase;
-                adsr.dls.dtime += (s32)(prod * dscale);
+                decayProd = lbl_803E77F8 * svoice->keyBase;
+                adsr.dls.dtime += (s32)(decayProd * dscale);
             }
 
             hwSetADSR(svoice->voiceHandle & 0xFF, &adsr, 1);
