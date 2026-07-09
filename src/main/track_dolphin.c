@@ -976,6 +976,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
+#pragma opt_loop_invariants off
 void intersectModLineBuild(int* obj)
 {
     s16 link[0xd48];
@@ -1110,6 +1111,7 @@ void intersectModLineBuild(int* obj)
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
 }
+#pragma opt_loop_invariants reset
 
 void fn_800605F0(s16* in, f32* out)
 {
