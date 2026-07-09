@@ -418,45 +418,45 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         u8 v = animUpdate->eventIds[i];
         switch (v)
         {
-        case 0:
+        case 2:
             state->phase = SHSTAFF_PHASE_CARRY_ATTACH;
             break;
-        case 1:
+        case 3:
             state->hudFlag = 1;
             break;
-        case 2:
+        case 4:
             state->hudFlag = 0;
             break;
-        case 3:
+        case 5:
             sh_staff_deactivate(obj, state, 1);
             break;
-        case 4:
+        case 6:
             state->phase = SHSTAFF_PHASE_CARRY_LOCAL;
             break;
-        case 5:
+        case 7:
             hudFn_8011f38c(1);
             break;
-        case 6:
+        case 8:
             state->flags = (u8)(state->flags | 1);
             break;
-        case 7:
+        case 9:
             state->flags = (u8)(state->flags | 4);
             break;
-        case 8:
+        case 0xa:
             state->flags = (u8)(state->flags | 0x10);
             state->fadeTimer = gShStaffFadeTimerMax;
             break;
-        case 9:
+        case 0xb:
             state->flags = (u8)(state->flags | 0x20);
             state->fadeTimer = lbl_803E54D4;
             break;
-        case 0xa:
+        case 0xc:
             state->flags = (u8)(state->flags | 0x10);
             state->flags = (u8)(state->flags | 0xa);
             state->fadeTimer = gShStaffFadeOutTimerInit;
             break;
-        case 0xb:
-        case 0xc:
+        case 0:
+        case 1:
             break;
         }
     }
@@ -605,7 +605,7 @@ end:
 }
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */
-u32 gSH_staffHazeObjDescriptor[14] = {0x00000000,
+u32 gSH_staffHazeObjDescriptor[14] __attribute__((aligned(8))) = {0x00000000,
                                       0x00000000,
                                       0x00000000,
                                       0x00090000,
