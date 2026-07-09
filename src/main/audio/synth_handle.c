@@ -1,4 +1,5 @@
 #include "src/main/audio/synth_internal.h"
+#pragma exceptions on
 
 typedef struct SynthStartParams
 {
@@ -124,7 +125,7 @@ resolved:
     }
 }
 
-static u32 resolveHandle(u32 handle)
+static inline u32 resolveHandle(u32 handle)
 {
     SynthVoice* voice;
 
