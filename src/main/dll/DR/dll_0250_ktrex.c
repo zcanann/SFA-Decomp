@@ -599,6 +599,7 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x100000LL;
 }
 
+#pragma opt_lifetimes off
 void ktrex_update(int obj)
 {
     void* runtime;
@@ -699,6 +700,7 @@ void ktrex_update(int obj)
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     ((GameObject*)obj)->anim.localPosY = ((KTRexArenaState*)gKTRexState)->posY;
 }
+#pragma opt_lifetimes reset
 
 int ktrex_stateHandlerB05(int obj, int runtime)
 {
