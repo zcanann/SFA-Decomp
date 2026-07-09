@@ -3212,6 +3212,91 @@ void skyFn_8008aee8(void)
 }
 #pragma opt_common_subs reset
 
+void Sky_func03(int a, int b, u8* cfg);
+
+f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
+
+f32 gSkyMoonDirection[] = {
+    0.0f,   1.0f,   0.0f,   80.0f, 120.0f, 165.0f, 120.0f, 80.0f,  80.0f,
+    100.0f, 125.0f, 100.0f, 80.0f, 255.0f, 220.0f, 190.0f, 220.0f, 255.0f,
+};
+
+u8 gSkyColorBlendTable[248] = {
+    0,   29,  164, 0,   0,   72,  155, 68,  29,  12,  53,  28,  255, 143, 191, 255, 116, 186, 255, 219, 255, 255, 176,
+    255, 255, 255, 255, 232, 211, 255, 130, 255, 255, 79,  163, 255, 180, 255, 255, 111, 167, 255, 255, 255, 165, 245,
+    183, 140, 255, 205, 0,   255, 152, 0,   255, 129, 36,  242, 96,  33,  153, 53,  107, 104, 38,  102, 11,  0,   69,
+    7,   0,   65,  255, 255, 255, 255, 255, 255, 202, 0,   254, 77,  0,   97,  255, 116, 200, 98,  0,   59,  101, 224,
+    127, 0,   83,  44,  254, 254, 19,  0,   105, 38,  255, 254, 38,  205, 45,  61,  255, 253, 0,   169, 19,  57,  254,
+    254, 254, 8,   121, 208, 206, 0,   0,   255, 161, 0,   255, 254, 226, 92,  131, 63,  255, 255, 147, 180, 91,  67,
+    255, 254, 254, 210, 56,  130, 255, 0,   0,   122, 17,  1,   152, 0,   149, 36,  0,   87,  255, 72,  255, 101, 6,
+    101, 255, 230, 131, 255, 176, 47,  254, 0,   0,   63,  0,   0,   92,  142, 255, 0,   0,   92,  153, 198, 255, 0,
+    37,  172, 255, 255, 255, 53,  53,  255, 128, 128, 83,  122, 96,  70,  201, 0,   254, 77,  0,   97,  30,  65,  85,
+    195, 219, 244, 30,  65,  85,  203, 219, 133, 30,  65,  85,  111, 12,  134, 30,  65,  85,  49,  138, 216, 30,  65,
+    85,  255, 213, 81,  30,  65,  85,  255, 12,  0,   0,   0,   0,   0,   0,   0,   0,   0,
+};
+
+typedef struct SkyDllInterface {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback slot00;
+    ObjectDescriptorCallback slot01;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback slot03;
+    ObjectDescriptorCallback slot04;
+    ObjectDescriptorCallback slot05;
+    ObjectDescriptorCallback slot06;
+    ObjectDescriptorCallback slot07;
+    ObjectDescriptorCallback slot08;
+    ObjectDescriptorCallback slot09;
+    ObjectDescriptorCallback slot0A;
+    ObjectDescriptorCallback slot0B;
+    ObjectDescriptorCallback slot0C;
+    ObjectDescriptorCallback slot0D;
+    ObjectDescriptorCallback slot0E;
+    ObjectDescriptorCallback slot0F;
+    ObjectDescriptorCallback slot10;
+    ObjectDescriptorCallback slot11;
+    ObjectDescriptorCallback slot12;
+    ObjectDescriptorCallback slot13;
+    ObjectDescriptorCallback slot14;
+    ObjectDescriptorCallback slot15;
+    ObjectDescriptorCallback slot16;
+    ObjectDescriptorCallback slot17;
+} SkyDllInterface;
+
+SkyDllInterface lbl_8030F414 = {
+    0,
+    0,
+    0,
+    0x00033FB0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)Sky_func03,
+    (ObjectDescriptorCallback)loadLightFn_8008bbc4,
+    (ObjectDescriptorCallback)timeOfDayFn_8008b964,
+    (ObjectDescriptorCallback)renderSky,
+    (ObjectDescriptorCallback)getTimeOfDay,
+    (ObjectDescriptorCallback)skyGetClockTime,
+    (ObjectDescriptorCallback)doNothing_8008B8B0,
+    (ObjectDescriptorCallback)fn_8008B88C,
+    (ObjectDescriptorCallback)getSunPos,
+    (ObjectDescriptorCallback)pDll_Sky_setTimeOfDay_nop,
+    (ObjectDescriptorCallback)return0_8008B7E8,
+    (ObjectDescriptorCallback)skyTimeToDayHourMinute,
+    (ObjectDescriptorCallback)fn_8008B71C,
+    (ObjectDescriptorCallback)skyFn_8008aee8,
+    (ObjectDescriptorCallback)skyGetCurrentTextureColor,
+    (ObjectDescriptorCallback)skyGetCurrentAmbientAndLightColors,
+    (ObjectDescriptorCallback)doNothing_800887C8,
+    (ObjectDescriptorCallback)doNothing_800887C4,
+    (ObjectDescriptorCallback)setGameBit2BA,
+    (ObjectDescriptorCallback)getEnvFxBit2BA,
+    (ObjectDescriptorCallback)return0_80088758,
+};
+
 void Sky_func03(int a, int b, u8* cfg)
 {
     s16* envp;
@@ -3388,90 +3473,7 @@ void Sky_func03(int a, int b, u8* cfg)
     }
 }
 
-u8 gSkyColorBlendTable[248] = {
-    0,   29,  164, 0,   0,   72,  155, 68,  29,  12,  53,  28,  255, 143, 191, 255, 116, 186, 255, 219, 255, 255, 176,
-    255, 255, 255, 255, 232, 211, 255, 130, 255, 255, 79,  163, 255, 180, 255, 255, 111, 167, 255, 255, 255, 165, 245,
-    183, 140, 255, 205, 0,   255, 152, 0,   255, 129, 36,  242, 96,  33,  153, 53,  107, 104, 38,  102, 11,  0,   69,
-    7,   0,   65,  255, 255, 255, 255, 255, 255, 202, 0,   254, 77,  0,   97,  255, 116, 200, 98,  0,   59,  101, 224,
-    127, 0,   83,  44,  254, 254, 19,  0,   105, 38,  255, 254, 38,  205, 45,  61,  255, 253, 0,   169, 19,  57,  254,
-    254, 254, 8,   121, 208, 206, 0,   0,   255, 161, 0,   255, 254, 226, 92,  131, 63,  255, 255, 147, 180, 91,  67,
-    255, 254, 254, 210, 56,  130, 255, 0,   0,   122, 17,  1,   152, 0,   149, 36,  0,   87,  255, 72,  255, 101, 6,
-    101, 255, 230, 131, 255, 176, 47,  254, 0,   0,   63,  0,   0,   92,  142, 255, 0,   0,   92,  153, 198, 255, 0,
-    37,  172, 255, 255, 255, 53,  53,  255, 128, 128, 83,  122, 96,  70,  201, 0,   254, 77,  0,   97,  30,  65,  85,
-    195, 219, 244, 30,  65,  85,  203, 219, 133, 30,  65,  85,  111, 12,  134, 30,  65,  85,  49,  138, 216, 30,  65,
-    85,  255, 213, 81,  30,  65,  85,  255, 12,  0,   0,   0,   0,   0,   0,   0,   0,   0,
-};
-
-f32 gSkyMoonDirection[] = {
-    0.0f,   1.0f,   0.0f,   80.0f, 120.0f, 165.0f, 120.0f, 80.0f,  80.0f,
-    100.0f, 125.0f, 100.0f, 80.0f, 255.0f, 220.0f, 190.0f, 220.0f, 255.0f,
-};
-
-f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
-
 u8 gSkyConfigFieldIndices[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0};
-
-typedef struct SkyDllInterface {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback slot00;
-    ObjectDescriptorCallback slot01;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback slot03;
-    ObjectDescriptorCallback slot04;
-    ObjectDescriptorCallback slot05;
-    ObjectDescriptorCallback slot06;
-    ObjectDescriptorCallback slot07;
-    ObjectDescriptorCallback slot08;
-    ObjectDescriptorCallback slot09;
-    ObjectDescriptorCallback slot0A;
-    ObjectDescriptorCallback slot0B;
-    ObjectDescriptorCallback slot0C;
-    ObjectDescriptorCallback slot0D;
-    ObjectDescriptorCallback slot0E;
-    ObjectDescriptorCallback slot0F;
-    ObjectDescriptorCallback slot10;
-    ObjectDescriptorCallback slot11;
-    ObjectDescriptorCallback slot12;
-    ObjectDescriptorCallback slot13;
-    ObjectDescriptorCallback slot14;
-    ObjectDescriptorCallback slot15;
-    ObjectDescriptorCallback slot16;
-    ObjectDescriptorCallback slot17;
-} SkyDllInterface;
-
-SkyDllInterface lbl_8030F414 = {
-    0,
-    0,
-    0x00033FB0,
-    0,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)Sky_func03,
-    (ObjectDescriptorCallback)loadLightFn_8008bbc4,
-    (ObjectDescriptorCallback)timeOfDayFn_8008b964,
-    (ObjectDescriptorCallback)renderSky,
-    (ObjectDescriptorCallback)getTimeOfDay,
-    (ObjectDescriptorCallback)skyGetClockTime,
-    (ObjectDescriptorCallback)doNothing_8008B8B0,
-    (ObjectDescriptorCallback)fn_8008B88C,
-    (ObjectDescriptorCallback)getSunPos,
-    (ObjectDescriptorCallback)pDll_Sky_setTimeOfDay_nop,
-    (ObjectDescriptorCallback)return0_8008B7E8,
-    (ObjectDescriptorCallback)skyTimeToDayHourMinute,
-    (ObjectDescriptorCallback)fn_8008B71C,
-    (ObjectDescriptorCallback)skyFn_8008aee8,
-    (ObjectDescriptorCallback)skyGetCurrentTextureColor,
-    (ObjectDescriptorCallback)skyGetCurrentAmbientAndLightColors,
-    (ObjectDescriptorCallback)doNothing_800887C8,
-    (ObjectDescriptorCallback)doNothing_800887C4,
-    (ObjectDescriptorCallback)setGameBit2BA,
-    (ObjectDescriptorCallback)getEnvFxBit2BA,
-    (ObjectDescriptorCallback)return0_80088758,
-};
 
 ObjectDescriptor17 lbl_8030F4AC = {
     0,
