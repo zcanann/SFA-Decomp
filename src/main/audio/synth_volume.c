@@ -168,23 +168,26 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
     default:
     {
         u32 fadeTime = convertedTime;
-        fade = (SynthFade*)(stateBase + target * sizeof(SynthFade));
-        *(u8*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
-        *(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) = handle;
+        u8* slot = (u8*)&((SynthFade*)stateBase)[target];
+        u32* handlePtr;
+        *(u8*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
+        handlePtr = (u32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x28);
+        *handlePtr = handle;
         if (fadeTime != 0)
         {
-            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x08) = *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00);
-            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
-            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x0c) = lbl_803E77A8;
-            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x10) = lbl_803E77D4 / fadeTime;
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x08) = *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x00);
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x0c) = lbl_803E77A8;
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x10) = lbl_803E77D4 / fadeTime;
         }
         else
         {
-            *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x00) = *(f32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x04) =
+            SynthFade* activeFade = (SynthFade*)(slot + SYNTH_FADE_TABLE_OFFSET);
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x00) = *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x04) =
                 lbl_803E7798 * volume;
-            if (*(u32*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET + 0x28) != SYNTH_INVALID_LINK_ID)
+            if (*handlePtr != SYNTH_INVALID_LINK_ID)
             {
-                synthDispatchFadeAction((SynthFade*)((u8*)fade + SYNTH_FADE_TABLE_OFFSET));
+                synthDispatchFadeAction(activeFade);
             }
         }
         synthMasterFaderActiveFlags |= 1U << target;
