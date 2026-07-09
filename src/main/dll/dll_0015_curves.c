@@ -1066,6 +1066,7 @@ RomCurvePoint* curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryA
     return sCurvesHitPoints;
 }
 
+#pragma opt_common_subs off
 void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step)
 {
     extern int ObjHits_IsObjectEnabled(int obj);
@@ -1452,6 +1453,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
         ((GameObject*)curveObj)->anim.localPosZ = ((GameObject*)curveObj)->anim.worldPosZ;
     }
 }
+#pragma opt_common_subs reset
 
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 {
