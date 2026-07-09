@@ -458,20 +458,19 @@ void fn_801EB634(int obj, int stateRaw)
     }
 }
 
-#pragma opt_lifetimes off
 void fn_801EB940(short* obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
+    void* pathState = (void*)(stateRaw + 0x178);
     f32 fa;
     f32 fb;
     int rotClamped;
     int yawDelta;
     int ival;
 
-    ival = stateRaw + 0x178;
-    (*gPathControlInterface)->update(obj, (void*)ival, timeDelta);
-    (*gPathControlInterface)->apply(obj, (void*)ival);
-    (*gPathControlInterface)->advance(obj, (void*)ival, timeDelta);
+    (*gPathControlInterface)->update(obj, pathState, timeDelta);
+    (*gPathControlInterface)->apply(obj, pathState);
+    (*gPathControlInterface)->advance(obj, pathState, timeDelta);
     ival = 2;
     if (*(char*)(stateRaw + 0x3d9) == '\0')
     {
@@ -555,7 +554,6 @@ void fn_801EB940(short* obj, int stateRaw)
     }
     obj[2] = rotClamped;
 }
-#pragma opt_lifetimes reset
 
 void fn_801EBD60(int obj, int stateRaw)
 {
