@@ -4084,6 +4084,7 @@ int mapUnload(int mapId, int flags)
 
 extern char sAssetIndexOverflowError[];
 
+#pragma opt_lifetimes off
 int mergeTableFiles(u32* tbl, int id, int idx, int count_)
 {
     u8* base = lbl_80345E10;
@@ -4363,6 +4364,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     }
     return 1;
 }
+#pragma opt_lifetimes reset
 
 #undef MAPTBL32
 #undef MAPTBLP
