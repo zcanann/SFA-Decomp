@@ -2045,6 +2045,7 @@ void ObjHits_DetectObjectPair(int objA, int objB)
 end:;
 }
 
+#pragma opt_propagation off
 void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, void* scratchC, void* scratchD,
                                void* scratchE, int depth)
 {
@@ -2171,6 +2172,7 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
         ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE, depth + 1);
     }
 }
+#pragma opt_propagation reset
 
 void ObjHits_CheckTrackContact(int objA, int objB)
 {
