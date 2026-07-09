@@ -1234,6 +1234,8 @@ int ObjGroup_GetObjectGroup(u32 obj)
     return 0;
 }
 
+#pragma opt_lifetimes off
+#pragma opt_propagation off
 void ObjGroup_AddObject(u32 obj, int group)
 {
     u8* offset;
@@ -1284,6 +1286,8 @@ void ObjGroup_AddObject(u32 obj, int group)
         group++;
     }
 }
+#pragma opt_propagation reset
+#pragma opt_lifetimes reset
 
 void ObjGroup_ClearAll(void)
 {
