@@ -1267,7 +1267,7 @@ void ObjGroup_AddObject(u32 obj, int group)
         }
         entries++;
     }
-    insertIndex = (insertIndex - limit == 0) ? insertIndex : (limit - 1);
+    insertIndex = (limit - insertIndex == 0) ? insertIndex : (limit - 1);
     gObjGroupObjectCount++;
     count = (int)(u32)gObjGroupObjectCount - 1;
     entries = gObjGroupObjects + count;
