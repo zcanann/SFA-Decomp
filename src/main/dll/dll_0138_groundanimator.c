@@ -239,6 +239,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     void* entry;
     void* vtx;
+    void* nv;
     int fallInn;
     int htInn;
     int fallMid;
@@ -280,10 +281,8 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
             clampMax = lbl_803E3FC4;
             for (; mid < *(u16*)((char*)entry + 0x14); mid++)
             {
-                vtx = fn_800606DC(block, mid);
-                fallInn = fallMid;
-                htInn = htMid;
-                for (inner = 0; inner < 3; inner++)
+                nv = fn_800606DC(block, mid);
+                for (inner = 0, vtx = nv, fallInn = fallMid, htInn = htMid; inner < 3; inner++)
                 {
                     void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
                     f32 dx;
