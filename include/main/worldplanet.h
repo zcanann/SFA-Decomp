@@ -144,7 +144,7 @@ void worldplanet_render(u32 param_1,u32 param_2,u32 param_3,
                         u32 param_4,u32 param_5,char visible);
 void worldplanet_hitDetect(void);
 void worldplanet_update(int obj);
-void worldplanet_init(int obj);
+void worldplanet_init(struct GameObject *obj);
 void worldplanet_release(void);
 void worldplanet_initialise(void);
 

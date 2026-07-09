@@ -22,7 +22,7 @@
 #define POINTLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define POINTLIGHT_MAX_SPOT_BRIGHTNESS    0x5a
 
-void pointlight_setEffectState(int obj, int enabled)
+void pointlight_setEffectState(struct GameObject *obj, int enabled)
 {
     GameObject* object = (GameObject*)obj;
     PointLightState* state = object->extra;
@@ -53,7 +53,7 @@ void PointLight_free(int obj)
     ObjGroup_RemoveObject(obj, LGT_POINTLIGHT_GROUP);
 }
 
-void PointLight_render(int obj)
+void PointLight_render(struct GameObject *obj)
 {
     PointLightState* state = ((GameObject*)obj)->extra;
     ModelLight* light = state->light;
@@ -67,7 +67,7 @@ void PointLight_hitDetect(void)
 {
 }
 
-void PointLight_update(int obj)
+void PointLight_update(struct GameObject *obj)
 {
     u8 colorR, colorG, colorB;
     PointLightSetup* setup = (PointLightSetup*)((GameObject*)obj)->anim.placementData;

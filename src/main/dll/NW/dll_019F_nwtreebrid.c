@@ -185,7 +185,7 @@ void treebird_update(int obj)
     }
 }
 
-void treebird_init(int obj, int setup)
+void treebird_init(struct GameObject *obj, int setup)
 {
     TreeBirdState* state;
 

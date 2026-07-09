@@ -33,18 +33,18 @@
 #define LARGECRATE_VARIANT_B_SFX_A 0x48
 #define LARGECRATE_VARIANT_B_SFX_B 0x4A
 
-int largecrate_spawnDropContents(int obj, int player, int state);
+int largecrate_spawnDropContents(struct GameObject *obj, int player, int state);
 int LargeCrate_SeqFn(int *obj);
 int largecrate_getExtraSize(void);
 int largecrate_getObjectTypeId(void);
 void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
 void largecrate_hitDetect(int obj);
-void largecrate_init(int obj, u8 *initData);
+void largecrate_init(struct GameObject *obj, u8 *initData);
 void largecrate_release(void);
 void largecrate_initialise(void);
 
 
 /* extern-cleanup: defining-file public prototypes */
-f32 largecrate_getReticleDistance(int obj);
+f32 largecrate_getReticleDistance(struct GameObject *obj);
 
 #endif /* MAIN_DLL_DLL_0105_LARGECRATE_H_ */

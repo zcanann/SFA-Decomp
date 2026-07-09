@@ -350,13 +350,13 @@ void drakormissile_update(int obj)
     }
 }
 
-int drakormissile_setScale(int obj)
+int drakormissile_setScale(struct GameObject *obj)
 {
     DrakorMissileState* state = ((GameObject*)obj)->extra;
     return state->state == DRAKORMISSILE_STATE_FADEOUT;
 }
 
-void drakormissile_abortStraightFlight(int obj)
+void drakormissile_abortStraightFlight(struct GameObject *obj)
 {
     DrakorMissileState* state = ((GameObject*)obj)->extra;
     if (state->state == DRAKORMISSILE_STATE_STRAIGHT)

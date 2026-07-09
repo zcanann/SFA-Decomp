@@ -77,9 +77,9 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
                                             int pointCount);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern float mathSinf(float x);
-extern f32 fn_802966F4(GameObject* obj);             /* returns a target proximity/distance scalar */
-extern void playerGetTimeScale(int obj, float* out); /* fills out[] with a target motion scalar */
-extern int EmissionController_IsLingering(int obj);
+extern f32 fn_802966F4(struct GameObject *obj);             /* returns a target proximity/distance scalar */
+extern void playerGetTimeScale(struct GameObject *obj, float* out); /* fills out[] with a target motion scalar */
+extern int EmissionController_IsLingering(struct GameObject *obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
@@ -290,7 +290,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     }
     if (target->anim.classId == 1)
     {
-        if (fn_802966F4(target) <= lbl_803E16DC)
+        if (fn_802966F4((struct GameObject*)(target)) <= lbl_803E16DC)
         {
             step = lbl_803E16E0 * gCamcontrolModeSettings->maxDistance - gCamcontrolModeSettings->lowerHeightOffset;
             step *= lbl_803E16E4;
@@ -671,9 +671,9 @@ void CameraModeNormal_update(u8* obj)
     }
     if (target->anim.classId == 1)
     {
-        playerGetTimeScale((int)target, &dx);
+        playerGetTimeScale((struct GameObject*)target, &dx);
         lbl_803DD52C = timeDelta * dx;
-        val = EmissionController_IsLingering((int)target);
+        val = EmissionController_IsLingering((struct GameObject*)target);
         switch (val)
         {
         case 1:

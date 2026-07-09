@@ -92,7 +92,7 @@ void drgenerator_hitDetect(int obj)
     if (((GameObject*)obj)->anim.seqId == 0x716 &&
         (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0)) != NULL)
     {
-        timer_addDuration((int)found, ((DrgeneratorState*)state)->timerDuration);
+        timer_addDuration((struct GameObject*)found, ((DrgeneratorState*)state)->timerDuration);
     }
     else
     {

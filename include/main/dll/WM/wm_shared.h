@@ -320,7 +320,7 @@ extern f32 lbl_803E609C;
 
 /* Intra-family forward declarations (from the original per-unit header). */
 void FireFlyFn_801f4f88(int obj);
-void firefly_free(int obj);
+void firefly_free(struct GameObject *obj);
 void firefly_update(int obj);
 void firefly_init(int obj, int def);
 

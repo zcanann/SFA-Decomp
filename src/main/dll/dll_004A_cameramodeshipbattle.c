@@ -25,7 +25,7 @@ extern f32 lbl_803E1978;
 extern f32 lbl_803E197C;
 extern f32 lbl_803E1980;
 
-extern int shipBattleFn_801eed24(int focus);
+extern int shipBattleFn_801eed24(struct GameObject *focus);
 
 #pragma opt_common_subs off
 void CameraModeShipBattle_update(short* cam)
@@ -39,7 +39,7 @@ void CameraModeShipBattle_update(short* cam)
     GameObject* focus = (GameObject*)((CameraObject*)cam)->anim.targetObj;
     if (focus != NULL)
     {
-        mode = shipBattleFn_801eed24((int)focus);
+        mode = shipBattleFn_801eed24((struct GameObject*)focus);
     }
     state = gCamShipBattleState;
     if (mode != state->mode)

@@ -154,7 +154,7 @@ void LaserBeam_update(int obj2)
 
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
-    extern int objGetAnimState80A(void* obj);
+    extern int objGetAnimState80A(struct GameObject *obj);
     extern float mathCosf(float x);
     extern float mathSinf(float x);
     extern int* gLaserBeamObjModgfxResource;
@@ -378,7 +378,7 @@ void LaserBeam_update(int obj2)
                 }
                 if (lat < range && lat > -range)
                 {
-                    if (objGetAnimState80A(player) == 0x1d7 && b->beamKind != 1)
+                    if (objGetAnimState80A((struct GameObject*)(player)) == 0x1d7 && b->beamKind != 1)
                     {
                         mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 1);
                     }

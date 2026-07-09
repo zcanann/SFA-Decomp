@@ -56,7 +56,7 @@ int CampFire_getObjectTypeId(void)
     return 0x1;
 }
 
-void CampFire_free(int obj)
+void CampFire_free(struct GameObject *obj)
 {
     CampfireExtra* state;
     void* effect;

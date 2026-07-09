@@ -24,11 +24,11 @@ typedef struct KtlazerwallState
 
 int KT_Lazerwall_getExtraSize(void);
 int KT_Lazerwall_getObjectTypeId(void);
-void KT_Lazerwall_free(int obj);
-void KT_Lazerwall_render(int obj);
+void KT_Lazerwall_free(struct GameObject *obj);
+void KT_Lazerwall_render(struct GameObject *obj);
 void KT_Lazerwall_hitDetect(void);
 void KT_Lazerwall_update(int obj);
-void KT_Lazerwall_init(int obj, char* placement);
+void KT_Lazerwall_init(struct GameObject *obj, char* placement);
 void KT_Lazerwall_release(void);
 void KT_Lazerwall_initialise(void);
 

@@ -118,7 +118,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable)
 }
 #pragma opt_common_subs reset
 
-void arwprojectile_placeForward(int obj, f32 dist)
+void arwprojectile_placeForward(struct GameObject *obj, f32 dist)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
     f32 mtx[16];
@@ -140,7 +140,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     ((GameObject*)obj)->anim.rotY = -((GameObject*)obj)->anim.rotY;
 }
 
-void arwprojectile_setLifetime(int obj, int lifetime)
+void arwprojectile_setLifetime(struct GameObject *obj, int lifetime)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
 
@@ -378,7 +378,7 @@ void arwingandrossstuff_initialise(void)
 {
 }
 
-void fn_8022ECE0(int obj, f32 lifetime)
+void fn_8022ECE0(struct GameObject *obj, f32 lifetime)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
     f32 mtx[16];
@@ -397,7 +397,7 @@ void fn_8022ECE0(int obj, f32 lifetime)
                           &((GameObject*)obj)->anim.velocityY, &((GameObject*)obj)->anim.velocityZ);
 }
 
-void fn_8022ED74(int obj, int scalar)
+void fn_8022ED74(struct GameObject *obj, int scalar)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
     state->param0.scalar = scalar;

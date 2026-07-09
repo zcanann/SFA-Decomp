@@ -146,7 +146,7 @@ void fn_801E7DC8(int obj, int state, int count)
     }
 }
 
-void ShopKeeper_free(int obj)
+void ShopKeeper_free(struct GameObject *obj)
 {
     Stack_Free(((ShopkeeperState*)((GameObject*)obj)->extra)->msgStack);
     return;

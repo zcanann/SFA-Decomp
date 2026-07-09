@@ -164,7 +164,7 @@ int link_levcontrol_getExtraSize(void)
     return sizeof(LinkLevControlState);
 }
 
-void link_levcontrol_free(int obj)
+void link_levcontrol_free(struct GameObject *obj)
 {
     switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
     {

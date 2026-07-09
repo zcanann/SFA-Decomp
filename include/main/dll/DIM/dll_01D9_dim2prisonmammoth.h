@@ -51,6 +51,6 @@ void dim2prisonmammoth_update(int obj);
 void dim2prisonmammoth_init(int obj, int params);
 void dim2prisonmammoth_release(void);
 void dim2prisonmammoth_initialise(void);
-void fn_802BC788(int obj, int b);
+void fn_802BC788(struct GameObject *obj, int b);
 
 #endif

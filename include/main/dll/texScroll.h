@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-u32 PressureSwitchFB_SeqFn(int obj,u32 param_2,int stateParam);
+u32 PressureSwitchFB_SeqFn(struct GameObject *obj,u32 param_2,int stateParam);
 int PressureSwitchFB_getExtraSize(void);
 void PressureSwitchFB_free(int obj);
 

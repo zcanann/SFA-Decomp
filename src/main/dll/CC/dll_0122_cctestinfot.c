@@ -46,7 +46,7 @@ extern void FxEmit_hitDetect(void);
 extern void DeathGas_getExtraSize(void);
 extern void FuelCell_free(void);
 extern void dll_127_update(void);
-extern void CampFire_free(void);
+extern void CampFire_free(struct GameObject *);
 extern void CFCrate_update(void);
 extern void FxEmit_update(void);
 
@@ -117,7 +117,7 @@ void CCTestInfot_update(int* obj)
     }
 }
 
-void CCTestInfot_init(int obj, s8* def)
+void CCTestInfot_init(struct GameObject *obj, s8* def)
 {
     u32 flags;
     flags =

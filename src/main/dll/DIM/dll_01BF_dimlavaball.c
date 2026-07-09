@@ -126,7 +126,7 @@ int lavaball1bf_getObjectTypeId(void)
     return 0x0;
 }
 
-void lavaball1bf_free(int obj, int mode)
+void lavaball1bf_free(struct GameObject *obj, int mode)
 {
     extern void Obj_FreeObject(void* o);
     Lavaball1bfState* inner = ((GameObject*)obj)->extra;

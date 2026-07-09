@@ -22,11 +22,11 @@ STATIC_ASSERT(sizeof(KtlazerlightPlacement) == 0x20);
 
 int ktlazerlight_getExtraSize(void);
 int ktlazerlight_getObjectTypeId(void);
-void ktlazerlight_free(int obj);
+void ktlazerlight_free(struct GameObject *obj);
 void ktlazerlight_render(void);
 void ktlazerlight_hitDetect(void);
-void ktlazerlight_update(int obj);
-void ktlazerlight_init(int obj, char* placement);
+void ktlazerlight_update(struct GameObject *obj);
+void ktlazerlight_init(struct GameObject *obj, char* placement);
 void ktlazerlight_release(void);
 void ktlazerlight_initialise(void);
 

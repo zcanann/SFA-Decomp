@@ -178,7 +178,7 @@ u32 lavaball1be_isInactive(int* obj)
     return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE;
 }
 
-void lavaball1be_free(int obj)
+void lavaball1be_free(struct GameObject *obj)
 {
     Lavaball1beState* inner = ((GameObject*)obj)->extra;
     if (inner->light != 0)

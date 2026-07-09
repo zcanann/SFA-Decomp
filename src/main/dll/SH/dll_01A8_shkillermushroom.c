@@ -92,8 +92,8 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int objIsFrozen(int* obj);
-extern int EmissionController_IsLingering(u8* player);
-extern int playerGetFlags3F0Bit5(u8* player);
+extern int EmissionController_IsLingering(struct GameObject *player);
+extern int playerGetFlags3F0Bit5(struct GameObject *player);
 extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
 extern void Obj_StartModelFadeIn(int* obj, int frames);
@@ -266,7 +266,7 @@ void enemymushroom_update(int* obj)
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <=
                     ((EnemyMushroomState*)state)->hitRadius &&
-                !EmissionController_IsLingering(player) && !playerGetFlags3F0Bit5(player) &&
+                !EmissionController_IsLingering((struct GameObject*)(player)) && !playerGetFlags3F0Bit5((struct GameObject*)(player)) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
@@ -329,7 +329,7 @@ void enemymushroom_update(int* obj)
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <=
                     ((EnemyMushroomState*)state)->hitRadius &&
-                !EmissionController_IsLingering(player) && !playerGetFlags3F0Bit5(player) &&
+                !EmissionController_IsLingering((struct GameObject*)(player)) && !playerGetFlags3F0Bit5((struct GameObject*)(player)) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);

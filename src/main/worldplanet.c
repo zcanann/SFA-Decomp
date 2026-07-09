@@ -118,7 +118,7 @@ void worldplanet_initialise(void)
 {
 }
 
-void worldplanet_init(int obj)
+void worldplanet_init(struct GameObject *obj)
 {
     WorldPlanetState* state;
     int i;
@@ -184,7 +184,7 @@ void worldplanet_init(int obj)
 }
 
 #pragma peephole on
-void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
+void worldplanet_readMapInput(struct GameObject *obj, u8* outX, u8* outY)
 {
     WorldPlanetState* state = ((GameObject*)obj)->extra;
     int stickX;
@@ -359,7 +359,7 @@ void worldplanet_update(int obj)
         pfx.offsetY = gWorldPlanetPfxOffsetY;
         pfx.offsetZ = gWorldPlanetPfxOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &pfx, 2, -1, NULL);
-        worldplanet_readMapInput(obj, (u8*)in.inX, &in.inY);
+        worldplanet_readMapInput((struct GameObject*)(obj), (u8*)in.inX, &in.inY);
         ((GameObject*)obj)->anim.rotZ -= 10;
         ((GameObject*)obj)->anim.rotY = 0x3448;
         ((GameObject*)obj)->anim.rotX = 0x4000;

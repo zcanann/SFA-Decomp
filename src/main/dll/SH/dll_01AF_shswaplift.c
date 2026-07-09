@@ -122,7 +122,7 @@ void warpstonelift_update(u8* obj)
     }
 }
 
-void warpstonelift_init(int obj, s8* def)
+void warpstonelift_init(struct GameObject *obj, s8* def)
 {
     int* state = ((GameObject*)obj)->extra;
     int i;

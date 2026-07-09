@@ -77,7 +77,7 @@ int fn_8017805C(GameObject* obj, FlameblastState* state)
     vecRotateZXY(&vec, &obj->anim.velocityX);
     if ((((GameObject*)tricky)->objectFlags & FLAMEBLAST_OBJFLAG_RENDERED) != 0)
     {
-        origin = trickyGetQueuedPathParticlePos(tricky);
+        origin = trickyGetQueuedPathParticlePos((struct GameObject*)(tricky));
     }
     else
     {

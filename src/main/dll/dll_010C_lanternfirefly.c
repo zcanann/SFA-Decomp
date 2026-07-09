@@ -141,12 +141,12 @@ void LanternFireFly_func0B(int obj)
         st->offZ = vec[2];
         st->animFrame = 4;
     }
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
+    fn_801869DC((struct GameObject*)(obj));
+    fn_801869DC((struct GameObject*)(obj));
+    fn_801869DC((struct GameObject*)(obj));
+    fn_801869DC((struct GameObject*)(obj));
+    fn_801869DC((struct GameObject*)(obj));
+    fn_801869DC((struct GameObject*)(obj));
     ((LFFlags*)&state->modeFlags)->mode = 1;
     state->timer = ((LanternFireFlyPlacement*)setup)->timer;
     gameBitIncrement(0x698);
@@ -236,9 +236,9 @@ void LanternFireFly_update(int obj)
         }
         else
         {
-            fn_801868D0(obj);
+            fn_801868D0((struct GameObject*)(obj));
         }
-        fn_801869DC(obj);
+        fn_801869DC((struct GameObject*)(obj));
     }
 
     ((GameObject*)obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->controlX, state->splineT, 0);
@@ -402,7 +402,7 @@ void LanternFireFly_initialise(void)
 }
 
 /* Helpers placed last (anti-inline): LanternFireFly_update above calls both. */
-void fn_801868D0(int obj)
+void fn_801868D0(struct GameObject *obj)
 {
     typedef struct
     {
@@ -443,7 +443,7 @@ void fn_801868D0(int obj)
     vecRotateZXY(&rot, &state->offX);
 }
 
-void fn_801869DC(int obj)
+void fn_801869DC(struct GameObject *obj)
 {
     typedef struct
     {

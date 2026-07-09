@@ -14,9 +14,9 @@ typedef struct BombPlantState {
     /* 0x15 */ u8 flags;
 } BombPlantState;
 
-void BombPlantSpore_free(void *obj);
-void bombplantspore_startDriftBurst(void *obj, void *state);
-void bombplantspore_updateDrift(void *obj, void *state);
+void BombPlantSpore_free(struct GameObject *obj);
+void bombplantspore_startDriftBurst(struct GameObject *obj, void *state);
+void bombplantspore_updateDrift(struct GameObject *obj, void *state);
 int BombPlantSpore_getExtraSize(void);
 
 #endif /* MAIN_DLL_SH_SHKILLERMUSHROOM_H_ */

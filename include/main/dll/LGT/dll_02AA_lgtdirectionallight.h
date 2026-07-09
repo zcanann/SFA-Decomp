@@ -74,10 +74,10 @@ struct DirectionalLightObjDescriptorLayout
     char debugStrings[0xE0];
 };
 
-void directionallight_debugEdit(int obj, int statePtr);
+void directionallight_debugEdit(struct GameObject *obj, int statePtr);
 int directionallight_getExtraSize(void);
 int directionallight_getObjectTypeId(void);
-void directionallight_free(int obj);
+void directionallight_free(struct GameObject *obj);
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void directionallight_hitDetect(void);
 void directionallight_update(int obj);

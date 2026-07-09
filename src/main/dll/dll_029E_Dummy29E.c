@@ -50,7 +50,7 @@ void Dummy29E_initialise(void)
 {
 }
 
-void arwbombcoll_setLifetime(int obj, int lifetime)
+void arwbombcoll_setLifetime(struct GameObject *obj, int lifetime)
 {
     ARWBombCollState* state = ((GameObject*)obj)->extra;
     state->lifetime = lifetime;

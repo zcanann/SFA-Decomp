@@ -161,7 +161,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     }
 }
 
-int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
+int sfxplayer_ensureEffectHandlePair(struct GameObject *obj, u8 ringIndex)
 {
     u32 ringIdWords[2];
     int* handles;
@@ -254,7 +254,7 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState
             mainSetBits(SFXPLAYER_GAMEBIT_RING_ACTIVE, 1);
             for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
             {
-                sfxplayer_ensureEffectHandlePair(obj, i);
+                sfxplayer_ensureEffectHandlePair((struct GameObject*)(obj), i);
             }
             state->flags.bit40 = 1;
             break;

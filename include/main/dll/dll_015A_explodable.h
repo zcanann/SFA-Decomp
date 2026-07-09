@@ -114,8 +114,8 @@ int explodable_getExtraSize(void);
 void explodable_free(int obj, int flag);
 void explodable_update(int obj);
 void explodable_init(int obj, int setup);
-int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragmentIndex);
+int explodable_spawnFragmentObject(struct GameObject *obj, int objType, int chunkSrc, int fragmentIndex);
 void explodable_buildFragments(int obj, int def, int skipCentroid, int state);
-void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def);
+void explodable_computeFragmentLaunch(struct GameObject *obj, int chunkSlot, int def);
 
 #endif /* MAIN_DLL_EXPLODABLE_H_ */

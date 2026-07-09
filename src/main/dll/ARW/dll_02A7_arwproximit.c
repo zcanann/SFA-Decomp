@@ -34,7 +34,7 @@ int arwproximit_getObjectTypeId(void)
     return 0;
 }
 
-void arwproximit_free(int obj)
+void arwproximit_free(struct GameObject *obj)
 {
     ARWProximitState* state = ((GameObject*)obj)->extra;
     if (state->light != NULL)

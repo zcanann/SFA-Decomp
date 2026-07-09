@@ -100,7 +100,7 @@ int BombPlantSpore_getExtraSize(void)
     return 0x2b4;
 }
 
-void BombPlantSpore_free(void* obj)
+void BombPlantSpore_free(struct GameObject *obj)
 {
     void* state;
     void* light;
@@ -118,7 +118,7 @@ void BombPlantSpore_free(void* obj)
 /* These two drift helpers' only callers (BombPlantSpore_update/init) live
  * in the BombPlantSpore TU (SHrocketmushroom.c). */
 #pragma dont_inline on
-void bombplantspore_startDriftBurst(void* obj, void* state)
+void bombplantspore_startDriftBurst(struct GameObject *obj, void* state)
 {
     s16 baseAngle;
     void* params;
@@ -163,7 +163,7 @@ void bombplantspore_startDriftBurst(void* obj, void* state)
         (gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->burstDriftAngle) / gBombPlantSporeAngleHalfPeriod);
 }
 
-void bombplantspore_updateDrift(void* obj, void* state)
+void bombplantspore_updateDrift(struct GameObject *obj, void* state)
 {
     s16 baseAngle;
     void* params;
@@ -338,10 +338,10 @@ void BombPlantSpore_update(void* obj)
         {
             ObjHits_EnableObject((u32)obj);
         }
-        bombplantspore_updateDrift(obj, state);
+        bombplantspore_updateDrift((struct GameObject*)(obj), state);
         if (randomGetRange(0, 100) < 5 && state->driftTimer <= lbl_803E5394)
         {
-            bombplantspore_startDriftBurst(obj, state);
+            bombplantspore_startDriftBurst((struct GameObject*)(obj), state);
         }
         {
             f32 st = state->spinTimer - timeDelta;

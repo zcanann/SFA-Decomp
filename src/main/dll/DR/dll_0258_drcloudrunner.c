@@ -103,7 +103,7 @@ void DR_CloudRunner_func18(int obj, f32* a, int* b)
     *b = 0;
 }
 
-int DR_CloudRunner_func11(int obj)
+int DR_CloudRunner_func11(struct GameObject *obj)
 {
     CloudRunnerState* inner = ((GameObject*)obj)->extra;
     if (inner->unkBB8 != 0)
@@ -118,7 +118,7 @@ void DR_CloudRunner_setGroundMarkerMatrix(int obj)
     fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
 }
 
-int DR_CloudRunner_func14(int obj)
+int DR_CloudRunner_func14(struct GameObject *obj)
 {
     CloudRunnerState* inner = ((GameObject*)obj)->extra;
     if (inner->unkBB7 != 0)
@@ -133,7 +133,7 @@ void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
     ObjPath_GetPointWorldPosition(obj, 2, a, b, c, 0);
 }
 
-int DR_CloudRunner_stateHandler07(int obj)
+int DR_CloudRunner_stateHandler07(struct GameObject *obj)
 {
     CloudRunnerState* inner = ((GameObject*)obj)->extra;
     if (inner->airTimeRemaining == 0)
@@ -323,7 +323,7 @@ int DR_CloudRunner_stateHandler00(int obj)
     return 3;
 }
 
-void DR_CloudRunner_setFlightState(int obj, int param)
+void DR_CloudRunner_setFlightState(struct GameObject *obj, int param)
 {
     CloudRunnerState* inner = ((GameObject*)obj)->extra;
     inner->flightState = param;
@@ -352,7 +352,7 @@ void DR_CloudRunner_setFlightState(int obj, int param)
 }
 
 #pragma opt_loop_invariants off
-int DR_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int DR_CloudRunner_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CloudRunnerState* inner = ((GameObject*)obj)->extra;
     int local = 1;
@@ -812,7 +812,7 @@ void fn_802BF0C8(int obj, int baddie, int mode)
     (*gPathControlInterface)->attachObject((void*)obj, pathState);
 }
 
-void DR_CloudRunner_func23(int obj, int mode, int* out)
+void DR_CloudRunner_func23(struct GameObject *obj, int mode, int* out)
 {
     struct gbids
     {

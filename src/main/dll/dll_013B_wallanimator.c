@@ -75,7 +75,7 @@ u8 wallanimator_func0B(int* obj)
     return state->timer >= WALLANIMATOR_DONE_TIMER;
 }
 
-f32 wallanimator_setScale(int obj, int target)
+f32 wallanimator_setScale(struct GameObject *obj, int target)
 {
     struct
     {

@@ -18,14 +18,14 @@ typedef struct MoonSeedBushPlacement
     u8 pad22[0x28 - 0x22];
 } MoonSeedBushPlacement;
 
-int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int MoonSeedBush_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate);
 int MoonSeedBush_getExtraSize(void);
 int MoonSeedBush_getObjectTypeId(void);
 void MoonSeedBush_free(void);
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedBush_hitDetect(void);
 void MoonSeedBush_update(int obj);
-void MoonSeedBush_init(int obj, int data);
+void MoonSeedBush_init(struct GameObject *obj, int data);
 void MoonSeedBush_release(void);
 void MoonSeedBush_initialise(void);
 

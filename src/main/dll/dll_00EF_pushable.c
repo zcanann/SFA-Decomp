@@ -149,7 +149,7 @@ extern f32 lbl_803E35A0;
 extern f32 lbl_803E35A4;
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
-void fn_80174A80(int obj, PushableState* ext)
+void fn_80174A80(struct GameObject *obj, PushableState* ext)
 {
     int def;
     ObjTextureRuntimeSlot* tex;
@@ -490,12 +490,12 @@ void pushable_handleMsgs(int obj)
     }
 }
 
-int pushable_render2(int obj)
+int pushable_render2(struct GameObject *obj)
 {
     return (*(PushableState**)&((GameObject*)obj)->extra)->flags & 1;
 }
 
-void pushable_modelMtxFn(int obj, int modelNo)
+void pushable_modelMtxFn(struct GameObject *obj, int modelNo)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
     u32 flags = *(u32*)(extra + 0xa8);
@@ -503,7 +503,7 @@ void pushable_modelMtxFn(int obj, int modelNo)
     *(u32*)(extra + 0xa8) = flags | (1 << modelNo);
 }
 
-int pushable_func0B(int obj, int other)
+int pushable_func0B(struct GameObject *obj, int other)
 {
     int state;
     f32 delta[3];
@@ -823,10 +823,10 @@ void pushable_init(s16* obj, char* def)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x21e:
-        fn_80174A80(obj, state);
+        fn_80174A80((struct GameObject*)(obj), state);
         break;
     case 0x411:
-        fn_80174A80(obj, state);
+        fn_80174A80((struct GameObject*)(obj), state);
         break;
     case 0x7df:
         fn_80174588(obj, state);

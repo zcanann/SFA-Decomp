@@ -119,7 +119,7 @@ int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int fn_801B0784(int obj, int delta)
+int fn_801B0784(struct GameObject *obj, int delta)
 {
     DimLogFireState* inner = ((GameObject*)obj)->extra;
     inner->strengthInit = (s8)(inner->strengthInit - delta);

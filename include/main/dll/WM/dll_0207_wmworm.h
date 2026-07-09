@@ -40,7 +40,7 @@ void WM_Worm_init(GameObject *obj, WmWormSetup *setup);
 void WM_Worm_release(void);
 void WM_Worm_initialise(void);
 
-void fn_801F3F18(int obj);
+void fn_801F3F18(struct GameObject *obj);
 int WM_LevelControl_getExtraSize(void);
 int WM_LevelControl_getObjectTypeId(void);
 void WM_LevelControl_free(int obj);

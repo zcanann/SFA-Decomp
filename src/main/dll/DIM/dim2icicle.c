@@ -703,12 +703,12 @@ void DIM2icicle_updateCombatState(DIMbossObject* obj, ObjAnimUpdateState* animUp
         {
             runtime->stateFlags |= DIMBOSS_STATE_FLAG_TARGET_TRICKY;
             state->fadeTimer = lbl_803E4C44;
-            DIM2icicle_createStateLight((int)obj, 0);
+            DIM2icicle_createStateLight((struct GameObject*)obj, 0);
         }
     }
     if (runtime->phase == DIMBOSS_PHASE_GAMEBIT_COUNT_MET)
     {
-        DIM2icicle_createStateLight((int)obj, 1);
+        DIM2icicle_createStateLight((struct GameObject*)obj, 1);
     }
     {
         if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT)

@@ -22,7 +22,7 @@ STATIC_ASSERT(offsetof(FireFlyMapData, variantParam) == 0x1A);
 STATIC_ASSERT(offsetof(FireFlyMapData, requiredGameBit) == 0x20);
 
 void FireFlyFn_801f4f88(int obj);
-void firefly_free(int obj);
+void firefly_free(struct GameObject *obj);
 void firefly_update(int obj);
 void firefly_init(int obj, int def);
 int firefly_getExtraSize(void);

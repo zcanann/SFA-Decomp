@@ -7,6 +7,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-void shopitem_onSeqFree(int obj);
+void shopitem_onSeqFree(struct GameObject *obj);
 
 #endif

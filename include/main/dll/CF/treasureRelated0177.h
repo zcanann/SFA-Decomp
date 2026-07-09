@@ -20,7 +20,7 @@ void FUN_8018d0b4(int param_1, int param_2, int param_3, int param_4, int param_
 void FUN_8018d110(void);
 int CampFire_getExtraSize(void);
 int CampFire_getObjectTypeId(void);
-void CampFire_free(int obj);
+void CampFire_free(struct GameObject *obj);
 void CampFire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 int KT_Torch_getExtraSize(void);
 int KT_Torch_getObjectTypeId(void);

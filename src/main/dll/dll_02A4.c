@@ -106,7 +106,7 @@ void dll_2A4_update(int obj)
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
 
-void dll_2A4_init(int obj)
+void dll_2A4_init(struct GameObject *obj)
 {
     Dll2A4State* state = ((GameObject*)obj)->extra;
 
@@ -144,8 +144,8 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
         dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
         dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_8023137C(newObj, dir);
-        fn_8023134C(newObj, setup->projectileSpeed);
+        fn_8023137C((struct GameObject*)(newObj), dir);
+        fn_8023134C((struct GameObject*)(newObj), setup->projectileSpeed);
     }
 }
 
@@ -175,7 +175,7 @@ void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
         dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
         dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_80231058(newObj, (int)dir);
-        fn_80231028(newObj, setup->projectileSpeed);
+        fn_80231058((struct GameObject*)(newObj), (int)dir);
+        fn_80231028((struct GameObject*)(newObj), setup->projectileSpeed);
     }
 }

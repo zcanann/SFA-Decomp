@@ -1229,7 +1229,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     }
 }
 
-extern int objGetAnimState80A(int obj);
+extern int objGetAnimState80A(struct GameObject *obj);
 extern f32 lbl_803E330C;
 extern f32 lbl_803E3310;
 extern f32 lbl_803E332C;
@@ -1325,7 +1325,7 @@ void staff_update(int* obj)
     }
 
     quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj);
-    objGetAnimState80A(*(int*)&((GameObject*)obj)->ownerObj);
+    objGetAnimState80A((struct GameObject*)(*(int*)&((GameObject*)obj)->ownerObj));
     ((StaffState*)state)->swipeTextureIndex = 0;
     {
         StaffQuakeSpellState* q = (StaffQuakeSpellState*)gStaffQuakeSpellState;
@@ -1619,7 +1619,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 extern int objFn_80296700(int* obj);
 extern void objfx_spawnArcedBurst(int* obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
 extern void fn_802961A4(int* obj, int* type, f32* power);
-extern void fn_802960F4(int objc4, u8** out);
+extern void fn_802960F4(struct GameObject *objc4, u8** out);
 extern f32 lbl_803E328C;
 extern f32 lbl_803E3298;
 extern f32 lbl_803E329C;
@@ -1797,7 +1797,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             {
                 fxA.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
                 fxA.id = 0xc95;
-                fn_802960F4(*(int*)&((GameObject*)obj)->ownerObj, &pos2);
+                fn_802960F4((struct GameObject*)(*(int*)&((GameObject*)obj)->ownerObj), &pos2);
                 fxB.f1 = *(f32*)(pos2 + 0xc);
                 fxB.f2 = *(f32*)(pos2 + 0x10);
                 fxB.f3 = *(f32*)(pos2 + 0x14);

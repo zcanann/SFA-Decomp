@@ -104,7 +104,7 @@ void ARWSpeedStr_update(int obj)
     }
 }
 
-void ARWSpeedStr_init(int obj, int setup)
+void ARWSpeedStr_init(struct GameObject *obj, int setup)
 {
     ((GameObject*)obj)->anim.alpha = 0;
 }
@@ -117,13 +117,13 @@ void ARWSpeedStr_initialise(void)
 {
 }
 
-void fn_80231028(int obj, int speed)
+void fn_80231028(struct GameObject *obj, int speed)
 {
     ARWSpeedStrState* state = ((GameObject*)obj)->extra;
     state->speed = speed;
 }
 
-void fn_80231058(int obj, int src)
+void fn_80231058(struct GameObject *obj, int src)
 {
     ((GameObject*)obj)->anim.velocityX = ((ARWSpeedStrVelocity*)src)->x;
     ((GameObject*)obj)->anim.velocityY = ((ARWSpeedStrVelocity*)src)->y;

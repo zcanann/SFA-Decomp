@@ -12,7 +12,7 @@ void KT_RexLevel_hitDetect(void);
 void ktrexlevel_clearPathGameBits(void);
 void ktrexlevel_updatePathGameBits(void);
 void KT_RexLevel_update(int obj);
-void KT_RexLevel_init(int obj);
+void KT_RexLevel_init(struct GameObject *obj);
 void KT_RexLevel_release(void);
 void KT_RexLevel_initialise(void);
 

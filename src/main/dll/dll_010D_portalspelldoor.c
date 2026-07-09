@@ -70,7 +70,7 @@ extern void Fall_Ladders_update(void);
 
 extern void LanternFireFly_init(void);
 extern void FireFlyLantern_render(void);
-extern void dll_109_init(void);
+extern void dll_109_init(struct GameObject *);
 extern void Fall_Ladders_init(void);
 
 extern void LanternFireFly_release(void);
@@ -79,14 +79,14 @@ extern void dll_109_release_nop(void);
 extern void Fall_Ladders_release(void);
 
 extern void LanternFireFly_initialise(void);
-extern void FireFlyLantern_init(void);
+extern void FireFlyLantern_init(struct GameObject *);
 extern void dll_109_initialise_nop(void);
 extern void Fall_Ladders_initialise(void);
 
 extern int Obj_GetPlayerObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int playerHasSpell(int obj, int spell);
-extern int objGetAnimState80A(int player);
+extern int playerHasSpell(struct GameObject *obj, int spell);
+extern int objGetAnimState80A(struct GameObject *player);
 extern void playerCancelSpell(int player, int v);
 extern int getTrickyObject(void);
 extern void trickyImpress(int tricky);
@@ -115,7 +115,7 @@ void PortalSpellDoor_hitDetect(void)
 {
 }
 
-void PortalSpellDoor_update(int obj)
+void PortalSpellDoor_update(struct GameObject *obj)
 {
     typedef struct
     {
@@ -129,7 +129,7 @@ void PortalSpellDoor_update(int obj)
     player = Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
     p4c = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (playerHasSpell(player, 3) != 0)
+    if (playerHasSpell((struct GameObject*)(player), 3) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
@@ -140,7 +140,7 @@ void PortalSpellDoor_update(int obj)
     if (((PortalFlags*)&state->flags0C)->open)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        if (objGetAnimState80A(player) == 0x5bd)
+        if (objGetAnimState80A((struct GameObject*)(player)) == 0x5bd)
         {
             playerCancelSpell(player, -1);
         }
@@ -148,7 +148,7 @@ void PortalSpellDoor_update(int obj)
     }
     else
     {
-        if (objGetAnimState80A(player) == 0x5bd && state->openTimer == -1)
+        if (objGetAnimState80A((struct GameObject*)(player)) == 0x5bd && state->openTimer == -1)
         {
             state->openTimer = 0;
         }

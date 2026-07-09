@@ -34,7 +34,7 @@ extern float mathSinf(float x);
 extern float fn_802943F4(float x);
 extern float mathCosf(float x);
 extern int playerIsDisguised(int obj);
-extern int objGetAnimState80A(void* obj);
+extern int objGetAnimState80A(struct GameObject *obj);
 
 #define OBJGROUP_COUNT                0x54
 #define OBJGROUP_OFFSET_CLEAR_COUNT   (OBJGROUP_COUNT + 1)
@@ -1773,7 +1773,7 @@ u32 ObjTrigger_IsSetById(int obj, short eventId)
         flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
         if ((flagBlocked == 0) && (playerState = (*gGameUIInterface)->isEventReady((int)eventId), playerState != 0))
         {
-            playerState = objGetAnimState80A(Obj_GetPlayerObject());
+            playerState = objGetAnimState80A((struct GameObject*)(Obj_GetPlayerObject()));
             if (playerState == OBJTRIGGER_PLAYER_STATE_NONE)
             {
                 buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX, OBJTRIGGER_BUTTON_DISABLE_FLAG);
@@ -1806,7 +1806,7 @@ u32 ObjTrigger_IsSet(int obj)
             flagBlocked = triggerFlags & OBJTRIGGER_CURRENT_BLOCK_FLAG;
             if ((flagBlocked == 0) && (playerState = (*gGameUIInterface)->isCurrentTriggerClear(), playerState == 0))
             {
-                playerState = objGetAnimState80A(Obj_GetPlayerObject());
+                playerState = objGetAnimState80A((struct GameObject*)(Obj_GetPlayerObject()));
                 if ((playerState == OBJTRIGGER_PLAYER_STATE_NONE) || (playerState == OBJTRIGGER_PLAYER_STATE_CLEAR))
                 {
                     buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX, OBJTRIGGER_BUTTON_DISABLE_FLAG);
@@ -1911,7 +1911,7 @@ void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, floa
     }
 }
 
-void ObjPath_GetPointLocalPosition(int obj, int pointIndex, float* xOut, float* yOut, float* zOut)
+void ObjPath_GetPointLocalPosition(struct GameObject *obj, int pointIndex, float* xOut, float* yOut, float* zOut)
 {
     *xOut = ((ObjPathPoint*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
                              pointIndex * sizeof(ObjPathPoint)))
@@ -1923,7 +1923,7 @@ void ObjPath_GetPointLocalPosition(int obj, int pointIndex, float* xOut, float* 
     return;
 }
 
-void ObjPath_GetPointLocalMtx(int obj, int pointIndex, float* mtxOut)
+void ObjPath_GetPointLocalMtx(struct GameObject *obj, int pointIndex, float* mtxOut)
 {
     ObjPathPoint* pathPoint;
     ObjPathTransform transform;

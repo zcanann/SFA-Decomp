@@ -349,7 +349,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
 }
 
 #pragma opt_common_subs off
-void fn_800E58FC(int obj, CurvesCollisionState* collision)
+void fn_800E58FC(struct GameObject *obj, CurvesCollisionState* collision)
 {
     f32 sumY;
     CurvesTransformScratch transform;
@@ -1236,7 +1236,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
                 }
                 break;
             default:
-                fn_800E58FC((int)curveObj, collision);
+                fn_800E58FC((struct GameObject*)curveObj, collision);
                 break;
             }
             if ((s32)(state->flags & 0x100) != 0)

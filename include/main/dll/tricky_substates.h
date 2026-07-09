@@ -22,6 +22,6 @@ int trickyFn_80143c04(int obj, int state);
 u32 fn_80143DD4(int param_1,int *param_2);
 void objAnimFn_801441c0(u8 *obj, u8 *state);
 void tricky_startRandomIdleMove(int param_1,int param_2);
-int trickyFoodFn_8014460c(int param_1,int *param_2);
+int trickyFoodFn_8014460c(struct GameObject *param_1,int *param_2);
 
 #endif /* MAIN_DLL_TRICKY_SUBSTATES_H_ */

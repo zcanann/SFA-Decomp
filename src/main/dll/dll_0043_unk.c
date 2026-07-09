@@ -35,7 +35,7 @@
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern int objFn_802962b4(int obj);
+extern int objFn_802962b4(struct GameObject *obj);
 extern int objFn_80296700(int obj);
 extern void memset(void* ptr, int value, int size);
 extern f32 sqrtf(f32 value);
@@ -98,7 +98,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
             goto done;
         }
-        if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) && (objFn_802962b4((int)target) != 0))
+        if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) && (objFn_802962b4((struct GameObject*)target) != 0))
         {
             actionPayload.x = gCamcontrolPathState->actionParamX;
             actionPayload.z = gCamcontrolPathState->actionParamZ;

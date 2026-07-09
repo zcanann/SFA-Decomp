@@ -82,7 +82,7 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_
 STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
 STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
-int wcapertures_interactCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int wcapertures_interactCallback(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     WCAperturesState* state = ((GameObject*)obj)->extra;
@@ -100,7 +100,7 @@ int wcapertures_getExtraSize(void)
     return WCAPERTURES_EXTRA_SIZE;
 }
 
-int wcapertures_getObjectTypeId(int obj)
+int wcapertures_getObjectTypeId(struct GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int modelIndex = *(s8*)&((WCAperturesSetup*)((GameObject*)obj)->anim.placementData)->modelIndex;
@@ -113,7 +113,7 @@ int wcapertures_getObjectTypeId(int obj)
     return (modelIndex << WCAPERTURES_RENDER_TYPE_SHIFT) | WCAPERTURES_RENDER_TYPE_BASE;
 }
 
-void wcapertures_free(int obj)
+void wcapertures_free(struct GameObject *obj)
 {
     WCAperturesState* state = ((GameObject*)obj)->extra;
     void* light = state->light;
@@ -148,7 +148,7 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void wcapertures_hitDetect(int obj)
+void wcapertures_hitDetect(struct GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCAperturesState* state = ((GameObject*)obj)->extra;
@@ -173,7 +173,7 @@ void wcapertures_hitDetect(int obj)
         modelLightStruct_updateGlowAlpha(state->light);
 }
 
-void wcapertures_update(int obj)
+void wcapertures_update(struct GameObject *obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     WCAperturesSetup* setup = (WCAperturesSetup*)((GameObject*)obj)->anim.placementData;

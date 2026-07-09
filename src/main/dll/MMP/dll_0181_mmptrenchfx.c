@@ -56,7 +56,7 @@ void mmp_trenchfx_hitDetect(void)
 }
 
 #pragma scheduling off
-void mmp_trenchfx_update(int obj)
+void mmp_trenchfx_update(struct GameObject *obj)
 {
     MmpTrenchfxState* state = ((GameObject*)obj)->extra;
     if (state->enableBit == -1 || mainGetBit(state->enableBit) != 0)
@@ -93,7 +93,7 @@ void mmp_trenchfx_update(int obj)
 }
 #pragma scheduling reset
 
-void mmp_trenchfx_init(int obj, int data)
+void mmp_trenchfx_init(struct GameObject *obj, int data)
 {
     MmpTrenchfxState* state = ((GameObject*)obj)->extra;
     MmpTrenchfxPlacement* place = (MmpTrenchfxPlacement*)data;

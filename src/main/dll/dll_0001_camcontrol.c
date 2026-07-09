@@ -296,7 +296,7 @@ void camcontrol_updateTargetFeedback(void)
                 break;
             case 0x3de:
             case 0x49f:
-                targetDistance = largecrate_getReticleDistance((int)target);
+                targetDistance = largecrate_getReticleDistance((struct GameObject*)target);
                 break;
             case 0x31:
                 targetDistance = gCamcontrolNormalizedMax;

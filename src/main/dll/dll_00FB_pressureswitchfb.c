@@ -65,7 +65,7 @@
 
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject();
-extern int fn_80295C5C(void* player);
+extern int fn_80295C5C(struct GameObject *player);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
@@ -74,7 +74,7 @@ extern f32 lbl_803E3764;
 extern f32 lbl_803E3768;
 extern f32 lbl_803E3778;
 
-int PressureSwitchFB_SeqFn(int obj, int unused, int stateParam)
+int PressureSwitchFB_SeqFn(struct GameObject *obj, int unused, int stateParam)
 {
     s16 objType;
     int config;
@@ -306,7 +306,7 @@ void PressureSwitchFB_update(int obj)
         {
             if ((((SwitchFlags*)(state + 0x84))->active) != 0)
             {
-                if (fn_80295C5C(Obj_GetPlayerObject()) != 0)
+                if (fn_80295C5C((struct GameObject*)(Obj_GetPlayerObject())) != 0)
                 {
                     ((SwitchFlags*)(state + 0x84))->released = 0;
                 }

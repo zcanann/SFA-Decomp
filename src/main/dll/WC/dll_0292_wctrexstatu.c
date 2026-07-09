@@ -45,7 +45,7 @@ STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);
 
 #pragma opt_strength_reduction off
-int wctrexstatu_interactCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int wctrexstatu_interactCallback(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
 
@@ -72,7 +72,7 @@ int wctrexstatu_getExtraSize(void)
     return 0;
 }
 
-int wctrexstatu_getObjectTypeId(int obj)
+int wctrexstatu_getObjectTypeId(struct GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int modelIndex = *(s8*)&((WCTrexStatueSetup*)((GameObject*)obj)->anim.placementData)->modelIndex;
@@ -123,7 +123,7 @@ void wctrexstatu_update(void)
 {
 }
 
-void wctrexstatu_init(int obj, int setup, int fromLoad)
+void wctrexstatu_init(struct GameObject *obj, int setup, int fromLoad)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCTrexStatueSetup* setupData = (WCTrexStatueSetup*)setup;

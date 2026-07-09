@@ -16,7 +16,7 @@ typedef struct MMSHShrineSequenceState {
 int MMSH_Shrine_SeqFn(int obj, u32 unused, MMSHShrineSequenceState *seq);
 int MMSH_Shrine_getExtraSize(void);
 int MMSH_Shrine_getObjectTypeId(void);
-void MMSH_Shrine_free(int param_1);
+void MMSH_Shrine_free(struct GameObject *param_1);
 void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5,
                         char flag);
 void MMSH_Shrine_hitDetect(void);

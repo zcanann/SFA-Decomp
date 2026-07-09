@@ -256,7 +256,7 @@ void fn_80152514(int* obj, u8* state)
             fn_801A0174(child2) != 0)
         {
             ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 0x16, 2, 0);
-            gcRobotLight_init((int)obj, 0x3b2);
+            gcRobotLight_init((struct GameObject*)obj, 0x3b2);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_rolovr_6);
             *(f32*)(state + 0x32c) = lbl_803DBCB4;
         }
@@ -292,7 +292,7 @@ void fn_80152514(int* obj, u8* state)
             {
                 attached = 0;
             }
-            newObj = (int*)gcRobotLight_init((int)obj, 0x639);
+            newObj = (int*)gcRobotLight_init((struct GameObject*)obj, 0x639);
             flag = 0;
             if (*(s8*)((char*)def + 0x2a) != 0 && !(((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW))
             {
@@ -409,7 +409,7 @@ void fn_80152B90(int* obj, u8* state)
     }
 }
 
-int gcRobotLight_init(int obj, int childId)
+int gcRobotLight_init(struct GameObject *obj, int childId)
 {
     extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     int sub;
@@ -436,7 +436,7 @@ int gcRobotLight_init(int obj, int childId)
 
 /* scheduling stays off; only peephole flips on for the next two handlers */
 #pragma peephole on
-void gcRobotPatrol_init(int obj, int state)
+void gcRobotPatrol_init(struct GameObject *obj, int state)
 {
     extern f32 lbl_803E2850;
     extern f32 lbl_803E2854;

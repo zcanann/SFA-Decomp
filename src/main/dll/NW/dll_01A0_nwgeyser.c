@@ -93,7 +93,7 @@ void nw_geyser_update(int obj)
     }
 }
 
-void nw_geyser_init(int obj)
+void nw_geyser_init(struct GameObject *obj)
 {
     ((GameObject*)obj)->objectFlags =
         (u16)(((GameObject*)obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));

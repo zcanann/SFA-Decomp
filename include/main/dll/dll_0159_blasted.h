@@ -39,7 +39,7 @@ typedef struct BlastedState
     u8 pad6E5[0x6E8 - 0x6E5];
 } BlastedState;
 
-int fn_801A27B8(int obj, int id);
+int fn_801A27B8(struct GameObject *obj, int id);
 int blasted_getExtraSize(void);
 int blasted_getObjectTypeId(void);
 void blasted_free(void);

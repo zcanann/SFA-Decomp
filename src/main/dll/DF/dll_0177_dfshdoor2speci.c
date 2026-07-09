@@ -41,7 +41,7 @@ extern f32 lbl_803E4E40;
 
 extern float mathCosf(float x);
 
-int DFSH_Door2Speci_SeqFn(int obj)
+int DFSH_Door2Speci_SeqFn(struct GameObject *obj)
 {
     ObjTextureRuntimeSlot* texture;
     DFDoorSpeciExtra* extra;
@@ -121,7 +121,7 @@ void DFSH_Door2Speci_update(void)
 {
 }
 
-void DFSH_Door2Speci_init(int obj, int def)
+void DFSH_Door2Speci_init(struct GameObject *obj, int def)
 {
     int state;
     ObjTextureRuntimeSlot* texture;

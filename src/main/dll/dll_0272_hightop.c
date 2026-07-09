@@ -226,7 +226,7 @@ int HighTop_setScale(void)
     return 0x0;
 }
 
-void hightop_func11(int obj, int val)
+void hightop_func11(struct GameObject *obj, int val)
 {
     u8 v = val;
     HighTopRuntime* state = ((GameObject*)obj)->extra;
@@ -260,7 +260,7 @@ void HighTop_free(int obj)
     (*gGameUIInterface)->airMeterSetShutdown();
 }
 
-int hightop_stateHandler00(int obj)
+int hightop_stateHandler00(struct GameObject *obj)
 {
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((HightopPlacement*)placement)->spawnVariant != 0)
@@ -274,7 +274,7 @@ int hightop_stateHandler00(int obj)
     return 5;
 }
 
-int hightop_stateHandler06(int obj, u8* state)
+int hightop_stateHandler06(struct GameObject *obj, u8* state)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
     if ((s8)((BaddieState*)state)->moveJustStartedA != 0)
@@ -336,7 +336,7 @@ int hightop_stateHandler03(int obj, u8* state)
     return 0;
 }
 
-int hightop_stateHandler05(int obj, u8* state)
+int hightop_stateHandler05(struct GameObject *obj, u8* state)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
     if ((s8)((BaddieState*)state)->moveJustStartedA != 0)
@@ -402,7 +402,7 @@ void hightop_playMovementSfx(int obj, int state2, int state)
 }
 #pragma dont_inline reset
 
-void HighTop_getLookTargetYaw(int obj, int mode, int* out)
+void HighTop_getLookTargetYaw(struct GameObject *obj, int mode, int* out)
 {
     f32 buf[6];
     HighTopRuntime* runtime;
@@ -439,7 +439,7 @@ void HighTop_renderGroundMarker(int obj, f32 scale)
     f32 lx, ly, lz;
     ObjPosParams pos;
     mtx = ObjPath_GetPointModelMtx(obj, 2);
-    ObjPath_GetPointLocalPosition(obj, 2, &lx, &ly, &lz);
+    ObjPath_GetPointLocalPosition((struct GameObject*)(obj), 2, &lx, &ly, &lz);
     pos.x = lx;
     pos.y = ly;
     pos.z = lz;
@@ -1256,7 +1256,7 @@ int hightop_stateHandler09(int obj, int stateArg)
 #pragma opt_common_subs reset
 
 #pragma opt_strength_reduction off
-int hightop_stateHandler10(int obj, int stateArg)
+int hightop_stateHandler10(struct GameObject *obj, int stateArg)
 {
     HighTopRuntime* rt = ((GameObject*)obj)->extra;
     int* weight;

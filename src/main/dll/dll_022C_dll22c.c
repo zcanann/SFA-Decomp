@@ -279,7 +279,7 @@ void dll_22C_update(int obj)
     }
 }
 
-void dll_22C_init(int obj, char* def)
+void dll_22C_init(struct GameObject *obj, char* def)
 {
     Dll22CState* state;
     Dll22CMapData* md = (Dll22CMapData*)def;

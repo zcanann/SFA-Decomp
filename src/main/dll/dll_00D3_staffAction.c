@@ -561,7 +561,7 @@ void fn_80165B3C(int obj, int state)
             int zero = 0;
             ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = zero;
         }
-        fn_80166840(obj, state, hitScratch.hit, end);
+        fn_80166840((struct GameObject*)(obj), state, hitScratch.hit, end);
     }
     else
     {
@@ -571,7 +571,7 @@ void fn_80165B3C(int obj, int state)
     }
 }
 
-void fn_80166840(int obj, int state, f32* hit, f32* end)
+void fn_80166840(struct GameObject *obj, int state, f32* hit, f32* end)
 {
     f32 speed;
     f32 planeX;
@@ -775,7 +775,7 @@ void fn_80166444(int obj, int state)
             dz = end[2] - start[2];
             segmentLen = sqrtf(dz * dz + (dx * dx + dy * dy));
             traveled = (f32)(traveled + segmentLen);
-            fn_80166840(obj, state, hitScratch.hit, end);
+            fn_80166840((struct GameObject*)(obj), state, hitScratch.hit, end);
         }
         else
         {
@@ -801,7 +801,7 @@ void fn_80166444(int obj, int state)
              (hitScratch.hit[2] != ((LandedArwingState*)state)->surfaceNormalZ)) ||
             (hitScratch.hit[3] != ((LandedArwingState*)state)->surfacePlaneD))
         {
-            fn_80166840(obj, state, hitScratch.hit, end);
+            fn_80166840((struct GameObject*)(obj), state, hitScratch.hit, end);
         }
         else
         {
@@ -827,7 +827,7 @@ void fn_80166444(int obj, int state)
         hitFound = hitDetectFn_80067958(obj, start, end, 1, hitScratch.hit, 0x20);
         if (hitFound != 0)
         {
-            fn_80166840(obj, state, hitScratch.hit, end);
+            fn_80166840((struct GameObject*)(obj), state, hitScratch.hit, end);
         }
         else
         {
@@ -1108,7 +1108,7 @@ int SkeetlaWall_getObjectTypeId(void);
 
 void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void SkeetlaWall_init(int obj, u8* def);
+void SkeetlaWall_init(struct GameObject *obj, u8* def);
 
 ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     {

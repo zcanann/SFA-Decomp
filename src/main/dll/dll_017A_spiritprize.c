@@ -87,7 +87,7 @@ void SpiritPrize_initialise(void)
 {
 }
 
-void SpiritPrize_free(int obj)
+void SpiritPrize_free(struct GameObject *obj)
 {
     SpiritPrizeState* state;
     void* light;

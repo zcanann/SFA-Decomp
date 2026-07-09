@@ -156,7 +156,7 @@ void kytesmum_free(int obj)
     }
 }
 
-int kytesmum_spawnInteractionCallback(int obj)
+int kytesmum_spawnInteractionCallback(struct GameObject *obj)
 {
     Obj_GetPlayerObject();
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
@@ -269,7 +269,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
     int* player = Obj_GetPlayerObject();
     int* tricky = getTrickyObject();
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
-    if (objGetAnimState80A(player) == 0x40)
+    if (objGetAnimState80A((struct GameObject*)(player)) == 0x40)
     {
         return 1;
     }

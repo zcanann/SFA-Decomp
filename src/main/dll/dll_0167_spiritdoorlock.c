@@ -76,7 +76,7 @@ int SpiritDoorLock_getObjectTypeId(void)
     return 0x0;
 }
 
-void SpiritDoorLock_free(int obj)
+void SpiritDoorLock_free(struct GameObject *obj)
 {
     SpiritDoorLockState* state = ((GameObject*)obj)->extra;
     if ((void*)state->light != NULL)

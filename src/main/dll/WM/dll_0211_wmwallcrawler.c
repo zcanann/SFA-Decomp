@@ -163,7 +163,7 @@ typedef struct
     f32 m8, mc, m10, m14;
 } WcXf;
 
-int wmwallcrawler_animEventCallback(int obj)
+int wmwallcrawler_animEventCallback(struct GameObject *obj)
 {
     ((WmwallcrawlerState*)((GameObject*)obj)->extra)->mode = WMWALLCRAWLER_MODE_DESCEND;
     return 0;
@@ -173,7 +173,7 @@ int wmwallcrawler_animEventCallback(int obj)
    but the retail unit keeps both bls. No same-TU callees, so the wrap
    is safe (see the dont_inline CAUTION in the playbook). */
 #pragma dont_inline on
-void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData)
+void wmwallcrawler_alignToFloorNormal(struct GameObject *obj, f32* floorData)
 {
     WcXf mtx;
     f32 in[3];
@@ -506,7 +506,7 @@ void wmwallcrawler_update(int obj)
                             if (list != 0)
                             {
                                 ((GameObject*)ob)->anim.localPosY = *list[bestIdx];
-                                wmwallcrawler_alignToFloorNormal(ob, list[bestIdx]);
+                                wmwallcrawler_alignToFloorNormal((struct GameObject*)(ob), list[bestIdx]);
                             }
                             else
                             {
@@ -604,7 +604,7 @@ void wmwallcrawler_update(int obj)
                                     if (list != 0)
                                     {
                                         ((GameObject*)ob)->anim.localPosY = *list[bestIdx];
-                                        wmwallcrawler_alignToFloorNormal(ob, list[bestIdx]);
+                                        wmwallcrawler_alignToFloorNormal((struct GameObject*)(ob), list[bestIdx]);
                                     }
                                     else
                                     {

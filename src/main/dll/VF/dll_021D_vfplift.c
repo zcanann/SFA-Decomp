@@ -41,12 +41,12 @@ extern void buttonDisable(int port, u32 mask);
 
 static const f32 gVfpLift1RaisedHeight = 307.0f;
 
-static inline VfpLiftState* vfplift_getState(int obj)
+static inline VfpLiftState* vfplift_getState(struct GameObject *obj)
 {
     return ((GameObject*)obj)->extra;
 }
 
-static inline f32 vfplift_getModelY(int obj)
+static inline f32 vfplift_getModelY(struct GameObject *obj)
 {
     VfpLiftPlacement* setup = *(VfpLiftPlacement**)&((GameObject*)obj)->anim.placementData;
 
@@ -58,7 +58,7 @@ static inline void vfplift_trigger(int triggerId, int obj)
     (*gObjectTriggerInterface)->runSequence(triggerId, (void*)obj, -1);
 }
 
-static inline void vfplift_setObjectHitEnabled(int obj)
+static inline void vfplift_setObjectHitEnabled(struct GameObject *obj)
 {
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
@@ -82,7 +82,7 @@ static inline f32 vfplift23_getRaisedOffset(int objType)
 
 int VFPLift_SeqFn(int obj)
 {
-    vfplift_getState(obj)->forceRaised = 1;
+    vfplift_getState((struct GameObject*)(obj))->forceRaised = 1;
     return 0;
 }
 
@@ -111,7 +111,7 @@ void vfplift23_updateState(int obj)
     if (state->mode == VFPLIFT_STATE_RAISED || state->mode >= VFPLIFT_STATE_RAISED ||
         state->mode < VFPLIFT_STATE_LOWERED)
     {
-        vfplift_setObjectHitEnabled(obj);
+        vfplift_setObjectHitEnabled((struct GameObject*)(obj));
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
@@ -132,7 +132,7 @@ void vfplift23_updateState(int obj)
     }
     else
     {
-        vfplift_setObjectHitEnabled(obj);
+        vfplift_setObjectHitEnabled((struct GameObject*)(obj));
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
@@ -200,7 +200,7 @@ void vfplift1_updateState(int obj)
     if (state->mode == VFPLIFT_STATE_RAISED || state->mode >= VFPLIFT_STATE_RAISED ||
         state->mode < VFPLIFT_STATE_LOWERED)
     {
-        vfplift_setObjectHitEnabled(obj);
+        vfplift_setObjectHitEnabled((struct GameObject*)(obj));
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
@@ -221,7 +221,7 @@ void vfplift1_updateState(int obj)
     }
     else
     {
-        vfplift_setObjectHitEnabled(obj);
+        vfplift_setObjectHitEnabled((struct GameObject*)(obj));
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
@@ -264,7 +264,7 @@ void VFPLift_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 
 void VFPLift_hitDetect(int obj)
 {
-    VfpLiftState* state = vfplift_getState(obj);
+    VfpLiftState* state = vfplift_getState((struct GameObject*)(obj));
 
     if (state->hitDisableGameBit != -1 && mainGetBit(state->hitDisableGameBit) == 0)
     {

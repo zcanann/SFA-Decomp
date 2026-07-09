@@ -295,7 +295,7 @@ void SB_ShipHead_update(int obj)
     gSbShipHeadPrevGalleonPhase = galleonPhase;
 }
 
-void SB_ShipHead_init(int obj)
+void SB_ShipHead_init(struct GameObject *obj)
 {
     SBShipHeadState* state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject((u32)obj, SBSHIPHEAD_OBJGROUP);

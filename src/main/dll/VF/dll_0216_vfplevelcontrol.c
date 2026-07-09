@@ -61,7 +61,7 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
    set in array order; the next-expected bit advances the step, any
    later bit lighting early resets the whole puzzle. */
 #pragma dont_inline on
-void fn_801F9804(int obj)
+void fn_801F9804(struct GameObject *obj)
 {
     s16* p;
     VfpLevelControlState* state = ((GameObject*)obj)->extra;
@@ -182,7 +182,7 @@ void VFP_LevelControl_update(int obj)
                 lbl_803DC148 = 0;
             }
         }
-        fn_801F9804(obj);
+        fn_801F9804((struct GameObject*)(obj));
         break;
     case 3:
         if (lbl_803DC148 != 0)

@@ -43,15 +43,15 @@ STATIC_ASSERT(offsetof(DrshackleState, pathPointA) == 0x1B);
 STATIC_ASSERT(offsetof(DrshackleState, pathPointB) == 0x1C);
 STATIC_ASSERT(sizeof(DrshackleState) == 0x20);
 
-int drshackle_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-int drshackle_func0B(int obj);
+int drshackle_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate);
+int drshackle_func0B(struct GameObject *obj);
 int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f);
 int drshackle_getExtraSize(void);
 int drshackle_getObjectTypeId(void);
 void drshackle_free(int obj);
 void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void drshackle_hitDetect(unsigned long obj);
-void drshackle_update(int obj);
+void drshackle_update(struct GameObject *obj);
 void drshackle_init(int obj, char* arg);
 void drshackle_release(void);
 void drshackle_initialise(void);

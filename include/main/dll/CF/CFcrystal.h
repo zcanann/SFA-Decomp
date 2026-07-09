@@ -72,9 +72,9 @@ int FireFlyLantern_getObjectTypeId(void);
 void FireFlyLantern_free(int obj);
 void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FireFlyLantern_update(int obj);
-void FireFlyLantern_init(int param_1,int param_2);
+void FireFlyLantern_init(struct GameObject *param_1,int param_2);
 int FireFlyLantern_spawnFireFly(int *obj);
-int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int FireFlyLantern_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int FlammableVine_getExtraSize(void);
 int FlammableVine_getObjectTypeId(void);

@@ -58,7 +58,7 @@ STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1c);
 STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
 STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
 
-void arwlevelcon_onSeqFree(int obj)
+void arwlevelcon_onSeqFree(struct GameObject *obj)
 {
     ARWLevelConState* state = ((GameObject*)obj)->extra;
 
@@ -73,7 +73,7 @@ void arwlevelcon_onSeqFree(int obj)
     arwingHudSetVisible(1);
 }
 
-int arwlevelcon_SeqFn(int obj, int unused, int data)
+int arwlevelcon_SeqFn(struct GameObject *obj, int unused, int data)
 {
     int i;
     int textId;
@@ -139,7 +139,7 @@ void arwlevelcon_hitDetect(void)
 {
 }
 
-void arwlevelcon_update(int obj)
+void arwlevelcon_update(struct GameObject *obj)
 {
     extern u8 AudioStream_IsPreparing(void);
     ARWLevelConState* state = ((GameObject*)obj)->extra;
@@ -210,7 +210,7 @@ void arwlevelcon_update(int obj)
     }
 }
 
-void arwlevelcon_init(int obj, u8* setup)
+void arwlevelcon_init(struct GameObject *obj, u8* setup)
 {
     ARWLevelConState* state = ((GameObject*)obj)->extra;
     ARWLevelConSetup* mapData = (ARWLevelConSetup*)setup;

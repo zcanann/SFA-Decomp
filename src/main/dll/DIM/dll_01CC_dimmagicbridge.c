@@ -37,7 +37,7 @@ extern f32 lbl_803E4A0C;
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int matchVal, int obj, int flag);
-extern int EmissionController_IsLingering(void* player);
+extern int EmissionController_IsLingering(struct GameObject *player);
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern float mathSinf(float x);
 
@@ -189,7 +189,7 @@ void dimmagicbridge_update(int obj)
     {
         if (mainGetBit(DIMMAGICBRIDGE_GAMEBIT_TRIGGER) != 0)
         {
-            if (EmissionController_IsLingering(player) != 0)
+            if (EmissionController_IsLingering((struct GameObject*)(player)) != 0)
             {
                 mainSetBits(DIMMAGICBRIDGE_GAMEBIT_LATCH, 1);
             }

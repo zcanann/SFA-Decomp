@@ -179,7 +179,7 @@ void bossdrakor_update(int obj)
     }
     else
     {
-        Obj_SmoothTurnAnglesTowardVelocity(obj, &((GameObject*)obj)->anim.velocityX, 0x2d, lbl_803E6548, lbl_803E656C);
+        Obj_SmoothTurnAnglesTowardVelocity((struct GameObject*)(obj), &((GameObject*)obj)->anim.velocityX, 0x2d, lbl_803E6548, lbl_803E656C);
     }
     if (moveResult != 0)
     {
@@ -203,7 +203,7 @@ void bossdrakor_update(int obj)
             }
             else
             {
-                moveId = bossdrakor_chooseNextMove(obj, &((BossDrakorState*)state)->moveSpeed);
+                moveId = bossdrakor_chooseNextMove((struct GameObject*)(obj), &((BossDrakorState*)state)->moveSpeed);
             }
             ObjAnim_SetCurrentMove(obj, moveId, lbl_803E6510, 0);
         }
@@ -416,7 +416,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
 }
 #pragma opt_propagation reset
 
-int bossdrakor_chooseNextMove(int obj, f32* speedOut)
+int bossdrakor_chooseNextMove(struct GameObject *obj, f32* speedOut)
 {
     int state;
     int idx;
@@ -703,7 +703,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         found = ObjGroup_FindNearestObject(DRAKORHOVERPAD_OBJGROUP, obj, 0);
         if ((void*)found != NULL)
         {
-            drakorhoverpad_resetPendingMotion(found);
+            drakorhoverpad_resetPendingMotion((struct GameObject*)(found));
         }
         break;
     }

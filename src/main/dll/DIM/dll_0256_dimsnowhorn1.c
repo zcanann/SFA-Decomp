@@ -67,7 +67,7 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler00(int obj)
+int DIMSnowHorn1_stateHandler00(struct GameObject *obj)
 {
     DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
 
@@ -793,7 +793,7 @@ int DIMSnowHorn1_func20(void)
     return 0;
 }
 
-f32 DIMSnowHorn1_func19(int obj, f32* out)
+f32 DIMSnowHorn1_func19(struct GameObject *obj, f32* out)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
     if (state->baddie.controlMode == 0xa)
@@ -814,7 +814,7 @@ void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
     *out_i = 0;
 }
 
-void DIMSnowHorn1_setMountMode(int obj, int value)
+void DIMSnowHorn1_setMountMode(struct GameObject *obj, int value)
 {
     u8 mode = (u8)value;
     ((DIMSnowHorn1State*)((GameObject*)obj)->extra)->mountMode = mode;
@@ -853,7 +853,7 @@ void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ)
     Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E8298, lbl_803E829C, outX, outY, outZ);
 }
 
-int DIMSnowHorn1_func14(int obj)
+int DIMSnowHorn1_func14(struct GameObject *obj)
 {
     if (((DIMSnowHorn1State*)((GameObject*)obj)->extra)->queryFlagA8F != 0)
     {
@@ -862,7 +862,7 @@ int DIMSnowHorn1_func14(int obj)
     return 1;
 }
 
-int DIMSnowHorn1_render2(int obj)
+int DIMSnowHorn1_render2(struct GameObject *obj)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
     if ((state->flags & SNOWHORN1_FLAG_RIDING) != 0)
@@ -874,7 +874,7 @@ int DIMSnowHorn1_render2(int obj)
     return 0;
 }
 
-void DIMSnowHorn1_modelMtxFn(int obj, f32* out_x, f32* out_y, f32* out_z)
+void DIMSnowHorn1_modelMtxFn(struct GameObject *obj, f32* out_x, f32* out_y, f32* out_z)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
     *out_x = state->pathPosX;
@@ -882,7 +882,7 @@ void DIMSnowHorn1_modelMtxFn(int obj, f32* out_x, f32* out_y, f32* out_z)
     *out_z = state->pathPosZ;
 }
 
-int DIMSnowHorn1_func11(int obj)
+int DIMSnowHorn1_func11(struct GameObject *obj)
 {
     if (((DIMSnowHorn1State*)((GameObject*)obj)->extra)->queryFlagA90 != 0)
     {
@@ -987,7 +987,7 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     f32 z;
 
     pathMtx = (void*)ObjPath_GetPointModelMtx(obj, 1);
-    ObjPath_GetPointLocalPosition(obj, 1, &x, &y, &z);
+    ObjPath_GetPointLocalPosition((struct GameObject*)(obj), 1, &x, &y, &z);
     transform.x = x;
     transform.y = y;
     transform.z = z;

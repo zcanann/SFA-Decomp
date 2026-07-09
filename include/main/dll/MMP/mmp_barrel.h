@@ -70,7 +70,7 @@ STATIC_ASSERT(offsetof(HitAnimatorObject, state) == 0xB8);
 
 #define WALLANIMATOR_DONE_TIMER 3000
 
-void waveanimator_modelMtxFn(int obj, int a, int b, int c);
+void waveanimator_modelMtxFn(struct GameObject *obj, int a, int b, int c);
 void waveanimator_func0B(int *obj);
 void waveanimator_setScale(int *obj, f32 fval);
 u8 wallanimator_func0B(int *obj);

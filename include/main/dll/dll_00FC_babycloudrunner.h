@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void dll_FC_update(int obj);
-void dll_FC_init(int obj,int objDef);
+void dll_FC_init(struct GameObject *obj,int objDef);
 void dll_FC_release_nop(void);
 void dll_FC_initialise_nop(void);
 void dll_FD_hitDetect(int obj);

@@ -2,9 +2,9 @@
 #define MAIN_DLL_PLAYER_STATUS_H_
 
 int playerGetCurMagic(int playerObj);
-int playerGetMaxMagic(int playerObj);
-int playerGetMaxHealth(int playerObj);
-int playerGetCurHealth(int playerObj);
+int playerGetMaxMagic(struct GameObject *playerObj);
+int playerGetMaxHealth(struct GameObject *playerObj);
+int playerGetCurHealth(struct GameObject *playerObj);
 
 static inline int Player_GetCurrentMagic(int playerObj)
 {
@@ -13,17 +13,17 @@ static inline int Player_GetCurrentMagic(int playerObj)
 
 static inline int Player_GetMaxMagic(int playerObj)
 {
-    return playerGetMaxMagic(playerObj);
+    return playerGetMaxMagic((struct GameObject*)(playerObj));
 }
 
 static inline int Player_GetMaxHealth(int playerObj)
 {
-    return playerGetMaxHealth(playerObj);
+    return playerGetMaxHealth((struct GameObject*)(playerObj));
 }
 
 static inline int Player_GetCurrentHealth(int playerObj)
 {
-    return playerGetCurHealth(playerObj);
+    return playerGetCurHealth((struct GameObject*)(playerObj));
 }
 
 #endif

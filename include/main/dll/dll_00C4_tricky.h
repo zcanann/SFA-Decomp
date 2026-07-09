@@ -27,7 +27,7 @@ void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1,int param_2,int param_3);
 int Tricky_func10(int *obj,int targetObj);
 void Tricky_func0F(int *obj,int commandEnabled,int targetObj);
-void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType);
+void sideCommandEnable(struct GameObject *obj,int targetObj,int commandKind,int commandType);
 int Tricky_updateSideCommandPrompts(int obj);
 u32 FUN_80146874(void);
 void Tricky_free(int obj,int shouldKeepFlameChildren);
@@ -42,7 +42,7 @@ void baddieFn_8014a304(int obj,int state,float radius);
 void fn_8014A5FC(int obj,int state);
 void fn_8014A86C(int obj,int state,float *nearestFloorY,float *nearestSpecialY);
 void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char doRender);
-void Tricky_hitDetect(int obj);
+void Tricky_hitDetect(struct GameObject *obj);
 void FUN_80146f94(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void FUN_80146f98(int param_1);

@@ -65,7 +65,7 @@ void FUN_801e5dd0(int param_1,int param_2);
 void FUN_801e5f78(int param_1);
 void FUN_801e5fc4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 u32 FUN_801e5fec(int param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
-int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int Lamp_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_801e60cc(u32 param_1);
 void FUN_801e62b8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e62e0(int param_1);

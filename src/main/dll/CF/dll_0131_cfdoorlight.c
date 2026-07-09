@@ -40,7 +40,7 @@ void CF_DoorLight_hitDetect(void)
 
 /* obj is a word here, not a pointer: target colors it r30 UNDER the state
    copy (r31) = the integral-param pool. */
-void CF_DoorLight_update(int obj)
+void CF_DoorLight_update(struct GameObject *obj)
 {
     CfDoorLightState* state;
     CfDoorLightMapData* def;

@@ -24,11 +24,11 @@ typedef struct DrLightBeaState
 
 int DR_LightBea_getExtraSize(void);
 int DR_LightBea_getObjectTypeId(void);
-void DR_LightBea_free(int obj);
+void DR_LightBea_free(struct GameObject *obj);
 void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5);
 void DR_LightBea_hitDetect(void);
 void DR_LightBea_update(int obj);
-void DR_LightBea_init(int obj);
+void DR_LightBea_init(struct GameObject *obj);
 void DR_LightBea_release(void);
 void DR_LightBea_initialise(void);
 

@@ -95,7 +95,7 @@ void KT_RexLevel_update(int obj)
     lbl_803DDD40 = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter);
 }
 
-void KT_RexLevel_init(int obj)
+void KT_RexLevel_init(struct GameObject *obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     setDrawCloudsAndLights(0);

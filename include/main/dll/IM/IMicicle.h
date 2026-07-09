@@ -150,7 +150,7 @@ int cflevelcontrol_getObjectTypeId(void);
 void cflevelcontrol_free(int param_1);
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void cflevelcontrol_hitDetect(void);
-void cflevelcontrol_update(int obj);
+void cflevelcontrol_update(struct GameObject *obj);
 void cflevelcontrol_init(u8 *obj, u8 *params);
 void cflevelcontrol_release(void);
 void cflevelcontrol_initialise(void);

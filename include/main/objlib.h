@@ -46,9 +46,9 @@ void *ObjList_GetObjects(int *startIndex,int *objectCount);
 int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq);
 u32 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *positions);
-void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,
+void ObjPath_GetPointLocalPosition(struct GameObject *param_1,int param_2,float *param_3,float *param_4,
                  float *param_5);
-void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3);
+void ObjPath_GetPointLocalMtx(struct GameObject *param_1,int param_2,float *param_3);
 void ObjPath_GetPointModelMtx(int param_1,int param_2);
 void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *outY,float *outZ,
                  int useInputPosition);

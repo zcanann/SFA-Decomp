@@ -250,8 +250,8 @@ void lightfoot_update(int obj)
         Lightfoot_UpdateAttachedChild(obj, inner);
         if (((GroundBaddieState*)inner)->flags400 & 0x2)
         {
-            Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
-            Lightfoot_ResetScriptedPosition(obj);
+            Lightfoot_RecordCompletedChallengeTargetHit((struct GameObject*)(obj), inner, anim);
+            Lightfoot_ResetScriptedPosition((struct GameObject*)(obj));
             ((GameObject*)obj)->unkF8 = 0;
             ((GroundBaddieState*)inner)->flags400 &= ~0x2;
         }
@@ -419,7 +419,7 @@ void lightfoot_init(int obj, int def, int flag)
             break;
         }
     }
-    Lightfoot_ResetScriptedPosition(obj);
+    Lightfoot_ResetScriptedPosition((struct GameObject*)(obj));
     ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C, (ObjAnimComponent*)obj);
     ((LightfootSub*)sub)->unk2A = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     ((LightfootSub*)sub)->animTimer = lbl_803E81C0;

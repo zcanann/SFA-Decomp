@@ -52,7 +52,7 @@ enum
     PAYMENT_KIOSK_SEQEV_PAY = 2
 };
 
-u32 PaymentKiosk_testEvent(int obj, int unused, int ev)
+u32 PaymentKiosk_testEvent(struct GameObject *obj, int unused, int ev)
 {
     PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
     PaymentKioskState* st = ((GameObject*)obj)->extra;
@@ -94,7 +94,7 @@ u32 PaymentKiosk_testEvent(int obj, int unused, int ev)
     return r;
 }
 
-int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int PaymentKiosk_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     PaymentKioskState* st = ((GameObject*)obj)->extra;
     PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;

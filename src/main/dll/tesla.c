@@ -76,7 +76,7 @@ STATIC_ASSERT(sizeof(TrickyCurveTriggerState) == 0x14);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, scale) == 0x08);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 
-extern int objGetAnimState80A(int obj);
+extern int objGetAnimState80A(struct GameObject *obj);
 
 extern u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
@@ -163,7 +163,7 @@ void fn_80206968(TrickyCurveObject* obj)
     }
     if (insideAxes == 3 && state->cooldown <= 0)
     {
-        if (objGetAnimState80A((int)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
+        if (objGetAnimState80A((struct GameObject*)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
         {
             mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
@@ -269,7 +269,7 @@ void fn_80206C18(TrickyCurveObject* obj)
             partfxArgs.xRot = 0x3fff;
         }
 
-        if (objGetAnimState80A((int)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
+        if (objGetAnimState80A((struct GameObject*)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
         {
             if (gTrickyCurveBurstCounter > TRICKY_CURVE_BURST_LIMIT)
             {

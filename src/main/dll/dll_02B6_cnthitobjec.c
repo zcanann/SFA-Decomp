@@ -186,7 +186,7 @@ void cnthitobjec_initialise(void)
 {
 }
 
-int mcupgrade_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
+int mcupgrade_SeqFn(struct GameObject *obj, int unused, CntHitObjectAnimEvent* event)
 {
     if (event->explosionCount != 0)
     {

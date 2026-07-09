@@ -512,7 +512,7 @@ u8 trickyBallMove(u8* obj)
     return 3;
 }
 
-void SidekickBall_init(int obj)
+void SidekickBall_init(struct GameObject *obj)
 {
 
     extern void mainSetBits(int eventId, int value);

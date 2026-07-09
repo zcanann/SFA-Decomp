@@ -126,8 +126,8 @@ extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int timerCountDown(void* timer);
-extern int fn_801EC9F4(int obj);
-extern int fn_801EC9BC(int obj);
+extern int fn_801EC9F4(struct GameObject *obj);
+extern int fn_801EC9BC(struct GameObject *obj);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
 extern u32 gSnowClawPulseTable[8];
 extern s32 lbl_8032A340[];
@@ -139,11 +139,11 @@ int snowclaw_getExtraSize(void);
 int snowclaw_getObjectTypeId(void);
 void snowclaw_release(void);
 void snowclaw_initialise(void);
-void snowclaw_free(int obj);
+void snowclaw_free(struct GameObject *obj);
 void snowclaw_init(int* obj, u8* init);
 void snowclaw_spawnDropBomb(int obj, int owner, int launchMode, int unkF4Value);
 void snowclaw_updateMountAttack(int obj, int mount);
-void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
+void snowclaw_syncMountTransform(struct GameObject *obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
                                  int enabled);
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis);
 void snowclaw_hitDetect(int obj);
@@ -168,7 +168,7 @@ void snowclaw_initialise(void)
 {
 }
 
-void snowclaw_free(int obj)
+void snowclaw_free(struct GameObject *obj)
 {
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
@@ -354,7 +354,7 @@ void snowclaw_updateMountAttack(int obj, int mount)
 }
 
 #pragma dont_inline on
-void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
+void snowclaw_syncMountTransform(struct GameObject *obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
                                  int enabled)
 {
     f32 newPosX, newPosY, newPosZ;
@@ -421,7 +421,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
             extern s8 objUpdateOpacity(int);
             vis = objUpdateOpacity(sub);
         }
-        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->mountAlpha, 1);
+        snowclaw_syncMountTransform((struct GameObject*)(obj), sub, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->mountAlpha, 1);
     }
     else
     {
@@ -547,7 +547,7 @@ void snowclaw_hitDetect(int obj)
     if (*(int**)inner != 0 &&
         (*(int (**)(int*))((char*)*((GameObject*)*(int**)inner)->anim.dll + 0x38))(*(int**)inner) == 2)
     {
-        snowclaw_syncMountTransform(obj, (int)*(int**)inner, 0, 0, 0, 0, 0, 0, 0);
+        snowclaw_syncMountTransform((struct GameObject*)(obj), (int)*(int**)inner, 0, 0, 0, 0, 0, 0, 0);
     }
     a5 = ((SnowclawState*)inner)->hitCooldown;
     if (a5 >= 0)
@@ -650,7 +650,7 @@ void snowclaw_update(int obj)
     sub = *(int**)inner;
     if (sub != 0 && *(s8*)&((SnowclawState*)inner)->health != 0 &&
         ((GameObject*)obj)->anim.currentMove == *(u16*)&((SnowclawState*)inner)->moveIdBase &&
-        fn_801EC9F4((int)sub) != 0 && timerCountDown(inner + 0x98) != 0)
+        fn_801EC9F4((struct GameObject*)sub) != 0 && timerCountDown(inner + 0x98) != 0)
     {
         choice = randomGetRange(0, 1);
         ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
@@ -667,7 +667,7 @@ void snowclaw_update(int obj)
                 obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 5, lbl_803E66F0, 0);
             snowclaw_spawnDropBomb(*(int*)inner, obj, (u8)choice, 0);
         }
-        s16toFloat(inner + 0x98, (s16)lbl_8032A340[fn_801EC9BC(*(int*)inner) - 1]);
+        s16toFloat(inner + 0x98, (s16)lbl_8032A340[fn_801EC9BC((struct GameObject*)(*(int*)inner)) - 1]);
     }
 
     sub = *(int**)inner;

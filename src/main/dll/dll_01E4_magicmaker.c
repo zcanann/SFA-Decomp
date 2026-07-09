@@ -55,7 +55,7 @@ void magicmaker_hitDetect(void)
 {
 }
 
-void magicmaker_update(int obj)
+void magicmaker_update(struct GameObject *obj)
 {
     int placement;
     char* spawnedObj;

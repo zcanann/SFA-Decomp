@@ -187,7 +187,7 @@ int VFP_SpellPlace_getObjectTypeId(void)
 
 void VFP_lavapool_update(int obj)
 {
-    fn_801FD6B4(obj);
+    fn_801FD6B4((struct GameObject*)(obj));
 }
 
 #pragma scheduling off
@@ -198,7 +198,7 @@ void VFP_lavastar_release(void)
 }
 
 #pragma peephole off
-int fn_801FD4A8(void* obj, int x)
+int fn_801FD4A8(struct GameObject *obj, int x)
 {
     VfpFlamePointData* extra = ((GameObject*)obj)->extra;
     if (extra != NULL)
@@ -288,7 +288,7 @@ void VFP_flamepoint_update(int obj)
     }
 }
 
-void fn_801FD6B4(int obj)
+void fn_801FD6B4(struct GameObject *obj)
 {
     VfpLavaPoolState* state;
     int def;
@@ -360,7 +360,7 @@ void fn_801FD6B4(int obj)
     }
 }
 
-void VFP_lavapool_init(int obj, int def)
+void VFP_lavapool_init(struct GameObject *obj, int def)
 {
     VfpLavaPoolState* state;
 
@@ -405,7 +405,7 @@ void VFP_lavastar_update(int obj)
     state->particleToggle ^= 1;
 }
 
-void VFP_lavastar_init(int obj, int def)
+void VFP_lavastar_init(struct GameObject *obj, int def)
 {
     VfpLavaStarState* state;
     VfpLavaStarMapData* mapData;

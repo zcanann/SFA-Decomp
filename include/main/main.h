@@ -30,6 +30,6 @@ void FUN_801feb6c(int param_1);
 
 
 /* extern-cleanup: defining-file public prototypes */
-void fn_801FD6B4(int obj);
+void fn_801FD6B4(struct GameObject *obj);
 
 #endif /* MAIN_MAIN_H_ */

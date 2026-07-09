@@ -621,7 +621,7 @@ void warpstone_initialise(void)
 {
 }
 
-void warpstone_init(int obj, u8* setup)
+void warpstone_init(struct GameObject *obj, u8* setup)
 {
     int state;
     s16 setupYaw;

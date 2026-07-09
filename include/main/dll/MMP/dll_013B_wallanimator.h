@@ -10,7 +10,7 @@
 #define WALLANIMATOR_RUNTIME_ACTIVE_FLAG 0x80
 #define WALLANIMATOR_COMPLETE_SFX 0x109
 
-f32 wallanimator_setScale(int obj,int desc);
+f32 wallanimator_setScale(struct GameObject *obj,int desc);
 void FUN_80194544(int param_1);
 void FUN_801945fc(int param_1,int param_2);
 void FUN_801946b8(void);

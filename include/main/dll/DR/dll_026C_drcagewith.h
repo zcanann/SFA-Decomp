@@ -42,8 +42,8 @@ STATIC_ASSERT(offsetof(DrcagewithState, linkedObject) == 0x4);
 STATIC_ASSERT(offsetof(DrcagewithState, angularVel) == 0x24);
 STATIC_ASSERT(sizeof(DrcagewithState) == 0x34);
 
-int DR_CageWith_setScale(int obj);
-int DR_CageWith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int DR_CageWith_setScale(struct GameObject *obj);
+int DR_CageWith_toggleRopeStateCallback(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate);
 int DR_CageWith_getExtraSize(void);
 int DR_CageWith_getObjectTypeId(void);
 void DR_CageWith_free(int obj, int arg);

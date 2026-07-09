@@ -58,12 +58,12 @@ void MMP_levelcontrol_initialise(void);
 
 int MoonSeedBush_getExtraSize(void);
 int MoonSeedBush_getObjectTypeId(void);
-int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int MoonSeedBush_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 void MoonSeedBush_free(void);
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedBush_hitDetect(void);
 void MoonSeedBush_update(int obj);
-void MoonSeedBush_init(int obj, int data);
+void MoonSeedBush_init(struct GameObject *obj, int data);
 void MoonSeedBush_release(void);
 void MoonSeedBush_initialise(void);
 
@@ -74,7 +74,7 @@ void mmp_asteroid_re_free(void);
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_asteroid_re_hitDetect(void);
 void mmp_asteroid_re_update(int obj);
-void mmp_asteroid_re_init(int obj);
+void mmp_asteroid_re_init(struct GameObject *obj);
 void mmp_asteroid_re_release(void);
 void mmp_asteroid_re_initialise(void);
 
@@ -93,8 +93,8 @@ int mmp_trenchfx_getObjectTypeId(void);
 void mmp_trenchfx_free(int obj);
 void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_trenchfx_hitDetect(void);
-void mmp_trenchfx_update(int obj);
-void mmp_trenchfx_init(int obj, int data);
+void mmp_trenchfx_update(struct GameObject *obj);
+void mmp_trenchfx_init(struct GameObject *obj, int data);
 void mmp_trenchfx_release(void);
 void mmp_trenchfx_initialise(void);
 
@@ -104,7 +104,7 @@ void mmp_gyservent_free(void);
 void mmp_gyservent_render(void);
 void mmp_gyservent_hitDetect(void);
 void mmp_gyservent_update(int obj);
-void mmp_gyservent_init(int obj);
+void mmp_gyservent_init(struct GameObject *obj);
 void mmp_gyservent_release(void);
 void mmp_gyservent_initialise(void);
 

@@ -13,7 +13,7 @@ extern f32 lbl_803E8298;
 extern f32 lbl_803E829C;
 extern f32 lbl_803E82A0;
 
-extern void ObjPath_GetPointLocalPosition(int obj, int point, f32 *out_x, f32 *out_y,
+extern void ObjPath_GetPointLocalPosition(struct GameObject *obj, int point, f32 *out_x, f32 *out_y,
                                           f32 *out_z);
 extern void mtx44_mult(void *lhs, void *rhs, void *out);
 extern void fn_8003B950(void *matrix);

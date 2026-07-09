@@ -22,7 +22,7 @@ void WM_Column_release(void);
 void WM_Column_initialise(void);
 extern ObjectDescriptor gWM_ColumnObjDescriptor;
 extern ObjectDescriptor13 gAppleOnTreeObjDescriptor;
-void AppleOnTree_setPosition(int obj,float *pos);
+void AppleOnTree_setPosition(struct GameObject *obj,float *pos);
 void FUN_8017db40(u32 param_1,int param_2);
 void FUN_8017de58(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,

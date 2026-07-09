@@ -125,7 +125,7 @@ extern void sc_levelcontrol_update(void);
 extern void sc_musictree_update(void);
 extern void sc_totempole_update(void);
 
-extern void sh_beacon_free(void);
+extern void sh_beacon_free(struct GameObject *);
 extern void sc_levelcontrol_init(void);
 extern void sc_musictree_init(void);
 extern void sc_totempole_init(void);
@@ -161,8 +161,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void staffToggle(int obj, int a);
-extern void playerPutAwayStaff(int obj, int mode);
+extern void staffToggle(struct GameObject *obj, int a);
+extern void playerPutAwayStaff(struct GameObject *obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
 
 extern void sh_staff_deactivate(int obj, ShStaffState* state, int a);
@@ -206,7 +206,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         if (state->phase == SHSTAFF_PHASE_CARRY_LOCAL)
         {
-            ObjPath_GetPointLocalMtx((void*)player, 0, state->carryMtx);
+            ObjPath_GetPointLocalMtx((struct GameObject*)player, 0, state->carryMtx);
             state->phase = SHSTAFF_PHASE_CARRY_RENDER;
         }
         if (state->phase == SHSTAFF_PHASE_CARRY_RENDER)
@@ -490,8 +490,8 @@ void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
 
     if (clearChildren != 0)
     {
-        staffToggle(player, 1);
-        playerPutAwayStaff(player, 1);
+        staffToggle((struct GameObject*)(player), 1);
+        playerPutAwayStaff((struct GameObject*)(player), 1);
         for (i = 0; i < 10; i++)
         {
             child = *(void**)((char*)state + i * 4 + 56);
@@ -529,7 +529,7 @@ void sh_staff_update(int obj)
         else
         {
             int loadResult;
-            staffToggle((int)player, 0);
+            staffToggle((struct GameObject*)player, 0);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E54D0);
             ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
             ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);

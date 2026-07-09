@@ -146,7 +146,7 @@ void ShipBattle_update(int obj)
     Obj_FreeObject(obj);
 }
 
-void ShipBattle_init(int obj, int def)
+void ShipBattle_init(struct GameObject *obj, int def)
 {
     ShipBattleState* state;
     int light;

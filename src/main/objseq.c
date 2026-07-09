@@ -234,10 +234,10 @@ extern f32 gObjSeqMsgNearbyRadius;
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
 extern void playerSetDisguised(void* obj, int idx);
-extern void playerPullOutStaff(void* obj, int idx);
-extern void playerPutAwayStaff(void* obj, int idx);
+extern void playerPullOutStaff(struct GameObject *obj, int idx);
+extern void playerPutAwayStaff(struct GameObject *obj, int idx);
 extern void Obj_SetActiveModelIndex(u8* obj, int idx);
-extern void playerLock(void* player, int mode);
+extern void playerLock(struct GameObject *player, int mode);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
@@ -299,10 +299,10 @@ extern int lbl_803DB71C;
 extern u8 lbl_803DD0D9;
 extern u8 lbl_803DD078;
 extern s16 lbl_8030ECF8[];
-extern int playerStatusIsPositive(void* obj);
-extern void playerSetInCutscene(void* obj);
-extern void playerSetCutsceneCameraFlag(void* obj);
-extern void playerSetOverrideParentSlack(void* obj);
+extern int playerStatusIsPositive(struct GameObject *obj);
+extern void playerSetInCutscene(struct GameObject *obj);
+extern void playerSetCutsceneCameraFlag(struct GameObject *obj);
+extern void playerSetOverrideParentSlack(struct GameObject *obj);
 extern void gameTextLoadTaskText(int taskId);
 
 extern int lbl_803DB724;
@@ -1423,13 +1423,13 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     case 24:
         if (((GameObject*)sourceObj)->anim.classId == 1)
         {
-            playerPullOutStaff(sourceObj, cmdArg);
+            playerPullOutStaff((struct GameObject*)(sourceObj), cmdArg);
         }
         break;
     case 25:
         if (((GameObject*)sourceObj)->anim.classId == 1)
         {
-            playerPutAwayStaff(sourceObj, cmdArg);
+            playerPutAwayStaff((struct GameObject*)(sourceObj), cmdArg);
         }
         break;
     case 26:
@@ -1453,7 +1453,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         (*gMapEventInterface)->savePoint(0, 0, 1, getCurMapLayer());
         break;
     case 38:
-        playerLock(Obj_GetPlayerObject(), cmdArg);
+        playerLock((struct GameObject*)(Obj_GetPlayerObject()), cmdArg);
         break;
     case 44:
         setMotionBlur(1, cmdArg / gObjSeqTexScrollScale);
@@ -3991,7 +3991,7 @@ checked:
             objIdU = *(u16*)(walk + 6);
             if (objIdU == 0x1f || objIdU == 0)
             {
-                if (playerStatusIsPositive(Obj_GetPlayerObject()) == 0)
+                if (playerStatusIsPositive((struct GameObject*)(Obj_GetPlayerObject())) == 0)
                 {
                     return -1;
                 }
@@ -4069,7 +4069,7 @@ checked:
             }
             if (idx == 0 && (*(u16*)(walk2 + 4) & 0x1000) && player != NULL)
             {
-                playerSetOverrideParentSlack(player);
+                playerSetOverrideParentSlack((struct GameObject*)(player));
             }
             *(s16*)(setup + 0x18) = packed | (idx & 0xf);
             *(s16*)(setup + 0x1a) = -1;
@@ -4150,7 +4150,7 @@ checked:
             {
                 if (idx == 0 && player != NULL)
                 {
-                    playerSetCutsceneCameraFlag(player);
+                    playerSetCutsceneCameraFlag((struct GameObject*)(player));
                 }
                 if (lbl_803DD064 == 0 || lbl_803DD064 == ((GameObject*)obj)->seqIndex)
                 {
@@ -4170,7 +4170,7 @@ checked:
             }
             if ((objId == 0x1f || objId == 0) && (((ObjSeqState*)seq)->flags & 1))
             {
-                playerSetInCutscene(player);
+                playerSetInCutscene((struct GameObject*)(player));
             }
             ((ObjSeqState*)seq)->targetObjId = *(int*)walk2;
             ((ObjSeqState*)seq)->savedFlags = ((ObjSeqState*)seq)->flags;

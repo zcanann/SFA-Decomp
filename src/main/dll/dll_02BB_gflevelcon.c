@@ -87,14 +87,14 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             gf_levelcon_findLinkedObjects(obj);
             if (*(void**)state != NULL)
             {
-                pointlight_setEffectState(*(int*)state, 1);
+                pointlight_setEffectState((struct GameObject*)(*(int*)state), 1);
             }
             break;
         case GFLEVELCON_SEQEV_LIGHT_OFF:
             gf_levelcon_findLinkedObjects(obj);
             if (*(void**)state != NULL)
             {
-                pointlight_setEffectState(*(int*)state, 0);
+                pointlight_setEffectState((struct GameObject*)(*(int*)state), 0);
             }
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_C:
@@ -186,7 +186,7 @@ void gf_levelcon_free(void)
     setIsOvercast(1);
 }
 
-void gf_levelcon_update(int obj)
+void gf_levelcon_update(struct GameObject *obj)
 {
     ((GameObject*)obj)->animEventCallback = gf_levelcon_SeqFn;
 }
@@ -289,7 +289,7 @@ void fn_80239EAC(int obj, int state)
                 dx = *(f32*)(state + 0xc0) - ((GameObject*)cur)->anim.localPosX;
                 ((GameObject*)cur)->anim.rotX = getAngle(dx, dz);
                 ((GameObject*)cur)->anim.rotY = -(s16)getAngle(dy, dz);
-                arwprojectile_placeForward(cur, (f32)(int)lbl_803DC4E8);
+                arwprojectile_placeForward((struct GameObject*)(cur), (f32)(int)lbl_803DC4E8);
             }
             objs++;
         }
@@ -320,8 +320,8 @@ void fn_8023A168(int obj, int state)
         if ((void*)proj != NULL)
         {
             ((GameObject*)proj)->anim.rootMotionScale = lbl_803E74B0;
-            arwprojectile_setLifetime(proj, 0x6e);
-            arwprojectile_placeForward(proj, lbl_803E74AC);
+            arwprojectile_setLifetime((struct GameObject*)(proj), 0x6e);
+            arwprojectile_placeForward((struct GameObject*)(proj), lbl_803E74AC);
         }
     }
 }
@@ -351,8 +351,8 @@ void fn_8023A268(int obj, int state, int p3)
         obj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
         if ((void*)obj != NULL)
         {
-            arwprojectile_setLifetime(obj, lbl_803DC4DC);
-            arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4D8);
+            arwprojectile_setLifetime((struct GameObject*)(obj), lbl_803DC4DC);
+            arwprojectile_placeForward((struct GameObject*)(obj), (f32)(int)lbl_803DC4D8);
         }
     }
 }
@@ -386,8 +386,8 @@ void fn_80239FCC(int obj, int state)
         if ((u32)proj != 0)
         {
             ((GameObject*)proj)->anim.rootMotionScale = lbl_803DC4E4;
-            arwprojectile_setLifetime(proj, lbl_803DC4E0);
-            arwprojectile_placeForward(proj, lbl_803E74AC);
+            arwprojectile_setLifetime((struct GameObject*)(proj), lbl_803DC4E0);
+            arwprojectile_placeForward((struct GameObject*)(proj), lbl_803E74AC);
         }
     }
 }

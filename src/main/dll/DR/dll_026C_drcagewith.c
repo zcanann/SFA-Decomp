@@ -19,13 +19,13 @@
 
 #define DRCAGEWITH_OBJFLAG_FREED 0x40
 
-int DR_CageWith_setScale(int obj)
+int DR_CageWith_setScale(struct GameObject *obj)
 {
     u8* state = ((GameObject*)obj)->extra;
     return state[0x30];
 }
 
-int DR_CageWith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int DR_CageWith_toggleRopeStateCallback(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* state = ((GameObject*)obj)->extra;
     int i;

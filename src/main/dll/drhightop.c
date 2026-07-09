@@ -141,7 +141,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
         {
             if ((u32)(st->flags428 >> 1 & 1) != 0)
             {
-                SnowBike_resetToRomListPosition(obj);
+                SnowBike_resetToRomListPosition((struct GameObject*)(obj));
             }
             else
             {

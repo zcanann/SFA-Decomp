@@ -126,7 +126,7 @@ extern s8 gDIMbosstonsilRoutePhase;
 
 int DIMbosstonsil_SeqFn(void *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
 void DIMbosstonsil_func0B(void);
-int DIMbosstonsil_setScale(int obj);
+int DIMbosstonsil_setScale(struct GameObject *obj);
 int DIMbosstonsil_getExtraSize(void);
 int DIMbosstonsil_getObjectTypeId(void);
 void DIMbosstonsil_free(void *obj);

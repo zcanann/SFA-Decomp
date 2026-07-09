@@ -70,7 +70,7 @@ void GCRobotBlast_update(void)
 {
 }
 
-void GCRobotBlast_init(int obj, s8* def)
+void GCRobotBlast_init(struct GameObject *obj, s8* def)
 {
     GCRobotBlastState* state = ((GameObject*)obj)->extra;
     state->mode = def[0x19];

@@ -18,7 +18,7 @@ typedef struct InfopointObjectDef
     u8 unk1F;
 } InfopointObjectDef;
 
-int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int InfoPoint_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate);
 int InfoPoint_getExtraSize(void);
 int InfoPoint_getObjectTypeId(void);
 void InfoPoint_free(void);

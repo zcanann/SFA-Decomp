@@ -14,6 +14,6 @@ STATIC_ASSERT(offsetof(ColdwaterControlState, playerObj) == 0x4);
 
 int ColdWaterControl_getExtraSize(void);
 void ColdWaterControl_update(int obj);
-void ColdWaterControl_init(int obj);
+void ColdWaterControl_init(struct GameObject *obj);
 
 #endif /* MAIN_DLL_DLL_0119_COLDWATERCONTROL_H_ */

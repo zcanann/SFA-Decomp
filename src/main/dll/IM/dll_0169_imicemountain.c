@@ -63,7 +63,7 @@ extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 
-int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
+int IMIceMountain_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void IMIceMountain_free(void)
 {
@@ -179,7 +179,7 @@ void IMIceMountain_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma scheduling off
 #pragma peephole on
-int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
+int IMIceMountain_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     ((IMIceMountainState*)((GameObject*)obj)->extra)->latchFlags |= 1;

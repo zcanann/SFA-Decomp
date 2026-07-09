@@ -57,7 +57,7 @@ void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7078);
 }
 
-void ARWBombColl_init(int obj, int setup)
+void ARWBombColl_init(struct GameObject *obj, int setup)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ARWBombCollSetup* mapData = (ARWBombCollSetup*)setup;
@@ -74,7 +74,7 @@ void ARWBombColl_initialise(void)
 {
 }
 
-void arwbombcoll_updateMovingAxis(int obj, RingState* state)
+void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState* state)
 {
     u8 mode = state->route;
     if (mode == 1 || mode == 3)
@@ -123,7 +123,7 @@ void arwbombcoll_updateMovingAxis(int obj, RingState* state)
     }
 }
 
-void Ring_onCollect(int obj, RingState* state, int arwing)
+void Ring_onCollect(struct GameObject *obj, RingState* state, int arwing)
 {
     GameObject* arwingObj = (GameObject*)arwing;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -178,7 +178,7 @@ void Ring_onCollect(int obj, RingState* state, int arwing)
     state->phase = 2;
 }
 
-int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
+int arwbombcoll_checkArwingCollision(struct GameObject *obj, RingState* state, int arwing)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;

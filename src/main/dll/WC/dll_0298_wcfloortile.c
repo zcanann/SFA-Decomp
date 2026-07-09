@@ -98,7 +98,7 @@ void wcfloortile_hitDetect(void)
 {
 }
 
-void wcfloortile_init(int obj)
+void wcfloortile_init(struct GameObject *obj)
 {
     WcFloorTileState* state = ((GameObject*)obj)->extra;
 
@@ -235,7 +235,7 @@ void wcfloortile_update(int obj)
     }
 }
 
-void arwarwing_clampToFlightBounds(int obj, int state)
+void arwarwing_clampToFlightBounds(struct GameObject *obj, int state)
 {
     ArwingState* arwing = (ArwingState*)state;
     f32 hy;
@@ -357,7 +357,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     ((GameObject*)obj)->anim.rotY = arwing->rotYCur;
     if (arwing->mode == 1)
     {
-        arwarwing_updateBarrelRoll(obj, state);
+        arwarwing_updateBarrelRoll((struct GameObject*)(obj), state);
     }
     else
     {
@@ -403,7 +403,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     arwing->bobRotZPhase = (arwing->bobRotZRate * timeDelta + (f32)(u32)arwing->bobRotZPhase);
     arwing->bobXPhase = (arwing->bobXRate * timeDelta + (f32)(u32)arwing->bobXPhase);
     arwing->bobYPhase = (arwing->bobYRate * timeDelta + (f32)(u32)arwing->bobYPhase);
-    arwarwing_clampToFlightBounds(obj, state);
+    arwarwing_clampToFlightBounds((struct GameObject*)(obj), state);
 }
 
 void arwarwing_updateBombFire(int obj, int state)
@@ -469,12 +469,12 @@ void arwarwing_spawnBomb(int obj, int state, int side)
     ((ArwingBombSetup*)setup)->head.color[0] = 1;
     ((ArwingBombSetup*)setup)->head.color[1] = 1;
     arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
-    fn_8022ED74(arwing->activeBombObj, *(u16*)&arwing->bombProjectileParam);
-    fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
+    fn_8022ED74((struct GameObject*)(arwing->activeBombObj), *(u16*)&arwing->bombProjectileParam);
+    fn_8022ECE0((struct GameObject*)(arwing->activeBombObj), arwing->bombProjectileLifetime);
     Sfx_PlayFromObject(obj, SFXTRIG_ar_badhit16);
 }
 
-void arwarwing_updateThrusters(int obj, int state)
+void arwarwing_updateThrusters(struct GameObject *obj, int state)
 {
 
     int slot;
@@ -594,7 +594,7 @@ void arwarwing_readControls(int obj, int state)
 }
 
 #pragma dont_inline on
-void arwarwing_updateBarrelRoll(int obj, int state)
+void arwarwing_updateBarrelRoll(struct GameObject *obj, int state)
 {
     f32 zero;
 

@@ -14,10 +14,10 @@ typedef struct FEseqobjectState {
 
 void PaymentKiosk_init(int obj, PaymentKioskMapData *initData);
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-void FEseqobject_init(int obj);
+void FEseqobject_init(struct GameObject *obj);
 void FEseqobject_update(int obj);
 int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-void dll_144_init(int obj);
+void dll_144_init(struct GameObject *obj);
 void PaymentKiosk_release(void);
 void PaymentKiosk_initialise(void);
 void FUN_801df45c(u16 *param_1);

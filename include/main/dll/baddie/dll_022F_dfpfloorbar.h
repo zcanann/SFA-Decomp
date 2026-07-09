@@ -22,7 +22,7 @@ typedef struct DfpFloorbarState {
 void DFP_Floorbar_update(int param_1);
 int dfpfloorbar_SeqFn(void);
 void DFP_Floorbar_release(void);
-void DFP_Floorbar_init(int obj, int params);
+void DFP_Floorbar_init(struct GameObject *obj, int params);
 void DFP_Floorbar_initialise(void);
 extern u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE];
 extern ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor;

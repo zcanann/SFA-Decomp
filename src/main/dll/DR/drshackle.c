@@ -131,7 +131,7 @@ int drshackle_updateSwingBlend(int obj, int state)
     }
 
     {
-        f32 ang = fn_801EA678(obj, state);
+        f32 ang = fn_801EA678((struct GameObject*)(obj), state);
         ang = -ang;
         if (s->lastPitch < ang || yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
@@ -170,7 +170,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
                 s->unk494 = zero;
                 s->unk498 = zero;
             }
-            s->lastPitch = -fn_801EA678(obj, state);
+            s->lastPitch = -fn_801EA678((struct GameObject*)(obj), state);
             hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
                                                 -s->lastPitch * timeDelta, s->colliderMode, 1);
             (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
@@ -212,7 +212,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
     }
 
     hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
-                                        timeDelta * fn_801EA678(obj, state), s->colliderMode, 1);
+                                        timeDelta * fn_801EA678((struct GameObject*)(obj), state), s->colliderMode, 1);
     (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
     (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
     if (hitResult != 0)

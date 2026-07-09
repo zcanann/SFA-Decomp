@@ -75,7 +75,7 @@ extern void cfforcefield_free(void);
 extern void cfmagicwall_free(void);
 extern void cflevelcontrol_free(void);
 extern void exploded_free(void);
-extern void SpiritDoorLock_free(void);
+extern void SpiritDoorLock_free(struct GameObject *);
 extern void RollingBarrel_free(void);
 extern void MMP_levelcontrol_free(void);
 
@@ -97,7 +97,7 @@ extern void MMP_levelcontrol_hitDetect(void);
 
 extern void cfforcefield_update(void);
 extern void cfmagicwall_update(void);
-extern void cflevelcontrol_update(void);
+extern void cflevelcontrol_update(struct GameObject *);
 extern void exploded_update(void);
 extern void SpiritDoorLock_update(void);
 extern void RollingBarrel_update(void);
@@ -108,8 +108,8 @@ extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
 extern void exploded_init(void);
 extern void SpiritDoorLock_init(void);
-extern void RollingBarrel_init(void);
-extern void MMP_levelcontrol_init(void);
+extern void RollingBarrel_init(struct GameObject *);
+extern void MMP_levelcontrol_init(struct GameObject *);
 
 extern void cfforcefield_release(void);
 extern void cfmagicwall_release(void);
@@ -289,7 +289,7 @@ void explodable_init(int obj, int setup)
     }
 }
 
-int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragmentIndex)
+int explodable_spawnFragmentObject(struct GameObject *obj, int objType, int chunkSrc, int fragmentIndex)
 {
     ExplodableFragmentSetup* s;
     f32 f1;
@@ -390,10 +390,10 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
             c->offX = c->centroidX;
             c->offY = c->centroidY;
             c->offZ = c->centroidZ;
-            explodable_computeFragmentLaunch(obj, (int)c, def);
+            explodable_computeFragmentLaunch((struct GameObject*)(obj), (int)c, def);
             c->unk6B = 0xff;
             c->gameBitMode = (u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
-            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject(obj, objType, (int)c, i13);
+            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject((struct GameObject*)(obj), objType, (int)c, i13);
             c++;
             i14 += 4;
             i8 += 4;
@@ -404,7 +404,7 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
     }
 }
 
-void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
+void explodable_computeFragmentLaunch(struct GameObject *obj, int chunkSlot, int def)
 {
     f32 dx;
     f32 dy;

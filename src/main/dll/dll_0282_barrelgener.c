@@ -392,7 +392,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
 }
 
 #pragma opt_common_subs off
-void Obj_SmoothTurnAnglesTowardVelocity(int obj, int velVec, int turnFrames, f32 rollFactor, f32 pitchFactor)
+void Obj_SmoothTurnAnglesTowardVelocity(struct GameObject *obj, int velVec, int turnFrames, f32 rollFactor, f32 pitchFactor)
 {
     ObjAnimComponent* anim = &((GameObject*)obj)->anim;
     f32* vel = (f32*)velVec;

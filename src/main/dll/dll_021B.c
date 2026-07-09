@@ -53,7 +53,7 @@ void dll_21B_hitDetect_nop(void)
 {
 }
 
-void dll_21B_update(int obj)
+void dll_21B_update(struct GameObject *obj)
 {
     Dll21BPlacement* setup = (Dll21BPlacement*)((GameObject*)obj)->anim.placementData;
     Dll21BState* state = ((GameObject*)obj)->extra;

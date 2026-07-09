@@ -48,7 +48,7 @@ int FireFlyLantern_spawnFireFly(int* obj)
 }
 #pragma dont_inline reset
 
-int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int FireFlyLantern_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FireFlyLanternState* state;
     void* child;
@@ -160,7 +160,7 @@ void FireFlyLantern_update(int obj)
     }
 }
 
-void FireFlyLantern_init(int obj, int def)
+void FireFlyLantern_init(struct GameObject *obj, int def)
 {
     void* player;
     u8* childSlot;

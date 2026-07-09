@@ -76,7 +76,7 @@ void imanimspacecraft_initialise(void);
 
 int imspacethruster_getExtraSize(void);
 int imspacethruster_getObjectTypeId(void);
-void imspacethruster_free(int obj);
+void imspacethruster_free(struct GameObject *obj);
 void imspacethruster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void imspacethruster_hitDetect(void);
 void imspacethruster_update(int *obj);
@@ -109,7 +109,7 @@ void linkb_levcontrol_update(int *obj);
 void linkb_levcontrol_init(int *obj);
 
 int link_levcontrol_getExtraSize(void);
-void link_levcontrol_free(int obj);
+void link_levcontrol_free(struct GameObject *obj);
 void link_levcontrol_update(int *obj);
 void link_levcontrol_updateAreaMusic(int *obj);
 void link_levcontrol_applyEnterAreaEffects(int *obj);
@@ -117,7 +117,7 @@ void link_levcontrol_init(int *obj);
 
 int lavaball1be_getExtraSize(int *obj);
 int lavaball1be_getObjectTypeId(int *obj);
-void lavaball1be_free(int obj);
+void lavaball1be_free(struct GameObject *obj);
 void lavaball1be_render(int *obj, int p2, int p3, int p4, int p5);
 void lavaball1be_hitDetect(void);
 void lavaball1be_update(s16 *obj);
@@ -129,7 +129,7 @@ u32 lavaball1be_isInactive(int *obj);
 
 int lavaball1bf_getExtraSize(void);
 int lavaball1bf_getObjectTypeId(void);
-void lavaball1bf_free(int obj, int mode);
+void lavaball1bf_free(struct GameObject *obj, int mode);
 void lavaball1bf_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void lavaball1bf_hitDetect(void);
 void lavaball1bf_update(int *obj);

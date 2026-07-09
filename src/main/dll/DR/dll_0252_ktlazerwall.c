@@ -28,7 +28,7 @@ int KT_Lazerwall_getObjectTypeId(void)
     return 0x0;
 }
 
-void KT_Lazerwall_free(int obj)
+void KT_Lazerwall_free(struct GameObject *obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     void* bolt = *(void**)&((KtlazerwallState*)extra)->bolt;
@@ -39,7 +39,7 @@ void KT_Lazerwall_free(int obj)
     }
 }
 
-void KT_Lazerwall_render(int obj)
+void KT_Lazerwall_render(struct GameObject *obj)
 {
     char* extra = ((GameObject*)obj)->extra;
     int placement = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -149,7 +149,7 @@ void KT_Lazerwall_update(int obj)
     }
 }
 
-void KT_Lazerwall_init(int obj, char* placement)
+void KT_Lazerwall_init(struct GameObject *obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)placement[0x18] << 8);

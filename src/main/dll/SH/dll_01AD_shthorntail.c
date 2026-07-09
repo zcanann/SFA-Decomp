@@ -77,7 +77,7 @@ extern void warpstone_hitDetect(void);
 
 extern void warpstone_update(void);
 
-extern void warpstone_init(void);
+extern void warpstone_init(struct GameObject *);
 
 extern void warpstone_release(void);
 

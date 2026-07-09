@@ -11,7 +11,7 @@ void dfropenode_update(DFropenodeObject *obj);
 void dfropenode_init(DFropenodeObject *obj, u8 *objDef);
 void dfropenode_release(void);
 void dfropenode_initialise(void);
-int DFSH_Door2Speci_SeqFn(int obj);
+int DFSH_Door2Speci_SeqFn(struct GameObject *obj);
 int DFSH_Door2Speci_getExtraSize(void);
 
 #endif /* MAIN_DLL_DF_DLL_198_H_ */

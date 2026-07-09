@@ -63,7 +63,7 @@ void dll_144_update(void)
 {
 }
 
-void dll_144_init(int obj)
+void dll_144_init(struct GameObject *obj)
 {
     ((GameObject*)obj)->anim.rotX = 0;
     ((GameObject*)obj)->animEventCallback = dll_144_SeqFn;

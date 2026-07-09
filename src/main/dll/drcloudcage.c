@@ -557,7 +557,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
     fn_801E9C00(obj, state);
 }
 
-f32 fn_801EA678(int obj, int state)
+f32 fn_801EA678(struct GameObject *obj, int state)
 {
     f32 result;
     f32 d;

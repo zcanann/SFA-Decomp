@@ -24,6 +24,6 @@ int DIMbossHitDetect_applyForwardMove(int *obj, u8 *state, f32 weight);
 int DIMbossHitDetect_resetIdleMove(int *obj, u8 *state);
 
 void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker *source, f32 *velocity);
-void DIM2icicle_createStateLight(int obj, u8 isGreen);
+void DIM2icicle_createStateLight(struct GameObject *obj, u8 isGreen);
 
 #endif /* MAIN_DLL_DIM_DIM2LIFT_H_ */

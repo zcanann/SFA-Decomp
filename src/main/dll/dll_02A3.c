@@ -92,7 +92,7 @@ void dll_2A3_update(int obj)
     }
 }
 
-void dll_2A3_init(int obj)
+void dll_2A3_init(struct GameObject *obj)
 {
     Dll2A3State* state = ((GameObject*)obj)->extra;
 
@@ -114,13 +114,13 @@ void dll_2A3_initialise_nop(void)
 {
 }
 
-void fn_8023134C(int obj, int lifetime)
+void fn_8023134C(struct GameObject *obj, int lifetime)
 {
     Dll2A3State* state = ((GameObject*)obj)->extra;
     state->lifetime = lifetime;
 }
 
-void fn_8023137C(int obj, f32* velocity)
+void fn_8023137C(struct GameObject *obj, f32* velocity)
 {
     ((GameObject*)obj)->anim.velocityX = velocity[0];
     ((GameObject*)obj)->anim.velocityY = velocity[1];

@@ -26,7 +26,7 @@ extern void objSetSlot(int* obj, int slot);
  * and bit 1 on matching group records. Returns 0 when the block is
  * missing or not trigger-enabled. */
 #pragma dont_inline on
-int fn_801A27B8(int obj, int id)
+int fn_801A27B8(struct GameObject *obj, int id)
 {
     MapBlockData* block;
 
@@ -114,7 +114,7 @@ void blasted_update(int obj)
     }
     if ((u32)mainGetBit(setup->completedGameBit) != 0)
     {
-        state->triggerFired = fn_801A27B8(obj, setup->triggerId);
+        state->triggerFired = fn_801A27B8((struct GameObject*)(obj), setup->triggerId);
         return;
     }
     {
@@ -167,7 +167,7 @@ void blasted_update(int obj)
                         mainSetBits(gbIndex + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
                     }
                     mainSetBits(setup->completedGameBit, 1);
-                    fn_801A27B8(obj, setup->triggerId);
+                    fn_801A27B8((struct GameObject*)(obj), setup->triggerId);
                     Obj_SetActiveModelIndex(obj, 2);
                     state->triggerFired = 1;
                 }
@@ -209,7 +209,7 @@ void blasted_init(int obj, int placement)
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
     if ((u32)mainGetBit(setup->completedGameBit) != 0)
     {
-        state[0xc / 4] = fn_801A27B8(obj, (int)setup->triggerId);
+        state[0xc / 4] = fn_801A27B8((struct GameObject*)(obj), (int)setup->triggerId);
     }
 }
 

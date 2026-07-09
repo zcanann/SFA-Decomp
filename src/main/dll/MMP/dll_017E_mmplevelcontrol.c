@@ -199,7 +199,7 @@ void MMP_levelcontrol_update(int obj)
     SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
 
-void MMP_levelcontrol_init(int obj)
+void MMP_levelcontrol_init(struct GameObject *obj)
 {
 
     ((GameObject*)obj)->objectFlags |= (MMPLEVELCONTROL_OBJFLAG_HIDDEN | MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);

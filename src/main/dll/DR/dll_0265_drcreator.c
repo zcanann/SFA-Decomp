@@ -158,7 +158,7 @@ void DR_Creator_update(int obj)
     }
 }
 
-void DR_Creator_init(int obj, char* arg)
+void DR_Creator_init(struct GameObject *obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);

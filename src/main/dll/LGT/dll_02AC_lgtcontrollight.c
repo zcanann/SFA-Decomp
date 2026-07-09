@@ -39,7 +39,7 @@ void ControlLight_render(void)
 {
 }
 
-void ControlLight_init(int obj, int setup)
+void ControlLight_init(struct GameObject *obj, int setup)
 {
     ControlLightSetup* setupData = (ControlLightSetup*)setup;
     ControlLightState* state = ((GameObject*)obj)->extra;
@@ -52,7 +52,7 @@ void ControlLight_init(int obj, int setup)
 
 #pragma opt_loop_invariants off
 #pragma optimization_level 1
-void ControlLight_update(int obj)
+void ControlLight_update(struct GameObject *obj)
 {
     u8 newBit;
     u32 bit;
@@ -79,7 +79,7 @@ void ControlLight_update(int obj)
                 lightObj = *lightIter;
                 if (Vec_distance((int)&self->anim.worldPosX, (int)&lightObj->anim.worldPosX) < radius)
                 {
-                    pointlight_setEffectState((int)lightObj, bit);
+                    pointlight_setEffectState((struct GameObject*)lightObj, bit);
                 }
                 lightIter++;
             }
@@ -101,7 +101,7 @@ void ControlLight_update(int obj)
                 lightObj = *lightIter;
                 if (Vec_distance((int)&self->anim.worldPosX, (int)&lightObj->anim.worldPosX) < radius)
                 {
-                    pointlight_setEffectState((int)lightObj, (u8)invBit);
+                    pointlight_setEffectState((struct GameObject*)lightObj, (u8)invBit);
                 }
                 lightIter++;
             }

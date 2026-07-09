@@ -16,7 +16,7 @@ typedef struct LampObjectDef
 int Lamp_getExtraSize(void);
 void Lamp_free(int* obj);
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int Lamp_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate);
 void Lamp_update(int obj);
 void Lamp_init(int* obj, int* def);
 

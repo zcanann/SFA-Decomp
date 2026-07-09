@@ -151,7 +151,7 @@ void WCBouncyCra_update(int obj)
     }
 }
 
-void WCBouncyCra_init(int obj, int setup)
+void WCBouncyCra_init(struct GameObject *obj, int setup)
 {
     WCBouncyCrateState* state = ((GameObject*)obj)->extra;
 

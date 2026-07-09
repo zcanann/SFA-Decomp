@@ -260,7 +260,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void storeZeroToFloatParam(int p);
 extern void s16toFloat(int p, int v);
-extern void fn_802BC788(void);
+extern void fn_802BC788(struct GameObject *);
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
 void fn_802BCA10(int obj, int sub, int state);
@@ -304,21 +304,21 @@ int DR_EarthWarrior_getObjectTypeId(void)
     return 0x43;
 }
 
-void DR_EarthWarrior_func15(int obj, f32* x, f32* y, f32* z)
+void DR_EarthWarrior_func15(struct GameObject *obj, f32* x, f32* y, f32* z)
 {
     *x = ((GameObject*)obj)->anim.localPosX;
     *y = ((GameObject*)obj)->anim.localPosY;
     *z = ((GameObject*)obj)->anim.localPosZ;
 }
 
-int DR_EarthWarrior_stateHandler00(int obj)
+int DR_EarthWarrior_stateHandler00(struct GameObject *obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     inner->sub.flags98C |= 0x20;
     return 2;
 }
 
-void DR_EarthWarrior_modelMtxFn(int obj, f32* x, f32* y, f32* z)
+void DR_EarthWarrior_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     *x = inner->sub.posX;
@@ -326,7 +326,7 @@ void DR_EarthWarrior_modelMtxFn(int obj, f32* x, f32* y, f32* z)
     *z = inner->sub.posZ;
 }
 
-int DR_EarthWarrior_func11(int obj)
+int DR_EarthWarrior_func11(struct GameObject *obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     if (inner->sub.unk993 != 0)
@@ -336,7 +336,7 @@ int DR_EarthWarrior_func11(int obj)
     return 2;
 }
 
-int DR_EarthWarrior_func14(int obj)
+int DR_EarthWarrior_func14(struct GameObject *obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     if (inner->sub.unk992 != 0)
@@ -346,7 +346,7 @@ int DR_EarthWarrior_func14(int obj)
     return 1;
 }
 
-void DR_EarthWarrior_func18(int obj, f32* a, int* b)
+void DR_EarthWarrior_func18(struct GameObject *obj, f32* a, int* b)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     *a = (f32)(s32)inner->sub.aimAccumY;
@@ -418,7 +418,7 @@ void DR_EarthWarrior_initialise(void)
     }
 }
 
-f32 DR_EarthWarrior_func19(int obj, f32* out)
+f32 DR_EarthWarrior_func19(struct GameObject *obj, f32* out)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     f32 animSpeed;
@@ -480,7 +480,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
     }
 }
 
-void DR_EarthWarrior_func17(int obj, int param)
+void DR_EarthWarrior_func17(struct GameObject *obj, int param)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     inner->sub.rideState = param;
@@ -514,7 +514,7 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     } v;
     f32 lp0, lp1, lp2;
     int mtx = ObjPath_GetPointModelMtx(obj, 2);
-    ObjPath_GetPointLocalPosition(obj, 2, &lp0, &lp1, &lp2);
+    ObjPath_GetPointLocalPosition((struct GameObject*)(obj), 2, &lp0, &lp1, &lp2);
     v.mat[1] = lp0;
     v.mat[2] = lp1;
     v.mat[3] = lp2;
@@ -595,7 +595,7 @@ void fn_802BE6E8(int obj, int t, int p3)
         ((EarthWarriorState*)inner)->baddie.cameraYaw = 0;
     }
     *(int*)((char*)inner + 0) |= 0x1000000;
-    fn_802B0EA4(obj, sub, inner);
+    fn_802B0EA4((struct GameObject*)(obj), sub, inner);
     (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
     ((GameObject*)obj)->anim.rotY =

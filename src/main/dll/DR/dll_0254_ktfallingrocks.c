@@ -70,7 +70,7 @@ void ktfallingrocks_update(int obj)
     mainSetBits(((KtfallingrocksPlacement*)placement)->triggerBit, 0);
 }
 
-void ktfallingrocks_init(int obj)
+void ktfallingrocks_init(struct GameObject *obj)
 {
     ((GameObject*)obj)->animEventCallback = NULL;
 }
