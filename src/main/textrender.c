@@ -2237,11 +2237,14 @@ void gameTextRun(void)
             gameTextFn_8001658c(cmd->arg0, cmd->arg1, cmd->arg2);
             break;
         case 5:
+        {
+            int strId = cmd->arg0;
             if (gCurTextBox != NULL)
             {
-                gameTextRenderStrs(cmd->arg0, ((u8*)gCurTextBox - (u8*)gTextBoxes) / 0x20);
+                gameTextRenderStrs(strId, ((u8*)gCurTextBox - (u8*)gTextBoxes) / 0x20);
             }
             break;
+        }
         case 6:
             gameTextRenderStrs(cmd->arg0, cmd->arg1);
             break;
