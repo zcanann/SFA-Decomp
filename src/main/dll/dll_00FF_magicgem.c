@@ -79,6 +79,7 @@ void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E34B0);
 }
 
+#pragma opt_lifetimes on
 void MagicDust_update(GameObject* obj)
 {
     extern u32 ObjHits_DisableObject();
@@ -305,6 +306,7 @@ void MagicDust_update(GameObject* obj)
 LAB_80173f80:
     return;
 }
+#pragma opt_lifetimes reset
 
 typedef struct MagicgemObjectDef
 {
