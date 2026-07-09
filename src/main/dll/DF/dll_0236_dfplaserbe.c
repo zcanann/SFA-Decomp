@@ -74,4 +74,4 @@ char sTextBlockInitNoLongerSupported[] = "<textblock.c Init>No Longer supported 
 /* Explicit length 40 (string data is 36 bytes; NUL-fill supplies the 4-byte
  * retail pad gap_07_80329C44_data) so .data ends 8-aligned at +0x88 as in
  * retail. */
-char sLaserInitNoLongerSupported[40] = "<laser.c Init>No Longer supported \n";
+char sLaserInitNoLongerSupported[] = "<laser.c Init>No Longer supported \n";
