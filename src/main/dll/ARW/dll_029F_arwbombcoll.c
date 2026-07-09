@@ -215,6 +215,7 @@ int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwi
     return 0;
 }
 
+#pragma opt_common_subs off
 void ARWBombColl_update(int obj)
 {
     ObjAnimComponent* objAnim;
@@ -341,3 +342,4 @@ active:
     }
 }
 }
+#pragma opt_common_subs reset
