@@ -2929,7 +2929,8 @@ void doPendingMapLoads(void)
                             if (*(void**)p4 != NULL)
                             {
                                 s16 sl = *(s16*)(p4 + 4);
-                                defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208), sl, 1);
+                                char* dp = base + sl * 0x8C;
+                                defStartFn_8005972c(*(char**)p4, (u32*)(dp + 0x4208), sl, 1);
                                 mm_free(*(void**)p4);
                                 ((int*)(base + 0x83A8))[sl] = 0;
                             }
