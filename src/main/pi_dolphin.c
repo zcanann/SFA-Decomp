@@ -3783,7 +3783,7 @@ extern void* externalFrameBuffer0;
 extern void* externalFrameBuffer1;
 extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
-char lbl_8035F730[0x10];
+extern char lbl_8035F730[0x10];
 
 int GXFlush_(u8 visible, int unused)
 {
@@ -6403,7 +6403,7 @@ void fn_8004EF9C(int* param)
 }
 
 extern u8 gLoadingScreenTextures[];
-char lbl_8035F680[0x38];
+extern char lbl_8035F680[0x38];
 extern void OSStopStopwatch(void* sw);
 extern u64 OSCheckStopwatch(void* sw);
 extern void OSResetStopwatch(void* sw);
@@ -6930,7 +6930,7 @@ extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetMisc(GXMiscToken token, u32 val);
-char lbl_8035F6B8[0x78];
+extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;
 extern int lbl_803DCCF4;
@@ -7570,12 +7570,25 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
 #pragma opt_propagation reset
 #pragma use_lmw_stmw reset
 
-/* .bss glue 0x8035EF48-0x8035F680 */
-int lbl_8035EF48[0x58];
-u32 lbl_8035F0A8[0x58];
-int lbl_8035F208[0x78];
-u32 lbl_8035F3E8[0x58];
+/* .bss glue 0x8035EF48-0x80377974 */
+u16 lbl_80377974[0x16];
+u16 lbl_80377954[0x10];
+u8 lbl_803778D4[0x80];
+u16 lbl_803778B4[0x10];
+u16 lbl_80377894[0x10];
+u8 lbl_80377880[0x14];
+u8 lbl_8036F880[0x8000];
+u8 lbl_8036F860[0x20];
+u16 lbl_8035F860[0x8000];
+u8 lbl_8035F740[0x120];
+char lbl_8035F730[0x10];
+char lbl_8035F6B8[0x78];
+char lbl_8035F680[0x38];
 s16 gObjMapBlockInfo[0x9C];
+u32 lbl_8035F3E8[0x58];
+int lbl_8035F208[0x78];
+u32 lbl_8035F0A8[0x58];
+int lbl_8035EF48[0x58];
 
 extern char sResourceFileNameAudioBin[];
 extern char sResourceFileNameSfxTab[];
