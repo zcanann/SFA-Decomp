@@ -3494,7 +3494,7 @@ void renderGlows(void)
     f32 sunMtx[12];
     f32 dir[3];
     f32 cam[3];
-    int alpha;
+    u8 alpha;
     u8 sky;
     f32 sunDot;
 
