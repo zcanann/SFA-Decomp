@@ -3871,12 +3871,9 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
                 fl += 0x18;
                 k++;
             } while (k < 0x40);
+            debugPrintf(sTrackNoFreeLastLineError);
             e = NULL;
         stored:
-            if (e == NULL)
-            {
-                debugPrintf(sTrackNoFreeLastLineError);
-            }
             if (e != NULL)
             {
                 ((ModelLightStruct*)e)->localY = t14[0];
