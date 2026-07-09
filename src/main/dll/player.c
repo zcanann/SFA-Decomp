@@ -1607,7 +1607,7 @@ int playerStateMoving(int obj, int state)
                 int cd = (int)(32768.0f * ((GameObject*)obj)->anim.currentMoveProgress +
                                (f32) * (int*)((char*)inner + 0x858));
                 ((PlayerState*)inner)->targetYaw = cd;
-                ((PlayerState*)inner)->lastInputHeading = (s16)cd;
+                ((PlayerState*)inner)->lastInputHeading = ((PlayerState*)inner)->targetYaw;
             }
             if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
             {
