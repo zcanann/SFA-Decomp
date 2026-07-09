@@ -2617,6 +2617,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
 
 /* Pause menu master state machine. */
 #pragma dont_inline on
+#pragma opt_propagation off
 void pauseMenuFn_80129ee0(void)
 {
     PauseTbl* tbl = &lbl_8031AE20;
@@ -3416,6 +3417,7 @@ void pauseMenuFn_80129ee0(void)
         }
     }
 }
+#pragma opt_propagation reset
 #pragma dont_inline reset
 
 /* Pause-menu save-screen render pass.
@@ -4423,6 +4425,7 @@ void GameUI_update(void)
 }
 
 #pragma opt_propagation off
+#pragma opt_loop_invariants off
 void textureFreeFn_8012fcec(void)
 {
     u8 z[2];
@@ -4460,6 +4463,7 @@ void textureFreeFn_8012fcec(void)
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = NULL;
 }
+#pragma opt_loop_invariants reset
 #pragma opt_propagation reset
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
