@@ -1234,15 +1234,13 @@ int ObjGroup_GetObjectGroup(u32 obj)
     return 0;
 }
 
-#pragma opt_lifetimes off
-#pragma opt_propagation off
 void ObjGroup_AddObject(u32 obj, int group)
 {
     u8* offset;
     int count;
     int index;
-    int insertIndex;
     int limit;
+    int insertIndex;
     u32* entries;
 
     if ((group < 0) || (group >= OBJGROUP_COUNT))
@@ -1269,7 +1267,8 @@ void ObjGroup_AddObject(u32 obj, int group)
     }
     insertIndex = (limit - insertIndex == 0) ? insertIndex : (limit - 1);
     gObjGroupObjectCount++;
-    count = (int)(u32)gObjGroupObjectCount - 1;
+    count = (int)(u32)gObjGroupObjectCount;
+    count--;
     entries = gObjGroupObjects + count;
     for (index = count; insertIndex < index; index--)
     {
@@ -1286,8 +1285,6 @@ void ObjGroup_AddObject(u32 obj, int group)
         group++;
     }
 }
-#pragma opt_propagation reset
-#pragma opt_lifetimes reset
 
 void ObjGroup_ClearAll(void)
 {
