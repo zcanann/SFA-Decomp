@@ -1493,6 +1493,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 }
 
 #pragma dont_inline off
+#pragma opt_lifetimes off
 void objFreeObjDef(u8* obj, int flag)
 {
     int defs[40];
@@ -1690,6 +1691,7 @@ void objFreeObjDef(u8* obj, int flag)
     }
     mm_free(obj);
 }
+#pragma opt_lifetimes reset
 
 void Obj_UpdateObject(u8* obj)
 {
