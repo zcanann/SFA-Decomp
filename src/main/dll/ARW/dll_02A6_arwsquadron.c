@@ -190,8 +190,8 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
         return;
     if (flag != 0)
         arwprojectile_createLinkedEffect(proj, 1);
-    arwprojectile_setLifetime((struct GameObject*)(proj), 0x4b);
-    arwprojectile_placeForward((struct GameObject*)(proj), lbl_803E71A8);
+    arwprojectile_setLifetime((GameObject*)(proj), 0x4b);
+    arwprojectile_placeForward((GameObject*)(proj), lbl_803E71A8);
     Sfx_PlayFromObjectLimited(proj, SFXTRIG_wp_blaserhit16, 4);
 }
 #pragma optimization_level reset
@@ -417,10 +417,10 @@ void arwsquadron_followPath(int objArg, int stateArg)
         if (setup->pathMode == 2)
         {
             if (state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
-                Obj_SmoothTurnAnglesTowardVelocity((struct GameObject*)(objArg), (int)&objAnim->velocityX, 0xf,
+                Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(objArg), (int)&objAnim->velocityX, 0xf,
                                                    lbl_803E71A0, lbl_803E7188);
             else
-                Obj_SmoothTurnAnglesTowardVelocity((struct GameObject*)(objArg), (int)&objAnim->velocityX, 0xf,
+                Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(objArg), (int)&objAnim->velocityX, 0xf,
                                                    state->flags.cmd.f08 ? lbl_803E7168 : lbl_803E71A0, lbl_803E7188);
         }
         state->pathSpeed += interpolate(state->targetPathSpeed - state->pathSpeed, lbl_803E71A4, timeDelta);
@@ -475,7 +475,7 @@ void arwsquadron_emitEffects(int objArg, int stateArg)
     {
         if (state->fxFrameCounter++ % 2 != 0)
         {
-            ObjPath_GetPointLocalPosition((struct GameObject*)(objArg), 4, &pfx.fx, &pfx.fy, &pfx.fz);
+            ObjPath_GetPointLocalPosition((GameObject*)(objArg), 4, &pfx.fx, &pfx.fy, &pfx.fz);
             pfx.f8 = state->damageSmokeScale;
             if ((s8)state->health <= 1)
                 pfx.s6 = 0x61a8;
@@ -487,7 +487,7 @@ void arwsquadron_emitEffects(int objArg, int stateArg)
     if ((s8)state->health <= 1)
     {
         pfx.s6 = 0xc0a;
-        ObjPath_GetPointLocalPosition((struct GameObject*)(objArg), 5, &pfx.fx, &pfx.fy, &pfx.fz);
+        ObjPath_GetPointLocalPosition((GameObject*)(objArg), 5, &pfx.fx, &pfx.fy, &pfx.fz);
         pfx.f8 = state->fireFxScale;
         (*gPartfxInterface)->spawnObject((void*)objArg, ARW_SQUADRON_PARTFX_FIRE, &pfx, 4, -1, &flag);
     }
@@ -497,12 +497,12 @@ void arwsquadron_emitEffects(int objArg, int stateArg)
         pfx.s2 = 0;
         pfx.s4 = 0;
         pfx.f8 = lbl_803E7168;
-        ObjPath_GetPointLocalPosition((struct GameObject*)(objArg), 2, &pfx.fx, &pfx.fy, &pfx.fz);
+        ObjPath_GetPointLocalPosition((GameObject*)(objArg), 2, &pfx.fx, &pfx.fy, &pfx.fz);
         objfx_spawnLightPulse(objArg, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
     if (state->muzzleCount > 1 && (s8)state->health > 1)
     {
-        ObjPath_GetPointLocalPosition((struct GameObject*)(objArg), 3, &pfx.fx, &pfx.fy, &pfx.fz);
+        ObjPath_GetPointLocalPosition((GameObject*)(objArg), 3, &pfx.fx, &pfx.fy, &pfx.fz);
         objfx_spawnLightPulse(objArg, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
 }

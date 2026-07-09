@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_
 #define MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -64,7 +65,7 @@ void PressureSwitch_initialise(void);
 
 int WM_LaserTarget_getExtraSize(void);
 int WM_LaserTarget_getObjectTypeId(void);
-int dll_200_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
+int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 void WM_LaserTarget_free(void);
 void WM_LaserTarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void WM_LaserTarget_hitDetect(void);

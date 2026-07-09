@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_LGT_DLL_02AC_LGTCONTROLLIGHT_H_
 #define MAIN_DLL_LGT_DLL_02AC_LGTCONTROLLIGHT_H_
 
+#include "main/game_object.h"
 #include "main/dll/dll_80220608_shared.h"
 
 typedef struct ControlLightSetup
@@ -38,8 +39,8 @@ int ControlLight_getObjectTypeId(void);
 void ControlLight_free(void);
 void ControlLight_hitDetect(void);
 void ControlLight_render(void);
-void ControlLight_init(struct GameObject* obj, int setup);
-void ControlLight_update(struct GameObject* obj);
+void ControlLight_init(GameObject* obj, int setup);
+void ControlLight_update(GameObject* obj);
 void ControlLight_release(void);
 void ControlLight_initialise(void);
 

@@ -22,6 +22,7 @@
  * pointers immediately following at +0x510/+0x514/+0x518.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/checkpoint_interface.h"
 #include "main/vecmath.h"
@@ -557,7 +558,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
     fn_801E9C00(obj, state);
 }
 
-f32 fn_801EA678(struct GameObject* obj, int state)
+f32 fn_801EA678(GameObject* obj, int state)
 {
     f32 result;
     f32 d;

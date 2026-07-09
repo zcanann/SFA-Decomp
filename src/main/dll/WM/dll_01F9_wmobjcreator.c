@@ -124,7 +124,7 @@ void WM_ObjCreator_hitDetect(void)
 {
 }
 
-void WM_ObjCreator_update(struct GameObject* obj)
+void WM_ObjCreator_update(GameObject* obj)
 {
     /* setup/spawned/n are FN-SCOPE on purpose: live-range splitting
        re-creates per-arm webs in the retail saved-reg spread, where

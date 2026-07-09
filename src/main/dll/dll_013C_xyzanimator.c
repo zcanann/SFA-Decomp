@@ -291,7 +291,7 @@ void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4004);
 }
 
-void XyzAnimator_update(struct GameObject* obj)
+void XyzAnimator_update(GameObject* obj)
 {
     extern void fn_80194C40(u8 * setup, u8 * state, int block);
     extern void fn_80194964(u8 * setup, u8 * state, int block);

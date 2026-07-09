@@ -453,8 +453,8 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         obj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
         if ((void*)obj != NULL)
         {
-            arwprojectile_setLifetime((struct GameObject*)(obj), lbl_803DC510);
-            arwprojectile_placeForward((struct GameObject*)(obj), lbl_803DC50C);
+            arwprojectile_setLifetime((GameObject*)(obj), lbl_803DC510);
+            arwprojectile_placeForward((GameObject*)(obj), lbl_803DC50C);
         }
     }
 }

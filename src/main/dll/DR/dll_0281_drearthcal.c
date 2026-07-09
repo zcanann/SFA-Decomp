@@ -104,7 +104,7 @@ void drearthcal_update(int obj)
     }
 }
 
-void drearthcal_init(struct GameObject* obj, int setup)
+void drearthcal_init(GameObject* obj, int setup)
 {
     obj->anim.rotX = (s16)((s8) * (u8*)(setup + DREARTHCAL_SETUP_YAW) << 8);
     obj->objectFlags |= DREARTHCAL_INIT_FLAGS;

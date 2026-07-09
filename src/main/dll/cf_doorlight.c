@@ -99,7 +99,7 @@ int kaldachom_stateHandlerB04(int obj, GroundBaddieState* state)
     return 0;
 }
 
-int kaldachom_stateHandlerB03(struct GameObject* obj, GroundBaddieState* state)
+int kaldachom_stateHandlerB03(GameObject* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
     {

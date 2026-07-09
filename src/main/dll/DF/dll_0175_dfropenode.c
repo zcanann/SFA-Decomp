@@ -67,7 +67,7 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
     return (f32) * (f64*)&bits - (f32)gRopeNodeS32ToDoubleBias;
 }
 
-int dfropenode_findNearestRopePoint(struct GameObject* obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
+int dfropenode_findNearestRopePoint(GameObject* obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
                                     float* phaseOut, u8* sideOut)
 {
     int offset;
@@ -167,7 +167,7 @@ void dfropenode_applyForceAtPhase(f32 phase, f32 force, int obj)
     node->force[1] = force * fraction + node->force[1];
 }
 
-void dfropenode_advancePhaseByDistance(struct GameObject* obj, float* phase, f32 distance)
+void dfropenode_advancePhaseByDistance(GameObject* obj, float* phase, f32 distance)
 {
     DFropenodeExtra* extra;
     s32 raw;
@@ -346,7 +346,7 @@ int dfropenode_getObjectTypeId(void)
     return 0;
 }
 
-void dfropenode_free(struct GameObject* obj)
+void dfropenode_free(GameObject* obj)
 {
     void* node;
     int** objs;
@@ -502,7 +502,7 @@ void dfropenode_hitDetect(void)
 void dfropenode_update(DFropenodeObject* obj)
 {
     extern int getAngle(float y, float x);
-    extern struct DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused,
+    extern DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused,
                                         s32 count, f32 tickScale);
 
     DFropenodeExtra* extra;

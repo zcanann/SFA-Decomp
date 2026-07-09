@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_WC_WCLEVCONTROL_H_
 #define MAIN_DLL_WC_WCLEVCONTROL_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
@@ -22,6 +23,6 @@ void FUN_801ef980(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u64 param_8, u16* param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
 void FUN_801ef984(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-int SB_CloudRunner_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #endif /* MAIN_DLL_WC_WCLEVCONTROL_H_ */

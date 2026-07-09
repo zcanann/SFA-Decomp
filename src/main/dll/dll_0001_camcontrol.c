@@ -22,6 +22,7 @@
  * camera/target flag bits are named in dll_0001_camcontrol.h.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "dolphin/os.h"
 #include "main/asset_load.h"
@@ -296,7 +297,7 @@ void camcontrol_updateTargetFeedback(void)
                 break;
             case 0x3de:
             case 0x49f:
-                targetDistance = largecrate_getReticleDistance((struct GameObject*)target);
+                targetDistance = largecrate_getReticleDistance((GameObject*)target);
                 break;
             case 0x31:
                 targetDistance = gCamcontrolNormalizedMax;

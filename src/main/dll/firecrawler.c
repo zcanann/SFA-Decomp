@@ -173,7 +173,7 @@ extern void lightSetField4D();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
 extern void modelLightStruct_setAffectsAabbLightSelection();
-extern void sidekickToy_accelerateTowardTarget3D(struct GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c,
+extern void sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c,
                                                  f32 spd);
 extern float powfBitEstimate(float x, float y);
 extern f32 sqrtf(f32 x);
@@ -1235,7 +1235,7 @@ void hagabonMK2_update(s16* obj, u8* state)
         ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
     sidekickToy_accelerateTowardTarget3D(
-        (struct GameObject*)(obj), ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
+        (GameObject*)(obj), ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
         lbl_803E2C48 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosY,
         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosZ, *(f32*)&lbl_803E2C48, lbl_803E2C78,
         lbl_803E2C50, ((BaddieState*)state)->unk304);
@@ -2232,7 +2232,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
-        sidekickToy_accelerateTowardTarget3D((struct GameObject*)(obj), base->posX, base->posY, base->posZ,
+        sidekickToy_accelerateTowardTarget3D((GameObject*)(obj), base->posX, base->posY, base->posZ,
                                              lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50, ((BaddieState*)state)->unk304);
     }
 

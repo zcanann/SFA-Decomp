@@ -16,6 +16,7 @@
  * All path geometry lives in the singleton gCamcontrolPathState.
  */
 #include "main/camera_interface.h"
+#include "main/game_object.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/cutCam.h"
@@ -35,7 +36,7 @@
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern int objFn_802962b4(struct GameObject* obj);
+extern int objFn_802962b4(GameObject* obj);
 extern int objFn_80296700(int obj);
 extern void memset(void* ptr, int value, int size);
 extern f32 sqrtf(f32 value);
@@ -99,7 +100,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             goto done;
         }
         if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
-            (objFn_802962b4((struct GameObject*)target) != 0))
+            (objFn_802962b4((GameObject*)target) != 0))
         {
             actionPayload.x = gCamcontrolPathState->actionParamX;
             actionPayload.z = gCamcontrolPathState->actionParamZ;

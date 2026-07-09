@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_GROUNDANIMATOR_H_
 #define MAIN_DLL_GROUNDANIMATOR_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
@@ -17,12 +18,12 @@ void WM_Column_free(int obj);
 void WM_Column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void WM_Column_hitDetect(void);
 void WM_Column_update(int obj);
-void WM_Column_init(struct GameObject* obj, struct WmColumnPlacement* mapData);
+void WM_Column_init(GameObject* obj, struct WmColumnPlacement* mapData);
 void WM_Column_release(void);
 void WM_Column_initialise(void);
 extern ObjectDescriptor gWM_ColumnObjDescriptor;
 extern ObjectDescriptor13 gAppleOnTreeObjDescriptor;
-void AppleOnTree_setPosition(struct GameObject* obj, float* pos);
+void AppleOnTree_setPosition(GameObject* obj, float* pos);
 void FUN_8017db40(u32 param_1, int param_2);
 void FUN_8017de58(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9);

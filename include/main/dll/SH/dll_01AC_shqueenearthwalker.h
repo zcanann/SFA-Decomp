@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SH_DLL_01AC_SHQUEENEARTHWALKER_H_
 #define MAIN_DLL_SH_DLL_01AC_SHQUEENEARTHWALKER_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
 
@@ -32,6 +33,6 @@ int sh_queenearthwalker_getExtraSize(void);
 void sh_queenearthwalker_update(void* obj);
 void queenFeedFn_801d44a4(void* obj, void* state);
 void openPortalFn_801d4364(void* obj, void* state);
-void sh_queenearthwalker_init(struct GameObject* obj, QueenEarthWalkerMapData* mapData);
+void sh_queenearthwalker_init(GameObject* obj, QueenEarthWalkerMapData* mapData);
 
 #endif /* MAIN_DLL_SH_DLL_01AC_SHQUEENEARTHWALKER_H_ */

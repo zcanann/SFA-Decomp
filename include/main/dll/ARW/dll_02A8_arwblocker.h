@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_ARW_DLL_02A8_ARWBLOCKER_H_
 #define MAIN_DLL_ARW_DLL_02A8_ARWBLOCKER_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/obj_placement.h"
 
@@ -25,7 +26,7 @@ STATIC_ASSERT(offsetof(ARWBlockerState, sequenceLocked) == 0x01);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
 
-int ARWBlocker_SeqFn(struct GameObject* obj);
+int ARWBlocker_SeqFn(GameObject* obj);
 int ARWBlocker_getExtraSize(void);
 int ARWBlocker_getObjectTypeId(void);
 void ARWBlocker_free(void);

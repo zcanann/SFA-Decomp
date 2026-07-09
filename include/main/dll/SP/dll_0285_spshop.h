@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SP_DLL_0285_SPSHOP_H_
 #define MAIN_DLL_SP_DLL_0285_SPSHOP_H_
 
+#include "main/game_object.h"
 #include "types.h"
 
 typedef struct ShopBuyItemState
@@ -38,7 +39,7 @@ typedef struct ShopItemRow
 void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4);
 void shop_func16(int* obj, int p2, int p3);
 void shop_func15(int* obj, int v);
-void shop_buyItem(struct GameObject* obj, int price);
+void shop_buyItem(GameObject* obj, int price);
 s32 shop_getItemIndex(int* obj);
 void shop_setItemIndex(int* obj, int v);
 s16 shop_getItemTextId(int obj, int idx);

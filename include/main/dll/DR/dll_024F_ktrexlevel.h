@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_024F_KTREXLEVEL_H_
 #define MAIN_DLL_DR_DLL_024F_KTREXLEVEL_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "ghidra_import.h"
 
@@ -12,7 +13,7 @@ void KT_RexLevel_hitDetect(void);
 void ktrexlevel_clearPathGameBits(void);
 void ktrexlevel_updatePathGameBits(void);
 void KT_RexLevel_update(int obj);
-void KT_RexLevel_init(struct GameObject* obj);
+void KT_RexLevel_init(GameObject* obj);
 void KT_RexLevel_release(void);
 void KT_RexLevel_initialise(void);
 

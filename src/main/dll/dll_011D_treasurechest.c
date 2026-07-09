@@ -63,9 +63,9 @@ extern f32 lbl_803E3C2C;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
-extern void playerPullOutStaff(struct GameObject* obj, int enabled);
+extern void playerPullOutStaff(GameObject* obj, int enabled);
 
-int TreasureChest_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* o = (GameObject*)obj;
     int i;
@@ -164,7 +164,7 @@ void TreasureChest_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-            playerPullOutStaff((struct GameObject*)(Obj_GetPlayerObject()), 1);
+            playerPullOutStaff((GameObject*)(Obj_GetPlayerObject()), 1);
             nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, obj, &nearestDist);
             if (nearestObject != 0)
             {

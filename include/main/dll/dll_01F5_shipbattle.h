@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_01F5_SHIPBATTLE_H_
 #define MAIN_DLL_DLL_01F5_SHIPBATTLE_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct ShipBattleObjectDef
@@ -19,7 +20,7 @@ void ShipBattle_free(int* obj);
 void ShipBattle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 void ShipBattle_hitDetect(void);
 void ShipBattle_update(int obj);
-void ShipBattle_init(struct GameObject* obj, int def);
+void ShipBattle_init(GameObject* obj, int def);
 void ShipBattle_release(void);
 void ShipBattle_initialise(void);
 

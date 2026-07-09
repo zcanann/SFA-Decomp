@@ -74,7 +74,7 @@ typedef struct DIM2icicleBlueWhiteEffectPlacement
 
 STATIC_ASSERT(sizeof(DIM2icicleBlueWhiteEffectPlacement) == 0x24);
 
-void DIM2icicle_createStateLight(struct GameObject* obj, u8 isGreen)
+void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
 {
     extern int objCreateLight(int, int);
     extern void modelLightStruct_setLightKind(int, int);

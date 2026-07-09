@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DIMBOSSTONSIL_H_
 #define MAIN_DLL_DIM_DIMBOSSTONSIL_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
@@ -129,7 +130,7 @@ extern s8 gDIMbosstonsilRoutePhase;
 
 int DIMbosstonsil_SeqFn(void* obj, u32 param_2, ObjAnimUpdateState* animUpdate);
 void DIMbosstonsil_func0B(void);
-int DIMbosstonsil_setScale(struct GameObject* obj);
+int DIMbosstonsil_setScale(GameObject* obj);
 int DIMbosstonsil_getExtraSize(void);
 int DIMbosstonsil_getObjectTypeId(void);
 void DIMbosstonsil_free(void* obj);

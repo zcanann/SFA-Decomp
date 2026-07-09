@@ -237,7 +237,7 @@ void fn_8023A87C(int obj, int state)
         ((AndrossState*)state)->effectLifetime -= framesThisStep;
         if (((AndrossState*)state)->effectLifetime < 0)
         {
-            arwbombcoll_setLifetime((struct GameObject*)(((AndrossState*)state)->effectHandle), 5);
+            arwbombcoll_setLifetime((GameObject*)(((AndrossState*)state)->effectHandle), 5);
             ((AndrossState*)state)->effectLifetime = 0;
             ((AndrossState*)state)->effectHandle = 0;
         }
@@ -1643,7 +1643,7 @@ void andross_update(int obj)
         {
             mainSetBits(0x10, 0);
             ((AndrossState*)state)->actionTimer = 0x1e;
-            arwarwing_resetFlightState((struct GameObject*)(*state));
+            arwarwing_resetFlightState((GameObject*)(*state));
             ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->savedPosZ;
             ((AndrossState*)state)->camOffsetAccum = lbl_803E74D4;
         }

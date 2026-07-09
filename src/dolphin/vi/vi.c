@@ -66,7 +66,7 @@ typedef struct {
 
 static volatile u32 retraceCount;
 static volatile u32 flushFlag;
-static struct OSThreadQueue retraceQueue;
+static OSThreadQueue retraceQueue;
 static void (*PreCB)(u32);
 static void (*PostCB)(u32);
 static u32 encoderType;

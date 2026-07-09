@@ -29,7 +29,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
-extern int playerGetFlags3F0Bit5(struct GameObject* obj);
+extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);
@@ -114,7 +114,7 @@ void fn_80154870(int obj, int* state)
         *(u32*)&state[0xb7] &= ~0x2000LL;
     }
     ObjHits_SetHitVolumeSlot(obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
-    flag = playerGetFlags3F0Bit5((struct GameObject*)(Obj_GetPlayerObject()));
+    flag = playerGetFlags3F0Bit5((GameObject*)(Obj_GetPlayerObject()));
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - ((GameObject*)obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
     dvec[2] = *(f32*)(state[0xa7] + 0x14) - ((GameObject*)obj)->anim.localPosZ;
@@ -194,7 +194,7 @@ void fn_80154870(int obj, int* state)
 }
 #pragma opt_common_subs reset
 
-void fn_80154C24(struct GameObject* obj, int state)
+void fn_80154C24(GameObject* obj, int state)
 {
     float fval;
     u32 randVal;

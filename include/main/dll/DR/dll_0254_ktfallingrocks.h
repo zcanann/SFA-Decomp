@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_0254_KTFALLINGROCKS_H_
 #define MAIN_DLL_DR_DLL_0254_KTFALLINGROCKS_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct KtfallingrocksPlacement
@@ -22,7 +23,7 @@ void ktfallingrocks_free(u8* obj);
 void ktfallingrocks_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void ktfallingrocks_hitDetect(void);
 void ktfallingrocks_update(int obj);
-void ktfallingrocks_init(struct GameObject* obj);
+void ktfallingrocks_init(GameObject* obj);
 void ktfallingrocks_release(void);
 void ktfallingrocks_initialise(void);
 

@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DLL_01D9_DIM2PRISONMAMMOTH_H_
 #define MAIN_DLL_DIM_DLL_01D9_DIM2PRISONMAMMOTH_H_
 
+#include "main/game_object.h"
 #include "types.h"
 #include "main/objanim_update.h"
 
@@ -51,6 +52,6 @@ void dim2prisonmammoth_update(int obj);
 void dim2prisonmammoth_init(int obj, int params);
 void dim2prisonmammoth_release(void);
 void dim2prisonmammoth_initialise(void);
-void fn_802BC788(struct GameObject* obj, int b);
+void fn_802BC788(GameObject* obj, int b);
 
 #endif

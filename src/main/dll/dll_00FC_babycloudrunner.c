@@ -201,7 +201,7 @@ end:
     return;
 }
 
-void dll_FC_init(struct GameObject* obj, int objDef)
+void dll_FC_init(GameObject* obj, int objDef)
 {
     BabyCloudRunnerState* state;
     BabyCloudRunnerPlacement* placement;

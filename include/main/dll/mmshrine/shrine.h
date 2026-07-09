@@ -1,9 +1,10 @@
 #ifndef MAIN_DLL_MMSHRINE_SHRINE_H_
 #define MAIN_DLL_MMSHRINE_SHRINE_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
-void MMSH_Shrine_init(struct GameObject* param_1, int param_2);
+void MMSH_Shrine_init(GameObject* param_1, int param_2);
 void MMSH_Scales_free(int param_1, int param_2);
 void FUN_801c5448(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9);

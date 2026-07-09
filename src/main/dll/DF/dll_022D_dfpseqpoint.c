@@ -52,7 +52,7 @@ extern int lockLevel(s32 val, int idx);
 extern void warpToMap(int idx, s8 transType);
 extern f32 Vec_distance(f32* a, f32* b);
 
-int DFP_seqpoint_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int blob = *(int*)&obj->extra;
     int data = *(int*)&obj->anim.placementData;
@@ -135,7 +135,7 @@ void DFP_seqpoint_hitDetect(void)
 {
 }
 
-void DFP_seqpoint_update(struct GameObject* obj)
+void DFP_seqpoint_update(GameObject* obj)
 {
     GameObject* self;
     GameObject* player;

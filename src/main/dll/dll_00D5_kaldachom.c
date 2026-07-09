@@ -122,7 +122,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     }
 }
 
-void kaldaChomFn_80168374(struct GameObject* obj, int state, u8 useUpperMouthPoint)
+void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
 {
     KaldaChomControl* control;
     int ref;
@@ -203,12 +203,12 @@ void kaldachom_handleAnimEvents(int obj, int state, int eventStateArg)
     if (((s32)eventState->baddie.eventFlags & 0x40) != 0)
     {
         eventState->baddie.eventFlags &= ~0x40;
-        kaldaChomFn_80168374((struct GameObject*)(obj), state, 0);
+        kaldaChomFn_80168374((GameObject*)(obj), state, 0);
     }
     if (((s32)eventState->baddie.eventFlags & 0x800) != 0)
     {
         eventState->baddie.eventFlags &= ~0x800;
-        kaldaChomFn_80168374((struct GameObject*)(obj), state, 1);
+        kaldaChomFn_80168374((GameObject*)(obj), state, 1);
     }
     if (((s32)eventState->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {

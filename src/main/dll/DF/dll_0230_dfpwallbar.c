@@ -41,7 +41,7 @@ void chuka_render(void)
 {
 }
 
-void chuka_hitDetect(struct GameObject* obj)
+void chuka_hitDetect(GameObject* obj)
 {
     GameObject* light;
     ChukaState* state = obj->extra;
@@ -193,7 +193,7 @@ void chuka_update(int obj)
     }
 }
 
-void chuka_init(struct GameObject* obj, int params)
+void chuka_init(GameObject* obj, int params)
 {
     ChukaState* state = obj->extra;
     ChukaPlacement* placement = (ChukaPlacement*)params;

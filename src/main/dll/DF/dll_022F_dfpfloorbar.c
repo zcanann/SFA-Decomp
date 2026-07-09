@@ -228,7 +228,7 @@ void DFP_Floorbar_update(int obj)
     }
 }
 
-void DFP_Floorbar_init(struct GameObject* obj, int params)
+void DFP_Floorbar_init(GameObject* obj, int params)
 {
     DfpFloorbarState* state = obj->extra;
 

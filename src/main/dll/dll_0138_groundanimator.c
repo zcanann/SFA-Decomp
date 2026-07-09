@@ -1,5 +1,6 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
 #include "main/dll/mmp_moonrock.h"
+#include "main/game_object.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -64,7 +65,7 @@ extern const f32 lbl_803E3FAC;
 extern const f32 lbl_803E3FB0;
 extern const f32 lbl_803E3FB4;
 extern const f32 lbl_803E3FBC;
-extern void fn_801A80F0(struct GameObject* e, int arg);
+extern void fn_801A80F0(GameObject* e, int arg);
 extern float fastFloorf(float x);
 extern const f32 lbl_803E3FC0;
 
@@ -220,7 +221,7 @@ f32 groundanimator_setScale(int* obj, int* target)
             switch (((GameObject*)e)->anim.seqId)
             {
             case 0x519:
-                fn_801A80F0((struct GameObject*)(e), 0);
+                fn_801A80F0((GameObject*)(e), 0);
                 break;
             default:
                 (*(void (**)(void*, int))(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
@@ -394,7 +395,7 @@ void groundanimator_update(int* obj)
                 case 0x519:
                     if ((g->flags & 2) == 0)
                     {
-                        fn_801A80F0((struct GameObject*)(near), 1);
+                        fn_801A80F0((GameObject*)(near), 1);
                     }
                     fn_801A80C4(near, ((GameObject*)obj)->anim.localPosX,
                                 ((GameObject*)obj)->anim.localPosY - g->yOffset, ((GameObject*)obj)->anim.localPosZ);
@@ -453,7 +454,7 @@ void groundanimator_update(int* obj)
                     switch (((GameObject*)g->linkedObj)->anim.seqId)
                     {
                     case 0x519:
-                        fn_801A80F0((struct GameObject*)g->linkedObj, 0);
+                        fn_801A80F0((GameObject*)g->linkedObj, 0);
                         break;
                     default:
                         (*(void (**)(void*, int))(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))(

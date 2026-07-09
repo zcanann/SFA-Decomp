@@ -140,7 +140,7 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)AppleOnTree_update + 0x71C),
 };
 
-void AppleOnTree_setPosition(struct GameObject* obj, float* pos)
+void AppleOnTree_setPosition(GameObject* obj, float* pos)
 {
     AppleOnTreeState* state = obj->extra;
 
@@ -461,7 +461,7 @@ int fn_8017DCD4(int obj, int state, f32 y)
     return 1;
 }
 
-int fn_8017DF34(struct GameObject* obj, int state, f32 y)
+int fn_8017DF34(GameObject* obj, int state, f32 y)
 {
     if (lbl_803E37D4 == ((AppleOnTreeState*)state)->extraAccel)
     {
@@ -795,7 +795,7 @@ void AppleOnTree_update(int objArg)
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
                     if (((AppleOnTreeState*)state)->velY > fd)
                     {
-                        placement = fn_8017DF34((struct GameObject*)(obj), state, fc);
+                        placement = fn_8017DF34((GameObject*)(obj), state, fc);
                     }
                     else
                     {

@@ -211,7 +211,7 @@ extern void walkgroupFindExitPointFn_800dc398(void);
 extern int gameBitIncrement(int bit);
 extern void objAnimFreeChildren(int a, int b, int* c);
 extern void trickyImpress(int obj);
-extern int trickyFoodFn_8014460c(struct GameObject* obj, int state);
+extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
 extern void skeetla_spawnLinkedSparks(int obj);
@@ -219,8 +219,8 @@ extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern void objSetAnimSpeedTo1(int obj);
 extern f32 objFn_801948c0(int obj, int coord);
-extern int fn_80296240(struct GameObject* obj);
-extern int playerGetFlags3F0Bit5(struct GameObject* obj);
+extern int fn_80296240(GameObject* obj);
+extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7, int arg8,
                               int arg9, int arg10);
@@ -309,7 +309,7 @@ extern f32 lbl_803E258C;
 extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
-extern void fn_802972B4(struct GameObject* player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
+extern void fn_802972B4(GameObject* player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
 extern void vecRotateZXY(int obj, void* vel);
 extern int objCreateLight(int a, int b);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
@@ -366,11 +366,11 @@ extern int trickyFoodFn_8013db3c(int obj, int state);
 extern void memmove(void* dst, void* src, int n);
 extern void fn_801B17F4(void);
 extern void fn_801B6D40(void);
-extern void fn_801FD4A8(struct GameObject*);
-extern void fn_801B0784(struct GameObject*);
+extern void fn_801FD4A8(GameObject*);
+extern void fn_801B0784(GameObject*);
 extern void drchimmey_countdownCallback(void);
-extern void fn_801DA9CC(struct GameObject*);
-extern void wcbeacon_aButtonCallback(struct GameObject*);
+extern void fn_801DA9CC(GameObject*);
+extern void wcbeacon_aButtonCallback(GameObject*);
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
 
@@ -512,7 +512,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void sideCommandEnable(struct GameObject* obj, int targetObj, int commandKind, int commandType)
+void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int commandType)
 {
     int commandCount;
     int commandEntry;
@@ -622,10 +622,10 @@ int Tricky_updateSideCommandPrompts(int obj)
             (bitVal = mainGetBit(GAMEBIT_ITEM_TrickyBall_Usable), bitVal != 0))
         {
             ref = Obj_GetPlayerObject();
-            ref = fn_80296240((struct GameObject*)(ref));
+            ref = fn_80296240((GameObject*)(ref));
             if ((ref != 0) && (bitVal = mainGetBit(GAMEBIT_NoBallsAllowed), bitVal == 0))
             {
-                if (playerGetFlags3F0Bit5((struct GameObject*)(((TrickyState*)state)->playerObj)) == 0)
+                if (playerGetFlags3F0Bit5((GameObject*)(((TrickyState*)state)->playerObj)) == 0)
                 {
                     commandMask |= 0x20;
                 }
@@ -2085,7 +2085,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         {
             ((TrickyState*)state)->freezeRecoverTimer = lbl_803E2574;
         }
-        fn_802972B4((struct GameObject*)(player), &hitEffects, &fxA, &fxB, &fxC, &impactSfx);
+        fn_802972B4((GameObject*)(player), &hitEffects, &fxA, &fxB, &fxC, &impactSfx);
         frozenEnemyFn_80149bb4((int*)state, hitEffects, fxA, impactSfx);
         if (hit != 0)
         {
@@ -2697,7 +2697,7 @@ void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
     return;
 }
 
-void Tricky_hitDetect(struct GameObject* obj)
+void Tricky_hitDetect(GameObject* obj)
 {
     f32 dy;
     f32 y;
@@ -3011,7 +3011,7 @@ void trickyFn_80144f50(int obj, int state)
     u32 sfxDisabled;
     u32 transitionFlag;
 
-    if (trickyFoodFn_8014460c((struct GameObject*)(obj), state) == 0)
+    if (trickyFoodFn_8014460c((GameObject*)(obj), state) == 0)
     {
         ((TrickyState*)state)->wanderTargetX =
             ((GameObject*)obj)->anim.worldPosX - mathSinf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);

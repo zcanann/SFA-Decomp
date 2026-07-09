@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_13B_H_
 #define MAIN_DLL_DLL_13B_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
@@ -25,7 +26,7 @@ void FUN_80169960(u64 param_1, double param_2, double param_3, u64 param_4, u64 
 void FUN_80169a44(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9);
 void FUN_80169c04(int param_1);
-void KaldaChompSpit_render(struct GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void KaldaChompSpit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern ObjectDescriptor gKaldaChompMeObjDescriptor;
 

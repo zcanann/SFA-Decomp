@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_0266_KYTESMUM_H_
 #define MAIN_DLL_DLL_0266_KYTESMUM_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/objanim_internal.h"
 #include "main/obj_placement.h"
@@ -84,7 +85,7 @@ void kytesmum_update(int obj);
 int kytesmum_idleCallback(void);
 void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible);
 void kytesmum_free(int obj);
-int kytesmum_spawnInteractionCallback(struct GameObject* obj);
+int kytesmum_spawnInteractionCallback(GameObject* obj);
 int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8* arg);
 int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void kytesmum_init(int obj, KytesMumSetup* setup);

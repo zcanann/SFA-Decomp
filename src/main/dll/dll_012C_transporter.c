@@ -330,7 +330,7 @@ void Transporter_render(void)
 {
 }
 
-void Transporter_init(struct GameObject* obj, u8* params)
+void Transporter_init(GameObject* obj, u8* params)
 {
     WarpPadPlacement* placement;
     WarpPadState* state;

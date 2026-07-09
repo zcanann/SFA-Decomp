@@ -26,7 +26,7 @@ static inline int* DrShackle_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-int drshackle_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* state = obj->extra;
     void* placement = *(void**)state;
@@ -52,7 +52,7 @@ int drshackle_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* anim
     return 0;
 }
 
-int drshackle_func0B(struct GameObject* obj)
+int drshackle_func0B(GameObject* obj)
 {
     int placement = *(int*)&obj->anim.placementData;
     return ((DrshacklePlacement*)placement)->unk19;
@@ -180,7 +180,7 @@ void drshackle_hitDetect(unsigned long obj)
     }
 }
 
-void drshackle_update(struct GameObject* obj)
+void drshackle_update(GameObject* obj)
 {
     char* state = obj->extra;
     int placement = *(int*)&obj->anim.placementData;

@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_IM_IMICICLE_H_
 #define MAIN_DLL_IM_IMICICLE_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objanim_internal.h"
 #include "main/objanim_update.h"
@@ -155,7 +156,7 @@ int cflevelcontrol_getObjectTypeId(void);
 void cflevelcontrol_free(int param_1);
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void cflevelcontrol_hitDetect(void);
-void cflevelcontrol_update(struct GameObject* obj);
+void cflevelcontrol_update(GameObject* obj);
 void cflevelcontrol_init(u8* obj, u8* params);
 void cflevelcontrol_release(void);
 void cflevelcontrol_initialise(void);

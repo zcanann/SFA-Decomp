@@ -71,7 +71,7 @@ void TrickyWarp_update(int obj)
     TrickyWarpState* state;
     int reachable;
     state = ((GameObject*)obj)->extra;
-    reachable = fn_8017FFD0((struct GameObject*)(obj), state);
+    reachable = fn_8017FFD0((GameObject*)(obj), state);
     if (reachable != 0)
     {
         if (state->active == 0)
@@ -90,7 +90,7 @@ void TrickyWarp_update(int obj)
     }
 }
 
-int fn_8017FFD0(struct GameObject* obj, TrickyWarpState* state)
+int fn_8017FFD0(GameObject* obj, TrickyWarpState* state)
 {
     int curveCount;
     TrickyWarpCurveEntry** curveEntries;

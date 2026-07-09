@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_LASER19F_H_
 #define MAIN_DLL_LASER19F_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
 typedef struct MMSHShrineSequenceState
@@ -17,7 +18,7 @@ typedef struct MMSHShrineSequenceState
 int MMSH_Shrine_SeqFn(int obj, u32 unused, MMSHShrineSequenceState* seq);
 int MMSH_Shrine_getExtraSize(void);
 int MMSH_Shrine_getObjectTypeId(void);
-void MMSH_Shrine_free(struct GameObject* param_1);
+void MMSH_Shrine_free(GameObject* param_1);
 void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5, char flag);
 void MMSH_Shrine_hitDetect(void);
 void MMSH_Shrine_update(int param_1);

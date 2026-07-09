@@ -148,15 +148,15 @@ extern void DFP_LevelControl_release(void);
 extern void DFP_LevelControl_render(void);
 extern void DFP_LevelControl_setScale(void);
 extern void DFP_LevelControl_update(void);
-extern void DFP_ObjCreator_free(struct GameObject*);
+extern void DFP_ObjCreator_free(GameObject*);
 extern void DFP_ObjCreator_getExtraSize(void);
 extern void DFP_ObjCreator_getObjectTypeId(void);
 extern void DFP_ObjCreator_hitDetect(void);
-extern void DFP_ObjCreator_init(struct GameObject*);
+extern void DFP_ObjCreator_init(GameObject*);
 extern void DFP_ObjCreator_initialise(void);
 extern void DFP_ObjCreator_release(void);
 extern void DFP_ObjCreator_render(void);
-extern void DFP_ObjCreator_update(struct GameObject*);
+extern void DFP_ObjCreator_update(GameObject*);
 extern void doorswitch_free(void);
 extern void doorswitch_getExtraSize(void);
 extern void doorswitch_getObjectTypeId(void);
@@ -627,7 +627,7 @@ int dbstealerworm_stateHandlerB03(int obj, int baddie)
     return 0;
 }
 
-int dbstealerworm_stateHandlerB01(struct GameObject* obj, int baddie)
+int dbstealerworm_stateHandlerB01(GameObject* obj, int baddie)
 {
     GroundBaddieState* state = obj->extra;
     if ((s8)((BaddieState*)baddie)->hitPoints < 1)
@@ -689,7 +689,7 @@ int dbstealerworm_stateHandlerA00(int obj, int baddie)
     return 0;
 }
 
-int dbstealerworm_func0B(struct GameObject* obj, u8 msg, int* out)
+int dbstealerworm_func0B(GameObject* obj, u8 msg, int* out)
 {
     GroundBaddieState* state = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)state->control;

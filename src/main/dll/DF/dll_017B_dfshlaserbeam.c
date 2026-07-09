@@ -153,7 +153,7 @@ extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int objGetAnimState80A(struct GameObject* obj);
+extern int objGetAnimState80A(GameObject* obj);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 
 void DFSH_LaserBeam_free(int* obj)
@@ -359,7 +359,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                                        yawCos * ((GameObject*)playerObj)->anim.previousLocalPosZ)) < lbl_803E4EC0)
                             ? lbl_803E4EF0
                             : lbl_803E4EF4;
-                    if (objGetAnimState80A((struct GameObject*)(playerObj)) != 0x1D7)
+                    if (objGetAnimState80A((GameObject*)(playerObj)) != 0x1D7)
                     {
                         int i;
                         Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);

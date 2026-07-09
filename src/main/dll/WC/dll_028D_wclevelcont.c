@@ -65,7 +65,7 @@ void wclevelcont_setTileB(int value, s16 i, s16 j)
     lbl_803AD298[i][j] = value;
 }
 
-void wclevelcont_worldPosToTileB(struct GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol)
+void wclevelcont_worldPosToTileB(GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
 
@@ -75,7 +75,7 @@ void wclevelcont_worldPosToTileB(struct GameObject* obj, f32 px, f32 pz, s16* ou
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
 
-void wclevelcont_tileBToWorldPos(struct GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp)
+void wclevelcont_tileBToWorldPos(GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
 
@@ -142,7 +142,7 @@ void wclevelcont_setTileA(int value, s16 i, s16 j)
     lbl_803AD2D8[i][j] = value;
 }
 
-void wclevelcont_worldPosToTileA(struct GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol)
+void wclevelcont_worldPosToTileA(GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol)
 {
     f32 outX, outZ;
 
@@ -152,7 +152,7 @@ void wclevelcont_worldPosToTileA(struct GameObject* obj, f32 px, f32 pz, s16* ou
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
 
-void wclevelcont_tileAToWorldPos(struct GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp)
+void wclevelcont_tileAToWorldPos(GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp)
 {
     f32 outX, outZ;
 
@@ -299,7 +299,7 @@ void wclevelcont_update(int obj)
     }
 }
 
-int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
+int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
     int i;
     int limit;

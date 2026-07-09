@@ -21,6 +21,7 @@
  * Hermite curve during a mode transition.
  */
 #include "main/dll/CAM/cutCam.h"
+#include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/dll_B8.h"
@@ -46,8 +47,8 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
                                             int pointCount);
 extern int getCurSeqNo();
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
-extern int fn_80295C0C(struct GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
-extern int objFn_802962b4(struct GameObject* obj); /* gates mode 0x44 */
+extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
+extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -213,7 +214,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
             if (((classId == 0x1c) || (classId == 0x2a)) && (target->anim.classId == 1))
             {
                 cond = objFn_80296700((int)target);
-                if ((cond != 0) && (cond = fn_80295C0C((struct GameObject*)target), cond != 0))
+                if ((cond != 0) && (cond = fn_80295C0C((GameObject*)target), cond != 0))
                 {
                     goto action_49;
                 }
@@ -226,7 +227,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
             (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
         }
         else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
-                 (cond = objFn_802962b4((struct GameObject*)target), cond != 0))
+                 (cond = objFn_802962b4((GameObject*)target), cond != 0))
         {
             action44Payload.distance = cameraMtxVar57->minDistance;
             action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;

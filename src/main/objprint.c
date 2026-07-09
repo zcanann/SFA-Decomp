@@ -477,7 +477,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
-static inline ObjTextureRuntimeSlot* characterFindEyeJoint(struct GameObject* obj, int kind)
+static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind)
 {
     ObjTextureSlotDef* list;
     int n;
@@ -515,8 +515,8 @@ void fn_8003B228(int obj, int state)
     ObjTextureRuntimeSlot* foundB;
     int val;
 
-    foundA = characterFindEyeJoint((struct GameObject*)(obj), 5);
-    foundB = characterFindEyeJoint((struct GameObject*)(obj), 4);
+    foundA = characterFindEyeJoint((GameObject*)(obj), 5);
+    foundB = characterFindEyeJoint((GameObject*)(obj), 4);
     if (foundA == NULL || foundB == NULL)
     {
         return;
@@ -573,7 +573,7 @@ void modelInitMtxs(int def, int model)
     }
 }
 
-extern void fn_80039DF8(struct GameObject* obj, s16* curve, s16* state, f32 x);
+extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
 void objAudioFn_800393f8(u32 obj, int state, u16 sfx, int pitch, int volume, u8 force)
@@ -600,7 +600,7 @@ void fn_8003B500(int obj, s16* state)
         {
             found[0] = (s16)(found[0] * 3 / 4);
         }
-        fn_80039DF8((struct GameObject*)(obj), state, found, lbl_803DE9A4);
+        fn_80039DF8((GameObject*)(obj), state, found, lbl_803DE9A4);
         *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
     }
 }
@@ -858,7 +858,7 @@ void fn_8003A230(int obj, void* state, f32 val)
         }
         if (val <= lbl_803DE9E4)
         {
-            fn_80039DF8((struct GameObject*)(obj), (s16*)state, found, val);
+            fn_80039DF8((GameObject*)(obj), (s16*)state, found, val);
         }
         else
         {
@@ -1177,7 +1177,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
     }
 }
 
-void fn_80039DF8(struct GameObject* obj, s16* curve, s16* state, f32 val)
+void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
 {
     extern f32 lbl_803DE9E8;
     int masked;
@@ -1520,8 +1520,8 @@ void characterDoEyeAnims(int obj, int state)
     ObjTextureRuntimeSlot* a;
     ObjTextureRuntimeSlot* b;
 
-    a = characterFindEyeJoint((struct GameObject*)(obj), 5);
-    b = characterFindEyeJoint((struct GameObject*)(obj), 4);
+    a = characterFindEyeJoint((GameObject*)(obj), 5);
+    b = characterFindEyeJoint((GameObject*)(obj), 4);
 
     if (a == NULL || b == NULL)
     {
@@ -1595,8 +1595,8 @@ void characterDoEyeMovements(int obj, int state, f32 unused)
     int flag;
     s8 timer;
 
-    foundA = characterFindEyeJoint((struct GameObject*)(obj), 1);
-    foundB = characterFindEyeJoint((struct GameObject*)(obj), 0);
+    foundA = characterFindEyeJoint((GameObject*)(obj), 1);
+    foundB = characterFindEyeJoint((GameObject*)(obj), 0);
     if (foundA == NULL || foundB == NULL)
     {
         return;

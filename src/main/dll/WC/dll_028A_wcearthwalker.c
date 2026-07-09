@@ -481,7 +481,7 @@ int dll_28B_substateHandler1(int obj, int ai)
     return 0;
 }
 
-int dll_28B_stateHandler3(struct GameObject* obj, int ai)
+int dll_28B_stateHandler3(GameObject* obj, int ai)
 {
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
 
@@ -493,7 +493,7 @@ int dll_28B_stateHandler3(struct GameObject* obj, int ai)
     return 0;
 }
 
-int dll_28B_stateHandler2(struct GameObject* obj, int ai)
+int dll_28B_stateHandler2(GameObject* obj, int ai)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     Dll28BAiState* state = *(Dll28BAiState**)&obj->extra;

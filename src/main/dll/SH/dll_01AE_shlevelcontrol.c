@@ -92,7 +92,7 @@ extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
 extern void buttonDisable(int port, u32 mask);
-extern int playerHasSpell(struct GameObject* obj, int spell);
+extern int playerHasSpell(GameObject* obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern void skyFn_80088e54(int mode, f32 brightness);
@@ -318,7 +318,7 @@ void SH_LevelControl_setMusic(short* obj)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void SH_LevelControl_runBloopEvent(struct GameObject* obj, int state)
+void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
 {
     extern s16 lbl_80327618[];
     extern void* Obj_GetPlayerObject(void);
@@ -634,7 +634,7 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
     if ((u8)MAP_EVENT_GET_ANIM(((ShopkeeperObject*)obj)->mapId, 6) == 0)
     {
         playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
-        if (playerHasSpell((struct GameObject*)playerObj, 0) != 0)
+        if (playerHasSpell((GameObject*)playerObj, 0) != 0)
         {
             MAP_EVENT_SET_ANIM(((ShopkeeperObject*)obj)->mapId, 6, 1);
         }
@@ -828,7 +828,7 @@ void SH_LevelControl_update(int obj)
         }
         break;
     case 6:
-        SH_LevelControl_runBloopEvent((struct GameObject*)(obj), state);
+        SH_LevelControl_runBloopEvent((GameObject*)(obj), state);
         break;
     case 7:
         val = mainGetBit(GAMEBIT_SH_ThornTailRelated01A0);
@@ -957,7 +957,7 @@ void SH_LevelControl_update(int obj)
     return;
 }
 
-void SH_LevelControl_init(struct GameObject* obj)
+void SH_LevelControl_init(GameObject* obj)
 {
 
     int* state = obj->extra;

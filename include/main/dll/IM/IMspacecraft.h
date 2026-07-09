@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_IM_IMSPACECRAFT_H_
 #define MAIN_DLL_IM_IMSPACECRAFT_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 #include "main/dll/curve_walker.h"
@@ -97,7 +98,7 @@ STATIC_ASSERT(offsetof(RollingBarrelMapData, curveSpeed) == 0x1C);
 
 int SpiritDoorLock_getExtraSize(void);
 int SpiritDoorLock_getObjectTypeId(void);
-void SpiritDoorLock_free(struct GameObject* obj);
+void SpiritDoorLock_free(GameObject* obj);
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SpiritDoorLock_hitDetect(void);
 void SpiritDoorLock_update(int obj);
@@ -111,7 +112,7 @@ void RollingBarrel_free(int obj);
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void RollingBarrel_hitDetect(void);
 void RollingBarrel_update(int obj);
-void RollingBarrel_init(struct GameObject* obj, RollingBarrelMapData* params);
+void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params);
 void RollingBarrel_release(void);
 void RollingBarrel_initialise(void);
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);

@@ -1,5 +1,6 @@
 /* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
 #include "main/audio/sfx.h"
+#include "main/game_object.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 #include "main/effect_interfaces.h"
@@ -77,7 +78,7 @@ extern void warpstone_hitDetect(void);
 
 extern void warpstone_update(void);
 
-extern void warpstone_init(struct GameObject*);
+extern void warpstone_init(GameObject*);
 
 extern void warpstone_release(void);
 

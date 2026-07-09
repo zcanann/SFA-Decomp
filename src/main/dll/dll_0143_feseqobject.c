@@ -210,7 +210,7 @@ void FEseqobject_update(int obj)
     }
 }
 
-void FEseqobject_init(struct GameObject* obj)
+void FEseqobject_init(GameObject* obj)
 {
     *(short*)obj = 0;
     obj->animEventCallback = FEseqobject_SeqFn;

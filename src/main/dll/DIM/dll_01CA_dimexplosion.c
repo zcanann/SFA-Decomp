@@ -271,7 +271,7 @@ int explosion_getExtraSize(void)
 }
 
 #pragma scheduling off
-int explosion_getObjectTypeId(struct GameObject* obj)
+int explosion_getObjectTypeId(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int idx = (int)*(short*)(*(int*)&obj->anim.placementData + 0x1c) & 3;
@@ -283,7 +283,7 @@ int explosion_getObjectTypeId(struct GameObject* obj)
 }
 
 #pragma scheduling on
-void explosion_free(struct GameObject* obj)
+void explosion_free(GameObject* obj)
 {
     void* light = *(void**)(*(int*)&obj->extra + 0xa40);
     if (light != NULL)

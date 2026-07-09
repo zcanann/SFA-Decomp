@@ -98,7 +98,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void playerAddMoney(int obj, int amount);
 extern void playerAddHealth(int obj, int amount);
 extern int gameBitIncrement(int bit);
-extern void staffToggle(struct GameObject* obj, int a);
+extern void staffToggle(GameObject* obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -135,7 +135,7 @@ void shop_func15(int* obj, int v)
     b[4] = v;
 }
 
-void shop_buyItem(struct GameObject* obj, int price)
+void shop_buyItem(GameObject* obj, int price)
 {
 
     int player;
@@ -327,7 +327,7 @@ void shop_update(int obj)
     player = (int)Obj_GetPlayerObject();
     if ((void*)Player_GetStaffObject(player) != NULL && mainGetBit(GAMEBIT_STAFF_ACQUIRED) == 0u)
     {
-        staffToggle((struct GameObject*)(player), 0);
+        staffToggle((GameObject*)(player), 0);
     }
 
     if (((GameObject*)obj)->unkF4 == 0)

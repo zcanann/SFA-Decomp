@@ -9,6 +9,7 @@
  * vtable (slots 0x20/0x28/0x2c) and through DBprotection_getCameraState.
  */
 #include "main/obj_placement.h"
+#include "main/game_object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -295,7 +296,7 @@ void SB_ShipHead_update(int obj)
     gSbShipHeadPrevGalleonPhase = galleonPhase;
 }
 
-void SB_ShipHead_init(struct GameObject* obj)
+void SB_ShipHead_init(GameObject* obj)
 {
     SBShipHeadState* state = obj->extra;
     ObjGroup_AddObject((u32)obj, SBSHIPHEAD_OBJGROUP);

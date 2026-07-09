@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DR_802BBC10_SHARED_H
 #define MAIN_DLL_DR_DR_802BBC10_SHARED_H
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -171,7 +172,7 @@ extern int gDRCloudRunnerVecTable[];
 extern s16 gDRCloudRunnerRollAngleLimits;
 extern f32 Vec3_Normalize(void* v);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void fn_802B0EA4(struct GameObject* obj, int q, int inner);
+extern void fn_802B0EA4(GameObject* obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
 extern void fn_802B1B28(int obj, f32 t);
 extern void logPrintf(const char* fmt, ...);

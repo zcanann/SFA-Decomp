@@ -43,7 +43,7 @@ extern f32 lbl_803E5DAC;
 extern f32 lbl_803E5DB0;
 extern f32 lbl_803E5DB4;
 extern void playerAddRemoveMagic(int obj, int amount);
-extern void playerSetHaveSpell(struct GameObject* player, int a, int b);
+extern void playerSetHaveSpell(GameObject* player, int a, int b);
 extern int playerGetCurMagic(void);
 
 #pragma dont_inline on
@@ -208,7 +208,7 @@ void dll_200_init(int* obj, int* arg)
 }
 
 #pragma opt_strength_reduction off
-int dll_200_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
+int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 {
     u8 mode;
     int i;
@@ -282,7 +282,7 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
             }
             else if (eventId == 2)
             {
-                playerSetHaveSpell((struct GameObject*)(player), 0, 1);
+                playerSetHaveSpell((GameObject*)(player), 0, 1);
                 playerAddRemoveMagic(player, 5);
             }
         }

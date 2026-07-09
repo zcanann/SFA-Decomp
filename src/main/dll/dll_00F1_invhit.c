@@ -88,7 +88,7 @@ void InvHit_render(int* obj, int a, int b, int c, int d)
 
 #pragma scheduling off
 #pragma peephole off
-void InvHit_free(struct GameObject* obj)
+void InvHit_free(GameObject* obj)
 {
     char* inner = obj->extra;
     switch (((InvHitState*)inner)->mode)

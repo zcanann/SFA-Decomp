@@ -243,7 +243,7 @@ void fn_801EEDE0(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
 }
 
 /* Forward to the laser-locked target's DLL vtable (slot 0x24). */
-void shipBattleFn_801eed24(struct GameObject* obj)
+void shipBattleFn_801eed24(GameObject* obj)
 {
     void* target = *(void**)&((SBCloudRunnerState*)obj->extra)->targetObj;
     void* vt = *((GameObject*)target)->anim.dll;
@@ -479,7 +479,7 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
     }
 }
 
-int SB_CloudRunner_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SBCloudRunnerState* state = obj->extra;
     int player = Obj_GetPlayerObject();

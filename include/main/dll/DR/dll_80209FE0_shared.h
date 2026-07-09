@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_80209FE0_SHARED_H_
 #define MAIN_DLL_DR_DLL_80209FE0_SHARED_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -170,7 +171,7 @@ extern f32 gThornBushLightScaleRate;
 extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
 extern void modelLightStruct_setEnabled(void* light, int onoff, f32 intensity);
-extern void drakorhoverpad_resetPendingMotion(struct GameObject* obj);
+extern void drakorhoverpad_resetPendingMotion(GameObject* obj);
 extern f32 lbl_803E6540;
 extern f32 lbl_803E6544;
 extern f32 lbl_803E6548;
@@ -234,7 +235,7 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void* curve, int p, void* out);
-extern void Obj_SmoothTurnAnglesTowardVelocity(struct GameObject* obj, void* angles, int p, f32 a, f32 b);
+extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* angles, int p, f32 a, f32 b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern void objAudioFn_80039270(int obj, int p, int sfxId);
@@ -265,7 +266,7 @@ extern f32 lbl_803E6578;
 
 void bossdrakor_handleActionEvent(int obj, int state, int action);
 void bossdrakor_updateHeadTracking(int obj, int state);
-int bossdrakor_chooseNextMove(struct GameObject* obj, f32* speedOut);
+int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut);
 void bossdrakor_spawnAttackObjects(int obj, int state, int action);
 
 #endif

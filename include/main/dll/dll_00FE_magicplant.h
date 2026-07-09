@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_00FE_MAGICPLANT_H_
 #define MAIN_DLL_DLL_00FE_MAGICPLANT_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "global.h"
 #include "main/object_descriptor.h"
@@ -128,7 +129,7 @@ typedef struct TrickyWarpState
 int TrickyWarp_getExtraSize(void);
 void TrickyWarp_free(int obj);
 void TrickyWarp_update(int obj);
-int fn_8017FFD0(struct GameObject* obj, TrickyWarpState* state);
+int fn_8017FFD0(GameObject* obj, TrickyWarpState* state);
 void TrickyWarp_init(s16* obj, u8* param_2);
 void FUN_801804a0(short* param_1, int param_2);
 void FUN_801804a4(int param_1);
@@ -156,7 +157,7 @@ void FUN_80181b50(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u64 param_8, u32 param_9, u32 param_10, int param_11);
 int CurveFish_getExtraSize(void);
 void CurveFish_update(int obj);
-void CurveFish_init(struct GameObject* obj, u8* param_2);
+void CurveFish_init(GameObject* obj, u8* param_2);
 void fn_801814D0(int obj, int param_2, u8* state);
 
 extern ObjectDescriptor gMagicPlantObjDescriptor;

@@ -12,7 +12,7 @@ static SIControl Si = {
 };
 
 static SIPacket Packet[4];
-static struct OSAlarm Alarm[4];
+static OSAlarm Alarm[4];
 static u32 Type[4] = { 0x08, 0x08, 0x08, 0x08 };
 char SITypeStrings[] =
     "No response\0"
@@ -40,7 +40,7 @@ static u32 CompleteTransfer();
 static inline void SITransferNext(s32 chan);
 static void SIInterruptHandler(s16 interrupt, OSContext* context);
 static int __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputBytes, SICallback callback);
-static void AlarmHandler(struct OSAlarm* alarm, struct OSContext* context);
+static void AlarmHandler(OSAlarm* alarm, OSContext* context);
 static void GetTypeCallback(s32 chan, u32 error, OSContext* context);
 static int SIGetResponseRaw(s32 chan);
 

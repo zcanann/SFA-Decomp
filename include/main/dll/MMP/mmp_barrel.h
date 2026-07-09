@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_MMP_MMP_BARREL_H_
 #define MAIN_DLL_MMP_MMP_BARREL_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
@@ -73,7 +74,7 @@ STATIC_ASSERT(offsetof(HitAnimatorObject, state) == 0xB8);
 
 #define WALLANIMATOR_DONE_TIMER 3000
 
-void waveanimator_modelMtxFn(struct GameObject* obj, int a, int b, int c);
+void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c);
 void waveanimator_func0B(int* obj);
 void waveanimator_setScale(int* obj, f32 fval);
 u8 wallanimator_func0B(int* obj);

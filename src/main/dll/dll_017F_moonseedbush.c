@@ -47,7 +47,7 @@ extern f32 lbl_803E44D8;
 
 #pragma peephole off
 #pragma scheduling off
-int MoonSeedBush_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int MoonSeedBush_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     MoonSeedBushState* state = obj->extra;
     int def = *(int*)&obj->anim.placementData;
@@ -139,7 +139,7 @@ void MoonSeedBush_update(int obj)
     state->flags &= ~1;
 }
 
-void MoonSeedBush_init(struct GameObject* obj, int data)
+void MoonSeedBush_init(GameObject* obj, int data)
 {
     MoonSeedBushState* state = obj->extra;
     MoonSeedBushPlacement* placement = (MoonSeedBushPlacement*)data;

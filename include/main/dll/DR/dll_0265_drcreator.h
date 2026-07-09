@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_0265_DRCREATOR_H_
 #define MAIN_DLL_DR_DLL_0265_DRCREATOR_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
@@ -73,7 +74,7 @@ void DR_Creator_free(void);
 void DR_Creator_render(void);
 void DR_Creator_hitDetect(void);
 void DR_Creator_update(int obj);
-void DR_Creator_init(struct GameObject* obj, char* arg);
+void DR_Creator_init(GameObject* obj, char* arg);
 void DR_Creator_release(void);
 void DR_Creator_initialise(void);
 

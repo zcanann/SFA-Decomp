@@ -15,6 +15,7 @@
  * zero-Y-offset fx path in update.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/game_object.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
@@ -76,7 +77,7 @@ int lightsource_getObjectTypeId(void)
     return 0x1;
 }
 
-void lightsource_free(struct GameObject* obj)
+void lightsource_free(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);

@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_0268_DRCAGECONTROL_H_
 #define MAIN_DLL_DR_DLL_0268_DRCAGECONTROL_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct CageControlPlacement
@@ -22,7 +23,7 @@ void DR_CageControl_free(void);
 void DR_CageControl_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void DR_CageControl_hitDetect(void);
 void DR_CageControl_update(int obj);
-void DR_CageControl_init(struct GameObject* obj, char* arg);
+void DR_CageControl_init(GameObject* obj, char* arg);
 void DR_CageControl_release(void);
 void DR_CageControl_initialise(void);
 

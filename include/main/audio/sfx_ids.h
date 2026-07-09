@@ -1,6 +1,8 @@
 #ifndef MAIN_AUDIO_SFX_IDS_H_
 #define MAIN_AUDIO_SFX_IDS_H_
 
+#include "main/game_object.h"
+
 /* Generated MusyX IDs recovered from orig/GSAE01/files/audio/starfox.h.bak.
    Complete set: all 828 SFX defines (global index 0..827). */
 #define SFXdn_boar1_c                0
@@ -840,6 +842,6 @@ void gameTextSetDrawFunc(void* fn);
 void fn_80293018(int q, float* sin_out, float* cos_out);
 void titleScreenFn_8005cdd4(int v);
 void fn_80292E20(int q, float* sin_out, float* cos_out);
-void baddieAfterUpdateBonesCb(struct GameObject* obj, int* bones);
+void baddieAfterUpdateBonesCb(GameObject* obj, int* bones);
 
 #endif /* MAIN_AUDIO_SFX_IDS_H_ */

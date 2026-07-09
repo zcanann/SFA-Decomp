@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_021B_H_
 #define MAIN_DLL_DLL_021B_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/obj_placement.h"
 
@@ -36,7 +37,7 @@ int dll_21B_getObjectTypeId(void);
 void dll_21B_free(int obj);
 void dll_21B_render_nop(void);
 void dll_21B_hitDetect_nop(void);
-void dll_21B_update(struct GameObject* obj);
+void dll_21B_update(GameObject* obj);
 void dll_21B_init(int* obj, Dll21BPlacement* init);
 void dll_21B_release_nop(void);
 void dll_21B_initialise_nop(void);

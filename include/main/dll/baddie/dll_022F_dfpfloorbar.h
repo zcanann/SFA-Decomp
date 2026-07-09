@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_BADDIE_DLL_022F_DFPFLOORBAR_H_
 #define MAIN_DLL_BADDIE_DLL_022F_DFPFLOORBAR_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
@@ -23,7 +24,7 @@ typedef struct DfpFloorbarState
 void DFP_Floorbar_update(int param_1);
 int dfpfloorbar_SeqFn(void);
 void DFP_Floorbar_release(void);
-void DFP_Floorbar_init(struct GameObject* obj, int params);
+void DFP_Floorbar_init(GameObject* obj, int params);
 void DFP_Floorbar_initialise(void);
 extern u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE];
 extern ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor;

@@ -101,7 +101,7 @@ int fn_80160534(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801601C4(struct GameObject* obj, GroundBaddieState* state)
+int fn_801601C4(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
     char* routePath;

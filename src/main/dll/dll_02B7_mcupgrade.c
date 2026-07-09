@@ -36,7 +36,7 @@ void mcupgrade_update(int obj)
     }
 }
 
-void mcupgrade_init(struct GameObject* obj)
+void mcupgrade_init(GameObject* obj)
 {
     obj->animEventCallback = mcupgrade_SeqFn;
 }
@@ -53,7 +53,7 @@ int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             hudFn_8011f38c(1);
             break;
         case MCUPGRADEMA_EVENT_SHOW_DIALOGUE:
-            fn_80296A9C((struct GameObject*)(Obj_GetPlayerObject()), 0x19);
+            fn_80296A9C((GameObject*)(Obj_GetPlayerObject()), 0x19);
             (*gGameUIInterface)->showNpcDialogue(0x468, 0x14, 0x8c, 0);
             break;
         case MCUPGRADEMA_EVENT_HIDE_HUD:

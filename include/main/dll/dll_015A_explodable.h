@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_EXPLODABLE_H_
 #define MAIN_DLL_EXPLODABLE_H_
 
+#include "main/game_object.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
@@ -114,8 +115,8 @@ int explodable_getExtraSize(void);
 void explodable_free(int obj, int flag);
 void explodable_update(int obj);
 void explodable_init(int obj, int setup);
-int explodable_spawnFragmentObject(struct GameObject* obj, int objType, int chunkSrc, int fragmentIndex);
+int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, int fragmentIndex);
 void explodable_buildFragments(int obj, int def, int skipCentroid, int state);
-void explodable_computeFragmentLaunch(struct GameObject* obj, int chunkSlot, int def);
+void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def);
 
 #endif /* MAIN_DLL_EXPLODABLE_H_ */

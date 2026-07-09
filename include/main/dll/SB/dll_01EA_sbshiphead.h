@@ -8,6 +8,6 @@ int SB_ShipHead_getObjectTypeId(void);
 void SB_ShipHead_free(int obj);
 void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void SB_ShipHead_update(int obj);
-void SB_ShipHead_init(struct GameObject* obj);
+void SB_ShipHead_init(GameObject* obj);
 
 #endif

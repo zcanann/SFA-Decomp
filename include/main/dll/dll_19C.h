@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_19C_H_
 #define MAIN_DLL_DLL_19C_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
@@ -14,7 +15,7 @@ void FUN_801c33b4(u64 param_1, double param_2, double param_3, u64 param_4, u64 
 void FUN_801c3a9c(u16* param_1, int param_2);
 void FUN_801c3aa0(int param_1);
 void FUN_801c3b00(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void SpiritPrize_free(struct GameObject* obj);
+void SpiritPrize_free(GameObject* obj);
 void SpiritPrize_update(int obj);
 
 #endif /* MAIN_DLL_DLL_19C_H_ */

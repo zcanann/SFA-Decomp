@@ -100,7 +100,7 @@ extern f32 lbl_803E24E0;
 extern f32 lbl_803E24E4;
 extern f32 lbl_803E24E8;
 
-void* trickyFindCirclingTarget(struct GameObject* obj, void* state);
+void* trickyFindCirclingTarget(GameObject* obj, void* state);
 
 typedef struct TrickyPackedSlots
 {
@@ -207,7 +207,7 @@ void fn_8013E0D0(int* obj, u8* st)
             if (*(int*)&t->stateFlags728 == 0)
             {
                 {
-                    void* ct = trickyFindCirclingTarget((struct GameObject*)(gobj), t);
+                    void* ct = trickyFindCirclingTarget((GameObject*)(gobj), t);
                     *(void**)&t->cooldownB = ct;
                     if (ct != NULL)
                     {
@@ -279,7 +279,7 @@ void fn_8013E0D0(int* obj, u8* st)
             if (*(int*)&t->stateFlags728 == 0)
             {
                 {
-                    void* ct = trickyFindCirclingTarget((struct GameObject*)(gobj), t);
+                    void* ct = trickyFindCirclingTarget((GameObject*)(gobj), t);
                     *(void**)&t->cooldownB = ct;
                     if (ct != NULL)
                     {
@@ -585,7 +585,7 @@ void fn_8013E0D0(int* obj, u8* st)
 
 #pragma dont_inline on
 #pragma opt_common_subs off
-void* trickyFindCirclingTarget(struct GameObject* obj, void* state)
+void* trickyFindCirclingTarget(GameObject* obj, void* state)
 {
     void* target;
     void** list;
@@ -599,7 +599,7 @@ void* trickyFindCirclingTarget(struct GameObject* obj, void* state)
         return target;
     }
 
-    target = (void*)fn_80296118((struct GameObject*)(*(int*)((u8*)state + 0x4)));
+    target = (void*)fn_80296118((GameObject*)(*(int*)((u8*)state + 0x4)));
     if (target == NULL)
         goto fail;
 

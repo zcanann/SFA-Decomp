@@ -575,7 +575,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                         ((TrickyState*)other)->stateFlags |= 0x10000LL;
                     }
                 }
-                if (trickyFoodFn_8014460c((struct GameObject*)obj, (int*)state) == 0 &&
+                if (trickyFoodFn_8014460c((GameObject*)obj, (int*)state) == 0 &&
                     trickyFn_8013b368((int)obj, lbl_803E2488, state) == 0)
                 {
                     ((TrickyState*)state)->idleSfxTimer -= timeDelta;
@@ -835,7 +835,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     } buf;
 
     buf = *(struct Buf5*)lbl_802C21DC;
-    if (trickyFoodFn_8014460c((struct GameObject*)(obj), (int*)state) != 0)
+    if (trickyFoodFn_8014460c((GameObject*)(obj), (int*)state) != 0)
     {
         ((TrickyState*)state)->cooldownB = lbl_803E23DC;
         {
@@ -906,7 +906,7 @@ int trickyFn_80142eb0(int obj, int state)
         f32 z;
     } spawnBuf;
 
-    if (trickyFoodFn_8014460c((struct GameObject*)(obj), (int*)state) != 0)
+    if (trickyFoodFn_8014460c((GameObject*)(obj), (int*)state) != 0)
     {
         return 1;
     }
@@ -986,7 +986,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
 
-    if (trickyFoodFn_8014460c((struct GameObject*)obj, (int*)state) != 0)
+    if (trickyFoodFn_8014460c((GameObject*)obj, (int*)state) != 0)
     {
         return 1;
     }
@@ -1029,7 +1029,7 @@ u32 trickyFn_80143210(int obj, int* trickyState)
     short move;
     int foodResult;
 
-    foodResult = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    foodResult = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (foodResult != 0)
     {
         return 1;
@@ -1059,7 +1059,7 @@ u32 trickyFn_801432cc(int obj, int* trickyState)
     short move;
     int foodResult;
 
-    foodResult = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    foodResult = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (foodResult != 0)
     {
         return 1;
@@ -1090,7 +1090,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     int ref;
     int val;
 
-    val = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    val = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (val != 0)
     {
         return 1;
@@ -1110,7 +1110,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
             }
         }
     }
-    val = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    val = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (val != 0)
     {
         return 1;
@@ -1139,7 +1139,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
     float fa;
     int ib;
 
-    if (trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState) != 0)
+    if (trickyFoodFn_8014460c((GameObject*)(obj), trickyState) != 0)
     {
         return 1;
     }
@@ -1260,7 +1260,7 @@ int trickyFoodFn_801437d4(int obj, int* state)
     int idx;
     f32 z;
 
-    if (trickyFoodFn_8014460c((struct GameObject*)(obj), state) != 0)
+    if (trickyFoodFn_8014460c((GameObject*)(obj), state) != 0)
     {
         ((u8*)state)[0xa] = 0;
         return 1;
@@ -1350,7 +1350,7 @@ u32 trickyFn_80143b04(int obj, int* trickyState)
 {
     int val;
 
-    val = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    val = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (val != 0)
     {
         return 1;
@@ -1369,7 +1369,7 @@ u32 trickyFn_80143b78(int obj, int* trickyState)
 {
     int val;
 
-    val = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    val = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (val != 0)
     {
         return 1;
@@ -1482,7 +1482,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
     int extra;
     u32 bitVal;
 
-    done = trickyFoodFn_8014460c((struct GameObject*)(obj), trickyState);
+    done = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
     if (done != 0)
     {
         return 1;
@@ -1723,7 +1723,7 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
     }
 }
 
-int trickyFoodFn_8014460c(struct GameObject* obj, int* state)
+int trickyFoodFn_8014460c(GameObject* obj, int* state)
 {
     u8* b;
     u8 gu;

@@ -91,7 +91,7 @@ extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80065574(int a, int* obj, int b);
-extern void fn_80296BBC(struct GameObject* player);
+extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -270,7 +270,7 @@ void WM_Galleon_update(int* obj)
         ((GameObject*)player)->anim.localPosY = lbl_803E5CF0;
         ((GameObject*)player)->anim.localPosZ = lbl_803E5CF4;
         objHitDetectFn_80062e84(player, (int)obj, 0);
-        fn_80296BBC((struct GameObject*)(player));
+        fn_80296BBC((GameObject*)(player));
         OBJ_S32(obj, 0xf8) = 1;
     }
     else if (OBJ_S32(obj, 0xf8) == 1)

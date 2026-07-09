@@ -80,7 +80,7 @@ extern const f32 gWaterFlowFilterCoeff;
 extern const f32 gWaterFlowDecayCoeff;
 extern const f32 gWaterFlowMaxMagnitude;
 
-void waterflowwe_calcCurrentVector(struct GameObject* obj, f32* vx, f32* vz)
+void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 {
     GameObject* object = obj;
     int hasCurrent;
@@ -244,7 +244,7 @@ void waterflowwe_update(int obj)
     WaterFlowWeSetup* setup = (WaterFlowWeSetup*)object->anim.placementData;
     f32 vx, vz;
 
-    waterflowwe_calcCurrentVector((struct GameObject*)(obj), &vx, &vz);
+    waterflowwe_calcCurrentVector((GameObject*)(obj), &vx, &vz);
     object->anim.rotX = (s16)(getAngle(vx, vz) + 0x4000);
     if ((u32)gWaterFlowPhaseDriver == 0 && setup->phaseDriverDisabled == 0)
     {

@@ -13,6 +13,7 @@
  * decaying 0.02/tick after) is up.
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
+#include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
@@ -101,7 +102,7 @@ extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void Music_Trigger(int id, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-void fn_801F3F18(struct GameObject* obj)
+void fn_801F3F18(GameObject* obj)
 {
     LightVecSet L;
     f32 lightX;
@@ -275,12 +276,12 @@ void WM_LevelControl_update(int obj)
         }
         SCGameBitLatch_Update(&state->latch, 0x20, -1, -1, 0xcbb, 0xc4);
     }
-    fn_801F3F18((struct GameObject*)(obj));
+    fn_801F3F18((GameObject*)(obj));
     state->frameCounter = state->frameCounter + 1;
     return;
 }
 
-void WM_LevelControl_init(struct GameObject* obj)
+void WM_LevelControl_init(GameObject* obj)
 {
     WmLevelControlState* state;
     u8 mode;

@@ -245,7 +245,7 @@ s16 fn_80138F90(u8* obj)
 {
     return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414;
 }
-void* trickyGetQueuedPathParticlePos(struct GameObject* obj)
+void* trickyGetQueuedPathParticlePos(GameObject* obj)
 {
     return &((TrickyImpressState*)obj->extra)->renderPosX;
 }

@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_CURVES_H_
 #define MAIN_DLL_CURVES_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
@@ -253,7 +254,7 @@ void RomCurve_release(void);
 void curves_countRandomPoints(int obj, CurvesCollisionState* state);
 void FUN_800e49c0(int param_1, u32* param_2);
 void fn_800E56A4(int obj, CurvesCollisionState* state);
-void fn_800E58FC(struct GameObject* obj, CurvesCollisionState* state);
+void fn_800E58FC(GameObject* obj, CurvesCollisionState* state);
 void fn_800E5CBC(short* param_1, int param_2);
 void fn_800E5E38(int obj, CurvesCollisionState* state);
 void fn_800E5F1C(int obj, CurvesCollisionState* state);

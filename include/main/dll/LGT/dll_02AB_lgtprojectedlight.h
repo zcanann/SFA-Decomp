@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_LGT_DLL_02AB_LGTPROJECTEDLIGHT_H_
 #define MAIN_DLL_LGT_DLL_02AB_LGTPROJECTEDLIGHT_H_
 
+#include "main/game_object.h"
 #include "main/dll/dll_80220608_shared.h"
 
 typedef struct ProjectedLightSetup
@@ -69,10 +70,10 @@ STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
 int ProjectedLight_getExtraSize(void);
 int ProjectedLight_getObjectTypeId(void);
-void ProjectedLight_free(struct GameObject* obj);
+void ProjectedLight_free(GameObject* obj);
 void ProjectedLight_render(void);
 void ProjectedLight_hitDetect(void);
-void ProjectedLight_update(struct GameObject* obj);
+void ProjectedLight_update(GameObject* obj);
 void ProjectedLight_init(int obj, int setup);
 void ProjectedLight_release(void);
 void ProjectedLight_initialise(void);

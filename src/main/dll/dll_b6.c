@@ -29,7 +29,7 @@ extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera
 extern f32 lbl_803E1658; /* 1/5 move-average weight */
 
 extern int objAnimFn_80296328(void);
-extern int fn_80295C24(struct GameObject* player);
+extern int fn_80295C24(GameObject* player);
 /* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match
    (canonical engine_shared.h uses s16/VoxPos pointers and u8 - do not narrow these here) */
 extern void voxmaps_worldToGrid(f32* world, int* grid);
@@ -132,7 +132,7 @@ CamcontrolTargetObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraS
         }
         canTarget = 1;
         if ((entry->flags & CAMCONTROL_TARGET_KIND_MASK) == CAMCONTROL_TARGET_KIND_A_BUTTON_HINT &&
-            fn_80295C24((struct GameObject*)(player)) != 0)
+            fn_80295C24((GameObject*)(player)) != 0)
         {
             canTarget = 0;
         }

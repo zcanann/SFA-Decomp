@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_0240_GCROBOTBLAST_H_
 #define MAIN_DLL_DLL_0240_GCROBOTBLAST_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/objanim_update.h"
 
@@ -11,7 +12,7 @@ void GCRobotBlast_free(void);
 void GCRobotBlast_render(void);
 void GCRobotBlast_hitDetect(void);
 void GCRobotBlast_update(void);
-void GCRobotBlast_init(struct GameObject* obj, s8* def);
+void GCRobotBlast_init(GameObject* obj, s8* def);
 void GCRobotBlast_release(void);
 void GCRobotBlast_initialise(void);
 

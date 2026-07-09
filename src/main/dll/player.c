@@ -48,7 +48,7 @@ static inline int* Player_GetActiveModel(int obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-static inline ObjHitsPriorityState* Player_GetObjHitsState(struct GameObject* obj)
+static inline ObjHitsPriorityState* Player_GetObjHitsState(GameObject* obj)
 {
     return (ObjHitsPriorityState*)obj->anim.hitReactState;
 }
@@ -65,7 +65,7 @@ void fn_802960E8(void* playerObj, s16 effectId)
     inner->pendingBoneEffectId = effectId;
 }
 
-void fn_802960F4(struct GameObject* obj, int* out)
+void fn_802960F4(GameObject* obj, int* out)
 {
     int inner = *(int*)&obj->extra;
     if (out == NULL)
@@ -81,19 +81,19 @@ f32 fn_8029610C(int obj)
     return inner->baddie.animSpeedA;
 }
 
-int fn_80296118(struct GameObject* obj)
+int fn_80296118(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
     return *(int*)&((PlayerState*)inner)->baddie.targetObj;
 }
 
-f32 fn_80296214(struct GameObject* obj)
+f32 fn_80296214(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->verticalVel;
 }
 
-void fn_80296220(struct GameObject* obj, f32 v)
+void fn_80296220(GameObject* obj, f32 v)
 {
     PlayerState* inner = obj->extra;
     inner->verticalVel = v;
@@ -104,7 +104,7 @@ int Obj_IsParentSlackClear(int obj)
     return (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0;
 }
 
-int playerGetFlags3F0Bit5(struct GameObject* obj)
+int playerGetFlags3F0Bit5(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return (inner->flags3F0 >> 5) & 1;
@@ -122,25 +122,25 @@ int isTrickyNear(int obj)
     return inner->curAnimId != 0x44;
 }
 
-int fn_80295C0C(struct GameObject* obj)
+int fn_80295C0C(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return ((inner->flags3F0 >> 1) & 1) == 0;
 }
 
-int fn_80295C24(struct GameObject* obj)
+int fn_80295C24(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->targetSuppressTimer > lbl_803E7EA4;
 }
 
-int fn_80295C40(struct GameObject* obj)
+int fn_80295C40(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->waterDepth > lbl_803E7ED4;
 }
 
-int fn_80295CBC(struct GameObject* obj)
+int fn_80295CBC(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->baddie.controlMode == 0x13;
@@ -174,31 +174,31 @@ int fn_802966B4(int obj)
     return inner->baddie.controlMode == 6;
 }
 
-void fn_80296BBC(struct GameObject* obj)
+void fn_80296BBC(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
 }
 
-void playerSetIsDead(struct GameObject* obj, int flag)
+void playerSetIsDead(GameObject* obj, int flag)
 {
     int inner = *(int*)&obj->extra;
     ((ByteFlags*)((char*)inner + 0x3f3))->b02 = flag;
 }
 
-void playerSetInCutscene(struct GameObject* obj)
+void playerSetInCutscene(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
     ((ByteFlags*)((char*)inner + 0x3f2))->b20 = 1;
 }
 
-void playerSetCutsceneCameraFlag(struct GameObject* obj)
+void playerSetCutsceneCameraFlag(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
     ((ByteFlags*)((char*)inner + 0x3f2))->b40 = 1;
 }
 
-void playerSetOverrideParentSlack(struct GameObject* obj)
+void playerSetOverrideParentSlack(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
     ((ByteFlags*)((char*)inner + 0x3f2))->b80 = 1;
@@ -214,7 +214,7 @@ void saveSetOverrideHealth(int v)
     gPlayerPendingHealth = v;
 }
 
-f32 fn_802966F4(struct GameObject* obj)
+f32 fn_802966F4(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->probeHitDist;
@@ -226,7 +226,7 @@ int playerGetFocusObject(int obj)
     return inner->focusObject;
 }
 
-int EmissionController_IsLingering(struct GameObject* obj)
+int EmissionController_IsLingering(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->emissionState;
@@ -244,7 +244,7 @@ int playerGetCurMagic(int obj)
     return *(s16*)((char*)inner->playerStatus + 4);
 }
 
-int playerGetMaxMagic(struct GameObject* obj)
+int playerGetMaxMagic(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return *(s16*)((char*)inner->playerStatus + 6);
@@ -262,20 +262,20 @@ int playerIsDead(int obj)
     return (inner->flags3F3 >> 2) & 1;
 }
 
-int playerGetTimeScale(struct GameObject* obj, f32* out)
+int playerGetTimeScale(GameObject* obj, f32* out)
 {
     PlayerState* inner = obj->extra;
     *out = inner->timeScale;
     return inner->unk8C4;
 }
 
-int playerGetMaxHealth(struct GameObject* obj)
+int playerGetMaxHealth(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return *(s8*)((char*)inner->playerStatus + 1);
 }
 
-int playerGetCurHealth(struct GameObject* obj)
+int playerGetCurHealth(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return *(s8*)((char*)inner->playerStatus);
@@ -299,7 +299,7 @@ int objGetAnimStateFlags(int obj, int flag)
     return *(s8*)((char*)inner->playerStatus + 2) & flag;
 }
 
-int objGetAnimState80A(struct GameObject* obj)
+int objGetAnimState80A(GameObject* obj)
 {
     void* inner = obj->extra;
     if (inner != NULL)
@@ -317,14 +317,14 @@ void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z)
     *z = *(f32*)((char*)inner + 0x2c);
 }
 
-int playerGetHeldObject(struct GameObject* obj, int* out)
+int playerGetHeldObject(GameObject* obj, int* out)
 {
     PlayerState* inner = obj->extra;
     *out = inner->heldObj;
     return inner->heldObj != 0;
 }
 
-int playerStatusIsPositive(struct GameObject* obj)
+int playerStatusIsPositive(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return *(s8*)((char*)inner->playerStatus) > 0;
@@ -340,7 +340,7 @@ void objUpdateHitboxPos(int obj)
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
 
-void fn_802A49A8(struct GameObject* obj)
+void fn_802A49A8(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     inner->moveParams = (int)lbl_80333250;
@@ -362,7 +362,7 @@ int fn_802969F0(int obj)
     return -1;
 }
 
-void objSetXRot(struct GameObject* obj, int v)
+void objSetXRot(GameObject* obj, int v)
 {
     PlayerState* inner = obj->extra;
     obj->anim.rotX = v;
@@ -402,7 +402,7 @@ int playerState41(int obj, int state, f32 fv)
             s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)sub);
+                objThrowFn_80182504((GameObject*)sub);
             }
             else
             {
@@ -444,7 +444,7 @@ int playerState41(int obj, int state, f32 fv)
     return 0;
 }
 
-void fn_8029782C(struct GameObject* obj)
+void fn_8029782C(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
@@ -460,7 +460,7 @@ int objIsCurModelNotZero(void* obj)
     return 0;
 }
 
-int playerHasSpell(struct GameObject* obj, int spell)
+int playerHasSpell(GameObject* obj, int spell)
 {
     PlayerState* inner = obj->extra;
     if ((u32)spell > 0xb)
@@ -470,7 +470,7 @@ int playerHasSpell(struct GameObject* obj, int spell)
     return inner->staffUnlockedFlags & (1 << spell);
 }
 
-int fn_80295C5C(struct GameObject* obj)
+int fn_80295C5C(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     return inner->baddie.controlMode == 0x36 && ((ByteFlags*)((char*)inner + 0x3f3))->b10;
@@ -500,7 +500,7 @@ void fn_802961A4(int obj, int* out1, f32* out2)
     }
 }
 
-void playerLock(struct GameObject* obj, int lock)
+void playerLock(GameObject* obj, int lock)
 {
     PlayerState* inner = obj->extra;
     if (lock != 0)
@@ -513,7 +513,7 @@ void playerLock(struct GameObject* obj, int lock)
     }
 }
 
-void fn_80296A9C(struct GameObject* obj, int delta)
+void fn_80296A9C(GameObject* obj, int delta)
 {
     PlayerState* inner = obj->extra;
     int deref = inner->playerStatus;
@@ -542,7 +542,7 @@ void objSetAnimStateFlags(int obj, int flag, int set)
     }
 }
 
-u8 fn_80296414(struct GameObject* obj, int otherObj, u8* out)
+u8 fn_80296414(GameObject* obj, int otherObj, u8* out)
 {
     PlayerState* inner = obj->extra;
     *out = inner->surfaceDir;
@@ -555,7 +555,7 @@ int fn_80295C88(int obj)
     return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &dist);
 }
 
-void fn_8029697C(struct GameObject* obj, s16* out1, s16* out2)
+void fn_8029697C(GameObject* obj, s16* out1, s16* out2)
 {
     PlayerState* inner = obj->extra;
     *out1 = lbl_803E7EE4 * inner->aimInputX;
@@ -616,7 +616,7 @@ void fn_802994A4(int obj)
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
 
-int objFn_802962b4(struct GameObject* obj)
+int objFn_802962b4(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     ByteFlags* f = (ByteFlags*)((char*)inner + 0x3f0);
@@ -633,7 +633,7 @@ int objFn_802962b4(struct GameObject* obj)
     return 0;
 }
 
-int fn_80296240(struct GameObject* obj)
+int fn_80296240(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     ByteFlags* f = (ByteFlags*)((char*)inner + 0x3f0);
@@ -650,7 +650,7 @@ int fn_80296240(struct GameObject* obj)
     return 0;
 }
 
-void playerSetHaveSpell(struct GameObject* obj, int spell, int set)
+void playerSetHaveSpell(GameObject* obj, int spell, int set)
 {
     PlayerState* inner = obj->extra;
     if ((u32)spell > 0xb)
@@ -668,7 +668,7 @@ void playerSetHaveSpell(struct GameObject* obj, int spell, int set)
     mainSetBits(gPlayerSpellGameBits[spell], set);
 }
 
-void fn_802A4B4C(struct GameObject* obj)
+void fn_802A4B4C(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     void* p = *(void**)((char*)inner + 0x7f8);
@@ -714,7 +714,7 @@ int playerState40(int p1, int obj)
     return 0;
 }
 
-int playerState37(struct GameObject* obj, int state)
+int playerState37(GameObject* obj, int state)
 {
     int inner = *(int*)&obj->extra;
     u8 v;
@@ -739,7 +739,7 @@ int playerState37(struct GameObject* obj, int state)
     return 0x39;
 }
 
-int playerState0D(struct GameObject* obj, int targetState)
+int playerState0D(GameObject* obj, int targetState)
 {
     PlayerState* inner = obj->extra;
     f32 fz;
@@ -981,7 +981,7 @@ int playerStateGrabLedge(int obj, int state)
             s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)sub);
+                objThrowFn_80182504((GameObject*)sub);
             }
             else
             {
@@ -2447,7 +2447,7 @@ int playerStateOnLadder(int obj, int state)
                                 if (((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId == 0x3cf ||
                                     ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId == 0x662)
                                 {
-                                    objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                                    objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                                 }
                                 else
                                 {
@@ -3126,7 +3126,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     s16 sp = *(s16*)(p + 0x46);
                     if (sp == 0x3cf || sp == 0x662)
                     {
-                        objThrowFn_80182504((struct GameObject*)(p));
+                        objThrowFn_80182504((GameObject*)(p));
                     }
                     else
                     {
@@ -3452,7 +3452,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     ((PlayerState*)inner)->baddie.physicsActive = 1;
                     *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
                     ((PlayerState*)inner)->emissionState = 0;
-                    fn_802B0EA4((struct GameObject*)(obj), (int)inner, (int)inner);
+                    fn_802B0EA4((GameObject*)(obj), (int)inner, (int)inner);
                     (**(void (**)(f32, int, int, f32, void*, void*))((char*)(*gPlayerInterface) + 8))(
                         timeDelta, obj, (int)inner, timeDelta, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
                 }
@@ -3476,7 +3476,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 ((PlayerState*)inner)->baddie.physicsActive = 1;
                 *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
                 ((PlayerState*)inner)->emissionState = 0;
-                fn_802B0EA4((struct GameObject*)(obj), (int)inner, (int)inner);
+                fn_802B0EA4((GameObject*)(obj), (int)inner, (int)inner);
                 (**(void (**)(f32, int, int, f32, void*, void*))((char*)(*gPlayerInterface) + 8))(
                     timeDelta, obj, (int)inner, timeDelta, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
             }
@@ -3734,7 +3734,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                             s16 sp17 = *(s16*)(p17 + 0x46);
                             if (sp17 == 0x3cf || sp17 == 0x662)
                             {
-                                objThrowFn_80182504((struct GameObject*)(p17));
+                                objThrowFn_80182504((GameObject*)(p17));
                             }
                             else
                             {
@@ -3777,7 +3777,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 (*gMapEventInterface)->gotoRestartPoint();
                 break;
             case 0x1c:
-                staffToggle((struct GameObject*)(obj), 0);
+                staffToggle((GameObject*)(obj), 0);
                 break;
             case 0x1d:
                 (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x1a);
@@ -4052,7 +4052,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
     rot[0] = -mathSinf(ang);
     rot[1] = lbl_803E7EA4;
     rot[2] = -mathCosf(ang);
-    fn_802A81B8((struct GameObject*)(obj), state, vec);
+    fn_802A81B8((GameObject*)(obj), state, vec);
     sc1p[0] = lbl_803E808C * rot[0];
     sc1p[1] = lbl_803E808C * rot[1];
     sc1p[2] = lbl_803E808C * rot[2];
@@ -4729,12 +4729,12 @@ void fn_80296EB4(int obj, int newParent)
     ((GameObject*)obj)->anim.previousWorldPosX = s.wp2[0];
     ((GameObject*)obj)->anim.previousWorldPosY = s.wp2[1];
     ((GameObject*)obj)->anim.previousWorldPosZ = s.wp2[2];
-    Player_GetObjHitsState((struct GameObject*)(obj))->localPosX = ((GameObject*)obj)->anim.localPosX;
-    Player_GetObjHitsState((struct GameObject*)(obj))->localPosY = ((GameObject*)obj)->anim.localPosY;
-    Player_GetObjHitsState((struct GameObject*)(obj))->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-    Player_GetObjHitsState((struct GameObject*)(obj))->worldPosX = ((GameObject*)obj)->anim.worldPosX;
-    Player_GetObjHitsState((struct GameObject*)(obj))->worldPosY = ((GameObject*)obj)->anim.worldPosY;
-    Player_GetObjHitsState((struct GameObject*)(obj))->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
+    Player_GetObjHitsState((GameObject*)(obj))->localPosX = ((GameObject*)obj)->anim.localPosX;
+    Player_GetObjHitsState((GameObject*)(obj))->localPosY = ((GameObject*)obj)->anim.localPosY;
+    Player_GetObjHitsState((GameObject*)(obj))->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+    Player_GetObjHitsState((GameObject*)(obj))->worldPosX = ((GameObject*)obj)->anim.worldPosX;
+    Player_GetObjHitsState((GameObject*)(obj))->worldPosY = ((GameObject*)obj)->anim.worldPosY;
+    Player_GetObjHitsState((GameObject*)(obj))->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
     *(int*)&((GameObject*)obj)->anim.parent = newParent;
 }
 
@@ -5329,7 +5329,7 @@ int playerStateAttack(int obj, int state, f32 fv)
         lbl_803DE459 = 0;
         changed = 1;
         *(u32*)&inner->flags360 &= ~0x40LL;
-        Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 0;
+        Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 0;
         {
             f32 z = 0.0f;
             inner->hitTimer = z;
@@ -5408,7 +5408,7 @@ int playerStateAttack(int obj, int state, f32 fv)
         }
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
-            Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 0;
+            Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 0;
         }
         inner->activeHitWindow = -1;
         if (*(s16*)((char*)path + 0x44) == 0x2d)
@@ -5428,8 +5428,8 @@ int playerStateAttack(int obj, int state, f32 fv)
             inner->lastHitObject = 0;
         }
     }
-    Player_GetObjHitsState((struct GameObject*)(obj))->hitVolumePriority = 0xb;
-    *(u8*)&Player_GetObjHitsState((struct GameObject*)(obj))->hitVolumeId =
+    Player_GetObjHitsState((GameObject*)(obj))->hitVolumePriority = 0xb;
+    *(u8*)&Player_GetObjHitsState((GameObject*)(obj))->hitVolumeId =
         *(u8*)((inner->moveSlots + 0x14) + (u32)inner->moveSlotIndex * 0xb0);
     {
         int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
@@ -5478,7 +5478,7 @@ int playerStateAttack(int obj, int state, f32 fv)
         int off;
         int i;
         off = 0;
-        Player_GetObjHitsState((struct GameObject*)(obj))->objectHitMask = 0;
+        Player_GetObjHitsState((GameObject*)(obj))->objectHitMask = 0;
         for (i = 0; i != 3; i++)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress >=
@@ -5486,7 +5486,7 @@ int playerStateAttack(int obj, int state, f32 fv)
                 ((GameObject*)obj)->anim.currentMoveProgress <=
                     *(f32*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + off) + 0x3c))
             {
-                if ((s8)Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits == 0)
+                if ((s8)Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits == 0)
                 {
                     int bits;
                     switch (*(s8*)((char*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + 0x5d) + i))
@@ -5513,11 +5513,11 @@ int playerStateAttack(int obj, int state, f32 fv)
                         bits = 0;
                         break;
                     }
-                    Player_GetObjHitsState((struct GameObject*)(obj))->objectHitMask = bits;
+                    Player_GetObjHitsState((GameObject*)(obj))->objectHitMask = bits;
                 }
                 if (i != inner->activeHitWindow)
                 {
-                    Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 0;
+                    Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 0;
                     inner->activeHitWindow = (s8)i;
                     inner->hitCount = 0;
                     inner->hitTimer = 0.0f;
@@ -5531,7 +5531,7 @@ int playerStateAttack(int obj, int state, f32 fv)
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
-        Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 0;
+        Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 0;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -5553,7 +5553,7 @@ int playerStateAttack(int obj, int state, f32 fv)
         {
             if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
             {
-                Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 0;
+                Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 0;
                 inner->activeHitWindow = -1;
                 (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x30)))(obj, state, fv, 2);
                 {
@@ -5610,7 +5610,7 @@ int playerState22(int obj, int state)
     return 0;
 }
 
-int playerState29(struct GameObject* obj, int state)
+int playerState29(GameObject* obj, int state)
 {
     PlayerState* inner = obj->extra;
     u32 b;
@@ -5949,7 +5949,7 @@ int playerState00(int obj, int state)
 
 void fn_8029BC08(int obj)
 {
-    Player_GetObjHitsState((struct GameObject*)(obj))->objectHitMask = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->objectHitMask = 0;
     if (((GameObject*)gPlayerPathObject)->anim.classId == 0x2d)
     {
         objSetAnimField48to0((int*)gPlayerPathObject);
@@ -5973,7 +5973,7 @@ void fn_8029F67C(int obj)
     }
 }
 
-void fn_80296124(struct GameObject* obj, void* p2, void* p3)
+void fn_80296124(GameObject* obj, void* p2, void* p3)
 {
     PlayerState* inner = obj->extra;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~0x4000LL;
@@ -5997,7 +5997,7 @@ void fn_80296124(struct GameObject* obj, void* p2, void* p3)
     }
 }
 
-int fn_8029605C(struct GameObject* obj, f32* p2, f32* p3)
+int fn_8029605C(GameObject* obj, f32* p2, f32* p3)
 {
     void* inner = obj->extra;
     if (inner == NULL || getCurSeqNo() != 0)
@@ -6013,7 +6013,7 @@ int fn_8029605C(struct GameObject* obj, f32* p2, f32* p3)
     return 0;
 }
 
-void fn_8029A420(struct GameObject* obj)
+void fn_8029A420(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     if (inner->curAnimId != 0x42 && getCurSeqNo() == 0)
@@ -6538,7 +6538,7 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                 if (typ == 0x3cf || typ == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                    objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                 }
                 else
                 {
@@ -7120,7 +7120,7 @@ void playerUpdate(int obj)
                         s16 typ = held->anim.seqId;
                         if (typ == 0x3cf || typ == 0x662)
                         {
-                            objThrowFn_80182504((struct GameObject*)held);
+                            objThrowFn_80182504((GameObject*)held);
                         }
                         else
                         {
@@ -7221,7 +7221,7 @@ void playerUpdate(int obj)
 
 extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
 
-void fn_802B0EA4(struct GameObject* obj, int inner, int state)
+void fn_802B0EA4(GameObject* obj, int inner, int state)
 {
     int d;
     char* cam;
@@ -7887,7 +7887,7 @@ void playerDoHitDetection(int obj)
                 (*(void**)((sub = *(int*)((char*)gPlayerPathObject + 0x54)) + 0x50) != NULL ||
                  (*(s8*)(sub + 0xad) != 0 && *(s8*)(sub + 0xac) != 0xe)))
             {
-                Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 1;
+                Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->boulderChargeLevel = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 {
@@ -7947,9 +7947,9 @@ void playerDoHitDetection(int obj)
                     }
                 }
             }
-            if (Player_GetObjHitsState((struct GameObject*)(obj))->lastHitObject != 0)
+            if (Player_GetObjHitsState((GameObject*)(obj))->lastHitObject != 0)
             {
-                Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 1;
+                Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->boulderChargeLevel = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 {
@@ -7968,7 +7968,7 @@ void playerDoHitDetection(int obj)
                         ((PlayerState*)inner)->hitTimer = (f32)(u32)((PlayerState*)inner)->hitInterval;
                         ((PlayerState*)inner)->hitCount += 1;
                         ((PlayerState*)inner)->lastHitObject =
-                            Player_GetObjHitsState((struct GameObject*)(obj))->lastHitObject;
+                            Player_GetObjHitsState((GameObject*)(obj))->lastHitObject;
                     }
                 }
             }
@@ -8033,7 +8033,7 @@ void playerDoHitDetection(int obj)
                 }
                 if (((*(s8*)((char*)inner + 0x264) & 2) != 0 && (*(s8*)((char*)inner + 0x264) & 0x20) == 0) ||
                     *(u8*)((char*)inner + 0x262) != 0 ||
-                    (Player_GetObjHitsState((struct GameObject*)(obj))->flags & 8) != 0)
+                    (Player_GetObjHitsState((GameObject*)(obj))->flags & 8) != 0)
                 {
                     if (((PlayerState*)inner)->rumbleCooldown <= lbl_803E7EA4 &&
                         ((PlayerState*)inner)->baddie.animSpeedA > lbl_803E8160)
@@ -8529,7 +8529,7 @@ void fn_802AFB0C(int obj, int inner, int state)
                 s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                 if (t == 0x3cf || t == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                    objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                 }
                 else
                 {
@@ -8628,7 +8628,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                 if (typ == 0x3cf || typ == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                    objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                 }
                 else
                 {
@@ -8668,7 +8668,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                 if (typ == 0x3cf || typ == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                    objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                 }
                 else
                 {
@@ -8711,7 +8711,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                 if (typ == 0x3cf || typ == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                    objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                 }
                 else
                 {
@@ -8934,7 +8934,7 @@ void playerHeal(int obj)
     inner->moveVariantIndex = 0xff;
 }
 
-void playerPutAwayStaff(struct GameObject* obj, int mode)
+void playerPutAwayStaff(GameObject* obj, int mode)
 {
     PlayerState* inner = obj->extra;
     if (mode == 0)
@@ -8966,7 +8966,7 @@ void playerPutAwayStaff(struct GameObject* obj, int mode)
     }
 }
 
-void playerPullOutStaff(struct GameObject* obj, int mode)
+void playerPullOutStaff(GameObject* obj, int mode)
 {
     PlayerState* inner = obj->extra;
     if (mode == 0)
@@ -9752,7 +9752,7 @@ int playerState31(int obj, int p2)
 }
 
 #pragma dont_inline on
-int playerCanCastBlasterSpell(struct GameObject* obj, int p2, int p3)
+int playerCanCastBlasterSpell(GameObject* obj, int p2, int p3)
 {
     PlayerState* inner = obj->extra;
     u8 c;
@@ -10112,7 +10112,7 @@ int playerState20(int obj, int state, f32 fv)
 }
 
 #pragma dont_inline on
-int playerCanCastQuakeSpell(struct GameObject* obj, int p2)
+int playerCanCastQuakeSpell(GameObject* obj, int p2)
 {
     PlayerState* inner = obj->extra;
     int threshold;
@@ -10144,7 +10144,7 @@ int playerCanCastQuakeSpell(struct GameObject* obj, int p2)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int playerIsBlasterSpellAvailable(struct GameObject* obj, int p2, int p3)
+int playerIsBlasterSpellAvailable(GameObject* obj, int p2, int p3)
 {
     PlayerState* inner = obj->extra;
     u8 c;
@@ -10174,7 +10174,7 @@ int playerIsBlasterSpellAvailable(struct GameObject* obj, int p2, int p3)
 }
 #pragma dont_inline reset
 
-void fn_8029C8C8(struct GameObject* obj, int p2)
+void fn_8029C8C8(GameObject* obj, int p2)
 {
     PlayerState* inner = obj->extra;
     if (((PlayerState*)p2)->baddie.inputMagnitude < lbl_803E7F6C)
@@ -10333,7 +10333,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
     return 0;
 }
 
-void Lightfoot_RecordCompletedChallengeTargetHit(struct GameObject* obj, int inner, int animState)
+void Lightfoot_RecordCompletedChallengeTargetHit(GameObject* obj, int inner, int animState)
 {
     int idx;
 
@@ -10464,7 +10464,7 @@ void playerPlayClimbingSound(int obj, int p2)
 }
 
 #pragma dont_inline on
-int playerCanCastPortalOpenSpell(struct GameObject* obj, int p2)
+int playerCanCastPortalOpenSpell(GameObject* obj, int p2)
 {
     PlayerState* inner = obj->extra;
     s16 sel = ((PlayerState*)p2)->baddie.controlMode;
@@ -10493,7 +10493,7 @@ int playerCanCastPortalOpenSpell(struct GameObject* obj, int p2)
 }
 #pragma dont_inline reset
 
-void Lightfoot_ResetScriptedPosition(struct GameObject* obj)
+void Lightfoot_ResetScriptedPosition(GameObject* obj)
 {
     switch (*(int*)((char*)*(int*)&obj->anim.placementData + 0x14))
     {
@@ -10531,7 +10531,7 @@ void Lightfoot_ResetScriptedPosition(struct GameObject* obj)
 }
 
 #pragma dont_inline on
-int fn_802A97D0(struct GameObject* obj, int p2)
+int fn_802A97D0(GameObject* obj, int p2)
 {
     PlayerState* inner = obj->extra;
     void* slot;
@@ -10560,7 +10560,7 @@ void fn_802B18BC(int obj, int state, f32 fv)
     f32 v;
 
     if ((((PlayerState*)state)->buttonsHeld & PAD_BUTTON_A) &&
-        playerCanCastQuakeSpell((struct GameObject*)(obj), state))
+        playerCanCastQuakeSpell((GameObject*)(obj), state))
     {
         ((ByteFlags*)((char*)state + 0x3f4))->b20 = 1;
         ((PlayerState*)state)->buttonHoldTimer += fv;
@@ -10851,7 +10851,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     }
 }
 
-void fn_8029A4A8(struct GameObject* obj, int p2)
+void fn_8029A4A8(GameObject* obj, int p2)
 {
     int z[2];
     PlayerState* inner = obj->extra;
@@ -10936,7 +10936,7 @@ void playerStaffInit(int obj, int state)
     }
     if (b == 0 && mainGetBit(GAMEBIT_ITEM_Staff_Got))
     {
-        staffToggle((struct GameObject*)(obj), 0);
+        staffToggle((GameObject*)(obj), 0);
     }
 }
 
@@ -11031,7 +11031,7 @@ int playerState27(int obj, int state, f32 fv)
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
-        Player_GetObjHitsState((struct GameObject*)(obj))->suppressOutgoingHits = 0;
+        Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 0;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -11203,7 +11203,7 @@ int playerStateThrowing(int obj, int state)
             s16 id = *(s16*)((char*)s2 + 0x46);
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)(s2));
+                objThrowFn_80182504((GameObject*)(s2));
             }
             else
             {
@@ -11256,7 +11256,7 @@ int playerState34(int obj, int state)
         break;
     default:
         ObjAnim_SetCurrentMove(obj, 0xdd, k, 0);
-        staffactivated_calcInteractionTargetXZ((struct GameObject*)(gPlayerInteractTarget), (char*)obj + 0xc,
+        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget), (char*)obj + 0xc,
                                                (char*)obj + 0x14);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         ((PlayerState*)state)->baddie.moveEventFlags = 0;
@@ -11272,7 +11272,7 @@ int playerState34(int obj, int state)
     return 0;
 }
 
-void staffToggle(struct GameObject* obj, int a)
+void staffToggle(GameObject* obj, int a)
 {
     PlayerState* inner = obj->extra;
 
@@ -11355,7 +11355,7 @@ void fn_802AE83C(int obj, int inner)
         s16 id = *(s16*)((char*)sub + 0x46);
         if (id == 0x3cf || id == 0x662)
         {
-            objThrowFn_80182504((struct GameObject*)(sub));
+            objThrowFn_80182504((GameObject*)(sub));
         }
         else
         {
@@ -11481,7 +11481,7 @@ int playerState06(int obj, int state)
             s16 id = *(s16*)((char*)s2 + 0x46);
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)(s2));
+                objThrowFn_80182504((GameObject*)(s2));
             }
             else
             {
@@ -11515,7 +11515,7 @@ int playerSetHeldObject(int obj, int held)
             s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)(sub));
+                objThrowFn_80182504((GameObject*)(sub));
             }
             else
             {
@@ -11980,17 +11980,17 @@ void playerAnimate(int obj, int state, f32 fv)
     ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->stickYf;
     *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
     *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
-    Player_GetObjHitsState((struct GameObject*)(obj))->hitVolumePriority = 0;
-    Player_GetObjHitsState((struct GameObject*)(obj))->hitVolumeId = 0;
-    Player_GetObjHitsState((struct GameObject*)(obj))->objectPairPriority = 0;
-    Player_GetObjHitsState((struct GameObject*)(obj))->objectPairHitVolume = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->hitVolumePriority = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->hitVolumeId = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->objectPairPriority = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->objectPairHitVolume = 0;
     ((PlayerState*)state)->baddie.physicsActive = 1;
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
     ((PlayerState*)state)->emissionState = 0;
     *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)state |= 0x1000000;
-    fn_802B0EA4((struct GameObject*)(obj), state, state);
+    fn_802B0EA4((GameObject*)(obj), state, state);
     if (playerCheckIfClimbingOntoWall(obj, state, state, buf, fv, 0x60) == 8)
     {
         *(int*)&((PlayerState*)state)->baddie.targetObj = 0;
@@ -12276,7 +12276,7 @@ void objLoadPlayerFromSave(int obj)
     (*gPathControlInterface)->setup(pathState, 2, base + 0x118, &lbl_803DC6B8, &lbl_803DC6A4);
     pathState[0x258] = 0x64;
     fn_802AB5A4(obj, inner, 0xff);
-    Player_GetObjHitsState((struct GameObject*)(obj))->trackContactMask = 0x29;
+    Player_GetObjHitsState((GameObject*)(obj))->trackContactMask = 0x29;
     ((GameObject*)obj)->anim.alpha = 0xff;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
@@ -12488,7 +12488,7 @@ void playerSetDisguised(int obj, int mode)
     objModelGetVecFn_800395d8(obj, 9);
     if (mode != 0)
     {
-        staffToggle((struct GameObject*)(obj), 0);
+        staffToggle((GameObject*)(obj), 0);
         ((ByteFlags*)((char*)inner + 0x3f3))->b08 = 1;
         tricky = getTrickyObject();
         if (tricky != NULL)
@@ -12510,7 +12510,7 @@ void playerSetDisguised(int obj, int mode)
     }
     else
     {
-        staffToggle((struct GameObject*)(obj), 1);
+        staffToggle((GameObject*)(obj), 1);
         ((ByteFlags*)((char*)inner + 0x3f3))->b08 = 0;
         ((ByteFlags*)((char*)inner + 0x3f4))->b80 = 0;
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x801, NULL, 0x50, NULL);
@@ -12531,7 +12531,7 @@ void playerRunActiveSpells(int obj, int state)
     void** p;
     int z[2];
     int v;
-    if (playerIsBlasterSpellAvailable((struct GameObject*)(obj), state, GAMEBIT_STAFF_ABILITY_FIRE_BLASTER) != 0)
+    if (playerIsBlasterSpellAvailable((GameObject*)(obj), state, GAMEBIT_STAFF_ABILITY_FIRE_BLASTER) != 0)
     {
         mainSetBits(GAMEBIT_ITEM_Spell0965_Disabled, 0);
         mainSetBits(GAMEBIT_ITEM_FireBlaster_Disabled, 0);
@@ -12541,7 +12541,7 @@ void playerRunActiveSpells(int obj, int state)
         mainSetBits(GAMEBIT_ITEM_Spell0965_Disabled, 1);
         mainSetBits(GAMEBIT_ITEM_FireBlaster_Disabled, 1);
     }
-    if (playerIsBlasterSpellAvailable((struct GameObject*)(obj), state, GAMEBIT_STAFF_ABILITY_FREEZE_BLAST) != 0)
+    if (playerIsBlasterSpellAvailable((GameObject*)(obj), state, GAMEBIT_STAFF_ABILITY_FREEZE_BLAST) != 0)
     {
         mainSetBits(GAMEBIT_ITEM_Spell0961_Disabled, 0);
     }
@@ -12571,7 +12571,7 @@ void playerRunActiveSpells(int obj, int state)
     {
         mainSetBits(GAMEBIT_ITEM_SharpClawDisguise_Disabled, 1);
     }
-    if (playerCanCastPortalOpenSpell((struct GameObject*)(obj), state) != 0)
+    if (playerCanCastPortalOpenSpell((GameObject*)(obj), state) != 0)
     {
         mainSetBits(GAMEBIT_ITEM_PortalSpell_Disabled, 0);
     }
@@ -12579,7 +12579,7 @@ void playerRunActiveSpells(int obj, int state)
     {
         mainSetBits(GAMEBIT_ITEM_PortalSpell_Disabled, 1);
     }
-    if (fn_802A97D0((struct GameObject*)(obj), state) != 0)
+    if (fn_802A97D0((GameObject*)(obj), state) != 0)
     {
         mainSetBits(GAMEBIT_ITEM_StaffBooster_Disabled, 0);
     }
@@ -12587,7 +12587,7 @@ void playerRunActiveSpells(int obj, int state)
     {
         mainSetBits(GAMEBIT_ITEM_StaffBooster_Disabled, 1);
     }
-    if (playerCanCastQuakeSpell((struct GameObject*)(obj), state) != 0)
+    if (playerCanCastQuakeSpell((GameObject*)(obj), state) != 0)
     {
         mainSetBits(GAMEBIT_ITEM_SuperQuake_Disabled, 0);
     }
@@ -12710,7 +12710,7 @@ int playerState11(int obj, int state)
     return 0;
 }
 
-void fn_802972B4(struct GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
+void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
 {
     PlayerState* inner = obj->extra;
     s8 idx;
@@ -13039,7 +13039,7 @@ void fn_80296D20(int obj, void* arg)
                 short id = ((GameObject*)inner->heldObj)->anim.seqId;
                 if (id == 0x3cf || id == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)(inner->heldObj));
+                    objThrowFn_80182504((GameObject*)(inner->heldObj));
                 }
                 else
                 {
@@ -13055,7 +13055,7 @@ void fn_80296D20(int obj, void* arg)
     }
 }
 
-void fn_802A81B8(struct GameObject* obj, int state, f32* out)
+void fn_802A81B8(GameObject* obj, int state, f32* out)
 {
     f32 mag;
     u32 flag = (((PlayerState*)state)->flags3F1 >> 5) & 1;
@@ -13242,7 +13242,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
 }
 
 #pragma dont_inline on
-void objDoTeleportAnim(struct GameObject* obj)
+void objDoTeleportAnim(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     struct
@@ -13773,7 +13773,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
         if (((PlayerState*)inner)->teleportAnimActive == 1)
         {
-            playerDrawTeleportAnim((struct GameObject*)(obj));
+            playerDrawTeleportAnim((GameObject*)(obj));
         }
         (*(void (*)(int))(*(int*)(*gPlayerShadowInterface + 0x8)))(obj);
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
@@ -14088,7 +14088,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (t == 0x3cf || t == 0x662)
                     {
-                        objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                        objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                     }
                     else
                     {
@@ -14199,7 +14199,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                         s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                         if (t == 0x3cf || t == 0x662)
                         {
-                            objThrowFn_80182504((struct GameObject*)(((PlayerState*)inner)->heldObj));
+                            objThrowFn_80182504((GameObject*)(((PlayerState*)inner)->heldObj));
                         }
                         else
                         {
@@ -15360,7 +15360,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
     ((PlayerState*)inner)->pendingBoneEffectId = 0;
     if (((PlayerState*)inner)->teleportAnimActive == 1)
     {
-        objDoTeleportAnim((struct GameObject*)(obj));
+        objDoTeleportAnim((GameObject*)(obj));
     }
     if ((*gSkyInterface)->getBlendStateBit20(2) != 0)
     {
@@ -15490,8 +15490,8 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
             *(s16*)((char*)setup + 0) = (s16)getAngle(dx, dz);
             ((ObjPlacement*)setup)->unk02 = (s16)(-getAngle(dy, sqrtf(dx * dx + dz * dz)));
             ((ObjPlacement*)setup)->posX = ((ObjPlacement*)setup)->posX * lbl_803E7EF0;
-            arwprojectile_placeForward((struct GameObject*)(setup), lbl_803E7ED8);
-            arwprojectile_setLifetime((struct GameObject*)(setup), 0x32);
+            arwprojectile_placeForward((GameObject*)(setup), lbl_803E7ED8);
+            arwprojectile_setLifetime((GameObject*)(setup), 0x32);
             if (slot == 1)
             {
                 arwprojectile_createLinkedEffect(setup, 1);
@@ -15538,7 +15538,7 @@ void fn_802AED2C(int obj, int state, int p3)
         short id = ((GameObject*)((PlayerState*)state)->heldObj)->anim.seqId;
         if (id == 0x3cf || id == 0x662)
         {
-            objThrowFn_80182504((struct GameObject*)(((PlayerState*)state)->heldObj));
+            objThrowFn_80182504((GameObject*)(((PlayerState*)state)->heldObj));
         }
         else
         {
@@ -15909,7 +15909,7 @@ void fn_802A514C(int obj, int state)
                 s16 id = ((GameObject*)sub)->anim.seqId;
                 if (id == 0x3cf || id == 0x662)
                 {
-                    objThrowFn_80182504((struct GameObject*)sub);
+                    objThrowFn_80182504((GameObject*)sub);
                 }
                 else
                 {
@@ -16087,7 +16087,7 @@ int fn_802ADC08(int obj, int inner, int p3)
             s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)sub);
+                objThrowFn_80182504((GameObject*)sub);
             }
             else
             {
@@ -16545,7 +16545,7 @@ int playerStateSlideDownLadder(int obj, int state, f32 fv)
                         s16 id = ((GameObject*)sub)->anim.seqId;
                         if (id == 0x3cf || id == 0x662)
                         {
-                            objThrowFn_80182504((struct GameObject*)sub);
+                            objThrowFn_80182504((GameObject*)sub);
                         }
                         else
                         {
@@ -16726,7 +16726,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
                 Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? SFXTRIG_impact3 : SFXTRIG_literun116));
                 lbl_803DE460 = (f32)(int)randomGetRange(0xa, 0x12);
             }
-            switch (cfPrisonGuard_getPullRateMode((struct GameObject*)(gPlayerInteractTarget)))
+            switch (cfPrisonGuard_getPullRateMode((GameObject*)(gPlayerInteractTarget)))
             {
             case 2:
                 lbl_803DE488 = lbl_803DE488 + lbl_803E7F50;
@@ -16808,7 +16808,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
     default:
         ObjAnim_SetCurrentMove(obj, 0xab, lbl_803E7EA4, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F40;
-        staffactivated_calcInteractionTargetXZ((struct GameObject*)(gPlayerInteractTarget),
+        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget),
                                                &((GameObject*)obj)->anim.localPosX,
                                                &((GameObject*)obj)->anim.localPosZ);
         inner->targetYaw = *(s16*)gPlayerInteractTarget + 0x8000;
@@ -17005,7 +17005,7 @@ int playerStateStaffBoost(int obj, int state, f32 fv)
         lbl_803DE494 = ((GameObject*)obj)->anim.localPosY;
         inner->targetYaw = *(s16*)gPlayerInteractTarget;
         inner->yaw = inner->targetYaw;
-        staffactivated_calcInteractionTargetXZ((struct GameObject*)(gPlayerInteractTarget), (f32*)((char*)obj + 0xc),
+        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget), (f32*)((char*)obj + 0xc),
                                                (f32*)((char*)obj + 0x14));
         fn_802AB5A4(obj, (int)inner, 7);
         *(int*)((char*)state + 0x4) |= 0x8000000;
@@ -17358,7 +17358,7 @@ int playerState35(int obj, int state)
             ((PlayerState*)state)->baddie.moveEventFlags |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(obj, SFXTRIG_staff_rapidfire);
-            cfPrisonGuard_setGameBitMirror((struct GameObject*)(gPlayerInteractTarget), 0);
+            cfPrisonGuard_setGameBitMirror((GameObject*)(gPlayerInteractTarget), 0);
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
@@ -17388,7 +17388,7 @@ int playerState35(int obj, int state)
             ((PlayerState*)state)->baddie.moveEventFlags |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(obj, SFXTRIG_staff_rapidfire);
-            cfPrisonGuard_setGameBitMirror((struct GameObject*)(gPlayerInteractTarget), 1);
+            cfPrisonGuard_setGameBitMirror((GameObject*)(gPlayerInteractTarget), 1);
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
@@ -17415,7 +17415,7 @@ int playerState35(int obj, int state)
         {
             ObjAnim_SetCurrentMove(obj, 0xe0, lbl_803E7EA4, 0);
         }
-        staffactivated_calcInteractionTargetXZ((struct GameObject*)(gPlayerInteractTarget), (char*)obj + 0xc,
+        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget), (char*)obj + 0xc,
                                                (char*)obj + 0x14);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F40;
         ((PlayerState*)state)->baddie.moveEventFlags = 0;
@@ -17642,7 +17642,7 @@ void fn_802AE9C8(int obj, int inner, int state)
             s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((struct GameObject*)sub);
+                objThrowFn_80182504((GameObject*)sub);
             }
             else
             {
@@ -17896,7 +17896,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
         case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
         case 0x958:
         case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
-            if (playerCanCastBlasterSpell((struct GameObject*)(obj), state, sel) != 0)
+            if (playerCanCastBlasterSpell((GameObject*)(obj), state, sel) != 0)
             {
                 ByteFlags* f1 = (ByteFlags*)((char*)state + 0x3f1);
                 u8 c8;
@@ -17944,7 +17944,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
             }
             break;
         case 0x957:
-            if (fn_802A97D0((struct GameObject*)(obj), state) != 0)
+            if (fn_802A97D0((GameObject*)(obj), state) != 0)
             {
                 playerCastSpell(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
@@ -17955,7 +17955,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
             break;
         case 0x107:
         case 0xc55:
-            if (playerCanCastQuakeSpell((struct GameObject*)(obj), state) != 0)
+            if (playerCanCastQuakeSpell((GameObject*)(obj), state) != 0)
             {
                 playerCastSpell(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
@@ -17992,7 +17992,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
             break;
         }
         case 0x5bd:
-            if (playerCanCastPortalOpenSpell((struct GameObject*)(obj), state) != 0)
+            if (playerCanCastPortalOpenSpell((GameObject*)(obj), state) != 0)
             {
                 playerCastSpell(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
@@ -18014,7 +18014,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
     ((PlayerState*)state)->queuedItemCommand = -1;
 }
 
-void playerDrawTeleportAnim(struct GameObject* obj)
+void playerDrawTeleportAnim(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
     u8* vp = gPlayerHudVtxBuf;

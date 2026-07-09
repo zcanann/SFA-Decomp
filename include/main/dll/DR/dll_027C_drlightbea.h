@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_027C_DRLIGHTBEA_H_
 #define MAIN_DLL_DR_DLL_027C_DRLIGHTBEA_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/lightningeffect.h"
 #include "main/dll/dll_80220608_shared.h"
@@ -24,11 +25,11 @@ typedef struct DrLightBeaState
 
 int DR_LightBea_getExtraSize(void);
 int DR_LightBea_getObjectTypeId(void);
-void DR_LightBea_free(struct GameObject* obj);
+void DR_LightBea_free(GameObject* obj);
 void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5);
 void DR_LightBea_hitDetect(void);
 void DR_LightBea_update(int obj);
-void DR_LightBea_init(struct GameObject* obj);
+void DR_LightBea_init(GameObject* obj);
 void DR_LightBea_release(void);
 void DR_LightBea_initialise(void);
 

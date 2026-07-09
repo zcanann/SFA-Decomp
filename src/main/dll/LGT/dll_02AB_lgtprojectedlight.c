@@ -28,7 +28,7 @@ int ProjectedLight_getObjectTypeId(void)
     return 0;
 }
 
-void ProjectedLight_free(struct GameObject* obj)
+void ProjectedLight_free(GameObject* obj)
 {
     ProjectedLightState* state = obj->extra;
     if (state->light != NULL)
@@ -49,7 +49,7 @@ void ProjectedLight_hitDetect(void)
 {
 }
 
-void ProjectedLight_update(struct GameObject* obj)
+void ProjectedLight_update(GameObject* obj)
 {
     ProjectedLightSetup* setup = (ProjectedLightSetup*)obj->anim.placementData;
 

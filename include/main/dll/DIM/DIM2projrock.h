@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DIM2PROJROCK_H_
 #define MAIN_DLL_DIM_DIM2PROJROCK_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/curve.h"
@@ -58,7 +59,7 @@ void dim2lavacontrol_free(void);
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2lavacontrol_update(int obj);
 void dim2lavacontrol_init(int obj, int param2);
-void dll_1DA_init(struct GameObject* obj);
+void dll_1DA_init(GameObject* obj);
 void dll_1DA_release(void);
 void dll_1DA_initialise(void);
 int dll_1DB_getExtraSize(void);
@@ -66,7 +67,7 @@ int dll_1DB_getObjectTypeId(void);
 void dll_1DB_free(void);
 void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_1DB_hitDetect(void);
-void dll_1DB_init(struct GameObject* obj, void* p);
+void dll_1DB_init(GameObject* obj, void* p);
 void dll_1DB_release(void);
 void dll_1DB_initialise(void);
 int dll_1DF_getExtraSize(void);

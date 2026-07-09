@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_0258_DRCLOUDRUNNER_H_
 #define MAIN_DLL_DR_DLL_0258_DRCLOUDRUNNER_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/objanim_update.h"
 
@@ -58,19 +59,19 @@ int DR_CloudRunner_getObjectTypeId(void);
 void DR_CloudRunner_release(void);
 f32 DR_CloudRunner_func19(int obj, f32* out);
 void DR_CloudRunner_func18(int obj, f32* a, int* b);
-int DR_CloudRunner_func11(struct GameObject* obj);
+int DR_CloudRunner_func11(GameObject* obj);
 void DR_CloudRunner_setGroundMarkerMatrix(int obj);
-int DR_CloudRunner_func14(struct GameObject* obj);
+int DR_CloudRunner_func14(GameObject* obj);
 void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c);
-int DR_CloudRunner_stateHandler07(struct GameObject* obj);
+int DR_CloudRunner_stateHandler07(GameObject* obj);
 void DR_CloudRunner_free(int obj);
 void DR_CloudRunner_initialise(void);
 void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
-void DR_CloudRunner_setFlightState(struct GameObject* obj, int param);
-int DR_CloudRunner_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+void DR_CloudRunner_setFlightState(GameObject* obj, int param);
+int DR_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void DR_CloudRunner_func15(int obj, f32* a, f32* b, f32* c);
 void DR_CloudRunner_init(int obj, int p2);
-void DR_CloudRunner_func23(struct GameObject* obj, int mode, int* out);
+void DR_CloudRunner_func23(GameObject* obj, int mode, int* out);
 void DR_CloudRunner_hitDetect(int obj);
 void DR_CloudRunner_update(int obj);
 

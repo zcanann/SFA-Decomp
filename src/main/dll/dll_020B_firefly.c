@@ -232,7 +232,7 @@ void FireFlyFn_801f4f88(int obj)
     }
 }
 
-void firefly_free(struct GameObject* obj)
+void firefly_free(GameObject* obj)
 {
     FireFlyState* state = obj->extra;
 

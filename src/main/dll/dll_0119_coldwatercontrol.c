@@ -31,7 +31,7 @@
 
 extern f32 lbl_803E3B68; /* timer reset / initial value */
 extern f32 lbl_803E3B6C; /* repeat-hit period */
-extern int fn_80295C40(struct GameObject* obj);
+extern int fn_80295C40(GameObject* obj);
 
 int ColdWaterControl_getExtraSize(void)
 {
@@ -54,7 +54,7 @@ void ColdWaterControl_update(int obj)
 
     if (state->playerObj != NULL)
     {
-        if (fn_80295C40((struct GameObject*)state->playerObj) != 0)
+        if (fn_80295C40((GameObject*)state->playerObj) != 0)
         {
             if (lbl_803E3B68 == state->timer)
             {
@@ -80,7 +80,7 @@ void ColdWaterControl_update(int obj)
 }
 
 #pragma scheduling on
-void ColdWaterControl_init(struct GameObject* obj)
+void ColdWaterControl_init(GameObject* obj)
 {
     ColdwaterControlState* p = (ColdwaterControlState*)obj->extra;
     p->timer = lbl_803E3B68;

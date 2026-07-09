@@ -100,7 +100,7 @@ void MagicLight_hitDetect(void)
 
 #pragma scheduling off
 #pragma peephole off
-void MagicLight_update(struct GameObject* obj)
+void MagicLight_update(GameObject* obj)
 {
     if (obj->anim.seqId != MAGICLIGHT_SEQ_GLOW && obj->unkF4 == 0)
     {

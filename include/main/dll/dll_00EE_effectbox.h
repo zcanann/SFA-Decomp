@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_00EE_EFFECTBOX_H_
 #define MAIN_DLL_DLL_00EE_EFFECTBOX_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/obj_placement.h"
 
@@ -25,7 +26,7 @@ int EffectBox_getObjectTypeId(void);
 void EffectBox_free(void);
 void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void EffectBox_hitDetect(void);
-void EffectBox_update(struct GameObject* obj);
+void EffectBox_update(GameObject* obj);
 void EffectBox_init(int obj, EffectboxPlacement* def);
 void EffectBox_release(void);
 void EffectBox_initialise(void);

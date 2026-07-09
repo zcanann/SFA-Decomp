@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_ANIM_H_
 #define MAIN_DLL_ANIM_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/dll/anim_internal.h"
@@ -130,8 +131,8 @@ void doorswitch_init(void);
 void doorswitch_release(void);
 void doorswitch_initialise(void);
 
-int dbegg_setLaunchVelocity(struct GameObject* obj, f32* v);
-int dbegg_setScale(struct GameObject* obj);
+int dbegg_setLaunchVelocity(GameObject* obj, f32* v);
+int dbegg_setScale(GameObject* obj);
 int dbegg_getExtraSize(void);
 int dbegg_getObjectTypeId(void);
 void dbegg_free(int x);
@@ -149,7 +150,7 @@ void GCRobotBlast_free(void);
 void GCRobotBlast_render(void);
 void GCRobotBlast_hitDetect(void);
 void GCRobotBlast_update(void);
-void GCRobotBlast_init(struct GameObject* obj, s8* p);
+void GCRobotBlast_init(GameObject* obj, s8* p);
 void GCRobotBlast_release(void);
 void GCRobotBlast_initialise(void);
 
@@ -199,11 +200,11 @@ void DFP_LevelControl_initialise(void);
 
 int DFP_ObjCreator_getExtraSize(void);
 int DFP_ObjCreator_getObjectTypeId(void);
-void DFP_ObjCreator_free(struct GameObject* obj, int flag);
+void DFP_ObjCreator_free(GameObject* obj, int flag);
 void DFP_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void DFP_ObjCreator_hitDetect(void);
-void DFP_ObjCreator_update(struct GameObject* obj);
-void DFP_ObjCreator_init(struct GameObject* obj, s8* def);
+void DFP_ObjCreator_update(GameObject* obj);
+void DFP_ObjCreator_init(GameObject* obj, s8* def);
 void DFP_ObjCreator_release(void);
 void DFP_ObjCreator_initialise(void);
 
@@ -212,16 +213,16 @@ int DFP_seqpoint_getObjectTypeId(void);
 void DFP_seqpoint_free(void);
 void DFP_seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void DFP_seqpoint_hitDetect(void);
-void DFP_seqpoint_update(struct GameObject* obj);
+void DFP_seqpoint_update(GameObject* obj);
 void DFP_seqpoint_init(int* obj, u8* init);
-int DFP_seqpoint_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void DFP_seqpoint_release(void);
 void DFP_seqpoint_initialise(void);
 
 int dll_22C_getExtraSize_ret_16(void);
 int dll_22C_getObjectTypeId(void);
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void dll_22C_init(struct GameObject* obj, char* p);
+void dll_22C_init(GameObject* obj, char* p);
 int dll_22C_SeqFn(void);
 void dll_22C_hitDetect_nop(void);
 void dll_22C_release_nop(void);

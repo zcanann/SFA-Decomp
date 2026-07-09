@@ -62,7 +62,7 @@ void EffectBox_hitDetect(void)
 {
 }
 
-void EffectBox_update(struct GameObject* obj)
+void EffectBox_update(GameObject* obj)
 {
     int* list;
     int def;

@@ -1,6 +1,7 @@
 #ifndef MAIN_MAIN_H_
 #define MAIN_MAIN_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/CF/laser.h"
 
@@ -29,6 +30,6 @@ void FUN_801fe924(void);
 void FUN_801feb6c(int param_1);
 
 /* extern-cleanup: defining-file public prototypes */
-void fn_801FD6B4(struct GameObject* obj);
+void fn_801FD6B4(GameObject* obj);
 
 #endif /* MAIN_MAIN_H_ */

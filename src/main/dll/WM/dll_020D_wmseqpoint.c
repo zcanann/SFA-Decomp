@@ -221,7 +221,7 @@ void wmseqpoint_hitDetect(void)
 {
 }
 
-void wmseqpoint_update(struct GameObject* obj)
+void wmseqpoint_update(GameObject* obj)
 {
     WmSeqPointState* state;
     int player;
@@ -335,7 +335,7 @@ void wmseqpoint_update(struct GameObject* obj)
     }
 }
 
-void wmseqpoint_init(struct GameObject* obj, int setup)
+void wmseqpoint_init(GameObject* obj, int setup)
 {
     WmSeqPointState* state;
     WmSeqPointMapData* mapData;

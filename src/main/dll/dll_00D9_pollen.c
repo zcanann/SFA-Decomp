@@ -100,7 +100,7 @@ void Pollen_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void Pollen_hitDetect(struct GameObject* obj)
+void Pollen_hitDetect(GameObject* obj)
 {
     if ((*(ObjHitsPriorityState**)&obj->anim.hitReactState)->contactFlags != 0)
     {
@@ -225,7 +225,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-void Pollen_init(struct GameObject* obj)
+void Pollen_init(GameObject* obj)
 {
     PollenExtra* extra = *(PollenExtra**)&obj->extra;
     extra->phaseX = randomGetRange(-0x8000, 0x7fff);

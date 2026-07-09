@@ -81,7 +81,7 @@ STATIC_ASSERT(sizeof(SunTempleState) == 2);
 #define SUNTEMPLE_GAMEBIT_WC_INV_C    0x202
 #define SUNTEMPLE_GAMEBIT_WC_INV_D    0x243
 
-int suntemple_interactCallback(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int suntemple_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* gameObj = obj;
     SunTempleSetup* cfg = (SunTempleSetup*)gameObj->anim.placementData;

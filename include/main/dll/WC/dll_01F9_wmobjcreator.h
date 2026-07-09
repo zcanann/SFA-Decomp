@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_WC_WCPRESSURESWITCH_H_
 #define MAIN_DLL_WC_WCPRESSURESWITCH_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
@@ -31,7 +32,7 @@ typedef struct WmGalleonState
     u8 pad0D[3];
 } WmGalleonState;
 
-void WM_ObjCreator_update(struct GameObject* obj);
+void WM_ObjCreator_update(GameObject* obj);
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void WM_Galleon_free(int* obj, int leavingMap);
 void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);

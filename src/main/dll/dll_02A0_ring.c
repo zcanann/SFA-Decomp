@@ -61,7 +61,7 @@ int ring_getObjectTypeId(void)
     return 0;
 }
 
-void ring_free(struct GameObject* obj)
+void ring_free(GameObject* obj)
 {
     RingState* state = obj->extra;
     if (state->light != NULL)
@@ -235,7 +235,7 @@ void ring_update(int obj)
                     state->light = NULL;
                 }
             }
-            arwbombcoll_updateMovingAxis((struct GameObject*)(obj), state);
+            arwbombcoll_updateMovingAxis((GameObject*)(obj), state);
             break;
         case RING_ROUTE_STATIONARY_SHOT:
             if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (void*)(hit = hitB) != NULL &&
@@ -256,15 +256,15 @@ void ring_update(int obj)
             break;
         case RING_ROUTE_MOVING_AXIS_B:
         case RING_ROUTE_MOVING_AXIS_A:
-            arwbombcoll_updateMovingAxis((struct GameObject*)(obj), state);
+            arwbombcoll_updateMovingAxis((GameObject*)(obj), state);
             break;
         }
         if (state->flags.bit80 != 0)
         {
             if (arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0 &&
-                arwbombcoll_checkArwingCollision((struct GameObject*)(obj), state, arwing) != 0)
+                arwbombcoll_checkArwingCollision((GameObject*)(obj), state, arwing) != 0)
             {
-                Ring_onCollect((struct GameObject*)(obj), state, arwing);
+                Ring_onCollect((GameObject*)(obj), state, arwing);
             }
         }
         ((GameObject*)obj)->anim.rotX = (f32)(int)((GameObject*)obj)->anim.rotX + lbl_803E70B8 * timeDelta;

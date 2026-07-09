@@ -55,7 +55,7 @@ int SB_ShipHead_getObjectTypeId(void);
 void SB_ShipHead_free(int obj);
 void SB_ShipHead_render(GameObject* param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void SB_ShipHead_update(int obj);
-void SB_ShipHead_init(struct GameObject* obj);
+void SB_ShipHead_init(GameObject* obj);
 
 int SB_ShipMast_getExtraSize(void);
 int SB_ShipMast_getObjectTypeId(void);

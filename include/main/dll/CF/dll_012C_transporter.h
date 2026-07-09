@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_CF_CFWALLTORCH_H_
 #define MAIN_DLL_CF_CFWALLTORCH_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -15,7 +16,7 @@ int Transporter_getExtraSize(void);
 void Transporter_render(void);
 void Transporter_hitDetect(int obj);
 void Transporter_update(int obj);
-void Transporter_init(struct GameObject* obj, u8* params);
+void Transporter_init(GameObject* obj, u8* params);
 
 int CFLightWall_getExtraSize(void);
 int CFLightWall_getObjectTypeId(void);
@@ -42,7 +43,7 @@ int CF_DoorLight_getObjectTypeId(void);
 void CF_DoorLight_free(void);
 void CF_DoorLight_render(void);
 void CF_DoorLight_hitDetect(void);
-void CF_DoorLight_update(struct GameObject* obj);
+void CF_DoorLight_update(GameObject* obj);
 void CF_DoorLight_init(int* obj, s8* def);
 void CF_DoorLight_release(void);
 void CF_DoorLight_initialise(void);

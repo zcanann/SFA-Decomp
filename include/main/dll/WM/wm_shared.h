@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_WM_WM_SHARED_H_
 #define MAIN_DLL_WM_WM_SHARED_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -320,7 +321,7 @@ extern f32 lbl_803E609C;
 
 /* Intra-family forward declarations (from the original per-unit header). */
 void FireFlyFn_801f4f88(int obj);
-void firefly_free(struct GameObject* obj);
+void firefly_free(GameObject* obj);
 void firefly_update(int obj);
 void firefly_init(int obj, int def);
 

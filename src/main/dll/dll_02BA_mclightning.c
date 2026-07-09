@@ -4,7 +4,7 @@
 
 #define MCLIGHTNING_OBJGROUP 0x48
 
-int mclightning_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     McLightningState* state = obj->extra;
     int i;
@@ -129,7 +129,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     }
 }
 
-void mclightning_update(struct GameObject* obj)
+void mclightning_update(GameObject* obj)
 {
     McLightningState* state = obj->extra;
 

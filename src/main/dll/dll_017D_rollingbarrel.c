@@ -302,7 +302,7 @@ void RollingBarrel_update(int obj)
     }
 }
 
-void RollingBarrel_init(struct GameObject* obj, RollingBarrelMapData* params)
+void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params)
 {
     RollingBarrelState* state = obj->extra;
     int tmp[2];

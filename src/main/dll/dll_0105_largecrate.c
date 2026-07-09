@@ -141,7 +141,7 @@ void largecrate_updateConveyorSlide(int obj, int def);
 void largecrate_update(int obj);
 void largecrate_free(int obj);
 
-f32 largecrate_getReticleDistance(struct GameObject* obj)
+f32 largecrate_getReticleDistance(GameObject* obj)
 {
     u8* state = obj->extra;
     return lbl_803E39AC -
@@ -206,7 +206,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
     }
 }
 
-int largecrate_spawnDropContents(struct GameObject* obj, int player, int state)
+int largecrate_spawnDropContents(GameObject* obj, int player, int state)
 {
     GameObject* playerObj;
     ExplodeArgs blk;
@@ -577,7 +577,7 @@ void largecrate_update(int obj)
                     }
                     ((LargeCrateState*)state)->breakTimer = 0x32;
                     ((LargeCrateState*)state)->damageTaken = 0;
-                    largecrate_spawnDropContents((struct GameObject*)(obj), player, state);
+                    largecrate_spawnDropContents((GameObject*)(obj), player, state);
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
@@ -612,7 +612,7 @@ int LargeCrate_SeqFn(int* obj)
     return 0;
 }
 
-void largecrate_init(struct GameObject* obj, u8* initData)
+void largecrate_init(GameObject* obj, u8* initData)
 {
     int state;
     u32 r3rand;

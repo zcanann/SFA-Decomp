@@ -77,7 +77,7 @@ void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void TumbleWeedBush_setScale(u8* obj, void* match);
 
 int grimble_animEventCallback(void);
-void fn_801627F4(struct GameObject* obj);
+void fn_801627F4(GameObject* obj);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
@@ -278,7 +278,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     return 0;
 }
 
-void fn_801627F4(struct GameObject* obj)
+void fn_801627F4(GameObject* obj)
 {
     int count;
     f32 dist;
@@ -445,7 +445,7 @@ void grimble_update(int obj)
         }
         else
         {
-            fn_801627F4((struct GameObject*)(obj));
+            fn_801627F4((GameObject*)(obj));
         }
     }
 }

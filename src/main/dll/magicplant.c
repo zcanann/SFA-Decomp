@@ -94,7 +94,7 @@ extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
 extern f32 PSVECMag(f32* v);
 extern s16 getAngle(float y, float x);
 
-void mikaladon_init(struct GameObject* obj, int state)
+void mikaladon_init(GameObject* obj, int state)
 {
     f32 zero;
     f32 lblA;
@@ -286,7 +286,7 @@ void fn_80153248(int obj, int state)
     fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
 }
 
-void vambat_init(struct GameObject* obj, int state)
+void vambat_init(GameObject* obj, int state)
 {
     f32 initSpeed;
     f32 zero;
@@ -322,7 +322,7 @@ void vambat_init(struct GameObject* obj, int state)
 }
 
 #pragma dont_inline on
-void fn_8015355C(struct GameObject* obj, int state)
+void fn_8015355C(GameObject* obj, int state)
 {
     u8 count = 0;
     switch (obj->anim.currentMove)
@@ -539,7 +539,7 @@ void fn_8015383C(int obj, int state)
         Sfx_PlayFromObject(obj, SFXTRIG_sc_clubswipe);
     }
 sharedTail:
-    fn_8015355C((struct GameObject*)(obj), state);
+    fn_8015355C((GameObject*)(obj), state);
 }
 
 void fn_80153BFC(int obj, int state)
@@ -551,7 +551,7 @@ void fn_80153BFC(int obj, int state)
         Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
     }
-    fn_8015355C((struct GameObject*)(obj), state);
+    fn_8015355C((GameObject*)(obj), state);
 }
 
 void kooshy_init(int unused, int state)

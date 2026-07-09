@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_VF_DLL_0216_VFPLEVELCONTROL_H_
 #define MAIN_DLL_VF_DLL_0216_VFPLEVELCONTROL_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "global.h"
 
@@ -38,7 +39,7 @@ STATIC_ASSERT(sizeof(VfpLevelControlState) == 0x1c);
 STATIC_ASSERT(offsetof(VfpLevelControlLatch, fields.sequenceStep) == 0x04);
 STATIC_ASSERT(offsetof(VfpLevelControlSetup, areaMode) == 0x1A);
 
-void fn_801F9804(struct GameObject* obj);
+void fn_801F9804(GameObject* obj);
 int VFP_LevelControl_getExtraSize(void);
 int VFP_LevelControl_getObjectTypeId(void);
 void VFP_LevelControl_free(int obj);

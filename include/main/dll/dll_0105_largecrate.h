@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_0105_LARGECRATE_H_
 #define MAIN_DLL_DLL_0105_LARGECRATE_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
 /* largecrate (DLL 0x105) tuning constants and entry points. */
@@ -33,17 +34,17 @@
 #define LARGECRATE_VARIANT_B_SFX_A 0x48
 #define LARGECRATE_VARIANT_B_SFX_B 0x4A
 
-int largecrate_spawnDropContents(struct GameObject* obj, int player, int state);
+int largecrate_spawnDropContents(GameObject* obj, int player, int state);
 int LargeCrate_SeqFn(int* obj);
 int largecrate_getExtraSize(void);
 int largecrate_getObjectTypeId(void);
 void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
 void largecrate_hitDetect(int obj);
-void largecrate_init(struct GameObject* obj, u8* initData);
+void largecrate_init(GameObject* obj, u8* initData);
 void largecrate_release(void);
 void largecrate_initialise(void);
 
 /* extern-cleanup: defining-file public prototypes */
-f32 largecrate_getReticleDistance(struct GameObject* obj);
+f32 largecrate_getReticleDistance(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_0105_LARGECRATE_H_ */

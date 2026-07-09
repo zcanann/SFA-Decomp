@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_0119_COLDWATERCONTROL_H_
 #define MAIN_DLL_DLL_0119_COLDWATERCONTROL_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct ColdwaterControlState
@@ -14,6 +15,6 @@ STATIC_ASSERT(offsetof(ColdwaterControlState, playerObj) == 0x4);
 
 int ColdWaterControl_getExtraSize(void);
 void ColdWaterControl_update(int obj);
-void ColdWaterControl_init(struct GameObject* obj);
+void ColdWaterControl_init(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_0119_COLDWATERCONTROL_H_ */

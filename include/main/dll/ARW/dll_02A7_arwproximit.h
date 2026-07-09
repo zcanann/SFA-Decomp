@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_ARW_DLL_02A7_ARWPROXIMIT_H_
 #define MAIN_DLL_ARW_DLL_02A7_ARWPROXIMIT_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct ARWProximitSetup
@@ -33,7 +34,7 @@ STATIC_ASSERT(offsetof(ARWProximitSetup, textVariant) == 0x31);
 
 int arwproximit_getExtraSize(void);
 int arwproximit_getObjectTypeId(void);
-void arwproximit_free(struct GameObject* obj);
+void arwproximit_free(GameObject* obj);
 void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void arwproximit_hitDetect(void);
 void arwproximit_update(int obj);

@@ -14,6 +14,7 @@
  * Entry points are dispatched from dll_0255_snowbike.c.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
 #include "main/effect_interfaces.h"
@@ -141,7 +142,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
         {
             if ((u32)(st->flags428 >> 1 & 1) != 0)
             {
-                SnowBike_resetToRomListPosition((struct GameObject*)(obj));
+                SnowBike_resetToRomListPosition((GameObject*)(obj));
             }
             else
             {

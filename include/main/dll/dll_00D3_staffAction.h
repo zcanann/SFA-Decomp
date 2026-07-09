@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_STAFFACTION_H_
 #define MAIN_DLL_STAFFACTION_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
 u32 fn_801659B8(s16* obj, u32* params);
@@ -17,7 +18,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, struct LandedArwingState* state
 void FUN_801661ec(short* param_1, int param_2);
 void fn_80166444(int obj, int state);
 void FUN_8016693c(int param_1, int param_2);
-void fn_80166840(struct GameObject* obj, int state, float* hit, float* end);
+void fn_80166840(GameObject* obj, int state, float* hit, float* end);
 void FUN_80166c6c(int param_1, int param_2, float* param_3, float* param_4);
 void updateConstrainedChaseVelocity(int obj, float targetX, float targetY, float targetZ, float blend);
 void FUN_80166e9c(double param_1, double param_2, double param_3, double param_4, int param_5);

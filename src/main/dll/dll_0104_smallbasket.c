@@ -54,7 +54,7 @@ extern void largecrate_hitDetect(void);
 
 extern void largecrate_update(void);
 
-extern void largecrate_init(struct GameObject*);
+extern void largecrate_init(GameObject*);
 
 extern void largecrate_release(void);
 
@@ -128,7 +128,7 @@ extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int po
 extern const f32 lbl_803E3970;
 void SmallBasket_init(int obj, int def);
 void SmallBasket_update(int obj);
-void SmallBasket_render(struct GameObject* obj, int p2, int p3, int p4, int p5, char visible);
+void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -614,7 +614,7 @@ void SmallBasket_free(int obj)
     ObjGroup_RemoveObject(obj, SMALLBASKET_OBJGROUP);
 }
 
-void objThrowFn_80182504(struct GameObject* obj)
+void objThrowFn_80182504(GameObject* obj)
 {
     struct LocalArgs
     {
@@ -646,7 +646,7 @@ void objThrowFn_80182504(struct GameObject* obj)
     vecRotateZXY(&local.f8, &obj->anim.velocityX);
 }
 
-void SmallBasket_render(struct GameObject* obj, int p2, int p3, int p4, int p5, char visible)
+void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible)
 {
     int extra;
     int result;

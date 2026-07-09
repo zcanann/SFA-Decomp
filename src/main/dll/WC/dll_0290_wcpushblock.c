@@ -143,7 +143,7 @@ int wcpushblock_getExtraSize(void)
     return WCPUSHBLOCK_EXTRA_SIZE;
 }
 
-int wcpushblock_getObjectTypeId(struct GameObject* obj)
+int wcpushblock_getObjectTypeId(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int modelIndex = *(s8*)(*(int*)&obj->anim.placementData + WCPUSHBLOCK_MODEL_INDEX_OFFSET);
@@ -314,7 +314,7 @@ void wcpushblock_update(int obj)
             ((GameObject*)obj)->anim.velocityX = zero;
             ((GameObject*)obj)->anim.velocityZ = zero;
         }
-        if (fn_80296414((struct GameObject*)player, obj, (int)&state->pushDir) != 0)
+        if (fn_80296414((GameObject*)player, obj, (int)&state->pushDir) != 0)
         {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
             {
@@ -916,7 +916,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state)
     state->completionFlags &= ~WCLEVELCTL_FLAG_TRIGGERED;
 }
 
-int wclevelcont_seqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WcLevelControlState* state = obj->extra;
     int i;
@@ -959,7 +959,7 @@ int wclevelcont_seqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* an
     return 0;
 }
 
-int wclevelcont_traceMoveB(struct GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
+int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
     int i;
     int limit;

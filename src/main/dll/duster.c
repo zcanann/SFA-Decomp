@@ -315,7 +315,7 @@ void fn_801557D4(int* obj, int state)
     else
     {
         if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
-            (cond = fn_80295CBC((struct GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
+            (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
         }
@@ -337,7 +337,7 @@ void fn_80155884(int* obj, int state)
         fn_801554B4(obj, state);
     }
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
-             (cond = fn_80295CBC((struct GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
+             (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
     {
         fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
@@ -366,7 +366,7 @@ void fn_80155948(int* obj, int state)
         fn_801554B4(obj, state);
     }
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
-             (cond = fn_80295CBC((struct GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
+             (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
     {
         ObjHits_SetHitVolumeSlot((int)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
         move = *(short*)(obj + 0x28);
@@ -728,7 +728,7 @@ void fn_8015625C(u32 obj, int state)
     {
         tracked = (GameObject*)((BaddieState*)state)->trackedObj;
         moveSpeed = sidekickToy_accelerateTowardTargetXZ(
-            (struct GameObject*)(obj), tracked->anim.worldPosX, lbl_803E2AB8 + tracked->anim.worldPosY,
+            (GameObject*)(obj), tracked->anim.worldPosX, lbl_803E2AB8 + tracked->anim.worldPosY,
             tracked->anim.worldPosZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4, ((BaddieState*)state)->unk304);
     }
     if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
@@ -827,7 +827,7 @@ void fn_8015652C(u32 obj, int state)
         }
         else
         {
-            moveSpeed = sidekickToy_accelerateTowardTargetXZ((struct GameObject*)(obj), route->posX, route->posY,
+            moveSpeed = sidekickToy_accelerateTowardTargetXZ((GameObject*)(obj), route->posX, route->posY,
                                                              route->posZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                              ((BaddieState*)state)->unk304);
         }
@@ -838,7 +838,7 @@ void fn_8015652C(u32 obj, int state)
     }
     else
     {
-        moveSpeed = sidekickToy_accelerateTowardTargetXZ((struct GameObject*)(obj), placement->posX, placement->posY,
+        moveSpeed = sidekickToy_accelerateTowardTargetXZ((GameObject*)(obj), placement->posX, placement->posY,
                                                          placement->posZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                          ((BaddieState*)state)->unk304);
     }

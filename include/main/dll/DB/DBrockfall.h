@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DB_DBROCKFALL_H_
 #define MAIN_DLL_DB_DBROCKFALL_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/paymentkiosk.h"
 #include "main/object_descriptor.h"
@@ -15,10 +16,10 @@ typedef struct FEseqobjectState
 
 void PaymentKiosk_init(int obj, PaymentKioskMapData* initData);
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void FEseqobject_init(struct GameObject* obj);
+void FEseqobject_init(GameObject* obj);
 void FEseqobject_update(int obj);
 int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void dll_144_init(struct GameObject* obj);
+void dll_144_init(GameObject* obj);
 void PaymentKiosk_release(void);
 void PaymentKiosk_initialise(void);
 void FUN_801df45c(u16* param_1);

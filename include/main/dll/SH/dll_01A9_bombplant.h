@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SH_SHKILLERMUSHROOM_H_
 #define MAIN_DLL_SH_SHKILLERMUSHROOM_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
@@ -15,9 +16,9 @@ typedef struct BombPlantState
     /* 0x15 */ u8 flags;
 } BombPlantState;
 
-void BombPlantSpore_free(struct GameObject* obj);
-void bombplantspore_startDriftBurst(struct GameObject* obj, void* state);
-void bombplantspore_updateDrift(struct GameObject* obj, void* state);
+void BombPlantSpore_free(GameObject* obj);
+void bombplantspore_startDriftBurst(GameObject* obj, void* state);
+void bombplantspore_updateDrift(GameObject* obj, void* state);
 int BombPlantSpore_getExtraSize(void);
 
 #endif /* MAIN_DLL_SH_SHKILLERMUSHROOM_H_ */

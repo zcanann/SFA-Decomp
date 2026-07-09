@@ -215,7 +215,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
     }
 }
 
-void shopitem_onSeqFree(struct GameObject* obj)
+void shopitem_onSeqFree(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
     int def = *(int*)&obj->anim.placementData;

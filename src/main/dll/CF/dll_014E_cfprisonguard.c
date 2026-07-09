@@ -54,7 +54,7 @@ extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
-extern int objGetAnimState80A(struct GameObject* obj);
+extern int objGetAnimState80A(GameObject* obj);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the
@@ -118,7 +118,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             if (dist < (f32)((CfPrisonGuardMapData*)def)->watchRadius ||
                 waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) != 0)
             {
-                if (objGetAnimState80A((struct GameObject*)(player)) != 0x40)
+                if (objGetAnimState80A((GameObject*)(player)) != 0x40)
                 {
                     moved = 1;
                     sub->guardState = 4;
@@ -147,7 +147,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (dist < (f32)((CfPrisonGuardMapData*)def)->watchRadius)
             {
-                if (objGetAnimState80A((struct GameObject*)(player)) != 0x40)
+                if (objGetAnimState80A((GameObject*)(player)) != 0x40)
                 {
                     moved = 1;
                     sub->guardState = 4;
@@ -296,7 +296,7 @@ void CFPrisonGuard_update(int* obj)
                 return;
             }
         }
-        if (objGetAnimState80A((struct GameObject*)(player)) != 0x40)
+        if (objGetAnimState80A((GameObject*)(player)) != 0x40)
         {
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         }

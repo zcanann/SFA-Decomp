@@ -415,7 +415,7 @@ void arwarwing_emitDamageEffects(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_warpByCourse(struct GameObject* obj)
+void arwarwing_warpByCourse(GameObject* obj)
 {
     switch (obj->anim.mapEventSlot)
     {
@@ -454,7 +454,7 @@ void arwarwing_warpByCourse(struct GameObject* obj)
 void arwarwing_updateWeaponFire(int obj, int state)
 {
     int fire;
-    arwarwing_updateThrusters((struct GameObject*)(obj), state);
+    arwarwing_updateThrusters((GameObject*)(obj), state);
     {
         f32 t = ((ArwingState*)state)->fireCooldown;
         f32 zero = lbl_803E6ECC;
@@ -564,7 +564,7 @@ void arwarwing_update(int obj)
         ((ArwingState*)state)->velY = ((ArwingState*)state)->velY - lbl_803E6EF8 * timeDelta;
         objMove(obj, ((ArwingState*)state)->velX * timeDelta, ((ArwingState*)state)->velY * timeDelta,
                 ((ArwingState*)state)->velZ * timeDelta);
-        arwarwing_clampToFlightBounds((struct GameObject*)(obj), state);
+        arwarwing_clampToFlightBounds((GameObject*)(obj), state);
         ((GameObject*)((ArwingState*)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ((GameObject*)((ArwingState*)state)->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
@@ -706,8 +706,8 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
     }
     if ((u8)linkEffect != 0)
         arwprojectile_createLinkedEffect(proj, 1);
-    arwprojectile_setLifetime((struct GameObject*)(proj), ((ArwingState*)state)->projLifetime);
-    arwprojectile_placeForward((struct GameObject*)(proj), ((ArwingState*)state)->projSpeed);
+    arwprojectile_setLifetime((GameObject*)(proj), ((ArwingState*)state)->projLifetime);
+    arwprojectile_placeForward((GameObject*)(proj), ((ArwingState*)state)->projSpeed);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -772,7 +772,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
-    arwarwinggu_setTextureFrame((struct GameObject*)(((ArwingState*)state)->escortObj),
+    arwarwinggu_setTextureFrame((GameObject*)(((ArwingState*)state)->escortObj),
                                 ((ArwingState*)state)->enginePitch);
 
     if (((ArwingState*)state)->rollCooldown <= lbl_803E6ECC)
@@ -884,7 +884,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_clearAimSnapshot(struct GameObject* obj)
+void arwarwing_clearAimSnapshot(GameObject* obj)
 {
     (*(ArwingState**)&obj->extra)->aimSnapshotValid = 0;
 }
@@ -1073,7 +1073,7 @@ void arwarwing_initAttachments(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_resetFlightState(struct GameObject* obj)
+void arwarwing_resetFlightState(GameObject* obj)
 {
     ArwingState* state = obj->extra;
     f32 v7c;
@@ -1269,7 +1269,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     arwarwing_updateRollAndEngine(obj, state);
-    arwarwing_updateThrusters((struct GameObject*)(obj), state);
+    arwarwing_updateThrusters((GameObject*)(obj), state);
     if (*(void**)&((ArwingState*)state)->bombObj != 0)
         arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
     ((GameObject*)((ArwingState*)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -1311,7 +1311,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 2:
             clearLoadedFileFlags_blocks1();
-            arwarwing_warpByCourse((struct GameObject*)(obj));
+            arwarwing_warpByCourse((GameObject*)(obj));
             break;
         case 0xa:
             if (Obj_IsLoadingLocked())
@@ -1325,7 +1325,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ArwArwingProjectileSetup*)setup)->field05 = 1;
                 loaded = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
                 if ((void*)loaded != 0)
-                    arwbombcoll_setLifetime((struct GameObject*)(loaded), 0x12c);
+                    arwbombcoll_setLifetime((GameObject*)(loaded), 0x12c);
             }
             break;
         case 0xb:

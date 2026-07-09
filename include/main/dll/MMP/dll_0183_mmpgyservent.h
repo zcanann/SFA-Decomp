@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_MMP_DLL_0183_MMPGYSERVENT_H_
 #define MAIN_DLL_MMP_DLL_0183_MMPGYSERVENT_H_
 
+#include "main/game_object.h"
 #include "types.h"
 
 typedef struct MmpGyserventPlacement
@@ -17,7 +18,7 @@ void mmp_gyservent_free(void);
 void mmp_gyservent_render(void);
 void mmp_gyservent_hitDetect(void);
 void mmp_gyservent_update(int obj);
-void mmp_gyservent_init(struct GameObject* obj);
+void mmp_gyservent_init(GameObject* obj);
 void mmp_gyservent_release(void);
 void mmp_gyservent_initialise(void);
 

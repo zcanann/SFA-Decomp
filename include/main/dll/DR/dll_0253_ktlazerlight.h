@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_0253_KTLAZERLIGHT_H_
 #define MAIN_DLL_DR_DLL_0253_KTLAZERLIGHT_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct KtlazerlightPlacement
@@ -22,11 +23,11 @@ STATIC_ASSERT(sizeof(KtlazerlightPlacement) == 0x20);
 
 int ktlazerlight_getExtraSize(void);
 int ktlazerlight_getObjectTypeId(void);
-void ktlazerlight_free(struct GameObject* obj);
+void ktlazerlight_free(GameObject* obj);
 void ktlazerlight_render(void);
 void ktlazerlight_hitDetect(void);
-void ktlazerlight_update(struct GameObject* obj);
-void ktlazerlight_init(struct GameObject* obj, char* placement);
+void ktlazerlight_update(GameObject* obj);
+void ktlazerlight_init(GameObject* obj, char* placement);
 void ktlazerlight_release(void);
 void ktlazerlight_initialise(void);
 

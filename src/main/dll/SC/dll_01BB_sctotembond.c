@@ -16,6 +16,7 @@
  * event 2 also calls setMode(0xe, 6) directly.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
@@ -89,7 +90,7 @@ extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void hudFn_8011f38c(u8 x);
-extern void fn_80296124(struct GameObject* player, void* pos, void* obj, int arg);
+extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
 extern void fn_8011F6D4(u32 x);
@@ -237,7 +238,7 @@ static inline void sc_totembond_finishOrbGame(ScTotemBondObject* obj, ScTotemBon
     (*gMapEventInterface)->clearRestartPoint();
     (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
     obj->mapAlpha = 0xff;
-    fn_80296124((struct GameObject*)(player), NULL, NULL, 0);
+    fn_80296124((GameObject*)(player), NULL, NULL, 0);
     ObjHits_EnableObject((u32)obj);
     hudFn_8011f38c(0);
     mainSetBits(0x2bc, 1);
@@ -346,7 +347,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
             }
         }
 
-        fn_80296124((struct GameObject*)(player), &obj->x, obj, 0);
+        fn_80296124((GameObject*)(player), &obj->x, obj, 0);
         state->x = obj->x;
         state->y = lbl_803E563C + obj->y;
         state->z = obj->z;

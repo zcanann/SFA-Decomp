@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DLL_13C_H_
 #define MAIN_DLL_DLL_13C_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
@@ -39,7 +40,7 @@ typedef struct PollenExtra
 #define POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES   60
 #define POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET 0xc4
 
-void KaldaChompSpit_render(struct GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void KaldaChompSpit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void KaldaChompSpit_hitDetect(void);
 void KaldaChompSpit_init(int obj);
 void KaldaChompSpit_release(void);
@@ -71,14 +72,14 @@ int Pollen_getExtraSize(void);
 int Pollen_getObjectTypeId(void);
 void Pollen_free(int obj);
 void Pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void Pollen_hitDetect(struct GameObject* obj);
+void Pollen_hitDetect(GameObject* obj);
 void Pollen_update(int obj);
-void Pollen_init(struct GameObject* obj);
+void Pollen_init(GameObject* obj);
 void Pollen_release(void);
 void Pollen_initialise(void);
 int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
-void pollenfragment_free(struct GameObject* obj);
+void pollenfragment_free(GameObject* obj);
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 void pollenfragment_hitDetect(int obj);
 void pollenfragment_update(int obj);

@@ -75,7 +75,7 @@ int dbstealerworm_stateHandlerA03(int obj, int baddie);
 int dbstealerworm_stateHandlerA01(int obj, int baddie);
 int dbstealerworm_stateHandlerB00(int obj, int baddie);
 int dbstealerworm_stateHandlerB03(int obj, int baddie);
-int dbstealerworm_stateHandlerB01(struct GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerB01(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA00(int obj, int baddie);
 int dbstealerworm_stateHandlerA04(int obj, int baddie);
 int dbstealerworm_stateHandlerA0E(int obj, int baddie);

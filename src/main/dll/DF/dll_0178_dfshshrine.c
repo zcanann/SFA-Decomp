@@ -283,7 +283,7 @@ int DFSH_Shrine_getObjectTypeId(void)
     return 0;
 }
 
-void DFSH_Shrine_free(struct GameObject* obj)
+void DFSH_Shrine_free(GameObject* obj)
 {
     void** state;
 

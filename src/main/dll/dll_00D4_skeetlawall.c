@@ -67,7 +67,7 @@ void SkeetlaWall_update(void)
 {
 }
 
-void SkeetlaWall_init(struct GameObject* obj, u8* def)
+void SkeetlaWall_init(GameObject* obj, u8* def)
 {
     SkeetlaWallState* state = obj->extra;
     state->negXExtent = def[0x18];

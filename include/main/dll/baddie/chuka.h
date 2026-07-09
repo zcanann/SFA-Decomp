@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_BADDIE_CHUKA_H_
 #define MAIN_DLL_BADDIE_CHUKA_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "global.h"
 
@@ -16,7 +17,7 @@ typedef struct ChukaState
 STATIC_ASSERT(offsetof(ChukaState, linkedObject) == 0x4);
 STATIC_ASSERT(sizeof(ChukaState) == 0xC);
 
-void chuka_init(struct GameObject* obj, int params);
+void chuka_init(GameObject* obj, int params);
 int chuka_SeqFn(void);
 void DFP_Floorbar_free(int* obj);
 void chuka_release(void);

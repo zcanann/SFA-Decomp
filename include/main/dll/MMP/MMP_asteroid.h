@@ -1,10 +1,11 @@
 #ifndef MAIN_DLL_MMP_MMP_ASTEROID_H_
 #define MAIN_DLL_MMP_MMP_ASTEROID_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "global.h"
 
-void XyzAnimator_update(struct GameObject* obj);
+void XyzAnimator_update(GameObject* obj);
 void FUN_801950ac(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801950d4(u32 param_1, u32 param_2, u32* param_3);
 void FUN_801954f0(void);

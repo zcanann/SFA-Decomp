@@ -1,6 +1,7 @@
 #ifndef MAIN_WORLDPLANET_H_
 #define MAIN_WORLDPLANET_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
@@ -148,7 +149,7 @@ void worldplanet_free(void);
 void worldplanet_render(u32 param_1, u32 param_2, u32 param_3, u32 param_4, u32 param_5, char visible);
 void worldplanet_hitDetect(void);
 void worldplanet_update(int obj);
-void worldplanet_init(struct GameObject* obj);
+void worldplanet_init(GameObject* obj);
 void worldplanet_release(void);
 void worldplanet_initialise(void);
 

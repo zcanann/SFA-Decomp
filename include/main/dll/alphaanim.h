@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_ALPHAANIM_H_
 #define MAIN_DLL_ALPHAANIM_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
@@ -61,7 +62,7 @@ typedef struct IMMultiSeqPlacement
     u8 pad31[3];
 } IMMultiSeqPlacement;
 
-int Lock_DoorLock_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void Lock_DoorLock_init(short* obj, DoorLockPlacement* config);
 void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1, int p1, int p2, int p3, int p4, s8 visible);

@@ -1,6 +1,7 @@
 #ifndef DR_SHARED_H
 #define DR_SHARED_H
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -111,7 +112,7 @@ extern void Obj_FreeObject(int obj);
 extern void mm_free(void* ptr);
 extern void storeZeroToFloatParam(void* timer);
 extern GameUIInterface** gGameUIInterface;
-extern int GM_MazeWell_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern u32 randomGetRange(int min, int max);
 extern int DR_CageControl_SeqFn(int obj);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
@@ -191,7 +192,7 @@ extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
-extern int drshackle_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+extern int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6A2C;
 extern f32 lbl_803E6B30;
 extern s16 gHighTopMovementSfxIds;
@@ -217,7 +218,7 @@ extern int dll_2E_func0A(int a, f32* buf);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 lbl_803E69F0;
 extern f32 gHighTopGroundMarkerMtx[];
-extern void ObjPath_GetPointLocalPosition(struct GameObject* obj, int idx, f32* x, f32* y, f32* z);
+extern void ObjPath_GetPointLocalPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z);
 extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern int dll_2E_func07(int obj, u8* arg, char* p, int a, int b);
@@ -336,7 +337,7 @@ extern int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* o
 extern void Obj_SpawnHitLightAndFade(int obj, f32* p, f32 v);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int ObjGroup_FindNearestObject(int group, int obj, void* out);
-extern void timer_addDuration(struct GameObject* obj, s16 dur);
+extern void timer_addDuration(GameObject* obj, s16 dur);
 extern f32 lbl_803E6B5C;
 extern f32 lbl_803E6B60;
 extern f32 lbl_803E6B64;
@@ -345,7 +346,7 @@ extern int gKytesMumTriggerIds[];
 extern int gKytesMumQuestIdleSfxTable[];
 extern int ObjTrigger_IsSet(int obj);
 extern void saveGame_saveObjectPos(int obj);
-extern int objGetAnimState80A(struct GameObject* obj);
+extern int objGetAnimState80A(GameObject* obj);
 extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
 extern f32 gKytesMumFleeDistance;
 extern f32 lbl_803E698C;
@@ -526,7 +527,7 @@ int ktrex_stateHandlerB05(int obj, int runtime);
 int ktrex_stateHandlerB06(int obj, int runtime);
 int ktrex_stateHandlerB07(int obj, int runtime);
 int ktrex_stateHandlerB08(int obj, int runtime);
-int ktrex_stateHandlerA01(struct GameObject* obj, int runtime);
+int ktrex_stateHandlerA01(GameObject* obj, int runtime);
 int ktrex_stateHandlerA02(int obj, int runtime);
 int ktrex_stateHandlerA03(int obj, int runtime);
 int ktrex_stateHandlerA04(int obj, int runtime);
@@ -535,6 +536,6 @@ int ktrex_stateHandlerA07(int obj, int runtime);
 int ktrex_stateHandlerA08(int obj, int runtime);
 int ktrex_stateHandlerA09(int obj, int runtime);
 int ktrex_stateHandlerA10(int obj, int runtime);
-int ktrex_stateHandlerA11(struct GameObject* obj, int runtime);
+int ktrex_stateHandlerA11(GameObject* obj, int runtime);
 
 #endif

@@ -59,7 +59,7 @@ STATIC_ASSERT(offsetof(WCTempleDiaSetup, type) == WCTEMPLE_DIA_SETUP_TYPE_OFFSET
 STATIC_ASSERT(offsetof(WCTempleDiaSetup, modelIndex) == WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET);
 
-void wctempledia_syncPartVisibility(struct GameObject* obj, u8 mask)
+void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
 {
     int bit;
     int part;
@@ -92,7 +92,7 @@ void wctempledia_syncPartVisibility(struct GameObject* obj, u8 mask)
     }
 }
 
-int wctempledia_interactCallback(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int wctempledia_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
 
@@ -135,7 +135,7 @@ void wctempledia_hitDetect(void)
 {
 }
 
-void wctempledia_update(struct GameObject* obj)
+void wctempledia_update(GameObject* obj)
 {
     int i;
     WCTempleDiaState* state;
@@ -150,7 +150,7 @@ void wctempledia_update(struct GameObject* obj)
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
     {
-        wctempledia_syncPartVisibility((struct GameObject*)go, state->stageMask);
+        wctempledia_syncPartVisibility((GameObject*)go, state->stageMask);
         return;
     }
     state->currentSpeed += timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed));
@@ -199,7 +199,7 @@ void wctempledia_update(struct GameObject* obj)
             }
         }
     }
-    wctempledia_syncPartVisibility((struct GameObject*)go, state->stageMask);
+    wctempledia_syncPartVisibility((GameObject*)go, state->stageMask);
     if (state->stageMask == WCTEMPLE_DIA_ALL_STAGES_MASK)
     {
         mainSetBits(setup->solvedBit, 1);
@@ -257,7 +257,7 @@ void wctempledia_init(int obj, int setup)
     }
     state->targetSpeed = state->currentSpeed;
     ((GameObject*)obj)->animEventCallback = wctempledia_interactCallback;
-    wctempledia_syncPartVisibility((struct GameObject*)(obj), state->stageMask);
+    wctempledia_syncPartVisibility((GameObject*)(obj), state->stageMask);
 }
 
 void wctempledia_release(void)

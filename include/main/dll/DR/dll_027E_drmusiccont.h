@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DR_DLL_027E_DRMUSICCONT_H_
 #define MAIN_DLL_DR_DLL_027E_DRMUSICCONT_H_
 
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct DrmusiccontState
@@ -16,7 +17,7 @@ void drmusiccont_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void drmusiccont_hitDetect(void);
 void drmusiccont_release(void);
 void drmusiccont_initialise(void);
-void drmusiccont_init(struct GameObject* obj);
+void drmusiccont_init(GameObject* obj);
 void drmusiccont_update(int obj);
 
 #endif /* MAIN_DLL_DR_DLL_027E_DRMUSICCONT_H_ */

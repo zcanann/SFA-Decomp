@@ -378,7 +378,7 @@ void LaserBeam_update(int obj2)
                 }
                 if (lat < range && lat > -range)
                 {
-                    if (objGetAnimState80A((struct GameObject*)(player)) == 0x1d7 && b->beamKind != 1)
+                    if (objGetAnimState80A((GameObject*)(player)) == 0x1d7 && b->beamKind != 1)
                     {
                         mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 1);
                     }

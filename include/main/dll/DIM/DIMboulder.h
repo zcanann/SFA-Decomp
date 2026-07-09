@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DIMBOULDER_H_
 #define MAIN_DLL_DIM_DIMBOULDER_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -44,7 +45,7 @@ u32 FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 p
 int IMIceMountain_getExtraSize(void);
 int IMIceMountain_getObjectTypeId(void);
 void IMIceMountain_free(void);
-int IMIceMountain_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void IMIceMountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void IMIceMountain_hitDetect(void);
 void IMIceMountain_update(int* obj);
@@ -65,7 +66,7 @@ int MagicLight_getObjectTypeId(void);
 void MagicLight_free(int obj);
 void MagicLight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void MagicLight_hitDetect(void);
-void MagicLight_update(struct GameObject* obj);
+void MagicLight_update(GameObject* obj);
 void MagicLight_init(int* obj, u8* params);
 int MagicLight_SeqFn(int* obj);
 void MagicLight_release(void);
@@ -75,7 +76,7 @@ int dll_16C_getExtraSize(void);
 int dll_16C_getObjectTypeId(void);
 void dll_16C_free(int* obj);
 void dll_16C_hitDetect(void* obj);
-void dll_16C_init(struct GameObject* obj, void* arg2);
+void dll_16C_init(GameObject* obj, void* arg2);
 int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 void dll_16C_release(void);
 void dll_16C_initialise(void);

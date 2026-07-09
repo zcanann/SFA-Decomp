@@ -70,7 +70,7 @@ void dll_299_update(int obj)
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
 }
 
-void dll_299_init(struct GameObject* obj, int setup)
+void dll_299_init(GameObject* obj, int setup)
 {
     ((Dll299State*)obj->extra)->id = *(s16*)(setup + 0x1e);
     obj->objectFlags |= DLL0299_OBJFLAG_HITDETECT_DISABLED;

@@ -1,6 +1,7 @@
 #ifndef MAIN_OBJLIB_H_
 #define MAIN_OBJLIB_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
@@ -46,9 +47,9 @@ void* ObjList_GetObjects(int* startIndex, int* objectCount);
 int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq);
 u32 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, float* positions);
-void ObjPath_GetPointLocalPosition(struct GameObject* param_1, int param_2, float* param_3, float* param_4,
+void ObjPath_GetPointLocalPosition(GameObject* param_1, int param_2, float* param_3, float* param_4,
                                    float* param_5);
-void ObjPath_GetPointLocalMtx(struct GameObject* param_1, int param_2, float* param_3);
+void ObjPath_GetPointLocalMtx(GameObject* param_1, int param_2, float* param_3);
 void ObjPath_GetPointModelMtx(int param_1, int param_2);
 void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                    int useInputPosition);

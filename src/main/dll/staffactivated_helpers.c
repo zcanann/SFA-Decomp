@@ -119,7 +119,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
                                                                 state->liftHeight / lbl_803E3BCC);
 }
 
-void cfPrisonGuard_setGameBitMirror(struct GameObject* obj, u8 flag)
+void cfPrisonGuard_setGameBitMirror(GameObject* obj, u8 flag)
 {
     StaffActivatedSetup* setup = (StaffActivatedSetup*)obj->anim.placementData;
     StaffActivatedState* state = obj->extra;
@@ -140,7 +140,7 @@ u32 cfPrisonGuard_isGameBitMirrorSet(int* obj)
     return (((StaffActivatedState*)((GameObject*)obj)->extra)->flags >> 5) & 1;
 }
 
-void staffactivated_spawnMapEventDebris(struct GameObject* obj)
+void staffactivated_spawnMapEventDebris(GameObject* obj)
 {
     int i;
     StaffActivatedSetup* setup;
@@ -224,7 +224,7 @@ void staffactivated_spawnMapEventDebris(struct GameObject* obj)
     }
 }
 
-u32 cfPrisonGuard_getPullRateMode(struct GameObject* obj)
+u32 cfPrisonGuard_getPullRateMode(GameObject* obj)
 {
     u32 mode;
     mode = ((StaffActivatedSetup*)obj->anim.placementData)->size;

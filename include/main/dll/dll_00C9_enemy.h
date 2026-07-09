@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SIDEKICKTOY_H_
 #define MAIN_DLL_SIDEKICKTOY_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
@@ -17,9 +18,9 @@ void FUN_8014c694(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
                   u64 param_8, int param_9);
 void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4);
 int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate);
-f32 sidekickToy_accelerateTowardTarget3D(struct GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
+f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);
-f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
+f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);
 u32 FUN_8014ca90(int param_1);
 void FUN_8014caf4(int param_1, u32* param_2, float* param_3, float* param_4);

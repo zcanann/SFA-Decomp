@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SP_DLL_0289_SPITEMBEAM_H_
 #define MAIN_DLL_SP_DLL_0289_SPITEMBEAM_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "global.h"
 
@@ -19,7 +20,7 @@ void spitembeam_free(void);
 void spitembeam_render(void);
 void spitembeam_hitDetect(void);
 void spitembeam_update(int* obj);
-void spitembeam_init(struct GameObject* obj);
+void spitembeam_init(GameObject* obj);
 void spitembeam_release(void);
 void spitembeam_initialise(void);
 

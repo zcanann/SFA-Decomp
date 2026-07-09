@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DLL_802B9780_SHARED_H_
 #define MAIN_DLL_DIM_DLL_802B9780_SHARED_H_
 
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
@@ -13,7 +14,7 @@ extern f32 lbl_803E8298;
 extern f32 lbl_803E829C;
 extern f32 lbl_803E82A0;
 
-extern void ObjPath_GetPointLocalPosition(struct GameObject* obj, int point, f32* out_x, f32* out_y, f32* out_z);
+extern void ObjPath_GetPointLocalPosition(GameObject* obj, int point, f32* out_x, f32* out_y, f32* out_z);
 extern void mtx44_mult(void* lhs, void* rhs, void* out);
 extern void fn_8003B950(void* matrix);
 

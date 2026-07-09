@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_CF_DLL_163_H_
 #define MAIN_DLL_CF_DLL_163_H_
 
+#include "main/game_object.h"
 #include "global.h"
 #include "main/obj_placement.h"
 
@@ -38,7 +39,7 @@ typedef struct StaffActivatedSetup
 
 int staffactivated_getExtraSize(void);
 int staffactivated_getObjectTypeId(void);
-void staffactivated_calcInteractionTargetXZ(struct GameObject* obj, f32* outX, f32* outZ);
+void staffactivated_calcInteractionTargetXZ(GameObject* obj, f32* outX, f32* outZ);
 u32 cfPrisonGuard_getLiftHeight(int* obj);
 void cfPrisonGuard_setLiftHeight(int* obj, int v);
 u8 objGetByteParam1C(int* obj);

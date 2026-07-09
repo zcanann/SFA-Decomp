@@ -83,7 +83,7 @@ int DFP_ObjCreator_getObjectTypeId(void)
     return 0x0;
 }
 
-void DFP_ObjCreator_free(struct GameObject* obj, int flag)
+void DFP_ObjCreator_free(GameObject* obj, int flag)
 {
     DfpObjCreatorState* state = obj->extra;
     if (flag == 0)
@@ -106,7 +106,7 @@ void DFP_ObjCreator_hitDetect(void)
 {
 }
 
-void DFP_ObjCreator_update(struct GameObject* obj)
+void DFP_ObjCreator_update(GameObject* obj)
 {
 
     extern void* Obj_AllocObjectSetup(int size, int id);
@@ -144,7 +144,7 @@ void DFP_ObjCreator_update(struct GameObject* obj)
     }
 }
 
-void DFP_ObjCreator_init(struct GameObject* obj, s8* def)
+void DFP_ObjCreator_init(GameObject* obj, s8* def)
 {
     DfpObjCreatorState* state = obj->extra;
     obj->anim.rotX = (s16)((s32)def[0x1E] << 8);
