@@ -201,49 +201,6 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
 }
 
 /*
- * Perform 16-bit register arithmetic with saturation.
- */
-void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
-{
-    s32 result;
-    s16 lhs;
-    s16 rhs;
-
-    lhs = varGet32(state, args->flags >> 0x18, (u8)args->value);
-    if (op == 4)
-    {
-        rhs = args->value >> 8;
-    }
-    else
-    {
-        rhs = varGet32(state, (args->value >> 8) & 0xff, (args->value >> 0x10) & 0xff);
-    }
-
-    switch (op)
-    {
-    case 4:
-    case 0:
-        result = lhs + rhs;
-        break;
-    case 1:
-        result = lhs - rhs;
-        break;
-    case 2:
-        result = lhs * rhs;
-        break;
-    case 3:
-        result = rhs != 0 ? lhs / rhs : 0;
-        break;
-    }
-
-    {
-        u8 d1 = (args->flags >> 8) & 0xff;
-        u8 d2 = (args->flags >> 0x10) & 0xff;
-        varSet32(state, d1, d2, (s16)(result < -0x8000 ? -0x8000 : result > 0x7fff ? 0x7fff : result));
-    }
-}
-
-/*
  * Read a 32-bit synth register, either from the voice or EX controller bank.
  */
 u32 varGet32(McmdVoiceState* state, u32 useExCtrl, u32 index)
@@ -265,25 +222,12 @@ u32 varGet32(McmdVoiceState* state, u32 useExCtrl, u32 index)
  */
 int varGet(McmdVoiceState* state, u32 useExCtrl, u32 index)
 {
-    u32 value;
+    return (s16)varGet32(state, useExCtrl, index);
+}
 
-    if (useExCtrl != 0)
-    {
-        value = (u16)inpGetExCtrl(state, index);
-    }
-    else
-    {
-        index &= 0x1f;
-        if (index < 0x10)
-        {
-            value = state->localRegs[index];
-        }
-        else
-        {
-            value = SYNTH_GLOBAL_REG(index);
-        }
-    }
-    return (s16)value;
+static inline s16 varGetSigned(McmdVoiceState* state, u32 useExCtrl, u8 index)
+{
+    return (s16)varGet32(state, useExCtrl, index);
 }
 
 /*
@@ -306,6 +250,51 @@ void varSet32(McmdVoiceState* state, u32 useExCtrl, u32 index, u32 value)
     SYNTH_GLOBAL_REG(index) = value;
 }
 #pragma dont_inline reset
+
+static inline void varSet(McmdVoiceState* state, u32 useExCtrl, u32 index, s16 value)
+{
+    varSet32(state, useExCtrl, index, value);
+}
+
+/*
+ * Perform 16-bit register arithmetic with saturation.
+ */
+void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
+{
+    s16 s1;
+    s16 s2;
+    s32 t;
+
+    s1 = varGetSigned(state, args->flags >> 0x18, (u8)args->value);
+    if (op == 4)
+    {
+        s2 = args->value >> 8;
+    }
+    else
+    {
+        s2 = varGetSigned(state, (u8)(args->value >> 8), args->value >> 0x10);
+    }
+
+    switch (op)
+    {
+    case 4:
+    case 0:
+        t = s1 + s2;
+        break;
+    case 1:
+        t = s1 - s2;
+        break;
+    case 2:
+        t = s1 * s2;
+        break;
+    case 3:
+        t = s2 != 0 ? s1 / s2 : 0;
+        break;
+    }
+
+    varSet(state, (u8)(args->flags >> 8), (u8)(args->flags >> 0x10),
+           (s16)(t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
+}
 
 /*
  * Queue register-derived messages onto voices found through vid handles.
