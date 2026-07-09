@@ -9,6 +9,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/sky.h"
+#include "main/object_descriptor.h"
 
 /* gSkyEnvFxFlags: per-group env-FX trigger enables + update state */
 #define SKY_ENVFX_GROUP_C        0x01 /* lbl_803DD138 group (GameBit 0x3ab) */
@@ -3409,6 +3410,91 @@ f32 gSkyMoonDirection[] = {
 f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
 
 u8 gSkyConfigFieldIndices[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0};
+
+typedef struct SkyDllInterface {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback slot00;
+    ObjectDescriptorCallback slot01;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback slot03;
+    ObjectDescriptorCallback slot04;
+    ObjectDescriptorCallback slot05;
+    ObjectDescriptorCallback slot06;
+    ObjectDescriptorCallback slot07;
+    ObjectDescriptorCallback slot08;
+    ObjectDescriptorCallback slot09;
+    ObjectDescriptorCallback slot0A;
+    ObjectDescriptorCallback slot0B;
+    ObjectDescriptorCallback slot0C;
+    ObjectDescriptorCallback slot0D;
+    ObjectDescriptorCallback slot0E;
+    ObjectDescriptorCallback slot0F;
+    ObjectDescriptorCallback slot10;
+    ObjectDescriptorCallback slot11;
+    ObjectDescriptorCallback slot12;
+    ObjectDescriptorCallback slot13;
+    ObjectDescriptorCallback slot14;
+    ObjectDescriptorCallback slot15;
+    ObjectDescriptorCallback slot16;
+    ObjectDescriptorCallback slot17;
+} SkyDllInterface;
+
+SkyDllInterface lbl_8030F414 = {
+    0,
+    0,
+    0x00033FB0,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)Sky_func03,
+    (ObjectDescriptorCallback)loadLightFn_8008bbc4,
+    (ObjectDescriptorCallback)timeOfDayFn_8008b964,
+    (ObjectDescriptorCallback)renderSky,
+    (ObjectDescriptorCallback)getTimeOfDay,
+    (ObjectDescriptorCallback)skyGetClockTime,
+    (ObjectDescriptorCallback)doNothing_8008B8B0,
+    (ObjectDescriptorCallback)fn_8008B88C,
+    (ObjectDescriptorCallback)getSunPos,
+    (ObjectDescriptorCallback)pDll_Sky_setTimeOfDay_nop,
+    (ObjectDescriptorCallback)return0_8008B7E8,
+    (ObjectDescriptorCallback)skyTimeToDayHourMinute,
+    (ObjectDescriptorCallback)fn_8008B71C,
+    (ObjectDescriptorCallback)skyFn_8008aee8,
+    (ObjectDescriptorCallback)skyGetCurrentTextureColor,
+    (ObjectDescriptorCallback)skyGetCurrentAmbientAndLightColors,
+    (ObjectDescriptorCallback)doNothing_800887C8,
+    (ObjectDescriptorCallback)doNothing_800887C4,
+    (ObjectDescriptorCallback)setGameBit2BA,
+    (ObjectDescriptorCallback)getEnvFxBit2BA,
+    (ObjectDescriptorCallback)return0_80088758,
+};
+
+ObjectDescriptor17 lbl_8030F4AC = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_16_SLOTS,
+    (ObjectDescriptorCallback)sky2_initialise,
+    (ObjectDescriptorCallback)sky2_release,
+    0,
+    (ObjectDescriptorCallback)sky2_update,
+    (ObjectDescriptorCallback)sky2_onMapSetup,
+    (ObjectDescriptorCallback)sky2_run,
+    (ObjectDescriptorCallback)dll_06_func06,
+    (ObjectDescriptorCallback)dll_06_func07_ret_0,
+    (ObjectDescriptorCallback)dll_06_func08,
+    (ObjectDescriptorExtraSizeCallback)dll_06_func09,
+    (ObjectDescriptorCallback)dll_06_func0A,
+    (ObjectDescriptorCallback)dll_06_func0B,
+    (ObjectDescriptorCallback)dll_06_func0C_nop,
+    (ObjectDescriptorCallback)dll_06_func0D,
+    (ObjectDescriptorCallback)dll_06_func0E,
+    (ObjectDescriptorCallback)dll_06_func0F,
+};
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 u8 lbl_8030F500[160] = {255, 206, 0,   0,   255, 206, 255, 206, 0, 100, 255, 206, 0, 50,  0, 100, 255, 206, 0, 50,
