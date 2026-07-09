@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
+#include "main/mldf_fileid.h"
 #include "main/model.h"
 #include "main/object_transform.h"
 #include "main/objprint_dolphin.h"
@@ -3863,20 +3864,20 @@ void mapLoadDataFiles(int mapIdx)
         int* r = (int*)(*gMapEventInterface)->getCurCharPos();
         *(s8*)((char*)r + 0xe) = mapIdx;
     }
-    mapLoadDataFile(mapIdx, 0x20);
-    mapLoadDataFile(mapIdx, 0x21);
-    mapLoadDataFile(mapIdx, 0x23);
-    mapLoadDataFile(mapIdx, 0x24);
-    mapLoadDataFile(mapIdx, 0x30);
-    mapLoadDataFile(mapIdx, 0x2f);
-    mapLoadDataFile(mapIdx, 0x2b);
-    mapLoadDataFile(mapIdx, 0x2a);
-    mapLoadDataFile(mapIdx, 0x26);
-    mapLoadDataFile(mapIdx, 0x25);
-    mapLoadDataFile(mapIdx, 0x1a);
-    mapLoadDataFile(mapIdx, 0x1b);
-    mapLoadDataFile(mapIdx, 0xe);
-    mapLoadDataFile(mapIdx, 0xd);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX1_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX1_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX0_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX0_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIM_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIM_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_MODELS_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_MODELS_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_BLOCKS_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_BLOCKS_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_VOXMAP_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_VOXMAP_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
 }
 
 extern void padUpdate(void);
