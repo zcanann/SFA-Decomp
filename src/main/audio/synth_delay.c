@@ -1,5 +1,7 @@
 #include "src/main/audio/synth_internal.h"
 
+#pragma exceptions on
+
 #ifndef SYNTH_VOICE_STRIDE
 #define SYNTH_VOICE_STRIDE 0x404
 #endif
@@ -124,7 +126,7 @@ u32 synthSendKeyOff(u32 handle)
     return found;
 }
 
-void synthDispatchDelayedAction(SynthFade* fade)
+static inline void synthDispatchDelayedAction(SynthFade* fade)
 {
     (void)fade;
 }
