@@ -215,7 +215,7 @@ int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u
     return 0;
 }
 
-static void AddDpop(s32* sum, s16 delta)
+static inline void AddDpop(s32* sum, s16 delta)
 {
     *sum += delta;
     *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
