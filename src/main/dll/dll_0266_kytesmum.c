@@ -345,6 +345,32 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg)
     return 0;
 }
 
+u8 gKytesMumMoveSets[] = {
+    0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
+    0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x35, 0x10, 0x00, 0x00, 0x00, 0x03, 0x36, 0x10,
+    0x00, 0x00, 0x00, 0x03, 0x37, 0x05, 0x00, 0x00, 0x00, 0x03, 0x38, 0x05, 0x00, 0x00, 0x00,
+};
+
+int gKytesMumQuestIdleSfxTable[] = {
+    0x02921000, 0x00000292, 0x10000000, 0x02920500, 0x00000292, 0x05000000,
+};
+
+u32 gKytesMumObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  (u32)kytesmum_initialise,
+                                  (u32)kytesmum_release,
+                                  0x00000000,
+                                  (u32)kytesmum_init,
+                                  (u32)kytesmum_update,
+                                  (u32)kytesmum_hitDetect,
+                                  (u32)kytesmum_render,
+                                  (u32)kytesmum_free,
+                                  (u32)kytesmum_getObjectTypeId,
+                                  (u32)kytesmum_getExtraSize};
+
 #pragma optimization_level 2
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
 {
@@ -360,26 +386,26 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
                 Sfx_PlayFromObject(obj, sfxData[0]);
             }
             break;
-        case 1:
+        case 7:
             if (sfxData != 0)
             {
                 Sfx_PlayFromObject(obj, sfxData[1]);
             }
             break;
-        case 2:
+        case 1:
             flags |= 1;
             break;
-        case 3:
+        case 2:
             flags |= 2;
             break;
-        case 4:
+        case 3:
             flags |= 4;
             break;
-        case 5:
+        case 4:
             flags |= 8;
             break;
+        case 5:
         case 6:
-        case 7:
             break;
         }
     }
@@ -389,17 +415,6 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
     }
 }
 #pragma reset
-
-u8 gKytesMumMoveSets[] = {
-    0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
-    0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x35, 0x10, 0x00, 0x00, 0x00, 0x03, 0x36, 0x10,
-    0x00, 0x00, 0x00, 0x03, 0x37, 0x05, 0x00, 0x00, 0x00, 0x03, 0x38, 0x05, 0x00, 0x00, 0x00,
-};
-
-int gKytesMumQuestIdleSfxTable[] = {
-    0x02921000, 0x00000292, 0x10000000, 0x02920500, 0x00000292, 0x05000000,
-};
 
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";
 
