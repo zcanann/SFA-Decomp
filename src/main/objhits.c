@@ -2331,7 +2331,7 @@ void ObjHits_Update(int objectCount)
     u8 skeletonScratchC[1040];
     u8 skeletonHits[1512];
     u8 skeletonScratchD[100];
-    u8 skeletonScratchE[100];
+    u8 skeletonScratchE[84];
     int candidateIndex;
     ObjHitsSweepEntry** entrySlot;
     int listCount;
