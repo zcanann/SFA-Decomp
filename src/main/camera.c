@@ -173,6 +173,7 @@ void Obj_GetWorldPosition(u32 obj, f32* outX, f32* outY, f32* outZ)
     }
 }
 
+#pragma opt_lifetimes off
 void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
 {
     u8* base;
@@ -239,6 +240,7 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
         mtxRotateByVec3s(inverseYawMatrix, &inverseTransform);
     }
 }
+#pragma opt_lifetimes reset
 
 void Obj_BuildTransformMatrices(u32 obj)
 {
