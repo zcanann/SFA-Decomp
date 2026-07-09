@@ -536,7 +536,7 @@ done:
     if ((found & 0x80000000) == 0)
     {
         voice = &runtime->voices[found];
-        switch (voice->state)
+        switch (runtime->voices[found].state)
         {
         case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
