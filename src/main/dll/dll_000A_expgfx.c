@@ -1937,6 +1937,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 
 #pragma optimization_level 2
 #pragma opt_propagation off
+#pragma opt_lifetimes on
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* viewMatrix;
@@ -2338,6 +2339,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
+#pragma opt_lifetimes reset
 #pragma opt_propagation reset
 #pragma optimization_level reset
 
