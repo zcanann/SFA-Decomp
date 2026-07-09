@@ -215,7 +215,8 @@ void inpInit(u32 state)
     }
     else
     {
-        int i;
+        u32 i;
+        u32 j;
         u8* b = lbl_803BDA74;
         u8* a = lbl_803BDEF4;
         u32* p = lbl_803D3CA0;
@@ -287,23 +288,10 @@ void inpInit(u32 state)
 
         for (i = 0; i < 8; i++)
         {
-            u32* row = p + i * 16;
-            row[0] = 0xff;
-            row[1] = 0xff;
-            row[2] = 0xff;
-            row[3] = 0xff;
-            row[4] = 0xff;
-            row[5] = 0xff;
-            row[6] = 0xff;
-            row[7] = 0xff;
-            row[8] = 0xff;
-            row[9] = 0xff;
-            row[10] = 0xff;
-            row[11] = 0xff;
-            row[12] = 0xff;
-            row[13] = 0xff;
-            row[14] = 0xff;
-            row[15] = 0xff;
+            for (j = 0; j < 16; j++)
+            {
+                ((u32(*)[16])p)[i][j] = 0xff;
+            }
         }
     }
 }

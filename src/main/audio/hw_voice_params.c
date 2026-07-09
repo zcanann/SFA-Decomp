@@ -8,7 +8,7 @@
 #define DSP_VOICE_ITD_DISABLED_MASK     0x7fffffff
 #define DSP_VOICE_ITD_CENTER            0x10
 
-extern u8* volatile dspVoice;
+extern DSPvoice* volatile dspVoice;
 extern u8 salTimeOffset;
 extern u16 lbl_803DC618[4];
 extern u16 lbl_803DC620[4];
@@ -20,7 +20,7 @@ void hwSetPitch(int slot, u32 pitch)
     u32 val;
     u32 channel;
 
-    entry = (DSPvoice*)(dspVoice + slot * DSP_VOICE_STRIDE);
+    entry = (DSPvoice*)((u8*)dspVoice + slot * DSP_VOICE_STRIDE);
     if ((u16)pitch >= 0x4000)
     {
         pitch = 0x3fff;
@@ -45,36 +45,28 @@ void hwSetPitch(int slot, u32 pitch)
     entry->lastUpdate.pitch = salTimeOffset;
 }
 
-void hwSetSRCType(int slot, u32 value)
+void hwSetSRCType(u32 slot, u8 value)
 {
-    DSPvoice* entry = (DSPvoice*)(dspVoice + slot * DSP_VOICE_STRIDE);
+    DSPvoice* entry = &dspVoice[slot];
     entry->srcTypeSelect = lbl_803DC618[(u8)value];
     entry->changed[0] |= DSP_VOICE_SRC_TYPE_CHANGE_FLAG;
 }
 
-void hwSetPolyPhaseFilter(int slot, u32 value)
+void hwSetPolyPhaseFilter(u32 slot, u8 value)
 {
-    DSPvoice* entry = (DSPvoice*)(dspVoice + slot * DSP_VOICE_STRIDE);
+    DSPvoice* entry = &dspVoice[slot];
     entry->srcCoefSelect = lbl_803DC620[(u8)value];
     entry->changed[0] |= DSP_VOICE_POLYPHASE_CHANGE_FLAG;
 }
 
-void hwSetITDMode(int slot, u32 value)
+void hwSetITDMode(u32 slot, u8 value)
 {
-    if ((u8)value == 0)
+    if (value == 0)
     {
-        int offset = slot * DSP_VOICE_STRIDE;
-        u8* entry = dspVoice + offset;
-        ((DSPvoice*)entry)->flags |= DSP_VOICE_ITD_ENABLED_FLAG;
-        value = DSP_VOICE_ITD_CENTER;
-        entry = dspVoice + offset;
-        ((DSPvoice*)entry)->itdShiftL = value;
-        entry = dspVoice + offset;
-        ((DSPvoice*)entry)->itdShiftR = value;
+        dspVoice[slot].flags |= DSP_VOICE_ITD_ENABLED_FLAG;
+        dspVoice[slot].itdShiftL = DSP_VOICE_ITD_CENTER;
+        dspVoice[slot].itdShiftR = DSP_VOICE_ITD_CENTER;
+        return;
     }
-    else
-    {
-        u8* entry = dspVoice + slot * DSP_VOICE_STRIDE;
-        ((DSPvoice*)entry)->flags &= DSP_VOICE_ITD_DISABLED_MASK;
-    }
+    dspVoice[slot].flags &= DSP_VOICE_ITD_DISABLED_MASK;
 }
