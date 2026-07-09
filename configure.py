@@ -781,7 +781,7 @@ config.libs = [
         "objects": [
             Object(MatchingFor("GSAE01"), "main/audio/synth_constants.c"),
             Object(MatchingFor("GSAE01"), "main/audio/synth_callback.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/audio/synth_channel.c", mw_version="GC/1.2.5n"),
+            Object(MatchingFor("GSAE01"), "main/audio/synth_channel.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/synth_handle.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/synth_sequence.c", mw_version="GC/1.2.5n"),
             Object(MatchingFor("GSAE01"), "main/audio/synth_seq_queue.c", mw_version="GC/1.2.5n"),

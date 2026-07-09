@@ -1,5 +1,10 @@
 #include "src/main/audio/synth_internal.h"
 
+#undef SYNTH_VOICE_RUNTIME
+#define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
+
+extern SynthVoiceRuntime lbl_803AF550;
+
 void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1)
 {
     SynthVoiceRuntime* runtime;
