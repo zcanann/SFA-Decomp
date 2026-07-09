@@ -174,9 +174,16 @@ void Obj_GetWorldPosition(u32 obj, f32* outX, f32* outY, f32* outZ)
 }
 
 #pragma opt_lifetimes off
+typedef struct ObjTransformMatrixPool
+{
+    f32 inverse[0x1E * 16];
+    f32 yaw[0x1F * 16];
+    f32 scratch[16];
+} ObjTransformMatrixPool;
+
 void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
 {
-    u8* base;
+    ObjTransformMatrixPool* base;
     u32 ancestors[4];
     ObjMatrixBuildTransform inverseTransform;
     f32* inverseYawMatrix;
@@ -186,12 +193,14 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     u32 current;
     f32 savedScale;
     s8 hasParent;
+    f32* yawMatrices;
 
     current = obj;
-    base = (u8*)gObjInverseYawTransformMatrices;
+    base = (ObjTransformMatrixPool*)gObjInverseYawTransformMatrices;
     matrixIndex = yawIndex << 4;
-    yawMatrix = (f32*)(base + 1920) + matrixIndex;
-    inverseYawMatrix = (f32*)(base + (matrixIndex << 2));
+    yawMatrices = base->yaw;
+    yawMatrix = yawMatrices + matrixIndex;
+    inverseYawMatrix = base->inverse + matrixIndex;
     hasParent = 0;
     ancestorCount = 0;
     while (current != 0)
@@ -210,8 +219,8 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
         }
         else
         {
-            setMatrixFromObjectPos((f32*)(base + 3904), (void*)current);
-            mtx44_multSafe(yawMatrix, (f32*)(base + 3904), yawMatrix);
+            setMatrixFromObjectPos(base->scratch, (void*)current);
+            mtx44_multSafe(yawMatrix, base->scratch, yawMatrix);
         }
 
         ((GameObject*)current)->anim.rootMotionScale = savedScale;
