@@ -265,6 +265,7 @@ void tumbleweed_update(int obj)
     tumbleweed_updateEffects(obj);
 }
 
+#pragma opt_loop_invariants off
 void tumbleweed_updateStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux);
@@ -502,6 +503,7 @@ void tumbleweed_updateStateMachine(int obj)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 void tumbleweed_init(int obj, int defData)
 {
