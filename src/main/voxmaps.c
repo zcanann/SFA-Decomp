@@ -976,9 +976,9 @@ searched:
 #pragma opt_loop_invariants off
 int voxmaps_processRouteQueue(RouteState* state, int count)
 {
+    int nodeIdx;
     int done = 0;
     int ret = 0;
-    int nodeIdx;
     CurveHeapNode* queue;
     RouteNode* node;
 
