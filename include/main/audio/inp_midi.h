@@ -16,7 +16,7 @@
 void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
 void inpSetMidiCtrl14(int controller, u8 slot, u8 key, u16 data);
 void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
-u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
+u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);
 void inpAddCtrl(int obj, int b, int c, int d, u32 flag);

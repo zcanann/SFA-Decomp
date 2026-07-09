@@ -15,6 +15,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlo
     u8 ctrl;
     s32 tmp;
     s32 vtmp;
+    extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 
     for (value = 0, i = 0; i < slotPtr->entryCount; ++i)
     {

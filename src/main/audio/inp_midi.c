@@ -82,7 +82,7 @@ void inpResetMidiCtrl(u8 channel, u8 key, u32 mode)
  * Read a 14-bit MIDI controller value from either the global channel defaults
  * or the per-key controller bank.
  */
-u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
+u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key)
 {
     u32 slotIdx;
     u32 keyIdx;
@@ -120,7 +120,7 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
                 return (u16)(((u32)st->midiCtrl[(u8)key][(u8)slot][controller & 0xfe] << 7) |
                              st->midiCtrl[(u8)key][(u8)slot][(controller & 0xfe) + 1]);
             }
-            return (u16)((u32)st->midiCtrl[(u8)key][(u8)slot][controller & 0xff] << 7);
+            return (u16)((u32)st->midiCtrl[(u8)key][(u8)slot][(u8)controller] << 7);
         }
 
         ctrl = controller & 0xff;
@@ -146,7 +146,7 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
             return (u16)(((u32)st->fxCtrl[(u8)slot][controller & 0xfe] << 7) |
                          st->fxCtrl[(u8)slot][(controller & 0xfe) + 1]);
         }
-        return (u16)((u32)st->fxCtrl[(u8)slot][controller & 0xff] << 7);
+        return (u16)((u32)st->fxCtrl[(u8)slot][(u8)controller] << 7);
     }
     return 0;
 }
