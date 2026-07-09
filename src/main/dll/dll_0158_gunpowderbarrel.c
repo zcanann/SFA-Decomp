@@ -651,6 +651,7 @@ void gunpowderbarrel_init(int obj, u8* def)
  * hitbox while the fuse burns and hands the barrel back to its generator,
  * and handles the pickup/steal/toss transitions against the player's carry
  * state. */
+#pragma opt_common_subs off
 void gunpowderbarrel_update(int obj)
 {
     extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
@@ -936,6 +937,7 @@ void gunpowderbarrel_update(int obj)
         }
     }
 }
+#pragma opt_common_subs reset
 
 /* Head of the TU (0x801A0B14..0x801A1230) - formerly the
  * gunpowder-barrel helper group inside sandwormBoss.c. Placed LAST in
