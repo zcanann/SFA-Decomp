@@ -97,7 +97,7 @@ extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 GSTACK synthLoadedGroupTable[128];
 
-static MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
+static inline MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
     if (pool == NULL)
@@ -112,7 +112,7 @@ static MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
     return NULL;
 }
 
-static MEM_DATA* GetCurveAddr(u16 id, POOL_DATA* pool)
+static inline MEM_DATA* GetCurveAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
     if (pool == NULL)
@@ -127,7 +127,7 @@ static MEM_DATA* GetCurveAddr(u16 id, POOL_DATA* pool)
     return NULL;
 }
 
-static MEM_DATA* GetKeymapAddr(u16 id, POOL_DATA* pool)
+static inline MEM_DATA* GetKeymapAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
     if (pool == NULL)
@@ -142,7 +142,7 @@ static MEM_DATA* GetKeymapAddr(u16 id, POOL_DATA* pool)
     return NULL;
 }
 
-static MEM_DATA* GetLayerAddr(u16 id, POOL_DATA* pool)
+static inline MEM_DATA* GetLayerAddr(u16 id, POOL_DATA* pool)
 {
     MEM_DATA* m;
     if (pool == NULL)
