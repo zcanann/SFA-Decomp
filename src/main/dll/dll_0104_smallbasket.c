@@ -165,6 +165,8 @@ extern const f32 lbl_803E3990;
 extern const f32 lbl_803E3994;
 extern f32 lbl_803E3998;
 
+#pragma opt_lifetimes off
+#pragma opt_propagation off
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
     GameObject* playerObj;
@@ -485,6 +487,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     }
     return 1;
 }
+#pragma opt_propagation reset
+#pragma opt_lifetimes reset
 
 int smallbasket_resolveCollision(u8* obj)
 {
