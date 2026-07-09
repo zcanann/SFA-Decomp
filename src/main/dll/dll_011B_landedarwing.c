@@ -186,7 +186,30 @@ typedef struct LandedArwingHitFlagBits
     u8 rest : 4;
 } LandedArwingHitFlagBits;
 
-extern LandedArwingFxPoint gLandedArwingPathFxTable[];
+void landed_arwing_init(GameObject* obj, int param);
+void landed_arwing_update(int obj);
+
+LandedArwingFxPoint gLandedArwingPathFxTable[] = {
+    {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
+};
+
+ObjectDescriptor gLanded_ArwingObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)landed_arwing_init,
+    (ObjectDescriptorCallback)landed_arwing_update,
+    0,
+    (ObjectDescriptorCallback)landed_arwing_render,
+    (ObjectDescriptorCallback)landed_arwing_free,
+    0,
+    landed_arwing_getExtraSize,
+};
+
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
 extern f32 lbl_803E3BA0;
@@ -707,24 +730,3 @@ void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingState* state
         }
     }
 }
-
-LandedArwingFxPoint gLandedArwingPathFxTable[] = {
-    {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
-};
-
-ObjectDescriptor gLanded_ArwingObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)landed_arwing_init,
-    (ObjectDescriptorCallback)landed_arwing_update,
-    0,
-    (ObjectDescriptorCallback)landed_arwing_render,
-    (ObjectDescriptorCallback)landed_arwing_free,
-    0,
-    landed_arwing_getExtraSize,
-};
