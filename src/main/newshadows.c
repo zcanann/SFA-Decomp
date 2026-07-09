@@ -2599,6 +2599,7 @@ void fn_8006CB50(void)
 
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
+#pragma opt_dead_assignments off
 void renderShadows(void)
 {
     char* casterPtr;
@@ -2898,3 +2899,4 @@ void renderShadows(void)
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
+#pragma opt_dead_assignments reset
