@@ -1838,6 +1838,7 @@ f32 gNewShadowPlacements[0x112];
    placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
    renders 16 noise animation frames through fn_8006CD20, then the caustic texture. */
 #pragma opt_lifetimes off
+#pragma opt_loop_invariants off
 void initFn_8006d020(void)
 {
     u8 saved;
@@ -1963,6 +1964,7 @@ void initFn_8006d020(void)
     gNewShadowReflectionScrollY = lbl_803DED28;
     testAndSet_onlyUseHeap3(saved);
 }
+#pragma opt_loop_invariants reset
 #pragma opt_lifetimes reset
 #pragma opt_common_subs reset
 
