@@ -2,6 +2,8 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
 
+#pragma exceptions on
+
 typedef struct VoicePrioVoiceRec
 {
     u8 prev;
@@ -189,7 +191,7 @@ u32 vidMakeNew(int state, int returnNewId)
  * Look up a voice handle's slot via the sorted linked list.
  * Returns -1 for the sentinel id 0xFFFFFFFF or if not found.
  */
-static int* get_vidlist(u32 id)
+static inline int* get_vidlist(u32 id)
 {
     int* node;
     node = vidRoot;
