@@ -633,6 +633,7 @@ int printHeapStats(void)
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag);
 
+#pragma opt_lifetimes off
 int mmAllocFromRegion(int region, int size, int type, int tag)
 {
     char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
@@ -781,6 +782,7 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
     }
     return 0;
 }
+#pragma opt_lifetimes reset
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag)
 {
