@@ -1809,6 +1809,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
 }
 #pragma dont_inline reset
 
+#pragma opt_propagation off
 void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
 {
     f32 vec[3];
@@ -1861,6 +1862,7 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     }
     gShadowFlag = 1;
 }
+#pragma opt_propagation reset
 
 #pragma opt_strength_reduction off
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
