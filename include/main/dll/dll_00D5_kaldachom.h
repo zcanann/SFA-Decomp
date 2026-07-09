@@ -5,12 +5,12 @@
 #include "main/dll/campfire_state.h"
 #include "main/object_descriptor.h"
 
-void kaldaChomFn_8016821c(int obj, KaldaChomControl *control);
-void kaldaChomFn_80168374(struct GameObject *obj, int state, u8 useUpperMouthPoint);
+void kaldaChomFn_8016821c(int obj, KaldaChomControl* control);
+void kaldaChomFn_80168374(struct GameObject* obj, int state, u8 useUpperMouthPoint);
 void kaldachom_handleAnimEvents(int obj, int p2, int p3);
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state);
 void kaldachom_func0B(void);
-s16 kaldachom_setScale(int *obj);
+s16 kaldachom_setScale(int* obj);
 int kaldachom_getExtraSize(void);
 int kaldachom_getObjectTypeId(void);
 void kaldachom_free(int param_1);

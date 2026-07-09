@@ -70,7 +70,7 @@ extern void Fall_Ladders_update(void);
 
 extern void LanternFireFly_init(void);
 extern void FireFlyLantern_render(void);
-extern void dll_109_init(struct GameObject *);
+extern void dll_109_init(struct GameObject*);
 extern void Fall_Ladders_init(void);
 
 extern void LanternFireFly_release(void);
@@ -79,14 +79,14 @@ extern void dll_109_release_nop(void);
 extern void Fall_Ladders_release(void);
 
 extern void LanternFireFly_initialise(void);
-extern void FireFlyLantern_init(struct GameObject *);
+extern void FireFlyLantern_init(struct GameObject*);
 extern void dll_109_initialise_nop(void);
 extern void Fall_Ladders_initialise(void);
 
 extern int Obj_GetPlayerObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int playerHasSpell(struct GameObject *obj, int spell);
-extern int objGetAnimState80A(struct GameObject *player);
+extern int playerHasSpell(struct GameObject* obj, int spell);
+extern int objGetAnimState80A(struct GameObject* player);
 extern void playerCancelSpell(int player, int v);
 extern int getTrickyObject(void);
 extern void trickyImpress(int tricky);
@@ -115,7 +115,7 @@ void PortalSpellDoor_hitDetect(void)
 {
 }
 
-void PortalSpellDoor_update(struct GameObject *obj)
+void PortalSpellDoor_update(struct GameObject* obj)
 {
     typedef struct
     {

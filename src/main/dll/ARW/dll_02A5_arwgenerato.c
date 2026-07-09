@@ -58,7 +58,7 @@ void arwgenerato_update(int obj)
     }
 }
 
-void arwgenerato_init(struct GameObject *obj, int setup)
+void arwgenerato_init(struct GameObject* obj, int setup)
 {
     ARWGeneratorState* state = (obj)->extra;
     ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)setup;

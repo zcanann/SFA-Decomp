@@ -69,10 +69,10 @@ STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
 int ProjectedLight_getExtraSize(void);
 int ProjectedLight_getObjectTypeId(void);
-void ProjectedLight_free(struct GameObject *obj);
+void ProjectedLight_free(struct GameObject* obj);
 void ProjectedLight_render(void);
 void ProjectedLight_hitDetect(void);
-void ProjectedLight_update(struct GameObject *obj);
+void ProjectedLight_update(struct GameObject* obj);
 void ProjectedLight_init(int obj, int setup);
 void ProjectedLight_release(void);
 void ProjectedLight_initialise(void);

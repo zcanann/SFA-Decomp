@@ -43,7 +43,7 @@ extern f32 lbl_803E5DAC;
 extern f32 lbl_803E5DB0;
 extern f32 lbl_803E5DB4;
 extern void playerAddRemoveMagic(int obj, int amount);
-extern void playerSetHaveSpell(struct GameObject *player, int a, int b);
+extern void playerSetHaveSpell(struct GameObject* player, int a, int b);
 extern int playerGetCurMagic(void);
 
 #pragma dont_inline on
@@ -208,7 +208,7 @@ void dll_200_init(int* obj, int* arg)
 }
 
 #pragma opt_strength_reduction off
-int dll_200_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
+int dll_200_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 {
     u8 mode;
     int i;
@@ -225,13 +225,11 @@ int dll_200_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUp
     case 2:
         break;
     case 4:
-        *(u8*)&(obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         break;
     case 6:
         state = *(int*)&(obj)->extra;
-        *(u8*)&(obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         for (i = 0; i < animUpdate->eventCount; i++)
         {
             switch (animUpdate->eventIds[i])

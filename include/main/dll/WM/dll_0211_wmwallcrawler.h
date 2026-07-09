@@ -7,6 +7,6 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 
-void wmwallcrawler_alignToFloorNormal(struct GameObject *obj, f32* floorData);
+void wmwallcrawler_alignToFloorNormal(struct GameObject* obj, f32* floorData);
 
 #endif

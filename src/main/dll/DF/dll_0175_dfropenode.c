@@ -67,8 +67,8 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
     return (f32) * (f64*)&bits - (f32)gRopeNodeS32ToDoubleBias;
 }
 
-int dfropenode_findNearestRopePoint(struct GameObject *obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut, float* phaseOut,
-                                    u8* sideOut)
+int dfropenode_findNearestRopePoint(struct GameObject* obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
+                                    float* phaseOut, u8* sideOut)
 {
     int offset;
     int i;
@@ -167,7 +167,7 @@ void dfropenode_applyForceAtPhase(f32 phase, f32 force, int obj)
     node->force[1] = force * fraction + node->force[1];
 }
 
-void dfropenode_advancePhaseByDistance(struct GameObject *obj, float* phase, f32 distance)
+void dfropenode_advancePhaseByDistance(struct GameObject* obj, float* phase, f32 distance)
 {
     DFropenodeExtra* extra;
     s32 raw;
@@ -346,7 +346,7 @@ int dfropenode_getObjectTypeId(void)
     return 0;
 }
 
-void dfropenode_free(struct GameObject *obj)
+void dfropenode_free(struct GameObject* obj)
 {
     void* node;
     int** objs;

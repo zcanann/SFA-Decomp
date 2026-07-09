@@ -74,7 +74,7 @@ void KT_RexFloorSwitch_hitDetect(void);
 void KT_RexFloorSwitch_initialise(void);
 void KT_RexFloorSwitch_release(void);
 void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
-void KT_RexFloorSwitch_init(struct GameObject *obj, char* placement);
+void KT_RexFloorSwitch_init(struct GameObject* obj, char* placement);
 void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle);
 void KT_RexFloorSwitch_update(int obj);
 

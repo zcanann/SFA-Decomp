@@ -104,7 +104,7 @@ void timer_forceStart(int obj)
     state->flags.manual = 1;
 }
 
-void timer_addDuration(struct GameObject *obj, int duration)
+void timer_addDuration(struct GameObject* obj, int duration)
 {
     TimerState* state = (obj)->extra;
     if (fn_80080150((int)state) != 0)

@@ -38,8 +38,8 @@ int ControlLight_getObjectTypeId(void);
 void ControlLight_free(void);
 void ControlLight_hitDetect(void);
 void ControlLight_render(void);
-void ControlLight_init(struct GameObject *obj, int setup);
-void ControlLight_update(struct GameObject *obj);
+void ControlLight_init(struct GameObject* obj, int setup);
+void ControlLight_update(struct GameObject* obj);
 void ControlLight_release(void);
 void ControlLight_initialise(void);
 

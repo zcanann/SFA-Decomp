@@ -52,7 +52,7 @@ void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-int Lamp_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int Lamp_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8 effectArgs[0x18];
     PartFxSpawnParams* fx = (PartFxSpawnParams*)effectArgs;

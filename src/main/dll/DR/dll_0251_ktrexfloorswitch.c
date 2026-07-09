@@ -66,7 +66,7 @@ void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
     }
 }
 
-void KT_RexFloorSwitch_init(struct GameObject *obj, char* placement)
+void KT_RexFloorSwitch_init(struct GameObject* obj, char* placement)
 {
     char* extra = (obj)->extra;
     int curve;

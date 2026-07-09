@@ -39,7 +39,7 @@ void ControlLight_render(void)
 {
 }
 
-void ControlLight_init(struct GameObject *obj, int setup)
+void ControlLight_init(struct GameObject* obj, int setup)
 {
     ControlLightSetup* setupData = (ControlLightSetup*)setup;
     ControlLightState* state = (obj)->extra;
@@ -52,7 +52,7 @@ void ControlLight_init(struct GameObject *obj, int setup)
 
 #pragma opt_loop_invariants off
 #pragma optimization_level 1
-void ControlLight_update(struct GameObject *obj)
+void ControlLight_update(struct GameObject* obj)
 {
     u8 newBit;
     u32 bit;

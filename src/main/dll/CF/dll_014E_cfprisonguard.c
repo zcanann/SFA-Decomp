@@ -54,7 +54,7 @@ extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
-extern int objGetAnimState80A(struct GameObject *obj);
+extern int objGetAnimState80A(struct GameObject* obj);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the

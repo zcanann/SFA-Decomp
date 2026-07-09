@@ -77,7 +77,7 @@ typedef enum CurveFishMode
 extern f32 getXZDistance(f32* a, f32* b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
-extern int playerGetFlags3F0Bit5(struct GameObject *obj);
+extern int playerGetFlags3F0Bit5(struct GameObject* obj);
 
 /* ROM curve query key for the fish path curves; first entry of this TU's
  * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
@@ -292,7 +292,7 @@ void CurveFish_update(int obj)
     }
 }
 
-void CurveFish_init(struct GameObject *obj, u8* setup)
+void CurveFish_init(struct GameObject* obj, u8* setup)
 {
     int state;
     u32 flags;
@@ -301,7 +301,7 @@ void CurveFish_init(struct GameObject *obj, u8* setup)
     flags |= 0x6000;
     (obj)->objectFlags = flags;
     (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
-                                               ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / 100.0f);
+                                  ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / 100.0f);
     ((CurveFishState*)state)->mode = CURVEFISH_MODE_SPAWN;
     ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / 100.0f;
 }

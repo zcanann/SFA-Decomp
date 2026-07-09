@@ -29,7 +29,7 @@
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
-extern int playerGetFlags3F0Bit5(struct GameObject *obj);
+extern int playerGetFlags3F0Bit5(struct GameObject* obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);
@@ -194,7 +194,7 @@ void fn_80154870(int obj, int* state)
 }
 #pragma opt_common_subs reset
 
-void fn_80154C24(struct GameObject *obj, int state)
+void fn_80154C24(struct GameObject* obj, int state)
 {
     float fval;
     u32 randVal;

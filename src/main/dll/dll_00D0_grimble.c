@@ -77,7 +77,7 @@ void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void TumbleWeedBush_setScale(u8* obj, void* match);
 
 int grimble_animEventCallback(void);
-void fn_801627F4(struct GameObject *obj);
+void fn_801627F4(struct GameObject* obj);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
@@ -278,7 +278,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     return 0;
 }
 
-void fn_801627F4(struct GameObject *obj)
+void fn_801627F4(struct GameObject* obj)
 {
     int count;
     f32 dist;
@@ -302,8 +302,8 @@ void fn_801627F4(struct GameObject *obj)
         for (i = 0; i < count; i++)
         {
             if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(*(int*)(*(int*)(ptr[i] + 0x68)) + 0x30))(
-                    ptr[i], (obj)->anim.localPosX, (obj)->anim.localPosY,
-                    (obj)->anim.localPosZ, &dist, &hitY, &unk) != 0 &&
+                    ptr[i], (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &dist, &hitY, &unk) !=
+                    0 &&
                 dist < ((GrimbleControl*)sub)->nearestDist)
             {
                 ((GrimbleControl*)sub)->candidatePathObj = ptr[i];
@@ -343,8 +343,7 @@ void fn_801627F4(struct GameObject *obj)
                 facing = 1;
             }
             ((GrimbleControl*)sub)->reversed = facing;
-            (obj)->anim.rotX =
-                ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed << 15);
+            (obj)->anim.rotX = ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed << 15);
             progress = ((GrimbleControl*)sub)->pathProgress - (f32)((((GrimbleControl*)sub)->reversed << 1) - 1) *
                                                                   ((f32)(int)randomGetRange(0xa, 0x3c) / lbl_803E2F24);
             ((GrimbleControl*)sub)->targetProgress = progress;

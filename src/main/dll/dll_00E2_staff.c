@@ -1229,7 +1229,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     }
 }
 
-extern int objGetAnimState80A(struct GameObject *obj);
+extern int objGetAnimState80A(struct GameObject* obj);
 extern f32 lbl_803E330C;
 extern f32 lbl_803E3310;
 extern f32 lbl_803E332C;
@@ -1619,7 +1619,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 extern int objFn_80296700(int* obj);
 extern void objfx_spawnArcedBurst(int* obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
 extern void fn_802961A4(int* obj, int* type, f32* power);
-extern void fn_802960F4(struct GameObject *objc4, u8** out);
+extern void fn_802960F4(struct GameObject* objc4, u8** out);
 extern f32 lbl_803E328C;
 extern f32 lbl_803E3298;
 extern f32 lbl_803E329C;

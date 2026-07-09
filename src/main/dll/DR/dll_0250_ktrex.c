@@ -157,10 +157,10 @@ typedef struct KTRexRuntime
 
 STATIC_ASSERT(offsetof(KTRexRuntime, arena) == 0x40c);
 
-extern void drakormissile_abortStraightFlight(struct GameObject *);
+extern void drakormissile_abortStraightFlight(struct GameObject*);
 extern void drakormissile_modelMtxFn(void);
 extern void drakormissile_startStraightLaunch(void);
-extern void drakormissile_setScale(struct GameObject *);
+extern void drakormissile_setScale(struct GameObject*);
 extern void drakormissile_getExtraSize(void);
 extern void drakormissile_getObjectTypeId(void);
 extern void drakormissile_free(void);
@@ -299,7 +299,7 @@ int ktrex_stateHandlerA06(int obj, int runtime)
 }
 
 #pragma dont_inline on
-int ktrex_isPlayerInLaneThreatRange(struct GameObject *obj)
+int ktrex_isPlayerInLaneThreatRange(struct GameObject* obj)
 {
     u8 state = ((KTRexArenaState*)gKTRexState)->laneMode;
     f32 center;
@@ -336,7 +336,7 @@ int ktrex_isPlayerInLaneThreatRange(struct GameObject *obj)
 }
 #pragma dont_inline reset
 
-int ktrex_setScale(struct GameObject *obj)
+int ktrex_setScale(struct GameObject* obj)
 {
     void* p = (obj)->extra;
     gKTRexRuntime = p;
@@ -1634,7 +1634,7 @@ ret0:
     return 0;
 }
 
-int ktrex_stateHandlerA11(struct GameObject *obj, int runtime)
+int ktrex_stateHandlerA11(struct GameObject* obj, int runtime)
 {
     int phase;
     f32 f4;
@@ -1829,7 +1829,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     return 0;
 }
 
-int ktrex_stateHandlerA01(struct GameObject *obj, int runtime)
+int ktrex_stateHandlerA01(struct GameObject* obj, int runtime)
 {
     if ((s8)((KTRexRuntime*)runtime)->moveJustStartedB != 0)
     {

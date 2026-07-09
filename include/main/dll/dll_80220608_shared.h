@@ -29,7 +29,7 @@
 extern u8 framesThisStep;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern void mm_free(void *ptr);
+extern void mm_free(void* ptr);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
@@ -38,8 +38,8 @@ extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
-extern void storeZeroToFloatParam(void *timer);
-extern void s16toFloat(void *timer, int duration);
+extern void storeZeroToFloatParam(void* timer);
+extern void s16toFloat(void* timer, int duration);
 extern void gunpowderbarrel_clearHeldState(int obj);
 extern f32 lbl_803E6CE0;
 extern void dll_2E_func06(int obj, int state, int flags);
@@ -62,39 +62,28 @@ extern int isGameTimerDisabled(void);
 extern int randomGetRange(int min, int max);
 extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 extern int Obj_GetActiveModel(int obj);
-extern void ObjModel_SetPostRenderCallback(int model, void *callback);
+extern void ObjModel_SetPostRenderCallback(int model, void* callback);
 extern void objRenderFn_80041018(int obj);
 extern void postRenderSetAlphaBlendState(void);
 
-
-typedef struct DrEnergyDiscState {
+typedef struct DrEnergyDiscState
+{
     u8 activated : 1;
 } DrEnergyDiscState;
 
-
-
-
-typedef struct DrLightBeaFlags {
+typedef struct DrLightBeaFlags
+{
     u8 bit80 : 1;
     u8 bit40 : 1;
     u8 pad : 6;
 } DrLightBeaFlags;
 
-
-
-
-
-
-
-
-
-typedef struct DrBarrelGrFlags {
+typedef struct DrBarrelGrFlags
+{
     u8 bit80 : 1;
     u8 bit40 : 1;
     u8 pad : 6;
 } DrBarrelGrFlags;
-
-
 
 extern void dll_2E_func03(int obj, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
@@ -103,7 +92,8 @@ extern ObjHitReactEntry gEarthWalkerHitReactEntries[];
 extern f32 gEarthWalkerMoveStartProgress;
 extern f32 gEarthWalkerAnimAdvanceRate;
 
-typedef struct EarthWalkerState {
+typedef struct EarthWalkerState
+{
     u8 pad000[0x600];
     u8 animPhase;
     u8 pad601[0x610 - 0x601];
@@ -131,10 +121,13 @@ STATIC_ASSERT(offsetof(EarthWalkerState, hitReactState) == 0x65A);
 STATIC_ASSERT(offsetof(EarthWalkerState, encounterType) == 0x65B);
 STATIC_ASSERT(offsetof(EarthWalkerState, lastTriggeredState) == 0x65C);
 
-typedef struct EarthWalkerObject {
-    union {
+typedef struct EarthWalkerObject
+{
+    union
+    {
         ObjAnimComponent anim;
-        struct {
+        struct
+        {
             s16 facingAngle;
             u8 pad02[0xA0 - 0x02];
             s16 currentMove;
@@ -145,8 +138,8 @@ typedef struct EarthWalkerObject {
         };
     };
     u8 padB0[0xB8 - sizeof(ObjAnimComponent)];
-    EarthWalkerState *state;
-    void *animEventCallback;
+    EarthWalkerState* state;
+    void* animEventCallback;
 } EarthWalkerObject;
 
 STATIC_ASSERT(offsetof(EarthWalkerObject, anim) == 0x00);
@@ -157,7 +150,6 @@ STATIC_ASSERT(offsetof(EarthWalkerObject, statusFlags) == offsetof(ObjAnimCompon
 STATIC_ASSERT(offsetof(EarthWalkerObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(EarthWalkerObject, animEventCallback) == 0xBC);
 
-
 extern f32 gBouncyCrateTriggerSearchRadius;
 extern f32 lbl_803E6D24;
 extern f32 gBouncyCrateNearDistance;
@@ -167,8 +159,8 @@ extern f32 lbl_803E6D34;
 extern f32 gBouncyCrateGravity;
 extern f32 gBouncyCrateRestitution;
 
-
-typedef struct {
+typedef struct
+{
     u8 phase : 3;
     u8 sfxActive : 1;
     u8 pad : 4;
@@ -176,32 +168,23 @@ typedef struct {
 
 typedef struct WCLevelContInterface WCLevelContInterface;
 
-typedef struct WCLevelContInterface {
+typedef struct WCLevelContInterface
+{
     u8 pad00[0x20];
-    void (*tileAToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
-                            WCLevelContInterface *iface);
-    void (*worldPosToTileA)(int obj, f32 x, f32 z, s16 *outTileX, s16 *outTileY,
-                            WCLevelContInterface *iface);
-    void (*setTileA)(int value, int tileX, int tileY, WCLevelContInterface *iface);
-    int (*getTileA)(int tileX, int tileY, WCLevelContInterface *iface);
-    void (*getInitialTileXYA)(int value, s16 *outTileX, s16 *outTileY,
-                              WCLevelContInterface *iface);
-    void (*getSolvedTileXYA)(int value, s16 *outTileX, s16 *outTileY,
-                             WCLevelContInterface *iface);
-    u8 (*traceMoveA)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
-                      int dy, WCLevelContInterface *iface);
-    void (*tileBToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
-                            WCLevelContInterface *iface);
-    void (*worldPosToTileB)(int obj, f32 x, f32 z, s16 *outTileX, s16 *outTileY,
-                            WCLevelContInterface *iface);
-    void (*setTileB)(int value, int tileX, int tileY, WCLevelContInterface *iface);
-    int (*getTileB)(int tileX, int tileY, WCLevelContInterface *iface);
-    void (*getInitialTileXYB)(int value, s16 *outTileX, s16 *outTileY,
-                              WCLevelContInterface *iface);
-    void (*getSolvedTileXYB)(int value, s16 *outTileX, s16 *outTileY,
-                             WCLevelContInterface *iface);
-    u8 (*traceMoveB)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ, int dx,
-                      int dy, WCLevelContInterface *iface);
+    void (*tileAToWorldPos)(int obj, int tileX, int tileY, f32* outX, f32* outZ, WCLevelContInterface* iface);
+    void (*worldPosToTileA)(int obj, f32 x, f32 z, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
+    void (*setTileA)(int value, int tileX, int tileY, WCLevelContInterface* iface);
+    int (*getTileA)(int tileX, int tileY, WCLevelContInterface* iface);
+    void (*getInitialTileXYA)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
+    void (*getSolvedTileXYA)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
+    u8 (*traceMoveA)(int obj, int tileX, int tileY, f32* outX, f32* outZ, int dx, int dy, WCLevelContInterface* iface);
+    void (*tileBToWorldPos)(int obj, int tileX, int tileY, f32* outX, f32* outZ, WCLevelContInterface* iface);
+    void (*worldPosToTileB)(int obj, f32 x, f32 z, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
+    void (*setTileB)(int value, int tileX, int tileY, WCLevelContInterface* iface);
+    int (*getTileB)(int tileX, int tileY, WCLevelContInterface* iface);
+    void (*getInitialTileXYB)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
+    void (*getSolvedTileXYB)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
+    u8 (*traceMoveB)(int obj, int tileX, int tileY, f32* outX, f32* outZ, int dx, int dy, WCLevelContInterface* iface);
 } WCLevelContInterface;
 
 STATIC_ASSERT(offsetof(WCLevelContInterface, tileAToWorldPos) == 0x20);
@@ -219,15 +202,15 @@ STATIC_ASSERT(offsetof(WCLevelContInterface, getInitialTileXYB) == 0x4C);
 STATIC_ASSERT(offsetof(WCLevelContInterface, getSolvedTileXYB) == 0x50);
 STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveB) == 0x54);
 
-extern u8 fn_80296414(struct GameObject *player, int obj, int dir);
+extern u8 fn_80296414(struct GameObject* player, int obj, int dir);
 extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 extern int Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
-                                int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
+extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
+                                f32 mulX, f32 mulY, f32 mulZ);
 extern void ObjHits_DisableObject(u32 obj);
 extern void ObjHits_EnableObject(u32 obj);
 extern int gameBitIncrement(int id);
@@ -262,25 +245,24 @@ extern f32 lbl_803E6DC0;
 extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
-extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ);
+extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 extern void gameTimerStop(void);
 extern u8 gameTimerIsRunning(void);
 extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern const f32 lbl_803E6DA8;
 typedef struct WcLevelControlState WcLevelControlState;
-extern void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state);
-extern void fn_802251B4(int obj, WcLevelControlState *state);
+extern void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state);
+extern void fn_802251B4(int obj, WcLevelControlState* state);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
-extern int wclevelcont_seqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
-extern void *memcpy(void *dst, const void *src, u32 n);
-
-
+extern int wclevelcont_seqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+extern void* memcpy(void* dst, const void* src, u32 n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-typedef struct {
+typedef struct
+{
     u8 b80 : 1;
     u8 b40 : 1;
     u8 b20 : 1;
@@ -310,7 +292,8 @@ typedef struct {
 #define WCLEVELCTL_MODE_TREX_INIT   6 /* trex challenge init: set up timer, then TREX_ACTIVE */
 #define WCLEVELCTL_MODE_DONE        7 /* terminal: sequence finished, no transitions */
 
-typedef struct WcLevelControlState {
+typedef struct WcLevelControlState
+{
     f32 eventTimer;
     f32 tileBResetTimer;
     f32 tileAResetTimer;
@@ -342,36 +325,21 @@ extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
 extern f32 gWcPushBlockTileResetTime;
 
-
-
-
-
-
-
-
-
-
 extern int getTrickyObject(void);
 extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
 extern f32 lbl_803E6DE4;
 extern f32 lbl_803E6DE8;
 
-
-
 extern f32 lbl_803E6DF4;
 extern f32 lbl_803E6DF8;
 
-
-
-extern void logPrintf(void *fmt, ...);
+extern void logPrintf(void* fmt, ...);
 extern char sWCPressuresActivateFormat[];
 extern f32 lbl_803E6E04;
 
-
-
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern u8 *mapGetBlock(int idx);
+extern u8* mapGetBlock(int idx);
 extern int fn_8006070C(int block, int index);
 extern void mapTextureOverrideSetValue(int a, int b, int c);
 extern f32 lbl_803E6E58;
@@ -382,7 +350,7 @@ extern s16 gWcTempleDiaGameBitsB;
 extern f32 gWcTempleDiaTargetSpeedTableA[];
 extern f32 gWcTempleDiaTargetSpeedTableB[];
 extern f32 gWcTempleDiaSpeedLerpRate;
-int wctempledia_interactCallback(struct GameObject *obj, int p2, ObjAnimUpdateState *animUpdate);
+int wctempledia_interactCallback(struct GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6E5C;
 extern f32 lbl_803E6E60;
 extern f32 lbl_803E6E64;
@@ -395,26 +363,24 @@ extern f32 lbl_803E6E90;
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern int ObjModel_GetBaseVertexCoords(int model, int idx);
 extern void ObjHits_DisableObject(u32 obj);
-extern int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate);
+extern int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6E70;
 extern f32 lbl_803E6E74;
 extern f32 lbl_803E6E78;
 extern f32 lbl_803E6E7C;
 
-extern f32 PSVECDistance(void *a, void *b);
+extern f32 PSVECDistance(void* a, void* b);
 extern f32 lbl_803E6E94;
-
 
 extern f32 lbl_803E6E98;
 extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
-extern void ModelLightStruct_free(void *light);
-extern void queueGlowRender(void *light);
+extern void ModelLightStruct_free(void* light);
+extern void queueGlowRender(void* light);
 extern int gWaterFlowPhaseDriver;
 extern f32 gWaterFlowIdlePhase;
 extern f32 gWaterFlowFlowPhase;
 extern f32 lbl_803E72B0;
-
 
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
@@ -428,45 +394,40 @@ extern f32 lbl_803E6EB4;
 extern f32 lbl_803E6EB8;
 extern f32 lbl_803E6EBC;
 
-
 extern f32 lbl_803E6E28;
 extern f32 lbl_803E6E30;
 extern f32 lbl_803E6E34;
-extern void modelLightStruct_updateGlowAlpha(void *light);
+extern void modelLightStruct_updateGlowAlpha(void* light);
 
 extern f32 lbl_803E6E3C;
 extern f32 lbl_803E6E40;
-extern void *objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(void *light, int v);
-extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
-
+extern void* objCreateLight(int obj, int kind);
+extern void modelLightStruct_setLightKind(void* light, int v);
+extern void modelLightStruct_setupGlow(void* light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(void* light, f32 v);
 
 extern int fn_802969F0(int player);
 extern f32 Camera_GetFovY(void);
-extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
+extern void modelLightStruct_setEnabled(void* light, int flag, f32 val);
 extern f32 lbl_803E6E38;
 
-
 extern f32 gWaterFlowScaleDivisor;
-extern void waterflowwe_calcCurrentVector(struct GameObject *obj, f32 *vx, f32 *vz);
+extern void waterflowwe_calcCurrentVector(struct GameObject* obj, f32* vx, f32* vz);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 gWaterFlowIdlePhaseRate;
 extern f32 gWaterFlowFlowPhaseRate;
 
-int suntemple_interactCallback(struct GameObject *obj, int p2, ObjAnimUpdateState *animUpdate);
+int suntemple_interactCallback(struct GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 
 extern f32 lbl_802C25D8[];
 extern int getCurMapLayer(void);
 
-typedef struct { f32 x, y, z; } SunVec3;
-
-
+typedef struct
+{
+    f32 x, y, z;
+} SunVec3;
 
 extern void buttonDisable(int a, int b);
-
-
-
 
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int lbl_803DDD90;
@@ -476,23 +437,18 @@ extern f32 lbl_803E711C;
 extern f32 lbl_803E7120;
 extern f32 lbl_803E7124;
 
-
-
-
-
-
 extern f32 lbl_803E7138;
 extern const f32 lbl_803E713C;
 
-
-
-
 typedef void ModelLight;
-typedef struct PointLightVec { f32 x, y, z; } PointLightVec;
+typedef struct PointLightVec
+{
+    f32 x, y, z;
+} PointLightVec;
 
-#define MODEL_LIGHT_KIND_POINT 2
+#define MODEL_LIGHT_KIND_POINT       2
 #define MODEL_LIGHT_KIND_DIRECTIONAL 4
-#define MODEL_LIGHT_KIND_PROJECTED 8
+#define MODEL_LIGHT_KIND_PROJECTED   8
 
 #define LGT_POINTLIGHT_GROUP 0x35
 
@@ -500,80 +456,56 @@ extern f32 lbl_802C25F8[];
 extern f32 lbl_803E7230;
 extern f32 lbl_803E7234;
 extern f32 lbl_803E7240;
-extern void ModelLightStruct_free(ModelLight *light);
-extern void modelLightStruct_setEnabled(ModelLight *light, int flag, f32 val);
-extern void queueGlowRender(ModelLight *light);
-extern void getAmbientColor(int id, u8 *r, u8 *g, u8 *b);
-extern void modelLightStruct_setDiffuseColor(ModelLight *light, u8 r, u8 g, u8 b, int a);
-extern void modelLightStruct_setDiffuseTargetColor(ModelLight *light, u8 r, u8 g, u8 b, int a);
-extern void modelLightStruct_updateGlowAlpha(ModelLight *light);
-extern ModelLight *objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(ModelLight *light, int v);
-extern void objSetEventName(ModelLight *light, int name);
-extern void modelLightStruct_setPosition(ModelLight *light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDistanceAttenuation(ModelLight *light, f32 near, f32 far);
-extern void modelLightStruct_setSpotAttenuation(ModelLight *light, f32 v, int x);
-extern void modelLightStruct_startColorFade(ModelLight *light, int a, s16 b);
-extern void modelLightStruct_setDirection(ModelLight *light, f32 x, f32 y, f32 z);
+extern void ModelLightStruct_free(ModelLight* light);
+extern void modelLightStruct_setEnabled(ModelLight* light, int flag, f32 val);
+extern void queueGlowRender(ModelLight* light);
+extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
+extern void modelLightStruct_setDiffuseColor(ModelLight* light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_updateGlowAlpha(ModelLight* light);
+extern ModelLight* objCreateLight(int obj, int kind);
+extern void modelLightStruct_setLightKind(ModelLight* light, int v);
+extern void objSetEventName(ModelLight* light, int name);
+extern void modelLightStruct_setPosition(ModelLight* light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDistanceAttenuation(ModelLight* light, f32 near, f32 far);
+extern void modelLightStruct_setSpotAttenuation(ModelLight* light, f32 v, int x);
+extern void modelLightStruct_startColorFade(ModelLight* light, int a, s16 b);
+extern void modelLightStruct_setDirection(ModelLight* light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
-extern void modelLightStruct_setupGlow(ModelLight *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(ModelLight *light, f32 v);
-extern void modelLightStruct_setAffectsAabbLightSelection(ModelLight *light, int v);
-extern void modelLightStruct_setSelectionPriority(ModelLight *light, u8 v);
-
+extern void modelLightStruct_setupGlow(ModelLight* light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(ModelLight* light, f32 v);
+extern void modelLightStruct_setAffectsAabbLightSelection(ModelLight* light, int v);
+extern void modelLightStruct_setSelectionPriority(ModelLight* light, u8 v);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-
-
-
-
-
 
 extern f32 lbl_802C2608[];
 extern f32 lbl_803E7250;
 extern f32 lbl_803E7254;
 extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
 extern int getButtonsJustPressed(int controller);
-extern void logPrintf(void *fmt, ...);
-
-
-
-
-
-
-
-
+extern void logPrintf(void* fmt, ...);
 
 extern f32 lbl_802C2618[];
 extern f32 lbl_803E7270;
 extern f32 lbl_803E7274;
 extern f32 lbl_803E7260;
-extern void textureFree(void *tex);
-extern void *textureLoadAsset(int id);
-extern void modelLightStruct_setProjectedLightChannelPreference(ModelLight *light, int v);
-extern void modelLightStruct_setProjectionTexture(ModelLight *light, void *tex);
-extern void modelLightStruct_setupOrthoProjection(ModelLight *light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
-extern void modelLightStruct_setupPerspectiveProjection(ModelLight *light, f32 a, f32 b);
-extern void modelLightStruct_setProjectionTevModes(ModelLight *light, int a, int b);
-extern void modelLightStruct_setProjectionNearZ(ModelLight *light, f32 v);
-extern void modelLightStruct_setProjectionFarZ(ModelLight *light, f32 v);
+extern void textureFree(void* tex);
+extern void* textureLoadAsset(int id);
+extern void modelLightStruct_setProjectedLightChannelPreference(ModelLight* light, int v);
+extern void modelLightStruct_setProjectionTexture(ModelLight* light, void* tex);
+extern void modelLightStruct_setupOrthoProjection(ModelLight* light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
+extern void modelLightStruct_setupPerspectiveProjection(ModelLight* light, f32 a, f32 b);
+extern void modelLightStruct_setProjectionTevModes(ModelLight* light, int a, int b);
+extern void modelLightStruct_setProjectionNearZ(ModelLight* light, f32 v);
+extern void modelLightStruct_setProjectionFarZ(ModelLight* light, f32 v);
 
-
-
-
-
-
-
-extern int *ObjGroup_GetObjects(int group, int *count);
+extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 Vec_distance(int a, int b);
 
-
-
-
-
-typedef struct TimerFlags {
+typedef struct TimerFlags
+{
     u8 expired : 1;
     u8 manual : 1;
     u8 flag20 : 1;
@@ -589,37 +521,23 @@ extern int fn_80080150(int state);
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
 
-
-
-
-
-
-
-
-
-
-extern int timerCountDown(void *timer);
+extern int timerCountDown(void* timer);
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern f32 lbl_803DC418;
 extern f32 lbl_803DC41C;
 extern f32 lbl_803E741C;
 extern f32 lbl_803E7420;
 
-
 extern void set_hudNumber_803db278(int n);
 
-
-
-
-
-
-
-typedef struct VortexFlags {
+typedef struct VortexFlags
+{
     u8 active : 1;
     u8 pad : 7;
 } VortexFlags;
 
-typedef struct VortexState {
+typedef struct VortexState
+{
     f32 alpha;
     f32 particleTimer;
     f32 alphaScale[3];
@@ -629,7 +547,8 @@ typedef struct VortexState {
     u8 pad27;
 } VortexState;
 
-typedef struct VortexSetup {
+typedef struct VortexSetup
+{
     ObjPlacement base;
     u8 pad18[2];
     s16 radiusParam;
@@ -662,9 +581,6 @@ extern double lbl_803E73F0;
 extern double lbl_803E73F8;
 extern f32 gVortexAlphaFadeSpeed;
 
-
-
-
 extern s16 gVortexAngleSpeed83D[4];
 extern s16 gVortexAngleSpeedDefault[4];
 extern s16 gVortexAngleSpeed835[2];
@@ -676,18 +592,11 @@ extern f32 gVortexAlphaScaleInit838[2];
 extern f32 lbl_803E7404;
 extern int getHudHiddenFrameCount(void);
 
-
-
-
-extern int modelLightStruct_getActiveState(void *light);
+extern int modelLightStruct_getActiveState(void* light);
 extern f32 lbl_803E70B0;
 
-
-
-
-
-
-typedef struct RingFlags {
+typedef struct RingFlags
+{
     u8 bit80 : 1;
     u8 bit40 : 1;
     u8 bit20 : 1;
@@ -695,7 +604,8 @@ typedef struct RingFlags {
     u8 pad : 4;
 } RingFlags;
 
-typedef struct RingState {
+typedef struct RingState
+{
     u8 mode;
     u8 route;
     u16 linkId;
@@ -708,7 +618,7 @@ typedef struct RingState {
     u8 pad16[2];
     f32 pullTimer;
     u8 pad1C[4];
-    void *light;
+    void* light;
 } RingState;
 
 STATIC_ASSERT(sizeof(RingFlags) == 0x1);
@@ -729,14 +639,15 @@ STATIC_ASSERT(offsetof(RingState, light) == 0x20);
  * Embeds the common ObjPlacement head, then the ring's class-specific
  * fields (setup+0x18..+0x20) read in ring_init and ring_update.
  */
-typedef struct RingPlacement {
-    ObjPlacement base;     /* 0x00: common placement head */
-    s8 modeFlag;           /* 0x18 */
-    u8 route;              /* 0x19 */
-    s16 linkId;            /* 0x1A */
-    s16 pullHeight;        /* 0x1C */
-    u8 pad1E[2];           /* 0x1E */
-    s16 activateBit;       /* 0x20 */
+typedef struct RingPlacement
+{
+    ObjPlacement base; /* 0x00: common placement head */
+    s8 modeFlag;       /* 0x18 */
+    u8 route;          /* 0x19 */
+    s16 linkId;        /* 0x1A */
+    s16 pullHeight;    /* 0x1C */
+    u8 pad1E[2];       /* 0x1E */
+    s16 activateBit;   /* 0x20 */
 } RingPlacement;
 
 STATIC_ASSERT(offsetof(RingPlacement, modeFlag) == 0x18);
@@ -748,7 +659,8 @@ STATIC_ASSERT(offsetof(RingPlacement, activateBit) == 0x20);
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 
-typedef struct CntHitFlags {
+typedef struct CntHitFlags
+{
     u8 disabled : 1;
     u8 pad : 7;
 } CntHitFlags;
@@ -759,48 +671,29 @@ extern void ObjHits_DisableObject(u32 obj);
 extern void ObjHits_EnableObject(u32 obj);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 
-
-
-
-
 extern int lbl_8032BEF8[];
 extern u8 lbl_803DC42C;
 extern int lbl_803DC428;
 extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
 extern int arrayIndexOf(int array, int count, int value);
-extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  u32 *outHitVolume);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-
-
-
-
-
-
-
 
 extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int e);
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
-extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
-                                int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
+extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
+                                f32 mulX, f32 mulY, f32 mulZ);
 extern void objfx_spawnDirectionalBurst(int obj, int a, int b, int c, f32 e, f32 f, int g, int h, int i);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                   f32 scaleZ, void *args, int arg9);
-
-
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
 extern f32 lbl_803E7340;
-extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, u32 hitFxMode, u32 colorR,
-                                                     u32 colorG, u32 colorB, u32 sfxId,
-                                                     float *cooldown);
+extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB,
+                                                     u32 sfxId, float* cooldown);
 
-
-
-
-extern void *lbl_803DDD98;
+extern void* lbl_803DDD98;
 extern f32 lbl_803DDD9C;
 extern f32 lbl_803DDDA0;
 extern f32 lbl_803E7288;
@@ -809,24 +702,8 @@ extern f32 lbl_803E7290;
 extern f32 lbl_803E7294;
 extern f32 lbl_803E7298;
 
-
-
-
-
-
-
-
-
 extern f32 lbl_803E7078;
 extern f32 lbl_803E7150;
-
-
-
-
-
-
-
-
 
 extern f32 lbl_803E7218;
 extern f32 lbl_803E7100;
@@ -834,29 +711,8 @@ extern f32 lbl_803E71E4;
 extern f32 lbl_803E704C;
 extern void ObjHits_MarkObjectPositionDirty(int obj);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 /* Arwing family (untouched: arwarwing, arwarwinggu, arwingandrossstuff, arwlevelcon, arwsquadron). */
 extern int gArwing;
@@ -872,20 +728,17 @@ extern void Music_Trigger(int id, int p2);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
-
 extern int getArwing(void);
-extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  u32 *outHitVolume);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 mathCosf(f32 x);
 extern void doRumble(f32 v);
-extern void PSVECNormalize(void *src, void *dst);
-extern void C_VECHalfAngle(void *out, void *a, void *b);
+extern void PSVECNormalize(void* src, void* dst);
+extern void C_VECHalfAngle(void* out, void* a, void* b);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern f32 lbl_803E7008;
 extern f32 lbl_803E7014;
@@ -896,8 +749,6 @@ extern f32 gArwingAndrossBinAngScale;
 extern f32 lbl_803E7038;
 extern f32 lbl_803E703C;
 
-
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -906,12 +757,13 @@ extern f32 lbl_803E70EC;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
 extern void ObjHits_SetTargetMask(int obj, u8 targetMask);
-extern void setMatrixFromObjectPos(void *mtx, void *src);
-extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void setMatrixFromObjectPos(void* mtx, void* src);
+extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void gameTextFn_80125ba4(int id);
 extern void pauseMenuCreateHeads(void);
 
-typedef struct ArwProjPosSrc {
+typedef struct ArwProjPosSrc
+{
     s16 rot[3];
     f32 scale;
     f32 pos[3];
@@ -920,10 +772,7 @@ typedef struct ArwProjPosSrc {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-
-int arwlevelcon_SeqFn(struct GameObject *obj, int p2, int data);
-
-
+int arwlevelcon_SeqFn(struct GameObject* obj, int p2, int data);
 
 extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EE8;
@@ -935,11 +784,9 @@ extern f32 lbl_803E6FF8;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 mathSinf(f32 x);
-extern void Obj_BuildWorldTransformMatrix(int obj, void *mtx, int p3);
-extern void PSMTXMultVec(void *mtx, void *src, void *dst);
+extern void Obj_BuildWorldTransformMatrix(int obj, void* mtx, int p3);
+extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
-
-
 
 extern f32 lbl_803E7028;
 extern f32 lbl_803E705C;
@@ -953,8 +800,6 @@ extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
 extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
-
-
 
 extern f32 lbl_803E70E4;
 extern f32 lbl_803E70E8;
@@ -970,13 +815,14 @@ extern int mapBlockFn_800592e4(void);
 extern int arwarwing_getRequiredRingCount(int arwing);
 extern int arwarwing_getCollectedRingCount(int arwing);
 
-
 extern f32 lbl_803E7154;
-typedef struct ARWGeneratorState {
+typedef struct ARWGeneratorState
+{
     f32 spawnTimer;
 } ARWGeneratorState;
 
-typedef struct ARWGeneratorSetup {
+typedef struct ARWGeneratorSetup
+{
     u8 pad00[0x18];
     u16 spawnInterval;
     u16 projectileSpeed;
@@ -997,20 +843,18 @@ STATIC_ASSERT(offsetof(ARWGeneratorSetup, velocityX) == 0x1C);
 STATIC_ASSERT(offsetof(ARWGeneratorSetup, spreadX) == 0x22);
 STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnMode) == 0x25);
 
-extern void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
-extern void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
-
+extern void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+extern void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
 
 extern void fn_8006CB24(int obj);
 extern void Rcp_DisableDistortionFilter(void);
-extern void lightningRender(void *p);
+extern void lightningRender(void* p);
 extern f32 lbl_803E74DC;
 extern f32 lbl_803E75B0;
 extern f32 lbl_803E7600;
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 extern int ObjList_FindObjectById(int id);
 extern void androsshand_handleDamage(int obj, int hand);
@@ -1038,8 +882,6 @@ extern f32 lbl_803E75F0;
 extern f32 lbl_803E75F4;
 extern f32 lbl_803E75F8;
 
-
-
 extern void fn_8006CB50(void);
 extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
@@ -1050,35 +892,23 @@ extern f32 gAndrossInitAnimSpeed;
 extern f32 gAndrossInitSpawnCooldown;
 extern f32 gAndrossSpringStiffness;
 
-
-
-
-
-
-
-extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
-                                  u32 *outHitVolume);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
-extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f,
-                                    int g, int h, int i, int j, int k);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
+extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
+                                    int k);
 extern int lbl_803DC508;
 extern f32 lbl_803E75A8;
-
 
 extern f32 lbl_803E75AC;
 extern f32 gAndrossHandMoveAnimSpeeds[];
 
-
-
-
 extern int ObjList_FindObjectById(int id);
-extern void androssligh_updateBeam(struct GameObject *obj, int state);
+extern void androssligh_updateBeam(struct GameObject* obj, int state);
 
-
-extern void *Camera_GetViewMatrix(void);
-extern void *Camera_GetInverseViewRotationMatrix(void);
-extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
-extern void PSVECScale(void *dst, void *src, f32 scale);
+extern void* Camera_GetViewMatrix(void);
+extern void* Camera_GetInverseViewRotationMatrix(void);
+extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
 extern f32 lbl_803DC518;
 extern f32 lbl_803DC51C;
@@ -1091,9 +921,8 @@ extern f32 lbl_803E760C;
 
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
-
 extern f32 lbl_803E7480;
-extern int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState *animUpdate);
+extern int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
 extern void gf_levelcon_findLinkedObjects(int obj);
 extern int loadMapAndParent(int mapId);
 extern void mapUnload(int a, int b);
@@ -1115,24 +944,19 @@ extern f32 lbl_803E7488;
 extern f32 lbl_803E748C;
 extern f32 timeDelta;
 
-
-
-
 extern f32 lbl_803E745C;
-extern int mclightning_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+extern int mclightning_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E7440;
 
-extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E7450;
 extern f32 lbl_803E7454;
 extern f32 lbl_803E7458;
 
-
 extern f32 lbl_803E738C;
 extern int cmbsrc_update(int obj);
 
-
-extern void modelLightStruct_setSpecularColor(void *light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_setSpecularColor(void* light, u8 r, u8 g, u8 b, int a);
 extern f32 lbl_803E7360;
 extern f32 lbl_803E7364;
 extern f32 lbl_803E7368;
@@ -1154,8 +978,8 @@ extern f32 lbl_803E7398;
 extern int Camera_GetCurrentViewSlot(void);
 extern f32 interpolate(f32 a, f32 b, f32 c);
 extern void objfx_spawnLightPulse(int obj, f32 brightness, int b, int c, int d, f32 e, int f);
-extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void *vec);
-extern void lightSetField4D(void *light, int v);
+extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
+extern void lightSetField4D(void* light, int v);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 obj);
 extern f32 gCmbsrcColorRadiusScaleTable[];
 extern f32 lbl_803E73A8;
@@ -1168,11 +992,6 @@ extern f32 lbl_803E73C0;
 
 #pragma dont_inline on
 
-
-
-
-
-
 #pragma dont_inline reset
 
 extern void fn_8003B608(int r, int g, int b);
@@ -1182,13 +1001,11 @@ extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern const f32 lbl_803E72F8;
 extern const f32 lbl_803E7308;
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-extern void vecRotateZXY(int obj, f32 *vec);
-extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
-extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHitObject, int *outSphereIndex,
-                                              u32 *outHitVolume, float *outHitPosX,
-                                              float *outHitPosY, float *outHitPosZ);
-extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume,
-                                   u8 sphereIndex);
+extern void vecRotateZXY(int obj, f32* vec);
+extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
+                                              float* outHitPosX, float* outHitPosY, float* outHitPosZ);
+extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);
 extern int Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 x);
 extern f32 gTreeEffectColors[];
@@ -1204,16 +1021,12 @@ extern const f32 lbl_803E732C;
 
 #pragma dont_inline on
 
-
-
-
 #pragma dont_inline reset
 
-extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 
-
-extern int *gPlayerInterface;
-extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 val);
+extern int* gPlayerInterface;
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 oneOverTimeDelta;
 extern f32 Vec_xzDistance(int a, int b);
@@ -1221,11 +1034,11 @@ extern void characterDoEyeAnims(int obj, int p2);
 extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
 extern void dll_2E_func03(int obj, int p2);
 extern void dll_2E_func05(int obj, int p2, int p3, int p4, int p5);
-extern void dll_2E_func09(int p1, void *p2, void *p3, int p4);
+extern void dll_2E_func09(int p1, void* p2, void* p3, int p4);
 extern int gDll28BMoveBlendDataA[];
 extern int gDll28BMoveBlendDataB[];
-extern void *gDll28BSubstateHandlers[];
-extern void *gDll28BStateHandlers[];
+extern void* gDll28BSubstateHandlers[];
+extern void* gDll28BStateHandlers[];
 extern f32 gWcEarthWalkerFarPlayerDistance;
 extern f32 gWcEarthWalkerNearPlayerDistance;
 extern f32 gWcEarthWalkerIdleTimerThreshold;
@@ -1236,31 +1049,22 @@ extern f32 gWcEarthWalkerWalkMoveSpeed;
 extern f32 lbl_803E6D18;
 extern f32 gDll28BCurveInitParam;
 
-typedef struct Blob16 { int a, b, c, d; } Blob16;
-typedef struct ObjXform {
+typedef struct Blob16
+{
+    int a, b, c, d;
+} Blob16;
+typedef struct ObjXform
+{
     s16 rx, ry, rz;
     f32 scale;
     f32 x, y, z;
 } ObjXform;
-
-
-
-
-
-
-
-
-
-
-
 
 extern int dll_2E_func07(int obj, int p2, int state, int p4, int p5);
 extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int gEarthWalkerMoveBlendData;
 extern f32 gEarthWalkerLookAtMaxDistance;
-
-
 
 extern int Obj_IsObjectAlive(int obj);
 extern int Obj_GetPlayerObject(void);
@@ -1270,40 +1074,23 @@ extern f32 lbl_803E6C2C;
 extern f32 lbl_803E6C30;
 extern f32 lbl_803E6C34;
 
-
-extern ModgfxInterface **gModgfxInterface;
-extern void *lbl_803DDD80;
-
-
-
+extern ModgfxInterface** gModgfxInterface;
+extern void* lbl_803DDD80;
 
 extern void PSVECAdd(int p1, int p2, int p3);
-typedef struct Vec12 { int a, b, c; } Vec12;
-
-
-
-
-
-
+typedef struct Vec12
+{
+    int a, b, c;
+} Vec12;
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
 #pragma dont_inline on
 
-
-
-
-
-
-
 #pragma dont_inline on
 
-
-
 #pragma dont_inline reset
-
-
 
 #pragma dont_inline reset
 
@@ -1312,9 +1099,6 @@ extern f32 lbl_803E70A0;
 extern f32 gArwBombCollHitToleranceY;
 extern f32 gArwBombCollHitRadiusSq;
 extern f32 gArwBombCollPlaneHitRadius;
-
-
-
 
 extern f32 lbl_803E6ECC;
 
@@ -1325,10 +1109,8 @@ extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
 extern f32 mathSinf(f32 x);
-extern void PSVECScale(void *dst, void *src, f32 scale);
-extern void PSVECSubtract(void *a, void *b, void *ab);
-
-
+extern void PSVECScale(void* dst, void* src, f32 scale);
+extern void PSVECSubtract(void* a, void* b, void* ab);
 
 extern f32 lbl_803E6F08;
 extern f32 lbl_803E6F0C;
@@ -1338,13 +1120,12 @@ extern f32 lbl_803E6F18;
 extern f32 lbl_803E6F1C;
 extern f32 lbl_803E6F20;
 
-
 extern void warpToMap(int map, int p2);
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void lightSetFieldBC_8001db14(void *light, int v);
+extern void lightSetFieldBC_8001db14(void* light, int v);
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 extern f32 lbl_803E7014;
@@ -1356,9 +1137,8 @@ extern f32 lbl_803E7018;
 extern f32 lbl_803E721C;
 extern f32 lbl_803E7220;
 
-
-extern void modelLightStruct_getDiffuseColor(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
-extern void modelLightStruct_setGlowColor(void *light, u8 r, u8 g, u8 b, int e);
+extern void modelLightStruct_getDiffuseColor(void* light, u8* a, u8* b, u8* c, u8* d);
+extern void modelLightStruct_setGlowColor(void* light, u8 r, u8 g, u8 b, int e);
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;
 extern f32 lbl_803E71E0;
@@ -1370,19 +1150,15 @@ extern f32 lbl_803E71F8;
 extern f32 gArwProximityFadeInRate;
 extern f32 gArwProximityWarningDistance;
 
-
 extern f32 lbl_803E71A8;
 
-
-extern void *Camera_GetInverseViewMatrix(void);
+extern void* Camera_GetInverseViewMatrix(void);
 extern f32 lbl_803E7104;
 extern f32 lbl_803E7108;
 extern f32 lbl_803E710C;
 
-
 extern void arwarwing_spawnLaserShot(int obj, int state, int a, int b, int c);
 extern f32 gArwingFireTimerReset;
-
 
 extern f32 lbl_803E6F34;
 extern f32 gArwingExplodeModeTime;
@@ -1397,41 +1173,23 @@ extern void lockLevel(int idx, int p2);
 extern void warpToMap(int map, int p2);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 
-
-
 #pragma dont_inline on
 
 #pragma dont_inline reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-
 
 extern int ObjTrigger_IsSet(int obj);
 extern void hudFn_8011f38c(int arg);
-extern int fn_80296A9C(struct GameObject *player, int p2);
+extern int fn_80296A9C(struct GameObject* player, int p2);
 extern int objGetFirstChild(void);
 extern void staffSetGlow(int staff, int p2, int p3);
-
-
-
-
-
-
-
-
-
-
 
 extern f32 mathCosf(f32 x);
 extern f32 lbl_803E6BF0;
 extern f32 lbl_803E6BF4;
 extern f32 lbl_803E6BF8;
-
-
-
-
 
 extern int objModelGetVecFn_800395d8(int model, int idx);
 extern f32 fn_802945E0(f32 ratio);
@@ -1443,10 +1201,7 @@ extern f32 lbl_803E6F64;
 extern f32 lbl_803E6F68;
 extern f32 lbl_803E6F38;
 extern f32 lbl_803E6EF8;
-void arwarwinggu_setTextureFrame(struct GameObject *obj, int p2);
-
-
-
+void arwarwinggu_setTextureFrame(struct GameObject* obj, int p2);
 
 extern void ObjLink_AttachChild(int obj, int child, int p3);
 extern f32 lbl_803E6F2C;
@@ -1487,19 +1242,20 @@ extern f32 lbl_803E6FF0;
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
 
-
 extern f32 lbl_803E707C;
 extern f32 gArwBombCollActivateDistanceZ;
 extern f32 gArwBombCollAlphaFadeRate;
 extern f32 gArwBombCollSpinRate;
 extern f32 lbl_803E708C;
 
-typedef struct {
+typedef struct
+{
     u8 b80 : 1;
     u8 b40 : 1;
 } ArwBombFlags;
 
-typedef struct ARWBombCollState {
+typedef struct ARWBombCollState
+{
     f32 lifetime;
     ArwBombFlags flags;
     u8 pad05[3];
@@ -1508,7 +1264,6 @@ typedef struct ARWBombCollState {
 STATIC_ASSERT(sizeof(ArwBombFlags) == 0x1);
 STATIC_ASSERT(sizeof(ARWBombCollState) == 0x8);
 STATIC_ASSERT(offsetof(ARWBombCollState, flags) == 0x04);
-
 
 extern int lbl_803E7160;
 extern f32 lbl_803E716C;
@@ -1521,15 +1276,13 @@ extern f32 lbl_803E71D0;
 extern f32 lbl_803E71D4;
 void arwsquadron_applyCommandParams(int p1, int p2);
 
-typedef struct {
+typedef struct
+{
     u8 b80 : 1;
     u8 b40 : 1;
     u8 b20 : 1;
     u8 b10 : 1;
 } SquadFlags;
-
-
-
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1537,7 +1290,6 @@ typedef struct {
 #pragma dont_inline reset
 
 extern f32 lbl_803E7140;
-
 
 extern f32 lbl_803E7044;
 #pragma dont_inline on
@@ -1548,7 +1300,7 @@ extern int loadObjectAtObject(int obj);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int ObjList_FindNearestObjectByDefNo(int obj, int defNo, f32 *maxDistanceSq);
+extern int ObjList_FindNearestObjectByDefNo(int obj, int defNo, f32* maxDistanceSq);
 extern f32 lbl_803E7490;
 
 #pragma dont_inline on
@@ -1556,13 +1308,10 @@ extern f32 lbl_803E7490;
 
 extern int lbl_803DC4E8;
 
-
 extern f32 lbl_803E74AC;
 extern f32 lbl_803E74B0;
 extern f32 lbl_803E74D4;
 extern f32 lbl_803E74D8;
-
-
 
 extern int lbl_803DC4D8;
 extern int lbl_803DC4DC;
@@ -1576,17 +1325,12 @@ extern f32 lbl_803E74A0;
 extern f32 lbl_803E74A4;
 extern f32 lbl_803E74A8;
 
-
-
 extern f32 lbl_803DC4C0;
 extern f32 gAndrossArwingVelDamp;
 
-
 extern u8 lbl_803DC4C8;
 
-
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
-
 
 extern f32 lbl_803E6ECC;
 extern f32 lbl_803E6ED0;
@@ -1613,10 +1357,8 @@ extern f32 lbl_803E6FB4;
 extern f32 lbl_803E6FB8;
 extern f32 lbl_803E6FBC;
 
-
 extern f32 lbl_803E7040;
 extern f32 lbl_803E7048;
-
 
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
@@ -1633,44 +1375,46 @@ extern f32 lbl_803E6F38;
 extern f32 lbl_803E6F3C;
 extern f32 lbl_803E6F40;
 
-
 extern int objGetFlagsE5_2(int obj);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);
 extern int loadMapAndParent(int mapId);
 
-
 extern int gAndrossHandShotPitch;
 extern int lbl_803DC50C;
 extern int lbl_803DC510;
-
 
 extern void mapUnload(int a, int b);
 extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
 extern void registerNewScore(int a, int b, int c, int d);
 extern u8 gArwingCourseMapIds[8];
-typedef struct { u8 scoreFlag : 1; } Arw339Flags;
+typedef struct
+{
+    u8 scoreFlag : 1;
+} Arw339Flags;
 
-
-typedef struct { int a; int b; u16 c; } ArwInitCfg;
+typedef struct
+{
+    int a;
+    int b;
+    u16 c;
+} ArwInitCfg;
 extern ArwInitCfg gArwingInitConfig;
 extern int gArwingPathSetupData[];
 extern int sArwingPathName[];
 
-
-extern f32 PSVECMag(f32 *v);
-extern void PSVECNormalize(void *src, void *dst);
-extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
-extern f32 PSVECDotProduct(f32 *a, f32 *b);
-extern void PSMTXRotAxisRad(f32 *mtx, f32 *axis, f32 angle);
-extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+extern f32 PSVECMag(f32* v);
+extern void PSVECNormalize(void* src, void* dst);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+extern f32 PSVECDotProduct(f32* a, f32* b);
+extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 angle);
+extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern f32 fn_80291FF4(f32 x);
 extern f32 lbl_803E6C38;
 extern f32 lbl_803E6C6C;
 extern f32 lbl_803E6C70;
 extern f32 lbl_803E6C74;
-
 
 extern f32 gBarrelGenPi;
 extern f32 gBarrelGenAngleHalfRange;
@@ -1683,7 +1427,8 @@ extern f32 lbl_803E6C80;
 
 #pragma dont_inline reset
 
-typedef struct {
+typedef struct
+{
     u8 f80 : 1;
     u8 f40 : 1;
     u8 f20 : 1;
@@ -1696,43 +1441,39 @@ extern f32 lbl_803E7170;
 
 #pragma dont_inline on
 
-extern void Obj_SmoothTurnAnglesTowardVelocity(struct GameObject *a, int b, int c, f32 d, f32 e);
+extern void Obj_SmoothTurnAnglesTowardVelocity(struct GameObject* a, int b, int c, f32 d, f32 e);
 extern f32 lbl_803E7168;
 extern f32 lbl_803E719C;
 extern f32 lbl_803E71A0;
 extern f32 lbl_803E71A4;
 
+extern void ObjPath_GetPointLocalPosition(struct GameObject* obj, int idx, f32* x, f32* y, f32* z);
 
-
-extern void ObjPath_GetPointLocalPosition(struct GameObject *obj, int idx, f32 *x, f32 *y, f32 *z);
-
-typedef struct {
+typedef struct
+{
     s16 s0, s2, s4, s6;
     f32 f8;
     f32 fx, fy, fz;
 } SquadPfx;
 
-
 extern f32 lbl_803E71AC;
 extern f32 lbl_803E71B0;
 extern f32 lbl_803E71B4;
 
-
-extern void setMatrixFromObjectTransposed(void *transform, f32 *mtx);
+extern void setMatrixFromObjectTransposed(void* transform, f32* mtx);
 extern f32 lbl_803E718C;
 extern f32 lbl_803E7190;
 extern f32 gArwingSquadronPi;
 extern f32 gArwingSquadronSwayPhaseToAngleDiv;
 
-
 extern f32 lbl_803E7164;
 extern f32 lbl_803E71B8;
 extern f32 lbl_803E71BC;
 
-
 extern f32 lbl_803E6C68;
 
-typedef struct DrMusicContFlags {
+typedef struct DrMusicContFlags
+{
     u8 b_state : 1;
     u8 pad8_lo : 1;
     u8 b_e30 : 1;
@@ -1751,7 +1492,6 @@ typedef struct DrMusicContFlags {
     u8 b_9e7 : 1;
 } DrMusicContFlags;
 
-
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
@@ -1766,23 +1506,21 @@ extern f32 gDrMusicControlRestartPointX;
 extern f32 gDrMusicControlRestartPointY;
 extern f32 gDrMusicControlRestartPointZ;
 
-
 extern f32 lbl_803E6CA4;
 extern f32 lbl_803E6CD0;
 
-
 extern int gunpowderbarrel_isHeld(int obj);
 extern int gunpowderbarrel_canBeGrabbed(int obj);
-extern void gunpowderbarrel_addThrowVelocity(int obj, void *vec);
+extern void gunpowderbarrel_addThrowVelocity(int obj, void* vec);
 extern void gunpowderbarrel_setHeldState(int obj);
-extern int timerCountDown(void *timer);
-extern void PSVECNormalize(void *src, void *dst);
-extern void PSVECScale(void *dst, void *src, f32 scale);
-extern f32 PSVECDistance(void *a, void *b);
+extern int timerCountDown(void* timer);
+extern void PSVECNormalize(void* src, void* dst);
+extern void PSVECScale(void* dst, void* src, f32 scale);
+extern f32 PSVECDistance(void* a, void* b);
 extern int Obj_UpdateRomCurveFollowVelocity(int obj, int p2, f32 a, f32 b, f32 c, int p6);
-extern int voxmaps_traceWorldLine(void *p1, void *p2);
-extern void PSVECSubtract(void *a, void *b, void *ab);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
+extern int voxmaps_traceWorldLine(void* p1, void* p2);
+extern void PSVECSubtract(void* a, void* b, void* ab);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
 extern f32 gDrBarrelGenGrabRange;
@@ -1793,33 +1531,30 @@ extern f32 lbl_803E6CC0;
 extern f32 lbl_803DC3B0;
 extern f32 gDrBarrelGenGrabYOffset;
 
-
-extern void PSVECSubtract(void *a, void *b, void *ab);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
+extern void PSVECSubtract(void* a, void* b, void* ab);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
 extern f32 lbl_803E6CAC;
 
-typedef struct DrBarrelGrRenderParams {
+typedef struct DrBarrelGrRenderParams
+{
     s16 a;
     s16 b;
     s16 c;
     f32 d;
 } DrBarrelGrRenderParams;
 
-
-extern int dll_2E_func0A(int a, void *out);
-extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern int dll_2E_func0A(int a, void* out);
+extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E6BB8;
 extern f32 lbl_803E6BBC;
 extern f32 lbl_803E6BC0;
 
-
-extern void *playerGetFocusObject(void);
+extern void* playerGetFocusObject(void);
 extern void setAButtonIcon(int icon);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                   f32 scaleZ, void *args, int arg9);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
+                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern f32 lbl_803E6C08;
 extern f32 lbl_803E6C0C;
 extern f32 lbl_803E6C10;
@@ -1827,12 +1562,11 @@ extern f32 lbl_803E6C14;
 extern f32 lbl_803E6C18;
 extern f32 lbl_803E6C1C;
 
-
-extern void voxmaps_worldToGrid(void *world, void *grid);
-extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
+extern void voxmaps_worldToGrid(void* world, void* grid);
+extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 extern f32 lbl_803E6C58;
 
-extern void mm_free_(void *ptr);
+extern void mm_free_(void* ptr);
 extern f32 lbl_803E6C3C;
 extern f32 lbl_803E6C40;
 extern f32 lbl_803E6C44;
@@ -1840,7 +1574,6 @@ extern f32 lbl_803DC3A0;
 extern f32 lbl_803DC3A4;
 extern f32 lbl_803DC3A8;
 extern u16 lbl_803DC3AC;
-
 
 extern f32 lbl_803E6C5C;
 extern f32 gBarrelGenAngleWrapNeg;
@@ -1850,11 +1583,7 @@ extern f32 gBarrelGenTurnRateClampMin;
 extern f32 gBarrelGenTurnRateClampMax;
 extern f32 lbl_803E6C98;
 
-
-
-
-extern void voxmaps_gridToWorld(void *grid, void *out);
-
+extern void voxmaps_gridToWorld(void* grid, void* out);
 
 extern f32 lbl_803E70A0;
 extern f32 lbl_803E70B4;
@@ -1866,11 +1595,12 @@ extern f32 lbl_803E70C8;
 extern f32 lbl_803E70CC;
 extern int getArwing(void);
 extern int Obj_GetPlayerObject(void);
-extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 
-typedef struct {
+typedef struct
+{
     /* 0x0 */ int f0;
     /* 0x4 */ int f4;
     /* 0x8 */ int f8;
@@ -1879,7 +1609,6 @@ typedef struct {
     /* 0x14 */ f32 f14;
 } RingTable;
 extern RingTable lbl_8032B720[];
-
 
 extern f32 lbl_803E6EC8;
 extern f32 lbl_803E6ED4;
@@ -1893,7 +1622,6 @@ extern int getButtonsJustPressedIfNotBusy(int controller);
 extern int getButtonsHeld(int controller);
 extern f32 lbl_8032B4A8[];
 
-
 extern f32 lbl_803E6EF8;
 
 /* Forward declarations for graduated functions (split from placeholder_80220608). */
@@ -1903,15 +1631,15 @@ void DR_EnergyDisc_free(void);
 void DR_EnergyDisc_render(void);
 void DR_EnergyDisc_hitDetect(void);
 void DR_EnergyDisc_update(int obj);
-void DR_EnergyDisc_init(u8 *obj, u8 *setup);
+void DR_EnergyDisc_init(u8* obj, u8* setup);
 void DR_EnergyDisc_release(void);
 void DR_EnergyDisc_initialise(void);
 int DR_LightBea_getExtraSize(void);
 int DR_LightBea_getObjectTypeId(void);
-void DR_LightBea_free(struct GameObject *obj);
+void DR_LightBea_free(struct GameObject* obj);
 void DR_LightBea_hitDetect(void);
 void DR_LightBea_update(int obj);
-void DR_LightBea_init(struct GameObject *obj);
+void DR_LightBea_init(struct GameObject* obj);
 void DR_LightBea_release(void);
 void DR_LightBea_initialise(void);
 int drmusiccont_getExtraSize(void);
@@ -1935,7 +1663,7 @@ int drearthcal_getObjectTypeId(void);
 void drearthcal_free(void);
 void drearthcal_render(void);
 void drearthcal_hitDetect(void);
-void drearthcal_init(struct GameObject *obj, int setup);
+void drearthcal_init(struct GameObject* obj, int setup);
 void drearthcal_release(void);
 void drearthcal_initialise(void);
 int barrelgener_getLinkId(int obj);
@@ -1950,7 +1678,7 @@ void barrelgener_release(void);
 void barrelgener_initialise(void);
 int DR_BarrelGr_getExtraSize(void);
 int DR_BarrelGr_getObjectTypeId(void);
-void DR_BarrelGr_free(struct GameObject *obj);
+void DR_BarrelGr_free(struct GameObject* obj);
 void DR_BarrelGr_hitDetect(void);
 void DR_BarrelGr_release(void);
 void DR_BarrelGr_initialise(void);
@@ -1968,11 +1696,11 @@ void WCBouncyCra_free(void);
 void WCBouncyCra_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void WCBouncyCra_hitDetect(void);
 void WCBouncyCra_update(int obj);
-void WCBouncyCra_init(struct GameObject *obj, int setup);
+void WCBouncyCra_init(struct GameObject* obj, int setup);
 void WCBouncyCra_release(void);
 void WCBouncyCra_initialise(void);
 int wcpushblock_getExtraSize(void);
-int wcpushblock_getObjectTypeId(struct GameObject *obj);
+int wcpushblock_getObjectTypeId(struct GameObject* obj);
 void wcpushblock_free(void);
 void wcpushblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcpushblock_hitDetect(void);
@@ -1980,18 +1708,18 @@ void wcpushblock_init(int obj, int setup);
 void wcpushblock_release(void);
 void wcpushblock_initialise(void);
 void wcpushblock_update(int obj);
-void wclevelcont_getSolvedTileXYB(s16 value, s16 *outRow, s16 *outCol);
-void wclevelcont_getInitialTileXYB(s16 value, s16 *outRow, s16 *outCol);
+void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol);
+void wclevelcont_getInitialTileXYB(s16 value, s16* outRow, s16* outCol);
 int wclevelcont_getTileB(s16 i, s16 j);
 void wclevelcont_setTileB(int value, s16 i, s16 j);
-void wclevelcont_worldPosToTileB(struct GameObject *obj, f32 px, f32 pz, s16 *outRow, s16 *outCol);
-void wclevelcont_tileBToWorldPos(struct GameObject *obj, s16 col, s16 row, f32 *outXp, f32 *outZp);
-void wclevelcont_getSolvedTileXYA(s16 value, s16 *outRow, s16 *outCol);
-void wclevelcont_getInitialTileXYA(s16 value, s16 *outRow, s16 *outCol);
+void wclevelcont_worldPosToTileB(struct GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol);
+void wclevelcont_tileBToWorldPos(struct GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp);
+void wclevelcont_getSolvedTileXYA(s16 value, s16* outRow, s16* outCol);
+void wclevelcont_getInitialTileXYA(s16 value, s16* outRow, s16* outCol);
 int wclevelcont_getTileA(s16 i, s16 j);
 void wclevelcont_setTileA(int value, s16 i, s16 j);
-void wclevelcont_worldPosToTileA(struct GameObject *obj, f32 px, f32 pz, s16 *outRow, s16 *outCol);
-void wclevelcont_tileAToWorldPos(struct GameObject *obj, s16 col, s16 row, f32 *outXp, f32 *outZp);
+void wclevelcont_worldPosToTileA(struct GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol);
+void wclevelcont_tileAToWorldPos(struct GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp);
 int wclevelcont_getExtraSize(void);
 int wclevelcont_getObjectTypeId(void);
 void wclevelcont_free(int obj);
@@ -1999,69 +1727,69 @@ void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wclevelcont_hitDetect(void);
 void wclevelcont_syncProgressBits(int state);
 void wclevelcont_update(int obj);
-void fn_802251B4(int obj, WcLevelControlState *state);
-int wclevelcont_traceMoveA(struct GameObject *obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy);
-void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state);
-int wclevelcont_seqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
-int wclevelcont_traceMoveB(struct GameObject *obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy);
+void fn_802251B4(int obj, WcLevelControlState* state);
+int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy);
+void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state);
+int wclevelcont_seqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int wclevelcont_traceMoveB(struct GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy);
 void wclevelcont_init(int obj);
 void wclevelcont_release(void);
 void wclevelcont_initialise(void);
-int wcbeacon_aButtonCallback(struct GameObject *obj);
+int wcbeacon_aButtonCallback(struct GameObject* obj);
 int wcbeacon_getExtraSize(void);
-int wcbeacon_getObjectTypeId(struct GameObject *obj);
+int wcbeacon_getObjectTypeId(struct GameObject* obj);
 void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void wcbeacon_init(u8 *obj, u8 *setup);
+void wcbeacon_init(u8* obj, u8* setup);
 void wcbeacon_update(int obj);
 int wctile_getExtraSize(void);
-int wctile_getObjectTypeId(struct GameObject *obj);
+int wctile_getObjectTypeId(struct GameObject* obj);
 void wctile_free(void);
 void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wctile_hitDetect(void);
-void wctile_init(u8 *obj, u8 *setup);
+void wctile_init(u8* obj, u8* setup);
 void wctile_release(void);
 void wctile_initialise(void);
 void wctile_update(int obj);
 int wcpressures_getExtraSize(void);
-int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int wcpressures_getObjectTypeId(int obj);
 void wcpressures_free(int obj);
 void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcpressures_hitDetect(void);
 void wcpressures_update(int obj);
-void wcpressures_init(u8 *obj, u8 *setup);
+void wcpressures_init(u8* obj, u8* setup);
 void wcpressures_release(void);
 void wcpressures_initialise(void);
-int wctrexstatu_interactCallback(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+int wctrexstatu_interactCallback(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int wctrexstatu_getExtraSize(void);
-int wctrexstatu_getObjectTypeId(struct GameObject *obj);
+int wctrexstatu_getObjectTypeId(struct GameObject* obj);
 void wctrexstatu_free(void);
 void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void wctrexstatu_hitDetect(u8 *obj);
+void wctrexstatu_hitDetect(u8* obj);
 void wctrexstatu_update(void);
-void wctrexstatu_init(struct GameObject *obj, int setup, int fromLoad);
+void wctrexstatu_init(struct GameObject* obj, int setup, int fromLoad);
 void wctrexstatu_release(void);
 void wctrexstatu_initialise(void);
-void wctempledia_syncPartVisibility(struct GameObject *obj, u8 mask);
+void wctempledia_syncPartVisibility(struct GameObject* obj, u8 mask);
 int wctempledia_getExtraSize(void);
 int wctempledia_getObjectTypeId(void);
 void wctempledia_free(void);
 void wctempledia_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wctempledia_hitDetect(void);
-int wctempledia_interactCallback(struct GameObject *obj, int p2, ObjAnimUpdateState *animUpdate);
-void wctempledia_update(struct GameObject *obj);
+int wctempledia_interactCallback(struct GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
+void wctempledia_update(struct GameObject* obj);
 void wctempledia_init(int obj, int setup);
 void wctempledia_release(void);
 void wctempledia_initialise(void);
 void wctemplebri_updateModelWarp(int obj, int p2);
 int wctemplebri_getExtraSize(void);
-int wctemplebri_getObjectTypeId(struct GameObject *obj);
+int wctemplebri_getObjectTypeId(struct GameObject* obj);
 void wctemplebri_free(void);
 void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wctemplebri_hitDetect(void);
 void wctemplebri_release(void);
 void wctemplebri_initialise(void);
-int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate);
+int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
 void wctemplebri_update(int obj);
 void wctemplebri_init(int obj, int initData);
 int wcfloortile_getExtraSize(void);
@@ -2069,23 +1797,23 @@ int wcfloortile_getObjectTypeId(void);
 void wcfloortile_free(void);
 void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcfloortile_hitDetect(void);
-void wcfloortile_init(struct GameObject *obj);
+void wcfloortile_init(struct GameObject* obj);
 void wcfloortile_release(void);
 void wcfloortile_initialise(void);
 void wcfloortile_update(int obj);
 int wcapertures_getExtraSize(void);
-int wcapertures_getObjectTypeId(struct GameObject *obj);
-void wcapertures_free(struct GameObject *obj);
+int wcapertures_getObjectTypeId(struct GameObject* obj);
+void wcapertures_free(struct GameObject* obj);
 void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void wcapertures_hitDetect(struct GameObject *obj);
+void wcapertures_hitDetect(struct GameObject* obj);
 void wcapertures_release(void);
 void wcapertures_initialise(void);
-int wcapertures_interactCallback(struct GameObject *obj, int p2, ObjAnimUpdateState *animUpdate);
+int wcapertures_interactCallback(struct GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 void wcapertures_init(int obj, int initData);
-void wcapertures_update(struct GameObject *obj);
+void wcapertures_update(struct GameObject* obj);
 int waterflowwe_getExtraSize(void);
 int waterflowwe_getObjectTypeId(void);
-void waterflowwe_init(int obj, u8 *setup);
+void waterflowwe_init(int obj, u8* setup);
 void waterflowwe_free(int obj);
 void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void waterflowwe_hitDetect(void);
@@ -2097,8 +1825,8 @@ int suntemple_getObjectTypeId(void);
 void suntemple_free(void);
 void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void suntemple_hitDetect(int obj);
-int suntemple_interactCallback(struct GameObject *obj, int p2, ObjAnimUpdateState *animUpdate);
-void suntemple_init(u8 *obj, u8 *setup);
+int suntemple_interactCallback(struct GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
+void suntemple_init(u8* obj, u8* setup);
 void suntemple_update(int obj);
 void suntemple_release(void);
 void suntemple_initialise(void);
@@ -2146,36 +1874,36 @@ void dll_2A3_free(void);
 void dll_2A3_render(int obj, int p2, int p3, int p4, int p5);
 void dll_2A3_hitDetect(void);
 void dll_2A3_update(int obj);
-void dll_2A3_init(struct GameObject *obj);
+void dll_2A3_init(struct GameObject* obj);
 void dll_2A4_render(int obj, int p2, int p3, int p4, int p5);
 void dll_2A4_update(int obj);
-void dll_2A4_init(struct GameObject *obj);
+void dll_2A4_init(struct GameObject* obj);
 int PointLight_getExtraSize(void);
 int PointLight_getObjectTypeId(void);
-void pointlight_setEffectState(struct GameObject *obj, int enabled);
+void pointlight_setEffectState(struct GameObject* obj, int enabled);
 void PointLight_free(int obj);
-void PointLight_render(struct GameObject *obj);
+void PointLight_render(struct GameObject* obj);
 void PointLight_hitDetect(void);
-void PointLight_update(struct GameObject *obj);
+void PointLight_update(struct GameObject* obj);
 void PointLight_init(int obj, int setup);
 void PointLight_release(void);
 void PointLight_initialise(void);
 int directionallight_getExtraSize(void);
 int directionallight_getObjectTypeId(void);
-void directionallight_free(struct GameObject *obj);
+void directionallight_free(struct GameObject* obj);
 void directionallight_hitDetect(void);
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void directionallight_debugEdit(struct GameObject *obj, int state);
+void directionallight_debugEdit(struct GameObject* obj, int state);
 void directionallight_init(int obj, int setup);
 void directionallight_update(int obj);
 void directionallight_release(void);
 void directionallight_initialise(void);
 int ProjectedLight_getExtraSize(void);
 int ProjectedLight_getObjectTypeId(void);
-void ProjectedLight_free(struct GameObject *obj);
+void ProjectedLight_free(struct GameObject* obj);
 void ProjectedLight_hitDetect(void);
 void ProjectedLight_render(void);
-void ProjectedLight_update(struct GameObject *obj);
+void ProjectedLight_update(struct GameObject* obj);
 void ProjectedLight_init(int obj, int setup);
 void ProjectedLight_release(void);
 void ProjectedLight_initialise(void);
@@ -2184,8 +1912,8 @@ int ControlLight_getObjectTypeId(void);
 void ControlLight_free(void);
 void ControlLight_hitDetect(void);
 void ControlLight_render(void);
-void ControlLight_init(struct GameObject *obj, int setup);
-void ControlLight_update(struct GameObject *obj);
+void ControlLight_init(struct GameObject* obj, int setup);
+void ControlLight_update(struct GameObject* obj);
 void ControlLight_release(void);
 void ControlLight_initialise(void);
 int timer_getExtraSize(void);
@@ -2194,17 +1922,17 @@ int timer_hasExpired(int obj);
 int timer_isEffectMode(int obj);
 void timer_clearManualFlags(int obj);
 void timer_forceStart(int obj);
-void timer_addDuration(struct GameObject *obj, int duration);
+void timer_addDuration(struct GameObject* obj, int duration);
 void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void timer_init(int obj, int setup);
 void timer_update(int obj);
 int CntCounter_getExtraSize(void);
 int CntCounter_getObjectTypeId(void);
-void CntCounter_free(struct GameObject *obj);
+void CntCounter_free(struct GameObject* obj);
 void CntCounter_hitDetect(void);
 void CntCounter_render(void);
-void CntCounter_init(struct GameObject *obj);
-void CntCounter_update(struct GameObject *obj);
+void CntCounter_init(struct GameObject* obj);
+void CntCounter_update(struct GameObject* obj);
 void CntCounter_release(void);
 void CntCounter_initialise(void);
 int Vortex_getExtraSize(void);
@@ -2212,12 +1940,12 @@ int Vortex_getObjectTypeId(void);
 void Vortex_free(int obj);
 void Vortex_hitDetect(void);
 void Vortex_init(int obj, int initData);
-void Vortex_update(struct GameObject *obj);
+void Vortex_update(struct GameObject* obj);
 void Vortex_release(void);
 void Vortex_initialise(void);
 int ring_getExtraSize(void);
 int ring_getObjectTypeId(void);
-void ring_free(struct GameObject *obj);
+void ring_free(struct GameObject* obj);
 void ring_hitDetect(void);
 void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void ring_release(void);
@@ -2258,7 +1986,7 @@ int ARWBombColl_getObjectTypeId(void);
 void ARWBombColl_free(void);
 void ARWBombColl_hitDetect(void);
 void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void ARWBombColl_init(struct GameObject *obj, int setup);
+void ARWBombColl_init(struct GameObject* obj, int setup);
 void ARWBombColl_release(void);
 void ARWBombColl_initialise(void);
 int arwgenerato_getExtraSize(void);
@@ -2266,10 +1994,10 @@ int arwgenerato_getObjectTypeId(void);
 void arwgenerato_free(void);
 void arwgenerato_hitDetect(void);
 void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void arwgenerato_init(struct GameObject *obj, int setup);
+void arwgenerato_init(struct GameObject* obj, int setup);
 void arwgenerato_release(void);
 void arwgenerato_initialise(void);
-int ARWBlocker_SeqFn(struct GameObject *obj);
+int ARWBlocker_SeqFn(struct GameObject* obj);
 int ARWBlocker_getExtraSize(void);
 int ARWBlocker_getObjectTypeId(void);
 void ARWBlocker_free(void);
@@ -2283,12 +2011,12 @@ int ARWSpeedStr_getObjectTypeId(void);
 void ARWSpeedStr_free(void);
 void ARWSpeedStr_hitDetect(void);
 void ARWSpeedStr_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void ARWSpeedStr_init(struct GameObject *obj, int setup);
+void ARWSpeedStr_init(struct GameObject* obj, int setup);
 void ARWSpeedStr_release(void);
 void ARWSpeedStr_initialise(void);
 int arwproximit_getExtraSize(void);
 int arwproximit_getObjectTypeId(void);
-void arwproximit_free(struct GameObject *obj);
+void arwproximit_free(struct GameObject* obj);
 void arwproximit_hitDetect(void);
 void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void arwproximit_init(int obj, int setup, int p3);
@@ -2309,12 +2037,12 @@ int arwarwing_getObjectTypeId(void);
 void arwarwing_free(int obj);
 void arwarwing_release(void);
 void arwarwing_initialise(void);
-int ARWArwingGu_getExtraSize(struct GameObject *obj);
+int ARWArwingGu_getExtraSize(struct GameObject* obj);
 int ARWArwingGu_getObjectTypeId(void);
 void ARWArwingGu_free(void);
 void ARWArwingGu_render(void);
 void ARWArwingGu_hitDetect(void);
-void ARWArwingGu_init(struct GameObject *obj);
+void ARWArwingGu_init(struct GameObject* obj);
 void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible);
 void ARWArwingGu_release(void);
 void ARWArwingGu_initialise(void);
@@ -2330,7 +2058,7 @@ int arwlevelcon_getObjectTypeId(void);
 void arwlevelcon_free(void);
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5);
 void arwlevelcon_hitDetect(void);
-void arwlevelcon_onSeqFree(struct GameObject *obj);
+void arwlevelcon_onSeqFree(struct GameObject* obj);
 void arwlevelcon_release(void);
 void arwlevelcon_initialise(void);
 int ARWSquadron_getExtraSize(void);
@@ -2338,16 +2066,16 @@ int ARWSquadron_getObjectTypeId(void);
 void ARWSquadron_free(void);
 void ARWSquadron_render(int obj, int p2, int p3, int p4, int p5);
 void ARWSquadron_hitDetect(void);
-void arwprojectile_setLifetime(struct GameObject *obj, int lifetime);
-void arwprojectile_placeForward(struct GameObject *obj, f32 dist);
-void arwingandrossstuff_init(int obj, u8 *setup);
-void arwlevelcon_init(struct GameObject *obj, u8 *setup);
-int arwlevelcon_SeqFn(struct GameObject *obj, int p2, int data);
+void arwprojectile_setLifetime(struct GameObject* obj, int lifetime);
+void arwprojectile_placeForward(struct GameObject* obj, f32 dist);
+void arwingandrossstuff_init(int obj, u8* setup);
+void arwlevelcon_init(struct GameObject* obj, u8* setup);
+int arwlevelcon_SeqFn(struct GameObject* obj, int p2, int data);
 void arwarwing_render(int obj, int p2, int p3, int p4, int p5);
 void arwarwing_hitDetect(int obj);
 void ARWArwingGu_update(int obj);
 void arwingandrossstuff_update(int obj);
-void arwlevelcon_update(struct GameObject *obj);
+void arwlevelcon_update(struct GameObject* obj);
 void arwgenerato_update(int obj);
 int andross_getExtraSize(void);
 int andross_getObjectTypeId(void);
@@ -2363,10 +2091,10 @@ void AndrossHand_update(int obj);
 int androssligh_getExtraSize(void);
 int androssligh_getObjectTypeId(void);
 void androssligh_free(void);
-void androssligh_render(struct GameObject *obj);
+void androssligh_render(struct GameObject* obj);
 void androssligh_setState(int obj, int newState, u8 force);
 int andross_SeqFn(int obj);
-void andross_init(int obj, u8 *setup);
+void andross_init(int obj, u8* setup);
 int AndrossBrain_getExtraSize(void);
 int AndrossBrain_getObjectTypeId(void);
 void AndrossBrain_free(void);
@@ -2379,26 +2107,26 @@ void androssbrain_setState(int obj, int newState, u8 force);
 void androsshand_handleDamage(int obj, int hand);
 void androssligh_init(void);
 void AndrossBrain_init(int obj);
-void AndrossHand_init(int obj, u8 *setup);
+void AndrossHand_init(int obj, u8* setup);
 void androssligh_update(int obj);
-void androssligh_updateBeam(struct GameObject *obj, int beam);
+void androssligh_updateBeam(struct GameObject* obj, int beam);
 void AndrossBrain_update(int obj);
-int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState *animUpdate);
+int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
 int gf_levelcon_getExtraSize(void);
 int gf_levelcon_getObjectTypeId(void);
 void gf_levelcon_hitDetect(void);
 void gf_levelcon_initialise(void);
 void gf_levelcon_release(void);
 void gf_levelcon_free(void);
-void gf_levelcon_update(struct GameObject *obj);
+void gf_levelcon_update(struct GameObject* obj);
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void gf_levelcon_init(int obj);
 int tree_getExtraSize(void);
-int mclightning_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+int mclightning_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int mclightning_getExtraSize(void);
 void mclightning_free(int obj);
-void mclightning_update(struct GameObject *obj);
-void mclightning_init(int obj, u8 *setup);
+void mclightning_update(struct GameObject* obj);
+void mclightning_init(int obj, u8* setup);
 void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 int cmbsrc_getExtraSize(void);
 int cmbsrc_getObjectTypeId(void);
@@ -2415,11 +2143,11 @@ void cmbsrc_hitDetect(int obj);
 int cmbsrc_cycleColor(int obj, int state);
 void cmbsrc_updateVisuals(int obj, int state);
 int cmbsrc_update(int obj);
-void cmbsrc_init(int obj, u8 *setup);
+void cmbsrc_init(int obj, u8* setup);
 void tree_spawnAmbientEffect(int obj, int p2, s8 index);
 void tree_updateAmbientEffects(int obj, int p2);
 void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void tree_init(int obj, u8 *setup);
+void tree_init(int obj, u8* setup);
 void tree_update(int obj);
 void gf_levelcon_findLinkedObjects(int obj);
 void dll_28B_free(int obj);
@@ -2427,18 +2155,18 @@ void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 int dll_28B_substateHandler3(int obj, int ai);
 int dll_28B_substateHandler2(int obj, int ai);
 int dll_28B_substateHandler1(int obj, int ai);
-int dll_28B_stateHandler3(struct GameObject *obj, int ai);
-int dll_28B_stateHandler2(struct GameObject *obj, int ai);
+int dll_28B_stateHandler3(struct GameObject* obj, int ai);
+int dll_28B_stateHandler2(struct GameObject* obj, int ai);
 int dll_28B_stateHandler1(int obj, int ai);
 void dll_28B_update(int obj);
 void dll_28B_init(int obj);
 void dll_28B_initialise(void);
-int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate, int shouldAdvanceMove);
+int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove);
 void earthwalker_init(int obj, int setup);
 void barrelgener_update(int obj);
 void dll_299_free(int obj);
 void dll_299_update(int obj);
-void dll_299_init(struct GameObject *obj, int setup);
+void dll_299_init(struct GameObject* obj, int setup);
 void arwarwing_setFlightHalfWidth(int arwing, f32 width);
 int arwarwing_getRotY(int arwing);
 void arwarwing_setRotY(int arwing, int rotY);
@@ -2460,14 +2188,14 @@ int arwarwing_incrementPickup6D8Count(int arwing);
 int arwarwing_incrementCollectedRingCount(int arwing);
 void arwarwing_addMaxHealth(int arwing, int p2);
 void arwarwing_addHealth(int arwing, int p2);
-void arwbombcoll_updateMovingAxis(struct GameObject *obj, RingState *state);
-void Ring_onCollect(struct GameObject *obj, RingState *state, int arwing);
-int arwbombcoll_checkArwingCollision(struct GameObject *obj, RingState *state, int arwing);
-void arwarwing_clampToFlightBounds(struct GameObject *obj, int state);
+void arwbombcoll_updateMovingAxis(struct GameObject* obj, RingState* state);
+void Ring_onCollect(struct GameObject* obj, RingState* state, int arwing);
+int arwbombcoll_checkArwingCollision(struct GameObject* obj, RingState* state, int arwing);
+void arwarwing_clampToFlightBounds(struct GameObject* obj, int state);
 void arwarwing_updateFlightPhysics(int obj, int state);
 void arwarwing_updateBombFire(int obj, int state);
 void arwarwing_emitDamageEffects(int obj, int state);
-void arwarwing_warpByCourse(struct GameObject *obj);
+void arwarwing_warpByCourse(struct GameObject* obj);
 void arwprojectile_createLinkedEffect(int obj, u8 enable);
 void ARWBlocker_update(int obj);
 void arwproximit_update(int obj);
@@ -2481,13 +2209,13 @@ void arwarwing_upgradeLaserLevel(int arwing);
 int arwarwing_isExplodingOrWarping(int arwing);
 int arwarwing_isBarrelRolling(int arwing);
 int arwarwing_isDead(int arwing);
-int mcupgrade_SeqFn(struct GameObject *obj, int unused, CntHitObjectAnimEvent *event);
-int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int mcupgrade_SeqFn(struct GameObject* obj, int unused, CntHitObjectAnimEvent* event);
+int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void mcupgrade_update(int obj);
-void mcupgrade_init(struct GameObject *obj);
+void mcupgrade_init(struct GameObject* obj);
 void mcupgradema_update(int obj);
-void mcupgradema_init(struct GameObject *obj);
+void mcupgradema_init(struct GameObject* obj);
 void mcstaffeffe_render(int obj);
 void mcstaffeffe_update(void);
 void mcstaffeffe_init(int obj, int setup);
@@ -2495,21 +2223,21 @@ int DR_CloudPer_setScale(int obj);
 int DR_CloudPer_selectActiveCloud(int obj);
 void DR_CloudPer_init(int obj, int setup);
 void arwarwing_updateRollAndEngine(int obj, int state);
-void arwarwinggu_setTextureFrame(struct GameObject *obj, int p2);
-void arwarwing_clearAimSnapshot(struct GameObject *obj);
+void arwarwinggu_setTextureFrame(struct GameObject* obj, int p2);
+void arwarwing_clearAimSnapshot(struct GameObject* obj);
 void arwarwing_initAttachments(int obj, int state);
 void ARWBombColl_update(int obj);
 void ARWSquadron_init(int obj, int setup);
-void fn_80231058(struct GameObject *obj, int src);
-void fn_8023137C(struct GameObject *obj, f32* src);
-void fn_8022ED74(struct GameObject *obj, int v);
-void arwbombcoll_setLifetime(struct GameObject *obj, int v);
-void fn_80231028(struct GameObject *obj, int v);
-void fn_8023134C(struct GameObject *obj, int v);
-void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
-void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
+void fn_80231058(struct GameObject* obj, int src);
+void fn_8023137C(struct GameObject* obj, f32* src);
+void fn_8022ED74(struct GameObject* obj, int v);
+void arwbombcoll_setLifetime(struct GameObject* obj, int v);
+void fn_80231028(struct GameObject* obj, int v);
+void fn_8023134C(struct GameObject* obj, int v);
+void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
 void arwarwinggu_applyTextureFrame(int obj);
-void fn_8022ECE0(struct GameObject *obj, f32 param);
+void fn_8022ECE0(struct GameObject* obj, f32 param);
 void arwarwing_spawnBomb(int obj, int state, int side);
 void fn_80239DD8(int p1, int p2);
 void fn_80239EAC(int p1, int p2);
@@ -2520,17 +2248,17 @@ void fn_80239FCC(int p1, int p2);
 int fn_8023A6A4(int p1, f32 a, f32 b, f32 c);
 void fn_8023A3E4(int p1, int p2);
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
-void arwarwing_resetFlightState(struct GameObject *obj);
+void arwarwing_resetFlightState(struct GameObject* obj);
 void arwarwingbo_update(int obj);
-void arwarwing_updateThrusters(struct GameObject *obj, int state);
+void arwarwing_updateThrusters(struct GameObject* obj, int state);
 void arwarwing_handlePathDamage(int obj, int state);
 void arwarwing_handleObjectDamage(int obj, int state);
 void androsshand_spawnShot(int obj, int hand, int p3);
-int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void arwarwing_init(int obj);
-void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c);
+void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c);
 int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int flag);
-int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6);
+int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c, int flag, int* p6);
 void arwsquadron_applyCommandParams(int p1, int p2);
 void arwsquadron_followPath(int p1, int p2);
 void arwsquadron_updateVolley(int p1, int p2, int p3);
@@ -2538,21 +2266,21 @@ void arwsquadron_emitEffects(int p1, int p2);
 void arwsquadron_handleDamage(int obj, int state);
 void arwsquadron_followLeader(int p1, int p2);
 void ARWSquadron_update(int obj);
-void Obj_SpawnHitLightAndFade(int obj, f32 *p2);
-void drmusiccont_init(struct GameObject *obj);
+void Obj_SpawnHitLightAndFade(int obj, f32* p2);
+void drmusiccont_init(struct GameObject* obj);
 void drmusiccont_update(int obj);
-void DR_BarrelGr_init(struct GameObject *obj, int setup);
+void DR_BarrelGr_init(struct GameObject* obj, int setup);
 void DR_BarrelGr_update(int obj);
 void DR_BarrelGr_render(int obj, int p2, int p3, int p4, int p5);
 void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5);
 void drearthcal_update(int obj);
-int Obj_UpdateLightningCluster(int obj, void **entries, int count, f32 intensity, void **light);
-void Obj_SmoothTurnAnglesTowardVelocity(struct GameObject *a, int b, int c, f32 d, f32 e);
+int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, void** light);
+void Obj_SmoothTurnAnglesTowardVelocity(struct GameObject* a, int b, int c, f32 d, f32 e);
 int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4);
-int voxmaps_traceWorldLine(void *p1, void *p2);
-void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale);
+int voxmaps_traceWorldLine(void* p1, void* p2);
+void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale);
 void ring_update(int obj);
 void arwarwing_readControls(int obj, int state);
-void arwarwing_updateBarrelRoll(struct GameObject *obj, int state);
+void arwarwing_updateBarrelRoll(struct GameObject* obj, int state);
 
 #endif

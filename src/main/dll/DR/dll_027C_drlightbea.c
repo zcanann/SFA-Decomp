@@ -29,7 +29,7 @@ int DR_LightBea_getObjectTypeId(void)
     return 0;
 }
 
-void DR_LightBea_free(struct GameObject *obj)
+void DR_LightBea_free(struct GameObject* obj)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     LightningEffect* buffer = state->handle;
@@ -122,7 +122,7 @@ void DR_LightBea_update(int obj)
     }
 }
 
-void DR_LightBea_init(struct GameObject *obj)
+void DR_LightBea_init(struct GameObject* obj)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     state->flags.bit80 = 0;

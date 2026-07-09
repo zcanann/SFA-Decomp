@@ -90,7 +90,7 @@ void TrickyWarp_update(int obj)
     }
 }
 
-int fn_8017FFD0(struct GameObject *obj, TrickyWarpState* state)
+int fn_8017FFD0(struct GameObject* obj, TrickyWarpState* state)
 {
     int curveCount;
     TrickyWarpCurveEntry** curveEntries;

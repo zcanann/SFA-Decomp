@@ -43,9 +43,9 @@ typedef struct FogControlState
 
 int FogControl_getExtraSize(void);
 int FogControl_getObjectTypeId(void);
-void FogControl_free(struct GameObject *obj);
+void FogControl_free(struct GameObject* obj);
 void FogControl_hitDetect(void);
-void FogControl_update(struct GameObject *obj);
-void FogControl_init(struct GameObject *obj, FogcontrolPlacement* placement);
+void FogControl_update(struct GameObject* obj);
+void FogControl_init(struct GameObject* obj, FogcontrolPlacement* placement);
 
 #endif /* MAIN_DLL_DLL_0140_FOGCONTROL_H_ */

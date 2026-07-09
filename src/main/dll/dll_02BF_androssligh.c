@@ -42,7 +42,7 @@ STATIC_ASSERT(offsetof(AndrosslighState, boltAge) == 0x8);
 STATIC_ASSERT(offsetof(AndrosslighState, state) == 0xC);
 STATIC_ASSERT(offsetof(AndrosslighState, prevState) == 0xD);
 
-void androssligh_updateBeam(struct GameObject *obj, int beam)
+void androssligh_updateBeam(struct GameObject* obj, int beam)
 {
     extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
     f32 start[3];
@@ -125,7 +125,7 @@ void androssligh_free(void)
 {
 }
 
-void androssligh_render(struct GameObject *obj)
+void androssligh_render(struct GameObject* obj)
 {
     void* bolt = ((AndrosslighState*)(obj)->extra)->bolt;
 

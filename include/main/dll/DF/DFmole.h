@@ -3,8 +3,8 @@
 
 #include "ghidra_import.h"
 
-void dfropenode_free(struct GameObject *obj);
-void FUN_801c1fb8(double param_1,int param_2,float *param_3);
-void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float *param_5);
+void dfropenode_free(struct GameObject* obj);
+void FUN_801c1fb8(double param_1, int param_2, float* param_3);
+void FUN_801c20b8(double param_1, int param_2, float* param_3, float* param_4, float* param_5);
 
 #endif /* MAIN_DLL_DF_DFMOLE_H_ */

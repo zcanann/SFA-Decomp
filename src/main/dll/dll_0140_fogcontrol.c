@@ -39,7 +39,7 @@ int FogControl_getObjectTypeId(void)
     return 0x0;
 }
 
-void FogControl_free(struct GameObject *obj)
+void FogControl_free(struct GameObject* obj)
 {
     FogControlState* st = (obj)->extra;
     if (st->on)
@@ -54,7 +54,7 @@ void FogControl_hitDetect(void)
 
 /* FogControl_update: ramp the fog blend toward the gamebit-selected
  * target and feed the heavy fog params. */
-void FogControl_update(struct GameObject *obj)
+void FogControl_update(struct GameObject* obj)
 {
     u8* setup = (u8*)(obj)->anim.placement;
     FogControlState* st = (obj)->extra;
@@ -131,7 +131,7 @@ void FogControl_update(struct GameObject *obj)
     }
 }
 
-void FogControl_init(struct GameObject *obj, FogcontrolPlacement* placement)
+void FogControl_init(struct GameObject* obj, FogcontrolPlacement* placement)
 {
     FogControlState* st;
     u8 cv;

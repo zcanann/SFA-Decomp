@@ -50,7 +50,7 @@ enum QuestWellRow
     QUESTWELL_UNUSED = 8         /* Nowhere - dead 9th token */
 };
 
-int GM_MazeWell_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int GM_MazeWell_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GmmazewellState* state = (obj)->extra;
     int i;
@@ -182,7 +182,7 @@ checkValue:
     objRenderFn_80041018(obj);
 }
 
-void GM_MazeWell_init(struct GameObject *obj)
+void GM_MazeWell_init(struct GameObject* obj)
 {
     GmmazewellState* state = (obj)->extra;
     state->unk0 = 0;

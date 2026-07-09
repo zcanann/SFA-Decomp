@@ -186,7 +186,7 @@ void gf_levelcon_free(void)
     setIsOvercast(1);
 }
 
-void gf_levelcon_update(struct GameObject *obj)
+void gf_levelcon_update(struct GameObject* obj)
 {
     (obj)->animEventCallback = gf_levelcon_SeqFn;
 }

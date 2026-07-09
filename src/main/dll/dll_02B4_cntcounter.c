@@ -36,7 +36,7 @@ int CntCounter_getObjectTypeId(void)
     return 0;
 }
 
-void CntCounter_free(struct GameObject *obj)
+void CntCounter_free(struct GameObject* obj)
 {
     CntCounterState* state = (obj)->extra;
     if (state->displayHud != 0)
@@ -53,7 +53,7 @@ void CntCounter_hitDetect(void)
 {
 }
 
-void CntCounter_update(struct GameObject *obj)
+void CntCounter_update(struct GameObject* obj)
 {
     CntCounterState* state = (obj)->extra;
     CntCounterSetup* setup = (CntCounterSetup*)(obj)->anim.placementData;
@@ -92,7 +92,7 @@ void CntCounter_update(struct GameObject *obj)
     }
 }
 
-void CntCounter_init(struct GameObject *obj)
+void CntCounter_init(struct GameObject* obj)
 {
     CntCounterState* state = (obj)->extra;
     state->displayHud = 0;

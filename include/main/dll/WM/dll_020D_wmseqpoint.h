@@ -53,8 +53,8 @@ int wmseqpoint_getObjectTypeId(void);
 void wmseqpoint_free(void);
 void wmseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wmseqpoint_hitDetect(void);
-void wmseqpoint_update(struct GameObject *obj);
-void wmseqpoint_init(struct GameObject *obj, int setup);
+void wmseqpoint_update(struct GameObject* obj);
+void wmseqpoint_init(struct GameObject* obj, int setup);
 void wmseqpoint_release(void);
 void wmseqpoint_initialise(void);
 

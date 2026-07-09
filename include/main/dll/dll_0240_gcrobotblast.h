@@ -11,7 +11,7 @@ void GCRobotBlast_free(void);
 void GCRobotBlast_render(void);
 void GCRobotBlast_hitDetect(void);
 void GCRobotBlast_update(void);
-void GCRobotBlast_init(struct GameObject *obj, s8* def);
+void GCRobotBlast_init(struct GameObject* obj, s8* def);
 void GCRobotBlast_release(void);
 void GCRobotBlast_initialise(void);
 

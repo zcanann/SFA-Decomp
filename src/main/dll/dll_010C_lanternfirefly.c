@@ -402,7 +402,7 @@ void LanternFireFly_initialise(void)
 }
 
 /* Helpers placed last (anti-inline): LanternFireFly_update above calls both. */
-void fn_801868D0(struct GameObject *obj)
+void fn_801868D0(struct GameObject* obj)
 {
     typedef struct
     {
@@ -443,7 +443,7 @@ void fn_801868D0(struct GameObject *obj)
     vecRotateZXY(&rot, &state->offX);
 }
 
-void fn_801869DC(struct GameObject *obj)
+void fn_801869DC(struct GameObject* obj)
 {
     typedef struct
     {
@@ -464,9 +464,9 @@ void fn_801869DC(struct GameObject *obj)
     if (((LFF2*)&state->modeFlags)->mode == 1)
     {
         int player = Obj_GetPlayerObject();
-        state->speed = lbl_803E3AC4 * Vec_distance((void*)&(obj)->anim.worldPosX,
-                                                   &((GameObject*)player)->anim.worldPosX) +
-                       lbl_803E3AC0;
+        state->speed =
+            lbl_803E3AC4 * Vec_distance((void*)&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) +
+            lbl_803E3AC0;
     }
     else
     {

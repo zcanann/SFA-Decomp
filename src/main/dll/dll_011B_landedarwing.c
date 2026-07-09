@@ -99,7 +99,7 @@ extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void arwarwinggu_setTextureFrame(struct GameObject *obj, int arg);
+extern void arwarwinggu_setTextureFrame(struct GameObject* obj, int arg);
 extern void arwarwinggu_applyTextureFrame(int obj);
 extern int playerGetFocusObject(int obj);
 
@@ -255,7 +255,7 @@ void landed_arwing_renderPathEffects(int obj)
 #define MAP_EVENT_SET(mapId, value)     (*gMapEventInterface)->setMapAct((mapId), (value))
 #define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (arg), (value))
 
-int Landed_Arwing_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int Landed_Arwing_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     int def;
@@ -546,7 +546,7 @@ void landed_arwing_update(int obj)
     }
 }
 
-void landed_arwing_init(struct GameObject *obj, int param)
+void landed_arwing_init(struct GameObject* obj, int param)
 {
     LandedArwingState* state = (obj)->extra;
     (obj)->objectFlags = (obj)->objectFlags | LANDEDARWING_OBJFLAG_HITDETECT_DISABLED;
@@ -645,7 +645,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta, &events);
 }
 
-void landed_arwing_updateDamageTexture(struct GameObject *obj, LandedArwingState* state)
+void landed_arwing_updateDamageTexture(struct GameObject* obj, LandedArwingState* state)
 {
     int def;
     ObjTextureRuntimeSlot* texture;

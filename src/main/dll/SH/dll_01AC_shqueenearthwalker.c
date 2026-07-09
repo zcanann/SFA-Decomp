@@ -56,7 +56,7 @@ extern int characterDoEyeAnims(void* obj, void* p2);
 extern int cMenuGetSelectedItem(void);
 extern int getYButtonItem(s16* outTrigger);
 extern void* getTrickyObject(void);
-extern int playerHasSpell(struct GameObject *obj, int param);
+extern int playerHasSpell(struct GameObject* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
@@ -374,7 +374,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     fn_8003B500(obj, (void*)((int)state + 0x8), lbl_803E53F8);
 }
 
-void sh_queenearthwalker_init(struct GameObject *obj, QueenEarthWalkerMapData* mapData)
+void sh_queenearthwalker_init(struct GameObject* obj, QueenEarthWalkerMapData* mapData)
 {
     (obj)->anim.rotX = (s16)(mapData->yawByte << 8);
     (obj)->animEventCallback = sh_queenearthwalker_processAnimEvents;

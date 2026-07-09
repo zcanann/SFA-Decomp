@@ -6,71 +6,77 @@
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
 
-#define MAGICPLANT_DLL_ID 0x00FE
-#define MAGICPLANT_CLASS_ID 0x0065
-#define MAGICPLANT_DEF_ID 0x04FE
-#define MAGICPLANT_OBJECT_DEF_BYTES 0x100
-#define MAGICPLANT_PLACEMENT_BYTES 0x20
-#define MAGICPLANT_EXTRA_STATE_BYTES 0x10
-#define MAGICPLANT_OBJECT_TYPE_BASE 0x400
-#define MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT 11
+#define MAGICPLANT_DLL_ID                     0x00FE
+#define MAGICPLANT_CLASS_ID                   0x0065
+#define MAGICPLANT_DEF_ID                     0x04FE
+#define MAGICPLANT_OBJECT_DEF_BYTES           0x100
+#define MAGICPLANT_PLACEMENT_BYTES            0x20
+#define MAGICPLANT_EXTRA_STATE_BYTES          0x10
+#define MAGICPLANT_OBJECT_TYPE_BASE           0x400
+#define MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT    11
 #define MAGICPLANT_OBJECT_FLAGS_CHILD_EFFECTS 0x2000
 
-typedef struct MagicPlantSetup {
-  u8 pad00[0x14];
-  int eventId;
-  u16 eventDuration;
-  u8 pad1A;
-  u8 gemColor; /* 0x1b: gem colour; indexes gMagicPlantGemDefIds (MagicPlantGemColor) */
-  u8 modelIndex;
-  u8 yawByte;
-  u8 pad1E[MAGICPLANT_PLACEMENT_BYTES - 0x1E];
+typedef struct MagicPlantSetup
+{
+    u8 pad00[0x14];
+    int eventId;
+    u16 eventDuration;
+    u8 pad1A;
+    u8 gemColor; /* 0x1b: gem colour; indexes gMagicPlantGemDefIds (MagicPlantGemColor) */
+    u8 modelIndex;
+    u8 yawByte;
+    u8 pad1E[MAGICPLANT_PLACEMENT_BYTES - 0x1E];
 } MagicPlantSetup;
 
-typedef struct MagicPlantState {
-  u32 childObject;
-  f32 animProgress;
-  f32 animStepScale;
-  s16 idleTimer;
-  u8 pad0E;
-  s8 mode;
+typedef struct MagicPlantState
+{
+    u32 childObject;
+    f32 animProgress;
+    f32 animStepScale;
+    s16 idleTimer;
+    u8 pad0E;
+    s8 mode;
 } MagicPlantState;
 
-typedef struct MagicPlantObject {
-  ObjAnimComponent objAnim;
-  u16 objectFlags;
-  u8 padB2[0xB8 - 0xB2];
-  MagicPlantState *state;
-  void *seqCallback;
-  u8 padC0[0xEB - 0xC0];
-  u8 childLinkActive;
+typedef struct MagicPlantObject
+{
+    ObjAnimComponent objAnim;
+    u16 objectFlags;
+    u8 padB2[0xB8 - 0xB2];
+    MagicPlantState* state;
+    void* seqCallback;
+    u8 padC0[0xEB - 0xC0];
+    u8 childLinkActive;
 } MagicPlantObject;
 
-enum MagicPlantMode {
-  MAGICPLANT_MODE_WAIT_FOR_EVENT,
-  MAGICPLANT_MODE_ACTIVE,
-  MAGICPLANT_MODE_FADE_OUT,
-  MAGICPLANT_MODE_FADE_IN,
-  MAGICPLANT_MODE_HIT_REACT
+enum MagicPlantMode
+{
+    MAGICPLANT_MODE_WAIT_FOR_EVENT,
+    MAGICPLANT_MODE_ACTIVE,
+    MAGICPLANT_MODE_FADE_OUT,
+    MAGICPLANT_MODE_FADE_IN,
+    MAGICPLANT_MODE_HIT_REACT
 };
 
 /* MagicPlantSetup.gemColor -> gMagicPlantGemDefIds[] object-def id. Live-verified
  * in Dolphin by forcing each variant and watching the regrown gem's colour. */
-enum MagicPlantGemColor {
-  MAGICPLANT_GEM_GREEN  = 0,  /* def 0x2c4 */
-  MAGICPLANT_GEM_RED    = 1,  /* def 0x2cd */
-  MAGICPLANT_GEM_YELLOW = 2,  /* def 0x2ce */
-  MAGICPLANT_GEM_BLUE   = 3,  /* def 0x2cf */
+enum MagicPlantGemColor
+{
+    MAGICPLANT_GEM_GREEN = 0,  /* def 0x2c4 */
+    MAGICPLANT_GEM_RED = 1,    /* def 0x2cd */
+    MAGICPLANT_GEM_YELLOW = 2, /* def 0x2ce */
+    MAGICPLANT_GEM_BLUE = 3,   /* def 0x2cf */
 };
 
 /* ObjAnim_SetCurrentMove indices for the magic plant. Live-verified in Dolphin
  * (watched currentMove through a shoot->release->reopen cycle and forced move 1). */
-enum MagicPlantMove {
-  MAGICPLANT_MOVE_CLOSED    = 0,  /* closed bud; open/close driven by the event timer */
-  MAGICPLANT_MOVE_SWAY_FAST = 1,  /* the idle sway at 2x speed; plays once, then -> IDLE */
-  MAGICPLANT_MOVE_BURST     = 2,  /* hit-react burst-open that releases the gem (set in dll_00FD) */
-  MAGICPLANT_MOVE_HIT       = 3,  /* hit recoil, set the frame it is struck */
-  MAGICPLANT_MOVE_IDLE      = 4,  /* open, idle sway */
+enum MagicPlantMove
+{
+    MAGICPLANT_MOVE_CLOSED = 0,    /* closed bud; open/close driven by the event timer */
+    MAGICPLANT_MOVE_SWAY_FAST = 1, /* the idle sway at 2x speed; plays once, then -> IDLE */
+    MAGICPLANT_MOVE_BURST = 2,     /* hit-react burst-open that releases the gem (set in dll_00FD) */
+    MAGICPLANT_MOVE_HIT = 3,       /* hit recoil, set the frame it is struck */
+    MAGICPLANT_MOVE_IDLE = 4,      /* open, idle sway */
 };
 
 STATIC_ASSERT(sizeof(MagicPlantSetup) == MAGICPLANT_PLACEMENT_BYTES);
@@ -91,71 +97,67 @@ STATIC_ASSERT(offsetof(MagicPlantObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(MagicPlantObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(MagicPlantObject, childLinkActive) == 0xEB);
 
-void MagicPlant_updateActive(int obj, MagicPlantSetup *setup, MagicPlantState *state);
-void MagicPlant_spawnChild(int obj,int objectId);
-void FUN_8017f7ec(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 u32 param_9,u32 param_10,int *param_11,u32 param_12,
-                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
+void MagicPlant_updateActive(int obj, MagicPlantSetup* setup, MagicPlantState* state);
+void MagicPlant_spawnChild(int obj, int objectId);
+void FUN_8017f7ec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, u32 param_9, u32 param_10, int* param_11, u32 param_12, u32 param_13, u32 param_14,
+                  u32 param_15, u32 param_16);
 int MagicPlant_getExtraSize(void);
-u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj);
+u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 void MagicPlant_free(int obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(int obj);
-void MagicPlant_init(int obj, MagicPlantSetup *setup);
-void FUN_8017fa14(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 int param_9,u16 param_10);
+void MagicPlant_init(int obj, MagicPlantSetup* setup);
+void FUN_8017fa14(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, int param_9, u16 param_10);
 u32 FUN_8017fba8(void);
-void FUN_8017fbe0(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 int param_9,int param_10);
-void FUN_8017fccc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_8017fd40(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 u16 *param_9,u32 param_10,u32 param_11,u32 param_12,
-                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
-typedef struct TrickyWarpState {
-  u8 patchGroup;
-  u8 active;
-  u8 pad02[2];
-  int curveNodeIds[0x18];
+void FUN_8017fbe0(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, int param_9, int param_10);
+void FUN_8017fccc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+void FUN_8017fd40(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, u16* param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+                  u32 param_15, u32 param_16);
+typedef struct TrickyWarpState
+{
+    u8 patchGroup;
+    u8 active;
+    u8 pad02[2];
+    int curveNodeIds[0x18];
 } TrickyWarpState;
 
 int TrickyWarp_getExtraSize(void);
 void TrickyWarp_free(int obj);
 void TrickyWarp_update(int obj);
-int fn_8017FFD0(struct GameObject *obj, TrickyWarpState *state);
-void TrickyWarp_init(s16 *obj, u8 *param_2);
-void FUN_801804a0(short *param_1,int param_2);
+int fn_8017FFD0(struct GameObject* obj, TrickyWarpState* state);
+void TrickyWarp_init(s16* obj, u8* param_2);
+void FUN_801804a0(short* param_1, int param_2);
 void FUN_801804a4(int param_1);
-void FUN_801804d8(int param_1,u32 param_2,u8 *param_3,int param_4,int param_5);
-void FUN_801804dc(u32 param_1,u32 param_2,u8 *param_3,int param_4,int param_5);
+void FUN_801804d8(int param_1, u32 param_2, u8* param_3, int param_4, int param_5);
+void FUN_801804dc(u32 param_1, u32 param_2, u8* param_3, int param_4, int param_5);
 void TrickyGuard_update();
-void TrickyGuard_init(s16 *obj, u8 *param_2);
+void TrickyGuard_init(s16* obj, u8* param_2);
 void StayPoint_update(int obj);
-void StayPoint_init(u16 *obj);
+void StayPoint_init(u16* obj);
 int duster_getExtraSize(void);
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect(int obj);
 void duster_update(int obj);
-void duster_init(int obj, u8 *params);
+void duster_init(int obj, u8* params);
 void FUN_80180700(int param_1);
 void FUN_801807cc(int param_1);
-void FUN_80180940(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_80180984(int *param_1);
-void FUN_80180a0c(u64 param_1,u64 param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8);
-void FUN_801811c8(int param_1,int param_2);
+void FUN_80180940(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+void FUN_80180984(int* param_1);
+void FUN_80180a0c(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8);
+void FUN_801811c8(int param_1, int param_2);
 void FUN_801811cc(void);
-void FUN_80181a90(int param_1,int param_2);
-void FUN_80181b50(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 u32 param_9,u32 param_10,int param_11);
+void FUN_80181a90(int param_1, int param_2);
+void FUN_80181b50(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, u32 param_9, u32 param_10, int param_11);
 int CurveFish_getExtraSize(void);
 void CurveFish_update(int obj);
-void CurveFish_init(struct GameObject *obj, u8 *param_2);
-void fn_801814D0(int obj, int param_2, u8 *state);
+void CurveFish_init(struct GameObject* obj, u8* param_2);
+void fn_801814D0(int obj, int param_2, u8* state);
 
 extern ObjectDescriptor gMagicPlantObjDescriptor;
 extern ObjectDescriptor gTrickyWarpObjDescriptor;

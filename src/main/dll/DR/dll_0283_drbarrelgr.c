@@ -75,7 +75,7 @@ int DR_BarrelGr_getObjectTypeId(void)
     return 0;
 }
 
-void DR_BarrelGr_free(struct GameObject *obj)
+void DR_BarrelGr_free(struct GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;
     void* heldObj = *(void**)&((DrbarrelgrState*)state)->heldBarrel;
@@ -316,7 +316,7 @@ void DR_BarrelGr_update(int obj)
     }
 }
 
-void DR_BarrelGr_init(struct GameObject *obj, int setup)
+void DR_BarrelGr_init(struct GameObject* obj, int setup)
 {
     int one;
     int state;

@@ -274,7 +274,7 @@ void Vortex_init(int obj, int initData)
     *(f32*)(obj + 0x40) = *(f32*)(obj + 0x40) * lbl_803E7404;
 }
 
-void Vortex_update(struct GameObject *obj)
+void Vortex_update(struct GameObject* obj)
 {
     VortexState* state = (obj)->extra;
     VortexSetup* setup = (VortexSetup*)(obj)->anim.placementData;

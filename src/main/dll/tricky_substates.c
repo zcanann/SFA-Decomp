@@ -1723,7 +1723,7 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
     }
 }
 
-int trickyFoodFn_8014460c(struct GameObject *obj, int* state)
+int trickyFoodFn_8014460c(struct GameObject* obj, int* state)
 {
     u8* b;
     u8 gu;

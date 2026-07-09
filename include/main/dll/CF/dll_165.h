@@ -5,7 +5,8 @@
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
-typedef struct TreasureChestSetup {
+typedef struct TreasureChestSetup
+{
     ObjPlacement base;
     s8 type;
     u8 hitboxKind;
@@ -16,7 +17,7 @@ typedef struct TreasureChestSetup {
 } TreasureChestSetup;
 
 void staffactivated_init(int obj, int setup);
-int TreasureChest_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+int TreasureChest_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int TreasureChest_getExtraSize(void);
 int TreasureChest_getObjectTypeId(void);
 void TreasureChest_free(void);

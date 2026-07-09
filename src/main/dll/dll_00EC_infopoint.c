@@ -32,7 +32,7 @@ extern void* gameTextGet(int textId);
 
 #pragma scheduling off
 #pragma peephole off
-int InfoPoint_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int InfoPoint_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     InfopointState* state = (obj)->extra;
     int i;

@@ -163,7 +163,7 @@ int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)
    ray and the camera facing; staring near the sun (cos > 0.5) ramps
    the flicker intensity (sin curve + random jitter, damped through
    gWmSunGlareDamping), looking away decays it. */
-void wmsun_updateGlare(struct GameObject *obj)
+void wmsun_updateGlare(struct GameObject* obj)
 {
     WmSunVec3 dir;
     WmSunVec3 sun;
@@ -317,7 +317,7 @@ int wmsun_getObjectTypeId(void)
     return 0x0;
 }
 
-void wmsun_free(struct GameObject *obj)
+void wmsun_free(struct GameObject* obj)
 {
     WmSunState* state = (obj)->extra;
     if (state->glareParams != NULL)
@@ -564,7 +564,7 @@ void wmsun_update(int obj)
     }
 }
 
-void wmsun_init(struct GameObject *obj, int params)
+void wmsun_init(struct GameObject* obj, int params)
 {
     ObjAnimComponent* objAnim;
     WmSunState* state = (obj)->extra;
@@ -650,8 +650,7 @@ void wmsun_init(struct GameObject *obj, int params)
         objAnim->alpha = 0;
         if (mapData->rootMotionScaleParam != 0)
         {
-            (obj)->anim.rootMotionScale =
-                lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam / lbl_803E5F8C);
+            (obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam / lbl_803E5F8C);
         }
     }
 }

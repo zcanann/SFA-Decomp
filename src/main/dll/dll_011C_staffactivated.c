@@ -74,9 +74,9 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int playerIsPathFollowing(void);
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
-extern void landed_arwing_updateDamageTexture(struct GameObject *obj, void* state);
+extern void landed_arwing_updateDamageTexture(struct GameObject* obj, void* state);
 
-void staffactivated_calcInteractionTargetXZ(struct GameObject *obj, f32* outX, f32* outZ)
+void staffactivated_calcInteractionTargetXZ(struct GameObject* obj, f32* outX, f32* outZ)
 {
     int mode;
     StaffActivatedState* state;

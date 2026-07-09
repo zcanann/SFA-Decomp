@@ -4,7 +4,8 @@
 #include "global.h"
 #include "main/obj_placement.h"
 
-typedef struct StaffActivatedState {
+typedef struct StaffActivatedState
+{
     f32 targetX;
     f32 targetZ;
     u8 pad08[4];
@@ -18,7 +19,8 @@ typedef struct StaffActivatedState {
     f32 hitCooldown;
 } StaffActivatedState;
 
-typedef struct StaffActivatedSetup {
+typedef struct StaffActivatedSetup
+{
     ObjPlacement base;
     u8 type;
     u8 unk19;
@@ -36,9 +38,9 @@ typedef struct StaffActivatedSetup {
 
 int staffactivated_getExtraSize(void);
 int staffactivated_getObjectTypeId(void);
-void staffactivated_calcInteractionTargetXZ(struct GameObject *obj, f32 *outX, f32 *outZ);
-u32 cfPrisonGuard_getLiftHeight(int *obj);
-void cfPrisonGuard_setLiftHeight(int *obj, int v);
-u8 objGetByteParam1C(int *obj);
+void staffactivated_calcInteractionTargetXZ(struct GameObject* obj, f32* outX, f32* outZ);
+u32 cfPrisonGuard_getLiftHeight(int* obj);
+void cfPrisonGuard_setLiftHeight(int* obj, int v);
+u8 objGetByteParam1C(int* obj);
 
 #endif /* MAIN_DLL_CF_DLL_163_H_ */

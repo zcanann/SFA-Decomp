@@ -64,7 +64,7 @@ extern const f32 lbl_803E3FAC;
 extern const f32 lbl_803E3FB0;
 extern const f32 lbl_803E3FB4;
 extern const f32 lbl_803E3FBC;
-extern void fn_801A80F0(struct GameObject *e, int arg);
+extern void fn_801A80F0(struct GameObject* e, int arg);
 extern float fastFloorf(float x);
 extern const f32 lbl_803E3FC0;
 

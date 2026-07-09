@@ -16,7 +16,7 @@
 #define ARWBLOCKER_SEQMODE_ARMED   1 /* fires sequence 1; reports armed until locked */
 
 #pragma peephole off
-int ARWBlocker_SeqFn(struct GameObject *obj)
+int ARWBlocker_SeqFn(struct GameObject* obj)
 {
     ARWBlockerState* state = (obj)->extra;
     switch (state->sequenceMode)

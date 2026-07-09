@@ -70,7 +70,7 @@ void mmp_gyservent_update(int obj)
     }
 }
 
-void mmp_gyservent_init(struct GameObject *obj)
+void mmp_gyservent_init(struct GameObject* obj)
 {
     (obj)->objectFlags |= (MMPGYSERVENT_OBJFLAG_HIDDEN | MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED);
     *(u32*)&(obj)->unkF4 = randomGetRange(0xa, 0xc8);

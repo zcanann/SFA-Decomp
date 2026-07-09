@@ -15,7 +15,7 @@ extern void addButtonObject(int* obj);
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 extern int playerIsDead(void);
-extern void playerSetIsDead(struct GameObject *player, int v);
+extern void playerSetIsDead(struct GameObject* player, int v);
 
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);

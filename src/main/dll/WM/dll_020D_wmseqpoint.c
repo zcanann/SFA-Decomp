@@ -221,7 +221,7 @@ void wmseqpoint_hitDetect(void)
 {
 }
 
-void wmseqpoint_update(struct GameObject *obj)
+void wmseqpoint_update(struct GameObject* obj)
 {
     WmSeqPointState* state;
     int player;
@@ -259,8 +259,7 @@ void wmseqpoint_update(struct GameObject *obj)
     switch (state->triggerMode)
     {
     case WMSEQPOINT_TRIGGER_PROXIMITY:
-        if (Vec_distance((void*)&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            state->triggerRadius)
+        if (Vec_distance((void*)&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
             state->doneLatch = 1;
@@ -338,7 +337,7 @@ void wmseqpoint_update(struct GameObject *obj)
     }
 }
 
-void wmseqpoint_init(struct GameObject *obj, int setup)
+void wmseqpoint_init(struct GameObject* obj, int setup)
 {
     WmSeqPointState* state;
     WmSeqPointMapData* mapData;

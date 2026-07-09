@@ -44,7 +44,7 @@ struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
     "RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
 };
 
-void directionallight_debugEdit(struct GameObject *obj, int statePtr)
+void directionallight_debugEdit(struct GameObject* obj, int statePtr)
 {
     DirectionalLightState* state = (DirectionalLightState*)statePtr;
     u8* desc = (u8*)&gDirectionalLightObjDescriptor;
@@ -186,7 +186,7 @@ int directionallight_getObjectTypeId(void)
     return 0;
 }
 
-void directionallight_free(struct GameObject *obj)
+void directionallight_free(struct GameObject* obj)
 {
     DirectionalLightState* state = (obj)->extra;
     if (state->light != NULL)

@@ -58,7 +58,7 @@ extern void ObjGroup_AddObject(int* obj, int group);
 
 void fn_801923F8(int* cfgArg);
 
-void waveanimator_modelMtxFn(struct GameObject *obj, int a, int b, int c)
+void waveanimator_modelMtxFn(struct GameObject* obj, int a, int b, int c)
 {
     int* state = (obj)->extra;
     u32 v;

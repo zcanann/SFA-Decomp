@@ -971,13 +971,13 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 eventCode, u8 subCode, void*
     return 1;
 }
 
-int drakorhoverpad_setScale(struct GameObject *obj)
+int drakorhoverpad_setScale(struct GameObject* obj)
 {
     u8* p = (obj)->extra;
     return (p[0x179] >> 2) & 1;
 }
 
-int drakorhoverpad_render2(struct GameObject *obj)
+int drakorhoverpad_render2(struct GameObject* obj)
 {
     u8* p = (obj)->extra;
     return ((p[0x179] >> 2) & 1) == 0;
@@ -989,7 +989,7 @@ void drakorhoverpad_func12(int obj, f32* outFloat, int* outFlag)
     *outFlag = 0;
 }
 
-void drakorhoverpad_modelMtxFn(struct GameObject *obj, f32* ox, f32* oy, f32* oz)
+void drakorhoverpad_modelMtxFn(struct GameObject* obj, f32* ox, f32* oy, f32* oz)
 {
     *ox = (obj)->anim.localPosX;
     *oy = lbl_803E6A40 + (obj)->anim.localPosY;
@@ -1008,7 +1008,7 @@ void drakorhoverpad_free(int obj)
     ObjGroup_RemoveObject(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
 }
 
-void drakorhoverpad_func17(struct GameObject *obj, int sel, int* out)
+void drakorhoverpad_func17(struct GameObject* obj, int sel, int* out)
 {
     switch (sel)
     {
@@ -1044,7 +1044,7 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
     Matrix_TransformPoint(mtx, lbl_803E6A3C, lbl_803DC300, lbl_803DC304, ox, oy, oz);
 }
 
-void drakorhoverpad_resetPendingMotion(struct GameObject *obj)
+void drakorhoverpad_resetPendingMotion(struct GameObject* obj)
 {
     u8* p = (obj)->extra;
     Flags377* g = (Flags377*)(p + 0x179);

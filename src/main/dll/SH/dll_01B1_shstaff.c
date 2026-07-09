@@ -125,7 +125,7 @@ extern void sc_levelcontrol_update(void);
 extern void sc_musictree_update(void);
 extern void sc_totempole_update(void);
 
-extern void sh_beacon_free(struct GameObject *);
+extern void sh_beacon_free(struct GameObject*);
 extern void sc_levelcontrol_init(void);
 extern void sc_musictree_init(void);
 extern void sc_totempole_init(void);
@@ -161,8 +161,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void staffToggle(struct GameObject *obj, int a);
-extern void playerPutAwayStaff(struct GameObject *obj, int mode);
+extern void staffToggle(struct GameObject* obj, int a);
+extern void playerPutAwayStaff(struct GameObject* obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
 
 extern void sh_staff_deactivate(int obj, ShStaffState* state, int a);

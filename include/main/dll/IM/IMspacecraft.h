@@ -6,22 +6,23 @@
 #include "main/dll/curve_walker.h"
 
 #define SPIRITDOORLOCK_EXTRA_SIZE 0x14
-#define ROLLINGBARREL_EXTRA_SIZE 0x118
+#define ROLLINGBARREL_EXTRA_SIZE  0x118
 
 /* SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED moved to GameBitId in gamebits.h
  * as GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED (0xab9). */
 #define SPIRITDOORLOCK_ORBIT_OBJECT_GROUP 0x4e
-#define SPIRITDOORLOCK_LOOP_SFX 0x423
+#define SPIRITDOORLOCK_LOOP_SFX           0x423
 
-#define ROLLINGBARREL_GROUP_ID 0x2f
+#define ROLLINGBARREL_GROUP_ID                0x2f
 #define ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE 0x72a
 
-#define ROLLINGBARREL_STATE_ROLLING 0
+#define ROLLINGBARREL_STATE_ROLLING       0
 #define ROLLINGBARREL_STATE_EXPLODED_WAIT 1
-#define ROLLINGBARREL_STATE_RESPAWN_WAIT 2
-#define ROLLINGBARREL_STATE_CLEANUP 3
+#define ROLLINGBARREL_STATE_RESPAWN_WAIT  2
+#define ROLLINGBARREL_STATE_CLEANUP       3
 
-typedef struct SpiritDoorLockState {
+typedef struct SpiritDoorLockState
+{
     int light;
     int spinAngle;
     int active;
@@ -30,7 +31,8 @@ typedef struct SpiritDoorLockState {
     u8 pad11[SPIRITDOORLOCK_EXTRA_SIZE - 0x11];
 } SpiritDoorLockState;
 
-typedef struct SpiritDoorLockMapData {
+typedef struct SpiritDoorLockMapData
+{
     u8 pad00[0x18];
     s8 yaw;
     s8 scale;
@@ -40,7 +42,8 @@ typedef struct SpiritDoorLockMapData {
     s16 activeGameBit;
 } SpiritDoorLockMapData;
 
-typedef struct RollingBarrelState {
+typedef struct RollingBarrelState
+{
     RomCurveWalker curve;
     f32 curveSpeed;
     f32 verticalSpeed;
@@ -51,7 +54,8 @@ typedef struct RollingBarrelState {
     u8 pad117;
 } RollingBarrelState;
 
-typedef struct RollingBarrelMapData {
+typedef struct RollingBarrelMapData
+{
     s16 objectDefId;
     u8 pad02[0x08 - 0x02];
     f32 x;
@@ -93,11 +97,11 @@ STATIC_ASSERT(offsetof(RollingBarrelMapData, curveSpeed) == 0x1C);
 
 int SpiritDoorLock_getExtraSize(void);
 int SpiritDoorLock_getObjectTypeId(void);
-void SpiritDoorLock_free(struct GameObject *obj);
+void SpiritDoorLock_free(struct GameObject* obj);
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SpiritDoorLock_hitDetect(void);
 void SpiritDoorLock_update(int obj);
-void SpiritDoorLock_init(int obj, SpiritDoorLockMapData *params, int mode);
+void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 void SpiritDoorLock_release(void);
 void SpiritDoorLock_initialise(void);
 void fn_801A5D88(int obj, int explosionVariant);
@@ -107,10 +111,10 @@ void RollingBarrel_free(int obj);
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void RollingBarrel_hitDetect(void);
 void RollingBarrel_update(int obj);
-void RollingBarrel_init(struct GameObject *obj, RollingBarrelMapData *params);
+void RollingBarrel_init(struct GameObject* obj, RollingBarrelMapData* params);
 void RollingBarrel_release(void);
 void RollingBarrel_initialise(void);
-int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int MMP_levelcontrol_getExtraSize(void);
 int MMP_levelcontrol_getObjectTypeId(void);
 void MMP_levelcontrol_free(int obj);

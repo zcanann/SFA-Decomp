@@ -122,7 +122,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     }
 }
 
-void kaldaChomFn_80168374(struct GameObject *obj, int state, u8 useUpperMouthPoint)
+void kaldaChomFn_80168374(struct GameObject* obj, int state, u8 useUpperMouthPoint)
 {
     KaldaChomControl* control;
     int ref;

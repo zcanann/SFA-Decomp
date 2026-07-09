@@ -477,7 +477,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
-static inline ObjTextureRuntimeSlot* characterFindEyeJoint(struct GameObject *obj, int kind)
+static inline ObjTextureRuntimeSlot* characterFindEyeJoint(struct GameObject* obj, int kind)
 {
     ObjTextureSlotDef* list;
     int n;
@@ -573,7 +573,7 @@ void modelInitMtxs(int def, int model)
     }
 }
 
-extern void fn_80039DF8(struct GameObject *obj, s16* curve, s16* state, f32 x);
+extern void fn_80039DF8(struct GameObject* obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
 void objAudioFn_800393f8(u32 obj, int state, u16 sfx, int pitch, int volume, u8 force)
@@ -1177,7 +1177,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
     }
 }
 
-void fn_80039DF8(struct GameObject *obj, s16* curve, s16* state, f32 val)
+void fn_80039DF8(struct GameObject* obj, s16* curve, s16* state, f32 val)
 {
     extern f32 lbl_803DE9E8;
     int masked;

@@ -161,7 +161,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     }
 }
 
-int sfxplayer_ensureEffectHandlePair(struct GameObject *obj, u8 ringIndex)
+int sfxplayer_ensureEffectHandlePair(struct GameObject* obj, u8 ringIndex)
 {
     u32 ringIdWords[2];
     int* handles;
@@ -211,8 +211,7 @@ int sfxplayer_ensureEffectHandlePair(struct GameObject *obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
         ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
         *(int*)((int)handles + handleOffset) =
-            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, (obj)->anim.mapEventSlot, -1,
-                            *(int*)&(obj)->anim.parent);
+            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
     }
 
     {
@@ -229,8 +228,8 @@ int sfxplayer_ensureEffectHandlePair(struct GameObject *obj, u8 ringIndex)
         ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-        *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, (obj)->anim.mapEventSlot, -1,
-                                *(int*)&(obj)->anim.parent);
+        *pair =
+            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
     }
 
     return 1;

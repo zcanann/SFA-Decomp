@@ -106,7 +106,7 @@ void dll_2A4_update(int obj)
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
 
-void dll_2A4_init(struct GameObject *obj)
+void dll_2A4_init(struct GameObject* obj)
 {
     Dll2A4State* state = (obj)->extra;
 

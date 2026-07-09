@@ -349,7 +349,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
 }
 
 #pragma opt_common_subs off
-void fn_800E58FC(struct GameObject *obj, CurvesCollisionState* collision)
+void fn_800E58FC(struct GameObject* obj, CurvesCollisionState* collision)
 {
     f32 sumY;
     CurvesTransformScratch transform;

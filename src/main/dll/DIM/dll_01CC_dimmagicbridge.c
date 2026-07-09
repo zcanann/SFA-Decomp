@@ -37,7 +37,7 @@ extern f32 lbl_803E4A0C;
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int matchVal, int obj, int flag);
-extern int EmissionController_IsLingering(struct GameObject *player);
+extern int EmissionController_IsLingering(struct GameObject* player);
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern float mathSinf(float x);
 

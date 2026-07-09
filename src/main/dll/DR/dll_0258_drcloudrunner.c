@@ -103,7 +103,7 @@ void DR_CloudRunner_func18(int obj, f32* a, int* b)
     *b = 0;
 }
 
-int DR_CloudRunner_func11(struct GameObject *obj)
+int DR_CloudRunner_func11(struct GameObject* obj)
 {
     CloudRunnerState* inner = (obj)->extra;
     if (inner->unkBB8 != 0)
@@ -118,7 +118,7 @@ void DR_CloudRunner_setGroundMarkerMatrix(int obj)
     fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
 }
 
-int DR_CloudRunner_func14(struct GameObject *obj)
+int DR_CloudRunner_func14(struct GameObject* obj)
 {
     CloudRunnerState* inner = (obj)->extra;
     if (inner->unkBB7 != 0)
@@ -133,7 +133,7 @@ void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
     ObjPath_GetPointWorldPosition(obj, 2, a, b, c, 0);
 }
 
-int DR_CloudRunner_stateHandler07(struct GameObject *obj)
+int DR_CloudRunner_stateHandler07(struct GameObject* obj)
 {
     CloudRunnerState* inner = (obj)->extra;
     if (inner->airTimeRemaining == 0)
@@ -296,8 +296,8 @@ void DR_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
         if (vis == -1)
         {
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E83A8);
-            ObjPath_GetPointWorldPosition(obj, 3, (char*)(int)((char*)inner + 0xae8), (char*)(int)((char*)inner + 0xaec),
-                                          (char*)(int)((char*)inner + 0xaf0), 0);
+            ObjPath_GetPointWorldPosition(obj, 3, (char*)(int)((char*)inner + 0xae8),
+                                          (char*)(int)((char*)inner + 0xaec), (char*)(int)((char*)inner + 0xaf0), 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {
@@ -323,7 +323,7 @@ int DR_CloudRunner_stateHandler00(int obj)
     return 3;
 }
 
-void DR_CloudRunner_setFlightState(struct GameObject *obj, int param)
+void DR_CloudRunner_setFlightState(struct GameObject* obj, int param)
 {
     CloudRunnerState* inner = (obj)->extra;
     inner->flightState = param;
@@ -352,7 +352,7 @@ void DR_CloudRunner_setFlightState(struct GameObject *obj, int param)
 }
 
 #pragma opt_loop_invariants off
-int DR_CloudRunner_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int DR_CloudRunner_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CloudRunnerState* inner = (obj)->extra;
     int local = 1;
@@ -812,7 +812,7 @@ void fn_802BF0C8(int obj, int baddie, int mode)
     (*gPathControlInterface)->attachObject((void*)obj, pathState);
 }
 
-void DR_CloudRunner_func23(struct GameObject *obj, int mode, int* out)
+void DR_CloudRunner_func23(struct GameObject* obj, int mode, int* out)
 {
     struct gbids
     {
@@ -835,8 +835,7 @@ void DR_CloudRunner_func23(struct GameObject *obj, int mode, int* out)
     switch (mode)
     {
     case 2:
-        if (((obj)->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK) ||
-            ((ByteFlags*)&inner->flagsBC1)->b80)
+        if (((obj)->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK) || ((ByteFlags*)&inner->flagsBC1)->b80)
         {
             *out = (obj)->anim.rotX;
             gDRCloudRunnerSmoothedRotX = (obj)->anim.rotX;
@@ -863,8 +862,7 @@ void DR_CloudRunner_func23(struct GameObject *obj, int mode, int* out)
             } while (i < 4);
             if (i != 4 && dll_2E_func0A(curve.a[i], &stk) != 0)
             {
-                s16 tmp = getAngle(stk.mat[1] - (obj)->anim.localPosX,
-                                   stk.mat[3] - (obj)->anim.localPosZ);
+                s16 tmp = getAngle(stk.mat[1] - (obj)->anim.localPosX, stk.mat[3] - (obj)->anim.localPosZ);
                 ang = tmp + gDRCloudRunnerHeadingAngleOffset;
             }
             diff = ang - (u16)gDRCloudRunnerSmoothedRotX;

@@ -25,7 +25,7 @@ STATIC_ASSERT(offsetof(ARWBlockerState, sequenceLocked) == 0x01);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
 
-int ARWBlocker_SeqFn(struct GameObject *obj);
+int ARWBlocker_SeqFn(struct GameObject* obj);
 int ARWBlocker_getExtraSize(void);
 int ARWBlocker_getObjectTypeId(void);
 void ARWBlocker_free(void);

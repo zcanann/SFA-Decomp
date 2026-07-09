@@ -417,7 +417,8 @@ void arwsquadron_followPath(int objArg, int stateArg)
         if (setup->pathMode == 2)
         {
             if (state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
-                Obj_SmoothTurnAnglesTowardVelocity((struct GameObject*)(objArg), (int)&objAnim->velocityX, 0xf, lbl_803E71A0, lbl_803E7188);
+                Obj_SmoothTurnAnglesTowardVelocity((struct GameObject*)(objArg), (int)&objAnim->velocityX, 0xf,
+                                                   lbl_803E71A0, lbl_803E7188);
             else
                 Obj_SmoothTurnAnglesTowardVelocity((struct GameObject*)(objArg), (int)&objAnim->velocityX, 0xf,
                                                    state->flags.cmd.f08 ? lbl_803E7168 : lbl_803E71A0, lbl_803E7188);

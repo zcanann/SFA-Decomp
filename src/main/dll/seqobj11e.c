@@ -409,7 +409,7 @@ void fn_80152B90(int* obj, u8* state)
     }
 }
 
-int gcRobotLight_init(struct GameObject *obj, int childId)
+int gcRobotLight_init(struct GameObject* obj, int childId)
 {
     extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     int sub;
@@ -430,13 +430,12 @@ int gcRobotLight_init(struct GameObject *obj, int childId)
     ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
     ((Seq11EChildSetup*)setup)->unk19 = 0;
     ((Seq11EChildSetup*)setup)->unk20 = 149;
-    return (int)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
-                                *(int*)&(obj)->anim.parent);
+    return (int)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
 }
 
 /* scheduling stays off; only peephole flips on for the next two handlers */
 #pragma peephole on
-void gcRobotPatrol_init(struct GameObject *obj, int state)
+void gcRobotPatrol_init(struct GameObject* obj, int state)
 {
     extern f32 lbl_803E2850;
     extern f32 lbl_803E2854;

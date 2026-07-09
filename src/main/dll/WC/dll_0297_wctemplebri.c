@@ -175,7 +175,7 @@ int wctemplebri_getExtraSize(void)
     return WCTEMPLEBRI_EXTRA_SIZE;
 }
 
-int wctemplebri_getObjectTypeId(struct GameObject *obj)
+int wctemplebri_getObjectTypeId(struct GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int modelIndex = *(s8*)&((WCTempleBriSetup*)(obj)->anim.placementData)->modelIndex;

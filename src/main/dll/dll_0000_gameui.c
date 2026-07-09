@@ -375,7 +375,7 @@ extern void* gGameUiBlinkTexture;
 extern int getScreenBlankFrameCount(void);
 extern void drawArwingHud(int a, int b, int c);
 extern void gameTextFn_80016c18(int text, int* arg);
-extern int fn_8029605C(struct GameObject *obj, f32* outX, f32* outY);
+extern int fn_8029605C(struct GameObject* obj, f32* outX, f32* outY);
 extern void textureAnimFn_80053f2c(void* tex, int* a, int* b);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);

@@ -136,7 +136,7 @@ int ccgasventcontrol_getExtraSize(void)
     return sizeof(CcgasventcontrolState);
 }
 
-void ccgasventcontrol_free(struct GameObject *obj)
+void ccgasventcontrol_free(struct GameObject* obj)
 {
     char* inner = (obj)->extra;
     u8 t = ((CcgasventcontrolState*)inner)->state;
@@ -258,7 +258,7 @@ void ccgasventcontrol_update(int obj)
     }
 }
 
-void ccgasventcontrol_init(struct GameObject *obj, u8* def)
+void ccgasventcontrol_init(struct GameObject* obj, u8* def)
 {
     char* inner = (obj)->extra;
     (obj)->animEventCallback = CCGasVentControl_SeqFn;

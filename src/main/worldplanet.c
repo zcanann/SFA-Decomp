@@ -118,7 +118,7 @@ void worldplanet_initialise(void)
 {
 }
 
-void worldplanet_init(struct GameObject *obj)
+void worldplanet_init(struct GameObject* obj)
 {
     WorldPlanetState* state;
     int i;
@@ -184,7 +184,7 @@ void worldplanet_init(struct GameObject *obj)
 }
 
 #pragma peephole on
-void worldplanet_readMapInput(struct GameObject *obj, u8* outX, u8* outY)
+void worldplanet_readMapInput(struct GameObject* obj, u8* outX, u8* outY)
 {
     WorldPlanetState* state = (obj)->extra;
     int stickX;

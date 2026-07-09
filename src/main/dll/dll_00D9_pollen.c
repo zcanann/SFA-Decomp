@@ -100,17 +100,14 @@ void Pollen_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void Pollen_hitDetect(struct GameObject *obj)
+void Pollen_hitDetect(struct GameObject* obj)
 {
     if ((*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactFlags != 0)
     {
         f32 fz;
-        (obj)->anim.localPosX =
-            (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosX;
-        (obj)->anim.localPosY =
-            (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosY;
-        (obj)->anim.localPosZ =
-            (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosZ;
+        (obj)->anim.localPosX = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosX;
+        (obj)->anim.localPosY = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosY;
+        (obj)->anim.localPosZ = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosZ;
         fz = lbl_803E313C;
         (obj)->anim.velocityX = fz;
         (obj)->anim.velocityY = fz;
@@ -228,7 +225,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-void Pollen_init(struct GameObject *obj)
+void Pollen_init(struct GameObject* obj)
 {
     PollenExtra* extra = *(PollenExtra**)&(obj)->extra;
     extra->phaseX = randomGetRange(-0x8000, 0x7fff);

@@ -179,9 +179,9 @@ extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 extern f32 enemyRespawnDistanceSq;
 extern void sharpClawInit(int obj, u8* state);
 extern void guardClaw_init(int obj, u8* state);
-extern void gcRobotPatrol_init(struct GameObject *obj, u8* state);
-extern void mikaladon_init(struct GameObject *obj, u8* state);
-extern void vambat_init(struct GameObject *obj, u8* state);
+extern void gcRobotPatrol_init(struct GameObject* obj, u8* state);
+extern void mikaladon_init(struct GameObject* obj, u8* state);
+extern void vambat_init(struct GameObject* obj, u8* state);
 extern void kooshy_init(int obj, u8* state);
 extern void fn_801542AC(int obj, u8* state);
 extern void mutatedEbaInit(int obj, u8* state);
@@ -713,7 +713,7 @@ void fn_8014D08C(int obj, int state, f32 rateScale, int moveId, int moveControlF
     }
 }
 
-void baddieAfterUpdateBonesCb(struct GameObject *obj, int* bones)
+void baddieAfterUpdateBonesCb(struct GameObject* obj, int* bones)
 {
     int* state = (obj)->extra;
     int v = *bones;
@@ -774,8 +774,8 @@ f32 enemy_getHealthFraction(register int obj)
  * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
  * 0x2c) by timeDelta * speedScale * unitDir, clamped at +/-maxVel, with an
  * optional drag pass. Returns the y-delta. */
-f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject *obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,
-                                         f32 drag)
+f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
+                                         f32 maxVel, f32 drag)
 {
     f32 dx = tx - (obj)->anim.worldPosX;
     f32 dy = ty - (obj)->anim.worldPosY;
@@ -783,17 +783,13 @@ f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject *obj, f32 tx, f32 ty,
     f32 dist = sqrtf(dx * dx + dz * dz);
     if (dist > accel)
     {
-        (obj)->anim.velocityX =
-            (obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
-        (obj)->anim.velocityZ =
-            (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
+        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
+        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
     }
     else if (dist > lbl_803E2574)
     {
-        (obj)->anim.velocityX =
-            (obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
-        (obj)->anim.velocityZ =
-            (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
+        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
+        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
     }
     if ((obj)->anim.velocityX < -maxVel)
     {
@@ -822,8 +818,8 @@ f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject *obj, f32 tx, f32 ty,
 /* sidekickToy_accelerateTowardTarget3D: 3D physics step toward a target. Variant of sidekickToy_accelerateTowardTargetXZ that
  * uses the full 3D distance (xyz) instead of planar (xz), and also nudges
  * the y-axis velocity at obj+0x28. Returns the y-delta. */
-f32 sidekickToy_accelerateTowardTarget3D(struct GameObject *obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,
-                                         f32 drag)
+f32 sidekickToy_accelerateTowardTarget3D(struct GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
+                                         f32 maxVel, f32 drag)
 {
     f32 dx = tx - (obj)->anim.worldPosX;
     f32 dy = ty - (obj)->anim.worldPosY;
@@ -831,21 +827,15 @@ f32 sidekickToy_accelerateTowardTarget3D(struct GameObject *obj, f32 tx, f32 ty,
     f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
     if (dist > accel)
     {
-        (obj)->anim.velocityX =
-            (obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
-        (obj)->anim.velocityY =
-            (obj)->anim.velocityY + timeDelta * (speedScale * (dy / dist));
-        (obj)->anim.velocityZ =
-            (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
+        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
+        (obj)->anim.velocityY = (obj)->anim.velocityY + timeDelta * (speedScale * (dy / dist));
+        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
     }
     else if (dist > lbl_803E2574)
     {
-        (obj)->anim.velocityX =
-            (obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
-        (obj)->anim.velocityY =
-            (obj)->anim.velocityY + timeDelta * (speedScale * (dy / accel));
-        (obj)->anim.velocityZ =
-            (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
+        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
+        (obj)->anim.velocityY = (obj)->anim.velocityY + timeDelta * (speedScale * (dy / accel));
+        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
     }
     if ((obj)->anim.velocityX < -maxVel)
     {
@@ -1609,7 +1599,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void enemy_hitDetect(struct GameObject *obj)
+void enemy_hitDetect(struct GameObject* obj)
 {
     u8* state = (obj)->extra;
     ObjHitsPriorityState* childHitState;
@@ -1620,16 +1610,13 @@ void enemy_hitDetect(struct GameObject *obj)
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
-    ((EnemyState*)state)->lastHitObject =
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject;
+    ((EnemyState*)state)->lastHitObject = ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject;
     if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject != 0)
     {
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
-    if ((obj)->childObjs[0] != NULL &&
-        *(void**)(*(int*)&(obj)->childObjs[0] + 0x54) != NULL &&
-        (childHitState = *(ObjHitsPriorityState**)(*(int*)&(obj)->childObjs[0] + 0x54))->lastHitObject !=
-            0)
+    if ((obj)->childObjs[0] != NULL && *(void**)(*(int*)&(obj)->childObjs[0] + 0x54) != NULL &&
+        (childHitState = *(ObjHitsPriorityState**)(*(int*)&(obj)->childObjs[0] + 0x54))->lastHitObject != 0)
     {
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }

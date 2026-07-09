@@ -80,7 +80,7 @@ extern const f32 gWaterFlowFilterCoeff;
 extern const f32 gWaterFlowDecayCoeff;
 extern const f32 gWaterFlowMaxMagnitude;
 
-void waterflowwe_calcCurrentVector(struct GameObject *obj, f32* vx, f32* vz)
+void waterflowwe_calcCurrentVector(struct GameObject* obj, f32* vx, f32* vz)
 {
     GameObject* object = obj;
     int hasCurrent;

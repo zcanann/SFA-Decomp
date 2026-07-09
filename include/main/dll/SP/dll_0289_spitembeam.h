@@ -19,7 +19,7 @@ void spitembeam_free(void);
 void spitembeam_render(void);
 void spitembeam_hitDetect(void);
 void spitembeam_update(int* obj);
-void spitembeam_init(struct GameObject *obj);
+void spitembeam_init(struct GameObject* obj);
 void spitembeam_release(void);
 void spitembeam_initialise(void);
 

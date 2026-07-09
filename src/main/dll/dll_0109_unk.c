@@ -152,7 +152,7 @@ void carryable_break_respawn_update(int obj)
     }
 }
 
-void dll_109_init(struct GameObject *obj, Dll109MapData* p)
+void dll_109_init(struct GameObject* obj, Dll109MapData* p)
 {
     (obj)->anim.rotX = (s16)((s32)p->rotX << 8);
     (obj)->objectFlags |= UNK_OBJFLAG_HITDETECT_DISABLED;

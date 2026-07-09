@@ -48,7 +48,7 @@ int FireFlyLantern_spawnFireFly(int* obj)
 }
 #pragma dont_inline reset
 
-int FireFlyLantern_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int FireFlyLantern_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FireFlyLanternState* state;
     void* child;
@@ -83,8 +83,7 @@ int FireFlyLantern_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState*
     {
         child = (void*)state->fireflies[i];
         (*(void (*)(void*, f32, f32, f32))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x28)))(
-            child, (obj)->anim.localPosX, 5.0f + (obj)->anim.localPosY,
-            (obj)->anim.localPosZ);
+            child, (obj)->anim.localPosX, 5.0f + (obj)->anim.localPosY, (obj)->anim.localPosZ);
         i++;
     }
 
@@ -160,7 +159,7 @@ void FireFlyLantern_update(int obj)
     }
 }
 
-void FireFlyLantern_init(struct GameObject *obj, int def)
+void FireFlyLantern_init(struct GameObject* obj, int def)
 {
     void* player;
     u8* childSlot;

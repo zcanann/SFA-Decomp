@@ -28,7 +28,7 @@ void dll_22C_free(int p1);
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_22C_hitDetect_nop(void);
 void dll_22C_update(int obj);
-void dll_22C_init(struct GameObject *obj, char* p);
+void dll_22C_init(struct GameObject* obj, char* p);
 void dll_22C_release_nop(void);
 void dll_22C_initialise_nop(void);
 

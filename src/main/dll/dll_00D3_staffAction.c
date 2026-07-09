@@ -571,7 +571,7 @@ void fn_80165B3C(int obj, int state)
     }
 }
 
-void fn_80166840(struct GameObject *obj, int state, f32* hit, f32* end)
+void fn_80166840(struct GameObject* obj, int state, f32* hit, f32* end)
 {
     f32 speed;
     f32 planeX;
@@ -1108,7 +1108,7 @@ int SkeetlaWall_getObjectTypeId(void);
 
 void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void SkeetlaWall_init(struct GameObject *obj, u8* def);
+void SkeetlaWall_init(struct GameObject* obj, u8* def);
 
 ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     {

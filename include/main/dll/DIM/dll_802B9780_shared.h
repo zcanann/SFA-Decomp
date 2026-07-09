@@ -13,10 +13,9 @@ extern f32 lbl_803E8298;
 extern f32 lbl_803E829C;
 extern f32 lbl_803E82A0;
 
-extern void ObjPath_GetPointLocalPosition(struct GameObject *obj, int point, f32 *out_x, f32 *out_y,
-                                          f32 *out_z);
-extern void mtx44_mult(void *lhs, void *rhs, void *out);
-extern void fn_8003B950(void *matrix);
+extern void ObjPath_GetPointLocalPosition(struct GameObject* obj, int point, f32* out_x, f32* out_y, f32* out_z);
+extern void mtx44_mult(void* lhs, void* rhs, void* out);
+extern void fn_8003B950(void* matrix);
 
 extern u8 gDIMSnowHorn1ModelMtx[];
 
@@ -277,7 +276,8 @@ extern u32 _DAT_803df140;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct {
+typedef struct
+{
     f32 f0;
     f32 f4;
     f32 f8;
@@ -292,7 +292,8 @@ typedef struct {
     u8 pad_22[2];
 } SnowHornEntry;
 
-typedef struct {
+typedef struct
+{
     u8 pad[0x94];
     u8 flag;
 } SnowHornFlags;
@@ -312,10 +313,10 @@ extern f32 lbl_803E82D0;
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 
-extern void *gEarthWarriorResource;
+extern void* gEarthWarriorResource;
 
 extern int gDRCloudRunnerStateHandlers[];
-extern void *gDRCloudRunnerDefaultStateHandler;
+extern void* gDRCloudRunnerDefaultStateHandler;
 extern int DR_CloudRunner_stateHandler00(int obj);
 extern int DR_CloudRunner_stateHandler01(int obj, int p2);
 extern int DR_CloudRunner_stateHandler02(int obj, int p2);
@@ -326,8 +327,8 @@ extern void DR_CloudRunner_stateHandler06();
 
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
-extern void *gDim2PrisonMammothDefaultStateHandler;
-extern void *gDREarthWarriorDefaultStateHandler;
+extern void* gDim2PrisonMammothDefaultStateHandler;
+extern void* gDREarthWarriorDefaultStateHandler;
 extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
@@ -362,15 +363,15 @@ extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 
-extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
+extern int objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int p5, int p6);
 extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
-extern void *gDIMSnowHorn1Texture;
+extern void* gDIMSnowHorn1Texture;
 
 extern f32 lbl_803E8410;
 
-int dim2prisonmammoth_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate);
+int dim2prisonmammoth_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
 
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
@@ -380,15 +381,15 @@ extern f32 gEarthWarriorMatrix[];
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
-extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
+extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int lbl_803E8230;
 extern int gDIMSnowHorn1PathCollisionData;
 extern f32 gDIMSnowHorn1Gravity;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 
-extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
+extern int dll_2E_func07(int obj, int p3, void* q, int a, int b);
 
-extern int dll_2E_func0A(int a, void *out);
+extern int dll_2E_func0A(int a, void* out);
 extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
@@ -412,15 +413,15 @@ extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 void fn_802BF4D8(int obj);
 
-extern void logPrintf(const char *fmt, ...);
+extern void logPrintf(const char* fmt, ...);
 extern char sOnCloudFormat[];
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
 
-extern void voxmaps_worldToGrid(void *src, void *grid);
-extern int voxmaps_traceLine(void *a, void *b, void *c, int d, int e);
-extern void voxmaps_gridToWorld(void *grid, void *out);
+extern void voxmaps_worldToGrid(void* src, void* grid);
+extern int voxmaps_traceLine(void* a, void* b, void* c, int d, int e);
+extern void voxmaps_gridToWorld(void* grid, void* out);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
 

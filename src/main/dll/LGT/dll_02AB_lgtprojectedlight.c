@@ -28,7 +28,7 @@ int ProjectedLight_getObjectTypeId(void)
     return 0;
 }
 
-void ProjectedLight_free(struct GameObject *obj)
+void ProjectedLight_free(struct GameObject* obj)
 {
     ProjectedLightState* state = (obj)->extra;
     if (state->light != NULL)
@@ -49,14 +49,13 @@ void ProjectedLight_hitDetect(void)
 {
 }
 
-void ProjectedLight_update(struct GameObject *obj)
+void ProjectedLight_update(struct GameObject* obj)
 {
     ProjectedLightSetup* setup = (ProjectedLightSetup*)(obj)->anim.placementData;
 
     (obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)(obj)->anim.rotX);
     (obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)(obj)->anim.rotY);
-    (obj)->anim.rotZ =
-        (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)(obj)->anim.rotZ);
+    (obj)->anim.rotZ = (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)(obj)->anim.rotZ);
 }
 
 #pragma opt_common_subs off

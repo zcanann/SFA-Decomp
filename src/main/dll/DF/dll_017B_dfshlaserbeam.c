@@ -153,7 +153,7 @@ extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int objGetAnimState80A(struct GameObject *obj);
+extern int objGetAnimState80A(struct GameObject* obj);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 
 void DFSH_LaserBeam_free(int* obj)

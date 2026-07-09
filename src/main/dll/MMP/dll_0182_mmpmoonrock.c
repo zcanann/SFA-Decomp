@@ -297,7 +297,7 @@ void fn_801A7CC4(int obj)
 }
 #pragma dont_inline reset
 
-void fn_801A80F0(struct GameObject *obj, u8 flag)
+void fn_801A80F0(struct GameObject* obj, u8 flag)
 {
     MmpMoonrockState* state = (obj)->extra;
     if (flag != 0)

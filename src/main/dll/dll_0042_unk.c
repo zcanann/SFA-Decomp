@@ -77,9 +77,9 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
                                             int pointCount);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern float mathSinf(float x);
-extern f32 fn_802966F4(struct GameObject *obj);             /* returns a target proximity/distance scalar */
-extern void playerGetTimeScale(struct GameObject *obj, float* out); /* fills out[] with a target motion scalar */
-extern int EmissionController_IsLingering(struct GameObject *obj);
+extern f32 fn_802966F4(struct GameObject* obj);                     /* returns a target proximity/distance scalar */
+extern void playerGetTimeScale(struct GameObject* obj, float* out); /* fills out[] with a target motion scalar */
+extern int EmissionController_IsLingering(struct GameObject* obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,

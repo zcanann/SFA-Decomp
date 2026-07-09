@@ -263,7 +263,7 @@ void Hagabon_free(int obj)
     }
 }
 
-void Hagabon_init(struct GameObject *obj, int data, int skip_alloc)
+void Hagabon_init(struct GameObject* obj, int data, int skip_alloc)
 {
     HagabonState* state = (obj)->extra;
     HagabonPlacement* placement = (HagabonPlacement*)data;

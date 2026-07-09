@@ -227,7 +227,7 @@ int MMSH_Shrine_getObjectTypeId(void)
     return 0;
 }
 
-void MMSH_Shrine_free(struct GameObject *obj)
+void MMSH_Shrine_free(struct GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;
     if ((((MMSHShrineRuntime*)state)->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
@@ -376,7 +376,7 @@ void MMSH_Shrine_update(int objArg)
     }
 }
 
-void MMSH_Shrine_init(struct GameObject *obj, int def)
+void MMSH_Shrine_init(struct GameObject* obj, int def)
 {
     int light;
     MMSHShrineRuntime* state;

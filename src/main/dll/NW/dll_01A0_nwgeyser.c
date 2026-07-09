@@ -93,10 +93,9 @@ void nw_geyser_update(int obj)
     }
 }
 
-void nw_geyser_init(struct GameObject *obj)
+void nw_geyser_init(struct GameObject* obj)
 {
-    (obj)->objectFlags =
-        (u16)((obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
+    (obj)->objectFlags = (u16)((obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
     (obj)->animEventCallback = NW_geyser_SeqFn;
 }
 

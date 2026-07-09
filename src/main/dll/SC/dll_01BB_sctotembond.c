@@ -89,7 +89,7 @@ extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void hudFn_8011f38c(u8 x);
-extern void fn_80296124(struct GameObject *player, void* pos, void* obj, int arg);
+extern void fn_80296124(struct GameObject* player, void* pos, void* obj, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
 extern void fn_8011F6D4(u32 x);

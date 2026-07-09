@@ -110,7 +110,7 @@ void DR_CageControl_update(int obj)
     }
 }
 
-void DR_CageControl_init(struct GameObject *obj, char* arg)
+void DR_CageControl_init(struct GameObject* obj, char* arg)
 {
     char* state = (obj)->extra;
     (obj)->animEventCallback = DR_CageControl_SeqFn;

@@ -69,7 +69,7 @@ extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flag
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
-extern void staffToggle(struct GameObject *obj, int a);
+extern void staffToggle(struct GameObject* obj, int a);
 extern int getCurMapLayer(void);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
@@ -125,7 +125,7 @@ void cflevelcontrol_hitDetect(void)
 {
 }
 
-void cflevelcontrol_update(struct GameObject *obj)
+void cflevelcontrol_update(struct GameObject* obj)
 {
     u8* state = (obj)->extra;
     int player = (int)Obj_GetPlayerObject();

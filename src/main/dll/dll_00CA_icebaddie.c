@@ -316,7 +316,7 @@ int iceBaddie_stateHandlerB04(int obj, int state)
     return 0;
 }
 
-int iceBaddie_stateHandlerB03(struct GameObject *obj, int state)
+int iceBaddie_stateHandlerB03(struct GameObject* obj, int state)
 {
     GroundBaddieState* sub;
 
@@ -1000,7 +1000,7 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
 #undef pathY
 #undef pathZ
 
-void iceBaddie_updateControlEffects(struct GameObject *obj, int state)
+void iceBaddie_updateControlEffects(struct GameObject* obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
     int paletteIndex;
@@ -1449,7 +1449,7 @@ void iceBaddie_update(int obj, int unusedA, int unusedB)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern int iceBaddie_updateTargetCollision(int obj, int sub, int sub2);
-    extern void iceBaddie_updateControlEffects(struct GameObject *obj, int sub);
+    extern void iceBaddie_updateControlEffects(struct GameObject * obj, int sub);
     extern void iceBaddie_tryAcquireTarget(int obj, int sub, int sub2);
     extern void iceBaddie_updateTargetMotion(int obj, int sub, int sub2);
     GroundBaddieState* sub;

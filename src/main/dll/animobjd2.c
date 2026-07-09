@@ -100,7 +100,7 @@ extern f32 lbl_803E24E0;
 extern f32 lbl_803E24E4;
 extern f32 lbl_803E24E8;
 
-void* trickyFindCirclingTarget(struct GameObject *obj, void* state);
+void* trickyFindCirclingTarget(struct GameObject* obj, void* state);
 
 typedef struct TrickyPackedSlots
 {
@@ -585,7 +585,7 @@ void fn_8013E0D0(int* obj, u8* st)
 
 #pragma dont_inline on
 #pragma opt_common_subs off
-void* trickyFindCirclingTarget(struct GameObject *obj, void* state)
+void* trickyFindCirclingTarget(struct GameObject* obj, void* state)
 {
     void* target;
     void** list;
@@ -609,8 +609,7 @@ void* trickyFindCirclingTarget(struct GameObject *obj, void* state)
         if (list[i] == target)
         {
             d1 = Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
-            d2 = Vec_xzDistance(&(obj)->anim.worldPosX,
-                                &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
+            d2 = Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
             d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
                                 &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
             if ((d1 + d2) < lbl_803E23F8 * d3)

@@ -137,7 +137,7 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void mmp_asteroid_re_init(struct GameObject *obj)
+void mmp_asteroid_re_init(struct GameObject* obj)
 {
     MmpAsteroidReState* state = (obj)->extra;
     (obj)->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);

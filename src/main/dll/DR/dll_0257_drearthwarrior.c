@@ -260,7 +260,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void storeZeroToFloatParam(int p);
 extern void s16toFloat(int p, int v);
-extern void fn_802BC788(struct GameObject *);
+extern void fn_802BC788(struct GameObject*);
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
 void fn_802BCA10(int obj, int sub, int state);
@@ -304,21 +304,21 @@ int DR_EarthWarrior_getObjectTypeId(void)
     return 0x43;
 }
 
-void DR_EarthWarrior_func15(struct GameObject *obj, f32* x, f32* y, f32* z)
+void DR_EarthWarrior_func15(struct GameObject* obj, f32* x, f32* y, f32* z)
 {
     *x = (obj)->anim.localPosX;
     *y = (obj)->anim.localPosY;
     *z = (obj)->anim.localPosZ;
 }
 
-int DR_EarthWarrior_stateHandler00(struct GameObject *obj)
+int DR_EarthWarrior_stateHandler00(struct GameObject* obj)
 {
     EarthWarriorState* inner = (obj)->extra;
     inner->sub.flags98C |= 0x20;
     return 2;
 }
 
-void DR_EarthWarrior_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
+void DR_EarthWarrior_modelMtxFn(struct GameObject* obj, f32* x, f32* y, f32* z)
 {
     EarthWarriorState* inner = (obj)->extra;
     *x = inner->sub.posX;
@@ -326,7 +326,7 @@ void DR_EarthWarrior_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
     *z = inner->sub.posZ;
 }
 
-int DR_EarthWarrior_func11(struct GameObject *obj)
+int DR_EarthWarrior_func11(struct GameObject* obj)
 {
     EarthWarriorState* inner = (obj)->extra;
     if (inner->sub.unk993 != 0)
@@ -336,7 +336,7 @@ int DR_EarthWarrior_func11(struct GameObject *obj)
     return 2;
 }
 
-int DR_EarthWarrior_func14(struct GameObject *obj)
+int DR_EarthWarrior_func14(struct GameObject* obj)
 {
     EarthWarriorState* inner = (obj)->extra;
     if (inner->sub.unk992 != 0)
@@ -346,7 +346,7 @@ int DR_EarthWarrior_func14(struct GameObject *obj)
     return 1;
 }
 
-void DR_EarthWarrior_func18(struct GameObject *obj, f32* a, int* b)
+void DR_EarthWarrior_func18(struct GameObject* obj, f32* a, int* b)
 {
     EarthWarriorState* inner = (obj)->extra;
     *a = (f32)(s32)inner->sub.aimAccumY;
@@ -418,7 +418,7 @@ void DR_EarthWarrior_initialise(void)
     }
 }
 
-f32 DR_EarthWarrior_func19(struct GameObject *obj, f32* out)
+f32 DR_EarthWarrior_func19(struct GameObject* obj, f32* out)
 {
     EarthWarriorState* inner = (obj)->extra;
     f32 animSpeed;
@@ -480,7 +480,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
     }
 }
 
-void DR_EarthWarrior_func17(struct GameObject *obj, int param)
+void DR_EarthWarrior_func17(struct GameObject* obj, int param)
 {
     EarthWarriorState* inner = (obj)->extra;
     inner->sub.rideState = param;
@@ -1034,7 +1034,8 @@ int DR_EarthWarrior_stateHandler01(int obj, int baddie)
     {
         ((BaddieState*)baddie)->animSpeedC = lbl_803E8304;
     }
-    ((BaddieState*)baddie)->animSpeedA -= interpolate(((BaddieState*)baddie)->animSpeedA, q->animSpeedASmoothing, timeDelta);
+    ((BaddieState*)baddie)->animSpeedA -=
+        interpolate(((BaddieState*)baddie)->animSpeedA, q->animSpeedASmoothing, timeDelta);
     if (((BaddieState*)baddie)->animSpeedA <= *(f32*)((char*)lbl_8033527C + 0x8))
     {
         ((BaddieState*)baddie)->animSpeedA = lbl_803E8304;
@@ -1088,8 +1089,8 @@ int DR_EarthWarrior_stateHandler01(int obj, int baddie)
     if (((GameObject*)obj)->anim.currentMove == *(s16*)(q->moveTable + 0x30) ||
         ((GameObject*)obj)->anim.currentMove == *(s16*)(q->moveTable + 0x32))
     {
-        if (*(s8*)&((BaddieState*)baddie)->moveDone != 0 && ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 &&
-            !((ByteFlags*)&inner->sub.flags994)->b01)
+        if (*(s8*)&((BaddieState*)baddie)->moveDone != 0 &&
+            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 && !((ByteFlags*)&inner->sub.flags994)->b01)
         {
             ObjAnim_SetCurrentMove(obj, moveId, lbl_803E8304, 0);
             ((BaddieState*)baddie)->moveSpeed = lbl_803E8354;

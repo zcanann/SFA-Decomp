@@ -728,8 +728,8 @@ void fn_8015625C(u32 obj, int state)
     {
         tracked = (GameObject*)((BaddieState*)state)->trackedObj;
         moveSpeed = sidekickToy_accelerateTowardTargetXZ(
-            (struct GameObject*)(obj), tracked->anim.worldPosX, lbl_803E2AB8 + tracked->anim.worldPosY, tracked->anim.worldPosZ, lbl_803E2ABC,
-            lbl_803E2AC0, lbl_803E2AC4, ((BaddieState*)state)->unk304);
+            (struct GameObject*)(obj), tracked->anim.worldPosX, lbl_803E2AB8 + tracked->anim.worldPosY,
+            tracked->anim.worldPosZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4, ((BaddieState*)state)->unk304);
     }
     if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
@@ -827,8 +827,9 @@ void fn_8015652C(u32 obj, int state)
         }
         else
         {
-            moveSpeed = sidekickToy_accelerateTowardTargetXZ((struct GameObject*)(obj), route->posX, route->posY, route->posZ, lbl_803E2ABC,
-                                                             lbl_803E2AC0, lbl_803E2AC4, ((BaddieState*)state)->unk304);
+            moveSpeed = sidekickToy_accelerateTowardTargetXZ((struct GameObject*)(obj), route->posX, route->posY,
+                                                             route->posZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
+                                                             ((BaddieState*)state)->unk304);
         }
     }
     else if ((((BaddieState*)state)->controlFlags & 0x8000000) != 0)
@@ -837,9 +838,9 @@ void fn_8015652C(u32 obj, int state)
     }
     else
     {
-        moveSpeed =
-            sidekickToy_accelerateTowardTargetXZ((struct GameObject*)(obj), placement->posX, placement->posY, placement->posZ, lbl_803E2ABC,
-                                                 lbl_803E2AC0, lbl_803E2AC4, ((BaddieState*)state)->unk304);
+        moveSpeed = sidekickToy_accelerateTowardTargetXZ((struct GameObject*)(obj), placement->posX, placement->posY,
+                                                         placement->posZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
+                                                         ((BaddieState*)state)->unk304);
     }
     if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))

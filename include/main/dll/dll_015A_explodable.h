@@ -14,19 +14,19 @@
  */
 typedef struct ExplodablePlacement
 {
-    ObjPlacement base;   /* 0x00: common placement head (position / mapId) */
-    u8 fragmentCount;    /* 0x18: number of fragments to spawn (0 -> 1) */
+    ObjPlacement base; /* 0x00: common placement head (position / mapId) */
+    u8 fragmentCount;  /* 0x18: number of fragments to spawn (0 -> 1) */
     u8 pad19[0x1A - 0x19];
-    s16 rotX;            /* 0x1A: prop orientation */
-    s16 rotY;            /* 0x1C */
-    s16 rotZ;            /* 0x1E */
-    s16 originX;         /* 0x20: launch-spread reference origin (local space) */
-    s16 originY;         /* 0x22 */
-    s16 originZ;         /* 0x24 */
+    s16 rotX;    /* 0x1A: prop orientation */
+    s16 rotY;    /* 0x1C */
+    s16 rotZ;    /* 0x1E */
+    s16 originX; /* 0x20: launch-spread reference origin (local space) */
+    s16 originY; /* 0x22 */
+    s16 originZ; /* 0x24 */
     u8 pad26[0x2C - 0x26];
-    s16 launchForce;     /* 0x2C: fragment launch speed scale */
-    s16 fragmentHeight;  /* 0x2E: per-fragment height override (0 = none) */
-    s16 launchScale2;     /* 0x30: secondary fragment launch scale; /divisor -> vel2/spin2 magnitude */
+    s16 launchForce;    /* 0x2C: fragment launch speed scale */
+    s16 fragmentHeight; /* 0x2E: per-fragment height override (0 = none) */
+    s16 launchScale2;   /* 0x30: secondary fragment launch scale; /divisor -> vel2/spin2 magnitude */
     u8 pad32[0x38 - 0x32];
     u16 launchDelayBase; /* 0x38: base for the per-fragment launch-delay roll */
     u8 pad3A[0x3E - 0x3B];
@@ -66,37 +66,37 @@ typedef struct GasVentTableEntry
  */
 typedef struct ExplodableFragmentSetup
 {
-    s16 seqId;            /* 0x00: fragment object type */
+    s16 seqId; /* 0x00: fragment object type */
     u8 pad02[2];
-    u8 colorR;            /* 0x04: RGBA tint applied to the spawned fragment (= ObjPlacement.color[0]) */
-    u8 colorG;            /* 0x05: color[1] */
-    u8 colorB;            /* 0x06: color[2] */
-    u8 colorA;            /* 0x07: color[3], alpha */
-    f32 posX;             /* 0x08 */
-    f32 posY;             /* 0x0c */
-    f32 posZ;             /* 0x10 */
+    u8 colorR; /* 0x04: RGBA tint applied to the spawned fragment (= ObjPlacement.color[0]) */
+    u8 colorG; /* 0x05: color[1] */
+    u8 colorB; /* 0x06: color[2] */
+    u8 colorA; /* 0x07: color[3], alpha */
+    f32 posX;  /* 0x08 */
+    f32 posY;  /* 0x0c */
+    f32 posZ;  /* 0x10 */
     u8 pad14[0x18 - 0x14];
-    u8 fragmentIndex;     /* 0x18 */
+    u8 fragmentIndex; /* 0x18 */
     u8 pad19[0x1A - 0x19];
-    s16 rotX;             /* 0x1a */
-    s16 rotY;             /* 0x1c */
-    s16 rotZ;             /* 0x1e */
-    u16 velX;             /* 0x20 */
-    u16 velY;             /* 0x22 */
-    u16 velZ;             /* 0x24 */
-    u16 vel2X;            /* 0x26: secondary velocity vector */
-    u16 vel2Y;            /* 0x28 */
-    u16 vel2Z;            /* 0x2a */
-    u16 spinX;            /* 0x2c */
-    u16 spinY;            /* 0x2e */
-    u16 spinZ;            /* 0x30 */
-    u16 spin2X;           /* 0x32: secondary spin vector */
-    u16 spin2Y;           /* 0x34 */
-    u16 spin2Z;           /* 0x36 */
-    u16 launchDelayBase;  /* 0x38 */
-    u16 height;           /* 0x3a */
+    s16 rotX;            /* 0x1a */
+    s16 rotY;            /* 0x1c */
+    s16 rotZ;            /* 0x1e */
+    u16 velX;            /* 0x20 */
+    u16 velY;            /* 0x22 */
+    u16 velZ;            /* 0x24 */
+    u16 vel2X;           /* 0x26: secondary velocity vector */
+    u16 vel2Y;           /* 0x28 */
+    u16 vel2Z;           /* 0x2a */
+    u16 spinX;           /* 0x2c */
+    u16 spinY;           /* 0x2e */
+    u16 spinZ;           /* 0x30 */
+    u16 spin2X;          /* 0x32: secondary spin vector */
+    u16 spin2Y;          /* 0x34 */
+    u16 spin2Z;          /* 0x36 */
+    u16 launchDelayBase; /* 0x38 */
+    u16 height;          /* 0x3a */
     u8 pad3C[1];
-    s8 scale;             /* 0x3d */
+    s8 scale; /* 0x3d */
     u8 pad3E[0x44 - 0x3E];
 } ExplodableFragmentSetup;
 
@@ -114,8 +114,8 @@ int explodable_getExtraSize(void);
 void explodable_free(int obj, int flag);
 void explodable_update(int obj);
 void explodable_init(int obj, int setup);
-int explodable_spawnFragmentObject(struct GameObject *obj, int objType, int chunkSrc, int fragmentIndex);
+int explodable_spawnFragmentObject(struct GameObject* obj, int objType, int chunkSrc, int fragmentIndex);
 void explodable_buildFragments(int obj, int def, int skipCentroid, int state);
-void explodable_computeFragmentLaunch(struct GameObject *obj, int chunkSlot, int def);
+void explodable_computeFragmentLaunch(struct GameObject* obj, int chunkSlot, int def);
 
 #endif /* MAIN_DLL_EXPLODABLE_H_ */

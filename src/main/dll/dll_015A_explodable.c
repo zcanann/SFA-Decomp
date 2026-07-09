@@ -75,7 +75,7 @@ extern void cfforcefield_free(void);
 extern void cfmagicwall_free(void);
 extern void cflevelcontrol_free(void);
 extern void exploded_free(void);
-extern void SpiritDoorLock_free(struct GameObject *);
+extern void SpiritDoorLock_free(struct GameObject*);
 extern void RollingBarrel_free(void);
 extern void MMP_levelcontrol_free(void);
 
@@ -97,7 +97,7 @@ extern void MMP_levelcontrol_hitDetect(void);
 
 extern void cfforcefield_update(void);
 extern void cfmagicwall_update(void);
-extern void cflevelcontrol_update(struct GameObject *);
+extern void cflevelcontrol_update(struct GameObject*);
 extern void exploded_update(void);
 extern void SpiritDoorLock_update(void);
 extern void RollingBarrel_update(void);
@@ -108,8 +108,8 @@ extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
 extern void exploded_init(void);
 extern void SpiritDoorLock_init(void);
-extern void RollingBarrel_init(struct GameObject *);
-extern void MMP_levelcontrol_init(struct GameObject *);
+extern void RollingBarrel_init(struct GameObject*);
+extern void MMP_levelcontrol_init(struct GameObject*);
 
 extern void cfforcefield_release(void);
 extern void cfmagicwall_release(void);
@@ -289,7 +289,7 @@ void explodable_init(int obj, int setup)
     }
 }
 
-int explodable_spawnFragmentObject(struct GameObject *obj, int objType, int chunkSrc, int fragmentIndex)
+int explodable_spawnFragmentObject(struct GameObject* obj, int objType, int chunkSrc, int fragmentIndex)
 {
     ExplodableFragmentSetup* s;
     f32 f1;
@@ -327,8 +327,7 @@ int explodable_spawnFragmentObject(struct GameObject *obj, int objType, int chun
     s->vel2Y = f1 * c->vel2Y;
     s->vel2Z = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
-    s->scale = (s8)(int)(lbl_803E435C * ((obj)->anim.rootMotionScale /
-                                         *(f32*)(*(int*)&(obj)->anim.modelInstance + 4)));
+    s->scale = (s8)(int)(lbl_803E435C * ((obj)->anim.rootMotionScale / *(f32*)(*(int*)&(obj)->anim.modelInstance + 4)));
     s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
     return Obj_SetupObject((int)s, 5, (obj)->anim.mapEventSlot, -1, 0);
@@ -404,7 +403,7 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
     }
 }
 
-void explodable_computeFragmentLaunch(struct GameObject *obj, int chunkSlot, int def)
+void explodable_computeFragmentLaunch(struct GameObject* obj, int chunkSlot, int def)
 {
     f32 dx;
     f32 dy;

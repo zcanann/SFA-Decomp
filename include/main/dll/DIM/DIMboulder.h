@@ -10,47 +10,41 @@ extern ObjectDescriptor gCRrockfallObjDescriptor;
 extern ObjectDescriptor gMagicLightObjDescriptor;
 extern ObjectDescriptor gIMIcePillarObjDescriptor;
 
-void imicemountain_updateEventState(int *obj);
+void imicemountain_updateEventState(int* obj);
 void FUN_801ac24c(int param_1);
-void FUN_801ac340(int param_1,u8 *param_2);
-void FUN_801ac490(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 int param_9,u32 param_10,u32 param_11,u32 param_12,
-                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
-u32 FUN_801accf4(int param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
-void FUN_801acd7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801acda4(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 int param_9,u32 param_10,u32 param_11,u32 param_12,
-                 u32 param_13,u32 param_14,u32 param_15,u32 param_16);
+void FUN_801ac340(int param_1, u8* param_2);
+void FUN_801ac490(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, int param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+                  u32 param_15, u32 param_16);
+u32 FUN_801accf4(int param_1, u32 param_2, ObjAnimUpdateState* animUpdate);
+void FUN_801acd7c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+void FUN_801acda4(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, int param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+                  u32 param_15, u32 param_16);
 void FUN_801ad248(int param_1);
 double FUN_801ad24c(int param_1);
-void FUN_801ad318(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801ad350(u64 param_1,double param_2,double param_3,double param_4,u64 param_5
-                 ,u64 param_6,u64 param_7,u64 param_8);
-void FUN_801ad97c(int param_1,int param_2);
+void FUN_801ad318(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+void FUN_801ad350(u64 param_1, double param_2, double param_3, double param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8);
+void FUN_801ad97c(int param_1, int param_2);
 void FUN_801ad980(void);
-u32
-FUN_801ad984(u64 param_1,u64 param_2,double param_3,u64 param_4,
-            u64 param_5,u64 param_6,u64 param_7,u64 param_8,int param_9);
-void FUN_801adb28(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 int param_9);
-void FUN_801adbec(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801adc20(u16 *param_1);
-void FUN_801adc9c(u16 *param_1,int param_2);
-void FUN_801adca0(u16 *param_1,u16 *param_2,u32 param_3,u32 param_4,
-                 u32 param_5,u32 param_6,char param_7,int param_8,int param_9);
-u32
-FUN_801addec(u64 param_1,double param_2,double param_3,u64 param_4,u64 param_5,
-            u64 param_6,u64 param_7,u64 param_8,int param_9,u32 param_10,
-            ObjAnimUpdateState *animUpdate,u32 param_12,u32 *param_13,u32 param_14,
-            u32 param_15,u32 param_16);
+u32 FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                 u64 param_8, int param_9);
+void FUN_801adb28(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, int param_9);
+void FUN_801adbec(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
+void FUN_801adc20(u16* param_1);
+void FUN_801adc9c(u16* param_1, int param_2);
+void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4, u32 param_5, u32 param_6, char param_7,
+                  int param_8, int param_9);
+u32 FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                 u64 param_8, int param_9, u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32* param_13,
+                 u32 param_14, u32 param_15, u32 param_16);
 
 int IMIceMountain_getExtraSize(void);
 int IMIceMountain_getObjectTypeId(void);
 void IMIceMountain_free(void);
-int IMIceMountain_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+int IMIceMountain_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void IMIceMountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void IMIceMountain_hitDetect(void);
 void IMIceMountain_update(int* obj);
@@ -66,23 +60,23 @@ void crrockfall_init(int* obj, u8* params);
 void crrockfall_release(void);
 void crrockfall_initialise(void);
 
-int MagicLight_getExtraSize(int *obj);
+int MagicLight_getExtraSize(int* obj);
 int MagicLight_getObjectTypeId(void);
 void MagicLight_free(int obj);
 void MagicLight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void MagicLight_hitDetect(void);
-void MagicLight_update(struct GameObject *obj);
+void MagicLight_update(struct GameObject* obj);
 void MagicLight_init(int* obj, u8* params);
-int MagicLight_SeqFn(int *obj);
+int MagicLight_SeqFn(int* obj);
 void MagicLight_release(void);
 void MagicLight_initialise(void);
 
 int dll_16C_getExtraSize(void);
 int dll_16C_getObjectTypeId(void);
-void dll_16C_free(int *obj);
-void dll_16C_hitDetect(void *obj);
-void dll_16C_init(struct GameObject *obj, void *arg2);
-int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
+void dll_16C_free(int* obj);
+void dll_16C_hitDetect(void* obj);
+void dll_16C_init(struct GameObject* obj, void* arg2);
+int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 void dll_16C_release(void);
 void dll_16C_initialise(void);
 

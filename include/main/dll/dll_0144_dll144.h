@@ -11,7 +11,7 @@ void dll_144_free(void);
 void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_144_hitDetect(void);
 void dll_144_update(void);
-void dll_144_init(struct GameObject *obj);
+void dll_144_init(struct GameObject* obj);
 void dll_144_release(void);
 void dll_144_initialise(void);
 

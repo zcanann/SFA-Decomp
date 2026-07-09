@@ -76,7 +76,7 @@ STATIC_ASSERT(sizeof(TrickyCurveTriggerState) == 0x14);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, scale) == 0x08);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 
-extern int objGetAnimState80A(struct GameObject *obj);
+extern int objGetAnimState80A(struct GameObject* obj);
 
 extern u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */

@@ -25,7 +25,7 @@ extern f32 lbl_803E1978;
 extern f32 lbl_803E197C;
 extern f32 lbl_803E1980;
 
-extern int shipBattleFn_801eed24(struct GameObject *focus);
+extern int shipBattleFn_801eed24(struct GameObject* focus);
 
 #pragma opt_common_subs off
 void CameraModeShipBattle_update(short* cam)

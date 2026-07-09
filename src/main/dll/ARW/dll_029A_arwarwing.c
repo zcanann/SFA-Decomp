@@ -415,7 +415,7 @@ void arwarwing_emitDamageEffects(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_warpByCourse(struct GameObject *obj)
+void arwarwing_warpByCourse(struct GameObject* obj)
 {
     switch ((obj)->anim.mapEventSlot)
     {
@@ -772,7 +772,8 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
-    arwarwinggu_setTextureFrame((struct GameObject*)(((ArwingState*)state)->escortObj), ((ArwingState*)state)->enginePitch);
+    arwarwinggu_setTextureFrame((struct GameObject*)(((ArwingState*)state)->escortObj),
+                                ((ArwingState*)state)->enginePitch);
 
     if (((ArwingState*)state)->rollCooldown <= lbl_803E6ECC)
     {
@@ -883,7 +884,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_clearAimSnapshot(struct GameObject *obj)
+void arwarwing_clearAimSnapshot(struct GameObject* obj)
 {
     (*(ArwingState**)&(obj)->extra)->aimSnapshotValid = 0;
 }
@@ -1072,7 +1073,7 @@ void arwarwing_initAttachments(int obj, int state)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_resetFlightState(struct GameObject *obj)
+void arwarwing_resetFlightState(struct GameObject* obj)
 {
     ArwingState* state = (obj)->extra;
     f32 v7c;

@@ -98,7 +98,7 @@ void wcfloortile_hitDetect(void)
 {
 }
 
-void wcfloortile_init(struct GameObject *obj)
+void wcfloortile_init(struct GameObject* obj)
 {
     WcFloorTileState* state = (obj)->extra;
 
@@ -235,7 +235,7 @@ void wcfloortile_update(int obj)
     }
 }
 
-void arwarwing_clampToFlightBounds(struct GameObject *obj, int state)
+void arwarwing_clampToFlightBounds(struct GameObject* obj, int state)
 {
     ArwingState* arwing = (ArwingState*)state;
     f32 hy;
@@ -474,7 +474,7 @@ void arwarwing_spawnBomb(int obj, int state, int side)
     Sfx_PlayFromObject(obj, SFXTRIG_ar_badhit16);
 }
 
-void arwarwing_updateThrusters(struct GameObject *obj, int state)
+void arwarwing_updateThrusters(struct GameObject* obj, int state)
 {
 
     int slot;
@@ -594,7 +594,7 @@ void arwarwing_readControls(int obj, int state)
 }
 
 #pragma dont_inline on
-void arwarwing_updateBarrelRoll(struct GameObject *obj, int state)
+void arwarwing_updateBarrelRoll(struct GameObject* obj, int state)
 {
     f32 zero;
 

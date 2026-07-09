@@ -220,7 +220,7 @@ u8 SnowBike_func0B(int* obj)
     return ((SnowBikeState*)((GameObject*)obj)->extra)->unk420;
 }
 
-void SnowBike_mount(struct GameObject *obj, f32* x, f32* y, f32* z)
+void SnowBike_mount(struct GameObject* obj, f32* x, f32* y, f32* z)
 {
     int state = *(int*)&(obj)->extra;
     ((SnowBikeMountState*)state)->mountPosX = (obj)->anim.localPosX;
@@ -231,7 +231,7 @@ void SnowBike_mount(struct GameObject *obj, f32* x, f32* y, f32* z)
     *z = ((SnowBikeMountState*)state)->mountPosZ;
 }
 
-void SnowBike_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
+void SnowBike_modelMtxFn(struct GameObject* obj, f32* x, f32* y, f32* z)
 {
     int state = *(int*)&(obj)->extra;
     *x = ((SnowBikeMountState*)state)->modelMtxPosX;
@@ -239,7 +239,7 @@ void SnowBike_modelMtxFn(struct GameObject *obj, f32* x, f32* y, f32* z)
     *z = ((SnowBikeMountState*)state)->modelMtxPosZ;
 }
 
-void SnowBike_resetToRomListPosition(struct GameObject *obj)
+void SnowBike_resetToRomListPosition(struct GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;
     int* table;
@@ -413,7 +413,7 @@ void SnowBike_setRiderMode(int obj, int type)
     }
 }
 
-void SnowBike_func12(struct GameObject *obj, f32* outFloat, s32* outBool)
+void SnowBike_func12(struct GameObject* obj, f32* outFloat, s32* outBool)
 {
     int state = *(int*)&(obj)->extra;
     f32 value, r;
@@ -423,7 +423,7 @@ void SnowBike_func12(struct GameObject *obj, f32* outFloat, s32* outBool)
     *outBool = ((SnowBikeMountState*)state)->unk414 < lbl_803E5AE8;
 }
 
-f32 SnowBike_func13(struct GameObject *obj, f32* out)
+f32 SnowBike_func13(struct GameObject* obj, f32* out)
 {
     int state = *(int*)&(obj)->extra;
     f32 speed;
@@ -439,7 +439,7 @@ f32 SnowBike_func13(struct GameObject *obj, f32* out)
     return speed;
 }
 
-u32 SnowBike_setScale(struct GameObject *obj)
+u32 SnowBike_setScale(struct GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;
     u32 bit = (((SnowBikeMountState*)state)->flags >> 1) & 1;
@@ -450,12 +450,12 @@ u32 SnowBike_setScale(struct GameObject *obj)
     return ((SnowBikeMountState*)state)->unk420;
 }
 
-void fn_801EC9BC(struct GameObject *obj)
+void fn_801EC9BC(struct GameObject* obj)
 {
     (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&(obj)->extra + 0x28));
 }
 
-u32 fn_801EC9F4(struct GameObject *obj)
+u32 fn_801EC9F4(struct GameObject* obj)
 {
     int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&(obj)->extra + 0x28));
     if (result == 3)

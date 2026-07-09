@@ -198,7 +198,7 @@ void VFP_lavastar_release(void)
 }
 
 #pragma peephole off
-int fn_801FD4A8(struct GameObject *obj, int x)
+int fn_801FD4A8(struct GameObject* obj, int x)
 {
     VfpFlamePointData* extra = (obj)->extra;
     if (extra != NULL)
@@ -288,7 +288,7 @@ void VFP_flamepoint_update(int obj)
     }
 }
 
-void fn_801FD6B4(struct GameObject *obj)
+void fn_801FD6B4(struct GameObject* obj)
 {
     VfpLavaPoolState* state;
     int def;
@@ -336,8 +336,7 @@ void fn_801FD6B4(struct GameObject *obj)
     {
         speed = lbl_803E6170 * (phase / lbl_803E6190);
     }
-    (obj)->anim.alpha =
-        ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
+    (obj)->anim.alpha = ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
     tex = objFindTexture((void*)obj, 0, 0);
     if (tex != NULL)
     {
@@ -360,7 +359,7 @@ void fn_801FD6B4(struct GameObject *obj)
     }
 }
 
-void VFP_lavapool_init(struct GameObject *obj, int def)
+void VFP_lavapool_init(struct GameObject* obj, int def)
 {
     VfpLavaPoolState* state;
 
@@ -372,8 +371,7 @@ void VFP_lavapool_init(struct GameObject *obj, int def)
     {
         *(s16*)(def + 0x1a) = 500;
     }
-    (obj)->anim.rootMotionScale =
-        lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(600, 1000));
+    (obj)->anim.rootMotionScale = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(600, 1000));
     state->amplitude = (obj)->anim.rootMotionScale;
     state->speedFactor = (f32)(int)randomGetRange(0x32, 100);
 }
@@ -405,7 +403,7 @@ void VFP_lavastar_update(int obj)
     state->particleToggle ^= 1;
 }
 
-void VFP_lavastar_init(struct GameObject *obj, int def)
+void VFP_lavastar_init(struct GameObject* obj, int def)
 {
     VfpLavaStarState* state;
     VfpLavaStarMapData* mapData;

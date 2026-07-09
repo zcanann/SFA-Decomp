@@ -46,7 +46,7 @@ extern void FxEmit_hitDetect(void);
 extern void DeathGas_getExtraSize(void);
 extern void FuelCell_free(void);
 extern void dll_127_update(void);
-extern void CampFire_free(struct GameObject *);
+extern void CampFire_free(struct GameObject*);
 extern void CFCrate_update(void);
 extern void FxEmit_update(void);
 
@@ -117,11 +117,10 @@ void CCTestInfot_update(int* obj)
     }
 }
 
-void CCTestInfot_init(struct GameObject *obj, s8* def)
+void CCTestInfot_init(struct GameObject* obj, s8* def)
 {
     u32 flags;
-    flags =
-        (u32)(obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
+    flags = (u32)(obj)->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
     (obj)->objectFlags = flags;
     (obj)->anim.rotX = (s16)((s32)(u8)def[0x1A] << 8);
     (obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);

@@ -53,7 +53,7 @@ extern void objRenderFn_80041018(int obj);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 
-int Lock_DoorLock_SeqFn(struct GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
+int Lock_DoorLock_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int def;
 

@@ -141,7 +141,7 @@ void largecrate_updateConveyorSlide(int obj, int def);
 void largecrate_update(int obj);
 void largecrate_free(int obj);
 
-f32 largecrate_getReticleDistance(struct GameObject *obj)
+f32 largecrate_getReticleDistance(struct GameObject* obj)
 {
     u8* state = (obj)->extra;
     return lbl_803E39AC -
@@ -206,7 +206,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
     }
 }
 
-int largecrate_spawnDropContents(struct GameObject *obj, int player, int state)
+int largecrate_spawnDropContents(struct GameObject* obj, int player, int state)
 {
     GameObject* playerObj;
     ExplodeArgs blk;
@@ -229,8 +229,7 @@ int largecrate_spawnDropContents(struct GameObject *obj, int player, int state)
         ((CrateFragmentSetup*)setup)->head.posY = (obj)->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = (obj)->anim.localPosZ;
         ((CrateFragmentSetup*)setup)->field1A = 400;
-        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
-                                 *(int*)&(obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
         ((GameObject*)newObj)->anim.velocityX = (obj)->anim.localPosX - playerObj->anim.localPosX;
         ((GameObject*)newObj)->anim.velocityZ = (obj)->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
@@ -274,8 +273,7 @@ int largecrate_spawnDropContents(struct GameObject *obj, int player, int state)
         ((CrateFragmentSetup*)setup)->head.posY = (obj)->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = (obj)->anim.localPosZ;
         ((CrateFragmentSetup*)setup)->field1A = 400;
-        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
-                                 *(int*)&(obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
         ((GameObject*)newObj)->anim.velocityX = (obj)->anim.localPosX - playerObj->anim.localPosX;
         ((GameObject*)newObj)->anim.velocityZ = (obj)->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
@@ -319,8 +317,7 @@ int largecrate_spawnDropContents(struct GameObject *obj, int player, int state)
         ((CrateFragmentSetup*)setup)->head.posY = (obj)->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = (obj)->anim.localPosZ;
         ((CrateFragmentSetup*)setup)->field1A = 2000;
-        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
-                                 *(int*)&(obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
         ((GameObject*)newObj)->anim.velocityX = (obj)->anim.localPosX - playerObj->anim.localPosX;
         ((GameObject*)newObj)->anim.velocityZ = (obj)->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
@@ -374,8 +371,7 @@ int largecrate_spawnDropContents(struct GameObject *obj, int player, int state)
         ((CrateGasSetup*)setup)->head.posY = lbl_803E39C0 + (obj)->anim.localPosY;
         ((CrateGasSetup*)setup)->head.posZ = (obj)->anim.localPosZ;
         ((CrateGasSetup*)setup)->field24 = -1;
-        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
-                                 *(int*)&(obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
         (**(void (**)(int, f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
             (int)newObj, lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
@@ -394,8 +390,7 @@ int largecrate_spawnDropContents(struct GameObject *obj, int player, int state)
             ((CratePickupSetup*)setup)->head.color[2] = 200;
             ((CratePickupSetup*)setup)->field20 = -1;
             ((CratePickupSetup*)setup)->field1A = 0x7f;
-            Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1,
-                            *(int*)&(obj)->anim.parent);
+            Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
         }
         break;
     }
@@ -617,7 +612,7 @@ int LargeCrate_SeqFn(int* obj)
     return 0;
 }
 
-void largecrate_init(struct GameObject *obj, u8* initData)
+void largecrate_init(struct GameObject* obj, u8* initData)
 {
     int state;
     u32 r3rand;

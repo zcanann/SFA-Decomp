@@ -101,7 +101,7 @@ extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void Music_Trigger(int id, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-void fn_801F3F18(struct GameObject *obj)
+void fn_801F3F18(struct GameObject* obj)
 {
     LightVecSet L;
     f32 lightX;
@@ -280,7 +280,7 @@ void WM_LevelControl_update(int obj)
     return;
 }
 
-void WM_LevelControl_init(struct GameObject *obj)
+void WM_LevelControl_init(struct GameObject* obj)
 {
     WmLevelControlState* state;
     u8 mode;

@@ -80,7 +80,7 @@ int wctile_getExtraSize(void)
     return WCTILE_EXTRA_SIZE;
 }
 
-int wctile_getObjectTypeId(struct GameObject *obj)
+int wctile_getObjectTypeId(struct GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int modelIndex = *(s8*)(*(int*)&(obj)->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);

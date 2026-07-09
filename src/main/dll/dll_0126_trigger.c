@@ -102,7 +102,7 @@ extern void mainSetBits(int eventId, int value);
 extern int getTrickyObject(void);
 extern void gameTextFn_80125ba4(int id);
 extern int getArwing(void);
-extern void timer_addDuration(struct GameObject *timer, int dur);
+extern void timer_addDuration(struct GameObject* timer, int dur);
 extern void envFxFn_800887cc(void);
 extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);

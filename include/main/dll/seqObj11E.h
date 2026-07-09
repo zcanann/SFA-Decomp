@@ -19,19 +19,20 @@
  * 0x18 is left unwritten and 0x19 / 0x20 carry class-specific slots this handler
  * seeds. Names beyond the head are generic (provenance is the raw store offsets).
  */
-typedef struct Seq11EChildSetup {
-    ObjPlacement head;      /* 0x00: common placement head (type id also stored at +0x00) */
-    u8 pad18;               /* 0x18: class byte (unwritten here) */
-    u8 unk19;               /* 0x19 */
-    u8 pad1A[0x20 - 0x1A];  /* 0x1A */
-    s16 unk20;              /* 0x20 */
-    u8 pad22[0x24 - 0x22];  /* 0x22 */
+typedef struct Seq11EChildSetup
+{
+    ObjPlacement head;     /* 0x00: common placement head (type id also stored at +0x00) */
+    u8 pad18;              /* 0x18: class byte (unwritten here) */
+    u8 unk19;              /* 0x19 */
+    u8 pad1A[0x20 - 0x1A]; /* 0x1A */
+    s16 unk20;             /* 0x20 */
+    u8 pad22[0x24 - 0x22]; /* 0x22 */
 } Seq11EChildSetup;
 
 STATIC_ASSERT(offsetof(Seq11EChildSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(Seq11EChildSetup, unk20) == 0x20);
 STATIC_ASSERT(sizeof(Seq11EChildSetup) == 0x24);
 
-int gcRobotLight_init(struct GameObject *obj, int childId);
+int gcRobotLight_init(struct GameObject* obj, int childId);
 
 #endif

@@ -92,7 +92,7 @@ extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
 extern void buttonDisable(int port, u32 mask);
-extern int playerHasSpell(struct GameObject *obj, int spell);
+extern int playerHasSpell(struct GameObject* obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern void skyFn_80088e54(int mode, f32 brightness);
@@ -318,7 +318,7 @@ void SH_LevelControl_setMusic(short* obj)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void SH_LevelControl_runBloopEvent(struct GameObject *obj, int state)
+void SH_LevelControl_runBloopEvent(struct GameObject* obj, int state)
 {
     extern s16 lbl_80327618[];
     extern void* Obj_GetPlayerObject(void);
@@ -646,7 +646,7 @@ void SH_LevelControl_update(int obj)
     extern u8 lbl_80327618[0x104];
     extern void SH_LevelControl_doEarlyScenes(int obj, u32* state);
     extern void SH_LevelControl_doThornTailEvents(int obj, u32* state);
-    extern void SH_LevelControl_runBloopEvent(struct GameObject *obj, u32* state);
+    extern void SH_LevelControl_runBloopEvent(struct GameObject * obj, u32 * state);
     extern int Obj_GetPlayerObject(void);
     extern void SH_LevelControl_setMusic(u32 * state);
 
@@ -957,7 +957,7 @@ void SH_LevelControl_update(int obj)
     return;
 }
 
-void SH_LevelControl_init(struct GameObject *obj)
+void SH_LevelControl_init(struct GameObject* obj)
 {
 
     int* state = (obj)->extra;
@@ -986,8 +986,7 @@ void SH_LevelControl_init(struct GameObject *obj)
         ((ShLevelcontrolState*)state)->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
     }
 
-    ((ShLevelcontrolState*)state)->mapAct =
-        (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
+    ((ShLevelcontrolState*)state)->mapAct = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
 
     ((ShLevelcontrolState*)state)->musicLatch = -1;
     Music_Trigger(MUSICTRIG_fox_arwing, 0);

@@ -228,7 +228,7 @@ void DFP_Floorbar_update(int obj)
     }
 }
 
-void DFP_Floorbar_init(struct GameObject *obj, int params)
+void DFP_Floorbar_init(struct GameObject* obj, int params)
 {
     DfpFloorbarState* state = (obj)->extra;
 
@@ -241,8 +241,7 @@ void DFP_Floorbar_init(struct GameObject *obj, int params)
 
     if (((DfpfloorbarPlacement*)params)->travelRange != 0)
     {
-        (obj)->anim.rootMotionScale =
-            lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
+        (obj)->anim.rootMotionScale = lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
     }
 
     if (mainGetBit((int)state->completionGameBit) != 0)

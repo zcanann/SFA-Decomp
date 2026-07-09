@@ -5,7 +5,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
-typedef struct WmWormSetup {
+typedef struct WmWormSetup
+{
     ObjPlacement base;
     s8 effectScale;
     u8 pad19;
@@ -13,7 +14,8 @@ typedef struct WmWormSetup {
     s16 burstCount;
 } WmWormSetup;
 
-typedef struct WmWormState {
+typedef struct WmWormState
+{
     f32 effectScale;
     s16 particleEffectId;
     u8 pad06[2];
@@ -35,12 +37,12 @@ STATIC_ASSERT(offsetof(WmWormState, burstCount) == 0x08);
 STATIC_ASSERT(offsetof(WmWormState, unk0C) == 0x0c);
 STATIC_ASSERT(offsetof(WmWormState, homeX) == 0x10);
 
-void WM_Worm_update(GameObject *obj);
-void WM_Worm_init(GameObject *obj, WmWormSetup *setup);
+void WM_Worm_update(GameObject* obj);
+void WM_Worm_init(GameObject* obj, WmWormSetup* setup);
 void WM_Worm_release(void);
 void WM_Worm_initialise(void);
 
-void fn_801F3F18(struct GameObject *obj);
+void fn_801F3F18(struct GameObject* obj);
 int WM_LevelControl_getExtraSize(void);
 int WM_LevelControl_getObjectTypeId(void);
 void WM_LevelControl_free(int obj);
