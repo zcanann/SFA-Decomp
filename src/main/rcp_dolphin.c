@@ -2073,6 +2073,7 @@ extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 
+#pragma opt_common_subs off
 void gxTextureFn_80052efc(void)
 {
     union
@@ -2185,6 +2186,7 @@ void gxTextureFn_80052efc(void)
     Camera_ApplyFullViewport();
     gRcpDistortGroup = 0;
 }
+#pragma opt_common_subs reset
 #undef mtx
 
 extern void OSReport(const char* msg, ...);
