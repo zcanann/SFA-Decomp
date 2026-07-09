@@ -2,6 +2,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_control.h"
 
+#pragma exceptions on
+
 #define MIDI_DIRTY_GROUP_STRIDE 0x40
 #define MIDI_DIRTY_ENTRY_STRIDE 4
 
@@ -10,6 +12,9 @@ extern u8 lbl_803D3CA0[];
 extern u8 gSynthInitialized;
 extern void IFFifoAlloc(void);
 extern double __frsqrte(double x);
+extern const float lbl_803E78C8;
+extern const double lbl_803E78D0;
+extern const double lbl_803E78D8;
 
 void sndQuit(void)
 {
@@ -43,15 +48,13 @@ void salApplyMatrix(f32* matrix, f32* vec, f32* out)
 #pragma fp_contract off
 extern inline f32 sqrtf(f32 x)
 {
-    static const f64 _half = .5;
-    static const f64 _three = 3.0;
     volatile f32 y;
-    if (x > 0.0f)
+    if (x > lbl_803E78C8)
     {
         f64 guess = __frsqrte((f64)x);
-        guess = _half * guess * (_three - guess * guess * x);
-        guess = _half * guess * (_three - guess * guess * x);
-        guess = _half * guess * (_three - guess * guess * x);
+        guess = lbl_803E78D0 * guess * (lbl_803E78D8 - guess * guess * x);
+        guess = lbl_803E78D0 * guess * (lbl_803E78D8 - guess * guess * x);
+        guess = lbl_803E78D0 * guess * (lbl_803E78D8 - guess * guess * x);
         y = (f32)(x * guess);
         return y;
     }
