@@ -203,6 +203,7 @@ void* objCreateLight(int arg, u8 addToList)
     return NULL;
 }
 
+#pragma opt_loop_invariants off
 void modelLightStruct_freeSlot(void** lightSlot)
 {
     int i;
@@ -238,6 +239,7 @@ void modelLightStruct_freeSlot(void** lightSlot)
         *lightSlot = NULL;
     }
 }
+#pragma opt_loop_invariants reset
 
 void ModelLightStruct_free(ModelLightStruct* light)
 {
