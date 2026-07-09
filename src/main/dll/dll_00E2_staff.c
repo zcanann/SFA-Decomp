@@ -1361,6 +1361,7 @@ extern f32 gStaffAngleUnitScale;
 extern f32 lbl_803E32A4;
 extern f32 lbl_803E32AC;
 
+#pragma opt_propagation off
 void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 {
     u8* slot;
@@ -1615,6 +1616,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
         ((StaffState*)swipe)->progress = *(f32*)(model2 + 4);
     }
 }
+#pragma opt_propagation reset
 
 extern int objFn_80296700(int* obj);
 extern void objfx_spawnArcedBurst(int* obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
