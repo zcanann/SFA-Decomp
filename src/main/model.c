@@ -2486,6 +2486,7 @@ typedef struct ObjHitBufs
 } ObjHitBufs;
 
 #pragma dont_inline off
+#pragma opt_loop_invariants off
 void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
     extern f32 gMapSavedPlayerOffsetX;
@@ -2596,6 +2597,7 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         prevSphere += 0x10;
     }
 }
+#pragma opt_loop_invariants reset
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXReorder(f32 * src, f32 * dst);
