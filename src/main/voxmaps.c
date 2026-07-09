@@ -969,6 +969,7 @@ searched:
 }
 
 #pragma dont_inline on
+#pragma opt_loop_invariants off
 int voxmaps_processRouteQueue(RouteState* state, int count)
 {
     int done = 0;
@@ -1015,6 +1016,7 @@ int voxmaps_processRouteQueue(RouteState* state, int count)
     }
     return ret;
 }
+#pragma opt_loop_invariants reset
 #pragma dont_inline reset
 
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
