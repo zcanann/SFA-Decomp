@@ -3,9 +3,15 @@
 
 #pragma exceptions on
 
+typedef union AuxInputSlots
+{
+    McmdInputSlot slots[8][4];
+    u8 bytes[0x480];
+} AuxInputSlots;
+
 extern u32 sndRandSeed;
-extern u8 lbl_803BDA74[];
-extern u8 lbl_803BDEF4[];
+extern AuxInputSlots lbl_803BDA74;
+extern AuxInputSlots lbl_803BDEF4;
 extern u32 lbl_803D3CA0[];
 extern u32 lbl_8032FFE0[];
 extern u32 lbl_8032FFF0[];
@@ -119,10 +125,9 @@ u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     }
     if (isDirty == 0)
     {
-        return *(u16*)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
+        return lbl_803BDEF4.slots[studio & 0xff][channel & 0xff].cachedValue;
     }
-    return _GetInputValue(0, (McmdInputSlot*)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24),
-                          auxIndex, handleIndex);
+    return _GetInputValue(0, &lbl_803BDEF4.slots[studio & 0xff][channel & 0xff], auxIndex, handleIndex);
 }
 
 /*
@@ -147,10 +152,9 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     }
     if (isDirty == 0)
     {
-        return *(u16*)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
+        return lbl_803BDA74.slots[studio & 0xff][channel & 0xff].cachedValue;
     }
-    return _GetInputValue(0, (McmdInputSlot*)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24),
-                          auxIndex, handleIndex);
+    return _GetInputValue(0, &lbl_803BDA74.slots[studio & 0xff][channel & 0xff], auxIndex, handleIndex);
 }
 
 /*
@@ -217,8 +221,8 @@ void inpInit(u32 state)
     {
         u32 i;
         u32 j;
-        u8* b = lbl_803BDA74;
-        u8* a = lbl_803BDEF4;
+        u8* b = lbl_803BDA74.bytes;
+        u8* a = lbl_803BDEF4.bytes;
         u32* p = lbl_803D3CA0;
 
         a[0x22] = 0;
