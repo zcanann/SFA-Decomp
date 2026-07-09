@@ -205,6 +205,90 @@ extern f32 oneOverTimeDelta;
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
  * [1] the alt (event 7) sfx, [2] the "selection" sfx played once if any
  * 1..4 marker event fired. Returns the last 1..4 marker seen. */
+/* Object-descriptor callbacks and data tables, defined below. */
+void cfguardian_initialise(void);
+void cfguardian_release(void);
+void cfguardian_init(int* obj, u8* params);
+void cfguardian_update(int obj);
+void cfguardian_hitDetect(int* obj);
+void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void cfguardian_free(int* obj, int keep);
+int cfguardian_getObjectTypeId(void);
+int cfguardian_getExtraSize(void);
+int cfguardian_setScale(int* obj);
+
+extern u8 lbl_80322798[];
+extern u8 lbl_803227A4[];
+extern u8 lbl_803227B0[];
+extern u8 lbl_803227BC[];
+extern u8 lbl_803227C8[];
+extern u8 lbl_803227D4[];
+extern u8 lbl_803227E0[];
+extern u8 lbl_803227EC[];
+extern u8 lbl_803227F8[];
+extern u8 lbl_80322804[];
+extern u8 lbl_80322810[];
+extern u8 lbl_8032281C[];
+extern u8 lbl_80322828[];
+extern u8 lbl_80322834[];
+extern u8 lbl_80322840[];
+
+int gCfGuardianSeqStreamTable[33][2] = {
+    {0, (int)&lbl_80322798},
+    {1, (int)&lbl_803227A4},
+    {2, (int)&lbl_803227B0},
+    {3, (int)&lbl_803227BC},
+    {4, (int)&lbl_803227C8},
+    {5, (int)&lbl_803227D4},
+    {6, (int)&lbl_803227E0},
+    {7, (int)&lbl_803227EC},
+    {8, (int)&lbl_803227F8},
+    {9, (int)&lbl_80322804},
+    {10, (int)&lbl_80322810},
+    {12, (int)&lbl_8032281C},
+    {13, (int)&lbl_80322828},
+    {14, (int)&lbl_80322834},
+    {15, (int)&lbl_80322840},
+    {0, 8},
+    {1, 8},
+    {2, 8},
+    {3, 10},
+    {4, 10},
+    {5, 10},
+    {6, 11},
+    {7, 11},
+    {8, 12},
+    {9, 12},
+    {10, -1},
+    {12, -1},
+    {13, -1},
+    {14, -1},
+    {15, -1},
+    {0, 0},
+    {0, 18},
+    {14, 10},
+};
+
+int gCfGuardianIdleMoveTable[20] = {-1, 0, 26, 0, 0, -1, -1, 26, 14, 14, 26, 26, 0, 0, -1, 10, 11, 12, 13, 14};
+
+ObjectDescriptor11 gCFGuardianObjDescriptor = {
+    0,
+    0,
+    0,
+    0xA0000,
+    (ObjectDescriptorCallback)cfguardian_initialise,
+    (ObjectDescriptorCallback)cfguardian_release,
+    0,
+    (ObjectDescriptorCallback)cfguardian_init,
+    (ObjectDescriptorCallback)cfguardian_update,
+    (ObjectDescriptorCallback)cfguardian_hitDetect,
+    (ObjectDescriptorCallback)cfguardian_render,
+    (ObjectDescriptorCallback)cfguardian_free,
+    (ObjectDescriptorCallback)cfguardian_getObjectTypeId,
+    (ObjectDescriptorCallback)cfguardian_getExtraSize,
+    (ObjectDescriptorCallback)cfguardian_setScale,
+};
+
 int cfguardianPlayEventSfx(int obj, int evList, s16* sfxIds)
 {
     int i;
@@ -1044,74 +1128,3 @@ void cfguardian_initialise(void)
 {
 }
 
-extern u8 lbl_80322798[];
-extern u8 lbl_803227A4[];
-extern u8 lbl_803227B0[];
-extern u8 lbl_803227BC[];
-extern u8 lbl_803227C8[];
-extern u8 lbl_803227D4[];
-extern u8 lbl_803227E0[];
-extern u8 lbl_803227EC[];
-extern u8 lbl_803227F8[];
-extern u8 lbl_80322804[];
-extern u8 lbl_80322810[];
-extern u8 lbl_8032281C[];
-extern u8 lbl_80322828[];
-extern u8 lbl_80322834[];
-extern u8 lbl_80322840[];
-
-int gCfGuardianSeqStreamTable[33][2] = {
-    {0, (int)&lbl_80322798},
-    {1, (int)&lbl_803227A4},
-    {2, (int)&lbl_803227B0},
-    {3, (int)&lbl_803227BC},
-    {4, (int)&lbl_803227C8},
-    {5, (int)&lbl_803227D4},
-    {6, (int)&lbl_803227E0},
-    {7, (int)&lbl_803227EC},
-    {8, (int)&lbl_803227F8},
-    {9, (int)&lbl_80322804},
-    {10, (int)&lbl_80322810},
-    {12, (int)&lbl_8032281C},
-    {13, (int)&lbl_80322828},
-    {14, (int)&lbl_80322834},
-    {15, (int)&lbl_80322840},
-    {0, 8},
-    {1, 8},
-    {2, 8},
-    {3, 10},
-    {4, 10},
-    {5, 10},
-    {6, 11},
-    {7, 11},
-    {8, 12},
-    {9, 12},
-    {10, -1},
-    {12, -1},
-    {13, -1},
-    {14, -1},
-    {15, -1},
-    {0, 0},
-    {0, 18},
-    {14, 10},
-};
-
-int gCfGuardianIdleMoveTable[20] = {-1, 0, 26, 0, 0, -1, -1, 26, 14, 14, 26, 26, 0, 0, -1, 10, 11, 12, 13, 14};
-
-ObjectDescriptor11 gCFGuardianObjDescriptor = {
-    0,
-    0,
-    0,
-    0xA0000,
-    (ObjectDescriptorCallback)cfguardian_initialise,
-    (ObjectDescriptorCallback)cfguardian_release,
-    0,
-    (ObjectDescriptorCallback)cfguardian_init,
-    (ObjectDescriptorCallback)cfguardian_update,
-    (ObjectDescriptorCallback)cfguardian_hitDetect,
-    (ObjectDescriptorCallback)cfguardian_render,
-    (ObjectDescriptorCallback)cfguardian_free,
-    (ObjectDescriptorCallback)cfguardian_getObjectTypeId,
-    (ObjectDescriptorCallback)cfguardian_getExtraSize,
-    (ObjectDescriptorCallback)cfguardian_setScale,
-};
