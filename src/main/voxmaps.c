@@ -651,6 +651,7 @@ static void heapSiftUp(CurveHeapNode* q, int i)
 }
 
 #pragma opt_strength_reduction off
+#pragma opt_dead_assignments off
 void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
 {
     int foundIdx;
@@ -968,6 +969,7 @@ searched:
         heapSiftUp(q, state->queueCount);
     }
 }
+#pragma opt_dead_assignments reset
 #pragma opt_strength_reduction reset
 
 #pragma dont_inline on
