@@ -2,7 +2,7 @@
 
 #pragma exceptions on
 
-u8 synthVirtualSampleState[0x950];
+SynthVirtualSampleState synthVirtualSampleState;
 
 /*
  * Sample-completion handler: if the packed (slotIdx, sampleId)
@@ -19,7 +19,7 @@ void synthHandleVirtualSampleDone(u32 packed)
     u8 vid;
     u32 generation;
 
-    state = (SynthVirtualSampleState*)synthVirtualSampleState;
+    state = &synthVirtualSampleState;
     if (packed == SYNTH_VIRTUAL_SAMPLE_INVALID_ID)
     {
         return;
@@ -56,7 +56,7 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
         u32 len, off;
     } d; /* struct-typed pair claims target frame slot */
 
-    state = (SynthVirtualSampleState*)synthVirtualSampleState;
+    state = &synthVirtualSampleState;
     sample = entry;
     if (sample->position == elapsed)
     {

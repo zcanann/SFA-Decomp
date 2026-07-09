@@ -20,7 +20,6 @@ typedef struct
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_ROUND        0xfff
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT        0x1000
 
-extern u8 synthVirtualSampleState[];
 extern u8* synthVoice;
 extern u16 synthLoadedGroupCount;
 
@@ -44,9 +43,9 @@ void synthUpdateVirtualSamples(void)
     u8* entry;
     u8 vid;
 
-    if (*(u32*)(synthVirtualSampleState + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) != 0)
+    if (synthVirtualSampleState.callback != 0)
     {
-        state = synthVirtualSampleState;
+        state = (u8*)&synthVirtualSampleState;
         slotMap = state;
         for (i = 0; i < SYNTH_VIRTUAL_SAMPLE_MAX_VOICES; i++, slotMap++)
         {

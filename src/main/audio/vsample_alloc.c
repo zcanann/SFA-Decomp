@@ -1,98 +1,64 @@
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/aram.h"
 
-typedef struct VsInfo
-{
-    u16 smpID;
-    u16 instID;
-    u32 start;
-    u32 size;
-    u32 wrapA;
-    u32 wrapB;
-} VsInfo;
-
-typedef struct VsBuffer
-{
-    u8 state;
-    u8 pad01;
-    u8 smpType;
-    u8 voice;
-    u32 last;
-    u8 pad08[0x10 - 0x8];
-    VsInfo info;
-} VsBuffer;
-
-typedef struct VS
-{
-    u8 numBuffers;
-    u8 pad01[3];
-    u32 bufferLength;
-    VsBuffer streamBuffer[SYNTH_VIRTUAL_SAMPLE_MAX_VOICES];
-    u8 voices[SYNTH_VIRTUAL_SAMPLE_MAX_VOICES];
-    u16 nextInstID;
-    u8 pad94a[2];
-    int (*callback)(int kind, void* data);
-} VS;
-
-extern u8 synthVirtualSampleState[];
-
 /*
  * Reset the virtual sample stream buffer table.
  */
 void synthInitVirtualSampleTable(void)
 {
     int i;
-    VS* v = (VS*)synthVirtualSampleState;
+    SynthVirtualSampleState* state = &synthVirtualSampleState;
 
-    v->numBuffers = 0;
+    state->entryCount = 0;
     for (i = 0; i < SYNTH_VIRTUAL_SAMPLE_MAX_VOICES; i++)
     {
-        v->voices[i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+        state->voiceMap[i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
     }
-    v->nextInstID = 0;
-    v->callback = 0;
+    state->nextId = 0;
+    state->callback = 0;
 }
 
-static void vsFreeBuffer(VS* v, u8 bufferIndex)
+static void vsFreeBuffer(SynthVirtualSampleState* state, u8 entryIndex)
 {
-    v->streamBuffer[bufferIndex].state = 0;
-    v->voices[v->streamBuffer[bufferIndex].voice] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+    state->entries[entryIndex].mode = SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE;
+    state->voiceMap[state->entries[entryIndex].voice] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
-static u8 vsAllocateBuffer(VS* v)
+static u8 vsAllocateBuffer(SynthVirtualSampleState* state)
 {
     u8 i;
 
-    for (i = 0; i < v->numBuffers; ++i)
+    for (i = 0; i < state->entryCount; ++i)
     {
-        if (v->streamBuffer[i].state != 0)
+        if (state->entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE)
         {
             continue;
         }
-        v->streamBuffer[i].state = 1;
-        v->streamBuffer[i].last = 0;
+        state->entries[i].mode = SYNTH_VIRTUAL_SAMPLE_MODE_ACTIVE;
+        state->entries[i].position = 0;
         return i;
     }
 
     return SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
-static u16 vsNewInstanceID(VS* v)
+static u16 vsNewInstanceID(SynthVirtualSampleState* state)
 {
     u8 i;
     u16 instID;
 
     do
     {
-        instID = v->nextInstID++;
-        for (i = 0; i < v->numBuffers; ++i)
+        instID = state->nextId++;
+        for (i = 0; i < state->entryCount; ++i)
         {
-            if (v->streamBuffer[i].state != 0 && v->streamBuffer[i].info.instID == instID)
+            if (state->entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE &&
+                state->entries[i].callbackData.generation == instID)
             {
                 break;
             }
         }
-    } while (i != v->numBuffers);
+    } while (i != state->entryCount);
 
     return instID;
 }
@@ -103,32 +69,32 @@ static u16 vsNewInstanceID(VS* v)
  */
 u32 synthClaimVirtualSampleSlot(u8 voiceID)
 {
-    VS* v = (VS*)synthVirtualSampleState;
+    SynthVirtualSampleState* state = &synthVirtualSampleState;
     u8 sb;
     u8 i;
     u32 addr;
 
-    for (i = 0; i < v->numBuffers; ++i)
+    for (i = 0; i < state->entryCount; ++i)
     {
-        if (v->streamBuffer[i].state != 0 && v->streamBuffer[i].voice == voiceID)
+        if (state->entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE && state->entries[i].voice == voiceID)
         {
-            vsFreeBuffer(v, i);
+            vsFreeBuffer(state, i);
         }
     }
 
-    sb = v->voices[voiceID] = vsAllocateBuffer(v);
+    sb = state->voiceMap[voiceID] = vsAllocateBuffer(state);
     if (sb != SYNTH_VIRTUAL_SAMPLE_FREE_SLOT)
     {
-        addr = aramGetStreamBufferAddress(v->voices[voiceID], 0);
-        hwSetVirtualSampleLoopBuffer(voiceID, addr, v->bufferLength);
-        v->streamBuffer[sb].info.smpID = hwGetSampleID(voiceID);
-        v->streamBuffer[sb].info.instID = vsNewInstanceID(v);
-        v->streamBuffer[sb].smpType = hwGetSampleType(voiceID);
-        v->streamBuffer[sb].voice = voiceID;
-        if (v->callback != 0)
+        addr = aramGetStreamBufferAddress(state->voiceMap[voiceID], 0);
+        hwSetVirtualSampleLoopBuffer(voiceID, addr, state->loopSize);
+        state->entries[sb].callbackData.sampleId = hwGetSampleID(voiceID);
+        state->entries[sb].callbackData.generation = vsNewInstanceID(state);
+        state->entries[sb].type = hwGetSampleType(voiceID);
+        state->entries[sb].voice = voiceID;
+        if (state->callback != 0)
         {
-            v->callback(SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND, &v->streamBuffer[sb].info);
-            return (v->streamBuffer[sb].info.instID << 8) | (voiceID & 0xff);
+            state->callback(SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND, &state->entries[sb].callbackData);
+            return (state->entries[sb].callbackData.generation << 8) | (voiceID & 0xff);
         }
         hwSetVirtualSampleLoopBuffer(voiceID, 0, 0);
     }

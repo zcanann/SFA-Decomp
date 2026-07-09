@@ -72,6 +72,8 @@ typedef struct SynthVirtualSampleState {
     SynthVirtualSampleCallback callback;
 } SynthVirtualSampleState;
 
+extern SynthVirtualSampleState synthVirtualSampleState;
+
 void synthInitVirtualSampleTable(void);
 u32 synthClaimVirtualSampleSlot(u8 voice);
 void synthHandleVirtualSampleDone(u32 packed);
