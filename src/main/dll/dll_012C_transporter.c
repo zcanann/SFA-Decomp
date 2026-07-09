@@ -57,9 +57,9 @@ extern void objRenderFn_80041018(int obj);
 #pragma opt_loop_invariants off
 int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    int i;
     WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)obj)->anim.placementData;
     WarpPadState* state = ((GameObject*)obj)->extra;
-    int i;
     int id;
 
     for (i = 0; i < animUpdate->eventCount; i++)
