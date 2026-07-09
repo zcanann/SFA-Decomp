@@ -431,11 +431,11 @@ s16 sndSin(u32 packed)
  */
 void* sndBSearch(void* key, void* base, int count, u32 stride, int (*cmp)(void*, void*))
 {
-    int high;
-    int low;
-    int mid;
+    long low;
+    long high;
+    long mid;
+    long result;
     void* entry;
-    int result;
 
     if (count != 0)
     {
@@ -443,10 +443,7 @@ void* sndBSearch(void* key, void* base, int count, u32 stride, int (*cmp)(void*,
         high = count;
         do
         {
-            mid = (low + high) >> 1;
-            entry = (u8*)base + stride * (mid - 1);
-            result = cmp(key, entry);
-            if (result == 0)
+            if ((result = cmp(key, (entry = (u8*)base + stride * ((mid = (low + high) >> 1) - 1)))) == 0)
             {
                 return entry;
             }
