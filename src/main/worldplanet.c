@@ -265,6 +265,7 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
 }
 #pragma peephole reset
 
+#pragma opt_lifetimes off
 void worldplanet_update(int obj)
 {
     u8 prevPlanet;
@@ -633,6 +634,7 @@ void worldplanet_update(int obj)
         state->orbitSoundFrameCount += 1;
     }
 }
+#pragma opt_lifetimes reset
 
 /* Per-WorldPlanetSlot parameter table. Columns are WorldPlanetSlot 0..4
  * (Walled City / CloudRunner / Dinosaur / Dragon Rock / DarkIce). Declared
