@@ -81,8 +81,8 @@ STATIC_ASSERT(offsetof(WCBeaconSetup, armBit) == WCBEACON_SETUP_ARM_BIT_OFFSET);
 
 int wcbeacon_aButtonCallback(struct GameObject* obj)
 {
-    WCBeaconState* state = (obj)->extra;
-    WCBeaconSetup* setup = (WCBeaconSetup*)(obj)->anim.placementData;
+    WCBeaconState* state = obj->extra;
+    WCBeaconSetup* setup = (WCBeaconSetup*)obj->anim.placementData;
 
     if (isGameTimerDisabled() == 0)
     {
@@ -100,7 +100,7 @@ int wcbeacon_getExtraSize(void)
 int wcbeacon_getObjectTypeId(struct GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = ((WCBeaconSetup*)(obj)->anim.placementData)->modelIndex;
+    int modelIndex = ((WCBeaconSetup*)obj->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount)

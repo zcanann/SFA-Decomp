@@ -138,7 +138,7 @@ int ccgasventcontrol_getExtraSize(void)
 
 void ccgasventcontrol_free(struct GameObject* obj)
 {
-    char* inner = (obj)->extra;
+    char* inner = obj->extra;
     u8 t = ((CcgasventcontrolState*)inner)->state;
     if (t == CCGASVENT_STATE_ACTIVE || t == CCGASVENT_STATE_WARP_BACK)
     {
@@ -260,9 +260,9 @@ void ccgasventcontrol_update(int obj)
 
 void ccgasventcontrol_init(struct GameObject* obj, u8* def)
 {
-    char* inner = (obj)->extra;
-    (obj)->animEventCallback = CCGasVentControl_SeqFn;
-    (obj)->anim.rotX = (s16)((u32)def[0x1a] << 8);
+    char* inner = obj->extra;
+    obj->animEventCallback = CCGasVentControl_SeqFn;
+    obj->anim.rotX = (s16)((u32)def[0x1a] << 8);
     if (mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         ((CcgasventcontrolState*)inner)->state = CCGASVENT_STATE_DONE;

@@ -83,7 +83,7 @@ int wctile_getExtraSize(void)
 int wctile_getObjectTypeId(struct GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = *(s8*)(*(int*)&(obj)->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);
+    int modelIndex = *(s8*)(*(int*)&obj->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount)

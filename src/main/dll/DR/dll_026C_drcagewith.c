@@ -21,13 +21,13 @@
 
 int DR_CageWith_setScale(struct GameObject* obj)
 {
-    u8* state = (obj)->extra;
+    u8* state = obj->extra;
     return state[0x30];
 }
 
 int DR_CageWith_toggleRopeStateCallback(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    char* state = (obj)->extra;
+    char* state = obj->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {

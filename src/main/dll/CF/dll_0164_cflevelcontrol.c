@@ -127,7 +127,7 @@ void cflevelcontrol_hitDetect(void)
 
 void cflevelcontrol_update(struct GameObject* obj)
 {
-    u8* state = (obj)->extra;
+    u8* state = obj->extra;
     int player = (int)Obj_GetPlayerObject();
     CfTriggerPos triggerPos;
     u32 bit974;
@@ -178,7 +178,7 @@ void cflevelcontrol_update(struct GameObject* obj)
     ((CfLevelControlFlags*)&state[0xc])->b5 = bit974;
     ((CfLevelControlFlags*)&state[0xc])->b4 = bit975;
 
-    if ((obj)->unkF4 == 0)
+    if (obj->unkF4 == 0)
     {
         getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_A, 0);
         if (mainGetBit(GAMEBIT_CFRelated0D73) == 0)
@@ -200,7 +200,7 @@ void cflevelcontrol_update(struct GameObject* obj)
             unlockLevel(0, 0, 1);
         }
 
-        (obj)->unkF4 = 1;
+        obj->unkF4 = 1;
     }
 
     if (mainGetBit(GAMEBIT_CF_NotRecoveredStaff) != 0 &&

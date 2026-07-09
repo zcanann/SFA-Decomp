@@ -49,8 +49,8 @@ extern f32 lbl_803E44D8;
 #pragma scheduling off
 int MoonSeedBush_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    MoonSeedBushState* state = (obj)->extra;
-    int def = *(int*)&(obj)->anim.placementData;
+    MoonSeedBushState* state = obj->extra;
+    int def = *(int*)&obj->anim.placementData;
     int i;
     int j;
     if (state->seedState == MOONSEEDBUSH_SEED_UNGROWN)
@@ -141,18 +141,18 @@ void MoonSeedBush_update(int obj)
 
 void MoonSeedBush_init(struct GameObject* obj, int data)
 {
-    MoonSeedBushState* state = (obj)->extra;
+    MoonSeedBushState* state = obj->extra;
     MoonSeedBushPlacement* placement = (MoonSeedBushPlacement*)data;
     state->flags = 1;
-    (obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    (obj)->animEventCallback = MoonSeedBush_SeqFn;
-    (obj)->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
-    (obj)->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
-    if ((obj)->anim.rootMotionScale == lbl_803E44D8)
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->animEventCallback = MoonSeedBush_SeqFn;
+    obj->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
+    if (obj->anim.rootMotionScale == lbl_803E44D8)
     {
-        (obj)->anim.rootMotionScale = lbl_803E44D0;
+        obj->anim.rootMotionScale = lbl_803E44D0;
     }
-    (obj)->anim.rootMotionScale = (obj)->anim.rootMotionScale * (obj)->anim.modelInstance->rootMotionScaleBase;
+    obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     if (placement->grownGameBit != -1)
     {
         state->seedState = mainGetBit(placement->grownGameBit);

@@ -55,7 +55,7 @@ void PointLight_free(int obj)
 
 void PointLight_render(struct GameObject* obj)
 {
-    PointLightState* state = (obj)->extra;
+    PointLightState* state = obj->extra;
     ModelLight* light = state->light;
     if (light != NULL && *(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)
     {
@@ -70,16 +70,16 @@ void PointLight_hitDetect(void)
 void PointLight_update(struct GameObject* obj)
 {
     u8 colorR, colorG, colorB;
-    PointLightSetup* setup = (PointLightSetup*)(obj)->anim.placementData;
-    PointLightState* state = (obj)->extra;
+    PointLightSetup* setup = (PointLightSetup*)obj->anim.placementData;
+    PointLightState* state = obj->extra;
 
     if (state->light == NULL)
     {
         return;
     }
 
-    (obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)(obj)->anim.rotX);
-    (obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)(obj)->anim.rotY);
+    obj->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)obj->anim.rotX);
+    obj->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)obj->anim.rotY);
 
     if (state->enabled != 0)
     {

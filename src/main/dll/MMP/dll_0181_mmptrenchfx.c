@@ -58,7 +58,7 @@ void mmp_trenchfx_hitDetect(void)
 #pragma scheduling off
 void mmp_trenchfx_update(struct GameObject* obj)
 {
-    MmpTrenchfxState* state = (obj)->extra;
+    MmpTrenchfxState* state = obj->extra;
     if (state->enableBit == -1 || mainGetBit(state->enableBit) != 0)
     {
         state->emitCooldown -= timeDelta;
@@ -69,9 +69,9 @@ void mmp_trenchfx_update(struct GameObject* obj)
             state->fxY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
             state->fxZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
             vecRotateZXY((void*)state->emitAngles, &state->fxX);
-            state->fxX += (obj)->anim.localPosX;
-            state->fxY += (obj)->anim.localPosY;
-            state->fxZ += (obj)->anim.localPosZ;
+            state->fxX += obj->anim.localPosX;
+            state->fxY += obj->anim.localPosY;
+            state->fxZ += obj->anim.localPosZ;
             state->emitCooldown = (f32)(int)randomGetRange(0x64, 0xC8);
             state->emitTimer = (f32)(int)randomGetRange(0x32, 0x64);
         }
@@ -85,9 +85,9 @@ void mmp_trenchfx_update(struct GameObject* obj)
         *(f32*)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-state->extentY, state->extentY);
         *(f32*)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
         vecRotateZXY((void*)state->emitAngles, (void*)(lbl_803AC930 + 0xC));
-        *(f32*)(lbl_803AC930 + 0xC) += (obj)->anim.localPosX;
-        *(f32*)(lbl_803AC930 + 0x10) += (obj)->anim.localPosY;
-        *(f32*)(lbl_803AC930 + 0x14) += (obj)->anim.localPosZ;
+        *(f32*)(lbl_803AC930 + 0xC) += obj->anim.localPosX;
+        *(f32*)(lbl_803AC930 + 0x10) += obj->anim.localPosY;
+        *(f32*)(lbl_803AC930 + 0x14) += obj->anim.localPosZ;
         (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, lbl_803AC930, 0x200001, -1, NULL);
     }
 }
@@ -95,7 +95,7 @@ void mmp_trenchfx_update(struct GameObject* obj)
 
 void mmp_trenchfx_init(struct GameObject* obj, int data)
 {
-    MmpTrenchfxState* state = (obj)->extra;
+    MmpTrenchfxState* state = obj->extra;
     MmpTrenchfxPlacement* place = (MmpTrenchfxPlacement*)data;
     s16 angle;
     state->enableBit = place->enableBit;
@@ -104,14 +104,14 @@ void mmp_trenchfx_init(struct GameObject* obj, int data)
     state->extentY = (u16)(place->extentY << 2);
     angle = (s16)(((s32)place->emitAngleZ) << 8);
     state->emitAngles[2] = angle;
-    (obj)->anim.rotZ = angle;
+    obj->anim.rotZ = angle;
     angle = (s16)(((s32)place->emitAngleY) << 8);
     state->emitAngles[1] = angle;
-    (obj)->anim.rotY = angle;
+    obj->anim.rotY = angle;
     angle = (s16)(((s32)place->emitAngleX) << 8);
     state->emitAngles[0] = angle;
-    (obj)->anim.rotX = angle;
-    (obj)->anim.rootMotionScale = lbl_803E45C0;
+    obj->anim.rotX = angle;
+    obj->anim.rootMotionScale = lbl_803E45C0;
 }
 #pragma peephole reset
 

@@ -486,7 +486,7 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(struct GameObject* ob
     ObjTextureRuntimeSlot* found;
 
     found = NULL;
-    modelDef = (obj)->anim.modelInstance;
+    modelDef = obj->anim.modelInstance;
     if (modelDef != NULL)
     {
         list = modelDef->textureSlotDefs;
@@ -499,7 +499,7 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(struct GameObject* ob
         {
             if (list->tag == kind)
             {
-                found = &(obj)->anim.textureSlots[k];
+                found = &obj->anim.textureSlots[k];
             }
             list++;
         }
@@ -1262,9 +1262,9 @@ void fn_80039DF8(struct GameObject* obj, s16* curve, s16* state, f32 val)
         {
             int angle;
             int n;
-            angle = getAngle((obj)->anim.localPosX - *(f32*)((char*)curve + 4),
-                             (obj)->anim.localPosZ - *(f32*)((char*)curve + 0xc));
-            curve[10] = (s16)(angle - (u16)(obj)->anim.rotX);
+            angle = getAngle(obj->anim.localPosX - *(f32*)((char*)curve + 4),
+                             obj->anim.localPosZ - *(f32*)((char*)curve + 0xc));
+            curve[10] = (s16)(angle - (u16)obj->anim.rotX);
             if (curve[10] > 0x8000)
             {
                 curve[10] = (s16)(curve[10] - 0xffff);

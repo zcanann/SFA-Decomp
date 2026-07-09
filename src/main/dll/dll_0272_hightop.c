@@ -229,7 +229,7 @@ int HighTop_setScale(void)
 void hightop_func11(struct GameObject* obj, int val)
 {
     u8 v = val;
-    HighTopRuntime* state = (obj)->extra;
+    HighTopRuntime* state = obj->extra;
     state->unkC43 = v;
 }
 
@@ -262,7 +262,7 @@ void HighTop_free(int obj)
 
 int hightop_stateHandler00(struct GameObject* obj)
 {
-    int placement = *(int*)&(obj)->anim.placementData;
+    int placement = *(int*)&obj->anim.placementData;
     if (((HightopPlacement*)placement)->spawnVariant != 0)
     {
         return 0xa;
@@ -276,7 +276,7 @@ int hightop_stateHandler00(struct GameObject* obj)
 
 int hightop_stateHandler06(struct GameObject* obj, u8* state)
 {
-    HighTopRuntime* runtime = (obj)->extra;
+    HighTopRuntime* runtime = obj->extra;
     if ((s8)((BaddieState*)state)->moveJustStartedA != 0)
     {
         runtime->flags |= 1;
@@ -338,7 +338,7 @@ int hightop_stateHandler03(int obj, u8* state)
 
 int hightop_stateHandler05(struct GameObject* obj, u8* state)
 {
-    HighTopRuntime* runtime = (obj)->extra;
+    HighTopRuntime* runtime = obj->extra;
     if ((s8)((BaddieState*)state)->moveJustStartedA != 0)
     {
         runtime->flagsC49.b1 = 0;
@@ -412,16 +412,16 @@ void HighTop_getLookTargetYaw(struct GameObject* obj, int mode, int* out)
     case 2:
         if (dll_2E_func0A(0x11, buf) != 0)
         {
-            yaw = getAngle(buf[3] - (obj)->anim.localPosX, buf[5] - (obj)->anim.localPosZ);
+            yaw = getAngle(buf[3] - obj->anim.localPosX, buf[5] - obj->anim.localPosZ);
             *out = yaw + gHighTopLookYawOffset;
-            runtime = (obj)->extra;
+            runtime = obj->extra;
             runtime->lookTargetX = buf[3];
             runtime->lookTargetY = buf[4];
             runtime->lookTargetZ = buf[5];
         }
         else
         {
-            *out = (obj)->anim.rotX + 0x4000;
+            *out = obj->anim.rotX + 0x4000;
         }
         break;
     case 3:
@@ -1258,7 +1258,7 @@ int hightop_stateHandler09(int obj, int stateArg)
 #pragma opt_strength_reduction off
 int hightop_stateHandler10(struct GameObject* obj, int stateArg)
 {
-    HighTopRuntime* rt = (obj)->extra;
+    HighTopRuntime* rt = obj->extra;
     int* weight;
     int roll;
     int i;
@@ -1282,7 +1282,7 @@ int hightop_stateHandler10(struct GameObject* obj, int stateArg)
     {
         rt->substate = 3;
     }
-    if (Vec_distance((f32*)((char*)Obj_GetPlayerObject() + 0x18), &(obj)->anim.worldPosX) > lbl_803E6AA4)
+    if (Vec_distance((f32*)((char*)Obj_GetPlayerObject() + 0x18), &obj->anim.worldPosX) > lbl_803E6AA4)
     {
         if (randFn_80080100(500) != 0)
         {

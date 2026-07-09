@@ -287,7 +287,7 @@ void DFSH_Shrine_free(struct GameObject* obj)
 {
     void** state;
 
-    state = (obj)->extra;
+    state = obj->extra;
     if (*state != NULL)
     {
         ModelLightStruct_free(*state);

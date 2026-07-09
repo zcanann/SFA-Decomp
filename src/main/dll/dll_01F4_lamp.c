@@ -74,13 +74,13 @@ int Lamp_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     {
         return 0;
     }
-    if (((obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
+    if ((obj->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
     {
         fx->scale = 0.35f;
         fx->arg3 = 0xc0d;
-        fx->posX = fx->posX - (obj)->anim.worldPosX;
-        fx->posY = fx->posY - (obj)->anim.worldPosY;
-        fx->posZ = fx->posZ - (obj)->anim.worldPosZ;
+        fx->posX = fx->posX - obj->anim.worldPosX;
+        fx->posY = fx->posY - obj->anim.worldPosY;
+        fx->posZ = fx->posZ - obj->anim.worldPosZ;
         for (i = 0; i < framesThisStep; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, LAMP_PARTFX_A, effectArgs, 6, -1, NULL);

@@ -593,12 +593,12 @@ void fn_80166840(struct GameObject* obj, int state, f32* hit, f32* end)
     f32 len;
 
     scale = lbl_803E3020;
-    stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + (objX = (obj)->anim.localPosX);
-    stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + (objY = (obj)->anim.localPosY);
-    stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + (objZ = (obj)->anim.localPosZ);
-    velX = scale * (obj)->anim.velocityX + objX;
-    velY = scale * (obj)->anim.velocityY + objY;
-    velZ = scale * (obj)->anim.velocityZ + objZ;
+    stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + (objX = obj->anim.localPosX);
+    stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + (objY = obj->anim.localPosY);
+    stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + (objZ = obj->anim.localPosZ);
+    velX = scale * obj->anim.velocityX + objX;
+    velY = scale * obj->anim.velocityY + objY;
+    velZ = scale * obj->anim.velocityZ + objZ;
     planeX = objY * (stateZ - velZ) + (stateY * (velZ - objZ) + velY * (objZ - stateZ));
     planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
     planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
@@ -618,16 +618,16 @@ void fn_80166840(struct GameObject* obj, int state, f32* hit, f32* end)
     Vec3_Cross(plane, hit, response);
     Vec3_Normalize(response);
     speed = lbl_803E3004;
-    (obj)->anim.velocityX = lbl_803E3004 * response[0];
-    (obj)->anim.velocityY = speed * response[1];
-    (obj)->anim.velocityZ = speed * response[2];
+    obj->anim.velocityX = lbl_803E3004 * response[0];
+    obj->anim.velocityY = speed * response[1];
+    obj->anim.velocityZ = speed * response[2];
     ((LandedArwingState*)state)->surfaceNormalX = hit[0];
     ((LandedArwingState*)state)->surfaceNormalY = hit[1];
     ((LandedArwingState*)state)->surfaceNormalZ = hit[2];
     ((LandedArwingState*)state)->surfacePlaneD = hit[3];
-    (obj)->anim.localPosX = end[0] + ((LandedArwingState*)state)->surfaceNormalX;
-    (obj)->anim.localPosY = end[1] + ((LandedArwingState*)state)->surfaceNormalY;
-    (obj)->anim.localPosZ = end[2] + ((LandedArwingState*)state)->surfaceNormalZ;
+    obj->anim.localPosX = end[0] + ((LandedArwingState*)state)->surfaceNormalX;
+    obj->anim.localPosY = end[1] + ((LandedArwingState*)state)->surfaceNormalY;
+    obj->anim.localPosZ = end[2] + ((LandedArwingState*)state)->surfaceNormalZ;
 }
 
 void updateConstrainedChaseVelocity(int obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend)

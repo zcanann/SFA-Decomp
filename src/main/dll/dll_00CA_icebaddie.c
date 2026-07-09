@@ -322,7 +322,7 @@ int iceBaddie_stateHandlerB03(struct GameObject* obj, int state)
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
-        sub = (obj)->extra;
+        sub = obj->extra;
         sub->subMode = 0;
         mainSetBits((s32)sub->gameBitB, 0);
         mainSetBits((s32)sub->gameBitA, 1);
@@ -1009,7 +1009,7 @@ void iceBaddie_updateControlEffects(struct GameObject* obj, int state)
     f32 shakeScale;
     f32 contactScale;
 
-    if ((obj)->anim.seqId == 99)
+    if (obj->anim.seqId == 99)
     {
         ((IceBaddieControl*)control)->fxScale = lbl_803E2D84;
         shakeScale = lbl_803E2D88;

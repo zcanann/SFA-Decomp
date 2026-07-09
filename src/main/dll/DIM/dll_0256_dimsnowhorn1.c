@@ -69,7 +69,7 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
 
 int DIMSnowHorn1_stateHandler00(struct GameObject* obj)
 {
-    DIMSnowHorn1State* inner = (obj)->extra;
+    DIMSnowHorn1State* inner = obj->extra;
 
     switch (inner->mode)
     {
@@ -795,7 +795,7 @@ int DIMSnowHorn1_func20(void)
 
 f32 DIMSnowHorn1_func19(struct GameObject* obj, f32* out)
 {
-    DIMSnowHorn1State* state = (obj)->extra;
+    DIMSnowHorn1State* state = obj->extra;
     if (state->baddie.controlMode == 0xa)
     {
         *out = -state->baddie.moveSpeed;
@@ -817,7 +817,7 @@ void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
 void DIMSnowHorn1_setMountMode(struct GameObject* obj, int value)
 {
     u8 mode = (u8)value;
-    ((DIMSnowHorn1State*)(obj)->extra)->mountMode = mode;
+    ((DIMSnowHorn1State*)obj->extra)->mountMode = mode;
 }
 
 int DIMSnowHorn1_func16(void)
@@ -855,7 +855,7 @@ void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ)
 
 int DIMSnowHorn1_func14(struct GameObject* obj)
 {
-    if (((DIMSnowHorn1State*)(obj)->extra)->queryFlagA8F != 0)
+    if (((DIMSnowHorn1State*)obj->extra)->queryFlagA8F != 0)
     {
         return 2;
     }
@@ -864,7 +864,7 @@ int DIMSnowHorn1_func14(struct GameObject* obj)
 
 int DIMSnowHorn1_render2(struct GameObject* obj)
 {
-    DIMSnowHorn1State* state = (obj)->extra;
+    DIMSnowHorn1State* state = obj->extra;
     if ((state->flags & SNOWHORN1_FLAG_RIDING) != 0)
     {
         mainSetBits(GAMEBIT_SNOWHORN_RIDING, 0);
@@ -876,7 +876,7 @@ int DIMSnowHorn1_render2(struct GameObject* obj)
 
 void DIMSnowHorn1_modelMtxFn(struct GameObject* obj, f32* out_x, f32* out_y, f32* out_z)
 {
-    DIMSnowHorn1State* state = (obj)->extra;
+    DIMSnowHorn1State* state = obj->extra;
     *out_x = state->pathPosX;
     *out_y = state->pathPosY;
     *out_z = state->pathPosZ;
@@ -884,7 +884,7 @@ void DIMSnowHorn1_modelMtxFn(struct GameObject* obj, f32* out_x, f32* out_y, f32
 
 int DIMSnowHorn1_func11(struct GameObject* obj)
 {
-    if (((DIMSnowHorn1State*)(obj)->extra)->queryFlagA90 != 0)
+    if (((DIMSnowHorn1State*)obj->extra)->queryFlagA90 != 0)
     {
         return 1;
     }

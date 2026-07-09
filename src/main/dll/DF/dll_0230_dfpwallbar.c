@@ -44,7 +44,7 @@ void chuka_render(void)
 void chuka_hitDetect(struct GameObject* obj)
 {
     GameObject* light;
-    ChukaState* state = (obj)->extra;
+    ChukaState* state = obj->extra;
     light = (GameObject*)state->linkedObject;
     if (light == NULL)
         return;
@@ -195,26 +195,26 @@ void chuka_update(int obj)
 
 void chuka_init(struct GameObject* obj, int params)
 {
-    ChukaState* state = (obj)->extra;
+    ChukaState* state = obj->extra;
     ChukaPlacement* placement = (ChukaPlacement*)params;
     u8* modeTable;
 
-    (obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    (obj)->animEventCallback = chuka_SeqFn;
-    state->startY = (obj)->anim.localPosY;
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->animEventCallback = chuka_SeqFn;
+    state->startY = obj->anim.localPosY;
     state->modeIndex = placement->modeIndex;
 
     if (placement->barHeight != 0)
     {
-        (obj)->anim.rootMotionScale = 1.0f / ((f32)placement->barHeight / 1000.0f);
+        obj->anim.rootMotionScale = 1.0f / ((f32)placement->barHeight / 1000.0f);
     }
 
     if (placement->rotZInit != 0)
     {
-        (obj)->anim.rotZ = placement->rotZInit;
+        obj->anim.rotZ = placement->rotZInit;
     }
 
-    (obj)->objectFlags |= DFPWALLBAR_OBJFLAG_HIDDEN;
+    obj->objectFlags |= DFPWALLBAR_OBJFLAG_HIDDEN;
     state->linkedObject = 0;
 
     modeTable = gChukaModeTable;

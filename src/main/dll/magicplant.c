@@ -113,9 +113,9 @@ void mikaladon_init(struct GameObject* obj, int state)
     ((BaddieState*)state)->unk318 = lblA;
     ((BaddieState*)state)->unk322 = 1;
     ((BaddieState*)state)->unk31C = lblA;
-    *(f32*)(state + 0x324) = (obj)->anim.localPosX;
-    *(f32*)(state + 0x328) = (obj)->anim.localPosY;
-    *(f32*)(state + 0x32c) = (obj)->anim.localPosZ;
+    *(f32*)(state + 0x324) = obj->anim.localPosX;
+    *(f32*)(state + 0x328) = obj->anim.localPosY;
+    *(f32*)(state + 0x32c) = obj->anim.localPosZ;
     ((BaddieState*)state)->seqEntryIndex = 0;
     ((BaddieState*)state)->inWhirlpoolGroup = 0;
     *(s16*)(state + 0x338) = 0;
@@ -124,8 +124,8 @@ void mikaladon_init(struct GameObject* obj, int state)
     ((BaddieState*)state)->pathStep = lbl_803E28A8;
 
     fn_80293018(*(u16*)(state + 0x338), &a, &b);
-    (obj)->anim.localPosX = a * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
-    (obj)->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
+    obj->anim.localPosX = a * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
+    obj->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
 
 void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
@@ -310,7 +310,7 @@ void vambat_init(struct GameObject* obj, int state)
     *(f32*)(state + 0x328) = zero;
     *(f32*)(state + 0x32c) = zero;
     ((BaddieState*)state)->pathStep = pathStepInit;
-    switch ((obj)->anim.seqId)
+    switch (obj->anim.seqId)
     {
     case 0x7c6:
         ((BaddieState*)state)->inWhirlpoolGroup = 1;
@@ -325,7 +325,7 @@ void vambat_init(struct GameObject* obj, int state)
 void fn_8015355C(struct GameObject* obj, int state)
 {
     u8 count = 0;
-    switch ((obj)->anim.currentMove)
+    switch (obj->anim.currentMove)
     {
     case 1:
         count = 1;

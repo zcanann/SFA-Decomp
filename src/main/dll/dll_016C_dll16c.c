@@ -180,14 +180,14 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 void dll_16C_init(struct GameObject* obj, void* arg2)
 {
     Dll16CState* extra;
-    (obj)->animEventCallback = dll_16C_SeqFn;
-    if ((obj)->anim.modelState != NULL)
+    obj->animEventCallback = dll_16C_SeqFn;
+    if (obj->anim.modelState != NULL)
     {
-        (obj)->anim.modelState->flags |= 0x4000;
-        (obj)->anim.modelState->shadowTintA = 100;
-        (obj)->anim.modelState->shadowTintB = 150;
+        obj->anim.modelState->flags |= 0x4000;
+        obj->anim.modelState->shadowTintA = 100;
+        obj->anim.modelState->shadowTintB = 150;
     }
-    extra = (obj)->extra;
+    extra = obj->extra;
     extra->linkedObj = NULL;
     extra->subObjIndex = *(s8*)((char*)arg2 + 0x27);
     extra->opacity = 0xff;

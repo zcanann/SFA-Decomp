@@ -188,7 +188,7 @@ void gf_levelcon_free(void)
 
 void gf_levelcon_update(struct GameObject* obj)
 {
-    (obj)->animEventCallback = gf_levelcon_SeqFn;
+    obj->animEventCallback = gf_levelcon_SeqFn;
 }
 
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)

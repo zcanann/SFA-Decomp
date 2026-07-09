@@ -78,7 +78,7 @@ int lightsource_getObjectTypeId(void)
 
 void lightsource_free(struct GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
+    int state = *(int*)&obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if (((LightSourceState*)state)->light != 0)
     {

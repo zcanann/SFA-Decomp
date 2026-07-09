@@ -247,7 +247,7 @@ s16 fn_80138F90(u8* obj)
 }
 void* trickyGetQueuedPathParticlePos(struct GameObject* obj)
 {
-    return &((TrickyImpressState*)(obj)->extra)->renderPosX;
+    return &((TrickyImpressState*)obj->extra)->renderPosX;
 }
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {

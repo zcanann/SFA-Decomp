@@ -64,7 +64,7 @@ void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 #pragma peephole on
 void arwarwinggu_setTextureFrame(struct GameObject* obj, int textureFrame)
 {
-    ArwingGuState* state = (obj)->extra;
+    ArwingGuState* state = obj->extra;
     state->texture.textureFrame = textureFrame;
 }
 
@@ -87,7 +87,7 @@ void arwarwinggu_applyTextureFrame(int obj)
 
 int ARWArwingGu_getExtraSize(struct GameObject* obj)
 {
-    switch ((obj)->anim.seqId)
+    switch (obj->anim.seqId)
     {
     case ARWGU_DEF_ENGINE:
         return 8;
@@ -181,12 +181,12 @@ void ARWArwingGu_update(int obj)
 
 void ARWArwingGu_init(struct GameObject* obj)
 {
-    if ((obj)->anim.seqId == ARWGU_DEF_ENGINE)
+    if (obj->anim.seqId == ARWGU_DEF_ENGINE)
     {
         return;
     }
-    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    (obj)->anim.alpha = 0;
+    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    obj->anim.alpha = 0;
 }
 
 void ARWArwingGu_release(void)

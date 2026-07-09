@@ -44,7 +44,7 @@ void mcupgradema_update(int obj)
 
 void mcupgradema_init(struct GameObject* obj)
 {
-    (obj)->animEventCallback = mcupgradema_SeqFn;
+    obj->animEventCallback = mcupgradema_SeqFn;
 }
 
 int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

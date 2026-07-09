@@ -26,7 +26,7 @@ int ktlazerlight_getObjectTypeId(void)
 
 void ktlazerlight_free(struct GameObject* obj)
 {
-    void* extra = (obj)->extra;
+    void* extra = obj->extra;
     void* light = *(void**)((char*)extra + 0x4);
     if (light != 0)
     {
@@ -44,8 +44,8 @@ void ktlazerlight_hitDetect(void)
 
 void ktlazerlight_update(struct GameObject* obj)
 {
-    int placement = *(int*)&(obj)->anim.placementData;
-    char* extra = (obj)->extra;
+    int placement = *(int*)&obj->anim.placementData;
+    char* extra = obj->extra;
     s16 intensity;
     void* light = *(void**)(extra + 0x4);
     intensity = mainGetBit(((KtlazerlightPlacement*)placement)->onIntensityBit);
@@ -74,7 +74,7 @@ void ktlazerlight_update(struct GameObject* obj)
 
 void ktlazerlight_init(struct GameObject* obj, char* placement)
 {
-    char* extra = (obj)->extra;
+    char* extra = obj->extra;
     *(void**)(extra + 0x4) = objCreateLight(0, 1);
     if (*(void**)(extra + 0x4) != 0)
     {

@@ -154,10 +154,10 @@ void carryable_break_respawn_update(int obj)
 
 void dll_109_init(struct GameObject* obj, Dll109MapData* p)
 {
-    (obj)->anim.rotX = (s16)((s32)p->rotX << 8);
-    (obj)->objectFlags |= UNK_OBJFLAG_HITDETECT_DISABLED;
-    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&(obj)->extra, 0x21);
-    (*(void (**)(int*, int))((u8*)*gCarryableInterface + 0x2c))((obj)->extra, 1);
+    obj->anim.rotX = (s16)((s32)p->rotX << 8);
+    obj->objectFlags |= UNK_OBJFLAG_HITDETECT_DISABLED;
+    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&obj->extra, 0x21);
+    (*(void (**)(int*, int))((u8*)*gCarryableInterface + 0x2c))(obj->extra, 1);
 }
 
 #pragma scheduling on

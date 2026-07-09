@@ -105,7 +105,7 @@ void DR_CloudRunner_func18(int obj, f32* a, int* b)
 
 int DR_CloudRunner_func11(struct GameObject* obj)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     if (inner->unkBB8 != 0)
     {
         return 1;
@@ -120,7 +120,7 @@ void DR_CloudRunner_setGroundMarkerMatrix(int obj)
 
 int DR_CloudRunner_func14(struct GameObject* obj)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     if (inner->unkBB7 != 0)
     {
         return 2;
@@ -135,12 +135,12 @@ void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
 
 int DR_CloudRunner_stateHandler07(struct GameObject* obj)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     if (inner->airTimeRemaining == 0)
     {
-        s32 a = (obj)->anim.alpha;
+        s32 a = obj->anim.alpha;
         a -= framesThisStep;
-        (obj)->anim.alpha = a;
+        obj->anim.alpha = a;
     }
     return 0;
 }
@@ -325,13 +325,13 @@ int DR_CloudRunner_stateHandler00(int obj)
 
 void DR_CloudRunner_setFlightState(struct GameObject* obj, int param)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     inner->flightState = param;
     if (param == CLOUDRUNNER_FLIGHT_TRANSITION)
     {
         s16 seqIndex;
         inner->unk464 = 0;
-        seqIndex = (obj)->seqIndex;
+        seqIndex = obj->seqIndex;
         if (seqIndex != -1)
         {
             (*gObjectTriggerInterface)->endSequence(seqIndex);
@@ -354,10 +354,10 @@ void DR_CloudRunner_setFlightState(struct GameObject* obj, int param)
 #pragma opt_loop_invariants off
 int DR_CloudRunner_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     int local = 1;
     int i;
-    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch ((int)animUpdate->eventIds[i])
@@ -831,14 +831,14 @@ void DR_CloudRunner_func23(struct GameObject* obj, int mode, int* out)
     Obj_GetPlayerObject();
     curve = *(struct curveids*)gDRCloudRunnerCurveIds;
     bits = *(struct gbids*)&gDRCloudRunnerGameBitIds;
-    inner = (obj)->extra;
+    inner = obj->extra;
     switch (mode)
     {
     case 2:
-        if (((obj)->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK) || ((ByteFlags*)&inner->flagsBC1)->b80)
+        if ((obj->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK) || ((ByteFlags*)&inner->flagsBC1)->b80)
         {
-            *out = (obj)->anim.rotX;
-            gDRCloudRunnerSmoothedRotX = (obj)->anim.rotX;
+            *out = obj->anim.rotX;
+            gDRCloudRunnerSmoothedRotX = obj->anim.rotX;
             ((ByteFlags*)&inner->flagsBC1)->b80 = 0;
         }
         else
@@ -848,7 +848,7 @@ void DR_CloudRunner_func23(struct GameObject* obj, int mode, int* out)
             int i;
             s16 diff;
             s16 step;
-            ang = (obj)->anim.rotX;
+            ang = obj->anim.rotX;
             i = 0;
             p = bits.a;
             do
@@ -862,7 +862,7 @@ void DR_CloudRunner_func23(struct GameObject* obj, int mode, int* out)
             } while (i < 4);
             if (i != 4 && dll_2E_func0A(curve.a[i], &stk) != 0)
             {
-                s16 tmp = getAngle(stk.mat[1] - (obj)->anim.localPosX, stk.mat[3] - (obj)->anim.localPosZ);
+                s16 tmp = getAngle(stk.mat[1] - obj->anim.localPosX, stk.mat[3] - obj->anim.localPosZ);
                 ang = tmp + gDRCloudRunnerHeadingAngleOffset;
             }
             diff = ang - (u16)gDRCloudRunnerSmoothedRotX;
@@ -888,7 +888,7 @@ void DR_CloudRunner_func23(struct GameObject* obj, int mode, int* out)
         }
         break;
     case 3:
-        if ((obj)->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK)
+        if (obj->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK)
         {
             *out = 0;
         }

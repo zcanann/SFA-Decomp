@@ -72,7 +72,7 @@ void ktfallingrocks_update(int obj)
 
 void ktfallingrocks_init(struct GameObject* obj)
 {
-    (obj)->animEventCallback = NULL;
+    obj->animEventCallback = NULL;
 }
 
 void ktfallingrocks_release(void)

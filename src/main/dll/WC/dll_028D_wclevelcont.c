@@ -69,8 +69,8 @@ void wclevelcont_worldPosToTileB(struct GameObject* obj, f32 px, f32 pz, s16* ou
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                   (obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                   obj->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DB8) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
@@ -79,8 +79,8 @@ void wclevelcont_tileBToWorldPos(struct GameObject* obj, s16 col, s16 row, f32* 
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                   (obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                   obj->anim.localPosZ, &outX, &outZ);
     {
         f32 base = lbl_803E6DB4;
         *outXp = base + (lbl_803E6DB8 + outX + (f32)(col * 48));
@@ -146,8 +146,8 @@ void wclevelcont_worldPosToTileA(struct GameObject* obj, f32 px, f32 pz, s16* ou
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                   (obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                   obj->anim.localPosZ, &outX, &outZ);
     *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
@@ -156,8 +156,8 @@ void wclevelcont_tileAToWorldPos(struct GameObject* obj, s16 col, s16 row, f32* 
 {
     f32 outX, outZ;
 
-    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                   (obj)->anim.localPosZ, &outX, &outZ);
+    ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                   obj->anim.localPosZ, &outX, &outZ);
     {
         f32 base = lbl_803E6DB4;
         *outXp = base + (lbl_803E6DD0 + outX + (f32)(col * 48));
@@ -310,8 +310,8 @@ int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32*
         if (dx == -1)
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                           (obj)->anim.localPosZ, &px, &pz);
+            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                           obj->anim.localPosZ, &px, &pz);
             {
                 f32 base = lbl_803E6DB4;
                 f32 tx = lbl_803E6DD0 + px;
@@ -324,8 +324,8 @@ int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32*
         else
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                           (obj)->anim.localPosZ, &px, &pz);
+            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                           obj->anim.localPosZ, &px, &pz);
             {
                 f32 base = lbl_803E6DB4;
                 f32 tx = lbl_803E6DD0 + px;
@@ -344,14 +344,14 @@ int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32*
                     f32 pz, px;
                     i += dx;
                     ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-                        (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &px, &pz);
+                        obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outX = (lbl_803E6DD0 + px + (f32)((s16)i * 48)) + lbl_803E6DB4;
                     return 1;
                 }
                 {
                     f32 pz, px;
                     ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-                        (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &px, &pz);
+                        obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outX = (lbl_803E6DD0 + px + (f32)((s16)i * 48)) + lbl_803E6DB4;
                     return 2;
                 }
@@ -364,8 +364,8 @@ int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32*
         if (dy == -1)
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                           (obj)->anim.localPosZ, &px, &pz);
+            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                           obj->anim.localPosZ, &px, &pz);
             {
                 f32 base = lbl_803E6DB4;
                 f32 tz;
@@ -379,8 +379,8 @@ int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32*
         else
         {
             f32 pz, px;
-            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                                                           (obj)->anim.localPosZ, &px, &pz);
+            ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(obj->anim.localPosX, obj->anim.localPosY,
+                                                                           obj->anim.localPosZ, &px, &pz);
             {
                 f32 base = lbl_803E6DB4;
                 f32 tz;
@@ -400,14 +400,14 @@ int wclevelcont_traceMoveA(struct GameObject* obj, s16 a, s16 b, f32* outX, f32*
                     f32 pz, px;
                     i += dy;
                     ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-                        (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &px, &pz);
+                        obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outZ = (lbl_803E6DD4 + pz + (f32)((s16)i * 48)) + lbl_803E6DB4;
                     return 1;
                 }
                 {
                     f32 pz, px;
                     ((void (*)(f32, f32, f32, f32*, f32*))mapGetBlockOriginForPos)(
-                        (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &px, &pz);
+                        obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outZ = (lbl_803E6DD4 + pz + (f32)((s16)i * 48)) + lbl_803E6DB4;
                     return 2;
                 }

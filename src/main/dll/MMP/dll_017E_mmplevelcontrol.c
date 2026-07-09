@@ -202,17 +202,17 @@ void MMP_levelcontrol_update(int obj)
 void MMP_levelcontrol_init(struct GameObject* obj)
 {
 
-    (obj)->objectFlags |= (MMPLEVELCONTROL_OBJFLAG_HIDDEN | MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags |= (MMPLEVELCONTROL_OBJFLAG_HIDDEN | MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     if (getSaveGameLoadStatus() != 0)
     {
-        (obj)->unkF4 = 2;
+        obj->unkF4 = 2;
     }
     else
     {
-        (obj)->unkF4 = 1;
+        obj->unkF4 = 1;
     }
-    *(u32*)&(obj)->unkF8 = mainGetBit(0xF33);
-    (obj)->animEventCallback = MMP_LevelControl_SeqFn;
+    *(u32*)&obj->unkF8 = mainGetBit(0xF33);
+    obj->animEventCallback = MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = 300.0f;
     lbl_803DDB2C = 0;

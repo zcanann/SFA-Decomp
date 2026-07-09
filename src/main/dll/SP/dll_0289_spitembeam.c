@@ -94,8 +94,7 @@ void spitembeam_update(int* obj)
 
 void spitembeam_init(struct GameObject* obj)
 {
-    (obj)->objectFlags =
-        (u16)((obj)->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags = (u16)(obj->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void spitembeam_release(void)

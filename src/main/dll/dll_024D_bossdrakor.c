@@ -426,8 +426,8 @@ int bossdrakor_chooseNextMove(struct GameObject* obj, f32* speedOut)
     u16 a;
     f32 dir[3];
 
-    state = *(int*)&(obj)->extra;
-    PSVECNormalize(&(obj)->anim.velocityX, dir);
+    state = *(int*)&obj->extra;
+    PSVECNormalize(&obj->anim.velocityX, dir);
     if (((BossDrakorState*)state)->moveState != 0)
     {
         *speedOut = lbl_803E6534;
@@ -445,7 +445,7 @@ int bossdrakor_chooseNextMove(struct GameObject* obj, f32* speedOut)
     else
     {
         a = (u16)(s16)getAngle(dir[0], dir[2]);
-        d = (obj)->anim.rotX - a;
+        d = obj->anim.rotX - a;
         if (d > 0x8000)
         {
             d = (s16)((int)d - 0xffff);

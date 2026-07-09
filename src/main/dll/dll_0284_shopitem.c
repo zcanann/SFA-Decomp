@@ -217,8 +217,8 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 
 void shopitem_onSeqFree(struct GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
-    int def = *(int*)&(obj)->anim.placementData;
+    int state = *(int*)&obj->extra;
+    int def = *(int*)&obj->anim.placementData;
     PushcartState97* b = (PushcartState97*)(state + 0x97);
     if (b->flag_40 == 0)
     {

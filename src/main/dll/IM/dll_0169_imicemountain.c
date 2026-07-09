@@ -182,7 +182,7 @@ void IMIceMountain_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 int IMIceMountain_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
-    ((IMIceMountainState*)(obj)->extra)->latchFlags |= 1;
+    ((IMIceMountainState*)obj->extra)->latchFlags |= 1;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         if (animUpdate->eventIds[i] == 2)

@@ -384,9 +384,9 @@ void fn_800E58FC(struct GameObject* obj, CurvesCollisionState* collision)
     if ((pointCount == 2) || (pointCount == 4))
     {
         zero = lbl_803E0668;
-        (obj)->anim.worldPosX = zero;
-        (obj)->anim.worldPosY = zero;
-        (obj)->anim.worldPosZ = zero;
+        obj->anim.worldPosX = zero;
+        obj->anim.worldPosY = zero;
+        obj->anim.worldPosZ = zero;
 
         pointIndex = 0;
         pointX = (f32*)collision;
@@ -394,28 +394,28 @@ void fn_800E58FC(struct GameObject* obj, CurvesCollisionState* collision)
         pointLimit = pointCount * 3;
         for (; pointIndex < pointLimit; pointIndex += 3)
         {
-            (obj)->anim.worldPosX += pointX[2];
-            (obj)->anim.worldPosY += pointYZ[3];
-            (obj)->anim.worldPosZ += pointYZ[4];
+            obj->anim.worldPosX += pointX[2];
+            obj->anim.worldPosY += pointYZ[3];
+            obj->anim.worldPosZ += pointYZ[4];
             pointX += 3;
             pointYZ += 3;
         }
 
         scale = lbl_803E068C;
         averageScale = scale / pointCount;
-        (obj)->anim.worldPosX *= averageScale;
-        (obj)->anim.worldPosY *= averageScale;
-        (obj)->anim.worldPosZ *= averageScale;
+        obj->anim.worldPosX *= averageScale;
+        obj->anim.worldPosY *= averageScale;
+        obj->anim.worldPosZ *= averageScale;
 
         if ((s32)(collision->flags & 0x8600) != 0)
         {
-            transform.angles[0] = -(obj)->anim.rotX;
-            transform.angles[1] = -(obj)->anim.rotY;
-            transform.angles[2] = -(obj)->anim.rotZ;
+            transform.angles[0] = -obj->anim.rotX;
+            transform.angles[1] = -obj->anim.rotY;
+            transform.angles[2] = -obj->anim.rotZ;
             transform.scale = scale;
-            transform.x = -(obj)->anim.worldPosX;
-            transform.y = -(obj)->anim.worldPosY;
-            transform.z = -(obj)->anim.worldPosZ;
+            transform.x = -obj->anim.worldPosX;
+            transform.y = -obj->anim.worldPosY;
+            transform.z = -obj->anim.worldPosZ;
             mtxRotateByVec3s(matrix, transform.angles);
 
             i = 0;
@@ -445,7 +445,7 @@ void fn_800E58FC(struct GameObject* obj, CurvesCollisionState* collision)
             {
                 angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
                                       (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
-                (obj)->anim.rotX += (s16)(u16)(angle + 0x8000) >> 2;
+                obj->anim.rotX += (s16)(u16)(angle + 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
             {
@@ -477,9 +477,9 @@ void fn_800E58FC(struct GameObject* obj, CurvesCollisionState* collision)
     }
     else
     {
-        (obj)->anim.worldPosX = collision->points[0][0];
-        (obj)->anim.worldPosY = collision->points[0][1];
-        (obj)->anim.worldPosZ = collision->points[0][2];
+        obj->anim.worldPosX = collision->points[0][0];
+        obj->anim.worldPosY = collision->points[0][1];
+        obj->anim.worldPosZ = collision->points[0][2];
     }
 }
 #pragma opt_common_subs reset

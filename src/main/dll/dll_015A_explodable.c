@@ -305,9 +305,9 @@ int explodable_spawnFragmentObject(struct GameObject* obj, int objType, int chun
     s->colorB = 0xff;
     s->colorG = 1;
     s->colorA = 0xff;
-    s->posX = (obj)->anim.localPosX;
-    s->posY = (obj)->anim.localPosY;
-    s->posZ = (obj)->anim.localPosZ;
+    s->posX = obj->anim.localPosX;
+    s->posY = obj->anim.localPosY;
+    s->posZ = obj->anim.localPosZ;
     f1 = lbl_803E4350;
     s->velX = lbl_803E4350 * c->velX;
     s->velY = f1 * c->velY;
@@ -327,10 +327,10 @@ int explodable_spawnFragmentObject(struct GameObject* obj, int objType, int chun
     s->vel2Y = f1 * c->vel2Y;
     s->vel2Z = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
-    s->scale = (s8)(int)(lbl_803E435C * ((obj)->anim.rootMotionScale / *(f32*)(*(int*)&(obj)->anim.modelInstance + 4)));
+    s->scale = (s8)(int)(lbl_803E435C * (obj->anim.rootMotionScale / *(f32*)(*(int*)&obj->anim.modelInstance + 4)));
     s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
-    return Obj_SetupObject((int)s, 5, (obj)->anim.mapEventSlot, -1, 0);
+    return Obj_SetupObject((int)s, 5, obj->anim.mapEventSlot, -1, 0);
 }
 
 void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
@@ -415,9 +415,9 @@ void explodable_computeFragmentLaunch(struct GameObject* obj, int chunkSlot, int
     int max;
 
     vecRotateZXY((s16*)(def + 0x1a), &c->offX);
-    c->posX = c->offX * (obj)->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posX;
-    c->posY = c->offY * (obj)->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posY;
-    c->posZ = c->offZ * (obj)->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posZ;
+    c->posX = c->offX * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posX;
+    c->posY = c->offY * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posY;
+    c->posZ = c->offZ * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posZ;
     c->rotX = ((ExplodablePlacement*)def)->rotX;
     c->rotY = ((ExplodablePlacement*)def)->rotY;
     c->rotZ = ((ExplodablePlacement*)def)->rotZ;
@@ -440,11 +440,11 @@ void explodable_computeFragmentLaunch(struct GameObject* obj, int chunkSlot, int
         c->spinY = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
         c->spinZ = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
         scale = (f32)((ExplodablePlacement*)def)->launchScale2 / lbl_803E4358;
-        if ((obj)->anim.velocityX > lbl_803E4368)
+        if (obj->anim.velocityX > lbl_803E4368)
         {
             c->launchFlags |= 1;
         }
-        if ((obj)->anim.velocityZ > lbl_803E4368)
+        if (obj->anim.velocityZ > lbl_803E4368)
         {
             c->launchFlags |= 2;
         }

@@ -417,7 +417,7 @@ void arwarwing_emitDamageEffects(int obj, int state)
 #pragma scheduling off
 void arwarwing_warpByCourse(struct GameObject* obj)
 {
-    switch ((obj)->anim.mapEventSlot)
+    switch (obj->anim.mapEventSlot)
     {
     case 0x3a:
         if ((u32)mainGetBit(GAMEBIT_ITEM_Spirit5_Got) != 0)
@@ -886,7 +886,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 #pragma scheduling off
 void arwarwing_clearAimSnapshot(struct GameObject* obj)
 {
-    (*(ArwingState**)&(obj)->extra)->aimSnapshotValid = 0;
+    (*(ArwingState**)&obj->extra)->aimSnapshotValid = 0;
 }
 #pragma scheduling reset
 
@@ -1075,7 +1075,7 @@ void arwarwing_initAttachments(int obj, int state)
 #pragma scheduling off
 void arwarwing_resetFlightState(struct GameObject* obj)
 {
-    ArwingState* state = (obj)->extra;
+    ArwingState* state = obj->extra;
     f32 v7c;
     f32 v74;
     f32 v78;
@@ -1112,14 +1112,14 @@ void arwarwing_resetFlightState(struct GameObject* obj)
     state->wingFlexTarget = state->wingFlexCur = lbl_803E6F5C;
     state->velZ = state->velY = state->velX = lbl_803E6ECC;
     state->laserLevel = 0;
-    (obj)->anim.localPosX = state->homeX;
-    (obj)->anim.localPosY = state->homeY;
-    (obj)->anim.localPosZ = state->homeZ;
+    obj->anim.localPosX = state->homeX;
+    obj->anim.localPosY = state->homeY;
+    obj->anim.localPosZ = state->homeZ;
     state->rotYCur = 0;
     state->rotZCur = 0;
-    (obj)->anim.rotX = 0;
-    (obj)->anim.rotY = 0;
-    (obj)->anim.rotZ = 0;
+    obj->anim.rotX = 0;
+    obj->anim.rotY = 0;
+    obj->anim.rotZ = 0;
     arwarwingbo_setActiveVisible(state->bombObj, 0, 0);
 }
 #pragma scheduling reset

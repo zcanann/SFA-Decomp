@@ -284,16 +284,16 @@ void dll_22C_init(struct GameObject* obj, char* def)
     Dll22CState* state;
     Dll22CMapData* md = (Dll22CMapData*)def;
 
-    state = (obj)->extra;
-    (obj)->animEventCallback = dll_22C_SeqFn;
-    (obj)->anim.rotX = (s16)(md->rotXByte << 8);
+    state = obj->extra;
+    obj->animEventCallback = dll_22C_SeqFn;
+    obj->anim.rotX = (s16)(md->rotXByte << 8);
     state->mode = DLL22C_MODE_ARMED;
     state->gameBit = md->gameBit;
     state->gameBit2 = md->gameBit2;
     state->raiseHeight = md->raiseHeight;
     state->raiseMode = md->raiseMode;
-    (obj)->anim.localPosY = (obj)->anim.localPosY - 1228.0f;
-    (obj)->objectFlags = (obj)->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.localPosY = obj->anim.localPosY - 1228.0f;
+    obj->objectFlags = obj->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_22C_release_nop(void)

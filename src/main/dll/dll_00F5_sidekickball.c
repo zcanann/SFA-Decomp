@@ -520,14 +520,14 @@ void SidekickBall_init(struct GameObject* obj)
     u8* state;
     int objDef;
 
-    state = (obj)->extra;
+    state = obj->extra;
     pathFlag = 5;
     memset(state, 0, 0x2cc);
     Obj_GetPlayerObject(); /* result discarded; the call is emitted in the target */
     ((SidekickBallState*)state)->ballMode = SIDEKICK_BALL_IDLE; /* explicit post-memset store in target */
     ((TFrameAnimatorState*)state)->fadeTimer = lbl_803E369C;
-    (obj)->objectFlags |= SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED;
-    objDef = *(int*)&(obj)->anim.hitReactState;
+    obj->objectFlags |= SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED;
+    objDef = *(int*)&obj->anim.hitReactState;
     ((TFrameAnimatorState*)state)->primaryRadius = (f32)((ObjHitsPriorityState*)objDef)->primaryRadius;
     (*gPathControlInterface)->init(state, 0, 0x40007, 1);
     (*gPathControlInterface)->setLocalPointCollision(state, 1, gSidekickBallPathPointData, state + 0x268, 1);

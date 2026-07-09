@@ -189,11 +189,11 @@ void treebird_init(struct GameObject* obj, int setup)
 {
     TreeBirdState* state;
 
-    state = (obj)->extra;
-    (obj)->animEventCallback = TreeBird_SeqFn;
-    (obj)->anim.rotX = (s16)(((NwTreeBirdMapData*)setup)->rotXByte << 8);
-    (obj)->anim.rotY = ((NwTreeBirdMapData*)setup)->rotY;
-    (obj)->anim.rotZ = ((NwTreeBirdMapData*)setup)->rotZ;
+    state = obj->extra;
+    obj->animEventCallback = TreeBird_SeqFn;
+    obj->anim.rotX = (s16)(((NwTreeBirdMapData*)setup)->rotXByte << 8);
+    obj->anim.rotY = ((NwTreeBirdMapData*)setup)->rotY;
+    obj->anim.rotZ = ((NwTreeBirdMapData*)setup)->rotZ;
     state->triggerId = ((NwTreeBirdMapData*)setup)->triggerVariant;
     state->gameBit = ((NwTreeBirdMapData*)setup)->gameBit;
     if (mainGetBit((int)state->gameBit) != 0)

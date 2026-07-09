@@ -30,7 +30,7 @@ int KT_Lazerwall_getObjectTypeId(void)
 
 void KT_Lazerwall_free(struct GameObject* obj)
 {
-    char* extra = (obj)->extra;
+    char* extra = obj->extra;
     void* bolt = *(void**)&((KtlazerwallState*)extra)->bolt;
     if (bolt != 0)
     {
@@ -41,8 +41,8 @@ void KT_Lazerwall_free(struct GameObject* obj)
 
 void KT_Lazerwall_render(struct GameObject* obj)
 {
-    char* extra = (obj)->extra;
-    int placement = *(int*)&(obj)->anim.placementData;
+    char* extra = obj->extra;
+    int placement = *(int*)&obj->anim.placementData;
     int bolt;
     if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
     {
@@ -151,8 +151,8 @@ void KT_Lazerwall_update(int obj)
 
 void KT_Lazerwall_init(struct GameObject* obj, char* placement)
 {
-    char* extra = (obj)->extra;
-    (obj)->anim.rotX = (s16)((s8)placement[0x18] << 8);
+    char* extra = obj->extra;
+    obj->anim.rotX = (s16)((s8)placement[0x18] << 8);
     ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898;
     ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0)

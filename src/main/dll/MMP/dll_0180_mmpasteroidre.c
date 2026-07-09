@@ -139,37 +139,37 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void mmp_asteroid_re_init(struct GameObject* obj)
 {
-    MmpAsteroidReState* state = (obj)->extra;
-    (obj)->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
-    (obj)->animEventCallback = mmp_asteroid_re_SeqFn;
+    MmpAsteroidReState* state = obj->extra;
+    obj->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
+    obj->animEventCallback = mmp_asteroid_re_SeqFn;
     state->eventFlags = 0;
     state->intensity = mainGetBit(0x88C);
     state->phase = mainGetBit(GAMEBIT_MMPAsteroidRelated087B);
     switch ((s32)state->phase)
     {
     case MMP_ASTEROID_PHASE_HIDDEN:
-        (obj)->anim.alpha = 0;
-        *(u8*)&(obj)->anim.bankIndex = 0;
+        obj->anim.alpha = 0;
+        *(u8*)&obj->anim.bankIndex = 0;
         break;
     case MMP_ASTEROID_PHASE_RISING:
-        (obj)->anim.alpha = 0xFF;
+        obj->anim.alpha = 0xFF;
         state->eventFlags = 4;
-        *(u8*)&(obj)->anim.bankIndex = 1;
+        *(u8*)&obj->anim.bankIndex = 1;
         state->eventFlags |= ASTEROIDRE_FX_PERIODIC;
         break;
     case MMP_ASTEROID_PHASE_RISEN:
-        (obj)->anim.alpha = 0xFF;
+        obj->anim.alpha = 0xFF;
         state->eventFlags = 4;
-        *(u8*)&(obj)->anim.bankIndex = 1;
+        *(u8*)&obj->anim.bankIndex = 1;
         break;
     case MMP_ASTEROID_PHASE_RISEN_SAVED:
-        (obj)->anim.alpha = 0xFF;
+        obj->anim.alpha = 0xFF;
         state->eventFlags = 4;
-        *(u8*)&(obj)->anim.bankIndex = 1;
+        *(u8*)&obj->anim.bankIndex = 1;
         break;
     }
     {
-        f32 v = (obj)->anim.localPosY;
+        f32 v = obj->anim.localPosY;
         state->baseY = v;
         state->baseY2 = v;
     }

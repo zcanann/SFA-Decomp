@@ -133,7 +133,7 @@ void kaldaChomFn_80168374(struct GameObject* obj, int state, u8 useUpperMouthPoi
     f32 mouthY;
 
     control = ((CampfireState*)state)->control;
-    ref = *(int*)&(obj)->anim.placementData;
+    ref = *(int*)&obj->anim.placementData;
     if (Obj_IsLoadingLocked() != 0)
     {
         heightOffset = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;

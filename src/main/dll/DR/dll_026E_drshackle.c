@@ -28,14 +28,14 @@ static inline int* DrShackle_GetActiveModel(void* obj)
 
 int drshackle_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    char* state = (obj)->extra;
+    char* state = obj->extra;
     void* placement = *(void**)state;
     int i;
     if (placement != 0)
     {
-        ((DrshacklePlacement*)placement)->posX = (obj)->anim.localPosX;
-        ((DrshacklePlacement*)placement)->posY = (obj)->anim.localPosY;
-        ((DrshacklePlacement*)placement)->posZ = (obj)->anim.localPosZ;
+        ((DrshacklePlacement*)placement)->posX = obj->anim.localPosX;
+        ((DrshacklePlacement*)placement)->posY = obj->anim.localPosY;
+        ((DrshacklePlacement*)placement)->posZ = obj->anim.localPosZ;
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -54,7 +54,7 @@ int drshackle_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* anim
 
 int drshackle_func0B(struct GameObject* obj)
 {
-    int placement = *(int*)&(obj)->anim.placementData;
+    int placement = *(int*)&obj->anim.placementData;
     return ((DrshacklePlacement*)placement)->unk19;
 }
 
@@ -182,8 +182,8 @@ void drshackle_hitDetect(unsigned long obj)
 
 void drshackle_update(struct GameObject* obj)
 {
-    char* state = (obj)->extra;
-    int placement = *(int*)&(obj)->anim.placementData;
+    char* state = obj->extra;
+    int placement = *(int*)&obj->anim.placementData;
     int count;
     int sub;
     int j;

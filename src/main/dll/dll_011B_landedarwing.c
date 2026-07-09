@@ -263,8 +263,8 @@ int Landed_Arwing_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* 
     int mapId;
     int child;
 
-    def = *(int*)&(obj)->anim.placementData;
-    state = (obj)->extra;
+    def = *(int*)&obj->anim.placementData;
+    state = obj->extra;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
@@ -548,14 +548,14 @@ void landed_arwing_update(int obj)
 
 void landed_arwing_init(struct GameObject* obj, int param)
 {
-    LandedArwingState* state = (obj)->extra;
-    (obj)->objectFlags = (obj)->objectFlags | LANDEDARWING_OBJFLAG_HITDETECT_DISABLED;
+    LandedArwingState* state = obj->extra;
+    obj->objectFlags = obj->objectFlags | LANDEDARWING_OBJFLAG_HITDETECT_DISABLED;
     state->sequenceState = 1;
     if (mainGetBit(((LandedArwingPlacement*)param)->triggerGameBit) == 0)
     {
         unlockLevel(0, 0, 1);
     }
-    (obj)->animEventCallback = Landed_Arwing_SeqFn;
+    obj->animEventCallback = Landed_Arwing_SeqFn;
 }
 
 void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
@@ -652,7 +652,7 @@ void landed_arwing_updateDamageTexture(struct GameObject* obj, LandedArwingState
     u32 bit;
     LandedArwingHitFlagBits* flags;
 
-    def = *(int*)&(obj)->anim.placementData;
+    def = *(int*)&obj->anim.placementData;
     flags = (LandedArwingHitFlagBits*)&state->hitFlags;
     if (((LandedArwingUpdateDamageTexturePlacement*)def)->damageStateGameBit != -1)
     {

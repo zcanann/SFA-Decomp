@@ -629,13 +629,13 @@ void objThrowFn_80182504(struct GameObject* obj)
     } local;
     int extra;
     short* player;
-    extra = *(int*)&(obj)->extra;
+    extra = *(int*)&obj->extra;
     player = Obj_GetPlayerObject();
     ((CfperchState*)extra)->carryAttached = 0;
     ((CfperchState*)extra)->carryState = 0;
     ((CfperchState*)extra)->throwState = 1;
-    (obj)->anim.velocityY = lbl_803E3958;
-    (obj)->anim.velocityZ = lbl_803E3974;
+    obj->anim.velocityY = lbl_803E3958;
+    obj->anim.velocityZ = lbl_803E3974;
     local.f14 = lbl_803E3938;
     local.f18 = lbl_803E3938;
     local.f1c = lbl_803E3938;
@@ -643,7 +643,7 @@ void objThrowFn_80182504(struct GameObject* obj)
     local.fc = 0;
     local.fa = 0;
     local.f8 = *player;
-    vecRotateZXY(&local.f8, &(obj)->anim.velocityX);
+    vecRotateZXY(&local.f8, &obj->anim.velocityX);
 }
 
 void SmallBasket_render(struct GameObject* obj, int p2, int p3, int p4, int p5, char visible)
@@ -651,22 +651,22 @@ void SmallBasket_render(struct GameObject* obj, int p2, int p3, int p4, int p5, 
     int extra;
     int result;
     short field_a;
-    extra = *(int*)&(obj)->extra;
-    result = (*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&(obj)->anim.placementData + 0x14));
+    extra = *(int*)&obj->extra;
+    result = (*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&obj->anim.placementData + 0x14));
     if (result == 0)
     {
-        (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
     else
     {
         field_a = ((CfperchState*)extra)->disableTimer;
         if ((field_a != 0 && field_a <= 0x32) || ((CfperchState*)extra)->hiddenTimer != 0)
         {
-            (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
-        else if ((obj)->unkF8 != 0 && visible != -1)
+        else if (obj->unkF8 != 0 && visible != -1)
         {
-            (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
         else
         {

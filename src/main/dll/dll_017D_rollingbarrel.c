@@ -304,20 +304,20 @@ void RollingBarrel_update(int obj)
 
 void RollingBarrel_init(struct GameObject* obj, RollingBarrelMapData* params)
 {
-    RollingBarrelState* state = (obj)->extra;
+    RollingBarrelState* state = obj->extra;
     int tmp[2];
 
     *(RollingBarrelInitPair*)tmp = *(RollingBarrelInitPair*)&gRollingBarrelCurveInitPair;
     params->respawnParam = -1;
-    (obj)->anim.flags = (s16)((obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-    (obj)->anim.rotZ = 0x4000;
+    obj->anim.flags = (s16)(obj->anim.flags & ~OBJANIM_FLAG_HIDDEN);
+    obj->anim.rotZ = 0x4000;
 
-    (obj)->anim.localPosX = params->x;
-    (obj)->anim.worldPosX = params->x;
-    (obj)->anim.localPosY = params->y;
-    (obj)->anim.worldPosY = params->y;
-    (obj)->anim.localPosZ = params->z;
-    (obj)->anim.worldPosZ = params->z;
+    obj->anim.localPosX = params->x;
+    obj->anim.worldPosX = params->x;
+    obj->anim.localPosY = params->y;
+    obj->anim.worldPosY = params->y;
+    obj->anim.localPosZ = params->z;
+    obj->anim.worldPosZ = params->z;
 
     state->verticalSpeed = params->verticalSpeed / lbl_803E447C;
     state->curveSpeed = params->curveSpeed / lbl_803E447C;

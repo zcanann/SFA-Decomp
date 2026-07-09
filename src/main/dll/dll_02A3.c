@@ -94,12 +94,12 @@ void dll_2A3_update(int obj)
 
 void dll_2A3_init(struct GameObject* obj)
 {
-    Dll2A3State* state = (obj)->extra;
+    Dll2A3State* state = obj->extra;
 
-    (obj)->anim.alpha = 0;
-    (obj)->anim.rotX = randomGetRange(0, 0xffff);
-    (obj)->anim.rotY = randomGetRange(0, 0xffff);
-    (obj)->anim.rotZ = randomGetRange(0, 0xffff);
+    obj->anim.alpha = 0;
+    obj->anim.rotX = randomGetRange(0, 0xffff);
+    obj->anim.rotY = randomGetRange(0, 0xffff);
+    obj->anim.rotZ = randomGetRange(0, 0xffff);
     state->rotXSpeed = randomGetRange(-0x32, 0x32);
     state->rotYSpeed = randomGetRange(-0x32, 0x32);
     state->rotZSpeed = randomGetRange(-0x32, 0x32);
@@ -116,13 +116,13 @@ void dll_2A3_initialise_nop(void)
 
 void fn_8023134C(struct GameObject* obj, int lifetime)
 {
-    Dll2A3State* state = (obj)->extra;
+    Dll2A3State* state = obj->extra;
     state->lifetime = lifetime;
 }
 
 void fn_8023137C(struct GameObject* obj, f32* velocity)
 {
-    (obj)->anim.velocityX = velocity[0];
-    (obj)->anim.velocityY = velocity[1];
-    (obj)->anim.velocityZ = velocity[2];
+    obj->anim.velocityX = velocity[0];
+    obj->anim.velocityY = velocity[1];
+    obj->anim.velocityZ = velocity[2];
 }

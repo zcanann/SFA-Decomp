@@ -147,7 +147,7 @@ void KaldaChompSpit_free(int* obj)
 
 void KaldaChompSpit_render(struct GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8* light = **(u8***)&(obj)->extra;
+    u8* light = **(u8***)&obj->extra;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
     {
         queueGlowRender(light);

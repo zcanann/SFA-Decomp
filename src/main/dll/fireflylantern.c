@@ -214,7 +214,7 @@ void fn_80154C24(struct GameObject* obj, int state)
     fval = lbl_803E2990;
     ((FireflyState*)state)->trackTimer = fval;
     ((FireflyState*)state)->breathTimer = fval;
-    ((FireflyState*)state)->anchorY = (obj)->anim.localPosY;
+    ((FireflyState*)state)->anchorY = obj->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
     ((BaddieState*)state)->seqEntryIndex = randVal;
     ((BaddieState*)state)->inWhirlpoolGroup = 0;

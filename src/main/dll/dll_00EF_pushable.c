@@ -157,7 +157,7 @@ void fn_80174A80(struct GameObject* obj, PushableState* ext)
     f32 eyePos;
     f32 lim;
 
-    def = *(int*)&(obj)->anim.placementData;
+    def = *(int*)&obj->anim.placementData;
     ext->eyeOpenSpeed = lbl_803E3580;
     fval = lbl_803E3584;
     ext->eyeDriftSpeedX = fval;
@@ -492,12 +492,12 @@ void pushable_handleMsgs(int obj)
 
 int pushable_render2(struct GameObject* obj)
 {
-    return (*(PushableState**)&(obj)->extra)->flags & 1;
+    return (*(PushableState**)&obj->extra)->flags & 1;
 }
 
 void pushable_modelMtxFn(struct GameObject* obj, int modelNo)
 {
-    int extra = *(int*)&(obj)->extra;
+    int extra = *(int*)&obj->extra;
     u32 flags = *(u32*)(extra + 0xa8);
 
     *(u32*)(extra + 0xa8) = flags | (1 << modelNo);
@@ -509,11 +509,11 @@ int pushable_func0B(struct GameObject* obj, int other)
     f32 delta[3];
     f32* d;
 
-    state = *(int*)&(obj)->extra;
+    state = *(int*)&obj->extra;
     d = delta;
-    d[0] = ((GameObject*)other)->anim.localPosX - (obj)->anim.localPosX;
-    d[1] = ((GameObject*)other)->anim.localPosY - (obj)->anim.localPosY;
-    d[2] = ((GameObject*)other)->anim.localPosZ - (obj)->anim.localPosZ;
+    d[0] = ((GameObject*)other)->anim.localPosX - obj->anim.localPosX;
+    d[1] = ((GameObject*)other)->anim.localPosY - obj->anim.localPosY;
+    d[2] = ((GameObject*)other)->anim.localPosZ - obj->anim.localPosZ;
     return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) < ((PushableState*)state)->cullDistance;
 }
 

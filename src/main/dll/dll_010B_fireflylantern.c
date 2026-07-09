@@ -54,7 +54,7 @@ int FireFlyLantern_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState*
     void* child;
     int i;
 
-    state = (obj)->extra;
+    state = obj->extra;
     i = 0;
     while (i < animUpdate->eventCount)
     {
@@ -83,7 +83,7 @@ int FireFlyLantern_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState*
     {
         child = (void*)state->fireflies[i];
         (*(void (*)(void*, f32, f32, f32))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x28)))(
-            child, (obj)->anim.localPosX, 5.0f + (obj)->anim.localPosY, (obj)->anim.localPosZ);
+            child, obj->anim.localPosX, 5.0f + obj->anim.localPosY, obj->anim.localPosZ);
         i++;
     }
 
@@ -167,8 +167,8 @@ void FireFlyLantern_init(struct GameObject* obj, int def)
     int i;
     u32 childCount;
 
-    state = (obj)->extra;
-    (obj)->animEventCallback = FireFlyLantern_SeqFn;
+    state = obj->extra;
+    obj->animEventCallback = FireFlyLantern_SeqFn;
     player = (void*)Obj_GetPlayerObject();
     if (((GameObject*)player)->anim.seqId != 0)
     {
@@ -189,7 +189,7 @@ void FireFlyLantern_init(struct GameObject* obj, int def)
             state->fireflyCount = 1;
             state->fireflies[0] = FireFlyLantern_spawnFireFly((int*)obj);
         }
-        (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
     else
     {

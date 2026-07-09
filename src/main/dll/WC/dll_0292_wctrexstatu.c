@@ -59,7 +59,7 @@ int wctrexstatu_interactCallback(struct GameObject* obj, int unused, ObjAnimUpda
             {
                 texture->textureId = WCTREXSTATU_TEXTURE_TRIGGERED;
             }
-            (obj)->unkF4 = 1;
+            obj->unkF4 = 1;
         }
     }
 
@@ -75,7 +75,7 @@ int wctrexstatu_getExtraSize(void)
 int wctrexstatu_getObjectTypeId(struct GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = *(s8*)&((WCTrexStatueSetup*)(obj)->anim.placementData)->modelIndex;
+    int modelIndex = *(s8*)&((WCTrexStatueSetup*)obj->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount)
@@ -127,19 +127,19 @@ void wctrexstatu_init(struct GameObject* obj, int setup, int fromLoad)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCTrexStatueSetup* setupData = (WCTrexStatueSetup*)setup;
-    (obj)->animEventCallback = wctrexstatu_interactCallback;
+    obj->animEventCallback = wctrexstatu_interactCallback;
     *(u8*)&objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
 
-    (obj)->anim.rotX = (s16)(setupData->type << 8);
+    obj->anim.rotX = (s16)(setupData->type << 8);
     if (fromLoad == 0)
     {
-        if ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED)
+        if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED)
         {
-            (obj)->anim.localPosY = (obj)->anim.localPosY + lbl_803E6E14;
+            obj->anim.localPosY = obj->anim.localPosY + lbl_803E6E14;
         }
     }
 
@@ -151,7 +151,7 @@ void wctrexstatu_init(struct GameObject* obj, int setup, int fromLoad)
         {
             texture->textureId = WCTREXSTATU_TEXTURE_TRIGGERED;
         }
-        (obj)->unkF4 = 1;
+        obj->unkF4 = 1;
     }
 }
 

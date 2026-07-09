@@ -72,8 +72,8 @@ void dll_299_update(int obj)
 
 void dll_299_init(struct GameObject* obj, int setup)
 {
-    ((Dll299State*)(obj)->extra)->id = *(s16*)(setup + 0x1e);
-    (obj)->objectFlags |= DLL0299_OBJFLAG_HITDETECT_DISABLED;
+    ((Dll299State*)obj->extra)->id = *(s16*)(setup + 0x1e);
+    obj->objectFlags |= DLL0299_OBJFLAG_HITDETECT_DISABLED;
     lbl_803DDD80 = Resource_Acquire(DLL0299_RESOURCE_ID, 1);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);

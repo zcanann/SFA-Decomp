@@ -519,7 +519,7 @@ void sideCommandEnable(struct GameObject* obj, int targetObj, int commandKind, i
     int commandIndex;
     int state;
 
-    state = *(int*)&(obj)->extra;
+    state = *(int*)&obj->extra;
     if (((TrickyState*)state)->commandCount == 10)
     {
         trickyReportError(sSidekickCommandDebugTextBlock);
@@ -2708,13 +2708,13 @@ void Tricky_hitDetect(struct GameObject* obj)
     f32 height;
     int count[2];
 
-    state = *(int*)&(obj)->extra;
-    y = (obj)->anim.localPosY;
-    dy = (y - (obj)->anim.previousLocalPosY >= lbl_803E23DC) ? y - (obj)->anim.previousLocalPosY
-                                                             : -(y - (obj)->anim.previousLocalPosY);
+    state = *(int*)&obj->extra;
+    y = obj->anim.localPosY;
+    dy = (y - obj->anim.previousLocalPosY >= lbl_803E23DC) ? y - obj->anim.previousLocalPosY
+                                                           : -(y - obj->anim.previousLocalPosY);
     if (lbl_803E23E8 == dy)
     {
-        if (y == (obj)->anim.worldPosY)
+        if (y == obj->anim.worldPosY)
         {
             ((TrickyStatusFlags58*)&((TrickyState*)state)->statusFlags)->heightTracking = 1;
             *(s32*)&((TrickyState*)state)->heightTrackObjId = -1;
@@ -2724,8 +2724,7 @@ void Tricky_hitDetect(struct GameObject* obj)
     else
     {
         firepipeObj = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
-        if ((firepipeObj != 0) &&
-            (getXZDistance(&(obj)->anim.worldPosX, (f32*)((int)firepipeObj + 0x18)) < lbl_803E2540))
+        if ((firepipeObj != 0) && (getXZDistance(&obj->anim.worldPosX, (f32*)((int)firepipeObj + 0x18)) < lbl_803E2540))
         {
             ((TrickyStatusFlags58*)&((TrickyState*)state)->statusFlags)->heightTracking = 1;
             ((TrickyState*)state)->heightTrackObjId = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
@@ -2744,8 +2743,8 @@ void Tricky_hitDetect(struct GameObject* obj)
             height = objFn_801948c0(*objects, TRICKY_HEIGHT_TRACK_MODEL_SLOT);
             if (*(s32*)&((TrickyState*)state)->heightTrackObjId == -1)
             {
-                dy = (height - (obj)->anim.localPosY >= lbl_803E23DC) ? height - (obj)->anim.localPosY
-                                                                      : -(height - (obj)->anim.localPosY);
+                dy = (height - obj->anim.localPosY >= lbl_803E23DC) ? height - obj->anim.localPosY
+                                                                    : -(height - obj->anim.localPosY);
                 if (dy < lbl_803E24B8)
                 {
                     ((TrickyState*)state)->heightTrackObjId =
@@ -2762,7 +2761,7 @@ void Tricky_hitDetect(struct GameObject* obj)
                 }
                 else
                 {
-                    (obj)->anim.localPosY = height;
+                    obj->anim.localPosY = height;
                     ((TrickyState*)state)->trackedHeight = height;
                 }
                 break;

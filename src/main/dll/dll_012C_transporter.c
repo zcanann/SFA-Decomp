@@ -337,13 +337,13 @@ void Transporter_init(struct GameObject* obj, u8* params)
     int id;
 
     placement = (WarpPadPlacement*)params;
-    state = (obj)->extra;
+    state = obj->extra;
     state->activateDelay = 400;
     state->flags = 0;
-    (obj)->anim.rotX = (s16)((u16)(placement->rotXHigh << 8));
-    (obj)->unkF4 = 0;
-    (obj)->animEventCallback = Transporter_SeqFn;
-    *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    obj->anim.rotX = (s16)((u16)(placement->rotXHigh << 8));
+    obj->unkF4 = 0;
+    obj->animEventCallback = Transporter_SeqFn;
+    *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
 
     id = placement->destinationId;
     switch (id)
@@ -422,6 +422,6 @@ void Transporter_init(struct GameObject* obj, u8* params)
 
     if ((state->flags & WARPPAD_FLAG_WARP_A) != 0)
     {
-        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
 }

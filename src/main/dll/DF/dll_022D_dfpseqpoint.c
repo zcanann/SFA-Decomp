@@ -54,8 +54,8 @@ extern f32 Vec_distance(f32* a, f32* b);
 
 int DFP_seqpoint_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int blob = *(int*)&(obj)->extra;
-    int data = *(int*)&(obj)->anim.placementData;
+    int blob = *(int*)&obj->extra;
+    int data = *(int*)&obj->anim.placementData;
     int i;
 
     animUpdate->activeHitVolumePair = -1;
@@ -68,17 +68,17 @@ int DFP_seqpoint_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* a
             switch (animUpdate->eventIds[i])
             {
             case 1:
-                if ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == 1)
+                if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 1)
                 {
-                    (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 5, 0);
-                    (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 6, 0);
-                    (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 7, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 5, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 6, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 7, 0);
                 }
-                else if ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == 2)
+                else if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 2)
                 {
-                    (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 5, 0);
-                    (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 6, 0);
-                    (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 7, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 5, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 6, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 7, 0);
                 }
                 break;
             }
@@ -93,8 +93,8 @@ int DFP_seqpoint_SeqFn(struct GameObject* obj, int unused, ObjAnimUpdateState* a
                 }
                 else
                 {
-                    if ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == 1 ||
-                        (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == 2)
+                    if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 1 ||
+                        (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 2)
                     {
                         unlockLevel(0, 0, 1);
                         lockLevel(mapGetDirIdx(0x32), 0);

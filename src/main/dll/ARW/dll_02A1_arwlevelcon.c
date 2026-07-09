@@ -60,7 +60,7 @@ STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
 
 void arwlevelcon_onSeqFree(struct GameObject* obj)
 {
-    ARWLevelConState* state = (obj)->extra;
+    ARWLevelConState* state = obj->extra;
 
     if (state->alternateRoute != 0)
     {
@@ -89,7 +89,7 @@ int arwlevelcon_SeqFn(struct GameObject* obj, int unused, int data)
         }
         else if (eventId == 4)
         {
-            switch ((obj)->anim.mapEventSlot)
+            switch (obj->anim.mapEventSlot)
             {
             case 0x3a:
                 textId = 0;
@@ -142,7 +142,7 @@ void arwlevelcon_hitDetect(void)
 void arwlevelcon_update(struct GameObject* obj)
 {
     extern u8 AudioStream_IsPreparing(void);
-    ARWLevelConState* state = (obj)->extra;
+    ARWLevelConState* state = obj->extra;
     int arwing = getArwing();
 
     if (state->skyConfigured == 0)
@@ -212,10 +212,10 @@ void arwlevelcon_update(struct GameObject* obj)
 
 void arwlevelcon_init(struct GameObject* obj, u8* setup)
 {
-    ARWLevelConState* state = (obj)->extra;
+    ARWLevelConState* state = obj->extra;
     ARWLevelConSetup* mapData = (ARWLevelConSetup*)setup;
 
-    (obj)->animEventCallback = arwlevelcon_SeqFn;
+    obj->animEventCallback = arwlevelcon_SeqFn;
     state->sequenceSlot = 1;
     state->sequenceCameraId = 0x50;
     {
@@ -238,7 +238,7 @@ void arwlevelcon_init(struct GameObject* obj, u8* setup)
     }
     arwingHudSetVisible(2);
     pauseMenuCreateHeads();
-    switch ((obj)->anim.mapEventSlot)
+    switch (obj->anim.mapEventSlot)
     {
     case 0x3a:
         state->streamId = 0x51bc;

@@ -229,7 +229,7 @@ int MMSH_Shrine_getObjectTypeId(void)
 
 void MMSH_Shrine_free(struct GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
+    int state = *(int*)&obj->extra;
     if ((((MMSHShrineRuntime*)state)->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
     {
         fn_8011F6D4(0);
@@ -381,9 +381,9 @@ void MMSH_Shrine_init(struct GameObject* obj, int def)
     int light;
     MMSHShrineRuntime* state;
 
-    state = (obj)->extra;
+    state = obj->extra;
     ((MMSHShrineObject*)obj)->yaw = 0;
-    (obj)->animEventCallback = MMSH_Shrine_SeqFn;
+    obj->animEventCallback = MMSH_Shrine_SeqFn;
     state->initCount = 10;
     state->phase = MMSH_SHRINE_PHASE_IDLE;
     if (0 < *(short*)(def + 0x1a))

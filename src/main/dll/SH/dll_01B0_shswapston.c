@@ -626,10 +626,10 @@ void warpstone_init(struct GameObject* obj, u8* setup)
     int state;
     s16 setupYaw;
 
-    state = *(int*)&(obj)->extra;
+    state = *(int*)&obj->extra;
     setupYaw = (s16)(setup[0x1a] << 8);
-    (obj)->anim.rotX = setupYaw;
-    (obj)->animEventCallback = warpstone_SeqFn;
+    obj->anim.rotX = setupYaw;
+    obj->animEventCallback = warpstone_SeqFn;
     ((WarpstoneState*)state)->gameBitE = 0x15a;
     ((WarpstoneState*)state)->gameBit10 = 0x886;
     ObjHits_EnableObject((u32)obj);

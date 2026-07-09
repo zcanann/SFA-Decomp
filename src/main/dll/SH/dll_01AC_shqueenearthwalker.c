@@ -376,7 +376,7 @@ void openPortalFn_801d4364(void* obj, void* state)
 
 void sh_queenearthwalker_init(struct GameObject* obj, QueenEarthWalkerMapData* mapData)
 {
-    (obj)->anim.rotX = (s16)(mapData->yawByte << 8);
-    (obj)->animEventCallback = sh_queenearthwalker_processAnimEvents;
-    (obj)->objectFlags |= SHQUEENEARTHWALKER_OBJFLAG_HIDDEN;
+    obj->anim.rotX = (s16)(mapData->yawByte << 8);
+    obj->animEventCallback = sh_queenearthwalker_processAnimEvents;
+    obj->objectFlags |= SHQUEENEARTHWALKER_OBJFLAG_HIDDEN;
 }

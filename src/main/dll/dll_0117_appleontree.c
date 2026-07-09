@@ -142,7 +142,7 @@ u32 jumptable_803214DC[] = {
 
 void AppleOnTree_setPosition(struct GameObject* obj, float* pos)
 {
-    AppleOnTreeState* state = (obj)->extra;
+    AppleOnTreeState* state = obj->extra;
 
     if (state->animState == APPLEONTREE_STATE_KNOCKED)
     {
@@ -156,9 +156,9 @@ void AppleOnTree_setPosition(struct GameObject* obj, float* pos)
     {
         return;
     }
-    (obj)->anim.localPosX = pos[0];
-    (obj)->anim.localPosY = pos[1];
-    (obj)->anim.localPosZ = pos[2];
+    obj->anim.localPosX = pos[0];
+    obj->anim.localPosY = pos[1];
+    obj->anim.localPosZ = pos[2];
 }
 
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
@@ -506,23 +506,23 @@ int fn_8017DF34(struct GameObject* obj, int state, f32 y)
                 ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->dropHeight;
             rad = lbl_803E37D4;
             ((AppleOnTreeState*)state)->dropHeight = rad;
-            (obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
-            (obj)->anim.rotX = ((AppleOnTreeState*)state)->rotX;
-            (obj)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
-            (obj)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
+            obj->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+            obj->anim.rotX = ((AppleOnTreeState*)state)->rotX;
+            obj->anim.rotY = ((AppleOnTreeState*)state)->rotY;
+            obj->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
             {
                 f32 g2 = lbl_803E37DC * ((AppleOnTreeState*)state)->gravity;
                 ((AppleOnTreeState*)state)->bounceVel = g2 * r + ((AppleOnTreeState*)state)->bounceVel;
             }
             ((AppleOnTreeState*)state)->extraAccel = ((AppleOnTreeState*)state)->velY;
             (*gWaterfxInterface)
-                ->spawnSplashBurst((void*)obj, (obj)->anim.localPosX, ((AppleOnTreeState*)state)->splashPosY,
-                                   (obj)->anim.localPosZ, rad);
+                ->spawnSplashBurst((void*)obj, obj->anim.localPosX, ((AppleOnTreeState*)state)->splashPosY,
+                                   obj->anim.localPosZ, rad);
             return 0;
         }
         else
         {
-            (obj)->anim.localPosY = y;
+            obj->anim.localPosY = y;
             return 1;
         }
     }
@@ -561,14 +561,14 @@ int fn_8017DF34(struct GameObject* obj, int state, f32 y)
             r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
         }
         ((AppleOnTreeState*)state)->flightTime = ((AppleOnTreeState*)state)->flightTime - r;
-        (obj)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
+        obj->anim.localPosY = ((AppleOnTreeState*)state)->posY;
         ((AppleOnTreeState*)state)->extraAccel = lbl_803E37FC;
         ((AppleOnTreeState*)state)->bounceVel = lbl_803E3800;
         return 0;
     }
     else
     {
-        (obj)->anim.localPosY = y;
+        obj->anim.localPosY = y;
         return 1;
     }
 }

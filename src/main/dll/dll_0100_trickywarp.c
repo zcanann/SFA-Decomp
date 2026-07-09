@@ -112,7 +112,7 @@ int fn_8017FFD0(struct GameObject* obj, TrickyWarpState* state)
     }
     if (state->patchGroup == 0)
     {
-        state->patchGroup = Objfsa_GetWalkGroupIndexAtPoint(&(obj)->anim.localPosX, 0);
+        state->patchGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.localPosX, 0);
         if (state->patchGroup != 0)
         {
             curveEntries = (TrickyWarpCurveEntry**)(*gRomCurveInterface)->getCurves(&curveCount);
@@ -139,7 +139,7 @@ int fn_8017FFD0(struct GameObject* obj, TrickyWarpState* state)
             return 0;
         }
     }
-    if (ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, lbl_803E38A0) != 0)
+    if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, lbl_803E38A0) != 0)
     {
         return 0;
     }

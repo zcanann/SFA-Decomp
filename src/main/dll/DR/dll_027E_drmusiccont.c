@@ -62,7 +62,7 @@ void drmusiccont_initialise(void)
 
 void drmusiccont_init(struct GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
+    int state = *(int*)&obj->extra;
     DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
 
     flags->b_e30 = mainGetBit(0xe30);

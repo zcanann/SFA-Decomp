@@ -121,8 +121,8 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
 
 void cfPrisonGuard_setGameBitMirror(struct GameObject* obj, u8 flag)
 {
-    StaffActivatedSetup* setup = (StaffActivatedSetup*)(obj)->anim.placementData;
-    StaffActivatedState* state = (obj)->extra;
+    StaffActivatedSetup* setup = (StaffActivatedSetup*)obj->anim.placementData;
+    StaffActivatedState* state = obj->extra;
     if (flag != 0)
     {
         mainSetBits(setup->lockGameBit, 1);
@@ -155,10 +155,10 @@ void staffactivated_spawnMapEventDebris(struct GameObject* obj)
     s32 yawDelta;
     PrisonGuardRotationWork rotate;
 
-    setup = (StaffActivatedSetup*)(obj)->anim.placementData;
+    setup = (StaffActivatedSetup*)obj->anim.placementData;
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
-    state = (obj)->extra;
+    state = obj->extra;
 
     if ((*gMapEventInterface)->shouldNotSaveTime(setup->base.mapId) != 0 && Obj_IsLoadingLocked() != 0)
     {
@@ -174,13 +174,13 @@ void staffactivated_spawnMapEventDebris(struct GameObject* obj)
             spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[setup->debrisObjectSet]);
             spawnedPlacement = (ObjPlacement*)spawnedSetup;
             spawnedPlacement->posX = state->targetX;
-            spawnedPlacement->posY = (obj)->anim.localPosY;
+            spawnedPlacement->posY = obj->anim.localPosY;
             spawnedPlacement->posZ = state->targetZ;
             *(s16*)((StaffActivatedSetup*)spawnedPlacement)->pad1A = 0x190;
 
-            spawnedObj = Obj_SetupObject(spawnedSetup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
-            ((GameObject*)spawnedObj)->anim.velocityX = (obj)->anim.localPosX - *(f32*)(player + 0xc);
-            ((GameObject*)spawnedObj)->anim.velocityZ = (obj)->anim.localPosZ - *(f32*)(player + 0x14);
+            spawnedObj = Obj_SetupObject(spawnedSetup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+            ((GameObject*)spawnedObj)->anim.velocityX = obj->anim.localPosX - *(f32*)(player + 0xc);
+            ((GameObject*)spawnedObj)->anim.velocityZ = obj->anim.localPosZ - *(f32*)(player + 0x14);
 
             lenSq = (((GameObject*)spawnedObj)->anim.velocityX * ((GameObject*)spawnedObj)->anim.velocityX) +
                     (((GameObject*)spawnedObj)->anim.velocityZ * ((GameObject*)spawnedObj)->anim.velocityZ);
@@ -227,7 +227,7 @@ void staffactivated_spawnMapEventDebris(struct GameObject* obj)
 u32 cfPrisonGuard_getPullRateMode(struct GameObject* obj)
 {
     u32 mode;
-    mode = ((StaffActivatedSetup*)(obj)->anim.placementData)->size;
+    mode = ((StaffActivatedSetup*)obj->anim.placementData)->size;
     if (mode > 2)
         mode = 2;
     return mode;

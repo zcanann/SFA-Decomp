@@ -107,7 +107,7 @@ int fn_801601C4(struct GameObject* obj, GroundBaddieState* state)
     char* routePath;
     f32 zero;
 
-    sub = (obj)->extra;
+    sub = obj->extra;
     if (*(void**)&state->baddie.targetObj != NULL)
     {
         (*gPlayerInterface)->setState((void*)obj, state, 1);
@@ -115,7 +115,7 @@ int fn_801601C4(struct GameObject* obj, GroundBaddieState* state)
         zero = lbl_803E2E68;
         state->baddie.moveInputX = zero;
         state->baddie.moveInputZ = zero;
-        memcpy(routePath, &(obj)->anim.localPosX, 12);
+        memcpy(routePath, &obj->anim.localPosX, 12);
         memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 12);
         voxmaps_updateRoutePath(routePath, (char*)(sub->route35C + 0x28));
         if (state->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)

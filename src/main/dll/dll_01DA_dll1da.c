@@ -176,8 +176,8 @@ void dll_1DA_update(int obj)
 
 void dll_1DA_init(struct GameObject* obj)
 {
-    *(*(f32**)&(obj)->extra) = (obj)->anim.localPosY;
-    (obj)->anim.localPosY = (obj)->anim.localPosY + lbl_803E4AD8;
+    *(*(f32**)&obj->extra) = obj->anim.localPosY;
+    obj->anim.localPosY = obj->anim.localPosY + lbl_803E4AD8;
 }
 
 void dll_1DA_release(void)

@@ -127,19 +127,19 @@ void PortalSpellDoor_update(struct GameObject* obj)
     int timer;
 
     player = Obj_GetPlayerObject();
-    state = (obj)->extra;
-    p4c = *(int*)&(obj)->anim.placementData;
+    state = obj->extra;
+    p4c = *(int*)&obj->anim.placementData;
     if (playerHasSpell((struct GameObject*)(player), 3) != 0)
     {
-        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     else
     {
-        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     if (((PortalFlags*)&state->flags0C)->open)
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         if (objGetAnimState80A((struct GameObject*)(player)) == 0x5bd)
         {
             playerCancelSpell(player, -1);
@@ -160,7 +160,7 @@ void PortalSpellDoor_update(struct GameObject* obj)
         if (timer < 0)
         {
             int tricky;
-            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             tricky = getTrickyObject();
             if ((void*)tricky != NULL)

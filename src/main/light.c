@@ -340,7 +340,7 @@ typedef struct SpellStoneUseState
 void spellStoneUseFn_801fd270(struct GameObject* obj)
 {
     extern u32 gSpellStoneEventId;
-    SpellStoneUseState* state = (obj)->extra;
+    SpellStoneUseState* state = obj->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
     if (player == NULL)
@@ -353,14 +353,14 @@ void spellStoneUseFn_801fd270(struct GameObject* obj)
         return;
     if (cond == 0)
         return;
-    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if ((*gGameUIInterface)->isEventReady(gSpellStoneEventId) != 0)
     {
-        if (Vec_distance(&(obj)->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
+        if (Vec_distance(&obj->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
         {
             mainSetBits(state->completeGameBit, 1);
             state->used = 1;
-            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
 }

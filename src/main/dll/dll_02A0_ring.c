@@ -63,7 +63,7 @@ int ring_getObjectTypeId(void)
 
 void ring_free(struct GameObject* obj)
 {
-    RingState* state = (obj)->extra;
+    RingState* state = obj->extra;
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);

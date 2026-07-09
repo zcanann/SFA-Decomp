@@ -18,7 +18,7 @@
 #pragma peephole off
 int ARWBlocker_SeqFn(struct GameObject* obj)
 {
-    ARWBlockerState* state = (obj)->extra;
+    ARWBlockerState* state = obj->extra;
     switch (state->sequenceMode)
     {
     case ARWBLOCKER_SEQMODE_ARMED:

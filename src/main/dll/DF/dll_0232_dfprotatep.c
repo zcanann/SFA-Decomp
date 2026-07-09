@@ -186,14 +186,14 @@ int sfxplayer_ensureEffectHandlePair(struct GameObject* obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->base.color[3] = 0xff;
         ((SfxplayerRingVisualSetup*)setup)->base.color[0] = 2;
         ((SfxplayerRingVisualSetup*)setup)->base.color[1] = 1;
-        ((SfxplayerRingVisualSetup*)setup)->base.posX = (obj)->anim.localPosX;
-        ((SfxplayerRingVisualSetup*)setup)->base.posY = (obj)->anim.localPosY;
-        ((SfxplayerRingVisualSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
+        ((SfxplayerRingVisualSetup*)setup)->base.posX = obj->anim.localPosX;
+        ((SfxplayerRingVisualSetup*)setup)->base.posY = obj->anim.localPosY;
+        ((SfxplayerRingVisualSetup*)setup)->base.posZ = obj->anim.localPosZ;
         ((SfxplayerRingVisualSetup*)setup)->gameBit = -1;
         ((SfxplayerRingVisualSetup*)setup)->unk1A = 0;
         ((SfxplayerRingVisualSetup*)setup)->unk18 = 0;
         ((SfxplayerRingVisualSetup*)setup)->unk19 = 0;
-        if ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == SFXPLAYER_MODE_SEQUENCE)
+        if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == SFXPLAYER_MODE_SEQUENCE)
         {
             ringIds = (s16*)ringIdWords;
             ((SfxplayerRingVisualSetup*)setup)->ringId = ringIds[ringIndex & 0xff];
@@ -211,7 +211,7 @@ int sfxplayer_ensureEffectHandlePair(struct GameObject* obj, u8 ringIndex)
         ((SfxplayerRingVisualSetup*)setup)->unk29 = 0xd2;
         ((SfxplayerRingVisualSetup*)setup)->unk2A = 0;
         *(int*)((int)handles + handleOffset) =
-            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
     }
 
     {
@@ -225,11 +225,10 @@ int sfxplayer_ensureEffectHandlePair(struct GameObject* obj, u8 ringIndex)
         ((ObjPlacement*)setup)->color[3] = 0xff;
         ((ObjPlacement*)setup)->color[0] = 2;
         ((ObjPlacement*)setup)->color[1] = 1;
-        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-        *pair =
-            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+        ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+        *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
     }
 
     return 1;

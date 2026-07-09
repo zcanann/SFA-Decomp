@@ -200,7 +200,7 @@ void VFP_lavastar_release(void)
 #pragma peephole off
 int fn_801FD4A8(struct GameObject* obj, int x)
 {
-    VfpFlamePointData* extra = (obj)->extra;
+    VfpFlamePointData* extra = obj->extra;
     if (extra != NULL)
     {
         extra->counter -= x;
@@ -304,9 +304,9 @@ void fn_801FD6B4(struct GameObject* obj)
         f32 unused[2];
     } parm;
 
-    state = (obj)->extra;
-    def = *(int*)&(obj)->anim.placementData;
-    speed = (f32)(u32)(obj)->anim.alpha;
+    state = obj->extra;
+    def = *(int*)&obj->anim.placementData;
+    speed = (f32)(u32)obj->anim.alpha;
     state->phase += timeDelta * ((lbl_803E6160 * state->speedFactor) / lbl_803E6160);
     if (state->phase > lbl_803E6164)
     {
@@ -317,12 +317,12 @@ void fn_801FD6B4(struct GameObject* obj)
         speed = lbl_803E6170;
     }
     gVfpLavaPoolWaveSin = wave = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int)state->phase) / lbl_803E6178);
-    (obj)->anim.rootMotionScale = lbl_803E617C * state->amplitude + lbl_803E6180 * state->amplitude * wave;
+    obj->anim.rootMotionScale = lbl_803E617C * state->amplitude + lbl_803E6180 * state->amplitude * wave;
     phase = state->phase;
     if (phase > lbl_803E6184 && phase < lbl_803E6188)
     {
         parm.value = state->amplitude;
-        if ((obj)->objectFlags & MAIN_OBJFLAG_RENDERED)
+        if (obj->objectFlags & MAIN_OBJFLAG_RENDERED)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, MAIN_LAVAPOOL_PARTFX, &parm, 2, -1, NULL);
         }
@@ -336,7 +336,7 @@ void fn_801FD6B4(struct GameObject* obj)
     {
         speed = lbl_803E6170 * (phase / lbl_803E6190);
     }
-    (obj)->anim.alpha = ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
+    obj->anim.alpha = ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
     tex = objFindTexture((void*)obj, 0, 0);
     if (tex != NULL)
     {
@@ -363,16 +363,16 @@ void VFP_lavapool_init(struct GameObject* obj, int def)
 {
     VfpLavaPoolState* state;
 
-    state = (obj)->extra;
-    (obj)->animEventCallback = return1_801FDA08;
+    state = obj->extra;
+    obj->animEventCallback = return1_801FDA08;
     state->timerA = 7000;
     state->timerB = 2000;
     if (*(s16*)(def + 0x1a) == 0)
     {
         *(s16*)(def + 0x1a) = 500;
     }
-    (obj)->anim.rootMotionScale = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(600, 1000));
-    state->amplitude = (obj)->anim.rootMotionScale;
+    obj->anim.rootMotionScale = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(600, 1000));
+    state->amplitude = obj->anim.rootMotionScale;
     state->speedFactor = (f32)(int)randomGetRange(0x32, 100);
 }
 
@@ -409,12 +409,12 @@ void VFP_lavastar_init(struct GameObject* obj, int def)
     VfpLavaStarMapData* mapData;
 
     mapData = (VfpLavaStarMapData*)def;
-    state = (obj)->extra;
+    state = obj->extra;
     state->gameBit = mapData->gameBit;
     state->verticalVelocity = lbl_803E61B4 * (f32)(int)randomGetRange(10, 0x19);
     state->effectTimer = 0x14;
-    (obj)->anim.localPosY = mapData->base.posY + (f32)(int)mapData->heightOffset;
-    (obj)->objectFlags |= MAIN_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.localPosY = mapData->base.posY + (f32)(int)mapData->heightOffset;
+    obj->objectFlags |= MAIN_OBJFLAG_HITDETECT_DISABLED;
     state->delayRangeMin = (f32)(int)randomGetRange(0x1e, 0x3c);
     state->delayRangeMax = (f32)(int)randomGetRange(100, 200);
 }

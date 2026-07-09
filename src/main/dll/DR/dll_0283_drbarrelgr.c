@@ -77,7 +77,7 @@ int DR_BarrelGr_getObjectTypeId(void)
 
 void DR_BarrelGr_free(struct GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
+    int state = *(int*)&obj->extra;
     void* heldObj = *(void**)&((DrbarrelgrState*)state)->heldBarrel;
 
     if (heldObj != NULL)
@@ -322,7 +322,7 @@ void DR_BarrelGr_init(struct GameObject* obj, int setup)
     int state;
 
     one = 1;
-    state = *(int*)&(obj)->extra;
+    state = *(int*)&obj->extra;
     if (((DrbarrelgrPlacement*)setup)->speed == 0)
     {
         ((DrbarrelgrPlacement*)setup)->speed = 0xa;
@@ -340,11 +340,11 @@ void DR_BarrelGr_init(struct GameObject* obj, int setup)
     ((DrBarrelGrFlags*)(state + 0x12a))->bit40 = 0;
     storeZeroToFloatParam((void*)(state + 0xc));
     s16toFloat((void*)(state + 0xc), ((DrbarrelgrPlacement*)setup)->range);
-    (obj)->anim.rotX = (s16)((s8)((DrbarrelgrPlacement*)setup)->spawnYawByte << 8);
+    obj->anim.rotX = (s16)((s8)((DrbarrelgrPlacement*)setup)->spawnYawByte << 8);
     (*gRomCurveInterface)->initCurve((void*)(state + 0x20), (void*)obj, lbl_803E6CD0, &one, 0);
-    (obj)->anim.localPosX = ((DrbarrelgrState*)state)->startPosX;
-    (obj)->anim.localPosZ = ((DrbarrelgrState*)state)->startPosZ;
-    (obj)->anim.localPosY = ((DrbarrelgrState*)state)->startPosY;
+    obj->anim.localPosX = ((DrbarrelgrState*)state)->startPosX;
+    obj->anim.localPosZ = ((DrbarrelgrState*)state)->startPosZ;
+    obj->anim.localPosY = ((DrbarrelgrState*)state)->startPosY;
 }
 
 void DR_BarrelGr_release(void)

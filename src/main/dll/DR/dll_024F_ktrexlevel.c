@@ -97,7 +97,7 @@ void KT_RexLevel_update(int obj)
 
 void KT_RexLevel_init(struct GameObject* obj)
 {
-    char* extra = (obj)->extra;
+    char* extra = obj->extra;
     setDrawCloudsAndLights(0);
     mainSetBits(GAMEBIT_DR_KTrexPhaseCounter, 0);
     mainSetBits(0x56e, 1);
@@ -109,7 +109,7 @@ void KT_RexLevel_init(struct GameObject* obj)
     mainSetBits(0x54e, 2);
     mainSetBits(0x552, 1);
     mainSetBits(0x556, 1);
-    (obj)->unkF4 = 0;
+    obj->unkF4 = 0;
     mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 1);
 }
 

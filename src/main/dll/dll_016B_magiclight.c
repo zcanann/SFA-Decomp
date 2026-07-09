@@ -102,13 +102,13 @@ void MagicLight_hitDetect(void)
 #pragma peephole off
 void MagicLight_update(struct GameObject* obj)
 {
-    if ((obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW && (obj)->unkF4 == 0)
+    if (obj->anim.seqId != MAGICLIGHT_SEQ_GLOW && obj->unkF4 == 0)
     {
-        (obj)->anim.rotX = 0;
-        (obj)->anim.rotY = 0;
-        (obj)->anim.rotZ = 0;
+        obj->anim.rotX = 0;
+        obj->anim.rotY = 0;
+        obj->anim.rotZ = 0;
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        (obj)->unkF4 = 1;
+        obj->unkF4 = 1;
     }
 }
 

@@ -108,11 +108,11 @@ void dll_2A4_update(int obj)
 
 void dll_2A4_init(struct GameObject* obj)
 {
-    Dll2A4State* state = (obj)->extra;
+    Dll2A4State* state = obj->extra;
 
-    (obj)->anim.rotX = randomGetRange(0, ROT_RANGE_MAX);
-    (obj)->anim.rotY = randomGetRange(0, ROT_RANGE_MAX);
-    (obj)->anim.rotZ = randomGetRange(0, ROT_RANGE_MAX);
+    obj->anim.rotX = randomGetRange(0, ROT_RANGE_MAX);
+    obj->anim.rotY = randomGetRange(0, ROT_RANGE_MAX);
+    obj->anim.rotZ = randomGetRange(0, ROT_RANGE_MAX);
     state->spinRateX = randomGetRange(-SPIN_RATE_MAG, SPIN_RATE_MAG);
     state->spinRateY = randomGetRange(-SPIN_RATE_MAG, SPIN_RATE_MAG);
     state->spinRateZ = randomGetRange(-SPIN_RATE_MAG, SPIN_RATE_MAG);

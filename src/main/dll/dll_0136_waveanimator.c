@@ -60,7 +60,7 @@ void fn_801923F8(int* cfgArg);
 
 void waveanimator_modelMtxFn(struct GameObject* obj, int a, int b, int c)
 {
-    int* state = (obj)->extra;
+    int* state = obj->extra;
     u32 v;
     v = (u32)((WaveanimatorModelMtxCtx*)state)->flags | 4;
     ((WaveanimatorModelMtxCtx*)state)->flags = v;

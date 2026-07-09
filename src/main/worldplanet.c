@@ -127,7 +127,7 @@ void worldplanet_init(struct GameObject* obj)
     int j;
     int flag;
 
-    state = (obj)->extra;
+    state = obj->extra;
     gWorldPlanetSelectConfirmTimer = 0;
     mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
     mask = 0;
@@ -175,7 +175,7 @@ void worldplanet_init(struct GameObject* obj)
     unlockLevel(0, 0, 1);
     mapUnload(WORLDPLANET_MAIN_MAP_ID, WORLDPLANET_MAP_PRELOAD_FLAG);
     layer = getCurMapLayer();
-    (*gMapEventInterface)->savePoint((int)&(obj)->anim.localPosX, 0, 0, layer);
+    (*gMapEventInterface)->savePoint((int)&obj->anim.localPosX, 0, 0, layer);
     (*gScreenTransitionInterface)->step(0x1e, 1);
     gWorldPlanetInputLockTimer = WORLDPLANET_COUNTDOWN_FRAMES;
     mainSetBits(gWorldPlanetGameBitTable[WORLDPLANET_SLOT_DINOSAUR_PLANET], 1);
@@ -186,7 +186,7 @@ void worldplanet_init(struct GameObject* obj)
 #pragma peephole on
 void worldplanet_readMapInput(struct GameObject* obj, u8* outX, u8* outY)
 {
-    WorldPlanetState* state = (obj)->extra;
+    WorldPlanetState* state = obj->extra;
     int stickX;
     int stickY;
     s8 resX;

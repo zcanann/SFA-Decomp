@@ -715,9 +715,9 @@ void fn_8014D08C(int obj, int state, f32 rateScale, int moveId, int moveControlF
 
 void baddieAfterUpdateBonesCb(struct GameObject* obj, int* bones)
 {
-    int* state = (obj)->extra;
+    int* state = obj->extra;
     int v = *bones;
-    switch ((obj)->anim.seqId)
+    switch (obj->anim.seqId)
     {
     case 0x7C8:
         playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain,
@@ -777,40 +777,40 @@ f32 enemy_getHealthFraction(register int obj)
 f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag)
 {
-    f32 dx = tx - (obj)->anim.worldPosX;
-    f32 dy = ty - (obj)->anim.worldPosY;
-    f32 dz = tz - (obj)->anim.worldPosZ;
+    f32 dx = tx - obj->anim.worldPosX;
+    f32 dy = ty - obj->anim.worldPosY;
+    f32 dz = tz - obj->anim.worldPosZ;
     f32 dist = sqrtf(dx * dx + dz * dz);
     if (dist > accel)
     {
-        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
-        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
+        obj->anim.velocityX = obj->anim.velocityX + timeDelta * (speedScale * (dx / dist));
+        obj->anim.velocityZ = obj->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
     }
     else if (dist > lbl_803E2574)
     {
-        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
-        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
+        obj->anim.velocityX = obj->anim.velocityX + timeDelta * (speedScale * (dx / accel));
+        obj->anim.velocityZ = obj->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
     }
-    if ((obj)->anim.velocityX < -maxVel)
+    if (obj->anim.velocityX < -maxVel)
     {
-        (obj)->anim.velocityX = -maxVel;
+        obj->anim.velocityX = -maxVel;
     }
-    else if ((obj)->anim.velocityX > maxVel)
+    else if (obj->anim.velocityX > maxVel)
     {
-        (obj)->anim.velocityX = maxVel;
+        obj->anim.velocityX = maxVel;
     }
-    if ((obj)->anim.velocityZ < -maxVel)
+    if (obj->anim.velocityZ < -maxVel)
     {
-        (obj)->anim.velocityZ = -maxVel;
+        obj->anim.velocityZ = -maxVel;
     }
-    else if ((obj)->anim.velocityZ > maxVel)
+    else if (obj->anim.velocityZ > maxVel)
     {
-        (obj)->anim.velocityZ = maxVel;
+        obj->anim.velocityZ = maxVel;
     }
     if (lbl_803E2574 != drag)
     {
-        (obj)->anim.velocityX = (obj)->anim.velocityX * powfBitEstimate(drag, timeDelta);
-        (obj)->anim.velocityZ = (obj)->anim.velocityZ * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -821,51 +821,51 @@ f32 sidekickToy_accelerateTowardTargetXZ(struct GameObject* obj, f32 tx, f32 ty,
 f32 sidekickToy_accelerateTowardTarget3D(struct GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag)
 {
-    f32 dx = tx - (obj)->anim.worldPosX;
-    f32 dy = ty - (obj)->anim.worldPosY;
-    f32 dz = tz - (obj)->anim.worldPosZ;
+    f32 dx = tx - obj->anim.worldPosX;
+    f32 dy = ty - obj->anim.worldPosY;
+    f32 dz = tz - obj->anim.worldPosZ;
     f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
     if (dist > accel)
     {
-        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / dist));
-        (obj)->anim.velocityY = (obj)->anim.velocityY + timeDelta * (speedScale * (dy / dist));
-        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
+        obj->anim.velocityX = obj->anim.velocityX + timeDelta * (speedScale * (dx / dist));
+        obj->anim.velocityY = obj->anim.velocityY + timeDelta * (speedScale * (dy / dist));
+        obj->anim.velocityZ = obj->anim.velocityZ + timeDelta * (speedScale * (dz / dist));
     }
     else if (dist > lbl_803E2574)
     {
-        (obj)->anim.velocityX = (obj)->anim.velocityX + timeDelta * (speedScale * (dx / accel));
-        (obj)->anim.velocityY = (obj)->anim.velocityY + timeDelta * (speedScale * (dy / accel));
-        (obj)->anim.velocityZ = (obj)->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
+        obj->anim.velocityX = obj->anim.velocityX + timeDelta * (speedScale * (dx / accel));
+        obj->anim.velocityY = obj->anim.velocityY + timeDelta * (speedScale * (dy / accel));
+        obj->anim.velocityZ = obj->anim.velocityZ + timeDelta * (speedScale * (dz / accel));
     }
-    if ((obj)->anim.velocityX < -maxVel)
+    if (obj->anim.velocityX < -maxVel)
     {
-        (obj)->anim.velocityX = -maxVel;
+        obj->anim.velocityX = -maxVel;
     }
-    else if ((obj)->anim.velocityX > maxVel)
+    else if (obj->anim.velocityX > maxVel)
     {
-        (obj)->anim.velocityX = maxVel;
+        obj->anim.velocityX = maxVel;
     }
-    if ((obj)->anim.velocityY < -maxVel)
+    if (obj->anim.velocityY < -maxVel)
     {
-        (obj)->anim.velocityY = -maxVel;
+        obj->anim.velocityY = -maxVel;
     }
-    else if ((obj)->anim.velocityY > maxVel)
+    else if (obj->anim.velocityY > maxVel)
     {
-        (obj)->anim.velocityY = maxVel;
+        obj->anim.velocityY = maxVel;
     }
-    if ((obj)->anim.velocityZ < -maxVel)
+    if (obj->anim.velocityZ < -maxVel)
     {
-        (obj)->anim.velocityZ = -maxVel;
+        obj->anim.velocityZ = -maxVel;
     }
-    else if ((obj)->anim.velocityZ > maxVel)
+    else if (obj->anim.velocityZ > maxVel)
     {
-        (obj)->anim.velocityZ = maxVel;
+        obj->anim.velocityZ = maxVel;
     }
     if (lbl_803E2574 != drag)
     {
-        (obj)->anim.velocityX = (obj)->anim.velocityX * powfBitEstimate(drag, timeDelta);
-        (obj)->anim.velocityY = (obj)->anim.velocityY * powfBitEstimate(drag, timeDelta);
-        (obj)->anim.velocityZ = (obj)->anim.velocityZ * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityY = obj->anim.velocityY * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -1601,7 +1601,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void enemy_hitDetect(struct GameObject* obj)
 {
-    u8* state = (obj)->extra;
+    u8* state = obj->extra;
     ObjHitsPriorityState* childHitState;
 
     if (*(void**)&((EnemyState*)state)->modelLight != NULL &&
@@ -1610,15 +1610,15 @@ void enemy_hitDetect(struct GameObject* obj)
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
-    ((EnemyState*)state)->lastHitObject = ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject;
-    if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject != 0)
+    ((EnemyState*)state)->lastHitObject = ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject;
+    if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0)
     {
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->suppressOutgoingHits = 1;
     }
-    if ((obj)->childObjs[0] != NULL && *(void**)(*(int*)&(obj)->childObjs[0] + 0x54) != NULL &&
-        (childHitState = *(ObjHitsPriorityState**)(*(int*)&(obj)->childObjs[0] + 0x54))->lastHitObject != 0)
+    if (obj->childObjs[0] != NULL && *(void**)(*(int*)&obj->childObjs[0] + 0x54) != NULL &&
+        (childHitState = *(ObjHitsPriorityState**)(*(int*)&obj->childObjs[0] + 0x54))->lastHitObject != 0)
     {
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->suppressOutgoingHits = 1;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {

@@ -49,10 +49,10 @@ void androssligh_updateBeam(struct GameObject* obj, int beam)
     f32 end[3];
     f32 offset[3];
 
-    start[0] = (obj)->anim.localPosX - lbl_803DC528;
-    start[1] = (obj)->anim.localPosY;
-    start[2] = (obj)->anim.localPosZ;
-    end[0] = (obj)->anim.localPosX + lbl_803DC528;
+    start[0] = obj->anim.localPosX - lbl_803DC528;
+    start[1] = obj->anim.localPosY;
+    start[2] = obj->anim.localPosZ;
+    end[0] = obj->anim.localPosX + lbl_803DC528;
     end[1] = start[1];
     end[2] = start[2];
     offset[0] = start[0] - playerMapOffsetX;
@@ -127,7 +127,7 @@ void androssligh_free(void)
 
 void androssligh_render(struct GameObject* obj)
 {
-    void* bolt = ((AndrosslighState*)(obj)->extra)->bolt;
+    void* bolt = ((AndrosslighState*)obj->extra)->bolt;
 
     if (bolt != NULL)
     {
