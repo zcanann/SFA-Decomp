@@ -2198,6 +2198,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
 extern u32* ObjModel_GetRenderOpTextureRefs(int* am, int idx);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 
+#pragma opt_dead_assignments off
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
 {
     f32 fm[16];
@@ -2611,6 +2612,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
     }
 }
+#pragma opt_dead_assignments reset
 
 extern u8* Shader_getLayer(u8* shader, int idx);
 extern void gxTextureFn_80050e28(int flag);
