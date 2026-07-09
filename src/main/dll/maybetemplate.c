@@ -830,15 +830,16 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     int bm2;
     int bm1;
     int bm0;
-    int k;
     u8* base;
+    int icon;
+    int yOff;
+    int i;
     void* player;
-    u8* gp;
-    s16 fade;
+    int k;
     int slotCount;
     int sel;
-    int i;
-    int yOff;
+    s16 fade;
+    u8* gp;
     s16 alpha;
     s16 rowFade;
     s16 a16;
@@ -849,7 +850,6 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     u32 glyph;
     int wid;
     u8 bi;
-    int icon;
     f32 scaleT;
     f64 dv;
 
