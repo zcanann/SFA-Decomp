@@ -173,7 +173,6 @@ void Obj_GetWorldPosition(u32 obj, f32* outX, f32* outY, f32* outZ)
     }
 }
 
-#pragma opt_lifetimes off
 typedef struct ObjTransformMatrixPool
 {
     f32 inverse[0x1E * 16];
@@ -190,12 +189,10 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     s32 matrixIndex;
     f32* yawMatrix;
     s8 ancestorCount;
-    u32 current;
     f32 savedScale;
     s8 hasParent;
     f32* yawMatrices;
 
-    current = obj;
     base = (ObjTransformMatrixPool*)gObjInverseYawTransformMatrices;
     matrixIndex = yawIndex << 4;
     yawMatrices = base->yaw;
@@ -203,53 +200,52 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     inverseYawMatrix = base->inverse + matrixIndex;
     hasParent = 0;
     ancestorCount = 0;
-    while (current != 0)
+    while (obj != 0)
     {
-        ancestors[ancestorCount] = current;
+        ancestors[ancestorCount] = obj;
         ancestorCount++;
-        savedScale = ((GameObject*)current)->anim.rootMotionScale;
-        if ((((GameObject*)current)->objectFlags & 8) == 0)
+        savedScale = ((GameObject*)obj)->anim.rootMotionScale;
+        if ((((GameObject*)obj)->objectFlags & 8) == 0)
         {
-            ((GameObject*)current)->anim.rootMotionScale = lbl_803DE5F0;
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803DE5F0;
         }
 
         if (hasParent == 0)
         {
-            setMatrixFromObjectPos(yawMatrix, (void*)current);
+            setMatrixFromObjectPos(yawMatrix, (void*)obj);
         }
         else
         {
-            setMatrixFromObjectPos(base->scratch, (void*)current);
+            setMatrixFromObjectPos(base->scratch, (void*)obj);
             mtx44_multSafe(yawMatrix, base->scratch, yawMatrix);
         }
 
-        ((GameObject*)current)->anim.rootMotionScale = savedScale;
-        current = (u32)((GameObject*)current)->anim.parent;
+        ((GameObject*)obj)->anim.rootMotionScale = savedScale;
+        obj = (u32)((GameObject*)obj)->anim.parent;
         hasParent = 1;
     }
 
     while (ancestorCount > 0)
     {
         ancestorCount--;
-        current = ancestors[ancestorCount];
-        inverseTransform.x = -((GameObject*)current)->anim.localPosX;
-        inverseTransform.y = -((GameObject*)current)->anim.localPosY;
-        inverseTransform.z = -((GameObject*)current)->anim.localPosZ;
-        if ((((GameObject*)current)->objectFlags & 8) == 0)
+        obj = ancestors[ancestorCount];
+        inverseTransform.x = -((GameObject*)obj)->anim.localPosX;
+        inverseTransform.y = -((GameObject*)obj)->anim.localPosY;
+        inverseTransform.z = -((GameObject*)obj)->anim.localPosZ;
+        if ((((GameObject*)obj)->objectFlags & 8) == 0)
         {
             inverseTransform.scale = lbl_803DE5F0;
         }
         else
         {
-            inverseTransform.scale = lbl_803DE5F0 / ((GameObject*)current)->anim.rootMotionScale;
+            inverseTransform.scale = lbl_803DE5F0 / ((GameObject*)obj)->anim.rootMotionScale;
         }
-        inverseTransform.rotX = -((GameObject*)current)->anim.rotX;
-        inverseTransform.rotY = -((GameObject*)current)->anim.rotY;
-        inverseTransform.rotZ = -((GameObject*)current)->anim.rotZ;
+        inverseTransform.rotX = -((GameObject*)obj)->anim.rotX;
+        inverseTransform.rotY = -((GameObject*)obj)->anim.rotY;
+        inverseTransform.rotZ = -((GameObject*)obj)->anim.rotZ;
         mtxRotateByVec3s(inverseYawMatrix, &inverseTransform);
     }
 }
-#pragma opt_lifetimes reset
 
 void Obj_BuildTransformMatrices(u32 obj)
 {
