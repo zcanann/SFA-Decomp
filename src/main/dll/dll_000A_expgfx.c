@@ -661,6 +661,7 @@ void expgfx_initSlotQuad(void* slotPtr)
     quad[3].texT = texT1;
 }
 
+#pragma opt_propagation off
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
     ExpgfxStaticDataLayout* staticData;
@@ -1757,6 +1758,7 @@ foundFirst:
         cacheQueueWait(0);
     }
 }
+#pragma opt_propagation reset
 
 #pragma dont_inline on
 #pragma opt_strength_reduction on
@@ -1938,6 +1940,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 #pragma optimization_level 2
 #pragma opt_propagation off
 #pragma opt_lifetimes on
+#pragma opt_common_subs off
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* viewMatrix;
@@ -2339,6 +2342,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
+#pragma opt_common_subs reset
 #pragma opt_lifetimes reset
 #pragma opt_propagation reset
 #pragma optimization_level reset
