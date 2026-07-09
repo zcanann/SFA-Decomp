@@ -655,9 +655,9 @@ void gunpowderbarrel_init(int obj, u8* def)
 void gunpowderbarrel_update(int obj)
 {
     extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
+    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
     u8* player;
     GunpowderbarrelPlacement* def;
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     def = *(GunpowderbarrelPlacement**)&((GameObject*)obj)->anim.placementData;
 
