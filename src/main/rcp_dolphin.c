@@ -660,6 +660,8 @@ extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
 #pragma dont_inline reset
 #pragma dont_inline on
+#pragma opt_common_subs off
+#pragma opt_propagation off
 void textureFn_80053d58(void* vobj)
 {
     u8* obj = (u8*)vobj;
@@ -693,6 +695,8 @@ void textureFn_80053d58(void* vobj)
         *(u32*)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
+#pragma opt_propagation reset
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 
 extern void findSomething(int);
