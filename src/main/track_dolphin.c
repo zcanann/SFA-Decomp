@@ -2800,6 +2800,7 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
     }
 }
 
+#pragma opt_common_subs off
 int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
 {
     f32 d0[3];
@@ -2920,6 +2921,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
     }
     return 1;
 }
+#pragma opt_common_subs reset
 
 int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 maxStep, f32 epsArg, f32* out29,
                          f32* outNrm, f32* outDist)
