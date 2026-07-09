@@ -241,14 +241,13 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
     long i;
     long j;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    DATA_TAB* curve;
 
     sndBegin();
 
-    {
-        DATA_TAB* c = &t->curve[0];
-        for (i = 0; i < dataCurveNum && c->id < cid; ++c, ++i)
-            ;
-    }
+    curve = &t->curve[0];
+    for (i = 0; i < dataCurveNum && curve->id < cid; ++curve, ++i)
+        ;
 
     if (i < dataCurveNum)
     {
@@ -256,11 +255,9 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
         {
             if (dataCurveNum < 2048)
             {
-                {
-                    DATA_TAB* curve = t->curve;
-                    for (j = dataCurveNum - 1; j >= i; --j)
-                        curve[j + 1] = curve[j];
-                }
+                curve = t->curve;
+                for (j = dataCurveNum - 1; j >= i; --j)
+                    curve[j + 1] = curve[j];
                 ++dataCurveNum;
             }
             else
