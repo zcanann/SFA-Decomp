@@ -1837,6 +1837,7 @@ f32 gNewShadowPlacements[0x112];
 /* Builds the animated water-noise assets: scatters up to 50 non-overlapping random
    placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
    renders 16 noise animation frames through fn_8006CD20, then the caustic texture. */
+#pragma opt_lifetimes off
 void initFn_8006d020(void)
 {
     u8 saved;
@@ -1962,6 +1963,7 @@ void initFn_8006d020(void)
     gNewShadowReflectionScrollY = lbl_803DED28;
     testAndSet_onlyUseHeap3(saved);
 }
+#pragma opt_lifetimes reset
 #pragma opt_common_subs reset
 
 #pragma opt_propagation off
