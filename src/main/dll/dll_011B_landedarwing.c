@@ -17,6 +17,7 @@
  */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
 #include "main/objhits.h"
@@ -709,4 +710,21 @@ void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingState* state
 
 LandedArwingFxPoint gLandedArwingPathFxTable[] = {
     {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
+};
+
+ObjectDescriptor gLanded_ArwingObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)landed_arwing_init,
+    (ObjectDescriptorCallback)landed_arwing_update,
+    0,
+    (ObjectDescriptorCallback)landed_arwing_render,
+    (ObjectDescriptorCallback)landed_arwing_free,
+    0,
+    landed_arwing_getExtraSize,
 };
