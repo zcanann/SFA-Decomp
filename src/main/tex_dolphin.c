@@ -230,6 +230,7 @@ typedef struct TexLayer
  * declared any earlier renumbers MWCC's internal @NNN constant-pool symbol
  * for setLightmapShader's 0.0f (a byte diff in the .o strtab). They keep the
  * raw int* bit-cursor spelling ([0]=byte base, [4]=bit position). */
+#pragma opt_common_subs off
 void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* bitReader, Mtx viewMtx)
 {
     Mtx passMtx;
@@ -294,6 +295,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
         GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, (u32)((MapBlockBoundsRec*)rec)->dlistSize);
     }
 }
+#pragma opt_common_subs reset
 
 int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
