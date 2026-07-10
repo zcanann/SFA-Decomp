@@ -330,13 +330,13 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 {
     SDIR_TAB* p;
     s32 i;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t;
     SDIR_DATA* s;
     u16 count;
     u16 j;
     u16 k;
 
-    for (i = 0, p = t->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
+    for (i = 0, p = (t = (SynthDataTables*)dataSmpSDirTable)->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
         ;
 
     if (i == dataSmpSDirNum)
