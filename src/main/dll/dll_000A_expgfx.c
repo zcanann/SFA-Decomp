@@ -854,7 +854,8 @@ foundFirst:
         boundsMax = gExpgfxBoundsInitMax;
         while (pool > -1)
         {
-            bounds = &runtime->poolBounds[pool];
+            curPoolBuf = (u8*)runtime + pool * sizeof(ExpgfxBounds);
+            bounds = (ExpgfxBounds*)(curPoolBuf + EXPGFX_POOL_BOUNDS_OFFSET);
             bounds->minX = boundsMin;
             maxXPtr = &bounds->maxX;
             *maxXPtr = boundsMax;
@@ -868,7 +869,8 @@ foundFirst:
             *maxZPtr = boundsMax;
             curPool = pool;
             next = pool + 1;
-            scan = &runtime->poolActiveCounts[next];
+            curPoolBuf = (u8*)runtime + next;
+            scan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
             for (; next < EXPGFX_POOL_COUNT; next++)
             {
                 switch (*scan)
