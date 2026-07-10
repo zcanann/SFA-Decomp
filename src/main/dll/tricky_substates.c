@@ -290,11 +290,9 @@ void trickyDigTunnel(u8* obj, u8* state)
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
         if (trickyMove(obj, pos) == 0)
         {
-            idx = 0;
-            off = idx;
-            for (k = 4; k != 0; k--)
+            for (idx = 0; idx < 4; idx++)
             {
-                v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
+                v = ((TrickyCurveNode*)((TrickyState*)state)->unk704)->links[idx];
                 if (v > -1 && v != ((TrickyCurveNode*)((TrickyState*)state)->unk700)->id)
                 {
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
@@ -302,8 +300,6 @@ void trickyDigTunnel(u8* obj, u8* state)
                         (u8*)(*gRomCurveInterface)->getById(((int*)((char*)((TrickyState*)state)->unk704 + 0x1c))[idx]);
                     break;
                 }
-                off += 4;
-                idx++;
             }
             state[0xa] = 6;
         }
