@@ -610,8 +610,11 @@ void macHandleActive(McmdVoiceState* sv)
         {
             u32 voiceid;
             u32 i;
+            u32 hi;
+            hi = cmd >> 0x10;
+            hi <<= 0x10;
             voiceid = (sv->keyBase + ((cmd >> 8) & 0xff)) << 8;
-            voiceid |= ((u16)(cmd >> 0x10)) << 0x10;
+            voiceid |= hi;
             for (i = 0; i < lbl_803BD150[0x210]; i++)
             {
                 if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
@@ -669,7 +672,8 @@ void macHandleActive(McmdVoiceState* sv)
             {
                 sv->volume = 0x7f0000;
             }
-            curve = (lbl_803DE2E8.flags >> 0x18) | ((*para1 & 0xff) << 8);
+            curve = (u8)(lbl_803DE2E8.flags >> 0x18);
+            curve |= ((u16)((u8)*para1) << 8);
             sv->volume = TranslateVolume(sv->volume, curve);
             MAC_CFLAGS(sv) |= MAC_FLAG64(0x1000, 0);
             break;
