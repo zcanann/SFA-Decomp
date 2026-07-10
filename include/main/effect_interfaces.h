@@ -42,13 +42,9 @@ typedef struct PartFxSpawnParams {
     f32 posX;
     f32 posY;
     f32 posZ;
-    u8 pad18[0x24 - 0x18];
-    f32 unk24;
-    u8 pad28[0x2C - 0x28];
-    f32 unk2C;
 } PartFxSpawnParams;
 
-STATIC_ASSERT(sizeof(PartFxSpawnParams) == 0x30);
+STATIC_ASSERT(sizeof(PartFxSpawnParams) == 0x18);
 STATIC_ASSERT(offsetof(PartFxSpawnParams, scale) == 0x08);
 STATIC_ASSERT(offsetof(PartFxSpawnParams, posX) == 0x0C);
 STATIC_ASSERT(offsetof(PartFxSpawnParams, posY) == 0x10);

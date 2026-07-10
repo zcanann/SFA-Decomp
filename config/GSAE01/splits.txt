@@ -211,6 +211,10 @@ main/dll/dll_0018_boneparticleeffect.c:
 
 main/dll/dll_000E_partfx.c:
 	.text       start:0x800A4DF4 end:0x800AF688
+	.bss        start:0x8039C2E0 end:0x8039C320
+	.sdata      start:0x803DB7A0 end:0x803DB7B0
+	.sbss       start:0x803DD2C0 end:0x803DD328
+	.sdata2     start:0x803DF4C8 end:0x803DF720
 
 main/dll/dll_001A_effect1.c:
 	.text       start:0x800AF688 end:0x800B319C

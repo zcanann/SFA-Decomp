@@ -895,7 +895,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_000C_projgfx.c"),
             Object(NonMatching, "main/dll/dll_000D_playershadow.c"),
             Object(NonMatching, "main/dll/dll_0018_boneparticleeffect.c"),
-            Object(NonMatching, "main/dll/dll_000E_partfx.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_000E_partfx.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_001A_effect1.c"),
             Object(NonMatching, "main/dll/dll_001B_effect2.c"),
             Object(NonMatching, "main/dll/dll_001C_effect3.c"),
