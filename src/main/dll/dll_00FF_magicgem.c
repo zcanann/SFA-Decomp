@@ -261,43 +261,47 @@ void MagicDust_update(GameObject* obj)
             }
         }
     }
-    if (((state->flags27A & MAGICGEM_FLAG_CLAIMED) == 0) && ((state->flags27A & MAGICGEM_FLAG_COLLECT_LATCH) == 0))
+    if ((state->flags27A & MAGICGEM_FLAG_CLAIMED) == 0)
     {
-        fval = obj->anim.localPosY - ((GameObject*)player)->anim.localPosY;
-        if (fval < lbl_803E34C4)
+        switch (state->flags27A & MAGICGEM_FLAG_COLLECT_LATCH)
         {
-            fval = -fval;
-        }
-        if (fval < gMagicGemPickupYRange)
-        {
-            dist = getXZDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-            fval = gMagicGemPickupRadiusBase + state->collectRadius;
-            if ((dist < fval * fval) && (Obj_IsParentSlackClear(player) != 0))
+        case 0:
+            fval = obj->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+            if (fval < lbl_803E34C4)
             {
-                val = mainGetBit(MAGICGEM_GAMEBIT_CLAIMED);
-                if (val == 0)
+                fval = -fval;
+            }
+            if (fval < gMagicGemPickupYRange)
+            {
+                dist = getXZDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+                fval = gMagicGemPickupRadiusBase + state->collectRadius;
+                if ((dist < fval * fval) && (Obj_IsParentSlackClear(player) != 0))
                 {
-                    *(s16*)&state->pickupMsgArg = 0xffff;
-                    ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, (int)state + 0x280);
-                    ObjHits_DisableObject(obj);
-                    mainSetBits(MAGICGEM_GAMEBIT_CLAIMED, 1);
-                    state->flags27A = state->flags27A | MAGICGEM_FLAG_CLAIMED;
-                }
-                else
-                {
-                    ref = (int)obj->anim.modelInstance->extraSetupData;
-                    (*gExpgfxInterface)->freeSource2((u32)obj);
-                    itemPickupDoParticleFx((int)obj, lbl_803E34B0, state->mode, 0x28);
-                    ObjHits_DisableObject(obj);
-                    Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
-                    Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
-                    playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
-                    state->flags27A = state->flags27A & ~5;
-                    state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
-                    state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;
-                    state->burstTimer = lbl_803E34B4;
-                    OSReport(sMagicGemCollectedMessage);
-                    obj->anim.alpha = 1;
+                    val = mainGetBit(MAGICGEM_GAMEBIT_CLAIMED);
+                    if (val == 0)
+                    {
+                        *(s16*)&state->pickupMsgArg = 0xffff;
+                        ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, (int)state + 0x280);
+                        ObjHits_DisableObject(obj);
+                        mainSetBits(MAGICGEM_GAMEBIT_CLAIMED, 1);
+                        state->flags27A = state->flags27A | MAGICGEM_FLAG_CLAIMED;
+                    }
+                    else
+                    {
+                        ref = (int)obj->anim.modelInstance->extraSetupData;
+                        (*gExpgfxInterface)->freeSource2((u32)obj);
+                        itemPickupDoParticleFx((int)obj, lbl_803E34B0, state->mode, 0x28);
+                        ObjHits_DisableObject(obj);
+                        Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
+                        Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
+                        playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
+                        state->flags27A = state->flags27A & ~5;
+                        state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
+                        state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;
+                        state->burstTimer = lbl_803E34B4;
+                        OSReport(sMagicGemCollectedMessage);
+                        obj->anim.alpha = 1;
+                    }
                 }
             }
         }
