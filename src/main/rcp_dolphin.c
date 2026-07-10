@@ -2073,6 +2073,20 @@ extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 
 #pragma opt_common_subs off
+static void gxLoadObjectLights(int model, int* lights)
+{
+    int count;
+    int n;
+    modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
+    modelLightChannels_reset(1);
+    modelLightChannel_configure(0, 0, 0);
+    for (n = 0; n < count; n++)
+    {
+        modelLightStruct_loadChannelLight(0, (void*)lights[n], model);
+    }
+    modelLightChannels_applyGXControls();
+}
+
 void gxTextureFn_80052efc(void)
 {
     union
@@ -2083,16 +2097,15 @@ void gxTextureFn_80052efc(void)
 #define mtx mtxu.m
     int lights[8];
     GXColor8 outColor;
+    GXColor8 texColor;
     GXColor8 matColor;
     u8* e; /* raw u8* + per-site casts are load-bearing: typed decls swap r28/r31 */
     u8* slots;
     int i;
     int clearSlot;
     int k;
-    int n;
     int model;
     u8* tex;
-    int* lightPtr;
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
@@ -2119,7 +2132,7 @@ void gxTextureFn_80052efc(void)
             GXSetChanMatColor(GX_COLOR1A1, matColor);
             textureFn_80052bb4(((RcpDistortSlot*)slots)[i].model, ((RcpDistortSlot*)slots)[i].params);
             resetLotsOfRenderVars();
-            textureFn_8004ff20(gRcpDistortTexture, mtx, &outColor, 0);
+            textureFn_8004ff20(gRcpDistortTexture, mtx, &texColor, 0);
             textureFn_800528bc();
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
             GXCopyTex(((RcpDistortSlot*)slots)[i].texture + 0x60, 0);
@@ -2152,19 +2165,9 @@ void gxTextureFn_80052efc(void)
         if (((Texture*)((RcpDistortSlot*)slots)[i].texture)->refCount != 0 && ((RcpDistortSlot*)slots)[i].mode == 0 &&
             gRcpDistortGroup == ((RcpDistortSlot*)slots)[i].group)
         {
-            int count;
             model = ((RcpDistortSlot*)slots)[i].model;
             modelTextureFn_80089970(2 - (i - 3));
-            modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
-            modelLightChannels_reset(1);
-            modelLightChannel_configure(0, 0, 0);
-            lightPtr = lights;
-            for (n = 0; n < count; n++)
-            {
-                modelLightStruct_loadChannelLight(0, (void*)*lightPtr, model);
-                lightPtr++;
-            }
-            modelLightChannels_applyGXControls();
+            gxLoadObjectLights(model, lights);
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
