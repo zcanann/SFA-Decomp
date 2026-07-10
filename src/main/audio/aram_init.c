@@ -18,7 +18,7 @@ extern void* aramChunkCallback;
 void aramInit(u32 extraSize)
 {
     u8* status;
-    u8* flag;
+    volatile u8* flag;
     u16* clear;
     u8* buf;
     u32 arBase;
