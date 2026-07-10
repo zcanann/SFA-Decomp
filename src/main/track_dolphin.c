@@ -4912,10 +4912,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         if ((s8)seg != -1)
         {
             int idx = (s8)seg * 2;
-            int off = idx * 2;
-            u8* segtbl = (u8*)gIntersectSegmentTypeTable;
-            start = *(u16*)(segtbl + off);
-            end = *(u16*)(segtbl + off + 2);
+            start = ((u16*)gIntersectSegmentTypeTable)[idx];
+            end = ((u16*)gIntersectSegmentTypeTable)[idx + 1];
         }
         else
         {
@@ -5048,9 +5046,12 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 ha = (f32)(s8)rec[0];
                 hb = (f32)(s8)rec[1];
             }
-            yhi = ay2 + ha;
-            if (by2 + hb > ay2 + ha)
-                yhi = by2 + hb;
+            {
+                f32 ta = ay2 + ha;
+                yhi = ta;
+                if (by2 + hb > ta)
+                    yhi = by2 + hb;
+            }
             yhi = yhi + (f32)(s8)ytol;
             if (A[1] < ylo)
                 continue;
