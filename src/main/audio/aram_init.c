@@ -17,10 +17,10 @@ void aramInit(u32 extraSize)
 {
     u16* clear;
     int i;
-    u32 arBase;
-    u8* buf;
-    u8* flag;
     u8* status;
+    u8* flag;
+    u8* buf;
+    u32 arBase;
 
     status = lbl_803D3F60;
     flag = status + 0x281;
