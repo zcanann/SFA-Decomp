@@ -2431,10 +2431,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         break;
     case 0x41:
         i = 0;
-        ftmp4 = lbl_803DF63C;
-        ftmp3 = lbl_803DF640;
-        ftmp2 = lbl_803DF638;
-        ftmp1 = lbl_803DF5B4;
+        ftmp4 = -10.0f;
+        ftmp3 = 1.6f;
+        ftmp2 = 0.4f;
+        ftmp1 = 0.003f;
         for (; i < 0x1e; i++)
         {
             cfg.startPosY = ftmp4;
@@ -2572,10 +2572,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     case 0x38:
         srand(0x4233d);
         i = 0;
-        ftmp1 = lbl_803DF644;
-        ftmp2 = lbl_803DF4E8;
-        ftmp3 = lbl_803DF600;
-        ftmp4 = lbl_803DF660;
+        ftmp1 = 35.0f;
+        ftmp2 = 0.01f;
+        ftmp3 = 0.0025f;
+        ftmp4 = 33.0f;
         for (; i < 0x28; i++)
         {
             cfg.startPosY = ftmp1;
