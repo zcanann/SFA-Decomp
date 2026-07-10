@@ -2524,7 +2524,8 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
                 {
                     idx = sampleCount - 1;
                 }
-                hitSample = *(void**)(samples + idx * 4);
+                samples = *(u8**)(samples + idx * 4);
+                hitSample = samples;
             }
         }
         else
@@ -2622,7 +2623,7 @@ static u8* modelGetBoneMtx(u8* m, int idx)
     {
         idx = 0;
     }
-    return (u8*)((int*)m)[(*(u16*)(m + 0x18) & 1) + 3] + idx * 0x40;
+    return ((ObjModel*)m)->jointMatrices[*(u16*)(m + 0x18) & 1] + idx * 0x40;
 }
 
 #pragma scheduling off
