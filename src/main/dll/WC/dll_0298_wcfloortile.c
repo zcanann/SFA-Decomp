@@ -594,6 +594,7 @@ void arwarwing_readControls(int obj, int state)
 }
 
 #pragma dont_inline on
+#pragma opt_propagation off
 void arwarwing_updateBarrelRoll(GameObject* obj, int state)
 {
     f32 zero;
@@ -608,9 +609,11 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
     {
         {
             int tgt = ((ArwingState*)state)->rotZTrimCur;
+            int angle;
             int hi = tgt + 0xffff;
-            int mid = hi - 0x7fff;
-            if (((ArwingState*)state)->barrelRollAngle > hi)
+            int mid = tgt + 0x8000;
+            angle = ((ArwingState*)state)->barrelRollAngle;
+            if (angle > hi)
             {
                 ((ArwingState*)state)->mode = 0;
                 ((ArwingState*)state)->rotZTrimCur = ((ArwingState*)state)->barrelRollAngle - 0xffff;
@@ -621,9 +624,9 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
                     ((ArwingState*)state)->accelX / ((ArwingState*)state)->barrelRollAccelScale;
                 arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
             }
-            else if (((ArwingState*)state)->barrelRollAngle > mid)
+            else if (angle > mid)
             {
-                int d = ((ArwingState*)state)->barrelRollAngle - (u16)tgt;
+                int d = angle - (u16)tgt;
                 if (d > 0x8000)
                     d -= 0xffff;
                 if (d < -0x8000)
@@ -642,9 +645,11 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
     {
         {
             int tgt = ((ArwingState*)state)->rotZTrimCur;
+            int angle;
             int lo = tgt - 0xffff;
-            int mid = lo + 0x7fff;
-            if (((ArwingState*)state)->barrelRollAngle < lo)
+            int mid = tgt - 0x8000;
+            angle = ((ArwingState*)state)->barrelRollAngle;
+            if (angle < lo)
             {
                 ((ArwingState*)state)->mode = 0;
                 ((ArwingState*)state)->rotZTrimCur = ((ArwingState*)state)->barrelRollAngle + 0xffff;
@@ -655,9 +660,9 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
                     ((ArwingState*)state)->accelX / ((ArwingState*)state)->barrelRollAccelScale;
                 arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
             }
-            else if (((ArwingState*)state)->barrelRollAngle > mid)
+            else if (angle > mid)
             {
-                int d = ((ArwingState*)state)->barrelRollAngle - (u16)tgt;
+                int d = angle - (u16)tgt;
                 if (d > 0x8000)
                     d -= 0xffff;
                 if (d < -0x8000)
@@ -673,3 +678,4 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
         }
     }
 }
+#pragma opt_propagation reset
