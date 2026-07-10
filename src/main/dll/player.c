@@ -12030,7 +12030,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         angle1 = getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
                           -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) &
                  0xffff;
-        angle1 -= (u16) * (s16*)((char*)p3 + 0x478);
+        angle1 -= (u16)((PlayerState*)p3)->targetYaw;
         if (angle1 > 0x8000)
         {
             angle1 = angle1 - 0xFFFF;
@@ -12082,7 +12082,7 @@ void fn_802AC32C(int p1, int p2, int p3)
     ((PlayerState*)p3)->bodyLeanAngle += angle1 * timeDelta;
     ((PlayerState*)p3)->bodyLeanHalf = (s16)(((PlayerState*)p3)->bodyLeanAngle / 2);
 
-    angle2 = ((PlayerState*)p3)->targetYaw - (u16) * (s16*)((char*)p3 + 0x492);
+    angle2 = ((PlayerState*)p3)->targetYaw - (u16)((PlayerState*)p3)->prevTargetYaw;
     if (angle2 > 0x8000)
     {
         angle2 = angle2 - 0xFFFF;
@@ -12104,7 +12104,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         angle2 = (int)((f32)angle2 * (lbl_803E7FC4 * f2));
     }
     angle2 = (angle2 < -0xccc) ? -0xccc : ((angle2 > 0xccc) ? 0xccc : angle2);
-    angle2 -= (u16) * (s16*)((char*)p3 + 0x4d0);
+    angle2 -= (u16)((PlayerState*)p3)->headPitch;
     if (angle2 > 0x8000)
     {
         angle2 = angle2 - 0xFFFF;
@@ -12114,8 +12114,8 @@ void fn_802AC32C(int p1, int p2, int p3)
         angle2 = angle2 + 0xFFFF;
     }
     ((PlayerState*)p3)->headPitch =
-        (f32) * (s16*)((char*)p3 + 0x4d0) + interpolate((f32)angle2, lbl_803E7EB4, timeDelta);
-    ((PlayerState*)p3)->headYaw = (f32) * (s16*)((char*)p3 + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta);
+        (f32)((PlayerState*)p3)->headPitch + interpolate((f32)angle2, lbl_803E7EB4, timeDelta);
+    ((PlayerState*)p3)->headYaw = (f32)((PlayerState*)p3)->headYaw * powfBitEstimate(lbl_803E7F1C, timeDelta);
 }
 
 #pragma opt_loop_invariants off
