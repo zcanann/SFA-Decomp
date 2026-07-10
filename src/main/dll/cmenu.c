@@ -439,6 +439,7 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
 void hudDrawCMenu(int p1, int p2, int p3)
 {
     u8 slot;
+    int zero;
     int j;
     int sel;
     int model;
@@ -479,7 +480,8 @@ void hudDrawCMenu(int p1, int p2, int p3)
     Camera_RebuildProjectionMatrix();
     GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32) * (u16*)(gRenderModeObj + 4),
                   (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
-    i = 0;
+    zero = 0;
+    i = zero;
     do
     {
         used[i] = 0;
@@ -491,9 +493,9 @@ void hudDrawCMenu(int p1, int p2, int p3)
     {
         f32 best = lbl_803E1EC4;
         sel = -1;
-        if (used[0] == 0 && vals[0] < best)
+        if (used[zero] == 0 && vals[zero] < best)
         {
-            best = vals[0];
+            best = vals[zero];
             sel = 0;
         }
         if (used[1] == 0 && vals[1] < best)
@@ -518,9 +520,9 @@ void hudDrawCMenu(int p1, int p2, int p3)
         *(u8*)(gCMenuRingFrontObjs[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
         if (best > lbl_803E1E3C)
         {
-            objRender(p1, p2, p3, 0, gCMenuRingObjs[sel], 1);
-            GXSetScissor(0, 0x79, 0x280, 0x95);
-            objRender(p1, p2, p3, 0, gCMenuRingFrontObjs[sel], 1);
+            objRender(p1, p2, p3, zero, gCMenuRingObjs[sel], 1);
+            GXSetScissor(zero, 0x79, 0x280, 0x95);
+            objRender(p1, p2, p3, zero, gCMenuRingFrontObjs[sel], 1);
             GXSetScissor(0, 0, 0x280, 0x1e0);
         }
         else
