@@ -27,6 +27,99 @@ extern u8 lbl_803BD150[];
 extern McmdVoiceState* synthVoice;
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* voice);
 
+static inline void inpSetRPNHi(u8 set, u8 channel, u8 value)
+{
+    InpMidiState* st = (InpMidiState*)lbl_803CD760;
+    u16 rpn;
+    u32 i;
+    u8 range;
+
+    rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
+    switch (rpn)
+    {
+    case MIDI_RPN_PITCH_BEND_SENSITIVITY:
+        range = value > 24 ? 24 : value;
+        st->pbRange[set][channel] = range;
+        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        {
+            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+            {
+                synthVoice[i].pitchBendRangeDown = range;
+                synthVoice[i].pitchBendRangeUp = range;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+static inline void inpSetRPNLo(u8 set, u8 channel, u8 value)
+{
+}
+
+static inline void inpSetRPNDec(u8 set, u8 channel)
+{
+    InpMidiState* st = (InpMidiState*)lbl_803CD760;
+    u16 rpn;
+    u32 i;
+    u8 range;
+
+    rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
+    switch (rpn)
+    {
+    case MIDI_RPN_PITCH_BEND_SENSITIVITY:
+        range = st->pbRange[set][channel];
+        if (range != 0)
+        {
+            --range;
+        }
+        st->pbRange[set][channel] = range;
+        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        {
+            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+            {
+                synthVoice[i].pitchBendRangeDown = range;
+                synthVoice[i].pitchBendRangeUp = range;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+static inline void inpSetRPNInc(u8 set, u8 channel)
+{
+    InpMidiState* st = (InpMidiState*)lbl_803CD760;
+    u16 rpn;
+    u32 i;
+    u8 range;
+
+    rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
+    switch (rpn)
+    {
+    case MIDI_RPN_PITCH_BEND_SENSITIVITY:
+        range = st->pbRange[set][channel];
+        if (range < 24)
+        {
+            ++range;
+        }
+        st->pbRange[set][channel] = range;
+        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        {
+            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+            {
+                synthVoice[i].pitchBendRangeDown = range;
+                synthVoice[i].pitchBendRangeUp = range;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 /*
  * inpSetMidiCtrl - combined RPN/MIDI controller setter.
  */
@@ -34,8 +127,6 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
 {
     InpMidiState* st = (InpMidiState*)lbl_803CD760;
     u32 i;
-    u16 rpn;
-    u8 range;
 
     if (channel == 0xFF)
     {
@@ -47,73 +138,21 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
         switch (ctrl)
         {
         case MIDI_CC_DATA_ENTRY_MSB:
-            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
-            switch (rpn)
-            {
-            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
-                range = value > 24 ? 24 : value;
-                st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++)
-                {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
-                    {
-                        synthVoice[i].pitchBendRangeDown = range;
-                        synthVoice[i].pitchBendRangeUp = range;
-                    }
-                }
-                break;
-            }
+            inpSetRPNHi(set, channel, value);
             break;
         case MIDI_CC_DATA_ENTRY_LSB:
+            inpSetRPNLo(set, channel, value);
             break;
         case MIDI_CC_DATA_INCREMENT:
-            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
-            switch (rpn)
-            {
-            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
-                range = st->pbRange[set][channel];
-                if (range != 0)
-                {
-                    --range;
-                }
-                st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++)
-                {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
-                    {
-                        synthVoice[i].pitchBendRangeDown = range;
-                        synthVoice[i].pitchBendRangeUp = range;
-                    }
-                }
-                break;
-            }
+            inpSetRPNDec(set, channel);
             break;
         case MIDI_CC_DATA_DECREMENT:
-            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
-            switch (rpn)
-            {
-            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
-                range = st->pbRange[set][channel];
-                if (range < 24)
-                {
-                    ++range;
-                }
-                st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++)
-                {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
-                    {
-                        synthVoice[i].pitchBendRangeDown = range;
-                        synthVoice[i].pitchBendRangeUp = range;
-                    }
-                }
-                break;
-            }
+            inpSetRPNInc(set, channel);
             break;
         }
 
         st->midiCtrl[set][channel][ctrl] = value & 0x7f;
-        for (i = 0; i < lbl_803BD150[0x210]; i++)
+        for (i = 0; i < lbl_803BD150[0x210]; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
@@ -128,73 +167,21 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
         switch (ctrl)
         {
         case MIDI_CC_DATA_ENTRY_MSB:
-            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
-            switch (rpn)
-            {
-            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
-                range = value > 24 ? 24 : value;
-                st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++)
-                {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
-                    {
-                        synthVoice[i].pitchBendRangeDown = range;
-                        synthVoice[i].pitchBendRangeUp = range;
-                    }
-                }
-                break;
-            }
+            inpSetRPNHi(set, channel, value);
             break;
         case MIDI_CC_DATA_ENTRY_LSB:
+            inpSetRPNLo(set, channel, value);
             break;
         case MIDI_CC_DATA_INCREMENT:
-            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
-            switch (rpn)
-            {
-            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
-                range = st->pbRange[set][channel];
-                if (range != 0)
-                {
-                    --range;
-                }
-                st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++)
-                {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
-                    {
-                        synthVoice[i].pitchBendRangeDown = range;
-                        synthVoice[i].pitchBendRangeUp = range;
-                    }
-                }
-                break;
-            }
+            inpSetRPNDec(set, channel);
             break;
         case MIDI_CC_DATA_DECREMENT:
-            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
-            switch (rpn)
-            {
-            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
-                range = st->pbRange[set][channel];
-                if (range < 24)
-                {
-                    ++range;
-                }
-                st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++)
-                {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
-                    {
-                        synthVoice[i].pitchBendRangeDown = range;
-                        synthVoice[i].pitchBendRangeUp = range;
-                    }
-                }
-                break;
-            }
+            inpSetRPNInc(set, channel);
             break;
         }
 
         st->fxCtrl[channel][ctrl] = value & 0x7f;
-        for (i = 0; i < lbl_803BD150[0x210]; i++)
+        for (i = 0; i < lbl_803BD150[0x210]; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
