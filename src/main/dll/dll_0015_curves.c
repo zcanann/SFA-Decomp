@@ -665,6 +665,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     f32* targetRow;
     int zoff[2];
     int pointIndex;
+    s32 pointLimit;
     int mode;
     f32 zero;
     f32 averageScale;
@@ -718,8 +719,10 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
         zero = lbl_803E0668;
         ((GameObject*)obj)->anim.localPosX = zero;
         ((GameObject*)obj)->anim.localPosZ = zero;
+        pointIndex = 0;
         localPoint = (f32*)collision;
-        for (pointIndex = 0; pointIndex < pointCount * 3; pointIndex += 3)
+        pointLimit = pointCount * 3;
+        for (; pointIndex < pointLimit; pointIndex += 3)
         {
             ((GameObject*)obj)->anim.localPosX += localPoint[57];
             ((GameObject*)obj)->anim.localPosZ += localPoint[59];
