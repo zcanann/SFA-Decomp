@@ -291,14 +291,13 @@ void fn_8026EC44(u32 dt)
  */
 void fn_8026F30C(void)
 {
-    SynthPool* pool;
-    u16* np;
     SynthSong* sp;
+    u16* np;
+    SynthPool* pool;
     u32 i;
     int j;
     int cbIndex;
     u32 prev;
-    u32* cb;
 
     pool = &lbl_803AF550;
     gSynthQueuedVoices = NULL;
@@ -328,17 +327,16 @@ void fn_8026F30C(void)
     }
     prev = 0;
     pool->songs[i - 1].next = (SynthSong*)prev;
-    cb = (u32*)pool;
-    gSynthFreeCallbacks = cb;
+    gSynthFreeCallbacks = (u32*)pool;
     for (cbIndex = prev; cbIndex < 0x100; cbIndex++)
     {
-        cb[1] = prev;
+        ((u32*)pool)[1] = prev;
         if (prev != 0)
         {
-            *(u32*)prev = (u32)cb;
+            *(u32*)prev = (u32)pool;
         }
-        prev = (u32)cb;
-        cb += 5;
+        prev = (u32)pool;
+        pool = (SynthPool*)((u32*)pool + 5);
     }
     *(u32*)prev = 0;
     gSynthNextHandle = 0;
