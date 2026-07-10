@@ -2040,7 +2040,7 @@ void mapLoadUnloadObjects(int flag)
                 int j2;
                 for (j2 = 0; j2 < count; j2++)
                 {
-                    if (*w == id)
+                    if (*w == *(volatile s16*)idPtr)
                     {
                         dup = 1;
                         break;
