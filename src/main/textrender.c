@@ -3165,27 +3165,25 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
+#pragma opt_dead_assignments off
+#pragma opt_lifetimes off
 #pragma peephole off
-/* the corner-texture inner loop below is a rolled 16-store group loop that the
-   retail build's unroller doubled (mtctr 2); the 128 limit is required for the
-   ~50-instr body to fit a 2x unroll (the file-wide 96 blocks it). */
-#pragma ppc_unroll_instructions_limit 128
 void gameTextInitFn_8001c794(void)
 {
     s16* p;
     void** q;
+    int x0;
+    int off;
+    int x3;
+    int x2;
+    int x1;
+    u16* src;
+    int x;
+    int y;
+    u8* rowBase;
+    u16* dst;
     int i;
     int j;
-    int x;
-    int x0;
-    int y;
-    int x1;
-    int x2;
-    int x3;
-    int off;
-    u16* dst;
-    u16* src;
-    u8* rowBase;
     void* tex;
 
     i = 1;
@@ -3207,7 +3205,7 @@ void gameTextInitFn_8001c794(void)
         j = 0;
         x = 0;
         x0 = 0;
-        for (; j < 4; j++)
+        for (; j < 2;)
         {
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
@@ -3236,9 +3234,38 @@ void gameTextInitFn_8001c794(void)
             dst[13] = *(u16*)(rowBase + x1);
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
-            dst += 16;
-            x += 4;
             x0 += 8;
+            x1 = (x + 5) * 2;
+            x2 = (x + 6) * 2;
+            x3 = (x + 7) * 2;
+            off = y * 32;
+            rowBase = (u8*)src + off;
+            dst[16] = *(u16*)(rowBase + x0);
+            dst[17] = *(u16*)(rowBase + x1);
+            dst[18] = *(u16*)(rowBase + x2);
+            dst[19] = *(u16*)(rowBase + x3);
+            off += 32;
+            rowBase = (u8*)src + off;
+            dst[20] = *(u16*)(rowBase + x0);
+            dst[21] = *(u16*)(rowBase + x1);
+            dst[22] = *(u16*)(rowBase + x2);
+            dst[23] = *(u16*)(rowBase + x3);
+            off += 32;
+            rowBase = (u8*)src + off;
+            dst[24] = *(u16*)(rowBase + x0);
+            dst[25] = *(u16*)(rowBase + x1);
+            dst[26] = *(u16*)(rowBase + x2);
+            dst[27] = *(u16*)(rowBase + x3);
+            off += 32;
+            rowBase = (u8*)src + off;
+            dst[28] = *(u16*)(rowBase + x0);
+            dst[29] = *(u16*)(rowBase + x1);
+            dst[30] = *(u16*)(rowBase + x2);
+            dst[31] = *(u16*)(rowBase + x3);
+            dst += 32;
+            x += 8;
+            x0 += 8;
+            j++;
         }
         y += 4;
     }
@@ -3291,6 +3318,8 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)gGameTextBoxEdgeTexture + 0x60, 800);
 }
+#pragma opt_lifetimes reset
+#pragma opt_dead_assignments reset
 #pragma opt_common_subs reset
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
