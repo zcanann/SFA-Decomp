@@ -96,6 +96,16 @@ typedef struct
 
 typedef struct
 {
+    u32 unk0;          // 0x0
+    u32 pTab;          // 0x4
+    u32 tmTab;         // 0x8
+    u32 unkC;          // 0xc
+    u32 unk10;         // 0x10
+    u32 loopPoint[16]; // 0x14
+} SeqArrBase;
+
+typedef struct
+{
     u32 low;   // 0x0
     u32 high;  // 0x4
 } SeqTimeWord; // size 0x8
@@ -586,7 +596,8 @@ int fn_8026E9D0(u8 voice, u32 param)
             }
             flag = 0;
             vp->timeIndex ^= 1;
-            vp->time[vp->timeIndex].high = ((u32*)(*(int*)(gSynthCurrentVoice + 0x118) + 0x14))[voice];
+            vp->time[vp->timeIndex].high =
+                ((SeqArrBase*)((SynthMidiState*)gSynthCurrentVoice)->seqData)->loopPoint[voice];
             vp->time[vp->timeIndex].low = vp->time[vp->timeIndex ^ 1].low;
             if (*(void**)(gSynthCurrentVoice + voice * 56 + 0x14e8) != NULL)
             {
