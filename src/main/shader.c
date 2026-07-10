@@ -2163,9 +2163,10 @@ void mapLoadUnloadObjects(int flag)
                         objStart = cur;
                         if ((*bp & mask) == 0 && objShouldLoad(cur, 0, list[i]) != 0)
                         {
+                            s16 lid = list[i];
                             if (bit >= 0)
                             {
-                                char* pg = *(char**)(base + (0x83A8 + list[i] * 4));
+                                char* pg = *(char**)(base + (0x83A8 + lid * 4));
                                 int ix2 = bit >> 3;
                                 int msk = 1 << (bit & 7);
                                 *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
