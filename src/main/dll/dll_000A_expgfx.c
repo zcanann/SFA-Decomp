@@ -672,7 +672,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     int pool;
     int sky;
     ExpgfxBounds* bounds;
-    f32* maxYPtr;
+    f32* maxXPtr;
     f32* minZPtr;
     f32* maxZPtr;
     s16 slotIdx;
@@ -693,7 +693,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     void* cache;
     u8* curCache;
     u8* curPoolBuf;
-    f32* maxXPtr;
+    f32* maxYPtr;
     u8 parity;
     u8 prefetched;
     int ambRPlus1;
