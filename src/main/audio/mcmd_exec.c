@@ -537,6 +537,16 @@ static inline void mcmdIfModulation(McmdVoiceState* svoice, McmdCommandArgs* cst
     }
 }
 
+static inline void mcmdSRCModeSelect(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    u8 filter;
+
+    hwSetSRCType(svoice->voiceHandle & 0xff, (cstep->flags >> 8) & 0xff);
+    filter = (cstep->flags >> 0x10) & 0xff;
+    hwSetPolyPhaseFilter(svoice->voiceHandle & 0xff, filter);
+    MAC_CFLAGS(svoice) |= MAC_FLAG64(0x800, 0);
+}
+
 static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     u32 voiceid;
@@ -1167,9 +1177,7 @@ void macHandleActive(McmdVoiceState* sv)
             mcmdSetKeyGroup(sv, &lbl_803DE2E8);
             break;
         case 0x5a: /* SRC mode select */
-            hwSetSRCType(sv->voiceHandle & 0xff, (cmd >> 8) & 0xff);
-            hwSetPolyPhaseFilter(sv->voiceHandle & 0xff, (lbl_803DE2E8.flags >> 0x10) & 0xff);
-            MAC_CFLAGS(sv) |= MAC_FLAG64(0x800, 0);
+            mcmdSRCModeSelect(sv, &lbl_803DE2E8);
             break;
         case 0x60: /* var add */
             mcmdVarCalculation(sv, &lbl_803DE2E8, 0);
