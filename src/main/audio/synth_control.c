@@ -142,13 +142,8 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     for (voiceIndex = 0; voiceIndex < voiceCount; voiceIndex++)
     {
-        u32* link;
-        u8 lowIndex;
-
         *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0xF4) = SYNTH_INVALID_LINK_ID;
-        link = (u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x114);
-        link[1] = 0;
-        link[0] = 0;
+        *(u64*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x114) = 0;
         *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x110) = 0;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x10C) = 0;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x121) = 0xFF;
@@ -177,12 +172,11 @@ void synthInit(u32 sampleRate, u32 voiceCount)
         *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x13C) = 0x6400;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x131) = 0;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11F) = 0;
-        lowIndex = voiceIndex;
-        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x08) = lowIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x08) = (u8)voiceIndex;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x09) = 0xFF;
-        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x14) = lowIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x14) = (u8)voiceIndex;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x15) = 0xFF;
-        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x20) = lowIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x20) = (u8)voiceIndex;
         *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x21) = 0xFF;
     }
 
