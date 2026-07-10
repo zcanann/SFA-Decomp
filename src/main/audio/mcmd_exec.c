@@ -485,6 +485,36 @@ static inline void mcmdSetAgeCounterByVolume(McmdVoiceState* svoice, McmdCommand
     hwSetPriority(svoice->voiceHandle & 0xff, ((u32)svoice->priorityGroup << 0x18) | (svoice->priorityValue >> 0xf));
 }
 
+static inline void mcmdIfVarCompare(McmdVoiceState* svoice, McmdCommandArgs* cstep, u8 cmp)
+{
+    s32 lhs;
+    s32 rhs;
+    u8 result;
+
+    lhs = varGet32(svoice, (cstep->flags >> 8) & 0xff, (cstep->flags >> 0x10) & 0xff);
+    rhs = varGet32(svoice, cstep->flags >> 0x18, (u8)cstep->value);
+
+    switch (cmp)
+    {
+    case 0:
+        result = !(rhs - lhs);
+        break;
+    case 1:
+        result = lhs < rhs;
+        break;
+    }
+
+    if ((cstep->value >> 8) & 0xff)
+    {
+        result = !result;
+    }
+    if (result != 0)
+    {
+        u16 step = cstep->value >> 0x10;
+        svoice->macroCursor = (u8*)((McmdCommandArgs*)svoice->macroBase + step);
+    }
+}
+
 static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     u32 voiceid;
@@ -1154,47 +1184,11 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         }
         case 0x70: /* if var equal */
-        {
-            s32 lhs;
-            s32 rhs;
-            u8 invert;
-            u8 result;
-            lhs = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
-            rhs = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8)*para1);
-            invert = (*para1 >> 8) & 0xff;
-            result = !(rhs - lhs);
-            if (invert != 0)
-            {
-                result = !result;
-            }
-            if (result != 0)
-            {
-                u16 step = *para1 >> 0x10;
-                sv->macroCursor = (u8*)((McmdCommandArgs*)sv->macroBase + step);
-            }
+            mcmdIfVarCompare(sv, &lbl_803DE2E8, 0);
             break;
-        }
         case 0x71: /* if var less */
-        {
-            s32 lhs;
-            s32 rhs;
-            u8 invert;
-            u8 result;
-            lhs = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
-            rhs = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8)*para1);
-            invert = (*para1 >> 8) & 0xff;
-            result = lhs < rhs;
-            if (invert != 0)
-            {
-                result = !result;
-            }
-            if (result != 0)
-            {
-                u16 step = *para1 >> 0x10;
-                sv->macroCursor = (u8*)((McmdCommandArgs*)sv->macroBase + step);
-            }
+            mcmdIfVarCompare(sv, &lbl_803DE2E8, 1);
             break;
-        }
         }
     next_command:;
     } while (ex == 0);
