@@ -518,8 +518,10 @@ void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int comm
     int commandEntry;
     int commandIndex;
     int state;
+    u32 count;
 
     state = *(int*)&obj->extra;
+    count = (u32)((TrickyState*)state)->commandCount;
     if (((TrickyState*)state)->commandCount == 10)
     {
         trickyReportError(sSidekickCommandDebugTextBlock);
@@ -538,7 +540,7 @@ void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int comm
         commandEntry = commandEntry + 8;
         commandIndex = commandIndex + 1;
     }
-    *(int*)((state + 0x748) + (u32)((TrickyState*)state)->commandCount * 8) = targetObj;
+    *(int*)((state + 0x748) + count * 8) = targetObj;
     *(char*)((state + 0x74c) + (u32)((TrickyState*)state)->commandCount * 8) = commandKind;
     *(char*)((state + 0x74d) + (u32)((TrickyState*)state)->commandCount * 8) = commandType;
     *(u8*)((state + 0x74e) + (u32)((TrickyState*)state)->commandCount * 8) = 3;
