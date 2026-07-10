@@ -149,7 +149,7 @@ extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
 extern char* lbl_803DD860[2];
-extern char* lbl_803DD868[];
+extern char* volatile lbl_803DD868[2];
 extern int lbl_8031BF90[];
 extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
