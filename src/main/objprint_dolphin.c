@@ -1511,8 +1511,8 @@ void objFn_8003dc50(u8* obj, u8* model)
                 GXSetChanMatColor(ch, *(ObjGXColor*)&lbl_803DB468);
             }
             {
-                int* p;
                 int i;
+                int* p;
                 i = 0;
                 p = larr;
                 for (; i < count; i++)
@@ -1526,11 +1526,11 @@ void objFn_8003dc50(u8* obj, u8* model)
         {
             if (f & 1)
             {
-                GXSetChanMatColor(ch, *(ObjGXColor*)&lbl_803DB468);
+                GXSetChanMatColor(chan, *(ObjGXColor*)&lbl_803DB468);
             }
             else
             {
-                GXSetChanMatColor(ch, *(ObjGXColor*)&gObjGxDefaultChanColor);
+                GXSetChanMatColor(chan, *(ObjGXColor*)&gObjGxDefaultChanColor);
             }
         }
         {
