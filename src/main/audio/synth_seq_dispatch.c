@@ -214,19 +214,19 @@ static inline u16 seqHandleStream(SeqStream* stream)
  * Dispatch a queued voice/MIDI channel event by type, then pull the next
  * event for the channel.
  */
-int fn_8026E0E4(int event, u8 voice, u32* flag)
+int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
 {
     SynthMidiCtrlBlock* base = (SynthMidiCtrlBlock*)lbl_803AF550;
 
-    switch (((SeqEvent*)event)->type)
+    switch (event->type)
     {
     case 4:
     {
-        SeqTrackEntry* d = (SeqTrackEntry*)((SeqEvent*)event)->data;
+        SeqTrackEntry* d = (SeqTrackEntry*)event->data;
         SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
         u8* seq = sv->seqData;
         u8* t = (u8*)(*(u32*)(*(u32*)(seq + 4) + (u32)seq + d->pattern * 4) + (u32)seq);
-        u8 trackId = ((SeqEvent*)event)->trackId;
+        u8 trackId = event->trackId;
         SynthChanRec* rec = &sv->records[trackId];
         u8 prog;
 
@@ -239,7 +239,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         seqInitStream(&rec->modulation, *(u32*)(t + 8));
         rec->modulation.val = 0;
         rec->chan = *(u8*)(*(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8) +
-                           (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + ((SeqEvent*)event)->trackId);
+                           (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + trackId);
         prog = d->prgChange;
         if (prog != 0xff)
         {
@@ -278,8 +278,8 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
     case 0:
     {
         u32 chan;
-        SeqNoteData* d = (SeqNoteData*)((SeqEvent*)event)->data;
-        SynthChanRec* t = (SynthChanRec*)((SeqEvent*)event)->chanRec;
+        SeqNoteData* d = (SeqNoteData*)event->data;
+        SynthChanRec* t = (SynthChanRec*)event->chanRec;
         int d2 = d->key;
         int d3 = d->velocity;
 
@@ -357,7 +357,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         else
         {
             SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
-            if (sv->chanBits[((SeqEvent*)event)->trackId / 32] & (1 << (((SeqEvent*)event)->trackId & 0x1f)))
+            if (sv->chanBits[event->trackId / 32] & (1 << (event->trackId & 0x1f)))
             {
                 u16 macroId = sv->chanPatch[chan].macroId;
                 if (macroId != 0xFFFF)
@@ -393,7 +393,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
                     {
                         vel = d3;
                     }
-                    cb = synthAllocCallback(((SeqEvent*)event)->time + d->length, voice);
+                    cb = synthAllocCallback(event->time + d->length, voice);
                     if (cb != NULL)
                     {
                         SynthMidiState* sv2;
@@ -414,7 +414,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
                         vt = sv2->studioIndex;
                         vid = synthStartSound(macroId, sv2->chanPatch[chan].a, sv2->chanPatch[chan].b, key & 0xff,
                                               vel & 0xff, 0x40, chan, gSynthCurrentVoiceSlotIndex & 0xff, voice, 0,
-                                              *(u8*)(event + 0x15), sv2->chanMap[*(u8*)(event + 0x15)], mod, vt,
+                                              event->trackId, sv2->chanMap[event->trackId], mod, vt,
                                               lbl_803BDA24[vt * 2]);
                         cb[2] = vid;
                         if (vid == 0xFFFFFFFF)
@@ -449,7 +449,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
     }
     case 2:
     {
-        SynthChanRec* t = (SynthChanRec*)((SeqEvent*)event)->chanRec;
+        SynthChanRec* t = (SynthChanRec*)event->chanRec;
 
         inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, t->chan, gSynthCurrentVoiceSlotIndex & 0xff,
                          seqHandleStream(&t->pitchBend));
@@ -457,7 +457,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
     }
     case 1:
     {
-        SynthChanRec* t = (SynthChanRec*)((SeqEvent*)event)->chanRec;
+        SynthChanRec* t = (SynthChanRec*)event->chanRec;
 
         inpSetMidiCtrl14(MCMD_CTRL_MODULATION, t->chan, gSynthCurrentVoiceSlotIndex & 0xff,
                          seqHandleStream(&t->modulation));
@@ -467,7 +467,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         *flag |= 1;
         return 0;
     }
-    return synthGetNextChannelEvent(((SeqEvent*)event)->trackId);
+    return synthGetNextChannelEvent(event->trackId);
 }
 
 /*
@@ -612,7 +612,7 @@ int fn_8026E9D0(u8 voice, u32 param)
             fn_8026E90C(voice);
             continue;
         }
-        res = fn_8026E0E4((int)event, voice, &flag);
+        res = fn_8026E0E4((SeqEvent*)event, voice, &flag);
         if (res != 0)
         {
             synthInsertChannelEvent((int)vp, res);
