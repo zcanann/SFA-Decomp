@@ -210,7 +210,7 @@ static inline u16 seqHandleStream(SeqStream* stream)
     return stream->val;
 }
 
-static inline void seqDoPrgChange(SynthMidiState* seq, u8 prg, u8 midi)
+static inline void seqDoPrgChange(SynthMidiState* seq, u8 prg, u32 midi)
 {
     ((SynthMidiCtrlBlock*)lbl_803AF550)->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
     if (midi != 9)
