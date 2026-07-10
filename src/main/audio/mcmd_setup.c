@@ -127,6 +127,7 @@ void mcmdPlayMacro(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 /*
  * Resolve a sample descriptor and start hardware playback for a voice.
  */
+#pragma opt_propagation off
 void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     SampleInfo* newsmp = &dataSampleInfo;
@@ -177,6 +178,7 @@ void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     synthQueueVoiceInputUpdate(svoice);
 }
 
+#pragma opt_propagation reset
 /*
  * Configure the voice vibrato ramp and curve flags.
  */
