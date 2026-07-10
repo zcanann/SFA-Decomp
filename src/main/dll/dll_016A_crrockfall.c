@@ -143,7 +143,7 @@ void crrockfall_release(void)
 void crrockfall_init(int* obj, u8* params)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
-    int* hitState;
+    ObjHitsPriorityState* hitState;
     ObjModelState* modelState;
 
     state->mode = zcEn3_ROCKFALL_MODE_ARMED;
@@ -151,13 +151,13 @@ void crrockfall_init(int* obj, u8* params)
     state->fallDelay = *(s16*)((char*)params + 0x1e);
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)params[0x1b] / gRockfallScaleDivisor;
 
-    hitState = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
         f32 scale = ((GameObject*)obj)->anim.rootMotionScale;
-        ObjHitbox_SetCapsuleBounds(obj, (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetB * scale));
+        ObjHitbox_SetCapsuleBounds(obj, (int)((f32)hitState->primaryRadius * scale),
+                                   (int)((f32)hitState->primaryCapsuleOffsetA * scale),
+                                   (int)((f32)hitState->primaryCapsuleOffsetB * scale));
         ObjHits_DisableObject(obj);
     }
 
@@ -185,7 +185,7 @@ void crrockfall_init(int* obj, u8* params)
 void crrockfall_update(int* obj)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
-    int* hitState = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
     ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
 
@@ -298,12 +298,12 @@ void crrockfall_update(int* obj)
                         Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_155);
                     }
                     Sfx_PlayFromObject(obj, SFXTRIG_wp_swdwood16);
-                    ((ObjHitsPriorityState*)hitState)->flags |= 1;
+                    hitState->flags |= 1;
                 }
-                *(int*)&((ObjHitsPriorityState*)hitState)->objectHitMask = 16;
-                *(int*)&((ObjHitsPriorityState*)hitState)->skeletonHitMask = 16;
-                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumeId = 1;
-                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
+                *(int*)&hitState->objectHitMask = 16;
+                *(int*)&hitState->skeletonHitMask = 16;
+                *(u8*)&hitState->hitVolumeId = 1;
+                *(u8*)&hitState->hitVolumePriority = 13;
                 ((GameObject*)obj)->anim.velocityY = gRockfallGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.localPosY =
                     ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
@@ -319,18 +319,18 @@ void crrockfall_update(int* obj)
                 }
                 break;
             case zcEn3_ROCKFALL_MODE_RESTING:
-                *(int*)&((ObjHitsPriorityState*)hitState)->objectHitMask = 16;
-                *(int*)&((ObjHitsPriorityState*)hitState)->skeletonHitMask = 16;
-                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumeId = 1;
-                *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
+                *(int*)&hitState->objectHitMask = 16;
+                *(int*)&hitState->skeletonHitMask = 16;
+                *(u8*)&hitState->hitVolumeId = 1;
+                *(u8*)&hitState->hitVolumePriority = 13;
                 break;
             case zcEn3_ROCKFALL_MODE_SHATTERED:
                 break;
             }
 
-            if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
+            if (*(void**)&hitState->lastHitObject != NULL)
             {
-                ((ObjHitsPriorityState*)hitState)->flags &= ~1;
+                hitState->flags &= ~1;
                 state->mode = zcEn3_ROCKFALL_MODE_SHATTERED;
                 Sfx_StopObjectChannel(obj, 8);
                 if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
