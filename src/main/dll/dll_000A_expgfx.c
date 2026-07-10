@@ -687,8 +687,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     s16 texS0;
     s8* scan;
     int batch;
-    u32* maskPtr;
     int curPool;
+    u32* maskPtr;
     void* cache;
     u8* curCache;
     u8* curPoolBuf;
