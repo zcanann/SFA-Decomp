@@ -464,6 +464,17 @@ static inline void mcmdGetVID(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     }
 }
 
+static inline void mcmdAddPriority(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    s16 delta;
+    s16 prio;
+
+    delta = cstep->flags >> 0x10;
+    prio = svoice->priorityGroup + delta;
+    prio = prio < 0 ? 0 : prio > 0xff ? 0xff : prio;
+    voiceSetPriority(svoice, prio);
+}
+
 static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     u32 voiceid;
@@ -1010,19 +1021,8 @@ void macHandleActive(McmdVoiceState* sv)
             voiceSetPriority(sv, (cmd >> 8) & 0xff);
             break;
         case 0x37: /* add priority */
-        {
-            s16 prio = sv->priorityGroup + (s16)(cmd >> 0x10);
-            if (prio < 0)
-            {
-                prio = 0;
-            }
-            else if (prio > 0xff)
-            {
-                prio = 0xff;
-            }
-            voiceSetPriority(sv, prio);
+            mcmdAddPriority(sv, &lbl_803DE2E8);
             break;
-        }
         case 0x38: /* set age counter speed */
             if (*para1 != 0)
             {
