@@ -563,6 +563,24 @@ static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep
     }
 }
 
+static inline void mcmdSetupLFO(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    u32 time;
+    u32 phase;
+    u8 n;
+
+    n = (u8)(cstep->flags >> 8);
+    time = (u16)(cstep->flags >> 0x10);
+    sndConvertMs(&time);
+    if (svoice->exCtrls[n].rampFrames != 0)
+    {
+        phase = (u16)cstep->value;
+        sndConvertMs(&phase);
+        svoice->exCtrls[n].unk00 = phase;
+    }
+    svoice->exCtrls[n].rampFrames = time;
+}
+
 /*
  * Run the active macro command stream for one voice (MusyX macHandleActive).
  */
@@ -1150,25 +1168,8 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         }
         case 0x50: /* setup LFO */
-        {
-            u32 phase;
-            u32 time;
-            u32 ctrlIndex;
-            time = (cmd >> 0x10) & 0xffff;
-            sndConvertMs(&time);
-            ctrlIndex = (cmd >> 8) & 0xff;
-            {
-                McmdExCtrlState* ec = &sv->exCtrls[ctrlIndex];
-                if (ec->rampFrames != 0)
-                {
-                    phase = *para1 & 0xffff;
-                    sndConvertMs(&phase);
-                    ec->unk00 = phase;
-                }
-                ec->rampFrames = time;
-            }
+            mcmdSetupLFO(sv, &lbl_803DE2E8);
             break;
-        }
         case 0x58: /* mode select */
             sv->volTable = ((cmd >> 8) & 0xff) != 0 ? 1 : 0;
             sv->itdMode = ((lbl_803DE2E8.flags >> 0x10) & 0xff) != 0 ? 0 : 1;
