@@ -156,8 +156,8 @@ void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     }
 
     {
-        u32* offset = &newsmp->offset;
         u32 length = newsmp->length;
+        u32* offset = &newsmp->offset;
         if (*offset >= length)
         {
             *offset = length - 1;
