@@ -2449,13 +2449,13 @@ int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t)
     if (*(void**)&sub->savedTargetObj == NULL)
     {
         player = Obj_GetPlayerObject();
-        q = sub->msgStack;
+        obj = sub->msgStack;
         msg0[0] = 0xf;
         msg0[1] = 1;
         msg0[2] = player;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(obj) == 0)
         {
-            Stack_Push(q, msg0);
+            Stack_Push(obj, msg0);
         }
         sub->msgAdvance = 1;
         return 0;
@@ -2537,13 +2537,13 @@ int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t)
                                                                                             sub->linkedObj) != 0)
                     {
                         sub->savedTargetObj = 0;
-                        q = sub->msgStack;
+                        objs = (int*)sub->msgStack;
                         msgC[0] = 0xa;
                         msgC[1] = 1;
                         msgC[2] = best;
-                        if (Stack_IsFull(q) == 0)
+                        if (Stack_IsFull((int)objs) == 0)
                         {
-                            Stack_Push(q, msgC);
+                            Stack_Push((int)objs, msgC);
                         }
                         sub->msgAdvance = 1;
                     }
