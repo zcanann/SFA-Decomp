@@ -991,6 +991,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400100;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+    case 0x55d:
     LAB_800a6a18:
         cfg.startPosY = lbl_803DF4FC;
         cfg.scale = lbl_803DF504;
@@ -1001,8 +1002,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
         goto LAB_800a6a6c;
-    case 0x55d:
-        goto LAB_800aeb28;
     case 0x557:
     LAB_800a6a6c:
         cfg.startPosY = lbl_803DF4FC;
