@@ -400,6 +400,51 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
  * Low-precision per-voice update: LFOs, vibrato, pitch sweeps, pan ramps,
  * pitch bend/portamento and final pitch computation.
  */
+static inline u32 apply_portamento(SynthHwVoice* svoice, u32 ccents, u32 deltaTime)
+{
+    u32 old_portCurPitch;
+
+    if ((HWVOICE_FLAGS(svoice) & 0x400) != 0 && (s32)((svoice->portDuration - svoice->portTime) >> 8) > 0)
+    {
+        old_portCurPitch = svoice->portCurPitch;
+        svoice->portCurPitch += (s32)deltaTime * ((s32)(ccents - svoice->portCurPitch) >> 8) /
+                                (s32)((svoice->portDuration - svoice->portTime) >> 8);
+        if ((old_portCurPitch < ccents && svoice->portCurPitch < ccents) ||
+            (old_portCurPitch > ccents && svoice->portCurPitch > ccents))
+        {
+            ccents = svoice->portCurPitch;
+            svoice->portTime += deltaTime;
+        }
+        else
+        {
+            svoice->portTime = svoice->portDuration;
+        }
+    }
+    return ccents;
+}
+
+static inline u32 convert_cents(SynthHwVoice* svoice, u32 ccents)
+{
+    u32 curDetune;
+    u32 cpitch;
+
+    cpitch = voiceGetPitchRatio(ccents >> 16, svoice->sInfo) << 16;
+    if ((curDetune = ccents & 0xFFFF) != 0)
+    {
+        cpitch += curDetune * (voiceScaleSampleRate(cpitch >> 16) - (cpitch >> 16));
+    }
+    return cpitch;
+}
+
+static inline void UpdateTimeMIDICtrl(SynthHwVoice* sv)
+{
+    if (sv->timeUsedByInput != 0)
+    {
+        sv->timeUsedByInput = 0;
+        sv->midiDirtyFlags = 0x1FFF;
+    }
+}
+
 void LowPrecisionHandler(int voice)
 {
     u32 j;
@@ -407,7 +452,7 @@ void LowPrecisionHandler(int voice)
     u32 ccents;
     u32 cpitch;
     u16 Modulation;
-    u16 portamento;
+    s32 portamentoRaw;
     u32 lowDeltaTime;
     SynthHwVoice* sv;
     u32 cntDelta;
@@ -416,6 +461,7 @@ void LowPrecisionHandler(int voice)
     u16 adsr_delta;
     s32 vrange;
     s32 voff;
+    extern u16 inpGetPitchBend(McmdVoiceState* state);
 
     sv = HWVOICE(voice);
     if (!hwIsActive(voice) && sv->addr == 0)
@@ -491,15 +537,7 @@ void LowPrecisionHandler(int voice)
         {
             sv->panning[j] = sv->panTarget[j] - (sv->panTime[j] / 256) * sv->panDelta[j];
             panVal = sv->panning[j];
-            if ((s32)panVal < 0)
-            {
-                panVal = 0;
-            }
-            else if (panVal > 0x7F0000)
-            {
-                panVal = 0x7F0000;
-            }
-            sv->panning[j] = panVal;
+            sv->panning[j] = (s32)panVal < 0 ? 0 : panVal > 0x7F0000 ? 0x7F0000 : panVal;
         }
         HWVOICE_FLAGS(sv) |= 0x200000000000ULL;
     }
@@ -514,7 +552,7 @@ void LowPrecisionHandler(int voice)
     {
         if (sv->midi != 0xFF)
         {
-            pbend = (u16)inpGetPitchBend((McmdVoiceState*)sv);
+            pbend = inpGetPitchBend((McmdVoiceState*)sv);
             sv->pbLast = pbend;
             goto pbend_adjust;
         }
@@ -558,10 +596,10 @@ void LowPrecisionHandler(int voice)
 
     if (sv->midi != 0xFF)
     {
-        portamento = inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, sv->midi, sv->midiSet);
-        if (portamento != sv->portLastCtrlState || (HWVOICE_FLAGS(sv) & 0x21000) == 0x20000)
+        portamentoRaw = inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, sv->midi, sv->midiSet);
+        if ((u16)portamentoRaw != sv->portLastCtrlState || (HWVOICE_FLAGS(sv) & 0x21000) == 0x20000)
         {
-            if (portamento <= 0x1F80)
+            if ((u16)portamentoRaw <= 0x1F80)
             {
                 HWVOICE_FLAGS(sv) &= ~0x400;
             }
@@ -592,48 +630,24 @@ void LowPrecisionHandler(int voice)
                 HWVOICE_FLAGS(sv) |= 0x400;
             }
             HWVOICE_FLAGS(sv) |= 0x1000;
-            sv->portLastCtrlState = portamento;
+            sv->portLastCtrlState = portamentoRaw;
         }
     }
 
-    if ((HWVOICE_FLAGS(sv) & 0x400) != 0 && (s32)((sv->portDuration - sv->portTime) >> 8) > 0)
-    {
-        u32 old_portCurPitch = sv->portCurPitch;
-        sv->portCurPitch +=
-            (s32)lowDeltaTime * ((s32)(ccents - sv->portCurPitch) >> 8) / (s32)((sv->portDuration - sv->portTime) >> 8);
-        if ((old_portCurPitch < ccents && sv->portCurPitch < ccents) ||
-            (old_portCurPitch > ccents && sv->portCurPitch > ccents))
-        {
-            ccents = sv->portCurPitch;
-            sv->portTime += lowDeltaTime;
-        }
-        else
-        {
-            sv->portTime = sv->portDuration;
-        }
-    }
+    ccents = apply_portamento(sv, ccents, lowDeltaTime);
 
     if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0)
     {
         ccents += sv->pitchADSRRange * (sv->pitchADSR.currentVolume >> 16) >> 7;
     }
 
-    cpitch = voiceGetPitchRatio(ccents >> 16, sv->sInfo) << 16;
-    if ((j = ccents & 0xFFFF) != 0)
-    {
-        cpitch += j * (voiceScaleSampleRate(cpitch >> 16) - (cpitch >> 16));
-    }
-
+    cpitch = convert_cents(sv, ccents);
     cpitch += sv->sweepOff[0] + sv->sweepOff[1];
     hwSetPitch(voice, sv->curPitch = ((cpitch >> 16) * inpGetDoppler((McmdVoiceState*)sv)) >> 13);
     synthQueueDelayedUpdate((SynthDelayedNode*)sv, 0, 0xF00);
 
 end:
-    if (sv->timeUsedByInput != 0)
-    {
-        sv->timeUsedByInput = 0;
-        sv->midiDirtyFlags = 0x1FFF;
-    }
+    UpdateTimeMIDICtrl(sv);
 }
 
 /*
@@ -818,11 +832,7 @@ void ZeroOffsetHandler(int voice)
     synthQueueDelayedUpdate((SynthDelayedNode*)sv, 1, (5 - hwGetTimeOffset()) * 256);
 
 end:
-    if (sv->timeUsedByInput != 0)
-    {
-        sv->timeUsedByInput = 0;
-        sv->midiDirtyFlags = 0x1FFF;
-    }
+    UpdateTimeMIDICtrl(sv);
 }
 #pragma fp_contract reset
 
@@ -859,11 +869,7 @@ void EventHandler(int voice)
     }
 
 end:
-    if (sv->timeUsedByInput != 0)
-    {
-        sv->timeUsedByInput = 0;
-        sv->midiDirtyFlags = 0x1FFF;
-    }
+    UpdateTimeMIDICtrl(sv);
 }
 
 /*
