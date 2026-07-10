@@ -384,14 +384,14 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
  */
 void mcmdSetKeyGroup(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u32 kg;
     u32 i;
+    u8 kg;
     u32 kill;
     McmdVoiceState* voice;
 
     state->keyGroup = 0;
-    kg = (args->flags >> 8) & 0xff;
-    kill = ((args->flags >> 0x10) & 0xff) != 0;
+    kg = (u8)(args->flags >> 8);
+    kill = (u8)(args->flags >> 0x10) != 0;
     if (kg != 0)
     {
         for (i = 0; i < lbl_803BD150[0x210]; i++)
