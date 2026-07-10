@@ -19,12 +19,11 @@ extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u
  */
 void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 {
-    DSPvoice* voice;
-    DSPstudioinfo* aux_entry;
     f32 out[9];
-    int v0, v1, v2;
-
-    voice = (DSPvoice*)(dspVoice + slot * 0xf4);
+    u16 il;
+    u16 ir;
+    u16 is;
+    DSPvoice* voice = (DSPvoice*)(dspVoice + slot * 0xf4);
 
     if (vol >= 1.0f)
         vol = 1.0f;
@@ -33,45 +32,45 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
     if (auxb >= 1.0f)
         auxb = 1.0f;
 
-    aux_entry = (DSPstudioinfo*)(lbl_803CC1E0 + voice->studio * 0xbc);
-
     {
         u32 f0w = voice->flags;
-        salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0, aux_entry->type == 1, vol, auxa, auxb);
+        DSPstudioinfo* dspStudio = (DSPstudioinfo*)lbl_803CC1E0;
+        f0w &= 0x80000000;
+        salCalcVolumeMatrix(p2, out, aux, p7, f0w != 0, dspStudio[voice->studio].type == 1, vol, auxa, auxb);
     }
 
-    v0 = (s32)(lbl_803E78E4 * out[0]);
-    v1 = (s32)(lbl_803E78E4 * out[1]);
-    v2 = (s32)(lbl_803E78E4 * out[2]);
-    if (voice->lastUpdate.vol == 0xff || voice->volL != (u16)v0 || voice->volR != (u16)v1 || voice->volS != (u16)v2)
+    il = lbl_803E78E4 * out[0];
+    ir = lbl_803E78E4 * out[1];
+    is = lbl_803E78E4 * out[2];
+    if (voice->lastUpdate.vol == 0xff || voice->volL != il || voice->volR != ir || voice->volS != is)
     {
-        voice->volL = v0;
-        voice->volR = v1;
-        voice->volS = v2;
+        voice->volL = il;
+        voice->volR = ir;
+        voice->volS = is;
         voice->changed[0] |= 0x1;
         voice->lastUpdate.vol = 0;
     }
 
-    v0 = (s32)(lbl_803E78E4 * out[3]);
-    v1 = (s32)(lbl_803E78E4 * out[4]);
-    v2 = (s32)(lbl_803E78E4 * out[5]);
-    if (voice->lastUpdate.volA == 0xff || voice->volLa != (u16)v0 || voice->volRa != (u16)v1 || voice->volSa != (u16)v2)
+    il = lbl_803E78E4 * out[3];
+    ir = lbl_803E78E4 * out[4];
+    is = lbl_803E78E4 * out[5];
+    if (voice->lastUpdate.volA == 0xff || voice->volLa != il || voice->volRa != ir || voice->volSa != is)
     {
-        voice->volLa = v0;
-        voice->volRa = v1;
-        voice->volSa = v2;
+        voice->volLa = il;
+        voice->volRa = ir;
+        voice->volSa = is;
         voice->changed[0] |= 0x2;
         voice->lastUpdate.volA = 0;
     }
 
-    v0 = (s32)(lbl_803E78E4 * out[6]);
-    v1 = (s32)(lbl_803E78E4 * out[7]);
-    v2 = (s32)(lbl_803E78E4 * out[8]);
-    if (voice->lastUpdate.volB == 0xff || voice->volLb != (u16)v0 || voice->volRb != (u16)v1 || voice->volSb != (u16)v2)
+    il = lbl_803E78E4 * out[6];
+    ir = lbl_803E78E4 * out[7];
+    is = lbl_803E78E4 * out[8];
+    if (voice->lastUpdate.volB == 0xff || voice->volLb != il || voice->volRb != ir || voice->volSb != is)
     {
-        voice->volLb = v0;
-        voice->volRb = v1;
-        voice->volSb = v2;
+        voice->volLb = il;
+        voice->volRb = ir;
+        voice->volSb = is;
         voice->changed[0] |= 0x4;
         voice->lastUpdate.volB = 0;
     }
