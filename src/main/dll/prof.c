@@ -128,15 +128,13 @@ void optionsMenu_openGeneralPanel(void)
         if (isCheatUnlocked((u8)(cheatId - 2)) != 0)
         {
             panels->optionEntries[entryOffset - 0x21] = cheatId;
-            *(u16*)(panels->optionEntries + entryOffset + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~OPTION_ENTRY_DISABLED);
+            *(u16*)(panels->optionEntries + entryOffset + 0x16) &= ~OPTION_ENTRY_DISABLED;
             lastUnlocked = cheatId;
         }
         else
         {
             panels->optionEntries[entryOffset - 0x21] = lastUnlocked;
-            *(u16*)(panels->optionEntries + entryOffset + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) | OPTION_ENTRY_DISABLED);
+            *(u16*)(panels->optionEntries + entryOffset + 0x16) |= OPTION_ENTRY_DISABLED;
         }
         entryOffset -= 0x3c;
         cheatId--;
@@ -150,8 +148,7 @@ void optionsMenu_openGeneralPanel(void)
         if (isCheatUnlocked((u8)(cheatId2 - 2)) != 0)
         {
             panels->optionEntries[entryOffset2 + 0x1a] = lastUnlocked2;
-            *(u16*)(panels->optionEntries + entryOffset2 + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset2 + 0x16) & ~OPTION_ENTRY_DISABLED);
+            *(u16*)(panels->optionEntries + entryOffset2 + 0x16) &= ~OPTION_ENTRY_DISABLED;
             lastUnlocked2 = cheatId2;
         }
         entryOffset2 += 0x3c;
