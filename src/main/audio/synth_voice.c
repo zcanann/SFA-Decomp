@@ -734,7 +734,7 @@ void ZeroOffsetHandler(int voice)
     {
         Modulation = inpGetModulation((McmdVoiceState*)sv);
         lfoInt = 0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1);
-        lfo = lbl_803E77A0 * (f32)lfoInt;
+        lfo = (f32)lfoInt * lbl_803E77A0;
         {
             f32 modScale = lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
             scale = lbl_803E77A4 * ((f32)sv->treScale * (lbl_803E77A8 - modScale));
