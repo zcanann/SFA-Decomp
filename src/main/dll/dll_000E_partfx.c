@@ -2553,7 +2553,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxDefaultSpawnParams.unk4 = 0;
             gPartfxDefaultSpawnParams.unk6 = 0;
         }
-        cfg.startPosY = lbl_803DF4DC;
+        cfg.startPosY = 0.0f;
         cfg.velocityY = lbl_803DF508 * (f32)(s32)randomGetRange(1, 10);
         rot.m[1] = lbl_803DF4DC;
         rot.m[2] = lbl_803DF4DC;
