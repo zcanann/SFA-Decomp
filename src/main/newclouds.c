@@ -1999,8 +1999,7 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
     {
         return;
     }
-    fl = params[0x58];
-    if (fl & NEWCLOUD_CMD_SPAWN)
+    if ((fl = params[0x58]) & NEWCLOUD_CMD_SPAWN)
     {
         return;
     }
