@@ -1736,8 +1736,7 @@ void initFn_800534f8(void)
         radiusScale = gRcpDistortScaleA;
         strengthScale = LastReadFinished_803DEB50.lo;
         strength = *(f32*)(cfg + i * 8 + 4);
-        slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
-        slot->colR = 0xff;
+        (slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c))->colR = 0xff;
         slot->colG = 0xff;
         slot->colB = 0xff;
         falloff = radiusScale / powfCoreHighPrecision(*(f32*)(cfg + i * 8), gRcpDistortPowExp);
