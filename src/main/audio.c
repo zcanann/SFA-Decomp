@@ -696,10 +696,10 @@ void Sfx_UpdateLoopedObjectSounds(void)
             Sfx_StopFromObject(obj, *ip);
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
-            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
-                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
+            memmove((u32*)table->objects + (u16)i, (u32*)table->objects + (index2 = index + 1), sz);
+            memmove((u16*)table->ids + (u16)i, (u16*)table->ids + index2,
+                    (u16)((gSfxLoopedObjectSoundCount - (u16)i) << 1));
+            memmove(table->flags + (u16)i, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - (u16)i));
         }
         else
         {
@@ -711,9 +711,10 @@ void Sfx_UpdateLoopedObjectSounds(void)
     }
 
     {
+        s16 i2;
         u16* ip2;
         u32* op2;
-        for (i = 0, ip2 = table->ids, op2 = table->objects; i < gSfxLoopedObjectSoundCount; i++)
+        for (i2 = 0, ip2 = table->ids, op2 = table->objects; i2 < gSfxLoopedObjectSoundCount; i2++)
         {
             if (Sfx_IsPlayingFromObject(*op2, *ip2) == 0)
             {
@@ -725,6 +726,10 @@ void Sfx_UpdateLoopedObjectSounds(void)
     }
 }
 
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
     SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
