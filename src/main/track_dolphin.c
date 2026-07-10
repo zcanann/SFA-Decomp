@@ -3958,24 +3958,21 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
-int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale, f32 x0, f32 y0d, f32 z0, f32 x1,
-                f32 y1d, f32 z1)
+int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
+                f32 y1, f32 z1)
 {
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
     f32 ytmp;
-    f32 y1, y0;
     int count, i;
     int flag8, flag20;
     int flag4;
     int hdr;
     int maxYi, minYi;
 
-    y0 = y0d;
-    y1 = y1d;
     hdr = *(int*)model;
 
-    Matrix_TransformPoint(desc->currentMatrix, x0, y0d, z0, &xa, &ytmp, &za);
+    Matrix_TransformPoint(desc->currentMatrix, x0, y0, z0, &xa, &ytmp, &za);
     Matrix_TransformPoint(desc->currentMatrix, x0, y0, z1, &xb, &y0, &zb);
     Matrix_TransformPoint(desc->currentMatrix, x1, y1, z0, &xc, &ytmp, &zc);
     Matrix_TransformPoint(desc->currentMatrix, x1, y1, z1, &xd, &y1, &zd);
