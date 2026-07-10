@@ -2031,9 +2031,11 @@ int modelLoadAnimations(void* model, int id, void* animBase)
         ((ModelFileHeader*)hdr)->animationHeaderBuffer = (u8*)gModelResourceBuffer;
     }
     hdrOff = 0;
-    groupSlot = 1;
-    listIdx = 0;
-    *(s16*)(hdr + listIdx * 2 + 0x70) = hdrOff;
+    groupSlot = 0;
+    {
+        u8* slot = hdr + groupSlot++ * 2;
+        *(s16*)(slot + 0x70) = (s16)hdrOff;
+    }
     i = 0;
     for (; i < (int)((ModelFileHeader*)hdr)->animationCount; i++)
     {
@@ -2058,11 +2060,9 @@ int modelLoadAnimations(void* model, int id, void* animBase)
         fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, ((ModelFileHeader*)hdr)->animationDataSection,
                                ((ModelFileHeader*)hdr)->animationDataFileOffset, id);
         animIdx = 0;
-        rdOff = 0;
-        wrOff = rdOff;
         do
         {
-            animId = *(s16*)((u8*)gModelResourceBuffer + rdOff);
+            animId = *(s16*)((u8*)gModelResourceBuffer + animIdx * 2);
             if (animId != -1)
             {
                 if ((getLoadedFileFlags(0) & 0x100000) && *(u16*)(hdr + 4) != 1 &&
@@ -2087,17 +2087,15 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                     }
                     atlasPtr = atlasHdr;
                 }
-                *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + wrOff) = atlasPtr;
-                if (*(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + wrOff) == 0)
+                *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = atlasPtr;
+                if (*(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) == 0)
                 {
                     int relIdx;
-                    int relOff;
 
                     relIdx = 0;
-                    relOff = 0;
                     for (; relIdx < animIdx; relIdx++)
                     {
-                        atlasEntry = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + relOff);
+                        atlasEntry = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + relIdx * 4);
                         if (atlasEntry != 0)
                         {
                             newRefCount = (*atlasEntry -= 1);
@@ -2108,7 +2106,6 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                                 mm_free(atlasEntry);
                             }
                         }
-                        relOff += 4;
                     }
                     *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
                     return 1;
@@ -2116,10 +2113,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
             }
             else
             {
-                *(int*)(((ModelFileHeader*)hdr)->animationModelPtrs + wrOff) = 0;
+                *(int*)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = 0;
             }
-            rdOff += 2;
-            wrOff += 4;
             animIdx++;
         }
         while (animIdx < (int)((ModelFileHeader*)hdr)->animationCount);
