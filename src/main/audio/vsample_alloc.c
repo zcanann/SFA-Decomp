@@ -1,6 +1,8 @@
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/aram.h"
 
+#pragma exceptions on
+
 /*
  * Reset the virtual sample stream buffer table.
  */

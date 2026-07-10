@@ -4,6 +4,8 @@
 #include "main/audio/voice_manage.h"
 #include "dolphin/os/OSCache.h"
 
+#pragma exceptions on
+
 typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
 
 typedef struct SynthSampleInfo
