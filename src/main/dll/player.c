@@ -1922,8 +1922,8 @@ int playerStateMoving(int obj, int state)
                 }
                 ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
             }
-            else if (((u32) * (u8*)((char*)inner + 0x3f0) >> 3 & 1) != 0 ||
-                     ((u32) * (u8*)((char*)inner + 0x3f0) >> 2 & 1) != 0)
+            else if (((ByteFlags*)((char*)inner + 0x3f0))->b08 != 0 ||
+                     ((ByteFlags*)((char*)inner + 0x3f0))->b04 != 0)
             {
                 t = ((PlayerState*)inner)->currentSpeed *
                     -mathSinf((gPlayerPi * (gPlayerDegToBinAngle * (f32) * (int*)((char*)inner + 0x48c))) / lbl_803E7F98);
