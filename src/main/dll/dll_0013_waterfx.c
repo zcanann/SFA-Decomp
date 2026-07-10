@@ -350,7 +350,14 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
 
 void waterfx_func05(int obj, int renderParam)
 {
+    int oPool;
+    int o32;
+    WaterEntry7* e;
+    WaterParticle* s;
+    WaterDrop* d;
+    WaterEntry* g;
     int i;
+    int o64;
     f32 thr;
     WaterDrawObj dp;
     if ((int)gWaterfxRippleCount != 0 || (int)gWaterfxWakeCount != 0 || (int)gWaterfxSplashCount != 0 ||
@@ -361,26 +368,23 @@ void waterfx_func05(int obj, int renderParam)
         {
             fn_8007CAF4((int)gWaterfxRippleTexture);
         }
+        for (i = 0, oPool = 0, o32 = 0; i < WATERFX_POOL_SIZE;
+             oPool += 0x1c, o32 += 0x20, i++)
         {
-            int oPool, o32, o64;
-            for (i = 0, oPool = 0, o32 = 0, o64 = oPool; i < WATERFX_POOL_SIZE;
-                 oPool += 0x1c, o32 += 0x20, o64 += 0x40, i++)
+            e = (WaterEntry7*)((char*)gWaterfxRipplePool + oPool);
+            if (e->active != 0)
             {
-                WaterEntry7* e = (WaterEntry7*)((char*)gWaterfxRipplePool + oPool);
-                if (e->active != 0)
-                {
-                    setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
-                    dp.x = e->x;
-                    dp.y = e->y;
-                    dp.z = e->z;
-                    dp.f10 = e->f10;
-                    dp.f8 = e->f14;
-                    dp.fc = 0;
-                    dp.fa = 0;
-                    Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
-                    fn_8007D670();
-                    drawFn_8005cf8c((char*)gWaterfxRippleVtx + o64, (char*)gWaterfxRippleVtxDesc + o32, 2);
-                }
+                setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
+                dp.x = e->x;
+                dp.y = e->y;
+                dp.z = e->z;
+                dp.f10 = e->f10;
+                dp.f8 = e->f14;
+                dp.fc = 0;
+                dp.fa = 0;
+                Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                fn_8007D670();
+                drawFn_8005cf8c(&((WaterVtx*)gWaterfxRippleVtx)[i * 4], (char*)gWaterfxRippleVtxDesc + o32, 2);
             }
         }
         i = 0;
@@ -396,10 +400,9 @@ void waterfx_func05(int obj, int renderParam)
             GXSetVtxDesc(GX_VA_CLR0, GX_INDEX16);
             GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
         }
-        thr = lbl_803DF2EC;
-        for (; i < WATERFX_MAX_SPLASHES; i++)
+        for (oPool = 0, thr = lbl_803DF2EC; i < WATERFX_MAX_SPLASHES; oPool += 0x3c, i++)
         {
-            WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
+            s = (WaterParticle*)((char*)gWaterfxSplashPool + oPool);
             if (s->f10 < thr)
             {
                 fn_80095164(s);
@@ -409,9 +412,9 @@ void waterfx_func05(int obj, int renderParam)
         {
             waterfx_setupSplashDropPointRender();
         }
-        for (i = 0; i < WATERFX_POOL_SIZE; i++)
+        for (i = 0, oPool = 0; i < WATERFX_POOL_SIZE; oPool += 0x1c, i++)
         {
-            WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
+            d = (WaterDrop*)((char*)gWaterfxDropPool + oPool);
             if (d->idx != -1)
             {
                 f32 vx, vy, vz;
@@ -428,11 +431,9 @@ void waterfx_func05(int obj, int renderParam)
         {
             fn_8007C664((int)gWaterfxWakeTexture);
         }
-        for (i = 0; i < WATERFX_POOL_SIZE; i++)
+        for (i = 0, o32 = 0, o64 = 0; i < WATERFX_POOL_SIZE; o32 += 0x20, o64 += 0x40, i++)
         {
-            WaterEntry* g = &((WaterEntry*)gWaterfxWakePool)[i];
-            int o32 = i * 0x20;
-            int o64 = i * 0x40;
+            g = &((WaterEntry*)gWaterfxWakePool)[i];
             if (g->active != 0 && g->f18 == 0)
             {
                 setTextColor(obj, 0xff, 0xff, 0xff, (u8)g->active);
