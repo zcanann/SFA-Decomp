@@ -2203,16 +2203,14 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     else
     {
         total = sizes[4] + 100;
-        total = sizes[3] + total;
-        total = (sizes[1] + 8) + total;
-        total = sizes[6] + total;
+        total = (sizes[3] + sizes[6] + sizes[1] + 8) + total;
     }
     total = total + sizes[0];
     if (((ModelFileHeader*)hdr)->jointData != 0 && ((ModelFileHeader*)hdr)->jointCount != 0 && ((ModelFileHeader*)hdr)->
         unk18 != 0)
     {
-        total = ((u32)((ModelFileHeader*)hdr)->jointCount << 1) + ((((u32)((ModelFileHeader*)hdr)->jointCount * 7) << 2)
-            + 0x1c + total);
+        total = ((u32)((ModelFileHeader*)hdr)->jointCount << 1) + (((u32)((ModelFileHeader*)hdr)->jointCount * 7) << 2)
+            + 0x1c + total;
     }
     if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
     {
