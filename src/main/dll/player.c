@@ -1906,12 +1906,12 @@ int playerStateMoving(int obj, int state)
             {
                 f32 d = interpolate(((PlayerState*)inner)->currentSpeed - ((PlayerState*)state)->baddie.animSpeedC,
                                     ((PlayerState*)inner)->velSmoothRate, timeDelta);
-                f32 m = (d < lbl_803E7EA8 * timeDelta) ? lbl_803E7EA8 * timeDelta : ((d > lbl_803E7EFC * timeDelta) ? lbl_803E7EFC * timeDelta : d);
-                if (((PlayerState*)inner)->yawRateSigned >= 0x96 && m > lbl_803E7EA4)
+                d = (d < lbl_803E7EA8 * timeDelta) ? lbl_803E7EA8 * timeDelta : ((d > lbl_803E7EFC * timeDelta) ? lbl_803E7EFC * timeDelta : d);
+                if (((PlayerState*)inner)->yawRateSigned >= 0x96 && d > lbl_803E7EA4)
                 {
-                    m = lbl_803E7ED4 * -m;
+                    d = lbl_803E7ED4 * -d;
                 }
-                ((PlayerState*)state)->baddie.animSpeedC = ((PlayerState*)state)->baddie.animSpeedC + m;
+                ((PlayerState*)state)->baddie.animSpeedC = ((PlayerState*)state)->baddie.animSpeedC + d;
                 {
                     ((PlayerState*)state)->baddie.animSpeedC =
                         (((PlayerState*)state)->baddie.animSpeedC < **(f32**)((char*)inner + 0x400))
