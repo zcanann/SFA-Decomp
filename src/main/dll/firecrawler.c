@@ -592,6 +592,7 @@ void crawler_initVariant(int* obj, int* st)
     ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
 }
 
+#pragma opt_loop_invariants off
 void fn_80157CDC(int obj, int state)
 {
     extern void CameraShake_ApplyRadial(f32, f32, f32, f32, f32);
@@ -678,6 +679,7 @@ void fn_80157CDC(int obj, int state)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 /* crawler_initModelVariant: crawler-family variant init. Dispatches on obj->modelType
  * (offset 0x46): values 0x6a2/0x6a3/0x6a4 each pick a different float +
