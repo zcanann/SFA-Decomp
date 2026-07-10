@@ -4910,9 +4910,10 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     {
         if ((s8)seg != -1)
         {
+            int idx = (s8)seg * 2;
             u16* segtbl = (u16*)gIntersectSegmentTypeTable;
-            start = segtbl[(s8)seg * 2];
-            end = segtbl[(s8)seg * 2 + 1];
+            start = segtbl[idx];
+            end = segtbl[idx + 1];
         }
         else
         {
