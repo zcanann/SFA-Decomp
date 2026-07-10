@@ -1181,11 +1181,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
     f32 delta[3];
 
     slot = Camera_GetCurrentViewSlot();
-    if (slot == NULL)
-    {
-        return;
-    }
-    if (objectChannel == NULL)
+    if (slot == NULL || objectChannel == NULL)
     {
         return;
     }
