@@ -601,9 +601,11 @@ void worldplanet_update(int obj)
             Pause_ResetMenuFrameCounter();
         }
         {
-            u32 ang = -((GameObject*)obj)->anim.rotZ & 0xffff;
+            u32 ang;
             f32 r;
-            for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
+            b = 0;
+            ang = -((GameObject*)obj)->anim.rotZ & 0xffff;
+            for (; b < WORLDPLANET_PLANET_COUNT; b++)
             {
                 int planetObj = ObjList_FindObjectById(tbl[2][b]);
                 ((GameObject*)planetObj)->anim.rotZ = -ang;
