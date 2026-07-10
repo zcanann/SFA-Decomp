@@ -2888,7 +2888,7 @@ void doPendingMapLoads(void)
                                     }
                                 }
                                 {
-                                    s8 cn2 = 0;
+                                    int cn2 = 0;
                                     int zc[2];
                                     char* gp2;
                                     int cc;
@@ -2909,7 +2909,7 @@ void doPendingMapLoads(void)
                                                 }
                                                 else
                                                 {
-                                                    *(s8*)(gMapLayerCellStates + zc[0]) = cn2++;
+                                                    *(s8*)(gMapLayerCellStates + zc[0]) = (s8)cn2++;
                                                 }
                                             }
                                             zc[0]++;
