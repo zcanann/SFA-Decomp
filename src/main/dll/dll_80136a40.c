@@ -1184,7 +1184,7 @@ int debugPrintDrawRecord(int color, u8* p)
 }
 #pragma optimization_level reset
 
-static inline void errDisplayFillBackdrop(int x, int xcb)
+static inline void errDisplayFillBackdrop(int xcb, int x)
 {
     int row;
     int n;
