@@ -216,6 +216,7 @@ enum GameBitId {
      * Live-verified against the gate and switch in the first Magic Cave.
      */
     GAMEBIT_FIRE_BLASTER_MAGIC_CAVE_DOOR_CLOSED = 0x246,
+    GAMEBIT_FIRE_BLASTER_MAGIC_CAVE_DOOR_CLOSED_LATCH = 0x28A,
 
     /*
      * The red switch above the SharpClaw door (revealed when the arena clears).
@@ -497,7 +498,6 @@ enum GameBitId {
     GAMEBIT_ITEM_Spirit1_Used = 0x277,                   /* table 1 */
     GAMEBIT_ITEM_SilverKey282_Got = 0x282,               /* table 2 */
     GAMEBIT_ITEM_SilverKey282_Used = 0x283,              /* table 2 */
-    GAMEBIT_MagicCaveDoorRelated028A = 0x28A,            /* table 2; related to iron gate, unsure of purpose */
     GAMEBIT_ITEM_Spirit2_Used = 0x29A,                   /* table 2; hint 316 */
     GAMEBIT_TransporterRelated029B = 0x29B,              /* table 2 */
     GAMEBIT_SH_OpenedGateToCape = 0x2B2,                 /* table 2; ref hollow/StaffLeverO activated */

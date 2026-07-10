@@ -23,7 +23,7 @@ typedef struct DoorObjectDef
 {
     u8 pad0[0x18 - 0x0];
     s16 closeRequestGameBit; /* 0x18: nonzero requests that the door close */
-    s16 closedGameBit;       /* 0x1A: set after closing, cleared after opening */
+    s16 closedLatchGameBit;  /* 0x1A: set after closing, cleared after opening */
     u8 unk1C;
     u8 unk1D;
     u8 pad1E[0x20 - 0x1E];
@@ -37,7 +37,7 @@ typedef struct DoorPlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 closeRequestGameBit; /* 0x18 */
-    s16 closedGameBit;       /* 0x1A */
+    s16 closedLatchGameBit;  /* 0x1A */
     s16 triggerSequenceId; /* 0x1C */
     u8 runSequenceId;      /* 0x1E */
     u8 pad1F[0x20 - 0x1F];
@@ -151,9 +151,9 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
             if (animUpdate->eventIds[i] == 2)
             {
                 state->phase = DOOR_PHASE_CLOSED;
-                if (def->closedGameBit != -1)
+                if (def->closedLatchGameBit != -1)
                 {
-                    mainSetBits(def->closedGameBit, 1);
+                    mainSetBits(def->closedLatchGameBit, 1);
                 }
                 if ((state->movementSfx != 0) && (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
                 {
@@ -174,9 +174,9 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 state->phase = DOOR_PHASE_OPEN;
                 state->closeFlags = 0;
-                if (def->closedGameBit != -1)
+                if (def->closedLatchGameBit != -1)
                 {
-                    mainSetBits(def->closedGameBit, 0);
+                    mainSetBits(def->closedLatchGameBit, 0);
                 }
                 if ((state->movementSfx != 0) && (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
                 {
@@ -244,9 +244,9 @@ void Door_init(int* obj, u8* def)
     }
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    if (((DoorObjectDef*)def)->closedGameBit != -1)
+    if (((DoorObjectDef*)def)->closedLatchGameBit != -1)
     {
-        state->phase = mainGetBit(((DoorObjectDef*)def)->closedGameBit);
+        state->phase = mainGetBit(((DoorObjectDef*)def)->closedLatchGameBit);
     }
     else
     {
