@@ -365,8 +365,8 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                             }
                             else
                             {
-                                pb->adpcmLoop.loop_yn2 = adpcmInfo->loopY1;
-                                pb->adpcmLoop.loop_yn1 = adpcmInfo->loopY2;
+                                pb->adpcmLoop.loop_yn2 = adpcmInfo->loopY0;
+                                pb->adpcmLoop.loop_yn1 = adpcmInfo->loopY1;
                                 pb->adpcmLoop.loop_pred_scale = adpcmInfo->loopPS;
                                 pb->loopType = 0;
                             }

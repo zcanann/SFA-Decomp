@@ -92,25 +92,29 @@ typedef struct _SPB {
 #include "main/audio/dsp_voice.h"
 
 typedef struct SNDADPCMinfo {
-    u16 coefTab[8][2]; /* 0x00 */
-    u16 initialPS;     /* 0x20 */
-    u16 loopPS;        /* 0x22 */
-    u16 loopY1;        /* 0x24 */
-    u16 loopY2;        /* 0x26 */
+    u16 unk0;          /* 0x00 */
+    u8 initialPS;      /* 0x02 */
+    u8 loopPS;         /* 0x03 */
+    u16 loopY0;        /* 0x04 */
+    u16 loopY1;        /* 0x06 */
+    u16 coefTab[8][2]; /* 0x08 */
 } SNDADPCMinfo;
 
 typedef struct DSPADPCMplusBlk {
-    u16 PS; /* 0x00 */
-    u16 Y0; /* 0x02 */
-    u16 Y1; /* 0x04 */
+    u16 Y0; /* 0x00 */
+    u16 Y1; /* 0x02 */
+    u8 PS;  /* 0x04 */
+    u8 pad5; /* 0x05 */
 } DSPADPCMplusBlk;
 
 typedef struct DSPADPCMplusInfo {
-    u16 coefTab[8][2];         /* 0x00 */
-    u16 loopPS;                /* 0x20 */
-    u16 loopY0;                /* 0x22 */
-    u16 loopY1;                /* 0x24 */
-    DSPADPCMplusBlk blk[1];    /* 0x26 */
+    u16 unk0;               /* 0x00 */
+    u8 initialPS;           /* 0x02 */
+    u8 loopPS;              /* 0x03 */
+    u16 loopY0;             /* 0x04 */
+    u16 loopY1;             /* 0x06 */
+    u16 coefTab[8][2];      /* 0x08 */
+    DSPADPCMplusBlk blk[1]; /* 0x28 */
 } DSPADPCMplusInfo;
 
 #endif /* MUSYX_DSP_H */
