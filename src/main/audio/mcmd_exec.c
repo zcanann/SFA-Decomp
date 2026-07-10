@@ -1142,8 +1142,12 @@ void macHandleActive(McmdVoiceState* sv)
             mcmdVarCalculation(sv, &lbl_803DE2E8, 4);
             break;
         case 0x65: /* set var immediate */
-            varSet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff, (s16)*para1);
+        {
+            u8 ctrl = (cmd >> 8) & 0xff;
+            u8 index = (cmd >> 0x10) & 0xff;
+            varSet32(sv, ctrl, index, (s16)*para1);
             break;
+        }
         case 0x70: /* if var equal */
         {
             s32 lhs;
