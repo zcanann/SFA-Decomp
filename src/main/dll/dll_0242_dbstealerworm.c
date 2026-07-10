@@ -1983,21 +1983,21 @@ int dbstealerworm_stateHandlerA07(int obj, int baddie, f32 t)
             *(int*)&((BaddieState*)baddie)->targetObj = player;
             tmp2A = sub->objGroup;
             tmp2B = sub->msgMode;
-            q = sub->msgStack;
+            ptr = (int*)sub->msgStack;
             msgC[0] = sub->msgCode;
             msgC[1] = tmp2B;
             msgC[2] = tmp2A;
-            if (Stack_IsFull(q) == 0)
+            if (Stack_IsFull((int)ptr) == 0)
             {
-                Stack_Push(q, msgC);
+                Stack_Push((int)ptr, msgC);
             }
-            q = sub->msgStack;
+            ptr = (int*)sub->msgStack;
             msgD[0] = 2;
             msgD[1] = 0;
             msgD[2] = 0;
-            if (Stack_IsFull(q) == 0)
+            if (Stack_IsFull((int)ptr) == 0)
             {
-                Stack_Push(q, msgD);
+                Stack_Push((int)ptr, msgD);
             }
             sub->msgAdvance = 1;
         }
@@ -2324,21 +2324,21 @@ int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t)
             *(int*)&((BaddieState*)baddie)->targetObj = player;
             tmp2A = sub->objGroup;
             tmp2B = sub->msgMode;
-            q = sub->msgStack;
+            ptr = (int*)sub->msgStack;
             msgC[0] = sub->msgCode;
             msgC[1] = tmp2B;
             msgC[2] = tmp2A;
-            if (Stack_IsFull(q) == 0)
+            if (Stack_IsFull((int)ptr) == 0)
             {
-                Stack_Push(q, msgC);
+                Stack_Push((int)ptr, msgC);
             }
-            q = sub->msgStack;
+            ptr = (int*)sub->msgStack;
             msgD[0] = 2;
             msgD[1] = 0;
             msgD[2] = 0;
-            if (Stack_IsFull(q) == 0)
+            if (Stack_IsFull((int)ptr) == 0)
             {
-                Stack_Push(q, msgD);
+                Stack_Push((int)ptr, msgD);
             }
             sub->msgAdvance = 1;
         }
