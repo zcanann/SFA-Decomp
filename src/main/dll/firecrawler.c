@@ -618,6 +618,7 @@ void fn_80157CDC(int obj, int state)
         CrawlerSubDesc* p;
     } CrawlerDescE;
     CrawlerDescE* d = (CrawlerDescE*)gCrawlerDescriptorTable;
+    CrawlerSubDesc* sub;
     CrawlerSubDesc* entry = d[((BaddieState*)state)->inWhirlpoolGroup].p;
     u8 i;
 
@@ -627,7 +628,7 @@ void fn_80157CDC(int obj, int state)
     {
         if ((((FCVars*)state)->moveEventMask & (1 << i)) != 0)
         {
-            CrawlerSubDesc* sub = &entry[i];
+            sub = &entry[i];
             if (sub->sfxId != 0)
             {
                 Sfx_PlayFromObject(obj, (u16)sub->sfxId);
