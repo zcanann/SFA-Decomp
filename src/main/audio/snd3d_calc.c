@@ -234,8 +234,6 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     u16 value14;
     u8 i;
     S3DEmitterCtrl* ctrl;
-    u8 controller;
-
     (void)unused;
     handle = emitter->handle;
     if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
