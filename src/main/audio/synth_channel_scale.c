@@ -79,7 +79,7 @@ extern void voiceRegister(McmdVoiceState* svoice);
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
-extern u32 sndFXCheck(void);
+extern u32 sndFXCheck(u32 id);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
 extern float floorf(float x);
@@ -150,15 +150,13 @@ void fn_8026EC44(u32 dt)
                 {
                     while (*(evt = st->evt) != 0xffffffff)
                     {
-                        if (*evt > *(u32*)((u8*)st + st->idx * 8 + 0x24))
+                        if (*evt > st->o[st->idx].out)
                         {
                             break;
                         }
                         if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0)
                         {
-                            u32* cv = (u32*)evt[1];
-                            st->cur = (u32)cv;
-                            synthSetStudioChannelScale((u32)cv >> 10, gSynthCurrentVoiceSlotIndex, 0);
+                            synthSetStudioChannelScale((st->cur = evt[1]) >> 10, gSynthCurrentVoiceSlotIndex, 0);
                         }
                         else
                         {
@@ -174,8 +172,8 @@ void fn_8026EC44(u32 dt)
                 freq = freq * (c1 * (f32)(u32)st->vol);
                 val = range * freq;
                 val = sal_fmod(val, range, absRange);
-                *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
-                *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
+                st->d[st->idx].step = val;
+                *(int*)&st->d[st->idx].delta = floorf(freq);
                 ret = fn_8026E9D0(0, dt);
                 cb = synthUpdateCallbacks();
                 if (gSynthCurrentVoice->counter == 0)
@@ -183,22 +181,21 @@ void fn_8026EC44(u32 dt)
                     for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
                     {
                         nnode = (u32*)*node;
-                        if ((node[2] != 0xffffffff) && (sndFXCheck() == 0xffffffff))
+                        if ((node[2] != 0xffffffff) && (sndFXCheck(node[2]) == 0xffffffff))
                         {
                             synthFreeCallback(node);
                         }
                     }
                 }
-                cnt = gSynthCurrentVoice->counter + 1;
-                gSynthCurrentVoice->counter = cnt - (cnt / 5) * 5;
+                gSynthCurrentVoice->counter = (gSynthCurrentVoice->counter + 1) % 5;
                 sum = gSynthCurrentVoice->streams[0].o[0].acc + gSynthCurrentVoice->streams[0].d[0].step;
                 gSynthCurrentVoice->streams[0].o[0].acc = sum & 0xffff;
                 sum = sum >> 16;
-                gSynthCurrentVoice->streams[0].o[0].out += gSynthCurrentVoice->streams[0].d[0].delta + sum;
+                gSynthCurrentVoice->streams[0].o[0].out += sum + gSynthCurrentVoice->streams[0].d[0].delta;
                 sum = gSynthCurrentVoice->streams[0].o[1].acc + gSynthCurrentVoice->streams[0].d[1].step;
                 gSynthCurrentVoice->streams[0].o[1].acc = sum & 0xffff;
                 sum = sum >> 16;
-                gSynthCurrentVoice->streams[0].o[1].out += gSynthCurrentVoice->streams[0].d[1].delta + sum;
+                gSynthCurrentVoice->streams[0].o[1].out += sum + gSynthCurrentVoice->streams[0].d[1].delta;
             }
             else
             {
@@ -210,15 +207,13 @@ void fn_8026EC44(u32 dt)
                     {
                         while (*(evt = st->evt) != 0xffffffff)
                         {
-                            if (*evt > *(u32*)((u8*)st + st->idx * 8 + 0x24))
+                            if (*evt > st->o[st->idx].out)
                             {
                                 break;
                             }
                             if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0)
                             {
-                                u32* cv = (u32*)evt[1];
-                                st->cur = (u32)cv;
-                                synthSetStudioChannelScale((u32)cv >> 10, gSynthCurrentVoiceSlotIndex, ch);
+                                synthSetStudioChannelScale((st->cur = evt[1]) >> 10, gSynthCurrentVoiceSlotIndex, ch);
                             }
                             else
                             {
@@ -234,8 +229,8 @@ void fn_8026EC44(u32 dt)
                     freq = freq * (c1 * (f32)(u32)st->vol);
                     val = range * freq;
                     val = sal_fmod(val, range, absRange);
-                    *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
-                    *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
+                    st->d[st->idx].step = val;
+                    *(int*)&st->d[st->idx].delta = floorf(freq);
                     ret |= fn_8026E9D0(ch, dt);
                 }
                 cb = synthUpdateCallbacks();
@@ -244,24 +239,23 @@ void fn_8026EC44(u32 dt)
                     for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
                     {
                         nnode = (u32*)*node;
-                        if ((node[2] != 0xffffffff) && (sndFXCheck() == 0xffffffff))
+                        if ((node[2] != 0xffffffff) && (sndFXCheck(node[2]) == 0xffffffff))
                         {
                             synthFreeCallback(node);
                         }
                     }
                 }
-                cnt = gSynthCurrentVoice->counter + 1;
-                gSynthCurrentVoice->counter = cnt - (cnt / 5) * 5;
+                gSynthCurrentVoice->counter = (gSynthCurrentVoice->counter + 1) % 5;
                 for (i = 0; i < 16; i++)
                 {
                     sum = gSynthCurrentVoice->streams[i].o[0].acc + gSynthCurrentVoice->streams[i].d[0].step;
                     gSynthCurrentVoice->streams[i].o[0].acc = sum & 0xffff;
                     sum = sum >> 16;
-                    gSynthCurrentVoice->streams[i].o[0].out += gSynthCurrentVoice->streams[i].d[0].delta + sum;
+                    gSynthCurrentVoice->streams[i].o[0].out += sum + gSynthCurrentVoice->streams[i].d[0].delta;
                     sum = gSynthCurrentVoice->streams[i].o[1].acc + gSynthCurrentVoice->streams[i].d[1].step;
                     gSynthCurrentVoice->streams[i].o[1].acc = sum & 0xffff;
                     sum = sum >> 16;
-                    gSynthCurrentVoice->streams[i].o[1].out += gSynthCurrentVoice->streams[i].d[1].delta + sum;
+                    gSynthCurrentVoice->streams[i].o[1].out += sum + gSynthCurrentVoice->streams[i].d[1].delta;
                 }
             }
             if ((ret == 0) && (cb == 0))
@@ -281,8 +275,7 @@ void fn_8026EC44(u32 dt)
                 synthRecycleVoiceCallbacks(song);
                 song->active = 0;
                 song->prev = NULL;
-                song->next = gSynthFreeVoices;
-                if (gSynthFreeVoices != NULL)
+                if ((song->next = gSynthFreeVoices) != NULL)
                 {
                     gSynthFreeVoices->prev = song;
                 }
@@ -296,7 +289,7 @@ void fn_8026EC44(u32 dt)
 /*
  * fn_8026F30C - synth song/callback pool init.
  */
-int fn_8026F30C(void)
+void fn_8026F30C(void)
 {
     SynthPool* pool;
     u16* np;
@@ -304,7 +297,7 @@ int fn_8026F30C(void)
     u32 i;
     int j;
     int cbIndex;
-    u32* prev;
+    u32 prev;
     u32* cb;
 
     pool = &lbl_803AF550;
@@ -333,23 +326,22 @@ int fn_8026F30C(void)
         np += 16;
         sp++;
     }
-    pool->songs[i - 1].next = NULL;
-    prev = NULL;
+    prev = 0;
+    pool->songs[i - 1].next = (SynthSong*)prev;
     cb = (u32*)pool;
     gSynthFreeCallbacks = cb;
-    for (cbIndex = 0; cbIndex < 0x100; cbIndex++)
+    for (cbIndex = prev; cbIndex < 0x100; cbIndex++)
     {
-        cb[1] = (u32)prev;
-        if (prev != NULL)
+        cb[1] = prev;
+        if (prev != 0)
         {
-            *prev = (u32)cb;
+            *(u32*)prev = (u32)cb;
         }
-        prev = cb;
+        prev = (u32)cb;
         cb += 5;
     }
-    *prev = 0;
+    *(u32*)prev = 0;
     gSynthNextHandle = 0;
-    return cbIndex;
 }
 
 /*
