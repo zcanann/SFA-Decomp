@@ -431,6 +431,39 @@ void mcmdSetKeyGroup(McmdVoiceState* state, McmdCommandArgs* args)
 }
 
 /*
+ * Clear one trap stream and drop the trigger flag when none remain armed.
+ */
+static inline void mcmdUntrapEvent(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    u8 i;
+
+    svoice->trapMacroBase[(cstep->flags >> 8) & 0xff] = 0;
+    for (i = 0; i < 3; i++)
+    {
+        if (svoice->trapMacroBase[i] != 0)
+        {
+            return;
+        }
+    }
+    svoice->hasTriggerMacros = 0;
+}
+
+/*
+ * Store the voice id (or clone list head) into a synth register.
+ */
+static inline void mcmdGetVID(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    if (((cstep->flags >> 0x10) & 0xff) == 0)
+    {
+        varSet32(svoice, 0, (cstep->flags >> 8) & 0xff, svoice->vidListNode->id);
+    }
+    else
+    {
+        varSet32(svoice, 0, (cstep->flags >> 8) & 0xff, (u32)svoice->cloneVidListNode);
+    }
+}
+
+/*
  * Run the active macro command stream for one voice (MusyX macHandleActive).
  */
 void macHandleActive(McmdVoiceState* sv)
@@ -906,9 +939,9 @@ void macHandleActive(McmdVoiceState* sv)
             u8* macro = dataGetMacro(cmd >> 0x10);
             if (macro != 0)
             {
-                u32 t = (*para1 >> 8) & 0xff;
+                u32 t = (lbl_803DE2E8.value >> 8) & 0xff;
                 sv->trapMacroBase[t] = macro;
-                sv->trapMacroCursor[t] = macro + ((*para1 & 0xffff) << 3);
+                sv->trapMacroCursor[t] = macro + ((lbl_803DE2E8.value & 0xffff) << 3);
                 sv->hasTriggerMacros = 1;
                 if (t == 0 && (MAC_CFLAGS(sv) & MAC_FLAG64(0x100, 8)) == MAC_FLAG64(0x100, 8))
                 {
@@ -918,19 +951,8 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         }
         case 0x29: /* untrap event */
-        {
-            u8 i;
-            sv->trapMacroBase[(cmd >> 8) & 0xff] = 0;
-            for (i = 0; i < 3; i++)
-            {
-                if (sv->trapMacroBase[i] != 0)
-                {
-                    goto next_command;
-                }
-            }
-            sv->hasTriggerMacros = 0;
+            mcmdUntrapEvent(sv, &lbl_803DE2E8);
             break;
-        }
         case 0x2a: /* send message */
             mcmdSendMessage(sv, &lbl_803DE2E8);
             break;
@@ -947,14 +969,7 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         }
         case 0x2c: /* get VID */
-            if (((cmd >> 0x10) & 0xff) == 0)
-            {
-                varSet32(sv, 0, (cmd >> 8) & 0xff, sv->vidListNode->id);
-            }
-            else
-            {
-                varSet32(sv, 0, (cmd >> 8) & 0xff, (u32)sv->cloneVidListNode);
-            }
+            mcmdGetVID(sv, &lbl_803DE2E8);
             break;
         case 0x30: /* add age counter */
         {
