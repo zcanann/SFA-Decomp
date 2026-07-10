@@ -40,6 +40,7 @@ extern char sLanguageNameGerman[];
 extern char sLanguageNameItalian[];
 extern char sLanguageNameSpanish[];
 
+#pragma auto_inline off
 int isSpace(u32 c)
 {
     int result = 0;
@@ -386,7 +387,39 @@ checked:
     }
 }
 
-#pragma dont_inline on
+static inline int gameTextCtrlCharLen(u32 c)
+{
+    SpecialGlyph* p = lbl_802C86F0;
+    int i = 46;
+    while (i--)
+    {
+        if (p->key == c)
+        {
+            return p->val;
+        }
+        p++;
+    }
+    return 0;
+}
+
+static inline MeasGlyph* gameTextFindGlyph(u32 ch, int langIdx)
+{
+    MeasGlyph* g;
+    int cnt;
+
+    g = (MeasGlyph*)gameTextFonts->glyphs;
+    cnt = gameTextFonts->glyphCount;
+    while (cnt-- != 0)
+    {
+        if (g->key == ch && g->lang == langIdx)
+        {
+            return g;
+        }
+        g++;
+    }
+    return NULL;
+}
+
 #pragma ppc_unroll_speculative on
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH)
 {
@@ -454,19 +487,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         {
             int n;
             int sel;
-            SpecialGlyph* g = lbl_802C86F0;
-            n = 46;
-            while (n--)
-            {
-                if (g->key == ch)
-                {
-                    n = g->val;
-                    goto haveCount;
-                }
-                g++;
-            }
-            n = 0;
-        haveCount:
+            n = gameTextCtrlCharLen(ch);
             for (i = 0; i < n; i++)
             {
                 int b0 = ((u8*)str)[cursor++];
@@ -497,19 +518,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* found = (MeasGlyph*)gameTextFonts->glyphs;
-            int n = gameTextFonts->glyphCount;
-            while (n-- != 0)
-            {
-                if (found->key != ch || found->lang != langIdx)
-                {
-                    found++;
-                    continue;
-                }
-                goto gotGlyph;
-            }
-            found = NULL;
-        gotGlyph:
+            MeasGlyph* found = gameTextFindGlyph(ch, langIdx);
             if (found != NULL)
             {
                 int advance = (found->fC + found->f8) + found->f9;
@@ -616,7 +625,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     return buffer;
 }
 #pragma ppc_unroll_speculative off
-#pragma dont_inline reset
 
 void gameTextRenderStrs(char* str, int boxIdx)
 {
