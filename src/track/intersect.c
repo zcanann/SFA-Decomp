@@ -462,14 +462,50 @@ void drawFn_8006f500(void)
             PSMTXConcat(trans, rot, rot);
             GXLoadTexMtxImm(rot, GX_TEXMTX0, GX_MTX2x4);
             GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-            GXPosition3f32(*(f32*)(quad + 0x0), *(f32*)(quad + 0x4), *(f32*)(quad + 0x8));
-            GXTexCoord2f32(Vachuff_803DEE20, tTop);
-            GXPosition3f32(*(f32*)(quad + 0xc), *(f32*)(quad + 0x10), *(f32*)(quad + 0x14));
-            GXTexCoord2f32(lbl_803DEE38, tTop);
-            GXPosition3f32(*(f32*)(quad + 0x18), *(f32*)(quad + 0x1c), *(f32*)(quad + 0x20));
-            GXTexCoord2f32(lbl_803DEE38, tBot);
-            GXPosition3f32(*(f32*)(quad + 0x24), *(f32*)(quad + 0x28), *(f32*)(quad + 0x2c));
-            GXTexCoord2f32(Vachuff_803DEE20, tBot);
+            {
+                f32 px, py, pz;
+                pz = *(f32*)(quad + 0x8);
+                py = *(f32*)(quad + 0x4);
+                px = *(f32*)(quad + 0x0);
+                GXWGFifo.f32 = px;
+                GXWGFifo.f32 = py;
+                GXWGFifo.f32 = pz;
+            }
+            GXWGFifo.f32 = Vachuff_803DEE20;
+            GXWGFifo.f32 = tTop;
+            {
+                f32 px, py, pz;
+                pz = *(f32*)(quad + 0x14);
+                py = *(f32*)(quad + 0x10);
+                px = *(f32*)(quad + 0xc);
+                GXWGFifo.f32 = px;
+                GXWGFifo.f32 = py;
+                GXWGFifo.f32 = pz;
+            }
+            GXWGFifo.f32 = lbl_803DEE38;
+            GXWGFifo.f32 = tTop;
+            {
+                f32 px, py, pz;
+                pz = *(f32*)(quad + 0x20);
+                py = *(f32*)(quad + 0x1c);
+                px = *(f32*)(quad + 0x18);
+                GXWGFifo.f32 = px;
+                GXWGFifo.f32 = py;
+                GXWGFifo.f32 = pz;
+            }
+            GXWGFifo.f32 = lbl_803DEE38;
+            GXWGFifo.f32 = tBot;
+            {
+                f32 px, py, pz;
+                pz = *(f32*)(quad + 0x2c);
+                py = *(f32*)(quad + 0x28);
+                px = *(f32*)(quad + 0x24);
+                GXWGFifo.f32 = px;
+                GXWGFifo.f32 = py;
+                GXWGFifo.f32 = pz;
+            }
+            GXWGFifo.f32 = Vachuff_803DEE20;
+            GXWGFifo.f32 = tBot;
         }
     }
     Camera_ApplyFullViewport();
