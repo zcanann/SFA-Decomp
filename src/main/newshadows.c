@@ -2560,6 +2560,7 @@ void fn_8006CB50(void)
         fy = y - Udchuff_803DEDAC;
         for (; x < 0x100; x++)
         {
+            char* rowBase;
             char* row;
             char* addr;
             f32 fx;
@@ -2567,8 +2568,8 @@ void fn_8006CB50(void)
             f32 ny;
             f32 nx;
             f32 s;
-            row = (char*)lbl_803DCFBC + ylo;
-            row += yhi;
+            rowBase = (char*)lbl_803DCFBC + ylo;
+            row = rowBase + yhi;
             row += (x & 3) * 8;
             addr = row + (x >> 2) * 0x800;
             fx = x - Udchuff_803DEDAC;
