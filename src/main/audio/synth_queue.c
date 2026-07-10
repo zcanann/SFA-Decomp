@@ -454,13 +454,13 @@ done:
         {
             gSynthAllocatedVoices->prev = voice;
         }
-        voice->prev = 0;
+        voice->prev = (SynthVoice*)(i = 0);
         gSynthAllocatedVoices = voice;
         voice->state = SYNTH_VOICE_STATE_ALLOCATED;
 
         {
             base = voice;
-            for (i = 0; i < 2; i++)
+            for (; i < 2; i++)
             {
                 cb = base->callbackLists[0];
                 while (cb != 0)
@@ -501,6 +501,7 @@ void synthFreeHandle(u32 handle)
     SynthSeqRuntime* runtime;
     u32 found;
     u32 i;
+    u8* row;
 
     runtime = &lbl_803AF550;
 
@@ -535,8 +536,9 @@ done:
 
     if ((found & 0x80000000) == 0)
     {
-        voice = &runtime->voices[found];
-        switch (runtime->voices[found].state)
+        row = (u8*)runtime + found * 6248;
+        voice = (SynthVoice*)(row + 0x1400);
+        switch (((SynthVoice*)(row + 0x1400))->state)
         {
         case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
