@@ -547,6 +547,20 @@ void fn_8026E90C(u8 voice)
 }
 
 #pragma fp_contract off
+static inline f32 seq_fmod(f32 x, f32 y)
+{
+    f32 ay;
+    f32 ax;
+
+    ay = __fabsf(y);
+    ax = __fabsf(x);
+    if (ay > ax)
+    {
+        return x;
+    }
+    return x - y * (f32)(s64)(u64)(x / y);
+}
+
 int fn_8026E9D0(u8 voice, u32 param)
 {
     SeqQueue* vp;
@@ -556,7 +570,6 @@ int fn_8026E9D0(u8 voice, u32 param)
     int res;
     f32 ftotal;
     f32 fm;
-    f64 k88abs;
     f32 k88;
     f32 k84;
     f32 k80;
@@ -564,7 +577,6 @@ int fn_8026E9D0(u8 voice, u32 param)
 
     flag = 0;
     k88 = lbl_803E7788;
-    k88abs = __fabs(k88);
     k80 = lbl_803E7780;
     k84 = lbl_803E7784;
     vp = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
@@ -589,17 +601,8 @@ int fn_8026E9D0(u8 voice, u32 param)
                 *(int*)(gSynthCurrentVoice + voice * 56 + 0x14ec) = *(int*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
                 fn_8026CF78(voice);
                 vp2 = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-                fm = (f32)vp2->bpm * param;
-                fm = k80 * fm;
-                fm = fm * (k84 * (f32)vp2->speed);
-                ftotal = k88 * fm;
-                if (k88abs > __fabs(ftotal))
-                {
-                }
-                else
-                {
-                    ftotal -= k88 * (f32)(s64)(u64)(ftotal / k88);
-                }
+                fm = (k80 * ((f32)vp2->bpm * param)) * (k84 * (f32)vp2->speed);
+                ftotal = seq_fmod(k88 * fm, k88);
                 vp2->scratch[vp2->timeIndex].low = ftotal;
                 vp2->scratch[vp2->timeIndex].high = (int)floorf(fm);
             }
