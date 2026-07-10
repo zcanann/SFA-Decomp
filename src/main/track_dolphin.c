@@ -3012,8 +3012,9 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 
 u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, void* results)
 {
-    void** pp;
+    int lim;
     f32* fp;
+    void** pp;
     s16 i;
     u8 hitCount;
     TrackBlockDescriptor* tbl = gTrackBlockDescriptors;
@@ -3025,7 +3026,7 @@ u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, v
     i = 0;
     if (count > 0)
     {
-        int lim = count - 8;
+        lim = count - 8;
         if (count > 8)
         {
             f32 b, a;
