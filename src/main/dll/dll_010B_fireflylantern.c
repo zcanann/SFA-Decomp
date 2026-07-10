@@ -14,6 +14,7 @@
 #define FIREFLYLANTERN_CHILD_OBJ_FIREFLY 1084
 
 extern f32 lbl_803E3AF0;
+extern const f32 lbl_803E3AEC;
 extern f32 lbl_803E3AE8;
 
 extern int gameBitDecrement(int bit);
@@ -83,7 +84,7 @@ int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
     {
         child = (void*)state->fireflies[i];
         (*(void (*)(void*, f32, f32, f32))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x28)))(
-            child, obj->anim.localPosX, 5.0f + obj->anim.localPosY, obj->anim.localPosZ);
+            child, obj->anim.localPosX, lbl_803E3AEC + obj->anim.localPosY, obj->anim.localPosZ);
         i++;
     }
 
