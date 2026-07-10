@@ -51,7 +51,7 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
     {
         VB_PRIO_LINK(vb, VB_PRIO_HEAD(vb, prio))->prev = voiceIdx;
     }
-    else if ((root = voicePrioSortRootListRoot) != 0xFFFF)
+    else if (root = voicePrioSortRootListRoot, root != 0xFFFF)
     {
         if (prio >= root)
         {
