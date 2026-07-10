@@ -923,9 +923,9 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
     if (lbl_803DCC48 == 1)
     {
         char* c2 = getCache();
-        int i;
-        char* dst;
         char* src;
+        char* dst;
+        int i;
         obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
         src = c2 + 0x2700;
         dst = c2;
@@ -944,8 +944,8 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         int count;
         f32 tmp[12];
         {
-            int pos = bs->pos;
             u32 w;
+            int pos = bs->pos;
             int off = pos >> 3;
             u8* p;
             w = bs->data[off];
@@ -962,9 +962,9 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
             int idx;
             {
                 int off;
-                u8* p;
-                int pos = bs->pos;
                 u32 w;
+                int pos = bs->pos;
+                u8* p;
                 off = pos >> 3;
                 p = (u8*)(off + bs->data);
                 w = p[0];
