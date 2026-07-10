@@ -65,13 +65,14 @@ extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 int drshackle_updateSwingBlend(int obj, int state)
 {
     ShackleSwingState* s = (ShackleSwingState*)state;
+    GameObject* o = (GameObject*)obj;
     int hitResult;
     int yawDelta;
     f32 fade;
 
     {
-        f32 dx = ((GameObject*)obj)->anim.localPosX;
-        f32 dz = ((GameObject*)obj)->anim.localPosZ;
+        f32 dx = o->anim.localPosX;
+        f32 dz = o->anim.localPosZ;
         dx = dx - s->anchorX;
         dz = dz - s->anchorZ;
         fade = lbl_803E5B68 - sqrtf(dx * dx + dz * dz);
@@ -100,8 +101,8 @@ int drshackle_updateSwingBlend(int obj, int state)
         return 0;
     }
 
-    yawDelta = (s32)(u16)getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
-                                  ((GameObject*)obj)->anim.localPosZ - s->anchorZ) -
+    yawDelta = (s32)(u16)getAngle(o->anim.localPosX - s->anchorX,
+                                  o->anim.localPosZ - s->anchorZ) -
                (s32)(u16)s->yaw;
     if (0x8000 < yawDelta)
     {
@@ -132,7 +133,7 @@ int drshackle_updateSwingBlend(int obj, int state)
     }
 
     {
-        f32 ang = fn_801EA678((GameObject*)(obj), state);
+        f32 ang = fn_801EA678(o, state);
         ang = -ang;
         if (s->lastPitch < ang || yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
