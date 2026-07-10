@@ -229,10 +229,11 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     }
     rampResetOffsetFlags[0] = 0;
     frameCycles = __OSBusClock / 400;
-    for (st = 0, stp = &dspStudio[0]; st < salMaxStudioNum; st++, stp++)
+    for (st = 0; st < salMaxStudioNum; st++)
     {
-        if (stp->state == 1)
+        if (msp[st].state == 1)
         {
+            stp = &msp[st];
             for (dsp_vptr = stp->voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
             {
                 next_dsp_vptr = dsp_vptr->next;
