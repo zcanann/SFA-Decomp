@@ -1072,11 +1072,12 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
     if (((GpbConfigFlags*)&state->configFlags)->returnHome != 0)
     {
         int i;
-        GunpowderbarrelPlacement* params = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
-        int target = 0;
         u32* barrels;
+        int target;
+        GunpowderbarrelPlacement* params = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
         u32* p;
         int count;
+        target = 0;
         if (params->generatorLinkId != 0)
         {
             barrels = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
