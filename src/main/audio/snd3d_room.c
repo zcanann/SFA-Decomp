@@ -261,11 +261,20 @@ void s3dUpdateRoomDistances(void)
 void s3dAllocateRoomStudios(void)
 {
     SndSpatialListener* listener;
-    u32 listenerCount;
+    Snd3DEmitter* voice;
+    SndSpatialEntry* scanEntry;
+    SndSpatialEntry* evictedEntry;
     SndSpatialEntry* entry;
+    struct
+    {
+        f32 x, y, z;
+    } d;
     f32 distanceSq;
-    f64 fadeThreshold;
-    f32 fadeScale;
+    f32 worstDistance;
+    u32 listenerCount;
+    u32 i;
+    u32 mask;
+    u8 listenerOwned;
 
     s3dUpdateRoomDistances();
 
@@ -277,20 +286,10 @@ void s3dAllocateRoomStudios(void)
 
     if (listenerCount != 0)
     {
-        fadeScale = gSnd3dRoomFadeFixedToFloat;
-        fadeThreshold = lbl_803E7898;
         for (entry = s3dRoomRoot; entry != NULL; entry = entry->next)
         {
             if (entry->assignedVoice == 0xff)
             {
-                SndSpatialEntry* evictedEntry;
-                u32 studioCount;
-                u8 listenerOwned;
-                struct
-                {
-                    f32 x, y, z;
-                } d;
-
                 distanceSq = lbl_803E7880;
                 for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
                 {
@@ -311,12 +310,10 @@ void s3dAllocateRoomStudios(void)
                     }
                 }
 
-                studioCount = snd_max_studios;
-                if (~(-1 << studioCount) != (~(-1 << studioCount) & snd_used_studios))
+                mask = ~(-1 << snd_max_studios);
+                if (mask != (snd_used_studios & mask))
                 {
-                    int i;
-
-                    for (i = 0; i < studioCount; i++)
+                    for (i = 0; i < snd_max_studios; i++)
                     {
                         if ((snd_used_studios & (1 << i)) == 0)
                         {
@@ -324,13 +321,11 @@ void s3dAllocateRoomStudios(void)
                         }
                     }
                     snd_used_studios |= 1 << i;
-                    entry->assignedVoice = (u8)(i + snd_base_studio);
+                    entry->assignedVoice = i + snd_base_studio;
                 }
                 else
                 {
-                    f32 worstDistance = lbl_803E7890;
-                    Snd3DEmitter* voice;
-                    SndSpatialEntry* scanEntry;
+                    worstDistance = lbl_803E7890;
 
                     for (scanEntry = s3dRoomRoot; scanEntry != NULL; scanEntry = scanEntry->next)
                     {
@@ -365,7 +360,7 @@ void s3dAllocateRoomStudios(void)
 
                 entry->averageDistanceSq = distanceSq;
                 entry->fade = listenerOwned ? 0x7f0000 : 0;
-                if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
+                if ((f32)(1.2014794e-07f * entry->fade) >= 0.5)
                 {
                     synthActivateStudio(entry->assignedVoice, 1, 0);
                 }
@@ -388,7 +383,7 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0x7f0000;
                         entry->flags &= ~S3D_ENTRY_FADE_IN;
                     }
-                    if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
+                    if ((f32)(1.2014794e-07f * entry->fade) >= 0.5)
                     {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
                     }
@@ -405,7 +400,7 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0;
                         entry->flags &= ~S3D_ENTRY_FADE_OUT;
                     }
-                    if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
+                    if ((f32)(1.2014794e-07f * entry->fade) >= 0.5)
                     {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
                     }
