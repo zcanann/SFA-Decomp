@@ -2225,8 +2225,12 @@ void mapLoadUnloadObjects(int flag)
                             else
                             {
                                 vis = 1;
-                                if (((vis << (bit & 7)) & *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
+                                switch ((vis << (bit & 7)) & *(s8*)(*(int*)(pg2 + 0x10) + idx))
+                                {
+                                case 0:
                                     vis = 0;
+                                    break;
+                                }
                             }
                         }
                         if (vis == 0 && objShouldLoad(cur, lp, mid2) != 0)
