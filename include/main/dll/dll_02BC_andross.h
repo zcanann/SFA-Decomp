@@ -4,18 +4,20 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+typedef struct GameObject GameObject;
+
 /*
  * AndrossState - andross.c's obj+0xB8 extra record (andross_getExtraSize =
  * 0xEC). Field widths mirror the deref widths observed in andross.c;
  * unobserved ranges are padded.
  */
 typedef struct AndrossState {
-    int arwingObj;
-    int handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
-    int handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
-    int lightAnchorObj;
+    GameObject* arwingObj;
+    GameObject* handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
+    GameObject* handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
+    GameObject* lightAnchorObj;
     int effectHandle;
-    int spawnedObj; /* handle of a spawned laser/projectile object (also read as its Z pos) */
+    GameObject* spawnedObj;
     /*
      * 0x18..0x58 is genuinely a pair of per-spawn arrays on the Andross state
      * itself: four spawned-object handles followed by four position-delta
@@ -27,7 +29,7 @@ typedef struct AndrossState {
      */
     union {
         struct {
-            int spawnObj[4];      /* 0x18: ObjList_FindObjectById(gAndrossSpawnObjectIds[i]) */
+            GameObject* spawnObj[4]; /* 0x18: ObjList_FindObjectById(gAndrossSpawnObjectIds[i]) */
             SunVec3 spawnDelta[4]; /* 0x28: spawnObj[i] world pos - Andross local pos */
         };
         struct {
@@ -76,7 +78,13 @@ typedef struct AndrossState {
     u8 hitReactionFlag; /* 0xB5: set externally on damage; nonzero -> hurt/stagger action state */
     u8 startupDelay; /* 0xB6: init to 5; update decrements and returns early until it hits 0 (spawn settle) */
     u8 attackCycleCount; /* 0xB7: repeat counter; phase advances after 3 attack cycles */
-    int seqQueryObj; /* object handle queried via animatedObjGetSeqId */
+    union {
+        int seqQueryObj;
+        struct {
+            u8 arwingFlightActive;
+            u8 unkB9[3];
+        };
+    };
     u8 handsInitialized; /* 0xBC: 1 at init; first phase-1 entry clears it and skips the hand reset */
     u8 unkBD[0xC0 - 0xBD];
     f32 cachedPosX;
