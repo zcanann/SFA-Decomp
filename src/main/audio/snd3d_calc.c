@@ -240,8 +240,14 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     handle = emitter->handle;
     if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
     {
-        synthFXSetCtrl(handle, S3D_CTRL_VOLUME,
-                       S3D_CLAMP_7BIT((u32)(int)(lbl_803E78A0 * (emitter->age * distance))));
+        {
+            u32 v = (u32)(int)(lbl_803E78A0 * (emitter->age * distance));
+            if ((v & 0xff) > 0x7f)
+            {
+                v = 0x7f;
+            }
+            synthFXSetCtrl(handle, S3D_CTRL_VOLUME, v);
+        }
     }
     else
     {
