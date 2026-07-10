@@ -4,6 +4,8 @@
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/vidlisttables.h"
 
+#pragma exceptions on
+
 typedef struct AllocVoice
 {
     u8 pad000[0x100];
