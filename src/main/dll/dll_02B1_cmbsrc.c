@@ -288,7 +288,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         f32 fullRadius = lbl_803E7374 * setup->radius;
         f32 radiusScaled;
         sourceState->radius += interpolate(sourceState->hitCharge / lbl_803E7378 *
-                                                   (fullRadius - (radiusScaled = setup->radius * lbl_803E737C)) +
+                                                   (fullRadius - (radiusScaled = lbl_803E737C * setup->radius)) +
                                                radiusScaled - sourceState->radius,
                                            lbl_803E7380, timeDelta);
     }
@@ -365,7 +365,7 @@ void cmbsrc_updateVisuals(int obj, int state)
             {
                 if (sourceState->pulseTimer <= lbl_803E7360)
                 {
-                    if (setup->pulseSubMode < CMBSRC_SUBMODE_COUNT)
+                    if (CMBSRC_SUBMODE_COUNT > setup->pulseSubMode)
                     {
                         if (dist <= (f32)(u32)(setup->pulseDistance << 3))
                         {
