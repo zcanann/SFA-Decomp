@@ -328,32 +328,32 @@ char* gameStrcpy(char* dst, char* src)
     return dst - 1;
 }
 
-void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+static inline int gameTextIdExists(int id)
 {
     GlyphEntry* e;
-    GameTextFont* font = gameTextFonts;
-    int found;
-    if (font->mode != 2)
+    int count;
+    int i;
+
+    if (gameTextFonts->mode != 2)
     {
-        found = 0;
+        return 0;
     }
-    else
+    e = gameTextFonts->entries;
+    count = gameTextFonts->count;
+    for (i = 0; i != count; i++)
     {
-        int count = font->count;
-        int i;
-        e = font->entries;
-        for (i = 0; i != count; i++)
+        if (e->id == id)
         {
-            if (e->id == id)
-            {
-                found = 1;
-                goto checked;
-            }
-            e++;
+            return 1;
         }
-        found = 0;
+        e++;
     }
-checked:
+    return 0;
+}
+
+void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    int found = gameTextIdExists(id);
     if (!found)
     {
         *outMaxX = 0;
