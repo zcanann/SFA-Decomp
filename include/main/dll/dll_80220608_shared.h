@@ -586,7 +586,7 @@ extern s16 gVortexAngleSpeed83D[4];
 extern s16 gVortexAngleSpeedDefault[4];
 extern s16 gVortexAngleSpeed835[2];
 extern s16 gVortexRotZTable[2];
-extern f32 gVortexScaleParams[];
+extern f32 gVortexScaleParams[4][3];
 extern f32 gVortexRadiusScaleInit[2];
 extern f32 gVortexAlphaScaleInit835[2];
 extern f32 gVortexAlphaScaleInit838[2];
