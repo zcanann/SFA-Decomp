@@ -913,8 +913,9 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
     int result;
     int j;
     int found;
-    u8 slotVal;
     int eventIdx;
+    u8 eventId;
+    u8 slotVal;
     int slot;
 
     i = 0;
@@ -1032,12 +1033,13 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 switch (subId)
                 {
                 case 0:
-                    ((ObjSeqState*)seq)->unk80 = top16;
+                    eventId = top16;
+                    ((ObjSeqState*)seq)->unk80 = eventId;
                     eventIdx = ((ObjSeqState*)seq)->eventCount;
                     if ((u32)eventIdx < 10)
                     {
                         ((ObjSeqState*)seq)->eventCount += 1;
-                        ((ObjSeqState*)seq)->eventIds[eventIdx] = top16;
+                        ((ObjSeqState*)seq)->eventIds[eventIdx] = eventId;
                     }
                     break;
                 case 1:
