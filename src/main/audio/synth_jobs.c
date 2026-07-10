@@ -36,6 +36,7 @@ extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback
 extern void hwInitSamplePlayback(u32 voice, u32 keyInfo, SynthSampleInfo* sample, u32 a, s32 b, u32 voiceId, u32 c,
                                  u32 d);
 extern void hwSetPitch(u32 voice, s32 pitch);
+extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 extern void hwStart(u32 voice, u8 studio);
 extern void hwSetStreamLoopPS(u32 voice, u32 ps);
 
@@ -82,8 +83,8 @@ void synthUpdateJobTable(void)
                                  *(u32*)(synthVoice + si->voice * SYNTH_VOICE_STRIDE + 0xF4), 1, 1);
             f = (f32)si->frq / (f32) * (u32*)lbl_803BD150;
             hwSetPitch(si->voice, f * 4096.0f);
-            hwSetVolume(si->voice, 0, si->volume * (1 / 127.0f), si->leftVolume * (1 / 127.0f),
-                        si->rightVolume * (1 / 127.0f), si->pan << 16, si->surroundPan << 16);
+            hwSetVolume(si->voice, 0, si->volume * (1 / 127.0f), si->pan << 16, si->surroundPan << 16,
+                        si->leftVolume * (1 / 127.0f), si->rightVolume * (1 / 127.0f));
             hwStart(si->voice, si->studio);
             si->state = SYNTH_JOB_STATE_PLAYING;
             if (!(si->flags & 0x20000))
@@ -327,8 +328,8 @@ void synthRefreshJobVolumes(void)
             if (synthJobTable[i].state != SYNTH_JOB_STATE_DONE)
             {
                 hwSetVolume(synthJobTable[i].voice, 0, volumeScale * synthJobTable[i].volume,
-                            volumeScale * synthJobTable[i].leftVolume, volumeScale * synthJobTable[i].rightVolume,
-                            synthJobTable[i].pan << 0x10, synthJobTable[i].surroundPan << 0x10);
+                            synthJobTable[i].pan << 0x10, synthJobTable[i].surroundPan << 0x10,
+                            volumeScale * synthJobTable[i].leftVolume, volumeScale * synthJobTable[i].rightVolume);
             }
         }
     }
