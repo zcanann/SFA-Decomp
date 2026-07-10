@@ -576,11 +576,15 @@ int fn_8026E9D0(u8 voice, u32 param)
             vp->time[vp->timeIndex].high =
                 ((SeqArrBase*)((SynthMidiState*)gSynthCurrentVoice)->seqData)->loopPoint[voice];
             vp->time[vp->timeIndex].low = vp->time[vp->timeIndex ^ 1].low;
-            if (*(void**)(gSynthCurrentVoice + voice * 56 + 0x14e8) != NULL)
             {
-                *(int*)(gSynthCurrentVoice + voice * 56 + 0x14ec) = *(int*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-                fn_8026CF78(voice);
-                seqSetTickDelta((SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8), param);
+                u8* voiceState = (u8*)(voice * 56);
+                voiceState += gSynthCurrentVoice;
+                if (*(void**)(voiceState + 0x14e8) != NULL)
+                {
+                    *(int*)(voiceState + 0x14ec) = *(int*)(voiceState + 0x14e8);
+                    fn_8026CF78(voice);
+                    seqSetTickDelta((SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8), param);
+                }
             }
             vp->loopCount += 1;
             fn_8026E90C(voice);
