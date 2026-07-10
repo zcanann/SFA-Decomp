@@ -103,3 +103,33 @@ Additional verified-but-parked reconstructions (register-rotation gated):
   conversions) must be created before the while-loop's times load (idx 34);
   creation point is constant-pool materialization, not statement order —
   needs the vreg-numbering disasm (IroLinearForm band).
+
+## audio.c trio findings (2026-07-10, main/audio holdouts — negative map + one landing)
+Sfx_UpdateLoopedObjectSounds 98.38→99.35 (committed 859e13ff08) via two levers:
+- loop-2 counter must be a FRESH `s16 i2` (reusing loop-1's `i` keeps its r26 home
+  by affinity; fresh counter+ip2+op2 take r25/r26/r27 in creation order).
+- `(u16)i` spellings on the memmove arg1s + size subtractions (keeping the named
+  `index` ONLY at its embedded def + one index2 use) drop the index web's priority
+  two slots — tree-level ref weight is real and per-use (V24 3-ref cut inert,
+  V25 full cut moved it). Full un-naming breaks the cross-call CSE (recompute per
+  statement); the embedded def `(index = (u16)i)` is the sz-first eval anchor
+  (standalone def reorders count reload, −8pts).
+  RESIDUAL (fp r27↔index r30 adjacent swap): index def-node respellings
+  ((u16)(u32), i&0xFFFF) break VN-merge with the (u16)i uses (−9pts); fp[0]/&flags[i]
+  spellings, decl permutations, block re-decls, dead index=0 seed, O1/O2/O3,
+  loop_invariants/strength off — ALL inert. Park/pop-interleave class.
+Sfx_UpdateObjectChannel3D 99.01: 3-web rotation (param objCh r31→r29, slot r30→r31,
+  spilled `level` reloads). #126 u32-param retype INERT (13 cast-noise derefs keep
+  it top); same-type copy + void*+cast local both propagate away (index unchanged);
+  named handle web in keyoff arm folds into arg (no web). Param web index is
+  usage-bound-appended (top) in our build; target has it below ALL locals —
+  spill-round interleave class (level spills in both).
+Music_Update 99.60: single ch(r21T/r22C)↔i(r22T/r21C) adjacent swap ×27 regions.
+  `int i;` decl before `ch` surfaces the target's `addi r0,lo; mr rX,r0` init shape
+  (separate addr-temp web!) but does NOT flip the pair (50 pure-swap regions,
+  99.13 — structurally closer per the fn_801B3DE4 lesson; % hides it). ch2 split
+  (middle loop) −1.4; block-scoped ch −1.2; fresh j middle counter inert;
+  opt_lifetimes off −2.0. Hypothesis: ch parks (nadj≥30), i doesn't; target needs
+  i parked too or ch unparked — needs the live tracer to see nadj values.
+=> All three = the parked pop-interleave family. Next unlock: lldb port of
+select_dump.gdb (gdb absent on this host) to read nadj/web indices live.
