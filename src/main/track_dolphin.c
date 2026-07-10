@@ -4866,17 +4866,22 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     int si16;
     int si2;
     s16* hitp;
-    int start, end;
-    int vt, vp;
-    u32 lineIdx;
-    int flag1;
-    int flag2;
+    int start;
+    f32* fracp;
     int flag4;
-    int count, found;
-    f32 *fracp, *distp;
-    int mask;
+    s16* ep;
+    u8* rp;
+    f32* distp;
+    s8 mask;
     int i;
+    int found;
+    int count;
+    int end;
+    u32 lineIdx;
+    int vt, vp;
     s8 lineType;
+    s8 flag1;
+    s8 flag2;
     f32 dist;
     f32 len, ax2, ay2, az2, bx2, by2, bz2, dx, dz;
     f32 minX, maxX, minZ, maxZ;
@@ -4907,9 +4912,10 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         if ((s8)seg != -1)
         {
             int idx = (s8)seg * 2;
-            u16* segtbl = (u16*)gIntersectSegmentTypeTable;
-            start = segtbl[idx];
-            end = segtbl[idx + 1];
+            int off = idx * 2;
+            u8* segtbl = (u8*)gIntersectSegmentTypeTable;
+            start = *(u16*)(segtbl + off);
+            end = *(u16*)(segtbl + off + 2);
         }
         else
         {
@@ -4921,8 +4927,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         vp = (int)lbl_803DCF38;
     }
 
-    flag1 = (s8) !(flags & 1);
-    flag2 = (s8)(flags & 2);
+    flag1 = !(flags & 1);
+    flag2 = flags & 2;
     flag4 = flags & 4;
 
     {
@@ -4968,22 +4974,19 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     hitp = hits;
     fracp = fracs;
     distp = dists;
-    mask = (s8)pmask;
+    mask = pmask;
     si2 = start << 1;
     si16 = start << 4;
 
     while (found)
     {
-        s16* ep;
-        u8* rp;
         found = 0;
-        for (i = start, ep = (s16*)(lineIdx + si2), rp = (u8*)(vt + si16); i < end; i++, ep++, rp += 0x10)
+        for (i = start, ep = (s16*)(lineIdx + si2), rp = (u8*)(vt + si16); i < end; ep++, rp += 0x10, i++)
         {
             u8* rec;
             int i0, i1;
             f32 *va, *vb;
             f32 ha, ylo, hb, yhi;
-            int mi;
 
             dist = lbl_803DECD0;
             if (lineIdx != 0)
@@ -5056,7 +5059,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
 
             dx = bx2 - ax2;
             dz = bz2 - az2;
-            if (__AR_Callback == dx * dx + dz * dz)
+            if (dx * dx + dz * dz == __AR_Callback)
                 continue;
             len = sqrtf(dx * dx + dz * dz);
             dx = dx / len;
@@ -5085,39 +5088,49 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             lbl_803DCF50 = lbl_803DECD4 * (-dx * radius);
 
             {
-                s16* mp = m;
-                f32* zp = posZ;
-                f32* xp = posX;
-                for (mi = 0; mi < 2; mi++)
+                s16* mp;
+                f32* zp;
+                f32* xp;
+                int mi;
+                int n;
+                f32 zero;
+                mi = 0;
+                mp = m;
+                zp = posZ;
+                xp = posX;
+                zero = __AR_Callback;
+                do
                 {
                     s16 mb = 1;
                     f32 pz, px;
                     f32 *ap, *bp, *dp;
-                    int n;
                     *mp = 0;
+                    n = 0;
                     pz = zp[0];
                     px = xp[0];
                     ap = la;
                     bp = lb;
                     dp = ld;
-                    for (n = 0; n < 2; n++)
+                    do
                     {
-                        if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback)
+                        if (dp[0] + (px * bp[0] + pz * ap[0]) < zero)
                             *mp |= mb;
                         mb = (s16)(mb << 1);
-                        if (dp[1] + (px * bp[1] + pz * ap[1]) < __AR_Callback)
+                        if (dp[1] + (px * bp[1] + pz * ap[1]) < zero)
                             *mp |= mb;
                         mb = (s16)(mb << 1);
                         ap += 2;
                         bp += 2;
                         dp += 2;
-                    }
+                        n++;
+                    } while (n < 2);
                     xp[0] = px;
                     zp[0] = pz;
                     mp++;
                     zp++;
                     xp++;
-                }
+                    mi++;
+                } while (mi < 2);
             }
             {
                 s16 mx = m[0] ^ m[1];
