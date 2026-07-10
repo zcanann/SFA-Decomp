@@ -83,6 +83,7 @@ void bossdrakor_update(int obj)
     f32 t;
     s16 d;
     int step;
+    s16 curRot;
     s16* vec;
     s8 buf[0x1c];
     f32 hz;
@@ -131,15 +132,17 @@ void bossdrakor_update(int obj)
             modelLightStruct_setGlowProjectionRadius(((BossDrakorState*)state)->lightObj, lbl_803E6550);
         }
     }
-    moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(((BossDrakorState*)state)->curveIndex, lbl_803E6568,
-                                                         lbl_803E6520, obj, (void*)((char*)state + 0x28), 1,
-                                                         &((BossDrakorState*)state)->curveFollowState);
+    moveResult = ((int (*)(int, void*, f32, f32, f32, int, void*))Obj_UpdateRomCurveFollowVelocityIndexed)(
+        obj, (void*)((char*)state + 0x28), ((BossDrakorState*)state)->curveIndex, lbl_803E6568, lbl_803E6520, 1,
+        &((BossDrakorState*)state)->curveFollowState);
     if (((DrakorFlags*)((char*)state + 0x198))->b40)
     {
         player = (int)Obj_GetPlayerObject();
         if ((void*)player != NULL)
         {
-            step = (s16)Obj_GetYawDeltaToObject(obj, player, 0);
+            step = Obj_GetYawDeltaToObject(obj, player, 0);
+            curRot = ((GameObject*)obj)->anim.rotX;
+            step = (s16)step;
             if (step < -0x200)
             {
                 step = -0x200;
@@ -148,7 +151,7 @@ void bossdrakor_update(int obj)
             {
                 step = 0x200;
             }
-            ((GameObject*)obj)->anim.rotX += (s16)step;
+            ((GameObject*)obj)->anim.rotX = curRot + (s16)step;
             step = ((GameObject*)obj)->anim.rotY;
             if (step != 0)
             {
