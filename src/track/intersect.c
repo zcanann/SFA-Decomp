@@ -503,6 +503,7 @@ typedef struct
     SplashQuad quads[0x100];
 } WaterFxState;
 
+#pragma opt_common_subs off
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
 {
     extern f32 gWaterFxState[];
@@ -512,8 +513,8 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
     extern int fn_80065768(u8 * obj, f32 x, f32 y, f32 z, f32 * outY, Vec * outNorm, int flag);
 
     WaterFxState* base;
-    f32 ax, px;
     f32 x, y, z;
+    f32 ax, px;
     f32 ay, py, az, pz;
     f32 xm, ym, zm;
     f32 groundY;
@@ -603,6 +604,7 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
     }
 }
 
+#pragma opt_common_subs reset
 void fn_8006FC00(int enable)
 {
     int i;
