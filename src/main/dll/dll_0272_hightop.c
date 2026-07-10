@@ -1012,7 +1012,7 @@ int hightop_stateHandler02(int obj, int stateArg, f32 dt)
     {
         absd = -d336;
     }
-    if (absd > state->turnRateThreshold)
+    if (*(volatile s16*)&state->turnRateThreshold < absd)
     {
         conv = (int)(gHighTopDegToAngle * ((f32)d336 * dt));
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + ((s16)conv >> 5));
