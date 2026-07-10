@@ -55,6 +55,21 @@ highest indices in the next Build/Simplify/Select iteration. Named locals keep
 their decl-descending indices below them. So a split web always sits at the
 index extreme, which is why no decl reorder can move a residue caused by one
 (crrockfall idx62, invhit idx86, the playerState1D prev/tbl r30/r31 pair).
+## DECODED (2026-07-10): park threshold + saved-reg grant order (traced live)
+Validated on DIMSnowHorn1_update and ktrex_update (both now 100 without
+opt_lifetimes):
+- GPR park threshold is STATIC: a web parks iff nadj >= 30.
+- The FALLBACK path reserves new saved registers r31-DESCENDING (one per pop).
+- The normal Select path grants a web the LOWEST-numbered already-reserved
+  saved register free of interference.
+- Consequence + lever: a web sitting just under the park threshold (e.g.
+  nadj=29) colors late and loses its retail register to a later-created temp.
+  Adding exactly one interfering web pushes it over the threshold and restores
+  the retail order. Plausible sources for that web: an inlined static helper's
+  return-value copy (DIMSnowHorn1_angleTo), a select temp from a ternary, or a
+  shared named local with register uses (hudDrawCMenu's zero). Zero extra
+  instructions in all three forms.
+
 What remains undecoded is only the *pop interleaving* of these appended webs
 across multiple spill rounds — needs the live tracer (gdb absent on this host;
 port select_dump.gdb to lldb/Rosetta to continue).
