@@ -9,6 +9,12 @@ typedef struct AramStreamBufferEntry
     u32 state;
 } AramStreamBufferEntry;
 
+typedef struct AramStreamBufferTable
+{
+    AramStreamBufferEntry entries[65];
+    u8 reserved[8];
+} AramStreamBufferTable;
+
 extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
@@ -18,7 +24,7 @@ extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;
 extern AramStreamBufferEntry* aramStreamFreeList;
-extern AramStreamBufferEntry lbl_803D4468[];
+extern AramStreamBufferTable lbl_803D4468;
 
 /*
  * Allocate+DMA: copies `size` bytes from `src` into the audio
@@ -101,9 +107,9 @@ u32 aramGetStreamBufferAddress(u8 idx, u32* outPos)
 {
     if (outPos != NULL)
     {
-        *outPos = lbl_803D4468[idx].position;
+        *outPos = lbl_803D4468.entries[idx].position;
     }
-    return lbl_803D4468[idx].address;
+    return lbl_803D4468.entries[idx].address;
 }
 
-AramStreamBufferEntry lbl_803D4468[0x418 / sizeof(AramStreamBufferEntry)];
+AramStreamBufferTable lbl_803D4468;
