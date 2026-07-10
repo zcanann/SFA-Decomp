@@ -251,7 +251,7 @@ void varSet32(McmdVoiceState* state, u32 useExCtrl, u32 index, u32 value)
 }
 #pragma dont_inline reset
 
-static inline void varSet(McmdVoiceState* state, u32 useExCtrl, u32 index, s16 value)
+static inline void varSet(McmdVoiceState* state, u8 useExCtrl, u8 index, s16 value)
 {
     varSet32(state, useExCtrl, index, value);
 }
@@ -265,7 +265,7 @@ void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
     s16 s2;
     s32 t;
 
-    s1 = varGetSigned(state, args->flags >> 0x18, (u8)args->value);
+    s1 = varGetSigned(state, (u8)(args->flags >> 0x18), args->value);
     if (op == 4)
     {
         s2 = args->value >> 8;
@@ -292,8 +292,11 @@ void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
         break;
     }
 
-    varSet(state, (u8)(args->flags >> 8), (u8)(args->flags >> 0x10),
-           (s16)(t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
+    {
+        u8 ctrl = args->flags >> 8;
+        u8 index = args->flags >> 0x10;
+        varSet(state, ctrl, index, (t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
+    }
 }
 
 /*
