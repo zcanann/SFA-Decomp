@@ -44,11 +44,20 @@ typedef struct
     u8 pad13[3];
 } SeqEntry;
 
+typedef struct
+{
+    u8 pad00[0x14];
+    u8* hitEntries;
+    u8 pad18[4];
+    u8* sequenceEntries;
+    u8 pad20[8];
+} GroundBaddieSequenceTable;
+
 /* Routines live in sibling baddie/seq TUs (fn_8014*, getAngle, math*,
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
 
-extern void fn_8014D08C(int obj, u8* state, int a, f32 f, int b, int c);
+extern void fn_8014D08C(int obj, int state, int a, f32 f, int b, int c);
 extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
@@ -125,7 +134,7 @@ void fn_801511E8(int obj, u8* state)
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
+    fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
         (ObjAnimComponent*)obj,
         *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
@@ -195,7 +204,7 @@ void fn_801513AC(int obj, u8* state)
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
+    fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
         (ObjAnimComponent*)obj,
         *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
@@ -214,13 +223,12 @@ void fn_8015165C(int obj, u8* state)
     u8 t;
     f32 tv;
     f32 fz;
-    char* base;
+    GroundBaddieSequenceTable* table;
 
-    base = lbl_8031F16C;
+    table = (GroundBaddieSequenceTable*)lbl_8031F16C;
     t = state[0x33b];
-    base += t * 40;
-    p20 = *(u8**)(base + 20);
-    p28 = *(u8**)(base + 28);
+    p20 = table[t].hitEntries;
+    p28 = table[t].sequenceEntries;
     if (t == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
     {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
@@ -255,18 +263,9 @@ void fn_8015165C(int obj, u8* state)
                     u8* p28c = p28 + 12;
                     *(u8*)(state + 0x2f2) = (u8) * (u32*)(p28c + *(u16*)(state + 0x338) * 16);
                 }
-                /* NOTE(match): retail asm reads the LAST arg as (u8) of the u32
-                   mask word at +4 (lwz 4(rP); clrlwi = mask & 0xff, i.e. byte +7),
-                   while this line loads the byte at +4 (lbz) — a real semantic
-                   divergence kept only because every correct-width spelling tried
-                   so far scores lower: `(u8)((SeqEntry*)p28)[idx].mask` (with anim
-                   also via [idx] and speed via *(f32*)(p28+idx*16)) reproduces
-                   lwz+clrlwi/lfsx exactly but hoists the shared `add` above the
-                   two arg `mr`s (98.84 vs 99.05). Fix the transposition (and the
-                   prologue addi r0/mulli r3 coloring) before re-spelling this. */
-                fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8],
+                fn_8014D08C(obj, (int)state, ((SeqEntry*)p28)[*(u16*)(state + 0x338)].anim,
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16), 0,
-                            (u8) * &(p28 + *(u16*)(state + 0x338) * 16)[4]);
+                            (u8)((SeqEntry*)p28)[*(u16*)(state + 0x338)].mask);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                     (ObjAnimComponent*)obj,
                     *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4));
