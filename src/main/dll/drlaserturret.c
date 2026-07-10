@@ -371,7 +371,8 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     {
         return 0;
     }
-    if (state->countValue < state->countTarget)
+    cv = state->countValue;
+    if (cv < state->countTarget)
     {
         nudge = (state->nudgeCount < DR_LASERTURRET_MAX_NUDGE_COUNT) ? 0 : 2;
     }
@@ -391,7 +392,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         if ((s8)nudge == 1)
         {
             int* target = state->linkedTarget;
-            (**(VtableFn***)((char*)target + 0x68))[0x48 / 4](target);
+            (**(VtableFn***)((char*)target + 0x68))[0x48 / 4](target, cv);
         }
         return nudge == 1;
     case DR_LASERTURRET_PROMPT_MAX_NUDGE:
