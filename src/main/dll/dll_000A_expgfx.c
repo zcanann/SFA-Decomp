@@ -1941,17 +1941,17 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* viewMatrix;
-    ExpgfxCameraViewSlot* cameraSlot;
+    int alpha;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
-    ExpgfxSourceObject* sourceObject;
-    u32 texture;
+    f32 sinA, cosA;
     int slotIndex;
+    u32 texture;
     u32 behaviorFlags;
     u32 renderFlags;
     u32 state;
-    int alpha;
+    ExpgfxCameraViewSlot* cameraSlot;
     f32 lifeFraction;
     f32 scaleSize;
     f32 sx, sy, sz;
@@ -1959,7 +1959,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     s16 angleA;
     s16 angleB;
     f32 sinB, cosB;
-    f32 sinA, cosA;
+    ExpgfxSourceObject* sourceObject;
     f32 sinC, cosC;
     f32 worldX, worldY, worldZ;
     f32 aimDelta[3];
@@ -1975,7 +1975,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     u32 currentTexture;
     u8 trackedFlags;
     void* dstBuf;
-
     dstBuf = getCache();
     trackedFlags = 0;
     dummy = getHudHiddenFrameCount();
@@ -2510,7 +2509,6 @@ void expgfx_resetAllPools(void)
     ExpgfxRuntimeDataLayout* runtime;
     int slotIndex;
     ExpgfxSlot* slot;
-
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
