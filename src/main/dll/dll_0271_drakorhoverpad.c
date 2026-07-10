@@ -651,8 +651,9 @@ void drakorhoverpad_updateMain(GameObject* obj)
     }
     else
     {
+        s16 yawDelta;
         phase = sqrtf(curve->tangentX * curve->tangentX + curve->tangentZ * curve->tangentZ);
-        yawDelta = (s16)((s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) - (obj)->anim.rotX);
+        yawDelta = (s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) - (obj)->anim.rotX;
         (obj)->anim.rotY = (s16)getAngle(curve->tangentY, phase);
         if (yawDelta < -0x800)
         {
