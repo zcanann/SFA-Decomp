@@ -500,7 +500,7 @@ typedef struct PartFxResource {
     PartFxResourceVTable* vtable;
 } PartFxResource;
 
-int partfx_spawnObject(s16* sourceObj, u32 effectValue, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                        u8 modelIdValue, void* extraArgsArg)
 {
     f32* extraArgs = extraArgsArg;
@@ -1006,6 +1006,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400200;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+    case 0x55c:
     LAB_800a69a8:
         cfg.startPosY = lbl_803DF4FC;
         cfg.scale = lbl_803DF4E8;
@@ -1064,6 +1065,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400200;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+    case 0x559:
     LAB_800a6b6c:
         cfg.startPosY = lbl_803DF4FC;
         if (extraArgs != NULL)
@@ -2454,6 +2456,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectValue, PartFxSpawnParams* spawn
         ftmp1 = 0.003f;
         for (; i < 0x1e; i++)
         {
+            effectId = (int)(u32)effectId;
             cfg.startPosY = ftmp4;
             cfg.velocityX = ftmp3 * (f32)(s32)(2 - randomGetRange(0, 4));
             cfg.velocityY = ftmp2 * (f32)(s32)randomGetRange(1, 2);
@@ -2480,7 +2483,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectValue, PartFxSpawnParams* spawn
             (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
         }
         break;
-    case 0x55c:
     LAB_800aa8ac:
         cfg.behaviorFlags = 0x20100100;
         cfg.lifetimeFrames = 400;
@@ -2595,6 +2597,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectValue, PartFxSpawnParams* spawn
         ftmp4 = 33.0f;
         for (; i < 0x28; i++)
         {
+            effectId = (int)(u32)effectId;
             cfg.startPosY = ftmp1;
             cfg.velocityX = ftmp2 * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
             cfg.velocityZ = ftmp2 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
