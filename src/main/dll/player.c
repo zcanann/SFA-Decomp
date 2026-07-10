@@ -3043,6 +3043,7 @@ store_ph:
 }
 #pragma opt_common_subs reset
 
+#pragma opt_propagation off
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
 {
     int ctrl;
@@ -3981,6 +3982,7 @@ extern f32 lbl_803E809C;
 extern f32 lbl_803E80A0;
 extern char sNotOnGroundFailureMessage[];
 
+#pragma opt_propagation reset
 int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
 int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag);
 
