@@ -116,7 +116,8 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
         {
             while (prioNode != 0xffff && num < maxVoices)
             {
-                i = VB_PRIO_HEAD(vb, prioNode);
+                u32 pn = prioNode;
+                i = VB_PRIO_HEAD(vb, pn);
                 while (i != 0xff)
                 {
                     if (allocId == ALLOC_VOICE[i].allocId)
@@ -127,7 +128,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                     i = VB_PRIO_LINK_NEXT(vb, i);
                 }
 
-                prioNode = VB_PRIO_SORT_NEXT(vb, prioNode);
+                prioNode = VB_PRIO_SORT_NEXT(vb, pn);
             }
 
             if (num < maxVoices)
