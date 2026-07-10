@@ -2703,8 +2703,8 @@ void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* target
     u16 nextWords;
     u16 bufIdx;
     u8* cache;
-    u16 curBuf;
     u8* out;
+    int curBuf;
     u8* in;
     int sync;
 
