@@ -369,7 +369,7 @@ void andross_update(int obj)
         }
     }
     /* Update each linked spawn object from its cached relative position. */
-    for (work = 0; (u8)work < 4; work = work + 1)
+    for (work = 0; (u8)work < 4; work++)
     {
         val = work & 0xff;
         found = val * 4 + 0x18;
@@ -416,7 +416,7 @@ void andross_update(int obj)
         fa = ((AndrossState*)state)->cachedPosY;
         fval = gAndrossPathPosOffset;
         ((AndrossState*)state)->cachedPosY = fa + fval;
-        ((AndrossState*)state)->cachedPosZ = ((AndrossState*)state)->cachedPosZ + fval;
+        ((AndrossState*)state)->cachedPosZ += fval;
     }
     switch (((AndrossState*)state)->fightPhase)
     {
@@ -463,7 +463,7 @@ void andross_update(int obj)
         }
         break;
     case 2:
-        if ((stateChanged) && (((AndrossState*)state)->signalFlags = ((AndrossState*)state)->signalFlags & ~0x6,
+        if ((stateChanged) && (((AndrossState*)state)->signalFlags &= ~0x6,
                                ((AndrossState*)state)->actionState == 0x16))
         {
             androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 1, 1);
@@ -596,7 +596,7 @@ void andross_update(int obj)
                     ((AndrossState*)state)->actionState = 0xb;
                     break;
                 }
-                ((AndrossState*)state)->actionToggle = ((AndrossState*)state)->actionToggle ^ 1;
+                ((AndrossState*)state)->actionToggle ^= 1;
                 break;
             case 0x15:
                 ((AndrossState*)state)->actionState = 0x12;
@@ -658,7 +658,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY =
             (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionPending = 1;
@@ -739,7 +739,7 @@ void andross_update(int obj)
             fn_8023A268(obj, (int)state, 0);
             ((AndrossState*)state)->actionTimer = lbl_803DC43C;
         }
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionState = 3;
@@ -803,7 +803,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY =
             (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionPending = 1;
@@ -829,12 +829,12 @@ void andross_update(int obj)
             mainSetBits(0xd, 1);
             ((AndrossState*)state)->durationTimer = lbl_803E7504;
         }
-        for (ref = 0; (u8)ref < 6; ref = ref + 1)
+        for (ref = 0; (u8)ref < 6; ref++)
         {
             if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
                 ((AndrossState*)state)->timer = 0x3c;
-                goto LAB_8023bb18;
+                goto hit_cue_ready_15;
             }
         }
         ((AndrossState*)state)->timer -= framesThisStep;
@@ -844,7 +844,7 @@ void andross_update(int obj)
             mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
             ((AndrossState*)state)->timer = 0x3c;
         }
-    LAB_8023bb18:
+    hit_cue_ready_15:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
@@ -858,7 +858,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY =
             (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             ((AndrossState*)state)->actionPending = 1;
@@ -1050,17 +1050,17 @@ void andross_update(int obj)
             {
                 androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 9, 1);
                 androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 9, 1);
-                ((AndrossState*)state)->signalFlags = ((AndrossState*)state)->signalFlags | 6;
+                ((AndrossState*)state)->signalFlags |= 6;
             }
         }
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionState == 0xb))
         {
-            for (ref = 0; (u8)ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     ((AndrossState*)state)->timer = 0x3c;
-                    goto LAB_8023c584;
+                    goto hit_cue_ready_b_or_d;
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
@@ -1071,7 +1071,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->timer = 0x3c;
             }
         }
-    LAB_8023c584:
+    hit_cue_ready_b_or_d:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
@@ -1169,11 +1169,11 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionTimer = 0;
             mainSetBits(0xf, 1);
         }
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             fn_80239FCC(obj, (int)state);
-            ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer + (f32)(lbl_803DC450);
+            ((AndrossState*)state)->durationTimer += (f32)(lbl_803DC450);
         }
         fn_80239EAC(obj, (int)state);
         if ((u32)mainGetBit(0x10) != 0)
@@ -1228,12 +1228,12 @@ void andross_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
         if (((AndrossState*)state)->fightPhase == 5)
         {
-            for (ref = 0; (u8)ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     ((AndrossState*)state)->timer = 0x3c;
-                    goto LAB_8023cbdc;
+                    goto hit_cue_ready_c;
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
@@ -1244,7 +1244,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->timer = 0x3c;
             }
         }
-    LAB_8023cbdc:
+    hit_cue_ready_c:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
@@ -1272,11 +1272,11 @@ void andross_update(int obj)
                                    gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
         }
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - timeDelta;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
         if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             fn_80239FCC(obj, (int)state);
-            ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer + (f32)(lbl_803DC464);
+            ((AndrossState*)state)->durationTimer += (f32)(lbl_803DC464);
         }
         fn_80239EAC(obj, (int)state);
         if (((AndrossState*)state)->hitReactionFlag != 0)
@@ -1443,26 +1443,26 @@ void andross_update(int obj)
                 mainSetBits(0xe, 1);
             }
         }
-        ((AndrossState*)state)->fadeAlpha = ((AndrossState*)state)->fadeAlpha - gAndrossFadeAlphaStep;
+        ((AndrossState*)state)->fadeAlpha -= gAndrossFadeAlphaStep;
         fval = (lbl_803E74D4 > ((AndrossState*)state)->fadeAlpha) ? lbl_803E74D4 : ((AndrossState*)state)->fadeAlpha;
         ((AndrossState*)state)->fadeAlpha = fval;
         fc = ((AndrossState*)state)->fadeAlpha;
         ref = *(int*)Obj_GetActiveModel(obj);
         work = 0;
         fval = gAndrossAlpha255 * fc;
-        for (; work < (int)(u32) * (u8*)(ref + 0xf8); work = work + 1)
+        for (; work < (int)(u32) * (u8*)(ref + 0xf8); work++)
         {
             found = ObjModel_GetRenderOp(ref, work);
             ((AndrossState*)found)->alpha = fval;
         }
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     ((AndrossState*)state)->timer = 0x3c;
-                    goto LAB_8023d59c;
+                    goto hit_cue_ready_12;
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
@@ -1473,7 +1473,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->timer = 0x3c;
             }
         }
-    LAB_8023d59c:
+    hit_cue_ready_12:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
@@ -1510,12 +1510,12 @@ void andross_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_spitout);
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     ((AndrossState*)state)->timer = 0x3c;
-                    goto LAB_8023d7cc;
+                    goto hit_cue_ready_13;
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
@@ -1526,7 +1526,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->timer = 0x3c;
             }
         }
-    LAB_8023d7cc:
+    hit_cue_ready_13:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
@@ -1541,7 +1541,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         durationBeforeStep = (int)((AndrossState*)state)->durationTimer;
-        ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - framesThisStep;
+        ((AndrossState*)state)->durationTimer -= framesThisStep;
         if (((AndrossState*)state)->fightPhase == 5)
         {
             delayPair[0] = 300;
@@ -1552,7 +1552,7 @@ void andross_update(int obj)
             delayPair[0] = 0x122;
             delayPair[1] = 0x28;
         }
-        for (ref = 0; (u8)ref < 2; ref = ref + 1)
+        for (ref = 0; (u8)ref < 2; ref++)
         {
             if (((((void*)((AndrossState*)state)->spawnedObj == NULL) &&
                   (((AndrossState*)state)->actionTimer <= delayPair[(u8)ref])) &&
@@ -1595,12 +1595,12 @@ void andross_update(int obj)
         }
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     ((AndrossState*)state)->timer = 0x3c;
-                    goto LAB_8023db24;
+                    goto hit_cue_ready_14;
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
@@ -1611,7 +1611,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->timer = 0x3c;
             }
         }
-    LAB_8023db24:
+    hit_cue_ready_14:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
@@ -1679,16 +1679,16 @@ void andross_update(int obj)
             ((AndrossState*)state)->springStiffness = lbl_803E74C8;
             ((AndrossState*)state)->springDamping = gAndrossSpringDamping;
         }
-        ((AndrossState*)state)->fadeAlpha = ((AndrossState*)state)->fadeAlpha + gAndrossFadeAlphaStep;
+        ((AndrossState*)state)->fadeAlpha += gAndrossFadeAlphaStep;
         fval = (gAndrossFadeAlphaMax < ((AndrossState*)state)->fadeAlpha) ? gAndrossFadeAlphaMax
                                                                           : ((AndrossState*)state)->fadeAlpha;
         ((AndrossState*)state)->fadeAlpha = fval;
-        for (ref = 0; (u8)ref < 6; ref = ref + 1)
+        for (ref = 0; (u8)ref < 6; ref++)
         {
             if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
                 ((AndrossState*)state)->timer = 0x3c;
-                goto LAB_8023de5c;
+                goto hit_cue_ready_1c;
             }
         }
         ((AndrossState*)state)->timer -= framesThisStep;
@@ -1698,11 +1698,11 @@ void andross_update(int obj)
             mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
             ((AndrossState*)state)->timer = 0x3c;
         }
-    LAB_8023de5c:
+    hit_cue_ready_1c:
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         if (((AndrossState*)state)->actionTimer < 0)
         {
-            ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - lbl_803E74DC;
+            ((AndrossState*)state)->durationTimer -= lbl_803E74DC;
             if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
             {
                 ((AndrossState*)state)->actionToggle += 1;
@@ -1750,7 +1750,7 @@ void andross_update(int obj)
         ref = *(int*)Obj_GetActiveModel(obj);
         work = 0;
         fval = gAndrossAlpha255 * fc;
-        for (; work < (int)(u32) * (u8*)(ref + 0xf8); work = work + 1)
+        for (; work < (int)(u32) * (u8*)(ref + 0xf8); work++)
         {
             found = ObjModel_GetRenderOp(ref, work);
             ((AndrossState*)found)->alpha = fval;
@@ -1879,7 +1879,7 @@ void andross_update(int obj)
                                      (u8)((((AndrossState*)state)->fightPhase == 4) + 1));
                 androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 1,
                                      (u8)((((AndrossState*)state)->fightPhase == 4) + 1));
-                ((AndrossState*)state)->signalFlags = ((AndrossState*)state)->signalFlags & ~0x6;
+                ((AndrossState*)state)->signalFlags &= ~0x6;
             }
         }
         break;
@@ -1892,7 +1892,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->soundTimer = lbl_803E74D4;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
-        ((AndrossState*)state)->soundTimer = ((AndrossState*)state)->soundTimer + timeDelta;
+        ((AndrossState*)state)->soundTimer += timeDelta;
         if ((((AndrossState*)state)->soundTimer > lbl_803E7578) &&
             ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
         {
@@ -2058,7 +2058,7 @@ void andross_update(int obj)
     if (*(void**)&((AndrossState*)state)->spawnedObj != NULL)
     {
         *(float*)&((AndrossState*)ref)->spawnedObj = *(float*)&((AndrossState*)ref)->spawnedObj - lbl_803E74D8;
-        ((AndrossState*)state)->spawnedObjLifetime = ((AndrossState*)state)->spawnedObjLifetime - framesThisStep;
+        ((AndrossState*)state)->spawnedObjLifetime -= framesThisStep;
         if (((AndrossState*)state)->spawnedObjLifetime < 0)
         {
             Obj_FreeObject(((AndrossState*)state)->spawnedObj);
@@ -2149,7 +2149,6 @@ void andross_update(int obj)
             }
         }
     }
-LAB_8023ef14:
     return;
 }
 
