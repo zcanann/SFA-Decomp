@@ -564,9 +564,7 @@ int fn_8026E9D0(u8 voice, u32 param)
     SeqQueue* vp;
     SeqQueue* vp2;
     u8* event;
-    u32 v;
     int res;
-    f32 ftotal;
     f32 fm;
     f32 k88;
     f32 k84;
@@ -596,8 +594,7 @@ int fn_8026E9D0(u8 voice, u32 param)
                 fn_8026CF78(voice);
                 vp2 = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
                 fm = (k80 * ((f32)vp2->bpm * param)) * (k84 * (f32)vp2->speed);
-                ftotal = seq_fmod(k88 * fm, k88);
-                vp2->scratch[vp2->timeIndex].low = ftotal;
+                vp2->scratch[vp2->timeIndex].low = seq_fmod(k88 * fm, k88);
                 vp2->scratch[vp2->timeIndex].high = (int)floorf(fm);
             }
             vp->loopCount += 1;
