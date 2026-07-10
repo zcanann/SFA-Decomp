@@ -989,6 +989,7 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
 }
 
 #pragma optimization_level 2
+#pragma opt_lifetimes on
 void modelLightChannels_applyGXControls(void)
 {
     ModelLightChannelState* entry;
@@ -1023,7 +1024,7 @@ void modelLightChannels_applyGXControls(void)
                 attnFn = lightMask != 0 ? 0 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, GX_DF_NONE, attnFn);
             }
-            activeMask = (activeMask | (1 << channel)) & 0xff;
+            activeMask |= 1 << channel;
         }
         entry++;
         channel++;
@@ -1065,6 +1066,7 @@ void modelLightChannels_applyGXControls(void)
         GXSetNumChans(0);
     }
 }
+#pragma opt_lifetimes reset
 #pragma optimization_level reset
 
 void updateLights(void)
