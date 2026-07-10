@@ -2095,8 +2095,8 @@ int playerStateMoving(int obj, int state)
                 if ((fl >> 5 & 1) == 0)
                 {
                     Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj,
-                                                        *(s16*)(((PlayerState*)inner)->moveAnimTable +
-                                                                (((PlayerState*)inner)->gaitLevel + pos) * 2 + 2),
+                                                        *(s16*)(((PlayerState*)inner)->moveAnimTable + 2 +
+                                                                (((PlayerState*)inner)->gaitLevel + pos) * 2),
                                                         (int)(lbl_803E7FAC * ad));
                 }
                 {
