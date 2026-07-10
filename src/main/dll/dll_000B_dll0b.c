@@ -1238,7 +1238,8 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                     dirX = dirX / dscale;
                     dirZ = dirZ / dscale;
                 }
-                xf.ang[0] += (s16)(f32)(u16)getAngle(dirX, dirZ);
+                dscale = (u16)getAngle(dirX, dirZ);
+                xf.ang[0] += (s16)dscale;
             }
         }
         xf.pos[0] = xf.pos[0] - playerMapOffsetX;
