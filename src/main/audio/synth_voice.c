@@ -324,18 +324,24 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
  * Start a sample/FX id, handling direct samples, table-expanded sample
  * groups, and already-linked voice chains.
  */
+static inline void unblockAllAllocatedVoices(u32 vid)
+{
+    u32 vi;
+
+    vi = vidGetInternalId(vid);
+    while (vi != 0xFFFFFFFF)
+    {
+        HWVOICE(vi & 0xFF)->callbackActive = 0;
+        vi = HWVOICE(vi & 0xFF)->child;
+    }
+}
+
 int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
                     u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
-    u32 handle;
-    u32 ok;
-    u32 rejected;
-    u32 vid;
-    u32 vi;
     s32 prioTmp;
+    u32 clamped;
     u8 pri;
-    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32 * rejected);
-    extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
     extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                         u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
     extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi,
@@ -343,26 +349,19 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
                                      u32 itd);
 
     prioTmp = prio + prioOffset;
-    if ((u8)prioTmp > 0xFF)
+    clamped = (u8)prioTmp;
+    if (clamped > 0xFF)
     {
-        prioTmp = 0xFF;
+        clamped = 0xFF;
     }
-    pri = prioTmp;
+    pri = clamped;
 
     switch (id & 0xC000)
     {
     case 0:
-        if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
-        {
-            handle = audioFn_8026f630(key & 0x7F, midi, midiSet, 1, &rejected);
-            ok = !rejected;
-        }
-        else
-        {
-            handle = -1;
-            ok = 1;
-        }
-        if (ok == 0)
+    {
+        u32 handle;
+        if (!check_portamento(key, midi, midiSet, 1, &handle))
         {
             return -1;
         }
@@ -372,32 +371,27 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         }
         return macStart(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup, studio,
                         itd);
+    }
     case 0x4000:
-        vid = StartKeymap(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup,
-                          studio, itd);
+    {
+        u32 vid = StartKeymap(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup,
+                              studio, itd);
         if (vid != 0xFFFFFFFF)
         {
-            vi = vidGetInternalId(vid);
-            while (vi != 0xFFFFFFFF)
-            {
-                HWVOICE(vi & 0xFF)->callbackActive = 0;
-                vi = HWVOICE(vi & 0xFF)->child;
-            }
+            unblockAllAllocatedVoices(vid);
         }
         return vid;
+    }
     case 0x8000:
-        vid = audioLayerFn_8026f8b8(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1,
-                                    vGroup, studio, itd);
+    {
+        u32 vid = audioLayerFn_8026f8b8(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid,
+                                        1, vGroup, studio, itd);
         if (vid != 0xFFFFFFFF)
         {
-            vi = vidGetInternalId(vid);
-            while (vi != 0xFFFFFFFF)
-            {
-                HWVOICE(vi & 0xFF)->callbackActive = 0;
-                vi = HWVOICE(vi & 0xFF)->child;
-            }
+            unblockAllAllocatedVoices(vid);
         }
         return vid;
+    }
     }
     return -1;
 }
