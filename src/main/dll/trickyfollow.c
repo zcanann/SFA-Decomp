@@ -1349,6 +1349,7 @@ state_selected:
 #pragma opt_common_subs reset
 #undef route
 
+#pragma opt_common_subs off
 void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag)
 {
     struct
@@ -1480,3 +1481,4 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         ((TrickyState*)state)->speed = (step > gTrickyFollowMaxSpeed) ? gTrickyFollowMaxSpeed : step;
     }
 }
+#pragma opt_common_subs reset
