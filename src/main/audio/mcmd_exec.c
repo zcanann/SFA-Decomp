@@ -464,6 +464,22 @@ static inline void mcmdGetVID(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     }
 }
 
+static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    u32 voiceid;
+    u32 i;
+
+    voiceid = (svoice->keyBase + ((cstep->flags >> 8) & 0xff)) << 8;
+    voiceid |= ((u16)(cstep->flags >> 0x10)) << 0x10;
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    {
+        if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
+        {
+            SendSingleKeyOff(voiceid | i);
+        }
+    }
+}
+
 /*
  * Run the active macro command stream for one voice (MusyX macHandleActive).
  */
@@ -641,22 +657,8 @@ void macHandleActive(McmdVoiceState* sv)
             mcmdPlayMacro(sv, &lbl_803DE2E8);
             break;
         case 0x9: /* send key off */
-        {
-            u32 voiceid;
-            u32 i;
-            u16 hi;
-            hi = cmd >> 0x10;
-            voiceid = (sv->keyBase + ((cmd >> 8) & 0xff)) << 8;
-            voiceid |= hi << 0x10;
-            for (i = 0; i < lbl_803BD150[0x210]; i++)
-            {
-                if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
-                {
-                    SendSingleKeyOff(voiceid | i);
-                }
-            }
+            mcmdSendKeyOff(sv, &lbl_803DE2E8);
             break;
-        }
         case 0xa: /* if modulation */
             if (sv->midiSlot != 0xff)
             {
