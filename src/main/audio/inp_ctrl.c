@@ -157,6 +157,20 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     return _GetInputValue(0, &lbl_803BDA74.slots[studio & 0xff][channel & 0xff], auxIndex, handleIndex);
 }
 
+static void inpResetGlobalMIDIDirtyFlags(void)
+{
+    u32 i;
+    u32 j;
+
+    for (i = 0; i < 8; ++i)
+    {
+        for (j = 0; j < 16; ++j)
+        {
+            ((u32(*)[16])lbl_803D3CA0)[i][j] = 0xff;
+        }
+    }
+}
+
 /*
  * Input/controller state init.
  */
@@ -221,82 +235,17 @@ void inpInit(u32 state)
     {
         u32 i;
         u32 j;
-        u8* b = lbl_803BDA74.bytes;
-        u8* a = lbl_803BDEF4.bytes;
-        u32* p = lbl_803D3CA0;
-
-        a[0x22] = 0;
-        b[0x22] = 0;
-        a[0x46] = 0;
-        b[0x46] = 0;
-        a[0x6a] = 0;
-        b[0x6a] = 0;
-        a[0x8e] = 0;
-        b[0x8e] = 0;
-        a[0xb2] = 0;
-        b[0xb2] = 0;
-        a[0xd6] = 0;
-        b[0xd6] = 0;
-        a[0xfa] = 0;
-        b[0xfa] = 0;
-        a[0x11e] = 0;
-        b[0x11e] = 0;
-        a[0x142] = 0;
-        b[0x142] = 0;
-        a[0x166] = 0;
-        b[0x166] = 0;
-        a[0x18a] = 0;
-        b[0x18a] = 0;
-        a[0x1ae] = 0;
-        b[0x1ae] = 0;
-        a[0x1d2] = 0;
-        b[0x1d2] = 0;
-        a[0x1f6] = 0;
-        b[0x1f6] = 0;
-        a[0x21a] = 0;
-        b[0x21a] = 0;
-        a[0x23e] = 0;
-        b[0x23e] = 0;
-        a[0x262] = 0;
-        b[0x262] = 0;
-        a[0x286] = 0;
-        b[0x286] = 0;
-        a[0x2aa] = 0;
-        b[0x2aa] = 0;
-        a[0x2ce] = 0;
-        b[0x2ce] = 0;
-        a[0x2f2] = 0;
-        b[0x2f2] = 0;
-        a[0x316] = 0;
-        b[0x316] = 0;
-        a[0x33a] = 0;
-        b[0x33a] = 0;
-        a[0x35e] = 0;
-        b[0x35e] = 0;
-        a[0x382] = 0;
-        b[0x382] = 0;
-        a[0x3a6] = 0;
-        b[0x3a6] = 0;
-        a[0x3ca] = 0;
-        b[0x3ca] = 0;
-        a[0x3ee] = 0;
-        b[0x3ee] = 0;
-        a[0x412] = 0;
-        b[0x412] = 0;
-        a[0x436] = 0;
-        b[0x436] = 0;
-        a[0x45a] = 0;
-        b[0x45a] = 0;
-        a[0x47e] = 0;
-        b[0x47e] = 0;
 
         for (i = 0; i < 8; i++)
         {
-            for (j = 0; j < 16; j++)
+            for (j = 0; j < 4; j++)
             {
-                ((u32(*)[16])p)[i][j] = 0xff;
+                lbl_803BDEF4.slots[i][j].entryCount = 0;
+                lbl_803BDA74.slots[i][j].entryCount = 0;
             }
         }
+
+        inpResetGlobalMIDIDirtyFlags();
     }
 }
 
