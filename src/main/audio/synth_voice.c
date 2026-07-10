@@ -1063,8 +1063,6 @@ void audioFn_80271498(u32 delta)
     u8* auxBIndex;
     u8* auxBMIDI;
     SynthAuxCallback* auxACallback;
-    u16 auxSamplesA[8];
-    u16 auxSamplesB[6];
 
     stateBase = lbl_803BCD90;
     if (*(u32*)(stateBase + 0x3c4) != 0)
@@ -1128,6 +1126,7 @@ void audioFn_80271498(u32 delta)
             {
                 if (*auxAIndex != 0xff)
                 {
+                    u16 auxSamplesA[8];
                     for (channel = 0; channel < 4; channel++)
                     {
                         auxSamplesA[channel] = inpGetAuxA(i, channel, *auxAIndex, *auxAMIDI);
@@ -1136,6 +1135,7 @@ void audioFn_80271498(u32 delta)
                 }
                 if (*auxBIndex != 0xff)
                 {
+                    u16 auxSamplesB[6];
                     for (channel = 0; channel < 4; channel++)
                     {
                         auxSamplesB[channel] = inpGetAuxB(i, channel, *auxBIndex, *auxBMIDI);
@@ -1144,9 +1144,9 @@ void audioFn_80271498(u32 delta)
                 }
                 auxAIndex++;
                 auxAMIDI++;
+                auxACallback++;
                 auxBIndex++;
                 auxBMIDI++;
-                auxACallback++;
                 auxBCallback++;
             }
         }
