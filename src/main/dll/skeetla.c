@@ -1170,8 +1170,9 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     }
 
     slope = (end[2] - start[2]) / (end[0] - start[0]);
+    dz = start[0] - end[0];
     intercept = start[2] - (slope * start[0]);
-    perpSlope = (start[0] - end[0]) / (end[2] - start[2]);
+    perpSlope = dz / (end[2] - start[2]);
     projection[0] = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
     projection[2] = (slope * projection[0]) + intercept;
 
