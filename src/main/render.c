@@ -450,12 +450,12 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
         sample = 0;
         if (hw & 0x10)
         {
-            u64 h2 = *(u16*)(u32)tp;
             u64 nib3;
 
-            if ((h2 & 0x10) != 0)
+            h = *(u16*)(u32)tp;
+            if ((h & 0x10) != 0)
             {
-                u64 nib2 = h2 & 0xf;
+                u64 nib2 = h & 0xf;
                 if (nib2 != 0)
                 {
                     bitpos += nib2;
@@ -467,16 +467,16 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
                     bufB <<= (nib2 & 0xFFFFFFFF);
                 }
                 tp += 2;
-                if (!((u32)h2 & 0x20))
+                if (!((u32)h & 0x20))
                 {
                     goto storeSecond;
                 }
-                h2 = *(u16*)(u32)tp;
+                h = *(u16*)(u32)tp;
             }
-            nib3 = h2 & 0xf;
+            nib3 = h & 0xf;
             if (nib3 != 0)
             {
-                u64 masked2 = h2 & 0xFFF0;
+                u64 masked2 = h & 0xFFF0;
                 bitpos += nib3;
                 if ((s64)bitpos > 64)
                 {
