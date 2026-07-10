@@ -2794,8 +2794,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             slot->sourceVecZ = attachedSource->rotZ;
             slot->sourceVecY = attachedSource->rotY;
             slot->sourceVecX = attachedSource->rotX;
-            if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
-                (behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0)
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
+                (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0)
             {
                 config->velocityX = config->velocityX + attachedSource->velocityX;
                 config->velocityY = config->velocityY + attachedSource->velocityY;
@@ -2823,12 +2823,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
          }*)&slot->encodedTableIndex)
             ->tableIndex = (u8)expTabIndex;
 
-        slot->posX.value = config->startPosX.value;
-        slot->startPosX.value = config->startPosX.value;
-        slot->posY.value = config->startPosY.value;
-        slot->startPosY.value = config->startPosY.value;
-        slot->posZ.value = config->startPosZ.value;
-        slot->startPosZ.value = config->startPosZ.value;
+        slot->posX.value = slot->startPosX.value = config->startPosX.value;
+        slot->posY.value = slot->startPosY.value = config->startPosY.value;
+        slot->posZ.value = slot->startPosZ.value = config->startPosZ.value;
         slot->velocityX = config->velocityX;
         slot->velocityY = config->velocityY;
         slot->velocityZ = config->velocityZ;
@@ -2873,7 +2870,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             slot->sourceVecY = config->sourceVecY;
             slot->sourceVecX = config->sourceVecX;
         }
-        slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
+        slot->stateBits.bits.frameParity = *(u8*)&gExpgfxFrameParityBit;
 
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0)
         {
