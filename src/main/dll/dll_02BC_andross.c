@@ -295,6 +295,7 @@ void andross_update(int obj)
     u8 flag;
     u8 moveChanged;
     int ref;
+    GameObject* objAlias;
     u32 val;
     f32 fval;
     s16 sval;
@@ -328,6 +329,7 @@ void andross_update(int obj)
     f32 searchDist3;
     f32 searchDist;
     u32 randOffsetY;
+    objAlias = (GameObject*)obj;
     state = ((GameObject*)obj)->extra;
     flag = 0;
     stateChanged = 0;
@@ -1768,7 +1770,8 @@ void andross_update(int obj)
             ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityY = fval;
             ((GameObject*)obj)->anim.velocityZ = fval;
-            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
+            Sfx_PlayFromObject((int)objAlias,
+                               randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
         }
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         if (((AndrossState*)state)->actionTimer < 0)
