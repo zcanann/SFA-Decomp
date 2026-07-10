@@ -677,7 +677,7 @@ void macHandleActive(McmdVoiceState* sv)
             s32 delta;
             s32 scale;
             delta = (sv->key - (s32)((cmd >> 0x10) & 0xff)) << 0x10;
-            scale = (s8)(cmd >> 8);
+            scale = (s8)(u8)(cmd >> 8);
             delta = (delta * scale) >> 7;
             delta += ((u8)(cmd >> 0x18)) << 0x10;
             delta = delta < 0 ? 0 : delta > 0x7f0000 ? 0x7f0000 : delta;
@@ -1096,8 +1096,8 @@ void macHandleActive(McmdVoiceState* sv)
         }
         case 0x50: /* setup LFO */
         {
-            u32 time;
             u32 phase;
+            u32 time;
             u32 ctrlIndex;
             time = (cmd >> 0x10) & 0xffff;
             sndConvertMs(&time);
@@ -1152,11 +1152,13 @@ void macHandleActive(McmdVoiceState* sv)
         {
             s32 lhs;
             s32 rhs;
+            u8 invert;
             u8 result;
             lhs = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
             rhs = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8)*para1);
+            invert = (*para1 >> 8) & 0xff;
             result = !(rhs - lhs);
-            if (((*para1 >> 8) & 0xff) != 0)
+            if (invert != 0)
             {
                 result = !result;
             }
@@ -1171,11 +1173,13 @@ void macHandleActive(McmdVoiceState* sv)
         {
             s32 lhs;
             s32 rhs;
+            u8 invert;
             u8 result;
             lhs = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
             rhs = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8)*para1);
+            invert = (*para1 >> 8) & 0xff;
             result = lhs < rhs;
-            if (((*para1 >> 8) & 0xff) != 0)
+            if (invert != 0)
             {
                 result = !result;
             }
