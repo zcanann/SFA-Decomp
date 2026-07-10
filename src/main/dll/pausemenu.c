@@ -146,6 +146,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     s32 y;
     s32 i;
     s32 acc;
+    f32 timer;
     s32 val;
     s32 h;
     u8* statusTable;
@@ -195,7 +196,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             f64 tmp = (double)(s16)y * (lbl_803E2080 - (double)lbl_803DD75C);
             x = (s32)(tmp * lbl_803E2088);
         }
-        if (gameTextFn_80019c00() != lbl_803E1E3C)
+        timer = gameTextFn_80019c00();
+        if (timer != lbl_803E1E3C)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
@@ -256,7 +258,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         model->bufferFlags &= ~0x8;
-        if (gameTextFn_80019c00() != lbl_803E1E3C)
+        timer = gameTextFn_80019c00();
+        if (timer != lbl_803E1E3C)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
@@ -335,7 +338,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         model->bufferFlags &= ~0x8;
-        if (gameTextFn_80019c00() != lbl_803E1E3C)
+        timer = gameTextFn_80019c00();
+        if (timer != lbl_803E1E3C)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
