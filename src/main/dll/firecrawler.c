@@ -1300,9 +1300,9 @@ void hoodedZyck_updateB(s16* obj, u8* state)
 {
     f32 scale;
     int moved;
-    u8 noHit;
     int turnRaw;
-    u32 mag;
+    u8 noHit;
+    u16 mag;
     u8 bufA[88];
     u8 bufB[84];
     f32 tgtA[3];
