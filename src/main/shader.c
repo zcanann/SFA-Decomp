@@ -318,6 +318,25 @@ static inline int mapFindRomListSlot(char* slots, int id)
     return -1;
 }
 
+static inline int mapFindRomListSlotByIdAt(char* base, int id)
+{
+    char* q2;
+    int i2;
+    int cn;
+    int k;
+    i2 = 0;
+    q2 = base + 0x418C;
+    cn = gShaderRomListSlotCount;
+    for (k = 0; k < cn; k++)
+    {
+        if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
+            return i2;
+        q2 += 8;
+        i2++;
+    }
+    return -1;
+}
+
 static inline int mapFindRomListSlotById(int id)
 {
     char* q2;
@@ -2759,23 +2778,7 @@ void doPendingMapLoads(void)
                     if (gShaderCurMapEventId != -1)
                     {
                         setForceLoadImmediately();
-                        {
-                            int m = gShaderCurMapEventId;
-                            int i2 = 0;
-                            char* p2 = base + 0x418C;
-                            int cn = gShaderRomListSlotCount;
-                            int k;
-                            for (k = 0; k < cn; k++)
-                            {
-                                if (*(void**)p2 != NULL && m == *(s16*)(p2 + 4))
-                                    goto found;
-                                p2 += 8;
-                                i2++;
-                            }
-                            i2 = -1;
-                        found:
-                            slot = i2;
-                        }
+                        slot = mapFindRomListSlotByIdAt(base, gShaderCurMapEventId);
                         if (slot == -1)
                             slot = mapProcessRomList(gShaderCurMapEventId);
                         {
