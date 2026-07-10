@@ -12009,8 +12009,6 @@ void playerAnimate(int obj, int state, f32 fv)
     *(int*)state &= ~0x1000000;
 }
 
-#pragma opt_common_subs off
-#pragma opt_lifetimes off
 void fn_802AC32C(int p1, int p2, int p3)
 {
     void* near;
@@ -12023,40 +12021,37 @@ void fn_802AC32C(int p1, int p2, int p3)
         f32 ratio;
         f32 clamped;
         f32 f5;
-        f32 result;
-        int delta;
 
         if (--*(s16*)&((PlayerState*)p3)->lookAtTimer <= 0)
         {
             *(s16*)&((PlayerState*)p3)->lookAtTimer = (s16)randomGetRange(0x78, 0xf0);
             *(s16*)&((PlayerState*)p3)->lookAtRandOffset = (s16)randomGetRange(0, 0x28);
         }
-        delta = getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
-                         -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) &
-                0xffff;
-        delta -= (u16) * (s16*)((char*)p3 + 0x478);
-        if (delta > 0x8000)
+        angle1 = getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
+                          -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) &
+                 0xffff;
+        angle1 -= (u16) * (s16*)((char*)p3 + 0x478);
+        if (angle1 > 0x8000)
         {
-            delta -= 0xFFFF;
+            angle1 = angle1 - 0xFFFF;
         }
-        if (delta < -0x8000)
+        if (angle1 < -0x8000)
         {
-            delta += 0xFFFF;
+            angle1 = angle1 + 0xFFFF;
         }
         ratio = lbl_803E7EE0 -
                 (((PlayerState*)p2)->baddie.animSpeedC - lbl_803E7E9C) / (((PlayerState*)p3)->maxSpeed - lbl_803E7E9C);
         f5 = lbl_803E80C4;
         clamped = (ratio < lbl_803E7EA4) ? lbl_803E7EA4 : ((ratio > lbl_803E7EE0) ? lbl_803E7EE0 : ratio);
         f5 = f5 * clamped + lbl_803E80F4;
-        result = ((f32)delta < lbl_803E80F8 * -f5)
+        angle1 = ((f32)angle1 < lbl_803E80F8 * -f5)
                      ? lbl_803E80F8 * -f5
-                     : (((f32)delta > lbl_803E80F8 * f5) ? lbl_803E80F8 * f5 : (f32)delta);
-        angle1 = (int)result;
+                     : (((f32)angle1 > lbl_803E80F8 * f5) ? lbl_803E80F8 * f5 : (f32)angle1);
     }
     else
     {
         angle1 = 0;
-        *(s16*)&((PlayerState*)p3)->lookAtTimer = 0;
+        *(s16*)&((PlayerState*)p3)->lookAtTimer = angle1;
     }
 
     {
@@ -12069,53 +12064,32 @@ void fn_802AC32C(int p1, int p2, int p3)
         {
             v480 = ((PlayerState*)p3)->targetYawRate;
         }
-        if (v480 < -0x28)
-        {
-            v480 = -0x28;
-        }
-        else if (v480 > 0x28)
-        {
-            v480 = 0x28;
-        }
+        v480 = (v480 < -0x28) ? -0x28 : ((v480 > 0x28) ? 0x28 : v480);
         angle1 += v480 * 0xb6;
     }
-    if (angle1 < -0x3ffc)
-    {
-        angle1 = -0x3ffc;
-    }
-    else if (angle1 > 0x3ffc)
-    {
-        angle1 = 0x3ffc;
-    }
-    angle1 -= (u16) * (s16*)((char*)p3 + 0x4d4);
+    angle1 = (angle1 < -0x3ffc) ? -0x3ffc : ((angle1 > 0x3ffc) ? 0x3ffc : angle1);
+    angle1 -= (u16)((PlayerState*)p3)->bodyLeanAngle;
     if (angle1 > 0x8000)
     {
-        angle1 -= 0xFFFF;
+        angle1 = angle1 - 0xFFFF;
     }
     if (angle1 < -0x8000)
     {
-        angle1 += 0xFFFF;
+        angle1 = angle1 + 0xFFFF;
     }
-    angle1 = (int)((f32)angle1 * lbl_803E7EB4);
-    if (angle1 < -0x16c)
-    {
-        angle1 = -0x16c;
-    }
-    else if (angle1 > 0x16c)
-    {
-        angle1 = 0x16c;
-    }
-    ((PlayerState*)p3)->bodyLeanAngle = (f32)angle1 * timeDelta + (f32) * (s16*)((char*)p3 + 0x4d4);
+    angle1 *= lbl_803E7EB4;
+    angle1 = (angle1 < -0x16c) ? -0x16c : ((angle1 > 0x16c) ? 0x16c : angle1);
+    ((PlayerState*)p3)->bodyLeanAngle += angle1 * timeDelta;
     ((PlayerState*)p3)->bodyLeanHalf = (s16)(((PlayerState*)p3)->bodyLeanAngle / 2);
 
     angle2 = ((PlayerState*)p3)->targetYaw - (u16) * (s16*)((char*)p3 + 0x492);
     if (angle2 > 0x8000)
     {
-        angle2 -= 0xFFFF;
+        angle2 = angle2 - 0xFFFF;
     }
     if (angle2 < -0x8000)
     {
-        angle2 += 0xFFFF;
+        angle2 = angle2 + 0xFFFF;
     }
     if (((ByteFlags*)((char*)p3 + 0x3f1))->b20)
     {
@@ -12129,29 +12103,20 @@ void fn_802AC32C(int p1, int p2, int p3)
         }
         angle2 = (int)((f32)angle2 * (lbl_803E7FC4 * f2));
     }
-    if (angle2 < -0xccc)
-    {
-        angle2 = -0xccc;
-    }
-    else if (angle2 > 0xccc)
-    {
-        angle2 = 0xccc;
-    }
+    angle2 = (angle2 < -0xccc) ? -0xccc : ((angle2 > 0xccc) ? 0xccc : angle2);
     angle2 -= (u16) * (s16*)((char*)p3 + 0x4d0);
     if (angle2 > 0x8000)
     {
-        angle2 -= 0xFFFF;
+        angle2 = angle2 - 0xFFFF;
     }
     if (angle2 < -0x8000)
     {
-        angle2 += 0xFFFF;
+        angle2 = angle2 + 0xFFFF;
     }
     ((PlayerState*)p3)->headPitch =
         (f32) * (s16*)((char*)p3 + 0x4d0) + interpolate((f32)angle2, lbl_803E7EB4, timeDelta);
     ((PlayerState*)p3)->headYaw = (f32) * (s16*)((char*)p3 + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta);
 }
-#pragma opt_common_subs reset
-#pragma opt_lifetimes reset
 
 #pragma opt_loop_invariants off
 int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
