@@ -89,7 +89,7 @@ extern f32 lbl_803E77A8;
 
 extern void* salMalloc(u32 size);
 extern void memset(void* dst, int value, u32 size);
-extern void inpInit(void);
+extern void inpInit(u32 unused);
 extern void macInit(void);
 extern void vidInit(void);
 extern void voiceInitPriorityTables(void);
@@ -99,76 +99,100 @@ extern void sndBegin(void);
 extern void sndEnd(void);
 extern void salFree(void* ptr);
 
+typedef struct SynthJobEntry
+{
+    u32 lowPrecision;
+    u32 event;
+    u32 zeroOffset;
+} SynthJobEntry;
+
+static inline void synthInitJobQueue(u8* state)
+{
+    SynthJobEntry* jobTable = (SynthJobEntry*)(state + 0x240);
+    u8 i;
+
+    for (i = 0; i < 32; ++i)
+    {
+        jobTable[i].lowPrecision = 0;
+        jobTable[i].event = 0;
+        jobTable[i].zeroOffset = 0;
+    }
+
+    gSynthDelayBucketCursor = 0;
+}
+
 void synthInit(u32 sampleRate, u32 voiceCount)
 {
     u8* state;
     u32 voiceIndex;
-    u32 voiceOffset;
     u32 fadeIndex;
     u32 auxIndex;
-    u32* delayBucket;
+    f32 unusedA[2];
 
     state = lbl_803BCD90;
-    synthRealTimeHi = synthRealTimeLo = voiceOffset = 0;
+    synthRealTimeLo = 0;
+    synthRealTimeHi = 0;
     ((SynthGlobalState*)state)->sampleRate = sampleRate;
     ((SynthGlobalState*)state)->dspDmaSize = 0x1800;
-    synthFlags = voiceOffset;
-    synthMessageCallback = voiceOffset;
+    synthFlags = 0;
+    synthMessageCallback = 0;
 
     synthVoice = salMalloc(voiceCount * SYNTH_VOICE_STRIDE);
     memset(synthVoice, 0, voiceCount * SYNTH_VOICE_STRIDE);
 
-    for (voiceIndex = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += SYNTH_VOICE_STRIDE)
+    for (voiceIndex = 0; voiceIndex < voiceCount; voiceIndex++)
     {
-        u8 lowIndex;
         u32* link;
+        u8 lowIndex;
 
-        lowIndex = voiceIndex;
-        *(u32*)(synthVoice + voiceOffset + 0xF4) = SYNTH_INVALID_LINK_ID;
-        link = (u32*)(synthVoice + voiceOffset + 0x114);
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0xF4) = SYNTH_INVALID_LINK_ID;
+        link = (u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x114);
         link[1] = 0;
         link[0] = 0;
-        *(u32*)(synthVoice + voiceOffset + 0x110) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x10C) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x121) = 0xFF;
-        *(u32*)(synthVoice + voiceOffset + 0x154) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x192) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x190) = 0x80;
-        *(u8*)(synthVoice + voiceOffset + 0x191) = 0;
-        *(u32*)(synthVoice + voiceOffset + 0x180) = 0x400000;
-        *(u32*)(synthVoice + voiceOffset + 0x170) = 0x400000;
-        *(u32*)(synthVoice + voiceOffset + 0x184) = 0;
-        *(u32*)(synthVoice + voiceOffset + 0x174) = 0;
-        *(u32*)(synthVoice + voiceOffset + 0x1A0) = 0;
-        *(u32*)(synthVoice + voiceOffset + 0x1A4) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x1B8) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x1B9) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x11C) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x11E) = 0x17;
-        *(u8*)(synthVoice + voiceOffset + 0x104) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x193) = 1;
-        *(u32*)(synthVoice + voiceOffset + 0x1C0) = 0;
-        *(u16*)(synthVoice + voiceOffset + 0x1C4) = 0;
-        *(u16*)(synthVoice + voiceOffset + 0x1C6) = 0x7FFF;
-        *(u32*)(synthVoice + voiceOffset + 0x1CC) = 0;
-        *(u16*)(synthVoice + voiceOffset + 0x1D0) = 0;
-        *(u16*)(synthVoice + voiceOffset + 0x1D2) = 0x7FFF;
-        *(u32*)(synthVoice + voiceOffset + 0x13C) = 0x6400;
-        *(u8*)(synthVoice + voiceOffset + 0x131) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x11F) = 0;
-        *(u8*)(synthVoice + voiceOffset + 0x08) = lowIndex;
-        *(u8*)(synthVoice + voiceOffset + 0x09) = 0xFF;
-        *(u8*)(synthVoice + voiceOffset + 0x14) = lowIndex;
-        *(u8*)(synthVoice + voiceOffset + 0x15) = 0xFF;
-        *(u8*)(synthVoice + voiceOffset + 0x20) = lowIndex;
-        *(u8*)(synthVoice + voiceOffset + 0x21) = 0xFF;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x110) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x10C) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x121) = 0xFF;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x154) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x192) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x190) = 0x80;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x191) = 0;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x180) = 0x400000;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x170) = 0x400000;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x184) = 0;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x174) = 0;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1A0) = 0;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1A4) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1B8) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1B9) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11C) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11E) = 0x17;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x104) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x193) = 1;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1C0) = 0;
+        *(u16*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1C4) = 0;
+        *(u16*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1C6) = 0x7FFF;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1CC) = 0;
+        *(u16*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1D0) = 0;
+        *(u16*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1D2) = 0x7FFF;
+        *(u32*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x13C) = 0x6400;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x131) = 0;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11F) = 0;
+        lowIndex = voiceIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x08) = lowIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x09) = 0xFF;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x14) = lowIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x15) = 0xFF;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x20) = lowIndex;
+        *(u8*)(synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x21) = 0xFF;
     }
 
     {
         SynthFade* fade = (SynthFade*)(state + 0x5D4);
-        f32 auxCurrent = lbl_803E77A8;
+        f32 auxCurrent;
         f32 fadeCurrent = lbl_803E77D0;
         u32 pass;
+
+        auxCurrent = lbl_803E77A8;
 
         for (pass = 0; pass < 2; pass++)
         {
@@ -238,7 +262,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
         ((SynthGlobalState*)state)->auxMixB = auxCurrent;
     }
 
-    inpInit();
+    inpInit(0);
 
     for (auxIndex = 0; auxIndex < 8; auxIndex++)
     {
@@ -261,37 +285,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     voiceInitRegistrationTables();
 
-    delayBucket = (u32*)(state + 0x240);
-    for (auxIndex = 0; (u8)auxIndex < 0x20; auxIndex += 8)
-    {
-        delayBucket[0] = 0;
-        delayBucket[1] = 0;
-        delayBucket[2] = 0;
-        delayBucket[3] = 0;
-        delayBucket[4] = 0;
-        delayBucket[5] = 0;
-        delayBucket[6] = 0;
-        delayBucket[7] = 0;
-        delayBucket[8] = 0;
-        delayBucket[9] = 0;
-        delayBucket[10] = 0;
-        delayBucket[11] = 0;
-        delayBucket[12] = 0;
-        delayBucket[13] = 0;
-        delayBucket[14] = 0;
-        delayBucket[15] = 0;
-        delayBucket[16] = 0;
-        delayBucket[17] = 0;
-        delayBucket[18] = 0;
-        delayBucket[19] = 0;
-        delayBucket[20] = 0;
-        delayBucket[21] = 0;
-        delayBucket[22] = 0;
-        delayBucket[23] = 0;
-        delayBucket += 24;
-    }
-
-    gSynthDelayBucketCursor = 0;
+    synthInitJobQueue(state);
     hwSetMesgCallback(synthHWMessageHandler);
 }
 
