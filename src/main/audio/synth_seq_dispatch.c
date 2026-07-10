@@ -217,34 +217,45 @@ static inline u16 seqHandleStream(SeqStream* stream)
 int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
 {
     SynthMidiCtrlBlock* base = (SynthMidiCtrlBlock*)lbl_803AF550;
+    SynthChanRec* pa;
+    SeqNoteData* pe;
+    int velocity;
+    int key;
+    u32 midi;
+    u16 macId;
+    u32* note;
+    SeqTrackEntry* tEntry;
+    SynthChanRec* pattern;
 
     switch (event->type)
     {
     case 4:
     {
-        SeqTrackEntry* d = (SeqTrackEntry*)event->data;
-        SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
-        u8* seq = sv->seqData;
-        u8* t = (u8*)(*(u32*)(*(u32*)(seq + 4) + (u32)seq + d->pattern * 4) + (u32)seq);
-        u8 trackId = event->trackId;
-        SynthChanRec* rec = &sv->records[trackId];
+        SynthMidiState* sv;
+        u8* seq;
+        u8* pptr;
         u8 prog;
 
-        rec->dataPtr = (u32)(t + 0xc);
-        rec->unk0 = 0;
-        rec->entryTime = d->time;
-        rec->eventPtr = (u32)d;
-        seqInitStream(&rec->pitchBend, *(u32*)(t + 4));
-        rec->pitchBend.val = 0x2000;
-        seqInitStream(&rec->modulation, *(u32*)(t + 8));
-        rec->modulation.val = 0;
-        rec->chan = *(u8*)(*(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8) +
-                           (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + trackId);
-        prog = d->prgChange;
+        tEntry = (SeqTrackEntry*)event->data;
+        sv = (SynthMidiState*)gSynthCurrentVoice;
+        seq = sv->seqData;
+        pattern = &sv->records[event->trackId];
+        pptr = (u8*)(*(u32*)(*(u32*)(seq + 4) + (u32)seq + tEntry->pattern * 4) + (u32)seq);
+        pattern->dataPtr = (u32)(pptr + 0xc);
+        pattern->unk0 = 0;
+        pattern->entryTime = tEntry->time;
+        pattern->eventPtr = (u32)tEntry;
+        seqInitStream(&pattern->pitchBend, *(u32*)(pptr + 4));
+        pattern->pitchBend.val = 0x2000;
+        seqInitStream(&pattern->modulation, *(u32*)(pptr + 8));
+        pattern->modulation.val = 0;
+        pattern->chan = *(u8*)(*(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8) +
+                               (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + event->trackId);
+        prog = tEntry->prgChange;
         if (prog != 0xff)
         {
             SynthMidiState* sv2 = (SynthMidiState*)gSynthCurrentVoice;
-            u8 chan = rec->chan;
+            u8 chan = pattern->chan;
             u32 idx;
 
             base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = 0xFFFF;
@@ -269,41 +280,40 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                 }
             }
         }
-        if (d->velocity != 0xff)
+        if (tEntry->velocity != 0xff)
         {
-            inpSetMidiCtrl(MCMD_CTRL_VOLUME, rec->chan, gSynthCurrentVoiceSlotIndex & 0xff, d->velocity);
+            inpSetMidiCtrl(MCMD_CTRL_VOLUME, pattern->chan, gSynthCurrentVoiceSlotIndex & 0xff, tEntry->velocity);
         }
         break;
     }
     case 0:
-    {
-        u32 chan;
-        SeqNoteData* d = (SeqNoteData*)event->data;
-        SynthChanRec* t = (SynthChanRec*)event->chanRec;
-        int d2 = d->key;
-        int d3 = d->velocity;
+        pe = (SeqNoteData*)event->data;
+        pa = (SynthChanRec*)event->chanRec;
+        key = pe->key;
+        velocity = pe->velocity;
+        midi = pa->chan;
 
-        chan = t->chan;
-        if (d2 & 0x80)
+        if (key & 0x80)
         {
-            switch (d3)
+            switch (velocity)
             {
             case 0:
             {
-                SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
+                SynthMidiState* sv;
                 u32 p7;
                 u32 idx;
 
-                base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = 0xFFFF;
-                p7 = d2 & 0x7f;
-                if (chan != 9)
+                base->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
+                sv = (SynthMidiState*)gSynthCurrentVoice;
+                p7 = key & 0x7f;
+                if (midi != 9)
                 {
                     idx = sv->progs[p7];
                     if (idx != 0xff)
                     {
-                        sv->chanPatch[chan].macroId = sv->patchTable[idx].macroId;
-                        sv->chanPatch[chan].a = sv->patchTable[idx].a;
-                        sv->chanPatch[chan].b = sv->patchTable[idx].b;
+                        sv->chanPatch[midi].macroId = sv->patchTable[idx].macroId;
+                        sv->chanPatch[midi].a = sv->patchTable[idx].a;
+                        sv->chanPatch[midi].b = sv->patchTable[idx].b;
                     }
                 }
                 else
@@ -311,20 +321,20 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                     idx = sv->drumProgs[p7];
                     if (idx != 0xff)
                     {
-                        sv->chanPatch[chan].macroId = sv->drumTable[idx].macroId;
-                        sv->chanPatch[chan].a = sv->drumTable[idx].a;
-                        sv->chanPatch[chan].b = sv->drumTable[idx].b;
+                        sv->chanPatch[midi].macroId = sv->drumTable[idx].macroId;
+                        sv->chanPatch[midi].a = sv->drumTable[idx].a;
+                        sv->chanPatch[midi].b = sv->drumTable[idx].b;
                     }
                 }
                 break;
             }
             case 1:
-                inpSetMidiCtrl(SEQ_META_KEY_OFF, chan, gSynthCurrentVoiceSlotIndex & 0xff, d2 & 0x7f);
+                inpSetMidiCtrl(SEQ_META_KEY_OFF, midi, gSynthCurrentVoiceSlotIndex & 0xff, key & 0x7f);
                 break;
             default:
-                if ((d3 & 0x80) == 0x80)
+                if ((velocity & 0x80) == 0x80)
                 {
-                    switch (d3 & 0x7f)
+                    switch (velocity & 0x7f)
                     {
                     case SEQ_META_START_PENDING:
                         if (((SynthMidiState*)gSynthCurrentVoice)->startPending != 0)
@@ -335,19 +345,19 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                         }
                         break;
                     case SEQ_META_LOOP_MARK:
-                        base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = d2 & 0x7f;
+                        base->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = key & 0x7f;
                         break;
                     case SEQ_META_LOOP_MARK_HI:
-                        base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = (d2 & 0x7f) + 0x80;
+                        base->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = (key & 0x7f) + 0x80;
                         break;
                     case SEQ_META_RESET_CTRL:
-                        inpResetMidiCtrl(chan, gSynthCurrentVoiceSlotIndex & 0xff, 0);
+                        inpResetMidiCtrl(midi, gSynthCurrentVoiceSlotIndex & 0xff, 0);
                         break;
                     case SEQ_META_ALL_NOTES_OFF:
                         synthFlushCallbacks();
                         break;
                     default:
-                        inpSetMidiCtrl(d3 & 0x7f, chan, gSynthCurrentVoiceSlotIndex & 0xff, d2 & 0x7f);
+                        inpSetMidiCtrl(velocity & 0x7f, midi, gSynthCurrentVoiceSlotIndex & 0xff, key & 0x7f);
                         break;
                     }
                 }
@@ -359,48 +369,17 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
             SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
             if (sv->chanBits[event->trackId / 32] & (1 << (event->trackId & 0x1f)))
             {
-                u16 macroId = sv->chanPatch[chan].macroId;
-                if (macroId != 0xFFFF)
+                if ((macId = sv->chanPatch[midi].macroId) != 0xFFFF)
                 {
-                    SeqTrackEntry* d6 = (SeqTrackEntry*)t->eventPtr;
-                    int sum = d2 + d6->transpose;
-                    int key;
-                    int vel;
-                    u32* cb;
-
-                    if (sum > 0x7f)
-                    {
-                        key = 0x7f;
-                    }
-                    else if (sum < 0)
-                    {
-                        key = 0;
-                    }
-                    else
-                    {
-                        key = sum;
-                    }
-                    d3 += d6->velocityAdd;
-                    if (d3 > 0x7f)
-                    {
-                        vel = 0x7f;
-                    }
-                    else if (d3 < 0)
-                    {
-                        vel = 0;
-                    }
-                    else
-                    {
-                        vel = d3;
-                    }
-                    cb = synthAllocCallback(event->time + d->length, voice);
-                    if (cb != NULL)
+                    key += ((SeqTrackEntry*)pa->eventPtr)->transpose;
+                    key = key > 0x7f ? 0x7f : key < 0 ? 0 : key;
+                    velocity += ((SeqTrackEntry*)pa->eventPtr)->velocityAdd;
+                    velocity = velocity > 0x7f ? 0x7f : velocity < 0 ? 0 : velocity;
+                    if ((note = synthAllocCallback(event->time + pe->length, voice)) != NULL)
                     {
                         SynthMidiState* sv2;
                         s16 mod;
                         u8 vt;
-                        u32 vid;
-                        u32* head;
 
                         if (lbl_803DE224 != 0)
                         {
@@ -412,57 +391,47 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                         }
                         sv2 = (SynthMidiState*)gSynthCurrentVoice;
                         vt = sv2->studioIndex;
-                        vid = synthStartSound(macroId, sv2->chanPatch[chan].a, sv2->chanPatch[chan].b, key & 0xff,
-                                              vel & 0xff, 0x40, chan, gSynthCurrentVoiceSlotIndex & 0xff, voice, 0,
-                                              event->trackId, sv2->chanMap[event->trackId], mod, vt,
-                                              lbl_803BDA24[vt * 2]);
-                        cb[2] = vid;
-                        if (vid == 0xFFFFFFFF)
+                        if ((note[2] = synthStartSound(macId, sv2->chanPatch[midi].a, sv2->chanPatch[midi].b,
+                                                       key & 0xff, velocity & 0xff, 0x40, midi,
+                                                       gSynthCurrentVoiceSlotIndex & 0xff, voice, 0, event->trackId,
+                                                       sv2->chanMap[event->trackId], mod, vt,
+                                                       lbl_803BDA24[vt * 2])) == 0xFFFFFFFF)
                         {
-                            if (cb[0] != 0)
+                            if (note[0] != 0)
                             {
-                                *(u32*)(cb[0] + 4) = cb[1];
+                                *(u32*)(note[0] + 4) = note[1];
                             }
-                            if (cb[1] != 0)
+                            if (note[1] != 0)
                             {
-                                *(u32*)cb[1] = cb[0];
+                                *(u32*)note[1] = note[0];
                             }
                             else
                             {
                                 SynthMidiState* sv3 = (SynthMidiState*)gSynthCurrentVoice;
-                                sv3->cbHeads[*((u8*)cb + 0x11)] = cb[0];
+                                sv3->cbHeads[*((u8*)note + 0x11)] = note[0];
                             }
-                            head = gSynthFreeCallbacks;
-                            cb[0] = (u32)head;
-                            if (head != NULL)
+                            if ((note[0] = (u32)gSynthFreeCallbacks) != 0)
                             {
-                                gSynthFreeCallbacks[1] = (u32)cb;
+                                gSynthFreeCallbacks[1] = (u32)note;
                             }
-                            cb[1] = 0;
-                            gSynthFreeCallbacks = cb;
+                            note[1] = 0;
+                            gSynthFreeCallbacks = note;
                         }
                     }
                 }
             }
         }
         break;
-    }
     case 2:
-    {
-        SynthChanRec* t = (SynthChanRec*)event->chanRec;
-
-        inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, t->chan, gSynthCurrentVoiceSlotIndex & 0xff,
-                         seqHandleStream(&t->pitchBend));
+        pa = (SynthChanRec*)event->chanRec;
+        inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, pa->chan, gSynthCurrentVoiceSlotIndex & 0xff,
+                         seqHandleStream(&pa->pitchBend));
         break;
-    }
     case 1:
-    {
-        SynthChanRec* t = (SynthChanRec*)event->chanRec;
-
-        inpSetMidiCtrl14(MCMD_CTRL_MODULATION, t->chan, gSynthCurrentVoiceSlotIndex & 0xff,
-                         seqHandleStream(&t->modulation));
+        pa = (SynthChanRec*)event->chanRec;
+        inpSetMidiCtrl14(MCMD_CTRL_MODULATION, pa->chan, gSynthCurrentVoiceSlotIndex & 0xff,
+                         seqHandleStream(&pa->modulation));
         break;
-    }
     case 3:
         *flag |= 1;
         return 0;
