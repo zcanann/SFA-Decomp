@@ -515,6 +515,28 @@ static inline void mcmdIfVarCompare(McmdVoiceState* svoice, McmdCommandArgs* cst
     }
 }
 
+static inline void mcmdIfModulation(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    u8* macro;
+    u8 mod;
+
+    if (svoice->midiSlot == 0xff)
+    {
+        return;
+    }
+    mod = inpGetModulation(svoice) >> 7;
+    if (mod < (u8)(cstep->flags >> 8))
+    {
+        return;
+    }
+
+    if ((macro = dataGetMacro(cstep->flags >> 0x10)) != 0)
+    {
+        svoice->macroBase = macro;
+        svoice->macroCursor = macro + ((cstep->value & 0xffff) << 3);
+    }
+}
+
 static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     u32 voiceid;
@@ -711,19 +733,7 @@ void macHandleActive(McmdVoiceState* sv)
             mcmdSendKeyOff(sv, &lbl_803DE2E8);
             break;
         case 0xa: /* if modulation */
-            if (sv->midiSlot != 0xff)
-            {
-                u32 mod = (inpGetModulation(sv) >> 7) & 0xff;
-                if (mod >= ((lbl_803DE2E8.flags >> 8) & 0xff))
-                {
-                    u8* macro = dataGetMacro(lbl_803DE2E8.flags >> 0x10);
-                    if (macro != 0)
-                    {
-                        sv->macroBase = macro;
-                        sv->macroCursor = macro + ((*para1 & 0xffff) << 3);
-                    }
-                }
-            }
+            mcmdIfModulation(sv, &lbl_803DE2E8);
             break;
         case 0xb: /* set piano panning */
         {
