@@ -736,9 +736,11 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     shiftHi = shiftLo + 2;
     z6lo = dz & 3;
     z6hi = z6lo + 1;
+    i = 0;
+    p = &occ[0][0];
     bitmapCol = (voxZ << 1) + (voxX >> 3);
 
-    for (i = 0, p = &occ[0][0]; i < 3; i++)
+    for (; i < 3; i++)
     {
         ySlot = i + box[1];
         ySlot = ySlot - 1;
