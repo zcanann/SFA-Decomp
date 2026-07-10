@@ -5794,8 +5794,15 @@ int playerState19(int obj, int state)
         inner->stateHandler = 0;
     }
     {
-        int inner2 = *(int*)&((GameObject*)obj)->extra;
-        *(int*)((char*)inner2 + 0x360) &= ~0x2LL;
+        register u32 mask;
+        register u32 value;
+        register int inner2 = *(int*)&((GameObject*)obj)->extra;
+        asm {
+            lwz value, 0x360(inner2)
+            li mask, -3
+            and mask, value, mask
+            stw mask, 0x360(inner2)
+        }
         *(int*)((char*)inner2 + 0x360) |= 0x2000;
     }
     *(int*)((char*)state + 0x4) |= 0x100000;
