@@ -1007,21 +1007,21 @@ foundFirst:
                 {
                     if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_A) != 0)
                     {
-                        slot->velocityX = lbl_803DF3E4 * slot->velocityX + slot->velocityX;
-                        slot->velocityY = lbl_803DF3E4 * slot->velocityY + slot->velocityY;
-                        slot->velocityZ = lbl_803DF3E4 * slot->velocityZ + slot->velocityZ;
+                        slot->velocityX += lbl_803DF3E4 * slot->velocityX;
+                        slot->velocityY += lbl_803DF3E4 * slot->velocityY;
+                        slot->velocityZ += lbl_803DF3E4 * slot->velocityZ;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_B) != 0)
                     {
-                        slot->velocityX = lbl_803DF3E8 * slot->velocityX + slot->velocityX;
-                        slot->velocityY = lbl_803DF3E8 * slot->velocityY + slot->velocityY;
-                        slot->velocityZ = lbl_803DF3E8 * slot->velocityZ + slot->velocityZ;
+                        slot->velocityX += lbl_803DF3E8 * slot->velocityX;
+                        slot->velocityY += lbl_803DF3E8 * slot->velocityY;
+                        slot->velocityZ += lbl_803DF3E8 * slot->velocityZ;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_C) != 0)
                     {
-                        slot->velocityX = lbl_803DF3EC * slot->velocityX + slot->velocityX;
-                        slot->velocityY = lbl_803DF3EC * slot->velocityY + slot->velocityY;
-                        slot->velocityZ = lbl_803DF3EC * slot->velocityZ + slot->velocityZ;
+                        slot->velocityX += lbl_803DF3EC * slot->velocityX;
+                        slot->velocityY += lbl_803DF3EC * slot->velocityY;
+                        slot->velocityZ += lbl_803DF3EC * slot->velocityZ;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_DAMP) != 0)
                     {
