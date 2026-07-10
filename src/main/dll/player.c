@@ -1959,8 +1959,10 @@ int playerStateMoving(int obj, int state)
             }
             else
             {
-                f32 v = ((PlayerState*)state)->baddie.animSpeedC;
-                f32 lim = ((PlayerState*)inner)->maxSpeed;
+                f32 lim;
+                f32 v;
+                v = ((PlayerState*)state)->baddie.animSpeedC;
+                lim = ((PlayerState*)inner)->maxSpeed;
                 ((PlayerState*)state)->baddie.animSpeedC = (v < -lim) ? -lim : ((v > lim) ? lim : v);
             }
             {
