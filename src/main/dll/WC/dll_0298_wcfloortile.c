@@ -598,6 +598,7 @@ void arwarwing_readControls(int obj, int state)
 void arwarwing_updateBarrelRoll(GameObject* obj, int state)
 {
     f32 zero;
+    f32 direction;
 
     ((ArwingState*)state)->barrelRollAngle =
         (int)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
@@ -605,7 +606,9 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
     obj->anim.rotZ =
         (s16)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
               (f32) * &obj->anim.rotZ);
-    if (((ArwingState*)state)->barrelRollDirection > (zero = lbl_803E6ECC))
+    direction = ((ArwingState*)state)->barrelRollDirection;
+    zero = lbl_803E6ECC;
+    if (direction > zero)
     {
         {
             int tgt = ((ArwingState*)state)->rotZTrimCur;
