@@ -145,7 +145,7 @@ void fn_8026EC44(u32 dt)
             lbl_803DE224 = fade;
             if (cs->multiMode == 0)
             {
-                st = &cs->streams[0];
+                st = (SynthStream*)((u8*)cs + 0x14E8);
                 if (st->base != NULL)
                 {
                     while (*(evt = st->evt) != 0xffffffff)
