@@ -67,6 +67,7 @@ void trickyFn_80141290(int obj, int ball)
     int curve;
     int fromNode;
     int nodeIds[4];
+    void* curveArg;
     int nextNode;
     int candidateNode;
     int targetNode;
@@ -204,6 +205,7 @@ void trickyFn_80141290(int obj, int ball)
             bestDistance = getXZDistance((float*)(ts->playerObj + 0x18), (float*)(fromNode + 8));
             distance = getXZDistance((float*)(ts->playerObj + 0x18), (float*)(toNode + 8));
 
+            curveArg = (void*)curve;
             if (bestDistance > distance)
             {
                 nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(fromNode, 0);
@@ -218,7 +220,7 @@ void trickyFn_80141290(int obj, int ball)
                 ts->route.reverse = 1;
             }
 
-            fn_800DA980(&ts->route, (void*)curve, (void*)fromNode, (void*)targetNode);
+            fn_800DA980(&ts->route, curveArg, (void*)fromNode, (void*)targetNode);
             if (ts->route.reverse != 0)
             {
                 RomCurve_stepClamped(&ts->route, lbl_803E250C);
