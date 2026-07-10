@@ -270,8 +270,8 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         u32 chan;
         SeqNoteData* d = (SeqNoteData*)((SeqEvent*)event)->data;
         SynthChanRec* t = (SynthChanRec*)((SeqEvent*)event)->chanRec;
-        u8 d2 = d->key;
-        u8 d3 = d->velocity;
+        int d2 = d->key;
+        int d3 = d->velocity;
 
         chan = t->chan;
         if (d2 & 0x80)
@@ -355,7 +355,6 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
                     SeqTrackEntry* d6 = (SeqTrackEntry*)t->eventPtr;
                     int sum = d2 + d6->transpose;
                     int key;
-                    int sum2;
                     int vel;
                     u32* cb;
 
@@ -371,18 +370,18 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
                     {
                         key = sum;
                     }
-                    sum2 = d3 + d6->velocityAdd;
-                    if (sum2 > 0x7f)
+                    d3 += d6->velocityAdd;
+                    if (d3 > 0x7f)
                     {
                         vel = 0x7f;
                     }
-                    else if (sum2 < 0)
+                    else if (d3 < 0)
                     {
                         vel = 0;
                     }
                     else
                     {
-                        vel = sum2;
+                        vel = d3;
                     }
                     cb = synthAllocCallback(((SeqEvent*)event)->time + d->length, voice);
                     if (cb != NULL)
