@@ -210,6 +210,31 @@ static inline u16 seqHandleStream(SeqStream* stream)
     return stream->val;
 }
 
+static inline void seqDoPrgChange(SynthMidiState* seq, u8 prg, u8 midi)
+{
+    ((SynthMidiCtrlBlock*)lbl_803AF550)->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
+    if (midi != 9)
+    {
+        prg = seq->progs[prg];
+        if (prg == 0xff)
+        {
+            return;
+        }
+        seq->chanPatch[midi].macroId = seq->patchTable[prg].macroId;
+        seq->chanPatch[midi].a = seq->patchTable[prg].a;
+        seq->chanPatch[midi].b = seq->patchTable[prg].b;
+        return;
+    }
+    prg = seq->drumProgs[prg];
+    if (prg == 0xff)
+    {
+        return;
+    }
+    seq->chanPatch[midi].macroId = seq->drumTable[prg].macroId;
+    seq->chanPatch[midi].a = seq->drumTable[prg].a;
+    seq->chanPatch[midi].b = seq->drumTable[prg].b;
+}
+
 /*
  * Dispatch a queued voice/MIDI channel event by type, then pull the next
  * event for the channel.
@@ -298,36 +323,8 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
             switch (velocity)
             {
             case 0:
-            {
-                SynthMidiState* sv;
-                u32 p7;
-                u32 idx;
-
-                base->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
-                sv = (SynthMidiState*)gSynthCurrentVoice;
-                p7 = key & 0x7f;
-                if (midi != 9)
-                {
-                    idx = sv->progs[p7];
-                    if (idx != 0xff)
-                    {
-                        sv->chanPatch[midi].macroId = sv->patchTable[idx].macroId;
-                        sv->chanPatch[midi].a = sv->patchTable[idx].a;
-                        sv->chanPatch[midi].b = sv->patchTable[idx].b;
-                    }
-                }
-                else
-                {
-                    idx = sv->drumProgs[p7];
-                    if (idx != 0xff)
-                    {
-                        sv->chanPatch[midi].macroId = sv->drumTable[idx].macroId;
-                        sv->chanPatch[midi].a = sv->drumTable[idx].a;
-                        sv->chanPatch[midi].b = sv->drumTable[idx].b;
-                    }
-                }
+                seqDoPrgChange((SynthMidiState*)gSynthCurrentVoice, key & 0x7f, midi);
                 break;
-            }
             case 1:
                 inpSetMidiCtrl(SEQ_META_KEY_OFF, midi, gSynthCurrentVoiceSlotIndex & 0xff, key & 0x7f);
                 break;
