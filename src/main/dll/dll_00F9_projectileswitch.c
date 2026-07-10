@@ -12,7 +12,8 @@
 #include "main/frame_timing.h"
 
 /*
- * Low 2 bits of ProjectileSwitchPlacement.triggerMode select switch behaviour.
+ * Low 2 bits of ProjectileSwitchPlacement.modelIndexAndMode select switch behaviour;
+ * the upper 6 bits select the model bank.
  * (Same mode field as dll_00FA invisiblehitswitch.)
  * Modes 0 and 3 both latch on in this DLL. Mode 2 and its delay units were
  * verified live against the first Magic Cave switch.
@@ -36,13 +37,13 @@ int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 int ProjectileSwitch_getObjectTypeId(int* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int v = (int)*(u8*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x1e) >> 2;
+    int modelIndex = (int)*(u8*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x1e) >> 2;
     int max = objAnim->modelInstance->modelCount;
-    if (v >= max)
+    if (modelIndex >= max)
     {
-        v = 0;
+        modelIndex = 0;
     }
-    return ((u32)v << 11) | 0x400;
+    return ((u32)modelIndex << 11) | 0x400;
 }
 
 void ProjectileSwitch_free(void)
@@ -51,17 +52,23 @@ void ProjectileSwitch_free(void)
 
 typedef struct ProjectileSwitchPlacement
 {
-    u8 pad0[0x1A - 0x0];
+    u8 pad0[0x18 - 0x0];
+    s16 gameBitId;
     s16 autoResetDelayTenths;
-    u8 pad1C[0x1E - 0x1C];
-    u8 triggerMode;
-    u8 pad1F[0x20 - 0x1F];
+    u8 rotYByte;
+    u8 scale64;
+    u8 modelIndexAndMode;
+    u8 rotXByte;
     u8 colorR;
     u8 colorG;
     u8 colorB;
     u8 renderFlags;
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchPlacement;
+
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, gameBitId) == 0x18);
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, modelIndexAndMode) == 0x1e);
+STATIC_ASSERT(sizeof(ProjectileSwitchPlacement) == 0x28);
 
 typedef struct ProjectileSwitchState
 {
@@ -117,7 +124,8 @@ void ProjectileSwitch_hitDetect(GameObject *obj)
 
     if (((ProjectileSwitchState*)switchState)->isOn != 0)
     {
-        if (((((ProjectileSwitchPlacement*)placement)->triggerMode & SWITCH_MODE_MASK)) != SWITCH_MODE_TOGGLE) return;
+        if (((((ProjectileSwitchPlacement*)placement)->modelIndexAndMode & SWITCH_MODE_MASK)) != SWITCH_MODE_TOGGLE)
+            return;
         switchStateReloaded = *(int*)&(obj)->extra;
         if ((obj)->anim.mapEventSlot == 0x2c)
         {
@@ -153,7 +161,7 @@ void ProjectileSwitch_hitDetect(GameObject *obj)
         }
         ((ProjectileSwitchState*)switchStateReloaded)->isOn = 1;
         mainSetBits((int)((ProjectileSwitchState*)switchState)->gameBitId, 1);
-        if ((((ProjectileSwitchPlacement*)placement)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_TIMED_RESET)
+        if ((((ProjectileSwitchPlacement*)placement)->modelIndexAndMode & SWITCH_MODE_MASK) == SWITCH_MODE_TIMED_RESET)
         {
             ((ProjectileSwitchState*)switchState)->autoResetTimerFrames =
                 60.0f * (0.1f *
@@ -207,28 +215,30 @@ void ProjectileSwitch_init(GameObject *obj, u8* initData)
 {
 
     ObjAnimComponent* objAnim;
+    ProjectileSwitchPlacement* placement;
     int switchState;
     u8* linkObj;
     u8* linkSub;
     ObjTextureRuntimeSlot* tex;
 
     objAnim = (ObjAnimComponent*)obj;
+    placement = (ProjectileSwitchPlacement*)initData;
     switchState = *(int*)&(obj)->extra;
-    *(short*)obj = (short)(initData[0x1f] << 8);
-    (obj)->anim.rotY = (short)(initData[0x1c] << 8);
-    if (initData[0x1d] == 0)
+    *(short*)obj = (short)(placement->rotXByte << 8);
+    (obj)->anim.rotY = (short)(placement->rotYByte << 8);
+    if (placement->scale64 == 0)
     {
         (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
-        f32 scaledRadius = (f32)(u32)initData[0x1d] * (obj)->anim.modelInstance->rootMotionScaleBase;
+        f32 scaledRadius = (f32)(u32)placement->scale64 * (obj)->anim.modelInstance->rootMotionScaleBase;
         (obj)->anim.rootMotionScale = scaledRadius / 64.0f;
     }
     ObjHitbox_SetSphereRadius(
         (int)obj,
-        (short)(((int)initData[0x1d] * (int)(obj)->anim.modelInstance->primaryHitboxRadius) / 64));
-    objAnim->bankIndex = initData[0x1e] >> 2;
+        (short)(((int)placement->scale64 * (int)(obj)->anim.modelInstance->primaryHitboxRadius) / 64));
+    objAnim->bankIndex = placement->modelIndexAndMode >> 2;
     if ((int)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
@@ -250,7 +260,7 @@ void ProjectileSwitch_init(GameObject *obj, u8* initData)
     }
     else
     {
-        ((ProjectileSwitchState*)switchState)->gameBitId = *(short*)(initData + 0x18);
+        ((ProjectileSwitchState*)switchState)->gameBitId = placement->gameBitId;
     }
     ((ProjectileSwitchState*)switchState)->isOn =
         mainGetBit((int)((ProjectileSwitchState*)switchState)->gameBitId);
@@ -268,7 +278,7 @@ void ProjectileSwitch_init(GameObject *obj, u8* initData)
         if (tex != 0) tex->textureId = 0;
         ((ProjectileSwitchState*)switchState)->isOn = 0;
     }
-    if ((initData[0x23] & PROJECTILESWITCH_PLACEMENT_CUSTOM_COLOR) == 0)
+    if ((placement->renderFlags & PROJECTILESWITCH_PLACEMENT_CUSTOM_COLOR) == 0)
     {
         (obj)->objectFlags = (u16)((obj)->objectFlags | OBJECT_OBJFLAG_HIDDEN);
     }

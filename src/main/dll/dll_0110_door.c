@@ -19,34 +19,24 @@
 #define DOOR_CLOSE_FLAG_REQUESTED 1
 #define DOOR_CLOSE_FLAG_READY 2
 
-typedef struct DoorObjectDef
+typedef struct DoorPlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 closeRequestGameBit; /* 0x18: nonzero requests that the door close */
     s16 closedLatchGameBit;  /* 0x1A: set after closing, cleared after opening */
-    u8 unk1C;
-    u8 unk1D;
-    u8 pad1E[0x20 - 0x1E];
-    u8 triggerArg; /* 0x20: low 7 bits passed to preempt sequence (== DoorPlacement.triggerArg) */
-    u8 rootMotionScaleInput; /* 0x21 */
+    s16 triggerSequenceId;   /* 0x1C */
+    u8 runSequenceId;        /* 0x1E */
+    u8 rotXByte;             /* 0x1F: high byte of initial anim.rotX */
+    u8 triggerArg;           /* 0x20: low 7 bits passed to preempt sequence */
+    u8 rootMotionScaleInput; /* 0x21: scale in 1/64 units */
     s16 closeReadyGameBit;   /* 0x22: closure waits for this bit, or -1 */
-    u8 pad24[0x28 - 0x24];
-} DoorObjectDef;
-
-typedef struct DoorPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 closeRequestGameBit; /* 0x18 */
-    s16 closedLatchGameBit;  /* 0x1A */
-    s16 triggerSequenceId; /* 0x1C */
-    u8 runSequenceId;      /* 0x1E */
-    u8 pad1F[0x20 - 0x1F];
-    u8 triggerArg;    /* 0x20: low 7 bits passed to preempt sequence */
-    u8 pad21[0x22 - 0x21];
-    s16 closeReadyGameBit; /* 0x22 */
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } DoorPlacement;
+
+STATIC_ASSERT(offsetof(DoorPlacement, closeRequestGameBit) == 0x18);
+STATIC_ASSERT(offsetof(DoorPlacement, rootMotionScaleInput) == 0x21);
+STATIC_ASSERT(sizeof(DoorPlacement) == 0x28);
 
 /* Per-door state block (GameObject->extra, Door_getExtraSize == 0x8). */
 typedef struct DoorState
@@ -234,28 +224,28 @@ void Door_init(int* obj, u8* def)
 {
     DoorState* state = (DoorState*)((GameObject*)obj)->extra;
     state->initPending = 1;
-    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((DoorPlacement*)def)->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = Door_animEventCallback;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DOOR_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->rootMotionScaleInput / 64.0f;
+    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorPlacement*)def)->rootMotionScaleInput / 64.0f;
     if (!((GameObject*)obj)->anim.rootMotionScale)
     {
         ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    if (((DoorObjectDef*)def)->closedLatchGameBit != -1)
+    if (((DoorPlacement*)def)->closedLatchGameBit != -1)
     {
-        state->phase = mainGetBit(((DoorObjectDef*)def)->closedLatchGameBit);
+        state->phase = mainGetBit(((DoorPlacement*)def)->closedLatchGameBit);
     }
     else
     {
         state->phase = DOOR_PHASE_OPEN;
     }
     state->closeFlags = 0;
-    if (mainGetBit(((DoorObjectDef*)def)->closeRequestGameBit) != 0)
+    if (mainGetBit(((DoorPlacement*)def)->closeRequestGameBit) != 0)
         state->closeFlags = (u8)(state->closeFlags | DOOR_CLOSE_FLAG_REQUESTED);
-    if (mainGetBit(((DoorObjectDef*)def)->closeReadyGameBit) != 0)
+    if (mainGetBit(((DoorPlacement*)def)->closeReadyGameBit) != 0)
         state->closeFlags = (u8)(state->closeFlags | DOOR_CLOSE_FLAG_READY);
     {
         s16 model = ((GameObject*)obj)->anim.seqId;
