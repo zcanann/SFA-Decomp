@@ -171,8 +171,7 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         u8* slot = (u8*)&((SynthFade*)stateBase)[target];
         u32* handlePtr;
         *(u8*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
-        handlePtr = (u32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x28);
-        *handlePtr = handle;
+        *(handlePtr = (u32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x28)) = handle;
         if (fadeTime != 0)
         {
             *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x08) = *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x00);
