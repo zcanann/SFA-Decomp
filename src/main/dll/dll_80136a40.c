@@ -829,7 +829,7 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
         for (; i < 5; i++)
         {
             bit = 0;
-            c0 = row0 + x;
+            c0 = x + row0;
             a0 = c0;
             a1 = c0 + 1;
             c1 = row1 + x;
