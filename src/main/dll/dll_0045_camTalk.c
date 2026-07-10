@@ -53,7 +53,6 @@ void CameraModeBike_free(void)
     gCamTalkBikeState = 0;
 }
 
-#pragma peephole on
 #pragma opt_propagation off
 void CameraModeBike_update(CameraObject* camera)
 {
@@ -66,8 +65,8 @@ void CameraModeBike_update(CameraObject* camera)
     GameObject* target;
     float sinYaw;
     float cosYaw;
-    float cosPitch;
     float sinPitch;
+    float cosPitch;
     float posZ;
     float posY;
     float posX;
@@ -83,16 +82,16 @@ void CameraModeBike_update(CameraObject* camera)
         xformIn.y = target->anim.worldPosY;
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
-        xformIn.yaw = target->anim.rotX;
-        xformIn.pitch = (u16)(int)gCamTalkBikeState->pitchTarget;
+        *(s16*)&xformIn.yaw = target->anim.rotX;
+        xformIn.pitch = gCamTalkBikeState->pitchTarget;
         xformIn.roll = 0;
         setMatrixFromObjectPos(mtxBuf, &xformIn);
         Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780, &posZ, &posY, &posX);
-        camera->anim.rotX = 0x8000 - target->anim.rotX;
+        angleDelta = 0x8000 - target->anim.rotX;
+        camera->anim.rotX = angleDelta;
         gCamTalkBikeState->smoothedYawOffset +=
             lbl_803E1790 * ((f32)(lbl_803E1794 * gCamTalkBikeState->turnInput) - gCamTalkBikeState->smoothedYawOffset);
-        rotVal = (int)((f32)(s32)camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset);
-        camera->anim.rotX = rotVal;
+        camera->anim.rotX = (f32)(s32)camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset;
         rotVal = (int)(lbl_803E1798 - gCamTalkBikeState->pitchTarget);
         angleDelta = rotVal - (u16)camera->anim.rotY;
         if (0x8000 < angleDelta)
@@ -116,13 +115,13 @@ void CameraModeBike_update(CameraObject* camera)
         gCamTalkBikeState->followDistance +=
             kFollowA * ((kFollowB * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance);
         followDist = gCamTalkBikeState->followDistance;
-        sinPitch = followDist * sinPitch;
-        cosPitch = followDist * cosPitch;
-        cosYaw = cosPitch * cosYaw;
-        cosPitch = cosPitch * sinYaw;
+        kFollowA = followDist * sinPitch;
+        kFollowB = followDist * cosPitch;
+        cosYaw = kFollowB * cosYaw;
+        kFollowB = kFollowB * sinYaw;
         camera->anim.worldPosX = posZ + cosYaw;
-        camera->anim.worldPosY = posY + sinPitch;
-        camera->anim.worldPosZ = posX + cosPitch;
+        camera->anim.worldPosY = posY + kFollowA;
+        camera->anim.worldPosZ = posX + kFollowB;
         rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
         angleDelta = rotVal - (u16)camera->anim.rotZ;
         if (0x8000 < angleDelta)
@@ -133,9 +132,8 @@ void CameraModeBike_update(CameraObject* camera)
         {
             angleDelta = angleDelta + 0xFFFF;
         }
-        sinYaw = (f32)(s32)angleDelta * timeDelta;
-        rotVal = (int)(sinYaw * lbl_803E17B4 + (f32)(s32) * (s16*)((char*)&camera->anim.rotZ));
-        camera->anim.rotZ = rotVal;
+        kFollowA = (f32)(s32)angleDelta * timeDelta;
+        camera->anim.rotZ = kFollowA * lbl_803E17B4 + (f32)(s32) * (s16*)((char*)&camera->anim.rotZ);
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                        (u32)camera->anim.parent);
