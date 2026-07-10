@@ -2125,6 +2125,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
 }
 
 #pragma opt_loop_invariants on
+#pragma opt_lifetimes off
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
 {
     u8* hdr = model;
@@ -2222,6 +2223,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
+#pragma opt_lifetimes reset
 
 extern f32 lbl_803DE850;
 
