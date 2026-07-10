@@ -2087,8 +2087,8 @@ void gameTextRun(void)
     int sourceId;
     GameTextLoadSlot* freeSlot;
     u8* pending;
-    int i;
     int dirId;
+    int i;
     int languageId;
     GameTextLoadSlot* slot;
     u8* textWindow;
@@ -2456,7 +2456,6 @@ void gameTextLoadForCurMap(int sourceId)
     int languageId;
     GameTextLoadSlot* slot;
     GameTextLoadSlot* freeSlot;
-    GameTextLoadRequest* request;
     u8* gameTextBase;
     int i;
 
@@ -2503,10 +2502,9 @@ void gameTextLoadForCurMap(int sourceId)
         slot++;
     } while (i-- != 0);
 
-    request = (GameTextLoadRequest*)(gameTextBase + sourceId * sizeof(GameTextLoadRequest));
-    *(int*)((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
-    *(dirPtr = (u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
-    *(langPtr = (u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = curLanguage;
+    *(int*)(gameTextBase + sourceId * sizeof(GameTextLoadRequest) + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
+    *(dirPtr = gameTextBase + sourceId * sizeof(GameTextLoadRequest) + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
+    *(langPtr = gameTextBase + sourceId * sizeof(GameTextLoadRequest) + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)       ? slot
@@ -3206,9 +3204,10 @@ void gameTextInitFn_8001c794(void)
     src = gGameTextBoxCornerTexSrc;
     for (; i < 4; i++)
     {
+        j = 0;
         x = 0;
         x0 = 0;
-        for (j = 0; j < 4; j++)
+        for (; j < 4; j++)
         {
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
@@ -3253,13 +3252,13 @@ void gameTextInitFn_8001c794(void)
     src = lbl_802CA100;
     for (; i < 5; i++)
     {
-        x = 0;
+        j = 0;
         x0 = 0;
-        for (; x < 20; x += 4)
+        for (; j < 20;)
         {
-            x1 = (x + 1) * 2;
-            x2 = (x + 2) * 2;
-            x3 = (x + 3) * 2;
+            x1 = (j + 1) * 2;
+            x2 = (j + 2) * 2;
+            x3 = (j + 3) * 2;
             off = y * 40;
             rowBase = (u8*)src + off;
             dst[0] = *(u16*)(rowBase + x0);
@@ -3285,6 +3284,7 @@ void gameTextInitFn_8001c794(void)
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
             dst += 16;
+            j += 4;
             x0 += 8;
         }
         y += 4;
