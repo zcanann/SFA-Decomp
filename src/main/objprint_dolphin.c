@@ -1299,7 +1299,7 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
 
-#pragma opt_propagation off
+#pragma opt_propagation on
 void objRenderFn_8003d980(u8* obj, int* p2)
 {
     f32 wm[16];
