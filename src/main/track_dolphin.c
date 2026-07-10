@@ -4872,13 +4872,14 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     int flag1;
     int flag2;
     int flag4;
-    f32 minX, maxX, minZ, maxZ;
     int count, found;
     f32 *fracp, *distp;
     int mask;
     int i;
-    f32 dist;
     s8 lineType;
+    f32 dist;
+    f32 len, ax2, ay2, az2, bx2, by2, bz2, dx, dz;
+    f32 minX, maxX, minZ, maxZ;
 
     if (obj != NULL)
     {
@@ -4925,7 +4926,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     flag4 = flags & 4;
 
     {
-        f32 x0, x1;
+        f32 x1, x0;
         x0 = A[0];
         posX[0] = x0;
         posZ[0] = A[2];
@@ -4976,14 +4977,12 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         s16* ep;
         u8* rp;
         found = 0;
-        ep = (s16*)(lineIdx + si2);
-        rp = (u8*)(vt + si16);
-        for (i = start; i < end; i++, ep++, rp += 0x10)
+        for (i = start, ep = (s16*)(lineIdx + si2), rp = (u8*)(vt + si16); i < end; i++, ep++, rp += 0x10)
         {
             u8* rec;
             int i0, i1;
             f32 *va, *vb;
-            f32 dx, dz, ay2, by2, ha, bz2, az2, ylo, bx2, hb, ax2, yhi, len;
+            f32 ha, ylo, hb, yhi;
             int mi;
 
             dist = lbl_803DECD0;
