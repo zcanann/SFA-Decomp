@@ -1509,6 +1509,7 @@ extern f32 lbl_803E8078;
 extern f32 lbl_803E807C;
 extern f32 lbl_803E8080;
 
+#pragma opt_propagation off
 int playerStateMoving(int obj, int state)
 {
     int inner;
@@ -2119,6 +2120,7 @@ int playerStateMoving(int obj, int state)
 extern s16 gPlayerPrevMoveId;
 extern f32 lbl_803E8020;
 
+#pragma opt_propagation reset
 int playerStateOnLadder(int obj, int state)
 {
     int jt;
