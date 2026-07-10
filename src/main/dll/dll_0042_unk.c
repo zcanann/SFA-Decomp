@@ -394,8 +394,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     {
         step = lbl_803E16AC;
     }
-    approach = interpolate((f64)step, gCamcontrolModeSettings->heightAdjustRate, timeDelta);
-    step = approach;
+    approach = step = interpolate((f64)step, gCamcontrolModeSettings->heightAdjustRate, timeDelta);
     if ((f32)approach > lbl_803E16E8 && (f32)approach < lbl_803E16F4)
     {
         step = lbl_803E16AC;
