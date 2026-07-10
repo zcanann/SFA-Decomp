@@ -266,12 +266,14 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
 #pragma peephole reset
 
 #pragma opt_lifetimes off
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 void worldplanet_update(GameObject* obj)
 {
     u8 prevPlanet;
     int arwing;
     int buttons;
-    int (*tbl)[5];
+    int(*tbl)[5];
     WorldPlanetState* state;
     u8 done;
     u8 i;
@@ -634,6 +636,8 @@ void worldplanet_update(GameObject* obj)
         state->orbitSoundFrameCount += 1;
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
 #pragma opt_lifetimes reset
 
 /* Per-WorldPlanetSlot parameter table. Columns are WorldPlanetSlot 0..4
