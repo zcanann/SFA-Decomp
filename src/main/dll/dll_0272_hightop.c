@@ -983,10 +983,10 @@ done:
 
 int hightop_stateHandler02(int obj, int stateArg, f32 dt)
 {
+    int absd;
+    s16 d336;
     HighTopRuntime* state = ((GameObject*)obj)->extra;
     int cont = 1;
-    s16 d336;
-    int absd;
     int conv;
     u32 band;
     int idx;
