@@ -55,7 +55,7 @@ extern const f32 lbl_803E2FBC;
 extern const f32 lbl_803E2FC0;
 extern f32 sqrtf(f32 x);
 
-void tumbleweed_updateRollingMotion(int obj, int state)
+void tumbleweed_updateRollingMotion(GameObject* obj, int state)
 {
     int hitCount;
     u32 uval;
@@ -69,11 +69,11 @@ void tumbleweed_updateRollingMotion(int obj, int state)
 
     hitList[0] = 0x0;
     bestDy = lbl_803E2F78;
-    hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, obj, (int*)hitList, 0, 0);
+    hitCount = hitDetectFn_80065e50(obj->anim.localPosX, obj->anim.localPosY,
+                                 obj->anim.localPosZ, (int)obj, (int*)hitList, 0, 0);
     for (i = 0, bestHit = 0, hitEntry = hitList[0]; i < hitCount; i++)
     {
-        dy = ((GameObject*)obj)->anim.localPosY - *(float*)*hitEntry;
+        dy = obj->anim.localPosY - *(float*)*hitEntry;
         if (dy < 0.0f)
         {
             dy = -1.0f * dy + 10.0f;
@@ -85,71 +85,71 @@ void tumbleweed_updateRollingMotion(int obj, int state)
         }
         hitEntry = hitEntry + 1;
     }
-    if (((GameObject*)obj)->anim.velocityX > lbl_803E2F80)
+    if (obj->anim.velocityX > lbl_803E2F80)
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E2F80;
+        obj->anim.velocityX = lbl_803E2F80;
     }
-    else if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E2F7C)
+    else if (obj->anim.velocityX < *(f32*)&lbl_803E2F7C)
     {
-        ((GameObject*)obj)->anim.velocityX = *(f32*)&lbl_803E2F7C;
+        obj->anim.velocityX = *(f32*)&lbl_803E2F7C;
     }
-    if (((GameObject*)obj)->anim.velocityY > lbl_803E2F80)
+    if (obj->anim.velocityY > lbl_803E2F80)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2F80;
+        obj->anim.velocityY = lbl_803E2F80;
     }
-    else if (((GameObject*)obj)->anim.velocityY < lbl_803E2F7C)
+    else if (obj->anim.velocityY < lbl_803E2F7C)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2F7C;
+        obj->anim.velocityY = lbl_803E2F7C;
     }
-    if (((GameObject*)obj)->anim.velocityZ > lbl_803E2F80)
+    if (obj->anim.velocityZ > lbl_803E2F80)
     {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E2F80;
+        obj->anim.velocityZ = lbl_803E2F80;
     }
-    else if (((GameObject*)obj)->anim.velocityZ < lbl_803E2F7C)
+    else if (obj->anim.velocityZ < lbl_803E2F7C)
     {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E2F7C;
+        obj->anim.velocityZ = lbl_803E2F7C;
     }
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+    obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
+    obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+    obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
     ((s16*)obj)[2] = (s16)((f32)(int) ((BackpackState*)state)->recoilVelX * timeDelta + (f32)(int)((s16*)obj)[2]);
     ((s16*)obj)[1] = (s16)((f32)(int) ((BackpackState*)state)->recoilVelZ * timeDelta + (f32)(int)((s16*)obj)[1]);
     *(s16*)obj = (s16)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (s16*)obj);
     if (hitList[0] != 0x0)
     {
-        if (((GameObject*)obj)->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
+        if (obj->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
         {
-            ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2F64;
+            obj->anim.velocityY = obj->anim.velocityY + lbl_803E2F64;
         }
         else
         {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E2F60 + *(float*)hitList[0][bestHit];
+            obj->anim.localPosY = lbl_803E2F60 + *(float*)hitList[0][bestHit];
             if (((short*)obj)[0x23] == 0x3fb)
             {
                 dy = (f32)(int)(uval = randomGetRange(0x8c, 0xb4));
                 dy = (f32) ((BackpackState*)state)->distToTarget / dy;
-                vp = lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityY = -(vp * dy);
+                vp = lbl_803E2F84 * obj->anim.velocityY;
+                obj->anim.velocityY = -(vp * dy);
             }
             else
             {
                 dy = (f32)(int)(uval = randomGetRange(0x14, 0x28));
                 dy = (f32) ((BackpackState*)state)->distToTarget / dy;
-                vp = lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityY = -(vp * dy);
+                vp = lbl_803E2F84 * obj->anim.velocityY;
+                obj->anim.velocityY = -(vp * dy);
             }
-            bestHit = (int)(lbl_803E2F88 * ((GameObject*)obj)->anim.velocityY);
+            bestHit = (int)(lbl_803E2F88 * obj->anim.velocityY);
             if (0x7f < bestHit)
             {
                 bestHit = 0x7f;
             }
             if (0x10 < bestHit)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_mv_roothack16);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_roothack16);
                 uval = randomGetRange(0, 5);
                 if (((int)uval == 0) && ((((BackpackState*)state)->flags & 8) != 0))
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_id_27f);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_id_27f);
                 }
             }
         }
@@ -260,15 +260,15 @@ void tumbleweed_update(GameObject *obj)
     }
     else
     {
-        tumbleweed_updateStateMachine((int)obj);
+        tumbleweed_updateStateMachine(obj);
     }
     tumbleweed_updateEffects(obj);
 }
 
 #pragma opt_loop_invariants off
-void tumbleweed_updateStateMachine(int obj)
+void tumbleweed_updateStateMachine(GameObject* obj)
 {
-    extern void tumbleweed_updateRollingMotion(int obj, int aux);
+    extern void tumbleweed_updateRollingMotion(GameObject* obj, int aux);
     int aux;
     int sphereIndex;
     u32 hitVolume;
@@ -277,15 +277,14 @@ void tumbleweed_updateStateMachine(int obj)
     GameObject* player;
     GameObject* tricky;
 
-    aux = *(int*)&((GameObject*)obj)->extra;
+    aux = *(int*)&obj->extra;
     {
         u32 state = ((BackpackState*)aux)->phase;
         if (state == TUMBLEWEED_PHASE_GROWING)
         {
-            if (((GameObject*)obj)->anim.rootMotionScale < ((BackpackState*)aux)->targetScale)
+            if (obj->anim.rootMotionScale < ((BackpackState*)aux)->targetScale)
             {
-                ((GameObject*)obj)->anim.rootMotionScale = ((BackpackState*)aux)->growRate * timeDelta + ((GameObject*)
-                    obj)->anim.rootMotionScale;
+                obj->anim.rootMotionScale = ((BackpackState*)aux)->growRate * timeDelta + obj->anim.rootMotionScale;
             }
             else
             {
@@ -294,12 +293,12 @@ void tumbleweed_updateStateMachine(int obj)
         }
         else if (state == TUMBLEWEED_PHASE_ARMED)
         {
-            if (ObjHits_GetPriorityHit((GameObject*)(obj), &hitObject, &sphereIndex, &hitVolume) != 0)
+            if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
             {
                 ObjHits_EnableObject((u32)obj);
                 ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
-                if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_4)
+                if (obj->anim.seqId == TUMBLEWEED_TYPE_4)
                 {
                     ((BackpackState*)aux)->phaseTimer = lbl_803E2F9C;
                 }
@@ -310,8 +309,8 @@ void tumbleweed_updateStateMachine(int obj)
             f32 dx, dz, dist2;
             f32 dist;
             player = (GameObject*)Obj_GetPlayerObject();
-            dx = ((GameObject*)obj)->anim.localPosX - player->anim.localPosX;
-            dz = ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ;
+            dx = obj->anim.localPosX - player->anim.localPosX;
+            dz = obj->anim.localPosZ - player->anim.localPosZ;
             dist2 = dx * dx + dz * dz;
             tricky = (GameObject*)getTrickyObject();
             if (tricky != 0 && tricky->anim.seqId == 0x24)
@@ -319,10 +318,10 @@ void tumbleweed_updateStateMachine(int obj)
                 f32 ndx, ndz, ndist2;
                 if (dist2 < lbl_803E2FA0)
                 {
-                    (*(int(**)(int, int, int, int))((char*)*tricky->anim.dll + 0x28))((int)tricky, obj, 0, 1);
+                    (*(int(**)(int, int, int, int))((char*)*tricky->anim.dll + 0x28))((int)tricky, (int)obj, 0, 1);
                 }
-                ndx = ((GameObject*)obj)->anim.localPosX - tricky->anim.localPosX;
-                ndz = ((GameObject*)obj)->anim.localPosZ - tricky->anim.localPosZ;
+                ndx = obj->anim.localPosX - tricky->anim.localPosX;
+                ndz = obj->anim.localPosZ - tricky->anim.localPosZ;
                 ndist2 = ndx * ndx + ndz * ndz;
                 if (ndist2 < dist2)
                 {
@@ -334,8 +333,8 @@ void tumbleweed_updateStateMachine(int obj)
             dist = sqrtf(dist2);
             *(s16*)&((BackpackState*)aux)->distToTarget = dist;
             {
-                f32 dpx = ((GameObject*)obj)->anim.localPosX - ((BackpackState*)aux)->anchorPosX;
-                f32 dpz = ((GameObject*)obj)->anim.localPosZ - ((BackpackState*)aux)->anchorPosZ;
+                f32 dpx = obj->anim.localPosX - ((BackpackState*)aux)->anchorPosX;
+                f32 dpz = obj->anim.localPosZ - ((BackpackState*)aux)->anchorPosZ;
                 int dpdist = sqrtf(dpx * dpx + dpz * dpz);
                 u32 dist;
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags & ~8);
@@ -343,13 +342,13 @@ void tumbleweed_updateStateMachine(int obj)
                 if ((f32)dist < 150.0f && dist != 0)
                 {
                     f32 k;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (15.0f * ((
+                    obj->anim.velocityX = obj->anim.velocityX - dx / (15.0f * ((
                         f32)dist - 150.0f));
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dz / (15.0f * ((
+                    obj->anim.velocityZ = obj->anim.velocityZ - dz / (15.0f * ((
                         f32)(u32)((BackpackState*)aux)->distToTarget - 150.0f));
                     k = lbl_803E2FAC;
-                    ((BackpackState*)aux)->recoilVelX = k * ((GameObject*)obj)->anim.velocityX;
-                    ((BackpackState*)aux)->recoilVelZ = k * ((GameObject*)obj)->anim.velocityZ;
+                    ((BackpackState*)aux)->recoilVelX = k * obj->anim.velocityX;
+                    ((BackpackState*)aux)->recoilVelZ = k * obj->anim.velocityZ;
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 8);
                 }
                 else
@@ -358,8 +357,8 @@ void tumbleweed_updateStateMachine(int obj)
                     if ((f32)dpdi > lbl_803E2F5C && dpdi != 0)
                     {
                         f32 denom = lbl_803E2F5C * dpdi;
-                        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dpx / denom;
-                        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dpz / denom;
+                        obj->anim.velocityX = obj->anim.velocityX - dpx / denom;
+                        obj->anim.velocityZ = obj->anim.velocityZ - dpz / denom;
                     }
                 }
             }
@@ -372,17 +371,17 @@ void tumbleweed_updateStateMachine(int obj)
             }
             else
             {
-                if (ObjHits_GetPriorityHit((GameObject*)(obj), &hitObject, &sphereIndex, &hitVolume) != 0 &&
-                    ((GameObject*)hitObject)->anim.seqId != ((GameObject*)obj)->anim.seqId)
+                if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
+                    ((GameObject*)hitObject)->anim.seqId != obj->anim.seqId)
                 {
-                    if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_3)
+                    if (obj->anim.seqId == TUMBLEWEED_TYPE_3)
                     {
                         ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
                         ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags & ~0x10);
                         ((BackpackState*)aux)->phase = 3;
                         ((BackpackState*)aux)->growRate = lbl_803E2FB0;
                         ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4;
-                        Obj_SetActiveModelIndex(obj, 1);
+                        Obj_SetActiveModelIndex((int)obj, 1);
                     }
                     else
                     {
@@ -395,7 +394,7 @@ void tumbleweed_updateStateMachine(int obj)
         {
             f32 dist;
             player = (GameObject*)Obj_GetPlayerObject();
-            dist = getXZDistance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
+            dist = getXZDistance(&player->anim.worldPosX, &obj->anim.worldPosX);
             if (dist < lbl_803E2FB8)
             {
                 ((BackpackState*)aux)->triggerGameBit = 0x195;
@@ -418,13 +417,13 @@ void tumbleweed_updateStateMachine(int obj)
                 }
                 else
                 {
-                    if (ObjHits_GetPriorityHit((GameObject*)(obj), &hitObject, &sphereIndex, &hitVolume) != 0 &&
-                        ((GameObject*)hitObject)->anim.seqId != ((GameObject*)obj)->anim.seqId)
+                    if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
+                        ((GameObject*)hitObject)->anim.seqId != obj->anim.seqId)
                     {
                         ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                     }
                 }
-                fn_80163990(obj, aux);
+                fn_80163990((int)obj, aux);
                 (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
             }
         }
@@ -437,7 +436,7 @@ void tumbleweed_updateStateMachine(int obj)
                 if (popMsg == TUMBLEWEED_MSG_PICKUP)
                 {
                     gameBitIncrement(GAMEBIT_ITEM_FireWeed_Count);
-                    Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_lockoff22);
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
             }
@@ -446,9 +445,9 @@ void tumbleweed_updateStateMachine(int obj)
         {
             f32* target = ((BackpackState*)aux)->targetPos;
             f32 vx, vy, vz, d;
-            vx = target[0] - ((GameObject*)obj)->anim.localPosX;
-            vy = target[1] - ((GameObject*)obj)->anim.localPosY;
-            vz = target[2] - ((GameObject*)obj)->anim.localPosZ;
+            vx = target[0] - obj->anim.localPosX;
+            vy = target[1] - obj->anim.localPosY;
+            vz = target[2] - obj->anim.localPosZ;
             d = sqrtf(vx * vx + vy * vy + vz * vz);
             vx /= d;
             vy /= d;
@@ -458,24 +457,24 @@ void tumbleweed_updateStateMachine(int obj)
                 f32 k = lbl_803E2FBC;
                 f32 kv;
                 kv = k * vx;
-                ((GameObject*)obj)->anim.velocityX = kv * ((BackpackState*)aux)->speed;
+                obj->anim.velocityX = kv * ((BackpackState*)aux)->speed;
                 kv = k * vy;
-                ((GameObject*)obj)->anim.velocityY = kv * ((BackpackState*)aux)->speed;
+                obj->anim.velocityY = kv * ((BackpackState*)aux)->speed;
                 kv = k * vz;
-                ((GameObject*)obj)->anim.velocityZ = kv * ((BackpackState*)aux)->speed;
+                obj->anim.velocityZ = kv * ((BackpackState*)aux)->speed;
             }
-            d = getXZDistance((f32*)(obj + 0xc), ((BackpackState*)aux)->targetPos);
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
-            if (getXZDistance((f32*)(obj + 0xc), ((BackpackState*)aux)->targetPos) > d)
+            d = getXZDistance((f32*)&obj->anim.localPosX, ((BackpackState*)aux)->targetPos);
+            objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+                    obj->anim.velocityZ * timeDelta);
+            if (getXZDistance((f32*)&obj->anim.localPosX, ((BackpackState*)aux)->targetPos) > d)
             {
                 f32 ldx, ldy, ldz;
-                ldx = (((BackpackState*)aux)->targetPos)[0] - ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosX += ldx * lbl_803E2F98;
-                ldy = (((BackpackState*)aux)->targetPos)[1] - ((GameObject*)obj)->anim.localPosY;
-                ((GameObject*)obj)->anim.localPosY += ldy * lbl_803E2F98;
-                ldz = (((BackpackState*)aux)->targetPos)[2] - ((GameObject*)obj)->anim.localPosZ;
-                ((GameObject*)obj)->anim.localPosZ += ldz * lbl_803E2F98;
+                ldx = (((BackpackState*)aux)->targetPos)[0] - obj->anim.localPosX;
+                obj->anim.localPosX += ldx * lbl_803E2F98;
+                ldy = (((BackpackState*)aux)->targetPos)[1] - obj->anim.localPosY;
+                obj->anim.localPosY += ldy * lbl_803E2F98;
+                ldz = (((BackpackState*)aux)->targetPos)[2] - obj->anim.localPosZ;
+                obj->anim.localPosZ += ldz * lbl_803E2F98;
             }
         }
         else if (state == 7)
@@ -484,17 +483,17 @@ void tumbleweed_updateStateMachine(int obj)
             f32 k = lbl_803E2FC0;
             for (; (s32)(j & 0xffff) < (s32)timeDelta; j = j + 1)
             {
-                ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * k;
+                obj->anim.rootMotionScale = obj->anim.rootMotionScale * k;
             }
-            ((GameObject*)obj)->anim.localPosX = (((BackpackState*)aux)->targetPos)[0];
-            ((GameObject*)obj)->anim.localPosY = (((BackpackState*)aux)->targetPos)[1];
-            ((GameObject*)obj)->anim.localPosZ = (((BackpackState*)aux)->targetPos)[2];
+            obj->anim.localPosX = (((BackpackState*)aux)->targetPos)[0];
+            obj->anim.localPosY = (((BackpackState*)aux)->targetPos)[1];
+            obj->anim.localPosZ = (((BackpackState*)aux)->targetPos)[2];
         }
         else
         {
             if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((int)obj);
             }
             else
             {
@@ -620,7 +619,7 @@ void tumbleweed_updateEffects(GameObject *obj)
 
 void tumbleweed_updateTargetedStateMachine(GameObject *obj)
 {
-    extern void tumbleweed_updateRollingMotion(int obj, int aux);
+    extern void tumbleweed_updateRollingMotion(GameObject* obj, int aux);
     int sphereIndex;
     u32 hitVolume;
     int hitObject;
@@ -692,7 +691,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
             (obj)->anim.velocityX = -(k * (obj)->anim.velocityX);
             (obj)->anim.velocityZ = -(k * (obj)->anim.velocityZ);
         }
-        tumbleweed_updateRollingMotion((int)obj, aux);
+        tumbleweed_updateRollingMotion(obj, aux);
         (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
         {

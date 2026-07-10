@@ -171,7 +171,7 @@ extern void drakormissile_init(GameObject*);
 extern void drakormissile_release(void);
 extern void drakormissile_initialise(void);
 
-static inline f32* KTRex_GetActiveContactPointTable(int obj)
+static inline f32* KTRex_GetActiveContactPointTable(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     u8* model = (u8*)objAnim->banks[objAnim->bankIndex];
@@ -369,12 +369,12 @@ void ktrex_hitDetect(GameObject* obj)
     }
 }
 
-void ktrex_free(int obj)
+void ktrex_free(GameObject* obj)
 {
     int i;
-    gKTRexRuntime = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, KTREX_OBJGROUP);
-    (*(void (**)(int, void*, int))((char*)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
+    gKTRexRuntime = obj->extra;
+    ObjGroup_RemoveObject((int)obj, KTREX_OBJGROUP);
+    (*(void (**)(void*, void*, int))((char*)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
     Stack_Free(*(void**)gKTRexState);
     if (gKTRexResource != NULL)
     {
@@ -692,7 +692,7 @@ void ktrex_update(int obj)
     (*(void (**)(int, void*, void*, int, void*, int, int, int))((char*)*gBaddieControlInterface + 0x54))(
         obj, runtime, (char*)gKTRexRuntime + 0x35c, ((KTRexRuntime*)gKTRexRuntime)->unk3F4,
         (char*)gKTRexRuntime + 0x405, 2, 2, 0);
-    ktrex_updateContactEffects(obj, runtime);
+    ktrex_updateContactEffects((GameObject*)obj, runtime);
     ktrex_updateAttackEffects((GameObject*)(obj));
     (*(void (**)(int, void*, f32, int))((char*)*gBaddieControlInterface + 0x2c))(obj, runtime, lbl_803E67B8, 0);
     ObjHits_SetHitVolumeMasks(obj, 24, 2, 0x1fffff);
@@ -700,7 +700,6 @@ void ktrex_update(int obj)
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     ((GameObject*)obj)->anim.localPosY = ((KTRexArenaState*)gKTRexState)->posY;
 }
-
 int ktrex_stateHandlerB05(int obj, int runtime)
 {
     f32 z;
@@ -1232,7 +1231,7 @@ void ktrex_updateAttackEffects(GameObject* obj)
     }
 }
 
-void ktrex_updateContactEffects(int obj, void* runtime)
+void ktrex_updateContactEffects(GameObject* obj, void* runtime)
 {
     int hitType;
     u32 hitC;
@@ -1261,7 +1260,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
             ((KTRexRuntime*)gKTRexRuntime)->bobRate = -((KTRexRuntime*)gKTRexRuntime)->bobRate;
         }
     }
-    hit = ObjHits_GetPriorityHit((GameObject*)(obj), &hitA, &hitType, &hitC);
+    hit = ObjHits_GetPriorityHit(obj, &hitA, &hitType, &hitC);
     if (hit == 0)
     {
         return;
@@ -1273,8 +1272,8 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + (pt = contactPoints + hitType * 4)[1];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = pt[2];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_rexhurt12);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4b2, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4b3, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         if (hit == 0xe)
@@ -1295,30 +1294,30 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     }
     else if (gKTRexContactEffectCooldown == 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_95);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_95);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = contactPoints[hitType * 4 + 2];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, KTREX_PARTFX_HIT, gKTRexEffectSpawnWork, 0x200001, -1, NULL);
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= ((GameObject*)obj)->anim.worldPosX;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posY -= ((GameObject*)obj)->anim.worldPosY;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ -= ((GameObject*)obj)->anim.worldPosZ;
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= obj->anim.worldPosX;
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posY -= obj->anim.worldPosY;
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ -= obj->anim.worldPosZ;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk8 = lbl_803E6818;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk0 = 0;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk2 = 0;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk4 = 0;
         msg[1] += randomGetRange(0, 0x9b);
         msg[2] += randomGetRange(0, 0x9b);
-        (*(void (**)(int, int, void*, int, int, int*))(*(int*)gKTRexResource + 0x4))(obj, 0, gKTRexEffectSpawnWork, 1,
-                                                                                     -1, msg);
+        (*(void (**)(void*, int, void*, int, int, int*))(*(int*)gKTRexResource + 0x4))(obj, 0, gKTRexEffectSpawnWork, 1,
+                                                                                       -1, msg);
         gKTRexContactEffectCooldown = 0x3c;
     }
     if ((s8)((KTRexRuntime*)runtime)->hitCountdown < 1)
     {
         ((KTRexRuntime*)runtime)->hitCountdown = 0;
     }
-    ObjMsg_SendToObject(hitA, KTREX_ADVANCE_MSG, obj, 0);
+    ObjMsg_SendToObject(hitA, KTREX_ADVANCE_MSG, (int)obj, 0);
 }
 
 int ktrex_stateHandlerA02(int obj, int runtime)

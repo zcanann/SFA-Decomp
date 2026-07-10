@@ -81,7 +81,7 @@ void iceblast_update(GameObject* obj)
         vec.dir[1] = path->anim.rotY;
         vec.dir[0] = path->anim.rotX;
         vecRotateZXY(&vec, &obj->anim.velocityX);
-        ObjPath_GetPointWorldPosition((int)path, 0, &obj->anim.localPosX, &obj->anim.localPosY, &obj->anim.localPosZ,
+        ObjPath_GetPointWorldPosition(path, 0, &obj->anim.localPosX, &obj->anim.localPosY, &obj->anim.localPosZ,
                                       0);
         ObjHits_EnableObject((u32)obj);
     }

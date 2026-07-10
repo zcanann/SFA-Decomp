@@ -122,7 +122,7 @@ void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
             }
             stk.scale = lbl_803E583C;
             stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition((int)obj, 0xd, &stk.dx, &stk.dy, &stk.dz, 0);
+            ObjPath_GetPointWorldPosition(obj, 0xd, &stk.dx, &stk.dy, &stk.dz, 0);
             stk.dx = stk.dx - object->anim.worldPosX;
             stk.dy = stk.dy - object->anim.worldPosY;
             stk.dz = stk.dz - object->anim.worldPosZ;

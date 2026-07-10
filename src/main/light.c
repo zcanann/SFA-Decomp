@@ -308,26 +308,24 @@ void VFP_Platform_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void VFP_coreplat_init(int obj, int data)
+void VFP_coreplat_init(GameObject* obj, int data)
 {
-    VfpPlatformState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
+    VfpPlatformState* state = obj->extra;
+    obj->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
     state->gameBitId = *(s16*)(data + 0x20);
-    *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
-    if (((GameObject*)obj)->anim.seqId == 0x3cb)
+    *(int (**)(void))((int)obj + 0xBC) = return0_801FD13C;
+    if (obj->anim.seqId == 0x3cb)
     {
         if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale =
-                lbl_803E6144 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+            obj->anim.rootMotionScale = lbl_803E6144 * obj->anim.modelInstance->rootMotionScaleBase;
         }
         if (mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale =
-                lbl_803E6148 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+            obj->anim.rootMotionScale = lbl_803E6148 * obj->anim.modelInstance->rootMotionScaleBase;
         }
     }
-    ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 typedef struct SpellStoneUseState
@@ -416,17 +414,17 @@ void VFPDragHead_init(GameObject* obj, int data)
     gVfpDragHeadResource = Resource_Acquire(LIGHT_DRAGHEAD_RESOURCE_ID, 1);
 }
 
-void SeqPoint_init(int obj, int data)
+void SeqPoint_init(GameObject* obj, int data)
 {
-    SeqPointState* state = ((GameObject*)obj)->extra;
-    *(void (**)(int))(obj + 0xBC) = (void (*)(int))SeqPoint_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
+    SeqPointState* state = obj->extra;
+    *(void (**)(int))((int)obj + 0xBC) = (void (*)(int))SeqPoint_SeqFn;
+    obj->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
     state->triggerRadius = *(s16*)(data + 0x1a);
     state->sequenceId = *(s16*)(data + 0x1c);
     state->mode = *(u8*)(data + 0x19);
     state->conditionBit = *(s16*)(data + 0x1e);
     state->disableBit = *(s16*)(data + 0x20);
-    ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -468,7 +466,7 @@ void VFP_DoorSwitch_update(GameObject* obj)
     VfpDoorSwitchState* state;
     if ((obj)->anim.seqId != 0x3e7)
     {
-        vfpdoorswitch_updateExplodingVariant((int)obj);
+        vfpdoorswitch_updateExplodingVariant(obj);
         return;
     }
     state = (obj)->extra;
@@ -504,9 +502,9 @@ void VFP_DoorSwitch_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-void vfpdoorswitch_updateExplodingVariant(int obj)
+void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
 {
-    VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
+    VfpDoorSwitchState* state = obj->extra;
     int camView = Camera_GetCurrentViewSlot();
 
     if (state->activated == 0)
@@ -514,29 +512,29 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
         if (mainGetBit(state->gameBitId) != 0)
         {
             Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_10d);
-            Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_10d);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_gate_stops);
             state->activated = 1;
         }
     }
     if (state->activated != 0)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6118, timeDelta, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E6118, timeDelta, NULL);
         if (state->exploded == 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E611C)
+            if (obj->anim.currentMoveProgress >= lbl_803E611C)
             {
                 f32 vec[3];
-                PSVECSubtract((void*)(camView + 0xC), (void*)(obj + 0xC), vec);
+                PSVECSubtract((void*)(camView + 0xC), &obj->anim.localPosX, vec);
                 PSVECNormalize(vec, vec);
                 PSVECScale(vec, vec, lbl_803E6120);
-                PSVECAdd((void*)(obj + 0xC), vec, (void*)(obj + 0xC));
-                ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-                ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-                spawnExplosion(obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
+                PSVECAdd(&obj->anim.localPosX, vec, &obj->anim.localPosX);
+                obj->anim.worldPosX = obj->anim.localPosX;
+                obj->anim.worldPosY = obj->anim.localPosY;
+                obj->anim.worldPosZ = obj->anim.localPosZ;
+                spawnExplosion((int)obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
                 state->exploded = 1;
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }

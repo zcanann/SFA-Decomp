@@ -125,7 +125,7 @@ void Lamp_update(int obj)
         *(f32*)(effectArgs + 0xc) = 0.0f;
         *(f32*)(effectArgs + 0x10) = -12.0f;
         *(f32*)(effectArgs + 0x14) = 0.0f;
-        ObjPath_GetPointWorldPosition(obj, 0, (f32*)(effectArgs + 0xc), (f32*)(effectArgs + 0x10),
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)(effectArgs + 0xc), (f32*)(effectArgs + 0x10),
                                       (f32*)(effectArgs + 0x14), 1);
         if (((GameObject*)obj)->anim.parent != NULL)
         {

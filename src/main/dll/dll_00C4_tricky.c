@@ -792,14 +792,15 @@ int Tricky_updateSideCommandPrompts(int obj)
     return -1;
 }
 
-void Tricky_free(int obj, int shouldKeepFlameChildren)
+#pragma opt_common_subs off
+void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
 {
     int i;
     int childSlot;
     bool playing;
     int state;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&obj->extra;
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[0]);
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[1]);
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[2]);
@@ -826,19 +827,19 @@ void Tricky_free(int obj, int shouldKeepFlameChildren)
             childSlot = childSlot + 4;
             i = i + 1;
         } while (i < 7);
-        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
-        childSlot = *(int*)&((GameObject*)obj)->extra;
+        Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);
+        childSlot = *(int*)&obj->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
-            (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-              (playing = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !playing))))
+            (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
+              (playing = Sfx_IsPlayingFromObjectChannel((int)obj, 0x10), !playing))))
         {
-            objAudioFn_800393f8(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+            objAudioFn_800393f8((int)obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
         }
     }
     doNothing_onTrickyFree();
-    objAnimFreeChildren(obj, state, (int*)(state + 0x7a8)); /* raw: arrow form shifts bytes */
-    objAnimFreeChildren(obj, state, (int*)(state + 0x7b0)); /* raw: arrow form shifts bytes */
-    objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->child);
+    objAnimFreeChildren((int)obj, state, (int*)(state + 0x7a8)); /* raw: arrow form shifts bytes */
+    objAnimFreeChildren((int)obj, state, (int*)(state + 0x7b0)); /* raw: arrow form shifts bytes */
+    objAnimFreeChildren((int)obj, state, (int*)&((TrickyState*)state)->child);
     if (*(void**)&((TrickyState*)state)->spawnedChild != NULL)
     {
         ObjLink_DetachChild(obj, *(int*)&((TrickyState*)state)->spawnedChild);
@@ -851,6 +852,7 @@ void Tricky_free(int obj, int shouldKeepFlameChildren)
     }
     return;
 }
+#pragma opt_common_subs reset
 
 /* Tricky sidekick command state machine and per-frame update. */
 #define TRICKY_RESET_COMMAND(state)                                                                                    \
@@ -2794,15 +2796,16 @@ int Tricky_getCurrentCommandType(int* obj, int* out)
     return 1;
 }
 
-void trickyFn_801451d8(int obj, int state)
+#pragma opt_common_subs off
+void trickyFn_801451d8(GameObject* obj, int state)
 {
     u8 pathBytes[16];
-    u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void*)(obj + 0x18), 0);
+    u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void*)((int)obj + 0x18), 0);
 
     pathBytes[0] = pathByte;
     if (pathByte == 0)
     {
-        int pathId = Objfsa_GetPatchGroupIdAtPoint((void*)(obj + 0x18));
+        int pathId = Objfsa_GetPatchGroupIdAtPoint((void*)((int)obj + 0x18));
         if (pathId != 0)
         {
             walkPath_writeU16LE(pathId & 0xffff, pathBytes);
@@ -2827,10 +2830,11 @@ void trickyFn_801451d8(int obj, int state)
     if (gTrickyHelperObject == 0)
     {
         int setup = Obj_AllocObjectSetup(0x18, 0x25);
-        gTrickyHelperObject = Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        gTrickyHelperObject = Obj_SetupObject(setup, 4, -1, -1, *(int*)&obj->anim.parent);
     }
     ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = 1;
 }
+#pragma opt_common_subs reset
 
 void Tricky_func11(int* obj)
 {

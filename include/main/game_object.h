@@ -125,7 +125,7 @@ void disableHeavyFog(void);
 void subtitleFn_8001b700(void);
 void trickyReportError(const char* fmt, ...);
 u8 isAreaNameTextActive(void);
-int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t);
+int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t);
 void renderResetFn_8003fc60(void);
 void modelLightChannels_applyGXControls(void);
 void __GXAbortWaitPECopyDone(void);
@@ -137,10 +137,10 @@ int isInBounds(f32 x, f32 z);
 void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte);
 void objSetHintTextIdx(GameObject* obj, u16 idx);
 void DBstealerwo_setFuncPtrs_80203c78(void);
-int dbstealerworm_stateHandlerA07(int obj, int baddie, f32 t);
-int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t);
+int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t);
+int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t);
-int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t);
+int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t);
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void* textureIdxToPtr(int idx);

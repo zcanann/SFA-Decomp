@@ -65,7 +65,7 @@ typedef struct ObjSeqTurnState
     u8 pad58[0x6E - 0x58];
     s16 flags; /* 0x6e */
     u8 pad70[0xE8 - 0x70];
-    void (*resetVecCb)(int); /* 0xe8 */
+    void (*resetVecCb)(GameObject*); /* 0xe8 */
     u8 padEC[0x110 - 0xEC];
     int cbArg;     /* 0x110 */
     s16 savedVecY; /* 0x114 */
@@ -408,9 +408,9 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
     return 0;
 }
 
-void objModelResetVecFn_80080548(int obj)
+void objModelResetVecFn_80080548(GameObject* obj)
 {
-    s16* v = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+    s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
     if (v != NULL)
     {
         v[1] = 0;
@@ -1121,7 +1121,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
  * vector and animation as it goes. */
-int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft)
+int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft)
 {
     int player;
     s16* modelVec;
@@ -1142,7 +1142,7 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
     if (mode == 4)
     {
         ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~2;
-        modelVec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+        modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
         if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
@@ -1163,12 +1163,12 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
         ((ObjSeqTurnState*)state)->turnAmount = turn;
         {
             f32* dp = d;
-            f32* ovr = *(f32**)(obj + 0x74);
+            f32* ovr = *(f32**)((int)obj + 0x74);
             if (ovr == NULL)
             {
-                dp[0] = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-                dp[1] = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-                dp[2] = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+                dp[0] = ((GameObject*)player)->anim.localPosX - obj->anim.localPosX;
+                dp[1] = ((GameObject*)player)->anim.localPosY - obj->anim.localPosY;
+                dp[2] = ((GameObject*)player)->anim.localPosZ - obj->anim.localPosZ;
             }
             else
             {
@@ -1205,14 +1205,14 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
                 {
                     if (animLeft != -1)
                     {
-                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, animLeft, 0.0f, 0);
+                        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, animLeft, 0.0f, 0);
                     }
                 }
                 else
                 {
                     if (animRight != -1)
                     {
-                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, animRight, 0.0f, 0);
+                        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, animRight, 0.0f, 0);
                     }
                 }
             }
@@ -1227,9 +1227,9 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
         {
             ((ObjSeqTurnState*)state)->blend = 1.0001f;
         }
-        ((GameObject*)obj)->anim.rotX +=
+        obj->anim.rotX +=
             (s16)(((ObjSeqTurnState*)state)->turnRate * (f32)((ObjSeqTurnState*)state)->turnAmount);
-        modelVec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+        modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
         if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
@@ -1251,14 +1251,14 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
                 fa = fa * 3.142f / 325767.0f;
                 ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent*)obj, &out);
-                ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, out, (f32)framesThisStep, NULL);
+                ((int (*)(void*, f32, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(obj, out, (f32)framesThisStep, NULL);
             }
         }
         if (((ObjSeqTurnState*)state)->blend > 1.0f)
         {
             ((ObjSeqTurnState*)state)->mode = 0;
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags | 8;
-            modelVec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+            modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
             if (modelVec != NULL)
             {
                 ((ObjSeqTurnState*)state)->savedVecY = modelVec[1];

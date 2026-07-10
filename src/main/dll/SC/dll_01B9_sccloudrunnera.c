@@ -176,7 +176,7 @@ void sc_cloudrunnera_update(int obj)
                 int innerSlot = *(int*)&((GameObject*)obj)->childObjs[0];
                 if ((u32)innerSlot != 0)
                 {
-                    ObjLink_DetachChild(obj, innerSlot);
+                    ObjLink_DetachChild((GameObject*)obj, innerSlot);
                     Obj_FreeObject(innerSlot);
                 }
                 break;

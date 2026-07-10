@@ -39,7 +39,7 @@ void cmbsrc_release(void)
 {
 }
 
-int cmbsrc_updateAndReturnZero(int obj)
+int cmbsrc_updateAndReturnZero(GameObject* obj)
 {
     cmbsrc_update(obj);
     return 0;
@@ -170,7 +170,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     return result;
 }
 
-void cmbsrc_hitDetect(int obj)
+void cmbsrc_hitDetect(GameObject* obj)
 {
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -180,7 +180,7 @@ void cmbsrc_hitDetect(int obj)
     state->priorityHitType = 0;
     if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0)
     {
-        state->priorityHitType = ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0);
+        state->priorityHitType = ObjHits_GetPriorityHit(obj, 0, 0, 0);
         if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE)
         {
             state->hitCharge -= 1;
@@ -266,7 +266,7 @@ int cmbsrc_cycleColor(int obj, int state)
     return idx;
 }
 
-void cmbsrc_updateVisuals(int obj, int state)
+void cmbsrc_updateVisuals(GameObject* obj, int state)
 {
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
@@ -293,7 +293,7 @@ void cmbsrc_updateVisuals(int obj, int state)
                                                radiusScaled - sourceState->radius,
                                            lbl_803E7380, timeDelta);
     }
-    dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
+    dist = Vec_distance(viewSlot + 0x44, (int)&obj->anim.worldPosX);
     if (sourceState->active == 1)
     {
         if (dist <= (f32)(u32)(setup->colorDistance << 3))
@@ -301,7 +301,7 @@ void cmbsrc_updateVisuals(int obj, int state)
             if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
             {
                 extern u8 cmbsrc_cycleColor(int obj, int state);
-                colorIdx = cmbsrc_cycleColor(obj, state);
+                colorIdx = cmbsrc_cycleColor((int)obj, state);
             }
             else
             {
@@ -357,7 +357,7 @@ void cmbsrc_updateVisuals(int obj, int state)
                     subMode = setup->pulseSubMode;
                 }
             }
-            objfx_spawnLightPulse((GameObject*)(obj), sourceState->radius, colorIdx, effectMode, subMode,
+            objfx_spawnLightPulse(obj, sourceState->radius, colorIdx, effectMode, subMode,
                                   (f32)(u32)setup->pulseDistance / lbl_803E7388, 0);
             break;
         case CMBSRC_SEQ_DEFAULT:
@@ -400,7 +400,7 @@ void cmbsrc_updateVisuals(int obj, int state)
                 }
             }
             vec[2] = *(f32*)&lbl_803E7360;
-            fn_80098B18(obj, sourceState->radius, colorIdx, effectMode, subMode, vec);
+            fn_80098B18((int)obj, sourceState->radius, colorIdx, effectMode, subMode, vec);
             break;
         }
     }
@@ -419,7 +419,7 @@ void cmbsrc_updateVisuals(int obj, int state)
     }
 }
 
-int cmbsrc_update(int obj)
+int cmbsrc_update(GameObject* obj)
 {
     extern u8 cmbsrc_shouldDeactivate(int obj, int state, int setup);
     extern u8 cmbsrc_shouldActivate(int obj, int state, int setup);
@@ -430,7 +430,7 @@ int cmbsrc_update(int obj)
     switch (state->active)
     {
     case 1:
-        if (cmbsrc_shouldDeactivate(obj, (int)state, (int)setup))
+        if (cmbsrc_shouldDeactivate((int)obj, (int)state, (int)setup))
         {
             state->active = 0;
             if (state->light != NULL)
@@ -439,9 +439,9 @@ int cmbsrc_update(int obj)
             }
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
-                Sfx_StopObjectChannel(obj, CMBSRC_LOOP_SOUND_CHANNEL);
+                Sfx_StopObjectChannel((u32)obj, CMBSRC_LOOP_SOUND_CHANNEL);
             }
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             if (setup->gameBit != -1)
             {
                 mainSetBits(setup->gameBit, 0);
@@ -452,7 +452,7 @@ int cmbsrc_update(int obj)
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
                 Sfx_KeepAliveLoopedObjectSound(
-                    obj, gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
+                    (u32)obj, gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
             if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
                 ((CmbSrcLight*)state->light)->enabled != 0)
@@ -478,7 +478,7 @@ int cmbsrc_update(int obj)
         }
         break;
     case 0:
-        if (cmbsrc_shouldActivate(obj, (int)state, (int)setup))
+        if (cmbsrc_shouldActivate((int)obj, (int)state, (int)setup))
         {
             state->active = 1;
             if (state->light != NULL)
@@ -487,7 +487,7 @@ int cmbsrc_update(int obj)
             }
             if (!state->hitFlags.disabled)
             {
-                ObjHits_EnableObject(obj);
+                ObjHits_EnableObject((u32)obj);
             }
             if (setup->gameBit != -1)
             {

@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 
-void SnowBike_hitDetect(int obj);
+#include "main/game_object.h"
+
+void SnowBike_hitDetect(GameObject* obj);
 
 #endif /* MAIN_DLL_DR_DRHALOLIGHT_H_ */

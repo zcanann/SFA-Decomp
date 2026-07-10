@@ -435,8 +435,8 @@ void dll_2E_func06(GameObject* obj, char* st, int point)
         f32 cA;
         f32 cB;
         fn_8003AC14(obj, seqFn_800394a0(), s->pointCount);
-        ObjPath_GetPointWorldPosition((int)obj, point, &v.x0, &v.y0, &v.z0, 0);
-        ObjPath_GetPointWorldPosition((int)obj, point + 1, &v.x1, &v.y1, &v.z1, 0);
+        ObjPath_GetPointWorldPosition(obj, point, &v.x0, &v.y0, &v.z0, 0);
+        ObjPath_GetPointWorldPosition(obj, point + 1, &v.x1, &v.y1, &v.z1, 0);
         cA = lbl_803E1CC8;
         cB = cA * v.x0 + v.x1;
         s->startOffsetX = cB * lbl_803E1CCC;
@@ -452,7 +452,7 @@ void dll_2E_func06(GameObject* obj, char* st, int point)
         vecRotateZXY(v.ang, &s->startOffsetX);
         s->needsReinit = 0;
     }
-    ObjPath_GetPointWorldPosition((int)obj, point, &v.x0, &v.y0, &v.z0, 0);
+    ObjPath_GetPointWorldPosition(obj, point, &v.x0, &v.y0, &v.z0, 0);
     s->targetX = v.x0;
     s->targetY = v.y0;
     s->targetZ = v.z0;

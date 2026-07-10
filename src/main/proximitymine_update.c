@@ -159,7 +159,7 @@ void ProximityMine_update(ProximityMineObject* obj)
         {
             if (objUpdateOpacity(state->targetObj) != 0)
             {
-                ObjPath_GetPointWorldPosition((int)state->targetObj, obj->pathIndex, &obj->posX, &obj->posY, &obj->posZ,
+                ObjPath_GetPointWorldPosition((GameObject*)state->targetObj, obj->pathIndex, &obj->posX, &obj->posY, &obj->posZ,
                                               0);
             }
             else

@@ -395,7 +395,7 @@ extern s16 lbl_803DC290[4];
 extern s16 lbl_803DC298[4];
 extern u32 lbl_803E67B0;
 extern void ObjHits_SetHitVolumeMasks(int obj, int a, int b, int c);
-extern void ktrex_updateContactEffects(int obj, void* runtime);
+extern void ktrex_updateContactEffects(GameObject* obj, void* runtime);
 extern s16 lbl_803DC250;
 extern f32 lbl_803E6810;
 extern f32 lbl_803E67F4;

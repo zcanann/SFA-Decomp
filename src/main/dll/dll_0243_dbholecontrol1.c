@@ -80,7 +80,7 @@ int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA04(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA0E(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA0D(int obj, int baddie);
+int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie);

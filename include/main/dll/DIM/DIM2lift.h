@@ -5,7 +5,7 @@
 #include "global.h"
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 
-int DIMbossAnim_updatePlayerHitReaction(int obj, int state);
+int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int state);
 int DIMbossAnim_finishDefeat(GameObject* obj, int state);
 int DIMbossAnim_hasMoveDone(int unused, int* state);
 int DIMbossAnim_returnToIdleWhenDone(int obj, int state);
@@ -15,11 +15,11 @@ int DIMbossHitDetect_tonsilSlam(GameObject* obj, int state);
 int DIMbossHitDetect_liftSlam(GameObject* obj, int state);
 int DIMbossHitDetect_liftImpact(int obj, int state);
 int DIMbossHitDetect_chooseIdleTaunt(GameObject* obj, int state);
-int DIMbossHitDetect_lungeAttack(int obj, int state, f32 weight);
+int DIMbossHitDetect_lungeAttack(GameObject* obj, int state, f32 weight);
 int DIMbossHitDetect_breathBurst(GameObject* obj, int state, f32 weight);
 int DIMbossHitDetect_blueWhiteCapture(GameObject* obj, int state, f32 weight);
 int DIMbossHitDetect_blueWhiteEventCapture(GameObject* obj, int state, f32 weight);
-int DIMbossHitDetect_randomSwipe(int obj, int state, f32 weight);
+int DIMbossHitDetect_randomSwipe(GameObject* obj, int state, f32 weight);
 int DIMbossHitDetect_trackTargetMove(GameObject* obj, int state, f32 weight);
 int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight);
 int DIMbossHitDetect_resetIdleMove(int* obj, u8* state);

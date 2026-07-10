@@ -102,7 +102,7 @@ extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
 
 extern void textureFree(int tex);
-extern int Obj_GetActiveModel(int obj);
+extern int Obj_GetActiveModel(void* obj);
 extern void ModelLightStruct_free(void*);
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
@@ -118,7 +118,7 @@ extern void PSMTXMultVecSR(f32* m, f32* in, f32* out);
 extern int fn_8000FA70(void);
 extern int fn_8000FA90(void);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* m, int p3);
+extern void Obj_BuildWorldTransformMatrix(void* obj, f32* m, int p3);
 extern int textureLoadAsset(int id);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
@@ -294,7 +294,7 @@ void explosion_free(GameObject* obj)
 
 #pragma scheduling off
 #pragma peephole off
-void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colA;
     u32 colB;
@@ -311,7 +311,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     int cursor;
     colA = lbl_803E4928;
     colB = lbl_803E8468;
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&obj->extra;
     model = Obj_GetActiveModel(obj);
     cursor = state;
     if (visible != 0)
@@ -394,9 +394,9 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             for (i = 0, cursor = state; i < ((ExplosionState*)state)->rayMode; cursor += 4, i++)
             {
-                ((GameObject*)obj)->anim.rotY = (s16) * (u16*)&((ExplosionState*)cursor)->rayYawA;
-                ((GameObject*)obj)->anim.rotX = (s16) * (u16*)&((ExplosionState*)cursor)->rayPitchA;
-                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, visible);
+                obj->anim.rotY = (s16) * (u16*)&((ExplosionState*)cursor)->rayYawA;
+                obj->anim.rotX = (s16) * (u16*)&((ExplosionState*)cursor)->rayPitchA;
+                ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
                     *(u16*)((char*)model + 0x18) &= ~8;
@@ -650,13 +650,13 @@ void explosion_update(GameObject* obj)
 }
 
 #pragma opt_propagation on
-void explosion_init(int obj, int def)
+void explosion_init(GameObject* obj, int def)
 {
     f32 vsp[3];
     f32 mB[12];
     f32 mA[12];
     int cursor;
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&obj->extra;
     f32 scale;
     int i;
     int debrisCount;
@@ -673,12 +673,11 @@ void explosion_init(int obj, int def)
             scale = lbl_803E49A8;
         }
     }
-    ((ExplosionSpawnFlameSpdFirst)explosion_spawnFlame)(
-        obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ);
-    ((GameObject*)obj)->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
+    ((ExplosionSpawnFlameSpdFirst)explosion_spawnFlame)((int)obj, lbl_803E49AC * scale, 0, obj->anim.localPosX,
+                                                        obj->anim.localPosY, obj->anim.localPosZ);
+    obj->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
     ((ExplosionState*)state)->modelKind = *(s16*)((char*)def + 0x1c) & 3;
-    Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
+    Obj_SetActiveModelIndex((int)obj, ((ExplosionState*)state)->modelKind);
     if (*(s16*)((char*)def + 0x1c) & 4)
     {
         ((ExplosionState*)state)->driftYSpeed = lbl_803E49A4;
@@ -688,19 +687,19 @@ void explosion_init(int obj, int def)
         ((ExplosionState*)state)->driftYSpeed = lbl_803E4960;
     }
     ((ExplosionState*)state)->nearGround = 0;
-    if (((HitDetectFloatsFirst)hitDetectFn_800658a4)(obj, ((GameObject*)obj)->anim.localPosX,
-                                                     lbl_803E49B0 + ((GameObject*)obj)->anim.localPosY,
-                                                     ((GameObject*)obj)->anim.localPosZ, state + 0x960, 0) == 0)
+    if (((HitDetectFloatsFirst)hitDetectFn_800658a4)((int)obj, obj->anim.localPosX,
+                                                     lbl_803E49B0 + obj->anim.localPosY, obj->anim.localPosZ,
+                                                     state + 0x960, 0) == 0)
     {
         if (((ExplosionState*)state)->groundY < lbl_803E49B4)
         {
             ((ExplosionState*)state)->nearGround = 1;
         }
-        ((ExplosionState*)state)->groundY = ((GameObject*)obj)->anim.localPosY - ((ExplosionState*)state)->groundY;
+        ((ExplosionState*)state)->groundY = obj->anim.localPosY - ((ExplosionState*)state)->groundY;
     }
     else
     {
-        ((ExplosionState*)state)->groundY = ((GameObject*)obj)->anim.localPosY;
+        ((ExplosionState*)state)->groundY = obj->anim.localPosY;
     }
     if (*(s16*)((char*)def + 0x1c) & 0x10)
     {
@@ -739,9 +738,9 @@ void explosion_init(int obj, int def)
             }
             {
                 GravityDebris* d = (GravityDebris*)((char*)cursor + 0x964);
-                d->posX = ((GameObject*)obj)->anim.localPosX;
-                d->posY = ((GameObject*)obj)->anim.localPosY;
-                d->posZ = ((GameObject*)obj)->anim.localPosZ;
+                d->posX = obj->anim.localPosX;
+                d->posY = obj->anim.localPosY;
+                d->posZ = obj->anim.localPosZ;
                 d->velX = vsp[0];
                 d->velY = vsp[1];
                 d->velZ = vsp[2];
@@ -764,8 +763,8 @@ void explosion_init(int obj, int def)
         if (*(void**)&((ExplosionState*)state)->light != NULL)
         {
             modelLightStruct_setLightKind(((ExplosionState*)state)->light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setPosition(((ExplosionState*)state)->light, ((GameObject*)obj)->anim.worldPosX,
-                                         ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ);
+            modelLightStruct_setPosition(((ExplosionState*)state)->light, obj->anim.worldPosX, obj->anim.worldPosY,
+                                         obj->anim.worldPosZ);
             modelLightStruct_setAffectsAabbLightSelection(((ExplosionState*)state)->light, 1);
             modelLightStruct_setEnabled(((ExplosionState*)state)->light, 1, lbl_803E4960);
             modelLightStruct_setDistanceAttenuation(((ExplosionState*)state)->light, (f32)(lbl_803E49CC * scale),
@@ -773,7 +772,7 @@ void explosion_init(int obj, int def)
             modelLightStruct_setDiffuseColor(((ExplosionState*)state)->light, 0xff, 0xeb, 0xa0, 0xff);
         }
     }
-    ((GameObject*)obj)->anim.alpha = 0xff;
+    obj->anim.alpha = 0xff;
     if (*(s16*)((char*)def + 0x1c) & 8)
     {
         if (((ExplosionState*)state)->nearGround == 0)
@@ -811,7 +810,7 @@ void explosion_init(int obj, int def)
         ((ExplosionState*)state)->lifeFrames = v;
     }
     ((ExplosionState*)state)->scale = scale;
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4960;
+    obj->anim.rootMotionScale = lbl_803E4960;
 }
 
 void explosion_release(u32 obj)

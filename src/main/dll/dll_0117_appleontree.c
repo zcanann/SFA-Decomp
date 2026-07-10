@@ -83,7 +83,7 @@ extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32);
-extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
+extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
@@ -181,16 +181,16 @@ void AppleOnTree_setPosition(GameObject* obj, float* pos)
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
-void appleontree_handleCollectableHit(int obj)
+void appleontree_handleCollectableHit(GameObject* obj)
 {
     extern void playerAddHealth(int player, u16 amount);
     extern int Obj_GetPlayerObject(void);
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&obj->extra;
     int player = Obj_GetPlayerObject();
 
-    if (!(Vec_xzDistance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupXZRange))
+    if (!(Vec_xzDistance((float*)(player + 0x18), (float*)&obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
         return;
-    if (!(Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18)) < gAppleOnTreePickupRange))
+    if (!(Vec_distance((float*)(player + 0x18), (float*)&obj->anim.worldPosX) < gAppleOnTreePickupRange))
         return;
 
     if (mainGetBit(GAMEBIT_SawApple) == 0)
@@ -206,9 +206,9 @@ void appleontree_handleCollectableHit(int obj)
     else
     {
         playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
-        itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
-        Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
-        appleontree_markFallen((GameObject*)(obj));
+        itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
+        appleontree_markFallen(obj);
     }
 }
 
@@ -242,9 +242,9 @@ void AppleOnTree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 #pragma opt_lifetimes off
-void fn_8017D854(int obj, int msg)
+void fn_8017D854(GameObject* obj, int msg)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&obj->extra;
     int v;
 
     switch (msg)
@@ -270,10 +270,10 @@ void fn_8017D854(int obj, int msg)
     ((AppleOnTreeState*)state)->rotY = randomGetRange(-0x8000, 0x7fff);
     ((AppleOnTreeState*)state)->rotZ = 0x2000;
 
-    if (fn_80065684(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ, (f32*)(state + 0x30), 0) == 0)
+    if (fn_80065684(obj, obj->anim.localPosX, obj->anim.localPosY,
+                    obj->anim.localPosZ, (f32*)(state + 0x30), 0) == 0)
     {
-        appleontree_markFallen((GameObject*)(obj));
+        appleontree_markFallen(obj);
     }
     else
     {
@@ -317,30 +317,30 @@ void fn_8017D854(int obj, int msg)
 
         if (((AppleOnTreeState*)state)->dropHeight <= lbl_803E37D4)
         {
-            state = *(int*)&((GameObject*)obj)->extra;
-            if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
+            state = *(int*)&obj->extra;
+            if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((int)obj);
             }
             else
             {
-                if (((GameObject*)obj)->anim.hitReactState != NULL)
+                if (obj->anim.hitReactState != NULL)
                 {
-                    ObjHits_DisableObject(obj);
+                    ObjHits_DisableObject((u32)obj);
                 }
                 ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
             }
         }
         else
         {
-            ((AppleOnTreeState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
+            ((AppleOnTreeState*)state)->posY = obj->anim.localPosY;
             ((AppleOnTreeState*)state)->splashPosY =
-                ((GameObject*)obj)->anim.localPosY - ((AppleOnTreeState*)state)->dropHeight;
-            if (((GameObject*)obj)->anim.hitReactState != NULL)
+                obj->anim.localPosY - ((AppleOnTreeState*)state)->dropHeight;
+            if (obj->anim.hitReactState != NULL)
             {
-                ObjHits_DisableObject(obj);
+                ObjHits_DisableObject((u32)obj);
             }
-            Sfx_PlayFromObject(obj, SFXTRIG_en_tranch_6);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_en_tranch_6);
         }
     }
 }
@@ -750,14 +750,14 @@ void AppleOnTree_update(int objArg)
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                   (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
-                fn_8017D854(obj, 1);
+                fn_8017D854((GameObject*)obj, 1);
             }
             break;
         case APPLEONTREE_STATE_LANDED:
             ((AppleOnTreeState*)state)->elapsedTime = fb - timeDelta;
             if (frac > ((GroundBaddieState*)state)->baddie.posZ)
             {
-                fn_8017D854(obj, 0);
+                fn_8017D854((GameObject*)obj, 0);
             }
             else
             {
@@ -766,7 +766,7 @@ void AppleOnTree_update(int objArg)
                     ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                       (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
                 {
-                    fn_8017D854(obj, 2);
+                    fn_8017D854((GameObject*)obj, 2);
                 }
             }
             break;
@@ -806,7 +806,7 @@ void AppleOnTree_update(int objArg)
                 }
                 modelIdxPtr = (int*)objFindTexture((GameObject*)obj, 0, 0);
                 *modelIdxPtr = (int)(lbl_803E380C * frac);
-                appleontree_handleCollectableHit(obj);
+                appleontree_handleCollectableHit((GameObject*)obj);
             }
             break;
         case APPLEONTREE_STATE_BURST:
@@ -849,7 +849,7 @@ void AppleOnTree_update(int objArg)
             {
                 placement = (int)(lbl_803E3818 * fb / frac);
                 ((GameObject*)obj)->anim.alpha = 0xff - placement;
-                appleontree_handleCollectableHit(obj);
+                appleontree_handleCollectableHit((GameObject*)obj);
             }
         }
     }

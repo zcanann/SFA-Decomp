@@ -44,7 +44,7 @@ typedef struct TumbleweedState
     u8 hitPulseCounter;
 } TumbleweedState;
 
-void tumbleweed_updateStateMachine(int obj);
+void tumbleweed_updateStateMachine(GameObject* obj);
 void tumbleweed_updateTargetedStateMachine(GameObject* obj);
 void tumbleweed_updateEffects(GameObject* obj);
 void tumbleweed_update(GameObject* obj);

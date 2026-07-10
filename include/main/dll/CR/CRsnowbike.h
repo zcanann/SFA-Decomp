@@ -35,13 +35,13 @@ void sc_levelcontrol_release(void);
 void sc_levelcontrol_initialise(void);
 
 void sc_musictree_spawnAmbientEffect(GameObject* obj, int p2, int p3, s8 idx);
-void sc_musictree_handleHitObject(int obj, int p2, int effectType);
+void sc_musictree_handleHitObject(GameObject* obj, int p2, int effectType);
 int sc_musictree_getExtraSize(void);
 int sc_musictree_getObjectTypeId(void);
 void sc_musictree_free(void);
-void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void sc_musictree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void sc_musictree_hitDetect(void);
-void sc_musictree_update(int obj);
+void sc_musictree_update(GameObject* obj);
 /* sc_musictree_init is defined in DRcloudrunner.c with a private setup type;
  * declared there. Not referenced here, so no prototype is carried (a (void)
  * drift prototype collides with the real def when the TUs merge). */

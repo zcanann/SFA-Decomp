@@ -69,7 +69,7 @@ extern void fn_801A80F0(GameObject* e, int arg);
 extern float fastFloorf(float x);
 extern const f32 lbl_803E3FC0;
 
-extern int fn_80060688(void* block, int v);
+extern int fn_80060688(GameObject* block, int v);
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);

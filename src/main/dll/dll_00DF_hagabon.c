@@ -118,7 +118,7 @@ void Hagabon_initialise(void)
 {
 }
 
-void fn_8014E1DC(int obj, HagabonState* state)
+void fn_8014E1DC(GameObject* obj, HagabonState* state)
 {
     int curve;
     GameObject* player;
@@ -151,83 +151,83 @@ void fn_8014E1DC(int obj, HagabonState* state)
     waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) / lbl_803E2620);
     waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
     waveA = waveB + waveA;
-    ((GameObject*)obj)->anim.rotZ = lbl_803E2618 * waveA;
+    obj->anim.rotZ = lbl_803E2618 * waveA;
 
     waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) / lbl_803E2620);
     waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
     waveA = waveB + waveA;
-    ((GameObject*)obj)->anim.rotY = lbl_803E2618 * waveA;
+    obj->anim.rotY = lbl_803E2618 * waveA;
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
-        ((GameObject*)obj)->anim.velocityX +=
-            lbl_803E2624 * (state->player->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
-        ((GameObject*)obj)->anim.velocityY +=
-            lbl_803E2624 * ((lbl_803E2628 + state->player->anim.localPosY) - ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ +=
-            lbl_803E2624 * (state->player->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
+        obj->anim.velocityX +=
+            lbl_803E2624 * (state->player->anim.localPosX - obj->anim.localPosX);
+        obj->anim.velocityY +=
+            lbl_803E2624 * ((lbl_803E2628 + state->player->anim.localPosY) - obj->anim.localPosY);
+        obj->anim.velocityZ +=
+            lbl_803E2624 * (state->player->anim.localPosZ - obj->anim.localPosZ);
     }
     else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
     {
-        ((GameObject*)obj)->anim.velocityX +=
-            lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
-        ((GameObject*)obj)->anim.velocityY +=
-            lbl_803E2624 * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ +=
-            lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
+        obj->anim.velocityX +=
+            lbl_803E2624 * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+        obj->anim.velocityY +=
+            lbl_803E2624 * (*(f32*)(curve + 0x6c) - obj->anim.localPosY);
+        obj->anim.velocityZ +=
+            lbl_803E2624 * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX +=
-            lbl_803E2624 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX);
+        obj->anim.velocityX +=
+            lbl_803E2624 * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
         waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) / lbl_803E2620);
         waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
         waveA = waveB + waveA;
-        waveA = ((lbl_803E262C * waveA) + *(f32*)(curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 * waveA;
-        ((GameObject*)obj)->anim.velocityZ +=
-            lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
+        waveA = ((lbl_803E262C * waveA) + *(f32*)(curve + 0x6c)) - obj->anim.localPosY;
+        obj->anim.velocityY += lbl_803E2624 * waveA;
+        obj->anim.velocityZ +=
+            lbl_803E2624 * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
 
-    ((GameObject*)obj)->anim.velocityX *= (damp = lbl_803E2630);
-    ((GameObject*)obj)->anim.velocityY *= damp;
-    ((GameObject*)obj)->anim.velocityZ *= damp;
+    obj->anim.velocityX *= (damp = lbl_803E2630);
+    obj->anim.velocityY *= damp;
+    obj->anim.velocityZ *= damp;
 
-    if (((GameObject*)obj)->anim.velocityX > lbl_803E2634)
+    if (obj->anim.velocityX > lbl_803E2634)
     {
-        ((GameObject*)obj)->anim.velocityX = *(f32*)&lbl_803E2634;
+        obj->anim.velocityX = *(f32*)&lbl_803E2634;
     }
-    if (((GameObject*)obj)->anim.velocityY > lbl_803E2634)
+    if (obj->anim.velocityY > lbl_803E2634)
     {
-        ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E2634;
+        obj->anim.velocityY = *(f32*)&lbl_803E2634;
     }
-    if (((GameObject*)obj)->anim.velocityZ > lbl_803E2634)
+    if (obj->anim.velocityZ > lbl_803E2634)
     {
-        ((GameObject*)obj)->anim.velocityZ = *(f32*)&lbl_803E2634;
-    }
-
-    if (((GameObject*)obj)->anim.velocityX < lbl_803E2638)
-    {
-        ((GameObject*)obj)->anim.velocityX = *(f32*)&lbl_803E2638;
-    }
-    if (((GameObject*)obj)->anim.velocityY < lbl_803E2638)
-    {
-        ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E2638;
-    }
-    if (((GameObject*)obj)->anim.velocityZ < lbl_803E2638)
-    {
-        ((GameObject*)obj)->anim.velocityZ = *(f32*)&lbl_803E2638;
+        obj->anim.velocityZ = *(f32*)&lbl_803E2634;
     }
 
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
+    if (obj->anim.velocityX < lbl_803E2638)
+    {
+        obj->anim.velocityX = *(f32*)&lbl_803E2638;
+    }
+    if (obj->anim.velocityY < lbl_803E2638)
+    {
+        obj->anim.velocityY = *(f32*)&lbl_803E2638;
+    }
+    if (obj->anim.velocityZ < lbl_803E2638)
+    {
+        obj->anim.velocityZ = *(f32*)&lbl_803E2638;
+    }
+
+    objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+            obj->anim.velocityZ * timeDelta);
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, state->animSpeed, timeDelta,
                                                                 (ObjAnimEventList*)animEvents);
 
     player = state->player;
-    angle = (u16)getAngle(((GameObject*)obj)->anim.worldPosX - player->anim.worldPosX,
-                          ((GameObject*)obj)->anim.worldPosZ - player->anim.worldPosZ);
-    angleDelta = angle - ((int)((GameObject*)obj)->anim.rotX & 0xffff);
+    angle = (u16)getAngle(obj->anim.worldPosX - player->anim.worldPosX,
+                          obj->anim.worldPosZ - player->anim.worldPosZ);
+    angleDelta = angle - ((int)obj->anim.rotX & 0xffff);
     if (angleDelta > 0x8000)
     {
         angleDelta -= 0xffff;
@@ -237,7 +237,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         angleDelta += 0xffff;
     }
 
-    ((GameObject*)obj)->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
+    obj->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
 void Hagabon_hitDetect(GameObject* obj)
@@ -251,17 +251,19 @@ void Hagabon_hitDetect(GameObject* obj)
     }
 }
 
-void Hagabon_free(int obj)
+#pragma opt_common_subs off
+void Hagabon_free(GameObject* obj)
 {
-    void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, HAGABON_OBJGROUP);
-    Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
+    void** state = obj->extra;
+    ObjGroup_RemoveObject((int)obj, HAGABON_OBJGROUP);
+    Sfx_StopFromObject((int)obj, SFXTRIG_en_twiggysnap11);
     if (*state != NULL)
     {
         mm_free(*state);
         *state = NULL;
     }
 }
+#pragma opt_common_subs reset
 
 void Hagabon_init(GameObject* obj, int data, int skip_alloc)
 {
@@ -292,30 +294,32 @@ void Hagabon_init(GameObject* obj, int data, int skip_alloc)
     }
 }
 
-void Hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+#pragma opt_common_subs off
+void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    HagabonState* state = *(HagabonState**)&((GameObject*)obj)->extra;
+    HagabonState* state = *(HagabonState**)&obj->extra;
     s32 v = visible;
     if (v != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch (obj->unkF4)
         {
         case 0:
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E2650);
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E2650);
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
-                objParticleFn_80099d84(obj, lbl_803E2650, 3,
-                                       (f32)(u32)((GameObject*)obj)->anim.alpha / gHagabonAlphaMax, 0);
+                objParticleFn_80099d84((int)obj, lbl_803E2650, 3,
+                                       (f32)(u32)obj->anim.alpha / gHagabonAlphaMax, 0);
             }
             if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
             {
-                objParticleFn_80099d84(obj, lbl_803E2650, 4,
-                                       (f32)(u32)((GameObject*)obj)->anim.alpha / gHagabonAlphaMax, 0);
+                objParticleFn_80099d84((int)obj, lbl_803E2650, 4,
+                                       (f32)(u32)obj->anim.alpha / gHagabonAlphaMax, 0);
             }
             break;
         }
     }
 }
+#pragma opt_common_subs reset
 
 int Hagabon_getExtraSize(void)
 {
@@ -458,7 +462,7 @@ void Hagabon_update(int obj)
     {
         state->flags |= HAGABON_FLAG_CHASE;
     }
-    fn_8014E1DC(obj, state);
+    fn_8014E1DC((GameObject*)obj, state);
 }
 #pragma fp_contract reset
 

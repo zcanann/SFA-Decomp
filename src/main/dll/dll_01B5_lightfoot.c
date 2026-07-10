@@ -247,7 +247,7 @@ void lightfoot_update(GameObject* obj)
     }
     else
     {
-        Lightfoot_UpdateAttachedChild((int)obj, inner);
+        Lightfoot_UpdateAttachedChild(obj, inner);
         if (((GroundBaddieState*)inner)->flags400 & 0x2)
         {
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);

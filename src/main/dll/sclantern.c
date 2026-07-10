@@ -81,7 +81,7 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     }
     if (pointIndex != 0)
     {
-        ObjPath_GetPointWorldPosition(obj, pointIndex - 1, &posX, &posY, &posZ, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, pointIndex - 1, &posX, &posY, &posZ, 0);
         if (!((lantern->anim.currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
               (lantern->anim.currentMoveProgress < lbl_803E5498)))
         {

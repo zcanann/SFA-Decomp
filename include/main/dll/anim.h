@@ -170,7 +170,7 @@ int dbstealerworm_getExtraSize(void);
 int dbstealerworm_getObjectTypeId(void);
 void dbstealerworm_free(int* obj);
 void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void dbstealerworm_hitDetect(int obj);
+void dbstealerworm_hitDetect(GameObject* obj);
 void dbstealerworm_update(u8* objp);
 void dbstealerworm_init(int* obj, u8* def, int param3);
 void dbstealerworm_release(void);

@@ -1120,7 +1120,7 @@ void fn_800605F0(s16* in, f32* out)
     out[2] = (f32)(s32)in[2] * CurrTiming_803DEC20;
 }
 
-int fn_80060688(int obj, int type)
+int fn_80060688(GameObject* obj, int type)
 {
     int entry;
     int offset;
@@ -1129,10 +1129,10 @@ int fn_80060688(int obj, int type)
     int count;
     total = 0;
     offset = 0;
-    count = *(u16*)(obj + 0x9a);
+    count = *(u16*)((char*)obj + 0x9a);
     for (i = 0; i < count; i++)
     {
-        entry = *(int*)&((GameObject*)obj)->anim.modelInstance + offset;
+        entry = *(int*)&obj->anim.modelInstance + offset;
         if (type == (int)((*(u32*)(entry + 0x10) & 0xff000000) >> 24))
         {
             total += *(u16*)(entry + 0x14) - *(u16*)entry;
@@ -1209,36 +1209,36 @@ void fn_80065574(int matchVal, GameObject* obj, int flag)
     }
 }
 
-void MapBlock_init(int obj)
+void MapBlock_init(GameObject* obj)
 {
     int off;
     int i;
-    if (*(u32*)&((GameObject*)obj)->anim.hitReactState != 0)
-        *(int*)&((GameObject*)obj)->anim.hitReactState = obj + *(int*)&((GameObject*)obj)->anim.hitReactState;
-    if (*(u32*)&((GameObject*)obj)->anim.placementData != 0)
-        *(int*)&((GameObject*)obj)->anim.placementData = obj + *(int*)&((GameObject*)obj)->anim.placementData;
-    if (*(u32*)&((GameObject*)obj)->anim.modelInstance != 0)
-        *(int*)&((GameObject*)obj)->anim.modelInstance = obj + *(int*)&((GameObject*)obj)->anim.modelInstance;
-    *(int*)(obj + 0x58) = obj + *(int*)(obj + 0x58);
-    *(int*)&((GameObject*)obj)->anim.weaponDaTable = obj + *(int*)&((GameObject*)obj)->anim.weaponDaTable;
-    *(int*)&((GameObject*)obj)->anim.eventTable = obj + *(int*)&((GameObject*)obj)->anim.eventTable;
-    if (*(u32*)&((GameObject*)obj)->anim.hitVolumeBounds != 0)
-        *(int*)&((GameObject*)obj)->anim.hitVolumeBounds = obj + *(int*)&((GameObject*)obj)->anim.hitVolumeBounds;
-    if (*(u32*)&((GameObject*)obj)->anim.banks != 0)
-        *(int*)&((GameObject*)obj)->anim.banks = obj + *(int*)&((GameObject*)obj)->anim.banks;
-    if (*(u32*)&((GameObject*)obj)->anim.previousLocalPosX != 0)
-        *(int*)&((GameObject*)obj)->anim.previousLocalPosX = obj + *(int*)&((GameObject*)obj)->anim.previousLocalPosX;
-    *(int*)&((GameObject*)obj)->anim.dll = obj + *(int*)&((GameObject*)obj)->anim.dll;
-    if (*(u32*)&((GameObject*)obj)->anim.modelState != 0)
-        *(int*)&((GameObject*)obj)->anim.modelState = obj + *(int*)&((GameObject*)obj)->anim.modelState;
-    for (i = 0, off = 0; i < *(u8*)(obj + 0xa1); i++)
+    if (*(u32*)&obj->anim.hitReactState != 0)
+        *(int*)&obj->anim.hitReactState = (int)obj + *(int*)&obj->anim.hitReactState;
+    if (*(u32*)&obj->anim.placementData != 0)
+        *(int*)&obj->anim.placementData = (int)obj + *(int*)&obj->anim.placementData;
+    if (*(u32*)&obj->anim.modelInstance != 0)
+        *(int*)&obj->anim.modelInstance = (int)obj + *(int*)&obj->anim.modelInstance;
+    *(int*)((char*)obj + 0x58) = (int)obj + *(int*)((char*)obj + 0x58);
+    *(int*)&obj->anim.weaponDaTable = (int)obj + *(int*)&obj->anim.weaponDaTable;
+    *(int*)&obj->anim.eventTable = (int)obj + *(int*)&obj->anim.eventTable;
+    if (*(u32*)&obj->anim.hitVolumeBounds != 0)
+        *(int*)&obj->anim.hitVolumeBounds = (int)obj + *(int*)&obj->anim.hitVolumeBounds;
+    if (*(u32*)&obj->anim.banks != 0)
+        *(int*)&obj->anim.banks = (int)obj + *(int*)&obj->anim.banks;
+    if (*(u32*)&obj->anim.previousLocalPosX != 0)
+        *(int*)&obj->anim.previousLocalPosX = (int)obj + *(int*)&obj->anim.previousLocalPosX;
+    *(int*)&obj->anim.dll = (int)obj + *(int*)&obj->anim.dll;
+    if (*(u32*)&obj->anim.modelState != 0)
+        *(int*)&obj->anim.modelState = (int)obj + *(int*)&obj->anim.modelState;
+    for (i = 0, off = 0; i < *(u8*)((char*)obj + 0xa1); i++)
     {
-        *(int*)(*(int*)&((GameObject*)obj)->anim.dll + off) = obj + *(int*)(*(int*)&((GameObject*)obj)->anim.dll + off);
+        *(int*)(*(int*)&obj->anim.dll + off) = (int)obj + *(int*)(*(int*)&obj->anim.dll + off);
         off += 0x1c;
     }
 }
 
-void MapBlock_initHits(int obj, int index)
+void MapBlock_initHits(GameObject* obj, int index)
 {
     int off;
     int i;
@@ -1248,19 +1248,19 @@ void MapBlock_initHits(int obj, int index)
     int entry;
     if (size > 0)
     {
-        *(void**)(obj + 0x70) = mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)(obj + 0x70), fileOff, size);
+        *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
     }
-    *(u16*)(obj + 0x9c) = (u32)size / 20;
-    for (i = 0, off = 0; i < *(u16*)(obj + 0x9c); i++)
+    *(u16*)((char*)obj + 0x9c) = (u32)size / 20;
+    for (i = 0, off = 0; i < *(u16*)((char*)obj + 0x9c); i++)
     {
-        entry = *(int*)&((GameObject*)obj)->anim.textureSlots + off;
+        entry = *(int*)&obj->anim.textureSlots + off;
         if (*(s16*)(entry + 0) < 0 || *(s16*)(entry + 2) < 0 || *(s16*)(entry + 0) > 0x280 ||
             *(s16*)(entry + 2) > 0x280)
         {
             *(u8*)(entry + 0xf) = 0x40;
         }
-        entry = *(int*)&((GameObject*)obj)->anim.textureSlots + off;
+        entry = *(int*)&obj->anim.textureSlots + off;
         if (*(s16*)(entry + 8) < 0 || *(s16*)(entry + 0xa) < 0 || *(s16*)(entry + 8) > 0x280 ||
             *(s16*)(entry + 0xa) > 0x280)
         {
@@ -1268,9 +1268,9 @@ void MapBlock_initHits(int obj, int index)
         }
         off += 0x14;
     }
-    *(int*)&((GameObject*)obj)->anim.hitVolumeTransforms = 0;
-    *(u16*)(obj + 0x9e) = 0;
-    *(u16*)&((GameObject*)obj)->anim.rotZ = *(u16*)&((GameObject*)obj)->anim.rotZ & ~0x40;
+    *(int*)&obj->anim.hitVolumeTransforms = 0;
+    *(u16*)((char*)obj + 0x9e) = 0;
+    *(u16*)&obj->anim.rotZ = *(u16*)&obj->anim.rotZ & ~0x40;
 }
 
 void* MapBlock_loadFromFile(int blockId)
@@ -1322,7 +1322,7 @@ cont:
     return buf;
 }
 
-void MapBlock_initShaders(int obj)
+void MapBlock_initShaders(GameObject* obj)
 {
     char* sh;
     int block;
@@ -1330,17 +1330,16 @@ void MapBlock_initShaders(int obj)
     int j;
     int ref;
     int outerOff;
-    for (i = 0, outerOff = 0; i < *(u8*)(obj + 0xa2); i++)
+    for (i = 0, outerOff = 0; i < *(u8*)((char*)obj + 0xa2); i++)
     {
-        block = *(int*)&((GameObject*)obj)->anim.modelState + outerOff;
+        block = *(int*)&obj->anim.modelState + outerOff;
         for (j = 0; j < *(u8*)(block + 0x41); j++)
         {
             sh = (char*)block + j * 8;
             ref = *(int*)&((ObjModelState*)sh)->overrideWorldPosY;
             if (ref != -1)
             {
-                *(int*)&((ObjModelState*)sh)->overrideWorldPosY =
-                    ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[ref];
+                *(int*)&((ObjModelState*)sh)->overrideWorldPosY = ((int*)*(int*)&obj->anim.hitReactState)[ref];
                 ref = *(u8*)(sh + 0x29);
                 if ((u32)ref != 0u)
                 {
@@ -1356,7 +1355,7 @@ void MapBlock_initShaders(int obj)
         ref = *(int*)(block + 0x34);
         if (ref != -1)
         {
-            *(int*)(block + 0x34) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[ref];
+            *(int*)(block + 0x34) = ((int*)*(int*)&obj->anim.hitReactState)[ref];
         }
         else
         {

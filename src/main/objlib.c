@@ -1627,14 +1627,14 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
     return collisionType;
 }
 
-void ObjLink_DetachChild(int obj, int child)
+void ObjLink_DetachChild(GameObject* obj, int child)
 {
     int dst;
     int slot;
     int i;
 
     i = 0;
-    for (slot = obj; i < (int)((GameObject*)obj)->childCount; i++)
+    for (slot = (int)obj; i < (int)obj->childCount; i++)
     {
         if ((u32) * (int*)(slot + OBJLINK_CHILD_LIST_OFFSET) == child)
         {
@@ -1642,15 +1642,15 @@ void ObjLink_DetachChild(int obj, int child)
         }
         slot += 4;
     }
-    dst = obj + i * 4;
-    while (i < (int)((GameObject*)obj)->childCount - 1)
+    dst = (int)obj + i * 4;
+    while (i < (int)obj->childCount - 1)
     {
         *(int*)(dst + OBJLINK_CHILD_LIST_OFFSET) = *(int*)(dst + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
         dst += 4;
         i++;
     }
-    ((GameObject*)obj)->childCount--;
-    *(int*)(obj + OBJLINK_CHILD_LIST_OFFSET + (u32)((GameObject*)obj)->childCount * 4) = 0;
+    obj->childCount--;
+    *(int*)((int)obj + OBJLINK_CHILD_LIST_OFFSET + (u32)obj->childCount * 4) = 0;
     ((GameObject*)child)->ownerObj = (void*)0;
     return;
 }
@@ -1785,7 +1785,7 @@ u32 ObjTrigger_IsSetById(int obj, short eventId)
     return 0;
 }
 
-u32 ObjTrigger_IsSet(int obj)
+u32 ObjTrigger_IsSet(GameObject* obj)
 {
     u32 flags;
     int playerState;
@@ -1793,14 +1793,14 @@ u32 ObjTrigger_IsSet(int obj)
     int flagEnabled;
     int flagBlocked;
 
-    if (((GameObject*)obj)->anim.modelInstance->hitVolumes == NULL)
+    if (obj->anim.modelInstance->hitVolumes == NULL)
     {
         return 0;
     }
     flags = buttonGetDisabled(0);
     if ((flags & OBJTRIGGER_BUTTON_DISABLE_FLAG) == 0)
     {
-        triggerFlags = *(u8*)(obj + OBJTRIGGER_FLAGS_OFFSET);
+        triggerFlags = *(u8*)((int)obj + OBJTRIGGER_FLAGS_OFFSET);
         flagEnabled = triggerFlags & OBJTRIGGER_CURRENT_ENABLE_FLAG;
         if (flagEnabled != 0)
         {
@@ -1895,7 +1895,7 @@ u32 ObjList_ContainsObject(int obj)
     return 0;
 }
 
-void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, float* positions)
+void ObjPath_GetPointWorldPositionArray(GameObject* obj, int pointIndex, int count, float* positions)
 {
     float* position;
     int i;
@@ -1940,16 +1940,16 @@ void ObjPath_GetPointLocalMtx(GameObject* obj, int pointIndex, float* mtxOut)
     return;
 }
 
-void ObjPath_GetPointModelMtx(int obj, int pointIndex)
+void ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex)
 {
     int* model;
     ObjPathPoint* pathPoint;
     int jointIndex;
 
-    model = Obj_GetActiveModel(obj);
-    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET));
+    model = Obj_GetActiveModel((int)obj);
+    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINTS_OFFSET));
     pathPoint += pointIndex;
-    jointIndex = pathPoint->modelIndex[(int)*(char*)(obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
+    jointIndex = pathPoint->modelIndex[(int)*(char*)((int)obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
     if ((jointIndex >= 0) && (jointIndex < (int)(u32) * (u8*)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET)))
     {
         ObjModel_GetJointMatrix(model, jointIndex);
@@ -1961,7 +1961,8 @@ void ObjPath_GetPointModelMtx(int obj, int pointIndex)
     return;
 }
 
-void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition)
+void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX, float* outY, float* outZ,
+                                   int useInputPosition)
 {
     int pointOffset;
     ObjPathPoint* pathPoint;
@@ -1975,25 +1976,25 @@ void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* 
     float rotMtx[16];
 
     if ((pointIndex < 0) ||
-        (pointIndex >= (int)(u32) * (u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINT_COUNT_OFFSET)))
+        (pointIndex >= (int)(u32) * (u8*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINT_COUNT_OFFSET)))
     {
-        *outX = ((GameObject*)obj)->anim.localPosX;
-        *outY = ((GameObject*)obj)->anim.localPosY;
-        *outZ = ((GameObject*)obj)->anim.localPosZ;
+        *outX = obj->anim.localPosX;
+        *outY = obj->anim.localPosY;
+        *outZ = obj->anim.localPosZ;
     }
     else
     {
-        model = Obj_GetActiveModel(obj);
-        pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET));
+        model = Obj_GetActiveModel((int)obj);
+        pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINTS_OFFSET));
         pointOffset = pointIndex * sizeof(ObjPathPoint);
         pathPoint = (ObjPathPoint*)((int)pathPoint + pointOffset);
-        jointIndex = pathPoint->modelIndex[(int)*(char*)(obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
+        jointIndex = pathPoint->modelIndex[(int)*(char*)((int)obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
         if ((jointIndex < OBJPATH_ROOT_JOINT_INDEX) ||
             (jointIndex >= (int)(u32) * (u8*)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET)))
         {
-            *outX = ((GameObject*)obj)->anim.localPosX;
-            *outY = ((GameObject*)obj)->anim.localPosY;
-            *outZ = ((GameObject*)obj)->anim.localPosZ;
+            *outX = obj->anim.localPosX;
+            *outY = obj->anim.localPosY;
+            *outZ = obj->anim.localPosZ;
         }
         else
         {
@@ -2017,11 +2018,9 @@ void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* 
             }
             else
             {
-                transform.x = *(f32*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
-                                      pointOffset);
+                transform.x = *(f32*)(*(int*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + pointOffset);
                 pathPoint =
-                    (ObjPathPoint*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
-                                    pointOffset);
+                    (ObjPathPoint*)(*(int*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + pointOffset);
                 transform.y = pathPoint->y;
                 transform.z = pathPoint->z;
                 transform.rotX = pathPoint->rotX;

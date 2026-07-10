@@ -58,13 +58,13 @@ int drshackle_func0B(GameObject* obj)
     return ((DrshacklePlacement*)placement)->unk19;
 }
 
-int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
+int drshackle_setScale(GameObject* obj, int a, int b, int c, int d, int e, int f)
 {
     int* model;
     int* modelData;
     int joint1;
-    u8* p = ((GameObject*)obj)->extra;
-    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
+    u8* p = obj->extra;
+    int* q = *(int**)&obj->anim.placementData;
     f32 jointPos[3];
     f32 parentPos[3];
     char* mdPtr;
@@ -77,9 +77,9 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     {
         return 1;
     }
-    ((DrshackleState*)p)->savedPosX = ((GameObject*)obj)->anim.localPosX;
-    ((DrshackleState*)p)->savedPosY = ((GameObject*)obj)->anim.localPosY;
-    ((DrshackleState*)p)->savedPosZ = ((GameObject*)obj)->anim.localPosZ;
+    ((DrshackleState*)p)->savedPosX = obj->anim.localPosX;
+    ((DrshackleState*)p)->savedPosY = obj->anim.localPosY;
+    ((DrshackleState*)p)->savedPosZ = obj->anim.localPosZ;
 
     {
         s8* jp = (s8*)(*(int*)(*(int*)((char*)a + 0x50) + 0x2c) + b * 24);
@@ -90,17 +90,17 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     modelData = *(int**)model;
     mdPtr = (char*)modelData + 0x3c;
 
-    ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->anim.rotY = 0;
+    obj->anim.rotZ = 0;
+    obj->anim.rotY = 0;
     ObjModel_CopyJointTranslation(model, joint1, jointPos);
     ObjModel_CopyJointTranslation(model, *(s8*)(*(int*)mdPtr + joint1 * 28), parentPos);
     PSVECSubtract(parentPos, jointPos, jointPos);
 
     if (((DrshacklePlacement*)q)->quarterTurns != 0)
     {
-        ((GameObject*)obj)->anim.rotZ =
+        obj->anim.rotZ =
             (s16)(((placement = (DrshacklePlacement*)q)->quarterTurns << 14) + getAngle(jointPos[2], jointPos[0]));
-        ((GameObject*)obj)->anim.rotY = (s16)getAngle(jointPos[2], jointPos[1]);
+        obj->anim.rotY = (s16)getAngle(jointPos[2], jointPos[1]);
     }
     else
     {
@@ -108,8 +108,8 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
         f32 mag;
         jointPos[1] = lbl_803E6A28;
         mag = PSVECMag(jointPos);
-        ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803DC2F0 + getAngle(jointPos[0], jointPos[2]));
-        ((GameObject*)obj)->anim.rotY = (s16)(lbl_803DDD70 + getAngle(mag, savedY));
+        obj->anim.rotZ = (s16)(lbl_803DC2F0 + getAngle(jointPos[0], jointPos[2]));
+        obj->anim.rotY = (s16)(lbl_803DDD70 + getAngle(mag, savedY));
         objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(a, b));
     }
     ObjPath_GetPointWorldPosition(a, b, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
@@ -121,8 +121,8 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
         char* entry = *(char**)a;
         if (entry != NULL)
         {
-            ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32*)(entry + 0xc), (f32*)(entry + 0x10),
-                                          (f32*)(entry + 0x14), 0);
+            ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
+                obj, p[i + 0x1b], (f32*)(entry + 0xc), (f32*)(entry + 0x10), (f32*)(entry + 0x14), 0);
         }
         a += 4;
     }
@@ -144,10 +144,10 @@ void drshackle_free(int obj)
     ObjGroup_RemoveObject(obj, DRSHACKLE_OBJGROUP);
 }
 
-void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void drshackle_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     int* ptr;
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     int i;
     if (((BitFlags8*)(state + 0x1a))->b0 == 0 && visible != 0)
     {
@@ -157,8 +157,9 @@ void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
             int* entry = ((int**)state)[i];
             if (entry != 0)
             {
-                ObjPath_GetPointWorldPosition(obj, state[i + 0x1b], (f32*)((char*)entry + 0xc),
-                                              (f32*)((char*)entry + 0x10), (f32*)((char*)entry + 0x14), 0);
+                ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
+                    obj, state[i + 0x1b], (f32*)((char*)entry + 0xc), (f32*)((char*)entry + 0x10),
+                    (f32*)((char*)entry + 0x14), 0);
             }
         }
     }

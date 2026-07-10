@@ -295,7 +295,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
         else
         {
             triggerIsSet = mainGetBit(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
-            if ((triggerIsSet == 0) && (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0))
+            if ((triggerIsSet == 0) && (objectTriggerIsSet = ObjTrigger_IsSet((GameObject*)obj), objectTriggerIsSet != 0))
             {
                 runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
                 runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;

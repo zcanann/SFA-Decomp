@@ -60,15 +60,17 @@ void dll_19D_render(void)
 {
 }
 
-void dll_19D_hitDetect(int obj)
+void dll_19D_hitDetect(GameObject* obj)
 {
-    register int self = obj;
-    register int state = *(int*)&((GameObject*)self)->extra;
-    int state2 = *(int*)&((GameObject*)self)->anim.placementData;
+    register int state;
+    register int self = (int)obj;
+    int state2;
     float vec[6];
     int linkObj;
     void* linkSubObj;
 
+    state = *(int*)&((GameObject*)self)->extra;
+    state2 = *(int*)&((GameObject*)self)->anim.placementData;
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
     vec[5] = lbl_803E51B8;
@@ -85,11 +87,11 @@ void dll_19D_hitDetect(int obj)
     ((Dll19DState*)state)->despawnTimer = 0x32;
 }
 
-void dll_19D_update(int obj)
+void dll_19D_update(GameObject* obj)
 {
-    register int self = obj;
-    register int state = *(int*)&((GameObject*)self)->extra;
-    int def = *(int*)&((GameObject*)self)->anim.placementData;
+    register int state;
+    register int self = (int)obj;
+    int def;
     int linkObj;
     float vec[6];
     int lifetime;
@@ -97,6 +99,8 @@ void dll_19D_update(int obj)
     u32 frames;
     f32 zero;
 
+    state = *(int*)&((GameObject*)self)->extra;
+    def = *(int*)&((GameObject*)self)->anim.placementData;
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
     vec[5] = lbl_803E51B8;
@@ -174,11 +178,13 @@ void dll_19D_update(int obj)
     }
 }
 
-void dll_19D_init(int obj)
+void dll_19D_init(GameObject* obj)
 {
-    register int self = obj;
-    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
+    register int state2;
+    register int self = (int)obj;
     int slot;
+
+    state2 = *(int*)&((GameObject*)self)->anim.placementData;
 
     if ((int)(signed char)*(u8*)(state2 + 0x19) != 0)
     {

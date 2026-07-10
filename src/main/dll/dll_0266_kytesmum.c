@@ -62,7 +62,7 @@ void kytesmum_release(void)
 {
 }
 
-void kytesmum_update(int obj)
+void kytesmum_update(GameObject* obj)
 {
     KytesMumObject* kytesMum = (KytesMumObject*)obj;
     KytesMumRuntime* runtime = kytesMum->runtime;
@@ -76,7 +76,7 @@ void kytesmum_update(int obj)
     nearDist = gKytesMumNearestSearchDist;
     if (runtime->questComplete == 0)
     {
-        if (runtime->updateCallback(obj) != 0)
+        if (runtime->updateCallback((int)obj) != 0)
         {
             mainSetBits(setup->completionGameBit, 1);
             runtime->questComplete = 1;
@@ -96,7 +96,7 @@ void kytesmum_update(int obj)
         logPrintf(sKytesMumYawDiffMessage);
         if (kytesMum->currentMove != runtime->moveSet->moves[2])
         {
-            ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
+            ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
         }
         kytesMum->yaw = (s16)(kytesMum->yaw + ((diff + 1) >> 4));
         runtime->animSpeed = lbl_803E699C * (f32)(diff / 1024);
@@ -105,31 +105,31 @@ void kytesmum_update(int obj)
         if (absDiff < 0x400)
         {
             kytesMum->yaw = (s16)(setup->yaw << 8);
-            ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[randomGetRange(0, 1)], lbl_803E698C, 0);
+            ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[randomGetRange(0, 1)], lbl_803E698C, 0);
             runtime->animSpeed = lbl_803E699C;
         }
     }
     if ((s16)(runtime->idleSfxTimer -= framesThisStep) < 0)
     {
         runtime->idleSfxTimer = randomGetRange(0x32, 0x1f4);
-        objSoundFn_800392f0(obj, (int)runtime->modelSoundState,
+        objSoundFn_800392f0((int)obj, (int)runtime->modelSoundState,
                             (void*)((char*)runtime->idleSfxTable + randomGetRange(0, 3) * 6), 0);
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, runtime->animSpeed, timeDelta,
+    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, runtime->animSpeed, timeDelta,
                                                                     (ObjAnimEventList*)runtime->animEvents) != 0)
     {
         moveIdx = (s16)((int)randomGetRange(0, 7) != 0 ? 0 : ((int)randomGetRange(0, 1) != 0 ? 1 : 4));
-        ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[moveIdx], lbl_803E698C, 0);
+        ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[moveIdx], lbl_803E698C, 0);
         runtime->animSpeed = (moveIdx == 0) ? lbl_803E699C : lbl_803E69A0;
     }
-    kytesmum_playAnimationEventSfx(obj, runtime->animEvents, runtime->eventSfxTable);
-    characterDoEyeAnims((GameObject*)(obj), runtime->eyeAnimState);
-    objAnimFn_80038f38((GameObject*)(obj), runtime->modelSoundState);
-    nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, obj, &nearDist);
+    kytesmum_playAnimationEventSfx((int)obj, runtime->animEvents, runtime->eventSfxTable);
+    characterDoEyeAnims(obj, runtime->eyeAnimState);
+    objAnimFn_80038f38(obj, runtime->modelSoundState);
+    nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, (u32)obj, &nearDist);
     if ((void*)nearest != NULL)
     {
-        (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(nearest, obj, 1,
-                                                                                                     2);
+        (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(nearest, (int)obj,
+                                                                                                     1, 2);
     }
 }
 

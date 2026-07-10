@@ -35,8 +35,8 @@ void DR_LaserCannon_release(void);
 void DR_LaserCannon_free(GameObject* obj);
 void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 int drlasercannon_getTrackedTarget(int obj, int* arg);
-void DR_LaserCannon_init(int obj, char* arg);
+void DR_LaserCannon_init(GameObject* obj, char* arg);
 void DR_LaserCannon_hitDetect(GameObject* obj);
-void DR_LaserCannon_update(int obj);
+void DR_LaserCannon_update(GameObject* obj);
 
 #endif /* MAIN_DLL_DR_DLL_0261_DRLASERCANNON_H_ */

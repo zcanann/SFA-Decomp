@@ -14,6 +14,6 @@
 #include "main/gamebits.h"
 
 void fn_8015ED1C(int obj, int state, int target);
-void fn_8015EB6C(int obj, int state, int target);
+void fn_8015EB6C(GameObject* obj, int state, int target);
 
 #endif

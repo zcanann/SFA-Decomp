@@ -236,7 +236,7 @@ void magicPlantDropGem(int obj, void* setup, void* stateArg)
         (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3870))
     {
         state->childObj = 0;
-        ObjLink_DetachChild(obj, (int)childObj);
+        ObjLink_DetachChild((GameObject*)obj, (int)childObj);
 
         launchSpeed = (f32)(int)
         randomGetRange(0x27, 0x2c) / lbl_803E3874;

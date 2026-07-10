@@ -348,7 +348,7 @@ int cfguardian_setScale(int* obj)
  * curve walker; thereafter it advances the walker, snaps the object to
  * the sampled position, sticks to the ground and blends the yaw toward
  * the heading of travel. Returns 1 once the path is exhausted. */
-int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase)
+int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int outPhase)
 {
     int ret;
     int moved;
@@ -362,11 +362,11 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
     moved = 1;
     ret = 0;
     ground = lbl_803E4110;
-    if (((GameObject*)obj)->unkF4 == -1)
+    if (obj->unkF4 == -1)
     {
         return 1;
     }
-    if (((GameObject*)obj)->unkF4 == 0)
+    if (obj->unkF4 == 0)
     {
         sel = pointId;
         pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
@@ -379,7 +379,7 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
             curveArgs[0] = 0x19;
             curveArgs[1] = 0x15;
             (*gRomCurveInterface)->initCurve((void*)walker, (void*)obj, lbl_803E4120, curveArgs, sel);
-            ((GameObject*)obj)->unkF4 = 1;
+            obj->unkF4 = 1;
             moved = 1;
         }
     }
@@ -390,26 +390,26 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
         {
             ret = (*gRomCurveInterface)->goNextPoint((void*)walker);
         }
-        ((GameObject*)obj)->anim.localPosX = ((CfCurveWalker*)walker)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((CfCurveWalker*)walker)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((CfCurveWalker*)walker)->posZ;
+        obj->anim.localPosX = ((CfCurveWalker*)walker)->posX;
+        obj->anim.localPosY = ((CfCurveWalker*)walker)->posY;
+        obj->anim.localPosZ = ((CfCurveWalker*)walker)->posZ;
         if (ret != 0)
         {
-            ((GameObject*)obj)->unkF4 = -1;
+            obj->unkF4 = -1;
         }
-        if (hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &ground, 0) == 0)
+        if (hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground, 0) ==
+            0)
         {
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ground;
+            obj->anim.localPosY = obj->anim.localPosY - ground;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float*)outPhase);
+    ((int (*)(void*, f32, float*))ObjAnim_SampleRootCurvePhase)(obj, t, (float*)outPhase);
     if (moved != 0)
     {
-        yawDelta = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                                  ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ) +
+        yawDelta = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
+                                  obj->anim.localPosZ - obj->anim.previousLocalPosZ) +
                          0x8000);
-        yawDelta = yawDelta - (u16)((GameObject*)obj)->anim.rotX;
+        yawDelta = yawDelta - (u16)obj->anim.rotX;
         if (yawDelta > 0x8000)
         {
             yawDelta = yawDelta - 0xffff;
@@ -418,11 +418,11 @@ int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase
         {
             yawDelta = yawDelta + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = *(s16*)(int)obj + (yawDelta >> 3);
+        obj->anim.rotX = *(s16*)(int)obj + (yawDelta >> 3);
     }
-    if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
+    if (obj->anim.currentMove != GUARDIAN_MOVE_FLY)
     {
-        ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
+        ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
     }
     return ret;
 }
@@ -526,7 +526,8 @@ static inline f32 cfguardianAbs(f32 x)
     return -x;
 }
 
-int cfguardian_updateMain(int obj)
+#pragma opt_common_subs off
+int cfguardian_updateMain(GameObject* obj)
 {
     CfGuardianState* sub;
     char* player;
@@ -539,19 +540,19 @@ int cfguardian_updateMain(int obj)
     f32 k;
     f32 nearDist = lbl_803E412C;
     f32 ground = lbl_803E4130;
-    def = (CfGuardianMapData*)((GameObject*)obj)->anim.placement;
+    def = (CfGuardianMapData*)obj->anim.placement;
     stk.evbuf[0x1b] = 0;
-    sub = ((GameObject*)obj)->extra;
+    sub = obj->extra;
     sub->flagsA9B &= ~GUARDIAN_FLAG_PATH_FLYING;
     sub->moveSpeed = lbl_803E4134;
     player = Obj_GetPlayerObject();
-    ObjTrigger_UpdateIdBlockFlag(obj);
+    ObjTrigger_UpdateIdBlockFlag((int)obj);
     if (def->variant == 1 && mainGetBit(GAMEBIT_GUARDIAN_CONVERGENCE) == 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         return 0;
     }
-    ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     /* quest state machine: 0..3 the release, 4/6/7 the flight home,
        8..11 the talk spots, 12..15 the endgame cutscene parks */
     switch (sub->questState)
@@ -575,8 +576,8 @@ int cfguardian_updateMain(int obj)
         if (mainGetBit(GAMEBIT_GUARDIAN_CAGE_OPEN) != 0)
         {
             sub->questState = CFGUARDIAN_RELEASE_SEQ;
-            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
-            ((GameObject*)obj)->unkF4 = 0;
+            ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
+            obj->unkF4 = 0;
             mainSetBits(GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN, 1);
             sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED;
         }
@@ -626,22 +627,22 @@ int cfguardian_updateMain(int obj)
             {
                 {
                     f32 fz = lbl_803E4110;
-                    ((GameObject*)obj)->anim.velocityX = fz;
-                    ((GameObject*)obj)->anim.velocityZ = fz;
+                    obj->anim.velocityX = fz;
+                    obj->anim.velocityZ = fz;
                 }
-                ((GameObject*)obj)->anim.localPosY =
-                    ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                     ((GameObject*)obj)->anim.localPosZ, &ground, 0);
-                ((GameObject*)obj)->anim.rotX = (s16)((0xc0 << (((GameObject*)obj)->anim.rotX + 8)) >> 1);
-                ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~0x400;
+                obj->anim.localPosY =
+                    obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+                hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY,
+                                     obj->anim.localPosZ, &ground, 0);
+                obj->anim.rotX = (s16)((0xc0 << (obj->anim.rotX + 8)) >> 1);
+                ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~0x400;
                 if (ground <= lbl_803E4130)
                 {
                     sub->landingPhase = 2;
-                    ((GameObject*)obj)->anim.localPosY -= ground;
+                    obj->anim.localPosY -= ground;
                     sub->chatterState = GUARDIAN_CHATTER_READY;
-                    ((GameObject*)obj)->unkF4 = 0;
-                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
+                    obj->unkF4 = 0;
+                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
                         RomCurvePlacementDef* pt =
                             (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
@@ -650,40 +651,40 @@ int cfguardian_updateMain(int obj)
                         sub->homeY = pt->base.y;
                         sub->homeZ = pt->base.z;
                         sub->homeYaw = (s16)(pt->rotZ << 8);
-                        homeDistY = sub->homeY - ((GameObject*)obj)->anim.localPosY;
+                        homeDistY = sub->homeY - obj->anim.localPosY;
                         homeDistY = (homeDistY >= lbl_803E4110) ? homeDistY : -homeDistY;
                         if (homeDistY < lbl_803E413C)
                         {
-                            ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
+                            ObjGroup_AddObject((int)obj, CFGUARDIAN_OBJGROUP);
                             sub->questState = CFGUARDIAN_FLY_TO_TALK;
-                            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
+                            ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
                         }
                     }
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.velocityY -= lbl_803E4140;
+                    obj->anim.velocityY -= lbl_803E4140;
                 }
             }
             else
             {
-                f32 w = cfguardianAbs(lbl_803E4144 * ((GameObject*)obj)->anim.velocityY);
+                f32 w = cfguardianAbs(lbl_803E4144 * obj->anim.velocityY);
                 f32 r;
-                r = (f32)((GameObject*)obj)->anim.rotX;
+                r = (f32)obj->anim.rotX;
                 r = r + w;
-                ((GameObject*)obj)->anim.rotX = r;
+                obj->anim.rotX = r;
                 sub->moveSpeed = lbl_803E4148;
                 if (mainGetBit(GAMEBIT_GUARDIAN_LANDED) != 0)
                 {
-                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
+                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E4110;
-                    ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
+                    obj->anim.velocityY = lbl_803E4110;
+                    ObjGroup_RemoveObject((int)obj, CFGUARDIAN_OBJGROUP);
                     {
                         f32 fz = lbl_803E4110;
-                        ((GameObject*)obj)->anim.velocityX = fz;
-                        ((GameObject*)obj)->anim.velocityY = lbl_803E414C;
-                        ((GameObject*)obj)->anim.velocityZ = fz;
+                        obj->anim.velocityX = fz;
+                        obj->anim.velocityY = lbl_803E414C;
+                        obj->anim.velocityZ = fz;
                     }
                     sub->landingPhase = 2;
                     sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
@@ -691,16 +692,16 @@ int cfguardian_updateMain(int obj)
             }
             if (sub->landingPhase < 2)
             {
-                ((GameObject*)obj)->anim.localPosX =
-                    timeDelta * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosZ =
-                    timeDelta * ((GameObject*)obj)->anim.velocityZ + ((GameObject*)obj)->anim.localPosZ;
+                obj->anim.localPosX =
+                    timeDelta * obj->anim.velocityX + obj->anim.localPosX;
+                obj->anim.localPosZ =
+                    timeDelta * obj->anim.velocityZ + obj->anim.localPosZ;
                 if (sub->bounceLatch != 0)
                 {
                     {
                         f32 fb = lbl_803E4150;
-                        ((GameObject*)obj)->anim.velocityX = fb * -((GameObject*)obj)->anim.velocityX;
-                        ((GameObject*)obj)->anim.velocityZ = fb * -((GameObject*)obj)->anim.velocityZ;
+                        obj->anim.velocityX = fb * -obj->anim.velocityX;
+                        obj->anim.velocityZ = fb * -obj->anim.velocityZ;
                     }
                 }
                 {
@@ -708,11 +709,11 @@ int cfguardian_updateMain(int obj)
                     f32 v0;
                     f32 v2;
                     f32 v3;
-                    v0 = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+                    v0 = obj->anim.localPosX - obj->anim.previousLocalPosX;
                     stk.v[0] = v0;
-                    v1 = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+                    v1 = obj->anim.localPosY - obj->anim.previousLocalPosY;
                     stk.v[1] = v1;
-                    v2 = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+                    v2 = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
                     stk.v[2] = v2;
                     k = lbl_803E4154 * oneOverTimeDelta;
                     v0 = v0 * k;
@@ -721,15 +722,15 @@ int cfguardian_updateMain(int obj)
                     stk.v[1] = v1;
                     v3 = v2 * k;
                     stk.v[2] = v3;
-                    ((GameObject*)obj)->anim.velocityX = v0 + ((GameObject*)obj)->anim.velocityX;
-                    ((GameObject*)obj)->anim.velocityY = v1 + ((GameObject*)obj)->anim.velocityY;
-                    ((GameObject*)obj)->anim.velocityZ = v3 + ((GameObject*)obj)->anim.velocityZ;
+                    obj->anim.velocityX = v0 + obj->anim.velocityX;
+                    obj->anim.velocityY = v1 + obj->anim.velocityY;
+                    obj->anim.velocityZ = v3 + obj->anim.velocityZ;
                 }
                 {
                     f32 fd = lbl_803E4138;
-                    ((GameObject*)obj)->anim.velocityX = fd * ((GameObject*)obj)->anim.velocityX;
-                    ((GameObject*)obj)->anim.velocityY = fd * ((GameObject*)obj)->anim.velocityY;
-                    ((GameObject*)obj)->anim.velocityZ = fd * ((GameObject*)obj)->anim.velocityZ;
+                    obj->anim.velocityX = fd * obj->anim.velocityX;
+                    obj->anim.velocityY = fd * obj->anim.velocityY;
+                    obj->anim.velocityZ = fd * obj->anim.velocityZ;
                 }
             }
         }
@@ -756,17 +757,17 @@ int cfguardian_updateMain(int obj)
         break;
     case CFGUARDIAN_TALK_1: /* talk spot: greet and head-track the player; 0x43 advances */
     {
-        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, obj, &nearDist);
+        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, (u32)obj, &nearDist);
         if (found != NULL && nearDist < lbl_803E4158)
         {
             dll_2E_func04(sub, found);
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX),
                                                       (char*)obj + offsetof(GameObject, anim.worldPosX)) < lbl_803E413C)
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
             {
                 dll_2E_func0C(0xf, &sub->homeYaw);
@@ -792,7 +793,7 @@ int cfguardian_updateMain(int obj)
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0 &&
             cfguardianSteerToward((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
-            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
         if (mainGetBit(GAMEBIT_CF_SavedQueen) != 0)
@@ -803,7 +804,7 @@ int cfguardian_updateMain(int obj)
         break;
     case CFGUARDIAN_TALK_2: /* second talk loop; 0x4be sends her onward */
     {
-        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, obj, &nearDist);
+        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, (u32)obj, &nearDist);
         if (found != NULL && nearDist < lbl_803E4158)
         {
             dll_2E_func04(sub, found);
@@ -837,14 +838,14 @@ int cfguardian_updateMain(int obj)
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0 &&
             cfguardianSteerToward((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
-            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
         }
         if (mainGetBit(0x4be) != 0)
         {
             sub->questState = CFGUARDIAN_FLY_OUT;
-            ObjAnim_SetCurrentMove(obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
-            ((GameObject*)obj)->unkF4 = 0;
+            ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
+            obj->unkF4 = 0;
         }
         break;
     case CFGUARDIAN_FLY_OUT: /* final flight out */
@@ -864,10 +865,10 @@ int cfguardian_updateMain(int obj)
         {
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
-        ((GameObject*)obj)->anim.alpha = 0;
-        ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~1;
+        obj->anim.alpha = 0;
+        ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
         Obj_RemoveFromUpdateList((int*)obj);
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->questState = CFGUARDIAN_PARKED_HIDDEN;
         break;
     case CFGUARDIAN_CUTSCENE_PERCH_A: /* cutscene perch: sequence 0xB on demand (0x4b7) */
@@ -877,7 +878,7 @@ int cfguardian_updateMain(int obj)
         }
         if (mainGetBit(GAMEBIT_TargetRelated04B7) != 0)
         {
-            (*gCameraInterface)->setTarget(obj);
+            (*gCameraInterface)->setTarget((int)obj);
             (*gObjectTriggerInterface)->runSequence(0xb, (void*)obj, -1);
             mainSetBits(GAMEBIT_TargetRelated04B7, 0);
         }
@@ -893,7 +894,7 @@ int cfguardian_updateMain(int obj)
         }
         if (mainGetBit(GAMEBIT_TargetRelated04B7) != 0)
         {
-            (*gCameraInterface)->setTarget(obj);
+            (*gCameraInterface)->setTarget((int)obj);
             (*gObjectTriggerInterface)->runSequence(0xa, (void*)obj, -1);
             mainSetBits(GAMEBIT_TargetRelated04B7, 0);
         }
@@ -909,9 +910,9 @@ int cfguardian_updateMain(int obj)
         }
         break;
     case CFGUARDIAN_PARKED_HIDDEN: /* parked and hidden */
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList((int*)obj);
-        ObjAnim_GetPriorityHitState(&((GameObject*)obj)->anim)->flags &= ~1;
+        ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
         break;
     }
     dll_2E_func03(obj, sub);
@@ -958,32 +959,33 @@ int cfguardian_updateMain(int obj)
     }
     {
         int mv = gCfGuardianIdleMoveTable[sub->questState];
-        if (mv != -1 && (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) == 0 && ((GameObject*)obj)->anim.currentMove != mv)
+        if (mv != -1 && (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) == 0 && obj->anim.currentMove != mv)
         {
-            ObjAnim_SetCurrentMove(obj, mv, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove((int)obj, mv, lbl_803E4110, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, sub->moveSpeed, framesThisStep, stk.evbuf) !=
+    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, framesThisStep, stk.evbuf) !=
             0 &&
         (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) != 0 &&
-        ((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY && ((GameObject*)obj)->anim.currentMove != 9)
+        obj->anim.currentMove != GUARDIAN_MOVE_FLY && obj->anim.currentMove != 9)
     {
         sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
     }
     ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
-        objAudioFn_800393f8(obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
+        objAudioFn_800393f8((int)obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }
-    objAnimFn_80038f38((GameObject*)(obj), sub->audioBlock);
-    characterDoEyeAnims((GameObject*)obj, sub->eyeBlock);
+    objAnimFn_80038f38(obj, sub->audioBlock);
+    characterDoEyeAnims(obj, sub->eyeBlock);
     if (sub->questState != mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE))
     {
         mainSetBits(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);
     }
     return 0;
 }
+#pragma opt_common_subs reset
 
 /* cfguardian_SeqFn: the Queen's sequence message handler.
  * Persists position on a negative cue, otherwise picks the active/idle
@@ -1071,7 +1073,7 @@ void cfguardian_hitDetect(int* obj)
 
 void cfguardian_update(GameObject* obj)
 {
-    cfguardian_updateMain((int)obj);
+    cfguardian_updateMain(obj);
 }
 
 void cfguardian_init(int* obj, u8* params)

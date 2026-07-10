@@ -200,12 +200,12 @@ f32 dll_19_func1A(GameObject *obj)
     return lbl_803E1C2C;
 }
 
-void dll_19_func0D(int obj, int state, f32 gravity, s8 field25f)
+void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f)
 {
     f32 fz;
     *(u32*)state |= 0x8000;
     ((BaddieState*)state)->cameraYaw = 0;
-    if (*(void**)(obj + 0x54) != NULL)
+    if (*(void**)((char*)obj + 0x54) != NULL)
     {
         ObjHits_SetHitVolumeSlot((void*)obj, 0, 0, -1);
     }
@@ -806,7 +806,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
     return (int)gDll19NearestObj;
 }
 
-void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam, int initFlags)
+void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam, int initFlags)
 {
     u8 flags;
     int b1;
@@ -823,10 +823,10 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     b1 = flags & 1;
     if (b1 == 0 && (flags & 0x20) == 0)
     {
-        ObjGroup_AddObject(obj, DLL19_OBJGROUP);
+        ObjGroup_AddObject((u32)obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
-    (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))(obj, state, moveArg0, moveArg1);
+    (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))((int)obj, state, moveArg0, moveArg1);
     *(int*)(state + 0) = 0;
     ((BaddieState*)state)->hasTarget = 0;
     ((BaddieState*)state)->animSpeedA = lbl_803E1C2C;
@@ -866,7 +866,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     ((GroundBaddieState*)state)->aggression = config[47];
     state[1031] = config[39];
     state[1032] = config[40];
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | ((s8)state[1032] & 7);
+    obj->objectFlags = obj->objectFlags | ((s8)state[1032] & 7);
     if ((flags & 8) != 0)
     {
         ((GroundBaddieState*)state)->soundIdA = *(s16*)(config + 32);
@@ -881,44 +881,44 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     ((GroundBaddieState*)state)->aggroRange = (u16)(config[41] << 3);
     ((GroundBaddieState*)state)->subMode = 0;
     *(f32*)(state + 996) = fparam;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)config[42] << 8);
-    ((GameObject*)obj)->anim.alpha = 255;
-    ((GameObject*)obj)->anim.resetHitboxFlags = ((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+    obj->anim.rotX = (s16)((s8)config[42] << 8);
+    obj->anim.alpha = 255;
+    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
     ((GroundBaddieState*)state)->gameBitA = *(s16*)(config + 24);
     if (((GroundBaddieState*)state)->gameBitA != -1)
     {
-        if (((GameObject*)obj)->anim.seqId == 636)
+        if (obj->anim.seqId == 636)
         {
-            ((GameObject*)obj)->unkF4 = (mainGetBit(((GroundBaddieState*)state)->gameBitA) == 0);
+            obj->unkF4 = (mainGetBit(((GroundBaddieState*)state)->gameBitA) == 0);
         }
         else
         {
-            ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)state)->gameBitA);
+            obj->unkF4 = mainGetBit(((GroundBaddieState*)state)->gameBitA);
         }
     }
     else
     {
-        ((GameObject*)obj)->unkF4 = 0;
+        obj->unkF4 = 0;
     }
     if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)(config + 20)) == 0)
     {
-        ((GameObject*)obj)->unkF4 = 1;
+        obj->unkF4 = 1;
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (obj->unkF4 != 0)
     {
-        ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+        ObjHits_DisableObject((u32)obj);
+        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         return;
     }
-    ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
-    ObjHits_EnableObject(obj);
+    obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+    ObjHits_EnableObject((u32)obj);
     if ((s8)config[46] == -1)
     {
-        ((GameObject*)obj)->unkF8 = 1;
+        obj->unkF8 = 1;
     }
     else
     {
-        ((GameObject*)obj)->unkF8 = 0;
+        obj->unkF8 = 0;
     }
     if (b1 == 0 && (flags & 0x20) == 0)
     {
@@ -1178,7 +1178,7 @@ void dll_19_func07(GameObject *obj, int target, int div, u16* outYaw, u16* outDe
 
 /* Probes the four compass directions around the object for walkable space,
  * returning a bitmask of clear directions. */
-u8 dll_19_func08(int obj, char* st, f32 dist)
+u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
 {
     extern const f32 lbl_803E1C68;
     extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b, int c, int d, int e);
@@ -1196,27 +1196,27 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
     f32 a;
 
     mask = 0;
-    world[0] = ((GameObject*)obj)->anim.localPosX;
-    world[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
-    world[2] = ((GameObject*)obj)->anim.localPosZ;
+    world[0] = obj->anim.localPosX;
+    world[1] = lbl_803E1C68 + obj->anim.localPosY;
+    world[2] = obj->anim.localPosZ;
     voxmaps_worldToGrid(world, grid0);
-    ovr = *(s16**)&((GameObject*)obj)->anim.parent;
+    ovr = *(s16**)&obj->anim.parent;
     if (ovr != NULL)
     {
-        cur = (s16)(((GameObject*)obj)->anim.rotX + *ovr);
+        cur = (s16)(obj->anim.rotX + *ovr);
     }
     else
     {
-        cur = ((GameObject*)obj)->anim.rotX;
+        cur = obj->anim.rotX;
     }
     for (i = 0; i < 4; i++)
     {
         a = gDll19AnglePi * (f32)((s16)cur + (i << 14)) / gDll19BinaryAngleScale;
-        world[0] = ((GameObject*)obj)->anim.localPosX - dist * mathSinf(a);
-        world[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
-        world[2] = ((GameObject*)obj)->anim.localPosZ - dist * mathCosf(a);
+        world[0] = obj->anim.localPosX - dist * mathSinf(a);
+        world[1] = lbl_803E1C68 + obj->anim.localPosY;
+        world[2] = obj->anim.localPosZ - dist * mathCosf(a);
         voxmaps_worldToGrid(world, grid1);
-        if (((GameObject*)obj)->anim.parent != NULL)
+        if (obj->anim.parent != NULL)
         {
             ok = 1;
         }
@@ -1230,7 +1230,7 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
         }
         if (ok != 0)
         {
-            if (objBboxFn_800640cc((char*)(obj + 0xc), world, lbl_803E1C48, 0, bboxOut, obj,
+            if (objBboxFn_800640cc(&obj->anim.localPosX, world, lbl_803E1C48, 0, bboxOut, (int)obj,
                                    *(u8*)(st + 0x261), -1, 0, 0) != 0)
             {
                 ok = 0;

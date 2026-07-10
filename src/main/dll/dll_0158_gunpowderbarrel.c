@@ -167,7 +167,7 @@ void gunpowderbarrel_free(GameObject *obj, int mode)
     {
         if (Obj_IsObjectAlive((int)child) != 0)
         {
-            ObjLink_DetachChild((int)obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
+            ObjLink_DetachChild(obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
             ((GunpowderBarrelState*)extra)->linkedTimerObject = 0;
         }
     }
@@ -486,7 +486,7 @@ void gunpowderbarrel_hitDetect(int obj)
     {
         if ((void*)state->linkedTimerObject != NULL)
         {
-            ObjLink_DetachChild(obj, state->linkedTimerObject);
+            ObjLink_DetachChild((GameObject*)obj, state->linkedTimerObject);
             state->linkedTimerObject = 0;
         }
     }
@@ -722,7 +722,7 @@ void gunpowderbarrel_update(GameObject *obj)
     {
         if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0 && *(void* *)&state->linkedTimerObject != NULL)
         {
-            ObjLink_DetachChild((int)obj, state->linkedTimerObject);
+            ObjLink_DetachChild(obj, state->linkedTimerObject);
             state->linkedTimerObject = 0;
         }
     }

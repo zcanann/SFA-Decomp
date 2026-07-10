@@ -2,6 +2,7 @@
 #define MAIN_DLL_SFXPLAYER_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 
 typedef struct SfxplayerStateFlags {
   u8 bit80 : 1;
@@ -41,7 +42,7 @@ typedef struct SfxplayerState {
 
 extern int gSfxplayerEffectHandles[8];
 
-void sfxplayer_update(int obj);
+void sfxplayer_update(GameObject* obj);
 void sfxplayer_updateEffectHandlePositions(short *obj);
 void sfxplayer_init(int obj,int config);
 void sfxplayer_free(int obj, int arg1);

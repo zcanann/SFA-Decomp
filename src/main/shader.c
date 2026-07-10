@@ -557,10 +557,10 @@ extern u8* gMapBlockRefCounts;
 extern void mapBlockFn_80059354(int p1, int p2, s16* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 
-extern void MapBlock_init(void* blk);
+extern void MapBlock_init(GameObject* blk);
 extern int textureLoad(int id, int param);
-extern void MapBlock_initHits(void* blk, int blockId);
-extern void MapBlock_initShaders(void* blk);
+extern void MapBlock_initHits(GameObject* blk, int blockId);
+extern void MapBlock_initShaders(GameObject* blk);
 extern int return0_80060B90(void* blk);
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)

@@ -130,24 +130,24 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E38B0);
 }
 
-void duster_hitDetect(int obj)
+void duster_hitDetect(GameObject* obj)
 {
     DusterState* state;
     u8 hit[0x54];
     int hitResult;
-    state = ((GameObject*)obj)->extra;
-    hitResult = objBboxFn_800640cc((f32*)(obj + 128), (f32*)(obj + 12), gDusterObjHitDetectRadius, 2, hit, (void*)obj,
-                                   8, -1, 255, 0);
+    state = obj->extra;
+    hitResult = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, gDusterObjHitDetectRadius, 2,
+                                   hit, (void*)obj, 8, -1, 255, 0);
     if (hitResult != 0)
     {
         state->priorityHit = 1;
     }
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+    obj->anim.previousLocalPosX = obj->anim.localPosX;
+    obj->anim.previousLocalPosY = obj->anim.localPosY;
+    obj->anim.previousLocalPosZ = obj->anim.localPosZ;
 }
 
-void duster_update(int obj)
+void duster_update(GameObject* obj)
 {
     DusterState* state;
     DusterSetup* setup;
@@ -164,8 +164,8 @@ void duster_update(int obj)
     DusterLaunchRotation launch;
     DusterMapEventState* mapState;
 
-    state = ((GameObject*)obj)->extra;
-    setup = *(DusterSetup**)&((GameObject*)obj)->anim.placementData;
+    state = obj->extra;
+    setup = *(DusterSetup**)&obj->anim.placementData;
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
 
@@ -174,7 +174,7 @@ void duster_update(int obj)
         switch (msg)
         {
         case DUSTER_MSG_DEPOSIT:
-            Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
+            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_sc_cam90_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
@@ -198,22 +198,21 @@ void duster_update(int obj)
         return;
     }
 
-    if (((GameObject*)obj)->anim.velocityY > gDusterObjGravityVelYThreshold)
+    if (obj->anim.velocityY > gDusterObjGravityVelYThreshold)
     {
-        ((GameObject*)obj)->anim.velocityY = gDusterObjGravityAccel * timeDelta + ((GameObject*)obj)->anim.velocityY;
+        obj->anim.velocityY = gDusterObjGravityAccel * timeDelta + obj->anim.velocityY;
     }
 
     state->priorityHit = 0;
     if (state->flags.floorCached == 0)
     {
-        floorHitCount =
-            hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &floorHits, 0, 0);
+        floorHitCount = hitDetectFn_80065e50((int)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                             &floorHits, 0, 0);
         bestFloorDelta = gDusterObjFloorSearchMaxDelta;
         bestFloorIndex = -1;
         for (i = 0; i < floorHitCount; i++)
         {
-            floorDelta = **(f32**)((int)floorHits + i * 4) - ((GameObject*)obj)->anim.localPosY;
+            floorDelta = **(f32**)((int)floorHits + i * 4) - obj->anim.localPosY;
             if (floorDelta < *(f32*)&lbl_803E38C4)
             {
                 floorDelta = -floorDelta;
@@ -228,7 +227,7 @@ void duster_update(int obj)
         {
             state->flags.floorCached = 1;
             state->floorY = **(f32**)((int)floorHits + bestFloorIndex * 4);
-            ((GameObject*)obj)->anim.velocityY = lbl_803E38C4;
+            obj->anim.velocityY = lbl_803E38C4;
         }
         if (state->flags.floorCached == 0)
         {
@@ -237,35 +236,35 @@ void duster_update(int obj)
         }
     }
 
-    if (((GameObject*)obj)->anim.localPosY < state->floorY)
+    if (obj->anim.localPosY < state->floorY)
     {
-        ((GameObject*)obj)->anim.localPosY = state->floorY;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E38C4;
+        obj->anim.localPosY = state->floorY;
+        obj->anim.velocityY = lbl_803E38C4;
     }
 
     if (state->settleTimer == 0 && state->hitReactTimer == 0)
     {
-        if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL) !=
-                0 ||
+        if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, state->moveStepScale, timeDelta,
+                                                                        NULL) != 0 ||
             state->priorityHit != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh3_c);
+            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_en_lflsh3_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_BOUNCE, NULL, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_BOUNCE, NULL, 2, -1, NULL);
             state->driftDir = randomGetRange(0, 4);
             if (state->useLaunchVelocity != 0)
             {
-                ((GameObject*)obj)->anim.velocityX = gDusterObjLaunchVelocityX;
-                launch.z = launch.y = launch.x = ((GameObject*)obj)->anim.velocityZ = lbl_803E38C4;
+                obj->anim.velocityX = gDusterObjLaunchVelocityX;
+                launch.z = launch.y = launch.x = obj->anim.velocityZ = lbl_803E38C4;
                 launch.scale = lbl_803E38B0;
                 launch.roll = 0;
                 launch.pitch = 0;
-                launch.yaw = ((GameObject*)obj)->anim.rotX;
-                vecRotateZXY(&launch, (void*)(obj + 0x24));
+                launch.yaw = obj->anim.rotX;
+                vecRotateZXY(&launch, &obj->anim.velocityX);
             }
             else
             {
-                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityX = lbl_803E38C4;
+                obj->anim.velocityZ = obj->anim.velocityX = lbl_803E38C4;
             }
             if (state->hitReactActive != 0)
             {
@@ -274,14 +273,14 @@ void duster_update(int obj)
         }
         else
         {
-            ((GameObject*)obj)->anim.localPosX += ((GameObject*)obj)->anim.velocityX * timeDelta;
-            ((GameObject*)obj)->anim.localPosZ += ((GameObject*)obj)->anim.velocityZ * timeDelta;
+            obj->anim.localPosX += obj->anim.velocityX * timeDelta;
+            obj->anim.localPosZ += obj->anim.velocityZ * timeDelta;
         }
 
-        if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == 0xe)
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
         {
             state->hitReactActive = 1;
-            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_4d);
+            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_dn_boar1_c_4d);
         }
     }
     else
@@ -309,25 +308,25 @@ void duster_update(int obj)
     {
         if (state->priorityHit != 0)
         {
-            ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - 0x7fff);
+            obj->anim.rotX = (s16)(obj->anim.rotX - 0x7fff);
             state->driftDir = 0;
         }
-        ((GameObject*)obj)->anim.rotX = (s16)((f32) * (s16*)obj + gDusterObjDriftSpinRate * timeDelta);
+        obj->anim.rotX = (s16)((f32) * (s16*)obj + gDusterObjDriftSpinRate * timeDelta);
     }
 
-    floorDelta = playerObj->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    floorDelta = playerObj->anim.localPosY - obj->anim.localPosY;
     if (floorDelta < lbl_803E38C4)
     {
         floorDelta = -floorDelta;
     }
     if (floorDelta < gDusterObjPickupRangeY &&
-        Vec_xzDistance(&playerObj->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < gDusterObjPickupRangeXZ &&
+        Vec_xzDistance(&playerObj->anim.worldPosX, &obj->anim.worldPosX) < gDusterObjPickupRangeXZ &&
         Obj_IsParentSlackClear(player) != 0)
     {
         if (mainGetBit(GAMEBIT_DUSTER_CARRIED) == 0)
         {
             state->heldObjectId = -1;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((int)obj);
             ObjMsg_SendToObject(player, DUSTER_MSG_REQUEST_PICKUP, obj, &state->heldObjectId);
             mainSetBits(GAMEBIT_DUSTER_CARRIED, 1);
         }
@@ -336,7 +335,7 @@ void duster_update(int obj)
             mapState = (DusterMapEventState*)(*gMapEventInterface)->getCurCharacterState();
             if (mapState->collectedCount < mapState->maxCollectedCount)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_sc_cam90_c);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTFX_DEPOSIT, NULL, 1, -1, NULL);
@@ -346,16 +345,16 @@ void duster_update(int obj)
                                                ? mapState->maxCollectedCount
                                                : next;
                 state->complete = 1;
-                ((GameObject*)obj)->anim.alpha = 1;
+                obj->anim.alpha = 1;
             }
         }
-        if (((GameObject*)obj)->anim.hitReactState != NULL)
+        if (obj->anim.hitReactState != NULL)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((int)obj);
         }
     }
 
-    ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY;
+    obj->anim.localPosY += obj->anim.velocityY;
 }
 
 void duster_init(GameObject* obj, u8* params)

@@ -9,6 +9,6 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 
-void fn_801A7D74(int obj, u8 place, u8 mode);
+void fn_801A7D74(GameObject* obj, u8 place, u8 mode);
 
 #endif

@@ -32,14 +32,14 @@
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
-extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, u32 volumeByte, f32 volume);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern s32 Sfx_IsPlayingFromObjectChannel(void* obj, u32 channel);
+extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u32 volumeByte, f32 volume);
+extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(int* from, int* to);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 a, int b, int c, int d, f32 e, void* params);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
 extern f32 gDrCloudCageWindVolume;
@@ -173,7 +173,7 @@ STATIC_ASSERT(offsetof(DRCloudCageState, windSfxId) == 0x440);
 STATIC_ASSERT(offsetof(DRCloudCageState, trailColorByte) == 0x4B4);
 STATIC_ASSERT(offsetof(DRCloudCageState, lastSpawnPosX) == 0x51C);
 
-void fn_801E9C00(int obj, int state)
+void fn_801E9C00(GameObject* obj, int state)
 {
     f32 endZ;
     f32 endY;
@@ -307,12 +307,12 @@ void fn_801E9C00(int obj, int state)
     {
         activeOffset = baseOffset + 4;
         nextOffset = baseOffset2 + 4;
-        transform.x = ((GameObject*)obj)->anim.worldPosX;
-        transform.y = ((GameObject*)obj)->anim.worldPosY;
-        transform.z = ((GameObject*)obj)->anim.worldPosZ;
-        transform.rotX = ((GameObject*)obj)->anim.rotX;
-        transform.rotY = ((GameObject*)obj)->anim.rotY;
-        transform.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + ((DRCloudCageState*)state)->rotZOffset);
+        transform.x = obj->anim.worldPosX;
+        transform.y = obj->anim.worldPosY;
+        transform.z = obj->anim.worldPosZ;
+        transform.rotX = obj->anim.rotX;
+        transform.rotY = obj->anim.rotY;
+        transform.rotZ = (s16)(obj->anim.rotZ + ((DRCloudCageState*)state)->rotZOffset);
         transform.scale = scaleV;
         setMatrixFromObjectPos(matrix, &transform);
 
@@ -396,9 +396,9 @@ void fn_801E9C00(int obj, int state)
             selectedTrail->points[0].startColorByte = ((DRCloudCageState*)state)->trailColorByte;
             selectedTrail->points[0].endColorByte = ((DRCloudCageState*)state)->trailColorByte;
             selectedTrail->count += 2;
-            ((DRCloudCageState*)state)->lastSpawnPosX = ((GameObject*)obj)->anim.worldPosX;
-            ((DRCloudCageState*)state)->lastSpawnPosY = ((GameObject*)obj)->anim.worldPosY;
-            ((DRCloudCageState*)state)->lastSpawnPosZ = ((GameObject*)obj)->anim.worldPosZ;
+            ((DRCloudCageState*)state)->lastSpawnPosX = obj->anim.worldPosX;
+            ((DRCloudCageState*)state)->lastSpawnPosY = obj->anim.worldPosY;
+            ((DRCloudCageState*)state)->lastSpawnPosZ = obj->anim.worldPosZ;
         }
         else
         {
@@ -416,7 +416,8 @@ typedef struct DRCloudCagePulseParams
     f32 unk14;
 } DRCloudCagePulseParams;
 
-void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int intensity, int unused, u8 channelFlags)
+void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, int intensity, int unused,
+                                u8 channelFlags)
 {
     f32 clamped;
     f32 d;
@@ -472,7 +473,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
                 d = 0.0f;
                 if (d != clamped)
                 {
-                    d = clamped * (f32)((GameObject*)obj)->anim.rotZ / lbl_803E5B24;
+                    d = clamped * (f32)obj->anim.rotZ / lbl_803E5B24;
                 }
                 gDrCloudCageWindVolume = d;
                 fv = (f32)(f64)d;
@@ -549,11 +550,11 @@ void drcloudcage_updateEngineFx(f32 distanceScale, int obj, int state, int inten
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;
         pulse.unk8 = lbl_803E5AE8;
-        objfx_spawnLightPulse((GameObject*)(obj), lbl_803E5AF8, 2, 0, 1,
-                              ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58, &pulse);
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
+                              &pulse);
         pulse.unkC = lbl_803E5B5C;
-        objfx_spawnLightPulse((GameObject*)(obj), lbl_803E5AF8, 2, 0, 1,
-                              ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58, &pulse);
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
+                              &pulse);
     }
     fn_801E9C00(obj, state);
 }

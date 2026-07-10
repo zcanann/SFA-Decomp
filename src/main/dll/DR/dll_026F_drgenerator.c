@@ -54,10 +54,10 @@ void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
-void drgenerator_hitDetect(int obj)
+void drgenerator_hitDetect(GameObject* obj)
 {
-    char* state = ((GameObject*)obj)->extra;
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    char* state = (obj)->extra;
+    int placement = *(int*)&(obj)->anim.placementData;
     f32 hitPosZ;
     f32 hitPosY;
     f32 hitPosX;
@@ -68,21 +68,21 @@ void drgenerator_hitDetect(int obj)
     {
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObject, 0, &hitVolume, &hitPosX, &hitPosY,
-                                           &hitPosZ) != 5)
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, 0, &hitVolume, &hitPosX, &hitPosY, &hitPosZ) != 5)
     {
         return;
     }
     state[0x19a] = *(u8*)(state + 0x19a) - hitVolume;
-    Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6B5C);
-    fn_8009A8C8(obj, lbl_803E6B60);
+    ((void (*)(void*, f32*, f32))Obj_SpawnHitLightAndFade)(obj, &hitPosX, lbl_803E6B5C);
+    ((void (*)(void*, f32))fn_8009A8C8)(obj, lbl_803E6B60);
     if (state[0x19a] > 0)
     {
         return;
     }
     {
-        ObjTextureRuntimeSlot* tex = objFindTexture((GameObject*)obj, 0, 0);
-        spawnExplosion(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1, 0);
+        ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
+        ((void (*)(void*, f32, int, int, int, int, int, int, int))spawnExplosion)(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1,
+                                                                                  0);
         if (tex != 0)
         {
             tex->textureId = 0x100;
@@ -90,14 +90,14 @@ void drgenerator_hitDetect(int obj)
     }
     ((BitFlags8*)(state + 0x19b))->b0 = 1;
     mainSetBits(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
-    if (((GameObject*)obj)->anim.seqId == 0x716 &&
-        (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0)) != NULL)
+    if ((obj)->anim.seqId == 0x716 &&
+        (found = (void*)((int (*)(int, void*, void*))ObjGroup_FindNearestObject)(TIMER_OBJGROUP, obj, 0)) != NULL)
     {
         timer_addDuration((GameObject*)found, ((DrgeneratorState*)state)->timerDuration);
     }
     else
     {
-        ObjHits_DisableObject(obj);
+        ((void (*)(void*))ObjHits_DisableObject)(obj);
     }
 }
 
@@ -158,32 +158,32 @@ loop:
     } while (n-- != 0);
 }
 
-void drgenerator_init(int obj, char* arg)
+void drgenerator_init(GameObject* obj, char* arg)
 {
-    char* state = ((GameObject*)obj)->extra;
+    char* state = (obj)->extra;
     f32 fv;
-    if (((GameObject*)obj)->anim.seqId == 0x72e)
+    if ((obj)->anim.seqId == 0x72e)
     {
         ObjTextureRuntimeSlot* t;
-        ((GameObject*)obj)->animEventCallback = drgenerator_SeqFn;
-        t = objFindTexture((GameObject*)obj, 0, 0);
+        (obj)->animEventCallback = drgenerator_SeqFn;
+        t = objFindTexture(obj, 0, 0);
         if (t != 0)
         {
             t->textureId = 0x100;
         }
     }
     ((DrgeneratorState*)state)->hitsRemaining = 2;
-    ObjHits_EnableObject(obj);
+    ((void (*)(void*))ObjHits_EnableObject)(obj);
     if (mainGetBit(((DrgeneratorPlacement*)arg)->completionGameBit) != 0)
     {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        Obj_RemoveFromUpdateList(obj);
-        ObjHits_DisableObject(obj);
+        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ((void (*)(void*))Obj_RemoveFromUpdateList)(obj);
+        ((void (*)(void*))ObjHits_DisableObject)(obj);
     }
-    ObjGroup_AddObject(obj, DRGENERATOR_OBJGROUP);
+    ((void (*)(void*, int))ObjGroup_AddObject)(obj, DRGENERATOR_OBJGROUP);
     *(int*)state = 0;
     ((BitFlags8*)(state + 0x19b))->b3 = 1;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
+    (obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
     {
         int duration = *(s16*)(arg + 0x1a);
         switch (duration)
@@ -206,9 +206,9 @@ void drgenerator_init(int obj, char* arg)
         ((BitFlags8*)(state + 0x19b))->b4 = 0;
     }
     fv = lbl_803E6B6C;
-    ((GameObject*)obj)->anim.velocityZ = fv;
-    ((GameObject*)obj)->anim.velocityY = fv;
-    ((GameObject*)obj)->anim.velocityX = fv;
+    (obj)->anim.velocityZ = fv;
+    (obj)->anim.velocityY = fv;
+    (obj)->anim.velocityX = fv;
 }
 
 void drgenerator_release(void)

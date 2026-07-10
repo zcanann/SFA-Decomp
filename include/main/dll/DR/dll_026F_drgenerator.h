@@ -36,9 +36,9 @@ int drgenerator_getExtraSize(void);
 int drgenerator_getObjectTypeId(void);
 void drgenerator_free(int obj);
 void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
-void drgenerator_hitDetect(int obj);
+void drgenerator_hitDetect(GameObject* obj);
 void drgenerator_update(GameObject* obj);
-void drgenerator_init(int obj, char* arg);
+void drgenerator_init(GameObject* obj, char* arg);
 void drgenerator_release(void);
 void drgenerator_initialise(void);
 

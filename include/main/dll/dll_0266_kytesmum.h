@@ -81,7 +81,7 @@ int kytesmum_getObjectTypeId(void);
 void kytesmum_hitDetect(void);
 void kytesmum_initialise(void);
 void kytesmum_release(void);
-void kytesmum_update(int obj);
+void kytesmum_update(GameObject* obj);
 int kytesmum_idleCallback(void);
 void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible);
 void kytesmum_free(int obj);

@@ -175,33 +175,33 @@ void tree_updateAmbientEffects(GameObject* obj, int state)
     }
 }
 
-void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
-    TreeState* state = ((GameObject*)obj)->extra;
+    TreeSetup* setup = (TreeSetup*)obj->anim.placementData;
+    TreeState* state = obj->extra;
     int i;
 
     if (visible != 0)
     {
         fn_8003B608(setup->colorR, setup->colorG, setup->colorB);
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7308);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E7308);
         if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
         {
             for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
             {
-                ObjPath_GetPointWorldPosition(obj, i, &state->ambientEffectPos[i][0], &state->ambientEffectPos[i][1],
-                                              &state->ambientEffectPos[i][2], 0);
+                ((void (*)(GameObject*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
+                    obj, i, &state->ambientEffectPos[i][0], &state->ambientEffectPos[i][1],
+                    &state->ambientEffectPos[i][2], 0);
             }
         }
-        ((GameObject*)obj)->unkF8 = 1;
+        obj->unkF8 = 1;
     }
 }
 
-void tree_init(int obj, u8* setup)
+void tree_init(GameObject* obj, u8* setup)
 {
-    GameObject* object = (GameObject*)obj;
     TreeSetup* setupData = (TreeSetup*)setup;
-    TreeState* state = object->extra;
+    TreeState* state = obj->extra;
     ObjAnimEventList animOut;
 
     state->swayTimer = lbl_803E730C;
@@ -211,33 +211,33 @@ void tree_init(int obj, u8* setup)
     state->flags = state->flags << 8;
     state->flags |= setupData->flagsLo;
     state->playerBurstCooldown = lbl_803E72F8;
-    object->anim.rotZ = (s16)(setupData->rotZ << 8);
-    object->anim.rotY = (s16)(setupData->rotY << 8);
-    object->anim.rotX = (s16)(setupData->rotX << 8);
-    *(u8*)&object->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
-    object->objectFlags |= TREE_OBJECT_FLAGS_INIT;
-    object->unkF8 = 0;
+    obj->anim.rotZ = (s16)(setupData->rotZ << 8);
+    obj->anim.rotY = (s16)(setupData->rotY << 8);
+    obj->anim.rotX = (s16)(setupData->rotX << 8);
+    *(u8*)&obj->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
+    obj->objectFlags |= TREE_OBJECT_FLAGS_INIT;
+    obj->unkF8 = 0;
     if (setupData->scale != 0)
     {
         state->scale = (f32)(u32)setupData->scale / gTreeScaleByteNormalizer;
-        object->anim.rootMotionScale = state->scale;
-        if (object->anim.rootMotionScale == lbl_803E72F8)
+        obj->anim.rootMotionScale = state->scale;
+        if (obj->anim.rootMotionScale == lbl_803E72F8)
         {
-            object->anim.rootMotionScale = lbl_803E7308;
+            obj->anim.rootMotionScale = lbl_803E7308;
         }
-        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
         state->scale = lbl_803E7308;
     }
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E72F8, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72F8, 0);
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
     if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
     {
         state->flags |= TREE_FLAG_HIT_ENABLED;
     }
-    switch (object->anim.seqId)
+    switch (obj->anim.seqId)
     {
     case 0x798:
         state->effectProfileIndex = 0xa;
@@ -250,7 +250,7 @@ void tree_init(int obj, u8* setup)
         break;
     case 0x70c:
         state->effectProfileIndex = 0x7;
-        ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E732C * object->anim.rootMotionScale), -0x5, 0x64);
+        ObjHitbox_SetCapsuleBounds((int)obj, (int)(lbl_803E732C * obj->anim.rootMotionScale), -0x5, 0x64);
         break;
     case 0x625:
         state->effectProfileIndex = 0x6;
@@ -276,14 +276,14 @@ void tree_init(int obj, u8* setup)
     }
     if (!(state->flags & TREE_FLAG_HIT_ENABLED))
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
     }
 }
 
-void tree_update(int obj)
+#pragma opt_common_subs off
+void tree_update(GameObject* obj)
 {
-    GameObject* object = (GameObject*)obj;
-    TreeState* state = object->extra;
+    TreeState* state = obj->extra;
     int hit;
     int player;
     int i;
@@ -298,7 +298,7 @@ void tree_update(int obj)
     f32* colorPtr;
     ObjAnimEventList animOut;
 
-    ObjAnim_AdvanceCurrentMove(state->swayTimer, timeDelta, obj, &animOut);
+    ObjAnim_AdvanceCurrentMove(state->swayTimer, timeDelta, (int)obj, &animOut);
     if (state->flags != 0)
     {
         if (state->playerBurstCooldown > lbl_803E72F8)
@@ -311,18 +311,18 @@ void tree_update(int obj)
         }
         if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
         {
-            tree_updateAmbientEffects((GameObject*)(obj), (int)state);
+            tree_updateAmbientEffects(obj, (int)state);
         }
         if (state->flags & TREE_FLAG_HIT_ENABLED)
         {
             if (state->flags & TREE_FLAG_HIT_WITH_POSITION)
             {
-                hit = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObject, &hitSphereIndex, &hitVolume,
+                hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume,
                                                          &colorVec[0], &colorVec[1], &colorVec[2]);
             }
             else
             {
-                hit = ObjHits_PollPriorityHitEffectWithCooldown((GameObject*)(obj), 8, 0xff, 0xff, 0x78, 0x129,
+                hit = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
                                                                 &state->hitEffectCooldown);
             }
             if (state->hitCooldownTimer >= lbl_803E72F8)
@@ -336,7 +336,7 @@ void tree_update(int obj)
                     colorVec[0] += playerMapOffsetX;
                     colorVec[2] += playerMapOffsetZ;
                     objLightFn_8009a1dc((void*)obj, lbl_803E7314, burstVec, 1, 0);
-                    Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+                    Obj_SetModelColorFadeRecursive((int)obj, 0xf, 0xc8, 0, 0, 1);
                 }
                 if (state->flags & TREE_FLAG_BURST_MODE_MASK)
                 {
@@ -344,8 +344,8 @@ void tree_update(int obj)
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
-                    vecRotateZXY(obj, colorPtr);
-                    objfx_spawnRandomBurst(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
+                    vecRotateZXY((int)obj, colorPtr);
+                    objfx_spawnRandomBurst((int)obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
                                            state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3], 0);
                 }
                 state->swayTimer = lbl_803E7318;
@@ -361,7 +361,7 @@ void tree_update(int obj)
                                 if ((*(int (**)(int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) + 0x28))(
                                         state->ambientEffectHandles[i]) > 1)
                                 {
-                                    ObjHits_RecordObjectHit(state->ambientEffectHandles[i], obj, 0xe, 1, 0);
+                                    ObjHits_RecordObjectHit(state->ambientEffectHandles[i], (int)obj, 0xe, 1, 0);
                                     break;
                                 }
                             }
@@ -377,8 +377,8 @@ void tree_update(int obj)
             return;
         }
         {
-            dx = object->anim.localPosX - ((GameObject*)player)->anim.localPosX;
-            dz = object->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
+            dx = obj->anim.localPosX - ((GameObject*)player)->anim.localPosX;
+            dz = obj->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
             playerDist = dist;
             if (playerDist < state->proximityRadius)
@@ -390,8 +390,8 @@ void tree_update(int obj)
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
-                    vecRotateZXY(obj, colorPtr);
-                    objfx_spawnRandomBurst(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
+                    vecRotateZXY((int)obj, colorPtr);
+                    objfx_spawnRandomBurst((int)obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
                                            state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3], 1);
                     state->playerBurstCooldown = lbl_803E7320;
                 }
@@ -402,8 +402,8 @@ void tree_update(int obj)
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
-                    vecRotateZXY(obj, colorPtr);
-                    objfx_spawnRandomBurst(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 1, burstVec,
+                    vecRotateZXY((int)obj, colorPtr);
+                    objfx_spawnRandomBurst((int)obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 1, burstVec,
                                            state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3], 0);
                     state->ambientBurstTimer += lbl_803E7324;
                 }
@@ -412,6 +412,7 @@ void tree_update(int obj)
         }
     }
 }
+#pragma opt_common_subs reset
 
 f32 gTreeEffectColors[] = {
     0.0f, 250.0f, 0.0f, 80.0f,  0.0f,  250.0f, 0.0f, 110.0f, 25.0f, 200.0f, 0.0f, 80.0f,  0.0f, 100.0f, 0.0f, 60.0f,

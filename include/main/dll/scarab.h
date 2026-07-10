@@ -42,7 +42,7 @@ u32 FUN_8015e9f4(u64 param_1, double param_2, double param_3, u64 param_4, u64 p
 u32 FUN_8015ec98(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                  u64 param_8, int param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                  u32 param_15, u32 param_16);
-void dll_CE_func0B(int obj, int v);
+void dll_CE_func0B(GameObject* obj, int v);
 void FUN_8015f068(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int param_10);
 void FUN_8015f224(u32 param_1, u32 param_2, int param_3);

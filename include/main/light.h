@@ -33,6 +33,6 @@ void FUN_801fd408(u16* param_1, int param_2);
 void FUN_801fd40c(u32 param_1);
 
 /* extern-cleanup: defining-file public prototypes */
-void vfpdoorswitch_updateExplodingVariant(int obj);
+void vfpdoorswitch_updateExplodingVariant(GameObject* obj);
 
 #endif /* MAIN_LIGHT_H_ */

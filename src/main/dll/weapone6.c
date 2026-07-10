@@ -451,29 +451,29 @@ void fn_8013F100(GameObject* obj, register int state)
     }
 }
 
-void fn_8013F9E4(int obj, int state)
+void fn_8013F9E4(GameObject* obj, int state)
 {
     int extra;
     int inWater;
     s16 move;
 
-    if (trickyFoodFn_8014460c((GameObject*)(obj), state) == 0)
+    if (trickyFoodFn_8014460c(obj, state) == 0)
     {
-        if (trickyFn_8013b368(obj, lbl_803E2488, state) == 0)
+        if (((int (*)(void*, f32, int))trickyFn_8013b368)(obj, lbl_803E2488, state) == 0)
         {
             ((TrickyState*)state)->idleSfxTimer -= timeDelta;
             if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
             {
                 ((TrickyState*)state)->idleSfxTimer = (f32)(s32)randomGetRange(500, 750);
-                extra = *(int*)&((GameObject*)obj)->extra;
+                extra = *(int*)&obj->extra;
                 if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
-                    move = ((GameObject*)obj)->anim.currentMove;
+                    move = obj->anim.currentMove;
                     if (move >= 48 || move < 41)
                     {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                        if (((s32 (*)(void*, u32))Sfx_IsPlayingFromObjectChannel)(obj, 16) == 0)
                         {
-                            objAudioFn_800393f8(obj, (void*)(extra + 936), 864, 1280, -1, 0);
+                            ((void (*)(void*, void*, int, int, int, int))objAudioFn_800393f8)(obj, (void*)(extra + 936), 864, 1280, -1, 0);
                         }
                     }
                 }
@@ -496,25 +496,25 @@ void fn_8013F9E4(int obj, int state)
             }
             if (inWater != 0)
             {
-                objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
             else
             {
-                switch (((GameObject*)obj)->anim.currentMove)
+                switch (obj->anim.currentMove)
                 {
                 case 13:
                     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
                     {
-                        objAnimFn_8013a3f0(obj, 49, lbl_803E243C, 0);
+                        ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 49, lbl_803E243C, 0);
                     }
                     break;
                 case 49:
                     break;
                 default:
-                    objAnimFn_8013a3f0(obj, 13, lbl_803E2444, 0);
+                    ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 13, lbl_803E2444, 0);
                     break;
                 }
                 trickyDebugPrint(lbl_8031D478);
@@ -523,7 +523,7 @@ void fn_8013F9E4(int obj, int state)
     }
 }
 
-void fn_8013FBE4(int obj, register int state)
+void fn_8013FBE4(GameObject* obj, register int state)
 {
     int inWater;
     float dx;
@@ -567,8 +567,8 @@ void fn_8013FBE4(int obj, register int state)
                 }
                 *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
             }
-            dx = *targetPos - ((GameObject*)obj)->anim.worldPosX;
-            dz = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;
+            dx = *targetPos - obj->anim.worldPosX;
+            dz = targetPos[2] - obj->anim.worldPosZ;
             distance = sqrtf(dx * dx + dz * dz);
             if (lbl_803E23DC != distance)
             {
@@ -579,7 +579,7 @@ void fn_8013FBE4(int obj, register int state)
             *(float*)&((TrickyState*)state)->unk704 = -(distance * dx - *(float*)(trackedObj + 0x18));
             *(float*)&((TrickyState*)state)->unk708 = *(float*)(trackedObj + 0x1c);
             *(float*)&((TrickyState*)state)->unk70C = -(distance * dz - *(float*)(trackedObj + 0x20));
-            if (trickyFn_8013b368(obj, lbl_803E2488, state) == 0)
+            if (((int (*)(void*, f32, int))trickyFn_8013b368)(obj, lbl_803E2488, state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                 {
@@ -599,14 +599,14 @@ void fn_8013FBE4(int obj, register int state)
                 }
                 if (inWater != 0)
                 {
-                    objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                    ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)state)->cooldownC = lbl_803E2440;
                     ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                    ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(lbl_8031D478);
                 }
             }

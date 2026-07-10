@@ -214,7 +214,7 @@ void timerSetToCountUp(void);
 void titleScreenPositionElements(f32 a, f32 b);
 void titleScreenShowCopyright(u8 arg);
 void titleScreenTextDrawFunc(void);
-void tumbleweed_updateRollingMotion(int obj, int aux);
+void tumbleweed_updateRollingMotion(GameObject* obj, int aux);
 void updateConstrainedChaseVelocity(GameObject* obj, f32 x, f32 y, f32 z, f32 scale);
 void vecRotateYXZ(int, int);
 void waitNextFrame(void);

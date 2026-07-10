@@ -130,7 +130,7 @@ void SB_Propeller_update(GameObject* obj)
         {
             stk.scale = lbl_803E5818;
             stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition((int)obj, 0, &stk.x, &stk.y, &stk.z, 0);
+            ObjPath_GetPointWorldPosition(obj, 0, &stk.x, &stk.y, &stk.z, 0);
             stk.x = stk.x - objAnim->worldPosX;
             stk.y = stk.y - objAnim->worldPosY;
             stk.z = stk.z - objAnim->worldPosZ;

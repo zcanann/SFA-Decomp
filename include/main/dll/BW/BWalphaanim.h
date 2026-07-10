@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+#include "main/game_object.h"
+
 /* Per-object extra state for the rideable SnowBike / CloudRunner bike.
  * Offsets recovered from SnowBike_init/SnowBike_update derefs; the
  * 0x178..0x3DC block is the gPathControlInterface curves-collision state
@@ -155,6 +157,6 @@ STATIC_ASSERT(offsetof(SnowBikeState, collisionBounceScale) == 0x4AC);
 STATIC_ASSERT(offsetof(SnowBikeState, unk530) == 0x530);
 STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 
-void SnowBike_update(int obj);
+void SnowBike_update(GameObject* obj);
 
 #endif /* MAIN_DLL_BW_BWALPHAANIM_H_ */

@@ -2,6 +2,7 @@
 #define MAIN_DLL_CMBSRC_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
@@ -121,7 +122,7 @@ typedef struct CmbSrcObject {
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   CmbSrcState *state;
-  int (*updateCallback)(int obj);
+  int (*updateCallback)(GameObject* obj);
 } CmbSrcObject;
 
 STATIC_ASSERT(sizeof(CmbSrcMapData) == CMBSRC_PLACEMENT_BYTES);
@@ -159,17 +160,17 @@ int cmbsrc_getExtraSize(void);
 int cmbsrc_getObjectTypeId(void);
 void cmbsrc_initialise(void);
 void cmbsrc_release(void);
-int cmbsrc_updateAndReturnZero(int obj);
+int cmbsrc_updateAndReturnZero(GameObject* obj);
 int cmbsrc_getColorIndex(int obj);
 void cmbsrc_setExternalActive(int obj,u8 active);
 void cmbsrc_free(int obj);
 void cmbsrc_render(int obj,int p2,int p3,int p4,int p5,s8 visible);
 int cmbsrc_shouldActivate(int obj,int state,int setup);
 int cmbsrc_shouldDeactivate(int obj,int state,int setup);
-void cmbsrc_hitDetect(int obj);
+void cmbsrc_hitDetect(GameObject* obj);
 int cmbsrc_cycleColor(int obj,int state);
-void cmbsrc_updateVisuals(int obj,int state);
-int cmbsrc_update(int obj);
+void cmbsrc_updateVisuals(GameObject* obj,int state);
+int cmbsrc_update(GameObject* obj);
 void cmbsrc_init(int obj,u8 *setup);
 
 #endif /* MAIN_DLL_CMBSRC_H_ */

@@ -378,7 +378,7 @@ int SnowBike_SeqFn(short* obj, int arg2, ObjSeqState* seq)
     return 0;
 }
 
-void fn_801EB634(int obj, int stateRaw)
+void fn_801EB634(GameObject* obj, int stateRaw)
 {
     extern int ObjHits_IsObjectEnabled(int obj);
     SnowBikeState* st = (SnowBikeState*)stateRaw;
@@ -392,19 +392,19 @@ void fn_801EB634(int obj, int stateRaw)
     int hitObj;
     f32 velNrm[3];
 
-    hitReact = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    if (ObjHits_IsObjectEnabled(obj) != 0)
+    hitReact = *(int*)&obj->anim.hitReactState;
+    if (((int (*)(void*))ObjHits_IsObjectEnabled)(obj) != 0)
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
         {
-            ObjHits_SetHitVolumeSlot(obj, DRHIGHTOP_HIT_VOLUME_SLOT, 1, 0);
+            ((void (*)(void*, int, int, int))ObjHits_SetHitVolumeSlot)(obj, DRHIGHTOP_HIT_VOLUME_SLOT, 1, 0);
         }
         else
         {
-            ObjHits_ClearHitVolumes(obj);
-            ObjHits_SyncObjectPositionIfDirty(obj);
+            ((void (*)(void*))ObjHits_ClearHitVolumes)(obj);
+            ((void (*)(void*))ObjHits_SyncObjectPositionIfDirty)(obj);
         }
-        hitKind = ObjHits_GetPriorityHit((GameObject*)(obj), &hitObj, &hitOutB, &hitOutC);
+        hitKind = ObjHits_GetPriorityHit(obj, &hitObj, &hitOutB, &hitOutC);
         switch (hitKind)
         {
         case 0xd:
@@ -417,7 +417,7 @@ void fn_801EB634(int obj, int stateRaw)
         case 0x15:
             if (st->collisionFxTimer == lbl_803E5AE8)
             {
-                PSVECNormalize((float*)(obj + 0x24), velNrm);
+                PSVECNormalize((float*)&obj->anim.velocityX, velNrm);
                 dot = PSVECDotProduct(velNrm, (float*)(hitObj + 0x24));
                 PSVECScale(&st->localVelX, &st->localVelX, dot * st->collisionBounceScale + lbl_803E5AEC);
                 st->localVelY = st->localVelY * lbl_803E5BA8;
@@ -555,7 +555,7 @@ void fn_801EB940(short* obj, int stateRaw)
     obj[2] = rotClamped;
 }
 
-void fn_801EBD60(int obj, int stateRaw)
+void fn_801EBD60(GameObject* obj, int stateRaw)
 {
     typedef struct HightopPartfxTransform
     {
@@ -607,7 +607,7 @@ void fn_801EBD60(int obj, int stateRaw)
             if (((u32)(flags >> 1 & 1) == 0) && (st->timer <= lbl_803E5AE8))
             {
                 st->timer = (f32)(s32)randomGetRange(5, 10);
-                if (PSVECMag((void*)(obj + 0x24)) > lbl_803E5BC4)
+                if (PSVECMag((void*)&obj->anim.velocityX) > lbl_803E5BC4)
                 {
                     doRumble((f32)(s32)randomGetRange(1, 3));
                 }
@@ -641,9 +641,9 @@ void fn_801EBD60(int obj, int stateRaw)
                 effect.rotZ = 0;
                 effect.rotY = 0;
                 effect.rotX = 0;
-                effect.x = ((GameObject*)obj)->anim.localPosX;
-                effect.y = lbl_803E5C10 + ((GameObject*)obj)->anim.localPosY;
-                effect.z = ((GameObject*)obj)->anim.localPosZ;
+                effect.x = obj->anim.localPosX;
+                effect.y = lbl_803E5C10 + obj->anim.localPosY;
+                effect.z = obj->anim.localPosZ;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x80a, &effect, 1, -1, NULL);
             }
             break;
