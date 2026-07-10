@@ -79,6 +79,23 @@ void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E34B0);
 }
 
+static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int player)
+{
+    int ref = (int)obj->anim.modelInstance->extraSetupData;
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+    itemPickupDoParticleFx((int)obj, lbl_803E34B0, state->mode, 0x28);
+    ObjHits_DisableObject(obj);
+    Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
+    Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
+    playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
+    state->flags27A = state->flags27A & ~5;
+    state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
+    state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;
+    state->burstTimer = lbl_803E34B4;
+    OSReport(sMagicGemCollectedMessage);
+    obj->anim.alpha = 1;
+}
+
 void MagicDust_update(GameObject* obj)
 {
     extern u32 ObjHits_DisableObject();
@@ -100,19 +117,7 @@ void MagicDust_update(GameObject* obj)
         switch (msg[0])
         {
         case MAGICGEM_MSG_PICKUP:
-            ref = (int)obj->anim.modelInstance->extraSetupData;
-            (*gExpgfxInterface)->freeSource2((u32)obj);
-            itemPickupDoParticleFx((int)obj, lbl_803E34B0, state->mode, 0x28);
-            ObjHits_DisableObject(obj);
-            Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
-            Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
-            playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
-            state->flags27A = state->flags27A & ~5;
-            state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
-            state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;
-            state->burstTimer = lbl_803E34B4;
-            OSReport(sMagicGemCollectedMessage);
-            obj->anim.alpha = 1;
+            magicgem_collect(obj, state, player);
             break;
         }
     }
@@ -288,19 +293,7 @@ void MagicDust_update(GameObject* obj)
                     }
                     else
                     {
-                        ref = (int)obj->anim.modelInstance->extraSetupData;
-                        (*gExpgfxInterface)->freeSource2((u32)obj);
-                        itemPickupDoParticleFx((int)obj, lbl_803E34B0, state->mode, 0x28);
-                        ObjHits_DisableObject(obj);
-                        Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
-                        Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
-                        playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
-                        state->flags27A = state->flags27A & ~5;
-                        state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
-                        state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;
-                        state->burstTimer = lbl_803E34B4;
-                        OSReport(sMagicGemCollectedMessage);
-                        obj->anim.alpha = 1;
+                        magicgem_collect(obj, state, player);
                     }
                 }
             }
