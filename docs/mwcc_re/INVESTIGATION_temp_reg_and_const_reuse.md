@@ -50,6 +50,15 @@ Target reuses a register that already holds the same constant; ours re-materiali
   distinct value numbers for reasons outside function-local C. These ~6
   functions are principled banks at 99.2-99.8 until the fold's disasm
   (IroLinearForm.c band) identifies the exact value-identity test.
+- PARTIAL RETRACTION (2026-07-10, hudDrawCMenu 99.84->100): class A IS
+  source-reachable when the shared constant is a NAMED LOCAL: `int zero;
+  zero = 0; i = zero;` with `zero` used at the other 0-sites (unrolled
+  check chain index, call args). The named web survives to allocation and
+  the target's register reuse falls out. The sc_totembond disproof above
+  only probed spellings that keep the copy chain on the SAME variable; a
+  distinct always-zero local was not tried there. Re-try the ~6 banked
+  functions with the shared-zero-local spelling before treating them as
+  compiler-revision artifacts.
 
 ## B. Temp-register selection r0 vs rN for short-lived values
 
