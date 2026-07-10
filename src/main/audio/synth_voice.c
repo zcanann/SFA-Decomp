@@ -235,6 +235,21 @@ typedef struct KeymapEntry
     u8 reserved[2]; /* 0x6 */
 } KeymapEntry;      /* size 0x8, MP4 musyx/synthdata.h KEYMAP */
 
+static inline u32 check_portamento(u32 key, u8 midi, u8 midiSet, u32 newVID, u32* vid)
+{
+    u32 rejected;
+    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+    extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
+
+    if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
+    {
+        *vid = audioFn_8026f630(key & 0x7F, midi, midiSet, newVID, &rejected);
+        return !rejected;
+    }
+    *vid = 0xFFFFFFFF;
+    return 1;
+}
+
 /*
  * Resolve an indirection-table sample entry, then dispatch the resolved
  * sample or nested sample group.
@@ -246,11 +261,6 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     KeymapEntry* keymap;
     s32 p;
     s32 k;
-    u32 handle;
-    u32 ok;
-    u32 rejected;
-    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
-    extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
     if ((keymap = (KeymapEntry*)dataGetKeymap(id)) != 0)
     {
@@ -282,38 +292,15 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                 }
 
                 k = (key & 0x7F) + keymap[o].transpose;
-                if (k > 0x7F)
-                {
-                    k = 0x7F;
-                }
-                else if (k < 0)
-                {
-                    k = 0;
-                }
+                k = k > 0x7F ? 0x7F : k < 0 ? 0 : k;
 
                 prio += keymap[o].prioOffset;
-                if (prio > 0xFF)
-                {
-                    prio = 0xFF;
-                }
-                else if (prio < 0)
-                {
-                    prio = 0;
-                }
+                prio = prio > 0xFF ? 0xFF : prio < 0 ? 0 : prio;
 
                 if ((keymap[o].id & 0xC000) == 0)
                 {
-                    if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
-                    {
-                        handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
-                        ok = !rejected;
-                    }
-                    else
-                    {
-                        handle = -1;
-                        ok = 1;
-                    }
-                    if (ok == 0)
+                    u32 handle;
+                    if (!check_portamento(k & 0xFF, midi, midiSet, vidFlag, &handle))
                     {
                         return -1;
                     }
