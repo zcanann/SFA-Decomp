@@ -3498,9 +3498,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxDefaultSpawnParams.unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF6E4;
-        rot.m[1] = lbl_803DF4DC;
-        rot.m[2] = lbl_803DF4DC;
-        rot.m[3] = lbl_803DF4DC;
+        rot.m[1] = 0.0f;
+        rot.m[2] = 0.0f;
+        rot.m[3] = 0.0f;
         rot.m[0] = lbl_803DF4D0;
         rot.z = randomGetRange(0xffff8001, 0x7fff);
         rot.y = randomGetRange(0xffff8001, 0x7fff);
