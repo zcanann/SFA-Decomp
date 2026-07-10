@@ -736,7 +736,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         return (*(int (**)())(*(int*)gPartfxResourceModule19 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
                                                                    modelIdArg, extraArgsArg);
     }
-    gPartfxSpawnAnimPhase0 = gPartfxSpawnAnimPhase0 + lbl_803DF4C8;
+    gPartfxSpawnAnimPhase0 += 0.001f;
     if (gPartfxSpawnAnimPhase0 > 1.0f)
     {
         gPartfxSpawnAnimPhase0 = lbl_803DF4CC;
