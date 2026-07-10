@@ -1783,9 +1783,9 @@ void crawler_updateC(s16* obj, u8* state)
                 }
                 else if (oct == 0 || oct == 7)
                 {
-                    scale = lbl_803E2BB4 *
-                                (lbl_803E2BA4 - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) +
-                            lbl_803E2BA4;
+                    scale = 2.0f *
+                                (1.0f - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) +
+                            1.0f;
                 }
             }
             {
