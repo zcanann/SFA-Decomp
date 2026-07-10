@@ -943,6 +943,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
     u32 shaderIdx;
     int byteBase;
     int fogColor;
+    u32 flags;
     u8 ambColor[3];
     u8 fogRgba[4];
     u32 bits;
@@ -995,7 +996,8 @@ LAB_8005F608:
     }
     mapBlockRender_setupShaderTextures(shader, 0x80);
 LAB_8005F690:
-    if ((SHADER_FLAGS(shader) & 0x20) != 0)
+    flags = SHADER_FLAGS(shader);
+    if ((flags & 0x20) != 0)
     {
         int* lightList = lbl_803DCE34;
         if (lightList != 0)
@@ -1004,7 +1006,7 @@ LAB_8005F690:
             goto LAB_8005F6F4;
         }
     }
-    if ((SHADER_FLAGS(shader) & 0x40) != 0)
+    if ((flags & 0x40) != 0)
     {
         fn_8004E0FC();
         goto LAB_8005F6F4;
