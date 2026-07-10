@@ -499,12 +499,15 @@ void DFSH_Shrine_update(int objArg)
         mainSetBits(0xb71, 0);
         mainSetBits(0xb76, 0);
         mainSetBits(0x589, 1);
-        for (i = 0, required = (u16*)((u8*)base + 40); i < 10; i++)
         {
-            mainSetBits(*required, 0);
-            mainSetBits(*base, 0);
-            required++;
-            base++;
+            s16 j;
+            for (j = 0, required = (u16*)((u8*)base + 40); j < 10; j++)
+            {
+                mainSetBits(*required, 0);
+                mainSetBits(*base, 0);
+                required++;
+                base++;
+            }
         }
         obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
