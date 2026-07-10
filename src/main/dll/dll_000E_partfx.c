@@ -956,13 +956,17 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityX = lbl_803DF4E4 * (f32)(s32)randomGetRange(0xffffffce, 0x32);
         cfg.velocityY = lbl_803DF4E4 * (f32)(s32)randomGetRange(0, 0x32);
         cfg.velocityZ = lbl_803DF4E4 * (f32)(s32)randomGetRange(0xffffffce, 0x32);
-        if (spawnParams != NULL)
         {
-            cfg.scale = spawnParams->scale;
-        }
-        else
-        {
-            cfg.scale = lbl_803DF4E8;
+            f32 scale;
+            if (spawnParams != NULL)
+            {
+                scale = spawnParams->scale;
+            }
+            else
+            {
+                scale = lbl_803DF4E8;
+            }
+            cfg.scale = scale;
         }
         cfg.lifetimeFrames = 0x32;
         cfg.initialAlpha = 0x96;
