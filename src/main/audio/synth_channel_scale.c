@@ -102,6 +102,27 @@ static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
     return x - y * (f32)n;
 }
 
+static inline void synthHandleKeyOffCallbacks(void)
+{
+    u32* node;
+    u32* nnode;
+
+    if (gSynthCurrentVoice->counter == 0)
+    {
+        node = gSynthCurrentVoice->cbList;
+        while (node != NULL)
+        {
+            nnode = (u32*)*node;
+            if ((node[2] != 0xffffffff) && (sndFXCheck(node[2]) == 0xffffffff))
+            {
+                synthFreeCallback(node);
+            }
+            node = nnode;
+        }
+    }
+    gSynthCurrentVoice->counter = (gSynthCurrentVoice->counter + 1) % 5;
+}
+
 void fn_8026EC44(u32 dt)
 {
     SynthSong* cs;
@@ -125,8 +146,6 @@ void fn_8026EC44(u32 dt)
     u8 fade;
     /* never referenced; reserves stack to match the retail frame (0xB0) */
     f32 unusedA[4];
-    u32* nnode;
-    u32* node;
 
     if (dt != 0)
     {
@@ -176,18 +195,7 @@ void fn_8026EC44(u32 dt)
                 *(int*)&st->d[st->idx].delta = floorf(freq);
                 ret = fn_8026E9D0(0, dt);
                 cb = synthUpdateCallbacks();
-                if (gSynthCurrentVoice->counter == 0)
-                {
-                    for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
-                    {
-                        nnode = (u32*)*node;
-                        if ((node[2] != 0xffffffff) && (sndFXCheck(node[2]) == 0xffffffff))
-                        {
-                            synthFreeCallback(node);
-                        }
-                    }
-                }
-                gSynthCurrentVoice->counter = (gSynthCurrentVoice->counter + 1) % 5;
+                synthHandleKeyOffCallbacks();
                 sum = gSynthCurrentVoice->streams[0].o[0].acc + gSynthCurrentVoice->streams[0].d[0].step;
                 gSynthCurrentVoice->streams[0].o[0].acc = sum & 0xffff;
                 sum = sum >> 16;
@@ -234,18 +242,7 @@ void fn_8026EC44(u32 dt)
                     ret |= fn_8026E9D0(ch, dt);
                 }
                 cb = synthUpdateCallbacks();
-                if (gSynthCurrentVoice->counter == 0)
-                {
-                    for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
-                    {
-                        nnode = (u32*)*node;
-                        if ((node[2] != 0xffffffff) && (sndFXCheck(node[2]) == 0xffffffff))
-                        {
-                            synthFreeCallback(node);
-                        }
-                    }
-                }
-                gSynthCurrentVoice->counter = (gSynthCurrentVoice->counter + 1) % 5;
+                synthHandleKeyOffCallbacks();
                 for (i = 0; i < 16; i++)
                 {
                     sum = gSynthCurrentVoice->streams[i].o[0].acc + gSynthCurrentVoice->streams[i].d[0].step;
