@@ -977,6 +977,7 @@ int trickyFn_80142eb0(GameObject* obj, int state)
 }
 
 #pragma opt_propagation reset
+#pragma opt_common_subs off
 int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
@@ -1018,6 +1019,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     }
     return 1;
 }
+#pragma opt_common_subs reset
 
 u32 trickyFn_80143210(GameObject* obj, int* trickyState)
 {
