@@ -778,8 +778,7 @@ void AppleOnTree_update(int objArg)
             }
             else
             {
-                placement = 0;
-                val = 0;
+                val = placement = 0;
                 fd = lbl_803E37D4;
                 while (placement == 0)
                 {

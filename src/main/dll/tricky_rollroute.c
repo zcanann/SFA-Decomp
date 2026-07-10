@@ -190,9 +190,8 @@ void trickyFn_80141290(int obj, int ball)
     else
     {
         trickyFn_8013b368(obj, ball, lbl_803E2488);
-        walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)((int)ts->unk700 + 8), NULL);
-
-        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) == walkGroup)
+        if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) ==
+            (walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)((int)ts->unk700 + 8), NULL)))
         {
             curve = (int)ts->unk700;
 
