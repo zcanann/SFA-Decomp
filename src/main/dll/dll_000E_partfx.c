@@ -5,7 +5,7 @@
  * fully-populated Expgfx spawn request (cfg) and submits it through
  * gExpgfxInterface->spawnEffect. The big effect-id ranges at the top are
  * delegated to one of 20 lazily-acquired particle resource modules
- * (gPartfxResourceModuleNN, Resource_Acquire id 0x1a..0x2d); each delegation
+ * (gPartfxResourceModuleNN, Resource_Acquire ids 0x1a through 0x2d); each delegation
  * arms a 2000-frame keep-alive in gPartfxResourceTimeouts[NN] and forwards the
  * call to the module's vtable slot 8. partfx_updateFrameState ticks the global
  * scroll/sin phases and decays those 20 timeouts, releasing a module once its
@@ -15,13 +15,13 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 #include "main/resource.h"
 #include "main/sfa_shared_decls.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_000E_partfx.h"
 
 extern u8 gPartfxCachedResourceCount;
-extern s16 gPartfxResourceTimeouts[];
 extern u8 lbl_80380209[];
 extern void* gPartfxResourceModule00;
 extern void* gPartfxResourceModule01;
@@ -235,7 +235,7 @@ void partfx_updateFrameState(void)
         gPartfxFrameAnimPhase0 = lbl_803DF4CC;
     }
     gPartfxFrameAnimPhase1 = gPartfxFrameAnimPhase1 + lbl_803DF4C8 * timeDelta;
-    if (gPartfxFrameAnimPhase1 > *(f32*)&lbl_803DF4D0)
+    if (gPartfxFrameAnimPhase1 > lbl_803DF4D0)
     {
         gPartfxFrameAnimPhase1 = lbl_803DF4D8;
     }
@@ -510,9 +510,6 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
     } values;
     s16 i;
     int variant;
-    f32 srcPosX;
-    f32 srcPosY;
-    f32 srcPosZ;
     f32 ftmp0;
     f32 ftmp1;
     f32 ftmp2;
