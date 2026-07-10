@@ -586,9 +586,14 @@ int fn_8026E9D0(u8 voice, u32 param)
     k80 = lbl_803E7780;
     k84 = lbl_803E7784;
     vp = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-    while (seqGetNextEventTime(vp) <= vp->time[vp->timeIndex].high)
+    while ((vp->eventList == NULL ? 0 : vp->eventList->time) <= vp->time[vp->timeIndex].high)
     {
-        if ((event = (u8*)seqGetGlobalEvent(vp)) == NULL)
+        SeqEvent* ev = vp->eventList;
+        if (ev != NULL && (vp->eventList = (SeqEvent*)ev->next) != NULL)
+        {
+            vp->eventList->prev = NULL;
+        }
+        if ((event = (u8*)ev) == NULL)
         {
             if (flag == 0)
             {
