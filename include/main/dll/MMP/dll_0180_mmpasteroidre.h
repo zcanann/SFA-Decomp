@@ -11,7 +11,7 @@ void mmp_asteroid_re_initialise(void);
 int mmp_asteroid_re_getExtraSize(void);
 int mmp_asteroid_re_getObjectTypeId(void);
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void mmp_asteroid_re_init(GameObject* obj);
 void mmp_asteroid_re_update(int obj);
 

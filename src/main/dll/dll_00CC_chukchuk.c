@@ -162,7 +162,7 @@ void ChukChuk_update(short* obj)
     }
     if ((v->flags & CHUKCHUK_FLAG_DEAD) == 0)
     {
-        tex = objFindTexture((void*)obj, 0, 0);
+        tex = objFindTexture((GameObject*)obj, 0, 0);
         if (v->glowPhase < 16.0f)
         {
             if ((int)v->glowPhase == 10)
@@ -240,7 +240,7 @@ void ChukChuk_update(short* obj)
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
         }
         v->prevDistance = di;
-        if (ObjHits_GetPriorityHit(obj, &hit.hitObject, &hit.sphereIndex, &hit.hitVolume) == 14)
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit.hitObject, &hit.sphereIndex, &hit.hitVolume) == 14)
         {
             v->hitsLeft -= 1;
             if (v->hitsLeft < 1)

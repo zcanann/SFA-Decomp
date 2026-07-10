@@ -52,9 +52,9 @@ extern int ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 
-int CFPowerBase_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    CfPowerBaseState* sub = ((GameObject*)obj)->extra;
+    CfPowerBaseState* sub = (obj)->extra;
     u8* animUpdateBytes = (u8*)animUpdate;
     int msgArg;
     int msgType;

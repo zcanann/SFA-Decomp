@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0018_BONEPARTICLEEFFECT_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 
 typedef u8 BoneFxJRow[16];
 
@@ -33,6 +34,6 @@ void boneParticleEffect_func03_nop(void);
 void boneParticleEffect_release(void);
 void boneParticleEffect_update(void* ctx, int renderParam, u8* obj);
 void boneParticleEffect_initialise(void);
-void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src);
+void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraArg, u8 prob, short* src);
 
 #endif /* MAIN_DLL_DLL_0018_BONEPARTICLEEFFECT_H_ */

@@ -104,20 +104,20 @@ render_basic:
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3798);
 }
 
-void Lock_DoorLock_update(int obj)
+void Lock_DoorLock_update(GameObject* obj)
 {
     DoorLockState* state;
     int def;
     int seqFlags;
     u8 placeFlags;
 
-    state = (DoorLockState*)((GameObject*)obj)->extra;
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0) &&
+    state = (DoorLockState*)(obj)->extra;
+    def = *(int*)&(obj)->anim.placementData;
+    if (((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0) &&
         (mainGetBit(GAMEBIT_DOORLOCK_UNLOCKED) == 0))
     {
         buttonDisable(0, PAD_BUTTON_A);
-        (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+        (*gObjectTriggerInterface)->setRunSequenceWorldSpace((int)obj, 0);
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         mainSetBits(GAMEBIT_DOORLOCK_UNLOCKED, 1);
     }
@@ -128,41 +128,41 @@ void Lock_DoorLock_update(int obj)
         {
             if (state->unlocked != 0)
             {
-                ((GameObject*)obj)->anim.alpha = 0;
+                (obj)->anim.alpha = 0;
             }
         }
         else if ((((DoorlockPlacement*)def)->modeFlags & 1) != 0)
         {
             if (state->unlocked != 0)
             {
-                ((GameObject*)obj)->unkF8 = 0;
+                (obj)->unkF8 = 0;
             }
             else
             {
-                ((GameObject*)obj)->unkF8 = 1;
+                (obj)->unkF8 = 1;
             }
         }
         if (state->unlocked == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             if ((((DoorlockPlacement*)def)->prereqGameBit1 != -1) &&
                 (mainGetBit(((DoorlockPlacement*)def)->prereqGameBit1) == 0))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+                *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                 if ((((DoorlockPlacement*)def)->modeBits & 0x10) != 0)
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
             if ((((DoorlockPlacement*)def)->prereqGameBit0 != -1) &&
                 (mainGetBit(((DoorlockPlacement*)def)->prereqGameBit0) == 0))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+                *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
             }
             if (((((DoorlockPlacement*)def)->prereqGameBit0 != -1) &&
-                 (ObjTrigger_IsSetById(obj, ((DoorlockPlacement*)def)->prereqGameBit0) != 0)) ||
-                ((((DoorlockPlacement*)def)->prereqGameBit0 == -1) && (ObjTrigger_IsSet(obj) != 0)))
+                 (ObjTrigger_IsSetById((int)obj, ((DoorlockPlacement*)def)->prereqGameBit0) != 0)) ||
+                ((((DoorlockPlacement*)def)->prereqGameBit0 == -1) && (ObjTrigger_IsSet((int)obj) != 0)))
             {
                 if (((DoorlockPlacement*)def)->unlockSequenceId != -1)
                 {
@@ -180,19 +180,19 @@ void Lock_DoorLock_update(int obj)
                 else
                 {
                     state->unlocked = 1;
-                    ((GameObject*)obj)->unkF4 = 1;
+                    (obj)->unkF4 = 1;
                 }
                 buttonDisable(0, PAD_BUTTON_A);
             }
         }
         else
         {
-            if (((GameObject*)obj)->unkF4 == 0)
+            if ((obj)->unkF4 == 0)
             {
                 if ((((DoorlockPlacement*)def)->unlockSequenceId != -1) &&
                     (((DoorlockPlacement*)def)->queuedSequenceId != 0))
                 {
-                    (*gObjectTriggerInterface)->preempt(obj, ((DoorlockPlacement*)def)->queuedSequenceId);
+                    (*gObjectTriggerInterface)->preempt((int)obj, ((DoorlockPlacement*)def)->queuedSequenceId);
                     seqFlags = 1;
                     placeFlags = ((DoorlockPlacement*)def)->modeBits;
                     if ((placeFlags & 0x20) != 0)
@@ -210,14 +210,14 @@ void Lock_DoorLock_update(int obj)
                     (*gObjectTriggerInterface)
                         ->runSequence((int)((DoorlockPlacement*)def)->unlockSequenceId, (void*)obj, seqFlags);
                 }
-                ((GameObject*)obj)->unkF4 = 1;
+                (obj)->unkF4 = 1;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
             (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
         {
-            objRenderFn_80041018(obj);
+            objRenderFn_80041018((int)obj);
         }
     }
 }

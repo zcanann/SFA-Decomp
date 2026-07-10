@@ -39,15 +39,15 @@ int wmtorch_getObjectTypeId(void)
     return 0x1;
 }
 
-void wmtorch_free(int obj, int mode)
+void wmtorch_free(GameObject* obj, int mode)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     if (mode == 0 && ((WmTorchState*)state)->linkedObj != 0)
     {
         Obj_FreeObject(((WmTorchState*)state)->linkedObj);
     }
     (*gModgfxInterface)->detachSource((void*)obj);
-    (*gExpgfxInterface)->freeSource(obj);
+    (*gExpgfxInterface)->freeSource((int)obj);
 }
 
 void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -60,21 +60,20 @@ void wmtorch_hitDetect(void)
 {
 }
 
-void wmtorch_update(int obj)
+void wmtorch_update(GameObject* obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     if (((WmTorchState*)state)->torchType == 2)
     {
-        ((GameObject*)obj)->anim.rotX += 0x32;
+        (obj)->anim.rotX += 0x32;
     }
-    if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
-        lbl_803E5DE8)
+    if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &(obj)->anim.worldPosX) < lbl_803E5DE8)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mushdizzylp12);
     }
     else
     {
-        Sfx_StopObjectChannel(obj, 0x40);
+        Sfx_StopObjectChannel((int)obj, 0x40);
     }
 }
 

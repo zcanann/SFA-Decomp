@@ -57,7 +57,7 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjMsg_AllocQueue();
 extern f32 Vec_distance(int a, int b);
 
-void EdibleMushroom_init(int obj, int aux);
+void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
 void EdibleMushroom_hitDetect(u8* obj);
 void EdibleMushroom_free(int obj);
@@ -667,7 +667,7 @@ void EdibleMushroom_update(u8* self)
         }
     }
 
-    hitKind = ObjHits_GetPriorityHit((int)self, &hitObj, 0, 0);
+    hitKind = ObjHits_GetPriorityHit((GameObject*)self, &hitObj, 0, 0);
     if (hitKind != 0)
     {
         if (hitKind == 0x10)
@@ -694,7 +694,7 @@ end:;
 }
 #pragma opt_loop_invariants reset
 
-void EdibleMushroom_init(int obj, int aux)
+void EdibleMushroom_init(GameObject* obj, int aux)
 {
     int state;
     int player;
@@ -702,27 +702,27 @@ void EdibleMushroom_init(int obj, int aux)
     ObjAnimEventList animEvents;
     f32 dist;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     curveInitParam = 0x19;
     player = (int)Obj_GetPlayerObject();
 
-    ((GameObject*)obj)->animEventCallback = EdibleMushroom_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | EDIBLEMUSHROOM_OBJFLAG_HIDDEN);
+    (obj)->animEventCallback = EdibleMushroom_SeqFn;
+    (obj)->objectFlags = (u16)((obj)->objectFlags | EDIBLEMUSHROOM_OBJFLAG_HIDDEN);
 
     if (mainGetBit(((EdibleMushroomPlacement*)aux)->gameBitId) != 0)
     {
         ((EdibleMushroomState*)state)->animState = 8;
         ObjHits_DisableObject((u32)obj);
-        ((GameObject*)obj)->anim.flags = (short)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+        (obj)->anim.flags = (short)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
 
-    ((GameObject*)obj)->anim.modelState->flags |= 0x810;
+    (obj)->anim.modelState->flags |= 0x810;
 
     ((EdibleMushroomState*)state)->lungeRootSpeedScale = 0.5f;
     ((EdibleMushroomState*)state)->mapParamScale = 0.2f * ((f32)((EdibleMushroomPlacement*)aux)->paramByte / 255.0f);
 
-    ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, 1.0f, 1.0f, &animEvents);
     ((EdibleMushroomState*)state)->lungeRange = animEvents.rootDeltaX;
     if (((EdibleMushroomState*)state)->lungeRange < 0.0f)
     {
@@ -732,8 +732,8 @@ void EdibleMushroom_init(int obj, int aux)
         ((EdibleMushroomState*)state)->lungeRange * ((EdibleMushroomState*)state)->lungeRootSpeedScale;
     ((EdibleMushroomState*)state)->lungeRange += 20.0f;
 
-    ObjAnim_SetCurrentMove(obj, 4, 0.0f, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_SetCurrentMove((int)obj, 4, 0.0f, 0);
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, 1.0f, 1.0f, &animEvents);
     ((EdibleMushroomState*)state)->retreatRange = animEvents.rootDeltaZ;
     if (((EdibleMushroomState*)state)->retreatRange < 0.0f)
     {
@@ -751,8 +751,8 @@ void EdibleMushroom_init(int obj, int aux)
         case 5:
             ((EdibleMushroomState*)state)->flags |= EDIBLEMUSHROOM_FLAG_ON_CURVE;
             (*gRomCurveInterface)->initCurve((void*)state, (void*)obj, 1000.0f, &curveInitParam, -1);
-            ((GameObject*)obj)->anim.localPosX = ((EdibleMushroomState*)state)->curve.posX;
-            ((GameObject*)obj)->anim.localPosZ = ((EdibleMushroomState*)state)->curve.posZ;
+            (obj)->anim.localPosX = ((EdibleMushroomState*)state)->curve.posX;
+            (obj)->anim.localPosZ = ((EdibleMushroomState*)state)->curve.posZ;
             break;
         }
     }
@@ -761,7 +761,7 @@ void EdibleMushroom_init(int obj, int aux)
 
     if ((void*)player != NULL)
     {
-        dist = Vec_distance(player + 0x18, obj + 0x18);
+        dist = Vec_distance(player + 0x18, (int)obj + 0x18);
         ((EdibleMushroomState*)state)->currentTargetDistance = dist;
         ((EdibleMushroomState*)state)->previousTargetDistance = dist;
     }
@@ -772,10 +772,10 @@ void EdibleMushroom_init(int obj, int aux)
         ((EdibleMushroomState*)state)->previousTargetDistance = z;
     }
 
-    ObjGroup_AddObject(obj, EDIBLEMUSHROOM_OBJGROUP_SECONDARY);
-    ObjGroup_AddObject(obj, EDIBLEMUSHROOM_OBJGROUP);
+    ObjGroup_AddObject((int)obj, EDIBLEMUSHROOM_OBJGROUP_SECONDARY);
+    ObjGroup_AddObject((int)obj, EDIBLEMUSHROOM_OBJGROUP);
 
-    if (((GameObject*)obj)->anim.seqId == 0x658)
+    if ((obj)->anim.seqId == 0x658)
     {
         ((EdibleMushroomState*)state)->collectedGameBitId = 0x66d;
     }

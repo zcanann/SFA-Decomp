@@ -52,11 +52,11 @@ void DFP_Torch_free(int obj)
 
 #pragma opt_common_subs off
 #pragma fp_contract off
-void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
-    DfpTorchState* state = ((GameObject*)obj)->extra;
+    DfpTorchState* state = (obj)->extra;
     char* cam;
     f32 dist;
     f32 scale;
@@ -82,14 +82,14 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
         if (state->lit != 0)
         {
             state->visibleLatch = 1;
             cam = Camera_GetCurrentViewSlot();
-            stk2.d[0] = *(f32*)(cam + 0xc) - ((GameObject*)obj)->anim.localPosX;
-            stk2.d[1] = *(f32*)(cam + 0x10) - ((GameObject*)obj)->anim.localPosY;
-            stk2.d[2] = *(f32*)(cam + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+            stk2.d[0] = *(f32*)(cam + 0xc) - (obj)->anim.localPosX;
+            stk2.d[1] = *(f32*)(cam + 0x10) - (obj)->anim.localPosY;
+            stk2.d[2] = *(f32*)(cam + 0x14) - (obj)->anim.localPosZ;
             dist = sqrtf(stk2.d[2] * stk2.d[2] + (stk2.d[0] * stk2.d[0] + stk2.d[1] * stk2.d[1]));
             if (dist > 50.0f)
             {
@@ -100,9 +100,9 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 stk2.a[0] = 32.0f * stk2.d[0];
                 stk2.a[1] = 32.0f * stk2.d[1];
                 stk2.a[2] = 32.0f * stk2.d[2];
-                stk2.a[0] = stk2.a[0] + ((GameObject*)obj)->anim.localPosX;
-                stk2.a[1] = stk2.a[1] + ((GameObject*)obj)->anim.localPosY;
-                stk2.a[2] = stk2.a[2] + ((GameObject*)obj)->anim.localPosZ;
+                stk2.a[0] = stk2.a[0] + (obj)->anim.localPosX;
+                stk2.a[1] = stk2.a[1] + (obj)->anim.localPosY;
+                stk2.a[2] = stk2.a[2] + (obj)->anim.localPosZ;
                 stk2.b[0] = -20.0f * stk2.d[0];
                 stk2.b[1] = -20.0f * stk2.d[1];
                 stk2.b[2] = -20.0f * stk2.d[2];
@@ -169,7 +169,7 @@ void DFP_Torch_update(int obj)
     case DFPTORCH_MODE_LIGHTABLE:
         buf[4] = -2.0f;
         state->prevLit = state->lit;
-        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0)
         {
             state->lit = 1 - state->lit;
             if (state->lit != 0)

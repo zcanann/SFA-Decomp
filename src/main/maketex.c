@@ -131,7 +131,7 @@ extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
-extern int objModelGetVecFn_800395d8(int obj, int idx);
+extern int objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void debugPrintf(char* fmt, ...);
 extern void AudioStream_CancelPrepared(void);
 extern void Obj_FreeObject(int obj);
@@ -410,7 +410,7 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
 
 void objModelResetVecFn_80080548(int obj)
 {
-    s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
+    s16* v = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     if (v != NULL)
     {
         v[1] = 0;
@@ -1142,7 +1142,7 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
     if (mode == 4)
     {
         ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~2;
-        modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
+        modelVec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
         if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
@@ -1229,7 +1229,7 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
         }
         ((GameObject*)obj)->anim.rotX +=
             (s16)(((ObjSeqTurnState*)state)->turnRate * (f32)((ObjSeqTurnState*)state)->turnAmount);
-        modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
+        modelVec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
         if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
@@ -1258,7 +1258,7 @@ int ObjSeq_func20(int obj, int state, s16 turnDegrees, s16 yawThreshold, s16 max
         {
             ((ObjSeqTurnState*)state)->mode = 0;
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags | 8;
-            modelVec = (s16*)objModelGetVecFn_800395d8(obj, 0);
+            modelVec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
             if (modelVec != NULL)
             {
                 ((ObjSeqTurnState*)state)->savedVecY = modelVec[1];

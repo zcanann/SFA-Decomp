@@ -121,7 +121,7 @@ int DIMbosstonsil_startIdleHitReaction(void* obj, DIMbosstonsilState* state)
     return 0;
 }
 
-void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
+void DIMbosstonsil_checkHit(GameObject* obj, DIMbosstonsilState* state)
 {
     int hitObj;
     int modelPart;
@@ -130,13 +130,13 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
     f32* spawnPos;
     int hit;
 
-    hit = ObjHits_GetPriorityHit((int)obj, &hitObj, &modelPart, &hitVolume);
+    hit = ObjHits_GetPriorityHit(obj, &hitObj, &modelPart, &hitVolume);
     if (hit != 0)
     {
         spawnPos = (f32*)((char*)spawnArgs + 0xc);
         {
-            f32(*modelPos)[4] = (f32(*)[4])(
-                *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + ((s8)((u8*)obj)[0xad] << 2)) + 0x50));
+            f32(*modelPos)[4] =
+                (f32(*)[4])(*(int*)(*(int*)(*(int*)&(obj)->anim.banks + ((s8)((u8*)obj)[0xad] << 2)) + 0x50));
             spawnPos[0] = playerMapOffsetX + modelPos[modelPart][1];
             spawnPos[1] = modelPos[modelPart][2];
             spawnPos[2] = playerMapOffsetZ + modelPos[modelPart][3];

@@ -300,9 +300,9 @@ typedef struct
 } SnowHornFlags;
 
 extern u8 gDIMSnowHorn1ConfigTable[];
-extern void fn_8003A168(int obj, int q);
-extern void fn_8003B500(int obj, int q, f32 f);
-extern void fn_802BB4B4(int obj, int a, int slot);
+extern void fn_8003A168(GameObject* obj, int q);
+extern void fn_8003B500(GameObject* obj, int q, f32 f);
+extern void fn_802BB4B4(GameObject* obj, int a, int slot);
 extern int getCurMapLayer(void);
 extern f32 getXZDistance(int a, int b);
 extern f32 lbl_803E82AC;
@@ -318,11 +318,11 @@ extern void* gEarthWarriorResource;
 
 extern int gDRCloudRunnerStateHandlers[];
 extern void* gDRCloudRunnerDefaultStateHandler;
-extern int DR_CloudRunner_stateHandler00(int obj);
-extern int DR_CloudRunner_stateHandler01(int obj, int p2);
-extern int DR_CloudRunner_stateHandler02(int obj, int p2);
-extern int DR_CloudRunner_stateHandler03(int obj, int p2);
-extern int DR_CloudRunner_stateHandler04(int obj, int p2);
+extern int DR_CloudRunner_stateHandler00(GameObject* obj);
+extern int DR_CloudRunner_stateHandler01(GameObject* obj, int p2);
+extern int DR_CloudRunner_stateHandler02(GameObject* obj, int p2);
+extern int DR_CloudRunner_stateHandler03(GameObject* obj, int p2);
+extern int DR_CloudRunner_stateHandler04(GameObject* obj, int p2);
 extern void DR_CloudRunner_stateHandler05();
 extern void DR_CloudRunner_stateHandler06();
 
@@ -330,12 +330,12 @@ extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
 extern void* gDim2PrisonMammothDefaultStateHandler;
 extern void* gDREarthWarriorDefaultStateHandler;
-extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
-extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
-extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
+extern int dim2prisonmammoth_stateHandler01(GameObject* obj, int p2);
+extern int dim2prisonmammoth_stateHandler02(GameObject* obj, int p2);
+extern int dim2prisonmammoth_stateHandler03(GameObject* obj, int p2);
 extern void DR_EarthWarrior_stateHandler01();
 extern void DR_EarthWarrior_stateHandler02();
-extern int DR_EarthWarrior_stateHandler03(int obj, int p2);
+extern int DR_EarthWarrior_stateHandler03(GameObject* obj, int p2);
 
 extern f32 lbl_803E82C0;
 extern f32 gPrisonMammothMoveSpeed;
@@ -386,9 +386,9 @@ extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateStat
 extern int lbl_803E8230;
 extern int gDIMSnowHorn1PathCollisionData;
 extern f32 gDIMSnowHorn1Gravity;
-extern void dll_2E_func05(int obj, int q, int a, int b, int c);
+extern void dll_2E_func05(GameObject* obj, int q, int a, int b, int c);
 
-extern int dll_2E_func07(int obj, int p3, void* q, int a, int b);
+extern int dll_2E_func07(GameObject* obj, int p3, void* q, int a, int b);
 
 extern int dll_2E_func0A(int a, void* out);
 extern void dll_2E_func08(int q, int a, int b);
@@ -409,10 +409,10 @@ extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
 
-extern int Obj_UpdateRomCurveFollowVelocity(int obj, int q, f32 a, f32 b, f32 c, int d);
+extern int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, int q, f32 a, f32 b, f32 c, int d);
 extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
-void fn_802BF4D8(int obj);
+void fn_802BF4D8(GameObject* obj);
 
 extern void logPrintf(const char* fmt, ...);
 extern char sOnCloudFormat[];

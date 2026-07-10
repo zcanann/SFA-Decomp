@@ -57,8 +57,8 @@ extern void getLActions();
 extern void gameBitFn_800ea2e0(int idx);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void fn_801AC108(int* obj, int* extra);
-extern void fn_801AC01C(int* obj);
+extern void fn_801AC108(GameObject* obj, int* extra);
+extern void fn_801AC01C(GameObject* obj);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
@@ -271,7 +271,7 @@ void imicemountain_updateEventState(int* obj)
         }
         break;
     case 4:
-        fn_801AC108(obj, (int*)extra);
+        fn_801AC108((GameObject*)(obj), (int*)extra);
         break;
     case 5:
         if ((extra->latchFlags & 1) != 0)
@@ -324,7 +324,7 @@ void IMIceMountain_update(int* obj)
     case 2:
         if (mainGetBit(GAMEBIT_IM_BikeRelated03A3) != 0)
         {
-            fn_801AC01C(obj);
+            fn_801AC01C((GameObject*)(obj));
         }
         break;
     case 3:

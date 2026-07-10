@@ -179,12 +179,12 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
     return 0;
 }
 
-int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
+int grimble_stateHandlerA09(GameObject* obj, GroundBaddieState* p)
 {
     GroundBaddieState* sub;
     f32 spd;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     p->baddie.stateTag = 0;
     p->baddie.moveSpeed = lbl_803E2EE0;
     spd = lbl_803E2EB8;
@@ -200,7 +200,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
         }
         p->baddie.moveSpeed = lbl_803E2EE4;
         p->baddie.moveDone = 0;
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        (obj)->anim.alpha = 0xff;
         sub->flags400 |= 0x100;
     }
     if ((s8)p->baddie.moveDone != 0)
@@ -210,7 +210,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
     return 0;
 }
 
-int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
+int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
 {
     GrimbleControl* ctrl;
     f64 d;
@@ -224,10 +224,10 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
         f32 x, y, z;
     } a;
 
-    ctrl = ((GroundBaddieState*)((GameObject*)obj)->extra)->control;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ctrl = ((GroundBaddieState*)(obj)->extra)->control;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 9;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
     if (randomGetRange(0, 100) < 50)
     {
         if ((s8)p->baddie.moveJustStartedA != 0)
@@ -270,7 +270,7 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     a.x = r;
     {
         int ang = (s16)getAngle(a.y, d);
-        ((GameObject*)obj)->anim.rotY = ang * ((ctrl->reversed << 1) - 1);
+        (obj)->anim.rotY = ang * ((ctrl->reversed << 1) - 1);
     }
     if ((s8)p->baddie.moveDone != 0)
     {

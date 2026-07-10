@@ -172,10 +172,10 @@ void wcpushblock_hitDetect(void)
 {
 }
 
-void wcpushblock_init(int obj, int setup)
+void wcpushblock_init(GameObject* obj, int setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCPushBlockRuntimeState* state = ((GameObject*)obj)->extra;
+    WCPushBlockRuntimeState* state = (obj)->extra;
     WCPushBlockSetup* setupData = (WCPushBlockSetup*)setup;
 
     objAnim->alpha = 0;
@@ -184,7 +184,7 @@ void wcpushblock_init(int obj, int setup)
     {
         objAnim->bankIndex = 0;
     }
-    ObjHitbox_SetStateIndex(obj, *(int*)&((GameObject*)obj)->anim.hitReactState, objAnim->bankIndex);
+    ObjHitbox_SetStateIndex((int)obj, *(int*)&(obj)->anim.hitReactState, objAnim->bankIndex);
     state->initialTile = setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->base.posY;
 }
@@ -217,7 +217,7 @@ void wcpushblock_update(int obj)
         objAnim->alpha = 0;
         return;
     }
-    tex = objFindTexture((void*)obj, 0, 0);
+    tex = objFindTexture((GameObject*)obj, 0, 0);
     if (tex != 0)
     {
         tex->textureId = WCPUSHBLOCK_TEXTURE_DEFAULT;
@@ -620,7 +620,7 @@ void wcpushblock_update(int obj)
     case WCPUSHBLOCK_PHASE_SOLVED:
         objAnim->alpha = WCPUSHBLOCK_ALPHA_OPAQUE;
     case WCPUSHBLOCK_PHASE_LOCKED:
-        tex = objFindTexture((void*)obj, 0, 0);
+        tex = objFindTexture((GameObject*)obj, 0, 0);
         if (tex != 0)
         {
             tex->textureId = WCPUSHBLOCK_TEXTURE_LOCKED;

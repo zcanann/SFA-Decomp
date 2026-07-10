@@ -12,6 +12,7 @@
  * animator states it shares headers with.
  */
 #include "main/dll/waveanimatorstate_struct.h"
+#include "main/game_object.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/map_block.h"
@@ -49,7 +50,7 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 extern MapBlockData* mapGetBlock(int i);
 extern void* fn_8006070C(MapBlockData* block, int idx);
 extern int fn_80065640(void);
-extern void fn_80065574(int matchVal, void* obj, int flag);
+extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern void* mapBlockFn_800606ec(MapBlockData* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern void* Shader_getLayer(void* shader, int idx);
@@ -155,7 +156,7 @@ void HitAnimator_update(HitAnimatorObject* obj)
         {
             if (fn_80065640() == 0)
             {
-                fn_80065574(desc->soundId, obj->objAnim.parent, state->activeBit);
+                fn_80065574(desc->soundId, (GameObject*)(obj->objAnim.parent), state->activeBit);
                 state->flags &= ~HITANIMATOR_STATE_FLAG_SOUND_PENDING;
             }
         }

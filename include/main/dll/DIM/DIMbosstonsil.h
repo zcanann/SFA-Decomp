@@ -128,15 +128,15 @@ STATIC_ASSERT(offsetof(DIMbosstonsilState, hitReactMode) == DIMBOSSTONSIL_HIT_RE
 extern DIMbosstonsilLight* gDIMbosstonsilLight;
 extern s8 gDIMbosstonsilRoutePhase;
 
-int DIMbosstonsil_SeqFn(void* obj, u32 param_2, ObjAnimUpdateState* animUpdate);
+int DIMbosstonsil_SeqFn(GameObject* obj, u32 param_2, ObjAnimUpdateState* animUpdate);
 void DIMbosstonsil_func0B(void);
 int DIMbosstonsil_setScale(GameObject* obj);
 int DIMbosstonsil_getExtraSize(void);
 int DIMbosstonsil_getObjectTypeId(void);
-void DIMbosstonsil_free(void* obj);
-void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
-void DIMbosstonsil_hitDetect(void* obj);
-void DIMbosstonsil_update(void* obj);
+void DIMbosstonsil_free(GameObject* obj);
+void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
+void DIMbosstonsil_hitDetect(GameObject* obj);
+void DIMbosstonsil_update(GameObject* obj);
 void DIMbosstonsil_init(int obj, u32 param_2, int isAltVariant);
 void DIMbosstonsil_release(void);
 void DIMbosstonsil_initialise(void);

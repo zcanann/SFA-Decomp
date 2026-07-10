@@ -156,7 +156,7 @@ void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void wallanimator_update(int obj)
+void wallanimator_update(GameObject* obj)
 {
     int nearby;
     WallanimatorState* state;
@@ -164,10 +164,9 @@ void wallanimator_update(int obj)
     int tricky;
     float nearestDistance[4];
 
-    state = ((GameObject*)obj)->extra;
-    desc = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+    state = (obj)->extra;
+    desc = *(int*)&(obj)->anim.placementData;
+    *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
 
     if (state->activeFlag != 0)
     {
@@ -178,7 +177,7 @@ void wallanimator_update(int obj)
     {
         state->activeFlag = 1;
         mainSetBits((int)((WallanimatorPlacement*)desc)->gameBit, 1);
-        Sfx_PlayFromObject(obj, WALLANIMATOR_COMPLETE_SFX);
+        Sfx_PlayFromObject((int)obj, WALLANIMATOR_COMPLETE_SFX);
         return;
     }
 
@@ -186,25 +185,22 @@ void wallanimator_update(int obj)
     if ((void*)tricky != NULL)
     {
         nearestDistance[0] = 35.0f;
-        nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP, obj, nearestDistance);
+        nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP, (int)obj, nearestDistance);
         if ((void*)nearby == NULL)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+            *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+            if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 (*(void (**)(int, int, int, int))(**(int**)(tricky + TRICKY_IFACE_OFFSET) + TRICKY_IFACE_NOTIFY_SLOT))(
-                    tricky, obj, 1, 1);
+                    tricky, (int)obj, 1, 1);
             }
-            objRenderFn_80041018(obj);
+            objRenderFn_80041018((int)obj);
         }
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 }
 

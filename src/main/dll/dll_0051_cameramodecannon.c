@@ -19,7 +19,7 @@
 #include "main/dll/dll_0051_cameramodecannon.h"
 
 extern CameraModeCannonState* lbl_803DD5A0;
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern s16* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 
 void CameraModeCannon_copyToCurrent(void)
 {
@@ -39,7 +39,7 @@ void CameraModeCannon_update(u8* obj)
     s16 yaw;
     s16 delta;
 
-    vec = objModelGetVecFn_800395d8((int)lbl_803DD5A0->target, 0);
+    vec = objModelGetVecFn_800395d8((GameObject*)lbl_803DD5A0->target, 0);
     if (lbl_803DD5A0->target == NULL)
     {
         return;

@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_0279_DRENERGYDISC_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 typedef struct DrenergydiscPlacement
 {
@@ -16,7 +17,7 @@ int DR_EnergyDisc_getObjectTypeId(void);
 void DR_EnergyDisc_free(void);
 void DR_EnergyDisc_render(void);
 void DR_EnergyDisc_hitDetect(void);
-void DR_EnergyDisc_update(int obj);
+void DR_EnergyDisc_update(GameObject* obj);
 void DR_EnergyDisc_init(u8* obj, u8* setup);
 void DR_EnergyDisc_release(void);
 void DR_EnergyDisc_initialise(void);

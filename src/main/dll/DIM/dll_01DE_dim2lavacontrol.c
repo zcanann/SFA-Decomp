@@ -78,12 +78,12 @@ extern void envFxActFn_800887f8(u8 value);
 extern u8 lbl_803DBF28[8];
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
-void dim2lavacontrol_setScale(void* obj)
+void dim2lavacontrol_setScale(GameObject *obj)
 {
-    void* sub = ((GameObject*)obj)->extra;
+    void* sub = (obj)->extra;
     if (((s32)((Dim2lavacontrolState*)sub)->flags & 1) == 0)
     {
-        void* p = *(void**)&((GameObject*)obj)->anim.placementData;
+        void* p = *(void**)&(obj)->anim.placementData;
         if ((s32)((Dim2lavacontrolState*)sub)->countdown > 0)
         {
             ((Dim2lavacontrolState*)sub)->countdown -= 1;
@@ -105,10 +105,10 @@ void dim2lavacontrol_free(void)
     timeOfDayFn_80055000();
 }
 
-void dim2lavacontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4B90);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4B90);
 }
 
 #pragma opt_common_subs off
@@ -189,7 +189,7 @@ void dim2lavacontrol_update(int obj)
 }
 #pragma opt_common_subs reset
 
-void dim2lavacontrol_init(int obj, int param2)
+void dim2lavacontrol_init(GameObject *obj, int param2)
 {
     extern void gameBitFn_800ea2e0(int i);
     int state;
@@ -197,17 +197,17 @@ void dim2lavacontrol_init(int obj, int param2)
     int gameBitState;
     if (getSaveGameLoadStatus() != 0)
     {
-        ((GameObject*)obj)->unkF4 = 2;
+        (obj)->unkF4 = 2;
     }
     else
     {
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
     for (i = 1; (u8)i <= 0x2d; i++)
     {
         gameBitFn_800ea2e0(i);
     }
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
     ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
     if (mainGetBit(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)

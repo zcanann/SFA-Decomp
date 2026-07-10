@@ -19,7 +19,7 @@ extern f32 lbl_803E5548;
 
 extern void ObjHitbox_SetCapsuleBounds();
 
-void SH_EmptyTumbleW_update(int obj)
+void SH_EmptyTumbleW_update(GameObject* obj)
 {
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280, &lbl_803DDC00);
 }

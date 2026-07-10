@@ -27,13 +27,13 @@ extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthw
 
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern int fn_8003B500(void* obj, void* p2, f32 f1);
-extern int fn_8003B228(void* obj, void* p2);
-extern int characterDoEyeAnims(void* obj, void* p2);
+extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
+extern int fn_8003B228(GameObject* obj, void* p2);
+extern int characterDoEyeAnims(GameObject* obj, void* p2);
 
-int sh_queenearthwalker_processAnimEvents(void* obj, void* unused, ObjAnimUpdateState* animUpdate)
+int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnimUpdateState* animUpdate)
 {
-    QueenEarthWalkerState* state = ((GameObject*)obj)->extra;
+    QueenEarthWalkerState* state = (obj)->extra;
     int i;
     u8 flags;
 

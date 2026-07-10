@@ -196,27 +196,27 @@ extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, i
 
 #pragma scheduling off
 #pragma peephole off
-int iceBaddie_updateOpenState(int obj, int state)
+int iceBaddie_updateOpenState(GameObject* obj, int state)
 {
     GroundBaddieState* sub;
     IceBaddieControl* control;
     ObjHitsPriorityState* hitState;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     control = (IceBaddieControl*)sub->control;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->flags |= 1;
     ((GroundBaddieState*)state)->baddie.physicsActive = 1;
     if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
-        ObjAnim_SetCurrentMove(obj, 11, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 11, lbl_803E2D14, 0);
         *(s8*)&((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         mainSetBits(sub->gameBitB, 1);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        (obj)->anim.alpha = 0xff;
         *(s8*)&((GroundBaddieState*)state)->baddie.stateTag = 1;
         ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D70 + (f32)(u32)sub->aggression / lbl_803E2D74;
     }
@@ -233,11 +233,11 @@ int iceBaddie_updateOpenState(int obj, int state)
         }
     }
     control->effectFlags |= ICEBADDIE_FX_BURST;
-    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2D78)
+    if ((obj)->anim.currentMoveProgress < lbl_803E2D78)
     {
         control->effectFlags |= ICEBADDIE_FX_PUFF;
     }
-    (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, state, timeDelta, 4);
+    (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
     return 0;
 }
 
@@ -354,9 +354,9 @@ int iceBaddie_stateHandlerB02(int obj, int state)
     return 0;
 }
 
-int iceBaddie_updateLandingState(int obj, int state)
+int iceBaddie_updateLandingState(GameObject* obj, int state)
 {
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     int player;
     f32 noBlend;
 
@@ -367,7 +367,7 @@ int iceBaddie_updateLandingState(int obj, int state)
     ((GroundBaddieState*)state)->baddie.animSpeedB = noBlend;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 1, noBlend, 0);
+        ObjAnim_SetCurrentMove((int)obj, 1, noBlend, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 1) == 0)
@@ -375,45 +375,44 @@ int iceBaddie_updateLandingState(int obj, int state)
         player = Obj_GetPlayerObject();
         if (((GameObject*)player)->anim.seqId == 0)
             goto playGroundLandSound;
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
         goto playLandingExtras;
     playGroundLandSound:
-        Sfx_PlayFromObject(obj, SFXTRIG_swd);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
     playLandingExtras:
-        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_26f);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_26f);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 1;
     }
-    if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 2) == 0 &&
-        ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2D2C)
+    if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 2) == 0 && (obj)->anim.currentMoveProgress > lbl_803E2D2C)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_iceywindlp16_233);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 2;
-        ((void (*)(int, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 0);
+        ((void (*)(int, int, int, int))((void**)*gBaddieControlInterface)[19])((int)obj, sub->triggerId, -1, 0);
     }
     return 0;
 }
 
-int iceBaddie_updateContactHitState(int obj, int state)
+int iceBaddie_updateContactHitState(GameObject* obj, int state)
 {
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     int control;
     f32 noBlend;
 
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
     if (sub->aggression > 0x32)
     {
         if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
         {
-            ObjAnim_SetCurrentMove(obj, 4, lbl_803E2D14, 0);
+            ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E2D14, 0);
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
     }
     else if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0xe, lbl_803E2D14, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.stateTag = 3;
@@ -425,22 +424,22 @@ int iceBaddie_updateContactHitState(int obj, int state)
     ((GroundBaddieState*)state)->baddie.animSpeedB = noBlend;
     if ((sub->configFlags & 2) == 0)
     {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D30 + ((GameObject*)obj)->anim.currentMoveProgress;
+        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D30 + (obj)->anim.currentMoveProgress;
     }
     return 0;
 }
 
-int iceBaddie_stateHandlerA0B(int obj, int state)
+int iceBaddie_stateHandlerA0B(GameObject* obj, int state)
 {
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     int control;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
         {
-            ObjAnim_SetCurrentMove(obj, 2, lbl_803E2D14, 0);
+            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2D14, 0);
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
         sub->targetState = 2;
@@ -462,19 +461,19 @@ int iceBaddie_stateHandlerA0B(int obj, int state)
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_IMPACT;
     }
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
-    ((GroundBaddieState*)state)->baddie.animSpeedA = ((GameObject*)obj)->anim.currentMoveProgress;
+    ((GroundBaddieState*)state)->baddie.animSpeedA = (obj)->anim.currentMoveProgress;
     return 0;
 }
 
-int iceBaddie_updateDropState(int obj, int state)
+int iceBaddie_updateDropState(GameObject* obj, int state)
 {
-    int control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+    int control = *(int*)(*(int*)&(obj)->extra + 0x40c);
     int player;
 
     ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_BURST;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2D14, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
@@ -483,12 +482,12 @@ int iceBaddie_updateDropState(int obj, int state)
         player = Obj_GetPlayerObject();
         if (((GameObject*)player)->anim.seqId == 0)
             goto playGroundDropSound;
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
         goto playDropExtras;
     playGroundDropSound:
-        Sfx_PlayFromObject(obj, SFXTRIG_swd);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
     playDropExtras:
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_26e);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_26e);
     }
     ((GroundBaddieState*)state)->baddie.stateTag = 3;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D34;
@@ -496,16 +495,16 @@ int iceBaddie_updateDropState(int obj, int state)
     return 0;
 }
 
-int iceBaddie_updateCommDownState(int obj, int state)
+int iceBaddie_updateCommDownState(GameObject* obj, int state)
 {
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     int control = *(int*)&sub->control;
 
     ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_BURST;
     ((GroundBaddieState*)state)->baddie.moveSpeed = gIceBaddieMinMoveSpeed;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 10, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 10, lbl_803E2D14, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.stateTag = 1;
@@ -514,15 +513,15 @@ int iceBaddie_updateCommDownState(int obj, int state)
         control = *(int*)&sub->control;
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_ARM_ICEBALL;
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_cf);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c_cf);
     }
-    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
+    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])((int)obj, state, timeDelta, 4);
     return 0;
 }
 
-int iceBaddie_updateHeightBlendState(int obj, int state)
+int iceBaddie_updateHeightBlendState(GameObject* obj, int state)
 {
-    int control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+    int control = *(int*)(*(int*)&(obj)->extra + 0x40c);
     f32 height;
 
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
@@ -530,7 +529,7 @@ int iceBaddie_updateHeightBlendState(int obj, int state)
     {
         if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
         {
-            ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E2D14, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E2D14, 0);
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
         ((GroundBaddieState*)state)->baddie.stateTag = 1;
@@ -544,7 +543,7 @@ int iceBaddie_updateHeightBlendState(int obj, int state)
     {
         ((GroundBaddieState*)state)->baddie.moveSpeed = gIceBaddieMinMoveSpeed;
     }
-    height = ((GameObject*)obj)->anim.currentMoveProgress;
+    height = (obj)->anim.currentMoveProgress;
     if (height < lbl_803E2D24)
     {
         ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D44 * height;
@@ -553,7 +552,7 @@ int iceBaddie_updateHeightBlendState(int obj, int state)
     {
         ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D44 * (lbl_803E2D48 - height);
     }
-    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
+    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])((int)obj, state, timeDelta, 4);
     return 0;
 }
 
@@ -668,24 +667,24 @@ int iceBaddie_stateHandlerA05(int obj, int state)
     return 0;
 }
 
-int iceBaddie_updateSpinState(int obj, int state)
+int iceBaddie_updateSpinState(GameObject* obj, int state)
 {
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     int control;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 9, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E2D14, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     control = *(int*)&sub->control;
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         sub->targetState = 4;
     }
-    ((GameObject*)obj)->anim.rotX =
+    (obj)->anim.rotX =
         (s16)(lbl_803E2D5C * (((f32)((GroundBaddieState*)state)->baddie.turnRate * timeDelta) / lbl_803E2D60) +
               (f32) * (s16*)obj);
     ((GroundBaddieState*)state)->baddie.moveSpeed = gIceBaddieMinMoveSpeed;
@@ -721,21 +720,21 @@ int iceBaddie_updateImpactHitState(int obj, int state)
     return 0;
 }
 
-int iceBaddie_updateHideResetState(int obj, int state)
+int iceBaddie_updateHideResetState(GameObject* obj, int state)
 {
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     ObjHitsPriorityState* hitState;
 
     if (((GroundBaddieState*)state)->baddie.prevControlMode != 4 &&
         (s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0xe, lbl_803E2D14, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((IceBaddieControl*)sub->control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->flags &= ~1;
         ((GroundBaddieState*)state)->baddie.moveSpeed = gIceBaddieMinMoveSpeed;
         ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
@@ -743,12 +742,12 @@ int iceBaddie_updateHideResetState(int obj, int state)
     if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
         mainSetBits((s32)sub->gameBitB, 0);
-        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
         *(int*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
         ((GroundBaddieState*)state)->baddie.physicsActive = 0;
         ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         sub->targetState = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     return 0;
 }
@@ -922,7 +921,7 @@ int iceBaddie_stateHandlerB07(int obj, int state)
     return 0;
 }
 
-void iceBaddie_updateEffectAnchors(int obj, int state)
+void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
     f32 transformed[3];
@@ -942,7 +941,7 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
     pathMtx[14] = lbl_803E2D14;
     pathMtx[13] = lbl_803E2D14;
     pathMtx[12] = lbl_803E2D14;
-    if (((GameObject*)obj)->anim.seqId == 99)
+    if ((obj)->anim.seqId == 99)
     {
         minScale = lbl_803E2D48;
     }
@@ -960,17 +959,17 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
     }
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
-        ObjPath_GetPointWorldPosition(obj, 2, &((IceBaddieControl*)control)->effectPosX,
+        ObjPath_GetPointWorldPosition((int)obj, 2, &((IceBaddieControl*)control)->effectPosX,
                                       &((IceBaddieControl*)control)->effectPosY,
                                       &((IceBaddieControl*)control)->effectPosZ, 0);
     }
     else
     {
-        ObjPath_GetPointWorldPosition(obj, 0, &((IceBaddieControl*)control)->effectPosX,
+        ObjPath_GetPointWorldPosition((int)obj, 0, &((IceBaddieControl*)control)->effectPosX,
                                       &((IceBaddieControl*)control)->effectPosY,
                                       &((IceBaddieControl*)control)->effectPosZ, 0);
     }
-    ((IceBaddieControl*)control)->effectPosY = gIceBaddieYOffset + ((GameObject*)obj)->anim.localPosY;
+    ((IceBaddieControl*)control)->effectPosY = gIceBaddieYOffset + (obj)->anim.localPosY;
     angle = (gIceBaddiePi * (f32) * (s16*)obj) / lbl_803E2D9C;
     ((IceBaddieControl*)control)->effectPosX =
         ((IceBaddieControl*)control)->effectPosX - scale * (lbl_803E2D94 * mathSinf(angle));
@@ -980,7 +979,7 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
     pathX = lbl_803E2D14;
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;
-    ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
+    ObjPath_GetPointWorldPosition((int)obj, 0, &pathX, &pathY, &pathZ, 1);
     if ((((IceBaddieControl*)control)->effectFlags & ICEBADDIE_FX_ARM_ICEBALL) != 0)
     {
         transformedX = lbl_803E2DA8;
@@ -1080,7 +1079,7 @@ void iceBaddie_updateControlEffects(GameObject* obj, int state)
     ((IceBaddieControl*)control)->effectFlags = 0;
 }
 
-void iceBaddie_updateTargetMotion(int obj, int sub, int state)
+void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
 {
     int control = *(int*)&((GroundBaddieState*)sub)->control;
 
@@ -1091,22 +1090,22 @@ void iceBaddie_updateTargetMotion(int obj, int sub, int state)
         if (((GroundBaddieState*)state)->baddie.controlMode == 7 ||
             ((GroundBaddieState*)state)->baddie.controlMode == 8)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_26c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_26c);
         }
     }
     if ((((GroundBaddieState*)sub)->configFlags & 2) != 0)
     {
-        ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])(obj, state, lbl_803E2D14, -1);
+        ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])((int)obj, state, lbl_803E2D14, -1);
     }
     else
     {
-        ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])(obj, state, lbl_803E2DB0, -1);
+        ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])((int)obj, state, lbl_803E2DB0, -1);
     }
-    ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
-    *(int*)&((GameObject*)obj)->pendingParentObj = 0;
+    ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&(obj)->pendingParentObj;
+    *(int*)&(obj)->pendingParentObj = 0;
     ((void (*)(int, int, f32, f32, u8*, u8*))((void**)*gPlayerInterface)[2])(
-        obj, state, timeDelta, timeDelta, gIceBaddieStateHandlersA, gIceBaddieStateHandlersB);
-    *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
+        (int)obj, state, timeDelta, timeDelta, gIceBaddieStateHandlersA, gIceBaddieStateHandlersB);
+    *(int*)&(obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 
 #pragma fp_contract off
@@ -1190,11 +1189,11 @@ void iceBaddie_free(int obj)
     ((void (*)(int, int, int))((void**)*gBaddieControlInterface)[16])(obj, (int)state, 0x20);
 }
 
-void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
+void iceBaddie_render(GameObject* obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
-    GroundBaddieState* state = ((GameObject*)obj)->extra;
+    GroundBaddieState* state = (obj)->extra;
 
-    if (visible == 0 || ((GameObject*)obj)->unkF4 != 0 || state->targetState == 0)
+    if (visible == 0 || (obj)->unkF4 != 0 || state->targetState == 0)
     {
         return;
     }
@@ -1203,8 +1202,8 @@ void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visibl
     {
         fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
     }
-    objRenderModelAndHitVolumes(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
-    iceBaddie_updateEffectAnchors(obj, (int)state);
+    objRenderModelAndHitVolumes((int)obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
+    iceBaddie_updateEffectAnchors((GameObject*)obj, (int)state);
 }
 
 #pragma peephole on
@@ -1325,29 +1324,29 @@ int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-void iceBaddie_leaveWhirlpoolGroup(int obj, GroundBaddieState* state)
+void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
     if (state->baddie.inWhirlpoolGroup != 0)
     {
-        ObjGroup_RemoveObject(obj, ICEBADDIE_OBJGROUP_SECONDARY);
+        ObjGroup_RemoveObject((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->baddie.inWhirlpoolGroup = 0;
     }
-    *(u16*)obj = (float)(int)((GameObject*)obj)->anim.rotX - lbl_803E2CD8 * timeDelta;
+    *(u16*)obj = (float)(int)(obj)->anim.rotX - lbl_803E2CD8 * timeDelta;
 }
 
-void iceBaddie_enterWhirlpoolGroup(int obj, GroundBaddieState* state)
+void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
 
     if (state->baddie.inWhirlpoolGroup == 0)
     {
-        ObjGroup_AddObject(obj, ICEBADDIE_OBJGROUP_SECONDARY);
+        ObjGroup_AddObject((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->baddie.inWhirlpoolGroup = 1;
     }
-    ObjHits_SetHitVolumeSlot(obj, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ObjHits_SetHitVolumeSlot((int)obj, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    ((GameObject*)obj)->anim.rotX -= 256;
+    (obj)->anim.rotX -= 256;
 }
 
 void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
@@ -1445,54 +1444,54 @@ return0:
     return 0;
 }
 
-void iceBaddie_update(int obj, int unusedA, int unusedB)
+void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern int iceBaddie_updateTargetCollision(int obj, int sub, int sub2);
-    extern void iceBaddie_updateControlEffects(struct GameObject * obj, int sub);
+    extern void iceBaddie_updateControlEffects(GameObject * obj, int sub);
     extern void iceBaddie_tryAcquireTarget(int obj, int sub, int sub2);
-    extern void iceBaddie_updateTargetMotion(int obj, int sub, int sub2);
+    extern void iceBaddie_updateTargetMotion(GameObject * obj, int sub, int sub2);
     GroundBaddieState* sub;
     int setup;
 
-    sub = ((GameObject*)obj)->extra;
-    setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((GameObject*)obj)->unkF4 != 0)
+    sub = (obj)->extra;
+    setup = *(int*)&(obj)->anim.placementData;
+    if ((obj)->unkF4 != 0)
     {
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
             (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
+                (int)obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
             sub->targetState = 0;
-            Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_263);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             *(s8*)&sub->baddie.moveDone = 0;
-            ((GameObject*)obj)->anim.alpha = 0xff;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            (obj)->anim.alpha = 0xff;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
-    else if (((GameObject*)obj)->unkF8 == 0)
+    else if ((obj)->unkF8 == 0)
     {
-        ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
+        (obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
+        (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
+        (obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
         (*gObjectTriggerInterface)->runSequence(*(s8*)(setup + 0x2e), (void*)obj, -1);
-        ((GameObject*)obj)->unkF8 = 1;
+        (obj)->unkF8 = 1;
     }
     else
     {
-        if ((*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0)
+        if ((*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))((int)obj, (int)sub, 0) == 0)
         {
             sub->targetState = 0;
         }
         else
         {
-            iceBaddie_updateTargetCollision(obj, (int)sub, (int)sub);
-            iceBaddie_updateControlEffects((GameObject*)(obj), (int)sub);
+            iceBaddie_updateTargetCollision((int)obj, (int)sub, (int)sub);
+            iceBaddie_updateControlEffects(obj, (int)sub);
             if (sub->targetState == 0)
             {
-                iceBaddie_tryAcquireTarget(obj, (int)sub, (int)sub);
+                iceBaddie_tryAcquireTarget((int)obj, (int)sub, (int)sub);
             }
             else
             {
@@ -1500,7 +1499,7 @@ void iceBaddie_update(int obj, int unusedA, int unusedB)
             }
             if ((sub->configFlags & 2) != 0)
             {
-                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - gIceBaddieYOffset;
+                (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - gIceBaddieYOffset;
             }
         }
     }

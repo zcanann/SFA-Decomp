@@ -28,7 +28,8 @@
  * Keep those spellings via launders - *(int *)&obj->extra != 0 - rather
  * than retyping the test to a pointer compare.
  */
-typedef struct GameObject {
+typedef struct GameObject
+{
     ObjAnimComponent anim;
     u16 objectFlags; /* obj+0xB0 flag word; 9 object families STATIC_ASSERT
         this name (Checkpoint4/CmbSrc/EnemyMushroom/Laser/MagicPlant/...) */
@@ -36,31 +37,31 @@ typedef struct GameObject {
     s16 seqIndex; /* obj+0xB4 trigger-sequence index (-1 = none, -2 = pending);
         passed to ObjectTriggerInterface.endSequence(seqIndex) */
     u8 unkB6[2];
-    void *extra; /* per-class state block */
-    void *animEventCallback; /* obj+0xBC anim-event callback slot;
+    void* extra;             /* per-class state block */
+    void* animEventCallback; /* obj+0xBC anim-event callback slot;
         LinkALevelControlObject/EarthWalkerObject STATIC_ASSERT this at 0xBC */
-    void *pendingParentObj; /* obj+0xC0: object whose anim.parent this object
+    void* pendingParentObj;  /* obj+0xC0: object whose anim.parent this object
         inherits in Obj_ApplyPendingParentLinks (set by objseq, cleared after) */
-    void *ownerObj; /* obj+0xC4 owner-ward chain link (newObj->ownerObj = obj at
+    void* ownerObj;          /* obj+0xC4 owner-ward chain link (newObj->ownerObj = obj at
         spawn; objprint walks it to the chain root for shadow state; some DLL
         classes reuse the slot as f32 scratch via launders) */
-    void *childObjs[5]; /* obj+0xC8..0xD8 child-object slots, childCount used;
+    void* childObjs[5];      /* obj+0xC8..0xD8 child-object slots, childCount used;
         Obj_*ModelColorFadeRecursive walks them (childScan += 4 loop) */
-    void *unkDC;
+    void* unkDC;
     u8 unkE0[4];
-    u8 hitVolumeIndex; /* index into anim.hitVolumeBounds/hitVolumeTransforms +
+    u8 hitVolumeIndex;   /* index into anim.hitVolumeBounds/hitVolumeTransforms +
         modelInstance->hitVolumes (active hit-volume node) */
-    u8 colorFadeFlags; /* obj+0xE5 bits 1/2 queried by getters, 4 toggled, 8
+    u8 colorFadeFlags;   /* obj+0xE5 bits 1/2 queried by getters, 4 toggled, 8
         suppresses the fade tick (Obj_*ModelColorFade* family) */
     s16 colorFadeFrames; /* obj+0xE6 frames left; -= framesThisStep, <=0 with
         no ownerObj -> Obj_ClearModelColorFadeRecursive */
-    u8 hintTextIdx; /* obj+0xE8 written by objSetHintTextIdx (clamped <=4) */
+    u8 hintTextIdx;      /* obj+0xE8 written by objSetHintTextIdx (clamped <=4) */
     s8 contactRefCount;
     u8 unkEA;
     u8 childCount;
     u8 unkEC[3];
     s8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
-    u8 fadeCounter; /* obj+0xF0 ++ toward the fade limit each tick */
+    u8 fadeCounter;    /* obj+0xF0 ++ toward the fade limit each tick */
     u8 unkF1[3];
     s32 unkF4;
     s32 unkF8;
@@ -91,12 +92,12 @@ STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
  *  - 0x40 FREED: object freed/pending-free marker.
  * Field is u16, so a bare int constant folds identically for |= / & / &~.
  */
-#define OBJECT_OBJFLAG_FREED               0x40
-#define OBJECT_OBJFLAG_RENDERED            0x800
-#define OBJECT_OBJFLAG_PARENT_SLACK        0x1000
-#define OBJECT_OBJFLAG_HITDETECT_DISABLED  0x2000
-#define OBJECT_OBJFLAG_HIDDEN              0x4000
-#define OBJECT_OBJFLAG_UPDATE_DISABLED     0x8000
+#define OBJECT_OBJFLAG_FREED              0x40
+#define OBJECT_OBJFLAG_RENDERED           0x800
+#define OBJECT_OBJFLAG_PARENT_SLACK       0x1000
+#define OBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define OBJECT_OBJFLAG_HIDDEN             0x4000
+#define OBJECT_OBJFLAG_UPDATE_DISABLED    0x8000
 
 /*
  * GameObject.colorFadeFlags (obj+0xE5 u8) bit names, the freeze / color-fade
@@ -117,9 +118,7 @@ STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 
-void Obj_SetActiveHitVolumeBounds(GameObject *obj, int xBound, int zBound, int yBound,
-                                  u8 radiusOrHeight, u8 flags);
-
+void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags);
 
 /* extern-cleanup: consolidated prototypes */
 void disableHeavyFog(void);
@@ -132,17 +131,16 @@ void modelLightChannels_applyGXControls(void);
 void __GXAbortWaitPECopyDone(void);
 void gameUiResetMenuState(void);
 int atan2_8002178c(f32 dx, f32 dz);
-void mapBlockFn_80059c2c(u8 * outFlags);
-void fn_8003A230(int obj, void* p, f32 f);
+void mapBlockFn_80059c2c(u8* outFlags);
+void fn_8003A230(GameObject* obj, void* p, f32 f);
 int isInBounds(f32 x, f32 z);
 void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte);
-void objSetHintTextIdx(int obj, u16 idx);
+void objSetHintTextIdx(GameObject* obj, u16 idx);
 void DBstealerwo_setFuncPtrs_80203c78(void);
 int dbstealerworm_stateHandlerA07(int obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t);
-int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t);
+int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t);
-
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void* textureIdxToPtr(int idx);

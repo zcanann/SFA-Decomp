@@ -92,7 +92,7 @@ void androssligh_updateBeam(GameObject* obj, int beam)
     }
 }
 
-void androssligh_setState(int obj, int newState, u8 force)
+void androssligh_setState(GameObject* obj, int newState, u8 force)
 {
     AndrosslighState* state;
 
@@ -100,7 +100,7 @@ void androssligh_setState(int obj, int newState, u8 force)
     {
         return;
     }
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (state->state == ANDROSSLIGH_DONE)
     {
         if (force == 0)
@@ -139,9 +139,9 @@ void androssligh_hitDetect(void)
 {
 }
 
-void androssligh_update(int obj)
+void androssligh_update(GameObject* obj)
 {
-    AndrosslighState* state = ((GameObject*)obj)->extra;
+    AndrosslighState* state = (obj)->extra;
 
     if (state->anchor == NULL)
     {
@@ -149,9 +149,9 @@ void androssligh_update(int obj)
     }
     if (state->anchor != NULL)
     {
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->anchor)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->anchor)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->anchor)->anim.localPosZ;
+        (obj)->anim.localPosX = ((GameObject*)state->anchor)->anim.localPosX;
+        (obj)->anim.localPosY = ((GameObject*)state->anchor)->anim.localPosY;
+        (obj)->anim.localPosZ = ((GameObject*)state->anchor)->anim.localPosZ;
     }
     state->prevState = state->state;
     switch (state->state)
@@ -159,7 +159,7 @@ void androssligh_update(int obj)
     case ANDROSSLIGH_IDLE:
         break;
     case ANDROSSLIGH_ACTIVE:
-        androssligh_updateBeam((GameObject*)(obj), (int)state);
+        androssligh_updateBeam(obj, (int)state);
         break;
     case ANDROSSLIGH_DONE:
         break;

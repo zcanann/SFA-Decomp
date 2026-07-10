@@ -401,7 +401,7 @@ void SB_CloudRunner_UpdateSteer(s16* obj, u8* state)
  * if the hit type is HIT_TYPE_BURST emit 3 hit-flash partfx followed by a
  * 10-shot debris burst. */
 
-void SB_CloudRunner_HandlePriorityHit(int obj, u8* state)
+void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
 {
     int hitObj;
     f32 pos[3];
@@ -410,18 +410,18 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8* state)
 
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &pos[0], &pos[1], &pos[2]) != 0)
     {
-        if (objGetFlagsE5_2(obj) == 0)
+        if (objGetFlagsE5_2((int)obj) == 0)
         {
             if (((GameObject*)hitObj)->anim.seqId != HIT_TYPE_INVULNERABLE)
             {
-                Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive((int)obj, 175, 200, 0, 0, 1);
                 doRumble(lbl_803E5CB8);
                 Sfx_PlayFromObject(0, SFXTRIG_dn_gscsc1_c);
                 if (mainGetBit(GAMEBIT_CLOUDRUNNER_HIT_SFX) != 0)
                 {
-                    Sfx_PlayFromObject(obj, SFX_CLOUDRUNNER_HIT);
+                    Sfx_PlayFromObject((int)obj, SFX_CLOUDRUNNER_HIT);
                 }
-                ((GameObject*)obj)->anim.rotY = COLORFADE_RUMBLE_PRESET;
+                (obj)->anim.rotY = COLORFADE_RUMBLE_PRESET;
                 ((SBCloudRunnerState*)state)->rideSubState = RIDE_SUBSTATE_TILT;
                 args.scale = lbl_803E5C74;
                 args.v[0] = 0;

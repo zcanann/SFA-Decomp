@@ -53,15 +53,15 @@ extern f32 lbl_803E3750;
 
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
 
-void InvisibleHitSwitch_update(int obj)
+void InvisibleHitSwitch_update(GameObject *obj)
 {
 
     int state2;
     int state;
     int hitId;
 
-    state2 = *(int*)&((GameObject*)obj)->anim.placementData;
-    state = *(int*)&((GameObject*)obj)->extra;
+    state2 = *(int*)&(obj)->anim.placementData;
+    state = *(int*)&(obj)->extra;
     if (((InvisibleHitSwitchState*)state)->active != 0)
     {
         if (mainGetBit((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId) == 0)
@@ -140,27 +140,27 @@ void InvisibleHitSwitch_update(int obj)
     }
 }
 
-void InvisibleHitSwitch_init(int obj, u8* placement)
+void InvisibleHitSwitch_init(GameObject *obj, u8* placement)
 {
 
     InvisibleHitSwitchState* info;
 
-    info = (InvisibleHitSwitchState*)*(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (INVISIBLEHITSWITCH_OBJFLAG_HIDDEN | INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED));
+    info = (InvisibleHitSwitchState*)*(int*)&(obj)->extra;
+    (obj)->objectFlags = (u16)((obj)->objectFlags | (INVISIBLEHITSWITCH_OBJFLAG_HIDDEN | INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED));
     if (placement[0x1d] == 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+        (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
         {
-            f32 v = (f32)(u32)placement[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-            ((GameObject*)obj)->anim.rootMotionScale = v * lbl_803E3750;
+            f32 v = (f32)(u32)placement[0x1d] * (obj)->anim.modelInstance->rootMotionScaleBase;
+            (obj)->anim.rootMotionScale = v * lbl_803E3750;
         }
     }
     ObjHitbox_SetSphereRadius(
-        obj,
-        (s16)((placement[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
+        (int)obj,
+        (s16)((placement[0x1d] * (int)(obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     info->active = mainGetBit(((InvisibleHitSwitchPlacement*)placement)->gameBitId);
     switch ((placement[0x23] & 0xe) >> 1)
     {

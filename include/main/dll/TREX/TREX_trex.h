@@ -72,8 +72,8 @@ void FUN_801e6558(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u64 param_8, int param_9, int param_10);
 void shop_initialise(void);
 void shop_release(void);
-void shop_init(int obj, int objDef);
-void shop_update(int obj);
+void shop_init(GameObject* obj, int objDef);
+void shop_update(GameObject* obj);
 void shop_hitDetect(void);
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void shop_free(int* obj);

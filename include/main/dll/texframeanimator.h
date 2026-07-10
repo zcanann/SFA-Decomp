@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_13F_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
@@ -10,11 +11,11 @@ extern ObjectDescriptor gMagicGemObjDescriptor;
 
 int collectible_getExtraSize(void);
 int collectible_getObjectTypeId(void);
-void collectible_init(int obj,int setup);
-int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
-u8 collectible_getVisibilityBitClear(int *obj);
-int collectible_getIsHidden(int *obj);
-void FUN_80173364(short *param_1,int param_2);
+void collectible_init(GameObject* obj, int setup);
+int collectible_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+u8 collectible_getVisibilityBitClear(int* obj);
+int collectible_getIsHidden(int* obj);
+void FUN_80173364(short* param_1, int param_2);
 void FUN_80173368(int param_1);
 void FUN_801733c0(int param_1);
 void collectible_hitDetect(void);

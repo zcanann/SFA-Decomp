@@ -72,8 +72,8 @@ int KaldaChompMe_getObjectTypeId(void);
 void KaldaChompMe_free(void);
 void KaldaChompMe_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag);
 void KaldaChompMe_hitDetect(void);
-void KaldaChompMe_update(int obj);
-void KaldaChompMe_init(int obj, int params);
+void KaldaChompMe_update(GameObject* obj);
+void KaldaChompMe_init(GameObject* obj, int params);
 void KaldaChompMe_release(void);
 void KaldaChompMe_initialise(void);
 
@@ -95,26 +95,26 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
 };
 
 #pragma dont_inline on
-void kaldachompspit_burst(int obj)
+void kaldachompspit_burst(GameObject* obj)
 {
     int i;
     u32* state;
     ObjHitsPriorityState* hitState;
     u8 rnd;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->unkF4 = 0xdc;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    state = (obj)->extra;
+    (obj)->anim.alpha = 0;
+    (obj)->unkF4 = 0xdc;
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->flags &= ~1;
     if (*state != 0)
     {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
     }
-    if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
+    if ((obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
     {
         rnd = randomGetRange(0, 1);
-        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
+        spawnExplosion((int)obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
     }
     else
     {
@@ -122,7 +122,7 @@ void kaldachompspit_burst(int obj)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, &i);
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_lummy311);
     }
 }
 #pragma dont_inline reset
@@ -219,20 +219,20 @@ void KaldaChompSpit_update(int obj)
         {
             if (((GameObject*)obj)->unkF4 < 0x17c)
             {
-                kaldachompspit_burst(obj);
+                kaldachompspit_burst((GameObject*)(obj));
                 return;
             }
             if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
                  Obj_GetPlayerObject()) ||
                 (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == getTrickyObject()))
             {
-                kaldachompspit_burst(obj);
+                kaldachompspit_burst((GameObject*)(obj));
                 return;
             }
         }
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
-            kaldachompspit_burst(obj);
+            kaldachompspit_burst((GameObject*)(obj));
         }
         else
         {
@@ -269,19 +269,19 @@ void KaldaChompSpit_update(int obj)
     }
 }
 
-void KaldaChompSpit_init(int obj)
+void KaldaChompSpit_init(GameObject* obj)
 {
     int* extra;
 
-    extra = *(int**)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->unkF4 = 400;
+    extra = *(int**)&(obj)->extra;
+    (obj)->unkF4 = 400;
     ObjHits_DisableObject((u32)obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, SFXTRIG_whiz3_c);
-    ((GameObject*)obj)->objectFlags |= KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->anim.alpha = 0xff;
+    Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);
+    (obj)->objectFlags |= KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED;
     if (*(void**)extra == NULL)
     {
-        *extra = (int)objCreateLight(obj, 1);
+        *extra = (int)objCreateLight((int)obj, 1);
         if (*(void**)extra != NULL)
         {
             modelLightStruct_setLightKind(*extra, MODEL_LIGHT_KIND_POINT);
@@ -291,24 +291,23 @@ void KaldaChompSpit_init(int obj)
     {
         f32 lightPos = lbl_803E30F8;
         modelLightStruct_setPosition(*extra, lightPos, lightPos, lightPos);
-        if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
+        if ((obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
             modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f,
-                                       lbl_803E3108 * (lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale));
+                                       lbl_803E3108 * (lbl_803E310C * (obj)->anim.rootMotionScale));
             modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
         }
         else
         {
             modelLightStruct_setDiffuseColor(*extra, 0, 0xff, 0, 0xff);
             modelLightStruct_setSpecularColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28,
-                                       lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
+            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * (obj)->anim.rootMotionScale);
             modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
         }
         {
-            int nearDist = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
+            int nearDist = (int)(lbl_803E310C * (obj)->anim.rootMotionScale);
             modelLightStruct_setDistanceAttenuation(*extra, nearDist, (f32)(nearDist + 0x28));
         }
         lightSetField4D(*extra, 1);

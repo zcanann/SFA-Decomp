@@ -137,7 +137,7 @@ void fn_801540A0(int obj, int state)
     }
 }
 
-void fn_80154584(int obj, int state)
+void fn_80154584(GameObject* obj, int state)
 {
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
@@ -146,21 +146,21 @@ void fn_80154584(int obj, int state)
 
     curve = *(RomCurveWalker**)state;
     ((BaddieState*)state)->inWhirlpoolGroup = 0;
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if ((Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
-            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E29B0, (int*)&lbl_803DBCD0, -1) !=
-                0)
+            (*gRomCurveInterface)
+                    ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E29B0, (int*)&lbl_803DBCD0, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
-        vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
+        vec[0] = curve->posX - (obj)->anim.localPosX;
         vec[1] = lbl_803E2990;
-        vec[2] = curve->posZ - ((GameObject*)obj)->anim.localPosZ;
-        fn_8014C678(obj, state, vec, lbl_803E29A0, lbl_803E29B4, *(f32*)&lbl_803E29B4, 1);
+        vec[2] = curve->posZ - (obj)->anim.localPosZ;
+        fn_8014C678((int)obj, state, vec, lbl_803E29A0, lbl_803E29B4, *(f32*)&lbl_803E29B4, 1);
         *(f32*)(state + 0x324) += timeDelta;
         if (*(f32*)(state + 0x324) > lbl_803E29B8)
         {
@@ -168,12 +168,12 @@ void fn_80154584(int obj, int state)
             *(f32*)(state + 0x324) = lbl_803E2990;
         }
     }
-    ((GameObject*)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(state + 0x33a)) -
-                                      (f32)((GameObject*)obj)->anim.rotY);
-    fn_8014CD1C(obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
+    (obj)->anim.rotY =
+        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(state + 0x33a)) - (f32)(obj)->anim.rotY);
+    fn_8014CD1C((int)obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E29C8)
+        if ((obj)->anim.currentMoveProgress < lbl_803E29C8)
         {
             rnd = randomGetRange(0, 200);
         }
@@ -183,22 +183,22 @@ void fn_80154584(int obj, int state)
         }
         if (rnd == 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
+            if ((obj)->anim.currentMoveProgress > lbl_803E29C8)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_kooshy_hit);
                 ((BaddieState*)state)->unk308 = lbl_803E29D0;
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_kooshy_death);
                 ((BaddieState*)state)->unk308 = lbl_803E29D4;
             }
         }
     }
     ((BaddieState*)state)->seqEntryIndex += 1;
-    ((GameObject*)obj)->anim.rotY =
-        lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(state + 0x33a)) + (f32)((GameObject*)obj)->anim.rotY;
-    fn_80154328(obj, state);
+    (obj)->anim.rotY =
+        lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32) * (u8*)(state + 0x33a)) + (f32)(obj)->anim.rotY;
+    fn_80154328((int)obj, state);
 }
 
 void fn_80154328(int obj, int state)
@@ -241,16 +241,16 @@ void fn_80154328(int obj, int state)
 
 #pragma optimization_level 1
 #pragma peephole on
-void Baddie_HandleHitReaction(int obj, u8* state, int unused, int cmd)
+void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd)
 {
-    int objCopy = obj;
+    int objCopy = (int)obj;
     if (cmd == 17 || cmd == 16)
         return;
-    if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
+    if ((obj)->anim.currentMoveProgress > lbl_803E29A4)
     {
         ((BaddieState*)state)->reactionFlags |= 8;
         Sfx_PlayFromObject(objCopy, SFXTRIG_en_rfall5_c);
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_iceywindlp16_233);
         ((BaddieState*)state)->hitCounter = 0;
         ((BaddieState*)state)->unk2E4 |= 32;
     }

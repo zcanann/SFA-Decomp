@@ -99,7 +99,7 @@ int suntemple_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* 
             {
                 ObjTextureRuntimeSlot* tex;
                 mainSetBits(cfg->activationGameBit, 1);
-                tex = objFindTexture((void*)obj, 0, 0);
+                tex = objFindTexture((GameObject*)obj, 0, 0);
                 if (tex != NULL)
                     tex->textureId = SUNTEMPLE_TEXTURE_LATCHED;
             }
@@ -139,18 +139,18 @@ void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void suntemple_hitDetect(int obj)
+void suntemple_hitDetect(GameObject* obj)
 {
-    GameObject* gameObj = (GameObject*)obj;
+    GameObject* gameObj = obj;
     if ((gameObj->anim.modelInstance->flags & 1) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018(obj);
+        objRenderFn_80041018((int)obj);
     }
 }
 
-void suntemple_update(int obj)
+void suntemple_update(GameObject* obj)
 {
-    GameObject* gameObj = (GameObject*)obj;
+    GameObject* gameObj = obj;
     SunTempleState* state;
     SunTempleSetup* cfg;
     ObjTextureRuntimeSlot* texture;
@@ -161,7 +161,7 @@ void suntemple_update(int obj)
     state->activationLatched = mainGetBit(cfg->activationGameBit);
     if (state->activationLatched == 0)
     {
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
             texture->textureId = 0;
@@ -231,7 +231,7 @@ void suntemple_update(int obj)
                 if ((cfg->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT) == 0)
                 {
                     mainSetBits(cfg->activationGameBit, 1);
-                    texture = objFindTexture((void*)obj, 0, 0);
+                    texture = objFindTexture(obj, 0, 0);
                     if (texture != NULL)
                     {
                         texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;
@@ -254,7 +254,7 @@ void suntemple_update(int obj)
     {
         if (gameObj->unkF4 == 0 && cfg->triggerSlot != -1 && cfg->preemptSequenceId != 0)
         {
-            (*gObjectTriggerInterface)->preempt(obj, cfg->preemptSequenceId);
+            (*gObjectTriggerInterface)->preempt((int)obj, cfg->preemptSequenceId);
             flags = 1;
             if ((cfg->flags & SUNTEMPLE_FLAG_PREEMPT_ARG_2) != 0)
             {
@@ -299,7 +299,7 @@ void suntemple_init(u8* obj, u8* setup)
     }
     if (state->activationLatched != 0)
     {
-        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
+        ObjTextureRuntimeSlot* texture = objFindTexture((GameObject*)(obj), 0, 0);
         if (texture != NULL)
         {
             texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;

@@ -16,23 +16,23 @@
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
 
-void mcupgrade_update(int obj)
+void mcupgrade_update(GameObject* obj)
 {
-    GameObject* gameObj = (GameObject*)obj;
+    GameObject* gameObj = obj;
     McUpgradeSetup* setup = (McUpgradeSetup*)gameObj->anim.placementData;
 
     if (mainGetBit(setup->collectedGameBit) != 0)
     {
         gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
-    else if (ObjTrigger_IsSet(obj) != 0)
+    else if (ObjTrigger_IsSet((int)obj) != 0)
     {
         mainSetBits(setup->collectedGameBit, 1);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
     else
     {
-        objRenderFn_80041018(obj);
+        objRenderFn_80041018((int)obj);
     }
 }
 

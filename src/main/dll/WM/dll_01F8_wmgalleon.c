@@ -90,7 +90,7 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
-extern void fn_80065574(int a, int* obj, int b);
+extern void fn_80065574(int a, GameObject* obj, int b);
 extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -177,7 +177,7 @@ void WM_Galleon_free(int* obj, int leavingMap)
     }
 }
 
-void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
+void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (mainGetBit(GAMEBIT_WM_Galleon_despawn) != 0)
     {
@@ -187,7 +187,7 @@ void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x188 && ((GameObject*)((GameObject*)obj)->anim.parent)->unkF4 >= 7)
+    if ((obj)->anim.seqId == 0x188 && ((GameObject*)(obj)->anim.parent)->unkF4 >= 7)
     {
         return;
     }
@@ -306,7 +306,7 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
     state->savedY = ((GameObject*)obj)->anim.localPosY;
     state->savedZ = ((GameObject*)obj)->anim.localPosZ;
     state->savedYaw = OBJ_S16(obj, 0);
-    fn_80065574(0, obj, 0);
+    fn_80065574(0, (GameObject*)(obj), 0);
     for (i = 0; i < 5; i++)
     {
         MAP_EVENT_SET(OBJ_U8(obj, 0x34), i, 0);

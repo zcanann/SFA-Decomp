@@ -87,7 +87,7 @@ extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
 extern f32 sqrtf(f32);
 extern int fn_80179650(int slot);
-extern void fn_80179678(int slot, int obj);
+extern void fn_80179678(GameObject* slot, int obj);
 extern void fn_8017962C(int slot);
 extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
@@ -95,7 +95,7 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void Obj_FreeObject(int obj);
 
-void fn_8013F100(int obj, register int state)
+void fn_8013F100(GameObject* obj, register int state)
 {
     int status;
     int extra;
@@ -116,7 +116,7 @@ void fn_8013F100(int obj, register int state)
     case 1:
         if (fn_80179650(*(int*)&((TrickyState*)state)->unk700) != 0)
         {
-            status = trickyFn_8013b368(obj, lbl_803E24F0, state);
+            status = trickyFn_8013b368((int)obj, lbl_803E24F0, state);
             if (status == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -137,27 +137,27 @@ void fn_8013F100(int obj, register int state)
                 }
                 if (useSwimAnim != 0)
                 {
-                    objAnimFn_8013a3f0(obj, 28, lbl_803E24F4, 0x4000000);
+                    objAnimFn_8013a3f0((int)obj, 28, lbl_803E24F4, 0x4000000);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 17, lbl_803E24F4, 0x4000000);
+                    objAnimFn_8013a3f0((int)obj, 17, lbl_803E24F4, 0x4000000);
                 }
                 *(int*)&((TrickyState*)state)->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
                 ((TrickyState*)state)->substate = 3;
-                fn_80179678(*(int*)&((TrickyState*)state)->unk700, obj);
+                fn_80179678((GameObject*)(*(int*)&((TrickyState*)state)->unk700), (int)obj);
             }
             else if (status == 2)
             {
-                extra = *(int*)&((GameObject*)obj)->extra;
+                extra = *(int*)&(obj)->extra;
                 if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) == 0)
                 {
-                    move = ((GameObject*)obj)->anim.currentMove;
+                    move = (obj)->anim.currentMove;
                     if (move >= 48 || move < 41)
                     {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                        if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                         {
-                            objAudioFn_800393f8(obj, (void*)(extra + 936), 861, 1280, -1, 0);
+                            objAudioFn_800393f8((int)obj, (void*)(extra + 936), 861, 1280, -1, 0);
                         }
                     }
                 }
@@ -171,7 +171,7 @@ void fn_8013F100(int obj, register int state)
         }
         else
         {
-            status = trickyFn_8013b368(obj, lbl_803E2408, state);
+            status = trickyFn_8013b368((int)obj, lbl_803E2408, state);
             if (status == 0)
             {
                 if (*(float*)&((TrickyState*)state)->unk704 > lbl_803E23DC)
@@ -194,14 +194,14 @@ void fn_8013F100(int obj, register int state)
                     }
                     if (useSwimAnim != 0)
                     {
-                        objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                        objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                         ((TrickyState*)state)->cooldownC = lbl_803E2440;
                         ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
                     }
                     else
                     {
-                        objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                        objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
                     *(float*)&((TrickyState*)state)->unk704 -= timeDelta;
@@ -235,7 +235,7 @@ void fn_8013F100(int obj, register int state)
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 16, lbl_803E243C, 0x4000000);
+                    objAnimFn_8013a3f0((int)obj, 16, lbl_803E243C, 0x4000000);
                     *(float*)&((TrickyState*)state)->unk708 -= timeDelta;
                     if (*(float*)&((TrickyState*)state)->unk708 <= lbl_803E23DC)
                     {
@@ -249,12 +249,12 @@ void fn_8013F100(int obj, register int state)
                 if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
                 {
                     ((TrickyState*)state)->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
-                    extra = *(int*)&((GameObject*)obj)->extra;
+                    extra = *(int*)&(obj)->extra;
                     if ((((u32) * (u8*)(extra + 0x58) >> 6) & 1) != 0)
                     {
                         break;
                     }
-                    move = ((GameObject*)obj)->anim.currentMove;
+                    move = (obj)->anim.currentMove;
                     if (move < 48)
                     {
                         if (move >= 41)
@@ -262,9 +262,9 @@ void fn_8013F100(int obj, register int state)
                             break;
                         }
                     }
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                     {
-                        objAudioFn_800393f8(obj, (void*)(extra + 936), 865, 1280, -1, 0);
+                        objAudioFn_800393f8((int)obj, (void*)(extra + 936), 865, 1280, -1, 0);
                     }
                 }
             }
@@ -288,26 +288,26 @@ void fn_8013F100(int obj, register int state)
                 }
                 if (useSwimAnim != 0)
                 {
-                    objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                    objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)state)->cooldownC = lbl_803E2440;
                     ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                    objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(lbl_8031D478);
                 }
             }
         }
         break;
     case 6:
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24FC)
+        if ((obj)->anim.currentMoveProgress >= lbl_803E24FC)
         {
             status = *(int*)&((TrickyState*)state)->unk700;
             *(float*)(status + 0x10) += lbl_803E2488;
             bob = -mathCosf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458);
-            fn_801796BC(*(int*)&((TrickyState*)state)->unk700, obj,
+            fn_801796BC(*(int*)&((TrickyState*)state)->unk700, (int)obj,
                         -mathSinf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458), lbl_803E23E8, bob);
             ((TrickyState*)state)->substate = 2;
         }
@@ -347,7 +347,7 @@ void fn_8013F100(int obj, register int state)
         }
         break;
     case 7:
-        status = trickyFn_8013b368(obj, lbl_803E2408, state);
+        status = trickyFn_8013b368((int)obj, lbl_803E2408, state);
         if (status != 1)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -368,14 +368,14 @@ void fn_8013F100(int obj, register int state)
             }
             if (useSwimAnim != 0)
             {
-                objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             }
             else
             {
-                objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                 trickyDebugPrint(lbl_8031D478);
             }
             return;
@@ -387,13 +387,13 @@ void fn_8013F100(int obj, register int state)
         }
         break;
     case 3:
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24A8)
+        if ((obj)->anim.currentMoveProgress >= lbl_803E24A8)
         {
             ((TrickyState*)state)->substate = 4;
         }
         break;
     case 4:
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E24D0)
+        if ((obj)->anim.currentMoveProgress >= lbl_803E24D0)
         {
             targetPos = *(u8**)&((TrickyState*)state)->playerObj + 24;
             if (((TrickyState*)state)->targetPosPtr != targetPos)
@@ -409,7 +409,7 @@ void fn_8013F100(int obj, register int state)
             }
             ((TrickyState*)state)->substate = 5;
         case 5:
-            if (trickyFn_8013b368(obj, lbl_803E24C8, state) == 0)
+            if (trickyFn_8013b368((int)obj, lbl_803E24C8, state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                 {
@@ -429,11 +429,11 @@ void fn_8013F100(int obj, register int state)
                 }
                 if (useSwimAnim != 0)
                 {
-                    objAnimFn_8013a3f0(obj, 29, lbl_803E24F4, 0x4000000);
+                    objAnimFn_8013a3f0((int)obj, 29, lbl_803E24F4, 0x4000000);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 19, lbl_803E24F4, 0x4000000);
+                    objAnimFn_8013a3f0((int)obj, 19, lbl_803E24F4, 0x4000000);
                 }
                 ((TrickyState*)state)->substate = 6;
             }
@@ -441,7 +441,7 @@ void fn_8013F100(int obj, register int state)
         break;
     }
     if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_RESET_FLAG_10000) != 0) &&
-        ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX, lbl_803E2500) == 0)
+        ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, lbl_803E2500) == 0)
     {
         Obj_FreeObject(*(int*)&((TrickyState*)state)->followObj);
     }

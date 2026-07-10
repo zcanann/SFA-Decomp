@@ -48,7 +48,7 @@ void WM_LaserTarget_update(int* obj)
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
-    if (ObjHits_GetPriorityHit((int)obj, 0, 0, 0) != 0)
+    if (ObjHits_GetPriorityHit((GameObject*)obj, 0, 0, 0) != 0)
     {
         sub->toggleQueued = 1;
         sub->cooldown = ((WmLaserTargetPlacement*)def)->cooldown;

@@ -327,13 +327,13 @@ void wmsun_free(GameObject* obj)
     state->glareParams = NULL;
 }
 
-void wmsun_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
+void wmsun_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    WmSunState* state = ((GameObject*)obj)->extra;
+    WmSunState* state = (obj)->extra;
     if (vis != 0 && state->renderEnabled != 0)
     {
         doNothing_8005D148(p2, 0x10000);
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
         doNothing_8005D14C(p2, 0x10000);
     }
 }
@@ -342,10 +342,10 @@ void wmsun_hitDetect(void)
 {
 }
 
-void wmsun_update(int obj)
+void wmsun_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim;
-    WmSunState* state = ((GameObject*)obj)->extra;
+    WmSunState* state = (obj)->extra;
     s16 thresh;
     s16 mult;
     f32 spd;
@@ -358,15 +358,15 @@ void wmsun_update(int obj)
     thresh = 0;
     mult = 1;
     spd = lbl_803E5F20;
-    if (((GameObject*)obj)->anim.seqId == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
+    if ((obj)->anim.seqId == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
         if (mainGetBit(0x38f) != 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
         }
         else
         {
-            t = objFindTexture((void*)obj, 1, 0);
+            t = objFindTexture(obj, 1, 0);
             if (t != NULL)
             {
                 t->offsetT -= 0x10;
@@ -404,10 +404,8 @@ void wmsun_update(int obj)
             if (state->riseStep < thresh)
             {
                 state->riseStep = state->riseStep + framesThisStep * mult;
-                ((GameObject*)obj)->anim.rootMotionScale =
-                    -(spd * timeDelta - ((GameObject*)obj)->anim.rootMotionScale);
-                ((GameObject*)obj)->anim.localPosY =
-                    lbl_803E5F7C * (spd * timeDelta) + ((GameObject*)obj)->anim.localPosY;
+                (obj)->anim.rootMotionScale = -(spd * timeDelta - (obj)->anim.rootMotionScale);
+                (obj)->anim.localPosY = lbl_803E5F7C * (spd * timeDelta) + (obj)->anim.localPosY;
             }
             else if (mainGetBit(0x222) != 0 && mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0)
             {
@@ -421,15 +419,15 @@ void wmsun_update(int obj)
                 CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(state->riseStep - 0x960) / lbl_803E5F84));
                 mainSetBits(0x370, 1);
             }
-            ((GameObject*)obj)->anim.rotX += state->riseStep;
+            (obj)->anim.rotX += state->riseStep;
             if (state->renderEnabled == 0)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((int)obj);
             }
         }
         return;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x2c2) /* unreachable in retail */
+    if ((obj)->anim.seqId == 0x2c2) /* unreachable in retail */
     {
         if (mainGetBit(0x38f) != 0)
         {
@@ -446,7 +444,7 @@ void wmsun_update(int obj)
                 newAlpha = 0xfa;
             }
             objAnim->alpha = newAlpha;
-            t = objFindTexture((void*)obj, 0, 0);
+            t = objFindTexture(obj, 0, 0);
             if (t != NULL)
             {
                 t->offsetS = t->offsetS - framesThisStep * 8;
@@ -504,15 +502,15 @@ void wmsun_update(int obj)
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
-                Sfx_PlayFromObject(obj, SFXTRIG_en_icecrk16);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_icecrk16);
             }
-            wmsun_updateGlare((GameObject*)(obj));
+            wmsun_updateGlare(obj);
         }
     }
     else
     {
-        ((GameObject*)obj)->anim.rotZ += state->spinStep;
-        ((GameObject*)obj)->anim.rotX += state->riseStep;
+        (obj)->anim.rotZ += state->spinStep;
+        (obj)->anim.rotX += state->riseStep;
         if (mainGetBit(GAMEBIT_WM_FinaleQuakeActive) != 0 && objAnim->bankIndex == 0)
         {
             if (lbl_803DDCAA == 0)
@@ -551,8 +549,8 @@ void wmsun_update(int obj)
                     if (gWmSunEnvfxTimer <= 0)
                     {
                         gWmSunEnvfxTimer = 0;
-                        getEnvfxAct(obj, obj, WMSUN_ENVFX_A, 0);
-                        getEnvfxAct(obj, obj, WMSUN_ENVFX_B, 0);
+                        getEnvfxAct((int)obj, (int)obj, WMSUN_ENVFX_A, 0);
+                        getEnvfxAct((int)obj, (int)obj, WMSUN_ENVFX_B, 0);
                     }
                 }
                 if ((int)randomGetRange(0, 8) == 0)

@@ -20,7 +20,7 @@ extern f32 gDimTrickyLosCamOffsetDist;
 extern f32 lbl_803E51D8;
 extern f32 lbl_803E51DC;
 extern int objUpdateOpacity(char* obj);
-extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
+extern int ObjHits_GetPriorityHit(GameObject *obj, int a, int b, int c);
 extern s8 gDimTrickyEggSequenceStage;
 extern u32 gDimTrickyEggResArgsTemplate[4];
 extern f32 lbl_803E51E0;
@@ -35,7 +35,7 @@ extern f32 lbl_803E51E8;
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_getObjectTypeId(void) { return 0x1; }
 
-void dll_19E_free(int obj)
+void dll_19E_free(GameObject *obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -61,7 +61,7 @@ enum DimTrickyMode
     DIM_TRICKY_MODE_EGG_INTERACT = 1 /* hit-detect toggle egg-interact sequence */
 };
 
-void dll_19E_render(int obj, int p2, int p3, int p4,
+void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
                     int p5, s8 visible)
 {
     Dll19EState* state;
@@ -87,7 +87,7 @@ void dll_19E_render(int obj, int p2, int p3, int p4,
     f32 gridB[2];
     int traceOut[2];
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (visible == 0)
     {
         state->delayTimer = 0;
@@ -97,9 +97,9 @@ void dll_19E_render(int obj, int p2, int p3, int p4,
     {
         state->losVisible = 1;
         camera = Camera_GetCurrentViewSlot();
-        stk.delta[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
-        stk.delta[2] = *(f32*)(camera + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+        stk.delta[0] = *(f32*)(camera + 0xc) - (obj)->anim.localPosX;
+        stk.delta[1] = *(f32*)(camera + 0x10) - (obj)->anim.localPosY;
+        stk.delta[2] = *(f32*)(camera + 0x14) - (obj)->anim.localPosZ;
         dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
         if (dist > gDimTrickyLosMinDist)
         {
@@ -116,9 +116,9 @@ void dll_19E_render(int obj, int p2, int p3, int p4,
             midA[1] = facy;
             facz = gDimTrickyLosObjOffsetDist * nz;
             midA[2] = facz;
-            midA[0] = facx + ((GameObject*)obj)->anim.localPosX;
-            midA[1] = facy + ((GameObject*)obj)->anim.localPosY;
-            midA[2] = facz + ((GameObject*)obj)->anim.localPosZ;
+            midA[0] = facx + (obj)->anim.localPosX;
+            midA[1] = facy + (obj)->anim.localPosY;
+            midA[2] = facz + (obj)->anim.localPosZ;
             facx2 = gDimTrickyLosCamOffsetDist * nx;
             midB[0] = facx2;
             facy2 = gDimTrickyLosCamOffsetDist * ny;
@@ -133,7 +133,7 @@ void dll_19E_render(int obj, int p2, int p3, int p4,
             if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0)
             {
                 state->losVisible = 0;
-                (*gExpgfxInterface)->freeSource(obj);
+                (*gExpgfxInterface)->freeSource((int)obj);
             }
         }
         if (state->delayTimer > 0)
@@ -214,7 +214,7 @@ void dll_19E_update(void* obj)
     {
         effectBuf.scale = lbl_803E51E0;
         state->previousActive = state->active;
-        if ((ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) ||
+        if ((ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0) ||
             ((state->settleTimer != 0) && (state->settleTimer <= 0x14)))
         {
             state->active = (u8)(1 - state->active);

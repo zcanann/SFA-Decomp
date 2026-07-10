@@ -16,13 +16,13 @@ STATIC_ASSERT(offsetof(CageControlPlacement, armGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CageControlPlacement, watchGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CageControlPlacement) == 0x28);
 
-int DR_CageControl_SeqFn(int obj);
+int DR_CageControl_SeqFn(GameObject* obj);
 int DR_CageControl_getExtraSize(void);
 int DR_CageControl_getObjectTypeId(void);
 void DR_CageControl_free(void);
 void DR_CageControl_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void DR_CageControl_hitDetect(void);
-void DR_CageControl_update(int obj);
+void DR_CageControl_update(GameObject* obj);
 void DR_CageControl_init(GameObject* obj, char* arg);
 void DR_CageControl_release(void);
 void DR_CageControl_initialise(void);

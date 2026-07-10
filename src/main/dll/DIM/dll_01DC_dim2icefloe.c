@@ -64,10 +64,10 @@ void dim2icefloe_free(void)
 {
 }
 
-void dim2icefloe_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dim2icefloe_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4B30);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4B30);
 }
 
 void dim2icefloe_hitDetect(void)
@@ -80,10 +80,10 @@ typedef struct
     u8 rest : 7;
 } IceFloeFlags;
 
-void dim2icefloe_update(int obj)
+void dim2icefloe_update(GameObject *obj)
 {
     extern int Obj_FreeObject(int obj);
-    int sub = *(int*)&((GameObject*)obj)->extra;
+    int sub = *(int*)&(obj)->extra;
     if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL &&
         (((GameObject*)((Dim2IceFloeState*)sub)->followedObj)->objectFlags & DIM2ICEFLOE_OBJFLAG_FREED) != 0)
     {
@@ -97,12 +97,12 @@ void dim2icefloe_update(int obj)
         switch ((int)((Dim2IceFloeState*)sub)->paused)
         {
         case 0:
-        alpha = ((GameObject*)obj)->anim.alpha + framesThisStep * 4;
+        alpha = (obj)->anim.alpha + framesThisStep * 4;
         if (alpha > 0xff)
         {
             alpha = 0xff;
         }
-        ((GameObject*)obj)->anim.alpha = alpha;
+        (obj)->anim.alpha = alpha;
         if ((((Dim2IceFloeState*)sub)->flags & 1) == 0)
         {
             ((Dim2IceFloeState*)sub)->followedObj = ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);
@@ -116,12 +116,12 @@ void dim2icefloe_update(int obj)
         }
         Curve_AdvanceAlongPath(&((Dim2IceFloeState*)sub)->curve, ((Dim2IceFloeState*)sub)->curveStep);
         reached = ((Dim2IceFloeState*)sub)->curve.idx >= ((Dim2IceFloeState*)sub)->curve.count - 4;
-        ((GameObject*)obj)->anim.localPosX = ((Dim2IceFloeState*)sub)->curve.sample[0];
+        (obj)->anim.localPosX = ((Dim2IceFloeState*)sub)->curve.sample[0];
         if (!((IceFloeFlags*)(sub + 0xb9))->finished)
         {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState*)sub)->curve.sample[1];
+            (obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState*)sub)->curve.sample[1];
         }
-        ((GameObject*)obj)->anim.localPosZ = ((Dim2IceFloeState*)sub)->curve.sample[2];
+        (obj)->anim.localPosZ = ((Dim2IceFloeState*)sub)->curve.sample[2];
         if (reached)
         {
             ((IceFloeFlags*)(sub + 0xb9))->finished = 1;
@@ -130,16 +130,16 @@ void dim2icefloe_update(int obj)
             Dim2IceFloeState*)sub)->bobPhase;
         if (((IceFloeFlags*)(sub + 0xb9))->finished)
         {
-            ((GameObject*)obj)->anim.localPosY = -(gDim2IceFloeSinkSpeed * timeDelta - ((GameObject*)obj)->anim.localPosY);
-            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1])
+            (obj)->anim.localPosY = -(gDim2IceFloeSinkSpeed * timeDelta - (obj)->anim.localPosY);
+            if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1])
             {
-                ObjHits_DisableObject(obj);
-                ((GameObject*)obj)->objectFlags |= 0x100;
-                fn_80296D20(Obj_GetPlayerObject(), obj);
+                ObjHits_DisableObject((int)obj);
+                (obj)->objectFlags |= 0x100;
+                fn_80296D20(Obj_GetPlayerObject(), (int)obj);
             }
-            if (((GameObject*)obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - gDim2IceFloeSinkFreeThreshold)
+            if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - gDim2IceFloeSinkFreeThreshold)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((int)obj);
             }
         }
         break;
@@ -149,21 +149,21 @@ void dim2icefloe_update(int obj)
     }
 }
 
-void dim2icefloe_init(int obj, int p)
+void dim2icefloe_init(GameObject *obj, int p)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     Dim2IceFloePlacement* placement = (Dim2IceFloePlacement*)p;
-    int sub = *(int*)&((GameObject*)obj)->extra;
+    int sub = *(int*)&(obj)->extra;
     ((Dim2IceFloeState*)sub)->targetId = placement->base.mapId;
     ((Dim2IceFloeState*)sub)->curveStep = (f32)placement->curveStep / lbl_803E4B48;
     ((Dim2IceFloeState*)sub)->yawJitter = (f32)(s32)
     randomGetRange(-0x1e, 0x1e);
     placement->base.mapId = -1;
     objAnim->bankIndex = randomGetRange(0, objAnim->modelInstance->modelCount - 1);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->yawByte << 8);
-    ((GameObject*)obj)->anim.rotX = randomGetRange(0, 0xffff);
-    ((GameObject*)obj)->anim.alpha = 0;
-    switch (((GameObject*)obj)->anim.seqId)
+    (obj)->anim.rotX = (s16)((s32)placement->yawByte << 8);
+    (obj)->anim.rotX = randomGetRange(0, 0xffff);
+    (obj)->anim.alpha = 0;
+    switch ((obj)->anim.seqId)
     {
     case 0x109:
         ((Dim2IceFloeState*)sub)->bobRate = lbl_803E4B4C + (f32)(s32)
@@ -182,7 +182,7 @@ void dim2icefloe_init(int obj, int p)
         ((Dim2IceFloeState*)sub)->bobBase = lbl_803E4B50;
         break;
     }
-    ((GameObject*)obj)->objectFlags |= DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->objectFlags |= DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dim2icefloe_release(void)

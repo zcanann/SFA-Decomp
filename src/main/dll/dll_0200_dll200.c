@@ -47,41 +47,43 @@ extern void playerSetHaveSpell(GameObject* player, int a, int b);
 extern int playerGetCurMagic(void);
 
 #pragma dont_inline on
-void fn_801F20D4(int obj)
+void fn_801F20D4(GameObject* obj)
 {
     int state;
     ItemIdSet3 itemSet;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     Obj_GetPlayerObject();
     itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetIdle;
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
+    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
     }
     if (mainGetBit(763) == 0)
     {
-        if (((GameObject*)obj)->anim.currentMove != 7)
+        if ((obj)->anim.currentMove != 7)
         {
-            ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
+            ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E5D98, 0);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+                                                                     NULL);
     }
     else
     {
-        if (((GameObject*)obj)->anim.currentMove != 2)
+        if ((obj)->anim.currentMove != 2)
         {
-            ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
+            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5D98, 0);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+                                                                     NULL);
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
+    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
     {
         mainSetBits(763, 1);
         *(u8*)&((Dll200State*)state)->counter27 = 0;
         buttonDisable(0, PAD_BUTTON_A);
     }
-    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+    else if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
         {
@@ -94,20 +96,21 @@ void fn_801F20D4(int obj)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_801F27E4(int obj)
+void fn_801F27E4(GameObject* obj)
 {
     int state;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.currentMove != 2)
+    state = *(int*)&(obj)->extra;
+    if ((obj)->anim.currentMove != 2)
     {
-        ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
+        ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5D98, 0);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+                                                                 NULL);
     ((Dll200State*)state)->latch24 = 1;
     if (((Dll200State*)state)->latch24 == 0)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             mainSetBits(GAMEBIT_WM_GalleonRelated00D0, 1);
             ((Dll200State*)state)->latch24 = 1;
@@ -116,8 +119,8 @@ void fn_801F27E4(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             Obj_GetPlayerObject();
             if (playerGetCurMagic() > 0)
@@ -311,7 +314,7 @@ void dll_200_update(int obj)
         switch (ev)
         {
         case 1:
-            fn_801F27E4(obj);
+            fn_801F27E4((GameObject*)(obj));
             break;
         case 2:
             fn_801F2290(obj);
@@ -327,7 +330,7 @@ void dll_200_update(int obj)
                                                                          NULL);
             break;
         case 6:
-            fn_801F20D4(obj);
+            fn_801F20D4((GameObject*)(obj));
             break;
         case 0:
         case 3:

@@ -53,7 +53,7 @@ void drshackle_free(int obj);
 void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void drshackle_hitDetect(unsigned long obj);
 void drshackle_update(GameObject* obj);
-void drshackle_init(int obj, char* arg);
+void drshackle_init(GameObject* obj, char* arg);
 void drshackle_release(void);
 void drshackle_initialise(void);
 

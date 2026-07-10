@@ -74,9 +74,9 @@ typedef struct ProjectileSwitchState
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchState;
 
-void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
+void ProjectileSwitch_render(GameObject *obj, int p2, int p3, int p4, int p5, char flag)
 {
-    int state = *(int*)&((GameObject*)obj)->anim.placementData;
+    int state = *(int*)&(obj)->anim.placementData;
     if ((int)(signed char)flag != 0)
     {
         if ((((ProjectileSwitchPlacement*)state)->flags & 1) != 0)
@@ -84,11 +84,11 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
             fn_8003B608(((ProjectileSwitchPlacement*)state)->colorR, ((ProjectileSwitchPlacement*)state)->colorG,
                         ((ProjectileSwitchPlacement*)state)->colorB);
         }
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
-void ProjectileSwitch_hitDetect(int obj)
+void ProjectileSwitch_hitDetect(GameObject *obj)
 {
     int state;
     int stateB;
@@ -99,8 +99,8 @@ void ProjectileSwitch_hitDetect(int obj)
     ObjTextureRuntimeSlot* tex;
     int isSpecial;
 
-    state2 = *(int*)&((GameObject*)obj)->anim.placementData;
-    state = *(int*)&((GameObject*)obj)->extra;
+    state2 = *(int*)&(obj)->anim.placementData;
+    state = *(int*)&(obj)->extra;
     hitId = ObjHits_GetPriorityHit(obj, &hitObj, 0x0, 0x0);
     if (hitId != 0xe && hitId != 0xf) return;
 
@@ -118,16 +118,16 @@ void ProjectileSwitch_hitDetect(int obj)
     if (((ProjectileSwitchState*)state)->isOn != 0)
     {
         if (((((ProjectileSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK)) != SWITCH_MODE_TOGGLE) return;
-        stateB = *(int*)&((GameObject*)obj)->extra;
-        if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
+        stateB = *(int*)&(obj)->extra;
+        if ((obj)->anim.mapEventSlot == 0x2c)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_63);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_63);
         }
-        tex = objFindTexture((void*)obj, 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (tex != 0)
         {
             tex->textureId = 0;
@@ -137,16 +137,16 @@ void ProjectileSwitch_hitDetect(int obj)
     }
     else
     {
-        stateB = *(int*)&((GameObject*)obj)->extra;
-        if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
+        stateB = *(int*)&(obj)->extra;
+        if ((obj)->anim.mapEventSlot == 0x2c)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_mpwru1_62);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_mpwru1_62);
         }
-        tex = objFindTexture((void*)obj, 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (tex != 0)
         {
             tex->textureId = 0x100;
@@ -162,20 +162,20 @@ void ProjectileSwitch_hitDetect(int obj)
     }
 }
 
-void ProjectileSwitch_update(int obj)
+void ProjectileSwitch_update(GameObject *obj)
 {
 
     int state;
     int state2;
     ObjTextureRuntimeSlot* tex;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     if (((ProjectileSwitchState*)state)->isOn != 0)
     {
         if (mainGetBit((int)((ProjectileSwitchState*)state)->gameBitId) == 0)
         {
-            state2 = *(int*)&((GameObject*)obj)->extra;
-            tex = objFindTexture((void*)obj, 0, 0);
+            state2 = *(int*)&(obj)->extra;
+            tex = objFindTexture(obj, 0, 0);
             if (tex != 0) tex->textureId = 0;
             ((ProjectileSwitchState*)state2)->isOn = 0;
         }
@@ -184,8 +184,8 @@ void ProjectileSwitch_update(int obj)
     {
         if (mainGetBit((int)((ProjectileSwitchState*)state)->gameBitId) != 0)
         {
-            state2 = *(int*)&((GameObject*)obj)->extra;
-            tex = objFindTexture((void*)obj, 0, 0);
+            state2 = *(int*)&(obj)->extra;
+            tex = objFindTexture(obj, 0, 0);
             if (tex != 0) tex->textureId = 0x100;
             ((ProjectileSwitchState*)state2)->isOn = 1;
         }
@@ -203,7 +203,7 @@ void ProjectileSwitch_update(int obj)
     }
 }
 
-void ProjectileSwitch_init(int obj, u8* initData)
+void ProjectileSwitch_init(GameObject *obj, u8* initData)
 {
 
     ObjAnimComponent* objAnim;
@@ -213,28 +213,28 @@ void ProjectileSwitch_init(int obj, u8* initData)
     ObjTextureRuntimeSlot* tex;
 
     objAnim = (ObjAnimComponent*)obj;
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     *(short*)obj = (short)(initData[0x1f] << 8);
-    ((GameObject*)obj)->anim.rotY = (short)(initData[0x1c] << 8);
+    (obj)->anim.rotY = (short)(initData[0x1c] << 8);
     if (initData[0x1d] == 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+        (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
-        f32 scaledRadius = (f32)(u32)initData[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-        ((GameObject*)obj)->anim.rootMotionScale = scaledRadius / 64.0f;
+        f32 scaledRadius = (f32)(u32)initData[0x1d] * (obj)->anim.modelInstance->rootMotionScaleBase;
+        (obj)->anim.rootMotionScale = scaledRadius / 64.0f;
     }
     ObjHitbox_SetSphereRadius(
-        obj,
-        (short)(((int)initData[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
+        (int)obj,
+        (short)(((int)initData[0x1d] * (int)(obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     objAnim->bankIndex = initData[0x1e] >> 2;
     if ((int)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
 
-    linkObj = ((GameObject*)obj)->anim.parent;
+    linkObj = (obj)->anim.parent;
     if (linkObj != 0)
     {
         linkSub = *(u8**)&((GameObject*)linkObj)->anim.placementData;
@@ -255,21 +255,21 @@ void ProjectileSwitch_init(int obj, u8* initData)
     ((ProjectileSwitchState*)state)->isOn = mainGetBit((int)((ProjectileSwitchState*)state)->gameBitId);
     if (((ProjectileSwitchState*)state)->isOn != 0)
     {
-        state = *(int*)&((GameObject*)obj)->extra;
-        tex = objFindTexture((void*)obj, 0, 0);
+        state = *(int*)&(obj)->extra;
+        tex = objFindTexture(obj, 0, 0);
         if (tex != 0) tex->textureId = 0x100;
         ((ProjectileSwitchState*)state)->isOn = 1;
     }
     else
     {
-        state = *(int*)&((GameObject*)obj)->extra;
-        tex = objFindTexture((void*)obj, 0, 0);
+        state = *(int*)&(obj)->extra;
+        tex = objFindTexture(obj, 0, 0);
         if (tex != 0) tex->textureId = 0;
         ((ProjectileSwitchState*)state)->isOn = 0;
     }
     if ((initData[0x23] & 1) == 0)
     {
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | PROJECTILESWITCH_OBJFLAG_HIDDEN);
+        (obj)->objectFlags = (u16)((obj)->objectFlags | PROJECTILESWITCH_OBJFLAG_HIDDEN);
     }
 }
 

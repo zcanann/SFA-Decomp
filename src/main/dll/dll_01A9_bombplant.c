@@ -227,18 +227,18 @@ int bombplant_SeqFn(int* obj)
     return 0;
 }
 
-void bombplant_init(void* obj, void* param, int flag)
+void bombplant_init(GameObject *obj, void* param, int flag)
 {
     extern u32 ObjHits_RefreshObjectState();
     void* state;
     void* p4c;
     s16 bitId;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((BombplantPlacement*)param)->objectTypeParam << 8);
-    ((GameObject*)obj)->objectFlags |= BOMBPLANT_OBJFLAG_HITDETECT_DISABLED;
-    ((GameObject*)obj)->animEventCallback = bombplant_SeqFn;
-    ((BombPlantState*)state)->growTargetScale = ((GameObject*)obj)->anim.rootMotionScale;
+    state = (obj)->extra;
+    (obj)->anim.rotX = (s16)((s32)((BombplantPlacement*)param)->objectTypeParam << 8);
+    (obj)->objectFlags |= BOMBPLANT_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->animEventCallback = bombplant_SeqFn;
+    ((BombPlantState*)state)->growTargetScale = (obj)->anim.rootMotionScale;
 
     if (flag != 0)
     {
@@ -248,13 +248,13 @@ void bombplant_init(void* obj, void* param, int flag)
     bitId = ((BombplantPlacement*)param)->gameBit;
     if (bitId != -1 && mainGetBit(bitId) == 0)
     {
-        p4c = ((GameObject*)obj)->anim.placementData;
-        ((GameObject*)obj)->anim.alpha = 0xff;
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-        ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
+        p4c = (obj)->anim.placementData;
+        (obj)->anim.alpha = 0xff;
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+        (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+        (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
+        (obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
         ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
         ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
         ((BombPlantState*)state)->growRate =
@@ -265,12 +265,12 @@ void bombplant_init(void* obj, void* param, int flag)
     }
     else
     {
-        p4c = ((GameObject*)obj)->anim.placementData;
-        ((GameObject*)obj)->anim.alpha = 0xff;
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
+        p4c = (obj)->anim.placementData;
+        (obj)->anim.alpha = 0xff;
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+        (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+        (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
         ObjHits_RefreshObjectState(obj);
     }
 }
@@ -416,7 +416,7 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x1) != 0)
     {
-        hitType = ObjHits_GetPriorityHitWithPosition(obj, &outA, &outB, &outC, &hitX,
+        hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &outA, &outB, &outC, &hitX,
                                                      &hitY, &hitZ);
         if (hitType != 0 && outC != 0)
         {

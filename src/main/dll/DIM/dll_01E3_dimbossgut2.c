@@ -60,7 +60,7 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 
-void dimbossgut2_updateTracking(int obj, int state)
+void dimbossgut2_updateTracking(GameObject* obj, int state)
 {
     int curve;
     int pathWalker;
@@ -84,7 +84,7 @@ void dimbossgut2_updateTracking(int obj, int state)
             }
         }
         angle = (s16)(getAngle(*(f32*)(pathWalker + 0x74), *(f32*)(pathWalker + 0x7c)) + 0x8000);
-        delta = (s16)(angle - (u16)((GameObject*)obj)->anim.rotX);
+        delta = (s16)(angle - (u16)(obj)->anim.rotX);
         if (delta > 0x8000)
         {
             delta = (s16)(delta - 0xffff);
@@ -93,7 +93,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             delta = (s16)(delta + 0xffff);
         }
-        ((GameObject*)obj)->anim.rotX = angle;
+        (obj)->anim.rotX = angle;
         ((Dimbossgut2Curve*)curve)->f4 = ((Dimbossgut2Curve*)curve)->f4 + (f32)(delta >> 4);
         if (((Dimbossgut2Curve*)curve)->f10 < lbl_803E4D14)
         {
@@ -114,15 +114,15 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             ((Dimbossgut2Curve*)curve)->f8 = ((Dimbossgut2Curve*)curve)->f8 / lbl_803E4D10;
         }
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(pathWalker + 0x68);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(pathWalker + 0x70);
+        (obj)->anim.localPosX = *(f32*)(pathWalker + 0x68);
+        (obj)->anim.localPosZ = *(f32*)(pathWalker + 0x70);
     }
     else
     {
         player = Obj_GetPlayerObject();
-        rel = (int)(u16)getAngle(-(((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX),
-                                 -(((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ)) -
-              (int)(u16)((GameObject*)obj)->anim.rotX;
+        rel = (int)(u16)getAngle(-(((GameObject*)player)->anim.worldPosX - (obj)->anim.worldPosX),
+                                 -(((GameObject*)player)->anim.worldPosZ - (obj)->anim.worldPosZ)) -
+              (int)(u16)(obj)->anim.rotX;
         if (rel > 0x8000)
         {
             rel = rel - 0xffff;
@@ -131,7 +131,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             rel = rel + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(*(s16*)(long)obj + rel * framesThisStep / 3);
+        (obj)->anim.rotX = (s16)(*(s16*)(long)obj + rel * framesThisStep / 3);
     }
     return;
 }
@@ -198,7 +198,7 @@ void DIM_BossGut2_hitDetect(void)
 {
 }
 
-void DIM_BossGut2_update(int obj)
+void DIM_BossGut2_update(GameObject* obj)
 {
     int state;
     int result;
@@ -221,11 +221,10 @@ void DIM_BossGut2_update(int obj)
         f32 f48;
     } stk;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    if ((((GameObject*)obj)->unkF4 == 0) &&
-        ((((GameObject*)obj)->anim.parent != NULL ||
-          (result = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                        ((GameObject*)obj)->anim.localPosZ),
+    state = *(int*)&(obj)->extra;
+    if (((obj)->unkF4 == 0) &&
+        (((obj)->anim.parent != NULL ||
+          (result = objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ),
            result >= 0))))
     {
         msgC = 0;
@@ -236,7 +235,7 @@ void DIM_BossGut2_update(int obj)
         posData = (Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData;
         if ((posData->f0 < lbl_803E4CD0) && (posData->f10 < lbl_803E4CD4))
         {
-            heightDiff = posData->fC - ((GameObject*)obj)->anim.localPosY;
+            heightDiff = posData->fC - (obj)->anim.localPosY;
             if (heightDiff < lbl_803E4CD8)
             {
                 heightDiff = -heightDiff;
@@ -245,12 +244,10 @@ void DIM_BossGut2_update(int obj)
                                                 (int)(u32)posData->timer16 > (int)randomThreshold))
             {
                 xyScale = lbl_803E4CE0 * posData->f10;
-                stk.f50 = ((GameObject*)obj)->anim.localPosX -
-                          xyScale * mathSinf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX /
-                                             gDimBossGut2AngleUnitToRadians);
-                stk.f48 = ((GameObject*)obj)->anim.localPosZ -
-                          xyScale * mathCosf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX /
-                                             gDimBossGut2AngleUnitToRadians);
+                stk.f50 = (obj)->anim.localPosX -
+                          xyScale * mathSinf(gDimBossGut2Pi * (f32)(obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
+                stk.f48 = (obj)->anim.localPosZ -
+                          xyScale * mathCosf(gDimBossGut2Pi * (f32)(obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
                 (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1, NULL);
                 posData->timer16 = 0;
@@ -259,10 +256,10 @@ void DIM_BossGut2_update(int obj)
         posData->timer16 += framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-        ObjHits_RegisterActiveHitVolumeObject(obj);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4D20, timeDelta, NULL);
+        ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumePriority = 9;
+        ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumeId = 1;
+        ObjHits_RegisterActiveHitVolumeObject((int)obj);
         val = (Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData;
         curveLight = (u8*)val->light;
         if ((curveLight != NULL) && (curveLight[0x2f8] != 0) && (curveLight[0x4c] != 0))
@@ -283,7 +280,7 @@ void DIM_BossGut2_update(int obj)
     return;
 }
 
-void DIM_BossGut2_init(int obj, int def, int p3)
+void DIM_BossGut2_init(GameObject* obj, int def, int p3)
 {
     int state;
     int curve;
@@ -293,15 +290,15 @@ void DIM_BossGut2_init(int obj, int def, int p3)
     u8 flags;
     f32 z;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     flags = 0x16;
     if (p3 != 0)
     {
         flags |= 1;
     }
     (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
-    ((GameObject*)obj)->animEventCallback = NULL;
+        (int)obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
+    (obj)->animEventCallback = NULL;
     curve = ((Dimbossgut2State*)state)->curveData;
     z = lbl_803E4CD8;
     ((Dimbossgut2Curve*)curve)->f0 = z;
@@ -311,15 +308,15 @@ void DIM_BossGut2_init(int obj, int def, int p3)
     ((Dimbossgut2Curve*)curve)->f8 = z;
     ((Dimbossgut2Curve*)curve)->timer16 = 0;
     ((Dimbossgut2Curve*)curve)->f10 = z;
-    count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &list, 0, 0);
+    count = hitDetectFn_80065e50((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
+                                 0, 0);
     ((Dimbossgut2Curve*)curve)->fC = lbl_803E4CD8;
     if (count != 0)
     {
         ((Dimbossgut2Curve*)curve)->fC = lbl_803E4D24;
         for (i = 0; i < count; i++)
         {
-            f32 d = *(f32*)list[i] - ((GameObject*)obj)->anim.localPosY;
+            f32 d = *(f32*)list[i] - (obj)->anim.localPosY;
             if (*(s8*)(list[i] + 0x14) == 0xe)
             {
                 if (d > ((Dimbossgut2Curve*)curve)->fC)
@@ -329,10 +326,10 @@ void DIM_BossGut2_init(int obj, int def, int p3)
             }
         }
     }
-    ((Dimbossgut2Curve*)curve)->fC += ((GameObject*)obj)->anim.localPosY;
-    ObjAnim_SetCurrentMove(obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
-    ((Dimbossgut2Curve*)curve)->light = (int)objCreateLight(obj, 1);
+    ((Dimbossgut2Curve*)curve)->fC += (obj)->anim.localPosY;
+    ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4D20, timeDelta, NULL);
+    ((Dimbossgut2Curve*)curve)->light = (int)objCreateLight((int)obj, 1);
     if ((void*)((Dimbossgut2Curve*)curve)->light != NULL)
     {
         modelLightStruct_setLightKind(((Dimbossgut2Curve*)curve)->light, MODEL_LIGHT_KIND_POINT);

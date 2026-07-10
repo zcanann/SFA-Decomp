@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_DLL_0204_WMTORCH_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 
 typedef struct WmTorchPlacement
@@ -30,10 +31,10 @@ STATIC_ASSERT(sizeof(WmTorchState) == 0x10);
 
 int wmtorch_getExtraSize(void);
 int wmtorch_getObjectTypeId(void);
-void wmtorch_free(int obj, int mode);
+void wmtorch_free(GameObject* obj, int mode);
 void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 void wmtorch_hitDetect(void);
-void wmtorch_update(int obj);
+void wmtorch_update(GameObject* obj);
 void wmtorch_init(u8* obj, u8* params);
 void wmtorch_release(void);
 void wmtorch_initialise(void);

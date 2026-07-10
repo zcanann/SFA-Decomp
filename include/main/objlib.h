@@ -44,11 +44,10 @@ u32 ObjContact_AddCallback(int param_1, int param_2, ObjContactCallback callback
 u32 ObjTrigger_IsSetById(int obj, short triggerId);
 u32 ObjTrigger_IsSet(int obj);
 void* ObjList_GetObjects(int* startIndex, int* objectCount);
-int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq);
+int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq);
 u32 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, float* positions);
-void ObjPath_GetPointLocalPosition(GameObject* param_1, int param_2, float* param_3, float* param_4,
-                                   float* param_5);
+void ObjPath_GetPointLocalPosition(GameObject* param_1, int param_2, float* param_3, float* param_4, float* param_5);
 void ObjPath_GetPointLocalMtx(GameObject* param_1, int param_2, float* param_3);
 void ObjPath_GetPointModelMtx(int param_1, int param_2);
 void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,

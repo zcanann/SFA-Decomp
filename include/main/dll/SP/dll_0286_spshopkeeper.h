@@ -14,6 +14,6 @@
 #include "main/objlib.h"
 #include "main/engine_shared.h"
 
-int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
+int fn_801E76A0(GameObject* obj, int p2, ObjSeqState* seq, s8 advance);
 
 #endif

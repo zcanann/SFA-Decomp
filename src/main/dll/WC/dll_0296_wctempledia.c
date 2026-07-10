@@ -208,7 +208,7 @@ void wctempledia_update(GameObject* obj)
     }
 }
 
-void wctempledia_init(int obj, int setup)
+void wctempledia_init(GameObject* obj, int setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCTempleDiaState* state = ((GameObject*)obj)->extra;

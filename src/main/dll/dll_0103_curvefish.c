@@ -163,7 +163,7 @@ void CurveFish_update(int obj)
         ((GameObject*)obj)->anim.alpha = 0xff;
         state->mode = CURVEFISH_MODE_CRUISE;
     case CURVEFISH_MODE_CRUISE:
-        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0)
         {
             state->speed = 2.0f * state->maxSpeed;
         }

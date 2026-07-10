@@ -41,10 +41,10 @@ void dimbarrier_free(void)
 {
 }
 
-void dimbarrier_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dimbarrier_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4898);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4898);
 }
 
 void dimbarrier_hitDetect(void)
@@ -113,21 +113,21 @@ void dimbarrier_update(int obj)
     }
 }
 
-void dimbarrier_init(int obj, s8* p)
+void dimbarrier_init(GameObject *obj, s8* p)
 {
     char* inner;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject*)obj)->objectFlags |= (DIMBARRIER_OBJFLAG_HIDDEN | DIMBARRIER_OBJFLAG_HITDETECT_DISABLED);
-    inner = ((GameObject*)obj)->extra;
+    (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
+    (obj)->objectFlags |= (DIMBARRIER_OBJFLAG_HIDDEN | DIMBARRIER_OBJFLAG_HITDETECT_DISABLED);
+    inner = (obj)->extra;
     inner[3] = 1;
     inner[2] = DIMBARRIER_STATE_ARMED;
     if (mainGetBit(((DimbarrierPlacement*)p)->barrierGameBit) != 0)
     {
         ObjHitsPriorityState* hitState;
         inner[3] = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
+        (obj)->anim.alpha = 0;
         inner[2] = DIMBARRIER_STATE_RESOLVED;
     }
 }

@@ -21,7 +21,7 @@ int drgenerator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (animUpdate->eventIds[i] == 1)
         {
-            ObjTextureRuntimeSlot* t = objFindTexture((void*)obj, 0, 0);
+            ObjTextureRuntimeSlot* t = objFindTexture((GameObject*)obj, 0, 0);
             if (t != 0)
             {
                 t->textureId = 0;
@@ -68,7 +68,8 @@ void drgenerator_hitDetect(int obj)
     {
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, 0, &hitVolume, &hitPosX, &hitPosY, &hitPosZ) != 5)
+    if (ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObject, 0, &hitVolume, &hitPosX, &hitPosY,
+                                           &hitPosZ) != 5)
     {
         return;
     }
@@ -80,7 +81,7 @@ void drgenerator_hitDetect(int obj)
         return;
     }
     {
-        ObjTextureRuntimeSlot* tex = objFindTexture((void*)obj, 0, 0);
+        ObjTextureRuntimeSlot* tex = objFindTexture((GameObject*)obj, 0, 0);
         spawnExplosion(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1, 0);
         if (tex != 0)
         {
@@ -100,10 +101,10 @@ void drgenerator_hitDetect(int obj)
     }
 }
 
-void drgenerator_update(int obj)
+void drgenerator_update(GameObject* obj)
 {
-    char* state = ((GameObject*)obj)->extra;
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    char* state = (obj)->extra;
+    int placement = *(int*)&(obj)->anim.placementData;
     int n;
     if (((BitFlags8*)(state + 0x19b))->b4 == 0 && mainGetBit(0x9b9) != 0)
     {
@@ -121,13 +122,13 @@ void drgenerator_update(int obj)
     {
         goto enable;
     }
-    if (((GameObject*)obj)->anim.seqId != 0x72e)
+    if ((obj)->anim.seqId != 0x72e)
     {
         (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
     }
     ((BitFlags8*)(state + 0x19b))->b3 = 1;
     ((BitFlags8*)(state + 0x19b))->b0 = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
     return;
 enable:
     if (((BitFlags8*)(state + 0x19b))->b3 == 0)
@@ -138,12 +139,12 @@ enable:
     {
         goto loop;
     }
-    if (((GameObject*)obj)->anim.seqId != 0x72e)
+    if ((obj)->anim.seqId != 0x72e)
     {
         (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
     }
     ((BitFlags8*)(state + 0x19b))->b3 = 0;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((int)obj);
     return;
 loop:
     if (((BitFlags8*)(state + 0x19b))->b0 == 0)
@@ -165,7 +166,7 @@ void drgenerator_init(int obj, char* arg)
     {
         ObjTextureRuntimeSlot* t;
         ((GameObject*)obj)->animEventCallback = drgenerator_SeqFn;
-        t = objFindTexture((void*)obj, 0, 0);
+        t = objFindTexture((GameObject*)obj, 0, 0);
         if (t != 0)
         {
             t->textureId = 0x100;

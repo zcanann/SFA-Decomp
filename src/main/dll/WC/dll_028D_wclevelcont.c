@@ -175,12 +175,12 @@ int wclevelcont_getObjectTypeId(void)
     return 0;
 }
 
-void wclevelcont_free(int obj)
+void wclevelcont_free(GameObject* obj)
 {
-    WcLevelControlState* state = ((GameObject*)obj)->extra;
+    WcLevelControlState* state = (obj)->extra;
     u8 mode;
 
-    ObjGroup_RemoveObject(obj, WCLEVELCONT_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, WCLEVELCONT_OBJGROUP);
     mode = state->mode;
     if (mode == 1)
     {
@@ -258,32 +258,32 @@ void wclevelcont_syncProgressBits(int stateArg)
 }
 #pragma opt_common_subs reset
 
-void wclevelcont_update(int obj)
+void wclevelcont_update(GameObject* obj)
 {
-    WcLevelControlState* state = ((GameObject*)obj)->extra;
+    WcLevelControlState* state = (obj)->extra;
     f32 sunTime;
 
-    if (((GameObject*)obj)->unkF4 == 0)
+    if ((obj)->unkF4 == 0)
     {
         if ((u32)mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
         {
-            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_A, 0);
-            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_B, 0);
-            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_C, 0);
-            getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_D, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_A, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_B, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_C, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6DA8);
             mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
         }
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
-    switch ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot))
+    switch ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot))
     {
     case 1:
     default:
-        wcpushblock_updateLevelControlState(obj, state);
+        wcpushblock_updateLevelControlState((int)obj, state);
         break;
     case 2:
-        fn_802251B4(obj, state);
+        fn_802251B4((int)obj, state);
         break;
     }
     wclevelcont_syncProgressBits((int)state);
@@ -417,12 +417,12 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
     return 4;
 }
 
-void wclevelcont_init(int obj)
+void wclevelcont_init(GameObject* obj)
 {
-    WcLevelControlState* state = ((GameObject*)obj)->extra;
+    WcLevelControlState* state = (obj)->extra;
     u16 flags;
 
-    ((GameObject*)obj)->animEventCallback = wclevelcont_seqFn;
+    (obj)->animEventCallback = wclevelcont_seqFn;
     mainSetBits(0x810, 0);
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     mainSetBits(0x811, 0);
@@ -452,12 +452,12 @@ void wclevelcont_init(int obj)
     {
         state->mode = 3;
     }
-    ObjGroup_AddObject(obj, WCLEVELCONT_OBJGROUP);
+    ObjGroup_AddObject((int)obj, WCLEVELCONT_OBJGROUP);
     mainSetBits(0x226, 1);
     mainSetBits(0x2a6, 1);
     mainSetBits(0x206, 1);
     mainSetBits(0x25f, 1);
-    (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
     state->dialogueFlags.b40 = mainGetBit(0xc58);
     state->dialogueFlags.b20 = mainGetBit(0xc59);
     state->dialogueFlags.b18 = mainGetBit(0xc5a);

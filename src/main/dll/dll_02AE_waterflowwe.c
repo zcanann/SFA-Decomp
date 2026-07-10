@@ -197,9 +197,9 @@ int waterflowwe_getObjectTypeId(void)
     return 0;
 }
 
-void waterflowwe_init(int obj, u8* setup)
+void waterflowwe_init(GameObject* obj, u8* setup)
 {
-    GameObject* object = (GameObject*)obj;
+    GameObject* object = obj;
     WaterFlowWeSetup* setupData = (WaterFlowWeSetup*)setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
@@ -215,7 +215,7 @@ void waterflowwe_init(int obj, u8* setup)
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags = (u16)(object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT);
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72B0, 0);
 }
 
 void waterflowwe_free(int obj)
@@ -238,17 +238,17 @@ void waterflowwe_hitDetect(void)
 {
 }
 
-void waterflowwe_update(int obj)
+void waterflowwe_update(GameObject* obj)
 {
-    GameObject* object = (GameObject*)obj;
+    GameObject* object = obj;
     WaterFlowWeSetup* setup = (WaterFlowWeSetup*)object->anim.placementData;
     f32 vx, vz;
 
-    waterflowwe_calcCurrentVector((GameObject*)(obj), &vx, &vz);
+    waterflowwe_calcCurrentVector(obj, &vx, &vz);
     object->anim.rotX = (s16)(getAngle(vx, vz) + 0x4000);
     if ((u32)gWaterFlowPhaseDriver == 0 && setup->phaseDriverDisabled == 0)
     {
-        gWaterFlowPhaseDriver = obj;
+        gWaterFlowPhaseDriver = (int)obj;
     }
     if ((u32)obj == gWaterFlowPhaseDriver)
     {
@@ -271,11 +271,11 @@ void waterflowwe_update(int obj)
     }
     if (lbl_803E72B0 == vx && lbl_803E72B0 == vz)
     {
-        ObjAnim_SetCurrentMove(obj, 1, gWaterFlowIdlePhase, 0);
+        ObjAnim_SetCurrentMove((int)obj, 1, gWaterFlowIdlePhase, 0);
     }
     else
     {
-        ObjAnim_SetCurrentMove(obj, 0, gWaterFlowIdlePhase, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, gWaterFlowIdlePhase, 0);
     }
 }
 

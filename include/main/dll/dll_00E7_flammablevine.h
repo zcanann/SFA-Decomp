@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_00E7_FLAMMABLEVINE_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 typedef struct FlammablevineObjectDef
 {
@@ -42,9 +43,9 @@ int FlammableVine_getExtraSize(void);
 int FlammableVine_getObjectTypeId(void);
 void FlammableVine_free(int obj);
 void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void FlammableVine_hitDetect(int obj);
-void FlammableVine_update(int obj);
-void FlammableVine_init(int obj, int def);
+void FlammableVine_hitDetect(GameObject* obj);
+void FlammableVine_update(GameObject* obj);
+void FlammableVine_init(GameObject* obj, int def);
 void FlammableVine_release(void);
 void FlammableVine_initialise(void);
 

@@ -101,7 +101,7 @@ extern void setLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void arwarwinggu_setTextureFrame(GameObject* obj, int arg);
-extern void arwarwinggu_applyTextureFrame(int obj);
+extern void arwarwinggu_applyTextureFrame(GameObject* obj);
 extern int playerGetFocusObject(int obj);
 
 typedef struct LandedArwingFxPoint
@@ -146,57 +146,57 @@ extern LandedArwingFxPoint gLandedArwingPathFxTable[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
 extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int arg4, int arg5, int arg6, void* pos);
-extern void objfx_spawnLightPulse(int obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
+extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
 
 #pragma dont_inline on
-void landed_arwing_renderPathEffects(int obj)
+void landed_arwing_renderPathEffects(GameObject* obj)
 {
     LandedArwingState* state;
     u8 i;
     LandedArwingFxScratch scratch;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (state->enablePathFx != 0)
     {
         i = 0;
         while (i < 5)
         {
-            ObjPath_GetPointWorldPosition(obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y,
+            ObjPath_GetPointWorldPosition((int)obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y,
                                           &scratch.z, 0);
-            scratch.x -= ((GameObject*)obj)->anim.localPosX;
-            scratch.y -= ((GameObject*)obj)->anim.localPosY;
-            scratch.z -= ((GameObject*)obj)->anim.localPosZ;
-            objfx_spawnMaskedHitEffect(
-                obj, ((GameObject*)obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
-                gLandedArwingPathFxTable[i].arg5, gLandedArwingPathFxTable[i].arg6, scratch.effectPos);
+            scratch.x -= (obj)->anim.localPosX;
+            scratch.y -= (obj)->anim.localPosY;
+            scratch.z -= (obj)->anim.localPosZ;
+            objfx_spawnMaskedHitEffect((int)obj, (obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
+                                       gLandedArwingPathFxTable[i].arg5, gLandedArwingPathFxTable[i].arg6,
+                                       scratch.effectPos);
             i++;
         }
     }
 
     if (state->path6Fx != lbl_803E3B98)
     {
-        ObjPath_GetPointWorldPosition(obj, 6, &scratch.x, &scratch.y, &scratch.z, 0);
-        scratch.x -= ((GameObject*)obj)->anim.localPosX;
-        scratch.y -= ((GameObject*)obj)->anim.localPosY;
-        scratch.z -= ((GameObject*)obj)->anim.localPosZ;
+        ObjPath_GetPointWorldPosition((int)obj, 6, &scratch.x, &scratch.y, &scratch.z, 0);
+        scratch.x -= (obj)->anim.localPosX;
+        scratch.y -= (obj)->anim.localPosY;
+        scratch.z -= (obj)->anim.localPosZ;
         objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path6Fx, scratch.effectPos);
     }
 
     if (state->path8Fx != lbl_803E3B98)
     {
-        ObjPath_GetPointWorldPosition(obj, 8, &scratch.x, &scratch.y, &scratch.z, 0);
-        scratch.x -= ((GameObject*)obj)->anim.localPosX;
-        scratch.y -= ((GameObject*)obj)->anim.localPosY;
-        scratch.z -= ((GameObject*)obj)->anim.localPosZ;
+        ObjPath_GetPointWorldPosition((int)obj, 8, &scratch.x, &scratch.y, &scratch.z, 0);
+        scratch.x -= (obj)->anim.localPosX;
+        scratch.y -= (obj)->anim.localPosY;
+        scratch.z -= (obj)->anim.localPosZ;
         objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path8Fx, scratch.effectPos);
     }
 
     if (state->path7Fx != lbl_803E3B98)
     {
-        ObjPath_GetPointWorldPosition(obj, 7, &scratch.x, &scratch.y, &scratch.z, 0);
-        scratch.x -= ((GameObject*)obj)->anim.localPosX;
-        scratch.y -= ((GameObject*)obj)->anim.localPosY;
-        scratch.z -= ((GameObject*)obj)->anim.localPosZ;
+        ObjPath_GetPointWorldPosition((int)obj, 7, &scratch.x, &scratch.y, &scratch.z, 0);
+        scratch.x -= (obj)->anim.localPosX;
+        scratch.y -= (obj)->anim.localPosY;
+        scratch.z -= (obj)->anim.localPosZ;
         objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path7Fx, scratch.effectPos);
     }
 }
@@ -227,13 +227,13 @@ void landed_arwing_free(int obj)
 
 extern f32 lbl_803E3BA4;
 
-void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void landed_arwing_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
         objRenderModelAndHitVolumes(lbl_803E3BA4);
-        landed_arwing_renderPathEffects(obj);
+        landed_arwing_renderPathEffects((GameObject*)obj);
     }
 }
 
@@ -247,7 +247,7 @@ typedef struct LandedArwingHitFlagBits
 } LandedArwingHitFlagBits;
 
 void landed_arwing_init(GameObject* obj, int param);
-void landed_arwing_update(int obj);
+void landed_arwing_update(GameObject* obj);
 
 LandedArwingFxPoint gLandedArwingPathFxTable[] = {
     {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
@@ -482,13 +482,13 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
     return 0;
 }
 
-void landed_arwing_update(int obj)
+void landed_arwing_update(GameObject* obj)
 {
     LandedArwingState* state;
     int player;
     int child;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = (int)Obj_GetPlayerObject();
     if ((u32)state->childObject == 0)
     {
@@ -498,7 +498,7 @@ void landed_arwing_update(int obj)
             state->childObject = child;
             if ((u32)state->childObject != 0)
             {
-                ObjLink_AttachChild(obj, state->childObject, 0);
+                ObjLink_AttachChild((int)obj, state->childObject, 0);
                 arwarwinggu_setTextureFrame((GameObject*)(state->childObject), 0xaf);
                 ((GameObject*)state->childObject)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
@@ -507,28 +507,28 @@ void landed_arwing_update(int obj)
 
     if ((u32)state->childObject != 0)
     {
-        arwarwinggu_applyTextureFrame(state->childObject);
+        arwarwinggu_applyTextureFrame((GameObject*)(state->childObject));
     }
 
     if ((u32)player != 0 && (u32)playerGetFocusObject(player) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 
     switch (state->sequenceState)
     {
     case 0:
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             int nearest;
             int def;
-            def = *(int*)&((GameObject*)obj)->anim.placementData;
-            nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
+            def = *(int*)&(obj)->anim.placementData;
+            nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, (int)obj, NULL);
+            if ((obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
@@ -541,7 +541,7 @@ void landed_arwing_update(int obj)
         }
         break;
     case 1:
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             state->sequenceState = 2;
             cutSceneFn_8011dd30();
@@ -553,9 +553,9 @@ void landed_arwing_update(int obj)
         {
             int def;
             int nearest;
-            def = *(int*)&((GameObject*)obj)->anim.placementData;
-            nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
+            def = *(int*)&(obj)->anim.placementData;
+            nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, (int)obj, NULL);
+            if ((obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
             {
                 ((GameObject*)nearest)->anim.localPosY += lbl_803E3BA0;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)nearest, -1);
@@ -586,7 +586,7 @@ void landed_arwing_init(GameObject* obj, int param)
     obj->animEventCallback = Landed_Arwing_SeqFn;
 }
 
-void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
+void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingState* state)
 {
     int i;
     LandedArwingState* otherState;
@@ -597,7 +597,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     f32 yOffset;
     ObjAnimEventList events;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    def = *(int*)&(obj)->anim.placementData;
     if (!((LandedArwingHitFlagBits*)&state->hitFlags)->damaged ||
         (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled && state->hitStarted == 0u))
     {
@@ -605,9 +605,9 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     }
     if (state->hitStarted != 0)
     {
-        ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC &&
+        (obj)->anim.rotY = 0;
+        (obj)->anim.rotZ = 0;
+        if ((obj)->anim.currentMoveProgress >= lbl_803E3BBC &&
             !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
         {
             if (((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit > 0)
@@ -625,19 +625,18 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                     while (i < ((LandedArwingUpdateHitReactionPlacement*)def)->spawnCount)
                     {
                         setup = Obj_AllocObjectSetup(0x24, LANDEDARWING_CHILD_OBJ_DEBRIS);
-                        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                        ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
-                        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+                        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+                        ((ObjPlacement*)setup)->posY = yOffset + (obj)->anim.localPosY;
+                        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
                         ((ObjPlacement*)setup)->color[0] = 1;
-                        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                        *(int*)&((GameObject*)obj)->anim.parent);
+                        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
                         i++;
                     }
                 }
                 break;
             case 1:
                 range = lbl_803E3BC0;
-                other = ObjGroup_FindNearestObject(STAFFACTIVATED_OBJ_GROUP, obj, &range);
+                other = ObjGroup_FindNearestObject(STAFFACTIVATED_OBJ_GROUP, (int)obj, &range);
                 if ((void*)other != NULL)
                 {
                     otherState = ((GameObject*)other)->extra;
@@ -665,12 +664,12 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     {
         if (((LandedArwingUpdateHitReactionPlacement*)def)->reactionType == 2)
         {
-            ((GameObject*)obj)->anim.rotY = randomGetRange(-200, 200);
-            ((GameObject*)obj)->anim.rotZ = randomGetRange(-200, 200);
+            (obj)->anim.rotY = randomGetRange(-200, 200);
+            (obj)->anim.rotZ = randomGetRange(-200, 200);
         }
         ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta, &events);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, state->path8Fx, timeDelta, &events);
 }
 
 void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingState* state)
@@ -714,7 +713,7 @@ void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingState* state
         }
     }
 
-    texture = objFindTexture((void*)obj, 0, 0);
+    texture = objFindTexture((GameObject*)obj, 0, 0);
     if (texture != NULL)
     {
         if (flags->damaged != 0)

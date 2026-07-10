@@ -41,32 +41,32 @@ void explodeplan_hitDetect(void)
 {
 }
 
-void explodeplan_update(int obj)
+void explodeplan_update(GameObject* obj)
 {
-    ExplodePlanPlacement* placement = *(ExplodePlanPlacement**)&((GameObject*)obj)->anim.placementData;
+    ExplodePlanPlacement* placement = *(ExplodePlanPlacement**)&(obj)->anim.placementData;
     if (mainGetBit(placement->removeGameBit) != 0)
     {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject(obj);
+        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ObjHits_DisableObject((int)obj);
     }
     else
     {
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ObjHits_EnableObject(obj);
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        ObjHits_EnableObject((int)obj);
     }
 }
 
 #pragma opt_common_subs off
-void explodeplan_init(int obj, char* arg)
+void explodeplan_init(GameObject* obj, char* arg)
 {
     ExplodePlanPlacement* def = (ExplodePlanPlacement*)arg;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((int)obj);
     if (mainGetBit(def->removeGameBit) != 0)
     {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject(obj);
+        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ObjHits_DisableObject((int)obj);
     }
-    ((GameObject*)obj)->anim.rotX = (s16)(def->rotXByte << 8);
+    (obj)->anim.rotX = (s16)(def->rotXByte << 8);
 }
 #pragma opt_common_subs reset
 

@@ -70,7 +70,7 @@ extern float fastFloorf(float x);
 extern const f32 lbl_803E3FC0;
 
 extern int fn_80060688(void* block, int v);
-extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
+extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
@@ -396,7 +396,7 @@ void groundanimator_update(int* obj)
                     {
                         fn_801A80F0((GameObject*)(near), 1);
                     }
-                    fn_801A80C4(near, ((GameObject*)obj)->anim.localPosX,
+                    fn_801A80C4((GameObject*)(near), ((GameObject*)obj)->anim.localPosX,
                                 ((GameObject*)obj)->anim.localPosY - g->yOffset, ((GameObject*)obj)->anim.localPosZ);
                     break;
                 default:

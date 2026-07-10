@@ -5,10 +5,9 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-struct GameObject;
 struct WmColumnPlacement;
 
-void dll_115_update(int obj);
+void dll_115_update(GameObject* obj);
 void dll_115_init(short* obj, int mapData);
 void dll_115_release_nop(void);
 void dll_115_initialise_nop(void);

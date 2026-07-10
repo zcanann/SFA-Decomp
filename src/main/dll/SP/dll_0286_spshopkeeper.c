@@ -79,12 +79,12 @@ extern void fn_801E66DC(int);
 extern f32 lbl_803E5A20;
 extern f32 lbl_803E59DC;
 extern int playerGetMoney(void* player);
-extern void characterDoEyeAnims(int obj, int p2);
+extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void dll_2E_func03(int, int);
 extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
-extern void dll_2E_func05(int, int, int, int, int);
+extern void dll_2E_func05(GameObject*, int, int, int, int);
 
 extern void DRlaserturret_startTimedChallenge(int);
 extern void DRlaserturret_handlePromptChoice(int);
@@ -94,7 +94,7 @@ extern void warpToMap(int idx, s8 transType);
 extern void playerAddMoney(void* player, int amount);
 extern f32 lbl_803E5A24;
 
-void fn_801E7DC8(int obj, int state, int count)
+void fn_801E7DC8(GameObject* obj, int state, int count)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
@@ -107,42 +107,42 @@ void fn_801E7DC8(int obj, int state, int count)
     if (Obj_IsLoadingLocked() == 0)
         return;
 
-    (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)obj)->anim.mapEventSlot, 6, 1);
+    (*gMapEventInterface)->setObjGroupStatus((s32)(obj)->anim.mapEventSlot, 6, 1);
 
-    hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                         ((GameObject*)obj)->anim.localPosZ, &groundHeight, 0);
+    hitDetectFn_800658a4((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &groundHeight,
+                         0);
 
     for (i = 0; i < count; i++)
     {
         setup = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
         ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)setup)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
+        ((ShopkeeperSpawnSetup*)setup)->groundY = (obj)->anim.localPosY - groundHeight;
         ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
         ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
         ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
         ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
     }
 
     for (i = 0; i < count; i++)
     {
         setup = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
         ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)setup)->groundY = ((GameObject*)obj)->anim.localPosY - groundHeight;
+        ((ShopkeeperSpawnSetup*)setup)->groundY = (obj)->anim.localPosY - groundHeight;
         ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
         ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
         ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
         ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)setup)->kind = 1;
         ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
     }
 }
 
@@ -152,14 +152,14 @@ void ShopKeeper_free(GameObject* obj)
     return;
 }
 
-void ShopKeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     f32 fxParams[4];
     fxParams[0] = lbl_803E59D8;
     if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E59D8);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, state + 0x35c, 0);
     }
     if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
@@ -198,13 +198,13 @@ void ShopKeeper_initialise(void)
     lbl_803DDC58 = fn_801E66DC;
 }
 
-void ShopKeeper_update(int obj)
+void ShopKeeper_update(GameObject* obj)
 {
     void* player;
     int state;
     f32 dist;
     player = Obj_GetPlayerObject();
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     dist = lbl_803E5A20;
     ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
     if (((ShopkeeperState*)state)->textTimer > lbl_803E59DC)
@@ -220,24 +220,25 @@ void ShopKeeper_update(int obj)
     {
         shopKeeperRotateFn_801e7c4c((s16*)obj, player, 1);
     }
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase;
     if (*(void**)&((ShopkeeperState*)state)->vendorObj == NULL)
     {
-        ((ShopkeeperState*)state)->vendorObj = ObjGroup_FindNearestObject(SPSHOPKEEPER_TARGET_OBJGROUP, obj, &dist);
+        ((ShopkeeperState*)state)->vendorObj =
+            ObjGroup_FindNearestObject(SPSHOPKEEPER_TARGET_OBJGROUP, (int)obj, &dist);
     }
     ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
     (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
-    dll_2E_func03(obj, state + 0x35C);
+    dll_2E_func03((int)obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
-    ((GameObject*)obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
+    (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
 }
 
-void ShopKeeper_init(int obj)
+void ShopKeeper_init(GameObject* obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;
-    ((GameObject*)obj)->animEventCallback = fn_801E76A0;
-    ((GameObject*)obj)->anim.modelState->flags |= 0x810;
+    int state = *(int*)&(obj)->extra;
+    (obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->animEventCallback = fn_801E76A0;
+    (obj)->anim.modelState->flags |= 0x810;
     ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
     ((ShopkeeperState*)state)->opacity = 0xFF;
@@ -246,7 +247,7 @@ void ShopKeeper_init(int obj)
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
 
-int fn_801E76A0(int obj, int unused, ObjSeqState* seq, s8 advance)
+int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
 {
     int state;
     int digit;
@@ -260,11 +261,11 @@ int fn_801E76A0(int obj, int unused, ObjSeqState* seq, s8 advance)
     f32 range;
     f32 speed;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     /* second copy of the extra pointer; the (int)(long) round-trip is
      * load-bearing - it splits the value web so state2 gets its own
      * register home (md5-verified: removing it changes codegen) */
-    state2 = (int)(long)*(int*)&((GameObject*)obj)->extra;
+    state2 = (int)(long)*(int*)&(obj)->extra;
     player = Obj_GetPlayerObject();
     range = lbl_803E59D8;
     ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
@@ -288,9 +289,9 @@ int fn_801E76A0(int obj, int unused, ObjSeqState* seq, s8 advance)
     ((ShopkeeperState*)state)->flags9D4 |= SHOPKEEPER_FLAG_FACING;
     if (advance != 0)
     {
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
+        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, NULL);
     }
-    if (((GameObject*)obj)->seqIndex == -1)
+    if ((obj)->seqIndex == -1)
     {
         if ((s8)seq->movementState != 0)
         {
@@ -307,16 +308,16 @@ int fn_801E76A0(int obj, int unused, ObjSeqState* seq, s8 advance)
                 ((ShopkeeperState*)state)->priceShown = ((ShopkeeperState*)state)->price;
                 ((ShopkeeperState*)state)->unk9D2 = 0;
                 digit = ((ShopkeeperState*)state)->price;
-                tex = objFindTexture((void*)obj, 8, 0);
+                tex = objFindTexture(obj, 8, 0);
                 tex->textureId = (digit % 10) * 0x100;
-                tex = objFindTexture((void*)obj, 7, 0);
+                tex = objFindTexture(obj, 7, 0);
                 tex->textureId = ((digit / 10) % 10) * 0x100;
                 hundreds = digit / 100;
                 if (hundreds > 9)
                 {
                     hundreds = 9;
                 }
-                tex = objFindTexture((void*)obj, 6, 0);
+                tex = objFindTexture(obj, 6, 0);
                 tex->textureId = hundreds << 8;
             }
             seq->movementState = 0;
@@ -390,21 +391,21 @@ int fn_801E76A0(int obj, int unused, ObjSeqState* seq, s8 advance)
         case 0xC:
             ((ShopkeeperState*)state)->amount = 1;
             digit = ((ShopkeeperState*)state)->amount;
-            tex = objFindTexture((void*)obj, 8, 0);
+            tex = objFindTexture(obj, 8, 0);
             tex->textureId = (digit % 10) * 0x100;
-            tex = objFindTexture((void*)obj, 7, 0);
+            tex = objFindTexture(obj, 7, 0);
             tex->textureId = ((digit / 10) % 10) * 0x100;
             digit = digit / 100;
             if (digit > 9)
             {
                 digit = 9;
             }
-            tex = objFindTexture((void*)obj, 6, 0);
+            tex = objFindTexture(obj, 6, 0);
             tex->textureId = digit << 8;
             break;
         }
     }
-    ((GameObject*)obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
+    (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
     return 0;
 }
 

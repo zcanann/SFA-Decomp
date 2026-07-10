@@ -15,6 +15,7 @@
  * poles of the tracking test).
  */
 #include "main/objlib.h"
+#include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
@@ -163,7 +164,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                                   &particleBox, 0);
         }
 
-        solvedTexture = objFindTexture(obj, 0, 0);
+        solvedTexture = objFindTexture((GameObject*)(obj), 0, 0);
         if (solvedTexture != NULL)
         {
             solvedTexture->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;
@@ -239,8 +240,8 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     int countB, startB;
 
     state = obj->state;
-    hitKind =
-        ObjHits_GetPriorityHitWithPosition(obj, &hitNx, &hitNy, &hitNz, &lightArgs[3], &lightArgs[4], &lightArgs[5]);
+    hitKind = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitNx, &hitNy, &hitNz, &lightArgs[3],
+                                                 &lightArgs[4], &lightArgs[5]);
     if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) ||
         (mainGetBit(0xc10) == 0))
     {
@@ -294,7 +295,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
                 }
                 startB++;
             }
-            texture = objFindTexture(obj, 0, 0);
+            texture = objFindTexture((GameObject*)(obj), 0, 0);
             if (texture != NULL)
             {
                 texture->textureId = 0;
@@ -370,7 +371,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     }
     if (obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX)
     {
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((GameObject*)(obj), 0, 0);
         if (tex != NULL)
         {
             tex->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;
@@ -384,7 +385,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     else
     {
         state->angle = lbl_803E562C;
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((GameObject*)(obj), 0, 0);
         if (tex != NULL)
         {
             tex->textureId = SC_TOTEMPUZZLE_SOLVED_TEXTURE_ID;

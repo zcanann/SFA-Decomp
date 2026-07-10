@@ -185,9 +185,9 @@ int VFP_SpellPlace_getObjectTypeId(void)
     return 0x0;
 }
 
-void VFP_lavapool_update(int obj)
+void VFP_lavapool_update(GameObject* obj)
 {
-    fn_801FD6B4((GameObject*)(obj));
+    fn_801FD6B4(obj);
 }
 
 #pragma scheduling off
@@ -242,13 +242,13 @@ void VFP_flamepoint_init(int* obj, s8* def)
     ((GameObject*)obj)->objectFlags |= (MAIN_OBJFLAG_HIDDEN | MAIN_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void VFP_flamepoint_update(int obj)
+void VFP_flamepoint_update(GameObject* obj)
 {
     VfpFlamePointData* d;
     void* tricky;
 
-    d = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    d = (obj)->extra;
+    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (!d->done && (d->checkGameBit == -1 || mainGetBit(d->checkGameBit) != 0))
     {
         if (d->counter <= 0 && !d->done)
@@ -265,14 +265,14 @@ void VFP_flamepoint_update(int obj)
             if (tricky != NULL)
             {
                 f32 dist = lbl_803E6158;
-                if (d->noCheck || (void*)ObjGroup_FindNearestObject(5, obj, &dist) == NULL)
+                if (d->noCheck || (void*)ObjGroup_FindNearestObject(5, (int)obj, &dist) == NULL)
                 {
-                    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
+                    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
                     {
                         (*(void (*)(void*, int, int, int)) *
-                         (int*)(*(int*)*(int*)((u8*)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                         (int*)(*(int*)*(int*)((u8*)tricky + 0x68) + 0x28))(tricky, (int)obj, 1, 4);
                     }
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                     objRenderFn_80041018((void*)obj);
                 }
             }
@@ -283,7 +283,7 @@ void VFP_flamepoint_update(int obj)
         u8 v = mainGetBit(d->showGameBit);
         if (!(d->done = v))
         {
-            d->counter = (s8) * (s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a);
+            d->counter = (s8) * (s16*)(*(int*)&(obj)->anim.placementData + 0x1a);
         }
     }
 }
@@ -337,7 +337,7 @@ void fn_801FD6B4(GameObject* obj)
         speed = lbl_803E6170 * (phase / lbl_803E6190);
     }
     obj->anim.alpha = ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
-    tex = objFindTexture((void*)obj, 0, 0);
+    tex = objFindTexture((GameObject*)obj, 0, 0);
     if (tex != NULL)
     {
         scrollT = (f32)(int)tex->offsetT + lbl_803E6160;
@@ -347,7 +347,7 @@ void fn_801FD6B4(GameObject* obj)
         }
         tex->offsetT = (s16)scrollT;
     }
-    tex = objFindTexture((void*)obj, 1, 0);
+    tex = objFindTexture((GameObject*)obj, 1, 0);
     if (tex != NULL)
     {
         scrollT = (f32)(int)tex->offsetT + lbl_803E6198;

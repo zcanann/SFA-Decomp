@@ -50,9 +50,9 @@ extern f32 gQueenEarthWalkerAttackTimerMax;
 
 extern int ObjTrigger_IsSetById();
 extern f32 getXZDistance(f32* a, f32* b);
-extern int fn_8003B500(void* obj, void* p2, f32 f1);
-extern int fn_8003B228(void* obj, void* p2);
-extern int characterDoEyeAnims(void* obj, void* p2);
+extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
+extern int fn_8003B228(GameObject* obj, void* p2);
+extern int characterDoEyeAnims(GameObject* obj, void* p2);
 extern int cMenuGetSelectedItem(void);
 extern int getYButtonItem(s16* outTrigger);
 extern void* getTrickyObject(void);
@@ -69,7 +69,7 @@ int sh_queenearthwalker_getExtraSize(void)
     return 0x40;
 }
 
-void sh_queenearthwalker_update(void* obj)
+void sh_queenearthwalker_update(GameObject* obj)
 {
     void* state;
     void* player;
@@ -81,9 +81,9 @@ void sh_queenearthwalker_update(void* obj)
     int currentMove;
     s16 targetMove;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_INIT_DONE;
-    mapSlot = ((GameObject*)obj)->anim.mapEventSlot;
+    mapSlot = (obj)->anim.mapEventSlot;
     action = (*gMapEventInterface)->getMapAct(mapSlot);
 
     if ((((QueenEarthWalkerState*)state)->flags & QEW_FLAG_STARTED) != 0)
@@ -220,7 +220,7 @@ void sh_queenearthwalker_update(void* obj)
         characterDoEyeAnims(obj, (u8*)state + 0x8);
     }
 
-    currentMove = ((GameObject*)obj)->anim.currentMove;
+    currentMove = (obj)->anim.currentMove;
     targetMove = gQueenEarthWalkerMoveTable[((QueenEarthWalkerState*)state)->stateIndex];
     if (currentMove != targetMove)
     {
@@ -249,7 +249,7 @@ void sh_queenearthwalker_update(void* obj)
     }
 }
 
-void queenFeedFn_801d44a4(void* obj, void* state)
+void queenFeedFn_801d44a4(GameObject* obj, void* state)
 {
     s16 triggerId;
     s32 total;
@@ -266,20 +266,20 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         }
         break;
     case 1:
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+        (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (cMenuGetSelectedItem() == -1)
         {
             if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
             {
                 tricky = getTrickyObject();
-                if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &((GameObject*)obj)->anim.worldPosX) <
+                if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &(obj)->anim.worldPosX) <
                                           gQueenEarthWalkerTrickyFeedDistance)
                 {
                     Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+                    (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 }
                 break;
             }
@@ -333,12 +333,12 @@ void queenFeedFn_801d44a4(void* obj, void* state)
     }
 }
 
-void openPortalFn_801d4364(void* obj, void* state)
+void openPortalFn_801d4364(GameObject* obj, void* state)
 {
     void* player;
 
     player = Obj_GetPlayerObject();
-    ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+    (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if (mainGetBit(0xc48) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
@@ -349,9 +349,9 @@ void openPortalFn_801d4364(void* obj, void* state)
     }
     else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (playerHasSpell((GameObject*)(player), 3) != 0 &&
-            getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
+            getXZDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) <
                 gQueenEarthWalkerPortalSpellDistance)
         {
             mainSetBits(0x23b, 1);

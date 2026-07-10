@@ -110,19 +110,19 @@ void wctile_hitDetect(void)
 }
 
 #pragma opt_common_subs off
-void wctile_update(int obj)
+void wctile_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     f32 nearest = lbl_803E6DF4;
-    WCTileState* state = ((GameObject*)obj)->extra;
+    WCTileState* state = (obj)->extra;
 
     if ((void*)state->controller == NULL)
     {
-        state->controller = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, obj, &nearest);
+        state->controller = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, (int)obj, &nearest);
         objAnim->alpha = 0;
         return;
     }
-    ((GameObject*)obj)->anim.rotX += (s16)(lbl_803E6DF8 * timeDelta);
+    (obj)->anim.rotX += (s16)(lbl_803E6DF8 * timeDelta);
     if (state->mode != WCTILE_MODE_HIDDEN)
     {
         if (objAnim->bankIndex == WCTILE_VARIANT_A)
@@ -147,17 +147,15 @@ void wctile_update(int obj)
         {
             WCTILE_STATE_IFACE(state)->getInitialTileXYA(state->targetTile, &state->tileX, &state->tileY,
                                                          WCTILE_STATE_IFACE(state));
-            WCTILE_STATE_IFACE(state)->tileAToWorldPos(obj, state->tileX, state->tileY,
-                                                       &((GameObject*)obj)->anim.localPosX,
-                                                       &((GameObject*)obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->tileAToWorldPos((int)obj, state->tileX, state->tileY, &(obj)->anim.localPosX,
+                                                       &(obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
         }
         else
         {
             WCTILE_STATE_IFACE(state)->getInitialTileXYB(state->targetTile, &state->tileX, &state->tileY,
                                                          WCTILE_STATE_IFACE(state));
-            WCTILE_STATE_IFACE(state)->tileBToWorldPos(obj, state->tileX, state->tileY,
-                                                       &((GameObject*)obj)->anim.localPosX,
-                                                       &((GameObject*)obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->tileBToWorldPos((int)obj, state->tileX, state->tileY, &(obj)->anim.localPosX,
+                                                       &(obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
         }
         objAnim->alpha = WCTILE_ALPHA_OPAQUE;
         state->mode = WCTILE_MODE_SOLID;
@@ -181,18 +179,16 @@ void wctile_update(int obj)
             {
                 WCTILE_STATE_IFACE(state)->getInitialTileXYA(state->targetTile, &state->tileX, &state->tileY,
                                                              WCTILE_STATE_IFACE(state));
-                WCTILE_STATE_IFACE(state)->tileAToWorldPos(
-                    obj, state->tileX, state->tileY, &((GameObject*)obj)->anim.localPosX,
-                    &((GameObject*)obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
+                WCTILE_STATE_IFACE(state)->tileAToWorldPos((int)obj, state->tileX, state->tileY, &(obj)->anim.localPosX,
+                                                           &(obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
                 state->mode = WCTILE_MODE_FADE_IN;
             }
             else
             {
                 WCTILE_STATE_IFACE(state)->getInitialTileXYB(state->targetTile, &state->tileX, &state->tileY,
                                                              WCTILE_STATE_IFACE(state));
-                WCTILE_STATE_IFACE(state)->tileBToWorldPos(
-                    obj, state->tileX, state->tileY, &((GameObject*)obj)->anim.localPosX,
-                    &((GameObject*)obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
+                WCTILE_STATE_IFACE(state)->tileBToWorldPos((int)obj, state->tileX, state->tileY, &(obj)->anim.localPosX,
+                                                           &(obj)->anim.localPosZ, WCTILE_STATE_IFACE(state));
                 state->mode = WCTILE_MODE_FADE_IN;
             }
         }

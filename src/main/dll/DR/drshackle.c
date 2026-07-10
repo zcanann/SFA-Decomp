@@ -62,7 +62,7 @@ extern f32 lbl_803E5B78; /* 2.0f */
 extern int fn_801EC870(int p1, int p2);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
-int drshackle_updateSwingBlend(int obj, int state)
+int drshackle_updateSwingBlend(GameObject* obj, int state)
 {
     ShackleSwingState* s = (ShackleSwingState*)state;
     GameObject* o = (GameObject*)obj;
@@ -101,9 +101,7 @@ int drshackle_updateSwingBlend(int obj, int state)
         return 0;
     }
 
-    yawDelta = (s32)(u16)getAngle(o->anim.localPosX - s->anchorX,
-                                  o->anim.localPosZ - s->anchorZ) -
-               (s32)(u16)s->yaw;
+    yawDelta = (s32)(u16)getAngle(o->anim.localPosX - s->anchorX, o->anim.localPosZ - s->anchorZ) - (s32)(u16)s->yaw;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta + -0xffff;
@@ -210,7 +208,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
             flags->positionAnchored = 1;
             return 0;
         }
-        return drshackle_updateSwingBlend(obj, state) != 0;
+        return drshackle_updateSwingBlend((GameObject*)(obj), state) != 0;
     }
 
     hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,

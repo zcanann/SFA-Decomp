@@ -72,10 +72,10 @@ extern void Obj_FreeObject(int o);
 extern f32 lbl_803E5210;
 extern u32 ObjGroup_AddObject();
 extern int ObjTrigger_IsSetById(int obj, int triggerId);
-extern void fn_8003A168(int obj, void* p);
-extern void characterDoEyeAnims(int obj, void* p);
+extern void fn_8003A168(GameObject* obj, void* p);
+extern void characterDoEyeAnims(GameObject* obj, void* p);
 extern int cMenuGetSelectedItem(void);
-extern void fn_801CDF94(int obj, void* state, int flag);
+extern void fn_801CDF94(GameObject* obj, void* state, int flag);
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
 extern u8 gNwMammothPathSetupDataB[];
@@ -621,12 +621,12 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     }
 }
 
-void NW_mammoth_free(void* obj)
+void NW_mammoth_free(GameObject* obj)
 {
     extern void ObjGroup_RemoveObject(void* obj, int group);
     void* node;
 
-    node = ((GameObject*)obj)->extra;
+    node = (obj)->extra;
     ObjGroup_RemoveObject(obj, NW_MAMMOTH_GROUP_ID);
     if ((((NwMammothState*)node)->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE) != 0)
     {
@@ -634,14 +634,14 @@ void NW_mammoth_free(void* obj)
     }
 }
 
-void NW_mammoth_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
     extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     int i;
     void* node;
 
-    node = ((GameObject*)obj)->extra;
+    node = (obj)->extra;
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
     {
@@ -720,8 +720,8 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
             ObjHitReact_Update((int)obj, hitReactEntries, 1, state->hitReactState, &state->hitReactStepScale);
         if (state->hitReactState != 0)
         {
-            fn_8003A168((int)obj, state->eyeAnimState);
-            characterDoEyeAnims((int)obj, state->eyeAnimState);
+            fn_8003A168((GameObject*)obj, state->eyeAnimState);
+            characterDoEyeAnims((GameObject*)obj, state->eyeAnimState);
             return;
         }
     }
@@ -785,7 +785,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     }
     objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState, lbl_803E5210,
                         *(f32*)&lbl_803E5210);
-    fn_801CDF94((int)obj, state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
+    fn_801CDF94((GameObject*)obj, state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
     {

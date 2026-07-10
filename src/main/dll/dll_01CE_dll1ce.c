@@ -100,7 +100,7 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-extern void dimmagicbridge_update(void);
+extern void dimmagicbridge_update(GameObject*);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);

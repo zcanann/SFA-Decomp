@@ -137,8 +137,8 @@ typedef struct CratePickupSetup /* dropType 9 (0x259) */
     s16 field20; /* 0x20 */
 } CratePickupSetup;
 
-void largecrate_updateConveyorSlide(int obj, int def);
-void largecrate_update(int obj);
+void largecrate_updateConveyorSlide(GameObject* obj, int def);
+void largecrate_update(GameObject* obj);
 void largecrate_free(int obj);
 
 f32 largecrate_getReticleDistance(GameObject* obj)
@@ -148,7 +148,7 @@ f32 largecrate_getReticleDistance(GameObject* obj)
            (f32)(u32)((LargeCrateState*)state)->damageTaken / (f32)(u32)((LargeCrateState*)state)->damageThreshold;
 }
 
-void largecrate_updateConveyorSlide(int obj, int def)
+void largecrate_updateConveyorSlide(GameObject* obj, int def)
 {
     int state31;
     int player;
@@ -158,20 +158,19 @@ void largecrate_updateConveyorSlide(int obj, int def)
     u32 linkedId;
     f32 limit;
 
-    state31 = *(int*)&((GameObject*)obj)->anim.placementData;
+    state31 = *(int*)&(obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    if ((*(u16*)(*(int*)&((GameObject*)obj)->anim.parent + 0xb0) & LARGECRATE_OBJFLAG_PARENT_SLACK) != 0)
+    if ((*(u16*)(*(int*)&(obj)->anim.parent + 0xb0) & LARGECRATE_OBJFLAG_PARENT_SLACK) != 0)
     {
-        ((GameObject*)obj)->anim.localPosX = ((LargeCrateState*)def)->homeX;
-        ((GameObject*)obj)->anim.velocityX = 0.0f;
+        (obj)->anim.localPosX = ((LargeCrateState*)def)->homeX;
+        (obj)->anim.velocityX = 0.0f;
     }
     else
     {
-        oldVel = ((GameObject*)obj)->anim.velocityX;
-        sum = ((GameObject*)((GameObject*)obj)->anim.parent)->anim.rotZ + ((LargeCrateState*)def)->slideOffset;
-        ((GameObject*)obj)->anim.velocityX = -(f32)sum / ((LargeCrateState*)def)->slidePhase;
-        if ((oldVel <= 0.0f && ((GameObject*)obj)->anim.velocityX >= 0.0f) ||
-            (oldVel >= 0.0f && ((GameObject*)obj)->anim.velocityX <= 0.0f))
+        oldVel = (obj)->anim.velocityX;
+        sum = ((GameObject*)(obj)->anim.parent)->anim.rotZ + ((LargeCrateState*)def)->slideOffset;
+        (obj)->anim.velocityX = -(f32)sum / ((LargeCrateState*)def)->slidePhase;
+        if ((oldVel <= 0.0f && (obj)->anim.velocityX >= 0.0f) || (oldVel >= 0.0f && (obj)->anim.velocityX <= 0.0f))
         {
             linkedId = *(u32*)(state31 + 0x14);
             adj = linkedId - LARGECRATE_LINKED_ID_BASE;
@@ -180,27 +179,26 @@ void largecrate_updateConveyorSlide(int obj, int def)
                 (linkedId == LARGECRATE_ROB_WAVE_DIRECT_ID) || (adj == LARGECRATE_ROB_WAVE_ID_65D0) ||
                 (adj == LARGECRATE_ROB_WAVE_ID_65D2))
             {
-                if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
-                    lbl_803E39BC)
+                if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) < lbl_803E39BC)
                 {
                     if ((u32)mainGetBit(GAMEBIT_SFX_MUTE) == 0)
                     {
-                        Sfx_PlayFromObject(obj, SFXTRIG_tr_jbike_snowhit);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_tr_jbike_snowhit);
                     }
                 }
             }
         }
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)obj)->anim.velocityX;
-        if (((GameObject*)obj)->anim.localPosX > (limit = lbl_803E39C0 + ((LargeCrateState*)def)->homeX))
+        (obj)->anim.localPosX = (obj)->anim.localPosX + (obj)->anim.velocityX;
+        if ((obj)->anim.localPosX > (limit = lbl_803E39C0 + ((LargeCrateState*)def)->homeX))
         {
-            ((GameObject*)obj)->anim.localPosX = limit;
+            (obj)->anim.localPosX = limit;
         }
         else
         {
             limit = ((LargeCrateState*)def)->homeX - lbl_803E39C4;
-            if (((GameObject*)obj)->anim.localPosX < limit)
+            if ((obj)->anim.localPosX < limit)
             {
-                ((GameObject*)obj)->anim.localPosX = limit;
+                (obj)->anim.localPosX = limit;
             }
         }
     }
@@ -407,35 +405,34 @@ int largecrate_getObjectTypeId(void)
     return 0;
 }
 
-void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
+void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     int state;
     s16 timer;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    if (((*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14)) ==
-         0) ||
+    state = *(int*)&(obj)->extra;
+    if (((*gMapEventInterface)->shouldNotSaveTime(*(int*)(*(int*)&(obj)->anim.placementData + 0x14)) == 0) ||
         (((timer = ((LargeCrateState*)state)->breakTimer) != 0) && (timer <= 0x32)) ||
         (((LargeCrateState*)state)->animTimer > lbl_803E39B8))
     {
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
     else
     {
-        if (((GameObject*)obj)->unkF8 != 0)
+        if ((obj)->unkF8 != 0)
         {
             if (renderState != -1)
             {
-                ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+                (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
                 return;
             }
         }
         else if (renderState == 0)
         {
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+            (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
             return;
         }
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E39AC);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E39AC);
     }
 }
 
@@ -443,7 +440,7 @@ void largecrate_hitDetect(int obj)
 {
 }
 
-void largecrate_update(int obj)
+void largecrate_update(GameObject* obj)
 {
     int player;
     int def;
@@ -458,32 +455,32 @@ void largecrate_update(int obj)
     int level;
     f32 thresh;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    def = *(int*)&(obj)->anim.placementData;
     hitType = -1;
     animSpeed = lbl_803E39AC;
     (*gSkyInterface)->getClockTime(&animSpeed);
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     player = Obj_GetPlayerObject();
-    if (((GameObject*)obj)->anim.parent != NULL)
+    if ((obj)->anim.parent != NULL)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
     }
     else
     {
         if (((LargeCrateState*)state)->animTimer > (thresh = lbl_803E39B8))
         {
-            ((GameObject*)obj)->anim.alpha = 0;
+            (obj)->anim.alpha = 0;
             if (((LargeCrateState*)state)->breakTimeBonus != -1)
             {
                 ((LargeCrateState*)state)->animTimer = -(timeDelta * animSpeed - ((LargeCrateState*)state)->animTimer);
                 if (((LargeCrateState*)state)->animTimer <= thresh)
                 {
-                    if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX,
-                                       &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E39D0))
+                    if (!(Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
+                          lbl_803E39D0))
                     {
                         ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
                     }
@@ -491,24 +488,24 @@ void largecrate_update(int obj)
                     {
                         ((LargeCrateState*)state)->animTimer = lbl_803E39B8;
                         ((LargeCrateState*)state)->breakTimer = 0;
-                        ObjHits_EnableObject(obj);
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                        ObjHits_EnableObject((int)obj);
+                        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                     }
                 }
             }
         }
         else
         {
-            level = (int)(lbl_803E39DC * timeDelta + (f32)(u32)((GameObject*)obj)->anim.alpha);
+            level = (int)(lbl_803E39DC * timeDelta + (f32)(u32)(obj)->anim.alpha);
             if (level > 0xff)
             {
                 level = 0xff;
             }
-            ((GameObject*)obj)->anim.alpha = level;
+            (obj)->anim.alpha = level;
             if (((LargeCrateState*)state)->breakTimer != 0)
             {
-                ObjHits_DisableObject(obj);
+                ObjHits_DisableObject((int)obj);
                 if ((((LargeCrateState*)state)->breakTimer -= framesThisStep) <= 0)
                 {
                     if (((LargeCrateState*)state)->breakTimeBonus > 0)
@@ -520,39 +517,39 @@ void largecrate_update(int obj)
                     {
                         ((LargeCrateState*)state)->animTimer = lbl_803E39AC;
                     }
-                    ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
-                    ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-                    ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
-                    ((GameObject*)obj)->anim.previousLocalPosX = ((ObjPlacement*)def)->posX;
-                    ((GameObject*)obj)->anim.previousLocalPosY = ((ObjPlacement*)def)->posY;
-                    ((GameObject*)obj)->anim.previousLocalPosZ = ((ObjPlacement*)def)->posZ;
+                    (obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
+                    (obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+                    (obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
+                    (obj)->anim.previousLocalPosX = ((ObjPlacement*)def)->posX;
+                    (obj)->anim.previousLocalPosY = ((ObjPlacement*)def)->posY;
+                    (obj)->anim.previousLocalPosZ = ((ObjPlacement*)def)->posZ;
                     thresh = lbl_803E39B8;
-                    ((GameObject*)obj)->anim.velocityX = thresh;
-                    ((GameObject*)obj)->anim.velocityY = thresh;
-                    ((GameObject*)obj)->anim.velocityZ = thresh;
+                    (obj)->anim.velocityX = thresh;
+                    (obj)->anim.velocityY = thresh;
+                    (obj)->anim.velocityZ = thresh;
                 }
                 if (((LargeCrateState*)state)->breakTimer <= 0x32)
                 {
                     return;
                 }
             }
-            ((GameObject*)obj)->anim.rotY = ((LargeCrateState*)state)->spinSpeed;
+            (obj)->anim.rotY = ((LargeCrateState*)state)->spinSpeed;
             ((LargeCrateState*)state)->spinSpeed = (f32)((LargeCrateState*)state)->spinSpeed * lbl_803E39E0;
-            if ((((GameObject*)obj)->anim.rotY < 10) && (-10 < ((GameObject*)obj)->anim.rotY))
+            if (((obj)->anim.rotY < 10) && (-10 < (obj)->anim.rotY))
             {
-                ((GameObject*)obj)->anim.rotY = 0;
+                (obj)->anim.rotY = 0;
             }
             hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)hitInfo, &hitType, (u32*)&hitDamage, &pos.x, &pos.y,
                                                      &pos.z);
             if (hit == 0x10)
             {
-                Obj_StartModelFadeIn(obj, 300);
+                Obj_StartModelFadeIn((int)obj, 300);
                 hit = 0;
             }
-            if ((hit != 0) && (((GameObject*)obj)->anim.parent == NULL))
+            if ((hit != 0) && ((obj)->anim.parent == NULL))
             {
                 ((LargeCrateState*)state)->damageTaken = ((LargeCrateState*)state)->damageTaken + hitDamage;
-                Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive((int)obj, 0xf, 200, 0, 0, 1);
                 pos.x = pos.x + playerMapOffsetX;
                 pos.z = pos.z + playerMapOffsetZ;
                 objLightFn_8009a1dc((void*)obj, lbl_803E39E4, &lightPos, 1, 0);
@@ -560,36 +557,35 @@ void largecrate_update(int obj)
                 {
                     if (Sfx_IsPlayingFromObject(0, (u16)((LargeCrateState*)state)->hitSfxId) == 0)
                     {
-                        Sfx_PlayFromObject(obj, (u16)((LargeCrateState*)state)->hitSfxId);
+                        Sfx_PlayFromObject((int)obj, (u16)((LargeCrateState*)state)->hitSfxId);
                     }
-                    if (((GameObject*)obj)->anim.seqId == LARGECRATE_VARIANT_A)
+                    if ((obj)->anim.seqId == LARGECRATE_VARIANT_A)
                     {
                         ((LargeCrateState*)state)->spinSpeed = randomGetRange(600, 800);
                     }
                 }
                 else
                 {
-                    Sfx_StopObjectChannel(obj, 0x7f);
-                    (**(void (**)(int, int, int, int, int, int))(*lbl_803DDAC8 + 0x4))(obj, 1, 0, 2, -1, 0);
+                    Sfx_StopObjectChannel((int)obj, 0x7f);
+                    (**(void (**)(int, int, int, int, int, int))(*lbl_803DDAC8 + 0x4))((int)obj, 1, 0, 2, -1, 0);
                     if (Sfx_IsPlayingFromObject(0, (u16)((LargeCrateState*)state)->explodeSfxId) == 0)
                     {
-                        Sfx_PlayFromObject(obj, (u16)((LargeCrateState*)state)->explodeSfxId);
+                        Sfx_PlayFromObject((int)obj, (u16)((LargeCrateState*)state)->explodeSfxId);
                     }
                     ((LargeCrateState*)state)->breakTimer = 0x32;
                     ((LargeCrateState*)state)->damageTaken = 0;
-                    largecrate_spawnDropContents((GameObject*)(obj), player, state);
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                    largecrate_spawnDropContents(obj, player, state);
+                    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
-            vec3f_distanceSquared(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
-                                  &((GameObject*)obj)->anim.worldPosX);
+            vec3f_distanceSquared(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &(obj)->anim.worldPosX);
             if ((((LargeCrateState*)state)->idleTimer -= framesThisStep) <= 0)
             {
                 ((LargeCrateState*)state)->idleTimer =
                     (s16)(randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX) +
                           LARGECRATE_RANDOM_DELAY_BASE);
             }
-            if (((GameObject*)obj)->anim.parent != NULL)
+            if ((obj)->anim.parent != NULL)
             {
                 largecrate_updateConveyorSlide(obj, state);
             }

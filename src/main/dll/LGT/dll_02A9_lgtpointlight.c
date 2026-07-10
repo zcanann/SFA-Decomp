@@ -43,14 +43,14 @@ int PointLight_getObjectTypeId(void)
     return 0;
 }
 
-void PointLight_free(int obj)
+void PointLight_free(GameObject* obj)
 {
-    PointLightState* state = ((GameObject*)obj)->extra;
+    PointLightState* state = (obj)->extra;
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
     }
-    ObjGroup_RemoveObject(obj, LGT_POINTLIGHT_GROUP);
+    ObjGroup_RemoveObject((int)obj, LGT_POINTLIGHT_GROUP);
 }
 
 void PointLight_render(GameObject* obj)
@@ -112,21 +112,21 @@ void PointLight_update(GameObject* obj)
     }
 }
 
-void PointLight_init(int obj, int setup)
+void PointLight_init(GameObject* obj, int setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
     PointLightSetup* setupData = (PointLightSetup*)setup;
-    PointLightState* state = ((GameObject*)obj)->extra;
+    PointLightState* state = (obj)->extra;
 
     vec = *(PointLightVec*)lbl_802C25F8;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setupData->rotX << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(setupData->rotY << 8);
+    (obj)->anim.rotX = (s16)(setupData->rotX << 8);
+    (obj)->anim.rotY = (s16)(setupData->rotY << 8);
 
     if (state->light == NULL)
     {
-        state->light = objCreateLight(obj, 1);
+        state->light = objCreateLight((int)obj, 1);
     }
 
     if (state->light != NULL)
@@ -166,11 +166,11 @@ void PointLight_init(int obj, int setup)
 
         if (setupData->spotMode != 0)
         {
-            Obj_SetActiveModelIndex(obj, 1);
+            Obj_SetActiveModelIndex((int)obj, 1);
         }
         else
         {
-            Obj_SetActiveModelIndex(obj, 0);
+            Obj_SetActiveModelIndex((int)obj, 0);
         }
 
         if (setupData->glowEnabled != 0)
@@ -191,7 +191,7 @@ void PointLight_init(int obj, int setup)
         }
     }
 
-    ObjGroup_AddObject(obj, LGT_POINTLIGHT_GROUP);
+    ObjGroup_AddObject((int)obj, LGT_POINTLIGHT_GROUP);
 }
 
 void PointLight_release(void)

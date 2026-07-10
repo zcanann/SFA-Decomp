@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DLL_01E3_DIMBOSSGUT2_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
 typedef struct Dimbossgut2State
@@ -38,7 +39,7 @@ STATIC_ASSERT(offsetof(Dimbossgut2Curve, s14) == 0x14);
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, timer16) == 0x16);
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 
-void dimbossgut2_updateTracking(int obj, int state);
+void dimbossgut2_updateTracking(GameObject* obj, int state);
 void DIM_BossGut2_func0B(void);
 int DIM_BossGut2_setScale(void);
 int DIM_BossGut2_getExtraSize(void);
@@ -46,8 +47,8 @@ int DIM_BossGut2_getObjectTypeId(void);
 void DIM_BossGut2_free(int arg9);
 void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void DIM_BossGut2_hitDetect(void);
-void DIM_BossGut2_update(int obj);
-void DIM_BossGut2_init(int obj, int def, int p3);
+void DIM_BossGut2_update(GameObject* obj);
+void DIM_BossGut2_init(GameObject* obj, int def, int p3);
 void DIM_BossGut2_release(void);
 void DIM_BossGut2_initialise(void);
 

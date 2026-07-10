@@ -243,7 +243,7 @@ int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    warpPadFn_8019042c((int)obj);
+    warpPadFn_8019042c((GameObject*)obj);
     return 0;
 }
 #pragma opt_loop_invariants reset
@@ -259,9 +259,9 @@ void Transporter_update(int obj)
     register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
     if ((int)setup->warpId != -1)
     {
-        warpPadPlayerStandingOn(self);
+        warpPadPlayerStandingOn((GameObject*)(self));
     }
-    warpPadFn_8019042c(self);
+    warpPadFn_8019042c((GameObject*)(self));
 }
 
 void Transporter_hitDetect(int obj)

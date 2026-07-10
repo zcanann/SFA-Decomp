@@ -45,7 +45,7 @@ int VFP_LevelControl_getObjectTypeId(void);
 void VFP_LevelControl_free(int obj);
 void VFP_LevelControl_render(void);
 void VFP_LevelControl_hitDetect(void);
-void VFP_LevelControl_update(int obj);
+void VFP_LevelControl_update(GameObject* obj);
 void VFP_LevelControl_init(int* obj, u8* init);
 void VFP_LevelControl_release(void);
 void VFP_LevelControl_initialise(void);

@@ -55,8 +55,8 @@ int shop_getObjectTypeId(void);
 void shop_free(int* obj);
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void shop_hitDetect(void);
-void shop_update(int obj);
-void shop_init(int obj, int objDef);
+void shop_update(GameObject* obj);
+void shop_init(GameObject* obj, int objDef);
 void shop_release(void);
 void shop_initialise(void);
 

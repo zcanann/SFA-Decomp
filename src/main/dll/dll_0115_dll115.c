@@ -100,7 +100,7 @@ void dll_115_hitDetect_nop(void)
 {
 }
 
-void dll_115_update(int obj)
+void dll_115_update(GameObject* obj)
 {
     u8* state;
     u8* mapData;
@@ -108,8 +108,8 @@ void dll_115_update(int obj)
     int step;
     int eventId;
 
-    state = ((GameObject*)obj)->extra;
-    mapData = (u8*)((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    mapData = (u8*)(obj)->anim.placementData;
     if ((state[1] & 1) != 0)
     {
         eventId = ((s16*)(mapData + 0x18))[state[0]];
@@ -123,7 +123,7 @@ void dll_115_update(int obj)
     switch (state[0])
     {
     case DLL115_STEP_FINISH:
-        (*gObjectTriggerInterface)->preempt(obj, ((Dll115Placement*)mapData)->preemptArg);
+        (*gObjectTriggerInterface)->preempt((int)obj, ((Dll115Placement*)mapData)->preemptArg);
         (*gObjectTriggerInterface)
             ->runSequence(((Dll115Placement*)mapData)->finishSeqId, (void*)obj,
                           ((Dll115Placement*)mapData)->finishSeqParam);

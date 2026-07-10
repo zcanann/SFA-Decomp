@@ -132,7 +132,8 @@ void dll_197_update(int obj)
 
     *(f32*)(callbackData + 0x10) = lbl_803E513C;
     state->previousActive = state->active;
-    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0 || (state->hitCooldown != 0 && state->hitCooldown <= 0x14))
+    if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0 ||
+        (state->hitCooldown != 0 && state->hitCooldown <= 0x14))
     {
         state->active = 1 - state->active;
         if (state->active != 0)
@@ -241,7 +242,7 @@ int dll_197_getObjectTypeId(void)
     return 0x1;
 }
 
-void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     struct
     {
@@ -254,7 +255,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 startGrid[4];
     s16 endGrid[4];
     u8 traceOut[8];
-    Cup197State* state = ((GameObject*)obj)->extra;
+    Cup197State* state = (obj)->extra;
     u8* camera;
     f32 dist;
     f32 scale;
@@ -274,9 +275,9 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     state->visibleToCamera = 1;
     camera = Camera_GetCurrentViewSlot();
-    dir[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dir[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    dir[2] = *(f32*)(camera + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dir[0] = *(f32*)(camera + 0xc) - (obj)->anim.localPosX;
+    dir[1] = *(f32*)(camera + 0x10) - (obj)->anim.localPosY;
+    dir[2] = *(f32*)(camera + 0x14) - (obj)->anim.localPosZ;
 
     dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
     if (dist > lbl_803E5120)
@@ -289,9 +290,9 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objTrace[0] = lbl_803E5128 * dir[0];
         objTrace[1] = lbl_803E5128 * dir[1];
         objTrace[2] = lbl_803E5128 * dir[2];
-        objTrace[0] = objTrace[0] + ((GameObject*)obj)->anim.localPosX;
-        objTrace[1] = objTrace[1] + ((GameObject*)obj)->anim.localPosY;
-        objTrace[2] = objTrace[2] + ((GameObject*)obj)->anim.localPosZ;
+        objTrace[0] = objTrace[0] + (obj)->anim.localPosX;
+        objTrace[1] = objTrace[1] + (obj)->anim.localPosY;
+        objTrace[2] = objTrace[2] + (obj)->anim.localPosZ;
         cameraTrace[0] = lbl_803E512C * dir[0];
         cameraTrace[1] = lbl_803E512C * dir[1];
         cameraTrace[2] = lbl_803E512C * dir[2];
@@ -304,7 +305,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0)
         {
             state->visibleToCamera = 0;
-            (*gExpgfxInterface)->freeSource(obj);
+            (*gExpgfxInterface)->freeSource((int)obj);
         }
     }
 

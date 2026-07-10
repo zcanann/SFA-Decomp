@@ -96,7 +96,7 @@ extern void CameraModeDebug_initialise_nop(void);
 extern void CameraModeStatic_initialise(void);
 extern void CameraModeTestStrength_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
-extern int dll_19_func1B(int p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
+extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 extern f32 enemy_getHealthFraction(register int obj); /* target reticle distance for the enemy objType group */
 extern f32 sqrtf(f32 x);
 u8 gCamcontrolStateStorage[0x148];
@@ -303,7 +303,7 @@ void camcontrol_updateTargetFeedback(void)
                 targetDistance = gCamcontrolNormalizedMax;
                 break;
             default:
-                result = dll_19_func1B((int)target);
+                result = dll_19_func1B((GameObject*)target);
                 if (result != 0)
                 {
                     targetDistance = camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);

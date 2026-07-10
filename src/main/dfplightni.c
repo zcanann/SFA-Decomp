@@ -1,4 +1,5 @@
 #include "main/dfplightni.h"
+#include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
@@ -226,7 +227,7 @@ int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject* obj)
     {
         return 0;
     }
-    i = ObjHits_GetPriorityHit((int)obj, &outObj, 0, 0);
+    i = ObjHits_GetPriorityHit((GameObject*)obj, &outObj, 0, 0);
     if (((u32)outObj != 0) && (i != 0))
     {
         i = 1;

@@ -559,31 +559,31 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
     return;
 }
 
-void fn_80155F20(int obj, int state)
+void fn_80155F20(GameObject* obj, int state)
 {
     ((DusterState*)state)->phaseTimer = lbl_803E2A60;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         if (((BaddieState*)state)->seqEntryIndex == 1)
         {
-            if (((GameObject*)obj)->anim.currentMove == 1)
+            if ((obj)->anim.currentMove == 1)
             {
                 ((BaddieState*)state)->seqEntryIndex = 2;
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
             }
-            else if (((GameObject*)obj)->anim.currentMove == 3)
+            else if ((obj)->anim.currentMove == 3)
             {
                 ((BaddieState*)state)->seqEntryIndex = 0;
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 Baddie_SetMove(obj, state, 0, lbl_803E2A54, 0, 0);
             }
         }
-        else if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 2))
+        else if ((((BaddieState*)state)->seqEntryIndex == 2) && ((obj)->anim.currentMove != 2))
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
         }
     }
-    timeOfDayFn_80155cf8(obj, state);
+    timeOfDayFn_80155cf8((int)obj, state);
     return;
 }
 
@@ -827,8 +827,8 @@ void fn_8015652C(u32 obj, int state)
         }
         else
         {
-            moveSpeed = sidekickToy_accelerateTowardTargetXZ((GameObject*)(obj), route->posX, route->posY,
-                                                             route->posZ, lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
+            moveSpeed = sidekickToy_accelerateTowardTargetXZ((GameObject*)(obj), route->posX, route->posY, route->posZ,
+                                                             lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                              ((BaddieState*)state)->unk304);
         }
     }
@@ -1068,7 +1068,7 @@ void hoodedZyckUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
     return;
 }
 
-void fn_80156DA0(int obj, int state)
+void fn_80156DA0(GameObject* obj, int state)
 {
     bool resetting;
     int groundHit;
@@ -1087,17 +1087,17 @@ void fn_80156DA0(int obj, int state)
     }
     if (lbl_803E2B18 != ((DusterState*)state)->decoyTimer)
     {
-        ObjHits_DisableObject(obj);
-        if (((GameObject*)obj)->anim.currentMove != 5)
+        ObjHits_DisableObject((int)obj);
+        if ((obj)->anim.currentMove != 5)
         {
             Baddie_SetMove(obj, state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((int)obj);
             ((DusterState*)state)->decoyTimer = lbl_803E2B18;
         }
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        (obj)->anim.alpha = 0xff;
         resetting = true;
     }
     else
@@ -1106,20 +1106,20 @@ void fn_80156DA0(int obj, int state)
     }
     if (!resetting)
     {
-        ((GameObject*)obj)->anim.rotX = (short)(((GameObject*)obj)->anim.rotX + ((DusterState*)state)->turnDelta);
-        fromPos[0] = ((GameObject*)obj)->anim.localPosX;
-        fromPos[1] = ((GameObject*)obj)->anim.localPosY;
-        fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
-        fn_80292E20((u32)(u16)((GameObject*)obj)->anim.rotX, &sinYaw, &cosYaw);
-        toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2B38 * sinYaw;
-        toPos[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
-        toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2B38 * cosYaw;
+        (obj)->anim.rotX = (short)((obj)->anim.rotX + ((DusterState*)state)->turnDelta);
+        fromPos[0] = (obj)->anim.localPosX;
+        fromPos[1] = (obj)->anim.localPosY;
+        fromPos[2] = (obj)->anim.localPosZ;
+        fn_80292E20((u32)(u16)(obj)->anim.rotX, &sinYaw, &cosYaw);
+        toPos[0] = (obj)->anim.localPosX - lbl_803E2B38 * sinYaw;
+        toPos[1] = lbl_803E2B3C + (obj)->anim.localPosY;
+        toPos[2] = (obj)->anim.localPosZ - lbl_803E2B38 * cosYaw;
         groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hitOut, obj, (u32) * (u8*)(state + 0x261),
                                        0xffffffff, 0xff, 0);
         noHit = !(groundHit & 0xff);
         if (!noHit || ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0))
         {
-            if (noHit && ((GameObject*)obj)->anim.currentMove != 0)
+            if (noHit && (obj)->anim.currentMove != 0)
             {
                 ((DusterState*)state)->turnDelta = 0;
                 Baddie_SetMove(obj, state, 0, lbl_803E2B40, 0, 1);
@@ -1129,15 +1129,15 @@ void fn_80156DA0(int obj, int state)
                 float fz;
                 Baddie_SetMove(obj, state, 1, lbl_803E2B44, 0, 0);
                 fz = lbl_803E2B18;
-                ((GameObject*)obj)->anim.velocityX = fz;
-                ((GameObject*)obj)->anim.velocityY = fz;
-                ((GameObject*)obj)->anim.velocityZ = fz;
+                (obj)->anim.velocityX = fz;
+                (obj)->anim.velocityY = fz;
+                (obj)->anim.velocityZ = fz;
                 randBit = randomGetRange(0, 1);
                 ((DusterState*)state)->turnDelta = (u16)((randBit - 1) * 0x12c);
             }
         }
-        ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
-        ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
+        (obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
+        (obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
     }
     return;
 }

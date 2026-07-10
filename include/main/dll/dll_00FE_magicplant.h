@@ -98,17 +98,17 @@ STATIC_ASSERT(offsetof(MagicPlantObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(MagicPlantObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(MagicPlantObject, childLinkActive) == 0xEB);
 
-void MagicPlant_updateActive(int obj, MagicPlantSetup* setup, MagicPlantState* state);
-void MagicPlant_spawnChild(int obj, int objectId);
+void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setup, MagicPlantState* state);
+void MagicPlant_spawnChild(GameObject* obj, int objectId);
 void FUN_8017f7ec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, int* param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
 int MagicPlant_getExtraSize(void);
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
-void MagicPlant_free(int obj, int param_2);
+void MagicPlant_free(GameObject* obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(int obj);
-void MagicPlant_init(int obj, MagicPlantSetup* setup);
+void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup);
 void FUN_8017fa14(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, u16 param_10);
 u32 FUN_8017fba8(void);
@@ -127,8 +127,8 @@ typedef struct TrickyWarpState
 } TrickyWarpState;
 
 int TrickyWarp_getExtraSize(void);
-void TrickyWarp_free(int obj);
-void TrickyWarp_update(int obj);
+void TrickyWarp_free(GameObject* obj);
+void TrickyWarp_update(GameObject* obj);
 int fn_8017FFD0(GameObject* obj, TrickyWarpState* state);
 void TrickyWarp_init(s16* obj, u8* param_2);
 void FUN_801804a0(short* param_1, int param_2);
@@ -143,7 +143,7 @@ int duster_getExtraSize(void);
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect(int obj);
 void duster_update(int obj);
-void duster_init(int obj, u8* params);
+void duster_init(GameObject* obj, u8* params);
 void FUN_80180700(int param_1);
 void FUN_801807cc(int param_1);
 void FUN_80180940(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);

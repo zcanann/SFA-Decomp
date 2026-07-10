@@ -25,8 +25,8 @@ extern int* gPlayerInterface;
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
-extern void fn_8003A168(int p1, int p2);
-extern void characterDoEyeAnims(int obj, int p2);
+extern void fn_8003A168(GameObject* p1, int p2);
+extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
@@ -37,21 +37,21 @@ int dim2prisonmammoth_defaultStateHandler(void)
     return 0x0;
 }
 
-int dim2prisonmammoth_stateHandler03(int obj, int state)
+int dim2prisonmammoth_stateHandler03(GameObject* obj, int state)
 {
     f32 fz = 0.0f;
     ((BaddieState*)state)->animSpeedC = fz;
     ((BaddieState*)state)->animSpeedB = fz;
     ((BaddieState*)state)->animSpeedA = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = fz;
-    ((GameObject*)obj)->anim.velocityZ = fz;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityY = fz;
+    (obj)->anim.velocityZ = fz;
     *(int*)((char*)state + 0) |= 0x200000;
     if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
         int k = randomGetRange(0, 1);
         ((BaddieState*)state)->moveSpeed = (&gPrisonMammothMoveSpeedTable)[k];
-        ObjAnim_SetCurrentMove(obj, (&gPrisonMammothMoveIdTable)[k], 0.0f, 0);
+        ObjAnim_SetCurrentMove((int)obj, (&gPrisonMammothMoveIdTable)[k], 0.0f, 0);
     }
     if (*(s8*)&((BaddieState*)state)->moveDone != 0)
     {
@@ -60,25 +60,25 @@ int dim2prisonmammoth_stateHandler03(int obj, int state)
     return 0;
 }
 
-int dim2prisonmammoth_stateHandler02(int obj, int state)
+int dim2prisonmammoth_stateHandler02(GameObject* obj, int state)
 {
-    int inner = *(int*)&((GameObject*)obj)->extra;
+    int inner = *(int*)&(obj)->extra;
     f32 fz = 0.0f;
     ((BaddieState*)state)->animSpeedC = fz;
     ((BaddieState*)state)->animSpeedB = fz;
     ((BaddieState*)state)->animSpeedA = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = fz;
-    ((GameObject*)obj)->anim.velocityZ = fz;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityY = fz;
+    (obj)->anim.velocityZ = fz;
     *(int*)((char*)state + 0) |= 0x200000;
     ((BaddieState*)state)->moveSpeed = 0.005f;
-    if (((GameObject*)obj)->anim.currentMove != 0)
+    if ((obj)->anim.currentMove != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 0, fz, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, fz, 0);
     }
     ((Dim2prisonmammothState*)inner)->unk38C = randomGetRange(0x4b0, 0x960);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         buttonDisable(0, PAD_BUTTON_A);
@@ -86,34 +86,34 @@ int dim2prisonmammoth_stateHandler02(int obj, int state)
     return 0;
 }
 
-int dim2prisonmammoth_stateHandler01(int obj, int state)
+int dim2prisonmammoth_stateHandler01(GameObject* obj, int state)
 {
-    int inner = *(int*)&((GameObject*)obj)->extra;
+    int inner = *(int*)&(obj)->extra;
     f32 fz = 0.0f;
     ((BaddieState*)state)->animSpeedC = fz;
     ((BaddieState*)state)->animSpeedB = fz;
     ((BaddieState*)state)->animSpeedA = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = fz;
-    ((GameObject*)obj)->anim.velocityZ = fz;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityY = fz;
+    (obj)->anim.velocityZ = fz;
     *(int*)((char*)state + 0) |= 0x200000;
     if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
         ((BaddieState*)state)->moveSpeed = 0.005f;
-        if (((GameObject*)obj)->anim.currentMove != 5)
+        if ((obj)->anim.currentMove != 5)
         {
-            ObjAnim_SetCurrentMove(obj, 5, fz, 0);
+            ObjAnim_SetCurrentMove((int)obj, 5, fz, 0);
         }
         ((Dim2prisonmammothState*)inner)->unk38C = randomGetRange(0x4b0, 0x960);
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         mainSetBits(GAMEBIT_DIM_FoundBelinaTe, 1);
         buttonDisable(0, PAD_BUTTON_A);
     }
     if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), 4.0f, 8.0f))
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_hightop_call1);
     }
     return 0;
 }
@@ -210,12 +210,12 @@ void dim2prisonmammoth_update(int obj)
                 (f32*)(inner + 0x390));
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
-            fn_8003A168(obj, inner + 0x35c);
-            characterDoEyeAnims(obj, inner + 0x35c);
+            fn_8003A168((GameObject*)(obj), inner + 0x35c);
+            characterDoEyeAnims((GameObject*)(obj), inner + 0x35c);
             return;
         }
     }
-    characterDoEyeAnims(obj, inner + 0x35c);
+    characterDoEyeAnims((GameObject*)(obj), inner + 0x35c);
     v.mat[1] = ((GameObject*)obj)->anim.localPosX;
     v.mat[2] = ((GameObject*)obj)->anim.localPosY;
     v.mat[3] = ((GameObject*)obj)->anim.localPosZ;

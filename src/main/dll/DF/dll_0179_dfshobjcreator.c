@@ -88,29 +88,29 @@ void DFSH_ObjCreator_hitDetect(void)
 {
 }
 
-void DFSH_ObjCreator_update(int obj)
+void DFSH_ObjCreator_update(GameObject* obj)
 {
 
-    u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    DfshObjCreatorState* state = ((GameObject*)obj)->extra;
+    u8* setup = *(u8**)&(obj)->anim.placementData;
+    DfshObjCreatorState* state = (obj)->extra;
     void* resource;
     u8* spawnSetup;
 
     if (mainGetBit(0x589) != 0)
     {
-        ((GameObject*)obj)->unkF8 = 0;
+        (obj)->unkF8 = 0;
         return;
     }
 
-    if (((GameObject*)obj)->unkF8 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
+    if ((obj)->unkF8 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
     {
         resource = Resource_Acquire(0x82, 1);
-        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
-        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))(obj, 1, 0, 1, -1, 0);
-        Sfx_PlayFromObject(obj, SFXTRIG_hitpos_6);
+        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 0, 0, 1, -1, 0);
+        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 1, 0, 1, -1, 0);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_hitpos_6);
         Resource_Release(resource);
         state->spawnTimerStep = 1;
-        ((GameObject*)obj)->unkF8 = 1;
+        (obj)->unkF8 = 1;
     }
 
     if (state->spawnTimerStep != 0)
@@ -134,7 +134,7 @@ void DFSH_ObjCreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1A = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk1C = -1;
-        ((DfshObjCreatorSetup*)spawnSetup)->rotByte = (s8)(((GameObject*)obj)->anim.rotX >> 8);
+        ((DfshObjCreatorSetup*)spawnSetup)->rotByte = (s8)((obj)->anim.rotX >> 8);
         ((DfshObjCreatorSetup*)spawnSetup)->unk2B = 2;
         if (mainGetBit(0xfc) != 0)
         {
@@ -147,22 +147,21 @@ void DFSH_ObjCreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk29 = 0xff;
         ((DfshObjCreatorSetup*)spawnSetup)->unk2E = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk34 = 0xffff;
-        Obj_SetupObject(spawnSetup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                        *(int*)&((GameObject*)obj)->anim.parent);
+        Obj_SetupObject(spawnSetup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
         state->spawnTimer = 100;
         state->spawnTimerStep = 0;
     }
 }
 
-void DFSH_ObjCreator_init(int obj, s8* def)
+void DFSH_ObjCreator_init(GameObject* obj, s8* def)
 {
-    DfshObjCreatorState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    ((GameObject*)obj)->unkF8 = 0;
+    DfshObjCreatorState* state = (obj)->extra;
+    (obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
+    (obj)->unkF8 = 0;
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;
     *(u8*)((char*)obj + 0x37) = 0xFF;
-    ((GameObject*)obj)->anim.alpha = 0xFF;
+    (obj)->anim.alpha = 0xFF;
 }
 
 void DFSH_ObjCreator_release(void)

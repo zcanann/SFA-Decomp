@@ -20,7 +20,7 @@ void FUN_801457a4(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u64 param_8, u32 param_9, u32 param_10, int param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
 void trickyFn_801451d8(int obj, int state);
-void trickyFn_80144f50(int obj, int state);
+void trickyFn_80144f50(GameObject* obj, int state);
 void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1, int param_2, int param_3);
 int Tricky_func10(int* obj, int targetObj);
@@ -29,24 +29,24 @@ void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int comm
 int Tricky_updateSideCommandPrompts(int obj);
 u32 FUN_80146874(void);
 void Tricky_free(int obj, int shouldKeepFlameChildren);
-void Tricky_init(int obj);
+void Tricky_init(GameObject* obj);
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void Tricky_update(int obj);
 void fn_80148C18(int obj, int state);
-void tricky_handleDefeat(int obj, int state);
-int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u32 mode);
-u8 baddieTargetFn_8014a150(int obj, int state, void* from, void* to);
+void tricky_handleDefeat(GameObject* obj, int state);
+int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode);
+u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to);
 void baddieFn_8014a304(int obj, int state, float radius);
 void fn_8014A5FC(int obj, int state);
 void fn_8014A86C(int obj, int state, float* nearestFloorY, float* nearestSpecialY);
-void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender);
+void Tricky_render(GameObject* obj, int param_2, int param_3, int param_4, int param_5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
 void FUN_80146f94(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
 void FUN_80146f98(int param_1);
 void FUN_80146f9c(void);
 void FUN_80146fa0(void);
-void baddieInstantiateWeapon(int obj, int state);
+void baddieInstantiateWeapon(GameObject* obj, int state);
 void FUN_80146fa4(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);

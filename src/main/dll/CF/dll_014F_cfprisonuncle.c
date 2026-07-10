@@ -29,8 +29,8 @@ extern int ObjPath_GetPointWorldPosition();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
 extern void playerAddRemoveMagic(void* player, int n);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern int objModelGetVecFn_800395d8(int obj, int idx);
+extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
+extern int objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void objAudioFn_80039270(int obj, void* p, int id);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern int objUpdateOpacity(int sub);
@@ -161,7 +161,7 @@ void cfprisonuncle_update(int* obj)
     if (sub->released == 0)
     {
         player = Obj_GetPlayerObject();
-        fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
+        fn_8003ADC4((GameObject*)(obj), player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
         if ((int)randomGetRange(0, 0x1e) == 0)
         {
             objAudioFn_80039270((int)obj, (char*)sub + 0x34, 0x297);
@@ -169,14 +169,14 @@ void cfprisonuncle_update(int* obj)
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
             s16* vec;
-            fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
-            vec = (s16*)objModelGetVecFn_800395d8((int)obj, 1);
+            fn_8003ADC4((GameObject*)(obj), player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
+            vec = (s16*)objModelGetVecFn_800395d8((GameObject*)obj, 1);
             *vec = -0xaaa;
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         }
         else
         {
-            objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
+            objAnimFn_80038f38((GameObject*)obj, (char*)sub + 0x34);
             ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E428C,
                                                                         (f32)(u32)framesThisStep, 0);
         }

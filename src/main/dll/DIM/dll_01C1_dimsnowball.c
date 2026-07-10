@@ -99,7 +99,7 @@ void dimsnowball_hitDetect(int* obj)
     state[0] = 0;
 }
 
-void dimsnowball_update(int obj)
+void dimsnowball_update(GameObject* obj)
 {
     extern int Obj_GetPlayerObject(void);
     s16 idx[4];
@@ -121,11 +121,11 @@ void dimsnowball_update(int obj)
     ap = x;
     ap = y;
     ap = z;
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = Obj_GetPlayerObject();
     if (*(void**)state == NULL)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int)obj);
         return;
     }
     frames = framesThisStep;
@@ -134,7 +134,7 @@ void dimsnowball_update(int obj)
     last = count - 1;
     if (idx[1] >= last)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int)obj);
         return;
     }
     idx[0] = idx[1] - 1;
@@ -208,37 +208,33 @@ void dimsnowball_update(int obj)
     dy2 = y[2] - y[3];
     if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState*)state)->jingleCooldown <= 0)
     {
-        sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
-              (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-               ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
+        sqrtf((obj)->anim.velocityZ * (obj)->anim.velocityZ +
+              ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
         if ((((GameObject*)player)->objectFlags & DIMSNOWBALL_OBJFLAG_PARENT_SLACK) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_en_fireup_c_1fb);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_en_fireup_c_1fb);
         }
         ((DimsnowballState*)state)->jingleCooldown = 0x1e;
     }
-    ((GameObject*)obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
-    ((GameObject*)obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
-    ((GameObject*)obj)->anim.localPosZ = z[1] + lbl_803E4850 * (z[2] - z[1]);
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)*state)->anim.localPosX;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((GameObject*)*state)->anim.localPosY;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((GameObject*)*state)->anim.localPosZ;
-    ((GameObject*)obj)->anim.velocityX =
-        oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
-    ((GameObject*)obj)->anim.velocityY =
-        oneOverTimeDelta * (((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY);
-    ((GameObject*)obj)->anim.velocityZ =
-        oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+    (obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
+    (obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
+    (obj)->anim.localPosZ = z[1] + lbl_803E4850 * (z[2] - z[1]);
+    (obj)->anim.localPosX = (obj)->anim.localPosX + ((GameObject*)*state)->anim.localPosX;
+    (obj)->anim.localPosY = (obj)->anim.localPosY + ((GameObject*)*state)->anim.localPosY;
+    (obj)->anim.localPosZ = (obj)->anim.localPosZ + ((GameObject*)*state)->anim.localPosZ;
+    (obj)->anim.velocityX = oneOverTimeDelta * ((obj)->anim.localPosX - (obj)->anim.previousLocalPosX);
+    (obj)->anim.velocityY = oneOverTimeDelta * ((obj)->anim.localPosY - (obj)->anim.previousLocalPosY);
+    (obj)->anim.velocityZ = oneOverTimeDelta * ((obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
     state[2] = state[2] + frames;
     if (((DimsnowballState*)state)->jingleCooldown > 0)
     {
         ((DimsnowballState*)state)->jingleCooldown -= frames;
     }
-    v24 = ((GameObject*)obj)->anim.velocityX;
+    v24 = (obj)->anim.velocityX;
     dy2 = lbl_803E4854;
-    ((GameObject*)obj)->anim.rotY = -(dy2 * -((GameObject*)obj)->anim.velocityZ - (f32)((GameObject*)obj)->anim.rotY);
-    ((GameObject*)obj)->anim.rotZ = -(dy2 * v24 - (f32)((GameObject*)obj)->anim.rotZ);
-    model = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    (obj)->anim.rotY = -(dy2 * -(obj)->anim.velocityZ - (f32)(obj)->anim.rotY);
+    (obj)->anim.rotZ = -(dy2 * v24 - (f32)(obj)->anim.rotZ);
+    model = *(u8**)&(obj)->anim.hitReactState;
     if (model != NULL)
     {
         ((ObjHitsPriorityState*)model)->flags |= 1;

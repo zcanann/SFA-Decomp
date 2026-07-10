@@ -12,6 +12,6 @@
 #include "main/objprint_dolphin.h"
 #include "main/sfa_extern_decls.h"
 
-void landed_arwing_renderPathEffects(int obj);
+void landed_arwing_renderPathEffects(GameObject* obj);
 
 #endif

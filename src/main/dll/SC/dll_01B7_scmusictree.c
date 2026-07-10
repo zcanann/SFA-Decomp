@@ -138,9 +138,9 @@ typedef struct ScMusictreeState
 } ScMusictreeState;
 
 #pragma dont_inline on
-void sc_musictree_spawnAmbientEffect(int obj, int extra, int unused, s8 idx)
+void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx)
 {
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    int def = *(int*)&(obj)->anim.placementData;
     SCMusicTreeState* state = (SCMusicTreeState*)extra;
     int setup;
 
@@ -164,7 +164,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int extra, int unused, s8 idx)
         ((ScMusictreeSetup*)setup)->unk25 = -50;
         ((ScMusictreeSetup*)setup)->unk26 = -1;
         ((ScMusictreeSetup*)setup)->unk18 = 0;
-        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&(obj)->anim.parent);
     }
 }
 #pragma dont_inline reset
@@ -277,7 +277,7 @@ void sc_musictree_update(int obj)
         {
             if (*(void**)p == NULL)
             {
-                sc_musictree_spawnAmbientEffect(obj, inner, framesThisStep, i);
+                sc_musictree_spawnAmbientEffect((GameObject*)(obj), inner, framesThisStep, i);
             }
             else
             {
@@ -301,12 +301,12 @@ void sc_musictree_update(int obj)
     }
     if (((ScMusictreeState*)inner)->flags & (SCMUSICTREE_FLAG_PRIORITY_HIT | SCMUSICTREE_FLAG_SATELLITES))
     {
-        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (u32*)&hr3, &vec[0],
+        rcType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hr1, &hr2, (u32*)&hr3, &vec[0],
                                                     &vec[1], &vec[2]);
     }
     else
     {
-        rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
+        rcType = ObjHits_PollPriorityHitEffectWithCooldown((GameObject*)(obj), 8, 0xff, 0xff, 0x78, 0x129,
                                                            (f32*)(inner + 0x44));
     }
     if (((CloudRunnerState*)inner)->baddie.velZ >= 0.0f)

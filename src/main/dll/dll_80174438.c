@@ -76,9 +76,9 @@ int fn_80174438(int obj, PushableState* state)
     return 0;
 }
 
-void fn_80174588(int obj, PushableState* state)
+void fn_80174588(GameObject *obj, PushableState* state)
 {
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
+    int data = *(int*)&(obj)->anim.placementData;
 
     switch (*(int*)(data + 0x14))
     {
@@ -99,7 +99,7 @@ void fn_80174588(int obj, PushableState* state)
     {
         ObjTextureRuntimeSlot* tex;
         state->flags = (u16)(state->flags | 0x80);
-        tex = objFindTexture((void*)obj, 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
             tex->textureId = 256;
@@ -107,7 +107,7 @@ void fn_80174588(int obj, PushableState* state)
     }
 }
 
-int fn_80174668(int obj, PushableState* state)
+int fn_80174668(GameObject *obj, PushableState* state)
 {
     u8 flag;
     ObjTextureRuntimeSlot* tex;
@@ -121,27 +121,27 @@ int fn_80174668(int obj, PushableState* state)
 
     flag = 0;
     dist[0] = lbl_803E3540;
-    pushable_handleMsgs(obj, 0);
+    pushable_handleMsgs((int)obj, 0);
     if (mainGetBit(state->gameBit) != 0)
     {
-        cur = ((GameObject*)obj)->anim.rootMotionScale;
+        cur = (obj)->anim.rootMotionScale;
         bound = lbl_803E3544;
         if (cur > bound)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - ((GameObject*)obj)->anim.
+            (obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - (obj)->anim.
                 rootMotionScale);
-            if (((GameObject*)obj)->anim.rootMotionScale <= bound)
+            if ((obj)->anim.rootMotionScale <= bound)
             {
-                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3528;
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E354C;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                (obj)->anim.rootMotionScale = lbl_803E3528;
+                (obj)->anim.localPosY = (obj)->anim.localPosY - lbl_803E354C;
+                *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
         }
         return 1;
     }
     if (state->nearestObj == NULL)
     {
-        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, obj, dist);
+        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, (int)obj, dist);
     }
     if (state->nearestObj == NULL)
     {
@@ -151,7 +151,7 @@ int fn_80174668(int obj, PushableState* state)
     {
         state->eyeOpenAmount = *(f32 *)&lbl_803E3550;
     }
-    dy = ((GameObject*)state->nearestObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    dy = ((GameObject*)state->nearestObj)->anim.localPosZ - (obj)->anim.localPosZ;
     if (dy < lbl_803E3528)
     {
         dy = dy * lbl_803E3554;
@@ -161,7 +161,7 @@ int fn_80174668(int obj, PushableState* state)
     {
         return 0;
     }
-    dx = ((GameObject*)state->nearestObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dx = ((GameObject*)state->nearestObj)->anim.localPosX - (obj)->anim.localPosX;
     if (dx < *(f32 *)&lbl_803E3528)
     {
         dx = dx * lbl_803E3554;
@@ -175,7 +175,7 @@ int fn_80174668(int obj, PushableState* state)
         flag = 1;
         mainSetBits(0x1c9, 1);
     }
-    tex = objFindTexture((void*)obj, 0, 0);
+    tex = objFindTexture(obj, 0, 0);
     state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
     if (state->blinkPhase >= state->blinkInterval)
     {
@@ -203,7 +203,7 @@ int fn_80174668(int obj, PushableState* state)
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
             Resource_Release(tex);
-            Sfx_PlayFromObject(obj, SFXTRIG_espar5_c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_espar5_c);
         }
         else
         {

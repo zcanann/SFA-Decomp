@@ -41,21 +41,21 @@ enum
 
 #pragma scheduling off
 #pragma peephole off
-void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
+void arwarwinggu_setActiveVisible(GameObject* obj, u8 active, u8 visible)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    ArwingGuState* state = ((GameObject*)obj)->extra;
+    ObjAnimComponent* objAnim = &(obj)->anim;
+    ArwingGuState* state = (obj)->extra;
 
     if (active != 0)
     {
-        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        Obj_SetActiveModelIndex((int)obj, visible != 0 ? 1 : 0);
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0xff;
         state->visibleTimer = lbl_803E7058;
     }
     else
     {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }
 }
@@ -70,14 +70,14 @@ void arwarwinggu_setTextureFrame(GameObject* obj, int textureFrame)
 
 #pragma scheduling off
 #pragma peephole off
-void arwarwinggu_applyTextureFrame(int obj)
+void arwarwinggu_applyTextureFrame(GameObject* obj)
 {
     int model;
     ObjTextureRuntimeSlot* texture;
-    ArwingGuState* state = ((GameObject*)obj)->extra;
+    ArwingGuState* state = (obj)->extra;
     int anim;
-    model = Obj_GetActiveModel(obj);
-    texture = objFindTexture((void*)obj, 0, 0);
+    model = Obj_GetActiveModel((int)obj);
+    texture = objFindTexture(obj, 0, 0);
     anim = ObjModel_GetTexture(*(int*)model, 0);
     fn_800541A4(anim, (u16)state->texture.textureFrame);
     textureAnimFn_80053f2c(anim, (int)state, (int)texture);
@@ -120,17 +120,17 @@ void ARWArwingGu_hitDetect(void)
 
 #pragma scheduling off
 #pragma peephole off
-void ARWArwingGu_update(int obj)
+void ARWArwingGu_update(GameObject* obj)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ObjAnimComponent* objAnim = &(obj)->anim;
 
-    switch (((GameObject*)obj)->anim.seqId)
+    switch ((obj)->anim.seqId)
     {
     case ARWGU_DEF_ENGINE:
     {
-        ArwingGuState* state = ((GameObject*)obj)->extra;
-        int model = Obj_GetActiveModel(obj);
-        ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
+        ArwingGuState* state = (obj)->extra;
+        int model = Obj_GetActiveModel((int)obj);
+        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         int anim = ObjModel_GetTexture(*(int*)model, 0);
         fn_800541A4(anim, (u16)state->texture.textureFrame);
         textureAnimFn_80053f2c(anim, (int)state, (int)texture);
@@ -139,7 +139,7 @@ void ARWArwingGu_update(int obj)
     case ARWGU_DEF_GUN_L:
     case ARWGU_DEF_GUN_R:
     {
-        ArwingGuState* state = ((GameObject*)obj)->extra;
+        ArwingGuState* state = (obj)->extra;
         f32 minTimer;
         f32 vt = state->visibleTimer;
         if (vt > (minTimer = lbl_803E7060))
@@ -155,7 +155,7 @@ void ARWArwingGu_update(int obj)
     }
     case ARWGU_DEF_BOMB:
     {
-        ArwingGuState* state = ((GameObject*)obj)->extra;
+        ArwingGuState* state = (obj)->extra;
         f32 alpha;
         if (state->fadeIn != 0)
         {

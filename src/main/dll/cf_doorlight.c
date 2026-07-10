@@ -111,26 +111,25 @@ int kaldachom_stateHandlerB03(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int kaldachom_stateHandlerB02(int obj, GroundBaddieState* state)
+int kaldachom_stateHandlerB02(GameObject* obj, GroundBaddieState* state)
 {
-    int sub = *(int*)&((GameObject*)obj)->extra;
+    int sub = *(int*)&(obj)->extra;
 
     if ((s32)(s8)state->baddie.moveJustStartedB != 0)
     {
         ((CfDoorlightState*)sub)->control->soundFlags = 0;
         (*gPlayerInterface)->setState((void*)obj, state, 7);
-        ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        ObjHits_DisableObject((int)obj);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
         ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
         ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
     }
     else if ((s32)(s8)state->baddie.moveDone != 0)
     {
-        if (((GameObject*)obj)->anim.placementData == NULL)
+        if ((obj)->anim.placementData == NULL)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
             return 0;
         }
         return 4;
@@ -191,12 +190,12 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int kaldachom_stateHandlerA07(int obj, int baddieState)
+int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
 {
     int state;
     KaldaChomControl* control;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     *(u8*)&((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
     ((GroundBaddieState*)baddieState)->baddie.moveSpeed = lbl_803E3084;
     {
@@ -205,7 +204,7 @@ int kaldachom_stateHandlerA07(int obj, int baddieState)
         ((GroundBaddieState*)baddieState)->baddie.animSpeedB = fz;
         if (*(char*)&((GroundBaddieState*)baddieState)->baddie.moveJustStartedA != '\0')
         {
-            ObjAnim_SetCurrentMove(obj, 5, fz, 0);
+            ObjAnim_SetCurrentMove((int)obj, 5, fz, 0);
             *(s8*)&((GroundBaddieState*)baddieState)->baddie.moveDone = 0;
         }
     }
@@ -220,15 +219,16 @@ int kaldachom_stateHandlerA07(int obj, int baddieState)
     control = ((CfDoorlightState*)state)->control;
     if ((control->soundFlags & SOUNDFLAG_PULLUP_BURST) == 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_impyflap16);
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_277);
-        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mn_impyflap16);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_277);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
         control->soundFlags |= SOUNDFLAG_PULLUP_BURST;
         {
             char* linkedObj;
             if (((CfDoorlightState*)state)->spawnsLinkedObj != 0)
             {
-                linkedObj = ((char* (*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
+                linkedObj =
+                    ((char* (*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])((int)obj, 6, -1, 0);
             }
             else
             {
@@ -244,12 +244,12 @@ int kaldachom_stateHandlerA07(int obj, int baddieState)
     }
     if ((control->soundFlags & SOUNDFLAG_DOOR_CREAK) == 0)
     {
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3088)
+        if ((obj)->anim.currentMoveProgress > lbl_803E3088)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_iceywindlp16_233);
             control->soundFlags |= SOUNDFLAG_DOOR_CREAK;
         }
     }
-    ((GameObject*)obj)->anim.alpha = (lbl_803E3078 - ((GameObject*)obj)->anim.currentMoveProgress) * lbl_803E308C;
+    (obj)->anim.alpha = (lbl_803E3078 - (obj)->anim.currentMoveProgress) * lbl_803E308C;
     return 0;
 }

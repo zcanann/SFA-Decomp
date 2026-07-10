@@ -9,6 +9,6 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 
-void dimmagicbridge_updateVertexWave(int obj, u8* sub);
+void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub);
 
 #endif

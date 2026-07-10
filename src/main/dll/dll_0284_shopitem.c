@@ -237,9 +237,9 @@ void shopitem_onSeqFree(GameObject* obj)
     }
 }
 
-int shopitem_SeqFn(int obj, int unused, ObjSeqState* seq)
+int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
 {
-    int sub = *(int*)&((GameObject*)obj)->extra;
+    int sub = *(int*)&(obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
 
     seq->freeCallback = (ObjAnimSequenceFreeCallback)shopitem_onSeqFree;
@@ -248,10 +248,10 @@ int shopitem_SeqFn(int obj, int unused, ObjSeqState* seq)
 
     if ((int)objAnim->banks[objAnim->bankIndex] != 0)
     {
-        ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);
+        ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, (int)obj, NULL);
     }
 
-    switch (((GameObject*)obj)->anim.seqId)
+    switch ((obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_BSPLINE:
     {
@@ -267,20 +267,19 @@ int shopitem_SeqFn(int obj, int unused, ObjSeqState* seq)
             }
             else
             {
-                fn_801F4D54(obj, sub);
+                fn_801F4D54((int)obj, sub);
             }
-            fn_801F4ECC(obj, sub);
+            fn_801F4ECC((int)obj, sub);
         }
     }
         {
-            ((GameObject*)obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, ((ShopItemState*)sub)->splineT, 0);
-            ((GameObject*)obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, ((ShopItemState*)sub)->splineT, 0);
-            ((GameObject*)obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
             ((ShopItemState*)sub)->splineT =
                 ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->splineT;
-            ((GameObject*)obj)->anim.rotX =
-                getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+            (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
+                                        (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
             (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 416, NULL, 1, -1, NULL);
         }
@@ -298,10 +297,10 @@ int shopitem_getObjectTypeId(void)
     return 0x0;
 }
 
-void shopitem_free(int obj)
+void shopitem_free(GameObject* obj)
 {
-    (*gExpgfxInterface)->freeSource(obj);
-    switch (((GameObject*)obj)->anim.seqId)
+    (*gExpgfxInterface)->freeSource((int)obj);
+    switch ((obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_SPARKLE:
         ObjGroup_RemoveObject(obj, SHOPITEM_OBJGROUP);
@@ -309,17 +308,17 @@ void shopitem_free(int obj)
     }
 }
 
-void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void shopitem_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        if (((GameObject*)obj)->anim.seqId == SHOPITEM_SEQ_SPARKLE)
+        if ((obj)->anim.seqId == SHOPITEM_SEQ_SPARKLE)
         {
-            fn_801E83B0(obj, 0, 0, 0, 0);
+            fn_801E83B0((int)obj, 0, 0, 0, 0);
         }
         else
         {
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5A30);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5A30);
         }
     }
 }
@@ -328,11 +327,11 @@ void shopitem_hitDetect(void)
 {
 }
 
-void shopitem_update(int obj)
+void shopitem_update(GameObject* obj)
 {
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    int def = *(int*)&(obj)->anim.placementData;
     void* player = Obj_GetPlayerObject();
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     f32 range = lbl_803E5A64;
     PushcartState97* b = (PushcartState97*)(state + 0x97);
     int money;
@@ -340,14 +339,14 @@ void shopitem_update(int obj)
 
     if (b->flag_40)
     {
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+        (obj)->objectFlags = (u16)((obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if (b->flag_80)
     {
         ((ShopItemState*)state)->msgParam = -1;
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, (void*)(state + 0x88));
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, (int)obj, (void*)(state + 0x88));
         b->flag_80 = 0;
         b->flag_40 = 1;
     }
@@ -356,7 +355,7 @@ void shopitem_update(int obj)
         if (*(u32*)&((ShopItemState*)state)->vendorObj == 0)
         {
             int item;
-            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, obj, &range);
+            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, (int)obj, &range);
             item = ((ShopItemState*)state)->vendorObj;
             if ((u32)item != 0)
             {
@@ -366,10 +365,9 @@ void shopitem_update(int obj)
                         ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot) != 0)
                 {
                     b->flag_40 = 1;
-                    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                    ((GameObject*)obj)->objectFlags =
-                        (u16)(((GameObject*)obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+                    (obj)->objectFlags = (u16)((obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
+                    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
                 ((ShopItemState*)state)->helpTextId =
                     (s16)(*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x3C))(
@@ -378,23 +376,23 @@ void shopitem_update(int obj)
         }
         else
         {
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
+            if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
             {
                 forceAButtonIcon(0x12);
                 showHelpText(((ShopItemState*)state)->helpTextId);
             }
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+            if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 money = playerGetMoney(player);
                 price = (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x38))(
                     ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
                 (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x40))(
                     ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
-                switch (((GameObject*)obj)->anim.seqId)
+                switch ((obj)->anim.seqId)
                 {
                 case SHOPITEM_SEQ_BSPLINE:
-                    ((GameObject*)obj)->anim.localPosY =
-                        lbl_803E5A68 + ((ShopItemDef*)*(int*)&((GameObject*)obj)->anim.placementData)->splineYOffset;
+                    (obj)->anim.localPosY =
+                        lbl_803E5A68 + ((ShopItemDef*)*(int*)&(obj)->anim.placementData)->splineYOffset;
                     break;
                 }
                 if (money >= price)
@@ -408,7 +406,7 @@ void shopitem_update(int obj)
                 }
                 buttonDisable(0, PAD_BUTTON_A);
             }
-            switch (((GameObject*)obj)->anim.seqId)
+            switch ((obj)->anim.seqId)
             {
             case SHOPITEM_SEQ_BSPLINE:
             {
@@ -424,64 +422,60 @@ void shopitem_update(int obj)
                     }
                     else
                     {
-                        fn_801F4D54(obj, state);
+                        fn_801F4D54((int)obj, state);
                     }
-                    fn_801F4ECC(obj, state);
+                    fn_801F4ECC((int)obj, state);
                 }
-                ((GameObject*)obj)->anim.localPosX = Curve_EvalBSpline(state + 4, ((ShopItemState*)state)->splineT, 0);
-                ((GameObject*)obj)->anim.localPosY =
-                    Curve_EvalBSpline(state + 0x14, ((ShopItemState*)state)->splineT, 0);
-                ((GameObject*)obj)->anim.localPosZ =
-                    Curve_EvalBSpline(state + 0x24, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosX = Curve_EvalBSpline(state + 4, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosY = Curve_EvalBSpline(state + 0x14, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosZ = Curve_EvalBSpline(state + 0x24, ((ShopItemState*)state)->splineT, 0);
                 ((ShopItemState*)state)->splineT =
                     ((ShopItemState*)state)->splineSpeed * timeDelta + ((ShopItemState*)state)->splineT;
-                ((GameObject*)obj)->anim.rotX =
-                    getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                             ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+                (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
+                                            (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x19F, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x1A0, NULL, 1, -1, NULL);
                 break;
             }
             }
         }
-        if (((GameObject*)obj)->anim.seqId != SHOPITEM_SEQ_STATIC &&
-            ((GameObject*)obj)->anim.seqId != SHOPITEM_SEQ_BSPLINE)
+        if ((obj)->anim.seqId != SHOPITEM_SEQ_STATIC && (obj)->anim.seqId != SHOPITEM_SEQ_BSPLINE)
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5A60, timeDelta, NULL);
+            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5A60, timeDelta, NULL);
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) == 0)
+        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) == 0)
         {
-            objRenderFn_80041018(obj);
+            objRenderFn_80041018((int)obj);
         }
     }
 }
 
-void shopitem_init(int obj, int data)
+void shopitem_init(GameObject* obj, int data)
 {
     ObjAnimComponent* objAnim;
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
 
     objAnim = (ObjAnimComponent*)obj;
-    ((GameObject*)obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
-    ((GameObject*)obj)->animEventCallback = shopitem_SeqFn;
+    (obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->animEventCallback = shopitem_SeqFn;
     objAnim->bankIndex = (s8)((ShopItemDef*)data)->bankIndex;
-    ((GameObject*)obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(((ShopItemDef*)data)->rotYByte << 8);
+    (obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
+    (obj)->anim.rotY = (s16)(((ShopItemDef*)data)->rotYByte << 8);
     if ((s32)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
-    switch (((GameObject*)obj)->anim.seqId)
+    switch ((obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_BSPLINE:
-        fn_801F4C28(obj, state);
+        fn_801F4C28((int)obj, state);
         break;
     case SHOPITEM_SEQ_AMBIENT:
         (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);
         break;
     case SHOPITEM_SEQ_SPARKLE:
-        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
-        ObjGroup_AddObject(obj, SHOPITEM_OBJGROUP);
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), fn_801E832C);
+        ObjGroup_AddObject((int)obj, SHOPITEM_OBJGROUP);
         break;
     }
 }

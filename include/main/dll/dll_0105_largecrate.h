@@ -38,7 +38,7 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state);
 int LargeCrate_SeqFn(int* obj);
 int largecrate_getExtraSize(void);
 int largecrate_getObjectTypeId(void);
-void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
+void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState);
 void largecrate_hitDetect(int obj);
 void largecrate_init(GameObject* obj, u8* initData);
 void largecrate_release(void);

@@ -6,11 +6,11 @@
 #include "main/objanim_update.h"
 
 void treebird_init(GameObject* obj, int setup);
-int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void nw_geyser_init(GameObject* obj);
-void nw_geyser_update(int obj);
+void nw_geyser_update(GameObject* obj);
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #define nw_mammoth_SeqFn nw_mammoth_SeqFn
 

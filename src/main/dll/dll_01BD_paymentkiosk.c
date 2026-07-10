@@ -155,10 +155,10 @@ void PaymentKiosk_hitDetect(void)
 {
 }
 
-void PaymentKiosk_update(int obj)
+void PaymentKiosk_update(GameObject* obj)
 {
-    PaymentKioskState* st = ((GameObject*)obj)->extra;
-    PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
+    PaymentKioskState* st = (obj)->extra;
+    PaymentKioskMapData* setup = (PaymentKioskMapData*)(obj)->anim.placementData;
     u8 payState = st->payState;
 
     switch (payState)
@@ -174,23 +174,20 @@ void PaymentKiosk_update(int obj)
         }
         break;
     case PAYMENT_KIOSK_STATE_ACTIVE:
-        if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+        if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+        (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         break;
     case PAYMENT_KIOSK_STATE_PAID:
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         break;
     }
     st->promptState = 0;
-    if ((((GameObject*)obj)->anim.modelInstance->flags & 1) != 0 &&
-        ((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
+    if (((obj)->anim.modelInstance->flags & 1) != 0 && (obj)->anim.hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018(obj);
+        objRenderFn_80041018((int)obj);
     }
 }
 

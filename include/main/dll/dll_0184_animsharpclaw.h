@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0184_ANIMSHARPCLAW_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 typedef struct AnimsharpclawPlacement
@@ -32,7 +33,7 @@ typedef struct AnimsharpclawState
 int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate);
 int animsharpclaw_getExtraSize(void);
 int animsharpclaw_getObjectTypeId(void);
-void animsharpclaw_free(int obj);
+void animsharpclaw_free(GameObject* obj);
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void animsharpclaw_hitDetect(void);
 void animsharpclaw_update(int* obj);

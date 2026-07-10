@@ -2,6 +2,7 @@
 #define MAIN_DLL_CF_DLL_014A_CFPOWERBASE_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
@@ -16,7 +17,7 @@ typedef struct CfPowerBaseMapData
 STATIC_ASSERT(offsetof(CfPowerBaseMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(CfPowerBaseMapData, typeBit) == 0x1E);
 
-int CFPowerBase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
+int CFPowerBase_SeqFn(GameObject* p1, int unused, ObjAnimUpdateState* animUpdate);
 int CFPowerBase_getExtraSize(void);
 int CFPowerBase_getObjectTypeId(void);
 void CFPowerBase_free(void);

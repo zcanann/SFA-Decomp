@@ -72,7 +72,7 @@ extern int unlockLevel(s32 val, int idx, int flag);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
-void dim_levelcontrol_free(int obj)
+void dim_levelcontrol_free(GameObject *obj)
 {
     extern void Music_Trigger(int id, int arg);
     Music_Trigger(MUSICTRIG_drako_1, 0);
@@ -80,16 +80,16 @@ void dim_levelcontrol_free(int obj)
     timeOfDayFn_80055000();
 }
 
-void dim_levelcontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dim_levelcontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 v);
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A20);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4A20);
 }
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
-static inline int* DIM2snowball_GetActiveModel(void* obj)
+static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
@@ -111,7 +111,7 @@ typedef struct DimLevelControlState
     u8 b3 : 1;
 } DimLevelControlState;
 
-void dim_levelcontrol_update(int obj)
+void dim_levelcontrol_update(GameObject *obj)
 {
     extern void Music_Trigger(int id, int arg);
 
@@ -127,7 +127,7 @@ void dim_levelcontrol_update(int obj)
     b = mainGetBit(0xd0c);
     c = mainGetBit(0xd0d);
     d = mainGetBit(0xd0e);
-    st = ((GameObject*)obj)->extra;
+    st = (obj)->extra;
     if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4))
     {
         Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
@@ -141,12 +141,12 @@ void dim_levelcontrol_update(int obj)
         Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
         st->b3 = 1;
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
         if ((u32)mainGetBit(GAMEBIT_DIM_FlewTo) == 0 ||
             ((u32)mainGetBit(0x17) != 0 && mainGetBit(0xead) == 0))
         {
-            if (((GameObject*)obj)->unkF4 == 2)
+            if ((obj)->unkF4 == 2)
             {
                 getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
                 getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
@@ -161,7 +161,7 @@ void dim_levelcontrol_update(int obj)
                 getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
             }
         }
-        ((GameObject*)obj)->unkF4 = 0;
+        (obj)->unkF4 = 0;
     }
     if (st->groupStatus != 0)
     {
@@ -249,22 +249,22 @@ void dim_levelcontrol_update(int obj)
 }
 
 
-void dim_levelcontrol_init(int obj)
+void dim_levelcontrol_init(GameObject *obj)
 {
     DimLevelControlState* st;
     u8 i;
 
     randomGetRange(0, 11);
-    st = ((GameObject*)obj)->extra;
+    st = (obj)->extra;
     st->saveState = 0;
     st->timer = lbl_803E4A28;
     if (getSaveGameLoadStatus() != 0)
     {
-        ((GameObject*)obj)->unkF4 = 2;
+        (obj)->unkF4 = 2;
     }
     else
     {
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
     for (i = 1; i <= 38; i++)
     {
@@ -281,8 +281,8 @@ void dim_levelcontrol_init(int obj)
     st->b5 = mainGetBit(0xd0d);
     st->b4 = mainGetBit(0xd0e);
     st->b3 = mainGetBit(GAMEBIT_DIM_CannonRelated0A21);
-    (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 1);
-    ((GameObject*)obj)->objectFlags |= (DIMLEVELCONTROL_OBJFLAG_HIDDEN | DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
+    (*gMapEventInterface)->setMapAct((obj)->anim.mapEventSlot, 1);
+    (obj)->objectFlags |= (DIMLEVELCONTROL_OBJFLAG_HIDDEN | DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     unlockLevel(0, 0, 1);
 }
 

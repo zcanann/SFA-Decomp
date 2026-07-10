@@ -10,7 +10,7 @@ int MMP_levelcontrol_getObjectTypeId(void);
 void MMP_levelcontrol_free(int obj);
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MMP_levelcontrol_hitDetect(void);
-void MMP_levelcontrol_update(int obj);
+void MMP_levelcontrol_update(GameObject* obj);
 void MMP_levelcontrol_init(GameObject* obj);
 void MMP_levelcontrol_release(void);
 void MMP_levelcontrol_initialise(void);

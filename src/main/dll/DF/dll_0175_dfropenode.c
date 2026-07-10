@@ -149,14 +149,14 @@ int dfropenode_findNearestRopePoint(GameObject* obj, f32 worldX, f32 worldY, f32
     return result;
 }
 
-void dfropenode_applyForceAtPhase(f32 phase, f32 force, int obj)
+void dfropenode_applyForceAtPhase(f32 phase, f32 force, GameObject* obj)
 {
     DFropenodeExtra* extra;
     s8 idx;
     f32 fraction;
     DFRopeNode* node;
 
-    extra = ((GameObject*)obj)->extra;
+    extra = (obj)->extra;
     phase = phase - (f32)(s8)phase;
     idx = (s8)phase;
     fraction = phase - (f32)idx;
@@ -195,7 +195,7 @@ void dfropenode_advancePhaseByDistance(GameObject* obj, float* phase, f32 distan
     *phase = *phase + (f32)(s8)raw;
 }
 
-void dfropenode_getWorldPosAtPhase(f32 phase, int obj, float* xOut, float* yOut, float* zOut)
+void dfropenode_getWorldPosAtPhase(f32 phase, GameObject* obj, float* xOut, float* yOut, float* zOut)
 {
     DFropenodeExtra* extra;
     s8 idx;
@@ -207,7 +207,7 @@ void dfropenode_getWorldPosAtPhase(f32 phase, int obj, float* xOut, float* yOut,
     DFRopeNode* node;
     int nodes;
 
-    extra = ((GameObject*)obj)->extra;
+    extra = (obj)->extra;
     idx = (s8)phase;
     fraction = phase - (f32)idx;
     nodes = (int)extra->rope->nodes;
@@ -216,9 +216,9 @@ void dfropenode_getWorldPosAtPhase(f32 phase, int obj, float* xOut, float* yOut,
     dz = node[1].pos[2] - node->pos[2];
     x0 = extra->rope->nodes[idx].pos[0];
     dx = node[1].pos[0] - x0;
-    *xOut = dx * fraction + (((GameObject*)obj)->anim.localPosX + x0);
-    *yOut = dy * fraction + (((GameObject*)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
-    *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
+    *xOut = dx * fraction + ((obj)->anim.localPosX + x0);
+    *yOut = dy * fraction + ((obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
+    *zOut = dz * fraction + ((obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 
 void dfropenode_getPlaneEquation(int* obj, f32* out)
@@ -503,7 +503,7 @@ void dfropenode_update(DFropenodeObject* obj)
 {
     extern int getAngle(float y, float x);
     extern DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused,
-                                        s32 count, f32 tickScale);
+                                 s32 count, f32 tickScale);
 
     DFropenodeExtra* extra;
     u8* objDef;

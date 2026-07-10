@@ -2,21 +2,21 @@
 #define TRACK_INTERSECT_H_
 
 #include "dolphin/gx.h"
+#include "main/game_object.h"
 #include "ghidra_import.h"
 
-void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale);
+void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
 void* fn_8006F388(u32 i);
 void timeFn_8006f400(f32 step);
 void drawFn_8006f500(void);
-void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type);
+void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type);
 void fn_8006FC00(int param_1);
 void mapInitFn_8006fccc(void);
 int depthReadRequestPoll(int x, int y, int id);
 u32 getScreenResolution(void);
 void setScreenWidth(u32 param_1);
 void clearScreenWidth(void);
-void matrixFn_8006ff0c(float *param_6,short *param_7,f32 param_1,f32 param_2,f32 param_3,f32 param_4,
-                 f32 param_5);
+void matrixFn_8006ff0c(float* param_6, short* param_7, f32 param_1, f32 param_2, f32 param_3, f32 param_4, f32 param_5);
 void normalize(f32* x, f32* y, f32* z);
 void fn_80070234(f32* param_1);
 void gxSetPeControl_ZCompLoc_(u32 param_1);
@@ -35,8 +35,8 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod);
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3);
 void quakeSpellTextureFn_8007366c(u8 alpha);
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
-int modelCb_80073d04(u8 *obj, int *objB);
-int moonFxCb_80074110(u8 *obj, int *objB, int slot);
+int modelCb_80073d04(u8* obj, int* objB);
+int moonFxCb_80074110(u8* obj, int* objB, int slot);
 int modelCb_80074518(void* obj_a, void** obj_b, int param_3);
 u32 objCallback_80074d04(int handle, void* model);
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color);
@@ -44,7 +44,8 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
-void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset, int v_offset);
+void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset,
+                        int v_offset);
 void drawRect(f32 sx, f32 sy, int x, int y);
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags);
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag);
@@ -52,8 +53,8 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void trackIntersect_drawColorBand(void);
-void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth);
-void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale);
+void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth);
+void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale);
 void FUN_80070ec8(void);
 void fn_8007880C(void);
 void fn_800788DC(void);

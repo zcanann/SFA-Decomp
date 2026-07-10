@@ -2,6 +2,7 @@
 #define MAIN_DLL_ICEBADDIE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
 /*
@@ -10,11 +11,10 @@
  * grouping helpers, which are SHARED engine utilities: the generic enemy DLL
  * (dll_00C9) calls them for water/whirlpool objects.
  */
-void iceBaddie_enterWhirlpoolGroup(int obj, GroundBaddieState *state);
-void iceBaddie_leaveWhirlpoolGroup(int obj, GroundBaddieState *state);
-
+void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state);
+void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state);
 
 /* extern-cleanup: defining-file public prototypes */
-void iceBaddie_updateEffectAnchors(int obj, int state);
+void iceBaddie_updateEffectAnchors(GameObject* obj, int state);
 
 #endif /* MAIN_DLL_ICEBADDIE_H_ */

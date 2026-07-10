@@ -510,7 +510,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
     {
         gDim2IcicleHitCooldown = gDim2IcicleHitCooldown - 1;
     }
-    hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
+    hitResult = ObjHits_GetPriorityHit((GameObject*)(obj), &hitId, &hitType, &hitVolume);
     if (hitResult != 0)
     {
         gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;

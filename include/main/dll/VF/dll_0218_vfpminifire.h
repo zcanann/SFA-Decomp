@@ -2,6 +2,7 @@
 #define MAIN_DLL_VF_DLL_0218_VFPMINIFIRE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct VfpMinifireState
@@ -29,7 +30,7 @@ int VFP_MiniFire_getObjectTypeId(void);
 void VFP_MiniFire_free(int obj);
 void VFP_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
 void VFP_MiniFire_hitDetect(void);
-void VFP_MiniFire_update(int obj);
+void VFP_MiniFire_update(GameObject* obj);
 void VFP_MiniFire_init(int* obj, u8* init);
 void VFP_MiniFire_release(void);
 void VFP_MiniFire_initialise(void);

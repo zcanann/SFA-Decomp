@@ -64,7 +64,7 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
     Sfx_PlayFromObject((u32)obj, SFXTRIG_en_lrope_powerdown);
     ((BaddieState*)state)->reactionFlags |= 0x8;
     *(f32*)(state + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
-    fn_8014D08C(obj, state, 1, lbl_803E2810, 0, 0);
+    fn_8014D08C((GameObject*)(obj), state, 1, lbl_803E2810, 0, 0);
     *(u32*)&((BaddieState*)state)->unk2E4 &= ~0x20LL;
     fz = lbl_803E2814;
     obj->anim.velocityZ = lbl_803E2814;
@@ -81,8 +81,8 @@ extern void Obj_FreeObject(int* obj);
 extern u8 lbl_803DBCA8;
 extern int fn_801A0174(int* obj);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
-extern void fn_8014D08C(void* p1, void* p2, int p3, f32 f1, int p5, int p6);
-extern void objfx_spawnLightPulse(int* obj, f32 scale, int a, int b, int c, f32 v, void* params);
+extern void fn_8014D08C(GameObject* p1, void* p2, int p3, f32 f1, int p5, int p6);
+extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 v, void* params);
 extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803DBCB0;
@@ -135,7 +135,7 @@ void fn_80152514(int* obj, u8* state)
             *(f32*)(state + 0x32c) = lbl_803E2814;
             *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
             Sfx_StopObjectChannel((u32)obj, 4);
-            fn_8014D08C(obj, state, 0, lbl_803E2820, 0, 0);
+            fn_8014D08C((GameObject*)(obj), state, 0, lbl_803E2820, 0, 0);
         }
         else if (!(*(u32*)&((BaddieState*)state)->unk2E4 & 0x20))
         {
@@ -232,7 +232,7 @@ void fn_80152514(int* obj, u8* state)
         fx.c = z;
         fx.d = z;
         fx.a = lbl_803E2820;
-        objfx_spawnLightPulse(obj, lbl_803E2834, 2, 0, 6, lbl_803E2838, &fx);
+        objfx_spawnLightPulse((GameObject*)(obj), lbl_803E2834, 2, 0, 6, lbl_803E2838, &fx);
         fx.c = lbl_803E283C;
         objfx_spawnMaskedHitEffect(obj, lbl_803E2840, 1, 6, 0x20, &fx);
         fx.b = lbl_803E2814;
@@ -267,7 +267,7 @@ void fn_80152514(int* obj, u8* state)
         child2 = ((GameObject*)obj)->childObjs[0];
         if (child2 != 0)
         {
-            ObjTextureRuntimeSlot* tex = objFindTexture(child2, 0, 0);
+            ObjTextureRuntimeSlot* tex = objFindTexture((GameObject*)(child2), 0, 0);
             int v;
             if (tex != 0)
             {
@@ -602,7 +602,7 @@ void fn_80152040(int* obj, u8* state)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
             }
-            fn_8014D08C(obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
+            fn_8014D08C((GameObject*)(obj), state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
                         *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
         }
     }

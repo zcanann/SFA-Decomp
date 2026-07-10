@@ -42,27 +42,27 @@ void DR_EnergyDisc_hitDetect(void)
 {
 }
 
-void DR_EnergyDisc_update(int obj)
+void DR_EnergyDisc_update(GameObject* obj)
 {
     ObjTextureRuntimeSlot* texture;
-    DrEnergyDiscState* state = ((GameObject*)obj)->extra;
-    int setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    DrEnergyDiscState* state = (obj)->extra;
+    int setup = *(int*)&(obj)->anim.placementData;
 
     if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
     {
         if (state->activated == 0)
         {
             state->activated = 1;
-            Sfx_PlayFromObject(obj, SFXTRIG_id_30c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_id_30c);
         }
 
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
             texture->textureId = 0x100;
         }
 
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
             texture->offsetT = texture->offsetT + lbl_803DC380 * framesThisStep;
@@ -75,7 +75,7 @@ void DR_EnergyDisc_update(int obj)
 
     if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->moveGameBit) != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6BB0, 0);
     }
 }
 
@@ -91,7 +91,7 @@ void DR_EnergyDisc_init(u8* obj, u8* setup)
     {
         state->activated = 1;
         Sfx_PlayFromObject((int)obj, SFXTRIG_id_30c);
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((GameObject*)(obj), 0, 0);
         if (texture != NULL)
         {
             texture->textureId = 0x100;
@@ -100,7 +100,7 @@ void DR_EnergyDisc_init(u8* obj, u8* setup)
     else
     {
         state->activated = 0;
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((GameObject*)(obj), 0, 0);
         if (texture != NULL)
         {
             texture->textureId = 0;

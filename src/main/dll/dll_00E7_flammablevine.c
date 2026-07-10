@@ -59,14 +59,14 @@ void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-void FlammableVine_hitDetect(int obj)
+void FlammableVine_hitDetect(GameObject* obj)
 {
     FlammablevineState* state;
     u8* def;
     int hitObj;
 
-    state = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    def = *(u8**)&(obj)->anim.placementData;
     if ((state->flags & 3) == 0)
     {
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitObj) == 0x1a)
@@ -82,7 +82,7 @@ void FlammableVine_hitDetect(int obj)
     }
 }
 
-void FlammableVine_update(int obj)
+void FlammableVine_update(GameObject* obj)
 {
     FlammablevineState* state;
     u8* def;
@@ -93,12 +93,11 @@ void FlammableVine_update(int obj)
     int pulseStyle;
     u32 fadeAlpha;
 
-    state = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    def = *(u8**)&(obj)->anim.placementData;
     tricky = getTrickyObject();
 
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+    *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     if (((FlammablevineObjectDef*)def)->gateBit == -1)
     {
         goto can_use_vine;
@@ -126,30 +125,29 @@ checked_vine_use:
     {
         if (state->setupParam == 0)
         {
-            ObjHits_SetHitVolumeSlot(obj, FLAMMABLEVINE_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((int)obj, FLAMMABLEVINE_HIT_VOLUME_SLOT, 1, 0);
         }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((int)obj);
 
-        if (((GameObject*)obj)->anim.seqId == 0x102)
+        if ((obj)->anim.seqId == 0x102)
         {
             if (cMenuGetSelectedItem() == -1)
             {
-                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0;
+                (obj)->anim.modelInstance->hitVolumes[0].priority = 0;
             }
             else
             {
-                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0x10;
+                (obj)->anim.modelInstance->hitVolumes[0].priority = 0x10;
             }
         }
 
         if (tricky != NULL && canUse != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+            *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+            if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 TrickyIface* iface = *(TrickyIface**)((u8*)tricky + 0x68);
-                iface->vtbl->slot28(tricky, obj, 1, 4);
+                iface->vtbl->slot28(tricky, (int)obj, 1, 4);
             }
         }
     }
@@ -161,11 +159,11 @@ checked_vine_use:
         state->burnTimer = burnTimer - timeDelta;
         if (state->burnTimer <= zero)
         {
-            ((GameObject*)obj)->anim.alpha = 0;
+            (obj)->anim.alpha = 0;
             state->burnTimer = zero;
             state->flags = state->flags & ~1;
             state->flags = state->flags | 2;
-            Obj_RemoveFromUpdateList(obj);
+            Obj_RemoveFromUpdateList((int)obj);
             ObjHits_DisableObject(obj);
         }
     }
@@ -191,12 +189,12 @@ checked_vine_use:
         {
             if (state->burnTimer < 120.0f)
             {
-                ((GameObject*)obj)->anim.alpha = 0;
+                (obj)->anim.alpha = 0;
             }
             else
             {
                 fadeAlpha = (u8)(255.0f * ((state->burnTimer - 120.0f) / 30.0f));
-                ((GameObject*)obj)->anim.alpha = fadeAlpha;
+                (obj)->anim.alpha = fadeAlpha;
             }
         }
 
@@ -210,44 +208,43 @@ checked_vine_use:
         {
             pulseStyle = 0;
         }
-        fn_80098B18(obj, 0.65f * (state->burnIntensity * ((GameObject*)obj)->anim.rootMotionScale), 3, 0, pulseStyle,
-                    0);
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
+        fn_80098B18((int)obj, 0.65f * (state->burnIntensity * (obj)->anim.rootMotionScale), 3, 0, pulseStyle, 0);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
     }
 }
 
-void FlammableVine_init(int obj, int def)
+void FlammableVine_init(GameObject* obj, int def)
 {
     FlammablevineState* state;
     f32 scale;
 
-    state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, FLAMMABLEVINE_OBJGROUP);
-    ((GameObject*)obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
+    state = (obj)->extra;
+    ObjGroup_AddObject((int)obj, FLAMMABLEVINE_OBJGROUP);
+    (obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
 
-    ((GameObject*)obj)->anim.rootMotionScale = 5.0f * ((f32)((FlammablevineObjectDef*)def)->scaleParam / 32767.0f);
-    if (((GameObject*)obj)->anim.rootMotionScale <= 0.05f)
+    (obj)->anim.rootMotionScale = 5.0f * ((f32)((FlammablevineObjectDef*)def)->scaleParam / 32767.0f);
+    if ((obj)->anim.rootMotionScale <= 0.05f)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = 0.05f;
+        (obj)->anim.rootMotionScale = 0.05f;
     }
 
-    scale = ((GameObject*)obj)->anim.rootMotionScale;
+    scale = (obj)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds(obj, (s16)(14.0f * scale), 0, (s16)(25.0f * scale));
     state->burnIntensity = 0.001f;
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, 0.0f);
 
     if (((FlammablevineObjectDef*)def)->burnedBit != -1 && mainGetBit(((FlammablevineObjectDef*)def)->burnedBit) != 0)
     {
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((int)obj);
         ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.alpha = 0;
+        (obj)->anim.alpha = 0;
         state->flags = state->flags | 2;
     }
 
     state->setupParam = ((FlammablevineObjectDef*)def)->setupParam;
     if (state->setupParam == 1)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((int)obj);
     }
 }
 

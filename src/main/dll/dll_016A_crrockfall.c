@@ -97,22 +97,22 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 #pragma dont_inline on
 #pragma scheduling off
-f32 fn_801ACCFC(int obj)
+f32 fn_801ACCFC(GameObject* obj)
 {
-    CrRockfallState* state = ((GameObject*)obj)->extra;
+    CrRockfallState* state = (obj)->extra;
     int* list;
     int count;
     int i;
     int bestIdx;
     f32 bestDist;
-    count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &list, 0, 0);
+    count = hitDetectFn_80065e50((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
+                                 0, 0);
     bestDist = lbl_803E4700;
     bestIdx = -1;
     for (i = 0; i < count; i++)
     {
         f32 dy;
-        if ((dy = ((GameObject*)obj)->anim.localPosY - *(f32*)list[i]) > *(f32*)&lbl_803E4704 && dy < bestDist)
+        if ((dy = (obj)->anim.localPosY - *(f32*)list[i]) > *(f32*)&lbl_803E4704 && dy < bestDist)
         {
             bestDist = dy;
             bestIdx = i;
@@ -123,7 +123,7 @@ f32 fn_801ACCFC(int obj)
         state->floorFound = 1;
         return *(f32*)list[bestIdx];
     }
-    return ((GameObject*)obj)->anim.localPosY;
+    return (obj)->anim.localPosY;
 }
 #pragma dont_inline reset
 
@@ -197,7 +197,7 @@ void crrockfall_update(int* obj)
 
     if (state->floorFound == 0)
     {
-        state->floorY = fn_801ACCFC((int)obj);
+        state->floorY = fn_801ACCFC((GameObject*)obj);
         if (state->floorFound != 0 && modelState != NULL)
         {
             modelState->overrideWorldPosY = state->floorY;
@@ -345,8 +345,7 @@ void crrockfall_update(int* obj)
             else
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_jbike_bombbeep);
-                spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale, 1, 1, 0, 1, 1, 1,
-                               1);
+                spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale, 1, 1, 0, 1, 1, 1, 1);
             }
         }
     }

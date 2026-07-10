@@ -90,8 +90,8 @@ extern void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq);
 extern void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq);
-extern void objModelClearVecFn_8003aa40(void* obj);
-extern s16* objModelGetVecFn_800395d8(void* obj, int index);
+extern void objModelClearVecFn_8003aa40(GameObject* obj);
+extern s16* objModelGetVecFn_800395d8(GameObject* obj, int index);
 extern long long OSGetTime(void);
 extern s16 gObjSeqBgCmds[];
 extern u8 objSeqXrotChanged[];
@@ -2153,7 +2153,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 
         if ((((ObjSeqState*)seq)->flags & 8) != 0)
         {
-            vec = objModelGetVecFn_800395d8(seqObj, 0);
+            vec = objModelGetVecFn_800395d8((GameObject*)(seqObj), 0);
             if (vec != NULL)
             {
                 if (((ObjSeqState*)seq)->trackRunLength[1] != 0)
@@ -2237,7 +2237,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                     {
                         for (k = 1; k < slots; k++)
                         {
-                            vec2 = objModelGetVecFn_800395d8(seqObj, modelIds[k]);
+                            vec2 = objModelGetVecFn_800395d8((GameObject*)(seqObj), modelIds[k]);
                             if (vec2 != NULL)
                             {
                                 vec2[1] = vec[1];
@@ -2252,7 +2252,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 
         if ((((ObjSeqState*)seq)->flags & 0x200) != 0)
         {
-            vec = objModelGetVecFn_800395d8(seqObj, 1);
+            vec = objModelGetVecFn_800395d8((GameObject*)(seqObj), 1);
             if (vec != NULL)
             {
                 if (((ObjSeqState*)seq)->trackRunLength[17] != 0)
@@ -2282,8 +2282,8 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 
         if ((((ObjSeqState*)seq)->flags & 0x40) != 0)
         {
-            tex1 = objFindTexture(seqObj, 1, 0);
-            tex2 = objFindTexture(seqObj, 0, 0);
+            tex1 = objFindTexture((GameObject*)(seqObj), 1, 0);
+            tex2 = objFindTexture((GameObject*)(seqObj), 0, 0);
             if (tex1 != NULL || tex2 != NULL)
             {
                 if (((ObjSeqState*)seq)->trackRunLength[15] != 0)
@@ -2349,8 +2349,8 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 }
             }
 
-            tex5 = objFindTexture(seqObj, 5, 0);
-            tex2 = objFindTexture(seqObj, 4, 0);
+            tex5 = objFindTexture((GameObject*)(seqObj), 5, 0);
+            tex2 = objFindTexture((GameObject*)(seqObj), 4, 0);
             if (tex5 != NULL)
             {
                 tex5->textureId = (s16)((ObjSeqState*)seq)->texId5 << 8;
@@ -3364,10 +3364,10 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
 
     if (*seqObj != NULL)
     {
-        objModelClearVecFn_8003aa40(*seqObj);
+        objModelClearVecFn_8003aa40((GameObject*)(*seqObj));
         if (*(s16*)(*seqObj + 0x44) == 1)
         {
-            modelVec = objModelGetVecFn_800395d8(obj, 1);
+            modelVec = objModelGetVecFn_800395d8((GameObject*)(obj), 1);
             if (modelVec != NULL)
             {
                 modelVec[0] = 0;

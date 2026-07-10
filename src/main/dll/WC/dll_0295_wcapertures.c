@@ -124,9 +124,9 @@ void wcapertures_free(GameObject* obj)
     }
 }
 
-void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    WCAperturesState* state = ((GameObject*)obj)->extra;
+    WCAperturesState* state = (obj)->extra;
     u8* light;
 
     if (visible != 0)
@@ -144,7 +144,7 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E2C);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6E2C);
     }
 }
 
@@ -241,14 +241,14 @@ void wcapertures_update(GameObject* obj)
     }
 }
 
-void wcapertures_init(int obj, int initData)
+void wcapertures_init(GameObject* obj, int initData)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCAperturesState* state = ((GameObject*)obj)->extra;
+    WCAperturesState* state = (obj)->extra;
     WCAperturesSetup* setup = (WCAperturesSetup*)initData;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setup->type << 8);
-    ((GameObject*)obj)->animEventCallback = wcapertures_interactCallback;
+    (obj)->anim.rotX = (s16)(setup->type << 8);
+    (obj)->animEventCallback = wcapertures_interactCallback;
     *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
@@ -261,8 +261,8 @@ void wcapertures_init(int obj, int initData)
     }
     objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
     state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
-    state->light = objCreateLight(obj, 1);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
+    state->light = objCreateLight((int)obj, 1);
     if (state->light != NULL)
     {
         modelLightStruct_setLightKind(state->light, WCAPERTURES_LIGHT_KIND);

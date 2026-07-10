@@ -35,15 +35,15 @@ typedef struct ObjUpdateRomCurveFollowVelocityState
 /* update group a dispensed barrel is added to (GunpowderBarrel DLL 0x158) */
 #define BARREL_UPDATE_OBJGROUP 25
 
-int barrelgener_getLinkId(int obj)
+int barrelgener_getLinkId(GameObject* obj)
 {
-    BarrelGeneratorSetup* setup = (BarrelGeneratorSetup*)((GameObject*)obj)->anim.placementData;
+    BarrelGeneratorSetup* setup = (BarrelGeneratorSetup*)(obj)->anim.placementData;
     return setup->linkId;
 }
 
-void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
+void barrelgener_queueObjectRelease(GameObject* obj, int queuedObj, int releaseFrame)
 {
-    BarrelGeneratorState* state = ((GameObject*)obj)->extra;
+    BarrelGeneratorState* state = (obj)->extra;
 
     state->queuedObject = (GameObject*)queuedObj;
     state->releaseAnimPlaying = 0;
@@ -78,11 +78,11 @@ void barrelgener_hitDetect(void)
 {
 }
 
-void barrelgener_init(int obj)
+void barrelgener_init(GameObject* obj)
 {
-    BarrelGeneratorState* state = ((GameObject*)obj)->extra;
+    BarrelGeneratorState* state = (obj)->extra;
 
-    ObjGroup_AddObject(obj, BARRELGENER_OBJGROUP);
+    ObjGroup_AddObject((int)obj, BARRELGENER_OBJGROUP);
     state->releaseAnimPlaying = 0;
     state->queuedObject = NULL;
     storeZeroToFloatParam(&state->releaseTimer);
@@ -96,14 +96,14 @@ void barrelgener_initialise(void)
 {
 }
 
-void barrelgener_update(int obj)
+void barrelgener_update(GameObject* obj)
 {
-    BarrelGeneratorState* state = ((GameObject*)obj)->extra;
+    BarrelGeneratorState* state = (obj)->extra;
     int player = Obj_GetPlayerObject();
 
     if ((u32)mainGetBit(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
     {
-        if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24)
+        if (Vec_distance((int)obj + 24, player + 24) < lbl_803E6C24)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             mainSetBits(GAMEBIT_BARRELGENER_TRIGGERED, 1);
@@ -114,8 +114,8 @@ void barrelgener_update(int obj)
         if (state->releaseTimer <= lbl_803E6C28 && state->releaseAnimPlaying == 0)
         {
             state->releaseAnimPlaying = 1;
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E6C2C, 0);
-            Sfx_PlayFromObject(obj, SFXTRIG_barrelgen_slide);
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6C2C, 0);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_barrelgen_slide);
             state->releaseBeepPlayed = 0;
         }
         if (timerCountDown((void*)&state->releaseTimer) != 0)
@@ -124,9 +124,9 @@ void barrelgener_update(int obj)
             {
                 GameObject* releasedBarrel = state->queuedObject;
                 f32 releaseVelocity;
-                releasedBarrel->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
-                releasedBarrel->anim.localPosY = ((GameObject*)obj)->anim.localPosY;
-                releasedBarrel->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
+                releasedBarrel->anim.localPosX = (obj)->anim.localPosX;
+                releasedBarrel->anim.localPosY = (obj)->anim.localPosY;
+                releasedBarrel->anim.localPosZ = (obj)->anim.localPosZ;
                 releasedBarrel->anim.previousLocalPosX = releasedBarrel->anim.localPosX;
                 releasedBarrel->anim.previousLocalPosY = releasedBarrel->anim.localPosY;
                 releasedBarrel->anim.previousLocalPosZ = releasedBarrel->anim.localPosZ;
@@ -144,16 +144,16 @@ void barrelgener_update(int obj)
     }
     if (state->releaseAnimPlaying != 0)
     {
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E6C30)
+        if ((obj)->anim.currentMoveProgress > lbl_803E6C30)
         {
             if (state->releaseBeepPlayed == 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_mzap2_c);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_mzap2_c);
                 state->releaseBeepPlayed = 1;
             }
         }
         state->releaseAnimPlaying =
-            !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6C34, timeDelta, 0);
+            !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E6C34, timeDelta, 0);
     }
 }
 
@@ -223,15 +223,16 @@ void Obj_SteerVelocityTowardVector(int out, f32* currentVel, f32* desiredDir, f3
 }
 #pragma optimization_level reset
 
-int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed, int flag)
+int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed,
+                                     int flag)
 {
     int result;
     f32 delta[3];
     f32 dist, ang;
 
     result = 0;
-    delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    delta[0] = (obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+    delta[2] = (obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
     dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
     if (dist < arriveRadius)
     {
@@ -245,15 +246,15 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 advanceStep, f32
         }
         speed = lbl_803E6C78 * advanceStep;
     }
-    delta[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
-    delta[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
-    delta[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
+    delta[0] = ((RomCurveWalker*)routePtr)->posX - (obj)->anim.localPosX;
+    delta[1] = ((RomCurveWalker*)routePtr)->posY - (obj)->anim.localPosY;
+    delta[2] = ((RomCurveWalker*)routePtr)->posZ - (obj)->anim.localPosZ;
     if ((u8)flag == 0)
     {
-        int state2 = *(int*)&((GameObject*)obj)->extra;
+        int state2 = *(int*)&(obj)->extra;
         s16 raw;
-        delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+        delta[0] = (obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+        delta[2] = (obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         raw = (s16)getAngle(delta[0], delta[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = speed * -mathSinf(ang);
@@ -261,13 +262,13 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 advanceStep, f32
     }
     else
     {
-        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, delta, speed, speed / lbl_803E6C7C,
+        Obj_SteerVelocityTowardVector((int)obj, &(obj)->anim.velocityX, delta, speed, speed / lbl_803E6C7C,
                                       lbl_803E6C80);
     }
     return result;
 }
 
-int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed,
+int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed,
                                             int flag, int* pickIdx)
 {
     int result;
@@ -275,8 +276,8 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceSt
     f32 dist, ang;
 
     result = 0;
-    delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    delta[0] = (obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+    delta[2] = (obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
     dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
     if (dist < arriveRadius)
     {
@@ -291,15 +292,15 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceSt
         }
         speed = lbl_803E6C78 * advanceStep;
     }
-    delta[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
-    delta[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
-    delta[2] = ((RomCurveWalker*)routePtr)->posZ - ((GameObject*)obj)->anim.localPosZ;
+    delta[0] = ((RomCurveWalker*)routePtr)->posX - (obj)->anim.localPosX;
+    delta[1] = ((RomCurveWalker*)routePtr)->posY - (obj)->anim.localPosY;
+    delta[2] = ((RomCurveWalker*)routePtr)->posZ - (obj)->anim.localPosZ;
     if ((u8)flag == 0)
     {
-        int state2 = *(int*)&((GameObject*)obj)->extra;
+        int state2 = *(int*)&(obj)->extra;
         s16 raw;
-        delta[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        delta[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+        delta[0] = (obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
+        delta[2] = (obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         raw = (s16)getAngle(delta[0], delta[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
         ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = speed * -mathSinf(ang);
@@ -307,7 +308,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 advanceSt
     }
     else
     {
-        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, delta, speed, speed / lbl_803E6C7C,
+        Obj_SteerVelocityTowardVector((int)obj, &(obj)->anim.velocityX, delta, speed, speed / lbl_803E6C7C,
                                       lbl_803E6C80);
     }
     return result;
@@ -392,8 +393,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
 }
 
 #pragma opt_common_subs off
-void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, int velVec, int turnFrames, f32 rollFactor,
-                                        f32 pitchFactor)
+void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, int velVec, int turnFrames, f32 rollFactor, f32 pitchFactor)
 {
     ObjAnimComponent* anim = &obj->anim;
     f32* vel = (f32*)velVec;
@@ -462,7 +462,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, int velVec, int turnFra
 #pragma opt_common_subs reset
 
 #pragma opt_loop_invariants off
-int Obj_PredictInterceptPoint(int obj, f32 dt, int targetPos, int outPos)
+int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, int targetPos, int outPos)
 {
     f32 pos[3];
     f32 step[3];
@@ -474,22 +474,22 @@ int Obj_PredictInterceptPoint(int obj, f32 dt, int targetPos, int outPos)
 
     if ((u32)obj != Obj_GetPlayerObject())
     {
-        PSVECSubtract((void*)&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.previousLocalPosX, vel);
+        PSVECSubtract((void*)&(obj)->anim.localPosX, &(obj)->anim.previousLocalPosX, vel);
     }
     else
     {
-        vel[0] = ((GameObject*)obj)->anim.velocityX;
-        vel[1] = ((GameObject*)obj)->anim.velocityY;
-        vel[2] = ((GameObject*)obj)->anim.velocityZ;
+        vel[0] = (obj)->anim.velocityX;
+        vel[1] = (obj)->anim.velocityY;
+        vel[2] = (obj)->anim.velocityZ;
     }
     PSVECScale(vel, vel, oneOverTimeDelta);
-    pos[0] = ((GameObject*)obj)->anim.localPosX;
-    pos[1] = lbl_803E6C58 + ((GameObject*)obj)->anim.localPosY;
-    pos[2] = ((GameObject*)obj)->anim.localPosZ;
+    pos[0] = (obj)->anim.localPosX;
+    pos[1] = lbl_803E6C58 + (obj)->anim.localPosY;
+    pos[2] = (obj)->anim.localPosZ;
     for (i = 0; i < 5; i++)
     {
         PSVECScale(vel, step, PSVECDistance(pos, (void*)targetPos) / dt);
-        PSVECAdd(obj + 0xc, (int)step, (int)pos);
+        PSVECAdd((int)obj + 0xc, (int)step, (int)pos);
     }
     *(f32*)(outPos + 0) = pos[0];
     *(f32*)(outPos + 4) = pos[1];

@@ -89,9 +89,9 @@ void DeathSeq_update(int* obj)
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
         {
-            tex = objFindTexture(obj, 5, 0);
+            tex = objFindTexture((GameObject*)(obj), 5, 0);
             tex->textureId = 0;
-            tex = objFindTexture(obj, 4, 0);
+            tex = objFindTexture((GameObject*)(obj), 4, 0);
             tex->textureId = 0;
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3D28)
@@ -128,9 +128,9 @@ void DeathSeq_update(int* obj)
         }
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
         {
-            tex = objFindTexture(obj, 5, 0);
+            tex = objFindTexture((GameObject*)(obj), 5, 0);
             tex->textureId = 0x200;
-            tex = objFindTexture(obj, 4, 0);
+            tex = objFindTexture((GameObject*)(obj), 4, 0);
             tex->textureId = 0x200;
         }
         state->timer -= timeDelta;

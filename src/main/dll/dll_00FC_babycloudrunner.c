@@ -104,7 +104,7 @@ void dll_FC_hitDetect(int* obj)
     objRenderFn_80041018(obj);
 }
 
-void dll_FC_update(int obj)
+void dll_FC_update(GameObject* obj)
 {
     BabyCloudRunnerPlacement* placement;
     BabyCloudRunnerState* state;
@@ -113,12 +113,12 @@ void dll_FC_update(int obj)
     f32 maxDist;
 
     maxDist = lbl_803E384C;
-    placement = (BabyCloudRunnerPlacement*)((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    placement = (BabyCloudRunnerPlacement*)(obj)->anim.placementData;
+    state = (obj)->extra;
 
     if (state->target == NULL)
     {
-        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, obj, &maxDist);
+        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, (int)obj, &maxDist);
         if (state->target == NULL)
             goto end;
         if ((int)placement->rememberedGameBit == -1)
@@ -133,12 +133,12 @@ void dll_FC_update(int obj)
         state->mode = BABYCLOUDRUNNER_MODE_LATCHED;
     }
 
-    ((GameObject*)obj)->anim.localPosX = state->target->anim.localPosX;
-    ((GameObject*)obj)->anim.localPosY = state->target->anim.localPosY;
-    ((GameObject*)obj)->anim.localPosZ = state->target->anim.localPosZ;
-    ((GameObject*)obj)->anim.rotX = state->target->anim.rotX;
-    ((GameObject*)obj)->anim.rotZ = state->target->anim.rotZ;
-    ((GameObject*)obj)->anim.rotY = state->target->anim.rotY;
+    (obj)->anim.localPosX = state->target->anim.localPosX;
+    (obj)->anim.localPosY = state->target->anim.localPosY;
+    (obj)->anim.localPosZ = state->target->anim.localPosZ;
+    (obj)->anim.rotX = state->target->anim.rotX;
+    (obj)->anim.rotZ = state->target->anim.rotZ;
+    (obj)->anim.rotY = state->target->anim.rotY;
 
     switch (state->mode)
     {
@@ -148,16 +148,16 @@ void dll_FC_update(int obj)
         if ((state->rememberedGameBitValue != 0) && ((placement->flags & BABYCLOUDRUNNER_FLAG_REMEMBERED_DONE) == 0))
         {
             state->target->anim.resetHitboxFlags &= ~0x20;
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+            (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->mode = BABYCLOUDRUNNER_MODE_FINISHED;
         }
         else if (((int)placement->gateGameBit != -1) && (mainGetBit((int)placement->gateGameBit) == 0))
         {
             state->target->anim.resetHitboxFlags &= ~0x20;
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+            (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->mode = BABYCLOUDRUNNER_MODE_WAIT_GATE;
         }
-        else if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+        else if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             if ((placement->flags & BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT) != 0)
             {
@@ -180,14 +180,14 @@ void dll_FC_update(int obj)
                     state->triggerId = placement->triggerIdMin;
                 }
             }
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+            (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             state->rememberedGameBitValue = 1;
             (*gObjectTriggerInterface)->runSequence(state->triggerId, (void*)obj, -1);
         }
         else
         {
             state->target->anim.resetHitboxFlags |= 0x20;
-            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+            (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
         break;
     case BABYCLOUDRUNNER_MODE_WAIT_GATE:

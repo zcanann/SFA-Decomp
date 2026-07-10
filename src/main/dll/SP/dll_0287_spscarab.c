@@ -165,7 +165,7 @@ void SPScarab_update(int obj)
     }
 }
 
-void SPScarab_init(int obj, int def)
+void SPScarab_init(GameObject* obj, int def)
 {
     ObjAnimComponent* objAnim;
     int state;
@@ -177,18 +177,15 @@ void SPScarab_init(int obj, int def)
     } paletteBytes;
 
     objAnim = (ObjAnimComponent*)obj;
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     paletteBytes.pairAB = gSpScarabPaletteBytesA;
     paletteBytes.byteC = gSpScarabPaletteByteB;
 
-    ((GameObject*)obj)->objectFlags =
-        ((GameObject*)obj)->objectFlags | (SPSCARAB_OBJFLAG_HIDDEN | SPSCARAB_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
+    (obj)->objectFlags = (obj)->objectFlags | (SPSCARAB_OBJFLAG_HIDDEN | SPSCARAB_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
 
-    ((GameObject*)obj)->anim.velocityX =
-        -mathSinf(gSpScarabPi * (f32)(s32)((GameObject*)obj)->anim.rotX / gSpScarabAngleToRadiansDivisor);
-    ((GameObject*)obj)->anim.velocityZ =
-        -mathCosf(gSpScarabPi * (f32)(s32)((GameObject*)obj)->anim.rotX / gSpScarabAngleToRadiansDivisor);
+    (obj)->anim.velocityX = -mathSinf(gSpScarabPi * (f32)(s32)(obj)->anim.rotX / gSpScarabAngleToRadiansDivisor);
+    (obj)->anim.velocityZ = -mathCosf(gSpScarabPi * (f32)(s32)(obj)->anim.rotX / gSpScarabAngleToRadiansDivisor);
 
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
@@ -197,8 +194,8 @@ void SPScarab_init(int obj, int def)
     ((SpscarabState*)state)->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 
-    Sfx_AddLoopedObjectSound(obj, SFXTRIG_scarab_runloop);
-    model = Obj_GetActiveModel(obj);
+    Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_scarab_runloop);
+    model = Obj_GetActiveModel((int)obj);
 
     switch ((s8) * (u8*)(def + 0x19))
     {

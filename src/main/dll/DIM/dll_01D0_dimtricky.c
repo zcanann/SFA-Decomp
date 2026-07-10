@@ -53,7 +53,7 @@ extern f32 lbl_803E4A38;
 #define DIMTRICKY_STATE_LINK_COMPANION 2
 #define DIMTRICKY_STATE_DONE 3
 
-static inline int* DIM2snowball_GetActiveModel(void* obj)
+static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];

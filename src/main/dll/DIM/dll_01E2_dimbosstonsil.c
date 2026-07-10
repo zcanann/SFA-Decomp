@@ -67,7 +67,7 @@ extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
-int DIMbosstonsil_SeqFn(void* obj, u32 unused, ObjAnimUpdateState* animUpdate)
+int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
@@ -87,8 +87,8 @@ int DIMbosstonsil_SeqFn(void* obj, u32 unused, ObjAnimUpdateState* animUpdate)
     int hitReactMode;
     int animOk;
 
-    state = ((GameObject*)obj)->extra;
-    config = *(DIMbosstonsilConfig**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    config = *(DIMbosstonsilConfig**)&(obj)->anim.placementData;
 
     if (gDIMbosstonsilLight != NULL)
     {
@@ -115,7 +115,7 @@ int DIMbosstonsil_SeqFn(void* obj, u32 unused, ObjAnimUpdateState* animUpdate)
         }
     }
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
         return 0;
     }
@@ -161,7 +161,7 @@ int DIMbosstonsil_SeqFn(void* obj, u32 unused, ObjAnimUpdateState* animUpdate)
     }
     lbl_803DDBA0 += timeDelta;
 
-    if (((GameObject*)obj)->seqIndex != -1)
+    if ((obj)->seqIndex != -1)
     {
         animOk = (*(int (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x30))(obj, state, 1);
         if (animOk == 0)
@@ -212,7 +212,7 @@ int DIMbosstonsil_SeqFn(void* obj, u32 unused, ObjAnimUpdateState* animUpdate)
     updateDone:;
     }
 
-    if (((GameObject*)obj)->seqIndex == -1)
+    if ((obj)->seqIndex == -1)
     {
         state->stateFlags |= DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
         return 0;
@@ -240,12 +240,12 @@ int DIMbosstonsil_getObjectTypeId(void)
     return DIMBOSSTONSIL_OBJECT_TYPE;
 }
 
-void DIMbosstonsil_free(void* obj)
+void DIMbosstonsil_free(GameObject* obj)
 {
     extern void* gBaddieControlInterface;
     DIMbosstonsilState* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     ObjGroup_RemoveObject(obj, DIMBOSSTONSIL_OBJGROUP);
     (*(void (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x40))(obj, state, 1);
     if (gDIMbosstonsilLight != NULL)
@@ -254,7 +254,7 @@ void DIMbosstonsil_free(void* obj)
     }
 }
 
-void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     struct
     {
@@ -267,7 +267,7 @@ void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visibl
 
     if (visible != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch ((obj)->unkF4)
         {
         case 0:
         {
@@ -290,13 +290,13 @@ void DIMbosstonsil_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visibl
     }
 }
 
-void DIMbosstonsil_hitDetect(void* obj)
+void DIMbosstonsil_hitDetect(GameObject* obj)
 {
     extern int lbl_803DDBB0;
-    (*gPlayerInterface)->updateVelocityState(obj, ((GameObject*)obj)->extra, &lbl_803DDBB0);
+    (*gPlayerInterface)->updateVelocityState(obj, (obj)->extra, &lbl_803DDBB0);
 }
 
-void DIMbosstonsil_update(void* obj)
+void DIMbosstonsil_update(GameObject* obj)
 {
     extern void* gBaddieControlInterface;
     extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state,
@@ -305,19 +305,19 @@ void DIMbosstonsil_update(void* obj)
     DIMbosstonsilConfig* config;
     u8 red, green, blue, alpha;
 
-    state = ((GameObject*)obj)->extra;
-    config = *(DIMbosstonsilConfig**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    config = *(DIMbosstonsilConfig**)&(obj)->anim.placementData;
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
         return;
 
-    if (((GameObject*)obj)->unkF8 == 0)
+    if ((obj)->unkF8 == 0)
     {
-        ((GameObject*)obj)->anim.localPosX = config->spawnX;
-        ((GameObject*)obj)->anim.localPosY = config->spawnY;
-        ((GameObject*)obj)->anim.localPosZ = config->spawnZ;
+        (obj)->anim.localPosX = config->spawnX;
+        (obj)->anim.localPosY = config->spawnY;
+        (obj)->anim.localPosZ = config->spawnZ;
         (*gObjectTriggerInterface)->runSequence((int)config->animObjId, obj, -1);
-        ((GameObject*)obj)->unkF8 = 1;
+        (obj)->unkF8 = 1;
         return;
     }
 

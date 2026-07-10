@@ -306,7 +306,7 @@ int Carryable_updateHeld(u8* obj)
     return ((CarryableUpdateHeldState*)held)->carryState;
 }
 
-void Carryable_init(int obj, int state)
+void Carryable_init(GameObject* obj, int state)
 {
     CarryableUpdateHeldState* s = (CarryableUpdateHeldState*)state;
     ObjGroup_AddObject(obj, CARRYABLE_OBJGROUP);
@@ -314,7 +314,7 @@ void Carryable_init(int obj, int state)
     s->carryState = CARRY_STATE_RESTING;
     s->pad4[0] = 0;
     s->isHeld = 0;
-    ((GameObject*)obj)->unkF8 = 0;
+    (obj)->unkF8 = 0;
 }
 
 void Carryable_release(void)

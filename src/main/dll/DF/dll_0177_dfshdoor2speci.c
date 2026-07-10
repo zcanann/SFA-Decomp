@@ -61,7 +61,7 @@ int DFSH_Door2Speci_SeqFn(GameObject* obj)
         }
         break;
     case DFSH_DOOR2SPECI_STATE_FADE_IN:
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
         {
             alpha = texture->textureId + framesThisStep * 0x10;
@@ -75,7 +75,7 @@ int DFSH_Door2Speci_SeqFn(GameObject* obj)
         break;
     case DFSH_DOOR2SPECI_STATE_PULSE:
     default:
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
         {
             phaseStep = (extra->phase + framesThisStep * 800) & 0xffff;
@@ -136,7 +136,7 @@ void DFSH_Door2Speci_init(GameObject* obj, int def)
     {
         *(unsigned char*)(state + 3) = 0;
     }
-    texture = objFindTexture((void*)obj, 0, 0);
+    texture = objFindTexture((GameObject*)obj, 0, 0);
     if (texture != NULL)
     {
         if (*(unsigned char*)(state + 3) == 2)

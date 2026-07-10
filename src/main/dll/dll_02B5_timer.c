@@ -68,10 +68,10 @@ int timer_getExtraSize(void)
     return sizeof(TimerState);
 }
 
-void timer_free(int obj)
+void timer_free(GameObject* obj)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, TIMER_OBJGROUP);
+    TimerState* state = (obj)->extra;
+    ObjGroup_RemoveObject((int)obj, TIMER_OBJGROUP);
     if (state->lightSlot != NULL)
     {
         modelLightStruct_freeSlot((int)&state->lightSlot);
@@ -79,28 +79,28 @@ void timer_free(int obj)
     gameTimerStop();
 }
 
-int timer_hasExpired(int obj)
+int timer_hasExpired(GameObject* obj)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     return state->flags.expired;
 }
 
-int timer_isEffectMode(int obj)
+int timer_isEffectMode(GameObject* obj)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     return state->mode == TIMER_MODE_EFFECT;
 }
 
-void timer_clearManualFlags(int obj)
+void timer_clearManualFlags(GameObject* obj)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     state->flags.manual = 0;
     state->flags.expired = 0;
 }
 
-void timer_forceStart(int obj)
+void timer_forceStart(GameObject* obj)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     state->flags.manual = 1;
 }
 
@@ -118,24 +118,24 @@ void timer_addDuration(GameObject* obj, int duration)
     }
 }
 
-void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     void* light = state->lightSlot;
     if (light != NULL && *(u8*)((char*)light + LIGHT_FIELD_2F8_OFFSET) != 0 &&
         *(u8*)((char*)light + LIGHT_FIELD_4C_OFFSET) != 0)
     {
         queueGlowRender(light);
     }
-    if (((GameObject*)obj)->ownerObj == NULL)
+    if ((obj)->ownerObj == NULL)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7418);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E7418);
     }
 }
 
-void timer_init(int obj, int setup)
+void timer_init(GameObject* obj, int setup)
 {
-    TimerState* state = ((GameObject*)obj)->extra;
+    TimerState* state = (obj)->extra;
     TimerSetup* setupData = (TimerSetup*)setup;
 
     storeZeroToFloatParam((void*)state);
@@ -144,19 +144,19 @@ void timer_init(int obj, int setup)
     state->flags.expired = 0;
     state->flags.manual = 0;
     state->lightSlot = NULL;
-    ObjGroup_AddObject(obj, TIMER_OBJGROUP);
+    ObjGroup_AddObject((int)obj, TIMER_OBJGROUP);
     state->flags.flag20 = 0;
 }
 
-void timer_update(int obj)
+void timer_update(GameObject* obj)
 {
     int textureId;
     int expiredThisFrame;
     TimerFlags* flags;
     TimerSetup* setup;
     TimerState* state;
-    state = ((GameObject*)obj)->extra;
-    setup = (TimerSetup*)((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    setup = (TimerSetup*)(obj)->anim.placementData;
     flags = &state->flags;
 
     if (fn_80080150((int)state) != 0)
@@ -167,12 +167,12 @@ void timer_update(int obj)
             storeZeroToFloatParam((void*)state);
             if (state->mode == TIMER_MODE_GLOBAL)
             {
-                switch (((TimerSetup*)((GameObject*)obj)->anim.placementData)->base.mapId)
+                switch (((TimerSetup*)(obj)->anim.placementData)->base.mapId)
                 {
                 case TIMER_MAP_NO_FOOTSTEP:
                     break;
                 default:
-                    Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_mpick1_b);
                     break;
                 }
             }
@@ -222,7 +222,7 @@ void timer_update(int obj)
                 timerSetToCountUp();
                 break;
             case TIMER_MODE_EFFECT:
-                state->lightSlot = (void*)modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
+                state->lightSlot = (void*)modelLightStruct_createPointLight((int)obj, 255, 0, 0, 0);
                 if (state->lightSlot != NULL)
                 {
                     modelLightStruct_setupGlow(state->lightSlot, 0, 255, 0, 0, 100, lbl_803DC418);
@@ -237,7 +237,7 @@ void timer_update(int obj)
             void* light = state->lightSlot;
             f32 glowAlpha; /* embedded-assign pins lbl_803DC41C to glowAlpha's reg */
             int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer * (glowAlpha = lbl_803DC41C));
-            ObjTextureRuntimeSlot* texPtr = objFindTexture((void*)obj, 0, 0);
+            ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
             if (texPtr != 0)
             {
                 textureId = texPtr->textureId + scroll * framesThisStep;
@@ -259,7 +259,7 @@ void timer_update(int obj)
             {
                 if (scroll == 1 && scroll != flags->flag20)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_barrel_timerbeep);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_timerbeep);
                 }
                 modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, lbl_803E741C);
             }

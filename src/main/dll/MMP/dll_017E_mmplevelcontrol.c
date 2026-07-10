@@ -66,7 +66,7 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    MMP_levelcontrol_update(obj);
+    MMP_levelcontrol_update((GameObject*)(obj));
     return 0;
 }
 
@@ -97,7 +97,7 @@ void MMP_levelcontrol_hitDetect(void)
 {
 }
 
-void MMP_levelcontrol_update(int obj)
+void MMP_levelcontrol_update(GameObject* obj)
 {
     extern void* Obj_GetPlayerObject(void);
     int playerForMap;
@@ -119,80 +119,80 @@ void MMP_levelcontrol_update(int obj)
         }
     }
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
         envFxActFn_800887f8(0);
         if (mainGetBit(0xd47) != 0)
         {
             skyFn_80088c94(7, 1);
-            if (((GameObject*)obj)->unkF4 == 2)
+            if ((obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
             }
             else
             {
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
             }
-            ((GameObject*)obj)->unkF8 = 0;
+            (obj)->unkF8 = 0;
         }
         else if (mainGetBit(0xf33) != 0)
         {
             skyFn_80088c94(7, 1);
-            if (((GameObject*)obj)->unkF4 == 2)
+            if ((obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
             }
             else
             {
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
             }
-            ((GameObject*)obj)->unkF8 = 1;
+            (obj)->unkF8 = 1;
         }
         else if (coordsToMapCell(((GameObject*)playerForMap)->anim.localPosX,
                                  ((GameObject*)playerForMap)->anim.localPosZ) == 0x12)
         {
             skyFn_80088c94(7, 0);
-            if (((GameObject*)obj)->unkF4 == 2)
+            if ((obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
             }
             else
             {
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
             }
-            ((GameObject*)obj)->unkF8 = 0;
+            (obj)->unkF8 = 0;
         }
         Music_Trigger(MUSICTRIG_Barrels, 1);
-        ((GameObject*)obj)->unkF4 = 0;
+        (obj)->unkF4 = 0;
     }
 
-    if (((GameObject*)obj)->unkF8 != 0 && mainGetBit(0xf33) == 0)
+    if ((obj)->unkF8 != 0 && mainGetBit(0xf33) == 0)
     {
         skyFn_80088c94(7, 0);
-        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
-        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
-        ((GameObject*)obj)->unkF8 = 0;
+        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
+        (obj)->unkF8 = 0;
     }
-    else if (((GameObject*)obj)->unkF8 == 0 && mainGetBit(0xf33) != 0)
+    else if ((obj)->unkF8 == 0 && mainGetBit(0xf33) != 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
-        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
-        ((GameObject*)obj)->unkF8 = 1;
+        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
+        (obj)->unkF8 = 1;
     }
 
     SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);

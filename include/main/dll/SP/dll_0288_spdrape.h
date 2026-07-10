@@ -2,6 +2,7 @@
 #define MAIN_DLL_SP_DLL_0288_SPDRAPE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct SpdrapeObjectDef
@@ -34,7 +35,7 @@ int spdrape_getObjectTypeId(void);
 void spdrape_free(void);
 void spdrape_render(void);
 void spdrape_hitDetect(void);
-void spdrape_update(int obj);
+void spdrape_update(GameObject* obj);
 void spdrape_init(int* obj, u8* def);
 void spdrape_release(void);
 void spdrape_initialise(void);

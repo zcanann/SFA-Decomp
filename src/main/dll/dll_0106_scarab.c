@@ -193,7 +193,7 @@ void Scarab_update(int obj)
             }
             ((GameObject*)obj)->anim.rotZ =
                 ((GameObject*)obj)->anim.rotZ + ((ScarabState*)state)->yawSpeed * framesThisStep;
-            if (scarab_sweptCollide(obj) != 0)
+            if (scarab_sweptCollide((GameObject*)(obj)) != 0)
             {
                 flag = 1;
             }
@@ -275,7 +275,7 @@ void Scarab_update(int obj)
                     fn_801845FC((u8*)obj, 0, 0, (f32*)((u8*)&bufs + 84));
                 }
             }
-            if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
+            if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == 0xe)
             {
                 ((ScarabState*)state)->fleeTimer = 0xfa;
                 Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c);
@@ -290,7 +290,8 @@ void Scarab_update(int obj)
                 {
                     speed = sqrtf(speed);
                 }
-                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (deltaY = lbl_803E39FC * speed);
+                ((GameObject*)obj)->anim.velocityX =
+                    ((GameObject*)obj)->anim.velocityX / (deltaY = lbl_803E39FC * speed);
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / deltaY;
                 ((GameObject*)obj)->anim.rotY = 0;
                 ((GameObject*)obj)->anim.velocityY = lbl_803E3A24;
@@ -536,14 +537,14 @@ void Scarab_update(int obj)
                         Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_45);
                     }
                 }
-                if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
+                if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == 0xe)
                 {
                     ((ScarabState*)state)->fleeTimer = 0xfa;
                     Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c);
                 }
             }
             else if (((ScarabState*)state)->fleeTimer != 0 && ((GameObject*)obj)->anim.seqId == 0x3d6 &&
-                     ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
+                     ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == 0xe)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_46);
                 money3 = gScarabMoneyValues;
@@ -748,7 +749,7 @@ void Scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int scarab_sweptCollide(int obj)
+int scarab_sweptCollide(GameObject* obj)
 {
     extern void hitDetect_calcSweptSphereBounds(u32 * boundsOut, f32 * startPoints, f32 * endPoints, f32 * radii,
                                                 int pointCount);
@@ -772,15 +773,15 @@ int scarab_sweptCollide(int obj)
     int idx;
     u8 hit;
 
-    state = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    state = *(u8**)&(obj)->anim.hitReactState;
     if (state != 0)
     {
-        endPoints[0] = ((GameObject*)obj)->anim.localPosX;
-        endPoints[1] = ((GameObject*)obj)->anim.localPosY;
-        endPoints[2] = ((GameObject*)obj)->anim.localPosZ;
-        startPoints[0] = ((GameObject*)obj)->anim.previousLocalPosX;
-        startPoints[1] = ((GameObject*)obj)->anim.previousLocalPosY;
-        startPoints[2] = ((GameObject*)obj)->anim.previousLocalPosZ;
+        endPoints[0] = (obj)->anim.localPosX;
+        endPoints[1] = (obj)->anim.localPosY;
+        endPoints[2] = (obj)->anim.localPosZ;
+        startPoints[0] = (obj)->anim.previousLocalPosX;
+        startPoints[1] = (obj)->anim.previousLocalPosY;
+        startPoints[2] = (obj)->anim.previousLocalPosZ;
         results.radii[0] = lbl_803E39F4;
         *(s8*)&results.axisTable[0] = -1;
         results.axisTable[4] = 0x3;
@@ -791,8 +792,8 @@ int scarab_sweptCollide(int obj)
     }
 
     hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, results.radii, 1);
-    hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
-    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
+    hitDetectFn_800691c0((int)obj, sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
+    hit = hitDetectFn_80067958((int)obj, startPoints, endPoints, 1, &results, 0);
     if (hit != 0)
     {
         if ((hit & 1) != 0)
@@ -825,22 +826,22 @@ int scarab_sweptCollide(int obj)
         {
             ((ObjHitsPriorityState*)state)->contactFlags =
                 *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
-            ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
-            ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
-            ((ObjHitsPriorityState*)state)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
-            ((ObjHitsPriorityState*)state)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
-            ((ObjHitsPriorityState*)state)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
+            (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
+            (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
+            (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
+            ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
             return 1;
         }
         ((ObjHitsPriorityState*)state)->contactFlags =
             *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
-        ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
-        ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
-        ((ObjHitsPriorityState*)state)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
-        ((ObjHitsPriorityState*)state)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
-        ((ObjHitsPriorityState*)state)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
+        (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
+        (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
+        (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
+        ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
+        ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
+        ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
         return 1;
     }
     return 0;

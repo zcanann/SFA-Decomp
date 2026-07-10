@@ -14,29 +14,29 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0268_drcagecontrol.h"
 
-int DR_CageControl_SeqFn(int obj)
+int DR_CageControl_SeqFn(GameObject* obj)
 {
     int ret;
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    char* state = ((GameObject*)obj)->extra;
+    int placement = *(int*)&(obj)->anim.placementData;
+    char* state = (obj)->extra;
     if (*(int*)state == 0)
     {
         if (mainGetBit(((CageControlPlacement*)placement)->armGameBit) != 0)
         {
-            Sfx_StopObjectChannel(obj, 8);
+            Sfx_StopObjectChannel((int)obj, 8);
             return 4;
         }
         if (((BitFlags8*)(state + 4))->b0 != mainGetBit(((CageControlPlacement*)placement)->watchGameBit))
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_blkhit_c);
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk2);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_mv_blkhit_c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_mv_persquk2);
             if (mainGetBit(((CageControlPlacement*)placement)->watchGameBit) != 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16_194);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_mv_wickpickup16_194);
             }
             else
             {
-                Sfx_StopObjectChannel(obj, 8);
+                Sfx_StopObjectChannel((int)obj, 8);
             }
         }
         ((BitFlags8*)(state + 4))->b0 = mainGetBit(((CageControlPlacement*)placement)->watchGameBit);
@@ -78,10 +78,10 @@ void DR_CageControl_hitDetect(void)
 {
 }
 
-void DR_CageControl_update(int obj)
+void DR_CageControl_update(GameObject* obj)
 {
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    char* state = ((GameObject*)obj)->extra;
+    int placement = *(int*)&(obj)->anim.placementData;
+    char* state = (obj)->extra;
     if (((BitFlags8*)(state + 0x4))->b1 != 0)
     {
         return;
@@ -94,7 +94,7 @@ void DR_CageControl_update(int obj)
     if (((BitFlags8*)(state + 0x4))->b2 != 0)
     {
         ((BitFlags8*)(state + 0x4))->b1 = 1;
-        (*gObjectTriggerInterface)->preempt(obj, 0x76c);
+        (*gObjectTriggerInterface)->preempt((int)obj, 0x76c);
         if (mainGetBit(GAMEBIT_DR_EnteredDrakorTower) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(*(int*)state, (void*)obj, 0x60);

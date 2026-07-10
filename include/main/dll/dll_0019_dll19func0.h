@@ -18,6 +18,6 @@
 #include "string.h"
 #include "main/object_transform.h"
 
-int dll_19_func1B(int p);
+int dll_19_func1B(GameObject* p);
 
 #endif

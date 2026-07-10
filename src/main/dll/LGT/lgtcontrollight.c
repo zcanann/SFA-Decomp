@@ -36,11 +36,11 @@ extern f32 lbl_803E5EBC;
 extern f32 lbl_803E5EC0;
 extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EC8;
-extern void FireFlyFn_801f4f88(int* obj);
+extern void FireFlyFn_801f4f88(GameObject* obj);
 
 int firefly_animEventCallback(int* obj)
 {
-    FireFlyFn_801f4f88(obj);
+    FireFlyFn_801f4f88((GameObject*)(obj));
     return 0;
 }
 

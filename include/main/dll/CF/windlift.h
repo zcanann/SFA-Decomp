@@ -8,9 +8,9 @@
 void Scarab_update(int obj);
 void FUN_80184a54(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
-void fn_80185868(int obj, f32 arg);
-void dll_107_render(int obj, int p2, int p3, int p4, int p5, s8 renderState);
-void dll_107_update(int obj);
+void fn_80185868(GameObject* obj, f32 arg);
+void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState);
+void dll_107_update(GameObject* obj);
 
 extern ObjectDescriptor gDummy108ObjDescriptor;
 extern ObjectDescriptor gPortalSpellDoorObjDescriptor;
@@ -36,7 +36,7 @@ void PortalSpellDoor_release(void);
 void PortalSpellDoor_initialise(void);
 
 void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c);
-void LanternFireFly_func0B(int obj);
+void LanternFireFly_func0B(GameObject* obj);
 void LanternFireFly_setScale(u8* obj, f32* vec);
 void fn_801868D0(GameObject* obj);
 void fn_801869DC(GameObject* obj);

@@ -22,9 +22,9 @@ extern f32 lbl_803E6274;
 
 extern void objfx_spawnDirectionalBurst(int, int, f32, int, int, int, f32, int, int);
 
-int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int i;
 
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -37,8 +37,8 @@ int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
         case 0:
         case 1:
-            objfx_spawnDirectionalBurst(obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
-            objfx_spawnDirectionalBurst(obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, 0, 0x200000);
+            objfx_spawnDirectionalBurst((int)obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
+            objfx_spawnDirectionalBurst((int)obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, 0, 0x200000);
             break;
         }
     }

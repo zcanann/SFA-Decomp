@@ -58,9 +58,9 @@ void cfmagicwall_hitDetect(void)
 {
 }
 
-void cfmagicwall_update(int obj)
+void cfmagicwall_update(GameObject* obj)
 {
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    int placement = *(int*)&(obj)->anim.placementData;
     int player = (int)Obj_GetPlayerObject();
     u8 alpha = 0xff;
 
@@ -72,7 +72,7 @@ void cfmagicwall_update(int obj)
 
         if (yaw > CFMAGICWALL_SIDE_ANGLE)
         {
-            ((GameObject*)obj)->anim.alpha = 0;
+            (obj)->anim.alpha = 0;
             return;
         }
 
@@ -81,16 +81,14 @@ void cfmagicwall_update(int obj)
             f32 range;
             f32 fadeDistance;
             range = (f32)(s32)((CfMagicWallMapData*)placement)->fadeRange;
-            playerDistance = Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)(player + 0x18));
-            fadeDistance = Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.localPosX,
-                                                                ((GameObject*)obj)->anim.localPosY,
-                                                                ((GameObject*)obj)->anim.localPosZ);
+            playerDistance = Vec_distance((void*)&(obj)->anim.worldPosX, (void*)(player + 0x18));
+            fadeDistance = Camera_DistanceToCurrentViewPosition((obj)->anim.localPosX, (obj)->anim.localPosY,
+                                                                (obj)->anim.localPosZ);
 
             if (fadeDistance < playerDistance)
             {
-                fadeDistance = Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.localPosX,
-                                                                    ((GameObject*)obj)->anim.localPosY,
-                                                                    ((GameObject*)obj)->anim.localPosZ);
+                fadeDistance = Camera_DistanceToCurrentViewPosition((obj)->anim.localPosX, (obj)->anim.localPosY,
+                                                                    (obj)->anim.localPosZ);
             }
             else
             {
@@ -102,7 +100,7 @@ void cfmagicwall_update(int obj)
                 alpha = lbl_803E43DC * (fadeDistance / range);
             }
 
-            ((GameObject*)obj)->anim.alpha = alpha;
+            (obj)->anim.alpha = alpha;
         }
     }
 }

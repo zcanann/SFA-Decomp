@@ -56,12 +56,12 @@ void dll_28B_free(int obj)
     ObjGroup_RemoveObject(obj, DLL28B_OBJ_GROUP);
 }
 
-void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dll_28B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D18);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6D18);
         dll_2E_func06(obj, (int)((Dll28BState*)state)->moveLib, 0);
     }
 }
@@ -95,7 +95,7 @@ void dll_28B_update(int obj)
         ((Dll28BState*)state)->flags96D |= 1;
     }
     dll_2E_func03(obj, (int)((Dll28BState*)state)->moveLib);
-    characterDoEyeAnims(obj, (int)((Dll28BState*)state)->eyeAnim);
+    characterDoEyeAnims((GameObject*)(obj), (int)((Dll28BState*)state)->eyeAnim);
     xform.x = ((GameObject*)obj)->anim.localPosX;
     xform.y = ((GameObject*)obj)->anim.localPosY;
     xform.z = ((GameObject*)obj)->anim.localPosZ;
@@ -111,12 +111,12 @@ void dll_28B_update(int obj)
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
-void dll_28B_init(int obj)
+void dll_28B_init(GameObject* obj)
 {
     int curveParam;
     Blob16 blockA;
     Blob16 blockB;
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
 
     blockA = *(Blob16*)gDll28BMoveBlendDataA;
     blockB = *(Blob16*)gDll28BMoveBlendDataB;
@@ -125,8 +125,8 @@ void dll_28B_init(int obj)
     dll_2E_func09(state + 0x35C, &blockB, &blockA, 8);
     ((Dll28BState*)state)->flags96D |= 0x22;
     (*gRomCurveInterface)->initCurve((void*)(state + 0x9B0), (void*)obj, gDll28BCurveInitParam, &curveParam, -1);
-    (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))(obj, state, 4, 4);
-    ObjGroup_AddObject(obj, DLL28B_OBJ_GROUP);
+    (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))((int)obj, state, 4, 4);
+    ObjGroup_AddObject((int)obj, DLL28B_OBJ_GROUP);
 }
 
 void dll_28B_release_nop(void)

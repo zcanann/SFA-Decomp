@@ -306,7 +306,7 @@ extern void PSMTXCopy(f32* s, f32* d);
 extern void PSMTXConcat(f32* a, f32* b, f32* o);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void objRenderShadowIfVisible(int* obj, int a, int b, int c, int d, int e);
+extern void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
 extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
 extern void GXSetScissor(int a, int b, int c, int d);
 extern int getDrawDistanceFlag_8005cd48(void);
@@ -968,7 +968,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     FUN_80247dfc(ndirX, dotLen, ndirX, dotLen, (double)lbl_803DF9AC, (double)lbl_803DF9EC, projMtx);
                     FUN_8025d6ac(projMtx, 1);
                     FUN_80006984();
-                    FUN_80247b70(dotLen, ndirX, ndirX, dotLen, shadowScale, shadowScale, shadowScale, shadowScale, shadowMtx);
+                    FUN_80247b70(dotLen, ndirX, ndirX, dotLen, shadowScale, shadowScale, shadowScale, shadowScale,
+                                 shadowMtx);
                     viewMtx = (float*)FUN_80006974();
                     FUN_802475e4(viewMtx, (float*)(&DAT_8038fd48 + slotOff));
                     FUN_80247618(shadowMtx, viewMtx, shadowMtx);
@@ -2784,7 +2785,7 @@ void renderShadows(void)
                     char* texSlot = texPool + (u8)texIdx * 4;
                     *(int*)(castSlot + 0x60) = *(int*)texSlot;
                     *(u8*)(castSlot + 0x65) = lbl_803DB668[(u8)texIdx];
-                    objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
+                    objRenderShadowIfVisible((GameObject*)(obj), 0, 0, 0, 0, 0);
                     if (*(u8*)(casterPtr + 8) == 2)
                     {
                         gxSetZMode_(1, GX_LEQUAL, 1);

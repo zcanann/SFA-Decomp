@@ -43,10 +43,10 @@ typedef struct
 
 extern FamilyTable lbl_8031F16C[]; /* per-family table-of-tables, 0x28-byte rows */
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
-extern void fn_8015039C(void* p1, void* p2);
-extern u32 fn_8014FFB4(void* p1, void* p2, int p3);
+extern void fn_8015039C(GameObject* p1, void* p2);
+extern u32 fn_8014FFB4(GameObject* p1, void* p2, int p3);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
-extern void sidekickToy_updateCurveTargetLatch(int* obj);
+extern void sidekickToy_updateCurveTargetLatch(GameObject* obj);
 
 extern int getAngle(float y, float x);
 
@@ -257,7 +257,7 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
 
 /* sidekick-toy anim-chain advance: timer-driven 16-stride SeqRow16 chain +
  * curve-follow speed shaping, called from the fn_80150910 update path. */
-void fn_80150EDC(void* obj, void* state)
+void fn_80150EDC(GameObject* obj, void* state)
 {
     u8* table = lbl_8031DD30;
     u8 idx = ((BaddieState*)state)->inWhirlpoolGroup;
@@ -341,7 +341,7 @@ void fn_80150EDC(void* obj, void* state)
         }
     }
 
-    if ((s32)((GameObject*)obj)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c))
+    if ((s32)(obj)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c))
     {
         ((BaddieState*)state)->unk308 =
             ((BaddieState*)state)->pathStep *
@@ -379,7 +379,7 @@ void fn_80150910(int* obj, u8* state)
     {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
-    fn_8015039C(obj, state);
+    fn_8015039C((GameObject*)(obj), state);
     {
         f32 t = *(f32*)(state + 0x328);
         f32 z = lbl_803E2740;
@@ -394,7 +394,7 @@ void fn_80150910(int* obj, u8* state)
             }
         }
     }
-    if ((u8)fn_8014FFB4(obj, state, 0) != 0)
+    if ((u8)fn_8014FFB4((GameObject*)(obj), state, 0) != 0)
     {
         return;
     }
@@ -423,7 +423,7 @@ void fn_80150910(int* obj, u8* state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) && state[0x33d] == 0)
     {
-        sidekickToy_updateCurveTargetLatch(obj);
+        sidekickToy_updateCurveTargetLatch((GameObject*)(obj));
     }
     flags = ((BaddieState*)state)->controlFlags;
     if (flags & BADDIE_CONTROL_PATH_FOLLOW)
@@ -453,7 +453,7 @@ void fn_80150910(int* obj, u8* state)
         {
             if ((*gRomCurveInterface)->goNextPoint(path) != 0)
             {
-                sidekickToy_updateCurveTargetLatch(obj);
+                sidekickToy_updateCurveTargetLatch((GameObject*)(obj));
             }
         }
         delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 - (u16)((GameObject*)obj)->anim.rotX);

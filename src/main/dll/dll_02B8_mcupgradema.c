@@ -22,23 +22,23 @@
 /* obj is a word, not a pointer: the shared-header prototype fixes the
    original signature as int, and the integral param pools low in the saved
    regs to match retail coloring (CLAUDE.md recipe #126). */
-void mcupgradema_update(int obj)
+void mcupgradema_update(GameObject* obj)
 {
-    GameObject* gameObj = (GameObject*)obj;
+    GameObject* gameObj = obj;
     McUpgradeMaSetup* setup = (McUpgradeMaSetup*)gameObj->anim.placementData;
 
     if ((u32)mainGetBit(setup->collectedGameBit) != 0)
     {
         *(u8*)&gameObj->anim.resetHitboxMode |= MCUPGRADE_OBJ_FLAG_COLLECTED;
     }
-    else if (ObjTrigger_IsSet(obj) != 0)
+    else if (ObjTrigger_IsSet((int)obj) != 0)
     {
         mainSetBits(setup->collectedGameBit, 1);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
     else
     {
-        objRenderFn_80041018(obj);
+        objRenderFn_80041018((int)obj);
     }
 }
 

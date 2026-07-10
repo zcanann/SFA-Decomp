@@ -5,7 +5,7 @@
 #include "main/dll/scarab.h"
 
 int fn_801601C4(GameObject* obj, GroundBaddieState* p);
-int fn_8016043C(int obj, GroundBaddieState* p);
+int fn_8016043C(GameObject* obj, GroundBaddieState* p);
 void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p);
 void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p);
 int dll_CB_seqFn(short* obj, int p2, u8* e);

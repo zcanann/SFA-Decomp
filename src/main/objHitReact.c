@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/game_object.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/mm.h"
@@ -39,7 +40,8 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
             reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
         }
     }
-    hitType = ObjHits_GetPriorityHitWithPosition(obj, 0, &hitSphereIndex, 0, &hitPos[0], &hitPos[1], &hitPos[2]);
+    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, &hitSphereIndex, 0, &hitPos[0], &hitPos[1],
+                                                 &hitPos[2]);
     if (hitType != 0)
     {
         ObjAnimBank* bank = ObjAnim_GetActiveBank(objAnim);

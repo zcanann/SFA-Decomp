@@ -30,65 +30,64 @@ int CCSharpclawPad_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
-void CCSharpclawPad_update(int obj)
+void CCSharpclawPad_update(GameObject* obj)
 {
     SharpClawPadParticleArgs particleArgs;
     f32* state;
     int* player;
 
-    if (mainGetBit(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a)) != 0)
+    if (mainGetBit(*(s16*)(*(int*)&(obj)->anim.placementData + 0x1a)) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         if (mainGetBit(GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        state = ((GameObject*)obj)->extra;
-        if (ObjTrigger_IsSet(obj) != 0 && isAreaNameTextActive() == 0)
+        state = (obj)->extra;
+        if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
         {
             *state = 600.0f;
         }
         if (*state > 0.0f)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+            if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
             {
                 *state = 0.0f;
             }
             else
             {
                 *state -= timeDelta;
-                showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[0]);
+                showHelpText((obj)->anim.modelInstance->helpTextIds[0]);
             }
         }
         player = Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-                100.0f &&
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 100.0f &&
             playerIsDisguised((int)player) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
-            mainSetBits(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
+            mainSetBits(*(s16*)(*(int*)&(obj)->anim.placementData + 0x1a), 1);
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
 }
 

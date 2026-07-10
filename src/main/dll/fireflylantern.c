@@ -93,7 +93,7 @@ typedef struct FireflyState
 } FireflyState;
 
 #pragma opt_common_subs off
-void fn_80154870(int obj, int* state)
+void fn_80154870(GameObject* obj, int* state)
 {
     RomCurveWalker* curve;
     u8 flag;
@@ -113,31 +113,30 @@ void fn_80154870(int obj, int* state)
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
     }
-    ObjHits_SetHitVolumeSlot(obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((int)obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
     flag = playerGetFlags3F0Bit5((GameObject*)(Obj_GetPlayerObject()));
-    dvec[0] = *(f32*)(state[0xa7] + 0xc) - ((GameObject*)obj)->anim.localPosX;
+    dvec[0] = *(f32*)(state[0xa7] + 0xc) - (obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
-    dvec[2] = *(f32*)(state[0xa7] + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dvec[2] = *(f32*)(state[0xa7] + 0x14) - (obj)->anim.localPosZ;
     if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
         ((FireflyState*)state)->trackTimer = lbl_803E2990;
     }
-    ((GameObject*)obj)->anim.rotY =
-        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
-          (f32)((GameObject*)obj)->anim.rotY);
+    (obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
+                         (f32)(obj)->anim.rotY);
     if (flag == 0)
     {
         fval = lbl_803E2990;
-        ((GameObject*)obj)->anim.velocityX = fval;
-        ((GameObject*)obj)->anim.velocityZ = fval;
+        (obj)->anim.velocityX = fval;
+        (obj)->anim.velocityZ = fval;
         curve = (RomCurveWalker*)state[0xa7];
-        fn_8014CF7C(obj, state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
+        fn_8014CF7C((int)obj, state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
     }
     else
     {
-        fn_8014C678(obj, state, dvec, lbl_803E29A0, lbl_803E29B4, *(f32*)&lbl_803E29B4, 1);
-        fn_8014CD1C(obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
+        fn_8014C678((int)obj, state, dvec, lbl_803E29A0, lbl_803E29B4, *(f32*)&lbl_803E29B4, 1);
+        fn_8014CD1C((int)obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     }
     if (state[0xb7] & 0x40000000U)
     {
@@ -146,7 +145,7 @@ void fn_80154870(int obj, int* state)
         {
             if (flag == 0)
             {
-                if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
+                if ((obj)->anim.currentMoveProgress > lbl_803E29A4)
                 {
                     ((FireflyState*)state)->breathTimer = lbl_803E29E0;
                     ((BaddieState*)state)->inWhirlpoolGroup += 1;
@@ -156,7 +155,7 @@ void fn_80154870(int obj, int* state)
                     ((FireflyState*)state)->breathTimer = lbl_803E29E4;
                 }
             }
-            else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
+            else if ((obj)->anim.currentMoveProgress > lbl_803E29C8)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
                 *(f32*)(state + 0xc2) = lbl_803E29D0;
@@ -173,7 +172,7 @@ void fn_80154870(int obj, int* state)
             if (((FireflyState*)state)->breathTimer <= fval)
             {
                 ((FireflyState*)state)->breathTimer = fval;
-                if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
+                if ((obj)->anim.currentMoveProgress > lbl_803E29C8)
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
                     *(f32*)(state + 0xc2) = lbl_803E29D0;
@@ -187,10 +186,9 @@ void fn_80154870(int obj, int* state)
         }
     }
     ((BaddieState*)state)->seqEntryIndex += 1;
-    ((GameObject*)obj)->anim.rotY =
-        (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
-         (f32)((GameObject*)obj)->anim.rotY);
-    fn_80154328(obj, state);
+    (obj)->anim.rotY = (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
+                        (f32)(obj)->anim.rotY);
+    fn_80154328((int)obj, state);
 }
 #pragma opt_common_subs reset
 

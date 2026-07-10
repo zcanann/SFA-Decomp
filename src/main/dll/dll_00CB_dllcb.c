@@ -81,7 +81,7 @@ extern void* memcpy(void* dst, const void* src, int n);
 extern void voxmaps_updateRoutePath(char* a, char* b);
 extern int Obj_GetPlayerObject(void);
 extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
-extern void characterDoEyeAnims(int* obj, u8* a);
+extern void characterDoEyeAnims(GameObject* obj, u8* a);
 extern f32 sqrtf(f32);
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
 extern int getAngle(float y, float x);
@@ -143,7 +143,7 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8016043C(int obj, GroundBaddieState* state)
+int fn_8016043C(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
 
@@ -153,14 +153,14 @@ int fn_8016043C(int obj, GroundBaddieState* state)
         *(int*)&state->baddie.targetObj = 0;
         *(s8*)&state->baddie.physicsActive = 0;
         *(s8*)&state->baddie.hasTarget = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else
     {
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xe0000, obj, 0);
-        if (((GameObject*)obj)->anim.placementData == NULL)
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xe0000, (int)obj, 0);
+        if ((obj)->anim.placementData == NULL)
         {
             Obj_FreeObject((int*)obj);
             return 0;
@@ -227,7 +227,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
         d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         state->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    characterDoEyeAnims(obj, sub->route35C + 0x50);
+    characterDoEyeAnims((GameObject*)(obj), sub->route35C + 0x50);
     if ((sub->configFlags & 1) == 0)
     {
         (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(

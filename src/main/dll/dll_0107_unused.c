@@ -61,7 +61,7 @@ extern void* lbl_803DDAD0;
 extern void* lbl_803DDAD4;
 
 #pragma opt_common_subs off
-void fn_80185868(int obj, f32 arg)
+void fn_80185868(GameObject* obj, f32 arg)
 {
 
     struct
@@ -73,30 +73,30 @@ void fn_80185868(int obj, f32 arg)
     WindLift107State* sub;
     f32 fz;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     stk.val = sub->radius;
     (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
     (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
-    Sfx_PlayFromObject(obj, SFXTRIG_wp_crthit6);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_crthit6);
     fz = lbl_803E3A58;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityZ = fz;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityZ = fz;
     sub->ventState = 0x32;
     sub->liftTimer = 800;
     sub->launchPhase = 0;
     sub->rideState = 0;
-    ((GameObject*)obj)->unkF8 = 0;
-    ((GameObject*)obj)->unkF4 = 2;
-    ObjHits_EnableObject(obj);
-    ObjHits_MarkObjectPositionDirty(obj);
+    (obj)->unkF8 = 0;
+    (obj)->unkF4 = 2;
+    ObjHits_EnableObject((int)obj);
+    ObjHits_MarkObjectPositionDirty((int)obj);
     sub->spitTimer = 0;
     if (arg < sub->radius)
     {
         ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
-    ObjHitbox_SetCapsuleBounds(obj, sub->radius, -5, 10);
-    ObjHits_SetHitVolumeSlot(obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject(obj);
+    ObjHitbox_SetCapsuleBounds((int)obj, sub->radius, -5, 10);
+    ObjHits_SetHitVolumeSlot((int)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_EnableObject((int)obj);
 }
 #pragma opt_common_subs reset
 #pragma dont_inline reset
@@ -119,14 +119,14 @@ void dll_107_free(int* obj)
     lbl_803DDAD4 = NULL;
 }
 
-void dll_107_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
+void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
     WindLift107State* state;
     s16 spitTimer;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (state->ventState != 0 && state->ventState <= 50)
     {
         goto end;
@@ -138,7 +138,7 @@ void dll_107_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     default:
         goto end;
     }
-    if (((GameObject*)obj)->unkF8 != 0)
+    if ((obj)->unkF8 != 0)
     {
         if (renderState == -1)
         {
@@ -177,7 +177,7 @@ void dll_107_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
             fn_8003B5E0(200, 30, 30, state->glowPulse);
         }
     }
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3A5C);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A5C);
 end:;
 }
 
@@ -186,7 +186,7 @@ void dll_107_hitDetect_nop(void)
 }
 
 #pragma opt_common_subs off
-void dll_107_update(int obj)
+void dll_107_update(GameObject* obj)
 {
 
     extern f32 getXZDistance(f32 * a, f32 * b);
@@ -223,27 +223,27 @@ void dll_107_update(int obj)
     char on;
     u8 held;
 
-    p4c = *(int*)&((GameObject*)obj)->anim.placementData;
+    p4c = *(int*)&(obj)->anim.placementData;
     spd = lbl_803E3A5C;
     (*gSkyInterface)->getClockTime(&spd);
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = Obj_GetPlayerObject();
     sub = *(int*)&((GameObject*)player)->extra;
-    dist = Vec_distance((void*)&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
+    dist = Vec_distance((void*)&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX);
     if (state->liftTimer <= 0)
     {
         state->ventState = 1;
         state->launchPhase = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         {
             f32 fz = lbl_803E3A58;
-            ((GameObject*)obj)->anim.velocityX = fz;
-            ((GameObject*)obj)->anim.velocityZ = fz;
+            (obj)->anim.velocityX = fz;
+            (obj)->anim.velocityZ = fz;
         }
     }
     if (state->spitTimer != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_70);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_70);
         state->spitTimer -= framesThisStep;
         if ((int)randomGetRange(0, 2) == 2)
         {
@@ -262,15 +262,15 @@ void dll_107_update(int obj)
         {
             state->holdTimer = 0;
             state->ventState = 0;
-            ObjHits_EnableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            ((GameObject*)obj)->unkF4 = 0;
+            ObjHits_EnableObject((int)obj);
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            (obj)->unkF4 = 0;
         }
         return;
     }
     if (state->ventState != 0)
     {
-        Sfx_StopObjectChannel(obj, SFXen_firlp6);
+        Sfx_StopObjectChannel((int)obj, SFXen_firlp6);
         state->ventState -= framesThisStep;
         if (state->ventState <= 0)
         {
@@ -294,9 +294,8 @@ void dll_107_update(int obj)
         {
             int cam = (*gCameraInterface)->getOverrideTarget();
             on = 0;
-            if ((void*)cam != (void*)obj &&
-                (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
-                ((GameObject*)obj)->unkF8 == 0)
+            if ((void*)cam != (void*)obj && (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
+                (obj)->unkF8 == 0)
             {
                 buttonDisable(0, PAD_BUTTON_A);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
@@ -310,26 +309,23 @@ void dll_107_update(int obj)
                 state->riding = 1;
                 state->spitTimer = 600;
             }
-            if (((GameObject*)obj)->unkF8 == 0)
+            if ((obj)->unkF8 == 0)
             {
-                ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                ObjHits_EnableObject((int)obj);
+                *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
-            ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosZ;
-            ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+            (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+            (obj)->anim.previousLocalPosY = (obj)->anim.localPosZ;
+            (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
         }
         else
         {
             u8 st21;
-            ObjHits_DisableObject(obj);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX =
-                ((GameObject*)obj)->anim.localPosX;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY =
-                ((GameObject*)obj)->anim.localPosY;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ =
-                ((GameObject*)obj)->anim.localPosZ;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            ObjHits_DisableObject((int)obj);
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosX = (obj)->anim.localPosX;
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosY = (obj)->anim.localPosY;
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosZ = (obj)->anim.localPosZ;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
             {
                 state->riding = 0;
@@ -341,20 +337,20 @@ void dll_107_update(int obj)
                 ObjMsg_SendToObject(player, UNUSED107_MSG_PLAYER_GRAB, obj,
                                     (state->yawHigh << 0x10) | ((u16)state->yawLow));
             }
-            if (((GameObject*)obj)->unkF8 == 1)
+            if ((obj)->unkF8 == 1)
             {
                 state->rideState = 2;
             }
             st21 = state->rideState;
-            if ((s8)st21 == 2 && ((GameObject*)obj)->unkF8 == 0 && ((GameObject*)player)->anim.currentMove != 0x447)
+            if ((s8)st21 == 2 && (obj)->unkF8 == 0 && ((GameObject*)player)->anim.currentMove != 0x447)
             {
                 state->rideState = 0;
                 state->launchPhase = 1;
                 {
                     f32 fz = lbl_803E3A58;
-                    ((GameObject*)obj)->anim.velocityX = fz;
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E3A64 * *(f32*)(sub + 0x298) + lbl_803E3A60;
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E3A6C * *(f32*)(sub + 0x298) + lbl_803E3A68;
+                    (obj)->anim.velocityX = fz;
+                    (obj)->anim.velocityY = lbl_803E3A64 * *(f32*)(sub + 0x298) + lbl_803E3A60;
+                    (obj)->anim.velocityZ = lbl_803E3A6C * *(f32*)(sub + 0x298) + lbl_803E3A68;
                     rot.x = fz;
                     rot.y = fz;
                     rot.z = fz;
@@ -363,19 +359,19 @@ void dll_107_update(int obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = ((GameObject*)player)->anim.rotX;
-                vecRotateZXY(&rot, &((GameObject*)obj)->anim.velocityX);
-                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_6a);
+                vecRotateZXY(&rot, &(obj)->anim.velocityX);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_6a);
             }
-            else if ((s8)st21 == 2 && ((GameObject*)obj)->unkF8 == 0)
+            else if ((s8)st21 == 2 && (obj)->unkF8 == 0)
             {
                 f32 fz;
                 state->rideState = 0;
                 state->launchPhase = 2;
                 fz = lbl_803E3A58;
-                ((GameObject*)obj)->anim.velocityX = fz;
-                ((GameObject*)obj)->anim.velocityY = fz;
-                ((GameObject*)obj)->anim.velocityZ = fz;
-                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_6a);
+                (obj)->anim.velocityX = fz;
+                (obj)->anim.velocityY = fz;
+                (obj)->anim.velocityZ = fz;
+                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_6a);
             }
         }
     }
@@ -384,7 +380,7 @@ void dll_107_update(int obj)
     {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
-            sub = *(int*)&((GameObject*)obj)->extra;
+            sub = *(int*)&(obj)->extra;
             stkA.val = ((WindLift107State*)sub)->radius;
             (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
             ((WindLift107State*)sub)->spitTimer = 1;
@@ -396,21 +392,20 @@ void dll_107_update(int obj)
         state->liftTimer -= framesThisStep;
         if (*(s8*)&state->launchPhase == 1)
         {
-            ObjHits_SetHitVolumeSlot(obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
-            if (((GameObject*)obj)->anim.velocityY > lbl_803E3A70)
+            ObjHits_SetHitVolumeSlot((int)obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
+            if ((obj)->anim.velocityY > lbl_803E3A70)
             {
-                ((GameObject*)obj)->anim.velocityY =
-                    gWindLift107LaunchGravity * timeDelta + ((GameObject*)obj)->anim.velocityY;
+                (obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + (obj)->anim.velocityY;
             }
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((int)obj);
         }
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         held = hitState->contactFlags;
         if ((s8)held != 0 && *(s8*)&state->launchPhase == 1)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E3A58;
+            (obj)->anim.velocityY = lbl_803E3A58;
             state->launchPhase = 0;
-            sub = *(int*)&((GameObject*)obj)->extra;
+            sub = *(int*)&(obj)->extra;
             stkB.val = ((WindLift107State*)sub)->radius;
             (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
             ((WindLift107State*)sub)->spitTimer = 1;
@@ -419,38 +414,34 @@ void dll_107_update(int obj)
         if ((s8)held != 0 && *(s8*)&state->launchPhase == 2)
         {
             state->launchPhase = 0;
-            sub = *(int*)&((GameObject*)obj)->extra;
+            sub = *(int*)&(obj)->extra;
             stkC.val = ((WindLift107State*)sub)->radius;
             (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
             ((WindLift107State*)sub)->spitTimer = 1;
-            ((GameObject*)obj)->anim.velocityY = lbl_803E3A58;
+            (obj)->anim.velocityY = lbl_803E3A58;
             return;
         }
-        ((GameObject*)obj)->anim.localPosX =
-            ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY =
-            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosZ =
-            ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+        (obj)->anim.localPosX = (obj)->anim.velocityX * timeDelta + (obj)->anim.localPosX;
+        (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.localPosY;
+        (obj)->anim.localPosZ = (obj)->anim.velocityZ * timeDelta + (obj)->anim.localPosZ;
     }
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
+    (obj)->anim.worldPosX = (obj)->anim.localPosX;
+    (obj)->anim.worldPosY = (obj)->anim.localPosY;
+    (obj)->anim.worldPosZ = (obj)->anim.localPosZ;
     state->timer -= framesThisStep;
     if (*(s8*)&state->rideState != 0)
     {
-        if (getXZDistance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)(p4c + 8)) >=
-            (f32)(state->maxDist * state->maxDist))
+        if (getXZDistance((void*)&(obj)->anim.worldPosX, (void*)(p4c + 8)) >= (f32)(state->maxDist * state->maxDist))
         {
             f32 fz = lbl_803E3A58;
-            ((GameObject*)obj)->anim.velocityX = fz;
-            ((GameObject*)obj)->anim.velocityZ = fz;
+            (obj)->anim.velocityX = fz;
+            (obj)->anim.velocityZ = fz;
             state->ventState = 500;
             state->launchPhase = 0;
-            ((GameObject*)obj)->unkF8 = 0;
-            ObjHits_EnableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            ObjHits_ClearHitVolumes(obj);
+            (obj)->unkF8 = 0;
+            ObjHits_EnableObject((int)obj);
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            ObjHits_ClearHitVolumes((int)obj);
         }
     }
 }

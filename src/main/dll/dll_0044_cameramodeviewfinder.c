@@ -472,7 +472,7 @@ void CameraModeViewfinder_update(s16* obj)
     case VIEWFINDER_MODE_IDLE:
         break;
     }
-    if (ObjHits_GetPriorityHit(*(int*)&((GameObject*)obj)->anim.targetObj, 0, 0, 0) != 0)
+    if (ObjHits_GetPriorityHit((GameObject*)(*(int*)&((GameObject*)obj)->anim.targetObj), 0, 0, 0) != 0)
     {
         firstPersonExit((CameraObject*)obj);
         ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;

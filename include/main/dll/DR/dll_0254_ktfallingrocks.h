@@ -22,7 +22,7 @@ int ktfallingrocks_getObjectTypeId(void);
 void ktfallingrocks_free(u8* obj);
 void ktfallingrocks_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void ktfallingrocks_hitDetect(void);
-void ktfallingrocks_update(int obj);
+void ktfallingrocks_update(GameObject* obj);
 void ktfallingrocks_init(GameObject* obj);
 void ktfallingrocks_release(void);
 void ktfallingrocks_initialise(void);

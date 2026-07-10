@@ -404,7 +404,7 @@ void fn_801EB634(int obj, int stateRaw)
             ObjHits_ClearHitVolumes(obj);
             ObjHits_SyncObjectPositionIfDirty(obj);
         }
-        hitKind = ObjHits_GetPriorityHit(obj, &hitObj, &hitOutB, &hitOutC);
+        hitKind = ObjHits_GetPriorityHit((GameObject*)(obj), &hitObj, &hitOutB, &hitOutC);
         switch (hitKind)
         {
         case 0xd:

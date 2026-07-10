@@ -57,7 +57,7 @@ typedef struct DIMWoodDoorShardState
 } DIMWoodDoorShardState;
 
 extern u8 Obj_IsLoadingLocked(void);
-extern s16* objModelGetVecFn_800395d8(int obj, int target);
+extern s16* objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
 extern int Obj_GetPlayerObject(void);
@@ -99,7 +99,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
         return;
     }
 
-    modelVec = objModelGetVecFn_800395d8(obj, 0);
+    modelVec = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     setup = Obj_AllocObjectSetup(0x24, DIMWOODDOOR_CHILD_OBJ_SHARD);
     setup[4] = config->setup04;
     setup[6] = config->setup06;
@@ -155,7 +155,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     Sfx_PlayFromObject(obj, SFXTRIG_tr_jrumbalp);
 }
 
-void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
+void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ)
 {
     DIMWoodDoorState* state;
     DIMWoodDoorConfig* config;
@@ -177,15 +177,15 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
     int turnStep;
     s16 absPitch;
 
-    config = *(DIMWoodDoorConfig**)&((GameObject*)obj)->anim.placementData;
+    config = *(DIMWoodDoorConfig**)&(obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (state->cooldown <= 0)
     {
         modelVec = objModelGetVecFn_800395d8(obj, 0);
         facingAngle = modelVec[1] + ((s32)config->angleBias << 8);
-        targetX -= ((GameObject*)obj)->anim.localPosX;
-        targetZ -= ((GameObject*)obj)->anim.localPosZ;
+        targetX -= (obj)->anim.localPosX;
+        targetZ -= (obj)->anim.localPosZ;
         angleDelta = ((u16)getAngle(targetX, targetZ) + 0x8000);
         angleDelta = angleDelta - (u16)facingAngle;
         if (angleDelta > 0x8000)

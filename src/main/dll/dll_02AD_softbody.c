@@ -68,9 +68,9 @@ void SoftBody_hitDetect(void)
 {
 }
 
-void SoftBody_update(int obj)
+void SoftBody_update(GameObject* obj)
 {
-    GameObject* object = (GameObject*)obj;
+    GameObject* object = obj;
     SoftBodySetup* setup = (SoftBodySetup*)object->anim.placementData;
 
     if (lbl_803DDD98 == NULL && setup->phaseDriverDisabled == 0)
@@ -103,17 +103,17 @@ void SoftBody_update(int obj)
     case SOFTBODY_MOVE_PHASE_A_FIRST:
     case SOFTBODY_MOVE_PHASE_A_FIRST + 1:
     case SOFTBODY_MOVE_PHASE_A_FIRST + 2:
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDA0, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803DDDA0, 0);
         break;
     default:
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803DDD9C, 0);
         break;
     }
 }
 
-void SoftBody_init(int obj, int setup)
+void SoftBody_init(GameObject* obj, int setup)
 {
-    GameObject* object = (GameObject*)obj;
+    GameObject* object = obj;
     SoftBodySetup* setupData = (SoftBodySetup*)setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
@@ -129,11 +129,12 @@ void SoftBody_init(int obj, int setup)
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= SOFTBODY_OBJECT_FLAGS_INIT;
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E7298, 0);
     if (object->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(obj, (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
-                                             object->anim.rootMotionScale));
+        ObjHitbox_SetSphereRadius((int)obj,
+                                  (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
+                                        object->anim.rootMotionScale));
     }
 }
 

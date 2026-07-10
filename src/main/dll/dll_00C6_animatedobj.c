@@ -4,7 +4,7 @@
 
 void MikaBomb_hitDetect(void);
 
-void MikaBomb_free(int obj, int mode);
+void MikaBomb_free(GameObject *obj, int mode);
 
 int MikaBomb_getExtraSize(void);
 int MikaBomb_getObjectTypeId(void);

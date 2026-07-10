@@ -60,30 +60,30 @@ void VFP_MiniFire_hitDetect(void)
 {
 }
 
-void VFP_MiniFire_update(int obj)
+void VFP_MiniFire_update(GameObject* obj)
 {
     /* local override: this TU treats randomGetRange's result as signed
        (vf_shared declares it u32); the int return is load-bearing. */
-    VfpMinifireState* state = ((GameObject*)obj)->extra;
+    VfpMinifireState* state = (obj)->extra;
     VfpMinifirePartfxArgs args;
     int linkedGfx;
     int i;
 
     if (0.0f == state->baseY)
     {
-        hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ, (f32*)state, 0);
-        state->baseY = ((GameObject*)obj)->anim.localPosY - state->baseY;
+        hitDetectFn_800658a4((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, (f32*)state,
+                             0);
+        state->baseY = (obj)->anim.localPosY - state->baseY;
     }
 
-    if (((GameObject*)obj)->anim.velocityY > -15.0f)
+    if ((obj)->anim.velocityY > -15.0f)
     {
-        ((GameObject*)obj)->anim.velocityY += -0.03f;
+        (obj)->anim.velocityY += -0.03f;
     }
 
-    ((GameObject*)obj)->anim.localPosX += ((GameObject*)obj)->anim.velocityX * timeDelta;
-    ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY * timeDelta;
-    ((GameObject*)obj)->anim.localPosZ += ((GameObject*)obj)->anim.velocityZ * timeDelta;
+    (obj)->anim.localPosX += (obj)->anim.velocityX * timeDelta;
+    (obj)->anim.localPosY += (obj)->anim.velocityY * timeDelta;
+    (obj)->anim.localPosZ += (obj)->anim.velocityZ * timeDelta;
 
     args.x = 0.0f;
     args.y = 0.0f;
@@ -98,9 +98,9 @@ void VFP_MiniFire_update(int obj)
     }
 
     {
-        f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-        f32 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-        f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+        f32 dx = (obj)->anim.localPosX - (obj)->anim.previousLocalPosX;
+        f32 dy = (obj)->anim.localPosY - (obj)->anim.previousLocalPosY;
+        f32 dz = (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ;
         args.x = dx / 3.0f;
         args.y = dy / 3.0f;
         args.z = dz / 3.0f;
@@ -122,7 +122,7 @@ void VFP_MiniFire_update(int obj)
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1);
     }
 
-    linkedGfx = *(int*)&((GameObject*)obj)->anim.hitReactState;
+    linkedGfx = *(int*)&(obj)->anim.hitReactState;
     if ((void*)linkedGfx != NULL)
     {
         *(u8*)&((ObjHitsPriorityState*)linkedGfx)->hitVolumePriority = 0xb;
@@ -131,11 +131,11 @@ void VFP_MiniFire_update(int obj)
         *(int*)&((ObjHitsPriorityState*)linkedGfx)->skeletonHitMask = 0x10;
     }
     if (((void*)linkedGfx != NULL && *(void**)&((ObjHitsPriorityState*)linkedGfx)->lastHitObject != NULL) ||
-        (((GameObject*)obj)->anim.localPosY < state->baseY && state->burstStarted == 0))
+        ((obj)->anim.localPosY < state->baseY && state->burstStarted == 0))
     {
         state->burstStarted = 1;
         i = VFPMINIFIRE_BURST_COUNT;
-        Sfx_StopObjectChannel(obj, 0x7f);
+        Sfx_StopObjectChannel((int)obj, 0x7f);
         for (; i != 0; i--)
         {
             VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_BURST_EFFECT, &args, 1);
@@ -144,17 +144,17 @@ void VFP_MiniFire_update(int obj)
 
     if (state->burstStarted != 0)
     {
-        s16 alpha = ((GameObject*)obj)->anim.alpha - (s16)timeDelta;
+        s16 alpha = (obj)->anim.alpha - (s16)timeDelta;
         if (alpha < 0)
         {
             alpha = 0;
         }
-        ((GameObject*)obj)->anim.alpha = alpha;
+        (obj)->anim.alpha = alpha;
     }
 
-    if (((GameObject*)obj)->anim.localPosY < state->baseY - 360.0f)
+    if ((obj)->anim.localPosY < state->baseY - 360.0f)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int)obj);
     }
 }
 

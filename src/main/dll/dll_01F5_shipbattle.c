@@ -84,7 +84,7 @@ void ShipBattle_hitDetect(void)
 {
 }
 
-void ShipBattle_update(int obj)
+void ShipBattle_update(GameObject* obj)
 {
     int groupId;
     int* objects;
@@ -95,11 +95,11 @@ void ShipBattle_update(int obj)
     int groupId2;
     int sameGroupCount;
 
-    if (((GameObject*)obj)->anim.placementData == NULL)
+    if ((obj)->anim.placementData == NULL)
     {
         return;
     }
-    if (((ShipBattleObjectDef*)((GameObject*)obj)->anim.placementData)->segmentIndex == -1)
+    if (((ShipBattleObjectDef*)(obj)->anim.placementData)->segmentIndex == -1)
     {
         return;
     }
@@ -109,12 +109,12 @@ void ShipBattle_update(int obj)
     {
         return;
     }
-    if (((GameObject*)obj)->seqIndex != SEQINDEX_PENDING)
+    if ((obj)->seqIndex != SEQINDEX_PENDING)
     {
         return;
     }
 
-    groupId = *(s8*)&((ObjSeqState*)((GameObject*)obj)->extra)->slot;
+    groupId = *(s8*)&((ObjSeqState*)(obj)->extra)->slot;
     linkedObject = 0;
     objects = ObjList_GetObjects(&i, &objectCount);
     sameGroupCount = 0;
@@ -142,8 +142,8 @@ void ShipBattle_update(int obj)
         ((GameObject*)linkedObject)->seqIndex = -1;
         (*gObjectTriggerInterface)->endSequence(groupId2);
     }
-    ((GameObject*)obj)->seqIndex = -1;
-    Obj_FreeObject(obj);
+    (obj)->seqIndex = -1;
+    Obj_FreeObject((int)obj);
 }
 
 void ShipBattle_init(GameObject* obj, int def)

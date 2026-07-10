@@ -1654,7 +1654,7 @@ fail:
     return 1;
 }
 
-int RomCurve_initCurve(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
+int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, int curveType, f32 maxDistance)
 {
     char* stateBytes;
     int curveId;
@@ -1674,7 +1674,7 @@ int RomCurve_initCurve(RomCurveWalker* state, int obj, int* curveTypes, int curv
     }
 
     stateBytes = (char*)state;
-    curveId = ((int (*)(int, int*, int, int, char))curves_findNearObj)(obj, curveTypes, 1, curveType, 0xc);
+    curveId = ((int (*)(int, int*, int, int, char))curves_findNearObj)((int)obj, curveTypes, 1, curveType, 0xc);
     if (curveId == -1)
     {
         goto fail;
@@ -1725,16 +1725,16 @@ int RomCurve_initCurve(RomCurveWalker* state, int obj, int* curveTypes, int curv
         if (state->reverse != 0)
         {
             distanceCurve = *(s32*)&state->nodeA4;
-            dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
-            dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
-            dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
+            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
         }
         else
         {
             distanceCurve = *(s32*)&state->nodeA0;
-            dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
-            dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
-            dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
+            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
         }
         distance = sqrtf(dx * dx + dy * dy + dz * dz);
         if (distance > maxDistance)
@@ -3409,7 +3409,7 @@ f32 curves_distXZ(f32 x, f32 z, u32 curveId)
     return gFloatNegOne;
 }
 
-f32 curves_distToObj(int obj, u32 curveId)
+f32 curves_distToObj(GameObject* obj, u32 curveId)
 {
     RomCurveDef* curve;
     f32 dx;
@@ -3419,9 +3419,9 @@ f32 curves_distToObj(int obj, u32 curveId)
     curve = RomCurve_FindByIdInline(curveId);
     if (curve != NULL && (void*)obj != NULL)
     {
-        dx = curve->x - ((GameObject*)obj)->anim.localPosX;
-        dy = curve->y - ((GameObject*)obj)->anim.localPosY;
-        dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
+        dx = curve->x - (obj)->anim.localPosX;
+        dy = curve->y - (obj)->anim.localPosY;
+        dz = curve->z - (obj)->anim.localPosZ;
         return sqrtf(dx * dx + dy * dy + dz * dz);
     }
 

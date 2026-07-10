@@ -36,7 +36,7 @@ extern f32 lbl_803E4A0C;
 
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
-extern void fn_80065574(int matchVal, int obj, int flag);
+extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern int EmissionController_IsLingering(GameObject* player);
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern float mathSinf(float x);
@@ -44,7 +44,7 @@ extern float mathSinf(float x);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void dimmagicbridge_updateVertexWave(int obj, u8* sub)
+void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
 {
     int i;
     int cnt;
@@ -52,7 +52,7 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
     int model;
     f32 amp;
     DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
-    model = Obj_GetActiveModel(obj);
+    model = Obj_GetActiveModel((int)obj);
     mdl = *(int*)model;
     i = 0;
     amp = lbl_803E4A00;
@@ -72,7 +72,7 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
         }
     }
     DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
-    ((GameObject*)obj)->anim.alpha = state->segmentGlow[1];
+    (obj)->anim.alpha = state->segmentGlow[1];
 }
 
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
@@ -81,7 +81,7 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     ObjTextureRuntimeSlot* tex;
     s32 phase;
 
-    tex = objFindTexture((void*)arg1, 0, 0);
+    tex = objFindTexture((GameObject*)arg1, 0, 0);
     tex->offsetT += 0x14;
     if (tex->offsetT > 10000)
     {
@@ -92,7 +92,7 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     {
         tex->offsetS -= 10000;
     }
-    tex = objFindTexture((void*)arg1, 1, 0);
+    tex = objFindTexture((GameObject*)arg1, 1, 0);
     tex->offsetT += 0x1e;
     if (tex->offsetT > 10000)
     {
@@ -109,15 +109,15 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 }
 #pragma dont_inline reset
 
-int dimmagicbridge_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int j;
     int i;
-    u8* sub = ((GameObject*)obj)->extra;
+    u8* sub = (obj)->extra;
     DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
-    dimmagicbridge_scrollTextureChannels(obj, sub);
+    dimmagicbridge_scrollTextureChannels((int)obj, sub);
     if (animUpdate->triggerCommand == 1)
     {
         animUpdate->triggerCommand = 0;
@@ -177,13 +177,13 @@ void dimmagicbridge_hitDetect(void)
 }
 
 #pragma peephole on
-void dimmagicbridge_update(int obj)
+void dimmagicbridge_update(GameObject* obj)
 {
     DimMagicBridgeState* sub;
     void* player;
     player = Obj_GetPlayerObject();
-    sub = ((GameObject*)obj)->extra;
-    dimmagicbridge_scrollTextureChannels(obj, (u8*)sub);
+    sub = (obj)->extra;
+    dimmagicbridge_scrollTextureChannels((int)obj, (u8*)sub);
     dimmagicbridge_updateVertexWave(obj, (u8*)sub);
     if (sub->ignited == 0)
     {
@@ -197,7 +197,7 @@ void dimmagicbridge_update(int obj)
     }
     else
     {
-        fn_80065574(0x11, 0, 0);
+        fn_80065574(0x11, (GameObject*)(0), 0);
     }
 }
 #pragma peephole off
@@ -269,7 +269,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
         {
             state->segmentGlow[i] = 0xff;
             state->segmentLit[i] = 1;
-            fn_80065574(0x11, 0, 0);
+            fn_80065574(0x11, (GameObject*)(0), 0);
         }
     }
 }

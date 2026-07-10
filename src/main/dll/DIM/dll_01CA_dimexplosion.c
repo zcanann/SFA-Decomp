@@ -133,16 +133,16 @@ extern void Obj_FreeObject(int obj);
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
+void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
 void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out);
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_propagation off
-void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
+void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
 {
-    s16* placement = ((GameObject*)obj)->anim.placementData;
-    ExplosionState* state = ((GameObject*)obj)->extra;
+    s16* placement = (obj)->anim.placementData;
+    ExplosionState* state = (obj)->extra;
     ExplosionDebris* flames = (ExplosionDebris*)state->flames;
     int idx = state->flameCount++;
     flames[idx].posX = x;
@@ -173,15 +173,15 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
         {
             if (c == 2)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4bf);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_sexpl2_c_4bf);
             }
             else if (c == 3)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4c2);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_sexpl2_c_4c2);
             }
             else
             {
-                s8 m = ((GameObject*)obj)->anim.mapEventSlot;
+                s8 m = (obj)->anim.mapEventSlot;
                 if (m < 0x3a)
                 {
                     if (m == 0x2c)
@@ -192,10 +192,10 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
                 else if (m < 0x3f)
                 {
                 playLimited:
-                    Sfx_PlayFromObjectLimited(obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
+                    Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
                     goto done;
                 }
-                Sfx_PlayFromObject(obj, SFXTRIG_sexpl2_c);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_sexpl2_c);
             done:;
             }
         }
@@ -416,14 +416,14 @@ void explosion_hitDetect(void)
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_propagation off
-void explosion_update(int obj)
+void explosion_update(GameObject* obj)
 {
     ExplosionPartfxSource fake;
     u16 ang[6];
     f32 vpos[3];
     f32 m[12];
     u8 rgb[3];
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int i;
     int cursor;
     gExplosionUpdateTick += 1;
@@ -470,7 +470,7 @@ void explosion_update(int obj)
                         f32 sv;
                         gen = ((ExplosionDebris*)cursor)->generation;
                         sp2 = ((ExplosionDebris*)cursor)->speed;
-                        st2 = *(int*)&((GameObject*)obj)->extra;
+                        st2 = *(int*)&(obj)->extra;
                         vpos[0] = ((ExplosionDebris*)cursor)->scale *
                                   (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
                         vpos[1] = lbl_803E4960;
@@ -605,7 +605,7 @@ void explosion_update(int obj)
         int d = ((ExplosionState*)state)->lifeFrames;
         if (e > d << 1)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
         }
         else
         {
@@ -626,8 +626,8 @@ void explosion_update(int obj)
             }
             {
                 f32 frac = (f32)((ExplosionState*)state)->frameCounter / (f32)((ExplosionState*)state)->lifeFrames;
-                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E49A4 * (frac * ((ExplosionState*)state)->scale);
-                ((GameObject*)obj)->anim.alpha = lbl_803E4938 - lbl_803E4938 * frac;
+                (obj)->anim.rootMotionScale = lbl_803E49A4 * (frac * ((ExplosionState*)state)->scale);
+                (obj)->anim.alpha = lbl_803E4938 - lbl_803E4938 * frac;
             }
             if (((ExplosionState*)state)->halfLifeFired == 0 &&
                 ((ExplosionState*)state)->frameCounter >= (((ExplosionState*)state)->lifeFrames >> 1))

@@ -238,7 +238,7 @@ void WM_LevelControl_hitDetect(void)
 {
 }
 
-void WM_LevelControl_update(int obj)
+void WM_LevelControl_update(GameObject* obj)
 {
     u32 mode6;
     int loadingDone;
@@ -246,7 +246,7 @@ void WM_LevelControl_update(int obj)
     float timer;
 
     Obj_GetPlayerObject(); /* result unused (retail does the same call) */
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     timer = state->messageTimer;
     if (timer > lbl_803E5E70)
     {
@@ -261,7 +261,7 @@ void WM_LevelControl_update(int obj)
     }
     if (state->latchesDisabled == 0)
     {
-        mode6 = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+        mode6 = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;
         if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
@@ -276,7 +276,7 @@ void WM_LevelControl_update(int obj)
         }
         SCGameBitLatch_Update(&state->latch, 0x20, -1, -1, 0xcbb, 0xc4);
     }
-    fn_801F3F18((GameObject*)(obj));
+    fn_801F3F18(obj);
     state->frameCounter = state->frameCounter + 1;
     return;
 }

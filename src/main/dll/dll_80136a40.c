@@ -189,7 +189,7 @@ extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int 
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
-extern int dll_19_func1B(int p);
+extern int dll_19_func1B(GameObject* p);
 extern f32 enemy_getHealthFraction(register int obj);
 extern f32 vec3f_distanceSquared(int, int);
 extern void selectTexture(char* tex, int slot);
@@ -571,7 +571,7 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
         int v1, v2;
         s32 g1, g2;
 
-        if (dll_19_func1B(*objs) != 0)
+        if (dll_19_func1B((GameObject*)(*objs)) != 0)
         {
             obj_extra = (**(f32(**)(int))((char*)(*gBaddieControlInterface) + 0x60))(*objs);
         }

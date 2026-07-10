@@ -42,7 +42,7 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 
 extern f32 lbl_803E48B8;
 
-extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
+extern void DIMwooddoor_updateShardAim(GameObject* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void* playerGetFocusObject(void* player);
@@ -55,7 +55,7 @@ extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;
 extern f32 gDimCannonAnimAdvanceSpeedCur;
 
-extern void* objModelGetVecFn_800395d8(void* obj, int target);
+extern void* objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern s8 padGetStickX(int chan);
 extern void playerAddRemoveMagic(void* player, int amount);
 
@@ -299,7 +299,7 @@ void DIMCannon_update(int* obj)
         break;
     }
     case 4:
-        DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->aimTargetX,
+        DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
                                    *(f32*)&((DimCannonState*)state)->aimTargetY, ((DimCannonState*)state)->aimTargetZ,
                                    ((DimCannonState*)state)->distance);
         if (mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
@@ -368,7 +368,7 @@ void DIMCannon_update(int* obj)
             ((DimCannonState*)state)->distance =
                 getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                               &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
-            DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->aimTargetX,
+            DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
                                        *(f32*)&((DimCannonState*)state)->aimTargetY,
                                        ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
             DIMwooddoor_spawnShard(obj, 0);
@@ -425,7 +425,7 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             return 0;
         }
-        vec = objModelGetVecFn_800395d8(obj, 0);
+        vec = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
         timer = ((DimCannonState*)state)->chargeTimer;
         if (timer > 0)
         {
@@ -559,7 +559,7 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         s16* vec2;
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-        vec2 = objModelGetVecFn_800395d8(obj, 0);
+        vec2 = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
         *(s16*)((char*)vec2 + 0x2) = (s16)(((GameObject*)obj)->anim.rotX - ((s8) * (s8*)((char*)src + 0x28) << 8));
         ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)src + 0x28) << 8);
         ((DimCannonState*)state)->fireState = 4;

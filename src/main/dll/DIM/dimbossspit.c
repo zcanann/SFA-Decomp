@@ -102,7 +102,7 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
     }
 
     lbl_803DDBA0 = lbl_803DDBA0 + timeDelta;
-    DIMbosstonsil_checkHit(obj, updateState);
+    DIMbosstonsil_checkHit((GameObject*)(obj), updateState);
 
     if (lbl_803E4C90 != lbl_803DDB98)
     {

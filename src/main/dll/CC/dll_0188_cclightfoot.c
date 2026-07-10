@@ -136,10 +136,10 @@ void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
 
 extern f32 lbl_803E4670;
 
-int CClightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern u32 ObjLink_DetachChild();
-    CcLightfootState* state = ((GameObject*)obj)->extra;
+    CcLightfootState* state = (obj)->extra;
     if (animUpdate->eventCount != 0)
     {
         int i;
@@ -149,15 +149,14 @@ int CClightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             switch (cmd)
             {
             case 1:
-                if (((GameObject*)obj)->childObjs[0] != NULL)
+                if ((obj)->childObjs[0] != NULL)
                 {
                     ObjLink_DetachChild(obj, state->childObj);
                 }
                 break;
             case 2:
                 (*gWaterfxInterface)
-                    ->spawnSplashBurst((void*)obj, ((GameObject*)obj)->anim.worldPosX,
-                                       ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
+                    ->spawnSplashBurst((void*)obj, (obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ,
                                        lbl_803E4670);
                 break;
             }
@@ -590,7 +589,7 @@ void cclightfoot_update(int obj)
     stateId = state->state;
     if (stateId >= CCLIGHTFOOT_STATE_GUARD && stateId <= CCLIGHTFOOT_STATE_RECOVER)
     {
-        if (ObjHits_PollPriorityHitWithCooldown(obj, gCcLightfootHitCooldown, 0, hitPos) != 0)
+        if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), gCcLightfootHitCooldown, 0, hitPos) != 0)
         {
             if (getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4690)
             {
@@ -602,7 +601,7 @@ void cclightfoot_update(int obj)
     }
     else
     {
-        if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0)
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hitObj, 0, 0) != 0)
         {
             move = ((GameObject*)hitObj)->anim.seqId;
             if (move == 0x11 || move == 0x33)

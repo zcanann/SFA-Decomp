@@ -204,19 +204,19 @@ void directionallight_hitDetect(void)
 {
 }
 
-void directionallight_update(int obj)
+void directionallight_update(GameObject* obj)
 {
     u8 colorR, colorG, colorB;
-    DirectionalLightState* state = ((GameObject*)obj)->extra;
-    DirectionalLightSetup* setup = (DirectionalLightSetup*)((GameObject*)obj)->anim.placementData;
+    DirectionalLightState* state = (obj)->extra;
+    DirectionalLightSetup* setup = (DirectionalLightSetup*)(obj)->anim.placementData;
 
     if (state->light == NULL)
     {
         return;
     }
 
-    ((GameObject*)obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
-    ((GameObject*)obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
+    (obj)->anim.rotX = (s16)((f32)setup->rotXSpeed * timeDelta + (f32)(obj)->anim.rotX);
+    (obj)->anim.rotY = (s16)((f32)setup->rotYSpeed * timeDelta + (f32)(obj)->anim.rotY);
 
     if (state->enabled != 0)
     {
@@ -240,24 +240,24 @@ void directionallight_update(int obj)
         }
     }
 
-    directionallight_debugEdit((GameObject*)(obj), (int)state);
+    directionallight_debugEdit(obj, (int)state);
 }
 
-void directionallight_init(int obj, int setup)
+void directionallight_init(GameObject* obj, int setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
     DirectionalLightSetup* setupData = (DirectionalLightSetup*)setup;
-    DirectionalLightState* state = ((GameObject*)obj)->extra;
+    DirectionalLightState* state = (obj)->extra;
 
     vec = *(PointLightVec*)lbl_802C2608;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setupData->rotX << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(setupData->rotY << 8);
+    (obj)->anim.rotX = (s16)(setupData->rotX << 8);
+    (obj)->anim.rotY = (s16)(setupData->rotY << 8);
 
     if (state->light == NULL)
     {
-        state->light = objCreateLight(obj, 1);
+        state->light = objCreateLight((int)obj, 1);
     }
 
     if (state->light != NULL)

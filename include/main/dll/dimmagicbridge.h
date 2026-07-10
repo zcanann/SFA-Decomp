@@ -2,11 +2,12 @@
 #define MAIN_DLL_DLL_1CC_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 void dll_199_update(int obj);
-void dll_199_init(int obj, int def);
-int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+void dll_199_init(GameObject* obj, int def);
+int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void dll_199_release(void);
 void dll_199_initialise(void);
 int dll_19A_getExtraSize(void);

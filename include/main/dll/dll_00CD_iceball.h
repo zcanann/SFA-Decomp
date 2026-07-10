@@ -3,8 +3,8 @@
 
 #include "main/game_object.h"
 
-void fn_8015FBEC(int obj);
-void fn_8015FCCC(int obj);
+void fn_8015FBEC(GameObject* obj);
+void fn_8015FCCC(GameObject* obj);
 int IceBall_getExtraSize(void);
 int IceBall_getObjectTypeId(void);
 void IceBall_free(void);

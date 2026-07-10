@@ -5,7 +5,7 @@
 #include "global.h"
 #include "main/objanim_update.h"
 
-int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int GCRobotBlast_getExtraSize(void);
 int GCRobotBlast_getObjectTypeId(void);
 void GCRobotBlast_free(void);

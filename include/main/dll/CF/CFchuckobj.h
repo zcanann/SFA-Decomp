@@ -2,6 +2,7 @@
 #define MAIN_DLL_CF_CFCHUCKOBJ_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/curve_walker.h"
 #include "main/object_descriptor.h"
@@ -10,35 +11,36 @@
 extern ObjectDescriptor gAreaFXEmitObjDescriptor;
 extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
 
-#define AREAFXEMIT_DLL_ID 0x0130
-#define AREAFXEMIT_CLASS_ID 0x0067
-#define AREAFXEMIT_DEF_ID 0x05A8
-#define TAREAFXEMIT_DEF_ID 0x05AA
-#define AREAFXEMIT_OBJECT_DEF_BYTES 0xA0
-#define AREAFXEMIT_PLACEMENT_BYTES 0x28
-#define AREAFXEMIT_EXTRA_STATE_BYTES 0x20
-#define AREAFXEMIT_SPAWN_LOCAL_WORLD 0
-#define AREAFXEMIT_SPAWN_OBJECT_RESOURCE 1
+#define AREAFXEMIT_DLL_ID                    0x0130
+#define AREAFXEMIT_CLASS_ID                  0x0067
+#define AREAFXEMIT_DEF_ID                    0x05A8
+#define TAREAFXEMIT_DEF_ID                   0x05AA
+#define AREAFXEMIT_OBJECT_DEF_BYTES          0xA0
+#define AREAFXEMIT_PLACEMENT_BYTES           0x28
+#define AREAFXEMIT_EXTRA_STATE_BYTES         0x20
+#define AREAFXEMIT_SPAWN_LOCAL_WORLD         0
+#define AREAFXEMIT_SPAWN_OBJECT_RESOURCE     1
 #define AREAFXEMIT_SPAWN_OBJECT_RESOURCE_ALT 2
-#define AREAFXEMIT_SPAWN_LOCAL_OBJECT 3
-#define AREAFXEMIT_APPROACH_BURST_COUNT 0x23
-#define LFXEMITTER_DLL_ID 0x012D
-#define LFXEMITTER_CLASS_ID 0x0060
-#define LFXEMITTER_DEF_ID 0x04B0
-#define LFXEMITTER_OBJECT_DEF_BYTES 0xA0
-#define LFXEMITTER_PLACEMENT_BYTES 0x28
-#define LFXEMITTER_EXTRA_STATE_BYTES 0x124
-#define LFXEMITTER_CURVE_RECORD_BYTES 0x108
-#define LFXEMITTER_CONFIG_BYTES 0x28
-#define LFXEMITTER_OBJ_GROUP 0x1C
-#define LFXEMITTER_FLAG_FOLLOW_CURVE 1
-#define LFXEMITTER_FLAG_DAMP_Y_VELOCITY 2
+#define AREAFXEMIT_SPAWN_LOCAL_OBJECT        3
+#define AREAFXEMIT_APPROACH_BURST_COUNT      0x23
+#define LFXEMITTER_DLL_ID                    0x012D
+#define LFXEMITTER_CLASS_ID                  0x0060
+#define LFXEMITTER_DEF_ID                    0x04B0
+#define LFXEMITTER_OBJECT_DEF_BYTES          0xA0
+#define LFXEMITTER_PLACEMENT_BYTES           0x28
+#define LFXEMITTER_EXTRA_STATE_BYTES         0x124
+#define LFXEMITTER_CURVE_RECORD_BYTES        0x108
+#define LFXEMITTER_CONFIG_BYTES              0x28
+#define LFXEMITTER_OBJ_GROUP                 0x1C
+#define LFXEMITTER_FLAG_FOLLOW_CURVE         1
+#define LFXEMITTER_FLAG_DAMP_Y_VELOCITY      2
 
 typedef struct AreaFxEmitObject AreaFxEmitObject;
 typedef struct LfxEmitterObject LfxEmitterObject;
-typedef int (*AreaFxEmitSeqCallback)(AreaFxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate);
+typedef int (*AreaFxEmitSeqCallback)(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-typedef struct AreaFxEmitPlacement {
+typedef struct AreaFxEmitPlacement
+{
     ObjPlacement base;
     s8 triggerRadius;
     s8 initialRoll;
@@ -58,27 +60,29 @@ typedef struct AreaFxEmitPlacement {
  * Per-object extra state for the areafxemit volume particle emitter
  * (AreaFxEmit_getExtraSize == 0x20).
  */
-typedef struct AreaFxEmitState {
+typedef struct AreaFxEmitState
+{
     f32 triggerRadius; /* (s8)setup[0x18] << 2; sentinel value = always emit */
-    f32 lastDistance; /* player distance at the last emit check */
-    u8 emitType; /* setup[0x1f]; 4/6 = world-positioned spawn (flag 0x200001), >3 bursts on approach */
+    f32 lastDistance;  /* player distance at the last emit check */
+    u8 emitType;       /* setup[0x1f]; 4/6 = world-positioned spawn (flag 0x200001), >3 bursts on approach */
     u8 pad09;
     u16 effectId;
     s16 emitCount; /* setup+0x22; >0: spawns per emit; <=0: negated re-emit cooldown; 0 also suppresses */
     s16 enableBit; /* gamebit gate, -1 = always on */
-    s16 stopBit; /* gamebit; once set the emitter suppresses */
+    s16 stopBit;   /* gamebit; once set the emitter suppresses */
     s16 suppressed;
-    u16 extentX; /* setup[0x1c] << 2 -- random offset half-extents */
-    u16 extentZ; /* setup[0x1d] << 2 */
-    u16 extentY; /* setup[0x1e] << 2 */
+    u16 extentX;       /* setup[0x1c] << 2 -- random offset half-extents */
+    u16 extentZ;       /* setup[0x1d] << 2 */
+    u16 extentY;       /* setup[0x1e] << 2 */
     s16 emitAngles[3]; /* yaw/pitch/roll, mirrored to obj+0/2/4 */
 } AreaFxEmitState;
 
-struct AreaFxEmitObject {
+struct AreaFxEmitObject
+{
     ObjAnimComponent objAnim;
     u16 objectFlags;
     u8 padB2[0xB8 - 0xB2];
-    AreaFxEmitState *state;
+    AreaFxEmitState* state;
     AreaFxEmitSeqCallback seqCallback;
     u8 padC0[0xF4 - 0xC0];
     s32 emitCooldown;
@@ -121,7 +125,8 @@ STATIC_ASSERT(offsetof(AreaFxEmitObject, emitCooldown) == 0xF4);
  * effect-bank paths; the rangeX/Y/Z fields seed randomGetRange jitter and
  * posBlock* feed FUN_80017748.
  */
-typedef struct LfxEmitterConfig {
+typedef struct LfxEmitterConfig
+{
     u8 pad00[0x08];
     u8 spawnType;
     u8 pad09;
@@ -150,7 +155,8 @@ STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock0) == 0x1A);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock1) == 0x1C);
 STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock2) == 0x1E);
 
-typedef struct LfxEmitterPlacement {
+typedef struct LfxEmitterPlacement
+{
     u8 pad00[0x08];
     f32 initialX;
     f32 initialY;
@@ -172,14 +178,15 @@ typedef struct LfxEmitterPlacement {
  * (lfxemitter_getExtraSize == 0x124). The leading 0x108 bytes are the
  * rom-curve walker record handed to Curve_AdvanceAlongPath / gRomCurveInterface.
  */
-typedef struct LfxEmitterState {
+typedef struct LfxEmitterState
+{
     RomCurveWalker curve;
-    void *config; /* mmAlloc(0x28) copy of the lbl_803AC7B0-format record */
-    f32 curveSpeed; /* placement curveSpeed / lbl_803E3E84 */
-    s16 lifeTimer; /* frames until Obj_FreeObject when armed */
+    void* config;    /* mmAlloc(0x28) copy of the lbl_803AC7B0-format record */
+    f32 curveSpeed;  /* placement curveSpeed / lbl_803E3E84 */
+    s16 lifeTimer;   /* frames until Obj_FreeObject when armed */
     s16 configIndex; /* tab entry index */
-    s16 unk114; /* -2 at init */
-    s16 enableBit; /* gamebit gate, -1 = always on */
+    s16 unk114;      /* -2 at init */
+    s16 enableBit;   /* gamebit gate, -1 = always on */
     s16 spinRoll;
     s16 spinPitch;
     s16 spinYaw;
@@ -189,11 +196,12 @@ typedef struct LfxEmitterState {
     u8 pad121[3];
 } LfxEmitterState;
 
-struct LfxEmitterObject {
+struct LfxEmitterObject
+{
     ObjAnimComponent objAnim;
     u16 objectFlags;
     u8 padB2[0xB8 - 0xB2];
-    LfxEmitterState *state;
+    LfxEmitterState* state;
 };
 
 STATIC_ASSERT(sizeof(LfxEmitterPlacement) == LFXEMITTER_PLACEMENT_BYTES);
@@ -216,49 +224,48 @@ STATIC_ASSERT(offsetof(LfxEmitterState, flags) == 0x120);
 STATIC_ASSERT(offsetof(LfxEmitterObject, objAnim) == 0x00);
 STATIC_ASSERT(offsetof(LfxEmitterObject, state) == 0xB8);
 
-void FxEmit_init(FxEmitObject *obj, FxEmitPlacement *setup);
+void FxEmit_init(FxEmitObject* obj, FxEmitPlacement* setup);
 void FUN_8018f158(u32 param_1);
-void FUN_8018f1b4(short *param_1);
-void FUN_8018f4fc(u16 *param_1,int param_2);
+void FUN_8018f1b4(short* param_1);
+void FUN_8018f4fc(u16* param_1, int param_2);
 void FUN_8018f500(void);
 void FUN_8018f650(void);
-int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void FUN_8018fd14(int obj);
 void FUN_8018fd48(int param_1);
-void FUN_8018fec4(u16 *param_1,int param_2);
-void FUN_8018fec8(u16 *param_1,u16 *param_2);
+void FUN_8018fec4(u16* param_1, int param_2);
+void FUN_8018fec8(u16* param_1, u16* param_2);
 void FUN_8018ffbc(int param_1);
-void areafxemit_emitBurst(AreaFxEmitObject *obj, int count);
-void areafxemit_emitEffect(AreaFxEmitObject *obj);
+void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
+void areafxemit_emitEffect(AreaFxEmitObject* obj);
 void fn_8018FF48(u16* src, u16* dst);
-void FUN_80190004(u64 param_1,double param_2,double param_3,u64 param_4,
-                 u64 param_5,u64 param_6,u64 param_7,u64 param_8,
-                 short *param_9);
-void FUN_80190008(int param_1,int param_2);
+void FUN_80190004(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
+                  u64 param_8, short* param_9);
+void FUN_80190008(int param_1, int param_2);
 
 int AreaFxEmit_getExtraSize(void);
 int AreaFxEmit_getObjectTypeId(void);
-void AreaFxEmit_free(AreaFxEmitObject *obj);
+void AreaFxEmit_free(AreaFxEmitObject* obj);
 void AreaFxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void AreaFxEmit_hitDetect(void);
-void AreaFxEmit_update(AreaFxEmitObject *obj);
-void AreaFxEmit_init(AreaFxEmitObject *obj, AreaFxEmitPlacement *setup);
+void AreaFxEmit_update(AreaFxEmitObject* obj);
+void AreaFxEmit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup);
 void AreaFxEmit_release(void);
 void AreaFxEmit_initialise(void);
 
-int lfxemitter_func0B(LfxEmitterObject *obj);
+int lfxemitter_func0B(LfxEmitterObject* obj);
 int lfxemitter_setScale(void);
 int lfxemitter_getExtraSize(void);
 int lfxemitter_getObjectTypeId(void);
-void lfxemitter_free(LfxEmitterObject *obj);
+void lfxemitter_free(LfxEmitterObject* obj);
 void lfxemitter_render(void);
 void lfxemitter_hitDetect(void);
-void lfxemitter_update(LfxEmitterObject *obj);
-void lfxemitter_init(LfxEmitterObject *obj, LfxEmitterPlacement *setup);
+void lfxemitter_update(LfxEmitterObject* obj);
+void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
 void lfxemitter_release(void);
 void lfxemitter_initialise(void);
 
-void warpPadPlayerStandingOn(int obj);
-void warpPadFn_8019042c(int obj);
+void warpPadPlayerStandingOn(GameObject* obj);
+void warpPadFn_8019042c(GameObject* obj);
 
 #endif /* MAIN_DLL_CF_CFCHUCKOBJ_H_ */

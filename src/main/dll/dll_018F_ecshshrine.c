@@ -132,9 +132,9 @@ extern EcshIntPair lbl_803E8470;
 extern void gpsh_shrine_getExtraSize(void);
 extern void gpsh_shrine_getObjectTypeId(void);
 extern void gpsh_shrine_free(void);
-extern void gpsh_shrine_render(void);
+extern void gpsh_shrine_render(GameObject*);
 extern void gpsh_shrine_hitDetect(void);
-extern void gpsh_shrine_update(void);
+extern void gpsh_shrine_update(GameObject*);
 extern void gpsh_shrine_init(void);
 extern void gpsh_shrine_release(void);
 extern void gpsh_shrine_initialise(void);
@@ -398,11 +398,11 @@ void ecsh_shrine_hitDetect(void)
 {
 }
 
-void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
     extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-    void** inner = ((GameObject*)obj)->extra;
+    void** inner = (obj)->extra;
     if (visible == 0)
     {
         if (*inner != NULL)
@@ -415,8 +415,8 @@ void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         modelLightStruct_setEnabled((int)*inner, 1, lbl_803E4FC8);
     }
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4FC8);
-    objParticleFn_80099d84(obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (int)*inner);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4FC8);
+    objParticleFn_80099d84((int)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (int)*inner);
 }
 
 void ecsh_shrine_free(int* obj)

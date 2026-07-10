@@ -81,29 +81,29 @@ void drmusiccont_init(GameObject* obj)
     flags->b_9e7 = mainGetBit(0x9e7);
 }
 
-void drmusiccont_update(int obj)
+void drmusiccont_update(GameObject* obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
     u32 bit0;
     u32 bit1;
     u32 bit2;
     u32 bit3;
 
-    cloudSetOverridePosition(obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
+    cloudSetOverridePosition((int)obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
                              gDrMusicControlCloudOverridePosZ);
-    if (((GameObject*)obj)->unkF4 == 0)
+    if ((obj)->unkF4 == 0)
     {
         if ((u32)mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
-            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_A, 0);
-            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_B, 0);
-            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_C, 0);
-            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_D, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_A, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_B, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_C, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6BD8);
             mainSetBits(GAMEBIT_DRArwingRelated0E7B, 1);
         }
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
 
     SCGameBitLatch_Update(state, 2, 0x1a7, 0x64b, 0xf0e, 0xe5);

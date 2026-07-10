@@ -98,7 +98,7 @@ extern f32 gShStaffMapLoadDistSq;
 
 extern void sc_levelcontrol_getAnimEventState(void);
 
-extern void sc_levelcontrol_applyAnimEventState(void);
+extern void sc_levelcontrol_applyAnimEventState(GameObject*);
 
 extern void sc_levelcontrol_getExtraSize(void);
 extern void sc_musictree_getExtraSize(void);
@@ -108,7 +108,7 @@ extern void sc_levelcontrol_getObjectTypeId(void);
 extern void sc_musictree_getObjectTypeId(void);
 extern void sc_totempole_getObjectTypeId(void);
 
-extern void sc_levelcontrol_free(void);
+extern void sc_levelcontrol_free(GameObject*);
 extern void sc_musictree_free(void);
 extern void sc_totempole_free(void);
 
@@ -121,24 +121,24 @@ extern void sc_musictree_hitDetect(void);
 extern void sc_totempole_hitDetect(void);
 
 extern void sh_beacon_getExtraSize(void);
-extern void sc_levelcontrol_update(void);
+extern void sc_levelcontrol_update(GameObject*);
 extern void sc_musictree_update(void);
 extern void sc_totempole_update(void);
 
 extern void sh_beacon_free(GameObject*);
-extern void sc_levelcontrol_init(void);
+extern void sc_levelcontrol_init(GameObject*);
 extern void sc_musictree_init(void);
-extern void sc_totempole_init(void);
+extern void sc_totempole_init(GameObject*);
 
-extern void SH_StaffHaze_render(void);
-extern void sh_beacon_update(void);
-extern void SH_EmptyTumbleW_update(void);
+extern void SH_StaffHaze_render(GameObject*);
+extern void sh_beacon_update(GameObject*);
+extern void SH_EmptyTumbleW_update(GameObject*);
 extern void sc_levelcontrol_release(void);
 extern void sc_musictree_release(void);
 extern void sc_totempole_release(void);
 
-extern void SH_StaffHaze_update(void);
-extern void sh_beacon_init(void);
+extern void SH_StaffHaze_update(GameObject*);
+extern void sh_beacon_init(GameObject*);
 extern void SH_EmptyTumbleW_init(void);
 extern void sc_levelcontrol_initialise(void);
 extern void sc_musictree_initialise(void);
@@ -165,9 +165,9 @@ extern void staffToggle(GameObject* obj, int a);
 extern void playerPutAwayStaff(GameObject* obj, int mode);
 extern int ObjTrigger_IsSet(int obj);
 
-extern void sh_staff_deactivate(int obj, ShStaffState* state, int a);
+extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
-void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     ShStaffState* state;
     int player;
@@ -193,13 +193,13 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     f32 y1;
     f32 x1;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = (int)Obj_GetPlayerObject();
     if (visible != 0)
     {
         if (state->phase == SHSTAFF_PHASE_CARRY_ATTACH)
         {
-            Obj_BuildWorldTransformMatrix(obj, mtxB, 0);
+            Obj_BuildWorldTransformMatrix((int)obj, mtxB, 0);
             PSMTXInverse((int)ObjPath_GetPointModelMtx((void*)player, 0), mtxA);
             PSMTXConcat(mtxA, mtxB, state->carryMtx);
             state->phase = SHSTAFF_PHASE_CARRY_RENDER;
@@ -213,14 +213,14 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             PSMTXConcat((f32*)ObjPath_GetPointModelMtx((void*)player, 0), state->carryMtx, mtxB);
             objSetMtxFn_800412d4(mtxB);
-            objRenderModel(obj);
+            objRenderModel((int)obj);
         }
         else
         {
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, (double)lbl_803E54D0);
         }
-        ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
-        ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);
+        ObjPath_GetPointWorldPosition((int)obj, 0, &x0, &y0, &z0, 0);
+        ObjPath_GetPointWorldPosition((int)obj, 1, &x1, &y1, &z1, 0);
         dx = x1 - x0;
         dy = y1 - y0;
         dz = z1 - z0;
@@ -387,9 +387,9 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int sh_staff_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    ShStaffState* state = ((GameObject*)obj)->extra;
+    ShStaffState* state = (obj)->extra;
     int i;
 
     for (i = 0; i < 10; i++)
@@ -406,7 +406,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 int* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
                 ((ObjPlacement*)newSetup)->color[0] = 2;
                 ((ObjPlacement*)newSetup)->color[3] = 0xff;
-                loadResult = loadObjectAtObject(obj, newSetup);
+                loadResult = loadObjectAtObject((int)obj, newSetup);
             }
             state->slots[i] = loadResult;
             state->pending[i] = 0;
@@ -463,8 +463,8 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (state->hudFlag != 0)
     {
-        ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])(
-            ((GameObject*)obj)->anim.modelInstance->helpTextIds[1], 0xa0, 0x8c);
+        ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])((obj)->anim.modelInstance->helpTextIds[1], 0xa0,
+                                                                       0x8c);
     }
     state->hazeClimbT = lbl_803E54D8 * timeDelta + state->hazeClimbT;
     if (state->hazeClimbT > lbl_803E54D0)
@@ -476,17 +476,16 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 #pragma dont_inline on
 #pragma opt_strength_reduction on
-void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
+void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren)
 {
     int player;
     void* child;
     int i;
 
     player = (int)Obj_GetPlayerObject();
-    ObjHits_DisableObject(obj);
-    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ((GameObject*)obj)->anim.resetHitboxFlags =
-        (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+    ObjHits_DisableObject((int)obj);
+    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
 
     if (clearChildren != 0)
     {
@@ -508,12 +507,12 @@ void sh_staff_deactivate(int obj, ShStaffState* state, int clearChildren)
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
 
-void sh_staff_update(int obj)
+void sh_staff_update(GameObject* obj)
 {
-    ShStaffState* state = ((GameObject*)obj)->extra;
-    int setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    ShStaffState* state = (obj)->extra;
+    int setup = *(int*)&(obj)->anim.placementData;
     void* player = Obj_GetPlayerObject();
-    f32 dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((int)player + 0x18));
+    f32 dist = getXZDistance(&(obj)->anim.worldPosX, (f32*)((int)player + 0x18));
     u8 mode = state->phase;
 
     if (mode == SHSTAFF_PHASE_IDLE)
@@ -524,16 +523,16 @@ void sh_staff_update(int obj)
             goto end;
         if (mainGetBit(GAMEBIT_STAFF_ACQUIRED) != 0)
         {
-            sh_staff_deactivate(obj, ((GameObject*)obj)->extra, 0);
+            sh_staff_deactivate(obj, (obj)->extra, 0);
         }
         else
         {
             int loadResult;
             staffToggle((GameObject*)player, 0);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E54D0);
-            ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
-            ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
-            ((GameObject*)obj)->animEventCallback = sh_staff_SeqFn;
+            (obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
+            (obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
+            (obj)->animEventCallback = sh_staff_SeqFn;
             state->phase = SHSTAFF_PHASE_ARMED;
             if (Obj_IsLoadingLocked() == 0)
             {
@@ -544,7 +543,7 @@ void sh_staff_update(int obj)
                 int* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
                 ((ObjPlacement*)newSetup)->color[0] = 2;
                 ((ObjPlacement*)newSetup)->color[3] = 0xff;
-                loadResult = loadObjectAtObject(obj, newSetup);
+                loadResult = loadObjectAtObject((int)obj, newSetup);
             }
             state->slots[0] = loadResult;
             state->sfxTimer = gShStaffFizzSfxTimerInit;
@@ -552,9 +551,9 @@ void sh_staff_update(int obj)
     }
     else if (mode == SHSTAFF_PHASE_ARMED)
     {
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
-            int target = ObjGroup_FindNearestObject(SHSTAFF_TARGET_OBJGROUP, obj, 0);
+            int target = ObjGroup_FindNearestObject(SHSTAFF_TARGET_OBJGROUP, (int)obj, 0);
             (*gObjectTriggerInterface)->runSequence(0, (void*)target, -1);
             state->phase = SHSTAFF_PHASE_PICKUP;
             state->fadeTimer = gShStaffFadeTimerMax;
@@ -599,26 +598,26 @@ end:
         state->sfxTimer = lbl_803E54D4;
         if (state->phase == SHSTAFF_PHASE_ARMED)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_pk_staff_fizz);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_pk_staff_fizz);
         }
     }
 }
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */
 u32 gSH_staffHazeObjDescriptor[14] __attribute__((aligned(8))) = {0x00000000,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00090000,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00000000,
-                                      (u32)SH_StaffHaze_update,
-                                      0x00000000,
-                                      (u32)SH_StaffHaze_render,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00000000};
+                                                                  0x00000000,
+                                                                  0x00000000,
+                                                                  0x00090000,
+                                                                  0x00000000,
+                                                                  0x00000000,
+                                                                  0x00000000,
+                                                                  0x00000000,
+                                                                  (u32)SH_StaffHaze_update,
+                                                                  0x00000000,
+                                                                  (u32)SH_StaffHaze_render,
+                                                                  0x00000000,
+                                                                  0x00000000,
+                                                                  0x00000000};
 u32 gSH_BeaconObjDescriptor[14] = {0x00000000,
                                    0x00000000,
                                    0x00000000,

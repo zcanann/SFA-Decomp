@@ -326,7 +326,7 @@ void PressureSwitchFB_update(int obj)
                     mainSetBits(((PressureswitchfbPlacement*)def)->pressedGameBit, 1);
                     if ((((SwitchFlags*)(state + 0x84))->active) != 0)
                     {
-                        tex = objFindTexture((int*)obj, 0, 0);
+                        tex = objFindTexture((GameObject*)obj, 0, 0);
                         if (tex != NULL)
                         {
                             tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
@@ -343,7 +343,7 @@ void PressureSwitchFB_update(int obj)
                         mainSetBits(((PressureswitchfbPlacement*)def)->pressedGameBit, 1);
                         if ((((SwitchFlags*)(state + 0x84))->active) != 0)
                         {
-                            tex = objFindTexture((int*)obj, 0, 0);
+                            tex = objFindTexture((GameObject*)obj, 0, 0);
                             if (tex != NULL)
                             {
                                 tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
@@ -394,7 +394,7 @@ void PressureSwitchFB_update(int obj)
             {
                 if (mainGetBit(((PressureswitchfbPlacement*)def)->pressedGameBit) == 0)
                 {
-                    tex = objFindTexture((int*)obj, 0, 0);
+                    tex = objFindTexture((GameObject*)obj, 0, 0);
                     if (tex != NULL)
                     {
                         tex->textureId = 0;
@@ -510,7 +510,7 @@ void PressureSwitchFB_init(u8* obj, u8* params)
         }
         if (flags->usePressedTexture)
         {
-            tex = objFindTexture((int*)obj, 0, 0);
+            tex = objFindTexture((GameObject*)obj, 0, 0);
             if (tex != NULL)
             {
                 tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;

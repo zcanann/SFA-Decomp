@@ -170,7 +170,7 @@ void TumbleWeedBush_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (ObjHits_PollPriorityHitWithCooldown(obj, &gTumbleweedBushHitCooldownState, &hit0, hitExtra) != 0)
+    if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), &gTumbleweedBushHitCooldownState, &hit0, hitExtra) != 0)
     {
         if (((GameObject*)hit0)->anim.seqId != TUMBLEWEEDBUSH_SIBLING_C)
         {

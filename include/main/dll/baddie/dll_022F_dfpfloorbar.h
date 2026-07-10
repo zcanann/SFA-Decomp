@@ -21,7 +21,7 @@ typedef struct DfpFloorbarState
     int* linkedObject;
 } DfpFloorbarState;
 
-void DFP_Floorbar_update(int param_1);
+void DFP_Floorbar_update(GameObject* param_1);
 int dfpfloorbar_SeqFn(void);
 void DFP_Floorbar_release(void);
 void DFP_Floorbar_init(GameObject* obj, int params);

@@ -80,7 +80,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 
-void fn_8014EE8C(int obj, SwarmBaddieState* state)
+void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
 {
     int curve;
     RomCurveWalker* walker;
@@ -100,67 +100,59 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         step = lbl_803E267C;
-        ((GameObject*)obj)->anim.velocityX =
-            step * (state->player->anim.localPosX - ((GameObject*)obj)->anim.localPosX) +
-            ((GameObject*)obj)->anim.velocityX;
-        ((GameObject*)obj)->anim.velocityY =
-            step * ((lbl_803E2680 + state->player->anim.localPosY) - ((GameObject*)obj)->anim.localPosY) +
-            ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ =
-            step * (state->player->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) +
-            ((GameObject*)obj)->anim.velocityZ;
+        (obj)->anim.velocityX = step * (state->player->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+        (obj)->anim.velocityY =
+            step * ((lbl_803E2680 + state->player->anim.localPosY) - (obj)->anim.localPosY) + (obj)->anim.velocityY;
+        (obj)->anim.velocityZ = step * (state->player->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
     else
     {
         step = lbl_803E267C;
-        ((GameObject*)obj)->anim.velocityX =
-            step * (walker->posX - ((GameObject*)obj)->anim.localPosX) + ((GameObject*)obj)->anim.velocityX;
-        ((GameObject*)obj)->anim.velocityY =
-            step * (walker->posY - ((GameObject*)obj)->anim.localPosY) + ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ =
-            step * (walker->posZ - ((GameObject*)obj)->anim.localPosZ) + ((GameObject*)obj)->anim.velocityZ;
+        (obj)->anim.velocityX = step * (walker->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+        (obj)->anim.velocityY = step * (walker->posY - (obj)->anim.localPosY) + (obj)->anim.velocityY;
+        (obj)->anim.velocityZ = step * (walker->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
 
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (step = lbl_803E2684);
-    ((GameObject*)obj)->anim.velocityY *= step;
-    ((GameObject*)obj)->anim.velocityZ *= step;
+    (obj)->anim.velocityX = (obj)->anim.velocityX * (step = lbl_803E2684);
+    (obj)->anim.velocityY *= step;
+    (obj)->anim.velocityZ *= step;
 
-    if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E2688)
+    if ((obj)->anim.velocityX > *(f32*)&lbl_803E2688)
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E2688;
+        (obj)->anim.velocityX = lbl_803E2688;
     }
-    if (((GameObject*)obj)->anim.velocityY > *(f32*)&lbl_803E2688)
+    if ((obj)->anim.velocityY > *(f32*)&lbl_803E2688)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2688;
+        (obj)->anim.velocityY = lbl_803E2688;
     }
-    if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E2688)
+    if ((obj)->anim.velocityZ > *(f32*)&lbl_803E2688)
     {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E2688;
+        (obj)->anim.velocityZ = lbl_803E2688;
     }
-    if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E268C)
+    if ((obj)->anim.velocityX < *(f32*)&lbl_803E268C)
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E268C;
+        (obj)->anim.velocityX = lbl_803E268C;
     }
-    if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E268C)
+    if ((obj)->anim.velocityY < *(f32*)&lbl_803E268C)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E268C;
+        (obj)->anim.velocityY = lbl_803E268C;
     }
-    if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E268C)
+    if ((obj)->anim.velocityZ < *(f32*)&lbl_803E268C)
     {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E268C;
+        (obj)->anim.velocityZ = lbl_803E268C;
     }
 
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
+    objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+            (obj)->anim.velocityZ * timeDelta);
 
     state->yawWavePhase += (s16)(lbl_803E2690 * timeDelta);
     state->rollWavePhase += (s16)(lbl_803E2694 * timeDelta);
 
-    ((GameObject*)obj)->anim.rotX +=
+    (obj)->anim.rotX +=
         (s16)(lbl_803E2698 *
               (gSwarmBaddieDegToAngle * mathSinf((gSwarmBaddiePi * state->yawWavePhase) / gSwarmBaddieS16AngleScale)));
 
-    ((GameObject*)obj)->anim.rotZ +=
+    (obj)->anim.rotZ +=
         (s16)(lbl_803E2698 *
               (gSwarmBaddieDegToAngle * mathSinf((gSwarmBaddiePi * state->rollWavePhase) / gSwarmBaddieS16AngleScale)));
 }
@@ -174,10 +166,10 @@ int SwarmBaddie_getObjectTypeId(void)
     return 0x9;
 }
 
-void SwarmBaddie_free(int obj)
+void SwarmBaddie_free(GameObject* obj)
 {
-    void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, SWARMBADDIE_OBJGROUP);
+    void** state = (obj)->extra;
+    ObjGroup_RemoveObject((int)obj, SWARMBADDIE_OBJGROUP);
     if (*state != NULL)
     {
         mm_free(*state);
@@ -195,7 +187,7 @@ void SwarmBaddie_hitDetect(void)
 {
 }
 
-void SwarmBaddie_update(int obj)
+void SwarmBaddie_update(GameObject* obj)
 {
     SwarmBaddieState* state;
     struct
@@ -212,14 +204,14 @@ void SwarmBaddie_update(int obj)
     int hitB;
     int hitA;
 
-    state = *(SwarmBaddieState**)&((GameObject*)obj)->extra;
+    state = *(SwarmBaddieState**)&(obj)->extra;
     oldTarget = state->curve;
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, &hitA, &hitE, &hitC, &hitF) != 0)
     {
         state->hitVolumeEnvelope = lbl_803E26B0;
     }
-    ObjHits_SetHitVolumeSlot(obj, SWARMBADDIE_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject(obj);
+    ObjHits_SetHitVolumeSlot((int)obj, SWARMBADDIE_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_EnableObject((int)obj);
     if (state->hitVolumeEnvelope > lbl_803E26B4)
     {
         state->hitVolumeEnvelope = state->hitVolumeEnvelope - lbl_803E26B8;
@@ -229,22 +221,22 @@ void SwarmBaddie_update(int obj)
                                        mathSinf((gSwarmBaddiePi * (f32)(state->yawWavePhase + state->rollWavePhase)) /
                                                 gSwarmBaddieS16AngleScale) +
                                    volume,
-                               obj, 0x40, (int)(lbl_803E26BC * volume));
+                               (int)obj, 0x40, (int)(lbl_803E26BC * volume));
     (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
     {
-        d.x = state->player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d.y = state->player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d.z = state->player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        d.x = state->player->anim.worldPosX - (obj)->anim.worldPosX;
+        d.y = state->player->anim.worldPosY - (obj)->anim.worldPosY;
+        d.z = state->player->anim.worldPosZ - (obj)->anim.worldPosZ;
         state->playerDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     if ((void*)oldTarget != NULL)
     {
         RomCurveWalker* walker = (RomCurveWalker*)oldTarget;
-        d.x = walker->posX - ((GameObject*)obj)->anim.worldPosX;
-        d.y = walker->posY - ((GameObject*)obj)->anim.worldPosY;
-        d.z = walker->posZ - ((GameObject*)obj)->anim.worldPosZ;
+        d.x = walker->posX - (obj)->anim.worldPosX;
+        d.y = walker->posY - (obj)->anim.worldPosY;
+        d.z = walker->posZ - (obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > lbl_803E26C4))
@@ -264,9 +256,9 @@ void SwarmBaddie_update(int obj)
     fn_8014EE8C(obj, state);
 }
 
-void SwarmBaddie_init(int obj, int data, int skip_alloc)
+void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc)
 {
-    SwarmBaddieState* state = ((GameObject*)obj)->extra;
+    SwarmBaddieState* state = (obj)->extra;
     state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / lbl_803E26CC;
     state->chaseRadius = lbl_803E2698 * (f32)(s32) * (s8*)(data + 0x19);
     state->hitVolumeEnvelope = lbl_803E26B4;
@@ -282,9 +274,9 @@ void SwarmBaddie_init(int obj, int data, int skip_alloc)
         {
             *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_en_grumb4_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_grumb4_c);
     }
-    ((GameObject*)obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void SwarmBaddie_release(void)

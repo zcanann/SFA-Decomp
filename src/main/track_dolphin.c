@@ -401,7 +401,7 @@ extern void GXBegin(int type, int fmt, int count);
 extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
-extern void fn_80077EF8(int hdr, void* col, void* mtx, f32 f);
+extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_80079804(void);
@@ -1168,7 +1168,7 @@ void fn_80062808(void)
     lbl_803DCF0C = lbl_803DCF20;
 }
 
-void fn_80065574(int matchVal, int obj, int flag)
+void fn_80065574(int matchVal, GameObject* obj, int flag)
 {
     int count;
     int i;
@@ -1176,7 +1176,7 @@ void fn_80065574(int matchVal, int obj, int flag)
     IntersectLine* e;
     if ((u32)obj != 0)
     {
-        base = *(int*)&((GameObject*)obj)->anim.modelInstance;
+        base = *(int*)&(obj)->anim.modelInstance;
         e = *(IntersectLine**)(base + 0x34);
         count = *(u8*)(base + 0x5c);
     }
@@ -1440,14 +1440,14 @@ void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int objShadowFn_80062378(void* obj, u8 param)
+int objShadowFn_80062378(GameObject* obj, u8 param)
 {
     int lo;
     int hi;
     f32 inv;
     void* p;
 
-    p = ((GameObject*)obj)->anim.modelInstance;
+    p = (obj)->anim.modelInstance;
     if (((ObjDef*)p)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         lo = 1000;
@@ -1458,8 +1458,7 @@ int objShadowFn_80062378(void* obj, u8 param)
         lo = 400;
         hi = 500;
     }
-    inv = (Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                                                ((GameObject*)obj)->anim.worldPosZ) -
+    inv = (Camera_DistanceToCurrentViewPosition((obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ) -
            lo) /
           (f32)(hi - lo);
     if (inv < 0.0f)
@@ -1718,7 +1717,7 @@ int fn_800626C8(int* obj, int delta)
     f31 = lbl_803DEC90[0] * (f32)*alphaStep;
     f31 = lbl_803DB654 * f31;
     {
-        f32 tint = objShadowFn_80062378(obj, modelState->shadowTintA);
+        f32 tint = objShadowFn_80062378((GameObject*)(obj), modelState->shadowTintA);
         v = (s16)(int)(tint * f31);
     }
     if (v > 0xff)
@@ -1915,7 +1914,7 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
 }
 #pragma opt_strength_reduction reset
 
-void fn_8006135C(s16* out, void* obj)
+void fn_8006135C(s16* out, GameObject* obj)
 {
     f32 dist;
     f32 b[3];
@@ -1927,8 +1926,7 @@ void fn_8006135C(s16* out, void* obj)
     f32 s;
     f32 nd;
 
-    if (fn_80065768((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ, &dist, a, 0) != 0)
+    if (fn_80065768((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &dist, a, 0) != 0)
     {
         goto fail;
     }
@@ -3154,11 +3152,11 @@ void objDrawFn_80061654(int obj, int placementObj)
     shadowVerts = *(s16**)(placementObj + 0x54);
     if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
     {
-        fn_8006135C(shadowVerts, (void*)obj);
+        fn_8006135C(shadowVerts, (GameObject*)obj);
     }
     if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
     {
-        alpha = objShadowFn_80062378((void*)obj, 0x96);
+        alpha = objShadowFn_80062378((GameObject*)obj, 0x96);
         *((u8*)&kColor + 3) = alpha;
         if (alpha != 0)
         {
@@ -3394,7 +3392,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         else
         {
             int c = *(int*)col;
-            fn_80077EF8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
+            fn_80077EF8((GameObject*)(((MapBlockData*)blockData)->shadowTexHeader), &c, mtx, f30);
         }
     afterDraw:;
     }

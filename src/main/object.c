@@ -493,13 +493,13 @@ int objGetFlagsE5_2(u8* obj)
 
 #pragma scheduling off
 #pragma peephole off
-void objSetHintTextIdx(int obj, u16 idx)
+void objSetHintTextIdx(GameObject* obj, u16 idx)
 {
     if (idx > 4)
     {
         idx = 0;
     }
-    ((GameObject*)obj)->hintTextIdx = idx;
+    (obj)->hintTextIdx = idx;
 }
 
 int Obj_IsLoadingLocked(void)

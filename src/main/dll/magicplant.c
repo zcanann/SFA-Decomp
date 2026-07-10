@@ -80,9 +80,9 @@ extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
 extern u8 gMagicPlantSeqEntryTable[8];
 extern int lbl_803DBCC8;
-void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
+void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
-    fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
+    fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
@@ -154,16 +154,16 @@ void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
     }
 }
 
-void fn_80153040(int obj, int state)
+void fn_80153040(GameObject* obj, int state)
 {
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
     f32 vec[3];
 
     curve = *(RomCurveWalker**)state;
-    if (((GameObject*)obj)->anim.hitReactState != NULL)
+    if ((obj)->anim.hitReactState != NULL)
     {
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->suppressOutgoingHits = 0;
     }
     if (((BaddieState*)state)->inWhirlpoolGroup != 0)
@@ -185,12 +185,12 @@ void fn_80153040(int obj, int state)
             }
         }
 
-        fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0xf, 0);
+        fn_8014CF7C((int)obj, state, curve->posX, curve->posZ, 0xf, 0);
 
-        vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
-        vec[1] = curve->posY - ((GameObject*)obj)->anim.localPosY;
-        vec[2] = curve->posZ - ((GameObject*)obj)->anim.localPosZ;
-        fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
+        vec[0] = curve->posX - (obj)->anim.localPosX;
+        vec[1] = curve->posY - (obj)->anim.localPosY;
+        vec[2] = curve->posZ - (obj)->anim.localPosZ;
+        fn_8014C678((int)obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
 
         *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
         if (*(f32*)(state + 0x324) > lbl_803E28C8)
@@ -200,18 +200,18 @@ void fn_80153040(int obj, int state)
         }
     }
 
-    fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
+    fn_8014CD1C((int)obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
 
     *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
     if (*(f32*)(state + 0x328) <= lbl_803E28B0)
     {
         *(f32*)(state + 0x328) = lbl_803E28B4;
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c);
     }
     *(f32*)(state + 0x32c) = lbl_803E28B0;
 }
 
-void fn_80153248(int obj, int state)
+void fn_80153248(GameObject* obj, int state)
 {
     RomCurveWalker* curve;
     f32 vec[3];
@@ -228,7 +228,7 @@ void fn_80153248(int obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_bombwhistle);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_mika_bombwhistle);
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
@@ -246,11 +246,11 @@ void fn_80153248(int obj, int state)
             }
         }
     }
-    ObjHits_SetHitVolumeSlot(obj, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((int)obj, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
     trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
-    vec[0] = ((GameObject*)trackedObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    vec[1] = (lbl_803E28D8 + ((GameObject*)trackedObj)->anim.localPosY) - ((GameObject*)obj)->anim.localPosY;
-    vec[2] = ((GameObject*)trackedObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    vec[0] = ((GameObject*)trackedObj)->anim.localPosX - (obj)->anim.localPosX;
+    vec[1] = (lbl_803E28D8 + ((GameObject*)trackedObj)->anim.localPosY) - (obj)->anim.localPosY;
+    vec[2] = ((GameObject*)trackedObj)->anim.localPosZ - (obj)->anim.localPosZ;
     PSVECMag(vec);
     *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
@@ -261,9 +261,9 @@ void fn_80153248(int obj, int state)
     }
     else
     {
-        worldPos[0] = ((GameObject*)obj)->anim.localPosX;
-        worldPos[1] = ((GameObject*)obj)->anim.localPosY;
-        worldPos[2] = ((GameObject*)obj)->anim.localPosZ;
+        worldPos[0] = (obj)->anim.localPosX;
+        worldPos[1] = (obj)->anim.localPosY;
+        worldPos[2] = (obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
         worldPos[0] = curve->posX;
         worldPos[1] = curve->posY;
@@ -282,8 +282,8 @@ void fn_80153248(int obj, int state)
             }
         }
     }
-    fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
-    fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
+    fn_8014C678((int)obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
+    fn_8014CD1C((int)obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
 }
 
 void vambat_init(GameObject* obj, int state)
@@ -358,7 +358,7 @@ void fn_8015355C(GameObject* obj, int state)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_80153640(int obj, int state)
+void fn_80153640(GameObject* obj, int state)
 {
     ObjPlacement* fx;
     int newObj;
@@ -366,9 +366,9 @@ void fn_80153640(int obj, int state)
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
         fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, MAGICPLANT_CHILD_OBJ);
-        fx->posX = ((GameObject*)obj)->anim.localPosX;
-        fx->posY = lbl_803E28F0 + ((GameObject*)obj)->anim.localPosY;
-        fx->posZ = ((GameObject*)obj)->anim.localPosZ;
+        fx->posX = (obj)->anim.localPosX;
+        fx->posY = lbl_803E28F0 + (obj)->anim.localPosY;
+        fx->posZ = (obj)->anim.localPosZ;
         fx->color[0] = 1;
         fx->color[1] = 1;
         fx->color[2] = 0xff;
@@ -386,16 +386,16 @@ void fn_80153640(int obj, int state)
                 ((GameObject*)newObj)->anim.velocityZ =
                     0.02f * (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ - fx->posZ);
             }
-            *(int*)&((GameObject*)newObj)->ownerObj = obj;
+            *(int*)&((GameObject*)newObj)->ownerObj = (int)obj;
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_baddie_blooplaugh2);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh2);
     }
 }
 #pragma dont_inline reset
 
-void kooshy_updateWhileFrozen(int obj, int state, int attacker, int msgFlag, int hitId, int damage)
+void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int hitId, int damage)
 {
-    if (((GameObject*)obj)->anim.currentMove == 1)
+    if ((obj)->anim.currentMove == 1)
     {
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
@@ -411,17 +411,17 @@ void kooshy_updateWhileFrozen(int obj, int state, int attacker, int msgFlag, int
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
         if (damage > (s32)((BaddieState*)state)->hitCounter)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_sc_walkstep);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_sc_walkstep);
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_sc_runstep);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_sc_runstep);
             ((BaddieState*)state)->hitCounter = (u16)(((BaddieState*)state)->hitCounter - damage);
         }
     }
 }
-void fn_8015383C(int obj, int state)
+void fn_8015383C(GameObject* obj, int state)
 {
     u32 hit;
     u8 losDetected;
@@ -436,15 +436,15 @@ void fn_8015383C(int obj, int state)
 
     ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0x7f;
     losDetected = 0;
-    vec[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
-    vec[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY;
-    vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
+    vec[0] = (obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
+    vec[1] = (obj)->anim.localPosY - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY;
+    vec[2] = (obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
     if (PSVECMag(vec) < lbl_803E2900 &&
         (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & MAGICPLANT_OBJFLAG_PARENT_SLACK) == 0)
     {
-        worldPos[0] = ((GameObject*)obj)->anim.localPosX;
-        worldPos[1] = lbl_803E2904 + ((GameObject*)obj)->anim.localPosY;
-        worldPos[2] = ((GameObject*)obj)->anim.localPosZ;
+        worldPos[0] = (obj)->anim.localPosX;
+        worldPos[1] = lbl_803E2904 + (obj)->anim.localPosY;
+        worldPos[2] = (obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
@@ -457,9 +457,9 @@ void fn_8015383C(int obj, int state)
         if (hit != 0)
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
-            fn_8014CF7C(obj, state, ((GameObject*)trackedObj)->anim.localPosX,
+            fn_8014CF7C((int)obj, state, ((GameObject*)trackedObj)->anim.localPosX,
                         ((GameObject*)trackedObj)->anim.localPosZ, 0x14, 0);
-            angle = (s16)(getAngle(vec[0], vec[2]) - (u16)((GameObject*)obj)->anim.rotX);
+            angle = (s16)(getAngle(vec[0], vec[2]) - (u16)(obj)->anim.rotX);
             if (angle > 0x8000)
                 angle = (angle - 0x10000) + 1;
             if (angle < -0x8000)
@@ -477,7 +477,7 @@ void fn_8015383C(int obj, int state)
     flagByte = ((BaddieState*)state)->inWhirlpoolGroup;
     if ((flagByte & 0x40) == 0)
     {
-        Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_blooplaugh3, 2);
+        Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_baddie_blooplaugh3, 2);
         Baddie_SetMove(obj, state, 2, lbl_803E290C, 0, 0);
         ((BaddieState*)state)->inWhirlpoolGroup = (u8)((((BaddieState*)state)->inWhirlpoolGroup) | 0x40);
         ((BaddieState*)state)->seqEntryIndex = 0;
@@ -490,9 +490,9 @@ void fn_8015383C(int obj, int state)
             if (((BaddieState*)state)->seqEntryIndex != 0)
             {
                 ((BaddieState*)state)->seqEntryIndex -= 1;
-                mode = (u8)((GameObject*)obj)->anim.currentMove;
+                mode = (u8)(obj)->anim.currentMove;
             }
-            else if (((GameObject*)obj)->anim.currentMove != 5 && losDetected)
+            else if ((obj)->anim.currentMove != 5 && losDetected)
             {
                 mode = 5;
                 ((BaddieState*)state)->seqEntryIndex =
@@ -517,14 +517,14 @@ void fn_8015383C(int obj, int state)
             }
             else if (mode == 4)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_newtricky_01j);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_newtricky_01j);
             }
         }
         Baddie_SetMove(obj, state, mode, lbl_803E2910, 0, 0);
     }
-    if (((GameObject*)obj)->anim.currentMove == 5)
+    if ((obj)->anim.currentMove == 5)
     {
-        f32 sct = ((GameObject*)obj)->anim.currentMoveProgress;
+        f32 sct = (obj)->anim.currentMoveProgress;
         if ((double)sct >= lbl_803E2918 && (double)sct < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
         {
             fn_80153640(obj, state);
@@ -536,22 +536,21 @@ void fn_8015383C(int obj, int state)
     {
         rnd = randomGetRange(0x96, 0x12c);
         *(f32*)(state + 0x324) = (f32)(s32)rnd;
-        Sfx_PlayFromObject(obj, SFXTRIG_sc_clubswipe);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_sc_clubswipe);
     }
 sharedTail:
-    fn_8015355C((GameObject*)(obj), state);
+    fn_8015355C(obj, state);
 }
 
-void fn_80153BFC(int obj, int state)
+void fn_80153BFC(GameObject* obj, int state)
 {
     ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0xbf;
-    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
-        ((GameObject*)obj)->anim.currentMove != 1)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && (obj)->anim.currentMove != 1)
     {
-        Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
+        Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
     }
-    fn_8015355C((GameObject*)(obj), state);
+    fn_8015355C(obj, state);
 }
 
 void kooshy_init(int unused, int state)
@@ -577,10 +576,10 @@ void kooshy_init(int unused, int state)
     ((BaddieState*)state)->pathStep = pathStepInit;
 }
 
-void weevil_updateWhileFrozen(int obj, int state, int attacker, int msgFlag)
+void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag)
 {
     u8 cond = 0;
-    int kind = ((GameObject*)obj)->anim.currentMove;
+    int kind = (obj)->anim.currentMove;
     if (kind == 5)
     {
     }
@@ -589,7 +588,7 @@ void weevil_updateWhileFrozen(int obj, int state, int attacker, int msgFlag)
     }
     else if (kind == 6)
     {
-        if ((double)((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2938)
+        if ((double)(obj)->anim.currentMoveProgress < lbl_803E2938)
         {
         }
         else
@@ -623,7 +622,7 @@ checkedKind:
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
-            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25f);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_25f);
         }
     }
     else if (msgFlag == 0x11)
@@ -641,7 +640,7 @@ checkedKind:
 }
 }
 
-void fn_80153E0C(int obj, int state)
+void fn_80153E0C(GameObject* obj, int state)
 {
     RomCurveWalker* curve;
     u32 rnd;
@@ -666,9 +665,9 @@ void fn_80153E0C(int obj, int state)
         }
         if (lbl_803E294C == *(f32*)(state + 0x32c))
         {
-            if (((GameObject*)obj)->anim.currentMove == 0)
+            if ((obj)->anim.currentMove == 0)
             {
-                fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0x3c, 0);
+                fn_8014CF7C((int)obj, state, curve->posX, curve->posZ, 0x3c, 0);
             }
             if (*(f32*)(state + 0x324) > lbl_803E294C)
             {
@@ -700,14 +699,14 @@ void fn_80153E0C(int obj, int state)
     {
         Baddie_SetMove(obj, state, 0, lbl_803E2958, 0, 3);
     }
-    ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
-    ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
+    (obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
+    (obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
     if (*(f32*)(state + 0x330) <= lbl_803E294C)
     {
         rnd = randomGetRange(0x3c, 0x78);
         *(f32*)(state + 0x330) = (f32)(s32)rnd;
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25e);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_25e);
     }
     ctr = ((BaddieState*)state)->inWhirlpoolGroup;
     if (ctr != 0)

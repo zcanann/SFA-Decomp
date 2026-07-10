@@ -55,16 +55,16 @@ extern int loadObjectAtObject(int obj, int* setup);
 
 extern f32 lbl_803DDBF8;
 
-int sh_beacon_SeqFn(int obj)
+int sh_beacon_SeqFn(GameObject* obj)
 {
-    int extra = *(int*)&((GameObject*)obj)->extra;
+    int extra = *(int*)&(obj)->extra;
     ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer + timeDelta;
     if (((ShBeaconState*)extra)->seqTimer >= 20.0f)
     {
         ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer - 20.0f;
-        if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
+        if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
-            fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
+            fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 0, 2, 0, 0);
         }
     }
     return 0;
@@ -95,7 +95,7 @@ void sh_beacon_free(GameObject* obj, int keepChild)
     }
 }
 
-void sh_beacon_update(int obj)
+void sh_beacon_update(GameObject* obj)
 {
     u8* state;
     int def;
@@ -104,12 +104,12 @@ void sh_beacon_update(int obj)
     int mode;
     int state2;
 
-    state = ((GameObject*)obj)->extra;
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    def = *(int*)&(obj)->anim.placementData;
     switch (((ShBeaconState*)state)->mode)
     {
     case SH_BEACON_MODE_UNLIT:
-        if (((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) &&
+        if ((((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) &&
             ((*gGameUIInterface)->isEventReady(0x194) != 0))
         {
             gameBitDecrement(GAMEBIT_ITEM_FireWeed_Count);
@@ -117,36 +117,36 @@ void sh_beacon_update(int obj)
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x20, SHBEACON_CHILD_OBJ_FLAME);
-                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+                ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+                ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
+                ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
                 ((ObjPlacement*)setup)->color[0] = 2;
-                ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
-                ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
-                ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
+                ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
+                ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
+                ((ShBeaconState*)state)->childObj = loadObjectAtObject((int)obj, setup);
             }
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
         }
     case SH_BEACON_MODE_IGNITING:
-        state2 = *(int*)&((GameObject*)obj)->extra;
+        state2 = *(int*)&(obj)->extra;
         ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer + timeDelta;
         if (((ShBeaconState*)state2)->seqTimer >= 20.0f)
         {
             ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer - 20.0f;
-            if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
+            if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
             {
-                fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
+                fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 0, 2, 0, 0);
             }
         }
         break;
     case SH_BEACON_MODE_LIT:
         if ((((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping) == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
+            Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
             ((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping = 1;
         }
-        if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
+        if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
             ((ShBeaconState*)state)->modeTimer = ((ShBeaconState*)state)->modeTimer + timeDelta;
             if (((ShBeaconState*)state)->modeTimer > 10.0f)
@@ -162,29 +162,29 @@ void sh_beacon_update(int obj)
             if (((ShBeaconState*)state)->burstTimer > 2.0f)
             {
                 ((ShBeaconState*)state)->burstTimer = ((ShBeaconState*)state)->burstTimer - 2.0f;
-                fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, mode, 0, 0);
+                fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 2, mode, 0, 0);
             }
         }
         break;
     }
     if (((ShBeaconState*)state)->mode != SH_BEACON_MODE_LIT)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+        (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (((ShBeaconState*)state)->mode == SH_BEACON_MODE_IGNITING)
         {
-            Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
+            Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 8);
         }
         else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) &&
                  (mainGetBit(GAMEBIT_ITEM_FireWeed_Count) == 0))
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         tricky = (int)getTrickyObject();
-        if (((void*)tricky != NULL) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))
+        if (((void*)tricky != NULL) && (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))
         {
             (*(VtableFn*)(*(int*)(*(int*)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 4);
         }
@@ -193,19 +193,19 @@ void sh_beacon_update(int obj)
     {
         if ((mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0) || (((ShBeaconPlacement*)def)->litGameBit != 0x95))
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+            (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         }
         else
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
     if (((ShBeaconState*)state)->fadeTimer > 0.0f)
     {
         ((ShBeaconState*)state)->fadeTimer = ((ShBeaconState*)state)->fadeTimer - timeDelta;
-        if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
+        if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
-            fn_80098B18(obj, 0.6f * ((GameObject*)obj)->anim.rootMotionScale, 3, 0, 0, 0);
+            fn_80098B18((int)obj, 0.6f * (obj)->anim.rootMotionScale, 3, 0, 0, 0);
         }
         if ((((ShBeaconState*)state)->fadeTimer <= 0.0f) && (((ShBeaconState*)state)->mode == SH_BEACON_MODE_IGNITING))
         {
@@ -225,14 +225,14 @@ void sh_beacon_update(int obj)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, &lbl_803DDBF8);
 }
 
-void sh_beacon_init(int obj, int defData)
+void sh_beacon_init(GameObject* obj, int defData)
 {
     int state;
     int* setup;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHBEACON_OBJFLAG_HIDDEN);
+    state = *(int*)&(obj)->extra;
+    (obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
+    (obj)->objectFlags = (u16)((obj)->objectFlags | SHBEACON_OBJFLAG_HIDDEN);
 
     ((ShBeaconState*)state)->mode = mainGetBit(((ShBeaconPlacement*)defData)->litGameBit);
     if (((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT)
@@ -246,14 +246,14 @@ void sh_beacon_init(int obj, int defData)
     if (((ShBeaconState*)state)->mode != SH_BEACON_MODE_UNLIT && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x20, SHBEACON_CHILD_OBJ_FLAME);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
         ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
-        ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
-        ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
+        ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
+        ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
+        ((ShBeaconState*)state)->childObj = loadObjectAtObject((int)obj, setup);
     }
 
-    ((GameObject*)obj)->animEventCallback = sh_beacon_SeqFn;
+    (obj)->animEventCallback = sh_beacon_SeqFn;
 }

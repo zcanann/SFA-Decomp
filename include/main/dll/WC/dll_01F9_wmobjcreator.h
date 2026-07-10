@@ -35,6 +35,6 @@ typedef struct WmGalleonState
 void WM_ObjCreator_update(GameObject* obj);
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void WM_Galleon_free(int* obj, int leavingMap);
-void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
+void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 #endif /* MAIN_DLL_WC_WCPRESSURESWITCH_H_ */

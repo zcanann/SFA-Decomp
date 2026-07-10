@@ -90,9 +90,9 @@ STATIC_ASSERT(offsetof(DimbossfirePlacement, triggerGameBit) == 0x20);
 int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
-void dimbossfire_free(int obj)
+void dimbossfire_free(GameObject *obj)
 {
-    int o = obj;
+    int o = (int)obj;
     int state;
     void* light;
 
@@ -112,7 +112,7 @@ void dimbossfire_hitDetect(void)
 {
 }
 
-void dimbossfire_update(int obj)
+void dimbossfire_update(GameObject *obj)
 {
     extern int randomGetRange(int lo, int hi);
     u32 bitVal;
@@ -122,8 +122,8 @@ void dimbossfire_update(int obj)
     DimbossfirePlacement* placement;
     float playerDist;
 
-    state = ((GameObject*)obj)->extra;
-    placement = *(DimbossfirePlacement**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    placement = *(DimbossfirePlacement**)&(obj)->anim.placementData;
     if ((int)placement->triggerGameBit != -1)
     {
         bitVal = mainGetBit((int)placement->triggerGameBit);
@@ -163,9 +163,9 @@ void dimbossfire_update(int obj)
         {
             state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
             ObjHits_SetHitVolumeSlot(obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
-            ObjHitbox_SetSphereRadius(obj, 0xf);
+            ObjHitbox_SetSphereRadius((int)obj, 0xf);
             ObjHits_EnableObject(obj);
-            if ((((GameObject*)obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
+            if (((obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
             {
                 ref = 0;
                 do
@@ -185,7 +185,7 @@ void dimbossfire_update(int obj)
             ref = Obj_GetPlayerObject();
             if (((void*)ref != NULL) && ((((GameObject*)ref)->objectFlags & DIMBOSSFIRE_OBJFLAG_PARENT_SLACK) == 0))
             {
-                playerDist = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
+                playerDist = Vec_distance((float*)&(obj)->anim.worldPosX, (float*)(ref + 0x18));
                 if (playerDist <= lbl_803E4DA4)
                 {
                     playerDist = lbl_803E4DA8 - playerDist / lbl_803E4DA4;
@@ -195,7 +195,7 @@ void dimbossfire_update(int obj)
             }
             if ((void*)state->light == NULL)
             {
-                light = objCreateLight(obj, 1);
+                light = objCreateLight((int)obj, 1);
                 state->light = light;
                 if ((void*)state->light != NULL)
                 {
@@ -214,7 +214,7 @@ void dimbossfire_update(int obj)
                     modelLightStruct_setEnabled(state->light, 0, state->activeTimer / lbl_803E4DC0);
                 }
             }
-            Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_188);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_188);
         }
         state->activeTimer = state->activeTimer - timeDelta;
         if (state->activeTimer <= lbl_803E4DA0)
@@ -226,8 +226,8 @@ void dimbossfire_update(int obj)
                 state->light = 0;
             }
             ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
-            ObjHitbox_SetSphereRadius(obj, 0);
-            ObjHits_DisableObject(obj);
+            ObjHitbox_SetSphereRadius((int)obj, 0);
+            ObjHits_DisableObject((int)obj);
         }
         else
         {
@@ -245,17 +245,17 @@ void dimbossfire_update(int obj)
     return;
 }
 
-void dimbossfire_init(int obj, u32 arg2, int placement)
+void dimbossfire_init(GameObject *obj, u32 arg2, int placement)
 {
     extern int randomGetRange(int lo, int hi);
     u32 ua;
     u8 randVal;
     int state;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
-    ObjHitbox_SetSphereRadius(obj, 0);
-    ObjHits_DisableObject(obj);
+    ObjHitbox_SetSphereRadius((int)obj, 0);
+    ObjHits_DisableObject((int)obj);
     if (placement == 0)
     {
         ((DimbossfireState*)state)->cooldownTimer = (f32)(int)

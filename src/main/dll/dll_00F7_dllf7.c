@@ -180,7 +180,7 @@ void dll_F7_update(int* obj)
         }
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition((int)obj, 0, 0, &hitVolume, &blk.x, &blk.y, &blk.z) != 0)
+    if (ObjHits_GetPriorityHitWithPosition((GameObject*)obj, 0, 0, &hitVolume, &blk.x, &blk.y, &blk.z) != 0)
     {
         if ((state->hitsRemaining -= hitVolume) > 0)
         {

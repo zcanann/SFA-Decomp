@@ -113,9 +113,9 @@ void dll_16C_free(int* obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_hitDetect(void* obj)
+void dll_16C_hitDetect(GameObject* obj)
 {
-    Dll16CState* extra = ((GameObject*)obj)->extra;
+    Dll16CState* extra = (obj)->extra;
     void* p = extra->linkedObj;
     if (p != NULL)
     {

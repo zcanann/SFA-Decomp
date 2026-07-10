@@ -3060,8 +3060,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     ctrl = *(int*)&((GameObject*)obj2)->anim.placementData;
     inner = ((GameObject*)obj)->extra;
     result = 0;
-    va = (int)objModelGetVecFn_800395d8(obj, 0);
-    vb = (int)objModelGetVecFn_800395d8(obj, 9);
+    va = (int)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+    vb = (int)objModelGetVecFn_800395d8((GameObject*)(obj), 9);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_802A93F4;
     if (*(void**)&gPlayerStaffObject != NULL)
     {
@@ -3196,9 +3196,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             seq->flags &= ~0x4c;
             seq->savedFlags &= ~0x48;
             obj2 = getFocusedNpc();
-            if (objModelGetVecFn_800395d8(obj2, 0) != 0)
+            if (objModelGetVecFn_800395d8((GameObject*)(obj2), 0) != 0)
             {
-                objPosFn_80039510(obj2, 0, npos);
+                objPosFn_80039510((GameObject*)(obj2), 0, npos);
             }
             else
             {
@@ -3944,7 +3944,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (((u32) * (u8*)((char*)inner + 0x3f2) >> 6 & 1) != 0)
     {
-        characterDoEyeAnims(obj, (int)((char*)inner + 0x364));
+        characterDoEyeAnims((GameObject*)(obj), (int)((char*)inner + 0x364));
     }
     if (gPlayerSubState == 2)
     {
@@ -5032,7 +5032,7 @@ int playerStateAimStaff(int obj, int state)
             Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, 0x440, (int)(lbl_803E7FAC * -a));
         }
         inner->bodyLeanHalf = lbl_803E7FB0 * inner->aimInputX;
-        objModelGetVecFn_800395d8(obj, 9);
+        objModelGetVecFn_800395d8((GameObject*)(obj), 9);
         *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
         if (gPlayerSelectedItem == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
         {
@@ -5864,7 +5864,7 @@ int playerState19(int obj, int state)
     }
     t = lbl_803E7EE0 - ((GameObject*)obj)->anim.currentMoveProgress;
     ((GameObject*)obj)->anim.localPosY = inner->warpDeltaY * t + inner->warpStartY;
-    vec = objModelGetVecFn_800395d8(obj, 5);
+    vec = objModelGetVecFn_800395d8((GameObject*)(obj), 5);
     if (vec != NULL)
     {
         *(s16*)vec = (f32) * (s16*)((char*)sub + 0x2) * t;
@@ -5964,7 +5964,7 @@ void fn_8029F67C(int obj)
     modelState->flags &= 0xFFFFEFFFLL;
     ((GameObject*)obj)->anim.flags &= ~0x8;
     ((GameObject*)obj)->anim.activeMove = -1;
-    v = objModelGetVecFn_800395d8(obj, 9);
+    v = objModelGetVecFn_800395d8((GameObject*)(obj), 9);
     if (v != NULL)
     {
         v[0] = 0;
@@ -8032,8 +8032,7 @@ void playerDoHitDetection(int obj)
                         (((GameObject*)obj)->anim.worldPosZ - ((GameObject*)obj)->anim.previousWorldPosZ) / dt;
                 }
                 if (((*(s8*)((char*)inner + 0x264) & 2) != 0 && (*(s8*)((char*)inner + 0x264) & 0x20) == 0) ||
-                    *(u8*)((char*)inner + 0x262) != 0 ||
-                    (Player_GetObjHitsState((GameObject*)(obj))->flags & 8) != 0)
+                    *(u8*)((char*)inner + 0x262) != 0 || (Player_GetObjHitsState((GameObject*)(obj))->flags & 8) != 0)
                 {
                     if (((PlayerState*)inner)->rumbleCooldown <= lbl_803E7EA4 &&
                         ((PlayerState*)inner)->baddie.animSpeedA > lbl_803E8160)
@@ -8160,7 +8159,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             gPlayerSfxTimerA = 0;
         }
     }
-    work = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &surfIdx, &damage, &pos.x, &pos.y, &pos.z);
+    work = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObj, &surfIdx, &damage, &pos.x, &pos.y, &pos.z);
     orig = work;
     if (**(s8**)&((PlayerState*)inner)->playerStatus <= 0)
     {
@@ -9410,7 +9409,7 @@ void fn_802A93F4(int obj, int p2, int p3)
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = 0;
     }
-    vec = (s16*)objModelGetVecFn_800395d8(obj, 1);
+    vec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), 1);
     if (vec != NULL)
     {
         vec[0] = 0;
@@ -9418,10 +9417,10 @@ void fn_802A93F4(int obj, int p2, int p3)
         vec[2] = 0;
     }
     ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
-    tex = objFindTexture((void*)obj, 1, 0);
+    tex = objFindTexture((GameObject*)obj, 1, 0);
     tex->offsetS = 0;
     tex->offsetT = 0;
-    tex = objFindTexture((void*)obj, 0, 0);
+    tex = objFindTexture((GameObject*)obj, 0, 0);
     tex->offsetS = 0;
     tex->offsetT = 0;
 }
@@ -9437,7 +9436,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     int inner;
     if (p8 != 0)
     {
-        vec = (void*)objModelGetVecFn_800395d8(p1, 0);
+        vec = (void*)objModelGetVecFn_800395d8((GameObject*)(p1), 0);
         if (vec != NULL)
         {
             v = *(s16*)((char*)vec + 0x2);
@@ -10559,8 +10558,7 @@ void fn_802B18BC(int obj, int state, f32 fv)
 {
     f32 v;
 
-    if ((((PlayerState*)state)->buttonsHeld & PAD_BUTTON_A) &&
-        playerCanCastQuakeSpell((GameObject*)(obj), state))
+    if ((((PlayerState*)state)->buttonsHeld & PAD_BUTTON_A) && playerCanCastQuakeSpell((GameObject*)(obj), state))
     {
         ((ByteFlags*)((char*)state + 0x3f4))->b20 = 1;
         ((PlayerState*)state)->buttonHoldTimer += fv;
@@ -10948,7 +10946,7 @@ int playerState1F(int obj, int state, f32 fv)
     ((PlayerState*)state)->baddie.stateTag = 3;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        if (ObjHits_GetPriorityHit(obj, &hit, 0, 0))
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit, 0, 0))
         {
             inner->targetYaw = (s16)getAngle(-*(f32*)((char*)hit + 0x24), -*(f32*)((char*)hit + 0x2c));
             inner->yaw = inner->targetYaw;
@@ -11954,7 +11952,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     }
     else
     {
-        characterDoEyeAnims(obj, inner + 0x3ac);
+        characterDoEyeAnims((GameObject*)(obj), inner + 0x3ac);
         *(int*)&((PlayerState*)state)->baddie.targetObj = Obj_GetPlayerObject();
         v = *(int*)&((PlayerState*)sub)->baddie.posX;
         if (v >= 0x49942 || v < 0x4993f)
@@ -12449,8 +12447,8 @@ void playerSetDisguised(int obj, int mode)
     int newModel;
     void* tricky;
 
-    objModelGetVecFn_800395d8(obj, 0);
-    objModelGetVecFn_800395d8(obj, 9);
+    objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+    objModelGetVecFn_800395d8((GameObject*)(obj), 9);
     if (mode != 0)
     {
         staffToggle((GameObject*)(obj), 0);
@@ -15026,9 +15024,9 @@ void fn_802ABFBC(int obj, int state, PlayerState* inner)
     if (sub != NULL && sub->anim.modelInstance->unk58 != 0)
     {
         ObjPath_GetPointWorldPosition(obj, 5, &x1, &y1, &z1, 0);
-        if (objModelGetVecFn_800395d8((int)sub, 0) != 0)
+        if (objModelGetVecFn_800395d8((GameObject*)sub, 0) != 0)
         {
-            objPosFn_80039510((int)sub, 0, pos);
+            objPosFn_80039510((GameObject*)sub, 0, pos);
         }
         else
         {
@@ -15459,7 +15457,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
             arwprojectile_setLifetime((GameObject*)(setup), 0x32);
             if (slot == 1)
             {
-                arwprojectile_createLinkedEffect(setup, 1);
+                arwprojectile_createLinkedEffect((GameObject*)(setup), 1);
             }
         }
     }
@@ -15577,7 +15575,7 @@ int Lightfoot_UpdateTargetAnimationCycle(int obj, int state, f32 fv)
     void* p = ((PlayerState*)state)->baddie.targetObj;
     if (p != NULL)
     {
-        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+        fn_8003B0D0((GameObject*)(obj), (int)p, inner + 0x3ac, 0x19);
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0 ||
         *(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -15606,7 +15604,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
     void* p = ((PlayerState*)state)->baddie.targetObj;
     if (p != NULL)
     {
-        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+        fn_8003B0D0((GameObject*)(obj), (int)p, inner + 0x3ac, 0x19);
     }
     if (((GameObject*)obj)->unkF8 == 0)
     {
@@ -15754,7 +15752,7 @@ int Lightfoot_UpdateAnimationCycle(int obj, int state, f32 fv)
     f32* blends;
     if (p != NULL)
     {
-        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+        fn_8003B0D0((GameObject*)(obj), (int)p, inner + 0x3ac, 0x19);
     }
     a4 = *(int*)((char*)inner + 0x40c);
     moves = *(s16**)((char*)a4 + 0);
@@ -16149,8 +16147,8 @@ int playerState28(int obj, int state, f32 fv)
 
 void playerDoEyeAnims(int obj, int state)
 {
-    s16* vec9 = objModelGetVecFn_800395d8(obj, 9);
-    s16* vec0 = objModelGetVecFn_800395d8(obj, 0);
+    s16* vec9 = objModelGetVecFn_800395d8((GameObject*)(obj), 9);
+    s16* vec0 = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     u8 doBlink = 0;
     PlayerState* inner = ((GameObject*)obj)->extra;
     f32 f31v;
@@ -16158,12 +16156,12 @@ void playerDoEyeAnims(int obj, int state)
 
     if ((s8) * (s8*)(((PlayerState*)state)->playerStatus) > 0)
     {
-        characterDoEyeAnims(obj, state + 0x364);
+        characterDoEyeAnims((GameObject*)(obj), state + 0x364);
     }
     else
     {
-        ObjTextureRuntimeSlot* t5 = objFindTexture((void*)obj, 5, 0);
-        ObjTextureRuntimeSlot* t4 = objFindTexture((void*)obj, 4, 0);
+        ObjTextureRuntimeSlot* t5 = objFindTexture((GameObject*)obj, 5, 0);
+        ObjTextureRuntimeSlot* t4 = objFindTexture((GameObject*)obj, 4, 0);
         if (t5 != NULL)
         {
             t5->textureId = 0x200;
@@ -16262,7 +16260,7 @@ void playerDoEyeAnims(int obj, int state)
             }
         }
         {
-            s16* vec1 = objModelGetVecFn_800395d8(obj, 1);
+            s16* vec1 = objModelGetVecFn_800395d8((GameObject*)(obj), 1);
             if (vec1 != NULL)
             {
                 vec1[0] = 0x1c2;

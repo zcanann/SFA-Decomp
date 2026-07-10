@@ -253,7 +253,7 @@ void MMSH_Shrine_free(GameObject* obj)
     mainSetBits(MMSH_SHRINE_SEQ_GB_RESET3, 0);
 }
 
-void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5, char visible)
+void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char visible)
 {
     MMSHShrineObject* shrine = (MMSHShrineObject*)obj;
     MMSHShrineRuntime* runtime = shrine->runtime;
@@ -271,8 +271,8 @@ void MMSH_Shrine_render(int obj, u32 a2, u32 a3, u32 a4, u32 a5, char visible)
         {
             modelLightStruct_setEnabled((int)runtime->light, 1, lbl_803E4F50);
         }
-        objRenderModelAndHitVolumes(obj, a2, a3, a4, a5, lbl_803E4F50);
-        objParticleFn_80099d84(obj, lbl_803E4F50, 7, *(f32*)&lbl_803E4F50, (int)runtime->light);
+        objRenderModelAndHitVolumes((int)obj, a2, a3, a4, a5, lbl_803E4F50);
+        objParticleFn_80099d84((int)obj, lbl_803E4F50, 7, *(f32*)&lbl_803E4F50, (int)runtime->light);
     }
 }
 

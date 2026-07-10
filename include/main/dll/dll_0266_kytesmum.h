@@ -86,11 +86,11 @@ int kytesmum_idleCallback(void);
 void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible);
 void kytesmum_free(int obj);
 int kytesmum_spawnInteractionCallback(GameObject* obj);
-int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8* arg);
+int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg);
 int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void kytesmum_init(int obj, KytesMumSetup* setup);
-int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg);
-int kytesmum_updateQuestStateCallback(int obj, int unused, u8* arg);
+void kytesmum_init(GameObject* obj, KytesMumSetup* setup);
+int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg);
+int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg);
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
 
 #endif /* MAIN_DLL_DLL_0266_KYTESMUM_H_ */

@@ -41,10 +41,10 @@ void DR_LightBea_free(GameObject* obj)
     }
 }
 
-void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5)
+void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
-    int setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
+    int setup = *(int*)&(obj)->anim.placementData;
     int player;
     f32 targetXform[6];
     f32 sourcePos[3];
@@ -52,9 +52,9 @@ void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5)
 
     if (state->flags.bit80)
     {
-        state->handle->start[0] = ((GameObject*)obj)->anim.localPosX;
-        state->handle->start[1] = ((GameObject*)obj)->anim.localPosY;
-        state->handle->start[2] = ((GameObject*)obj)->anim.localPosZ;
+        state->handle->start[0] = (obj)->anim.localPosX;
+        state->handle->start[1] = (obj)->anim.localPosY;
+        state->handle->start[2] = (obj)->anim.localPosZ;
         if (((DrlightbeaPlacement*)setup)->targetId == 0)
         {
             player = Obj_GetPlayerObject();
@@ -85,10 +85,10 @@ void DR_LightBea_render(int obj, int p2, int p3, int p4, int p5)
         state->flags.bit80 = mainGetBit(((DrlightbeaPlacement*)setup)->gameBit);
         if (state->flags.bit80)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_id_30f);
-            sourcePos[0] = ((GameObject*)obj)->anim.localPosX;
-            sourcePos[1] = ((GameObject*)obj)->anim.localPosY;
-            sourcePos[2] = ((GameObject*)obj)->anim.localPosZ;
+            Sfx_PlayFromObject((int)obj, SFXTRIG_id_30f);
+            sourcePos[0] = (obj)->anim.localPosX;
+            sourcePos[1] = (obj)->anim.localPosY;
+            sourcePos[2] = (obj)->anim.localPosZ;
             if (((DrlightbeaPlacement*)setup)->targetId != 0 &&
                 dll_2E_func0A(((DrlightbeaPlacement*)setup)->targetId, targetXform) != 0)
             {
@@ -113,12 +113,12 @@ void DR_LightBea_hitDetect(void)
 {
 }
 
-void DR_LightBea_update(int obj)
+void DR_LightBea_update(GameObject* obj)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     if (state->flags.bit40)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int)obj);
     }
 }
 

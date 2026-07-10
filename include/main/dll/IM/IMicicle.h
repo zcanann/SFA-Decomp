@@ -145,7 +145,7 @@ int cfmagicwall_getObjectTypeId(void);
 void cfmagicwall_free(void);
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void cfmagicwall_hitDetect(void);
-void cfmagicwall_update(int obj);
+void cfmagicwall_update(GameObject* obj);
 void cfmagicwall_init(s16* dst, void* src);
 void cfmagicwall_release(void);
 void cfmagicwall_initialise(void);

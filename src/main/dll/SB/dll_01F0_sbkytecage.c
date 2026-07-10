@@ -75,7 +75,7 @@ enum
 extern int getLActions();
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
-extern int* objModelGetVecFn_800395d8(int obj, int idx);
+extern int* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
@@ -142,11 +142,10 @@ void SB_KyteCage_hitDetect(void)
 {
 }
 
-void SB_KyteCage_update(int obj)
+void SB_KyteCage_update(GameObject* obj)
 {
-    SBKyteCageState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.resetHitboxFlags =
-        (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);
+    SBKyteCageState* state = (obj)->extra;
+    (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);
     if (state->kyte == NULL)
     {
         int* head;
@@ -164,21 +163,21 @@ void SB_KyteCage_update(int obj)
             }
         }
     }
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_OPEN) != 0)
+    if (((obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_OPEN) != 0)
     {
         if (mainGetBit(GAMEBIT_KYTE_OPENED) == 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
-            (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+            (*gObjectTriggerInterface)->setRunSequenceWorldSpace((int)obj, 0);
             (*gObjectTriggerInterface)->runSequence(SB_KYTECAGE_TRIGGER_OPEN, (void*)obj, -1);
             mainSetBits(GAMEBIT_KYTE_OPENED, 1);
             return;
         }
     }
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_RELEASE) != 0)
+    if (((obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_RELEASE) != 0)
     {
         buttonDisable(0, PAD_BUTTON_A);
-        (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+        (*gObjectTriggerInterface)->setRunSequenceWorldSpace((int)obj, 0);
         if (state->doorChoice != 0)
         {
             (*gObjectTriggerInterface)->runSequence(SB_KYTECAGE_TRIGGER_RELEASE_B, (void*)obj, -1);
@@ -189,22 +188,22 @@ void SB_KyteCage_update(int obj)
             state->doorChoice = 1;
         }
     }
-    if (((GameObject*)obj)->anim.parent != NULL)
+    if ((obj)->anim.parent != NULL)
     {
-        int kind = ((GameObject*)((GameObject*)obj)->anim.parent)->unkF4;
+        int kind = ((GameObject*)(obj)->anim.parent)->unkF4;
         int* mvec = objModelGetVecFn_800395d8(obj, 0);
-        if (mvec != 0 && kind < 9 && ((GameObject*)obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
+        if (mvec != 0 && kind < 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
         {
-            *(s16*)((char*)mvec + 4) = ((GameObject*)((GameObject*)obj)->anim.parent)->anim.rotZ;
-            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
+            *(s16*)((char*)mvec + 4) = ((GameObject*)(obj)->anim.parent)->anim.rotZ;
+            ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
         }
-        else if (mvec != 0 && kind >= 9 && ((GameObject*)obj)->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
+        else if (mvec != 0 && kind >= 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
         {
             *(s16*)((char*)mvec + 4) = 0;
-            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
         }
     }
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.004f, timeDelta, NULL) != 0)
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f, timeDelta, NULL) != 0)
     {
         Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
     }

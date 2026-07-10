@@ -115,7 +115,7 @@ void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AF0);
 }
 
-void FireFlyLantern_update(int obj)
+void FireFlyLantern_update(GameObject* obj)
 {
     int* slot;
     FireFlyLanternState* state;
@@ -124,8 +124,8 @@ void FireFlyLantern_update(int obj)
     int i;
     int shouldFree;
 
-    state = ((GameObject*)obj)->extra;
-    def = *(FireFlyLanternSpawnSetup**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    def = *(FireFlyLanternSpawnSetup**)&(obj)->anim.placementData;
     shouldFree = 0;
 
     if ((s8)def->spawnMode == 1)
@@ -156,7 +156,7 @@ void FireFlyLantern_update(int obj)
 
     if (shouldFree != 0)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((int)obj);
     }
 }
 

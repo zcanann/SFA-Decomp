@@ -100,7 +100,7 @@ void DR_BarrelGr_render(int obj, int p2, int p3, int p4, int p5)
     f32 dval;
     f32 pathPoint[3];
     DrBarrelGrRenderParams params;
-    extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void* params);
+    extern void objfx_spawnLightPulse(GameObject * obj, f32 a, int b, int c, int d, f32 e, void* params);
 
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CA0);
     ObjPath_GetPointWorldPosition(obj, 0, (f32*)(state + 0x14), (f32*)(state + 0x18), (f32*)(state + 0x1c), 0);
@@ -117,7 +117,7 @@ void DR_BarrelGr_render(int obj, int p2, int p3, int p4, int p5)
         ObjPath_GetPointWorldPosition(obj, i + 1, vp, vp1, vp2, 0);
         PSVECSubtract(vp, (void*)(obj + 0xc), vp);
         params.d = dval;
-        objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
+        objfx_spawnLightPulse((GameObject*)(obj), lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
     }
     objRef = *(u32*)&((DrbarrelgrState*)state)->heldBarrel;
     if ((u32)objRef != 0)
@@ -247,7 +247,8 @@ void DR_BarrelGr_update(int obj)
     case DRBARRELGR_MODE_CARRY:
     {
         f32 spd = gDrBarrelGenCarrySpeedScale * (f32)((DrbarrelgrState*)state)->carrySpeed;
-        int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20, spd * timeDelta, lbl_803E6CBC, lbl_803E6CB4, 1);
+        int r = Obj_UpdateRomCurveFollowVelocity((GameObject*)(obj), state + 0x20, spd * timeDelta, lbl_803E6CBC,
+                                                 lbl_803E6CB4, 1);
         objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
         if (r != 0)

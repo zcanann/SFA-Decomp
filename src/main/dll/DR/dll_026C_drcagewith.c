@@ -49,9 +49,9 @@ int DR_CageWith_getObjectTypeId(void)
     return 0x0;
 }
 
-void DR_CageWith_free(int obj, int arg)
+void DR_CageWith_free(GameObject* obj, int arg)
 {
-    char* state = ((GameObject*)obj)->extra;
+    char* state = (obj)->extra;
     GameObject* linked = ((DrcagewithState*)state)->spawnedObject;
     if (linked != 0 && arg == 0 && linked->anim.modelInstance != 0)
     {
@@ -63,12 +63,12 @@ void DR_CageWith_free(int obj, int arg)
         ((DrcagewithState*)state)->spawnedObject->unkF4 = 0;
         Obj_FreeObject((int)((DrcagewithState*)state)->spawnedObject);
     }
-    ObjGroup_RemoveObject(obj, DRCAGEWITH_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DRCAGEWITH_OBJGROUP);
 }
 
-void DR_CageWith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    char* state = ((GameObject*)obj)->extra;
+    char* state = (obj)->extra;
     int* linkedObj;
     if (visible != 0)
     {
@@ -93,9 +93,9 @@ void DR_CageWith_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
-void DR_CageWith_hitDetect(int obj)
+void DR_CageWith_hitDetect(GameObject* obj)
 {
-    int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* placement = *(int**)&(obj)->anim.placementData;
     u8* state;
     BitFlags8* bf31;
     f32 maxDist;
@@ -108,19 +108,19 @@ void DR_CageWith_hitDetect(int obj)
     f32 div;
 
     maxDist = gDrCageWithFindObjMaxDist;
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     bf31 = (BitFlags8*)(state + 0x31);
 
     if (bf31->b1 != 0)
     {
-        objParticleFn_80099d84(obj, lbl_803E69F8, 6, lbl_803E69F0, 0);
+        objParticleFn_80099d84((int)obj, lbl_803E69F8, 6, lbl_803E69F0, 0);
     }
 
-    if (((GameObject*)obj)->anim.seqId == 2154 || ((GameObject*)obj)->anim.seqId == 2155)
+    if ((obj)->anim.seqId == 2154 || (obj)->anim.seqId == 2155)
     {
         if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {
-            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
         return;
     }
@@ -132,11 +132,10 @@ void DR_CageWith_hitDetect(int obj)
             *(u8*)(spawned + 4) = 2;
             *(u8*)(spawned + 5) = 1;
             *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)placement)->flags & 0x18));
-            ((GameObject*)spawned)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)spawned)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
-            ((GameObject*)spawned)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-            spawned = Obj_SetupObject(spawned, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                      *(int*)&((GameObject*)obj)->anim.parent);
+            ((GameObject*)spawned)->anim.rootMotionScale = (obj)->anim.localPosX;
+            ((GameObject*)spawned)->anim.localPosX = (obj)->anim.localPosY;
+            ((GameObject*)spawned)->anim.localPosY = (obj)->anim.localPosZ;
+            spawned = Obj_SetupObject(spawned, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
             ((GameObject*)spawned)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ((GameObject*)spawned)->unkF4 = 1;
             ((DrcagewithState*)state)->spawnedObject = (GameObject*)spawned;
@@ -147,10 +146,10 @@ void DR_CageWith_hitDetect(int obj)
     {
         if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {
-            ObjHits_DisableObject(obj);
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            ObjHits_DisableObject((int)obj);
+            (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
-            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
+            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
                 ((GameObject*)nearest)->unkF4 = 0;
@@ -158,7 +157,7 @@ void DR_CageWith_hitDetect(int obj)
             }
             return;
         }
-        angVel = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
+        angVel = oneOverTimeDelta * ((obj)->anim.localPosX - (obj)->anim.previousLocalPosX);
         angVel = angVel * lbl_803E69FC;
         angVel = interpolate(angVel - ((DrcagewithState*)state)->angularVel, lbl_803E6A00, timeDelta);
         clamped =
@@ -177,7 +176,7 @@ void DR_CageWith_hitDetect(int obj)
         if (((DrcagewithState*)state)->spawnedObject != NULL)
         {
             ((DrcagewithState*)state)->spawnedObject->anim.rotZ = (s16)((DrcagewithState*)state)->angularVel;
-            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
+            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
                 ((GameObject*)nearest)->unkF4 = 1;
@@ -196,7 +195,7 @@ void DR_CageWith_hitDetect(int obj)
     {
         if (mainGetBit(3175) != 0)
         {
-            px = ((GameObject*)obj)->anim.localPosX;
+            px = (obj)->anim.localPosX;
             if (px >= lbl_803E6A10 && px <= lbl_803E6A14)
             {
                 mainSetBits(((DrcagewithPlacement*)placement)->openedGameBit, 1);

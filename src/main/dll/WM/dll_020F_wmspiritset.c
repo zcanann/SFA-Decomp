@@ -32,14 +32,14 @@ void wmspiritset_free(void)
 {
 }
 
-void wmspiritset_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
+void wmspiritset_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    WmSpiritSetState* state = ((GameObject*)obj)->extra;
+    WmSpiritSetState* state = (obj)->extra;
     s16 visibilityGameBit = state->visibilityGameBit;
 
     if ((visibilityGameBit == -1 || mainGetBit(visibilityGameBit) != 0) && vis != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
     }
 }
 

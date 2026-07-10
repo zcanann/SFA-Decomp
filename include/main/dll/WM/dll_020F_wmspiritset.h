@@ -27,7 +27,7 @@ STATIC_ASSERT(sizeof(WmSpiritSetMapData) == 0x20);
 int wmspiritset_getExtraSize(void);
 int wmspiritset_getObjectTypeId(void);
 void wmspiritset_free(void);
-void wmspiritset_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
+void wmspiritset_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 vis);
 void wmspiritset_hitDetect(void);
 void wmspiritset_update(void);
 void wmspiritset_init(GameObject* obj, WmSpiritSetMapData* mapData);

@@ -10,7 +10,7 @@ int wctemplebri_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
 int wctemplebri_getExtraSize(void);
 int wctemplebri_getObjectTypeId(GameObject* obj);
 void wctemplebri_free(void);
-void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void wctemplebri_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wctemplebri_hitDetect(void);
 void wctemplebri_release(void);
 void wctemplebri_initialise(void);

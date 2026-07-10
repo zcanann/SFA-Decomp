@@ -53,19 +53,19 @@ void earthwalker_free(void)
 {
 }
 
-void earthwalker_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
 
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CE0);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6CE0);
         dll_2E_func06(obj, state, 0);
     }
 }
 
-void earthwalker_hitDetect(int obj)
+void earthwalker_hitDetect(GameObject* obj)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
@@ -122,7 +122,7 @@ void earthwalker_update(int obj)
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
     }
 
-    characterDoEyeAnims(obj, (int)ewState->eyeAnimState);
+    characterDoEyeAnims((GameObject*)(obj), (int)ewState->eyeAnimState);
     if (ewState->flags & 1)
     {
         return;
@@ -526,8 +526,8 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
     int i;
 
     ewState->flags &= ~1;
-    characterDoEyeAnims(obj, (int)ewState->eyeAnimState);
-    if (dll_2E_func07(obj, (int)(u8*)animUpdate, state, 0, 0) != 0)
+    characterDoEyeAnims((GameObject*)(obj), (int)ewState->eyeAnimState);
+    if (dll_2E_func07((GameObject*)(obj), (int)(u8*)animUpdate, state, 0, 0) != 0)
     {
         return 0;
     }
@@ -550,7 +550,7 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
     return 0;
 }
 
-void earthwalker_init(int obj, int setup)
+void earthwalker_init(GameObject* obj, int setup)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;

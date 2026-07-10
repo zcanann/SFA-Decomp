@@ -55,7 +55,7 @@ void CF_DoorLight_update(GameObject* obj)
     }
     if (state->flags.active != 0)
     {
-        textureFrame = objFindTexture((void*)obj, state->textureId, 0);
+        textureFrame = objFindTexture((GameObject*)obj, state->textureId, 0);
         if (textureFrame != 0)
         {
             state->currentFrame += state->frameStep;

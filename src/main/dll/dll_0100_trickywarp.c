@@ -52,12 +52,12 @@ extern f32 lbl_803E38A0;
 extern int getPatchGroup(f32* pos, int patchGroup);
 extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 
-void TrickyWarp_free(int obj)
+void TrickyWarp_free(GameObject* obj)
 {
-    TrickyWarpState* state = ((GameObject*)obj)->extra;
+    TrickyWarpState* state = (obj)->extra;
     if (state->active != 0)
     {
-        ObjGroup_RemoveObject(obj, TRICKYWARP_OBJ_GROUP);
+        ObjGroup_RemoveObject((int)obj, TRICKYWARP_OBJ_GROUP);
     }
 }
 
@@ -66,18 +66,18 @@ int TrickyWarp_getExtraSize(void)
     return sizeof(TrickyWarpState);
 }
 
-void TrickyWarp_update(int obj)
+void TrickyWarp_update(GameObject* obj)
 {
     TrickyWarpState* state;
     int reachable;
-    state = ((GameObject*)obj)->extra;
-    reachable = fn_8017FFD0((GameObject*)(obj), state);
+    state = (obj)->extra;
+    reachable = fn_8017FFD0(obj, state);
     if (reachable != 0)
     {
         if (state->active == 0)
         {
             state->active = 1;
-            ObjGroup_AddObject(obj, TRICKYWARP_OBJ_GROUP);
+            ObjGroup_AddObject((int)obj, TRICKYWARP_OBJ_GROUP);
         }
     }
     else
@@ -85,7 +85,7 @@ void TrickyWarp_update(int obj)
         if (state->active != 0)
         {
             state->active = 0;
-            ObjGroup_RemoveObject(obj, TRICKYWARP_OBJ_GROUP);
+            ObjGroup_RemoveObject((int)obj, TRICKYWARP_OBJ_GROUP);
         }
     }
 }

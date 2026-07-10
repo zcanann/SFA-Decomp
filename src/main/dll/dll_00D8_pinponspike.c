@@ -170,13 +170,13 @@ void pinponspike_update(int obj)
     }
 }
 
-void pinponspike_init(int obj)
+void pinponspike_init(GameObject* obj)
 {
-    ((GameObject*)obj)->unkF4 = 0;
-    ObjHits_DisableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, SFXTRIG_whiz3_c);
-    ((GameObject*)obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->unkF4 = 0;
+    ObjHits_DisableObject((int)obj);
+    (obj)->anim.alpha = 0xff;
+    Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);
+    (obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void pinponspike_release(void)

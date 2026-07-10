@@ -286,8 +286,8 @@ extern void timeOfDayFn_80055000(void);
 extern int lbl_803DC148;
 extern f32 lbl_803E60F0;
 extern f32 lbl_803E5F94;
-extern void vfplift1_updateState(int obj);
-extern void vfplift23_updateState(int obj);
+extern void vfplift1_updateState(GameObject* obj);
+extern void vfplift23_updateState(GameObject* obj);
 extern void WM_newcrystal_SeqFn(void);
 extern void fn_80053ED0(int n);
 extern void fn_80053EBC(int n);
@@ -309,9 +309,9 @@ extern f32 lbl_803E60A4;
 extern f32 lbl_803E609C;
 
 /* Intra-family forward declarations (from the original per-unit header). */
-void FireFlyFn_801f4f88(int obj);
+void FireFlyFn_801f4f88(GameObject* obj);
 void firefly_free(GameObject* obj);
 void firefly_update(int obj);
-void firefly_init(int obj, int def);
+void firefly_init(GameObject* obj, int def);
 
 #endif /* MAIN_DLL_VF_VF_SHARED_H_ */

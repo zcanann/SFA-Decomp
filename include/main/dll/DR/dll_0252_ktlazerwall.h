@@ -28,7 +28,7 @@ int KT_Lazerwall_getObjectTypeId(void);
 void KT_Lazerwall_free(GameObject* obj);
 void KT_Lazerwall_render(GameObject* obj);
 void KT_Lazerwall_hitDetect(void);
-void KT_Lazerwall_update(int obj);
+void KT_Lazerwall_update(GameObject* obj);
 void KT_Lazerwall_init(GameObject* obj, char* placement);
 void KT_Lazerwall_release(void);
 void KT_Lazerwall_initialise(void);

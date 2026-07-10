@@ -45,14 +45,14 @@ typedef struct NwTreeBirdMapData
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
 
-int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     TreeBirdState* state;
     int i;
     int j;
     u8 cmd;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     i = 0;
     while (i < animUpdate->eventCount)
     {
@@ -69,7 +69,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 2:
             j = 100;
-            if (((GameObject*)obj)->anim.seqId == 0x5d)
+            if ((obj)->anim.seqId == 0x5d)
             {
                 do
                 {
@@ -96,7 +96,7 @@ int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 3:
             j = 5;
-            if (((GameObject*)obj)->anim.seqId == 0x5d)
+            if ((obj)->anim.seqId == 0x5d)
             {
                 do
                 {
@@ -148,17 +148,17 @@ void treebird_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void treebird_update(int obj)
+void treebird_update(GameObject* obj)
 {
     TreeBirdState* state;
     int immediateTrigger;
     float dist;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     dist = lbl_803E51FC;
     if (state->searchDelay != 0)
     {
-        state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, obj, &dist);
+        state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, (int)obj, &dist);
         if ((u32)state->targetObj != 0)
         {
             state->searchDelay = 0;
@@ -173,7 +173,7 @@ void treebird_update(int obj)
         immediateTrigger = state->immediateTrigger;
         if (immediateTrigger != 0)
         {
-            (*gObjectTriggerInterface)->preempt(obj, immediateTrigger);
+            (*gObjectTriggerInterface)->preempt((int)obj, immediateTrigger);
             (*gObjectTriggerInterface)->runSequence((int)state->triggerId, (void*)obj, 1);
             state->triggerLatched = 1;
         }

@@ -99,7 +99,7 @@ void VFP_statueball_update(int* obj)
 
     if ((u32)mainGetBit(state->gameBit) == 0)
     {
-        hitType = ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0);
+        hitType = ObjHits_GetPriorityHit((GameObject*)obj, &hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
             (((GameObject*)hitObj)->anim.seqId == VFPSTATUEBALL_HIT_SEQID))
         {

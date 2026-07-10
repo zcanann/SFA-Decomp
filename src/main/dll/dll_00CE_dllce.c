@@ -51,12 +51,12 @@ extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();
 
-int fn_8015E3A0(int obj, int state)
+int fn_8015E3A0(GameObject* obj, int state)
 {
 
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD8;
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    GroundBaddieState* sub = (obj)->extra;
     int count;
     int idx;
 
@@ -65,8 +65,8 @@ int fn_8015E3A0(int obj, int state)
         ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairPriority = 10;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
     if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
@@ -385,7 +385,7 @@ int fn_8015DF20(int obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E0C8(int obj, GroundBaddieState* state)
+int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
 {
     extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -396,7 +396,7 @@ int fn_8015E0C8(int obj, GroundBaddieState* state)
     GroundBaddieState* sub;
     f32 spd;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     *(s8*)&state->baddie.stateTag = 3;
     state->baddie.moveSpeed = lbl_803E2DCC;
     spd = lbl_803E2DC8;
@@ -411,26 +411,26 @@ int fn_8015E0C8(int obj, GroundBaddieState* state)
     {
         if (((GameObject*)Obj_GetPlayerObject())->anim.seqId != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_swd);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_263);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_seal4_c_263);
         state->baddie.moveEventFlags |= 1;
     }
-    if ((state->baddie.moveEventFlags & 2) == 0 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2DD0)
+    if ((state->baddie.moveEventFlags & 2) == 0 && (obj)->anim.currentMoveProgress > lbl_803E2DD0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.moveEventFlags |= 2;
-        (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(obj, sub->triggerId, -1, 0);
+        (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))((int)obj, sub->triggerId, -1, 0);
     }
     return 0;
 }
 
-int fn_8015E798(int obj, GroundBaddieState* state)
+int fn_8015E798(GameObject* obj, GroundBaddieState* state)
 {
 
     extern f32 lbl_803E2DC8;
@@ -439,20 +439,20 @@ int fn_8015E798(int obj, GroundBaddieState* state)
     GroundBaddieState* sub;
     u8* hit;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
         ObjAnim_SetCurrentMove((int)obj, 14, lbl_803E2DC8, 0);
         *(s8*)&state->baddie.moveDone = 0;
     }
-    if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2DE4)
+    if ((obj)->anim.currentMoveProgress > lbl_803E2DE4)
     {
         hit = *(u8**)&sub->control;
         hit[8] |= 2;
     }
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
         state->baddie.moveSpeed = lbl_803E2DD8;
         state->baddie.animSpeedA = lbl_803E2DC8;
     }
@@ -466,13 +466,13 @@ int fn_8015E798(int obj, GroundBaddieState* state)
         sub->targetState = 0;
         if ((hit[9] & 2) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
     return 0;
 }
 
-int fn_8015E8BC(int obj, GroundBaddieState* state)
+int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
 {
 
     extern f32 lbl_803E2DC8;
@@ -483,7 +483,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* state)
     u8* hit;
     int flags;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     hit = *(u8**)&sub->control;
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
@@ -494,8 +494,8 @@ int fn_8015E8BC(int obj, GroundBaddieState* state)
     {
         *(s8*)&state->baddie.physicsActive = 1;
         mainSetBits(sub->gameBitB, 1);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        (obj)->anim.alpha = 0xff;
         *(s8*)&state->baddie.stateTag = 1;
         state->baddie.moveSpeed = lbl_803E2DE8 + (f32)(u32)sub->aggression / lbl_803E2DEC;
         ObjHits_EnableObject(obj);
@@ -503,8 +503,8 @@ int fn_8015E8BC(int obj, GroundBaddieState* state)
     else
     {
         ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairPriority = 10;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairHitVolume = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
     if (*(char*)&state->baddie.moveDone != '\0')
@@ -517,14 +517,14 @@ int fn_8015E8BC(int obj, GroundBaddieState* state)
         state->baddie.eventFlags = flags & ~BADDIE_EVENT_LANDING;
         hit[8] |= 4;
     }
-    if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2DF0)
+    if ((obj)->anim.currentMoveProgress < lbl_803E2DF0)
     {
         hit[8] |= 2;
     }
     return 0;
 }
 
-void fn_8015EA48(int obj, GroundBaddieState* state)
+void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 {
     extern u8 Obj_IsLoadingLocked(void);
     extern int Obj_AllocObjectSetup(int size, int id);
@@ -541,9 +541,9 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
     if (Obj_IsLoadingLocked() == 0)
     {
         setup = Obj_AllocObjectSetup(36, DLLCE_CHILD_OBJ);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = lbl_803E2DF4 + ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = lbl_803E2DF4 + (obj)->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 1;
         ((ObjPlacement*)setup)->color[2] = 0xff;
@@ -554,14 +554,13 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
             t = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
             dur = lbl_803E2DF8 * t;
             ((GameObject*)o)->anim.velocityX =
-                (((GameObject*)state->baddie.targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / dur;
+                (((GameObject*)state->baddie.targetObj)->anim.localPosX - (obj)->anim.localPosX) / dur;
             ((GameObject*)o)->anim.velocityY =
-                ((lbl_803E2DFC * t + ((GameObject*)state->baddie.targetObj)->anim.localPosY) -
-                 ((GameObject*)obj)->anim.localPosY) /
+                ((lbl_803E2DFC * t + ((GameObject*)state->baddie.targetObj)->anim.localPosY) - (obj)->anim.localPosY) /
                 dur;
             ((GameObject*)o)->anim.velocityZ =
-                (((GameObject*)state->baddie.targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / dur;
-            *(int*)&((GameObject*)o)->ownerObj = obj;
+                (((GameObject*)state->baddie.targetObj)->anim.localPosZ - (obj)->anim.localPosZ) / dur;
+            *(int*)&((GameObject*)o)->ownerObj = (int)obj;
         }
     }
 }
@@ -712,7 +711,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E2E10);
 }
 
-void dll_CE_init(int obj, u8* def, int flags)
+void dll_CE_init(GameObject* obj, u8* def, int flags)
 {
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
@@ -722,7 +721,7 @@ void dll_CE_init(int obj, u8* def, int flags)
     u8 mode;
     f32* v;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     mode = 6;
     if (flags != 0)
     {
@@ -733,16 +732,16 @@ void dll_CE_init(int obj, u8* def, int flags)
         mode |= 8;
     }
     (*(void (**)(int, u8*, int, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        obj, def, (int)sub, 7, 6, 0x102, mode, lbl_803E2E14);
-    ((GameObject*)obj)->animEventCallback = NULL;
+        (int)obj, def, (int)sub, 7, 6, 0x102, mode, lbl_803E2E14);
+    (obj)->animEventCallback = NULL;
     v = *(f32**)&sub->control;
     *v = (f32)(int)randomGetRange(10, 300);
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
+    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (int)sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
 }
 
 void dll_CE_update(int obj, int unusedA, int unusedB)
@@ -750,7 +749,7 @@ void dll_CE_update(int obj, int unusedA, int unusedB)
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void fn_8015ED1C(int p1, int p2, int p3);
     extern void fn_8015EB6C(int obj, int p2, int p3);
-    extern void fn_8015EA48(int obj, u8* p);
+    extern void fn_8015EA48(GameObject * obj, u8 * p);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
     extern void* gChukChukMoveHandlers[];
@@ -812,7 +811,7 @@ void dll_CE_update(int obj, int unusedA, int unusedB)
                 hit = *(u8**)&sub->control;
                 if ((hit[8] & 1) != 0)
                 {
-                    fn_8015EA48(obj, (u8*)sub);
+                    fn_8015EA48((GameObject*)(obj), (u8*)sub);
                 }
                 if ((hit[8] & 2) != 0)
                 {

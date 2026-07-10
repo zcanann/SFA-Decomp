@@ -90,10 +90,10 @@ void mmp_asteroid_re_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 #pragma scheduling off
-int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
-    MmpAsteroidReState* state = ((GameObject*)obj)->extra;
+    MmpAsteroidReState* state = (obj)->extra;
     int i;
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -108,7 +108,7 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->eventFlags = 13;
             state->phase = MMP_ASTEROID_PHASE_RISING;
             mainSetBits(GAMEBIT_MMPAsteroidRelated087B, state->phase);
-            ((GameObject*)obj)->anim.alpha = 0xff;
+            (obj)->anim.alpha = 0xff;
             break;
         case 2:
             state->eventFlags = state->eventFlags & ~9;
@@ -133,7 +133,7 @@ int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
     state->eventFlags |= ASTEROIDRE_SEQ_TICK;
-    mmp_asteroid_re_update(obj);
+    mmp_asteroid_re_update((int)obj);
     return 0;
 }
 

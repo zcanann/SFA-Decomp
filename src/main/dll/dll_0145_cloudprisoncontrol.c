@@ -98,7 +98,7 @@ void CloudPrisonControl_init(int obj)
     ObjMsg_AllocQueue(obj, 0xa);
 }
 
-void CloudPrisonControl_update(int obj)
+void CloudPrisonControl_update(GameObject* obj)
 {
     int target;
     int data;
@@ -124,7 +124,7 @@ void CloudPrisonControl_update(int obj)
         switch (msgId)
         {
         case CPMSG_REGISTER:
-            if (((GameObject*)target)->anim.mapEventSlot == ((GameObject*)obj)->anim.mapEventSlot)
+            if (((GameObject*)target)->anim.mapEventSlot == (obj)->anim.mapEventSlot)
             {
                 found = 0;
                 p = lbl_803AC7D8;

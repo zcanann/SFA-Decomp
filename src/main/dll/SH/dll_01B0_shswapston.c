@@ -92,20 +92,20 @@ void warpstone_loadBaseUi(void)
     loadUiDll(0x1);
 }
 
-void warpstone_free(int obj, int mode)
+void warpstone_free(GameObject* obj, int mode)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = (obj)->extra;
     if (*(void**)state != NULL && mode == 0)
     {
-        ObjLink_DetachChild(obj, state[0]);
+        ObjLink_DetachChild((int)obj, state[0]);
         Obj_FreeObject(state[0]);
     }
 }
 
-void warpstone_hitDetect(int obj)
+void warpstone_hitDetect(GameObject* obj)
 {
     extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d);
-    int* state = ((GameObject*)obj)->extra;
+    int* state = (obj)->extra;
     f32 pos[3];
     f32 lightPos[3];
 
@@ -116,13 +116,13 @@ void warpstone_hitDetect(int obj)
         objLightFn_8009a1dc((void*)obj, lbl_803E54A0, lightPos, 1, 0);
         if (randFn_80080100(3) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
         }
-        objAudioFn_800393f8(obj, state + 5, 171, -1280, -1, 0);
+        objAudioFn_800393f8((int)obj, state + 5, 171, -1280, -1, 0);
     }
 }
 
@@ -247,10 +247,10 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
     return 0;
 }
 
-int warpstone_SeqFn(int obj, u32 unused, int animObj)
+int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
 {
     extern int playerFn_801d6d58(void);
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int i;
     int child;
     u8 command;
@@ -269,8 +269,7 @@ int warpstone_SeqFn(int obj, u32 unused, int animObj)
     if ((void*)child != NULL)
     {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-            child, ((GameObject*)obj)->anim.currentMoveProgress - ((GameObject*)child)->anim.currentMoveProgress,
-            timeDelta, NULL);
+            child, (obj)->anim.currentMoveProgress - ((GameObject*)child)->anim.currentMoveProgress, timeDelta, NULL);
     }
 
     animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_testEvent;
@@ -397,7 +396,7 @@ int warpstone_SeqFn(int obj, u32 unused, int animObj)
         }
     }
 
-    SHthorntail_updateDustEffects(obj);
+    SHthorntail_updateDustEffects((int)obj);
     return 0;
 }
 
@@ -440,11 +439,11 @@ extern f32 lbl_803E54A8;
 extern f32 lbl_803E54AC;
 
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void fn_8003ADC4(int obj, int target, void* state, int a, int b, int c);
-extern s16* objModelGetVecFn_800395d8(int obj, int index);
+extern void fn_8003ADC4(GameObject* obj, int target, void* state, int a, int b, int c);
+extern s16* objModelGetVecFn_800395d8(GameObject* obj, int index);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
-extern void objAnimFn_80038f38(int obj, int* animState);
-extern void characterDoEyeAnims(int obj, void* state);
+extern void objAnimFn_80038f38(GameObject* obj, int* animState);
+extern void characterDoEyeAnims(GameObject* obj, void* state);
 
 void warpstone_update(int obj)
 {
@@ -504,8 +503,8 @@ void warpstone_update(int obj)
     }
 
     ((GameObject*)obj)->anim.localPosY += lbl_803DC040;
-    fn_8003ADC4(obj, target, (void*)(state + 0x74), 0x23, 1, lbl_803DC03C);
-    modelVec = objModelGetVecFn_800395d8(obj, 0);
+    fn_8003ADC4((GameObject*)(obj), target, (void*)(state + 0x74), 0x23, 1, lbl_803DC03C);
+    modelVec = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     ((GameObject*)obj)->anim.localPosY -= lbl_803DC040;
 
     if (modelVec != NULL)
@@ -567,8 +566,8 @@ void warpstone_update(int obj)
         }
     }
 
-    objAnimFn_80038f38(obj, (int*)(state + 0x14));
-    characterDoEyeAnims(obj, (void*)(state + 0x44));
+    objAnimFn_80038f38((GameObject*)(obj), (int*)(state + 0x14));
+    characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x44));
     if (mainGetBit(GAMEBIT_SH_SawWarpStoneIntro) == 0)
     {
         ((WarpstoneState*)state)->activated = 0;

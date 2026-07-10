@@ -78,11 +78,11 @@ extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
 extern void* memcpy(void* dst, void* src, int n);
-extern void characterDoEyeAnims(short* obj, void* p);
-extern void fn_8003B0D0(short* obj, int b, void* c, int d);
-extern void tricky_handleDefeat(short* obj, int state);
-extern void Tricky_resumeAfterCommand(short* obj, int state);
-extern void Tricky_applyFloorResponse(short* obj, int state);
+extern void characterDoEyeAnims(GameObject* obj, void* p);
+extern void fn_8003B0D0(GameObject* obj, int b, void* c, int d);
+extern void tricky_handleDefeat(GameObject* obj, int state);
+extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
+extern void Tricky_applyFloorResponse(GameObject* obj, int state);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32);
 
@@ -90,28 +90,28 @@ extern void objMove(short* obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8014FF20(short* obj, int state);
 extern void fn_8014FF24(short* obj, int state);
 extern void fn_80150910(short* obj, int state);
-extern void fn_80150EDC(short* obj, int state);
-extern void fn_8015165C(short* obj, int state);
+extern void fn_80150EDC(GameObject* obj, int state);
+extern void fn_8015165C(GameObject* obj, int state);
 extern void fn_80152040(short* obj, int state);
 extern void fn_80152514(short* obj, int state);
 extern void fn_80152B90(short* obj, int state);
-extern void fn_80153040(short* obj, int state);
-extern void fn_80153248(short* obj, int state);
-extern void fn_8015383C(short* obj, int state);
-extern void fn_80153BFC(short* obj, int state);
-extern void fn_80153E0C(short* obj, int state);
+extern void fn_80153040(GameObject* obj, int state);
+extern void fn_80153248(GameObject* obj, int state);
+extern void fn_8015383C(GameObject* obj, int state);
+extern void fn_80153BFC(GameObject* obj, int state);
+extern void fn_80153E0C(GameObject* obj, int state);
 extern void fn_801540A0(short* obj, int state);
-extern void fn_80154584(short* obj, int state);
+extern void fn_80154584(GameObject* obj, int state);
 extern void fn_80155884(short* obj, int state);
 extern void fn_80155948(short* obj, int state);
 extern void fn_801557D4(short* obj, int state);
-extern void fn_80155F20(short* obj, int state);
+extern void fn_80155F20(GameObject* obj, int state);
 extern void fn_80156010(short* obj, int state);
 extern void fn_8015625C(short* obj, int state);
 extern void fn_8015652C(short* obj, int state);
 extern void fn_80156B0C(short* obj, int state);
 extern void fn_80156C34(short* obj, int state);
-extern void fn_80156DA0(short* obj, int state);
+extern void fn_80156DA0(GameObject* obj, int state);
 extern void hoodedZyck_updateB(short* obj, int state);
 extern void hoodedZyck_update(short* obj, int state);
 extern void crawler_updateC(short* obj, int state);
@@ -134,7 +134,7 @@ extern f32 oneOverTimeDelta;
 extern f32 lbl_803E2598;
 
 extern void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg);
-extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
+extern u8 baddieTargetFn_8014a150(GameObject* obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
 extern int getAngle(float y, float x);
 extern u32 gEnemySelfAngleFlagClearMask[];
@@ -174,7 +174,7 @@ extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
 
 extern int objIsFrozen(int obj);
-extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
+extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
 
 extern f32 enemyRespawnDistanceSq;
 extern void sharpClawInit(int obj, u8* state);
@@ -222,21 +222,21 @@ void objAnimFn_8014a9f0(short* obj, int state)
     memcpy((void*)(state + 0x2b8), obj + 0x12, 0xc);
     if ((((TrickyState*)state)->controlFlags & 0x400) != 0)
     {
-        characterDoEyeAnims(obj, (void*)(state + 0x26c));
+        characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x26c));
     }
     if ((*(void**)&((TrickyState*)state)->actionTargetObj != 0) && ((((TrickyState*)state)->controlFlags & 0x800) != 0))
     {
-        fn_8003B0D0(obj, *(int*)&((TrickyState*)state)->actionTargetObj, (void*)(state + 0x26c), 0x19);
+        fn_8003B0D0((GameObject*)(obj), *(int*)&((TrickyState*)state)->actionTargetObj, (void*)(state + 0x26c), 0x19);
     }
     ((TrickyState*)state)->prevActionId = ((TrickyState*)state)->actionId;
     flags = ((TrickyState*)state)->flags2DC;
     if ((flags & 0x800) != 0)
     {
-        tricky_handleDefeat(obj, state);
+        tricky_handleDefeat((GameObject*)(obj), state);
     }
     else if ((flags & 0x1000) != 0)
     {
-        Tricky_resumeAfterCommand(obj, state);
+        Tricky_resumeAfterCommand((GameObject*)(obj), state);
     }
     else if ((flags & 0x20000000) != 0)
     {
@@ -252,7 +252,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x5b9:
             case 0x5e1:
             case 0x7a6:
-                fn_8015165C(obj, state);
+                fn_8015165C((GameObject*)(obj), state);
                 break;
             case 0xd8:
             case 0x281:
@@ -266,16 +266,16 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x3fe:
             case 0x7c6:
-                fn_80153248(obj, state);
+                fn_80153248((GameObject*)(obj), state);
                 break;
             case 0x58b:
-                fn_80153BFC(obj, state);
+                fn_80153BFC((GameObject*)(obj), state);
                 break;
             case 0x369:
                 fn_801540A0(obj, state);
                 break;
             case 0x251:
-                fn_80154870(obj, state);
+                fn_80154870((GameObject*)(obj), state);
                 break;
             case 0x25d:
                 fn_80155948(obj, state);
@@ -290,7 +290,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80156B0C(obj, state);
                 break;
             case 0x851:
-                iceBaddie_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
+                iceBaddie_enterWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
                 break;
             case 0x842:
             case 0x84b:
@@ -329,7 +329,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x5b9:
             case 0x5e1:
             case 0x7a6:
-                fn_80150EDC(obj, state);
+                fn_80150EDC((GameObject*)(obj), state);
                 break;
             case 0xd8:
             case 0x281:
@@ -343,16 +343,16 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x3fe:
             case 0x7c6:
-                fn_80153248(obj, state);
+                fn_80153248((GameObject*)(obj), state);
                 break;
             case 0x58b:
-                fn_80153BFC(obj, state);
+                fn_80153BFC((GameObject*)(obj), state);
                 break;
             case 0x369:
                 fn_801540A0(obj, state);
                 break;
             case 0x251:
-                fn_80154870(obj, state);
+                fn_80154870((GameObject*)(obj), state);
                 break;
             case 0x25d:
                 fn_80155884(obj, state);
@@ -367,7 +367,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80156B0C(obj, state);
                 break;
             case 0x851:
-                iceBaddie_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
+                iceBaddie_enterWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
                 break;
             case 0x842:
             case 0x84b:
@@ -454,22 +454,22 @@ void objAnimFn_8014a9f0(short* obj, int state)
             break;
         case 0x3fe:
         case 0x7c6:
-            fn_80153040(obj, state);
+            fn_80153040((GameObject*)(obj), state);
             break;
         case 0x58b:
-            fn_8015383C(obj, state);
+            fn_8015383C((GameObject*)(obj), state);
             break;
         case 0x369:
-            fn_80153E0C(obj, state);
+            fn_80153E0C((GameObject*)(obj), state);
             break;
         case 0x251:
-            fn_80154584(obj, state);
+            fn_80154584((GameObject*)(obj), state);
             break;
         case 0x25d:
             fn_801557D4(obj, state);
             break;
         case 0x457:
-            fn_80155F20(obj, state);
+            fn_80155F20((GameObject*)(obj), state);
             break;
         case 0x4d7:
             fn_8015652C(obj, state);
@@ -478,14 +478,14 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80156C34(obj, state);
             break;
         case 0x851:
-            iceBaddie_leaveWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
+            iceBaddie_leaveWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
             break;
         case 0x842:
         case 0x84b:
             snowworm_applyReactionState(obj, state);
             break;
         case 0x4ac:
-            fn_80156DA0(obj, state);
+            fn_80156DA0((GameObject*)(obj), state);
             break;
         case 0x427:
             fn_8014FF20(obj, state);
@@ -621,7 +621,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(((TrickyState*)state)->base, timeDelta);
         }
     }
-    Tricky_applyFloorResponse(obj, state);
+    Tricky_applyFloorResponse((GameObject*)(obj), state);
     if (((((TrickyState*)state)->controlFlags & 0x400000) != 0) || ((((TrickyState*)state)->flags2DC & 0x8100000) != 0))
     {
         if ((((TrickyState*)state)->flags2F1 & 0x80) == 0)
@@ -699,14 +699,14 @@ null_state:
     return 0;
 }
 
-void fn_8014D08C(int obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)
+void fn_8014D08C(GameObject* obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)
 {
     ObjHitsPriorityState* hitState;
 
     ((BaddieState*)state)->unk308 = lbl_803E256C / (lbl_803E2570 * rateScale);
     *(u8*)(state + 0x323) = stateByte;
-    ObjAnim_SetCurrentMove(obj, (u8)moveId, lbl_803E2574, moveControlFlags);
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    ObjAnim_SetCurrentMove((int)obj, (u8)moveId, lbl_803E2574, moveControlFlags);
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     if (hitState != NULL)
     {
         hitState->suppressOutgoingHits = 0;
@@ -774,8 +774,8 @@ f32 enemy_getHealthFraction(register int obj)
  * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
  * 0x2c) by timeDelta * speedScale * unitDir, clamped at +/-maxVel, with an
  * optional drag pass. Returns the y-delta. */
-f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
-                                         f32 maxVel, f32 drag)
+f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,
+                                         f32 drag)
 {
     f32 dx = tx - obj->anim.worldPosX;
     f32 dy = ty - obj->anim.worldPosY;
@@ -818,8 +818,8 @@ f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz
 /* sidekickToy_accelerateTowardTarget3D: 3D physics step toward a target. Variant of sidekickToy_accelerateTowardTargetXZ that
  * uses the full 3D distance (xyz) instead of planar (xz), and also nudges
  * the y-axis velocity at obj+0x28. Returns the y-delta. */
-f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
-                                         f32 maxVel, f32 drag)
+f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel,
+                                         f32 drag)
 {
     f32 dx = tx - obj->anim.worldPosX;
     f32 dy = ty - obj->anim.worldPosY;
@@ -875,14 +875,14 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
  * leave state[0x2dc] alone. Otherwise initialise the rom-curve walker with
  * (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
  * the 0x2000 bit based on the u8 result. */
-void sidekickToy_updateCurveTargetLatch(int obj)
+void sidekickToy_updateCurveTargetLatch(GameObject* obj)
 {
     extern u8 lbl_803DBC58;
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = (obj)->extra;
     u8* data = *(u8**)state;
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if ((u8)baddieTargetFn_8014a150(obj, state, &((GameObject*)obj)->anim.worldPosX, data + 0x68) != 0)
+        if ((u8)baddieTargetFn_8014a150((GameObject*)obj, state, &(obj)->anim.worldPosX, data + 0x68) != 0)
         {
             return;
         }
@@ -1054,7 +1054,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void fn_8014B878(int* node, int* sub);
     extern void baddieTurnTowardTarget(int* node, int* sub);
-    extern void baddieInstantiateWeapon(int* node, int* sub);
+    extern void baddieInstantiateWeapon(GameObject * node, int* sub);
     char* sub = *(char**)&((GameObject*)node)->extra;
     s8* n29 = *(s8**)&((GameObject*)node)->anim.placementData;
     int i;
@@ -1106,7 +1106,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    baddieInstantiateWeapon(node, (int*)sub);
+    baddieInstantiateWeapon((GameObject*)(node), (int*)sub);
     if (((GameObject*)node)->seqIndex == -1)
     {
         ((TrickyState*)sub)->flags2E8 &= ~3LL;
@@ -1208,7 +1208,7 @@ void fn_8014B878(int* arg1, int* sub)
     {
         if ((((TrickyState*)sub)->controlFlags & 0x1000) != 0)
         {
-            u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
+            u8 r = baddieTargetFn_8014a150((GameObject*)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
                                            (void*)(*(char**)&((TrickyState*)sub)->actionTargetObj + 0x18));
             if (r != 0)
                 ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
@@ -1626,14 +1626,14 @@ void enemy_hitDetect(GameObject* obj)
     }
 }
 
-void enemy_free(int obj, int flag)
+void enemy_free(GameObject* obj, int flag)
 {
     u8* child;
     int i;
     int n;
     u8* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
 
     if (*(void**)&((EnemyState*)state)->tailSimHandle != NULL)
     {
@@ -1649,22 +1649,22 @@ void enemy_free(int obj, int flag)
         mm_free(*(int*)state);
         *(int*)state = 0;
     }
-    switch (((GameObject*)obj)->anim.seqId)
+    switch ((obj)->anim.seqId)
     {
     case 0x7c8:
-        hagabonMK2_stopLoopSfx(obj, state);
+        hagabonMK2_stopLoopSfx((int)obj, state);
         break;
     case 0x851:
         if ((int)ObjGroup_ContainsObject(obj, ENEMY_OBJGROUP_SECONDARY) != 0)
         {
-            ObjGroup_RemoveObject(obj, ENEMY_OBJGROUP_SECONDARY);
+            ObjGroup_RemoveObject((int)obj, ENEMY_OBJGROUP_SECONDARY);
         }
         break;
     }
-    n = ((GameObject*)obj)->childCount;
+    n = (obj)->childCount;
     for (i = 0; i < n; i++)
     {
-        child = ((GameObject*)obj)->childObjs[0];
+        child = (obj)->childObjs[0];
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
@@ -1674,8 +1674,8 @@ void enemy_free(int obj, int flag)
             }
         }
     }
-    (*gExpgfxInterface)->freeSource(obj);
-    ObjGroup_RemoveObject(obj, ENEMY_OBJGROUP);
+    (*gExpgfxInterface)->freeSource((int)obj);
+    ObjGroup_RemoveObject((int)obj, ENEMY_OBJGROUP);
 }
 
 void enemy_update(int obj)
@@ -1684,7 +1684,7 @@ void enemy_update(int obj)
     extern void fn_8014B878(int obj, u8* state);
     extern void baddieTurnTowardTarget(int obj, u8* state);
     extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-    extern void baddieInstantiateWeapon(int obj, u8* state);
+    extern void baddieInstantiateWeapon(GameObject * obj, u8 * state);
     u8* player;
     u8* state;
     u8* setup;
@@ -1717,7 +1717,7 @@ void enemy_update(int obj)
     }
     if (objIsFrozen(obj) != 0)
     {
-        baddie_updateWhileFrozen(obj, state, 1);
+        baddie_updateWhileFrozen((GameObject*)(obj), state, 1);
         return;
     }
     if (((EnemyState*)state)->trackedObj == NULL)
@@ -1729,7 +1729,7 @@ void enemy_update(int obj)
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
-    baddieInstantiateWeapon(obj, state);
+    baddieInstantiateWeapon((GameObject*)(obj), state);
     flags = ((EnemyState*)state)->controlFlags;
     if ((flags & 1) != 0 && (flags & 2) == 0)
     {
@@ -1777,7 +1777,7 @@ void enemy_update(int obj)
                 if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) >
                     enemyRespawnDistanceSq)
                 {
-                    enemy_init(obj, setup, 0);
+                    enemy_init((GameObject*)(obj), setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
                     *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                 }
@@ -1807,7 +1807,7 @@ void enemy_update(int obj)
                 if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) >
                     enemyRespawnDistanceSq)
                 {
-                    enemy_init(obj, setup, 0);
+                    enemy_init((GameObject*)(obj), setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
                     *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                 }
@@ -1841,7 +1841,7 @@ void enemy_update(int obj)
                         if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) >
                             enemyRespawnDistanceSq)
                         {
-                            enemy_init(obj, setup, 0);
+                            enemy_init((GameObject*)(obj), setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
                             *(u32*)&((EnemyState*)state)->initialFlags &= ~0x1000LL;
                         }
@@ -1901,7 +1901,7 @@ void enemy_update(int obj)
             (**(void (**)(u8*, int, int, int))(*(int*)(*(int*)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
         }
     }
-    baddie_updateWhileFrozen(obj, state, 0);
+    baddie_updateWhileFrozen((GameObject*)(obj), state, 0);
     if ((((EnemyState*)state)->controlFlags & 0x1800) == 0)
     {
         baddieTurnTowardTarget(obj, state);
@@ -1910,13 +1910,13 @@ void enemy_update(int obj)
     objAnimFn_8014a9f0(obj, state);
 }
 
-void enemy_init(int obj, u8* setup, int flag)
+void enemy_init(GameObject* obj, u8* setup, int flag)
 {
     extern f32 lbl_803DBC58;
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = (obj)->extra;
     f32 fz;
 
-    ((GameObject*)obj)->unkF4 = 0;
+    (obj)->unkF4 = 0;
     if (flag == 0)
     {
         if (((EnemyPlacement*)setup)->gameBit2 != -1)
@@ -1925,54 +1925,54 @@ void enemy_init(int obj, u8* setup, int flag)
             {
                 if (mainGetBit(((EnemyPlacement*)setup)->gameBit) == 0)
                 {
-                    ((GameObject*)obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
+                    (obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
                 }
             }
             else
             {
-                ((GameObject*)obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
+                (obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
             }
         }
         if (*(u32*)&((ObjPlacement*)setup)->mapId != 0xFFFFFFFF)
         {
-            if (((GameObject*)obj)->unkF4 == 0)
+            if ((obj)->unkF4 == 0)
             {
                 if (((EnemyPlacement*)setup)->gameBit != -1)
                 {
-                    ((GameObject*)obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit);
+                    (obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit);
                 }
-                if (((GameObject*)obj)->unkF4 == 0)
+                if ((obj)->unkF4 == 0)
                 {
                     if (((EnemyPlacement*)setup)->respawnEnabled != 0)
                     {
                         if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) == 0)
                         {
-                            ((GameObject*)obj)->unkF4 = 1;
+                            (obj)->unkF4 = 1;
                         }
                     }
                 }
             }
         }
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.alpha = 0;
+        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.alpha = 0;
     }
     else
     {
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.alpha = 255;
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.alpha = 255;
     }
     ((EnemyState*)state)->health = ((EnemyPlacement*)setup)->healthByte / lbl_803E257C;
     ((EnemyState*)state)->aggroRange = (f32)(u32)(((EnemyPlacement*)setup)->aggroRangeByte << 3);
     *(int*)&((EnemyState*)state)->controlFlags = 0;
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
-    ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)setup)->rotXByte << 8;
-    ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
-    ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-    ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    (obj)->anim.rotX = ((EnemyPlacement*)setup)->rotXByte << 8;
+    (obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
+    (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
+    (obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
+    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if (flag == 0)
     {
         *(int*)&((EnemyState*)state)->flags2E4 = 0;
@@ -2001,10 +2001,10 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->intervalTimer = fz;
         ((EnemyState*)state)->unk2B4 = -1;
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
-        ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->objectFlagBits & 7;
+        (obj)->objectFlags |= ((EnemyPlacement*)setup)->objectFlagBits & 7;
         ((EnemyState*)state)->current = ((EnemyPlacement*)setup)->hitPoints;
-        ((GameObject*)obj)->animEventCallback = enemy_SeqFn;
-        switch (((GameObject*)obj)->anim.seqId)
+        (obj)->animEventCallback = enemy_SeqFn;
+        switch ((obj)->anim.seqId)
         {
         case 17:
         case 314:
@@ -2013,67 +2013,67 @@ void enemy_init(int obj, u8* setup, int flag)
         case 1465:
         case 1505:
         case 1958:
-            sharpClawInit(obj, state);
+            sharpClawInit((int)obj, state);
             break;
         case 216:
         case 641:
-            guardClaw_init(obj, state);
+            guardClaw_init((int)obj, state);
             break;
         case 1555:
-            gcRobotPatrol_init((GameObject*)(obj), state);
+            gcRobotPatrol_init(obj, state);
             break;
         case 1602:
-            mikaladon_init((GameObject*)(obj), state);
+            mikaladon_init(obj, state);
             break;
         case 1022:
         case 1990:
-            vambat_init((GameObject*)(obj), state);
+            vambat_init(obj, state);
             break;
         case 1419:
-            kooshy_init(obj, state);
+            kooshy_init((int)obj, state);
             break;
         case 873:
-            fn_801542AC(obj, state);
+            fn_801542AC((int)obj, state);
             break;
         case 593:
-            fn_80154C24((GameObject*)(obj), state);
+            fn_80154C24(obj, state);
             break;
         case 605:
-            rachnopInit(obj, (int)state);
+            rachnopInit((int)obj, (int)state);
             break;
         case 1111:
-            baddieInit_80156188(obj, (int)state);
+            baddieInit_80156188((int)obj, (int)state);
             break;
         case 1239:
-            wbInit(obj, (int)state);
+            wbInit((int)obj, (int)state);
             break;
         case 1112:
-            mutatedEbaInit(obj, state);
+            mutatedEbaInit((int)obj, state);
             break;
         case 2129:
-            baddie_initWhirlpoolState(obj, state);
+            baddie_initWhirlpoolState((int)obj, state);
             break;
         case 2114:
         case 2123:
-            crawler_initVariant(obj, state);
+            crawler_initVariant((int)obj, state);
             break;
         case 1196:
-            hoodedZyck_init(obj, state);
+            hoodedZyck_init((int)obj, state);
             break;
         case 1063:
-            battleDroidInit(obj, state);
+            battleDroidInit((int)obj, state);
             break;
         case 1698:
         case 1699:
         case 1700:
         case 1701:
-            crawler_initModelVariant(obj, state);
+            crawler_initModelVariant((int)obj, state);
             break;
         case 1992:
-            crawler_initTailModel(obj, state);
+            crawler_initTailModel((int)obj, state);
             break;
         default:
-            battleDroidInit(obj, state);
+            battleDroidInit((int)obj, state);
             break;
         }
         ((EnemyState*)state)->max = *(u16*)&((EnemyState*)state)->current;
@@ -2112,7 +2112,7 @@ void enemy_init(int obj, u8* setup, int flag)
             state[0x25f] = 1;
         }
         if ((((EnemyState*)state)->flags2E4 & 0x8000022) != 0 || ((EnemyPlacement*)setup)->unk34 != 0 ||
-            ((GameObject*)obj)->anim.seqId == 1022 || ((GameObject*)obj)->anim.seqId == 1990)
+            (obj)->anim.seqId == 1022 || (obj)->anim.seqId == 1990)
         {
             ((EnemyState*)state)->flags |= 0x40000;
         }
@@ -2124,7 +2124,7 @@ void enemy_init(int obj, u8* setup, int flag)
         {
             ((EnemyState*)state)->flags &= ~0x3800;
         }
-        if (((GameObject*)obj)->unkF4 != 0)
+        if ((obj)->unkF4 != 0)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
             *(u32*)&((EnemyState*)state)->initialFlags = *(u32*)&((EnemyState*)state)->initialFlags & ~0x1000LL;

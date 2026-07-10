@@ -107,10 +107,10 @@ extern void envFxFn_800887cc(void);
 extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
-extern void objSeqFn_801992ec(int obj, int target);
+extern void objSeqFn_801992ec(GameObject* obj, int target);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
-extern void objSeqMoveFn_80199188(int obj, int target);
+extern void objSeqMoveFn_80199188(GameObject* obj, int target);
 
 void Trigger_render(void)
 {
@@ -129,10 +129,10 @@ void Trigger_initialise(void)
 }
 #pragma reset
 
-void Trigger_free(void* obj)
+void Trigger_free(GameObject* obj)
 {
     u8 i;
-    u8* entry = *(u8**)&((GameObject*)obj)->anim.placementData + 0x18;
+    u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
     i = 0;
 
     while (i < 8)
@@ -759,10 +759,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     }
 }
 
-void Trigger_hitDetect(int obj)
+void Trigger_hitDetect(GameObject* obj)
 {
-    u8* state = ((GameObject*)obj)->extra;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    u8* state = (obj)->extra;
+    u8* def = *(u8**)&(obj)->anim.placementData;
     int triggerObj;
     int trickyObj;
     int target;
@@ -796,7 +796,7 @@ void Trigger_hitDetect(int obj)
         {
             if ((*state & TRIGGER_SFLAG_DISABLED) != 0)
             {
-                objInterpretSeq(obj, triggerObj, 1, 0);
+                objInterpretSeq((int)obj, triggerObj, 1, 0);
                 *state &= ~TRIGGER_SFLAG_DISABLED;
                 *state |= TRIGGER_SFLAG_ENTERED;
             }
@@ -806,7 +806,7 @@ void Trigger_hitDetect(int obj)
                 targetKind = ((TriggerPlacement*)def)->target;
                 if (targetKind > 2)
                 {
-                    target = ObjGroup_FindNearestObject(targetKind - 1, obj, (int)dist);
+                    target = ObjGroup_FindNearestObject(targetKind - 1, (int)obj, (int)dist);
                     if ((void*)target == NULL)
                     {
                         ok = 0;
@@ -905,45 +905,45 @@ void Trigger_hitDetect(int obj)
                     }
                     if (ok2 && ok)
                     {
-                        fn_80198DE8(obj, target);
+                        fn_80198DE8((int)obj, target);
                     }
                     break;
                 case 0x4e:
                     ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
                     if (((TriggerState*)state)->timer >= (u32)((TriggerPlacement*)def)->triggerDelayFrames)
                     {
-                        objInterpretSeq(obj, 0, 1, 0);
+                        objInterpretSeq((int)obj, 0, 1, 0);
                     }
                     break;
                 case 0x4d:
                     if (ok)
                     {
-                        TriggerState* st = (TriggerState*)((GameObject*)obj)->extra;
-                        inside = fn_80198B68(obj, (int)&st->prevTargetPosX);
-                        wasInside = fn_80198B68(obj, (int)&st->targetPosX);
+                        TriggerState* st = (TriggerState*)(obj)->extra;
+                        inside = fn_80198B68((int)obj, (int)&st->prevTargetPosX);
+                        wasInside = fn_80198B68((int)obj, (int)&st->targetPosX);
                         if (inside != 0)
                         {
                             if (wasInside == 0)
                             {
-                                objInterpretSeq(obj, target, 1, 0);
+                                objInterpretSeq((int)obj, target, 1, 0);
                             }
                             else
                             {
-                                objInterpretSeq(obj, target, 2, 0);
+                                objInterpretSeq((int)obj, target, 2, 0);
                             }
                         }
                         else if (wasInside != 0)
                         {
-                            objInterpretSeq(obj, target, -1, 0);
+                            objInterpretSeq((int)obj, target, -1, 0);
                         }
                         else
                         {
-                            objInterpretSeq(obj, target, -2, 0);
+                            objInterpretSeq((int)obj, target, -2, 0);
                         }
                     }
                     break;
                 case 0x50:
-                    objInterpretSeq(obj, triggerObj, 1, 0);
+                    objInterpretSeq((int)obj, triggerObj, 1, 0);
                     if (return1_800202BC() != 0)
                     {
                         Obj_FreeObject(obj);
@@ -964,7 +964,7 @@ void Trigger_hitDetect(int obj)
                     if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
-                        objInterpretSeq(obj, triggerObj, 1, 0);
+                        objInterpretSeq((int)obj, triggerObj, 1, 0);
                     }
                     if (!ok)
                     {
@@ -974,7 +974,7 @@ void Trigger_hitDetect(int obj)
                 case 0xf4:
                     if (ok)
                     {
-                        fn_80198A00(obj, target);
+                        fn_80198A00((int)obj, target);
                     }
                     break;
                 }

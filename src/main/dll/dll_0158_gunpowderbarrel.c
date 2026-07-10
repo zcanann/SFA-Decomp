@@ -100,10 +100,10 @@ extern int timerCountDown(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);
-extern int timer_isEffectMode(int obj);
-extern void timer_forceStart(int obj);
-extern int timer_hasExpired(int obj);
-extern void barrelgener_queueObjectRelease(int gen, int obj, int code);
+extern int timer_isEffectMode(GameObject *obj);
+extern void timer_forceStart(GameObject *obj);
+extern int timer_hasExpired(GameObject *obj);
+extern void barrelgener_queueObjectRelease(GameObject *gen, int obj, int code);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern u32 playerGetStateFlag310(u8 * player);
 extern void setAButtonIcon(int x);
@@ -155,24 +155,24 @@ int gunpowderbarrel_getExtraSize(void)
     return 0x58;
 }
 
-void gunpowderbarrel_free(int obj, int mode)
+void gunpowderbarrel_free(GameObject *obj, int mode)
 {
     extern int Obj_IsObjectAlive(int obj);
     int extra;
     void* child;
-    extra = *(int*)&((GameObject*)obj)->extra;
+    extra = *(int*)&(obj)->extra;
     (*(VtableFn*)(*(int*)gCarryableInterface + 0x10))(obj);
     child = (void*)((GunpowderBarrelState*)extra)->linkedTimerObject;
     if (child != NULL && mode == 0)
     {
         if (Obj_IsObjectAlive((int)child) != 0)
         {
-            ObjLink_DetachChild(obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
+            ObjLink_DetachChild((int)obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
             ((GunpowderBarrelState*)extra)->linkedTimerObject = 0;
         }
     }
-    ObjGroup_RemoveObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
-    ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, CFGUARDIAN_OBJGROUP);
     if (((GunpowderBarrelState*)extra)->fuseFrames != 0)
     {
         (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -211,7 +211,7 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
 
 /* When hit (or touched while resting on a damage source) blow the barrel up,
  * optionally re-saving its position at the owning generator first. */
-void gunpowderbarrel_triggerExplosion(int obj)
+void gunpowderbarrel_triggerExplosion(GameObject *obj)
 {
     u8* sub;
     int hitObj;
@@ -219,11 +219,11 @@ void gunpowderbarrel_triggerExplosion(int obj)
     u8* tricky;
     int* timer;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     /* Arm detonation if we took a priority hit, OR we're in flight (motionFlags
      * bit 2) and made contact with a surface. Also mark the barrel sleeping. */
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, 0) != 0 ||
-        (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (((GunpowderBarrelState*)sub)->motionFlags & 2) != 0))
+        (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0 && (((GunpowderBarrelState*)sub)->motionFlags & 2) != 0))
     {
         ((GunpowderBarrelState*)sub)->detonateTrigger += 1;
         ((GunpowderBarrelState*)sub)->motionFlags = (u8)(((GunpowderBarrelState*)sub)->motionFlags | 1);
@@ -237,7 +237,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
             int** objs;
             int* best = 0;
             int i;
-            int* def = *(int**)&((GameObject*)obj)->anim.placementData;
+            int* def = *(int**)&(obj)->anim.placementData;
             int** p;
             if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
@@ -246,7 +246,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
                 p = objs;
                 for (; i < count; i++)
                 {
-                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId(*p))
+                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
                     {
                         best = objs[i];
                         break;
@@ -256,36 +256,36 @@ void gunpowderbarrel_triggerExplosion(int obj)
             }
             else
             {
-                best = (int*)ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
+                best = (int*)ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
             }
             if (best != 0)
             {
                 f32 x, y, z;
-                x = ((GameObject*)obj)->anim.localPosX;
-                y = ((GameObject*)obj)->anim.localPosY;
-                z = ((GameObject*)obj)->anim.localPosZ;
-                ((GameObject*)obj)->anim.localPosX = ((GameObject*)best)->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)best)->anim.localPosY;
-                ((GameObject*)obj)->anim.localPosZ = ((GameObject*)best)->anim.localPosZ;
+                x = (obj)->anim.localPosX;
+                y = (obj)->anim.localPosY;
+                z = (obj)->anim.localPosZ;
+                (obj)->anim.localPosX = ((GameObject*)best)->anim.localPosX;
+                (obj)->anim.localPosY = ((GameObject*)best)->anim.localPosY;
+                (obj)->anim.localPosZ = ((GameObject*)best)->anim.localPosZ;
                 saveGame_saveObjectPos((int*)obj);
-                ((GameObject*)obj)->anim.localPosX = x;
-                ((GameObject*)obj)->anim.localPosY = y;
-                ((GameObject*)obj)->anim.localPosZ = z;
+                (obj)->anim.localPosX = x;
+                (obj)->anim.localPosY = y;
+                (obj)->anim.localPosZ = z;
             }
         }
         /* Reconfigure the hitbox into a blast-damage volume, play the boom SFX
          * and spawn the explosion effect at a raised Y. */
-        ObjHits_ClearFlags(obj, 0x80);
-        ObjHits_SetSourceMask(obj, 1);
-        ObjHitbox_SetCapsuleBounds(obj, 0x14, -5, 0x14);
-        ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
-        Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11_d1);
-        ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
+        ObjHits_ClearFlags((int)obj, 0x80);
+        ObjHits_SetSourceMask((int)obj, 1);
+        ObjHitbox_SetCapsuleBounds((int)obj, 0x14, -5, 0x14);
+        ObjHits_EnableObject((int)obj);
+        ObjHits_SetHitVolumeSlot((int)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
+        (obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
-            (*(void (**)(int, u8*))(*(int*)gCarryableInterface + 0x30))(obj, sub);
+            (*(void (**)(int, u8*))(*(int*)gCarryableInterface + 0x30))((int)obj, sub);
             ((GunpowderBarrelState*)sub)->heldByCarryInterface = 0;
         }
         /* Light the fuse: update() grows the blast radius each frame and, once
@@ -296,7 +296,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
          * from the u32 call args above — matching retail, no CSE'd copy of obj
          * survives across the calls (target passes r30 directly here). */
         ObjGroup_RemoveObject((u32)(void*)obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
-        if (((GameObject*)obj)->anim.parent != 0)
+        if ((obj)->anim.parent != 0)
         {
             ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
         }
@@ -313,7 +313,7 @@ void gunpowderbarrel_triggerExplosion(int obj)
         timer = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
         if (timer != 0)
         {
-            timer_clearManualFlags(timer);
+            timer_clearManualFlags((GameObject*)(timer));
         }
     }
 }
@@ -652,14 +652,14 @@ void gunpowderbarrel_init(int obj, u8* def)
  * and handles the pickup/steal/toss transitions against the player's carry
  * state. */
 #pragma opt_common_subs off
-void gunpowderbarrel_update(int obj)
+void gunpowderbarrel_update(GameObject *obj)
 {
     extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
+    GunpowderBarrelState* state = (obj)->extra;
     u8* player;
     GunpowderbarrelPlacement* def;
     player = Obj_GetPlayerObject();
-    def = *(GunpowderbarrelPlacement**)&((GameObject*)obj)->anim.placementData;
+    def = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
 
     if (state->impactSoundCooldown <= lbl_803E4334)
     {
@@ -669,17 +669,17 @@ void gunpowderbarrel_update(int obj)
      * the frame it expires we un-hide, reset state and pop back onto the pad. --- */
     if (fn_80080150(&state->respawnTimer) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (timerCountDown(&state->respawnTimer) != 0)
         {
             state->fuseFrames = 0;
             state->detonateTrigger = 0;
             state->motionFlags |= 1;
-            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ObjHits_ClearHitVolumes(obj);
-            ObjHitbox_SetCapsuleBounds(obj, 8, -2, 0x19);
-            ObjHits_EnableObject(obj);
-            ObjHits_SyncObjectPositionIfDirty(obj);
+            (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            ObjHits_ClearHitVolumes((int)obj);
+            ObjHitbox_SetCapsuleBounds((int)obj, 8, -2, 0x19);
+            ObjHits_EnableObject((int)obj);
+            ObjHits_SyncObjectPositionIfDirty((int)obj);
             gunpowderbarrel_updatePhysics((int*)obj);
             gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
         }
@@ -689,40 +689,40 @@ void gunpowderbarrel_update(int obj)
      * barrel still (zero throw + object velocity) until the timer drains. --- */
     if (fn_80080150(&state->releaseTimer) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         timerCountDown(&state->releaseTimer);
         memset(&state->throwVelX, 0, 0xc);
-        memset((void*)&((GameObject*)obj)->anim.velocityX, 0, 0xc);
+        memset((void*)&(obj)->anim.velocityX, 0, 0xc);
         return;
     }
     if (((GpbHeldFlags*)&state->heldFlags)->held == 0)
     {
         if (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 && playerIsDisguised(player) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
     /* --- Cannon/effect-timer link: with no child yet, grab the nearest free
      * group-0x4c effect-timer object and attach it; drop it if it dies. --- */
-    if (((GameObject*)obj)->childObjs[0] == NULL)
+    if ((obj)->childObjs[0] == NULL)
     {
         f32 range = lbl_803E4338;
-        if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, &range)) != 0 &&
-            timer_isEffectMode(state->linkedTimerObject) != 0 &&
+        if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, &range)) != 0 &&
+            timer_isEffectMode((GameObject*)(state->linkedTimerObject)) != 0 &&
             ((GameObject*)state->linkedTimerObject)->ownerObj == NULL)
         {
-            ObjLink_AttachChild(obj, state->linkedTimerObject, 0);
+            ObjLink_AttachChild((int)obj, state->linkedTimerObject, 0);
         }
     }
     else
     {
         if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0 && *(void* *)&state->linkedTimerObject != NULL)
         {
-            ObjLink_DetachChild(obj, state->linkedTimerObject);
+            ObjLink_DetachChild((int)obj, state->linkedTimerObject);
             state->linkedTimerObject = 0;
         }
     }
@@ -742,7 +742,7 @@ void gunpowderbarrel_update(int obj)
                 gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
                 if (arg != 0)
                 {
-                    ObjGroup_AddObject((u32)(GameObject*)obj, CFGUARDIAN_OBJGROUP);
+                    ObjGroup_AddObject((u32)obj, CFGUARDIAN_OBJGROUP);
                 }
                 break;
             }
@@ -750,11 +750,11 @@ void gunpowderbarrel_update(int obj)
     }
     if (((GpbHeldFlags*)&state->heldFlags)->held != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     }
     /* --- Fuse phase: once lit (fuseFrames != 0) grow the blast hitbox each
      * frame; after the fuse window (> 0x14) consume the barrel below. --- */
@@ -765,11 +765,11 @@ void gunpowderbarrel_update(int obj)
         state->fuseFrames + lbl_803E42DC;
         {
             f32 r = state->hitRadius;
-            ObjHitbox_SetCapsuleBounds(obj, r, (s32)(-r * lbl_803E4328), (s32)(r * lbl_803E4328));
+            ObjHitbox_SetCapsuleBounds((int)obj, r, (s32)(-r * lbl_803E4328), (s32)(r * lbl_803E4328));
         }
         if (*(void* *)&state->linkedTimerObject != NULL)
         {
-            timer_clearManualFlags(state->linkedTimerObject);
+            timer_clearManualFlags((GameObject*)(state->linkedTimerObject));
         }
         if (state->fuseFrames > 0x14)
         {
@@ -792,7 +792,7 @@ void gunpowderbarrel_update(int obj)
                 p = objs;
                 for (; i < cnt; i++)
                 {
-                    if (def->generatorLinkId == barrelgener_getLinkId(*p))
+                    if (def->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
                     {
                         gen = objs[i];
                         break;
@@ -802,20 +802,20 @@ void gunpowderbarrel_update(int obj)
             }
             else
             {
-                gen = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
+                gen = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
             }
             if (gen == 0)
             {
-                Obj_RemoveFromUpdateList(obj);
-                ObjHits_DisableObject(obj);
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                Obj_RemoveFromUpdateList((int)obj);
+                ObjHits_DisableObject((int)obj);
+                (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 s16toFloat(&state->respawnTimer, 0x3c);
                 return;
             }
             memset(&state->throwVelX, 0, 0xc);
-            memset((void*)&((GameObject*)obj)->anim.velocityX, 0, 0xc);
+            memset((void*)&(obj)->anim.velocityX, 0, 0xc);
             state->motionFlags &= ~2;
-            ObjHits_RefreshObjectState(obj);
+            ObjHits_RefreshObjectState((int)obj);
             /* Generator + respawns flag: hand the barrel back to the generator,
              * hide it, and arm both the respawn and release timers. */
             if (((GpbConfigFlags*)&state->configFlags)->respawns != 0)
@@ -823,15 +823,15 @@ void gunpowderbarrel_update(int obj)
                 s16toFloat(&state->respawnTimer, 0x3c);
                 storeZeroToFloatParam(&state->releaseTimer);
                 s16toFloat(&state->releaseTimer, 0x5a);
-                barrelgener_queueObjectRelease(gen, obj, 0x46);
-                ObjHits_ClearHitVolumes(obj);
-                ObjHits_DisableObject(obj);
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                barrelgener_queueObjectRelease((GameObject*)(gen), (int)obj, 0x46);
+                ObjHits_ClearHitVolumes((int)obj);
+                ObjHits_DisableObject((int)obj);
+                (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
             }
-            Obj_RemoveFromUpdateList(obj);
-            ObjHits_DisableObject(obj);
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            Obj_RemoveFromUpdateList((int)obj);
+            ObjHits_DisableObject((int)obj);
+            (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         return;
     }
@@ -855,12 +855,12 @@ void gunpowderbarrel_update(int obj)
         }
     }
     if ((state->motionFlags & 2) != 0 || ((GpbHeldFlags*)&state->heldFlags)->held != 0 ||
-        (*(int (**)(int, GunpowderBarrelState*))((char*)*gCarryableInterface + 0x8))(obj, state) == 0 ||
+        (*(int (**)(int, GunpowderBarrelState*))((char*)*gCarryableInterface + 0x8))((int)obj, state) == 0 ||
         (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 && playerIsDisguised(player) == 0))
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((int)obj);
         gunpowderbarrel_triggerExplosion(obj);
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        (obj)->anim.alpha = 0xff;
         /* Releasing from carry: dispatch on the player's controlMode —
          * 6 = place in-place, 7 = launch at a target, no lift velocity = toss. */
         if (state->heldByCarryInterface != 0)
@@ -868,37 +868,37 @@ void gunpowderbarrel_update(int obj)
             state->heldByCarryInterface = 0;
             if (fn_802966B4(player) != 0) /* controlMode 6: set down in place */
             {
-                ObjHits_SyncObjectPositionIfDirty(obj);
+                ObjHits_SyncObjectPositionIfDirty((int)obj);
             }
             else if (fn_8029669C(player) != 0) /* controlMode 7: launch at target */
             {
-                ObjHits_MarkObjectPositionDirty(obj);
+                ObjHits_MarkObjectPositionDirty((int)obj);
                 gunpowderbarrel_launchAtTarget(obj, 1);
             }
             else if (lbl_803E42C0 == Player_GetLiftVelocityY((int)player)) /* no lift: gentle toss */
             {
-                ObjHits_SyncObjectPositionIfDirty(obj);
+                ObjHits_SyncObjectPositionIfDirty((int)obj);
                 gunpowderbarrel_launchAtTarget(obj, 0);
             }
             else if (state->fuseFrames == 0)
             {
-                ((GameObject*)obj)->anim.velocityX = state->throwVelX =
+                (obj)->anim.velocityX = state->throwVelX =
                     mathSinf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit);
-                ((GameObject*)obj)->anim.velocityY = state->throwVelY = lbl_803E42C0;
-                ((GameObject*)obj)->anim.velocityZ = state->throwVelZ =
+                (obj)->anim.velocityY = state->throwVelY = lbl_803E42C0;
+                (obj)->anim.velocityZ = state->throwVelZ =
                     mathCosf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit);
-                ((GameObject*)obj)->anim.localPosX =
+                (obj)->anim.localPosX =
                     lbl_803DBE80 * -mathSinf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX /
                         gGunpowderBarrelHalfAngleUnit) +
-                    ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosZ =
+                    (obj)->anim.localPosX;
+                (obj)->anim.localPosZ =
                     lbl_803DBE80 * -mathCosf(gGunpowderBarrelPi * (f32) ((GameObject*)player)->anim.rotX / gGunpowderBarrelHalfAngleUnit) +
-                    ((GameObject*)obj)->anim.localPosZ;
-                ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
+                    (obj)->anim.localPosZ;
+                ObjGroup_AddObject((int)obj, CFGUARDIAN_OBJGROUP);
             }
             /* faithful double-add: retail emits two adjacent ObjGroup_AddObject
              * (target 0x19b8/0x19c4) when the inner branch is taken. */
-            ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
+            ObjGroup_AddObject((int)obj, CFGUARDIAN_OBJGROUP);
         }
         gunpowderbarrel_updatePhysics((int*)obj);
     }
@@ -909,9 +909,9 @@ void gunpowderbarrel_update(int obj)
         {
             if (*(void* *)&state->linkedTimerObject != NULL)
             {
-                timer_forceStart(state->linkedTimerObject);
+                timer_forceStart((GameObject*)(state->linkedTimerObject));
             }
-            ObjGroup_RemoveObject(obj, CFGUARDIAN_OBJGROUP);
+            ObjGroup_RemoveObject((int)obj, CFGUARDIAN_OBJGROUP);
         }
         state->heldByCarryInterface = 1;
         ((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture = 1;
@@ -920,19 +920,19 @@ void gunpowderbarrel_update(int obj)
     }
     if (((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture != 0 && ((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
         {
-            state->throwVelX = ((GameObject*)obj)->anim.velocityX;
-            state->throwVelY = ((GameObject*)obj)->anim.velocityY;
-            state->throwVelZ = ((GameObject*)obj)->anim.velocityZ;
+            state->throwVelX = (obj)->anim.velocityX;
+            state->throwVelY = (obj)->anim.velocityY;
+            state->throwVelZ = (obj)->anim.velocityZ;
             state->throwVelY = lbl_803E42C0;
             ((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture = 0;
         }
     }
     if (*(void* *)&state->linkedTimerObject != NULL)
     {
-        if (timer_hasExpired(state->linkedTimerObject) != 0)
+        if (timer_hasExpired((GameObject*)(state->linkedTimerObject)) != 0)
         {
             state->detonateTrigger = 0xa;
         }
@@ -1037,9 +1037,9 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
  * (or the nearest one if 0), temporarily moves obj to that barrel's
  * position so saveGame_saveObjectPos latches the target slot, then
  * restores. */
-void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
+void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
 {
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
+    GunpowderBarrelState* state = (obj)->extra;
     u8* playerState;
     s16 stk[8];
     f32 fz;
@@ -1072,7 +1072,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
     if (((GpbConfigFlags*)&state->configFlags)->returnHome != 0)
     {
         int i;
-        GunpowderbarrelPlacement* params = *(GunpowderbarrelPlacement**)&((GameObject*)obj)->anim.placementData;
+        GunpowderbarrelPlacement* params = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
         int target = 0;
         u32* barrels;
         u32* p;
@@ -1084,7 +1084,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
             p = barrels;
             for (; i < count; i++)
             {
-                if (params->generatorLinkId == barrelgener_getLinkId(*p))
+                if (params->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
                 {
                     target = barrels[i];
                     break;
@@ -1094,20 +1094,20 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         }
         else
         {
-            target = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
+            target = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
         }
         if ((void*)target != NULL)
         {
-            sx = ((GameObject*)obj)->anim.localPosX;
-            sy = ((GameObject*)obj)->anim.localPosY;
-            sz = ((GameObject*)obj)->anim.localPosZ;
-            ((GameObject*)obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
+            sx = (obj)->anim.localPosX;
+            sy = (obj)->anim.localPosY;
+            sz = (obj)->anim.localPosZ;
+            (obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
+            (obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
+            (obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
             saveGame_saveObjectPos((int*)obj);
-            ((GameObject*)obj)->anim.localPosX = sx;
-            ((GameObject*)obj)->anim.localPosY = sy;
-            ((GameObject*)obj)->anim.localPosZ = sz;
+            (obj)->anim.localPosX = sx;
+            (obj)->anim.localPosY = sy;
+            (obj)->anim.localPosZ = sz;
         }
     }
 }

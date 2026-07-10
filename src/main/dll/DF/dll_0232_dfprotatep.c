@@ -84,7 +84,7 @@ extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);
 extern void vecRotateZXY(s16* rotation, f32* outVec);
-extern int ObjHits_GetPriorityHit(int obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
+extern int ObjHits_GetPriorityHit(GameObject* obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 /* .sdata2 constant pool */
 static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
@@ -385,8 +385,8 @@ void sfxplayer_update(int obj)
                 if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                 {
                     hitObj = 0;
-                    hitType =
-                        ObjHits_GetPriorityHit(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], &hitObj, 0x0, 0x0);
+                    hitType = ObjHits_GetPriorityHit((GameObject*)(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]),
+                                                     &hitObj, 0x0, 0x0);
                     if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET)
                     {
                         mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);

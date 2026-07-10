@@ -97,14 +97,14 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     ObjTextureRuntimeSlot* tex;
     int phase;
 
-    tex = objFindTexture((void*)obj, 0, 0);
+    tex = objFindTexture((GameObject*)obj, 0, 0);
     tex->offsetT += WCTEMPLEBRI_UV0_V_STEP;
     if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
         tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
     tex->offsetS += WCTEMPLEBRI_UV0_U_STEP;
     if (tex->offsetS > WCTEMPLEBRI_WARP_WRAP)
         tex->offsetS -= WCTEMPLEBRI_WARP_WRAP;
-    tex = objFindTexture((void*)obj, 1, 0);
+    tex = objFindTexture((GameObject*)obj, 1, 0);
     tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
     if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
         tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
@@ -192,16 +192,16 @@ void wctemplebri_free(void)
 {
 }
 
-void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wctemplebri_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    WCTempleBriState* state = ((GameObject*)obj)->extra;
+    WCTempleBriState* state = (obj)->extra;
 
     if (visible == 0 || state->active == 0)
     {
         return;
     }
 
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E90);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6E90);
 }
 
 void wctemplebri_hitDetect(void)

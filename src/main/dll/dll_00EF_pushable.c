@@ -111,7 +111,7 @@ extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f3
 extern int playerIsDisguised(void* player);
 extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
-extern int fn_80174668(int* obj, PushableState* state);
+extern int fn_80174668(GameObject* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
 extern void Obj_RemoveFromUpdateList(int* obj);
 extern f64 lbl_803E3530;
@@ -171,7 +171,7 @@ void fn_80174A80(GameObject* obj, PushableState* ext)
     ext->unk_F0 = fval;
     ext->nearestObj = NULL;
     mainSetBits(ext->gameBit, 0);
-    tex = objFindTexture((void*)obj, 0, 0);
+    tex = objFindTexture((GameObject*)obj, 0, 0);
 
     ext->eyePosX = ext->eyePosX + ext->eyeDriftSpeedX;
     eyePos = ext->eyePosX;
@@ -282,7 +282,7 @@ void fn_80174BFC(int obj, int ext)
                                 ((PushableState*)ext)->flags &= ~1;
                                 if (hit.id == ((PushableState*)ext)->requiredHitId)
                                 {
-                                    ObjTextureRuntimeSlot* tex = objFindTexture((void*)obj, 0, 0);
+                                    ObjTextureRuntimeSlot* tex = objFindTexture((GameObject*)obj, 0, 0);
                                     if (tex != NULL)
                                     {
                                         tex->textureId = 0x100;
@@ -623,11 +623,11 @@ void pushable_update(int* obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x21e:
-        if (fn_80174668(obj, state) == 0)
+        if (fn_80174668((GameObject*)(obj), state) == 0)
             break;
         return;
     case 0x411:
-        if (fn_80174668(obj, state) == 0)
+        if (fn_80174668((GameObject*)(obj), state) == 0)
             break;
         return;
     case 0x54a:
@@ -829,7 +829,7 @@ void pushable_init(s16* obj, char* def)
         fn_80174A80((GameObject*)(obj), state);
         break;
     case 0x7df:
-        fn_80174588(obj, state);
+        fn_80174588((GameObject*)(obj), state);
         break;
     case 0x1cb:
         if (((PushableObjectDef*)def)->gameBit > -1 && mainGetBit(((PushableObjectDef*)def)->gameBit) != 0)

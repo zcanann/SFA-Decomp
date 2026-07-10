@@ -44,7 +44,7 @@ extern f32 lbl_803E4B00;
 extern const f32 lbl_803E4B04;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
+extern int ObjHits_GetPriorityHit(GameObject* obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void ObjHits_AddContactObject(int obj, int contactObj);
 extern void saveGame_saveObjectPos(int obj);
@@ -72,7 +72,7 @@ void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AD8);
 }
 
-void dll_1DA_hitDetect(int obj)
+void dll_1DA_hitDetect(GameObject* obj)
 {
 
     void* hi;
@@ -82,10 +82,10 @@ void dll_1DA_hitDetect(int obj)
     if (hit == 0xE)
     {
         player = Obj_GetPlayerObject();
-        (void)Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)((int)player + 0x18));
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)hi)->anim.velocityX * (k = lbl_803E4ADC);
-        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)hi)->anim.velocityZ * k;
-        Sfx_PlayFromObject(obj, SFXTRIG_en_birdymornin11_1f9);
+        (void)Vec_distance((float*)&(obj)->anim.worldPosX, (float*)((int)player + 0x18));
+        (obj)->anim.velocityX = ((GameObject*)hi)->anim.velocityX * (k = lbl_803E4ADC);
+        (obj)->anim.velocityZ = ((GameObject*)hi)->anim.velocityZ * k;
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_birdymornin11_1f9);
     }
 }
 

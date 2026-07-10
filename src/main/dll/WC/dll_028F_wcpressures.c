@@ -285,7 +285,7 @@ void wcpressures_update(int obj)
     }
     {
         ObjTextureRuntimeSlot* tex =
-            objFindTexture((void*)obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
+            objFindTexture((GameObject*)obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
         if (tex != 0)
         {
             tex->textureId =

@@ -102,11 +102,11 @@ void SidekickBall_free(int obj)
     mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
 }
 
-void SidekickBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (((GameObject*)obj)->unkF8 == 0 || visible == -1)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E36A0);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E36A0);
     }
 }
 
@@ -128,12 +128,12 @@ int fn_80179650(int* obj)
     return result;
 }
 
-void fn_80179678(int obj)
+void fn_80179678(GameObject* obj)
 {
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->fadeTimer = lbl_803E369C;
     state->ballMode = SIDEKICK_BALL_IDLE;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
     state->hittableLatch = 0;
 }
 
@@ -154,7 +154,7 @@ void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
     state->launchZ = obj->anim.localPosZ;
 }
 
-void trickyBallFn_801793b8(int obj, u8* paramsRaw)
+void trickyBallFn_801793b8(GameObject* obj, u8* paramsRaw)
 {
 
     SidekickBallState* params = (SidekickBallState*)paramsRaw;
@@ -179,7 +179,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
         return;
     }
 
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 
     getYButtonItem(&yItem);
@@ -257,7 +257,7 @@ end:
 void SidekickBall_update(u8* self)
 {
     extern int ObjTrigger_IsSet(u8 * obj);
-    extern void trickyBallFn_801793b8(int obj, u8* state);
+    extern void trickyBallFn_801793b8(GameObject * obj, u8 * state);
     SidekickBallState* state;
     u8* player;
     u8* other;
@@ -330,7 +330,7 @@ void SidekickBall_update(u8* self)
         }
         break;
     case SIDEKICK_BALL_IDLE:
-        trickyBallFn_801793b8((int)self, (u8*)state);
+        trickyBallFn_801793b8((GameObject*)self, (u8*)state);
         break;
     default:
         break;

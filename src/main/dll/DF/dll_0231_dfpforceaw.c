@@ -53,7 +53,7 @@ extern u32 ObjMsg_SendToObject();
 extern void fn_80206C18(int* obj);
 extern void fn_80206968(int* obj);
 
-void TrickyCurve_updateBurstTrigger(int obj)
+void TrickyCurve_updateBurstTrigger(GameObject* obj)
 {
     u8* state;
     int player;
@@ -67,15 +67,15 @@ void TrickyCurve_updateBurstTrigger(int obj)
     TrickyCurveBurstFxParams fxParams;
     int burstParticles;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = Obj_GetPlayerObject();
     insideCount = 0;
     xSide = 0;
     ySide = 0;
     zSide = 0;
-    dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    dx = ((GameObject*)player)->anim.localPosX - (obj)->anim.localPosX;
+    dy = ((GameObject*)player)->anim.localPosY - (obj)->anim.localPosY;
+    dz = ((GameObject*)player)->anim.localPosZ - (obj)->anim.localPosZ;
 
     if ((((TrickyCurveObjState*)state)->gateGameBit != -1) &&
         (mainGetBit(((TrickyCurveObjState*)state)->gateGameBit) != 0))
@@ -173,7 +173,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
             } while (burstParticles-- != 0);
         }
         mainSetBits(((TrickyCurveObjState*)state)->triggerGameBit, 1);
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_fball2_c_1c9);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_fball2_c_1c9);
     }
 
     state[0x10] = xSide;
@@ -209,7 +209,7 @@ void TrickyCurve_update(int* obj)
     u32 state = inner[0xe];
     if (state == 0)
     {
-        TrickyCurve_updateBurstTrigger((int)obj);
+        TrickyCurve_updateBurstTrigger((GameObject*)obj);
     }
     else if (state == 1)
     {

@@ -78,7 +78,7 @@ void SB_Propeller_hitDetect(GameObject* obj)
     object->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
-void SB_Propeller_update(int obj)
+void SB_Propeller_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim;
     int camA;
@@ -101,13 +101,13 @@ void SB_Propeller_update(int obj)
     } stk;
 
     objAnim = (ObjAnimComponent*)obj;
-    object = (GameObject*)obj;
+    object = obj;
     state = object->extra;
     camA = SB_GALLEON_VTBL(*(int*)&objAnim->parent)->getStage(*(int*)&objAnim->parent);
     camB = SB_GALLEON_VTBL(*(int*)&objAnim->parent)->getPhase(*(int*)&objAnim->parent);
     if (((state->health != 0) && (camB < 6)) && (objAnim->seqId != SB_PROPELLER_SEQ_ID))
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, SB_PROPELLER_SFX_LOOP);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, SB_PROPELLER_SFX_LOOP);
     }
     camC = DBprotection_getCameraState(*(int*)&objAnim->parent);
     if ((camC < 2) && (state->health <= 0))
@@ -130,7 +130,7 @@ void SB_Propeller_update(int obj)
         {
             stk.scale = lbl_803E5818;
             stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition(obj, 0, &stk.x, &stk.y, &stk.z, 0);
+            ObjPath_GetPointWorldPosition((int)obj, 0, &stk.x, &stk.y, &stk.z, 0);
             stk.x = stk.x - objAnim->worldPosX;
             stk.y = stk.y - objAnim->worldPosY;
             stk.z = stk.z - objAnim->worldPosZ;
@@ -168,17 +168,17 @@ void SB_Propeller_update(int obj)
              ((camA == 2 || (camA == 5)))) &&
             (objAnim->seqId == SB_PROPELLER_SEQ_ID))
         {
-            Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
-            Sfx_PlayFromObject(obj, SB_PROPELLER_SFX_HIT);
+            Obj_SetModelColorFadeRecursive((int)obj, 0xf, 200, 0, 0, 1);
+            Sfx_PlayFromObject((int)obj, SB_PROPELLER_SFX_HIT);
             state->health -= 1;
             if (state->health <= 0)
             {
                 state->health = 0;
                 SB_GALLEON_VTBL(*(int*)&objAnim->parent)->onPartDestroyed(*(int*)&objAnim->parent);
-                ObjHits_DisableObject(obj);
+                ObjHits_DisableObject((int)obj);
                 objAnim->flags = objAnim->flags | OBJANIM_FLAG_HIDDEN;
-                spawnExplosion(obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
-                Sfx_PlayFromObject(obj, SB_PROPELLER_SFX_DESTROYED);
+                spawnExplosion((int)obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
+                Sfx_PlayFromObject((int)obj, SB_PROPELLER_SFX_DESTROYED);
             }
         }
         if (object->unkF4 == 0)

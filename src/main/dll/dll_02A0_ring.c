@@ -75,14 +75,14 @@ void ring_hitDetect(void)
 {
 }
 
-void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    RingState* state = ((GameObject*)obj)->extra;
+    RingState* state = (obj)->extra;
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
     {
         queueGlowRender(state->light);
     }
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E70B0);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E70B0);
 }
 
 void ring_release(void)
@@ -93,12 +93,12 @@ void ring_initialise(void)
 {
 }
 
-void ring_init(int obj, int setup)
+void ring_init(GameObject* obj, int setup)
 {
-    RingState* state = ((GameObject*)obj)->extra;
+    RingState* state = (obj)->extra;
     RingPlacement* p = (RingPlacement*)setup;
     RingFlags* f = &state->flags;
-    s16 type = ((GameObject*)obj)->anim.seqId;
+    s16 type = (obj)->anim.seqId;
     if (type == RING_OBJ_ARW_SILVER)
     {
         state->mode = RING_MODE_SILVER;
@@ -129,22 +129,22 @@ void ring_init(int obj, int setup)
         state->route == RING_ROUTE_MOVING_SHOT_B)
     {
         f->bit80 = 0;
-        Obj_SetActiveModelIndex(obj, RING_MODEL_ALT);
+        Obj_SetActiveModelIndex((int)obj, RING_MODEL_ALT);
     }
     else
     {
         f->bit80 = 1;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
     }
     state->linkId = p->linkId;
     state->pullHeight = (f32)p->pullHeight / lbl_803E70C4;
-    state->origX = ((GameObject*)obj)->anim.localPosX;
-    state->origY = ((GameObject*)obj)->anim.localPosY;
+    state->origX = (obj)->anim.localPosX;
+    state->origY = (obj)->anim.localPosY;
     if (p->modeFlag != 0)
         f->bit20 = 1;
     else
         f->bit20 = 0;
-    ((GameObject*)obj)->anim.rotX = -32768;
+    (obj)->anim.rotX = -32768;
     if (state->mode == RING_MODE_WC_MOON || state->mode == RING_MODE_WC_SUN)
     {
         f->bit10 = 1;
@@ -152,8 +152,8 @@ void ring_init(int obj, int setup)
     }
     else
     {
-        ((GameObject*)obj)->anim.flags |= RING_OBJFLAG_HIDDEN;
-        ((GameObject*)obj)->anim.alpha = 0;
+        (obj)->anim.flags |= RING_OBJFLAG_HIDDEN;
+        (obj)->anim.alpha = 0;
     }
 }
 
@@ -220,7 +220,7 @@ void ring_update(int obj)
         {
         case RING_ROUTE_MOVING_SHOT_A:
         case RING_ROUTE_MOVING_SHOT_B:
-            if (ObjHits_GetPriorityHit(obj, &hitA, 0, 0) != 0 && (void*)(hit = hitA) != NULL &&
+            if (ObjHits_GetPriorityHit((GameObject*)(obj), &hitA, 0, 0) != 0 && (void*)(hit = hitA) != NULL &&
                 (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A ||
                  ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
             {
@@ -238,7 +238,7 @@ void ring_update(int obj)
             arwbombcoll_updateMovingAxis((GameObject*)(obj), state);
             break;
         case RING_ROUTE_STATIONARY_SHOT:
-            if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (void*)(hit = hitB) != NULL &&
+            if (ObjHits_GetPriorityHit((GameObject*)(obj), &hitB, 0, 0) != 0 && (void*)(hit = hitB) != NULL &&
                 (((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_A ||
                  ((GameObject*)hit)->anim.seqId == RING_SHOT_TYPE_B))
             {

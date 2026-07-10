@@ -71,10 +71,10 @@ int MagicLight_getObjectTypeId(void)
     return 0x0;
 }
 
-void MagicLight_free(int obj)
+void MagicLight_free(GameObject* obj)
 {
-    MagicLightState* state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW)
+    MagicLightState* state = (obj)->extra;
+    if ((obj)->anim.seqId != MAGICLIGHT_SEQ_GLOW)
     {
         if ((s8)state->inRange != 0)
         {
@@ -85,11 +85,11 @@ void MagicLight_free(int obj)
 }
 
 #pragma scheduling on
-void MagicLight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void MagicLight_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
+    if ((obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

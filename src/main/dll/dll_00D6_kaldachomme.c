@@ -149,14 +149,14 @@ void KaldaChompMe_hitDetect(void)
 {
 }
 
-void KaldaChompMe_update(int obj)
+void KaldaChompMe_update(GameObject* obj)
 {
     f32 target;
     f32 current;
     f32 step;
     KaldaChompMeState* extra;
 
-    extra = ((GameObject*)obj)->extra;
+    extra = (obj)->extra;
     current = extra->progress;
     target = extra->targetProgress;
     if (current != target)
@@ -185,18 +185,18 @@ void KaldaChompMe_update(int obj)
             }
         }
     }
-    ObjAnim_SetCurrentMove(obj, extra->moveId, extra->progress, 0);
+    ObjAnim_SetCurrentMove((int)obj, extra->moveId, extra->progress, 0);
 }
 
-void KaldaChompMe_init(int obj, int params)
+void KaldaChompMe_init(GameObject* obj, int params)
 {
     KaldaChompMePlacement* placement = (KaldaChompMePlacement*)params;
 
-    ((GameObject*)obj)->anim.rotZ = (s16)(placement->yawBits << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(placement->pitchBits << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)(placement->rollBits << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | KALDACHOMME_OBJFLAG_HITDETECT_DISABLED);
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E30D4, 0);
+    (obj)->anim.rotZ = (s16)(placement->yawBits << 8);
+    (obj)->anim.rotY = (s16)(placement->pitchBits << 8);
+    (obj)->anim.rotX = (s16)(placement->rollBits << 8);
+    (obj)->objectFlags = (u16)((obj)->objectFlags | KALDACHOMME_OBJFLAG_HITDETECT_DISABLED);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E30D4, 0);
 }
 
 void KaldaChompMe_release(void)

@@ -97,9 +97,9 @@ void dll_19C_update(int* obj)
     }
 }
 
-void dll_19C_init(int obj, u8* initData)
+void dll_19C_init(GameObject *obj, u8* initData)
 {
-    register int self = obj;
+    register int self = (int)obj;
     register int state = *(int*)&((GameObject*)self)->extra;
     *(short*)self = (short)((int)(signed char)initData[0x1e] << 8);
     ((GameObject*)self)->unkF8 = 0;

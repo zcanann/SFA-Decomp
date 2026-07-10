@@ -100,11 +100,11 @@ void blasted_hitDetect(void)
  * index, and on the final piece latches the GameBit, fires the trigger,
  * and swaps to the destroyed model. */
 #pragma opt_loop_invariants off
-void blasted_update(int obj)
+void blasted_update(GameObject* obj)
 {
     int i;
-    BlastedTargetSetup* setup = (BlastedTargetSetup*)((GameObject*)obj)->anim.placementData;
-    BlastedTargetState* state = ((GameObject*)obj)->extra;
+    BlastedTargetSetup* setup = (BlastedTargetSetup*)(obj)->anim.placementData;
+    BlastedTargetState* state = (obj)->extra;
     s16 total = setup->pieceCount;
 
     if (state->triggerFired != 0)
@@ -113,18 +113,18 @@ void blasted_update(int obj)
     }
     if ((u32)mainGetBit(setup->completedGameBit) != 0)
     {
-        state->triggerFired = fn_801A27B8((GameObject*)(obj), setup->triggerId);
+        state->triggerFired = fn_801A27B8(obj, setup->triggerId);
         return;
     }
     {
-        for (i = 0; i < ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
+        for (i = 0; i < ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->priorityHitCount; i++)
         {
             int cnt;
             u32 hitObject;
             int hitType;
             int found;
-            hitType = *(s8*)((int)((GameObject*)obj)->anim.hitReactState + i + 117);
-            hitObject = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
+            hitType = *(s8*)((int)(obj)->anim.hitReactState + i + 117);
+            hitObject = ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitObjects[i];
             found = 0;
             if (hitType != 5)
             {
@@ -166,14 +166,14 @@ void blasted_update(int obj)
                         mainSetBits(gbIndex + BLASTED_GAMEBIT_DAMAGE_BASE, 0);
                     }
                     mainSetBits(setup->completedGameBit, 1);
-                    fn_801A27B8((GameObject*)(obj), setup->triggerId);
-                    Obj_SetActiveModelIndex(obj, 2);
+                    fn_801A27B8(obj, setup->triggerId);
+                    Obj_SetActiveModelIndex((int)obj, 2);
                     state->triggerFired = 1;
                 }
                 else
                 {
                     state->damageStep++;
-                    Obj_SetActiveModelIndex(obj, state->damageStep);
+                    Obj_SetActiveModelIndex((int)obj, state->damageStep);
                 }
             }
         }
@@ -181,17 +181,17 @@ void blasted_update(int obj)
 }
 #pragma opt_loop_invariants reset
 
-void blasted_init(int obj, int placement)
+void blasted_init(GameObject* obj, int placement)
 {
     BlastedTargetSetup* setup = (BlastedTargetSetup*)placement;
-    int* state = ((GameObject*)obj)->extra;
+    int* state = (obj)->extra;
     int* targ;
     s16 gbid;
     u8 progress;
 
     state[0xc / 4] = 0;
     objSetSlot((int*)obj, 0x51);
-    targ = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    targ = *(int**)&(obj)->anim.hitReactState;
     ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
     ((BlastedState*)state)->pieceCount = (u8)setup->pieceCount;
     gbid = setup->progressGameBit;
@@ -201,14 +201,14 @@ void blasted_init(int obj, int placement)
         ((BlastedState*)state)->gameBitLatchState = progress;
         if (progress != 0)
         {
-            Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->gameBitLatchState);
+            Obj_SetActiveModelIndex((int)obj, (int)((BlastedState*)state)->gameBitLatchState);
         }
     }
     mainSetBits(BLASTED_GAMEBIT_DAMAGE_BASE, 1);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
+    (obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
     if ((u32)mainGetBit(setup->completedGameBit) != 0)
     {
-        state[0xc / 4] = fn_801A27B8((GameObject*)(obj), (int)setup->triggerId);
+        state[0xc / 4] = fn_801A27B8(obj, (int)setup->triggerId);
     }
 }
 

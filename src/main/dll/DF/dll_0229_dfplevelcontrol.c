@@ -34,16 +34,16 @@ extern s16 lbl_803DC180;
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern int dbstealerworm_stateHandlerB06();
-int dbstealerworm_stateHandlerB06(int obj, int p2);
+int dbstealerworm_stateHandlerB06(GameObject* obj, int p2);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
-extern void fn_80204098(int);
+extern void fn_80204098(GameObject*);
 extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
 extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
 
-void fn_80204098(int obj)
+void fn_80204098(GameObject* obj)
 {
-    DfpLevelControlState* state = ((GameObject*)obj)->extra;
+    DfpLevelControlState* state = (obj)->extra;
     void* player;
     s16 i;
 
@@ -62,12 +62,12 @@ void fn_80204098(int obj)
     }
     if (mainGetBit(0x5e3) == 0 && mainGetBit(0x5e0) != 0 && mainGetBit(0x5e1) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_espk2_c);
         mainSetBits(0x5e3, 1);
     }
     if (mainGetBit(0x792) == 0 && mainGetBit(0xb8c) != 0 && mainGetBit(0xb8c) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_espk2_c);
         mainSetBits(0x792, 1);
     }
     if (mainGetBit(0xe58) == 0)
@@ -98,19 +98,19 @@ void fn_80204098(int obj)
     }
     if (mainGetBit(0x7a1) != 0)
     {
-        if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6) == 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus((obj)->anim.mapEventSlot, 6) == 0)
         {
-            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
+            (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 6, 1);
         }
     }
 }
 
-void fn_80204320(int obj)
+void fn_80204320(GameObject* obj)
 {
     DfpLevelControlState* sub;
     void* player;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = (obj)->extra;
     player = Obj_GetPlayerObject();
     if (lbl_803DC182 != 0)
     {
@@ -207,11 +207,11 @@ void DFP_LevelControl_hitDetect(void)
 {
 }
 
-void DFP_LevelControl_update(int obj)
+void DFP_LevelControl_update(GameObject* obj)
 {
     extern void* Obj_GetPlayerObject(void);
 
-    DfpLevelControlState* state = ((GameObject*)obj)->extra;
+    DfpLevelControlState* state = (obj)->extra;
     char* player;
     u8 b1;
     u8 b2;
@@ -235,7 +235,7 @@ void DFP_LevelControl_update(int obj)
         mainSetBits(0x5e8, 1);
     }
     coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
-    mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    mode = (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
     switch (mode)
     {
     case 1:
@@ -261,26 +261,26 @@ void DFP_LevelControl_update(int obj)
     mainSetBits(0xdcf, 0);
 }
 
-void DFP_LevelControl_init(int obj, int param2)
+void DFP_LevelControl_init(GameObject* obj, int param2)
 {
 
-    DfpLevelControlState* state = ((GameObject*)obj)->extra;
+    DfpLevelControlState* state = (obj)->extra;
     int mode;
-    ObjGroup_AddObject(obj, DFPLEVELCONTROL_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DFPLEVELCONTROL_OBJGROUP);
     ((DfpFlags7*)&state->flags07)->b80 = mainGetBit(0xd5d);
     ((DfpFlags7*)&state->flags07)->b40 = mainGetBit(0xd59);
     ((DfpFlags7*)&state->flags07)->b20 = mainGetBit(0xd5a);
-    ((GameObject*)obj)->animEventCallback = (void*)DFP_LevelControl_SeqFn;
+    (obj)->animEventCallback = (void*)DFP_LevelControl_SeqFn;
     state->mode = 1;
     mode = *(s16*)(param2 + 0x1a);
     if (mode != 0 && mode <= 2)
     {
         state->mode = mode;
     }
-    (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
     unlockLevel(0, 0, 1);
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPLEVELCONTROL_OBJFLAG_HIDDEN;
-    if (((GameObject*)obj)->anim.mapEventSlot == 0x15)
+    (obj)->objectFlags = (obj)->objectFlags | DFPLEVELCONTROL_OBJFLAG_HIDDEN;
+    if ((obj)->anim.mapEventSlot == 0x15)
     {
         mainSetBits(0xdce, 0);
     }

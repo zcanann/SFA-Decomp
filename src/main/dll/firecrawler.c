@@ -173,8 +173,7 @@ extern void lightSetField4D();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
 extern void modelLightStruct_setAffectsAabbLightSelection();
-extern void sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c,
-                                                 f32 spd);
+extern void sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
 extern float powfBitEstimate(float x, float y);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E2C74;
@@ -1472,7 +1471,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
     }
 }
 
-void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
+void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, int damage)
 {
     typedef struct
     {
@@ -1503,18 +1502,18 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         {
             return;
         }
-        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
+        if ((obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
                 case 0x416:
-                    Sfx_PlayFromObject(obj, SFXTRIG_snort);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
                     break;
                 case 0:
                 case 0x69:
-                    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_stftest);
                     break;
                 }
                 gCrawlerHitSfxTimer = lbl_803E2BAC;
@@ -1522,15 +1521,15 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_swd_var);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swd_var);
         }
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
         return;
     }
 
-    if (idx == 1 && ((GameObject*)obj)->childObjs[0] != NULL)
+    if (idx == 1 && (obj)->childObjs[0] != NULL)
     {
-        firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+        firepipe_clearLinkedUpdateFlag(*(int*)&(obj)->childObjs[0]);
     }
     ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x40;
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
@@ -1553,30 +1552,30 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         Baddie_SetMove((int*)obj, state, tbl[step].moveId, tbl[step].spd, 0, tbl[step].mask & 0xff);
         ((FCVars*)state)->flagsC = tbl[step].flagC;
-        ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
+        (obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
         ((FCVars*)state)->reactStep = tbl[step].next9;
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
-        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
+        if ((obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
                 case 0x416:
-                    Sfx_PlayFromObject(obj, SFXTRIG_snort);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
                     break;
                 case 0:
                 case 0x69:
-                    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_stftest);
                     break;
                 }
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_var);
                 gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_stftest_var);
         }
         if (damage > ((BaddieState*)state)->hitCounter)
         {
@@ -1588,7 +1587,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         if (((BaddieState*)state)->hitCounter == 0 && ((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
-            crawler_checkNearbyActive(obj, state);
+            crawler_checkNearbyActive((int)obj, state);
         }
         return;
     }
@@ -1600,61 +1599,61 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         u8 v;
         Baddie_SetMove((int*)obj, state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
         ((FCVars*)state)->flagsC = tbl[1].flagC;
-        ((GameObject*)obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
+        (obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
         ((FCVars*)state)->reactStep = tbl[1].next9;
         v = ((BaddieState*)state)->inWhirlpoolGroup;
         if (v == 0)
         {
             ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32)((FCVars*)state)->hitCountScalar;
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
-            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
+            if ((obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
                 {
                     switch (((GameObject*)attacker)->anim.seqId)
                     {
                     case 0x416:
-                        Sfx_PlayFromObject(obj, SFXTRIG_snort);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
                         break;
                     case 0:
                     case 0x69:
-                        Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_stftest);
                         break;
                     }
-                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_var);
                     gCrawlerHitSfxTimer = lbl_803E2BAC;
                 }
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_stftest_var);
             }
             return;
         }
         if (v == 1)
         {
             ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32)((FCVars*)state)->hitCountScalar;
-            if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
+            if ((obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
                 {
                     switch (((GameObject*)attacker)->anim.seqId)
                     {
                     case 0x416:
-                        Sfx_PlayFromObject(obj, SFXTRIG_snort);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
                         break;
                     case 0:
                     case 0x69:
-                        Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_stftest);
                         break;
                     }
-                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_var);
                     gCrawlerHitSfxTimer = lbl_803E2BAC;
                 }
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_swd_var);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_swd_var);
             }
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
         }
@@ -1663,27 +1662,27 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
 
     if (cmd != 0x11)
     {
-        if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
+        if ((obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER)
         {
             if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
             {
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
                 case 0x416:
-                    Sfx_PlayFromObject(obj, SFXTRIG_snort);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
                     break;
                 case 0:
                 case 0x69:
-                    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_stftest);
                     break;
                 }
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_var);
                 gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_swd_var);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swd_var);
         }
     }
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
@@ -1783,9 +1782,7 @@ void crawler_updateC(s16* obj, u8* state)
                 }
                 else if (oct == 0 || oct == 7)
                 {
-                    scale = 2.0f *
-                                (1.0f - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) +
-                            1.0f;
+                    scale = 2.0f * (1.0f - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / lbl_803E2BB8) + 1.0f;
                 }
             }
             {
@@ -2234,8 +2231,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
-        sidekickToy_accelerateTowardTarget3D((GameObject*)(obj), base->posX, base->posY, base->posZ,
-                                             lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50, ((BaddieState*)state)->unk304);
+        sidekickToy_accelerateTowardTarget3D((GameObject*)(obj), base->posX, base->posY, base->posZ, lbl_803E2C48,
+                                             lbl_803E2C4C, lbl_803E2C50, ((BaddieState*)state)->unk304);
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)

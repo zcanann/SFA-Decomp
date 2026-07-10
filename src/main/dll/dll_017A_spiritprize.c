@@ -189,7 +189,7 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void SpiritPrize_update(int obj)
+void SpiritPrize_update(GameObject* obj)
 {
     extern int Obj_GetPlayerObject(void);
     u8* params;
@@ -200,8 +200,8 @@ void SpiritPrize_update(int obj)
     int* objects;
     int i;
 
-    params = *(u8**)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    params = *(u8**)&(obj)->anim.placementData;
+    state = (obj)->extra;
     if (params == NULL)
     {
         return;
@@ -229,7 +229,7 @@ void SpiritPrize_update(int obj)
     }
 
     objectIndex = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)lbl_803DB411);
-    if (objectIndex != 0 && ((GameObject*)obj)->seqIndex == -2)
+    if (objectIndex != 0 && (obj)->seqIndex == -2)
     {
         int matchingObj;
         int prizeId;
@@ -259,8 +259,8 @@ void SpiritPrize_update(int obj)
             ((GameObject*)matchingObj)->seqIndex = -1;
             (*gObjectTriggerInterface)->endSequence(prizeId);
         }
-        ((GameObject*)obj)->seqIndex = -1;
-        Obj_FreeObject(obj);
+        (obj)->seqIndex = -1;
+        Obj_FreeObject((int)obj);
     }
 
     state->sfxTimer -= timeDelta;
@@ -270,11 +270,11 @@ void SpiritPrize_update(int obj)
 
         player = Obj_GetPlayerObject();
         state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
-        if (((GameObject*)obj)->anim.mapEventSlot == -1 &&
+        if ((obj)->anim.mapEventSlot == -1 &&
             ((void*)player == NULL ||
              coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xb))
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_pda);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_pda);
         }
     }
 }

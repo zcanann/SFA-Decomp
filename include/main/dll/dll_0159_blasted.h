@@ -46,8 +46,8 @@ int blasted_getObjectTypeId(void);
 void blasted_free(void);
 void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 void blasted_hitDetect(void);
-void blasted_update(int obj);
-void blasted_init(int obj, int placement);
+void blasted_update(GameObject* obj);
+void blasted_init(GameObject* obj, int placement);
 void blasted_release(void);
 void blasted_initialise(void);
 

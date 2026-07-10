@@ -129,7 +129,7 @@ void imspacethruster_update(GameObject* obj)
             ((void (*)(int, f32, int))((void**)*(void**)*(int*)(*(int*)&obj->anim.parent + 0x68))[10])(
                 *(int*)&obj->anim.parent, weight, state->kind);
         }
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((GameObject*)(obj), 0, 0);
         scroll = -tex->offsetT;
         scroll += 0x100;
         if (scroll > 0x800)
@@ -137,7 +137,7 @@ void imspacethruster_update(GameObject* obj)
             scroll -= 0x800;
         }
         tex->offsetT = -scroll;
-        tex = objFindTexture(obj, 1, 0);
+        tex = objFindTexture((GameObject*)(obj), 1, 0);
         scroll = -tex->offsetT;
         scroll += 0xa0;
         if (scroll > 0x800)

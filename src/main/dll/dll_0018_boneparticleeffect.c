@@ -437,7 +437,7 @@ void boneParticleEffect_initialise(void)
     }
 }
 
-void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src)
+void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraArg, u8 prob, short* src)
 {
     void* model;
     int i;
@@ -458,9 +458,9 @@ void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8
             data.unk0 = 0;
             mtx = ObjModel_GetJointMatrix(model, i);
             PSMTXMultVec(mtx, &data.x, &data.x);
-            data.x = data.x - ((GameObject*)obj)->anim.worldPosX;
-            data.y = data.y - ((GameObject*)obj)->anim.worldPosY;
-            data.z = data.z - ((GameObject*)obj)->anim.worldPosZ;
+            data.x = data.x - (obj)->anim.worldPosX;
+            data.y = data.y - (obj)->anim.worldPosY;
+            data.z = data.z - (obj)->anim.worldPosZ;
             data.x = data.x + playerMapOffsetX;
             data.z = data.z + playerMapOffsetZ;
             if (src != NULL)

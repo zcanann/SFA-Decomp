@@ -67,13 +67,13 @@ STATIC_ASSERT(offsetof(DrcreatorState, velocityY) == 0x28);
 STATIC_ASSERT(offsetof(DrcreatorState, velocityZ) == 0x2C);
 STATIC_ASSERT(offsetof(DrcreatorState, creatorObj) == 0xC4);
 
-int DR_Creator_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int DR_Creator_getExtraSize(void);
 int DR_Creator_getObjectTypeId(void);
 void DR_Creator_free(void);
 void DR_Creator_render(void);
 void DR_Creator_hitDetect(void);
-void DR_Creator_update(int obj);
+void DR_Creator_update(GameObject* obj);
 void DR_Creator_init(GameObject* obj, char* arg);
 void DR_Creator_release(void);
 void DR_Creator_initialise(void);

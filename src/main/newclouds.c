@@ -358,7 +358,7 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
     {
         layer = (int*)Shader_getLayer(
             ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(lbl_8039AB28.mainCloudObj), 0), 0);
-        tex = objFindTexture(lbl_8039AB28.mainCloudObj, 0, 0);
+        tex = objFindTexture((GameObject*)(lbl_8039AB28.mainCloudObj), 0, 0);
         if (tex != NULL)
         {
             f32 scale = lbl_803DF2B0;

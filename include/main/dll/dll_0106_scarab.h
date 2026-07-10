@@ -13,6 +13,6 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 
-int scarab_sweptCollide(int obj);
+int scarab_sweptCollide(GameObject* obj);
 
 #endif

@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_026F_DRGENERATOR_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 typedef struct DrgeneratorPlacement
@@ -36,7 +37,7 @@ int drgenerator_getObjectTypeId(void);
 void drgenerator_free(int obj);
 void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void drgenerator_hitDetect(int obj);
-void drgenerator_update(int obj);
+void drgenerator_update(GameObject* obj);
 void drgenerator_init(int obj, char* arg);
 void drgenerator_release(void);
 void drgenerator_initialise(void);

@@ -32,9 +32,9 @@ extern void objRenderFn_80041018(int* obj);
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
 
-int fn_801B17F4(int obj, int delta)
+int fn_801B17F4(GameObject *obj, int delta)
 {
-    DimicewallState* inner = ((GameObject*)obj)->extra;
+    DimicewallState* inner = (obj)->extra;
     inner->hp = (s8)(inner->hp - delta);
     return inner->hp <= 0;
 }
@@ -104,14 +104,14 @@ void dimicewall_update(int* obj)
     }
 }
 
-void dimicewall_init(int obj, s8* p)
+void dimicewall_init(GameObject *obj, s8* p)
 {
-    char* inner = ((GameObject*)obj)->extra;
+    char* inner = (obj)->extra;
     ((DimicewallState*)inner)->hp = (s8) * (s16*)(p + 0x1a);
     if (((DimicewallPlacement*)p)->shatterGameBit != -1)
     {
         ((DimicewallState*)inner)->shattered = mainGetBit(((DimicewallPlacement*)p)->shatterGameBit);
     }
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject*)obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
+    (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
+    (obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
 }

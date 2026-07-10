@@ -5,6 +5,7 @@
  * driven sequence-flag word (gDIMbossSequenceFlags).
  */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
+#include "main/game_object.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/effect_interfaces.h"
@@ -67,7 +68,7 @@ extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                  u32 p4, u32 p5, f32 scale);
 
 extern void queueGlowRender(void* effect);
-extern void dll_2E_func06(DIMbossObject* obj, void* animController, int p3);
+extern void dll_2E_func06(GameObject *obj, void* animController, int p3);
 extern u32 dll_2E_func03();
 extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
@@ -204,7 +205,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
         return 0;
     }
 
-    dll_2E_func07(obj, animUpdate, animScratch->animController, 1, 1);
+    dll_2E_func07((GameObject*)(obj), animUpdate, animScratch->animController, 1, 1);
     for (eventIndex = 0; eventIndex < (int)(u32)animUpdate->eventCount; eventIndex = eventIndex + 1)
     {
         switch (animUpdate->eventIds[eventIndex])
@@ -481,7 +482,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
 
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
-    dll_2E_func06(obj, gDIMbossAnimController, 0);
+    dll_2E_func06((GameObject*)(obj), gDIMbossAnimController, 0);
 
     effect = runtime->topState->effect;
     if (effect != NULL && effect->glowType != 0 && effect->enabled != 0)
@@ -652,7 +653,7 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     lbl_803DDB84 = 0;
     gDIMbossSequenceFlags = 0;
     mainSetBits(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
-    dll_2E_func05(obj, gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
+    dll_2E_func05((GameObject*)(obj), gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
     dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
     *animFlagsByte |= 8;

@@ -72,7 +72,7 @@ STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 #define DFPOBJCREATOR_CHILD_OBJ 0x71b
 
 extern int dbstealerworm_stateHandlerA02();
-int dbstealerworm_stateHandlerA02(int obj, int p2);
+int dbstealerworm_stateHandlerA02(GameObject* obj, int p2);
 
 int DFP_ObjCreator_getExtraSize(void)
 {

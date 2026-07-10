@@ -71,7 +71,7 @@ extern f32 lbl_803E4A64;
 extern f32 lbl_803E4A68;
 extern f32 lbl_803E4A6C;
 
-static inline int* DIM2snowball_GetActiveModel(void* obj)
+static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
@@ -127,11 +127,11 @@ int dim2conveyor_getObjectTypeId(void) { return 0x0; }
 
 void dim2conveyor_free(int obj) { ObjGroup_RemoveObject(obj, OBJ_GROUP_CONVEYORS); }
 
-void dim2conveyor_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dim2conveyor_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A58);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4A58);
 }
 
 void dim2conveyor_hitDetect(void)

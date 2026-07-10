@@ -82,7 +82,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if ((state->flags & 1) != 0)
         {
-            tex = objFindTexture((int*)obj, 0, 0);
+            tex = objFindTexture((GameObject*)obj, 0, 0);
             if (tex != NULL)
             {
                 tex->textureId = 0x100;
@@ -90,7 +90,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if ((state->flags & 2) != 0)
         {
-            tex = objFindTexture((int*)obj, 1, 0);
+            tex = objFindTexture((GameObject*)obj, 1, 0);
             if (tex != NULL)
             {
                 tex->textureId = 0x100;
@@ -198,22 +198,22 @@ int Door_getExtraSize(void) { return 0x8; }
 
 void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
 
-void Door_update(int obj)
+void Door_update(GameObject *obj)
 {
     DoorState* state;
     DoorPlacement* def;
     int triggerArg;
     int triggerId;
 
-    state = (DoorState*)((GameObject*)obj)->extra;
-    def = (DoorPlacement*)((GameObject*)obj)->anim.placementData;
+    state = (DoorState*)(obj)->extra;
+    def = (DoorPlacement*)(obj)->anim.placementData;
     if (state->initPending != 0)
     {
         triggerId = def->triggerSequenceId;
         if ((triggerId != 0) && (state->phase != DOOR_PHASE_IDLE))
         {
             triggerArg = def->triggerArg & 0x7f;
-            (*gObjectTriggerInterface)->preempt(obj, triggerId);
+            (*gObjectTriggerInterface)->preempt((int)obj, triggerId);
         }
         else
         {

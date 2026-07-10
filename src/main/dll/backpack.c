@@ -57,16 +57,16 @@ extern f32 lbl_803E3000;
 
 extern void Obj_FreeObject(int obj);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void fn_80165B3C(int obj, int state);
+extern void fn_80165B3C(GameObject* obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int state);
 extern void fn_80166444(int obj, int state);
-extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
+extern void updateConstrainedChaseVelocity(GameObject* obj, f32 x, f32 y, f32 z, f32 scale);
 void dll_D3_initialise(void);
 void dll_D3_release_nop(void);
-void dll_D3_init(int obj, int def, int flag);
+void dll_D3_init(GameObject* obj, int def, int flag);
 void dll_D3_update(int* obj);
 void dll_D3_hitDetect_nop(void);
-void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_D3_free(int obj);
 int dll_D3_getObjectTypeId(void);
 int dll_D3_getExtraSize_ret_1188(void);
@@ -160,7 +160,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     return 0;
 }
 
-int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
+int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord)
 {
     f32 scale;
     int player;
@@ -170,7 +170,7 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
     f32 y;
     f32 z;
 
-    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
     *(u8*)(stateWord + LANDED_ARWING_STATE_INDEX) = 1;
@@ -178,7 +178,7 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
     {
         state->scriptTimer = 0x3c;
         state->speed = lbl_803E2FFC;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
     }
     if (state->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
     {
@@ -213,20 +213,17 @@ int LandedArwing_UpdateRetreatChase(int obj, int stateWord)
     goto use_player_reflect_position;
 use_object_position:
 {
-    x = ((GameObject*)obj)->anim.localPosX;
-    y = ((GameObject*)obj)->anim.localPosY;
-    z = ((GameObject*)obj)->anim.localPosZ;
+    x = (obj)->anim.localPosX;
+    y = (obj)->anim.localPosY;
+    z = (obj)->anim.localPosZ;
     scale = lbl_803E2FDC;
     goto update_action;
 }
 use_player_reflect_position:
 {
-    x = ((GameObject*)obj)->anim.localPosX -
-        lbl_803E3000 * (playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
-    y = ((GameObject*)obj)->anim.localPosY -
-        lbl_803E3000 * (playerObj->anim.localPosY - ((GameObject*)obj)->anim.localPosY);
-    z = ((GameObject*)obj)->anim.localPosZ -
-        lbl_803E3000 * (playerObj->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
+    x = (obj)->anim.localPosX - lbl_803E3000 * (playerObj->anim.localPosX - (obj)->anim.localPosX);
+    y = (obj)->anim.localPosY - lbl_803E3000 * (playerObj->anim.localPosY - (obj)->anim.localPosY);
+    z = (obj)->anim.localPosZ - lbl_803E3000 * (playerObj->anim.localPosZ - (obj)->anim.localPosZ);
     scale = lbl_803E2FF4;
 }
 update_action:
@@ -239,12 +236,12 @@ update_action:
         }
         else
         {
-            fn_80166444(obj, (int)state);
+            fn_80166444((int)obj, (int)state);
         }
     }
     else
     {
-        landedarwing_moveSurfaceCrawler(obj, (int)state);
+        landedarwing_moveSurfaceCrawler((int)obj, (int)state);
     }
     if ((int)state->scriptTimer <= (int)(u32)framesThisStep)
     {

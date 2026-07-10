@@ -96,18 +96,18 @@ extern void RollingBarrel_hitDetect(void);
 extern void MMP_levelcontrol_hitDetect(void);
 
 extern void cfforcefield_update(void);
-extern void cfmagicwall_update(void);
+extern void cfmagicwall_update(GameObject*);
 extern void cflevelcontrol_update(GameObject*);
 extern void exploded_update(void);
-extern void SpiritDoorLock_update(void);
-extern void RollingBarrel_update(void);
-extern void MMP_levelcontrol_update(void);
+extern void SpiritDoorLock_update(GameObject*);
+extern void RollingBarrel_update(GameObject*);
+extern void MMP_levelcontrol_update(GameObject*);
 
 extern void cfforcefield_init(void);
 extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
 extern void exploded_init(void);
-extern void SpiritDoorLock_init(void);
+extern void SpiritDoorLock_init(GameObject*);
 extern void RollingBarrel_init(GameObject*);
 extern void MMP_levelcontrol_init(GameObject*);
 
@@ -144,14 +144,14 @@ int explodable_getExtraSize(void)
     return 0x6e8;
 }
 
-void explodable_free(int obj, int flag)
+void explodable_free(GameObject* obj, int flag)
 {
     int state;
     int i = -1;
     int slotPtr;
     void* child;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     ObjGroup_RemoveObject(obj, EXPLODABLE_OBJ_GROUP);
     if (flag == 0)
     {
@@ -167,7 +167,7 @@ void explodable_free(int obj, int flag)
     }
 }
 
-void explodable_update(int obj)
+void explodable_update(GameObject* obj)
 {
     int slotPtr;
     int def;
@@ -176,8 +176,8 @@ void explodable_update(int obj)
     int status;
     int fragObj;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    state = *(int*)&(obj)->extra;
+    def = *(int*)&(obj)->anim.placementData;
     if (((DrExplodableState*)state)->phase6E4 != EXPLODABLE_PHASE_BROKEN)
     {
         if (((DrExplodableState*)state)->phase6E4 == EXPLODABLE_PHASE_WAIT)
@@ -190,7 +190,7 @@ void explodable_update(int obj)
                     Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->breakSfx & 0xffff);
                 }
                 ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BREAKING;
-                ((GameObject*)obj)->anim.alpha = 0;
+                (obj)->anim.alpha = 0;
             }
             else
             {
@@ -230,15 +230,15 @@ void explodable_update(int obj)
     }
 }
 
-void explodable_init(int obj, int setup)
+void explodable_init(GameObject* obj, int setup)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int base;
     GasVentTableEntry* e;
     u32 count;
 
     ObjGroup_AddObject(obj, EXPLODABLE_OBJ_GROUP);
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     count = ((ExplodablePlacement*)setup)->fragmentCount;
     if (count == 0)
     {
@@ -261,16 +261,16 @@ void explodable_init(int obj, int setup)
     ((DrExplodableState*)state)->children[12] = 0;
     ((DrExplodableState*)state)->children[13] = 0;
     ((DrExplodableState*)state)->children[14] = 0;
-    ((GameObject*)obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
-    ((GameObject*)obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
-    ((GameObject*)obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
+    (obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
+    (obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
+    (obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
     if ((u32)mainGetBit(((ExplodablePlacement*)setup)->doneGameBit) != 0)
     {
         ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BROKEN;
     }
     for (base = 0; base < 16; base++)
     {
-        if (((GameObject*)obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
+        if ((obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
         {
             ((DrExplodableState*)state)->recipeIndex = base;
             break;
@@ -280,12 +280,12 @@ void explodable_init(int obj, int setup)
     {
         ((ExplodablePlacement*)setup)->scaleParam = 0x14;
     }
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-                                               (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
+    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
+                                  (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
     e = gExplodableBreakRecipeTable;
     if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
     {
-        ((GameObject*)obj)->objectFlags |= EXPLODABLE_OBJFLAG_HIDDEN;
+        (obj)->objectFlags |= EXPLODABLE_OBJFLAG_HIDDEN;
     }
 }
 
@@ -333,7 +333,7 @@ int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, i
     return Obj_SetupObject((int)s, 5, obj->anim.mapEventSlot, -1, 0);
 }
 
-void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
+void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int state)
 {
     DrExplodableChunk* c;
     int i14;
@@ -371,7 +371,7 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
                 c->centroidX = zero;
                 c->centroidY = zero;
                 c->centroidZ = zero;
-                model = *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + i14));
+                model = *(int*)(*(int*)(*(int*)&(obj)->anim.banks + i14));
                 s.acc[0] = zero;
                 s.acc[1] = zero;
                 s.acc[2] = zero;
@@ -389,10 +389,10 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
             c->offX = c->centroidX;
             c->offY = c->centroidY;
             c->offZ = c->centroidZ;
-            explodable_computeFragmentLaunch((GameObject*)(obj), (int)c, def);
+            explodable_computeFragmentLaunch(obj, (int)c, def);
             c->unk6B = 0xff;
             c->gameBitMode = (u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
-            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject((GameObject*)(obj), objType, (int)c, i13);
+            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject(obj, objType, (int)c, i13);
             c++;
             i14 += 4;
             i8 += 4;

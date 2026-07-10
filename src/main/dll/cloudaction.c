@@ -294,7 +294,7 @@ void cloudaction_func05(void)
     ObjTextureRuntimeSlot* tex;
     if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        tex = objFindTexture(lbl_8039AB28.mainCloudObj, 0, 0);
+        tex = objFindTexture((GameObject*)(lbl_8039AB28.mainCloudObj), 0, 0);
         if (tex != NULL)
         {
             tex->offsetS -= lbl_8039AB28.textureScrollStep;

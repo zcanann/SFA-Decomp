@@ -74,6 +74,6 @@ void WM_LaserTarget_init(char* obj, s8* p);
 void WM_LaserTarget_release(void);
 void WM_LaserTarget_initialise(void);
 int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible);
+void lightsource_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 
 #endif /* MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_ */

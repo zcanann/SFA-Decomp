@@ -62,7 +62,7 @@ extern f32 lbl_803DF38C;
 extern f32 lbl_803DF39C;
 extern f32 fcos16(u16 angle);
 
-void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
+void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
 {
     PartfxParams params;
     int i;
@@ -93,9 +93,9 @@ void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 x
             params.vec[2] = 0.0f;
             *(u16*)state += 0x7fff;
             vecRotateZXY(state, params.vec);
-            params.vec[0] += ((GameObject*)obj)->anim.localPosX;
-            params.vec[1] += ((GameObject*)obj)->anim.localPosY;
-            params.vec[2] += ((GameObject*)obj)->anim.localPosZ;
+            params.vec[0] += (obj)->anim.localPosX;
+            params.vec[1] += (obj)->anim.localPosY;
+            params.vec[2] += (obj)->anim.localPosZ;
             params.f8 = 1.0f;
             spawnFlags = 0x200001;
             if (flags != 0)
@@ -578,7 +578,7 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
     }
 }
 
-void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32 fa, f32 fb)
+void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* light, f32 fa, f32 fb)
 {
     extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 * ox, f32 * oy, f32 * oz);
     extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* sx, int* sy, int* sz);
@@ -634,7 +634,7 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
         case 4:
         {
             int flags = 2;
-            if ((((GameObject*)obj)->anim.flags & 0x40080) != 0)
+            if (((obj)->anim.flags & 0x40080) != 0)
             {
                 flags |= 0x20000000;
             }
@@ -657,16 +657,15 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             lvec[4] = ((GameObject*)light)->anim.localPosY;
             lvec[5] = ((GameObject*)light)->anim.localPosZ;
             vecRotateZXY(obj, &lvec[3]);
-            Camera_ProjectWorldPointWithOffset(((GameObject*)obj)->anim.worldPosX + lvec[3] - playerMapOffsetX,
-                                               ((GameObject*)obj)->anim.worldPosY + lvec[4],
-                                               ((GameObject*)obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ,
-                                               lbl_803DF384, &proj[2], &proj[1], &proj[0]);
+            Camera_ProjectWorldPointWithOffset(
+                (obj)->anim.worldPosX + lvec[3] - playerMapOffsetX, (obj)->anim.worldPosY + lvec[4],
+                (obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ, lbl_803DF384, &proj[2], &proj[1], &proj[0]);
         }
         else
         {
-            Camera_ProjectWorldPointWithOffset(
-                ((GameObject*)obj)->anim.worldPosX - playerMapOffsetX, ((GameObject*)obj)->anim.worldPosY,
-                ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384, &proj[2], &proj[1], &proj[0]);
+            Camera_ProjectWorldPointWithOffset((obj)->anim.worldPosX - playerMapOffsetX, (obj)->anim.worldPosY,
+                                               (obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384, &proj[2],
+                                               &proj[1], &proj[0]);
         }
         Camera_NdcToScreen(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
         depth = depthReadRequestPoll(screen[2], screen[1], obj);

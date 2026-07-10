@@ -825,7 +825,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
 }
 
 #pragma dont_inline on
-int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
+int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
                                        float* outHitPosX, float* outHitPosY, float* outHitPosZ)
 {
     u8 hitPriority;
@@ -835,7 +835,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
     u8 bestPriority;
     s8 bestHitSlot;
 
-    hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+    hitState = *(ObjHitsPriorityState**)&(obj)->anim.hitReactState;
     if (hitState == 0)
     {
         return 0;
@@ -882,7 +882,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume)
+int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume)
 {
     u8 hitPriority;
     int hitCount;
@@ -891,7 +891,7 @@ int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32*
     u8 bestPriority;
     s8 bestHitSlot;
 
-    hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
+    hitState = *(ObjHitsPriorityState**)&(obj)->anim.hitReactState;
     if (hitState == 0)
     {
         return 0;
@@ -1555,7 +1555,7 @@ bool ObjTrigger_UpdateIdBlockFlag(int obj)
     return true;
 }
 
-int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObject, float* outHitPos)
+int ObjHits_PollPriorityHitWithCooldown(GameObject* obj, float* cooldown, int* outHitObject, float* outHitPos)
 {
     int collisionType;
 
@@ -1569,7 +1569,7 @@ int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObj
                                                                outHitPos + 2);
             if (collisionType != 0)
             {
-                fn_80054F74(obj, outHitPos);
+                fn_80054F74((int)obj, outHitPos);
             }
         }
         else
@@ -1584,8 +1584,8 @@ int ObjHits_PollPriorityHitWithCooldown(int obj, float* cooldown, int* outHitObj
     return collisionType;
 }
 
-int ObjHits_PollPriorityHitEffectWithCooldown(int obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB, u32 sfxId,
-                                              float* cooldown)
+int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB,
+                                              u32 sfxId, float* cooldown)
 {
     int collisionType;
     ObjHitReactEffectHandle* effectHandle;
@@ -1620,7 +1620,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, u32 hitFxMode, u32 colorR
             if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == 0x69))
             {
                 extern void Sfx_PlayFromObject(int obj, int id);
-                Sfx_PlayFromObject(obj, sfxId);
+                Sfx_PlayFromObject((int)obj, sfxId);
             }
         }
     }
@@ -1820,7 +1820,7 @@ u32 ObjTrigger_IsSet(int obj)
 }
 
 #pragma opt_loop_invariants off
-int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
+int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq)
 {
     int startIndex;
     int objectCount;
@@ -1843,9 +1843,8 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
         while (objectIndex < objectCount)
         {
             otherObj = *walker;
-            if (((defNo == ((GameObject*)otherObj)->anim.seqId) && (obj != otherObj)) &&
-                (distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
-                                                    &((GameObject*)otherObj)->anim.worldPosX),
+            if (((defNo == ((GameObject*)otherObj)->anim.seqId) && ((int)obj != otherObj)) &&
+                (distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)otherObj)->anim.worldPosX),
                  distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
@@ -1862,8 +1861,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
         invalidDistance = lbl_803DE970;
         while (objectIndex < objectCount)
         {
-            distanceSq =
-                vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)*walker)->anim.worldPosX);
+            distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)*walker)->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;

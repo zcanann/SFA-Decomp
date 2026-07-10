@@ -2,6 +2,7 @@
 #define MAIN_DLL_BADDIE_SETMOVE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 
 /*
@@ -23,8 +24,8 @@
  * per-file extern types are load-bearing). This header is therefore included
  * only by callers; the definition TU must NOT include it.
  */
-void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
-#define Baddie_SetMove(obj, state, moveId, speed, p5, flags) \
-    fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
+void fn_8014D08C(GameObject* obj, int state, int moveId, f32 speed, int p5, int flags);
+#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
+    fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 
 #endif

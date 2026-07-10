@@ -113,17 +113,17 @@ void MoonSeedBush_hitDetect(void)
 
 #pragma peephole off
 #pragma scheduling off
-void MoonSeedBush_update(int obj)
+void MoonSeedBush_update(GameObject* obj)
 {
-    MoonSeedBushState* state = ((GameObject*)obj)->extra;
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    MoonSeedBushState* state = (obj)->extra;
+    int def = *(int*)&(obj)->anim.placementData;
     int preemptSlot;
     if ((state->flags & 1) == 0)
         return;
     if (((MoonSeedBushPlacement*)def)->preemptSeq != 0 && state->seedState != MOONSEEDBUSH_SEED_UNGROWN)
     {
         preemptSlot = ((MoonSeedBushPlacement*)def)->preemptSlot;
-        (*gObjectTriggerInterface)->preempt(obj, ((MoonSeedBushPlacement*)def)->preemptSeq);
+        (*gObjectTriggerInterface)->preempt((int)obj, ((MoonSeedBushPlacement*)def)->preemptSeq);
     }
     else
     {

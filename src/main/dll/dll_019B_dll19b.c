@@ -470,7 +470,7 @@ void dll_19B_init(u8* obj, u8* params)
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
 
-void dll_19C_init(int obj, u8* initData);
+void dll_19C_init(GameObject* obj, u8* initData);
 
 /*__DATA_EXTERNS__*/
 extern void nw_geyser_free();

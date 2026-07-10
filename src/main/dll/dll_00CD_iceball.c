@@ -48,10 +48,10 @@ extern void* ObjList_GetObjects(int* outA, int* outB);
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void fn_8015FBEC(int obj)
+void fn_8015FBEC(GameObject* obj)
 {
 
-    s16 mode = ((GameObject*)obj)->anim.seqId;
+    s16 mode = (obj)->anim.seqId;
     int i;
 
     if (mode == 0x2cb)
@@ -90,7 +90,7 @@ static inline u8 scarab_isObjectInList(void* obj)
     return 0;
 }
 
-void fn_8015FCCC(int obj)
+void fn_8015FCCC(GameObject* obj)
 {
 
     s16 type;
@@ -99,15 +99,15 @@ void fn_8015FCCC(int obj)
     Camera_EnableViewYOffset();
     CameraShake_SetAllMagnitudes(lbl_803E2E50);
     Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
-    type = ((GameObject*)obj)->anim.seqId;
+    type = (obj)->anim.seqId;
     if (type == 0x2cb)
     {
-        if (((GameObject*)obj)->ownerObj != NULL)
+        if ((obj)->ownerObj != NULL)
         {
-            if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
+            if (scarab_isObjectInList((obj)->ownerObj))
             {
-                (*(void (**)(void*, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x20))(
-                    ((GameObject*)obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER);
+                (*(void (**)(void*, int))(**(int**)(*(int*)&(obj)->ownerObj + 0x68) + 0x20))((obj)->ownerObj,
+                                                                                             ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
         for (n = 0; n < 25; n++)
@@ -117,12 +117,12 @@ void fn_8015FCCC(int obj)
     }
     else if (type == 100)
     {
-        if (((GameObject*)obj)->ownerObj != NULL)
+        if ((obj)->ownerObj != NULL)
         {
-            if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
+            if (scarab_isObjectInList((obj)->ownerObj))
             {
-                (*(void (**)(void*, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x24))(
-                    ((GameObject*)obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER);
+                (*(void (**)(void*, int))(**(int**)(*(int*)&(obj)->ownerObj + 0x68) + 0x24))((obj)->ownerObj,
+                                                                                             ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
         for (n = 0; n < 25; n++)
@@ -132,12 +132,12 @@ void fn_8015FCCC(int obj)
     }
     else if (type == 0x30a)
     {
-        if (((GameObject*)obj)->ownerObj != NULL)
+        if ((obj)->ownerObj != NULL)
         {
-            if (scarab_isObjectInList(((GameObject*)obj)->ownerObj))
+            if (scarab_isObjectInList((obj)->ownerObj))
             {
-                (*(void (**)(void*, int, int))(**(int**)(*(int*)&((GameObject*)obj)->ownerObj + 0x68) + 0x24))(
-                    ((GameObject*)obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER, 0);
+                (*(void (**)(void*, int, int))(**(int**)(*(int*)&(obj)->ownerObj + 0x68) + 0x24))(
+                    (obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER, 0);
             }
         }
         for (n = 0; n < 25; n++)
@@ -211,14 +211,14 @@ void IceBall_update(u16* obj, int unused)
              Obj_GetPlayerObject() ||
          (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == getTrickyObject()))
     {
-        fn_8015FCCC(objInt);
+        fn_8015FCCC((GameObject*)(objInt));
         ((GameObject*)objInt)->anim.alpha = 0;
         ((GameObject*)objInt)->unkF4 = 120;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
     else if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->contactFlags != 0)
     {
-        fn_8015FBEC(objInt);
+        fn_8015FBEC((GameObject*)(objInt));
         ((GameObject*)objInt)->anim.alpha = 0;
         ((GameObject*)objInt)->unkF4 = 120;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;

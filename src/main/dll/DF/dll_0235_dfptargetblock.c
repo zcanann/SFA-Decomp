@@ -61,7 +61,7 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
                               int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
+extern int ObjHits_GetPriorityHit(GameObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
@@ -167,7 +167,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     obj->prevZ = obj->z;
 
     hitObj = NULL;
-    hitType = ObjHits_GetPriorityHit(obj, &hitObj, &priority, 0);
+    hitType = ObjHits_GetPriorityHit((GameObject*)(obj), &hitObj, &priority, 0);
     if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
         (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH))
     {

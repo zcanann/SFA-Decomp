@@ -80,7 +80,7 @@ void spitembeam_update(int* obj)
             ((GameObject*)obj)->objectFlags =
                 (u16)(((GameObject*)obj)->objectFlags | SPITEMBEAM_OBJFLAG_UPDATE_DISABLED);
         }
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((GameObject*)(obj), 0, 0);
         if (tex != NULL)
         {
             tex->offsetS += SPITEMBEAM_SCROLL_STEP;

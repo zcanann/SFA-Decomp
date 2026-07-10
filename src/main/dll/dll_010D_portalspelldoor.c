@@ -37,7 +37,7 @@ extern f32 lbl_803E3A88;
 
 extern void LanternFireFly_modelMtxFn(void);
 
-extern void LanternFireFly_func0B(void);
+extern void LanternFireFly_func0B(GameObject*);
 
 extern void LanternFireFly_setScale(void);
 
@@ -63,18 +63,18 @@ extern void FireFlyLantern_getObjectTypeId(void);
 extern void dll_109_hitDetect_nop(void);
 extern void Fall_Ladders_hitDetect(void);
 
-extern void LanternFireFly_update(void);
+extern void LanternFireFly_update(GameObject*);
 extern void FireFlyLantern_free(void);
-extern void carryable_break_respawn_update(void);
-extern void Fall_Ladders_update(void);
+extern void carryable_break_respawn_update(GameObject*);
+extern void Fall_Ladders_update(GameObject*);
 
-extern void LanternFireFly_init(void);
+extern void LanternFireFly_init(GameObject*);
 extern void FireFlyLantern_render(void);
 extern void dll_109_init(GameObject*);
 extern void Fall_Ladders_init(void);
 
 extern void LanternFireFly_release(void);
-extern void FireFlyLantern_update(void);
+extern void FireFlyLantern_update(GameObject*);
 extern void dll_109_release_nop(void);
 extern void Fall_Ladders_release(void);
 

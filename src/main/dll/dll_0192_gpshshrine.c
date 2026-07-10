@@ -29,11 +29,11 @@ extern void dbsh_shrine_getObjectTypeId(void);
 
 extern void gpsh_scene_free(void);
 extern void ecsh_cup_free(void);
-extern void dbsh_shrine_free(void);
+extern void dbsh_shrine_free(GameObject *);
 
 extern void gpsh_scene_render(void);
 extern void ecsh_cup_render(void);
-extern void dbsh_shrine_render(void);
+extern void dbsh_shrine_render(GameObject *);
 
 extern void gpsh_scene_hitDetect(void);
 extern void ecsh_cup_hitDetect(void);
@@ -53,7 +53,7 @@ extern void DBSH_Symbol_render(void);
 extern void gpsh_scene_release(void);
 extern void ecsh_cup_release(void);
 extern void dbsh_shrine_release(void);
-extern void DBSH_Symbol_update(void);
+extern void DBSH_Symbol_update(GameObject *);
 
 extern void gpsh_scene_initialise(void);
 extern void ecsh_cup_initialise(void);
@@ -127,9 +127,9 @@ void gpsh_shrine_free(int* obj)
     mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, mainGetBit(0xc91) == 0);
 }
 
-void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
+void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void** state = ((GameObject*)obj)->extra;
+    void** state = (obj)->extra;
 
     if (visible == 0)
     {
@@ -289,7 +289,7 @@ void fn_801C70F0(s16* obj)
     }
 }
 
-void gpsh_shrine_update(int obj)
+void gpsh_shrine_update(GameObject *obj)
 {
     extern void Music_Trigger(int id, int arg);
     extern int objGetAnimStateFlags(int obj, int flag);
@@ -299,7 +299,7 @@ void gpsh_shrine_update(int obj)
     extern int getEnvfxAct(int a, int b, u16 idx, int d);
     extern void* Obj_GetPlayerObject(void);
     int count;
-    int data = *(int*)&((GameObject*)obj)->extra;
+    int data = *(int*)&(obj)->extra;
     char* player = Obj_GetPlayerObject();
     u8 b149;
     u8 b14c;
@@ -353,18 +353,18 @@ void gpsh_shrine_update(int obj)
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
         }
-        if (((GameObject*)obj)->unkF4 != 0)
+        if ((obj)->unkF4 != 0)
         {
-            ((GameObject*)obj)->unkF4 -= 1;
-            if (((GameObject*)obj)->unkF4 == 0)
+            (obj)->unkF4 -= 1;
+            if ((obj)->unkF4 == 0)
             {
                 skyFn_80088c94(7, 1);
-                getEnvfxAct(obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
-                getEnvfxAct(obj, (int)player, GPSH_SHRINE_ENVFX_B, 0);
-                getEnvfxAct(obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
+                getEnvfxAct((int)obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
+                getEnvfxAct((int)obj, (int)player, GPSH_SHRINE_ENVFX_B, 0);
+                getEnvfxAct((int)obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
             }
         }
-        fn_801C70F0(obj);
+        fn_801C70F0((int)obj);
         unlockLevel(mapGetDirIdx(0x22), 1, 0);
         SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
@@ -382,16 +382,16 @@ void gpsh_shrine_update(int obj)
             switch (((GpshShrineState*)data)->puzzleState)
             {
             case 0:
-                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 idleSfxTimer = ((GpshShrineState*)data)->sfxTimer - timeDelta;
                 ((GpshShrineState*)data)->sfxTimer = idleSfxTimer;
                 if (idleSfxTimer <= k)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_spirit_voice);
                     ((GpshShrineState*)data)->sfxTimer = (f32)(int)
                     randomGetRange(500, 1000);
                 }
-                if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+                if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
                 {
                     ((GpshShrineState*)data)->puzzleState = 5;
                     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
@@ -405,7 +405,7 @@ void gpsh_shrine_update(int obj)
                 ((GpshShrineState*)data)->timer = lbl_803E5040;
                 (*gScreenTransitionInterface)->step(0x1e, 1);
                 ((GpshShrineState*)data)->puzzleState = 1;
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 break;
             case 1:
                 if (((GpshShrineFlags*)((char*)data + 0x15))->b80 == 1)

@@ -74,7 +74,7 @@ void ProjectedLight_free(GameObject* obj);
 void ProjectedLight_render(void);
 void ProjectedLight_hitDetect(void);
 void ProjectedLight_update(GameObject* obj);
-void ProjectedLight_init(int obj, int setup);
+void ProjectedLight_init(GameObject* obj, int setup);
 void ProjectedLight_release(void);
 void ProjectedLight_initialise(void);
 

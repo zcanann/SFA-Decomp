@@ -83,19 +83,19 @@ int animsharpclaw_getObjectTypeId(void)
 
 #pragma peephole off
 #pragma scheduling off
-void animsharpclaw_free(int obj)
+void animsharpclaw_free(GameObject* obj)
 {
     u8* inner;
     int child;
-    inner = ((GameObject*)obj)->extra;
-    child = (int)((GameObject*)obj)->childObjs[0];
+    inner = (obj)->extra;
+    child = (int)(obj)->childObjs[0];
     if ((void*)child != NULL)
     {
-        ObjLink_DetachChild(obj, child);
+        ObjLink_DetachChild((int)obj, child);
         Obj_FreeObject(child);
     }
     (*gObjectTriggerInterface)->freeState(inner);
-    (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
+    (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))((int)obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
 #pragma scheduling on

@@ -252,7 +252,7 @@ int XyzAnimator_getExtraSize(void)
     return 0x50;
 }
 
-void XyzAnimator_free(int obj, int flag)
+void XyzAnimator_free(GameObject* obj, int flag)
 {
     extern int mapGetBlock(int blockIdx);
     int block;
@@ -260,17 +260,16 @@ void XyzAnimator_free(int obj, int flag)
     XyzAnimatorPlacement* setup;
     f32 zero;
 
-    state = (XyzAnimatorState*)((GameObject*)obj)->extra;
-    setup = *(XyzAnimatorPlacement**)&((GameObject*)obj)->anim.placementData;
+    state = (XyzAnimatorState*)(obj)->extra;
+    setup = *(XyzAnimatorPlacement**)&(obj)->anim.placementData;
     zero = lbl_803E4000;
     state->offsetX = zero;
     state->offsetY = zero;
     state->offsetZ = zero;
     if (flag == 0)
     {
-        block =
-            objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX, (double)((GameObject*)obj)->anim.localPosY,
-                                (double)((GameObject*)obj)->anim.localPosZ);
+        block = objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
+                                    (double)(obj)->anim.localPosZ);
         block = mapGetBlock(block);
         if (((void*)block != NULL) && (state->vertexCount != 0))
         {
@@ -281,7 +280,7 @@ void XyzAnimator_free(int obj, int flag)
     {
         mm_free(*(void**)&state->dataBuffer);
     }
-    ObjGroup_RemoveObject(obj, XYZANIMATOR_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, XYZANIMATOR_OBJGROUP);
 }
 
 void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -749,12 +748,12 @@ no_update:
     return;
 }
 
-void XyzAnimator_init(int obj)
+void XyzAnimator_init(GameObject* obj)
 {
-    int inner = *(int*)&((GameObject*)obj)->extra;
+    int inner = *(int*)&(obj)->extra;
     int id;
-    ObjGroup_AddObject(obj, XYZANIMATOR_OBJGROUP);
-    id = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    ObjGroup_AddObject((int)obj, XYZANIMATOR_OBJGROUP);
+    id = *(int*)(*(int*)&(obj)->anim.placementData + 0x14);
     switch (id)
     {
     case 0x46406:

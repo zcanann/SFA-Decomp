@@ -4,7 +4,7 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 
-void spdrape_update(int obj);
+void spdrape_update(GameObject* obj);
 void FUN_801e9348(void);
 void FUN_801e9368(int* param_1);
 void FUN_801e9690(short* param_1, int param_2);

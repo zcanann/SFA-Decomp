@@ -59,10 +59,10 @@ void ARWBlocker_hitDetect(void)
 
 #pragma scheduling off
 #pragma peephole off
-void ARWBlocker_update(int obj)
+void ARWBlocker_update(GameObject* obj)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    ARWBlockerState* state = ((GameObject*)obj)->extra;
+    ObjAnimComponent* objAnim = &(obj)->anim;
+    ARWBlockerState* state = (obj)->extra;
     int arwing = getArwing();
 
     if ((u32)arwing == 0)
@@ -73,9 +73,9 @@ void ARWBlocker_update(int obj)
         if (alpha > 0xff)
             alpha = 0xff;
         objAnim->alpha = alpha;
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ObjHits_EnableObject(obj);
-        if (((GameObject*)obj)->unkF4 == 0)
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        ObjHits_EnableObject((int)obj);
+        if ((obj)->unkF4 == 0)
         {
             switch (state->sequenceMode)
             {
@@ -87,24 +87,24 @@ void ARWBlocker_update(int obj)
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 break;
             }
-            ((GameObject*)obj)->unkF4 = 1;
+            (obj)->unkF4 = 1;
         }
     }
 }
 
-void ARWBlocker_init(int obj, int setup)
+void ARWBlocker_init(GameObject* obj, int setup)
 {
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    ARWBlockerState* state = ((GameObject*)obj)->extra;
+    ObjAnimComponent* objAnim = &(obj)->anim;
+    ARWBlockerState* state = (obj)->extra;
     ARWBlockerSetup* mapData = (ARWBlockerSetup*)setup;
 
-    ((GameObject*)obj)->anim.rotX = -0x8000;
-    ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ((GameObject*)obj)->animEventCallback = ARWBlocker_SeqFn;
+    (obj)->anim.rotX = -0x8000;
+    (obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
+    (obj)->animEventCallback = ARWBlocker_SeqFn;
     state->sequenceMode = mapData->sequenceMode;
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
 }
 
 #pragma scheduling on

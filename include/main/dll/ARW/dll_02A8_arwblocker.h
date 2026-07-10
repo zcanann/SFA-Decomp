@@ -32,8 +32,8 @@ int ARWBlocker_getObjectTypeId(void);
 void ARWBlocker_free(void);
 void ARWBlocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void ARWBlocker_hitDetect(void);
-void ARWBlocker_update(int obj);
-void ARWBlocker_init(int obj, int setup);
+void ARWBlocker_update(GameObject* obj);
+void ARWBlocker_init(GameObject* obj, int setup);
 void ARWBlocker_release(void);
 void ARWBlocker_initialise(void);
 

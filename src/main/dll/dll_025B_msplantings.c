@@ -278,7 +278,7 @@ void MoonSeedPlantingSpot_update(int obj)
             {
                 objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
             }
-            if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == MSPLANTING_HIT_CUT)
+            if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == MSPLANTING_HIT_CUT)
             {
                 ((MoonSeedPlantingSpotState*)ex)->phase = MSPLANTING_PHASE_CUT;
                 ((MoonSeedPlantingSpotState*)ex)->colorPhase = 0;

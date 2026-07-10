@@ -2,6 +2,7 @@
 #define MAIN_DLL_MMSHRINE_ECSH_SHRINE_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 
 /* Floating shrine model behaviour (DLL 0x18F). */
@@ -20,7 +21,7 @@ void ecsh_shrine_setScale(s16* out);
 int ecsh_shrine_getExtraSize(void);
 int ecsh_shrine_getObjectTypeId(void);
 void ecsh_shrine_free(int* obj);
-void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void ecsh_shrine_hitDetect(void);
 void ecsh_shrine_update(s16* obj);
 void ecsh_shrine_init(s16* obj, s8* def);

@@ -131,18 +131,18 @@ int dbsh_shrine_getObjectTypeId(void)
     return 0;
 }
 
-void dbsh_shrine_free(int obj)
+void dbsh_shrine_free(GameObject* obj)
 {
     DbshShrineRuntime* runtime;
 
-    runtime = ((GameObject*)obj)->extra;
+    runtime = (obj)->extra;
     if (runtime->light != NULL)
     {
         ModelLightStruct_free((int)runtime->light);
         runtime->light = NULL;
     }
     gameTimerStop();
-    ObjGroup_RemoveObject(obj, DBSHSHRINE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DBSHSHRINE_OBJGROUP);
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
@@ -151,11 +151,11 @@ void dbsh_shrine_free(int obj)
     mainSetBits(DBSH_SHRINE_GB_SCENE_BLOCK, 1);
 }
 
-void dbsh_shrine_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
+void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
 {
     DbshShrineRuntime* runtime;
 
-    runtime = ((GameObject*)obj)->extra;
+    runtime = (obj)->extra;
     if (visible == 0)
     {
         if (runtime->light != NULL)
@@ -169,8 +169,8 @@ void dbsh_shrine_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
         {
             modelLightStruct_setEnabled((int)runtime->light, 1, (double)lbl_803E50D8);
         }
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E50D8);
-        objParticleFn_80099d84(obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)runtime->light);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E50D8);
+        objParticleFn_80099d84((int)obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)runtime->light);
     }
 }
 

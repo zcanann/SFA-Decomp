@@ -30,9 +30,9 @@ typedef struct QueenEarthWalkerState
 } QueenEarthWalkerState;
 
 int sh_queenearthwalker_getExtraSize(void);
-void sh_queenearthwalker_update(void* obj);
-void queenFeedFn_801d44a4(void* obj, void* state);
-void openPortalFn_801d4364(void* obj, void* state);
+void sh_queenearthwalker_update(GameObject* obj);
+void queenFeedFn_801d44a4(GameObject* obj, void* state);
+void openPortalFn_801d4364(GameObject* obj, void* state);
 void sh_queenearthwalker_init(GameObject* obj, QueenEarthWalkerMapData* mapData);
 
 #endif /* MAIN_DLL_SH_DLL_01AC_SHQUEENEARTHWALKER_H_ */

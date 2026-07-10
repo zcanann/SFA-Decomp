@@ -2,6 +2,7 @@
 #define MAIN_DLL_VF_DLL_021D_VFPLIFT_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 #include "main/obj_placement.h"
 
@@ -46,15 +47,15 @@ STATIC_ASSERT(offsetof(VfpLiftPlacement, mapEventNo) == 0x1C);
 STATIC_ASSERT(offsetof(VfpLiftPlacement, toggleGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VfpLiftPlacement, hitDisableGameBit) == 0x20);
 
-int VFPLift_SeqFn(int obj);
-void vfplift23_updateState(int obj);
-void vfplift1_updateState(int obj);
+int VFPLift_SeqFn(GameObject* obj);
+void vfplift23_updateState(GameObject* obj);
+void vfplift1_updateState(GameObject* obj);
 int VFPLift_getExtraSize(void);
 int VFPLift_getObjectTypeId(void);
 void VFPLift_free(int obj);
 void VFPLift_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
-void VFPLift_hitDetect(int obj);
-void VFPLift_update(int obj);
+void VFPLift_hitDetect(GameObject* obj);
+void VFPLift_update(GameObject* obj);
 void VFPLift_init(int* obj, VfpLiftPlacement* init);
 void VFPLift_release(void);
 void VFPLift_initialise(void);

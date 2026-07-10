@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0115_DLL115_H_
 
 #include "types.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 typedef struct Dll115Placement
@@ -21,7 +22,7 @@ int dll_115_getObjectTypeId(void);
 void dll_115_free(int obj);
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_115_hitDetect_nop(void);
-void dll_115_update(int obj);
+void dll_115_update(GameObject* obj);
 void dll_115_init(s16* obj, int mapData);
 void dll_115_release_nop(void);
 void dll_115_initialise_nop(void);

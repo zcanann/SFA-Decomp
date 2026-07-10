@@ -82,7 +82,7 @@ extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
-extern void fn_801513AC(int obj, int state);
+extern void fn_801513AC(GameObject* obj, int state);
 extern f32 lbl_803E2708;
 extern f32 lbl_803E270C;
 extern f32 lbl_803E2710;
@@ -124,14 +124,14 @@ void wispbaddie_hitDetect(void)
 {
 }
 
-void Hagabon_hitDetect(int obj);
+void Hagabon_hitDetect(GameObject* obj);
 
-void SwarmBaddie_free(int obj);
+void SwarmBaddie_free(GameObject* obj);
 
-void wispbaddie_free(int obj)
+void wispbaddie_free(GameObject* obj)
 {
-    void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, WISPBADDIE_OBJGROUP);
+    void** state = (obj)->extra;
+    ObjGroup_RemoveObject((int)obj, WISPBADDIE_OBJGROUP);
     if (*state != NULL)
     {
         mm_free(*state);
@@ -141,7 +141,7 @@ void wispbaddie_free(int obj)
 
 void Hagabon_free(int obj);
 
-void SwarmBaddie_init(int obj, int data, int skip_alloc);
+void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc);
 
 void Hagabon_init(GameObject* obj, int data, int skip_alloc);
 
@@ -167,7 +167,7 @@ void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         return;
 }
 
-void fn_8014F620(int obj, WispBaddieState* state)
+void fn_8014F620(GameObject* obj, WispBaddieState* state)
 {
     RomCurveWalker* curve;
     int done;
@@ -190,66 +190,61 @@ void fn_8014F620(int obj, WispBaddieState* state)
 
     if ((state->flags & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
-        ((GameObject*)obj)->anim.velocityX =
-            lbl_803E26E8 * (state->playerObj->anim.localPosX - ((GameObject*)obj)->anim.localPosX) +
-            ((GameObject*)obj)->anim.velocityX;
+        (obj)->anim.velocityX =
+            lbl_803E26E8 * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
-        wave = (lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) -
-               ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E26E8 * wave + ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ =
-            lbl_803E26E8 * (state->playerObj->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) +
-            ((GameObject*)obj)->anim.velocityZ;
+        wave = (lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) - (obj)->anim.localPosY;
+        (obj)->anim.velocityY = lbl_803E26E8 * wave + (obj)->anim.velocityY;
+        (obj)->anim.velocityZ =
+            lbl_803E26E8 * (state->playerObj->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX =
-            lbl_803E26E8 * (((RomCurveWalker*)curve)->posX - ((GameObject*)obj)->anim.localPosX) +
-            ((GameObject*)obj)->anim.velocityX;
+        (obj)->anim.velocityX =
+            lbl_803E26E8 * (((RomCurveWalker*)curve)->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
-        wave = (lbl_803E26F0 * wave + ((RomCurveWalker*)curve)->posY) - ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.velocityY = lbl_803E26E8 * wave + ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ =
-            lbl_803E26E8 * (((RomCurveWalker*)curve)->posZ - ((GameObject*)obj)->anim.localPosZ) +
-            ((GameObject*)obj)->anim.velocityZ;
+        wave = (lbl_803E26F0 * wave + ((RomCurveWalker*)curve)->posY) - (obj)->anim.localPosY;
+        (obj)->anim.velocityY = lbl_803E26E8 * wave + (obj)->anim.velocityY;
+        (obj)->anim.velocityZ =
+            lbl_803E26E8 * (((RomCurveWalker*)curve)->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
 
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (step = lbl_803E26F4);
-    ((GameObject*)obj)->anim.velocityY *= step;
-    ((GameObject*)obj)->anim.velocityZ *= step;
+    (obj)->anim.velocityX = (obj)->anim.velocityX * (step = lbl_803E26F4);
+    (obj)->anim.velocityY *= step;
+    (obj)->anim.velocityZ *= step;
 
-    if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E26F8)
+    if ((obj)->anim.velocityX > *(f32*)&lbl_803E26F8)
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E26F8;
+        (obj)->anim.velocityX = lbl_803E26F8;
     }
-    if (((GameObject*)obj)->anim.velocityY > *(f32*)&lbl_803E26F8)
+    if ((obj)->anim.velocityY > *(f32*)&lbl_803E26F8)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E26F8;
+        (obj)->anim.velocityY = lbl_803E26F8;
     }
-    if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E26F8)
+    if ((obj)->anim.velocityZ > *(f32*)&lbl_803E26F8)
     {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E26F8;
+        (obj)->anim.velocityZ = lbl_803E26F8;
     }
-    if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E26FC)
+    if ((obj)->anim.velocityX < *(f32*)&lbl_803E26FC)
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E26FC;
+        (obj)->anim.velocityX = lbl_803E26FC;
     }
-    if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E26FC)
+    if ((obj)->anim.velocityY < *(f32*)&lbl_803E26FC)
     {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E26FC;
+        (obj)->anim.velocityY = lbl_803E26FC;
     }
-    if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E26FC)
+    if ((obj)->anim.velocityZ < *(f32*)&lbl_803E26FC)
     {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E26FC;
+        (obj)->anim.velocityZ = lbl_803E26FC;
     }
 
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
+    objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+            (obj)->anim.velocityZ * timeDelta);
 }
 
-void SwarmBaddie_update(int obj);
+void SwarmBaddie_update(GameObject* obj);
 
 void Hagabon_update(int obj);
 
@@ -287,7 +282,7 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     SwarmBaddie_getExtraSize,
 };
 
-void wispbaddie_update(int obj)
+void wispbaddie_update(GameObject* obj)
 {
     WispBaddieState* state;
     RomCurveWalker* curve;
@@ -303,7 +298,7 @@ void wispbaddie_update(int obj)
     u8 flags;
     void* dAlias = (void*)d;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     curve = state->curve;
     hit = ObjHits_GetPriorityHitWithPosition(obj, &dx, &hitX, &hitY, &hitZ, &dy, &dz);
     if (hit != 0)
@@ -315,7 +310,7 @@ void wispbaddie_update(int obj)
             state->flags = (u8)(flags & ~WISPBADDIE_FLAG_CHASE_PLAYER);
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
-        Sfx_PlayAtPositionFromObject(obj, hitZ, dy, dz, SFXTRIG_robolaser16);
+        Sfx_PlayAtPositionFromObject((int)obj, hitZ, dy, dz, SFXTRIG_robolaser16);
     }
 
     particleParam = 4;
@@ -326,7 +321,7 @@ void wispbaddie_update(int obj)
     if (state->hitRadius < state->maxHitRadius)
     {
         state->hitRadius += lbl_803E270C;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
     }
     else
     {
@@ -335,8 +330,8 @@ void wispbaddie_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleParam);
         particleParam = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleParam);
-        ObjHits_SetHitVolumeSlot(obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject(obj);
+        ObjHits_SetHitVolumeSlot((int)obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_EnableObject((int)obj);
     }
 
     particleParam = 1;
@@ -344,16 +339,16 @@ void wispbaddie_update(int obj)
     state->playerObj = Obj_GetPlayerObject();
     if (state->playerObj != NULL)
     {
-        d[0] = state->playerObj->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = state->playerObj->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = state->playerObj->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        d[0] = state->playerObj->anim.worldPosX - (obj)->anim.worldPosX;
+        d[1] = state->playerObj->anim.worldPosY - (obj)->anim.worldPosY;
+        d[2] = state->playerObj->anim.worldPosZ - (obj)->anim.worldPosZ;
         state->playerDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     if (curve != 0)
     {
-        d[0] = ((RomCurveWalker*)curve)->posX - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = ((RomCurveWalker*)curve)->posY - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = ((RomCurveWalker*)curve)->posZ - ((GameObject*)obj)->anim.worldPosZ;
+        d[0] = ((RomCurveWalker*)curve)->posX - (obj)->anim.worldPosX;
+        d[1] = ((RomCurveWalker*)curve)->posY - (obj)->anim.worldPosY;
+        d[2] = ((RomCurveWalker*)curve)->posZ - (obj)->anim.worldPosZ;
         state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
 
@@ -368,7 +363,7 @@ void wispbaddie_update(int obj)
         state->cryTimer -= timeDelta;
         if (state->cryTimer < lbl_803E2714)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_fball2_c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
             state->cryTimer = (f32)(int)randomGetRange(0x3c, 0x78);
         }
         state->particleId = 0x338;
@@ -391,15 +386,15 @@ void wispbaddie_update(int obj)
         }
         state->particleId = 0x337;
     }
-    fn_8014F620(obj, state);
+    fn_8014F620((GameObject*)obj, state);
 }
 
-void wispbaddie_init(int obj, int setup, int initialised)
+void wispbaddie_init(GameObject* obj, int setup, int initialised)
 {
     WispBaddieState* state;
     f32 value;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     value = (f32) * (s16*)(setup + 0x1a) / lbl_803E271C;
     state->maxHitRadius = value;
     state->hitRadius = value;
@@ -418,9 +413,9 @@ void wispbaddie_init(int obj, int setup, int initialised)
         {
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_PATH_NEEDS_LINK);
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_id_23b);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_id_23b);
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags = (u16)((obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
 }
 
 #pragma scheduling off
@@ -490,7 +485,7 @@ void battleDroidInit(int unused, char* p)
     ((BaddieState*)p)->unk31C = v1c;
 }
 
-u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
+u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
 {
     u8* base = lbl_8031DD30;
     WispEventRow* eventRows;
@@ -594,7 +589,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     if (*(f32*)(state + 0x32c) != lbl_803E2740)
     {
         int pos = *(int*)&((BaddieState*)state)->trackedObj;
-        fn_8014CF7C(obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
+        fn_8014CF7C((int)obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
         if (((BaddieState*)state)->unk308 > lbl_803E2750)
         {
             ((BaddieState*)state)->unk308 = ((BaddieState*)state)->unk308 - lbl_803E2754;
@@ -626,7 +621,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     return 0;
 }
 
-void fn_8015039C(int obj, int animState)
+void fn_8015039C(GameObject* obj, int animState)
 {
     extern f32 Vec_distance(f32 * a, f32 * b);
     GameObject* player;
@@ -635,36 +630,36 @@ void fn_8015039C(int obj, int animState)
 
     if ((((HagabonAnimState*)animState)->moveEventFlags & 0x200) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_sml_trex_snap3);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_sml_trex_snap3);
         player = Obj_GetPlayerObject();
         if ((player->objectFlags & WISPBADDIE_OBJFLAG_PARENT_SLACK) == 0)
         {
-            distance = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
+            distance = Vec_distance(&(obj)->anim.worldPosX, &player->anim.worldPosX);
             if (distance <= lbl_803E2760)
             {
                 rumbleFalloff = lbl_803E2748 - distance / lbl_803E2760;
                 rumbleFalloff = lbl_803E2744 * rumbleFalloff;
                 doRumble(rumbleFalloff);
             }
-            CameraShake_ApplyRadial(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                    ((GameObject*)obj)->anim.localPosZ, lbl_803E2760, lbl_803E2764);
+            CameraShake_ApplyRadial((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, lbl_803E2760,
+                                    lbl_803E2764);
         }
     }
     if ((((HagabonAnimState*)animState)->moveEventFlags & 0x40) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_spotfox01);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_spotfox01);
     }
     if ((((HagabonAnimState*)animState)->moveEventFlags & 0x1000) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_scream1);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_scream1);
     }
     if ((((HagabonAnimState*)animState)->moveEventFlags & 1) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_pullup2);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_pullup2);
     }
     if ((((HagabonAnimState*)animState)->moveEventFlags & 0x80) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_death01);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_death01);
     }
 }
 

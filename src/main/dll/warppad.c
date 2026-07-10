@@ -64,7 +64,7 @@ extern void setAButtonIcon(int x);
 
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
-void warpPadFn_8019042c(int obj)
+void warpPadFn_8019042c(GameObject* obj)
 {
     WarpPadState* state;
     void* player;
@@ -80,7 +80,7 @@ void warpPadFn_8019042c(int obj)
         f32 pos[3];
     } fx;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = Obj_GetPlayerObject();
     fx.pos[0] = lbl_803E3E98;
     fx.pos[1] = lbl_803E3E9C;
@@ -107,19 +107,19 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_B) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             gWarpPadProximityBurstDistSq)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
-                                      &fx, 0);
+                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                                      lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 1, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
-                                      &fx, 0);
+                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EB0, 1, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                                      lbl_803E3EAC, &fx, 0);
             }
         }
         fx.effectId = 0xc0e;
@@ -127,19 +127,19 @@ void warpPadFn_8019042c(int obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_C) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             gWarpPadProximityBurstDistSq)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
-                                      &fx, 0);
+                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                                      lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 5, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
-                                      &fx, 0);
+                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EB0, 5, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                                      lbl_803E3EAC, &fx, 0);
             }
         }
         fx.effectId = 0xc7e;
@@ -147,19 +147,19 @@ void warpPadFn_8019042c(int obj)
     }
     else
     {
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             gWarpPadProximityBurstDistSq)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
-                                      &fx, 0);
+                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                                      lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 3, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8, lbl_803E3EAC,
-                                      &fx, 0);
+                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EB0, 3, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                                      lbl_803E3EAC, &fx, 0);
             }
         }
         fx.effectId = 0xc13;
@@ -213,15 +213,15 @@ void warpPadFn_8019042c(int obj)
     }
 }
 
-void warpPadPlayerStandingOn(int obj)
+void warpPadPlayerStandingOn(GameObject* obj)
 {
     WarpPadPlacement* placement;
     WarpPadState* state;
     void* player;
     s16 gameBit;
 
-    placement = (WarpPadPlacement*)((GameObject*)obj)->anim.placement;
-    state = ((GameObject*)obj)->extra;
+    placement = (WarpPadPlacement*)(obj)->anim.placement;
+    state = (obj)->extra;
     gameBit = placement->enableGameBit;
     if (gameBit != -1)
     {
@@ -235,7 +235,7 @@ void warpPadPlayerStandingOn(int obj)
         }
     }
 
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
+    if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
         setAButtonIcon(0x1b);
         if (mainGetBit(GAMEBIT_WARPPAD_PROMPT_SHOWN) == 0)
@@ -253,16 +253,15 @@ void warpPadPlayerStandingOn(int obj)
     }
 
     if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
-        ((((GameObject*)obj)->objectFlags & WARPPAD_OBJFLAG_PARENT_SLACK) == 0))
+        (((obj)->objectFlags & WARPPAD_OBJFLAG_PARENT_SLACK) == 0))
     {
         if (lbl_803DCEB8 > -1)
         {
             player = Obj_GetPlayerObject();
-            if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-                gWarpPadTriggerDist)
+            if (Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadTriggerDist)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                ((GameObject*)obj)->unkF4 = state->activateDelay;
+                (obj)->unkF4 = state->activateDelay;
                 state->triggerMode = 0;
                 state->countdownActive = 1;
                 lbl_803DCDE0 = 2;
@@ -270,12 +269,12 @@ void warpPadPlayerStandingOn(int obj)
             }
         }
         gameBit = placement->enableGameBit;
-        if (((gameBit == -1) || ((mainGetBit(gameBit) != 0) &&
-                                 ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
-            (ObjTrigger_IsSet(obj) != 0))
+        if (((gameBit == -1) ||
+             ((mainGetBit(gameBit) != 0) && (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
+            (ObjTrigger_IsSet((int)obj) != 0))
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            ((GameObject*)obj)->unkF4 = state->activateDelay;
+            (obj)->unkF4 = state->activateDelay;
             state->triggerMode = 1;
             state->countdownActive = 1;
         }
@@ -284,13 +283,13 @@ void warpPadPlayerStandingOn(int obj)
 updateTimer:
     if (state->countdownActive != 0)
     {
-        if (((GameObject*)obj)->unkF4 > 0)
+        if ((obj)->unkF4 > 0)
         {
-            ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
+            (obj)->unkF4 = (obj)->unkF4 - framesThisStep;
         }
         else
         {
-            ((GameObject*)obj)->unkF4 = 0;
+            (obj)->unkF4 = 0;
             state->countdownActive = 0;
         }
     }

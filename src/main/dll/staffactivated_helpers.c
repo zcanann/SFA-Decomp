@@ -64,7 +64,7 @@ extern f32 sqrtf(f32 value);
 extern void vecRotateZXY(void* rotation, void* vec);
 extern u16 getAngle(f32 x, f32 z);
 
-void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
+void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state)
 {
     u32 flags;
     s32 prevHeight;
@@ -85,13 +85,13 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
         }
         if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_mammoth_grunt);
         }
         if (state->liftHeight < 0)
         {
             if (state->previousLiftHeight > 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt1);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_mammoth_grunt1);
                 rumbleStrength = state->peakLiftHeight / 200;
                 if (rumbleStrength > 0)
                 {
@@ -111,7 +111,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     prevHeight = state->previousLiftHeight;
     if ((prevHeight < 0x40 && state->liftHeight >= 0x40) || (prevHeight >= 0x40 && state->liftHeight < 0x40))
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mammoth_grunt);
     }
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitCooldown);
     state->previousLiftHeight = state->liftHeight;

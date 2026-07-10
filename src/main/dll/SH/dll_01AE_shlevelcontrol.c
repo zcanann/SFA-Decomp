@@ -82,8 +82,8 @@ extern f32 gShLevelControlHudTextDuration;
 
 extern void sh_staff_getExtraSize(void);
 extern void sh_staff_free(void);
-extern void sh_staff_render(void);
-extern void sh_staff_update(void);
+extern void sh_staff_render(GameObject*);
+extern void sh_staff_update(GameObject*);
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
 extern void logPrintf(char* fmt, ...);
@@ -641,12 +641,12 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
     }
 }
 
-void SH_LevelControl_update(int obj)
+void SH_LevelControl_update(GameObject* obj)
 {
     extern u8 lbl_80327618[0x104];
     extern void SH_LevelControl_doEarlyScenes(int obj, u32* state);
     extern void SH_LevelControl_doThornTailEvents(int obj, u32* state);
-    extern void SH_LevelControl_runBloopEvent(struct GameObject * obj, u32 * state);
+    extern void SH_LevelControl_runBloopEvent(GameObject * obj, u32 * state);
     extern int Obj_GetPlayerObject(void);
     extern void SH_LevelControl_setMusic(u32 * state);
 
@@ -657,7 +657,7 @@ void SH_LevelControl_update(int obj)
     u8 animEvt;
     u8* base = lbl_80327618;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (((ShLevelcontrolState*)state)->hudTextTimer > lbl_803E54B4)
     {
         gameTextShow(0x3f6);
@@ -671,68 +671,67 @@ void SH_LevelControl_update(int obj)
     val = mainGetBit(GAMEBIT_SH_Related03AA);
     if (val != 0)
     {
-        if (((GameObject*)obj)->anim.mapEventSlot == 8)
+        if ((obj)->anim.mapEventSlot == 8)
         {
-            animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d);
+            animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1d);
             if (animEvt == '\0')
             {
-                (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
+                (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1d, 1);
             }
         }
         else
         {
-            animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d);
+            animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1d);
             if (animEvt != '\0')
             {
-                (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1d, 0);
+                (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1d, 0);
             }
         }
     }
     val = mainGetBit(GAMEBIT_STAFF_PICKUP_MAP_UNLOADED);
     if (val != 0)
     {
-        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1c);
         if (animEvt == '\0')
         {
-            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 1);
+            (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1c, 1);
         }
     }
     else
     {
-        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1c);
         if (animEvt != '\0')
         {
-            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1c, 0);
+            (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1c, 0);
         }
     }
     val = mainGetBit(GAMEBIT_STAFF_TUTORIAL_ARENA_REWARD_UNLOCKED);
     if ((val != 0) &&
-        (animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b),
-         animEvt == '\0'))
+        (animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1b), animEvt == '\0'))
     {
-        (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1b, 1);
+        (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1b, 1);
     }
     val = mainGetBit(GAMEBIT_STAFF_TUTORIAL_ARENA_ACTIVE);
     if (val != 0)
     {
-        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1a);
         if (animEvt == '\0')
         {
-            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 1);
+            (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1a, 1);
         }
     }
     else
     {
-        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a);
+        animEvt = (*gMapEventInterface)->getObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1a);
         if (animEvt != '\0')
         {
-            (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1a, 0);
+            (*gMapEventInterface)->setObjGroupStatus((int)(obj)->anim.mapEventSlot, 0x1a, 0);
         }
     }
     switch (((ShLevelcontrolState*)state)->mapAct)
     {
     case 1:
-        SH_LevelControl_doEarlyScenes(obj, state);
+        SH_LevelControl_doEarlyScenes((int)obj, state);
         break;
     case 2:
         val = mainGetBit(GAMEBIT_SH_ReturnedToQueen);
@@ -759,12 +758,12 @@ void SH_LevelControl_update(int obj)
         val2 = mainGetBit(GAMEBIT_ITEM_WhiteShroom_Count);
         if ((val2 + val == 6) && (val = mainGetBit(GAMEBIT_SH_Got6WhiteShrooms), val == 0))
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_mpick1_b);
             mainSetBits(GAMEBIT_SH_Got6WhiteShrooms, 1);
         }
         break;
     case 3:
-        SH_LevelControl_doThornTailEvents(obj, state);
+        SH_LevelControl_doThornTailEvents((int)obj, state);
         break;
     case 4:
         if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
@@ -828,7 +827,7 @@ void SH_LevelControl_update(int obj)
         }
         break;
     case 6:
-        SH_LevelControl_runBloopEvent((GameObject*)(obj), state);
+        SH_LevelControl_runBloopEvent(obj, state);
         break;
     case 7:
         val = mainGetBit(GAMEBIT_SH_ThornTailRelated01A0);
@@ -889,11 +888,11 @@ void SH_LevelControl_update(int obj)
     val = mainGetBit(GAMEBIT_SH_Related0D36);
     if (val != 0)
     {
-        if (((GameObject*)obj)->unkF8 != 2)
+        if ((obj)->unkF8 != 2)
         {
-            ((GameObject*)obj)->unkF8 = 2;
+            (obj)->unkF8 = 2;
             envFxActFn_800887f8(0);
-            if (((GameObject*)obj)->unkF4 == 2)
+            if ((obj)->unkF4 == 2)
             {
                 getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
                 getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
@@ -914,10 +913,10 @@ void SH_LevelControl_update(int obj)
         val = mainGetBit(GAMEBIT_SH_Related0D35);
         if (val != 0)
         {
-            if (((GameObject*)obj)->unkF8 != 1)
+            if ((obj)->unkF8 != 1)
             {
-                ((GameObject*)obj)->unkF8 = 1;
-                if (((GameObject*)obj)->unkF4 == 2)
+                (obj)->unkF8 = 1;
+                if ((obj)->unkF4 == 2)
                 {
                     envFxActFn_800887f8(0);
                     getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
@@ -935,10 +934,10 @@ void SH_LevelControl_update(int obj)
                 }
             }
         }
-        else if (((GameObject*)obj)->unkF8 != 0)
+        else if ((obj)->unkF8 != 0)
         {
-            ((GameObject*)obj)->unkF8 = 0;
-            if (((GameObject*)obj)->unkF4 == 2)
+            (obj)->unkF8 = 0;
+            if ((obj)->unkF4 == 2)
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);

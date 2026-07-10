@@ -39,16 +39,16 @@ int brokenpipe_getExtraSize(void)
     return 4;
 }
 
-void brokenpipe_update(int obj)
+void brokenpipe_update(GameObject* obj)
 {
-    BrokenPipeState* state = ((GameObject*)obj)->extra;
+    BrokenPipeState* state = (obj)->extra;
 
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
 }
 
-void brokenpipe_init(int obj, int setup)
+void brokenpipe_init(GameObject* obj, int setup)
 {
-    GameObject* object = (GameObject*)obj;
+    GameObject* object = obj;
     BrokenPipeSetup* setupData = (BrokenPipeSetup*)setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
@@ -61,8 +61,9 @@ void brokenpipe_init(int obj, int setup)
         {
             object->anim.rootMotionScale = lbl_803E7340;
         }
-        ObjHitbox_SetSphereRadius(obj, (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
-                                             object->anim.rootMotionScale));
+        ObjHitbox_SetSphereRadius((int)obj,
+                                  (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
+                                        object->anim.rootMotionScale));
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= BROKENPIPE_OBJFLAG_HIDDEN;

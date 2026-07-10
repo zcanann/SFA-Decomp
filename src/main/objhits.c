@@ -359,7 +359,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
 }
 #pragma opt_propagation reset
 
-int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeletonHit* hits,
+int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
                                    ObjHitsSkeletonJointData* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
                                    f32 t, f32 axial, f32* out)
 {
@@ -387,9 +387,9 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
 
     aPtr = &pj.out[9];
     saved = hits;
-    move.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)obj)->anim.previousWorldPosX;
-    move.y = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousWorldPosY;
-    move.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)obj)->anim.previousWorldPosZ;
+    move.x = (obj)->anim.worldPosX - (obj)->anim.previousWorldPosX;
+    move.y = (obj)->anim.localPosY - (obj)->anim.previousWorldPosY;
+    move.z = (obj)->anim.worldPosZ - (obj)->anim.previousWorldPosZ;
     moveLen = Vec3_Length(&move.x);
     projPos.x = pos[0];
     projPos.y = pos[1];
@@ -489,7 +489,7 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
     return 1;
 }
 
-int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, int obj, ObjHitsSkeletonHit* hits,
+int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
                                    ObjHitsSkeletonJointData* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
                                    f32 t, f32 axial, f32* out)
 {
@@ -516,9 +516,9 @@ int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, int obj, ObjHitsSkeleto
 
     aPtr = &pj.out[9];
     saved = hits;
-    move.x = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-    move.y = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-    move.z = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+    move.x = (obj)->anim.localPosX - (obj)->anim.previousLocalPosX;
+    move.y = (obj)->anim.localPosY - (obj)->anim.previousLocalPosY;
+    move.z = (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ;
     moveLen = Vec3_Length(&move.x);
     projPos.x = pos[0];
     projPos.y = pos[1];
@@ -2096,7 +2096,7 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                 ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                 int mf = *hitboxBuf;
                 ObjHitsSkeletonHit* bh = bestHit;
-                ObjHits_CalcSkeletonResponse3D(pos, rad, ob, hh, jd, mf, bh,
+                ObjHits_CalcSkeletonResponse3D(pos, rad, (GameObject*)(ob), hh, jd, mf, bh,
                                                (ratio < gObjHitsScalarZero)
                                                    ? gObjHitsScalarZero
                                                    : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
@@ -2143,7 +2143,7 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                 ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                 int mf = *hitboxBuf;
                 ObjHitsSkeletonHit* bh = bestHit;
-                ObjHits_CalcSkeletonResponseXZ(pos, rad, ob, hh, jd, mf, bh,
+                ObjHits_CalcSkeletonResponseXZ(pos, rad, (GameObject*)(ob), hh, jd, mf, bh,
                                                (ratio < gObjHitsScalarZero)
                                                    ? gObjHitsScalarZero
                                                    : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),

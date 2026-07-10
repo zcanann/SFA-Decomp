@@ -20,10 +20,10 @@
 
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
-extern void fn_80165B3C(int obj, int state);
+extern void fn_80165B3C(GameObject *obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int sub);
 extern void fn_80166444(int obj, int state);
-extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
+extern void updateConstrainedChaseVelocity(GameObject *obj, f32 x, f32 y, f32 z, f32 scale);
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E3004;
@@ -164,13 +164,13 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         break;
     }
 
-    updateConstrainedChaseVelocity(obj, targetX, targetY, targetZ, chaseScale);
+    updateConstrainedChaseVelocity((GameObject*)(obj), targetX, targetY, targetZ, chaseScale);
 
     if (sub->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
     {
         if ((u32)((sub->flags92 >> 2) & 1) != 0)
         {
-            fn_80165B3C(obj, (int)sub);
+            fn_80165B3C((GameObject*)(obj), (int)sub);
         }
         else
         {

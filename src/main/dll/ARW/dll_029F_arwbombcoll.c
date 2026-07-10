@@ -292,7 +292,7 @@ active:
     else
     {
         int hit;
-        if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0 && (u32)hit != 0 &&
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit, 0, 0) != 0 && (u32)hit != 0 &&
             (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == 0x605))
         {
             arwarwing_addScore(arw, 0xf);

@@ -2,6 +2,7 @@
 #define MAIN_DLL_MMP_GYSERVENT_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 typedef struct MmpGyserventState
 {
@@ -29,7 +30,7 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reachBX) == 0x28);
 STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
 void objFn_80198fa4(s16* obj, void* placement);
-void objSeqMoveFn_80199188(void* obj, int arg2);
-void objSeqFn_801992ec(void* obj, int arg2);
+void objSeqMoveFn_80199188(GameObject* obj, int arg2);
+void objSeqFn_801992ec(GameObject* obj, int arg2);
 
 #endif /* MAIN_DLL_MMP_GYSERVENT_H_ */

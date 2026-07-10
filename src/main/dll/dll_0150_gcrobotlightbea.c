@@ -124,18 +124,18 @@ void gcrobotlightbea_render(void)
 
 /* Clear the hit flag, then re-set it only if the priority hit is the
  * (undisguised) player and lands inside the beacon's bounding box. */
-void gcrobotlightbea_hitDetect(int obj)
+void gcrobotlightbea_hitDetect(GameObject* obj)
 {
     float out[22];
     f32 vec[3];
     void* hit;
-    GcRobotLightBeaState* sub = ((GameObject*)obj)->extra;
+    GcRobotLightBeaState* sub = (obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
-    if (((GameObject*)obj)->ownerObj == NULL)
+    if ((obj)->ownerObj == NULL)
         return;
     if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) == 0)
     {
-        hit = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+        hit = (void*)(*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject;
         if (hit == NULL)
             return;
     }
@@ -148,9 +148,8 @@ void gcrobotlightbea_hitDetect(int obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0)
         return;
-    if (((GameObject*)obj)->unkF4 != 0 ||
-        ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(obj + 0xc, vec, 1.0f, 0, out,
-                                                                                          obj, 4, -1, 0, 0) == 0)
+    if ((obj)->unkF4 != 0 || ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(
+                                 (int)obj + 0xc, vec, 1.0f, 0, out, (int)obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }

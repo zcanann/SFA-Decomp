@@ -57,10 +57,10 @@ typedef struct
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
 
-extern void fn_8014D08C(int obj, int state, int a, f32 f, int b, int c);
+extern void fn_8014D08C(GameObject* obj, int state, int a, f32 f, int b, int c);
 extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
-extern void fn_8015039C(int obj, u8* state);
-extern u8 fn_8014FFB4(int obj, u8* state, int a);
+extern void fn_8015039C(GameObject* obj, u8* state);
+extern u8 fn_8014FFB4(GameObject* obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
 extern int playerGetMoney(void* player);
 extern void playerAddMoney(u8* player, int amount);
@@ -102,7 +102,7 @@ extern f32 lbl_803E27E8;
 #pragma peephole off
 
 #pragma dont_inline on
-void fn_801511E8(int obj, u8* state)
+void fn_801511E8(GameObject* obj, u8* state)
 {
     u8* entry;
     u32 idx;
@@ -122,8 +122,8 @@ void fn_801511E8(int obj, u8* state)
             state[0x33a] = (u8)(entry[8] + 3);
         }
     }
-    while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0
-        && (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
+    while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
+           (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
     {
         (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
         if (state[0x33a] > entry[8])
@@ -136,8 +136,7 @@ void fn_801511E8(int obj, u8* state)
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
     fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-        (ObjAnimComponent*)obj,
-        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
+        (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
     (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8])
     {
@@ -146,7 +145,7 @@ void fn_801511E8(int obj, u8* state)
 }
 #pragma dont_inline reset
 
-void fn_801513AC(int obj, u8* state)
+void fn_801513AC(GameObject* obj, u8* state)
 {
     u8* entry;
     u32 idx;
@@ -156,15 +155,14 @@ void fn_801513AC(int obj, u8* state)
     base = lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
-    if (fn_8014C11C(obj, lbl_803E27AC, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
+    if (fn_8014C11C((int)obj, lbl_803E27AC, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
     {
-        if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40
-            && *(u16*)(state + 0x2a0) != 3
-            && *(u16*)(state + 0x2a0) != 4)
+        if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40 && *(u16*)(state + 0x2a0) != 3 &&
+            *(u16*)(state + 0x2a0) != 4)
         {
-            d = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0xc),
-                         ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0x14))
-                - (u16)((GameObject*)obj)->anim.rotX;
+            d = getAngle((obj)->anim.localPosX - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0xc),
+                         (obj)->anim.localPosZ - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0x14)) -
+                (u16)(obj)->anim.rotX;
             if (d > 0x8000)
             {
                 d = (d - 0x10000) + 1;
@@ -192,8 +190,8 @@ void fn_801513AC(int obj, u8* state)
     {
         state[0x33a] = (u8)(entry[8] + 1);
     }
-    while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0
-        && (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
+    while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
+           (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
     {
         (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
         if (state[0x33a] > entry[8])
@@ -206,8 +204,7 @@ void fn_801513AC(int obj, u8* state)
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
     fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-        (ObjAnimComponent*)obj,
-        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
+        (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
     (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8])
     {
@@ -215,7 +212,7 @@ void fn_801513AC(int obj, u8* state)
     }
 }
 
-void fn_8015165C(int obj, u8* state)
+void fn_8015165C(GameObject* obj, u8* state)
 {
     u8* player;
     u8* p20;
@@ -233,8 +230,8 @@ void fn_8015165C(int obj, u8* state)
     {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
-    if (((GroundBaddieState*)state)->baddie.trackedObj != NULL && ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.
-        trackedObj)->anim.classId == 1)
+    if (((GroundBaddieState*)state)->baddie.trackedObj != NULL &&
+        ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.trackedObj)->anim.classId == 1)
     {
         fn_8001FEA8();
     }
@@ -256,7 +253,7 @@ void fn_8015165C(int obj, u8* state)
         if ((((GroundBaddieState*)state)->baddie.controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             player = Obj_GetPlayerObject();
-            fn_8014C11C(obj, lbl_803E27AC, 3, 16, gGroundBaddieTargetSearchResult);
+            fn_8014C11C((int)obj, lbl_803E27AC, 3, 16, gGroundBaddieTargetSearchResult);
             if (*(u16*)(state + 0x338) != 0)
             {
                 {
@@ -267,14 +264,13 @@ void fn_8015165C(int obj, u8* state)
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16), 0,
                             (u8)((SeqEntry*)p28)[*(u16*)(state + 0x338)].mask);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)obj,
-                    *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4));
+                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4));
                 *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[9];
             }
             else
             {
                 if (player != NULL && ((((GroundBaddieState*)state)->baddie.controlFlags & 0x800080) != 0 ||
-                    (void*)Player_GetTargetObject((int)player) == NULL))
+                                       (void*)Player_GetTargetObject((int)player) == NULL))
                 {
                     fn_801511E8(obj, state);
                 }
@@ -284,26 +280,26 @@ void fn_8015165C(int obj, u8* state)
                 }
             }
         }
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
-        if (((GameObject*)obj)->anim.currentMove == p20[8])
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 0;
+        if ((obj)->anim.currentMove == p20[8])
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = p20[9];
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[9];
         }
-        if (((GameObject*)obj)->anim.currentMove == p20[0x14])
+        if ((obj)->anim.currentMove == p20[0x14])
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = p20[0x15];
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[0x15];
         }
-        if (((GameObject*)obj)->anim.currentMove == p20[0x20])
+        if ((obj)->anim.currentMove == p20[0x20])
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = p20[0x21];
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[0x21];
         }
         if ((state[0x323] & 8) == 0)
         {
-            fn_8014CF7C(obj, state, ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
+            fn_8014CF7C((int)obj, state, ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
                         ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosZ, 10, 0);
         }
     }
@@ -472,8 +468,10 @@ void fn_80151DB8(int obj, u8* state)
     {
         return;
     }
-    px0 = setup->posX - lbl_803E27DC * mathSinf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
-    pz0 = setup->posZ - lbl_803E27DC * mathCosf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
+    px0 = setup->posX -
+          lbl_803E27DC * mathSinf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
+    pz0 = setup->posZ -
+          lbl_803E27DC * mathCosf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
     dx = player->anim.worldPosX - px0;
     dz = player->anim.worldPosZ - pz0;
     if (sqrtf(dx * dx + dz * dz) < ((GroundBaddieState*)state)->baddie.speedScale)

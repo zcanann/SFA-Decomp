@@ -310,7 +310,7 @@ void BombPlantSpore_update(void* obj)
                                         (f32)(lbl_803E53D8 * (double)(fuseCap - fuse) + lbl_803E53D0), NULL, 0);
         }
     }
-    ObjHits_GetPriorityHit((int)obj, &hitObject, 0, 0);
+    ObjHits_GetPriorityHit((GameObject*)obj, &hitObject, 0, 0);
     hitObj = *(void**)((GameObject*)obj)->anim.hitReactState;
     if (BOMBPLANTSPORE_FLAGS(state)->hitSurface == 0)
     {
@@ -413,7 +413,7 @@ void BombPlantSpore_update(void* obj)
     }
 }
 
-void BombPlantSpore_init(void* obj, void* param2)
+void BombPlantSpore_init(GameObject* obj, void* param2)
 {
     BombPlantSporeState* state;
     void* light;
@@ -421,11 +421,11 @@ void BombPlantSpore_init(void* obj, void* param2)
     u32 randAsDouble[2];
     u8 events[8];
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     events[0] = 5;
     state->fuseTimer = lbl_803E53F0;
-    ((GameObject*)obj)->objectFlags |= (BOMBPLANTSPORE_OBJFLAG_HIDDEN | BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->anim.velocityY = lbl_803E53F4;
+    (obj)->objectFlags |= (BOMBPLANTSPORE_OBJFLAG_HIDDEN | BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->anim.velocityY = lbl_803E53F4;
     ObjHits_DisableObject((u32)obj);
     state->spinAngle = randomGetRange(0, 0xffff);
 

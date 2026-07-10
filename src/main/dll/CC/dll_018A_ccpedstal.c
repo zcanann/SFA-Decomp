@@ -36,23 +36,22 @@ int ccpedstal_getExtraSize(void)
  * Otherwise shows model 0 and, while gameBit 0xA9 is set and the object's
  * 0xA9 trigger fires, runs sequence 0, decrements 0xA9 and marks the one-shot;
  * with 0xA9 clear it instead raises the obj's 0x10 hitbox bit. */
-void ccpedstal_updateGameBitGate(int obj, u8* state2)
+void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
 {
     CcpedstalState* state = (CcpedstalState*)state2;
     if (mainGetBit(state->gameBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        Obj_SetActiveModelIndex(obj, 1);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        Obj_SetActiveModelIndex((int)obj, 1);
     }
     else
     {
         int doMark;
-        Obj_SetActiveModelIndex(obj, 0);
+        Obj_SetActiveModelIndex((int)obj, 0);
         if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+            *(u8*)&(obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
             if (ObjTrigger_IsSetById(obj, 0xa9) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -63,8 +62,8 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
+            *(u8*)&(obj)->anim.resetHitboxMode =
+                (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
         }
         doMark = 0;
     check:
@@ -79,29 +78,26 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
  * then on the pedestal's own gameBit: set -> model 0; clear -> model 1 and,
  * when the pending trigger asserts, runs sequence 1, increments 0xA9 and
  * marks the one-shot. */
-void ccpedstal_updateAltVariant(int obj, u8* state2)
+void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
 {
     CcpedstalState* state = (CcpedstalState*)state2;
     if (mainGetBit(0xdc5) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     }
     if (mainGetBit(state->gameBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        Obj_SetActiveModelIndex(obj, 0);
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        Obj_SetActiveModelIndex((int)obj, 0);
     }
     else
     {
         int doMark;
-        Obj_SetActiveModelIndex(obj, 1);
+        Obj_SetActiveModelIndex((int)obj, 1);
         if (ObjTrigger_IsSet(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);

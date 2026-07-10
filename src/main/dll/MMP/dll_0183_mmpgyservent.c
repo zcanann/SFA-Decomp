@@ -45,28 +45,28 @@ void mmp_gyservent_hitDetect(void)
 
 #pragma scheduling off
 #pragma peephole off
-void mmp_gyservent_update(int obj)
+void mmp_gyservent_update(GameObject* obj)
 {
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    int def = *(int*)&(obj)->anim.placementData;
     if (mainGetBit(((MmpGyserventPlacement*)def)->disableBit) != 0)
         return;
-    ((GameObject*)obj)->unkF4 -= framesThisStep;
-    if (((GameObject*)obj)->unkF4 < 0)
+    (obj)->unkF4 -= framesThisStep;
+    if ((obj)->unkF4 < 0)
     {
-        ((GameObject*)obj)->unkF4 = randomGetRange(0x46, 0xF0);
-        ((GameObject*)obj)->unkF8 = randomGetRange(0x1E, 0x3C);
+        (obj)->unkF4 = randomGetRange(0x46, 0xF0);
+        (obj)->unkF8 = randomGetRange(0x1E, 0x3C);
     }
-    if (((GameObject*)obj)->unkF8 == 0)
+    if ((obj)->unkF8 == 0)
         return;
-    ((GameObject*)obj)->unkF8 -= framesThisStep;
-    if (((GameObject*)obj)->unkF8 <= 0)
+    (obj)->unkF8 -= framesThisStep;
+    if ((obj)->unkF8 <= 0)
     {
-        ((GameObject*)obj)->unkF8 = 0;
+        (obj)->unkF8 = 0;
     }
     else
     {
         (*gPartfxInterface)->spawnObject((void*)obj, MMPGYSERVENT_PARTFX_GEYSER, NULL, 2, -1, NULL);
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_450);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_en_diallp_c_450);
     }
 }
 

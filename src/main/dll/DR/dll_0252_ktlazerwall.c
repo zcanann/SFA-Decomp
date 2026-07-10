@@ -76,10 +76,10 @@ void KT_Lazerwall_hitDetect(void)
 {
 }
 
-void KT_Lazerwall_update(int obj)
+void KT_Lazerwall_update(GameObject* obj)
 {
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    u8* flags = ((GameObject*)obj)->extra;
+    int placement = *(int*)&(obj)->anim.placementData;
+    u8* flags = (obj)->extra;
     int intensity;
     int mode;
     int i;
@@ -98,7 +98,7 @@ void KT_Lazerwall_update(int obj)
             return;
         }
     }
-    ((GameObject*)obj)->anim.rotZ += 910;
+    (obj)->anim.rotZ += 910;
     if (intensity >= 15 && (flags[0] & 9) == 0)
     {
         mainSetBits(((KtlazerwallPlacement*)placement)->activeBit, 1);
@@ -120,7 +120,7 @@ void KT_Lazerwall_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         if ((flags[1] & 4) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_beamhit16);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamhit16);
         }
     }
     if (flags[0] & 8)
@@ -132,7 +132,7 @@ void KT_Lazerwall_update(int obj)
     }
     if ((flags[0] & 8) == 0 && (flags[1] & 8) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_beamgenlp16);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamgenlp16);
     }
     {
         f32 timer = ((KtlazerwallState*)flags)->reloadTimer;
@@ -142,7 +142,7 @@ void KT_Lazerwall_update(int obj)
             ((KtlazerwallState*)flags)->reloadTimer = timer - timeDelta;
             if (((KtlazerwallState*)flags)->reloadTimer <= limit)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_blaserflyby16);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_blaserflyby16);
                 ((KtlazerwallState*)flags)->reloadTimer = lbl_803E6898;
             }
         }

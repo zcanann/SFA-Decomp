@@ -50,7 +50,7 @@ void mmp_bridge_update(int* obj)
 
     if (mainGetBit(placement->enableBit) != 0)
     {
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((GameObject*)(obj), 0, 0);
         if (tex != NULL)
         {
             frame = tex->offsetS + ((int)timeDelta << 3);
@@ -69,7 +69,7 @@ void mmp_bridge_update(int* obj)
 void mmp_bridge_init(int* obj)
 {
     MmpBridgePlacement* placement = (MmpBridgePlacement*)*(int**)&((GameObject*)obj)->anim.placementData;
-    ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
+    ObjTextureRuntimeSlot* tex = objFindTexture((GameObject*)(obj), 0, 0);
     if (tex != NULL)
     {
         tex->offsetS = BRIDGE_TEX_OFFSET_START;

@@ -71,10 +71,10 @@ void dimsnowball1c2_free(void)
 {
 }
 
-void dimsnowball1c2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dimsnowball1c2_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4860);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4860);
 }
 
 void dimsnowball1c2_hitDetect(void)
@@ -117,15 +117,15 @@ void dimsnowball1c2_update(int* obj)
     }
 }
 
-void dimsnowball1c2_init(int obj, u8* p)
+void dimsnowball1c2_init(GameObject *obj, u8* p)
 {
     Dimsnowball1c2Placement* def = (Dimsnowball1c2Placement*)p;
     char* inner;
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
-    inner = ((GameObject*)obj)->extra;
+    (obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
+    inner = (obj)->extra;
     ((DimicewallState*)inner)->unk2 = def->initialCountdown;
     *(s16*)inner = def->initialCountdown;
-    ((GameObject*)obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimsnowball1c2_release(void)

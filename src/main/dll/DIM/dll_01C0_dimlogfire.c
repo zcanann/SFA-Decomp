@@ -181,7 +181,7 @@ void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void DIMLogFire_update(int obj)
+void DIMLogFire_update(GameObject* obj)
 {
     extern int getTrickyObject(void);
     extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -197,9 +197,9 @@ void DIMLogFire_update(int obj)
         f32 x, y, z;
     } vec;
 
-    state = ((GameObject*)obj)->extra;
-    tricky = *(int*)&((GameObject*)obj)->anim.placementData;
-    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+    state = (obj)->extra;
+    tricky = *(int*)&(obj)->anim.placementData;
+    (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     switch (state->mode)
     {
     case DIMLOGFIRE_MODE_LIT:
@@ -207,7 +207,7 @@ void DIMLogFire_update(int obj)
         {
             modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mushdizzylp12);
         state->flickerTimerA = state->flickerTimerA - timeDelta;
         if (state->flickerTimerA <= lbl_803E4828)
         {
@@ -231,8 +231,8 @@ void DIMLogFire_update(int obj)
         vec.x = lbl_803E4828;
         vec.y = lbl_803E482C;
         vec.z = lbl_803E4828;
-        fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
-        ObjHits_SetHitVolumeSlot(obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
+        fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
+        ObjHits_SetHitVolumeSlot((int)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:
         if (*(int**)&state->light != NULL)
@@ -241,7 +241,7 @@ void DIMLogFire_update(int obj)
         }
         if (state->strengthInit <= 0)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((int)obj);
             state->mode = DIMLOGFIRE_MODE_LIT;
             state->dousedLatch = 1;
             mainSetBits(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
@@ -249,14 +249,14 @@ void DIMLogFire_update(int obj)
         tricky = getTrickyObject();
         if ((u32)tricky != 0)
         {
-            if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
+            if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 (*(void (**)(int, int, int, int))(**(int**)&((DimlogfirePlacement*)tricky)->linkedObjPtr + 0x28))(
-                    tricky, obj, 1, 4);
+                    tricky, (int)obj, 1, 4);
             }
-            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+            (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
-        ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+        ObjHits_SetHitVolumeSlot((int)obj, 0, 0, 0);
         break;
     case DIMLOGFIRE_MODE_ANIM_HELD:
         break;

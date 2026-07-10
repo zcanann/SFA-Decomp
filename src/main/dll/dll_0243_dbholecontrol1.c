@@ -68,22 +68,22 @@ extern int dbstealerworm_stateHandlerA04();
 extern int dbstealerworm_stateHandlerA02();
 int dbstealerworm_stateHandlerB04(int obj, int p);
 int dbstealerworm_stateHandlerB02(int obj, int baddie);
-int dbstealerworm_stateHandlerA09(int obj, int baddie);
-int dbstealerworm_stateHandlerA06(int obj, int baddie);
-int dbstealerworm_stateHandlerA05(int obj, int baddie);
+int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA05(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA03(int obj, int baddie);
-int dbstealerworm_stateHandlerA01(int obj, int baddie);
+int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerB00(int obj, int baddie);
 int dbstealerworm_stateHandlerB03(int obj, int baddie);
 int dbstealerworm_stateHandlerB01(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA00(int obj, int baddie);
-int dbstealerworm_stateHandlerA04(int obj, int baddie);
-int dbstealerworm_stateHandlerA0E(int obj, int baddie);
-int dbstealerworm_stateHandlerA02(int obj, int baddie);
+int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA04(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA0E(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA0D(int obj, int baddie);
-int dbstealerworm_stateHandlerB05(int obj, int baddie);
-int dbstealerworm_stateHandlerB06(int obj, int baddie);
-int dbstealerworm_stateHandlerA0A(int obj, int baddie);
+int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie);
 
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {

@@ -35,7 +35,7 @@ struct PlayerShadowParamsBlob
 
 void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj);
 void playerShadow_setMode(u8 v);
-void playerShadow_renderObject(void* obj);
+void playerShadow_renderObject(GameObject* obj);
 void playerShadow_func03_nop(void);
 void playerShadow_release(void);
 void playerShadow_initialise(void);

@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0269_EXPLODEPLAN_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 /* opaque per-instance extra state; no field is read or written by this DLL */
 typedef struct ExplodePlanState
@@ -27,8 +28,8 @@ int explodeplan_getObjectTypeId(void);
 void explodeplan_free(void);
 void explodeplan_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void explodeplan_hitDetect(void);
-void explodeplan_update(int obj);
-void explodeplan_init(int obj, char* arg);
+void explodeplan_update(GameObject* obj);
+void explodeplan_init(GameObject* obj, char* arg);
 void explodeplan_release(void);
 void explodeplan_initialise(void);
 

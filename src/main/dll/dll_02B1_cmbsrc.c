@@ -16,6 +16,7 @@
  * defined in dll_02B1_cmbsrc.h.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/game_object.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
@@ -179,7 +180,7 @@ void cmbsrc_hitDetect(int obj)
     state->priorityHitType = 0;
     if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0)
     {
-        state->priorityHitType = ObjHits_GetPriorityHit(obj, 0, 0, 0);
+        state->priorityHitType = ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0);
         if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE)
         {
             state->hitCharge -= 1;
@@ -356,7 +357,7 @@ void cmbsrc_updateVisuals(int obj, int state)
                     subMode = setup->pulseSubMode;
                 }
             }
-            objfx_spawnLightPulse(obj, sourceState->radius, colorIdx, effectMode, subMode,
+            objfx_spawnLightPulse((GameObject*)(obj), sourceState->radius, colorIdx, effectMode, subMode,
                                   (f32)(u32)setup->pulseDistance / lbl_803E7388, 0);
             break;
         case CMBSRC_SEQ_DEFAULT:

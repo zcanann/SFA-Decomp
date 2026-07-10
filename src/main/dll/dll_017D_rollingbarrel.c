@@ -42,7 +42,7 @@ extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);
 extern void ObjHits_DisableObject(u32 objPtr);
 extern void ObjHits_EnableObject(u32 objPtr);
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
+extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -51,35 +51,34 @@ extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #pragma dont_inline on
-void fn_801A5D88(int obj, int explosionVariant)
+void fn_801A5D88(GameObject* obj, int explosionVariant)
 {
-    RollingBarrelState* state = ((GameObject*)obj)->extra;
+    RollingBarrelState* state = (obj)->extra;
     u32 debrisType;
     u32 r2;
     int player;
     f32 dist;
     f32 falloff;
     gRollingBarrelExplodingCount += 1;
-    Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_106);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c_106);
     if (gRollingBarrelExplodingCount > 1)
     {
         debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     else
     {
         debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion(obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
-    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ObjHitbox_SetSphereRadius(
-        obj, (s32)(lbl_803E446C * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
+    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    ObjHitbox_SetSphereRadius((int)obj, (s32)(lbl_803E446C * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
     player = Obj_GetPlayerObject();
     if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
     {
-        dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+        dist = Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
         if (dist <= gRollingBarrelShakeMaxDist)
         {
             falloff = lbl_803E4474 - dist / gRollingBarrelShakeMaxDist;
@@ -136,7 +135,7 @@ void RollingBarrel_hitDetect(void)
 {
 }
 
-void RollingBarrel_update(int obj)
+void RollingBarrel_update(GameObject* obj)
 {
     RollingBarrelState* state;
     RollingBarrelMapData* descriptor;
@@ -150,9 +149,9 @@ void RollingBarrel_update(int obj)
     u32 explosionVariant;
     u8 stateId;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     hitObject = 0;
-    descriptor = *(RollingBarrelMapData**)&((GameObject*)obj)->anim.placementData;
+    descriptor = *(RollingBarrelMapData**)&(obj)->anim.placementData;
     blocked = 0;
     dist_sq = lbl_803E4468;
     stateId = state->state;
@@ -172,8 +171,8 @@ void RollingBarrel_update(int obj)
                     (*gRomCurveInterface)->goNextPoint(&state->curve);
                 }
                 {
-                    f32 dx = state->curve.posX - ((GameObject*)obj)->anim.previousLocalPosX;
-                    f32 dz = state->curve.posZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+                    f32 dx = state->curve.posX - (obj)->anim.previousLocalPosX;
+                    f32 dz = state->curve.posZ - (obj)->anim.previousLocalPosZ;
                     dist_sq = dx * dx + dz * dz;
                 }
             }
@@ -188,7 +187,7 @@ void RollingBarrel_update(int obj)
         }
 
         state->hitVolumeSlot = 10;
-        ObjHitbox_SetSphereRadius(obj, ((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius);
+        ObjHitbox_SetSphereRadius((int)obj, (obj)->anim.modelInstance->primaryHitboxRadius);
 
         if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
         {
@@ -200,39 +199,38 @@ void RollingBarrel_update(int obj)
         }
 
         state->verticalSpeed = gRollingBarrelGravity * timeDelta + state->verticalSpeed;
-        ((GameObject*)obj)->anim.localPosY = state->verticalSpeed * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        (obj)->anim.localPosY = state->verticalSpeed * timeDelta + (obj)->anim.localPosY;
 
-        if (((GameObject*)obj)->anim.localPosY < floor_y)
+        if ((obj)->anim.localPosY < floor_y)
         {
             if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE &&
-                ((GameObject*)obj)->anim.localPosY < gRollingBarrelFallLimitY)
+                (obj)->anim.localPosY < gRollingBarrelFallLimitY)
             {
                 blocked = 1;
             }
             if (blocked == 0 && state->verticalSpeed * state->verticalSpeed > lbl_803E446C)
             {
-                Sfx_PlayFromObjectLimited(obj, SFXTRIG_mfin2_c, 6);
+                Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_mfin2_c, 6);
             }
             state->verticalSpeed *= gRollingBarrelBounceFactor;
-            ((GameObject*)obj)->anim.localPosY = lbl_803E44A4 * floor_y - ((GameObject*)obj)->anim.localPosY;
+            (obj)->anim.localPosY = lbl_803E44A4 * floor_y - (obj)->anim.localPosY;
         }
-        ((GameObject*)obj)->anim.localPosX = state->curve.posX;
-        ((GameObject*)obj)->anim.localPosZ = state->curve.posZ;
+        (obj)->anim.localPosX = state->curve.posX;
+        (obj)->anim.localPosZ = state->curve.posZ;
         *(s16*)obj = (s16)getAngle(state->curve.tangentX, state->curve.tangentZ);
 
         if (state->pitchRising != 0)
         {
-            ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E44A8 * timeDelta + (f32)(int)((GameObject*)obj)->anim.rotZ);
-            if (((GameObject*)obj)->anim.rotZ > 0x5000)
+            (obj)->anim.rotZ = (s16)(lbl_803E44A8 * timeDelta + (f32)(int)(obj)->anim.rotZ);
+            if ((obj)->anim.rotZ > 0x5000)
             {
                 state->pitchRising = 0;
             }
         }
         else
         {
-            ((GameObject*)obj)->anim.rotZ =
-                (s16) - (lbl_803E44A8 * timeDelta - (f32)(int)((GameObject*)obj)->anim.rotZ);
-            if (((GameObject*)obj)->anim.rotZ < 0x3a00)
+            (obj)->anim.rotZ = (s16) - (lbl_803E44A8 * timeDelta - (f32)(int)(obj)->anim.rotZ);
+            if ((obj)->anim.rotZ < 0x3a00)
             {
                 state->pitchRising = 1;
             }
@@ -240,8 +238,7 @@ void RollingBarrel_update(int obj)
 
         {
             f32 rotYStep = lbl_803E44AC * timeDelta;
-            ((GameObject*)obj)->anim.rotY =
-                (s16)(rotYStep * state->curveSpeed + (f32)(int)((GameObject*)obj)->anim.rotY);
+            (obj)->anim.rotY = (s16)(rotYStep * state->curveSpeed + (f32)(int)(obj)->anim.rotY);
         }
         hitPriority = ObjHits_GetPriorityHit(obj, &hitObject, &hitSphereIndex, &hitVolume);
 
@@ -276,7 +273,7 @@ void RollingBarrel_update(int obj)
             state->hitVolumeSlot = 0;
             state->state = ROLLINGBARREL_STATE_CLEANUP;
             state->timer -= lbl_803E44B0;
-            ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
+            ObjGroup_AddObject((int)obj, ROLLINGBARREL_GROUP_ID);
             gRollingBarrelExplodingCount -= 1;
         }
         break;
@@ -284,7 +281,7 @@ void RollingBarrel_update(int obj)
         state->timer += timeDelta;
         if (state->timer >= lbl_803E44B4)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
             return;
         }
         break;
@@ -292,13 +289,13 @@ void RollingBarrel_update(int obj)
 
     if (state->hitVolumeSlot != 0)
     {
-        ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, state->hitVolumeSlot, 1, 0);
+        ObjHits_EnableObject((int)obj);
+        ObjHits_SetHitVolumeSlot((int)obj, state->hitVolumeSlot, 1, 0);
     }
     else
     {
-        ObjHits_DisableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, state->hitVolumeSlot, 0, 0);
+        ObjHits_DisableObject((int)obj);
+        ObjHits_SetHitVolumeSlot((int)obj, state->hitVolumeSlot, 0, 0);
     }
 }
 

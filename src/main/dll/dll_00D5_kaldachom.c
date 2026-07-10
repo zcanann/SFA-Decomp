@@ -89,16 +89,16 @@ extern f32 lbl_803E30CC;
 extern u8 gKaldachomHitLightWork[0x18];
 
 #pragma dont_inline on
-void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
+void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)
 {
     u8 loadLocked;
     int placement;
     int work;
 
-    placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    placement = *(int*)&(obj)->anim.placementData;
     gKaldachomDustSpawnScratch = lbl_803E30A0 + (float)(int)*(char*)(placement + 0x28) / lbl_803E30A4;
     control->hitFlashTimer = lbl_803E308C;
-    Sfx_PlayFromObject(obj, SFXTRIG_wp_beamgenlp16_276);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamgenlp16_276);
     work = 0x28;
     do
     {
@@ -109,9 +109,9 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
     {
         work = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
-        ((ObjPlacement*)work)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)work)->posY = lbl_803E30A8 + ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)work)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)work)->posX = (obj)->anim.localPosX;
+        ((ObjPlacement*)work)->posY = lbl_803E30A8 + (obj)->anim.localPosY;
+        ((ObjPlacement*)work)->posZ = (obj)->anim.localPosZ;
         ((ObjPlacement*)work)->color[0] = ((ObjPlacement*)placement)->color[0];
         ((ObjPlacement*)work)->color[1] = ((ObjPlacement*)placement)->color[1];
         ((ObjPlacement*)work)->color[2] = ((ObjPlacement*)placement)->color[2];
@@ -176,25 +176,25 @@ void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
 }
 
 #pragma dont_inline off
-void kaldachom_handleAnimEvents(int obj, int state, int eventStateArg)
+void kaldachom_handleAnimEvents(GameObject* obj, int state, int eventStateArg)
 {
     KaldaChomControl* control = ((CampfireState*)state)->control;
     GroundBaddieState* eventState = (GroundBaddieState*)eventStateArg;
     int spawnCount;
 
     gKaldachomMouthSpawnScratch =
-        lbl_803E30A0 + (f32)(s32)(s8) * (u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x28) / lbl_803E30A4;
+        lbl_803E30A0 + (f32)(s32)(s8) * (u8*)(*(int*)&(obj)->anim.placementData + 0x28) / lbl_803E30A4;
 
     if (((s32)eventState->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0)
     {
         eventState->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy211_273);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy211_273);
     }
     if (((s32)eventState->baddie.eventFlags & 0x80) != 0)
     {
         control->climbFxIndex = randomGetRange(0, 2);
         eventState->baddie.eventFlags &= ~0x80;
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_impyflap16);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mn_impyflap16);
         for (spawnCount = (2 - control->climbFxIndex) * 10; spawnCount != 0; spawnCount--)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 1809, 0, 4, -1, &gKaldachomMouthSpawnScratch);
@@ -203,17 +203,17 @@ void kaldachom_handleAnimEvents(int obj, int state, int eventStateArg)
     if (((s32)eventState->baddie.eventFlags & 0x40) != 0)
     {
         eventState->baddie.eventFlags &= ~0x40;
-        kaldaChomFn_80168374((GameObject*)(obj), state, 0);
+        kaldaChomFn_80168374(obj, state, 0);
     }
     if (((s32)eventState->baddie.eventFlags & 0x800) != 0)
     {
         eventState->baddie.eventFlags &= ~0x800;
-        kaldaChomFn_80168374((GameObject*)(obj), state, 1);
+        kaldaChomFn_80168374(obj, state, 1);
     }
     if (((s32)eventState->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
         eventState->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_cling03);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mn_cling03);
     }
     if (((s32)eventState->baddie.eventFlags & 0x400) != 0)
     {
@@ -302,7 +302,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
             {
                 if ((result != 0x10) && (control->hitFlashTimer < lbl_803E30C0))
                 {
-                    kaldaChomFn_8016821c(obj, control);
+                    kaldaChomFn_8016821c((GameObject*)(obj), control);
                     *(f32*)(gKaldachomHitLightWork + 8) = lbl_803E3078;
                     *(u16*)(gKaldachomHitLightWork + 4) = 0;
                     *(u16*)(gKaldachomHitLightWork + 2) = 0;
@@ -372,12 +372,12 @@ int kaldachom_getObjectTypeId(void)
     return 0x49;
 }
 
-void kaldachom_free(int obj)
+void kaldachom_free(GameObject* obj)
 {
     u32 state;
 
-    state = *(u32*)&((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, KALDACHOM_OBJGROUP);
+    state = *(u32*)&(obj)->extra;
+    ObjGroup_RemoveObject((int)obj, KALDACHOM_OBJGROUP);
     (*(VtableFn*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
 }
 
@@ -481,7 +481,7 @@ void kaldachom_update(int obj)
             else
             {
                 ref = (int)((CampfireState*)state)->control;
-                texture = (int)objFindTexture((void*)obj, 0, 0);
+                texture = (int)objFindTexture((GameObject*)obj, 0, 0);
                 ((KaldaChomControl*)ref)->textureScrollAngle += 0x1000;
                 scrollPhase =
                     mathSinf((gKaldachomPi * (f32)(s32)((KaldaChomControl*)ref)->textureScrollAngle) / lbl_803E30B8);
@@ -489,7 +489,7 @@ void kaldachom_update(int obj)
                 ((ObjTextureRuntimeSlot*)texture)->textureId = (int)(lbl_803E30B0 * scrollPhase);
                 player = Obj_GetPlayerObject();
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
-                kaldachom_handleAnimEvents(obj, state, state);
+                kaldachom_handleAnimEvents((GameObject*)(obj), state, state);
                 (*(void (**)(int, int, double, int))(*(int*)gBaddieControlInterface + 0x2c))(
                     obj, state, (double)lbl_803E3060, 0xffffffff);
                 if (((CampfireState*)state)->controlMode != 6)
@@ -508,27 +508,26 @@ void kaldachom_update(int obj)
     }
 }
 
-void kaldachom_init(int obj, int data, int skip_alloc)
+void kaldachom_init(GameObject* obj, int data, int skip_alloc)
 {
     int state;
     KaldaChomControl* control;
     int player;
     u8 initMode;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     initMode = 6;
     if (skip_alloc != 0)
     {
         initMode |= 1;
     }
     (*(void (**)(int, int, int, int, int, int, u8, double))(*(int*)gBaddieControlInterface + 0x58))(
-        obj, data, state, 8, 6, 0, initMode, (double)lbl_803E30C8);
-    ((GameObject*)obj)->animEventCallback = NULL;
+        (int)obj, data, state, 8, 6, 0, initMode, (double)lbl_803E30C8);
+    (obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
-    ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
-    ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E307C;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+    ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
+    (obj)->anim.currentMoveProgress = lbl_803E307C;
+    *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     (*(VtableFn*)(*gPlayerInterface + 0x14))(obj, state, 0);
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
@@ -536,14 +535,14 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     player = Obj_GetPlayerObject();
     ((CampfireState*)state)->targetObj = player;
     ((GroundBaddieState*)state)->baddie.physicsActive = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
     control->pullupSfxTimer = (f32)(int)randomGetRange(300, 600);
     control->idleAnimTimer = (f32)(int)randomGetRange(0, 499);
     control->unk3C = lbl_803E3060;
     control->spawnedDustObj = NULL;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | KALDACHOM_OBJFLAG_HITDETECT_DISABLED;
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32) * (s8*)(data + 0x28) / lbl_803E30A4;
-    ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E30CC * ((GameObject*)obj)->anim.rootMotionScale));
+    (obj)->objectFlags = (obj)->objectFlags | KALDACHOM_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32) * (s8*)(data + 0x28) / lbl_803E30A4;
+    ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E30CC * (obj)->anim.rootMotionScale));
     if (skip_alloc == 0)
     {
         gKaldachomEffectResource = Resource_Acquire(KALDACHOM_EFFECT_RESOURCE_ID, 1);

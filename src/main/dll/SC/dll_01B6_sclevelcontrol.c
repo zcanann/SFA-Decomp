@@ -84,9 +84,9 @@ static const f32 lbl_803E5578 = 0.1f;
 static const f32 lbl_803E557C = 0.0005f;
 static const f32 lbl_803E5580 = 300.0f;
 
-int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int sc_levelcontrol_processAnimEventsCallback(GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int i;
 
     animUpdate->sequenceEventActive = 0;
@@ -108,7 +108,7 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdate
     }
     ((ScLevelControlState*)state)->flags1F |= 1;
     mainSetBits(0x60f, 0);
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     Obj_GetPlayerObject();
     if (((ScLevelControlState*)state)->mode == 5)
     {
@@ -130,9 +130,9 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdate
 
 u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)((GameObject*)obj)->extra)->mode; }
 
-void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
+void sc_levelcontrol_applyAnimEventState(GameObject *obj, u8 scale)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     u8 mode;
 
     ((ScLevelControlState*)state)->mode = scale;
@@ -175,7 +175,7 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 int sc_levelcontrol_getExtraSize(void) { return 0x24; }
 int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
-void sc_levelcontrol_free(int obj)
+void sc_levelcontrol_free(GameObject *obj)
 {
     gameTimerStop();
     disableHeavyFog();
@@ -200,16 +200,16 @@ void sc_levelcontrol_hitDetect(void)
    village mode gates, runs the fade/exit countdown timers, eases the heavy
    fog level, tracks the totem combo code (bits 0x7d..0x7f) into the music
    step, and keeps the area music in sync with the day/night sun position. */
-void sc_levelcontrol_update(int obj)
+void sc_levelcontrol_update(GameObject *obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     u8* player = Obj_GetPlayerObject();
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        if (((GameObject*)obj)->unkF4 == 2)
+        if ((obj)->unkF4 == 2)
         {
             getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
             getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
@@ -237,7 +237,7 @@ void sc_levelcontrol_update(int obj)
                 getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
-        ((GameObject*)obj)->unkF4 = 0;
+        (obj)->unkF4 = 0;
     }
     if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(GAMEBIT_LV_ChallengeGate2Complete) != 0)
     {
@@ -338,10 +338,10 @@ void sc_levelcontrol_update(int obj)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E5564;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5568;
-            if (((GameObject*)obj)->unkF8 != 0)
+            if ((obj)->unkF8 != 0)
             {
                 skyFn_80088e54(1, lbl_803E5554);
-                ((GameObject*)obj)->unkF8 = 0;
+                (obj)->unkF8 = 0;
             }
         }
         else
@@ -478,7 +478,7 @@ void sc_levelcontrol_update(int obj)
         mainSetBits(0xbe3, 1);
     }
     {
-        int state2 = *(int*)&((GameObject*)obj)->extra;
+        int state2 = *(int*)&(obj)->extra;
         Obj_GetPlayerObject();
         if (((ScLevelControlState*)state2)->mode == 5)
         {
@@ -541,16 +541,16 @@ void sc_levelcontrol_update(int obj)
     }
 }
 
-void sc_levelcontrol_init(int obj)
+void sc_levelcontrol_init(GameObject *obj)
 {
-    ScLevelControlState* st = ((GameObject*)obj)->extra;
+    ScLevelControlState* st = (obj)->extra;
     int state = (int)st;
     f32 fogNear;
 
     ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 0;
     ((ScLevelControlState*)state)->areaCell = 0xff;
     ((ScLevelControlState*)state)->mode = 0;
-    ((GameObject*)obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
+    (obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
     mainSetBits(0x60f, 1);
     mainSetBits(0x2b8, 0);
     mainSetBits(0x4bd, 1);
@@ -571,13 +571,13 @@ void sc_levelcontrol_init(int obj)
     unlockLevel(mapGetDirIdx(SCLEVELCONTROL_MAP_SWAPCIRCLE), 0, 0);
     if (getSaveGameLoadStatus() != 0)
     {
-        ((GameObject*)obj)->unkF4 = 2;
+        (obj)->unkF4 = 2;
     }
     else
     {
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
-    ((GameObject*)obj)->unkF8 = 1;
+    (obj)->unkF8 = 1;
 }
 
 void sc_levelcontrol_release(void)

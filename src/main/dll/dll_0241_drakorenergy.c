@@ -59,7 +59,7 @@ extern f32 Vec_distance(int, int);
 extern f32 Vec_xzDistance(int, int);
 extern void playerAddHealth(int obj, int amount);
 
-extern int Obj_PredictInterceptPoint(int, f32, f32*, f32*);
+extern int Obj_PredictInterceptPoint(GameObject*, f32, f32*, f32*);
 extern void PSVECSubtract(f32*, f32*, f32*);
 extern void PSVECNormalize(f32*, f32*);
 extern void PSVECScale(f32*, f32*, f32);
@@ -87,13 +87,13 @@ void drakorenergy_free(void)
 {
 }
 
-void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void drakorenergy_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    DrakorEnergyState* state = ((GameObject*)obj)->extra;
+    DrakorEnergyState* state = (obj)->extra;
     u32 mode = state->mode;
     if (mode != DRAKORENERGY_MODE_IDLE && mode != DRAKORENERGY_MODE_COLLECTED)
     {
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E6278);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E6278);
     }
 }
 
@@ -128,7 +128,7 @@ void drakorenergy_update(int obj)
         {
             ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBounceRestitution * -((GameObject*)obj)->anim.velocityY;
             dist = (((GameObject*)obj)->anim.velocityY >= zeroF) ? ((GameObject*)obj)->anim.velocityY
-                                                             : -((GameObject*)obj)->anim.velocityY;
+                                                                 : -((GameObject*)obj)->anim.velocityY;
             if (dist < lbl_803E6284)
             {
                 ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_BOBBING;
@@ -169,7 +169,7 @@ void drakorenergy_update(int obj)
         else
         {
             spd = gDrakorEnergyChaseSpeed;
-            Obj_PredictInterceptPoint(player, spd / lbl_803E6294, (f32*)(obj + 0xc), interceptPt);
+            Obj_PredictInterceptPoint((GameObject*)(player), spd / lbl_803E6294, (f32*)(obj + 0xc), interceptPt);
             PSVECSubtract(interceptPt, (f32*)(obj + 0xc), seekDir);
             PSVECNormalize(seekDir, seekDir);
             if (dist < spd)

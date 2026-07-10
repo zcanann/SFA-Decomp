@@ -123,7 +123,7 @@ void TreasureChest_free(void)
     Resource_Release(lbl_803DDAE0);
 }
 
-void TreasureChest_hitDetect(int obj)
+void TreasureChest_hitDetect(GameObject* obj)
 {
     u8* state;
     TreasureChestSetup* setup;
@@ -132,11 +132,11 @@ void TreasureChest_hitDetect(int obj)
     state = ((GameObject*)obj)->extra;
     if (((u32)state[0] >> 5 & 1) != 0)
     {
-        hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
+        hitDetectFn_80097070(lbl_803E3C24, (int)obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
     }
 }
 
-void TreasureChest_update(int obj)
+void TreasureChest_update(GameObject* obj)
 {
 
     ChestFlags* flags;
@@ -156,7 +156,7 @@ void TreasureChest_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E3C2C, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3C2C, 0);
     }
     if (flags->open == 0)
     {
@@ -165,7 +165,7 @@ void TreasureChest_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             playerPullOutStaff((GameObject*)(Obj_GetPlayerObject()), 1);
-            nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, obj, &nearestDist);
+            nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, (int)obj, &nearestDist);
             if (nearestObject != 0)
             {
                 (*gObjectTriggerInterface)->setObjects((int)((GameObject*)nearestObject)->anim.seqId, 0, 0);
@@ -183,8 +183,8 @@ void TreasureChest_update(int obj)
         flags->trigger = 0;
         blk.params = lbl_802C22B0;
         hitPriority = 0xffffffff;
-        hitResult =
-            ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitPriority, &hitVolume, &blk.x, &blk.y, blk.z);
+        hitResult = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitPriority, &hitVolume, &blk.x,
+                                                       &blk.y, blk.z);
         if ((hitResult != 0) && (hitResult != 0xe))
         {
             blk.x = blk.x + playerMapOffsetX;

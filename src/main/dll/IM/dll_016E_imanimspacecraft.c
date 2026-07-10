@@ -63,7 +63,7 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     ObjTextureRuntimeSlot* tex;
 
     state = ((GameObject*)obj)->extra;
-    tex = objFindTexture(obj, 1, 0);
+    tex = objFindTexture((GameObject*)(obj), 1, 0);
     tex->textureId = ((state->flags >> 1 & 1) ^ 1) << 8;
     if (!(state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON))
     {
@@ -88,7 +88,7 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         *(f32*)(lbl_803AC948 + 0x14) = lbl_803E4778;
         (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
     }
-    tex = objFindTexture(obj, 0, 0);
+    tex = objFindTexture((GameObject*)(obj), 0, 0);
     tex->textureId = 0x100;
     for (i = 0; i < animUpdate->eventCount; i++)
     {

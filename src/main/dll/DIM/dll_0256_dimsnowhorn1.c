@@ -36,7 +36,7 @@ int DIMSnowHorn1_defaultStateHandler(void)
     return 0x0;
 }
 
-int DIMSnowHorn1_stateHandler04(int obj, int state)
+int DIMSnowHorn1_stateHandler04(GameObject* obj, int state)
 {
     f32 k = lbl_803E8234;
     int idx;
@@ -44,22 +44,22 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    ((GameObject*)obj)->anim.velocityX = k;
-    ((GameObject*)obj)->anim.velocityY = k;
-    ((GameObject*)obj)->anim.velocityZ = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
     *(u32*)((char*)state) |= 0x200000;
 
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         idx = randomGetRange(0, 1);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803DC740[idx];
-        ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC73C[idx], lbl_803E8234, 0);
     }
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
     {
         return -2;
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
         buttonDisable(0, PAD_BUTTON_A);
@@ -100,24 +100,24 @@ int DIMSnowHorn1_stateHandler00(GameObject* obj)
     }
 }
 
-int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
+int DIMSnowHorn1_stateHandler02(GameObject* obj, int state, f32 fv)
 {
-    DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
+    DIMSnowHorn1State* inner = (obj)->extra;
     f32 k = lbl_803E8234;
     s16 timer;
 
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    ((GameObject*)obj)->anim.velocityX = k;
-    ((GameObject*)obj)->anim.velocityY = k;
-    ((GameObject*)obj)->anim.velocityZ = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
     *(u32*)((char*)state) |= 0x200000;
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
 
-    if (((GameObject*)obj)->anim.currentMove != lbl_803DC748)
+    if ((obj)->anim.currentMove != lbl_803DC748)
     {
-        ObjAnim_SetCurrentMove(obj, lbl_803DC748, k, 0);
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
     }
 
     inner->countdownTimer = randomGetRange(0x4b0, 0x960);
@@ -127,7 +127,7 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
     {
         return -4;
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
         buttonDisable(0, PAD_BUTTON_A);
@@ -135,31 +135,31 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler03(int obj, int state)
+int DIMSnowHorn1_stateHandler03(GameObject* obj, int state)
 {
-    DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
+    DIMSnowHorn1State* inner = (obj)->extra;
     f32 k = lbl_803E8234;
     int idx;
 
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    ((GameObject*)obj)->anim.velocityX = k;
-    ((GameObject*)obj)->anim.velocityY = k;
-    ((GameObject*)obj)->anim.velocityZ = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
     *(u32*)((char*)state) |= 0x200000;
 
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         idx = randomGetRange(0, 1);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803DC740[idx];
-        ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC73C[idx], lbl_803E8234, 0);
     }
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
     {
         return -1;
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
         {
@@ -174,26 +174,26 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
+int DIMSnowHorn1_stateHandler01(GameObject* obj, int state, f32 fv)
 {
-    DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
+    DIMSnowHorn1State* inner = (obj)->extra;
     f32 k = lbl_803E8234;
     s16 timer;
 
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    ((GameObject*)obj)->anim.velocityX = k;
-    ((GameObject*)obj)->anim.velocityY = k;
-    ((GameObject*)obj)->anim.velocityZ = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
     *(u32*)((char*)state) |= 0x200000;
 
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
-        if (((GameObject*)obj)->anim.currentMove != lbl_803DC748)
+        if ((obj)->anim.currentMove != lbl_803DC748)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC748, k, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
         }
         inner->countdownTimer = randomGetRange(0x4b0, 0x960);
     }
@@ -204,7 +204,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     {
         return -3;
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
         {
@@ -219,30 +219,30 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler0B(int obj, int state)
+int DIMSnowHorn1_stateHandler0B(GameObject* obj, int state)
 {
     int sub;
     DIMSnowHorn1State* inner;
     f32 k;
 
-    inner = ((GameObject*)obj)->extra;
-    sub = *(int*)&((GameObject*)obj)->anim.hitReactState;
+    inner = (obj)->extra;
+    sub = *(int*)&(obj)->anim.hitReactState;
     *(u32*)((char*)state) |= 0x200000;
     k = lbl_803E8234;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    ((GameObject*)obj)->anim.velocityX = k;
-    ((GameObject*)obj)->anim.velocityY = k;
-    ((GameObject*)obj)->anim.velocityZ = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
 
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         inner->flags &= ~SNOWHORN1_FLAG_HITVOL_PRIO;
         ((ObjHitsPriorityState*)sub)->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
-        ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x204, k, 0);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8238;
-        Sfx_PlayFromObject(obj, SFXTRIG_thorntail_chew2);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_thorntail_chew2);
     }
     if ((((ObjHitsPriorityState*)sub)->flags & OBJHITS_PRIORITY_STATE_TRACK_CONTACT) &&
         (((ObjHitsPriorityState*)sub)->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
@@ -261,14 +261,14 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
         *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumeId = 1;
         ((ObjHitsPriorityState*)sub)->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
     }
-    if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E823C)
+    if ((obj)->anim.currentMoveProgress > lbl_803E823C)
     {
         return 8;
     }
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
+int DIMSnowHorn1_stateHandler09(GameObject* obj, int state, f32 fv)
 {
     int near;
     DIMSnowHorn1State* inner;
@@ -276,7 +276,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     s16 turnRate;
 
     near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &sp);
-    inner = ((GameObject*)obj)->extra;
+    inner = (obj)->extra;
     *(u32*)((char*)state) |= 0x200000;
 
     if (*(s16*)((char*)state + 0x334) < inner->advanceCountThreshold ||
@@ -290,19 +290,19 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
         ((DIMSnowHorn1State*)state)->baddie.turnRate = -((DIMSnowHorn1State*)state)->baddie.turnRate;
     }
     turnRate = ((DIMSnowHorn1State*)state)->baddie.turnRate;
-    if (turnRate > 0 && ((GameObject*)obj)->anim.currentMove != 0x201)
+    if (turnRate > 0 && (obj)->anim.currentMove != 0x201)
     {
-        ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x201, lbl_803E8234, 0);
     }
     else if (turnRate <= 0)
     {
-        if (((GameObject*)obj)->anim.currentMove != 0x200)
+        if ((obj)->anim.currentMove != 0x200)
         {
-            ObjAnim_SetCurrentMove(obj, 0x200, lbl_803E8234, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x200, lbl_803E8234, 0);
         }
     }
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8278;
-    (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 8);
+    (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))((int)obj, state, fv, 8);
 
     if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A)
     {
@@ -315,21 +315,21 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler08(int obj, int state)
+int DIMSnowHorn1_stateHandler08(GameObject* obj, int state)
 {
-    DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
+    DIMSnowHorn1State* inner = (obj)->extra;
 
     *(u32*)((char*)state) |= 0x200000;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 
-    switch (((GameObject*)obj)->anim.currentMove)
+    switch ((obj)->anim.currentMove)
     {
     case 0x206:
         if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
         {
             if (((DIMSnowHorn1State*)state)->baddie.moveSpeed > lbl_803E8234)
             {
-                ObjAnim_SetCurrentMove(obj, 0x205, lbl_803E8234, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0x205, lbl_803E8234, 0);
                 ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
             }
             else
@@ -354,7 +354,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
                 lbl_803E8234 != ((DIMSnowHorn1State*)state)->baddie.moveInputX ||
                 lbl_803E8234 != ((DIMSnowHorn1State*)state)->baddie.moveInputZ)
             {
-                ObjAnim_SetCurrentMove(obj, 0x207, lbl_803E8234, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0x207, lbl_803E8234, 0);
                 ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8280;
             }
         }
@@ -366,14 +366,14 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
         }
         break;
     default:
-        ObjAnim_SetCurrentMove(obj, 0x206, lbl_803E8234, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x206, lbl_803E8234, 0);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8280;
         break;
     }
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler07(int obj, int state)
+int DIMSnowHorn1_stateHandler07(GameObject* obj, int state)
 {
     void* near;
     DIMSnowHorn1State* inner;
@@ -381,33 +381,33 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     f32 fz;
 
     near = (void*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &sp);
-    inner = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    inner = (obj)->extra;
+    *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     fz = lbl_803E8234;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = fz;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = fz;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = fz;
-    ((GameObject*)obj)->anim.velocityZ = fz;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityY = fz;
+    (obj)->anim.velocityZ = fz;
     *(u32*)((char*)state) |= 0x200000;
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x338) = 0;
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
         ((DIMSnowHorn1State*)state)->baddie.velSmoothTime = lbl_803E8284;
-        if (((GameObject*)obj)->anim.currentMove != lbl_803DC748)
+        if ((obj)->anim.currentMove != lbl_803DC748)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC748, fz, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, fz, 0);
         }
     }
-    switch (((GameObject*)obj)->anim.currentMove)
+    switch ((obj)->anim.currentMove)
     {
     case 0x209:
     case 0x20a:
         if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
         {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, lbl_803E8234, 0);
             ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
         }
         break;
@@ -442,13 +442,13 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     {
         if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_hightop_call1);
         }
     }
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler06(int obj, int state)
+int DIMSnowHorn1_stateHandler06(GameObject* obj, int state)
 {
     DIMSnowHorn1State* inner;
     f32 fz;
@@ -457,22 +457,22 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = fz;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = fz;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = fz;
-    ((GameObject*)obj)->anim.velocityZ = fz;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityY = fz;
+    (obj)->anim.velocityZ = fz;
     *(u32*)((char*)state) |= 0x200000;
-    inner = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-    ((GameObject*)obj)->hitVolumeIndex = mainGetBit(GAMEBIT_SNOWHORN_PUZZLE) != 0;
+    inner = (obj)->extra;
+    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    (obj)->hitVolumeIndex = mainGetBit(GAMEBIT_SNOWHORN_PUZZLE) != 0;
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
-        if (((GameObject*)obj)->anim.currentMove != 0x13)
+        if ((obj)->anim.currentMove != 0x13)
         {
-            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x13, lbl_803E8234, 0);
         }
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
     {
         if ((*gGameUIInterface)->isEventReady(GAMEBIT_SNOWHORN_PUZZLE) != 0)
         {
@@ -502,7 +502,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
         }
         else
         {
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+            if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 if (mainGetBit(GAMEBIT_ITEM_AlpineRoot_028) != 0)
                 {
@@ -520,7 +520,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler05(int obj, int state)
+int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
 {
     void* player;
     DIMSnowHorn1State* inner;
@@ -535,12 +535,12 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = resetValue;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = resetValue;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedA = resetValue;
-    ((GameObject*)obj)->anim.velocityX = resetValue;
-    ((GameObject*)obj)->anim.velocityY = resetValue;
-    ((GameObject*)obj)->anim.velocityZ = resetValue;
+    (obj)->anim.velocityX = resetValue;
+    (obj)->anim.velocityY = resetValue;
+    (obj)->anim.velocityZ = resetValue;
     *(int*)state |= 0x200000;
 
-    inner = ((GameObject*)obj)->extra;
+    inner = (obj)->extra;
     player = (void*)Obj_GetPlayerObject();
     switch (inner->mode)
     {
@@ -565,14 +565,14 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
-        if (((GameObject*)obj)->anim.currentMove != 0x13)
+        if ((obj)->anim.currentMove != 0x13)
         {
-            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x13, lbl_803E8234, 0);
         }
     }
 
     if (mainGetBit(bit_a) != 0 && mainGetBit(bit_b) != 0 && player != NULL &&
-        Vec_distance((char*)player + 0x18, (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E828C)
+        Vec_distance((char*)player + 0x18, (void*)&(obj)->anim.worldPosX) < lbl_803E828C)
     {
         switch (inner->mode)
         {
@@ -591,12 +591,12 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         phase = inner->proximityPhase;
         switch (phase)
         {
         case 1:
-            if (Vec_distance((char*)player + 0x18, (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E8290)
+            if (Vec_distance((char*)player + 0x18, (void*)&(obj)->anim.worldPosX) < lbl_803E8290)
             {
                 o1 = ObjList_FindObjectById(id_a);
                 if (o1 != NULL)
@@ -609,8 +609,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
             break;
         case 0:
         case 2:
-            if ((u32)phase == 0 ||
-                Vec_distance((char*)player + 0x18, (void*)&((GameObject*)obj)->anim.worldPosX) > lbl_803E8240)
+            if ((u32)phase == 0 || Vec_distance((char*)player + 0x18, (void*)&(obj)->anim.worldPosX) > lbl_803E8240)
             {
                 o1 = ObjList_FindObjectById(id_a);
                 o2 = ObjList_FindObjectById(id_c);
@@ -626,7 +625,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
             {
                 if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd08, lbl_803E8294, lbl_803E8284) != 0)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_thorntail_chew1);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_thorntail_chew1);
                 }
             }
             break;
@@ -635,7 +634,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
+int DIMSnowHorn1_stateHandler0A(GameObject* obj, int state, f32 t)
 {
     int near;
     DIMSnowHorn1State* inner;
@@ -651,12 +650,12 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 
     nearDist = lbl_803E8240;
     near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
-    inner = ((GameObject*)obj)->extra;
+    inner = (obj)->extra;
     if (mainGetBit(GAMEBIT_SNOWHORN_RIDING) != 0)
     {
         if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_hightop_call1);
         }
     }
     *(int*)((char*)state + 0) |= 0x200000;
@@ -668,9 +667,9 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
     if (*(s16*)((char*)state + 0x334) < 0x5a)
     {
-        ((GameObject*)obj)->anim.rotX =
+        (obj)->anim.rotX =
             lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State*)state)->baddie.turnRate * t / lbl_803E8254) +
-            (f32)(s16) * &((GameObject*)obj)->anim.rotX;
+            (f32)(s16) * &(obj)->anim.rotX;
     }
     else
     {
@@ -699,15 +698,13 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
                                                           ((DIMSnowHorn1State*)state)->baddie.velSmoothTime) +
                                                      ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
 
-    if (((GameObject*)obj)->anim.rotY > 0)
+    if ((obj)->anim.rotY > 0)
     {
-        target =
-            target - lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * &((GameObject*)obj)->anim.rotY / lbl_803E8268);
+        target = target - lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * &(obj)->anim.rotY / lbl_803E8268);
     }
     else
     {
-        target =
-            target - lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * &((GameObject*)obj)->anim.rotY / lbl_803E8268);
+        target = target - lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * &(obj)->anim.rotY / lbl_803E8268);
     }
     if (target < lbl_80335128[2])
     {
@@ -718,9 +715,9 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
                                                      ((DIMSnowHorn1State*)state)->baddie.animSpeedA;
 
     changed = 0;
-    blend = ((GameObject*)obj)->anim.currentMoveProgress;
+    blend = (obj)->anim.currentMoveProgress;
     phase = 0;
-    while ((&lbl_803DC748)[phase] != ((GameObject*)obj)->anim.currentMove && phase < 2)
+    while ((&lbl_803DC748)[phase] != (obj)->anim.currentMove && phase < 2)
     {
         phase++;
     }
@@ -728,7 +725,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     {
         phase = 0;
     }
-    if (((GameObject*)obj)->anim.currentMove == 0x208)
+    if ((obj)->anim.currentMove == 0x208)
     {
         phase = 1;
     }
@@ -755,7 +752,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     useNormal = 1;
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0 && ((GameObject*)obj)->anim.currentMove == 0x208)
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0 && (obj)->anim.currentMove == 0x208)
     {
         changed = 1;
         useNormal = 0;
@@ -764,16 +761,16 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     {
         if (phase == 1 && useNormal != 0)
         {
-            ObjAnim_SetCurrentMove(obj, 0x208, blend, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x208, blend, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove(obj, (&lbl_803DC748)[phase], blend, 0);
+            ObjAnim_SetCurrentMove((int)obj, (&lbl_803DC748)[phase], blend, 0);
         }
     }
 
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-        obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA, &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
+        (int)obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA, &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
     if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A) != 0)
     {
         if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
@@ -968,7 +965,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
     return (u32)(-(s8)animUpdate->sequenceEventActive | (s8)animUpdate->sequenceEventActive) >> 0x1f;
 }
 
-void DIMSnowHorn1_func22(int obj, f32 scale)
+void DIMSnowHorn1_func22(GameObject* obj, f32 scale)
 {
     void* pathMtx;
     struct
@@ -987,26 +984,26 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     f32 z;
 
     pathMtx = (void*)ObjPath_GetPointModelMtx(obj, 1);
-    ObjPath_GetPointLocalPosition((GameObject*)(obj), 1, &x, &y, &z);
+    ObjPath_GetPointLocalPosition(obj, 1, &x, &y, &z);
     transform.x = x;
     transform.y = y;
     transform.z = z;
     transform.rotX = 0;
     transform.rotY = 0;
     transform.rotZ = 0;
-    transform.scale = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+    transform.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos((f32*)gDIMSnowHorn1ModelMtx, (s16*)&transform);
     mtx44_mult(gDIMSnowHorn1ModelMtx, pathMtx, gDIMSnowHorn1ModelMtx);
     fn_8003B950(gDIMSnowHorn1ModelMtx);
 }
 
-int DIMSnowHorn1_setScale(int obj)
+int DIMSnowHorn1_setScale(GameObject* obj)
 {
     DIMSnowHorn1State* state;
     f32 range;
     void* nearest;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     range = lbl_803E8240;
 
     switch (state->mode)
@@ -1019,7 +1016,7 @@ int DIMSnowHorn1_setScale(int obj)
     {
         return 0;
     }
-    if (((GameObject*)obj)->pendingParentObj != NULL)
+    if ((obj)->pendingParentObj != NULL)
     {
         return 0;
     }
@@ -1107,20 +1104,20 @@ void DIMSnowHorn1_free(int obj)
     ObjGroup_RemoveObject(obj, DIMSNOWHORN1_OBJGROUP);
 }
 
-void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void DIMSnowHorn1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
+    DIMSnowHorn1State* state = (obj)->extra;
 
     if (visible == -1)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E8258);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E8258);
         ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY, &state->pathPosZ, 0);
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, state->pathPointArray);
     }
 
     if ((state->mountMode != 2) && (visible != 0))
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E8258);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E8258);
         ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY, &state->pathPosZ, 0);
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, state->pathPointArray);
     }
@@ -1130,13 +1127,13 @@ void DIMSnowHorn1_hitDetect(void)
 {
 }
 
-void fn_802BB4B4(int obj, int frameStep, int slot)
+void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
 {
     extern u32 getButtonsJustPressed(int port);
     extern u32 getButtonsHeld(int port);
     int matchFrame = (slot != -1) ? ((framesThisStep - 1 - slot) == 0) : 1;
     int* viewSlot = (int*)Camera_GetCurrentViewSlot();
-    DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
+    DIMSnowHorn1State* state = (obj)->extra;
 
     state->baddie.hitPoints = 0;
     *(u32*)state &= ~0x8000;
@@ -1186,23 +1183,22 @@ void fn_802BB4B4(int obj, int frameStep, int slot)
 
     if (*(s8*)&state->baddie.physicsActive != 0)
     {
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E82A4 * (f32)frameStep;
+        (obj)->anim.velocityY = (obj)->anim.velocityY - lbl_803E82A4 * (f32)frameStep;
     }
 
     {
-        f32 cur = ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityY =
-            (cur < lbl_803E82A8) ? lbl_803E82A8 : ((cur > lbl_803E8234) ? lbl_803E8234 : cur);
+        f32 cur = (obj)->anim.velocityY;
+        (obj)->anim.velocityY = (cur < lbl_803E82A8) ? lbl_803E82A8 : ((cur > lbl_803E8234) ? lbl_803E8234 : cur);
     }
 
     (*(void (**)(int, int, f32, f32, int*, f32*))(*(int*)gPlayerInterface + 0x8))(
-        obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
-    fn_802BB998(obj, (int)state, (int)state);
+        (int)obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
+    fn_802BB998((int)obj, (int)state, (int)state);
 }
 
-static inline s16 DIMSnowHorn1_angleTo(int obj, char* found)
+static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
 {
-    s16 angleDelta = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
+    s16 angleDelta = (obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
     if (angleDelta > 0x8000)
     {
         angleDelta = angleDelta - 0xffff;
@@ -1214,7 +1210,7 @@ static inline s16 DIMSnowHorn1_angleTo(int obj, char* found)
     return angleDelta;
 }
 
-void DIMSnowHorn1_update(int obj)
+void DIMSnowHorn1_update(GameObject* obj)
 {
     f32 nearDist;
     struct
@@ -1234,10 +1230,10 @@ void DIMSnowHorn1_update(int obj)
     u32 flip;
     int flags;
 
-    data = *(int*)&((GameObject*)obj)->extra;
+    data = *(int*)&(obj)->extra;
     ((DIMSnowHorn1State*)data)->advanceCountThreshold = 5;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
+    *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->trackContactMask = 9;
     {
         u8* fp = base + 0x94;
         flags = fp[((DIMSnowHorn1State*)data)->baddie.controlMode];
@@ -1255,7 +1251,7 @@ void DIMSnowHorn1_update(int obj)
         }
         ((DIMSnowHorn1State*)data)->hitReactState =
             ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
-                obj, arm, 1, ((DIMSnowHorn1State*)data)->hitReactState, (f32*)((char*)data + 0xa94));
+                (int)obj, arm, 1, ((DIMSnowHorn1State*)data)->hitReactState, (f32*)((char*)data + 0xa94));
         if (((DIMSnowHorn1State*)data)->hitReactState != 0)
         {
             fn_8003A168(obj, data + 0x980);
@@ -1276,9 +1272,9 @@ void DIMSnowHorn1_update(int obj)
         ((DIMSnowHorn1State*)data)->baddie.animSpeedC = fz;
         ((DIMSnowHorn1State*)data)->baddie.animSpeedB = fz;
         ((DIMSnowHorn1State*)data)->baddie.animSpeedA = fz;
-        ((GameObject*)obj)->anim.velocityX = fz;
-        ((GameObject*)obj)->anim.velocityY = fz;
-        ((GameObject*)obj)->anim.velocityZ = fz;
+        (obj)->anim.velocityX = fz;
+        (obj)->anim.velocityY = fz;
+        (obj)->anim.velocityZ = fz;
         (*gPathControlInterface)->attachObject((void*)obj, (u8*)&((DIMSnowHorn1State*)data)->baddie + 4);
         fn_802BB4B4(obj, framesThisStep, -1);
     }
@@ -1294,10 +1290,10 @@ void DIMSnowHorn1_update(int obj)
     {
     case 0:
     case 5:
-        statePtr = *(int*)&((GameObject*)obj)->extra;
+        statePtr = *(int*)&(obj)->extra;
         playerObj = (char*)Obj_GetPlayerObject();
         if (playerObj != NULL &&
-            Vec_distance((void*)((int)playerObj + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX) < lbl_803E8240 &&
+            Vec_distance((void*)((int)playerObj + 0x18), (void*)&(obj)->anim.worldPosX) < lbl_803E8240 &&
             ((DIMSnowHorn1State*)statePtr)->mountMode == 0)
         {
             ((DIMSnowHorn1State*)statePtr)->playerNearby = 1;
@@ -1320,7 +1316,7 @@ void DIMSnowHorn1_update(int obj)
         nearDist = lbl_803E8240;
         found = (char*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
         if (((DIMSnowHorn1State*)data)->mountMode == 0 && ((DIMSnowHorn1State*)data)->baddie.controlMode == 7 &&
-            getXZDistance(player + 0x18, (int)&((GameObject*)obj)->anim.worldPosX) < lbl_803E82B4)
+            getXZDistance(player + 0x18, (int)&(obj)->anim.worldPosX) < lbl_803E82B4)
         {
             if (found != NULL && (*(u8*)&((GameObject*)found)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE))
             {
@@ -1407,18 +1403,16 @@ void DIMSnowHorn1_update(int obj)
         break;
     }
     characterDoEyeAnims(obj, data + 0x980);
-    v.mat[1] = ((GameObject*)obj)->anim.localPosX;
-    v.mat[2] = ((GameObject*)obj)->anim.localPosY;
-    v.mat[3] = ((GameObject*)obj)->anim.localPosZ;
-    v.angles[0] = ((GameObject*)obj)->anim.rotX;
-    v.angles[1] = ((GameObject*)obj)->anim.rotY;
-    v.angles[2] = ((GameObject*)obj)->anim.rotZ;
+    v.mat[1] = (obj)->anim.localPosX;
+    v.mat[2] = (obj)->anim.localPosY;
+    v.mat[3] = (obj)->anim.localPosZ;
+    v.angles[0] = (obj)->anim.rotX;
+    v.angles[1] = (obj)->anim.rotY;
+    v.angles[2] = (obj)->anim.rotZ;
     v.mat[0] = lbl_803E8258;
     setMatrixFromObjectPos(matrix, v.angles);
-    Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E82AC, lbl_803E82B0,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
+    Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E82AC, lbl_803E82B0, &(obj)->anim.modelState->overrideWorldPosX,
+                          &(obj)->anim.modelState->overrideWorldPosY, &(obj)->anim.modelState->overrideWorldPosZ);
 }
 
 #pragma opt_propagation off
@@ -1462,30 +1456,30 @@ void DIMSnowHorn1_initialise(void)
 }
 #pragma opt_propagation reset
 
-void DIMSnowHorn1_init(int obj, int def, int spawnFlag)
+void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
 {
     u8* base = gDIMSnowHorn1ConfigTable;
     int stk = lbl_803E8230;
     DIMSnowHorn1State* inner;
     u8* pathState;
     s8 idx;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)def + 0x18) << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)DIMSnowHorn1_animEventCallback;
+    (obj)->anim.rotX = (s16)((s8) * (s8*)((char*)def + 0x18) << 8);
+    (obj)->animEventCallback = (void*)DIMSnowHorn1_animEventCallback;
     ObjGroup_AddObject(obj, DIMSNOWHORN1_OBJGROUP);
-    inner = ((GameObject*)obj)->extra;
+    inner = (obj)->extra;
     inner->mode = *(u8*)((char*)def + 0x19);
     inner->advanceCountThreshold = 5;
     inner->airMeterValue = 0x3e8;
-    if (((GameObject*)obj)->anim.modelState != NULL)
+    if ((obj)->anim.modelState != NULL)
     {
-        ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
+        (obj)->anim.modelState->flags |= 0xa10;
     }
-    if (((GameObject*)obj)->anim.hitReactState != NULL)
+    if ((obj)->anim.hitReactState != NULL)
     {
-        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->trackContactMask = 9;
     }
-    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
+    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))((int)obj, (int)inner, 0xc, 1);
     inner->baddie.gravity = gDIMSnowHorn1Gravity;
     pathState = (u8*)&inner->baddie + 4;
     pathState[0x25b] = 0;
@@ -1530,22 +1524,22 @@ void DIMSnowHorn1_init(int obj, int def, int spawnFlag)
             SnowHornEntry* tbl = (SnowHornEntry*)base;
             if (mainGetBit(tbl[idx].h1e))
             {
-                ((GameObject*)obj)->anim.localPosX = tbl[idx].f10;
-                ((GameObject*)obj)->anim.localPosY = tbl[idx].f14;
-                ((GameObject*)obj)->anim.localPosZ = tbl[idx].f18;
-                ((GameObject*)obj)->anim.rotX = tbl[idx].h1c;
+                (obj)->anim.localPosX = tbl[idx].f10;
+                (obj)->anim.localPosY = tbl[idx].f14;
+                (obj)->anim.localPosZ = tbl[idx].f18;
+                (obj)->anim.rotX = tbl[idx].h1c;
             }
             else
             {
                 SnowHornEntry* e = &tbl[idx];
-                ((GameObject*)obj)->anim.localPosX = e->f0;
-                ((GameObject*)obj)->anim.localPosY = e->f4;
-                ((GameObject*)obj)->anim.localPosZ = e->f8;
-                ((GameObject*)obj)->anim.rotX = e->hc;
+                (obj)->anim.localPosX = e->f0;
+                (obj)->anim.localPosY = e->f4;
+                (obj)->anim.localPosZ = e->f8;
+                (obj)->anim.rotX = e->hc;
             }
             if (mainGetBit(tbl[idx].h20))
             {
-                ((GameObject*)obj)->anim.rotX += 0x8000;
+                (obj)->anim.rotX += 0x8000;
             }
         }
     }

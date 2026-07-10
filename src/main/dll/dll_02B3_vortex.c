@@ -60,7 +60,7 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     if (((GameObject*)obj)->anim.seqId == 0x835 || ((GameObject*)obj)->anim.seqId == 0x838)
     {
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
         {
             u8 reverse;
@@ -110,8 +110,8 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             ((GameObject*)obj)->anim.rotZ = gVortexRotZTable[i];
             ((GameObject*)obj)->anim.rotX = state->angles[i];
             state->angles[i] = state->angles[i] + dt * gVortexAngleSpeed835[i];
-            ((GameObject*)obj)->anim.rootMotionScale =
-                ((f32)setup->radiusParam / gVortexRadiusParamScale) * (state->alpha * (state->radiusScale[i] * objScale));
+            ((GameObject*)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / gVortexRadiusParamScale) *
+                                                       (state->alpha * (state->radiusScale[i] * objScale));
             *(u8*)(obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
@@ -123,7 +123,7 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else if (((GameObject*)obj)->anim.seqId == 0x83d)
     {
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
         {
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
@@ -159,7 +159,7 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        texture = objFindTexture((void*)obj, 0, 0);
+        texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
         {
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
@@ -330,8 +330,8 @@ void Vortex_initialise(void)
 }
 
 f32 gVortexScaleParams[4][3] = {
-    { 0.8f, 1.0f, 1.2f },
-    { 0.7f, 0.8f, 0.9f },
-    { 1.0f, 1.2f, 1.4f },
-    { 0.6f, 0.4f, 0.2f },
+    {0.8f, 1.0f, 1.2f},
+    {0.7f, 0.8f, 0.9f},
+    {1.0f, 1.2f, 1.4f},
+    {0.6f, 0.4f, 0.2f},
 };

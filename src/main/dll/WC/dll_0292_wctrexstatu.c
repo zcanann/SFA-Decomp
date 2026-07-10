@@ -53,7 +53,7 @@ int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState
     {
         if (animUpdate->eventIds[i] == WCTREXSTATU_CALLBACK_TRIGGER)
         {
-            ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
+            ObjTextureRuntimeSlot* texture = objFindTexture((GameObject*)obj, 0, 0);
 
             if (texture != NULL)
             {
@@ -145,7 +145,7 @@ void wctrexstatu_init(GameObject* obj, int setup, int fromLoad)
 
     if ((u32)mainGetBit(setupData->raisedBit) != 0)
     {
-        ObjTextureRuntimeSlot* texture = objFindTexture((void*)obj, 0, 0);
+        ObjTextureRuntimeSlot* texture = objFindTexture((GameObject*)obj, 0, 0);
 
         if (texture != NULL)
         {

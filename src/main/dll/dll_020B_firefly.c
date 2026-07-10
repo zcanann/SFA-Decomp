@@ -95,10 +95,10 @@ STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
    new segment and re-targeting while pathAge < 4), spawn the trail fx,
    ease the proximity glow, and detect the player touch. Runs as the
    anim-event callback via the sibling TU's firefly_animEventCallback wrapper. */
-void FireFlyFn_801f4f88(int obj)
+void FireFlyFn_801f4f88(GameObject* obj)
 {
-    FireFlyState* state = ((GameObject*)obj)->extra;
-    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    FireFlyState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &(obj)->anim;
     int player = (int)Obj_GetPlayerObject();
     if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE)
     {
@@ -116,7 +116,7 @@ void FireFlyFn_801f4f88(int obj)
         }
         else
         {
-            fn_801F4D54(obj, (int)state);
+            fn_801F4D54((int)obj, (int)state);
         }
         state->splineX[0] = state->splineX[1];
         state->splineY[0] = state->splineY[1];
@@ -132,16 +132,12 @@ void FireFlyFn_801f4f88(int obj)
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
     }
-    ((GameObject*)obj)->anim.localPosX =
-        ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineX, state->splineT, 0);
-    ((GameObject*)obj)->anim.localPosY =
-        ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineY, state->splineT, 0);
-    ((GameObject*)obj)->anim.localPosZ =
-        ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineZ, state->splineT, 0);
+    (obj)->anim.localPosX = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineX, state->splineT, 0);
+    (obj)->anim.localPosY = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineY, state->splineT, 0);
+    (obj)->anim.localPosZ = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineZ, state->splineT, 0);
     state->splineT = state->splineSpeed * timeDelta + state->splineT;
-    ((GameObject*)obj)->anim.rotX =
-        getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
-                 ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+    (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
+                                (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
     if (state->kind == FIREFLY_KIND_BLUE_MAIN || state->kind == FIREFLY_KIND_BLUE_NEAR)
     {
         (*gPartfxInterface)
@@ -156,7 +152,7 @@ void FireFlyFn_801f4f88(int obj)
     }
     /* player+0x18 (worldPos) by raw arith - the &member spelling CSEs the
        address into a saved-reg web and shifts the bytes (recipe #77(b)) */
-    if (Vec_xzDistance((f32*)(player + 0x18), &((GameObject*)obj)->anim.placement->posX) < state->playerRadius)
+    if (Vec_xzDistance((f32*)(player + 0x18), &(obj)->anim.placement->posX) < state->playerRadius)
     {
         f32 maxAlpha;
         f32 curAlpha;
@@ -202,13 +198,12 @@ void FireFlyFn_801f4f88(int obj)
         }
     }
     {
-        f32 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+        f32 dy = (obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
         if ((state->flags & FIREFLY_FLAG_PLAYER_TOUCHED) == 0)
         {
             if (dy < lbl_803E5EEC && dy > lbl_803E5EC4) /* 35.0f / 0.0f */
             {
-                if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) <
-                    lbl_803E5EF0) /* 225.0f */
+                if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5EF0) /* 225.0f */
                 {
                     state->flags = (u8)(state->flags | FIREFLY_FLAG_PLAYER_TOUCHED);
                     if (mainGetBit(FIREFLY_FIRST_TOUCH_BIT) == 0)
@@ -219,12 +214,12 @@ void FireFlyFn_801f4f88(int obj)
                     }
                     else
                     {
-                        FireFlyState* st = ((GameObject*)obj)->extra;
-                        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
+                        FireFlyState* st = (obj)->extra;
+                        (obj)->anim.flags = (s16)((obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
                         st->despawnTimer = lbl_803E5EA8; /* 180.0f */
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
-                        Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_lockoff22);
                     }
                 }
             }
@@ -299,21 +294,21 @@ void firefly_update(int obj)
         }
         else
         {
-            FireFlyFn_801f4f88(obj);
+            FireFlyFn_801f4f88((GameObject*)(obj));
         }
     }
 }
 
-void firefly_init(int obj, int def)
+void firefly_init(GameObject* obj, int def)
 {
     FireFlyState* state;
     FireFlyMapData* mapData;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     mapData = (FireFlyMapData*)def;
-    fn_801F4C28(obj, state);
-    ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->animEventCallback = firefly_animEventCallback;
+    fn_801F4C28((int)obj, state);
+    (obj)->anim.alpha = 0;
+    (obj)->animEventCallback = firefly_animEventCallback;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(state->lifeTimer);
     if (mapData->variantParam == 0x7f)

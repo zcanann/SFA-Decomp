@@ -38,9 +38,9 @@ typedef struct Dim2prisonmammothState
 } Dim2prisonmammothState;
 
 int dim2prisonmammoth_defaultStateHandler(void);
-int dim2prisonmammoth_stateHandler03(int obj, int state);
-int dim2prisonmammoth_stateHandler02(int obj, int state);
-int dim2prisonmammoth_stateHandler01(int obj, int state);
+int dim2prisonmammoth_stateHandler03(GameObject* obj, int state);
+int dim2prisonmammoth_stateHandler02(GameObject* obj, int state);
+int dim2prisonmammoth_stateHandler01(GameObject* obj, int state);
 int dim2prisonmammoth_stateHandler00(int* obj);
 int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate);
 int dim2prisonmammoth_getExtraSize(void);

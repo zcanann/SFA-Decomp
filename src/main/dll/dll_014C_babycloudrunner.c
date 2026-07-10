@@ -129,7 +129,7 @@ extern void storeZeroToFloatParam(void* p);
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void* Obj_GetPlayerObject(void);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -137,7 +137,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* getTrickyObject(void);
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
-extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
+extern void Obj_UpdateRomCurveFollowVelocity(GameObject* obj, void* p, f32 a, f32 b, f32 c, int d);
 extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* p, int n, f32 a, f32 b);
 extern void fn_8014C66C(int* a, void* b);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
@@ -225,7 +225,7 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* sub, int playMove)
 {
     int shifted;
-    fn_8003ADC4((int*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
+    fn_8003ADC4((GameObject*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
     shifted = Obj_GetYawDeltaToObject(obj, target, 0);
     *(s16*)obj += (shifted >>= 3);
     if (playMove == 0)
@@ -493,7 +493,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, player, 0);
-        fn_8003ADC4(obj, (int*)player, sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)(obj), (int*)player, sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         if (inRange != 0)
         {
@@ -507,7 +507,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, getTrickyObject(), 0);
-        fn_8003ADC4(obj, getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)(obj), getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;
     }
@@ -590,14 +590,14 @@ void babycloudrunner_update(int* obj)
                 u16 sfxId = ((s16*)sub->mutterSfxTable)[randomGetRange(0, 3)];
                 objAudioFn_80039270((int)obj, sub->audioBlock, sfxId);
             }
-            objAnimFn_80038f38((int)obj, sub->audioBlock);
+            objAnimFn_80038f38((GameObject*)obj, sub->audioBlock);
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity(obj, sub->curveWalker, speed, lbl_803E4238 * speed,
+                Obj_UpdateRomCurveFollowVelocity((GameObject*)(obj), sub->curveWalker, speed, lbl_803E4238 * speed,
                                                  lbl_803E4250 * speed, 1);
-                Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(obj), (char*)((int)obj + 0x24), 0x1e,
-                                                   lbl_803E4238, lbl_803E4254);
+                Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(obj), (char*)((int)obj + 0x24), 0x1e, lbl_803E4238,
+                                                   lbl_803E4254);
                 objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                         ((GameObject*)obj)->anim.velocityZ);
                 if (sub->runnerState == 1)

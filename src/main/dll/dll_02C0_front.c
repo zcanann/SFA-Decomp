@@ -520,8 +520,8 @@ void fn_80134870(int obj, u8* arr);
 void TitleScreen_update(u8* obj)
 {
     extern int randomGetRange(int lo, int hi);
-    extern void characterDoEyeAnims(u8 * obj, void* state);
-    extern void fn_8003B228(u8 * obj, void* p);
+    extern void characterDoEyeAnims(GameObject * obj, void* state);
+    extern void fn_8003B228(GameObject * obj, void* p);
     extern void Sfx_StopFromObject(u8 * obj, u32 sfxId);
     extern void Sfx_PlayFromObject(u8 * obj, u32 sfxId);
     extern void fn_80134870(u8 * obj, u8 * arr);
@@ -667,11 +667,11 @@ void TitleScreen_update(u8* obj)
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x77e && ((phase = ((TitlescreenState*)state)->animPhase) == 0 || phase == 4))
         {
-            fn_8003B228(obj, state);
+            fn_8003B228((GameObject*)(obj), state);
         }
         else if (t >= 0x77d && t < 0x781)
         {
-            characterDoEyeAnims(obj, state);
+            characterDoEyeAnims((GameObject*)(obj), state);
         }
         model = Obj_GetActiveModel(obj);
         if (model->file->morphTargetCount != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&

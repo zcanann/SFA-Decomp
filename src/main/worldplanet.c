@@ -266,7 +266,7 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
 #pragma peephole reset
 
 #pragma opt_lifetimes off
-void worldplanet_update(int obj)
+void worldplanet_update(GameObject* obj)
 {
     u8 prevPlanet;
     int arwing;
@@ -285,14 +285,14 @@ void worldplanet_update(int obj)
     } in;
 
     tbl = gWorldPlanetObjectIdTable;
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     done = 0;
     state->foxSpawnTimer -= 1;
     if (state->foxSpawnTimer == 1)
     {
         int def;
         state->foxSpawnTimer = randomGetRange(WORLDPLANET_FOX_SPAWN_MIN_FRAMES, 3000);
-        def = *(int*)&((GameObject*)obj)->anim.placementData;
+        def = *(int*)&(obj)->anim.placementData;
         if (Obj_IsLoadingLocked() != 0)
         {
             WorldObjSetup* setup = (WorldObjSetup*)Obj_AllocObjectSetup(0x20, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
@@ -300,17 +300,17 @@ void worldplanet_update(int obj)
             *(u8*)((char*)setup + 6) = *(u8*)(def + 6);
             *(u8*)((char*)setup + 5) = *(u8*)(def + 5);
             *(u8*)((char*)setup + 7) = *(u8*)(def + 7);
-            ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-            ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-            ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-            Obj_SetupObject((int)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+            ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+            ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
+            ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
+            Obj_SetupObject((int)setup, 5, (obj)->anim.mapEventSlot, -1, 0);
         }
     }
     if (state->foxSpawnTimer < 0)
     {
         state->foxSpawnTimer = 0;
     }
-    worldplanet_updateMapLighting(obj);
+    worldplanet_updateMapLighting((int)obj);
     if (gWorldPlanetInputLockTimer != 0)
     {
         gWorldPlanetInputLockTimer -= 1;
@@ -360,15 +360,15 @@ void worldplanet_update(int obj)
         pfx.offsetY = gWorldPlanetPfxOffsetY;
         pfx.offsetZ = gWorldPlanetPfxOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &pfx, 2, -1, NULL);
-        worldplanet_readMapInput((GameObject*)(obj), (u8*)in.inX, &in.inY);
-        ((GameObject*)obj)->anim.rotZ -= 10;
-        ((GameObject*)obj)->anim.rotY = 0x3448;
-        ((GameObject*)obj)->anim.rotX = 0x4000;
+        worldplanet_readMapInput(obj, (u8*)in.inX, &in.inY);
+        (obj)->anim.rotZ -= 10;
+        (obj)->anim.rotY = 0x3448;
+        (obj)->anim.rotX = 0x4000;
         {
             int fox = ObjList_FindObjectById(WORLDPLANET_FOX_OBJECT_ID);
-            ((GameObject*)fox)->anim.rotZ = ((GameObject*)obj)->anim.rotZ;
-            ((GameObject*)fox)->anim.rotY = ((GameObject*)obj)->anim.rotY;
-            ((GameObject*)fox)->anim.rotX = ((GameObject*)obj)->anim.rotX;
+            ((GameObject*)fox)->anim.rotZ = (obj)->anim.rotZ;
+            ((GameObject*)fox)->anim.rotY = (obj)->anim.rotY;
+            ((GameObject*)fox)->anim.rotX = (obj)->anim.rotX;
         }
         arwing = ObjList_FindObjectById(WORLDPLANET_ARWING_OBJECT_ID);
         ((WorldObjState*)((GameObject*)arwing)->extra)->effectState = state->selectionLocked;
@@ -421,9 +421,9 @@ void worldplanet_update(int obj)
              * block runs on a real selection change OR that first frame, but the
              * camera swoosh (releaseAction) + select SFX below are gated on the
              * latch so they fire only on genuine changes, not on the initial open. */
-            if (prevPlanet != state->selectedPlanet || ((GameObject*)obj)->unkF4 == 0)
+            if (prevPlanet != state->selectedPlanet || (obj)->unkF4 == 0)
             {
-                if (((GameObject*)obj)->unkF4 != 0)
+                if ((obj)->unkF4 != 0)
                 {
                     objId = tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, 1);
@@ -436,7 +436,7 @@ void worldplanet_update(int obj)
                     planetObj = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)((GameObject*)planetObj)->extra)->effectState = 1;
                 }
-                ((GameObject*)obj)->unkF4 = 1;
+                (obj)->unkF4 = 1;
             }
         }
         gWorldPlanetPathProgress = gWorldPlanetPathProgress + gWorldPlanetPathProgressStep;
@@ -448,8 +448,8 @@ void worldplanet_update(int obj)
         {
             int planet = ObjList_FindObjectById(tbl[2][i]);
             WorldObjState* pstate = ((GameObject*)planet)->extra;
-            ((GameObject*)planet)->anim.rotY = ((GameObject*)obj)->anim.rotY;
-            ((GameObject*)planet)->anim.rotX = ((GameObject*)obj)->anim.rotX;
+            ((GameObject*)planet)->anim.rotY = (obj)->anim.rotY;
+            ((GameObject*)planet)->anim.rotX = (obj)->anim.rotX;
             if ((u8)state->selectionLocked != 0 || (((int)(u32)state->unlockedPlanetMask >> i) & 1) == 0)
             {
                 pstate->effectState = 0;
@@ -603,7 +603,7 @@ void worldplanet_update(int obj)
             u32 ang;
             f32 r;
             b = 0;
-            ang = -((GameObject*)obj)->anim.rotZ & 0xffff;
+            ang = -(obj)->anim.rotZ & 0xffff;
             for (; b < WORLDPLANET_PLANET_COUNT; b++)
             {
                 int planetObj = ObjList_FindObjectById(tbl[2][b]);
@@ -624,12 +624,11 @@ void worldplanet_update(int obj)
                 {
                     Sfx_KeepAliveLoopedObjectSound((u32)rotPtr, SFXTRIG_crf_babyambi2);
                 }
-                *(f32*)(rotPtr + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) +
-                                      ((GameObject*)obj)->anim.localPosX;
-                *(f32*)(rotPtr + 8) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) +
-                                      ((GameObject*)obj)->anim.localPosY;
-                *(f32*)(rotPtr + 10) =
-                    r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
+                *(f32*)(rotPtr + 6) =
+                    r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + (obj)->anim.localPosX;
+                *(f32*)(rotPtr + 8) =
+                    r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) + (obj)->anim.localPosY;
+                *(f32*)(rotPtr + 10) = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + (obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;

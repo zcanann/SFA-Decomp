@@ -239,13 +239,13 @@ void DBSH_Symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5104);
 }
 
-void DBSH_Symbol_update(int obj)
+void DBSH_Symbol_update(GameObject* obj)
 {
     s16 phase;
     u32 puzzleStarted;
     DbshSymbolState* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     puzzleStarted = mainGetBit(DBSH_GB_RISE_DONE);
     if (puzzleStarted == 0)
     {
@@ -258,7 +258,7 @@ void DBSH_Symbol_update(int obj)
         phase = state->phase;
         if (phase == 0)
         {
-            ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+            (obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
             state->phase = 1;
         }
         else if (phase == 2)
@@ -271,14 +271,14 @@ void DBSH_Symbol_update(int obj)
             if (gDbShSymbolScuffPlayed != 0)
             {
                 gDbShSymbolScuffPlayed = 0;
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_iceywindlp16);
             }
             state->phase = 2;
             gDbShSymbolScuffPlayed = 1;
         }
         else if (phase == 3)
         {
-            ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+            (obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
             if (state->flags.finished != 0)
             {
                 mainSetBits(DBSH_GB_CLOSE_A, 1);
@@ -287,7 +287,7 @@ void DBSH_Symbol_update(int obj)
             {
                 mainSetBits(DBSH_GB_CLOSE_B, 1);
             }
-            Sfx_StopObjectChannel(obj, 0x7f);
+            Sfx_StopObjectChannel((int)obj, 0x7f);
             state->flags.active = 1;
         }
     }

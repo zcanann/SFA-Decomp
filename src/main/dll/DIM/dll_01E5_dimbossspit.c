@@ -83,7 +83,7 @@ extern f32 lbl_803E4D78;
 extern f32 lbl_803E4D7C;
 extern f32 lbl_803E4D80;
 
-void DIMbossspit_updateBurst(int obj)
+void DIMbossspit_updateBurst(GameObject* obj)
 {
     int state;
     s16 burstTimer;
@@ -92,11 +92,11 @@ void DIMbossspit_updateBurst(int obj)
     int radius;
     int i;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale + lbl_803E4D38;
-    ((GameObject*)obj)->anim.rotX += 0xaaa;
-    ((GameObject*)obj)->anim.rotZ += 0x38e;
-    ((GameObject*)obj)->anim.rotY += 0x38e;
+    state = *(int*)&(obj)->extra;
+    (obj)->anim.rootMotionScale = (obj)->anim.rootMotionScale + lbl_803E4D38;
+    (obj)->anim.rotX += 0xaaa;
+    (obj)->anim.rotZ += 0x38e;
+    (obj)->anim.rotY += 0x38e;
     if (*(s16*)state == 1)
     {
         i = 0;
@@ -106,8 +106,8 @@ void DIMbossspit_updateBurst(int obj)
             i = i + 1;
         } while (i < 0x12);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4bb, NULL, 1, -1, NULL);
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_gcexp1_c);
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_gcexp1_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy311);
         CameraShake_SetAllMagnitudes(lbl_803E4D3C);
         doRumble(lbl_803E4D40);
         if (*(void**)&((DIMbossspitUpdateBurstState*)state)->light != NULL)
@@ -121,7 +121,7 @@ void DIMbossspit_updateBurst(int obj)
     {
         if (burstTimer > 0x22a)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
         }
         return;
     }
@@ -130,9 +130,9 @@ void DIMbossspit_updateBurst(int obj)
     radius = 0x94 - (burstTimer >> 2);
     if (alpha >= 0)
     {
-        ObjHits_SetHitVolumeSlot(obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 2, 0);
-        ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
-        ((GameObject*)obj)->anim.alpha = alpha;
+        ObjHits_SetHitVolumeSlot((int)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 2, 0);
+        ObjHitbox_SetSphereRadius((int)obj, (s16)((radius - 0x40) >> 1));
+        (obj)->anim.alpha = alpha;
     }
     else
     {
@@ -141,11 +141,11 @@ void DIMbossspit_updateBurst(int obj)
             ModelLightStruct_free(*(void**)&((DIMbossspitUpdateBurstState*)state)->light);
             ((DIMbossspitUpdateBurstState*)state)->light = 0;
         }
-        ((GameObject*)obj)->anim.alpha = 0;
+        (obj)->anim.alpha = 0;
         if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50)
         {
-            ObjHits_SetHitVolumeSlot(obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_9, 1, 0);
-            ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
+            ObjHits_SetHitVolumeSlot((int)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_9, 1, 0);
+            ObjHitbox_SetSphereRadius((int)obj, (s16)((radius - 0x40) >> 1));
         }
     }
     (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_BURST, NULL, 1, -1, &radius);
@@ -196,45 +196,42 @@ void DIMbossspit_hitDetect(void)
 {
 }
 
-void DIMbossspit_update(int obj)
+void DIMbossspit_update(GameObject* obj)
 {
     int state;
     int i;
     s16 glowAlpha;
     ModelLightStruct* p;
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&(obj)->extra;
     if (*(s16*)state == 0)
     {
-        ((GameObject*)obj)->unkF4 -= framesThisStep;
-        if (((GameObject*)obj)->unkF4 < 0)
+        (obj)->unkF4 -= framesThisStep;
+        if ((obj)->unkF4 < 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
             return;
         }
-        ObjHits_SetHitVolumeSlot(obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 4, 0);
-        ObjHitbox_SetSphereRadius(obj, 10);
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gDimBossSpitGravity * timeDelta;
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * gDimBossSpitVelocityDamping;
-        ((GameObject*)obj)->anim.rotX = lbl_803E4D68 * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
-        ((GameObject*)obj)->anim.rotZ = lbl_803E4D6C * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
-        ((GameObject*)obj)->anim.rotY = lbl_803E4D6C * timeDelta + (f32)((GameObject*)obj)->anim.rotY;
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        ObjHits_SetHitVolumeSlot((int)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 4, 0);
+        ObjHitbox_SetSphereRadius((int)obj, 10);
+        (obj)->anim.velocityY = (obj)->anim.velocityY - gDimBossSpitGravity * timeDelta;
+        (obj)->anim.velocityY = (obj)->anim.velocityY * gDimBossSpitVelocityDamping;
+        (obj)->anim.rotX = lbl_803E4D68 * timeDelta + (f32)(obj)->anim.rotX;
+        (obj)->anim.rotZ = lbl_803E4D6C * timeDelta + (f32)(obj)->anim.rotZ;
+        (obj)->anim.rotY = lbl_803E4D6C * timeDelta + (f32)(obj)->anim.rotY;
+        objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+                (obj)->anim.velocityZ * timeDelta);
         i = 0;
         do
         {
             (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, 1, -1, NULL);
             i = i + 1;
         } while (i < 3);
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        if ((*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactFlags != 0)
         {
-            ((GameObject*)obj)->anim.localPosX =
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosX;
-            ((GameObject*)obj)->anim.localPosY =
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosY - lbl_803E4D50;
-            ((GameObject*)obj)->anim.localPosZ =
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactPosZ;
+            (obj)->anim.localPosX = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosX;
+            (obj)->anim.localPosY = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosY - lbl_803E4D50;
+            (obj)->anim.localPosZ = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactPosZ;
             *(s16*)state = 1;
         }
     }

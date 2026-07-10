@@ -238,7 +238,7 @@ void gf_levelcon_findLinkedObjects(int obj)
     }
 }
 
-void fn_80239DD8(int obj, int state)
+void fn_80239DD8(GameObject* obj, int state)
 {
     f32 maxDist;
     char* nearObj;
@@ -256,7 +256,7 @@ void fn_80239DD8(int obj, int state)
             ((ObjPlacement*)newObj)->posZ = ((GameObject*)nearObj)->anim.localPosZ;
             ((ObjPlacement*)newObj)->color[0] = 1;
             ((ObjPlacement*)newObj)->color[1] = 1;
-            *(int*)(state + 0x10) = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
+            *(int*)(state + 0x10) = ((int (*)(int, int))loadObjectAtObject)((int)obj, newObj);
             if (*(void**)(state + 0x10) != NULL)
             {
                 ((GameObject*)*(int*)(state + 0x10))->anim.alpha = 0xff;
@@ -409,7 +409,7 @@ void fn_8023A3E4(int objArg, int hitState)
 
     obj = objArg;
     s = (u8*)hitState;
-    got = ObjHits_GetPriorityHit(objArg, &hitObj, &hitType, &hitVol);
+    got = ObjHits_GetPriorityHit((GameObject*)(objArg), &hitObj, &hitType, &hitVol);
     {
         u8 j;
         int off;
@@ -490,11 +490,11 @@ void fn_8023A3E4(int objArg, int hitState)
         texIdx = (&lbl_803DC4C8)[idx];
         if ((u32)texIdx < 2 && state == 1)
             adjusted = 0;
-        tex = objFindTexture((void*)obj, texIdx * 2, 0);
+        tex = objFindTexture((GameObject*)obj, texIdx * 2, 0);
         tex->textureId = adjusted << 8;
         if ((u32)texIdx == 2 && state == 1)
             state = 0;
-        tex = objFindTexture((void*)obj, texIdx * 2 + 1, 0);
+        tex = objFindTexture((GameObject*)obj, texIdx * 2 + 1, 0);
         tex->textureId = state << 8;
     }
 }

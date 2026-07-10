@@ -27,7 +27,7 @@ int KT_Torch_getObjectTypeId(void);
 void KT_Torch_free(void);
 void KT_Torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void KT_Torch_hitDetect(void);
-void KT_Torch_update(int obj);
+void KT_Torch_update(GameObject* obj);
 void KT_Torch_release(void);
 void KT_Torch_initialise(void);
 int CFCrate_getExtraSize(void);

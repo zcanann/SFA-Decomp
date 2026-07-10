@@ -31,6 +31,6 @@ int chuka_getObjectTypeId(void);
 void chuka_free(int obj);
 void chuka_render(void);
 void chuka_hitDetect(GameObject* obj);
-void chuka_update(int obj);
+void chuka_update(GameObject* obj);
 
 #endif /* MAIN_DLL_DF_DLL_0230_DFPWALLBAR_H_ */

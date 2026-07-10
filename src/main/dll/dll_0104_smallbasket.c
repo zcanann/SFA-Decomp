@@ -48,11 +48,11 @@ extern void largecrate_getObjectTypeId(void);
 
 extern void largecrate_free(void);
 
-extern void largecrate_render(void);
+extern void largecrate_render(GameObject*);
 
 extern void largecrate_hitDetect(void);
 
-extern void largecrate_update(void);
+extern void largecrate_update(GameObject*);
 
 extern void largecrate_init(GameObject*);
 
@@ -126,8 +126,8 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f3
 extern void hitDetectFn_800691c0(u8* obj, void* bounds, u32 mask, int flags);
 extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
 extern const f32 lbl_803E3970;
-void SmallBasket_init(int obj, int def);
-void SmallBasket_update(int obj);
+void SmallBasket_init(GameObject* obj, int def);
+void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
@@ -709,15 +709,15 @@ typedef struct SmallbasketObjectDef
     f32 unk24;
 } SmallbasketObjectDef;
 
-void SmallBasket_init(int obj, int def)
+void SmallBasket_init(GameObject* obj, int def)
 {
     CfperchState* state;
     s16 v1c;
     s16 mode;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     ObjHits_DisableObject(obj);
-    ObjGroup_AddObject(obj, SMALLBASKET_OBJGROUP);
+    ObjGroup_AddObject((int)obj, SMALLBASKET_OBJGROUP);
 
     v1c = ((SmallbasketObjectDef*)def)->respawnMinutes;
     if (v1c == 0)
@@ -732,7 +732,7 @@ void SmallBasket_init(int obj, int def)
     gSmallBasketResource = Resource_Acquire(SMALLBASKET_RESOURCE_ID, 1);
     state->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
     state->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
-    ((GameObject*)obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
+    (obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
     state->enableGameBit = ((SmallbasketObjectDef*)def)->enableGameBit;
     state->leashRange = ((SmallbasketObjectDef*)def)->leashRange;
     if (state->leashRange == 0)
@@ -740,11 +740,11 @@ void SmallBasket_init(int obj, int def)
         state->leashRange = 0x14;
     }
     state->respawnTimer = 0x320;
-    ((GameObject*)obj)->objectFlags |= SMALLBASKET_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->objectFlags |= SMALLBASKET_OBJFLAG_HITDETECT_DISABLED;
     state->subtype = ((SmallbasketObjectDef*)def)->subtype;
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosZ;
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosZ;
 
     if ((u32)mainGetBit(state->enableGameBit) != 0)
     {
@@ -752,7 +752,7 @@ void SmallBasket_init(int obj, int def)
         ObjHits_DisableObject(obj);
     }
 
-    mode = ((GameObject*)obj)->anim.seqId;
+    mode = (obj)->anim.seqId;
     if (mode == 0x3cf)
     {
         state->sfxId = 0x60;
@@ -779,7 +779,7 @@ typedef struct
     f32 fw;
 } BasketMathArgs;
 
-void SmallBasket_update(int obj)
+void SmallBasket_update(GameObject* obj)
 {
     /* int-param redecls override the u8* definitions for these call sites only
        (caller passes int locals); can't live at file scope - conflicts with the
@@ -799,10 +799,10 @@ void SmallBasket_update(int obj)
     BasketMathArgs blk;
 
     player = (int)Obj_GetPlayerObject();
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    def = *(int*)&(obj)->anim.placementData;
     animSpeed = lbl_803E3950;
     (*gSkyInterface)->getClockTime(&animSpeed);
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
     {
         return;
@@ -813,21 +813,21 @@ void SmallBasket_update(int obj)
         state->respawnTimer = 800;
         state->disableTimer = 1;
         state->throwState = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        fn_801816F8(obj, player, (int)state);
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        fn_801816F8((int)obj, player, (int)state);
         zf = lbl_803E3938;
-        ((GameObject*)obj)->anim.velocityX = zf;
-        ((GameObject*)obj)->anim.velocityZ = zf;
+        (obj)->anim.velocityX = zf;
+        (obj)->anim.velocityZ = zf;
     }
     if (state->hiddenTimer != 0)
     {
         flag = 0;
-        ((GameObject*)obj)->anim.alpha = flag;
+        (obj)->anim.alpha = flag;
         state->hiddenTimer -= (s16)(int)(timeDelta * animSpeed);
         if (state->hiddenTimer <= 0)
         {
-            if ((Vec_distance(&((GameObject*)obj)->anim.worldPosX,
-                              &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E3930) &&
+            if ((Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
+                 lbl_803E3930) &&
                 (state->enableGameBit == -1))
             {
                 flag = 1;
@@ -841,9 +841,9 @@ void SmallBasket_update(int obj)
                 state->hiddenTimer = 0;
                 state->disableTimer = 0;
                 ObjHits_EnableObject(obj);
-                ObjHits_SyncObjectPositionIfDirty(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                ObjHits_SyncObjectPositionIfDirty((int)obj);
+                *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             }
         }
     }
@@ -851,12 +851,12 @@ void SmallBasket_update(int obj)
     {
         if (state->carryState != 2)
         {
-            level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)((GameObject*)obj)->anim.alpha);
+            level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)(obj)->anim.alpha);
             if (level > 0xff)
             {
                 level = 0xff;
             }
-            ((GameObject*)obj)->anim.alpha = level;
+            (obj)->anim.alpha = level;
         }
         if (state->disableTimer != 0)
         {
@@ -873,16 +873,16 @@ void SmallBasket_update(int obj)
                     state->hiddenTimer = 1;
                 }
                 (*gMapEventInterface)->addTime(((ObjPlacement*)def)->mapId, (f32)state->respawnDelay);
-                ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
-                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
-                ((GameObject*)obj)->anim.previousLocalPosX = ((ObjPlacement*)def)->posX;
-                ((GameObject*)obj)->anim.previousLocalPosY = ((ObjPlacement*)def)->posY;
-                ((GameObject*)obj)->anim.previousLocalPosZ = ((ObjPlacement*)def)->posZ;
+                (obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
+                (obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+                (obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
+                (obj)->anim.previousLocalPosX = ((ObjPlacement*)def)->posX;
+                (obj)->anim.previousLocalPosY = ((ObjPlacement*)def)->posY;
+                (obj)->anim.previousLocalPosZ = ((ObjPlacement*)def)->posZ;
                 zf = lbl_803E3938;
-                ((GameObject*)obj)->anim.velocityX = zf;
-                ((GameObject*)obj)->anim.velocityY = zf;
-                ((GameObject*)obj)->anim.velocityZ = zf;
+                (obj)->anim.velocityX = zf;
+                (obj)->anim.velocityY = zf;
+                (obj)->anim.velocityZ = zf;
             }
             if (state->disableTimer <= 0x32)
             {
@@ -894,8 +894,8 @@ void SmallBasket_update(int obj)
             if (state->carryState == 0)
             {
                 flag = 0;
-                if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && (((GameObject*)obj)->unkF8 == 0) &&
-                    (ObjTrigger_IsSet(obj) != 0))
+                if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && ((obj)->unkF8 == 0) &&
+                    (ObjTrigger_IsSet((int)obj) != 0))
                 {
                     state->carryAngle = -0x8000;
                     state->carryParam = 0;
@@ -907,26 +907,26 @@ void SmallBasket_update(int obj)
                 {
                     state->carryAttached = 1;
                 }
-                if (((GameObject*)obj)->unkF8 == 0)
+                if ((obj)->unkF8 == 0)
                 {
                     ObjHits_EnableObject(obj);
                     if ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0))
                     {
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+                        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                     }
                     else
                     {
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+                        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
                     }
                 }
-                ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosZ;
-                ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+                (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+                (obj)->anim.previousLocalPosY = (obj)->anim.localPosZ;
+                (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
             }
             else
             {
                 ObjHits_DisableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 if ((playerGetStateFlag310(player) & 0x4000) != 0)
                 {
                     setAButtonIcon(5);
@@ -947,19 +947,19 @@ void SmallBasket_update(int obj)
                         Sfx_PlayFromObject(0, SFXTRIG_id_10a);
                     }
                 }
-                if (((GameObject*)obj)->unkF8 == 1)
+                if ((obj)->unkF8 == 1)
                 {
                     *(u8*)&state->carryState = 2;
                 }
-                if (((state->carryState == 2) && (((GameObject*)obj)->unkF8 == 0)) ||
+                if (((state->carryState == 2) && ((obj)->unkF8 == 0)) ||
                     ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0)))
                 {
                     if (fn_8029669C(player) != 0)
                     {
                         *(u8*)&state->carryState = 0;
                         state->throwState = 1;
-                        ((GameObject*)obj)->anim.velocityY = lbl_803E397C * *(f32*)(playerState + 0x298) + lbl_803E3958;
-                        ((GameObject*)obj)->anim.velocityZ = lbl_803E3980 * *(f32*)(playerState + 0x298) + lbl_803E3974;
+                        (obj)->anim.velocityY = lbl_803E397C * *(f32*)(playerState + 0x298) + lbl_803E3958;
+                        (obj)->anim.velocityZ = lbl_803E3980 * *(f32*)(playerState + 0x298) + lbl_803E3974;
                         blk.fy = lbl_803E3938;
                         blk.fz = lbl_803E3938;
                         blk.fw = lbl_803E3938;
@@ -971,27 +971,27 @@ void SmallBasket_update(int obj)
                         {
                             blk.h0 = blk.h0 + **(s16**)(player + 0x30);
                         }
-                        vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
-                        Sfx_PlayFromObject(obj, SFXTRIG_barrel_throw);
+                        vecRotateZXY(&blk, &(obj)->anim.velocityX);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_throw);
                     }
                     else if (fn_802966B4(player) != 0)
                     {
                         *(u8*)&state->carryState = 0;
                         state->throwState = 2;
                         zf = lbl_803E3938;
-                        ((GameObject*)obj)->anim.velocityX = zf;
-                        ((GameObject*)obj)->anim.velocityY = zf;
-                        ((GameObject*)obj)->anim.velocityZ = zf;
+                        (obj)->anim.velocityX = zf;
+                        (obj)->anim.velocityY = zf;
+                        (obj)->anim.velocityZ = zf;
                         ObjHits_EnableObject(obj);
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                        ObjHits_ClearHitVolumes(obj);
+                        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                        ObjHits_ClearHitVolumes((int)obj);
                     }
                     else
                     {
                         *(u8*)&state->carryState = 0;
                         state->throwState = 1;
-                        ((GameObject*)obj)->anim.velocityY = lbl_803E3988 * *(f32*)(playerState + 0x298) + lbl_803E3984;
-                        ((GameObject*)obj)->anim.velocityZ = lbl_803E3990 * *(f32*)(playerState + 0x298) + lbl_803E398C;
+                        (obj)->anim.velocityY = lbl_803E3988 * *(f32*)(playerState + 0x298) + lbl_803E3984;
+                        (obj)->anim.velocityZ = lbl_803E3990 * *(f32*)(playerState + 0x298) + lbl_803E398C;
                         blk.fy = lbl_803E3938;
                         blk.fz = lbl_803E3938;
                         blk.fw = lbl_803E3938;
@@ -999,19 +999,18 @@ void SmallBasket_update(int obj)
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = ((GameObject*)player)->anim.rotX;
-                        vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
-                        Sfx_PlayFromObject(obj, SFXTRIG_barrel_throw);
+                        vecRotateZXY(&blk, &(obj)->anim.velocityX);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_throw);
                         state->carryAttached = 0;
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                     }
                 }
                 if (*(s8*)&state->carryAttached != 0)
                 {
                     state->disableTimer = 0;
                     state->hiddenTimer = 0;
-                    ObjMsg_SendToObject(player, SMALLBASKET_MSG_PLAYER_GRAB, obj,
-                                        (state->carryParam << 16) |
-                                            ((u16)state->carryAngle));
+                    ObjMsg_SendToObject(player, SMALLBASKET_MSG_PLAYER_GRAB, (int)obj,
+                                        (state->carryParam << 16) | ((u16)state->carryAngle));
                 }
             }
         }
@@ -1020,89 +1019,87 @@ void SmallBasket_update(int obj)
             state->respawnTimer -= framesThisStep;
             if (*(s8*)&state->throwState == 1)
             {
-                ObjHits_SetHitVolumeSlot(obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
-                if (((GameObject*)obj)->anim.velocityY > lbl_803E3994)
+                ObjHits_SetHitVolumeSlot((int)obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
+                if ((obj)->anim.velocityY > lbl_803E3994)
                 {
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E3998 * timeDelta + ((GameObject*)obj)->anim.velocityY;
+                    (obj)->anim.velocityY = lbl_803E3998 * timeDelta + (obj)->anim.velocityY;
                 }
                 ObjHits_EnableObject(obj);
             }
-            ((GameObject*)obj)->anim.localPosX =
-                ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.localPosY =
-                ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-            ((GameObject*)obj)->anim.localPosZ =
-                ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-            smallbasket_resolveCollision(obj);
-            contactFlags = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags;
+            (obj)->anim.localPosX = (obj)->anim.velocityX * timeDelta + (obj)->anim.localPosX;
+            (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.localPosY;
+            (obj)->anim.localPosZ = (obj)->anim.velocityZ * timeDelta + (obj)->anim.localPosZ;
+            smallbasket_resolveCollision((int)obj);
+            contactFlags = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactFlags;
             if ((contactFlags != 0) && (*(s8*)&state->throwState == 1))
             {
-                blk.fy = ((GameObject*)obj)->anim.localPosX;
-                blk.fz = ((GameObject*)obj)->anim.localPosY;
-                blk.fw = ((GameObject*)obj)->anim.localPosZ;
+                blk.fy = (obj)->anim.localPosX;
+                blk.fz = (obj)->anim.localPosY;
+                blk.fw = (obj)->anim.localPosZ;
                 objLightFn_8009a1dc((void*)obj, lbl_803E3934, &blk, 1, 0);
-                (**(void (**)(int, int, int, int, int, int))(*(int*)gSmallBasketResource + 0x4))(obj, 1, 0, 2, -1, 0);
-                Sfx_PlayFromObject(obj, (u16)state->sfxId);
+                (**(void (**)(int, int, int, int, int, int))(*(int*)gSmallBasketResource + 0x4))((int)obj, 1, 0, 2, -1,
+                                                                                                 0);
+                Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
                 state->disableTimer = 0x32;
                 state->throwState = 0;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                fn_801816F8(obj, player, (int)state);
+                *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                fn_801816F8((int)obj, player, (int)state);
                 zf = lbl_803E3938;
-                ((GameObject*)obj)->anim.velocityX = zf;
-                ((GameObject*)obj)->anim.velocityZ = zf;
-                ObjHits_ClearHitVolumes(obj);
+                (obj)->anim.velocityX = zf;
+                (obj)->anim.velocityZ = zf;
+                ObjHits_ClearHitVolumes((int)obj);
             }
             else if ((contactFlags != 0) && (*(s8*)&state->throwState == 2))
             {
                 zf = lbl_803E3938;
-                ((GameObject*)obj)->anim.velocityX = zf;
-                ((GameObject*)obj)->anim.velocityZ = zf;
+                (obj)->anim.velocityX = zf;
+                (obj)->anim.velocityZ = zf;
                 state->disableTimer = 500;
                 state->throwState = 0;
-                ((GameObject*)obj)->unkF8 = 0;
+                (obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ObjHits_ClearHitVolumes(obj);
+                *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                ObjHits_ClearHitVolumes((int)obj);
             }
         }
         state->randomTimer -= framesThisStep;
         if (state->carryState != 0)
         {
-            if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(def + 0x8)) >=
+            if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(def + 0x8)) >=
                 (f32)(state->leashRange * state->leashRange))
             {
                 zf = lbl_803E3938;
-                ((GameObject*)obj)->anim.velocityX = zf;
-                ((GameObject*)obj)->anim.velocityZ = zf;
+                (obj)->anim.velocityX = zf;
+                (obj)->anim.velocityZ = zf;
                 state->disableTimer = 500;
                 state->throwState = 0;
-                ((GameObject*)obj)->unkF8 = 0;
+                (obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ObjHits_ClearHitVolumes(obj);
+                *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                ObjHits_ClearHitVolumes((int)obj);
             }
         }
         else
         {
-            fn_801814D0(obj, player, (int)state);
+            fn_801814D0((int)obj, player, (int)state);
         }
         if ((state->randomTimer <= 0) && (state->carryState != 0))
         {
             subtype = state->subtype;
             if ((subtype == 5) || (subtype == 6))
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_id_6c);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_id_6c);
                 state->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
             else if (((u8)(subtype - 1) <= 1) || (subtype == 3))
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_vineclimb116);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_vineclimb116);
                 state->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }
-        if (((GameObject*)obj)->unkF8 == 0)
+        if ((obj)->unkF8 == 0)
         {
-            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
     }
 }

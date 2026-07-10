@@ -5,7 +5,7 @@
 #include "global.h"
 #include "main/dll/CF/dll_163.h"
 
-void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state);
+void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state);
 void FUN_80189cc4(int obj, StaffActivatedState* state);
 void FUN_80189e0c(u32 obj, StaffActivatedState* state);
 void staffactivated_spawnMapEventDebris(GameObject* obj);

@@ -2,104 +2,113 @@
 #define MAIN_DLL_EDIBLEMUSHROOM_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
 #include "main/objanim_internal.h"
 
-typedef struct EdibleMushroomPlacement {
-  u8 pad00[0x18];
-  u8 objectTypeParam; /* 0x18: variant selector (switch 4/5) */
-  u8 pad19[0x1A - 0x19];
-  s16 gameBitId;      /* 0x1a: pickup/spawn GameBit id */
-  u8 paramByte;       /* 0x1c: normalized into mapParamScale */
+typedef struct EdibleMushroomPlacement
+{
+    u8 pad00[0x18];
+    u8 objectTypeParam; /* 0x18: variant selector (switch 4/5) */
+    u8 pad19[0x1A - 0x19];
+    s16 gameBitId; /* 0x1a: pickup/spawn GameBit id */
+    u8 paramByte;  /* 0x1c: normalized into mapParamScale */
 } EdibleMushroomPlacement;
 
-typedef struct EnemyMushroomMapData {
-  u8 pad00[0x08];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 pad14[0x1A - 0x14];
-  u16 respawnFrameLimit;
-  s16 gameBitId;
-  s8 yawParam;
-  s8 objectTypeParam;
+typedef struct EnemyMushroomMapData
+{
+    u8 pad00[0x08];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    u8 pad14[0x1A - 0x14];
+    u16 respawnFrameLimit;
+    s16 gameBitId;
+    s8 yawParam;
+    s8 objectTypeParam;
 } EnemyMushroomMapData;
 
-typedef struct EnemyMushroomModelState {
-  u8 pad00[0x30];
-  u32 flags;
+typedef struct EnemyMushroomModelState
+{
+    u8 pad00[0x30];
+    u32 flags;
 } EnemyMushroomModelState;
 
-typedef struct EnemyMushroomState {
-  f32 timer;
-  f32 heightTarget;
-  f32 riseDuration;
-  f32 baseScale;
-  f32 riseStep;
-  u8 resetToSpawn;
-  u8 flags;
-  u8 pad16[0x20 - 0x16];
-  f32 hitEffectX;
-  f32 hitEffectY;
-  f32 hitEffectZ;
-  f32 hitRadius;
-  f32 effectTimer;
-  s16 respawnFrameLimit;
-  u8 stateId;
-  u8 stateFlags;
+typedef struct EnemyMushroomState
+{
+    f32 timer;
+    f32 heightTarget;
+    f32 riseDuration;
+    f32 baseScale;
+    f32 riseStep;
+    u8 resetToSpawn;
+    u8 flags;
+    u8 pad16[0x20 - 0x16];
+    f32 hitEffectX;
+    f32 hitEffectY;
+    f32 hitEffectZ;
+    f32 hitRadius;
+    f32 effectTimer;
+    s16 respawnFrameLimit;
+    u8 stateId;
+    u8 stateFlags;
 } EnemyMushroomState;
 
-typedef struct EnemyMushroomObject {
-  union {
-    ObjAnimComponent anim;
-    struct {
-      s16 rotX;
-      s16 rotY;
-      s16 rotZ;
-      s16 flags;
-      f32 scale;
-      f32 posX;
-      f32 posY;
-      f32 posZ;
-      u8 pad18[0x36 - 0x18];
-      u8 alpha;
-      u8 pad37[0x4C - 0x37];
-      EnemyMushroomMapData *mapData;
-      u8 pad50[0x64 - 0x50];
-      EnemyMushroomModelState *modelState;
-      u8 pad68[0xB0 - 0x68];
+typedef struct EnemyMushroomObject
+{
+    union
+    {
+        ObjAnimComponent anim;
+        struct
+        {
+            s16 rotX;
+            s16 rotY;
+            s16 rotZ;
+            s16 flags;
+            f32 scale;
+            f32 posX;
+            f32 posY;
+            f32 posZ;
+            u8 pad18[0x36 - 0x18];
+            u8 alpha;
+            u8 pad37[0x4C - 0x37];
+            EnemyMushroomMapData* mapData;
+            u8 pad50[0x64 - 0x50];
+            EnemyMushroomModelState* modelState;
+            u8 pad68[0xB0 - 0x68];
+        };
     };
-  };
-  u16 objectFlags;
-  u8 padB2[0xB8 - 0xB2];
-  EnemyMushroomState *state;
+    u16 objectFlags;
+    u8 padB2[0xB8 - 0xB2];
+    EnemyMushroomState* state;
 } EnemyMushroomObject;
 
 /* ediblemushroom extra block (size 0x144 = EdibleMushroom_getExtraSize). */
-typedef struct EdibleMushroomState {
-  RomCurveWalker curve;
-  f32 currentTargetDistance;
-  f32 previousTargetDistance;
-  f32 lungeRootSpeedScale;
-  f32 mapParamScale;
-  f32 lungeRange;
-  f32 retreatRange;
-  f32 curveAdvanceStep;
-  f32 burrowAttackTimer;
-  f32 sporePuffTimer;
-  f32 tailSwingFxTimer;
-  s16 moveAngle;
-  u8 pad132[2];
-  s16 collectedGameBitId;
-  u8 animState;
-  u8 flags;
-  u8 pad138;
-  u8 seqResetPending;
-  u8 pad13A[2];
-  s16 pickupMsgBitId;
-  s16 pickupMsgValue;
-  f32 pickupMsgDelay;
+typedef struct EdibleMushroomState
+{
+    RomCurveWalker curve;
+    f32 currentTargetDistance;
+    f32 previousTargetDistance;
+    f32 lungeRootSpeedScale;
+    f32 mapParamScale;
+    f32 lungeRange;
+    f32 retreatRange;
+    f32 curveAdvanceStep;
+    f32 burrowAttackTimer;
+    f32 sporePuffTimer;
+    f32 tailSwingFxTimer;
+    s16 moveAngle;
+    u8 pad132[2];
+    s16 collectedGameBitId;
+    u8 animState;
+    u8 flags;
+    u8 pad138;
+    u8 seqResetPending;
+    u8 pad13A[2];
+    s16 pickupMsgBitId;
+    s16 pickupMsgValue;
+    f32 pickupMsgDelay;
 } EdibleMushroomState;
 
 STATIC_ASSERT(offsetof(EnemyMushroomMapData, posX) == 0x08);
@@ -149,13 +158,12 @@ STATIC_ASSERT(offsetof(EdibleMushroomState, pickupMsgValue) == 0x13E);
 STATIC_ASSERT(offsetof(EdibleMushroomState, pickupMsgDelay) == 0x140);
 STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
 
-void EdibleMushroom_init(int obj, int aux);
-int EdibleMushroom_SeqFn(int *obj);
-void enemymushroom_resetToSpawn(EnemyMushroomObject *obj,EnemyMushroomState *state,
-                                int enableTimer);
+void EdibleMushroom_init(GameObject* obj, int aux);
+int EdibleMushroom_SeqFn(int* obj);
+void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer);
 int enemymushroom_getExtraSize(void);
-int enemymushroom_getObjectTypeId(EnemyMushroomObject *obj);
-void enemymushroom_free(EnemyMushroomObject *obj);
+int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj);
+void enemymushroom_free(EnemyMushroomObject* obj);
 void enemymushroom_hitDetect(void);
 
 #endif /* MAIN_DLL_EDIBLEMUSHROOM_H_ */

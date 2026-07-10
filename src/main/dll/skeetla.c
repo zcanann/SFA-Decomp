@@ -214,8 +214,8 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     state->lastContactObj = lastContactObj;
-    hitKind =
-        ObjHits_PollPriorityHitWithCooldown((int)obj, &state->hitCooldown, (int*)&lastContactObj, (hitPosPtr = hitPos));
+    hitKind = ObjHits_PollPriorityHitWithCooldown((GameObject*)obj, &state->hitCooldown, (int*)&lastContactObj,
+                                                  (hitPosPtr = hitPos));
     state->light = hitKind;
 
     switch (state->light)

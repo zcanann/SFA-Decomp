@@ -32,10 +32,10 @@ void arwgenerato_hitDetect(void)
 {
 }
 
-void arwgenerato_update(int obj)
+void arwgenerato_update(GameObject* obj)
 {
-    ARWGeneratorState* state = ((GameObject*)obj)->extra;
-    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)((GameObject*)obj)->anim.placementData;
+    ARWGeneratorState* state = (obj)->extra;
+    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
     f32 timer = state->spawnTimer;
     f32 thr = lbl_803E7154;
 
@@ -47,10 +47,10 @@ void arwgenerato_update(int obj)
             switch (mapData->spawnMode)
             {
             case 0:
-                fn_802317A8(obj, state, mapData);
+                fn_802317A8((int)obj, state, mapData);
                 break;
             case 1:
-                fn_802315EC(obj, state, mapData);
+                fn_802315EC((int)obj, state, mapData);
                 break;
             }
             state->spawnTimer = (f32)(u32)mapData->spawnInterval;

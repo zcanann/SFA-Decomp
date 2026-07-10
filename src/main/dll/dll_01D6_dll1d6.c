@@ -101,7 +101,7 @@ extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy,
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
-static inline int* DIM2snowball_GetActiveModel(void* obj)
+static inline int* DIM2snowball_GetActiveModel(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
@@ -160,7 +160,7 @@ void dll_1D6_init(int* obj, u8* params)
 
     ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)params + 0x18) << 8);
     extra = ((GameObject*)obj)->extra;
-    model = DIM2snowball_GetActiveModel(obj);
+    model = DIM2snowball_GetActiveModel((GameObject*)(obj));
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
     extra->upTimer = *(s16*)((char*)params + 0x1a);
@@ -228,7 +228,7 @@ void dll_1D6_update(int* obj)
         }
         if (extra->downTimer <= 0)
         {
-            model = DIM2snowball_GetActiveModel(obj);
+            model = DIM2snowball_GetActiveModel((GameObject*)(obj));
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
             extra->upTimer = ((Dll1D6Placement*)def)->upTimer;
             if (extra->upTimer < 15)
@@ -242,7 +242,7 @@ void dll_1D6_update(int* obj)
     else
     {
         void* p28;
-        model = DIM2snowball_GetActiveModel(obj);
+        model = DIM2snowball_GetActiveModel((GameObject*)(obj));
         p28 = *(void**)((char*)model + 0x28);
         if (p28 != NULL && (extra->flags1D & 4) != 0)
         {
@@ -265,7 +265,7 @@ void dll_1D6_update(int* obj)
             extra->dizzyTimer = 20;
         }
     }
-    tex = objFindTexture(obj, 0, 0);
+    tex = objFindTexture((GameObject*)(obj), 0, 0);
     {
         s16 t = -tex->offsetT;
         int v = t + 256;
@@ -275,7 +275,7 @@ void dll_1D6_update(int* obj)
         }
         tex->offsetT = -v;
     }
-    tex = objFindTexture(obj, 1, 0);
+    tex = objFindTexture((GameObject*)(obj), 1, 0);
     {
         s16 t = -tex->offsetT;
         int v = t + 160;
@@ -309,7 +309,7 @@ void dll_1D6_update(int* obj)
             {
                 int* row;
                 f32 lim;
-                model = DIM2snowball_GetActiveModel(obj);
+                model = DIM2snowball_GetActiveModel((GameObject*)(obj));
                 {
                     char* mrow = (char*)model + 4;
                     row = *(int**)(mrow + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4);

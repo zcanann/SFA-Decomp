@@ -23,8 +23,8 @@ typedef struct ArwAttachTarget
     f32 speed;
 } ArwAttachTarget;
 
-void fn_801F20D4(int obj);
-void fn_801F27E4(int obj);
+void fn_801F20D4(GameObject* obj);
+void fn_801F27E4(GameObject* obj);
 void dll_200_free_nop(void);
 void dll_200_hitDetect_nop(void);
 void dll_200_release_nop(void);

@@ -2,6 +2,7 @@
 #define MAIN_DLL_VF_DLL_021C_VFPLADDERS_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct VfpLaddersState
@@ -36,7 +37,7 @@ int VFP_Ladders_getObjectTypeId(void);
 void VFP_Ladders_free(int obj);
 void VFP_Ladders_render(void);
 void VFP_Ladders_hitDetect(void);
-void VFP_Ladders_update(int obj);
+void VFP_Ladders_update(GameObject* obj);
 void VFP_Ladders_init(int* obj, u8* init);
 void VFP_Ladders_release(void);
 void VFP_Ladders_initialise(void);

@@ -76,7 +76,7 @@ void dll_199_free(int* obj)
 
 void dll_199_initialise(void);
 void dll_199_release(void);
-void dll_199_init(int obj, int def);
+void dll_199_init(GameObject* obj, int def);
 void dll_199_update(int obj);
 
 ObjectDescriptor dll_199 = {
@@ -454,15 +454,15 @@ void dll_199_update(int obj)
     }
 }
 
-void dll_199_init(int obj, int def)
+void dll_199_init(GameObject* obj, int def)
 {
     extern int* gTitleMenuControlInterface;
     short* state;
     int* res;
     short id;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = 0;
+    state = (obj)->extra;
+    (obj)->anim.rotX = 0;
     *state = 10;
     if (((Dll199ObjectDef*)def)->initStateOverride > 0)
     {
@@ -472,8 +472,8 @@ void dll_199_init(int obj, int def)
     ((Dll199State*)state)->unk10 = 0;
     state[1] = 0;
     ((Dll199State*)state)->unlockCount = 0;
-    ((GameObject*)obj)->animEventCallback = dll_199_SeqFn;
-    ObjMsg_AllocQueue(obj, 4);
+    (obj)->animEventCallback = dll_199_SeqFn;
+    ObjMsg_AllocQueue((int)obj, 4);
     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     mainSetBits(0x1cf, 0);
     mainSetBits(0x126, 1);
@@ -488,7 +488,7 @@ void dll_199_init(int obj, int def)
     state[5] = 0;
     ((Dll199State*)state)->triggered = 0;
     res = Resource_Acquire(0x6a, 1);
-    id = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
+    id = (**(short (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 0x402, 0xffffffff, 0);
     state[6] = id;
     Resource_Release(res);
 }

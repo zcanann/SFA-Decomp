@@ -77,7 +77,7 @@ extern f32 lbl_803E56A4;
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
-int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* self;
     Platform1State* st;
@@ -102,7 +102,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         u8 flag;
     } evt;
 
-    self = (GameObject*)obj;
+    self = obj;
     st = self->extra;
     playerObj = (GameObject*)Obj_GetPlayerObject();
     player = (int)playerObj;
@@ -333,7 +333,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 st->platformSfxTimer = (f32)(int)randomGetRange(0x78, 0xf0);
             }
-            Sfx_PlayFromObject(obj, PLATFORM1_PLATFORM_SFX_ID);
+            Sfx_PlayFromObject((int)obj, PLATFORM1_PLATFORM_SFX_ID);
         }
         if (diff < lbl_803E5678)
         {
@@ -348,7 +348,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             vol = 100;
         }
-        Sfx_SetObjectSfxVolume(obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, lbl_803E56A4);
+        Sfx_SetObjectSfxVolume((int)obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, lbl_803E56A4);
         ret = 0;
     }
 done:

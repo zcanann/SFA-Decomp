@@ -112,7 +112,7 @@ void objFn_80198fa4(s16* obj, void* placement)
 #undef rotMtx
 }
 
-void objSeqMoveFn_80199188(void* obj, int arg2)
+void objSeqMoveFn_80199188(GameObject* obj, int arg2)
 {
     f32 distSqA;
     f32 dyB;
@@ -124,15 +124,15 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     s8 leg;
     MmpGyserventState* state;
 
-    state = ((GameObject*)obj)->extra;
-    speed = (float)(s32)(*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + MMP_GYSERVENT_PLACE_SPEED) * 2);
-    t = state->reachAX - ((GameObject*)obj)->anim.worldPosX;
-    dyA = state->reachAY - ((GameObject*)obj)->anim.worldPosY;
-    distSqA = state->reachAZ - ((GameObject*)obj)->anim.worldPosZ;
+    state = (obj)->extra;
+    speed = (float)(s32)(*(u8*)(*(int*)&(obj)->anim.placementData + MMP_GYSERVENT_PLACE_SPEED) * 2);
+    t = state->reachAX - (obj)->anim.worldPosX;
+    dyA = state->reachAY - (obj)->anim.worldPosY;
+    distSqA = state->reachAZ - (obj)->anim.worldPosZ;
     distSqA = t * t + distSqA * distSqA;
-    t = state->reachBX - ((GameObject*)obj)->anim.worldPosX;
-    dyB = state->reachBY - ((GameObject*)obj)->anim.worldPosY;
-    distSqB = state->reachBZ - ((GameObject*)obj)->anim.worldPosZ;
+    t = state->reachBX - (obj)->anim.worldPosX;
+    dyB = state->reachBY - (obj)->anim.worldPosY;
+    distSqB = state->reachBZ - (obj)->anim.worldPosZ;
     distSqB = t * t + distSqB * distSqB;
     t = state->nearRadiusSq;
     if (distSqB < t)
@@ -167,23 +167,23 @@ end:
     objInterpretSeq(obj, arg2, leg, distSqB);
 }
 
-void objSeqFn_801992ec(void* obj, int arg2)
+void objSeqFn_801992ec(GameObject* obj, int arg2)
 {
     MmpGyserventState* state;
     f32 dx0, dy0, dz0, d0;
     f32 dx1, dy1, dz1, d1;
     s8 cat;
 
-    state = (MmpGyserventState*)((GameObject*)obj)->extra;
+    state = (MmpGyserventState*)(obj)->extra;
 
-    dx0 = state->reachAX - ((GameObject*)obj)->anim.worldPosX;
-    dy0 = state->reachAY - ((GameObject*)obj)->anim.worldPosY;
-    dz0 = state->reachAZ - ((GameObject*)obj)->anim.worldPosZ;
+    dx0 = state->reachAX - (obj)->anim.worldPosX;
+    dy0 = state->reachAY - (obj)->anim.worldPosY;
+    dz0 = state->reachAZ - (obj)->anim.worldPosZ;
     d0 = dx0 * dx0 + dy0 * dy0 + dz0 * dz0;
 
-    dx1 = state->reachBX - ((GameObject*)obj)->anim.worldPosX;
-    dy1 = state->reachBY - ((GameObject*)obj)->anim.worldPosY;
-    dz1 = state->reachBZ - ((GameObject*)obj)->anim.worldPosZ;
+    dx1 = state->reachBX - (obj)->anim.worldPosX;
+    dy1 = state->reachBY - (obj)->anim.worldPosY;
+    dz1 = state->reachBZ - (obj)->anim.worldPosZ;
     d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
 
     if (d1 < state->nearRadiusSq)

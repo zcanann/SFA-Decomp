@@ -90,17 +90,17 @@ void lightfoot_initialise(void)
     lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
 
-void lightfoot_free(int obj, int flag)
+void lightfoot_free(GameObject* obj, int flag)
 {
     void* child;
-    int inner = *(int*)&((GameObject*)obj)->extra;
+    int inner = *(int*)&(obj)->extra;
     int count;
     int i;
     ObjGroup_RemoveObject(obj, LIGHTFOOT_OBJGROUP);
-    count = ((GameObject*)obj)->childCount;
+    count = (obj)->childCount;
     for (i = 0; i < count; i++)
     {
-        child = ((GameObject*)obj)->childObjs[0];
+        child = (obj)->childObjs[0];
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
@@ -110,13 +110,13 @@ void lightfoot_free(int obj, int flag)
             }
         }
     }
-    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0x20);
+    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))((int)obj, inner, 0x20);
 }
 
-void lightfoot_update(int obj)
+void lightfoot_update(GameObject* obj)
 {
-    int inner = *(int*)&((GameObject*)obj)->extra;
-    int p30 = *(int*)&((GameObject*)obj)->anim.placementData;
+    int inner = *(int*)&(obj)->extra;
+    int p30 = *(int*)&(obj)->anim.placementData;
     int anim = ((LightfootState*)inner)->subObj;
     f32 snd[3];
     f32 buf[6];
@@ -130,11 +130,11 @@ void lightfoot_update(int obj)
         ((LightfootSub*)anim)->lifeTimer = fv - timeDelta;
         if (((LightfootSub*)anim)->lifeTimer <= limit)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
         }
     }
 
-    if (((GameObject*)obj)->anim.seqId == 0x27c && ((GroundBaddieState*)inner)->gameBitA != -1)
+    if ((obj)->anim.seqId == 0x27c && ((GroundBaddieState*)inner)->gameBitA != -1)
     {
         switch (((ObjPlacement*)p30)->mapId)
         {
@@ -143,11 +143,11 @@ void lightfoot_update(int obj)
         case 0x49941:
             if (mainGetBit(0xc44))
             {
-                ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
+                (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
-                ((GameObject*)obj)->unkF4 = 1;
+                (obj)->unkF4 = 1;
             }
             break;
         case 0x499AC:
@@ -164,7 +164,7 @@ void lightfoot_update(int obj)
                     buf[5] = lbl_803E8180;
                     for (i = 0x14; i != 0; i--)
                     {
-                        objfx_spawnDirectionalBurst(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                        objfx_spawnDirectionalBurst((int)obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
                     if (mainGetBit(0xc3b) && mainGetBit(0xc3c) && mainGetBit(0xc3d))
                     {
@@ -175,11 +175,11 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
-                ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
+                (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
-                ((GameObject*)obj)->unkF4 = 1;
+                (obj)->unkF4 = 1;
             }
             break;
         case 0x499B0:
@@ -196,7 +196,7 @@ void lightfoot_update(int obj)
                     buf[5] = lbl_803E8180;
                     for (i = 0x14; i != 0; i--)
                     {
-                        objfx_spawnDirectionalBurst(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                        objfx_spawnDirectionalBurst((int)obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
                     if (mainGetBit(0xc3e) && mainGetBit(0xc3f) && mainGetBit(0xc40))
                     {
@@ -207,31 +207,31 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
-                ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
+                (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
-                ((GameObject*)obj)->unkF4 = 1;
+                (obj)->unkF4 = 1;
             }
             break;
         default:
-            ((GameObject*)obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0;
+            (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0;
             break;
         }
 
-        if (((GameObject*)obj)->unkF4 != 0)
+        if ((obj)->unkF4 != 0)
         {
             ObjHits_DisableObject(obj);
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         else
         {
             ObjHits_EnableObject(obj);
-            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
     }
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
         if ((((ObjPlacement*)p30)->mapId == 0x499B5 && mainGetBit(0xc42) &&
              (mainGetBit(0xc3b) == 0 || mainGetBit(0xc3c) == 0 || mainGetBit(0xc3d) == 0)) ||
@@ -241,23 +241,22 @@ void lightfoot_update(int obj)
             buf[3] = lbl_803E8180;
             buf[4] = lbl_803E821C;
             buf[5] = lbl_803E8180;
-            objfx_spawnArcedBurst(obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, *(f32*)&lbl_803E8214, lbl_803E8224,
-                                  buf, 0);
+            objfx_spawnArcedBurst((int)obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, *(f32*)&lbl_803E8214,
+                                  lbl_803E8224, buf, 0);
         }
     }
     else
     {
-        Lightfoot_UpdateAttachedChild(obj, inner);
+        Lightfoot_UpdateAttachedChild((int)obj, inner);
         if (((GroundBaddieState*)inner)->flags400 & 0x2)
         {
-            Lightfoot_RecordCompletedChallengeTargetHit((GameObject*)(obj), inner, anim);
-            Lightfoot_ResetScriptedPosition((GameObject*)(obj));
-            ((GameObject*)obj)->unkF8 = 0;
+            Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
+            Lightfoot_ResetScriptedPosition(obj);
+            (obj)->unkF8 = 0;
             ((GroundBaddieState*)inner)->flags400 &= ~0x2;
         }
-        Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
-        if ((((GroundBaddieState*)inner)->configFlags & 1) &&
-            (((GameObject*)obj)->objectFlags & LIGHTFOOT_OBJFLAG_RENDERED))
+        Lightfoot_UpdatePlayerInteraction((int)obj, inner, inner);
+        if ((((GroundBaddieState*)inner)->configFlags & 1) && ((obj)->objectFlags & LIGHTFOOT_OBJFLAG_RENDERED))
         {
             int a40c = ((LightfootState*)inner)->subObj;
             ((LightfootSub*)a40c)->animTimer -= timeDelta;
@@ -273,18 +272,18 @@ void lightfoot_update(int obj)
             snd[0] = lbl_803E8180;
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
-            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
+            Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_foot_metal_scuff_455);
             ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(
-                obj, lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, 3, p30, 0, snd);
+                (int)obj, lbl_803E81C8 * (obj)->anim.rootMotionScale, 3, p30, 0, snd);
         }
         ((LightfootSub*)anim)->wanderTimer -= timeDelta;
     }
 }
 
-void lightfoot_init(int obj, int def, int flag)
+void lightfoot_init(GameObject* obj, int def, int flag)
 {
     u8* base = (u8*)lbl_80334EE8;
-    int inner = *(int*)&((GameObject*)obj)->extra;
+    int inner = *(int*)&(obj)->extra;
     ObjPlacement* plc = (ObjPlacement*)def;
     int sub;
     u8 flags = 0x16;
@@ -294,15 +293,15 @@ void lightfoot_init(int obj, int def, int flag)
         flags |= 1;
     }
     (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        obj, def, inner, 5, 3, 0x108, flags, lbl_803E8228);
-    ((GameObject*)obj)->animEventCallback = Lightfoot_SeqFn;
+        (int)obj, def, inner, 5, 3, 0x108, flags, lbl_803E8228);
+    (obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags = (u16)((obj)->objectFlags | LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED);
     sub = ((LightfootState*)inner)->subObj;
     ((LightfootSub*)sub)->unk26 = -1;
     ((LightfootSub*)sub)->unk28 = ((LightfootSub*)sub)->unk26;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (*(s8*)((char*)def + 0x28) & 0x7));
+    (obj)->objectFlags = (u16)((obj)->objectFlags | (*(s8*)((char*)def + 0x28) & 0x7));
     if (*(s16*)((char*)def + 0x1a) == 0x64c)
     {
         ((GroundBaddieState*)inner)->baddie.controlMode = 2;
@@ -312,9 +311,8 @@ void lightfoot_init(int obj, int def, int flag)
         ((LightfootSub*)sub)->unk28 = 0x6f1;
         ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
         ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        ((GameObject*)obj)->unkF8 = 0;
+        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        (obj)->unkF8 = 0;
     }
     else
     {
@@ -324,55 +322,48 @@ void lightfoot_init(int obj, int def, int flag)
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC714;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC718;
             ObjHits_DisableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x33e3c:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
             ((LightfootSub*)sub)->unk28 = 0x6f1;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x33e34:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6FC;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC700;
             ((LightfootSub*)sub)->unk28 = 0x6f1;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x45c47:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC708;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC70C;
             ObjHits_DisableObject(obj);
             ((LightfootSub*)sub)->unk28 = 0x6f2;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x460b6:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC720;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC724;
             ObjHits_DisableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x3433f:
             ((LightfootSub*)sub)->unk0 = (int)(base + 0x30);
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x40);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x46a51:
             if (mainGetBit(0xc52))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                    (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+                *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             }
             ((LightfootSub*)sub)->unk0 = (int)base;
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
@@ -380,8 +371,7 @@ void lightfoot_init(int obj, int def, int flag)
         case 0x46a55:
             if (mainGetBit(GAMEBIT_LV_ChallengeGate2Complete))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                    (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+                *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             }
             ((LightfootSub*)sub)->unk0 = (int)base;
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
@@ -389,8 +379,7 @@ void lightfoot_init(int obj, int def, int flag)
         case 0x49928:
             if (mainGetBit(GAMEBIT_SC_ChallengeGate3Complete))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                    (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+                *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             }
             ((LightfootSub*)sub)->unk0 = (int)base;
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x10);
@@ -405,11 +394,11 @@ void lightfoot_init(int obj, int def, int flag)
             ((LightfootSub*)sub)->unk0 = (int)(base + 0x30);
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x40);
             ((LightfootSub*)sub)->wanderTimer = (f32)(s32)randomGetRange(0x78, 0xb4);
-            ((GameObject*)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x499b5:
         case 0x499b6:
-            ((GameObject*)obj)->unkF4 = 1;
+            (obj)->unkF4 = 1;
             ((LightfootSub*)sub)->unk0 = (int)(base + 0x30);
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x40);
             break;
@@ -419,11 +408,11 @@ void lightfoot_init(int obj, int def, int flag)
             break;
         }
     }
-    Lightfoot_ResetScriptedPosition((GameObject*)(obj));
+    Lightfoot_ResetScriptedPosition(obj);
     ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C, (ObjAnimComponent*)obj);
     ((LightfootSub*)sub)->unk2A = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     ((LightfootSub*)sub)->animTimer = lbl_803E81C0;
-    if (((GameObject*)obj)->unkF4 != 0)
+    if ((obj)->unkF4 != 0)
     {
         ObjHits_DisableObject(obj);
     }

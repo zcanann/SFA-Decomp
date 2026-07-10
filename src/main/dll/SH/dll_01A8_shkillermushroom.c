@@ -159,9 +159,9 @@ void enemymushroom_free(EnemyMushroomObject* obj)
     ObjGroup_RemoveObject((int)obj, SHKILLERMUSHROOM_OBJGROUP);
 }
 
-void enemymushroom_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void enemymushroom_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    void* state = ((GameObject*)obj)->extra;
+    void* state = (obj)->extra;
     if (visible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5310);
@@ -232,8 +232,8 @@ void enemymushroom_update(int* obj)
 
     if (objIsFrozen(obj))
     {
-        hitType =
-            ObjHits_GetPriorityHitWithPosition((int)obj, &hitObject, &hitSphereIndex, &hitVolume, &hv.x, &hv.y, &hv.z);
+        hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitSphereIndex, &hitVolume, &hv.x,
+                                                     &hv.y, &hv.z);
         if (hitType != 0 && hitType != 0x10)
         {
             hv.x += playerMapOffsetX;
@@ -464,8 +464,8 @@ void enemymushroom_update(int* obj)
         break;
     }
 
-    hitType =
-        ObjHits_GetPriorityHitWithPosition((int)obj, &hitObject, &hitSphereIndex, &hitVolume, &hv.x, &hv.y, &hv.z);
+    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitSphereIndex, &hitVolume, &hv.x,
+                                                 &hv.y, &hv.z);
     hv.x += playerMapOffsetX;
     hv.z += playerMapOffsetZ;
     if (hitType != 0)

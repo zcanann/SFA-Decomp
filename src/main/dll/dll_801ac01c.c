@@ -24,9 +24,9 @@ extern void* playerGetFocusObject(void* obj);
 #define HUD_STATE_HIDDEN 6
 
 #pragma scheduling off
-void fn_801AC01C(int obj)
+void fn_801AC01C(GameObject *obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&(obj)->extra;
     int mode;
     void* player;
 
@@ -57,7 +57,7 @@ void fn_801AC01C(int obj)
     mainSetBits(GAMEBIT_IM_BikeRelated03B9, 0);
 }
 
-void fn_801AC108(int obj, int extra)
+void fn_801AC108(GameObject *obj, int extra)
 {
     int mode;
     void* player;
@@ -79,7 +79,7 @@ void fn_801AC108(int obj, int extra)
             mode = 0;
         }
         mainSetBits(GAMEBIT_IM_DoneRace, 1);
-        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
+        (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 1, 1);
         if (mode == 1)
         {
             (*gGameUIInterface)->setShowWorldMapHud(1);

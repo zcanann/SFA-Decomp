@@ -16,6 +16,7 @@
  * commands the linked target object to begin the challenge.
  */
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
@@ -310,14 +311,14 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
             state->countValue = (s16)(state->countScale >> 1);
         }
         cv = state->countValue;
-        texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
+        texture = objFindTexture((GameObject*)(obj), DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
         texture->textureId = (cv % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-        texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
+        texture = objFindTexture((GameObject*)(obj), DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
         texture->textureId = ((cv / 10) % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         cv = cv / 100;
         if (cv > DR_LASERTURRET_MAX_DIGIT)
             cv = DR_LASERTURRET_MAX_DIGIT;
-        texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
+        texture = objFindTexture((GameObject*)(obj), DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
         texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
     }
     else if (dispatch == DR_LASERTURRET_PROMPT_DIGIT_COUNT)
@@ -347,14 +348,14 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         }
         {
             cv = state->digitCount;
-            texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
+            texture = objFindTexture((GameObject*)(obj), DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
             texture->textureId = (cv % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-            texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
+            texture = objFindTexture((GameObject*)(obj), DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
             texture->textureId = ((cv / 10) % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             cv = cv / 100;
             if (cv > DR_LASERTURRET_MAX_DIGIT)
                 cv = DR_LASERTURRET_MAX_DIGIT;
-            texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
+            texture = objFindTexture((GameObject*)(obj), DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
             texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }
         btn = getButtonsJustPressed(0);

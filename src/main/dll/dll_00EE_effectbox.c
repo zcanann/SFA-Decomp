@@ -166,26 +166,26 @@ void EffectBox_update(GameObject* obj)
     }
 }
 
-void EffectBox_init(int obj, EffectboxPlacement* def)
+void EffectBox_init(GameObject* obj, EffectboxPlacement* def)
 {
     s16 gameBit;
     u32 flags;
-    if (((GameObject*)obj)->unkF4 == 0)
+    if ((obj)->unkF4 == 0)
     {
-        fn_8002B860(obj);
+        fn_8002B860((int)obj);
     }
-    ((GameObject*)obj)->unkF4 = 1;
+    (obj)->unkF4 = 1;
     gameBit = def->gameBitIndex;
     if (gameBit > -1)
     {
-        ((GameObject*)obj)->unkF8 = gameBit;
+        (obj)->unkF8 = gameBit;
     }
     else
     {
-        ((GameObject*)obj)->unkF8 = -1;
+        (obj)->unkF8 = -1;
     }
-    flags = (u32)((GameObject*)obj)->objectFlags | (EFFECTBOX_OBJFLAG_HIDDEN | EFFECTBOX_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->objectFlags = flags;
+    flags = (u32)(obj)->objectFlags | (EFFECTBOX_OBJFLAG_HIDDEN | EFFECTBOX_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags = flags;
 }
 
 void EffectBox_release(void)

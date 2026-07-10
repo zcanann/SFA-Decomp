@@ -62,8 +62,8 @@ void BombPlantingSpot_update(void* obj)
     }
 }
 
-void BombPlantingSpot_init(void* obj, BombPlantingSpotMapData* mapData)
+void BombPlantingSpot_init(GameObject *obj, BombPlantingSpotMapData* mapData)
 {
-    ((GameObject*)obj)->objectFlags |= BOMBPLANTINGSPOT_OBJFLAG_HIDDEN;
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
+    (obj)->objectFlags |= BOMBPLANTINGSPOT_OBJFLAG_HIDDEN;
+    (obj)->anim.rotX = (s16)(mapData->yawByte << 8);
 }

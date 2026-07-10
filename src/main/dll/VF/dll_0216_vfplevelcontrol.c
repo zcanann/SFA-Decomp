@@ -129,27 +129,27 @@ void VFP_LevelControl_hitDetect(void)
 {
 }
 
-void VFP_LevelControl_update(int obj)
+void VFP_LevelControl_update(GameObject* obj)
 {
-    VfpLevelControlState* state = ((GameObject*)obj)->extra;
+    VfpLevelControlState* state = (obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if (((GameObject*)obj)->unkF4 == 0 && mainGetBit(GAMEBIT_VFP_INTRO_DONE) == 0u)
+    if ((obj)->unkF4 == 0 && mainGetBit(GAMEBIT_VFP_INTRO_DONE) == 0u)
     {
         if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
-            getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_0, 0);
-            getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_1, 0);
-            getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_2, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, VFP_ENVFX_INTRO_0, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, VFP_ENVFX_INTRO_1, 0);
+            getEnvfxActImmediately((int)obj, (int)obj, VFP_ENVFX_INTRO_2, 0);
             skyFn_80088e54(1, lbl_803E6060);
             mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
 
     coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
-    mapEventState = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    mapEventState = (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
     switch (mapEventState)
     {
     case 0:
@@ -182,7 +182,7 @@ void VFP_LevelControl_update(int obj)
                 lbl_803DC148 = 0;
             }
         }
-        fn_801F9804((GameObject*)(obj));
+        fn_801F9804(obj);
         break;
     case 3:
         if (lbl_803DC148 != 0)

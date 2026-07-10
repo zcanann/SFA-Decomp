@@ -70,11 +70,11 @@ extern void warpstone_getExtraSize(void);
 
 extern void warpstone_getObjectTypeId(void);
 
-extern void warpstone_free(void);
+extern void warpstone_free(GameObject*);
 
 extern void warpstone_render(void);
 
-extern void warpstone_hitDetect(void);
+extern void warpstone_hitDetect(GameObject*);
 
 extern void warpstone_update(void);
 
@@ -86,18 +86,18 @@ extern void warpstone_initialise(void);
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjTrigger_IsSet(int obj);
-extern void characterDoEyeAnims(int obj, int p2);
+extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z,
                                           int useInputPosition);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int point);
+extern void dll_2E_func06(GameObject* obj, SHthorntailRuntime* runtime, int point);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 Obj_GetActiveModel();
 extern u32 modelInitBones();
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void fn_8003B228(int obj, int p2);
+extern void fn_8003B228(GameObject* obj, int p2);
 extern u32 dll_2E_func05();
 extern void dll_2E_func08(int obj, int v1, int v2);
 extern void dll_2E_func03(SHthorntailObject* obj, SHthorntailRuntime* runtime);
@@ -321,13 +321,13 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
     impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
     if (impactPending != 0)
     {
-        impactHandled = dll_2E_func07((int)obj, (ObjSeqState*)animUpdate, (char*)runtime, 0, 0);
+        impactHandled = dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (char*)runtime, 0, 0);
         if (impactHandled != 0)
         {
             return 0;
         }
         animUpdate->hitVolumePair &= ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
-        characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
+        characterDoEyeAnims((GameObject*)obj, (int)runtime->collisionShapeState);
     }
     runtime->activeMoveValid = 0;
     objAudioFn_8006ef38((int)obj, (int)&animUpdate->animEvents, 8, (int)runtime->renderPathPoints,
@@ -359,7 +359,7 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
 
     runtime = obj->runtime;
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5448);
-    dll_2E_func06(obj, runtime, 0);
+    dll_2E_func06((GameObject*)(obj), runtime, 0);
     pointIndex = 0;
     do
     {
@@ -529,11 +529,11 @@ void SHthorntail_update(SHthorntailObject* obj)
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) !=
             0)
         {
-            fn_8003B228((int)obj, (int)runtime->collisionShapeState);
+            fn_8003B228((GameObject*)obj, (int)runtime->collisionShapeState);
         }
         else
         {
-            characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
+            characterDoEyeAnims((GameObject*)obj, (int)runtime->collisionShapeState);
         }
         runtime->behaviorFlags = runtime->behaviorFlags & ~2;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))
@@ -635,7 +635,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
         ->attachPathData(moveScratch, SHTHORNTAIL_PATH_CHANNEL, gSHthorntailPathHeaders, gSHthorntailPathData, outA);
     (*gSHthorntailPathControlInterface)->bindObject(obj, moveScratch);
     obj->animEventCallback = SHthorntail_updateLevelControlState;
-    dll_2E_func05((int)obj, runtime, 0xffffdc72, 0x2aaa, 3);
+    dll_2E_func05((GameObject*)obj, runtime, 0xffffdc72, 0x2aaa, 3);
     dll_2E_func08((int)runtime, 400, 0x78);
     ObjGroup_AddObject((int)obj, THORNTAIL_OBJGROUP);
 }

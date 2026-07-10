@@ -79,9 +79,9 @@ int MikaBomb_getObjectTypeId(void)
     return 0x0;
 }
 
-void MikaBomb_free(int obj, int mode)
+void MikaBomb_free(GameObject* obj, int mode)
 {
-    void** inner = ((GameObject*)obj)->extra;
+    void** inner = (obj)->extra;
     if (inner[0] != NULL && mode == 0)
     {
         Obj_FreeObject(inner[0]);

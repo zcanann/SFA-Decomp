@@ -144,7 +144,7 @@ void Shield_initialise(void);
 void Shield_init(int* obj, void* initData);
 void Shield_update(int* obj);
 void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void Shield_free(int obj);
+void Shield_free(GameObject* obj);
 int Shield_getExtraSize(void);
 int Shield_getObjectTypeId(void);
 void staffFn_80170380(int* obj, int cmd);
@@ -487,16 +487,16 @@ int Shield_getObjectTypeId(void)
     return 0x0;
 }
 
-void Shield_free(int obj)
+void Shield_free(GameObject* obj)
 {
-    void** state = ((GameObject*)obj)->extra;
+    void** state = (obj)->extra;
     if (state[0] != NULL)
     {
         ModelLightStruct_free(state[0]);
         state[0] = NULL;
     }
-    Sfx_StopFromObject(obj, SFXTRIG_lrope_powerup);
-    Sfx_StopFromObject(obj, SFXTRIG_lockon3_on);
+    Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
+    Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
 }
 
 typedef struct ShieldFxVec

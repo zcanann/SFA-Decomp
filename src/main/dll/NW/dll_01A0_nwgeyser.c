@@ -41,10 +41,10 @@ extern f32 lbl_803E5214;
 
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
                                 f32 scaleZ);
-extern void fn_8003A168(int obj, void* p);
-extern void fn_8003B228(int obj, void* p);
+extern void fn_8003A168(GameObject* obj, void* p);
+extern void fn_8003B228(GameObject* obj, void* p);
 
-void fn_801CDF94(int obj, int state, int flag);
+void fn_801CDF94(GameObject* obj, int state, int flag);
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -56,8 +56,8 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
-    tex0 = objFindTexture(obj, 0, 0);
-    objFindTexture(obj, 1, 0);
+    tex0 = objFindTexture((GameObject*)(obj), 0, 0);
+    objFindTexture((GameObject*)(obj), 1, 0);
     tex0->offsetT = (s16)(tex0->offsetT + (s32)(lbl_803E5200 * timeDelta));
     if (tex0->offsetT > 0x4e80)
     {
@@ -73,21 +73,21 @@ void nw_geyser_free(int* obj)
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
 }
 
-void nw_geyser_update(int obj)
+void nw_geyser_update(GameObject* obj)
 {
     if (mainGetBit(GAMEBIT_GEYSER_OFF) != 0)
     {
-        ((GameObject*)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | NWGEYSER_OBJFLAG_UPDATE_DISABLED);
-        Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_A);
-        Sfx_RemoveLoopedObjectSound(obj, SFX_GEYSER_LOOP_B);
+        (obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
+        (obj)->objectFlags = (u16)((obj)->objectFlags | NWGEYSER_OBJFLAG_UPDATE_DISABLED);
+        Sfx_RemoveLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_A);
+        Sfx_RemoveLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_B);
         ObjHits_DisableObject((u32)obj);
         mainSetBits(0x398, 1);
     }
     else
     {
-        Sfx_AddLoopedObjectSound(obj, SFX_GEYSER_LOOP_A);
-        Sfx_AddLoopedObjectSound(obj, SFX_GEYSER_LOOP_B);
+        Sfx_AddLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_A);
+        Sfx_AddLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_B);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         ObjHits_EnableObject((u32)obj);
     }
@@ -104,17 +104,17 @@ char* fn_801CDE70(int* obj)
     return *(char**)&((GameObject*)obj)->extra + 0xc;
 }
 
-int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8* state;
     void* audioEvents;
     void* audioPoints;
     void* audioScratch;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if ((((NwMammothState*)state)->runtimeFlags & 0x20) == 0)
     {
-        Sfx_StopObjectChannel(obj, 0x7f);
+        Sfx_StopObjectChannel((int)obj, 0x7f);
         ((NwMammothState*)state)->pathSpeed = lbl_803E520C;
         ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags & ~0x10);
         ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags | 0x20);
@@ -129,16 +129,16 @@ int nw_mammoth_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
-    objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch, lbl_803E5210, *(f32*)&lbl_803E5210);
+    objAudioFn_8006ef38((int)obj, audioEvents, 8, audioPoints, audioScratch, lbl_803E5210, *(f32*)&lbl_803E5210);
     if (animUpdate->eventCount != 0)
     {
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags & ~0x400);
-        ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
+        (obj)->objectFlags = (u16)((obj)->objectFlags & ~0x400);
+        (obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
     }
     return 0;
 }
 
-void fn_801CDF94(int obj, int state, int flag)
+void fn_801CDF94(GameObject* obj, int state, int flag)
 {
     if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
         ((NwMammothState*)state)->playerDistanceSq < lbl_803E5214)

@@ -18,6 +18,6 @@ void drmusiccont_hitDetect(void);
 void drmusiccont_release(void);
 void drmusiccont_initialise(void);
 void drmusiccont_init(GameObject* obj);
-void drmusiccont_update(int obj);
+void drmusiccont_update(GameObject* obj);
 
 #endif /* MAIN_DLL_DR_DLL_027E_DRMUSICCONT_H_ */

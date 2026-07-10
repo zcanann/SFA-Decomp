@@ -75,7 +75,7 @@ void dll_1DF_update(GameObject* obj)
     f32 dist;
     f32 t;
 
-    tex = objFindTexture(obj, 0, 0);
+    tex = objFindTexture((GameObject*)(obj), 0, 0);
     if (tex != NULL)
     {
         if (obj->anim.seqId == 209)

@@ -103,12 +103,12 @@ STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 void SwarmBaddie_hitDetect(void);
 void SwarmBaddie_release(void);
 void SwarmBaddie_initialise(void);
-void SwarmBaddie_free(int obj);
-void SwarmBaddie_init(int obj, int data, int skip_alloc);
+void SwarmBaddie_free(GameObject* obj);
+void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc);
 int SwarmBaddie_getExtraSize(void);
 int SwarmBaddie_getObjectTypeId(void);
 void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void SwarmBaddie_update(int obj);
+void SwarmBaddie_update(GameObject* obj);
 
 void Hagabon_release(void)
 {
@@ -240,14 +240,14 @@ void fn_8014E1DC(int obj, HagabonState* state)
     ((GameObject*)obj)->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
-void Hagabon_hitDetect(int obj)
+void Hagabon_hitDetect(GameObject* obj)
 {
     ObjHitsPriorityState* hitState;
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     if (hitState->lastHitObject != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_32b);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_32b);
     }
 }
 
@@ -401,8 +401,8 @@ void Hagabon_update(int obj)
     }
     else
     {
-        if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume, &lightPos[0], &lightPos[1],
-                                               &lightPos[2]) != 0)
+        if (ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObject, &hitSphereIndex, &hitVolume,
+                                               &lightPos[0], &lightPos[1], &lightPos[2]) != 0)
         {
             Sfx_StopObjectChannel(obj, 0x7f);
             state->flags |= HAGABON_FLAG_FADE_OUT;

@@ -62,7 +62,7 @@ extern int ObjMsg_Pop();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
-extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
+extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
 /* CFPrisonCage_SeqFn: lock interaction once the opened bit is set;
  * everything past the cage early-return is the SWITCH's logic - drain
@@ -145,7 +145,7 @@ void CFPrisonCage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void CFPrisonCage_hitDetect(int* obj)
 {
     f32 pos_z, pos_y, pos_x;
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0)
+    if (ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0)
     {
         objfx_spawnHitEmitterAtPos(&pos_x, 8, 200, 128, 0);
     }

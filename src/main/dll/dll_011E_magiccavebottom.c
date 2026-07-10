@@ -30,7 +30,7 @@ int MagicCaveBottom_getExtraSize(void)
     return 1;
 }
 
-void MagicCaveBottom_free(int obj)
+void MagicCaveBottom_free(GameObject *obj)
 {
 
 

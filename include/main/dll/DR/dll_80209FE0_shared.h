@@ -145,7 +145,7 @@ extern void storeZeroToFloatParam(f32* p);
 extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);
 extern int randomGetRange(int lo, int hi);
-extern int bossdrakor_seqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+extern int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6588;
 extern f32 gThornBushLightScaleMax;
 extern f32 lbl_803E6590;
@@ -208,7 +208,7 @@ typedef struct
     u8 b01 : 1;
 } DrakorFlags;
 
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern s16* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* in, f32* out);
 extern f32 PSVECDotProduct(f32* a, f32* b);
@@ -218,7 +218,7 @@ extern int getAngle(f32 dx, f32 dz);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8* Obj_AllocObjectSetup(int size, int typeId);
 extern int loadObjectAtObject(int obj, u8* setup);
-extern void drakormissile_startActiveLaunch(int obj);
+extern void drakormissile_startActiveLaunch(GameObject* obj);
 extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
 extern void skyFn_80088e54(int p, f32 v);
 extern void timeOfDayFn_80055038(void);
@@ -234,12 +234,12 @@ extern void modelLightStruct_setSpecularTargetColor(int light, int a, int b, int
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
-extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void* curve, int p, void* out);
+extern int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* a, f32 b, f32 c, int obj, void* curve, int p, void* out);
 extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* angles, int p, f32 a, f32 b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern void objAudioFn_80039270(int obj, int p, int sfxId);
-extern void objAnimFn_80038f38(int obj, int p);
+extern void objAnimFn_80038f38(GameObject* obj, int p);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, void* x, void* y, void* z, int p);
 extern f32 sqrtf(f32 x);
 extern int* seqFn_800394a0(void);
@@ -265,8 +265,8 @@ extern f32 lbl_803E6574;
 extern f32 lbl_803E6578;
 
 void bossdrakor_handleActionEvent(int obj, int state, int action);
-void bossdrakor_updateHeadTracking(int obj, int state);
+void bossdrakor_updateHeadTracking(GameObject* obj, int state);
 int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut);
-void bossdrakor_spawnAttackObjects(int obj, int state, int action);
+void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action);
 
 #endif

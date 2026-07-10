@@ -103,9 +103,9 @@ int tree_getExtraSize(void)
     return sizeof(TreeState);
 }
 
-void tree_spawnAmbientEffect(int obj, int state, s8 index)
+void tree_spawnAmbientEffect(GameObject* obj, int state, s8 index)
 {
-    TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
+    TreeSetup* setup = (TreeSetup*)(obj)->anim.placementData;
     TreeState* ts = (TreeState*)state;
     TreeAmbientEffectSetup* effectSetup;
     int idx;
@@ -133,17 +133,17 @@ void tree_spawnAmbientEffect(int obj, int state, s8 index)
         effectSetup->verticalDrift = -0x28;
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
-        ts->ambientEffectHandles[idx] = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                                           *(int*)&((GameObject*)obj)->anim.parent);
+        ts->ambientEffectHandles[idx] =
+            Obj_SetupObject(newObj, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
     }
 }
 
-void tree_updateAmbientEffects(int obj, int state)
+void tree_updateAmbientEffects(GameObject* obj, int state)
 {
     int i;
     TreeState* ts;
 
-    if (((GameObject*)obj)->unkF8 != 0)
+    if ((obj)->unkF8 != 0)
     {
         ts = (TreeState*)state;
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
@@ -311,18 +311,18 @@ void tree_update(int obj)
         }
         if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
         {
-            tree_updateAmbientEffects(obj, (int)state);
+            tree_updateAmbientEffects((GameObject*)(obj), (int)state);
         }
         if (state->flags & TREE_FLAG_HIT_ENABLED)
         {
             if (state->flags & TREE_FLAG_HIT_WITH_POSITION)
             {
-                hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume, &colorVec[0],
-                                                         &colorVec[1], &colorVec[2]);
+                hit = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObject, &hitSphereIndex, &hitVolume,
+                                                         &colorVec[0], &colorVec[1], &colorVec[2]);
             }
             else
             {
-                hit = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
+                hit = ObjHits_PollPriorityHitEffectWithCooldown((GameObject*)(obj), 8, 0xff, 0xff, 0x78, 0x129,
                                                                 &state->hitEffectCooldown);
             }
             if (state->hitCooldownTimer >= lbl_803E72F8)

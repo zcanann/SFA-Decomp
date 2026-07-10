@@ -34,7 +34,7 @@ extern void FxEmit_free(void);
 
 extern void dll_127_render(void);
 extern void CampFire_getExtraSize(void);
-extern void CFCrate_render(void);
+extern void CFCrate_render(GameObject*);
 extern void FxEmit_render(void);
 
 extern void FuelCell_getExtraSize(void);
@@ -47,14 +47,14 @@ extern void DeathGas_getExtraSize(void);
 extern void FuelCell_free(void);
 extern void dll_127_update(void);
 extern void CampFire_free(GameObject*);
-extern void CFCrate_update(void);
+extern void CFCrate_update(GameObject*);
 extern void FxEmit_update(void);
 
 extern void DeathGas_free(void);
 extern void FuelCell_render(void);
 extern void dll_127_init(void);
 extern void CampFire_render(void);
-extern void CFCrate_init(void);
+extern void CFCrate_init(GameObject*);
 extern void FxEmit_init(void);
 
 extern void DeathGas_update(void);
@@ -97,7 +97,7 @@ void CCTestInfot_update(int* obj)
             state->disguised = 1;
         }
     }
-    objSetHintTextIdx((int)obj, state->disguised);
+    objSetHintTextIdx((GameObject*)obj, state->disguised);
     Obj_SetActiveModelIndex(obj, state->disguised);
     if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
     {

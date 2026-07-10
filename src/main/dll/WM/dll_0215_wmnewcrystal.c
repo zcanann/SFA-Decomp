@@ -28,7 +28,7 @@ extern void PSVECNormalize(f32* src, f32* dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* out);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void WM_newcrystalFn_800969b0(int* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e, int enabled);
+extern void WM_newcrystalFn_800969b0(GameObject* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e, int enabled);
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int kind, int mode, int chance, f32 speed,
                                         void* origin, int flags);
 
@@ -96,8 +96,8 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
                stack block for this effect */
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
-        WM_newcrystalFn_800969b0((int*)obj, state, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
-        WM_newcrystalFn_800969b0((int*)obj, state->altFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
+        WM_newcrystalFn_800969b0((GameObject*)obj, state, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
+        WM_newcrystalFn_800969b0((GameObject*)obj, state->altFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
     }
     else if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0)
     {

@@ -53,10 +53,10 @@ void chuka_hitDetect(GameObject* obj)
     state->linkedObject = 0;
 }
 
-void chuka_update(int obj)
+void chuka_update(GameObject* obj)
 {
-    int data = *(int*)&((GameObject*)obj)->anim.placementData;
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int data = *(int*)&(obj)->anim.placementData;
+    int state = *(int*)&(obj)->extra;
     int linkedObj;
     int* objList;
     int candidate;
@@ -107,87 +107,87 @@ void chuka_update(int obj)
     case 0:
         if (objAnim->bankIndex != 0)
         {
-            Obj_SetActiveModelIndex(obj, 0);
+            Obj_SetActiveModelIndex((int)obj, 0);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         break;
     case 1:
         if (objAnim->bankIndex != 1)
         {
-            Obj_SetActiveModelIndex(obj, 1);
+            Obj_SetActiveModelIndex((int)obj, 1);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (((GameObject*)obj)->anim.rotZ != 0)
+        if ((obj)->anim.rotZ != 0)
         {
-            ((GameObject*)obj)->anim.rotZ = 0;
+            (obj)->anim.rotZ = 0;
         }
         break;
     case 2:
         if (objAnim->bankIndex != 2)
         {
-            Obj_SetActiveModelIndex(obj, 2);
+            Obj_SetActiveModelIndex((int)obj, 2);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (((GameObject*)obj)->anim.rotZ != 0)
+        if ((obj)->anim.rotZ != 0)
         {
-            ((GameObject*)obj)->anim.rotZ = 0;
+            (obj)->anim.rotZ = 0;
         }
         break;
     case 3:
         if (objAnim->bankIndex != 2)
         {
-            Obj_SetActiveModelIndex(obj, 2);
+            Obj_SetActiveModelIndex((int)obj, 2);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (((GameObject*)obj)->anim.rotZ != 0x3fff)
+        if ((obj)->anim.rotZ != 0x3fff)
         {
-            ((GameObject*)obj)->anim.rotZ = 0x7fff;
+            (obj)->anim.rotZ = 0x7fff;
         }
         break;
     case 4:
         if (objAnim->bankIndex != 1)
         {
-            Obj_SetActiveModelIndex(obj, 1);
+            Obj_SetActiveModelIndex((int)obj, 1);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (((GameObject*)obj)->anim.rotZ != 0x3fff)
+        if ((obj)->anim.rotZ != 0x3fff)
         {
-            ((GameObject*)obj)->anim.rotZ = 0x7fff;
+            (obj)->anim.rotZ = 0x7fff;
         }
         break;
     default:
         if (objAnim->bankIndex != 0)
         {
-            Obj_SetActiveModelIndex(obj, 0);
+            Obj_SetActiveModelIndex((int)obj, 0);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (((GameObject*)obj)->anim.rotZ != 0)
+        if ((obj)->anim.rotZ != 0)
         {
-            ((GameObject*)obj)->anim.rotZ = 0;
+            (obj)->anim.rotZ = 0;
         }
         break;
     }

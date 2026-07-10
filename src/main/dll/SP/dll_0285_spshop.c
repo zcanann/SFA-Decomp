@@ -319,7 +319,7 @@ void shop_hitDetect(void)
 {
 }
 
-void shop_update(int obj)
+void shop_update(GameObject* obj)
 {
 
     int player;
@@ -330,51 +330,51 @@ void shop_update(int obj)
         staffToggle((GameObject*)(player), 0);
     }
 
-    if (((GameObject*)obj)->unkF4 == 0)
+    if ((obj)->unkF4 == 0)
     {
-        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0, 1);
-        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 1);
-        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
+        (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 0, 1);
+        (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 5, 1);
+        (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 6, 1);
         mainSetBits(GAMEBIT_SHOP_Unk0617, 1);
         skyFn_80088c94(7, 1);
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
 
-    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && ((GameObject*)obj)->unkF8 == 0)
+    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && (obj)->unkF8 == 0)
     {
         envFxActFn_800887f8(0);
-        getEnvfxAct(obj, obj, SPSHOP_ENVFX_A, 0);
-        getEnvfxAct(obj, obj, SPSHOP_ENVFX_B, 0);
-        ((GameObject*)obj)->unkF8 = 1;
+        getEnvfxAct((int)obj, (int)obj, SPSHOP_ENVFX_A, 0);
+        getEnvfxAct((int)obj, (int)obj, SPSHOP_ENVFX_B, 0);
+        (obj)->unkF8 = 1;
         return;
     }
 
-    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) == 0u && ((GameObject*)obj)->unkF8 != 0)
+    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) == 0u && (obj)->unkF8 != 0)
     {
-        ((GameObject*)obj)->unkF8 = 0;
+        (obj)->unkF8 = 0;
     }
 }
 
 #pragma inline_max_size(1000)
-static inline void shop_initBody(int obj, int objDef)
+static inline void shop_initBody(GameObject* obj, int objDef)
 {
     u8* item;
     int i;
 
-    ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex = -1;
-    ObjGroup_AddObject(obj, SPSHOP_OBJGROUP);
+    ((ShopBuyItemState*)(obj)->extra)->itemIndex = -1;
+    ObjGroup_AddObject((int)obj, SPSHOP_OBJGROUP);
     for (i = 0, item = lbl_80327FD0; i < SHOP_ITEM_ROW_COUNT; i++)
     {
         item[5] = item[randomGetRange(0, 2) + 1];
         item += 0xc;
     }
     Music_Trigger(MUSICTRIG_communicator, 1);
-    ((GameObject*)obj)->unkF8 = 0;
+    (obj)->unkF8 = 0;
     mainSetBits(GAMEBIT_PlayerInShop, 1);
 }
 #pragma inline_max_size reset
 
-void shop_init(int obj, int objDef)
+void shop_init(GameObject* obj, int objDef)
 {
     shop_initBody(obj, objDef);
 }

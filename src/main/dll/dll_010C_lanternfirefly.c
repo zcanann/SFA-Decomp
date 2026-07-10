@@ -98,7 +98,7 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 anchorX, f32 anchorY, f32 anchorZ)
     state->anchorZ = anchorZ;
 }
 
-void LanternFireFly_func0B(int obj)
+void LanternFireFly_func0B(GameObject* obj)
 {
     typedef struct
     {
@@ -112,14 +112,14 @@ void LanternFireFly_func0B(int obj)
     f32 px;
     f32 y2;
 
-    state = ((GameObject*)obj)->extra;
-    setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    setup = *(int*)&(obj)->anim.placementData;
     state->wanderRange = ((LanternFireFlyPlacement*)setup)->wanderRange;
     state->stateId = ((LanternFireFlyPlacement*)setup)->stateId;
     state->field4C = lbl_803E3AA0;
     state->driftRangeZ = (f32)(int)((LanternFireFlyPlacement*)setup)->driftRangeZ;
     state->field6F = 0;
-    objHitDetectFn_80062e84(obj, 0, 1);
+    objHitDetectFn_80062e84((int)obj, 0, 1);
     player = Obj_GetPlayerObject();
     px = ((GameObject*)player)->anim.worldPosX;
     vec[0] = px;
@@ -128,11 +128,11 @@ void LanternFireFly_func0B(int obj)
     vec[1] = ((GameObject*)player)->anim.worldPosY + lbl_803E3AA4;
     y2 = lbl_803E3AA8 + ((GameObject*)player)->anim.worldPosY;
     {
-        LanternFireFlyState* st = ((GameObject*)obj)->extra;
+        LanternFireFlyState* st = (obj)->extra;
         st->anchorX = px;
         st->anchorY = y2;
         st->anchorZ = vec[2];
-        st = ((GameObject*)obj)->extra;
+        st = (obj)->extra;
         vec[0] = vec[0] - st->anchorX;
         vec[1] = vec[1] - st->anchorY;
         vec[2] = vec[2] - st->anchorZ;
@@ -141,12 +141,12 @@ void LanternFireFly_func0B(int obj)
         st->offZ = vec[2];
         st->animFrame = 4;
     }
-    fn_801869DC((GameObject*)(obj));
-    fn_801869DC((GameObject*)(obj));
-    fn_801869DC((GameObject*)(obj));
-    fn_801869DC((GameObject*)(obj));
-    fn_801869DC((GameObject*)(obj));
-    fn_801869DC((GameObject*)(obj));
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
     ((LFFlags*)&state->modeFlags)->mode = 1;
     state->timer = ((LanternFireFlyPlacement*)setup)->timer;
     gameBitIncrement(0x698);
@@ -203,7 +203,7 @@ void LanternFireFly_hitDetect(void)
 #define LANTERN_FIREFLY_MODE(state)      (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
 
-void LanternFireFly_update(int obj)
+void LanternFireFly_update(GameObject* obj)
 {
     LanternFireFlyState* state;
     int player;
@@ -214,11 +214,11 @@ void LanternFireFly_update(int obj)
     f32 yy;
     f32 stepScale;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     player = Obj_GetPlayerObject();
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
+    (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
 
     if (state->splineT > *(f32*)&lbl_803E3AA0)
     {
@@ -236,20 +236,20 @@ void LanternFireFly_update(int obj)
         }
         else
         {
-            fn_801868D0((GameObject*)(obj));
+            fn_801868D0(obj);
         }
-        fn_801869DC((GameObject*)(obj));
+        fn_801869DC(obj);
     }
 
-    ((GameObject*)obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->controlX, state->splineT, 0);
-    ((GameObject*)obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->controlY, state->splineT, 0);
-    ((GameObject*)obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->controlZ, state->splineT, 0);
+    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->controlX, state->splineT, 0);
+    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->controlY, state->splineT, 0);
+    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->controlZ, state->splineT, 0);
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {
-        state->speed = (f32)(lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
-                                                         (void*)(Obj_GetPlayerObject() + 0x18)) +
-                             lbl_803E3AC0);
+        state->speed =
+            (f32)(lbl_803E3AC4 * Vec_distance((void*)&(obj)->anim.worldPosX, (void*)(Obj_GetPlayerObject() + 0x18)) +
+                  lbl_803E3AC0);
     }
     state->splineT += state->speed * timeDelta;
 
@@ -258,7 +258,7 @@ void LanternFireFly_update(int obj)
         int light;
 
         state->lightSpawned = 1;
-        light = objCreateLight(obj, 1);
+        light = objCreateLight((int)obj, 1);
         if ((void*)light == NULL)
         {
             light = 0;
@@ -279,9 +279,9 @@ void LanternFireFly_update(int obj)
     }
 
     v = velocity;
-    v[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-    v[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-    v[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+    v[0] = (obj)->anim.localPosX - (obj)->anim.previousLocalPosX;
+    v[1] = (obj)->anim.localPosY - (obj)->anim.previousLocalPosY;
+    v[2] = (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ;
     zz = v[2] * v[2];
     xx = v[0] * v[0];
     yy = v[1] * v[1];
@@ -292,7 +292,7 @@ void LanternFireFly_update(int obj)
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_pk_lightcritter_lp);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_pk_lightcritter_lp);
         if ((f32)state->timer > lbl_803DBDD8)
         {
             if (state->stateId == 1 || state->stateId == 4)
@@ -308,7 +308,7 @@ void LanternFireFly_update(int obj)
         if ((state->timer -= framesThisStep) < 0)
         {
             gameBitDecrement(0x698);
-            Obj_FreeObject(obj);
+            Obj_FreeObject((int)obj);
             return;
         }
         else
@@ -319,7 +319,7 @@ void LanternFireFly_update(int obj)
 
             worldZ = ((GameObject*)player)->anim.worldPosZ;
             worldY = lbl_803E3AA8 + ((GameObject*)player)->anim.worldPosY;
-            st = (LanternFireFlyState*)((GameObject*)obj)->extra;
+            st = (LanternFireFlyState*)(obj)->extra;
             st->anchorX = ((GameObject*)player)->anim.worldPosX;
             st->anchorY = worldY;
             st->anchorZ = worldZ;
@@ -344,7 +344,7 @@ void LanternFireFly_update(int obj)
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
 
-void LanternFireFly_init(int obj, int def)
+void LanternFireFly_init(GameObject* obj, int def)
 {
     LanternFireFlyState* state;
     LanternFireFlySpawnDef* spawnDef;
@@ -352,9 +352,9 @@ void LanternFireFly_init(int obj, int def)
     s16 randValue;
     int flagValue;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     spawnDef = (LanternFireFlySpawnDef*)def;
-    ObjGroup_AddObject(obj, LANTERNFIREFLY_OBJGROUP);
+    ObjGroup_AddObject((int)obj, LANTERNFIREFLY_OBJGROUP);
 
     zero = lbl_803E3AB8;
     state->controlX[0] = zero;

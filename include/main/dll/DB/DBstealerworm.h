@@ -47,14 +47,14 @@ void SB_Galleon_initialise(void);
 int SB_Propeller_getExtraSize(void);
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SB_Propeller_hitDetect(GameObject* obj);
-void SB_Propeller_update(int obj);
+void SB_Propeller_update(GameObject* obj);
 void SB_Propeller_init(GameObject* param_1, int param_2);
 
 int SB_ShipHead_getExtraSize(void);
 int SB_ShipHead_getObjectTypeId(void);
 void SB_ShipHead_free(int obj);
 void SB_ShipHead_render(GameObject* param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void SB_ShipHead_update(int obj);
+void SB_ShipHead_update(GameObject* obj);
 void SB_ShipHead_init(GameObject* obj);
 
 int SB_ShipMast_getExtraSize(void);

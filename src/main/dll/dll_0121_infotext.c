@@ -8,36 +8,36 @@ extern void objRenderFn_80041018(int obj);
 
 int infotext_getExtraSize(void) { return 0x4; }
 
-void infotext_update(int obj)
+void infotext_update(GameObject *obj)
 {
-    f32* sub = ((GameObject*)obj)->extra;
+    f32* sub = (obj)->extra;
     if (ObjTrigger_IsSet(obj) != 0 && isAreaNameTextActive() == 0)
     {
         *sub = 600.0f;
     }
     if (*sub > 0.0f)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
             *sub = 0.0f;
         }
         else
         {
             *sub = *sub - timeDelta;
-            showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[(*(u8**)&((GameObject*)obj)->anim.placementData)[0x19]]);
+            showHelpText((obj)->anim.modelInstance->helpTextIds[(*(u8**)&(obj)->anim.placementData)[0x19]]);
         }
     }
     if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0)
     {
-        objRenderFn_80041018(obj);
+        objRenderFn_80041018((int)obj);
     }
 }
 
-void infotext_init(int obj, s8* def)
+void infotext_init(GameObject *obj, s8* def)
 {
     u32 flags;
-    flags = (u32)((GameObject*)obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->objectFlags = flags;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
+    flags = (u32)(obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags = flags;
+    (obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
     objSetHintTextIdx(obj, (u8)def[0x19]);
 }

@@ -92,33 +92,32 @@ void dll_109_hitDetect_nop(void)
 {
 }
 
-void carryable_break_respawn_update(int obj)
+void carryable_break_respawn_update(GameObject* obj)
 {
     Dll109State* state;
     ObjPlacement* placement;
     int setup;
     u32 hitVolume;
 
-    state = ((GameObject*)obj)->extra;
-    placement = (ObjPlacement*)((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    placement = (ObjPlacement*)(obj)->anim.placementData;
     switch (state->phase)
     {
     case DLL109_PHASE_INTACT:
-        (*gCarryableInterface)->getAnimState(obj, (int)state);
+        (*gCarryableInterface)->getAnimState((int)obj, (int)state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            (*(void (*)(int, Dll109State*)) * (int*)((u8*)*gCarryableInterface + 0x30))(obj, state);
-            Sfx_PlayFromObject(obj, SFXTRIG_crtsmsh6);
-            ObjHitbox_SetSphereRadius(obj, 0x28);
-            ObjHits_SetHitVolumeSlot(obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
+            (*(void (*)(int, Dll109State*)) * (int*)((u8*)*gCarryableInterface + 0x30))((int)obj, state);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_crtsmsh6);
+            ObjHitbox_SetSphereRadius((int)obj, 0x28);
+            ObjHits_SetHitVolumeSlot((int)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ);
-                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                *(int*)&((GameObject*)obj)->anim.parent);
+                ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+                ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
+                ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
+                Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
             }
             (*gPartfxInterface)->spawnObject((void*)obj, 0x355, NULL, 0, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x352, NULL, 0, -1, NULL);
@@ -127,24 +126,23 @@ void carryable_break_respawn_update(int obj)
         break;
     case DLL109_PHASE_BREAKING:
         ObjHits_ClearHitVolumes();
-        ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        ObjHits_DisableObject((int)obj);
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         state->phase = DLL109_PHASE_RESPAWNING;
         state->timer = 0.0f;
-        ((GameObject*)obj)->anim.localPosX = placement->posX;
-        ((GameObject*)obj)->anim.localPosY = placement->posY;
-        ((GameObject*)obj)->anim.localPosZ = placement->posZ;
+        (obj)->anim.localPosX = placement->posX;
+        (obj)->anim.localPosY = placement->posY;
+        (obj)->anim.localPosZ = placement->posZ;
         break;
     case DLL109_PHASE_RESPAWNING:
         state->timer += timeDelta;
         if (state->timer > 300.0f)
         {
-            if (ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.hitboxScale *
-                                                ((GameObject*)obj)->anim.rootMotionScale) == 0)
+            if (ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX,
+                                            (obj)->anim.hitboxScale * (obj)->anim.rootMotionScale) == 0)
             {
-                ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+                ObjHits_EnableObject((int)obj);
+                *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 state->phase = DLL109_PHASE_INTACT;
             }
         }

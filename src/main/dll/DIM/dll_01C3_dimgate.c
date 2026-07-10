@@ -35,10 +35,10 @@ void dimgate_free(void)
 {
 }
 
-void dimgate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dimgate_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4878);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4878);
 }
 
 void dimgate_hitDetect(void)
@@ -93,24 +93,24 @@ void dimgate_update(int obj)
     }
 }
 
-void dimgate_init(int obj, s8* p_unused_passthrough)
+void dimgate_init(GameObject *obj, s8* p_unused_passthrough)
 {
     char* inner;
     char* param;
-    param = *(char**)&((GameObject*)obj)->anim.placementData;
-    inner = ((GameObject*)obj)->extra;
+    param = *(char**)&(obj)->anim.placementData;
+    inner = (obj)->extra;
     if (mainGetBit(((DimgatePlacement*)param)->gateGameBit) != 0)
     {
         inner[0] = DIMGATE_STATE_OPEN;
-        ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E4878;
+        (obj)->anim.currentMoveProgress = lbl_803E4878;
     }
     else
     {
         inner[0] = DIMGATE_STATE_CLOSED;
     }
-    ((GameObject*)obj)->animEventCallback = dimgate_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(param + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags |= (DIMGATE_OBJFLAG_HIDDEN | DIMGATE_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->animEventCallback = dimgate_SeqFn;
+    (obj)->anim.rotX = (s16)((s8) * (u8*)(param + 0x18) << 8);
+    (obj)->objectFlags |= (DIMGATE_OBJFLAG_HIDDEN | DIMGATE_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimgate_release(void)

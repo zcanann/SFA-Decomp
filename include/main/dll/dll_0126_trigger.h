@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0126_TRIGGER_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 typedef struct TriggerPlacement
 {
@@ -74,11 +75,11 @@ void Trigger_render(void);
 void Trigger_update(void);
 void Trigger_release(void);
 void Trigger_initialise(void);
-void Trigger_free(void* obj);
+void Trigger_free(GameObject* obj);
 void Trigger_init(u8* obj, u8* params);
 int Trigger_getExtraSize(void);
 int Trigger_getObjectTypeId(void);
 void objInterpretSeq(int obj, int seqArg, int legCode, int distSq);
-void Trigger_hitDetect(int obj);
+void Trigger_hitDetect(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_0126_TRIGGER_H_ */

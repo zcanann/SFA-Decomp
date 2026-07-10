@@ -182,7 +182,7 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 }
 
 #pragma opt_loop_invariants off
-void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
+void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
 {
     GameObject* object;
     RomCurvePoint** list;
@@ -204,7 +204,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     f32 heights[5];
     extern int getAngle(f32 deltaX, f32 deltaZ);
 
-    object = (GameObject*)obj;
+    object = obj;
     if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
     {
         sum0 = *(const f32*)&lbl_803E0668;
@@ -213,8 +213,8 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
         for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             heights[i] = collision->points[i][1];
-            hits = hitDetectFn_80065e50(obj, collision->points[i][0], object->anim.worldPosY, collision->points[i][2],
-                                        &hitOut, -1, 0);
+            hits = hitDetectFn_80065e50((int)obj, collision->points[i][0], object->anim.worldPosY,
+                                        collision->points[i][2], &hitOut, -1, 0);
             found1 = 0;
             if (hits != 0)
             {
@@ -272,7 +272,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
 }
 
 #pragma opt_loop_invariants reset
-void fn_800E56A4(int obj, CurvesCollisionState* collision)
+void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
 {
     RomCurvePoint* point;
     RomCurvePoint* points;
@@ -288,9 +288,9 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     startZ = collision->points[1][2];
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0)
     {
-        ((GameObject*)obj)->anim.worldPosX = startX;
-        ((GameObject*)obj)->anim.worldPosZ = startZ;
-        ((GameObject*)obj)->anim.worldPosY = collision->points[0][1];
+        (obj)->anim.worldPosX = startX;
+        (obj)->anim.worldPosZ = startZ;
+        (obj)->anim.worldPosY = collision->points[0][1];
     }
 
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], (u32*)&hitCount, 0);
@@ -305,15 +305,15 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
             collision->points[0][0] = collision->points[1][0];
             collision->points[0][1] = points[pointIndex].x;
             collision->points[0][2] = collision->points[1][2];
-            hitDetectFn_80067958(obj, collision->traceStart[0], collision->points[0], 1, collision->segmentHitPlanes,
-                                 0);
+            hitDetectFn_80067958((int)obj, collision->traceStart[0], collision->points[0], 1,
+                                 collision->segmentHitPlanes, 0);
             break;
         }
         point++;
         pointIndex++;
     }
 
-    if (((GameObject*)obj)->anim.classId == 1)
+    if ((obj)->anim.classId == 1)
     {
         collision->traceStart[2][0] = collision->points[1][0];
         collision->traceStart[2][1] = collision->points[1][1];
@@ -323,7 +323,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
         collision->points[2][2] = collision->points[1][2];
         hitScratch.scale = lbl_803E0680;
         hitScratch.type = 3;
-        hitDetectFn_80067958(obj, collision->traceStart[2], collision->points[2], 1, &hitScratch, 0);
+        hitDetectFn_80067958((int)obj, collision->traceStart[2], collision->points[2], 1, &hitScratch, 0);
     }
 
     PSVECSubtract(collision->points[0], collision->points[1], delta);
@@ -335,7 +335,8 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
         collision->points[0][0] = collision->points[1][0];
         collision->points[0][1] = collision->points[1][1] - lbl_803E0688;
         collision->points[0][2] = collision->points[1][2];
-        hitDetectFn_80067958(obj, collision->traceStart[0], collision->points[0], 1, collision->segmentHitPlanes, 0);
+        hitDetectFn_80067958((int)obj, collision->traceStart[0], collision->points[0], 1, collision->segmentHitPlanes,
+                             0);
     }
 
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
@@ -344,7 +345,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     collision->contactObj = collision->traceHitObj;
     if (collision->contactObj != 0)
     {
-        ObjHits_AddContactObject(collision->contactObj, obj);
+        ObjHits_AddContactObject(collision->contactObj, (int)obj);
     }
 }
 
@@ -540,7 +541,7 @@ void fn_800E5CBC(short* obj, int state)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_800E5E38(int obj, CurvesCollisionState* collision)
+void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
 {
     u32 hitCount;
     int hitIndex;
@@ -550,7 +551,7 @@ void fn_800E5E38(int obj, CurvesCollisionState* collision)
 
     point = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
     hitIndex = hitCount - 1;
-    currentY = ((GameObject*)obj)->anim.worldPosY;
+    currentY = (obj)->anim.worldPosY;
     window = lbl_803E06A0;
     while (hitIndex >= 0)
     {
@@ -558,7 +559,7 @@ void fn_800E5E38(int obj, CurvesCollisionState* collision)
         {
             if ((currentY <= point[hitIndex].x) && (currentY >= (point[hitIndex].x - window)))
             {
-                ((GameObject*)obj)->anim.worldPosY = point[hitIndex].x;
+                (obj)->anim.worldPosY = point[hitIndex].x;
                 collision->surfaceNormalX = point[hitIndex].y;
                 collision->surfaceNormalY = point[hitIndex].z;
                 collision->surfaceNormalZ = point[hitIndex].w;
@@ -573,7 +574,7 @@ void fn_800E5E38(int obj, CurvesCollisionState* collision)
 #pragma dont_inline reset
 
 #pragma opt_propagation off
-void fn_800E5F1C(int obj, CurvesCollisionState* collision)
+void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
 {
     int seg;
     int hitCount;
@@ -939,7 +940,7 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
     }
 }
 
-void dll_15_func0A(int obj, CurvesCollisionState* collision)
+void dll_15_func0A(GameObject* obj, CurvesCollisionState* collision)
 {
     u32 flags;
     u8* worldBase;
@@ -954,12 +955,12 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
     CurvesTransformScratch transform;
     f32 matrix[16];
 
-    curves_preparePointCollisionFrame(obj, collision);
+    curves_preparePointCollisionFrame((int)obj, collision);
     flags = collision->flags;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0))
     {
-        transform.angles[0] = ((GameObject*)obj)->anim.rotX;
+        transform.angles[0] = (obj)->anim.rotX;
         if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
         {
             transform.angles[1] = 0;
@@ -967,13 +968,13 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         }
         else
         {
-            transform.angles[1] = ((GameObject*)obj)->anim.rotY;
-            transform.angles[2] = ((GameObject*)obj)->anim.rotZ;
+            transform.angles[1] = (obj)->anim.rotY;
+            transform.angles[2] = (obj)->anim.rotZ;
         }
         transform.scale = lbl_803E068C;
-        transform.x = ((GameObject*)obj)->anim.localPosX;
-        transform.y = ((GameObject*)obj)->anim.localPosY;
-        transform.z = ((GameObject*)obj)->anim.localPosZ;
+        transform.x = (obj)->anim.localPosX;
+        transform.y = (obj)->anim.localPosY;
+        transform.z = (obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         loopIdx[0] = 0;
         loopIdx[1] = loopIdx[0];
@@ -1004,7 +1005,7 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
     }
 }
 
-f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
+f32 dll_15_func0B(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height)
 {
     int hitCount;
     f32 maxY;
@@ -1027,7 +1028,7 @@ f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height)
     return baseY;
 }
 
-RomCurvePoint* curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
+RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
     int queryMode;
     RomCurvePoint* outPoint;
@@ -1037,7 +1038,7 @@ RomCurvePoint* curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryA
 
     if ((u32)obj != sCurvesCachedHitObj)
     {
-        sCurvesCachedHitObj = obj;
+        sCurvesCachedHitObj = (int)obj;
         if (queryAll != 0)
         {
             queryMode = 1;
@@ -1046,8 +1047,7 @@ RomCurvePoint* curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryA
         {
             queryMode = -2;
         }
-        sCurvesCachedHitCount =
-            hitDetectFn_80065e50(obj, x, ((GameObject*)obj)->anim.worldPosY, z, &hitPoints, queryMode, 0);
+        sCurvesCachedHitCount = hitDetectFn_80065e50((int)obj, x, (obj)->anim.worldPosY, z, &hitPoints, queryMode, 0);
         if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
         {
             sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
@@ -1223,10 +1223,10 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             switch (collision->updateMode)
             {
             case 1:
-                fn_800E56A4((int)curveObj, collision);
+                fn_800E56A4((GameObject*)curveObj, collision);
                 break;
             case 3:
-                curves_countRandomPoints((int)curveObj, collision);
+                curves_countRandomPoints((GameObject*)curveObj, collision);
                 break;
             case 4:
                 collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
@@ -1245,7 +1245,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             }
             if ((s32)(state->flags & 0x100) != 0)
             {
-                fn_800E5E38((int)curveObj, collision);
+                fn_800E5E38((GameObject*)curveObj, collision);
             }
             if ((s32)(state->flags & 0x80) != 0)
             {
@@ -1253,7 +1253,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             }
             if ((s32)(state->flags & 1) != 0)
             {
-                fn_800E5F1C((int)curveObj, collision);
+                fn_800E5F1C((GameObject*)curveObj, collision);
             }
             memcpy(collision->traceStart, collision->points,
                    ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
@@ -1380,7 +1380,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
                    ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
             if ((s32)(state->flags & 1) != 0)
             {
-                fn_800E5F1C((int)curveObj, collision);
+                fn_800E5F1C((GameObject*)curveObj, collision);
             }
         }
     }

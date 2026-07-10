@@ -194,10 +194,10 @@ void staffactivated_update(GameObject* obj)
     switch (setup->mode)
     {
     case STAFFACTIVATED_MODE_LIFT:
-        staffactivated_updateLiftHeight((int)obj, state);
+        staffactivated_updateLiftHeight((GameObject*)obj, state);
         break;
     case STAFFACTIVATED_MODE_HIT_REACTION:
-        landed_arwing_updateHitReaction(obj, state);
+        landed_arwing_updateHitReaction((GameObject*)(obj), state);
         break;
     case STAFFACTIVATED_MODE_DAMAGE_FIRST:
     case STAFFACTIVATED_MODE_DAMAGE_SECOND:

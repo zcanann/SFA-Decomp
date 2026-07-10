@@ -44,7 +44,7 @@ typedef struct
  * is runtime-variable, so the record cannot be a fixed C struct; the raw
  * byte walk below is the original access pattern.
  */
-static inline s16* objFindJointVecByKey(int obj, int key)
+static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 {
     int i;
     int k;
@@ -52,7 +52,7 @@ static inline s16* objFindJointVecByKey(int obj, int key)
     s16* found;
 
     found = NULL;
-    table = ((GameObject*)obj)->anim.modelInstance;
+    table = (obj)->anim.modelInstance;
     if (table != NULL)
     {
         i = 0;
@@ -61,7 +61,7 @@ static inline s16* objFindJointVecByKey(int obj, int key)
             if ((int)*(u8*)(*(int*)&table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                 (int)*(u8*)(*(int*)&table->jointData + i) == key)
             {
-                found = (s16*)&((ObjJointPose18*)((GameObject*)obj)->anim.jointPoseData)[k];
+                found = (s16*)&((ObjJointPose18*)(obj)->anim.jointPoseData)[k];
             }
             i = i + table->modelCount + 1;
         }
@@ -95,7 +95,7 @@ extern f32 lbl_803DF664;
 extern f32 lbl_803DF668;
 extern f32 lbl_803DF66C;
 
-void objAnimFn_80038f38(int obj, char* state)
+void objAnimFn_80038f38(GameObject* obj, char* state)
 {
     extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
     extern f32 lbl_803DE9A4;
@@ -196,7 +196,7 @@ extern u8 lbl_803DCC0D;
 extern void objRenderModel(int* obj, int** table);
 extern void objRenderFn_80041018(int* obj);
 
-void* objModelGetVecFn_800395d8(void* obj, int target)
+void* objModelGetVecFn_800395d8(GameObject* obj, int target)
 {
     int vecOffset;
     int entries;
@@ -219,7 +219,7 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
                 (s32) * (u8*)(entries + entryIdx) == target)
             {
-                result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
+                result = (char*)(obj)->anim.jointPoseData + vecOffset;
             }
             entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
             vecOffset += 0x12;
@@ -275,10 +275,10 @@ void fn_8003B5E0(int a, int b, int c, u8 d)
     lbl_803DCC0A = d;
 }
 
-ObjTextureRuntimeSlot* objFindTexture(void* obj, int target, int unusedMaterialIndex)
+ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMaterialIndex)
 {
     ObjTextureRuntimeSlot* result = NULL;
-    ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+    ObjDef* modelDef = (obj)->anim.modelInstance;
     if (modelDef != NULL)
     {
         int count;
@@ -292,7 +292,7 @@ ObjTextureRuntimeSlot* objFindTexture(void* obj, int target, int unusedMaterialI
             {
                 if (target == entries[i].tag)
                 {
-                    result = &((GameObject*)obj)->anim.textureSlots[i];
+                    result = &(obj)->anim.textureSlots[i];
                 }
             }
         }
@@ -302,10 +302,10 @@ ObjTextureRuntimeSlot* objFindTexture(void* obj, int target, int unusedMaterialI
 
 extern void objRenderShadow(void* obj);
 
-void objRenderShadowIfVisible(void* obj)
+void objRenderShadowIfVisible(GameObject* obj)
 {
-    void** arr = *(void***)&((GameObject*)obj)->anim.banks;
-    s8 idx = ((GameObject*)obj)->anim.bankIndex;
+    void** arr = *(void***)&(obj)->anim.banks;
+    s8 idx = (obj)->anim.bankIndex;
     if (arr[idx] != NULL)
     {
         objRenderShadow(obj);
@@ -369,7 +369,7 @@ int fn_800399C0(s16* curve, s16* state)
 }
 #pragma dont_inline reset
 
-void fn_8003A168(int obj, int state)
+void fn_8003A168(GameObject* obj, int state)
 {
     s16* found;
 
@@ -387,7 +387,7 @@ void fn_8003A168(int obj, int state)
     *(s16*)(state + 0x1a) = 0;
 }
 
-void objModelClearVecFn_8003aa40(int obj)
+void objModelClearVecFn_8003aa40(GameObject* obj)
 {
     s16* found;
     int slot;
@@ -404,7 +404,7 @@ void objModelClearVecFn_8003aa40(int obj)
     }
 }
 
-void fn_8003AC14(int obj, int* keys, int count)
+void fn_8003AC14(GameObject* obj, int* keys, int count)
 {
     s16* found;
     int idx;
@@ -422,7 +422,7 @@ void fn_8003AC14(int obj, int* keys, int count)
     }
 }
 
-void objFn_8003acfc(int obj, int* keys, int count, int out)
+void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
 {
     s16* found;
     int idx;
@@ -441,7 +441,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     }
 }
 
-void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
+void fn_8003AAE0(GameObject* obj, int* keys, int count, int lo, int hi)
 {
     s16* found;
     int idx;
@@ -507,16 +507,16 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int 
     return found;
 }
 
-void characterDoEyeMovements(int obj, int state, f32 unused);
+void characterDoEyeMovements(GameObject* obj, int state, f32 unused);
 
-void fn_8003B228(int obj, int state)
+void fn_8003B228(GameObject* obj, int state)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
     int val;
 
-    foundA = characterFindEyeJoint((GameObject*)(obj), 5);
-    foundB = characterFindEyeJoint((GameObject*)(obj), 4);
+    foundA = characterFindEyeJoint(obj, 5);
+    foundB = characterFindEyeJoint(obj, 4);
     if (foundA == NULL || foundB == NULL)
     {
         return;
@@ -589,7 +589,7 @@ void objAudioFn_800393f8(u32 obj, int state, u16 sfx, int pitch, int volume, u8 
     *(f32*)((char*)state + 4) = lbl_803DE99C;
 }
 
-void fn_8003B500(int obj, s16* state)
+void fn_8003B500(GameObject* obj, s16* state)
 {
     s16* found;
 
@@ -600,7 +600,7 @@ void fn_8003B500(int obj, s16* state)
         {
             found[0] = (s16)(found[0] * 3 / 4);
         }
-        fn_80039DF8((GameObject*)(obj), state, found, lbl_803DE9A4);
+        fn_80039DF8(obj, state, found, lbl_803DE9A4);
         *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
     }
 }
@@ -651,7 +651,7 @@ extern int Obj_GetActiveModel(int obj);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-void objPosFn_80039510(int obj, int key, int out)
+void objPosFn_80039510(GameObject* obj, int key, int out)
 {
     int* table;
     int i;
@@ -660,7 +660,7 @@ void objPosFn_80039510(int obj, int key, int out)
     int joint;
     int model;
 
-    table = (void*)((GameObject*)obj)->anim.modelInstance;
+    table = (void*)(obj)->anim.modelInstance;
     i = 0;
     n = (s32)(u32)((ObjDef*)table)->jointCount;
     for (k = 0; k < n; k++)
@@ -672,7 +672,7 @@ void objPosFn_80039510(int obj, int key, int out)
         }
         i = i + ((ObjDef*)table)->modelCount + 1;
     }
-    model = Obj_GetActiveModel(obj);
+    model = Obj_GetActiveModel((int)obj);
     model = (int)ObjModel_GetJointMatrix((int*)model, joint);
     *(f32*)((char*)out + 0) = *(f32*)((char*)model + 0xc);
     *(f32*)((char*)out + 4) = *(f32*)((char*)model + 0x1c);
@@ -840,7 +840,7 @@ void objModelAndSoundFn_80039118(int obj, int state)
 
 extern f32 lbl_803DE9E4;
 
-void fn_8003A230(int obj, void* state, f32 val)
+void fn_8003A230(GameObject* obj, void* state, f32 val)
 {
     s16* found;
     int flag;
@@ -858,11 +858,11 @@ void fn_8003A230(int obj, void* state, f32 val)
         }
         if (val <= lbl_803DE9E4)
         {
-            fn_80039DF8((GameObject*)(obj), (s16*)state, found, val);
+            fn_80039DF8(obj, (s16*)state, found, val);
         }
         else
         {
-            fn_80039B54(obj, (s16*)state, found, val);
+            fn_80039B54((int)obj, (s16*)state, found, val);
         }
         *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
         if (val > lbl_803DE9E4)
@@ -880,7 +880,7 @@ void fn_8003A230(int obj, void* state, f32 val)
 extern int getAngle(float y, float x);
 extern f32 gObjPrintDegToAngle;
 
-void fn_8003B0D0(int obj, int target, int state, int maxAngle)
+void fn_8003B0D0(GameObject* obj, int target, int state, int maxAngle)
 {
     s16* found;
 
@@ -888,9 +888,9 @@ void fn_8003B0D0(int obj, int target, int state, int maxAngle)
     if (found != NULL)
     {
         *(s16*)((char*)state + 0x14) =
-            (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX,
-                                ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ) -
-                  ((GameObject*)obj)->anim.rotX);
+            (s16)((s16)getAngle((obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX,
+                                (obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ) -
+                  (obj)->anim.rotX);
         maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
         if (*(s16*)((char*)state + 0x14) > maxAngle)
         {
@@ -926,7 +926,7 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
     keys = keyList;
     while (i < count)
     {
-        found = objFindJointVecByKey(obj, *keys);
+        found = objFindJointVecByKey((GameObject*)(obj), *keys);
         total += fn_800399C0((s16*)p4, found);
         total += fn_80039834((s16*)(p4 + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
         keys++;
@@ -1313,7 +1313,7 @@ void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
 }
 
 #pragma opt_loop_invariants off
-void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
+void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
     extern f32 sqrtf(f32);
     s16 ang[2];
@@ -1321,7 +1321,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
     void* m[1];
 
     found[0] = NULL;
-    m[0] = (void*)((GameObject*)obj)->anim.modelInstance;
+    m[0] = (void*)(obj)->anim.modelInstance;
     if (m[0] != NULL)
     {
         int iv[2];
@@ -1336,7 +1336,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
                 (int)*(u8*)(entries + iv[0]) == 0)
             {
-                found[0] = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + iv[1]);
+                found[0] = (s16*)((char*)(obj)->anim.jointPoseData + iv[1]);
             }
             iv[0] += ((ObjDef*)m[0])->modelCount + 1;
             iv[1] += 0x12;
@@ -1351,9 +1351,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
         }
         else
         {
-            f32 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
-            f32 dy = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
-            f32 dz = ((GameObject*)obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
+            f32 dx = (obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
+            f32 dy = (obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
+            f32 dz = (obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
             f32 dist = sqrtf(dx * dx + dy * dy);
             int minB;
             int negA;
@@ -1362,7 +1362,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             int i;
             f32 prodB;
 
-            ang[0] = (s16)getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
+            ang[0] = (s16)getAngle(dx, dy) - (u16)(obj)->anim.rotX;
             if (ang[0] > 0x8000)
             {
                 ang[0] = (s16)(ang[0] - 0xffff);
@@ -1515,13 +1515,13 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
-void characterDoEyeAnims(int obj, int state)
+void characterDoEyeAnims(GameObject* obj, int state)
 {
     ObjTextureRuntimeSlot* a;
     ObjTextureRuntimeSlot* b;
 
-    a = characterFindEyeJoint((GameObject*)(obj), 5);
-    b = characterFindEyeJoint((GameObject*)(obj), 4);
+    a = characterFindEyeJoint(obj, 5);
+    b = characterFindEyeJoint(obj, 4);
 
     if (a == NULL || b == NULL)
     {
@@ -1587,7 +1587,7 @@ void characterDoEyeAnims(int obj, int state)
     }
 }
 
-void characterDoEyeMovements(int obj, int state, f32 unused)
+void characterDoEyeMovements(GameObject* obj, int state, f32 unused)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -1595,8 +1595,8 @@ void characterDoEyeMovements(int obj, int state, f32 unused)
     int flag;
     s8 timer;
 
-    foundA = characterFindEyeJoint((GameObject*)(obj), 1);
-    foundB = characterFindEyeJoint((GameObject*)(obj), 0);
+    foundA = characterFindEyeJoint(obj, 1);
+    foundB = characterFindEyeJoint(obj, 0);
     if (foundA == NULL || foundB == NULL)
     {
         return;

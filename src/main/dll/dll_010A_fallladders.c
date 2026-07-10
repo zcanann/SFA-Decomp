@@ -92,15 +92,15 @@ void Fall_Ladders_hitDetect(void)
 
 #pragma scheduling off
 #pragma peephole off
-void Fall_Ladders_update(int obj)
+void Fall_Ladders_update(GameObject* obj)
 {
     int def;
     FallLaddersState* state;
     f32 speed;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId == FALLLADDERS_SEQ_ID)
+    def = *(int*)&(obj)->anim.placementData;
+    state = (obj)->extra;
+    if ((obj)->anim.seqId == FALLLADDERS_SEQ_ID)
     {
         if (mainGetBit(state->upperGameBit) != 0 && mainGetBit(state->lowerGameBit) == 0)
         {
@@ -119,7 +119,7 @@ void Fall_Ladders_update(int obj)
             state->motionState = 1;
             if (state->playStartSound != 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_totem_slide);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_totem_slide);
                 state->playStartSound = 0;
             }
             state->delay = 0;
@@ -131,16 +131,15 @@ void Fall_Ladders_update(int obj)
         {
             state->delay = 10;
         }
-        if ((s8)state->motionState == 1 && ((GameObject*)obj)->anim.localPosY >= ((ObjPlacement*)def)->posY)
+        if ((s8)state->motionState == 1 && (obj)->anim.localPosY >= ((ObjPlacement*)def)->posY)
         {
-            ((GameObject*)obj)->anim.velocityY -= 0.9f;
-            ((GameObject*)obj)->anim.localPosY =
-                ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-            if (((GameObject*)obj)->anim.localPosY <= ((ObjPlacement*)def)->posY)
+            (obj)->anim.velocityY -= 0.9f;
+            (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.localPosY;
+            if ((obj)->anim.localPosY <= ((ObjPlacement*)def)->posY)
             {
-                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-                ((GameObject*)obj)->anim.velocityY = 0.3f * -((GameObject*)obj)->anim.velocityY;
-                speed = ((GameObject*)obj)->anim.velocityY;
+                (obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+                (obj)->anim.velocityY = 0.3f * -(obj)->anim.velocityY;
+                speed = (obj)->anim.velocityY;
                 speed = (speed >= 0.0f) ? speed : -speed;
                 if (speed < 0.01f)
                 {

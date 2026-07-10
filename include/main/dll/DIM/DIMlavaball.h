@@ -13,7 +13,7 @@ extern ObjectDescriptor gMMP_moonrockObjDescriptor;
 extern ObjectDescriptor gMMP_trenchFXObjDescriptor;
 extern ObjectDescriptor gMMP_gyserventObjDescriptor;
 
-void MMP_levelcontrol_update(int obj);
+void MMP_levelcontrol_update(GameObject* obj);
 u32 FUN_801a68b8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                  u64 param_8, int param_9, u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
                  u32 param_14, u32 param_15, u32 param_16);
@@ -56,14 +56,14 @@ int MoonSeedBush_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
 void MoonSeedBush_free(void);
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedBush_hitDetect(void);
-void MoonSeedBush_update(int obj);
+void MoonSeedBush_update(GameObject* obj);
 void MoonSeedBush_init(GameObject* obj, int data);
 void MoonSeedBush_release(void);
 void MoonSeedBush_initialise(void);
 
 int mmp_asteroid_re_getExtraSize(void);
 int mmp_asteroid_re_getObjectTypeId(void);
-int mmp_asteroid_re_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void mmp_asteroid_re_free(void);
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_asteroid_re_hitDetect(void);
@@ -78,7 +78,7 @@ void mmp_moonrock_free(int obj);
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_moonrock_hitDetect(void);
 void mmp_moonrock_update(int obj);
-void mmp_moonrock_init(int obj, int param2);
+void mmp_moonrock_init(GameObject* obj, int param2);
 void mmp_moonrock_release(void);
 void mmp_moonrock_initialise(void);
 
@@ -97,7 +97,7 @@ int mmp_gyservent_getObjectTypeId(void);
 void mmp_gyservent_free(void);
 void mmp_gyservent_render(void);
 void mmp_gyservent_hitDetect(void);
-void mmp_gyservent_update(int obj);
+void mmp_gyservent_update(GameObject* obj);
 void mmp_gyservent_init(GameObject* obj);
 void mmp_gyservent_release(void);
 void mmp_gyservent_initialise(void);

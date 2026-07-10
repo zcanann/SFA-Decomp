@@ -41,9 +41,9 @@ void ktfallingrocks_hitDetect(void)
 {
 }
 
-void ktfallingrocks_update(int obj)
+void ktfallingrocks_update(GameObject* obj)
 {
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    int placement = *(int*)&(obj)->anim.placementData;
     ObjPosParams params;
     char* player;
     int i;
@@ -56,17 +56,17 @@ void ktfallingrocks_update(int obj)
     {
         return;
     }
-    ((GameObject*)obj)->anim.localPosX = ((GameObject*)player)->anim.localPosX;
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
+    (obj)->anim.localPosX = ((GameObject*)player)->anim.localPosX;
+    (obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
     for (i = 0; i < 10; i++)
     {
-        params.x = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
-        params.y = ((GameObject*)obj)->anim.localPosY;
-        params.z = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
+        params.x = (obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
+        params.y = (obj)->anim.localPosY;
+        params.z = (obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
         (*gPartfxInterface)
             ->spawnObject((void*)obj, ((KtfallingrocksPlacement*)placement)->effectId, &params, 0x200001, -1, NULL);
     }
-    Sfx_PlayFromObject(obj, SFXTRIG_en_birdynight11);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_en_birdynight11);
     mainSetBits(((KtfallingrocksPlacement*)placement)->triggerBit, 0);
 }
 

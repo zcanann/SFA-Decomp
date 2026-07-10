@@ -161,15 +161,15 @@ void dll_19A_update(int obj)
     }
 }
 
-void dll_19A_init(int obj, s8* def)
+void dll_19A_init(GameObject* obj, s8* def)
 {
-    int* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    ((GameObject*)obj)->unkF8 = 0;
+    int* state = (obj)->extra;
+    (obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
+    (obj)->unkF8 = 0;
     *(s16*)state = 100;
     ((Dll199State*)state)->unk2 = 0;
     *(u8*)((char*)obj + 0x37) = 0xFF; /* pad37[0], distinct from anim.alpha at 0x36 */
-    ((GameObject*)obj)->anim.alpha = 0xFF;
+    (obj)->anim.alpha = 0xFF;
 }
 
 void dll_19A_release(void)

@@ -46,20 +46,20 @@ int mclightning_getExtraSize(void)
     return 0x1c;
 }
 
-void mclightning_free(int obj)
+void mclightning_free(GameObject* obj)
 {
-    McLightningState* state = ((GameObject*)obj)->extra;
+    McLightningState* state = (obj)->extra;
 
-    ObjGroup_RemoveObject(obj, MCLIGHTNING_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, MCLIGHTNING_OBJGROUP);
     if (state->boltHandle != NULL)
     {
         mm_free(state->boltHandle);
     }
 }
 
-void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    McLightningState* state = ((GameObject*)obj)->extra;
+    McLightningState* state = (obj)->extra;
     u32 mode = state->flags.phase;
     if (mode == MCLIGHTNING_PHASE_ARMED)
     {
@@ -79,15 +79,14 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         else
         {
             McLightningState* foundState;
-            state->boltHandle =
-                lightningCreate(&((GameObject*)obj)->anim.localPosX, (f32*)(objs[i] + 0xc), state->boltParamA,
-                                state->boltParamB, state->boltParamC, state->boltParamD, 0);
+            state->boltHandle = lightningCreate(&(obj)->anim.localPosX, (f32*)(objs[i] + 0xc), state->boltParamA,
+                                                state->boltParamB, state->boltParamC, state->boltParamD, 0);
             state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;
             state->boltFrameTimer = lbl_803E7450;
             if (state->flags.spawnFlags & 1)
             {
                 extern void hitDetectFn_80097070(int obj, f32 c, int a, int b, int d, int e);
-                hitDetectFn_80097070(obj, state->hitEffectScale, 1, 7, 0x1e, 0);
+                hitDetectFn_80097070((int)obj, state->hitEffectScale, 1, 7, 0x1e, 0);
             }
             foundState = (McLightningState*)*(int*)(objs[i] + 0xb8);
             if (foundState->flags.spawnFlags & 1)
@@ -99,7 +98,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
             {
                 extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2,
                                                         void* p8, int p9);
-                objfx_spawnDirectionalBurst(obj, 5, state->burstEffectChance, 1, 1, 0x64, lbl_803E7454, 0, 0);
+                objfx_spawnDirectionalBurst((int)obj, 5, state->burstEffectChance, 1, 1, 0x64, lbl_803E7454, 0, 0);
             }
             if (foundState->flags.spawnFlags & 2)
             {
@@ -123,7 +122,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
                 mm_free(state->boltHandle);
                 state->boltHandle = NULL;
                 state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_A;
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }
@@ -142,14 +141,14 @@ void mclightning_update(GameObject* obj)
     obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
 }
 
-void mclightning_init(int obj, u8* setup)
+void mclightning_init(GameObject* obj, u8* setup)
 {
-    McLightningState* state = ((GameObject*)obj)->extra;
+    McLightningState* state = (obj)->extra;
     f32 effectScale;
 
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)obj)->animEventCallback = mclightning_SeqFn;
-    ObjGroup_AddObject(obj, MCLIGHTNING_OBJGROUP);
+    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    (obj)->animEventCallback = mclightning_SeqFn;
+    ObjGroup_AddObject((int)obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup[0x1a];
     effectScale = lbl_803E745C;
     state->hitEffectScale = effectScale;

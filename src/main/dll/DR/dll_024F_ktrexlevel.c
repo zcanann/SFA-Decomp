@@ -80,17 +80,17 @@ void ktrexlevel_updatePathGameBits(void)
     }
 }
 
-void KT_RexLevel_update(int obj)
+void KT_RexLevel_update(GameObject* obj)
 {
-    if (((GameObject*)obj)->unkF4 == 0)
+    if ((obj)->unkF4 == 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_A, 0);
-        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_B, 0);
-        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_C, 0);
+        getEnvfxAct((int)obj, (int)obj, KTREXLEVEL_ENVFX_A, 0);
+        getEnvfxAct((int)obj, (int)obj, KTREXLEVEL_ENVFX_B, 0);
+        getEnvfxAct((int)obj, (int)obj, KTREXLEVEL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E67A4);
         mainSetBits(0x55e, 1);
-        ((GameObject*)obj)->unkF4 = 1;
+        (obj)->unkF4 = 1;
     }
     lbl_803DDD40 = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter);
 }

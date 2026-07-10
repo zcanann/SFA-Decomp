@@ -40,11 +40,11 @@ int ColdWaterControl_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
-void ColdWaterControl_update(int obj)
+void ColdWaterControl_update(GameObject* obj)
 {
     ColdwaterControlState* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     if (mainGetBit(GAMEBIT_COLDWATER_ARM) != 0 && mainGetBit(GAMEBIT_COLDWATER_DONE) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -58,13 +58,13 @@ void ColdWaterControl_update(int obj)
         {
             if (lbl_803E3B68 == state->timer)
             {
-                ObjHits_RecordObjectHit((int)state->playerObj, obj, COLDWATER_HIT_PRIORITY, 0, 1);
+                ObjHits_RecordObjectHit((int)state->playerObj, (int)obj, COLDWATER_HIT_PRIORITY, 0, 1);
             }
 
             state->timer = state->timer + timeDelta;
             if (state->timer > lbl_803E3B6C)
             {
-                ObjHits_RecordObjectHit((int)state->playerObj, obj, COLDWATER_HIT_PRIORITY, 1, 1);
+                ObjHits_RecordObjectHit((int)state->playerObj, (int)obj, COLDWATER_HIT_PRIORITY, 1, 1);
                 state->timer = state->timer - lbl_803E3B6C;
             }
         }

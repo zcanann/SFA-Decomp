@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_024E_DRAKORDTHORNBUSH_H_
 
 #include "types.h"
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct DrakordThornbushPlacement
@@ -46,8 +47,8 @@ int drakord_thornbush_getObjectTypeId(void);
 void drakord_thornbush_free(int obj);
 void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
 void drakord_thornbush_hitDetect(int obj);
-void drakord_thornbush_update(int obj);
-void drakord_thornbush_init(int obj, u8* init);
+void drakord_thornbush_update(GameObject* obj);
+void drakord_thornbush_init(GameObject* obj, u8* init);
 void drakord_thornbush_release(void);
 void drakord_thornbush_initialise(void);
 

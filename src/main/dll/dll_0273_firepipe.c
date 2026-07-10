@@ -51,7 +51,7 @@ extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
 
 extern void ObjHits_EnableObject(FirePipeObject* obj);
 extern void ObjHits_DisableObject(FirePipeObject* obj);
-extern int ObjHits_GetPriorityHit(FirePipeObject* obj, int a, int b, int c);
+extern int ObjHits_GetPriorityHit(GameObject* obj, int a, int b, int c);
 extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ObjGroup_RemoveObject();
@@ -232,7 +232,7 @@ void firepipe_updateState(FirePipeObject* obj)
     }
     else
     {
-        priorityHit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
+        priorityHit = ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0);
         switch (obj->objectId)
         {
         case FIREPIPE_OBJ_FLAME_B:

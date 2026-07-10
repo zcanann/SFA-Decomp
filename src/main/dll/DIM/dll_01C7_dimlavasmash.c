@@ -122,7 +122,7 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
 #pragma opt_propagation reset
 #pragma dont_inline reset
 
-int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int mapGetBlock(void);
     int* def;
@@ -130,22 +130,21 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int block;
     int* state;
     ObjHitsPriorityState* hitState;
-    state = ((GameObject*)obj)->extra;
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
+    state = (obj)->extra;
+    def = *(int**)&(obj)->anim.placementData;
     if (((DimlavasmashState*)state)->state == 0)
     {
         if (mainGetBit(((DimlavasmashPlacement*)def)->gateGameBit) != 0)
         {
-            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
             hitState->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             {
                 if (((GameObject*)hit)->anim.seqId == DIMLAVASMASH_HIT_SEQID_CANNONBALL)
                 {
                     ((DimlavasmashState*)state)->state = 2;
-                    Sfx_PlayFromObject(obj, SFXTRIG_en_mushsporedisp22);
-                    objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                        ((GameObject*)obj)->anim.localPosZ);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_en_mushsporedisp22);
+                    objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ);
                     block = mapGetBlock();
                     if ((void*)block != NULL)
                     {

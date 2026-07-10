@@ -22,10 +22,10 @@ typedef struct FireFlyMapData
 STATIC_ASSERT(offsetof(FireFlyMapData, variantParam) == 0x1A);
 STATIC_ASSERT(offsetof(FireFlyMapData, requiredGameBit) == 0x20);
 
-void FireFlyFn_801f4f88(int obj);
+void FireFlyFn_801f4f88(GameObject* obj);
 void firefly_free(GameObject* obj);
 void firefly_update(int obj);
-void firefly_init(int obj, int def);
+void firefly_init(GameObject* obj, int def);
 int firefly_getExtraSize(void);
 int firefly_getObjectTypeId(void);
 void firefly_render(void);

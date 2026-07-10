@@ -85,7 +85,7 @@ int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 int Lock_DoorLock_getExtraSize(void);
 void Lock_DoorLock_free(int x);
 void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void Lock_DoorLock_update(int obj);
+void Lock_DoorLock_update(GameObject* obj);
 
 int SeqObject_getExtraSize(void);
 int SeqObject_getObjectTypeId(void);

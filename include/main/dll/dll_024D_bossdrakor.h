@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_024D_BOSSDRAKOR_H_
 
 #include "types.h"
+#include "main/game_object.h"
 #include "global.h"
 
 typedef struct BossdrakorPlacement
@@ -55,9 +56,9 @@ void bossdrakor_release(void);
 void bossdrakor_initialise(void);
 int bossdrakor_getExtraSize(void);
 void bossdrakor_update(int obj);
-void bossdrakor_free(int obj);
-void bossdrakor_hitDetect(int obj);
-void bossdrakor_init(int obj, BossdrakorPlacement* init);
+void bossdrakor_free(GameObject* obj);
+void bossdrakor_hitDetect(GameObject* obj);
+void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init);
 void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
 
 #endif

@@ -1,5 +1,6 @@
 /* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
+#include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/objlib.h"
 #include "main/effect_interfaces.h"
@@ -105,7 +106,7 @@ void ProximityMine_hitDetect(ProximityMineObject* obj)
 
     if (fn_80080150(&obj->state->renderTimer) == 0)
     {
-        hit = ObjHits_GetPriorityHit((int)obj, 0, 0, 0);
+        hit = ObjHits_GetPriorityHit((GameObject*)obj, 0, 0, 0);
         collider = obj->collider;
         hitFlag = collider->hitFlag;
         if ((hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL))
@@ -189,7 +190,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             ObjTextureRuntimeSlot* tex;
 
             state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
-            tex = objFindTexture(obj, 0, 0);
+            tex = objFindTexture((GameObject*)(obj), 0, 0);
             if (tex != NULL)
             {
                 tex->textureId = (tex->textureId + 0x10) % 512;

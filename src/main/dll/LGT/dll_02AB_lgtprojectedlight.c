@@ -59,21 +59,21 @@ void ProjectedLight_update(GameObject* obj)
 }
 
 #pragma opt_common_subs off
-void ProjectedLight_init(int obj, int setup)
+void ProjectedLight_init(GameObject* obj, int setup)
 {
     PointLightVec vec;
     ProjectedLightSetup* setupData = (ProjectedLightSetup*)setup;
-    ProjectedLightState* state = ((GameObject*)obj)->extra;
+    ProjectedLightState* state = (obj)->extra;
 
     vec = *(PointLightVec*)lbl_802C2618;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setupData->rotX << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(setupData->rotY << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)(setupData->rotZ << 8);
+    (obj)->anim.rotX = (s16)(setupData->rotX << 8);
+    (obj)->anim.rotY = (s16)(setupData->rotY << 8);
+    (obj)->anim.rotZ = (s16)(setupData->rotZ << 8);
 
     if (state->light == NULL)
     {
-        state->light = objCreateLight(obj, 1);
+        state->light = objCreateLight((int)obj, 1);
     }
 
     if (state->light != NULL)

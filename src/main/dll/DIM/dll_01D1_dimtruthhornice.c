@@ -73,7 +73,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 
-static inline int* DIM2snowball_GetActiveModel(void* obj)
+static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];

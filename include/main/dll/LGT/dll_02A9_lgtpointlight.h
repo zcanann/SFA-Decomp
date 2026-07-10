@@ -73,11 +73,11 @@ STATIC_ASSERT(sizeof(PointLightSetup) == 0x40);
 void pointlight_setEffectState(GameObject* obj, int enabled);
 int PointLight_getExtraSize(void);
 int PointLight_getObjectTypeId(void);
-void PointLight_free(int obj);
+void PointLight_free(GameObject* obj);
 void PointLight_render(GameObject* obj);
 void PointLight_hitDetect(void);
 void PointLight_update(GameObject* obj);
-void PointLight_init(int obj, int setup);
+void PointLight_init(GameObject* obj, int setup);
 void PointLight_release(void);
 void PointLight_initialise(void);
 

@@ -140,14 +140,14 @@ void arwarwingbo_update(int obj)
     objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta, objAnim->velocityZ * timeDelta);
 }
 
-void arwarwingbo_init(int obj, int setup)
+void arwarwingbo_init(GameObject* obj, int setup)
 {
     ArwingBombSetup* mapData = (ArwingBombSetup*)setup;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(mapData->rotY << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    ObjGroup_AddObject(obj, ARWARWINGBO_OBJGROUP);
+    (obj)->anim.rotX = (s16)(mapData->rotX << 8);
+    (obj)->anim.rotY = (s16)(mapData->rotY << 8);
+    (obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
+    ObjGroup_AddObject((int)obj, ARWARWINGBO_OBJGROUP);
 }
 
 void arwarwingbo_release(void)
@@ -158,18 +158,18 @@ void arwarwingbo_initialise(void)
 {
 }
 
-void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
+void arwarwingbo_setActiveVisible(GameObject* obj, u8 active, u8 visible)
 {
-    ArwingBombState* state = ((GameObject*)obj)->extra;
+    ArwingBombState* state = (obj)->extra;
     if (active != 0)
     {
-        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
+        Obj_SetActiveModelIndex((int)obj, visible != 0 ? 1 : 0);
         state->control.active = 1;
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     }
     else
     {
         state->control.active = 0;
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
 }

@@ -44,9 +44,9 @@ extern f32 lbl_803E51B8;
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
 
-void dll_19D_free(int obj)
+void dll_19D_free(GameObject *obj)
 {
-    register int self = obj;
+    register int self = (int)obj;
     register int state = *(int*)&((GameObject*)self)->extra;
     if ((((Dll19DState*)state)->flags & 2) == 0)
     {

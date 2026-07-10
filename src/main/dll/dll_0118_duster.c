@@ -278,7 +278,7 @@ void duster_update(int obj)
             ((GameObject*)obj)->anim.localPosZ += ((GameObject*)obj)->anim.velocityZ * timeDelta;
         }
 
-        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == 0xe)
         {
             state->hitReactActive = 1;
             Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_4d);
@@ -358,14 +358,14 @@ void duster_update(int obj)
     ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY;
 }
 
-void duster_init(int obj, u8* params)
+void duster_init(GameObject* obj, u8* params)
 {
     DusterState* state;
     DusterSetup* setup;
     void* hitData;
 
     setup = (DusterSetup*)params;
-    state = ((GameObject*)obj)->extra;
+    state = (obj)->extra;
     state->settleTimer = randomGetRange(0, 0x32);
     state->moveStepScale = gDusterObjMoveStepScale;
     state->activeGameBit = setup->activeGameBit;
@@ -380,15 +380,15 @@ void duster_init(int obj, u8* params)
         state->completeGameBit = state->activeGameBit + 0x64;
     }
     state->complete = mainGetBit(state->completeGameBit);
-    hitData = ((GameObject*)obj)->anim.hitReactState;
+    hitData = (obj)->anim.hitReactState;
     if (hitData != NULL && state->active == 0)
     {
         *(s16*)((int)hitData + 0x60) = (s16)(*(s16*)((int)hitData + 0x60) | 1);
     }
-    if ((state->complete != 0 || state->active == 0) && ((GameObject*)obj)->anim.hitReactState != NULL)
+    if ((state->complete != 0 || state->active == 0) && (obj)->anim.hitReactState != NULL)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
     }
     ObjMsg_AllocQueue((void*)obj, 1);
-    ((GameObject*)obj)->animEventCallback = duster_SeqFn;
+    (obj)->animEventCallback = duster_SeqFn;
 }

@@ -42,7 +42,7 @@ typedef struct PollenExtra
 
 void KaldaChompSpit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void KaldaChompSpit_hitDetect(void);
-void KaldaChompSpit_init(int obj);
+void KaldaChompSpit_init(GameObject* obj);
 void KaldaChompSpit_release(void);
 void KaldaChompSpit_initialise(void);
 void FUN_80169d38(u64 param_1, u64 param_2, u64 param_3, double param_4, u64 param_5, u64 param_6, u64 param_7,
@@ -61,7 +61,7 @@ void pinponspike_free(int obj);
 void pinponspike_render(void);
 void pinponspike_hitDetect(void);
 void pinponspike_update(int obj);
-void pinponspike_init(int obj);
+void pinponspike_init(GameObject* obj);
 void pinponspike_release(void);
 void pinponspike_initialise(void);
 void FUN_8016aba8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
@@ -81,9 +81,9 @@ int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
 void pollenfragment_free(GameObject* obj);
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
-void pollenfragment_hitDetect(int obj);
+void pollenfragment_hitDetect(GameObject* obj);
 void pollenfragment_update(int obj);
-void pollenfragment_init(int obj, int config);
+void pollenfragment_init(GameObject* obj, int config);
 void pollenfragment_release(void);
 void pollenfragment_initialise(void);
 void FUN_8016b174(int param_1);

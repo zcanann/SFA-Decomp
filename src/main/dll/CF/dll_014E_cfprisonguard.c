@@ -111,7 +111,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     switch (sub->guardState)
     {
     case 0:
-        fn_8003B228(obj, sub);
+        fn_8003B228((GameObject*)(obj), sub);
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0)
         {
@@ -139,7 +139,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             sub->guardState = 1;
         }
-        fn_8003B228(obj, sub);
+        fn_8003B228((GameObject*)(obj), sub);
         break;
     case 1:
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
@@ -244,7 +244,7 @@ void CFPrisonGuard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void CFPrisonGuard_hitDetect(int* obj)
 {
     CfPrisonGuardState* state = ((GameObject*)obj)->extra;
-    if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19)
+    if (ObjHits_GetPriorityHit((GameObject*)(obj), NULL, NULL, NULL) == 19)
     {
         state->guardState = 7;
     }

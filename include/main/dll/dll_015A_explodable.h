@@ -112,11 +112,11 @@ STATIC_ASSERT(sizeof(ExplodableFragmentSetup) == 0x44);
 
 void explodable_render(void);
 int explodable_getExtraSize(void);
-void explodable_free(int obj, int flag);
-void explodable_update(int obj);
-void explodable_init(int obj, int setup);
+void explodable_free(GameObject* obj, int flag);
+void explodable_update(GameObject* obj);
+void explodable_init(GameObject* obj, int setup);
 int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, int fragmentIndex);
-void explodable_buildFragments(int obj, int def, int skipCentroid, int state);
+void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int state);
 void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def);
 
 #endif /* MAIN_DLL_EXPLODABLE_H_ */

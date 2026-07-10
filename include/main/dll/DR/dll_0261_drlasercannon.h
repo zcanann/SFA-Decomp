@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_0261_DRLASERCANNON_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 typedef struct DrLaserCannonBeamSetup
 {
@@ -31,11 +32,11 @@ int DR_LaserCannon_getExtraSize(void);
 int DR_LaserCannon_getObjectTypeId(void);
 void DR_LaserCannon_initialise(void);
 void DR_LaserCannon_release(void);
-void DR_LaserCannon_free(int obj);
-void DR_LaserCannon_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
+void DR_LaserCannon_free(GameObject* obj);
+void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 int drlasercannon_getTrackedTarget(int obj, int* arg);
 void DR_LaserCannon_init(int obj, char* arg);
-void DR_LaserCannon_hitDetect(int obj);
+void DR_LaserCannon_hitDetect(GameObject* obj);
 void DR_LaserCannon_update(int obj);
 
 #endif /* MAIN_DLL_DR_DLL_0261_DRLASERCANNON_H_ */

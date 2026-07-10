@@ -155,7 +155,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
     return 0;
 }
 
-int grimble_stateHandlerA01(int obj, char* state, f32 arg)
+int grimble_stateHandlerA01(GameObject* obj, char* state, f32 arg)
 {
     f32 z2, y2, x2, z, y, x;
     u8 hitEdge;
@@ -164,18 +164,18 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     f32 r;
     char* sub;
 
-    sub = *(char**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+    sub = *(char**)(*(int*)&(obj)->extra + 0x40c);
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E2EB8, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2EB8, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    (*(void (**)(int, char*, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, state, arg, 0);
+    (*(void (**)(int, char*, f32, int))(*(int*)gPlayerInterface + 0x20))((int)obj, state, arg, 0);
     if ((*(int*)&((GroundBaddieState*)state)->baddie.eventFlags & 1) != 0)
     {
         *(int*)&((GroundBaddieState*)state)->baddie.eventFlags =
             *(int*)&((GroundBaddieState*)state)->baddie.eventFlags & ~1;
-        Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_mv_persquk1);
     }
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
@@ -210,7 +210,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     d = r;
     x = r;
     angle = getAngle(y, d);
-    ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
+    (obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
 
