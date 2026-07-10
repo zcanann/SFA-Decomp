@@ -513,8 +513,6 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
     f32 ftmp0;
     f32 ftmp1;
     f32 ftmp2;
-    f32 ftmp3;
-    f32 ftmp4;
     struct
     {
         s16 x, y, z;
