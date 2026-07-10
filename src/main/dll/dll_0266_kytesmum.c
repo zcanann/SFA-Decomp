@@ -189,6 +189,8 @@ int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg
     return 0;
 }
 
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
 int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     KytesMumSetup* setup;
@@ -213,6 +215,8 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
         return !result;
     }
 }
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
 
 void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
 {
