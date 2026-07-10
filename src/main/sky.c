@@ -1332,6 +1332,7 @@ void sky2_run(void)
     int i;
     u8* p;
     f32* dst;
+    f32 cmax;
     int a1;
     int k;
     int d;
@@ -1471,8 +1472,7 @@ void sky2_run(void)
             else if ((*(u16*)&((GameObject*)p)->anim.flags & 0x20) != 0)
             {
                 (*gSkyInterface)->getTimeOfDay(&height);
-                t = height / lbl_803DF15C;
-                if (t < lbl_803DF108)
+                if ((t = height / lbl_803DF15C) < lbl_803DF108)
                 {
                     t = lbl_803DF108;
                 }
@@ -1590,9 +1590,10 @@ void sky2_run(void)
             {
                 r = lbl_803DF108;
             }
+            cmax = lbl_803DF118;
             if (g > *(f32*)&lbl_803DF118)
             {
-                g = lbl_803DF118;
+                g = cmax;
             }
             else if (g < lbl_803DF108)
             {
@@ -1600,7 +1601,7 @@ void sky2_run(void)
             }
             if (b > *(volatile f32*)&lbl_803DF118)
             {
-                b = lbl_803DF118;
+                b = cmax;
             }
             else if (b < lbl_803DF108)
             {
