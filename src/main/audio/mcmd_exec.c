@@ -475,6 +475,16 @@ static inline void mcmdAddPriority(McmdVoiceState* svoice, McmdCommandArgs* cste
     voiceSetPriority(svoice, prio);
 }
 
+static inline void mcmdSetAgeCounterByVolume(McmdVoiceState* svoice, McmdCommandArgs* cstep)
+{
+    u32 age;
+
+    age = (cstep->flags >> 0x10) +
+          ((s32)(((svoice->volume >> 0x10) & 0xff) * (cstep->value & 0xffff)) >> 7);
+    svoice->priorityValue = age > 60000 ? 0x75300000 : age << 0xf;
+    hwSetPriority(svoice->voiceHandle & 0xff, ((u32)svoice->priorityGroup << 0x18) | (svoice->priorityValue >> 0xf));
+}
+
 static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     u32 voiceid;
@@ -1034,12 +1044,8 @@ void macHandleActive(McmdVoiceState* sv)
             }
             break;
         case 0x39: /* set age counter by volume */
-        {
-            u32 age = (cmd >> 0x10) + ((s32)((*para1 & 0xffff) * ((sv->volume >> 0x10) & 0xff)) >> 7);
-            sv->priorityValue = age > 60000 ? 0x75300000 : age << 0xf;
-            hwSetPriority(sv->voiceHandle & 0xff, ((u32)sv->priorityGroup << 0x18) | (sv->priorityValue >> 0xf));
+            mcmdSetAgeCounterByVolume(sv, &lbl_803DE2E8);
             break;
-        }
         case 0x40: /* volume select */
             SelectSource(sv, &sv->volumeInput, &lbl_803DE2E8, MAC_FLAG64(0, 0x80000), 1);
             break;
