@@ -1914,7 +1914,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         }
         if ((int)randomGetRange(0, 10) == 0)
         {
-            spawnFlags ^= 4;
+            spawnFlags ^= 4LL;
             spawnFlags |= 1;
         }
         cfg.lifetimeFrames = 0xdc;
