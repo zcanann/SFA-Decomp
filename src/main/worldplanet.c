@@ -376,10 +376,10 @@ void worldplanet_update(int obj)
         {
             u8 ok;
             u32 mask = 0;
-            int k = mask;
+            int k;
             int* ids = tbl[3];
             u8* hints = gWorldPlanetHintFlagTable;
-            do
+            for (k = mask; k < 5; k++)
             {
                 if (mainGetBit(*ids) != 0)
                 {
@@ -395,8 +395,7 @@ void worldplanet_update(int obj)
                 }
                 ids += 1;
                 hints += 1;
-                k += 1;
-            } while (k < 5);
+            }
             state->unlockedPlanetMask = mask;
         }
         if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
