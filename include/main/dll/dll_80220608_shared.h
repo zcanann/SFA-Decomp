@@ -26,6 +26,8 @@
 #include "main/screen_transition.h"
 #include "main/dll/cnthitobjec_state.h"
 
+struct AndrossState;
+
 /* Pattern wrappers. */
 extern u8 framesThisStep;
 extern int lbl_803DC380;
@@ -2247,7 +2249,7 @@ void fn_8023A168(int p1, int p2);
 void fn_8023A87C(GameObject* p1, int p2);
 void fn_8023A268(int p1, int p2, int p3);
 void fn_80239FCC(int p1, int p2);
-int fn_8023A6A4(int p1, f32 a, f32 b, f32 c);
+int fn_8023A6A4(struct AndrossState* state, f32 a, f32 b, f32 c);
 void fn_8023A3E4(int p1, int p2);
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 void arwarwing_resetFlightState(GameObject* obj);
