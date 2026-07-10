@@ -2,6 +2,8 @@
 #include "main/audio/sal_dsp.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/ar.h"
+
+#pragma exceptions on
 extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
@@ -15,15 +17,14 @@ extern void* aramChunkCallback;
  */
 void aramInit(u32 extraSize)
 {
-    u16* clear;
-    int i;
     u8* status;
     u8* flag;
+    u16* clear;
     u8* buf;
     u32 arBase;
+    int i;
 
     status = lbl_803D3F60;
-    flag = status + 0x281;
     arBase = ARGetBaseAddress();
     buf = salMalloc(0x500);
     clear = (u16*)buf;
@@ -32,7 +33,7 @@ void aramInit(u32 extraSize)
         clear[i] = 0;
     }
     DCFlushRange(buf, 0x500);
-    status[0x281] = 0;
+    *(flag = status + 0x281) = 0;
     status[0x280] = 0;
     status[0x505] = 0;
     status[0x504] = 0;
