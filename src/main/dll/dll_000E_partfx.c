@@ -2485,9 +2485,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         }
         else if (effectId == 0x3f)
         {
-            (*startPos) = lbl_803DF4DC;
+            (*startPos) = 0.0f;
             cfg.startPosY = lbl_803DF64C;
-            cfg.startPosZ = lbl_803DF4DC;
+            cfg.startPosZ = 0.0f;
             cfg.lifetimeFrames = 100;
             cfg.scale = lbl_803DF624 * (f32)(s32)randomGetRange(1, 3);
             cfg.renderFlags |= 0x1000000LL;
