@@ -300,17 +300,51 @@ void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
 }
 
 /*
+ * Resume a trapped macro stream (keyoff/sample-end/message) if armed.
+ */
+static inline u32 ExecuteTrap(McmdVoiceState* sv, u8 trapType)
+{
+    if (sv->hasTriggerMacros != 0 && sv->trapMacroBase[trapType] != 0)
+    {
+        sv->macroCursor = sv->trapMacroCursor[trapType];
+        sv->macroBase = sv->trapMacroBase[trapType];
+        sv->trapMacroBase[trapType] = 0;
+        macMakeActive(sv);
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Queue a message onto the voice owning a vid handle, resuming its
+ * message-trap macro stream when armed.
+ */
+static inline u32 macPostMessage(u32 vid, u32 mesg)
+{
+    McmdVoiceState* sv;
+    u32 v;
+
+    if ((v = vidGetInternalId(vid)) != 0xffffffff &&
+        (sv = (McmdVoiceState*)(synthVoice + (v & 0xff) * SYNTH_VOICE_STRIDE))->queuedMessageCount < 4)
+    {
+        ++sv->queuedMessageCount;
+        sv->queuedMessages[sv->queuedMessageWriteIndex] = mesg;
+        sv->queuedMessageWriteIndex = (sv->queuedMessageWriteIndex + 1) & 3;
+        ExecuteTrap(sv, 2);
+        return 1;
+    }
+    return 0;
+}
+
+/*
  * Queue register-derived messages onto voices found through vid handles.
  */
 void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u32 index;
     u32 value;
-    int offset;
     u32 targetInstrument;
-    int voice;
-    McmdVoiceState* voiceState;
     u8 i;
+    McmdVoiceState* voiceState;
     u32 targetVoice;
 
     value = varGet32(state, 0, (args->value >> 8) & 0xff);
@@ -320,34 +354,13 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         targetInstrument = args->flags >> 0x10;
         if (targetInstrument != 0xffff)
         {
-            offset = 0;
             for (i = 0; i < lbl_803BD150[0x210]; i++)
             {
-                voice = (int)(synthVoice + offset);
-                voiceState = (McmdVoiceState*)voice;
-                if (voiceState->macroBase != 0 && targetInstrument == voiceState->instrumentKey)
+                if (((McmdVoiceState*)synthVoice)[i].macroBase != 0 &&
+                    targetInstrument == ((McmdVoiceState*)synthVoice)[i].instrumentKey)
                 {
-                    targetVoice = vidGetInternalId(voiceState->vidListNode->id);
-                    if (targetVoice != 0xffffffff)
-                    {
-                        voiceState = (McmdVoiceState*)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
-                        if (voiceState->queuedMessageCount < 4)
-                        {
-                            voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
-                            voiceState->queuedMessages[voiceState->queuedMessageWriteIndex] = value;
-                            voiceState->queuedMessageWriteIndex = (voiceState->queuedMessageWriteIndex + 1) & 3;
-                            if (voiceState->hasTriggerMacros != 0 && voiceState->messageMacroBase != 0)
-                            {
-                                voiceState->macroCursor = voiceState->messageMacroCursor;
-                                voiceState->macroBase = voiceState->messageMacroBase;
-                                voiceState->messageMacroBase = 0;
-                                voice = (int)voiceState;
-                                macMakeActive((McmdVoiceState*)voice);
-                            }
-                        }
-                    }
+                    macPostMessage(((McmdVoiceState*)synthVoice)[i].vidListNode->id, value);
                 }
-                offset += SYNTH_VOICE_STRIDE;
             }
         }
         else
@@ -360,25 +373,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
     }
     else
     {
-        targetVoice = vidGetInternalId(varGet32(state, 0, args->value));
-        if (targetVoice != 0xffffffff)
-        {
-            voiceState = (McmdVoiceState*)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
-            if (voiceState->queuedMessageCount < 4)
-            {
-                voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
-                voiceState->queuedMessages[voiceState->queuedMessageWriteIndex] = value;
-                voiceState->queuedMessageWriteIndex = (voiceState->queuedMessageWriteIndex + 1) & 3;
-                if (voiceState->hasTriggerMacros != 0 && voiceState->messageMacroBase != 0)
-                {
-                    voiceState->macroCursor = voiceState->messageMacroCursor;
-                    voiceState->macroBase = voiceState->messageMacroBase;
-                    voiceState->messageMacroBase = 0;
-                    voice = (int)voiceState;
-                    macMakeActive((McmdVoiceState*)voice);
-                }
-            }
-        }
+        macPostMessage(varGet32(state, 0, args->value), value);
     }
 }
 
@@ -1161,22 +1156,6 @@ void macHandleActive(McmdVoiceState* sv)
         }
     next_command:;
     } while (ex == 0);
-}
-
-/*
- * Resume a trapped macro stream (keyoff/sample-end/message) if armed.
- */
-static u32 ExecuteTrap(McmdVoiceState* sv, u8 trapType)
-{
-    if (sv->hasTriggerMacros != 0 && sv->trapMacroBase[trapType] != 0)
-    {
-        sv->macroCursor = sv->trapMacroCursor[trapType];
-        sv->macroBase = sv->trapMacroBase[trapType];
-        sv->trapMacroBase[trapType] = 0;
-        macMakeActive(sv);
-        return 1;
-    }
-    return 0;
 }
 
 /*
