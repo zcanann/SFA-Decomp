@@ -1688,29 +1688,15 @@ void pauseMenuRunSubmenu(int p1)
     gCMenuButtons = btn;
     if (lbl_803DD75C != 0)
     {
-        int v;
         if (btn & 0x300)
         {
             Sfx_PlayFromObject(0, SFXTRIG_menu_fend_back);
             buttonDisable(0, 0x300);
             lbl_803DD75E = -0x28;
         }
-        {
-            int sum = lbl_803DD75C + lbl_803DD75E;
-            lbl_803DD75C = sum;
-            v = (s16)sum;
-        }
-        if (v > 0x200)
-        {
-            v = 0x200;
-        }
-        lbl_803DD75C = v;
-        v = (s16)lbl_803DD75C;
-        if (v < 0)
-        {
-            v = 0;
-        }
-        lbl_803DD75C = v;
+        lbl_803DD75C += lbl_803DD75E;
+        lbl_803DD75C = (lbl_803DD75C > 0x200) ? 0x200 : lbl_803DD75C;
+        lbl_803DD75C = (lbl_803DD75C < 0) ? 0 : lbl_803DD75C;
     }
     else
     {
