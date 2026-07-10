@@ -215,7 +215,7 @@ enum GameBitId {
      * red switch turns it green, clears this underlying bit, and opens the gate.
      * Live-verified against the gate and switch in the first Magic Cave.
      */
-    GAMEBIT_STAFF_TUTORIAL_MAGIC_CAVE_DOOR_CLOSED = 0x246,
+    GAMEBIT_FIRE_BLASTER_MAGIC_CAVE_DOOR_CLOSED = 0x246,
 
     /*
      * The red switch above the SharpClaw door (revealed when the arena clears).
