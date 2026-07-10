@@ -329,7 +329,6 @@ void andross_update(int obj)
     f32 searchDist2;
     f32 searchDist3;
     f32 searchDist;
-    u32 randOffsetY;
     objAlias = (GameObject*)obj;
     state = ((GameObject*)obj)->extra;
     flag = 0;
@@ -1725,12 +1724,15 @@ void andross_update(int obj)
             {
                 randVal = randomGetRange(0x14, 0x1e);
                 ((AndrossState*)state)->actionTimer = randVal;
-                val = randomGetRange((int)-gAndrossSpawnRandX, gAndrossSpawnRandX);
-                ((AndrossState*)state)->targetPosX = (f32)(int)val + ((AndrossState*)state)->homePosX;
-                randOffsetY = randomGetRange((int)-gAndrossSpawnRandY, gAndrossSpawnRandY);
-                ((AndrossState*)state)->targetPosY = (f32)(int)randOffsetY + ((AndrossState*)state)->homePosY;
-                val = randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ);
-                ((AndrossState*)state)->targetPosZ = (f32)(int)val + ((AndrossState*)state)->homePosZ;
+                ((AndrossState*)state)->targetPosX =
+                    (f32)(int)randomGetRange((int)-gAndrossSpawnRandX, gAndrossSpawnRandX) +
+                    ((AndrossState*)state)->homePosX;
+                ((AndrossState*)state)->targetPosY =
+                    (f32)(int)randomGetRange((int)-gAndrossSpawnRandY, gAndrossSpawnRandY) +
+                    ((AndrossState*)state)->homePosY;
+                ((AndrossState*)state)->targetPosZ =
+                    (f32)(int)randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ) +
+                    ((AndrossState*)state)->homePosZ;
             }
         }
         if ((((AndrossState*)state)->signalFlags & 8) != 0)
