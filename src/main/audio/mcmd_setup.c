@@ -3,6 +3,8 @@
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
+
+#pragma exceptions on
 extern McmdVoiceState* synthVoice;
 extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
 void DoSetPitch(McmdVoiceState* svoice);
