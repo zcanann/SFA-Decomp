@@ -299,7 +299,7 @@ void fn_8026F30C(void)
     int cbIndex;
     u32 prev;
 
-    pool = &lbl_803AF550;
+    pool = (SynthPool*)(u8*)&lbl_803AF550;
     gSynthQueuedVoices = NULL;
     np = pool->lastNotes[0];
     gSynthAllocatedVoices = 0;
