@@ -523,6 +523,7 @@ void pauseMenuDrawStatus_801274A0(int* arg1)
     s32 j;
     ObjModel* model;
     int* info;
+    f32 timer;
 
     pauseMenuDoSave();
     alpha = (s32)(hudElementOpacity * lbl_803DD760);
@@ -539,7 +540,8 @@ void pauseMenuDrawStatus_801274A0(int* arg1)
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
     model->bufferFlags &= ~0x8;
 
-    if (gameTextFn_80019c00() != lbl_803E1E3C)
+    timer = gameTextFn_80019c00();
+    if (timer != lbl_803E1E3C)
     {
         s32 rnd1 = randomGetRange(0, 0x1e) * 2;
         s32 rnd2 = randomGetRange(0, 0x1e) * 2;
