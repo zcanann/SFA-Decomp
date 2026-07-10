@@ -5357,6 +5357,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 *sp1, *sp2;
     u8* slotp;
     f32* outp;
+    f32 *wyp, *wzp, *syp, *szp;
     f32 *edge1p, *edge2p, *vbp, *evecp;
     u8* typeSlotp;
     s16 i;
@@ -5366,7 +5367,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     u8 typeb;
     u8 typeb2;
     TrackBlockDescriptor* descSave;
-    u8 type;
+    int type;
     f32 edge2[4];
     f32 edge1[4];
     f32 edge0[4];
@@ -5403,8 +5404,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     u8 found;
     s16 hit;
 
-    descBase = gTrackBlockDescriptors;
-    descEnd = &gTrackBlockDescriptors[gActiveTrackBlockCount];
+    descEnd = gActiveTrackBlockCount + (descBase = gTrackBlockDescriptors);
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5417,6 +5417,10 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     sp2 = (f32*)startPos;
     slotp = slots;
     outp = slots;
+    szp = &ws[2];
+    syp = &ws[1];
+    wzp = &we[2];
+    wyp = &we[1];
     edge1p = edge1;
     edge2p = edge2;
     vbp = vb;
@@ -5449,9 +5453,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
             {
                 if (desc->object != NULL)
                 {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], &ws[1],
-                                          &ws[2]);
-                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], &we[1], &we[2]);
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], syp, szp);
+                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], wyp, wzp);
                 }
                 else
                 {
@@ -5459,8 +5462,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     ws[1] = svFromp[1];
                     ws[2] = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
-                    we[1] = cur[1];
-                    we[2] = cur[2] - offZ;
+                    *wyp = cur[1];
+                    *wzp = cur[2] - offZ;
                 }
                 PSVECSubtract(we, ws, delta);
                 mag = PSVECMag(delta);
