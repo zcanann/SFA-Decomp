@@ -2089,11 +2089,11 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
     ObjAnimComponent** resetObjects;
     int flag80;
     s16 i;
-    int count;
-    int masked;
-    int cur;
     TrackBlockDescriptor* desc;
     TrackBlockDescriptor* descEnd;
+    int cur;
+    int count;
+    int masked;
 
     gTrackBlockDescriptors[0].object = NULL;
     gTrackBlockDescriptors[0].firstTriangle = 0;
