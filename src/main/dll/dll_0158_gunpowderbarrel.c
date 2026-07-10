@@ -774,6 +774,7 @@ void gunpowderbarrel_update(int obj)
         if (state->fuseFrames > 0x14)
         {
             int i;
+            u32* objs;
             u32 gen;
             if (((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
             {
@@ -785,8 +786,8 @@ void gunpowderbarrel_update(int obj)
             if (def->generatorLinkId != 0)
             {
                 int cnt;
-                u32* objs = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &cnt);
                 u32* p;
+                objs = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &cnt);
                 i = 0;
                 p = objs;
                 for (; i < cnt; i++)
