@@ -120,7 +120,7 @@ typedef struct DSPstudioinfo {
     u8 state;                 /* 0x50 */
     u8 isMaster;              /* 0x51 */
     u8 numInputs;             /* 0x52 */
-    u32 type;                 /* 0x54 */
+    s32 type;                 /* 0x54 */
     DSPinput in[7];           /* 0x58 */
     void *auxAHandler;        /* 0xac */
     void *auxBHandler;        /* 0xb0 */

@@ -79,7 +79,7 @@ extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last
                                          u16 resetMask);
 extern void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr);
 extern void SortVoices(DSPvoice** voices, int l, int r);
-extern int adsrSetup(ADSR_VARS* adsr);
+extern u32 adsrSetup(ADSR_VARS* adsr);
 extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime);
 extern int adsrRelease(ADSR_VARS* adsr);
 extern u32 adsrHandle(ADSR_VARS* adsr, u16* adsr_start, u16* adsr_delta);
@@ -175,6 +175,7 @@ static void DoDepopFade(s32* dspStart, s16* dspDelta, s32* hostSum)
 
 void salBuildCommandList(s16* dest, u32 nsDelay)
 {
+    DSPstudioinfo* msp;
     u8 s;
     u8 mix_start;
     u8 st;
@@ -182,7 +183,6 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     u8 getAuxFrame;
     u16 rampResetOffsetFlags[5];
     DSPstudioinfo* stp;
-    DSPstudioinfo* msp;
     DSPvoice* dsp_vptr;
     DSPvoice* next_dsp_vptr;
     u32 tmp_addr;
@@ -356,8 +356,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                 pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
                                 pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
                             }
-                            base = (u32)dsp_vptr->smp_info.addr * 2;
-                            addr = base + 2;
+                            addr = (base = (u32)dsp_vptr->smp_info.addr * 2) + 2;
                             dsp_vptr->playInfo.posHi = dsp_vptr->playInfo.posLo = 0;
                             if ((dsp_vptr->smp_info.compType == 4) || (dsp_vptr->smp_info.compType == 5))
                             {
@@ -390,8 +389,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                 pb->adpcm.a[i][0] = adpcmInfo->coefTab[i][0];
                                 pb->adpcm.a[i][1] = adpcmInfo->coefTab[i][1];
                             }
-                            base = (u32)dsp_vptr->smp_info.addr * 2;
-                            addr = base + offset * 16 + 2;
+                            addr = (base = (u32)dsp_vptr->smp_info.addr * 2) + offset * 16 + 2;
                             dsp_vptr->playInfo.posHi = offset * 0xE;
                             dsp_vptr->playInfo.posLo = 0;
                         }
@@ -974,7 +972,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                 dspCmdPtr[4] = (u32)stp->auxA[getAuxFrame];
                 dspCmdPtr += 5;
             }
-            if (*(int*)&stp->type == 0)
+            if (stp->type == 0)
             {
                 if (stp->auxBHandler)
                 {
@@ -1173,7 +1171,7 @@ void salHandleAuxProcessing(void)
                 ((void (*)(int, void*, int))studio->auxAHandler)(0, bufs, (int)studio->auxAUser);
                 DCFlushRangeNoSync((void*)buf, 0x780);
             }
-            if (*(int*)&studio->type == 0 && studio->auxBHandler != NULL)
+            if (studio->type == 0 && studio->auxBHandler != NULL)
             {
                 buf = (int)studio->auxB[(salAuxFrame + 2) % 3];
                 bufs[0] = (void*)buf;
