@@ -3063,8 +3063,8 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
             *(s8*)(p6 + slot * 8) = 1;
         }
         rects = (s16*)(gShaderMapRomBuffers[1] + id * 10);
-        x = x - rects[0];
         z = z - rects[2];
+        x = x - rects[0];
         v = *(u32*)(*(int*)(entry + 0xc) + (x + z * *(s16*)entry) * 4);
         *(s8*)((char*)out + 8) = (v >> 0x11) & 0x3f;
         *(s8*)((char*)out + 9) = (v >> 0x17) & 0xff;
