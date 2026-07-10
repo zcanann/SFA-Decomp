@@ -103,58 +103,43 @@ u16 inpGetTremolo(McmdVoiceState* state)
     return _GetInputValue(state, &state->tremoloInput, state->midiSlot, state->midiEvent);
 }
 
+static inline u32 inpResetGlobalMIDIDirtyFlag(u8 chan, u8 midiSet, u32 flag)
+{
+    u32 ret;
+
+    if ((ret = (flag & ((u32(*)[16])lbl_803D3CA0)[midiSet][chan]) != 0) != 0)
+    {
+        ((u32(*)[16])lbl_803D3CA0)[midiSet][chan] &= ~flag;
+    }
+    return ret;
+}
+
 /*
  * Cached aux A input getter for a studio/channel/slot.
  */
-u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
+u16 inpGetAuxA(u8 studio, u8 index, u8 midi, u8 midiSet)
 {
-    u32 flags;
-    u32 mask;
-    u32 maskedFlags;
-    u32 isDirty;
-    u32* dirtyWord;
+    extern u16 _GetInputValue(McmdVoiceState*, McmdInputSlot*, u8, u8);
 
-    mask = lbl_8032FFE0[channel & 0xff];
-    dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
-    flags = *dirtyWord;
-    maskedFlags = flags & mask;
-    isDirty = !!maskedFlags;
-    if (isDirty != 0)
+    if (!inpResetGlobalMIDIDirtyFlag(midi, midiSet, lbl_8032FFE0[index]))
     {
-        *dirtyWord = flags & ~mask;
+        return lbl_803BDEF4.slots[studio][index].cachedValue;
     }
-    if (isDirty == 0)
-    {
-        return lbl_803BDEF4.slots[studio & 0xff][channel & 0xff].cachedValue;
-    }
-    return _GetInputValue(0, &lbl_803BDEF4.slots[studio & 0xff][channel & 0xff], auxIndex, handleIndex);
+    return _GetInputValue(0, &lbl_803BDEF4.slots[studio][index], midi, midiSet);
 }
 
 /*
  * Cached aux B input getter for a studio/channel/slot.
  */
-u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
+u16 inpGetAuxB(u8 studio, u8 index, u8 midi, u8 midiSet)
 {
-    u32 flags;
-    u32 mask;
-    u32 maskedFlags;
-    u32 isDirty;
-    u32* dirtyWord;
+    extern u16 _GetInputValue(McmdVoiceState*, McmdInputSlot*, u8, u8);
 
-    mask = lbl_8032FFF0[channel & 0xff];
-    dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
-    flags = *dirtyWord;
-    maskedFlags = flags & mask;
-    isDirty = !!maskedFlags;
-    if (isDirty != 0)
+    if (!inpResetGlobalMIDIDirtyFlag(midi, midiSet, lbl_8032FFF0[index]))
     {
-        *dirtyWord = flags & ~mask;
+        return lbl_803BDA74.slots[studio][index].cachedValue;
     }
-    if (isDirty == 0)
-    {
-        return lbl_803BDA74.slots[studio & 0xff][channel & 0xff].cachedValue;
-    }
-    return _GetInputValue(0, &lbl_803BDA74.slots[studio & 0xff][channel & 0xff], auxIndex, handleIndex);
+    return _GetInputValue(0, &lbl_803BDA74.slots[studio][index], midi, midiSet);
 }
 
 static void inpResetGlobalMIDIDirtyFlags(void)
