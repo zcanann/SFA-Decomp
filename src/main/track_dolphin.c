@@ -3140,6 +3140,7 @@ static inline void GXTexCoord2s16(const s16 x, const s16 y)
 }
 
 #pragma peephole on
+#pragma optimization_level 2
 void objDrawFn_80061654(int obj, int placementObj)
 {
     s16* shadowVerts;
@@ -3211,6 +3212,7 @@ void objDrawFn_80061654(int obj, int placementObj)
         }
     }
 }
+#pragma optimization_level reset
 #pragma peephole reset
 
 #pragma opt_lifetimes off
@@ -3495,6 +3497,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
 #pragma opt_strength_reduction reset
 #pragma ppc_unroll_speculative on
 
+#pragma opt_dead_assignments off
 void renderGlows(void)
 {
     f32 px, py, pz;
@@ -3676,6 +3679,7 @@ void renderGlows(void)
         GXSetCurrentMtx(GX_PNMTX0);
     }
 }
+#pragma opt_dead_assignments reset
 
 void gxErrorFn_80060b40(void)
 {
