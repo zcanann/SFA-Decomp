@@ -558,7 +558,6 @@ void expgfx_initSlotQuad(void* slotPtr)
     s16 texS1;
     s16 texS0;
     f32 step;
-
     slot = (ExpgfxSlot*)slotPtr;
     staticData = EXPGFX_STATIC_DATA;
     entry = gExpgfxTableEntries;
@@ -682,14 +681,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     s16 texT0;
     s16 texS1;
     u8* nextBuf;
-    f32* minYPtr;
     ExpgfxSourceObject* srcObj;
+    f32* minYPtr;
     u32 resource;
     s16 texS0;
     s8* scan;
     int batch;
-    int curPool;
     u32* maskPtr;
+    int curPool;
     void* cache;
     u8* curCache;
     u8* curPoolBuf;
@@ -719,7 +718,6 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 playerRange;
     f32 trickyRange;
     f32 attractRatio;
-
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
     attractRatio = lbl_803DF354;
@@ -1056,12 +1054,11 @@ foundFirst:
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) != 0)
                     {
-                        f32 zero = lbl_803DF35C;
-                        if (slot->velocityY * timeDelta + slot->posY.value < zero)
+                        if (slot->velocityY * timeDelta + slot->posY.value < lbl_803DF35C)
                         {
-                            slot->velocityX = zero;
-                            slot->velocityY = zero;
-                            slot->velocityZ = zero;
+                            slot->velocityX = lbl_803DF35C;
+                            slot->velocityY = lbl_803DF35C;
+                            slot->velocityZ = lbl_803DF35C;
                             slot->sourceVecX = 0;
                             slot->sourceVecY = 0;
                             slot->sourceVecZ = 0;
