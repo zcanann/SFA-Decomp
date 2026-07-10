@@ -681,7 +681,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     s16 texT0;
     s16 texS1;
     u8* nextBuf;
-    ExpgfxSourceObject* srcObj;
+    u8 parity;
     f32* minYPtr;
     u32 resource;
     s16 texS0;
@@ -693,7 +693,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     u8* curCache;
     u8* curPoolBuf;
     f32* maxYPtr;
-    u8 parity;
+    ExpgfxSourceObject* srcObj;
     u8 prefetched;
     int ambRPlus1;
     int ambGPlus1;
@@ -712,8 +712,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 prevX;
     f32 prevY;
     f32 prevZ;
-    f32 workA;
     f32 workB;
+    f32 workA;
     f32 camScale;
     f32 playerRange;
     f32 trickyRange;
