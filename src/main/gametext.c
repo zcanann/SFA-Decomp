@@ -423,28 +423,27 @@ static inline MeasGlyph* gameTextFindGlyph(u32 ch, int langIdx)
 #pragma ppc_unroll_speculative on
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH)
 {
-    int lineStarts[32];
-    int params[8];
+    int cursor = 0;
+    int* boundary;
     int langIdx;
     FontSizeEntry* sizeEntry;
-    f32 penX;
-    int lineCount = 0;
     int lineOff = 0;
-    int charLen;
-    int i;
     int* bp;
-    char** buffer;
-    int lineIdx;
-    int charLen2;
-    u32 ch;
-    int* boundary;
-    int cursor = 0;
+    int lineCount = 0;
     int breakPos = 0;
     int haveSpace = 0;
+    int lineIdx;
     char* src;
-    char* dst;
     int charPos;
-
+    char** buffer;
+    char* dst;
+    int lineStarts[32];
+    int params[8];
+    f32 penX;
+    int charLen;
+    int i;
+    int charLen2;
+    u32 ch;
     penX = lbl_803DE704;
     if (gameTextCharset == 2)
     {
