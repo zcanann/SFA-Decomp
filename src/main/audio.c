@@ -2610,8 +2610,7 @@ void Music_Update(void)
     i = 0xf;
     do
     {
-        int st = ch->status;
-        switch (st)
+        switch (ch->status)
         {
         case 1:
         case 3:
@@ -2619,9 +2618,9 @@ void Music_Update(void)
             {
                 if (ch->field_12 == gMusicActivePriority && *(u32*)&ch->pad14[4] < bestActive18)
                 {
-                    if (st != 2)
+                    if (ch->status != 2)
                     {
-                        if (st == 4 || st == 5)
+                        if (ch->status == 4 || ch->status == 5)
                         {
                             ch->status = 5;
                         }
@@ -2634,7 +2633,7 @@ void Music_Update(void)
                 }
                 else if (ch->field_12 > gMusicActivePriority || ch->field_12 > lowPriority || (int)fadeB != 0)
                 {
-                    if (st != 3)
+                    if (ch->status != 3)
                     {
                         sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle,
                                      (u8)(ch->pad11 != 0 ? 0 : 2));
@@ -2643,7 +2642,7 @@ void Music_Update(void)
                 }
                 else
                 {
-                    if (st != 1)
+                    if (ch->status != 1)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
@@ -2657,9 +2656,9 @@ void Music_Update(void)
             {
                 if (ch->field_12 == lowPriority && *(u32*)&ch->pad14[4] < bestLow18)
                 {
-                    if (st != 2)
+                    if (ch->status != 2)
                     {
-                        if (st == 4 || st == 5)
+                        if (ch->status == 4 || ch->status == 5)
                         {
                             ch->status = 5;
                         }
@@ -2672,7 +2671,7 @@ void Music_Update(void)
                 }
                 else if (ch->field_12 > lowPriority || ch->field_12 > gMusicActivePriority || (int)fadeA != 0)
                 {
-                    if (st != 3)
+                    if (ch->status != 3)
                     {
                         sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle,
                                      (u8)(ch->pad11 != 0 ? 0 : 2));
@@ -2681,7 +2680,7 @@ void Music_Update(void)
                 }
                 else
                 {
-                    if (st != 1)
+                    if (ch->status != 1)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
