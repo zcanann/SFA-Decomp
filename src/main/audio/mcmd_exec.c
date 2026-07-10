@@ -1162,7 +1162,8 @@ void macHandleActive(McmdVoiceState* sv)
             }
             if (result != 0)
             {
-                sv->macroCursor = sv->macroBase + ((*para1 >> 0x10) << 3);
+                u16 step = *para1 >> 0x10;
+                sv->macroCursor = (u8*)((McmdCommandArgs*)sv->macroBase + step);
             }
             break;
         }
@@ -1180,7 +1181,8 @@ void macHandleActive(McmdVoiceState* sv)
             }
             if (result != 0)
             {
-                sv->macroCursor = sv->macroBase + ((*para1 >> 0x10) << 3);
+                u16 step = *para1 >> 0x10;
+                sv->macroCursor = (u8*)((McmdCommandArgs*)sv->macroBase + step);
             }
             break;
         }
