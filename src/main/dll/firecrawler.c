@@ -1796,8 +1796,10 @@ void crawler_updateC(s16* obj, u8* state)
                 {
                     dist = lbl_803E2BA0;
                 }
-                ((FCVars*)state)->pathSpeed =
-                    scale * (((lbl_803E2BA0 - dist) / lbl_803E2BA0) * ((BaddieState*)state)->pathStep);
+                {
+                    f32 ratio = (*(f32*)&lbl_803E2BA0 - dist) / *(f32*)&lbl_803E2BA0;
+                    ((FCVars*)state)->pathSpeed = scale * (ratio * ((BaddieState*)state)->pathStep);
+                }
                 if (((FCVars*)state)->pathSpeed < lbl_803E2BBC)
                 {
                     ((FCVars*)state)->pathSpeed = *(f32*)&lbl_803E2BBC;
