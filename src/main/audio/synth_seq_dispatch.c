@@ -49,21 +49,23 @@ typedef struct
 
 typedef struct
 {
-    u32 unk0;      // 0x0
-    u32 entryTime; // 0x4
-    u32 dataPtr;   // 0x8
-    u32 eventPtr;  // 0xc
-    u32 pitchCur;  // 0x10
-    u16 pitchVal;  // 0x14
-    s16 pitchStep; // 0x16
-    u32 pitchTime; // 0x18
-    u32 modCur;    // 0x1c
-    u16 modVal;    // 0x20
-    s16 modStep;   // 0x22
-    u32 modTime;   // 0x24
-    u8 chan;       // 0x28
-    u8 pad29[3];   // 0x29
-} SynthChanRec;    // size 0x2c
+    u32 cur;    // 0x0 -- stream data cursor
+    u16 val;    // 0x4 -- current controller value
+    s16 step;   // 0x6 -- pending value delta
+    u32 time;   // 0x8 -- next event time
+} SeqStream;    // size 0xc
+
+typedef struct
+{
+    u32 unk0;             // 0x0
+    u32 entryTime;        // 0x4
+    u32 dataPtr;          // 0x8
+    u32 eventPtr;         // 0xc
+    SeqStream pitchBend;  // 0x10
+    SeqStream modulation; // 0x1c
+    u8 chan;              // 0x28
+    u8 pad29[3];          // 0x29
+} SynthChanRec;           // size 0x2c
 
 typedef struct
 {
@@ -152,6 +154,52 @@ extern int synthStartSound(u32 sampleId, char key, u32 velocity, u32 flags, u32 
                            u8 section, u16 step, u16 trackid, u8 auxIndex, int keyOffset, u8 studio, u32 studioAux);
 extern int fn_8026CF78(u8 voice);
 
+static inline void seqInitStream(SeqStream* stream, u32 streamDataOffset)
+{
+    u16 delta;
+
+    if (streamDataOffset != 0)
+    {
+        if ((stream->cur = (u32)synthReadVariablePair(
+                 (u8*)(streamDataOffset + (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData), &delta,
+                 &stream->step)) != 0)
+        {
+            stream->time = delta;
+        }
+        else
+        {
+            stream->time = SEQ_TIME_EMPTY;
+        }
+    }
+    else
+    {
+        stream->time = SEQ_TIME_EMPTY;
+    }
+}
+
+static inline u16 seqHandleStream(SeqStream* stream)
+{
+    u16 delta;
+
+    stream->val += stream->step;
+    if (stream->cur != 0)
+    {
+        if ((stream->cur = (u32)synthReadVariablePair((u8*)stream->cur, &delta, &stream->step)) != 0)
+        {
+            stream->time += delta;
+        }
+        else
+        {
+            stream->time = SEQ_TIME_EMPTY;
+        }
+    }
+    else
+    {
+        stream->time = SEQ_TIME_EMPTY;
+    }
+    return stream->val;
+}
+
 /*
  * Dispatch a queued voice/MIDI channel event by type, then pull the next
  * event for the channel.
@@ -159,10 +207,6 @@ extern int fn_8026CF78(u8 voice);
 int fn_8026E0E4(int event, u8 voice, u32* flag)
 {
     SynthMidiCtrlBlock* base = (SynthMidiCtrlBlock*)lbl_803AF550;
-    u16 pbVal2;
-    u16 pbVal1;
-    u16 timeVal2;
-    u16 timeVal;
 
     switch (((SeqEvent*)event)->type)
     {
@@ -174,52 +218,18 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         u8* t = seq + *(u32*)(seq + d->pattern * 4 + *(u32*)(seq + 4));
         u8 trackId = ((SeqEvent*)event)->trackId;
         SynthChanRec* rec = &sv->records[trackId];
-        u8 prog;
 
         rec->dataPtr = (u32)(t + 0xc);
         rec->unk0 = 0;
         rec->entryTime = d->time;
         rec->eventPtr = (u32)d;
-        if (*(u32*)(t + 4) != 0)
-        {
-            if ((rec->pitchCur = (u32)synthReadVariablePair(
-                     (u8*)(*(u32*)(t + 4) + (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData), &timeVal2,
-                     &rec->pitchStep)) != 0)
-            {
-                rec->pitchTime = timeVal2;
-            }
-            else
-            {
-                rec->pitchTime = SEQ_TIME_EMPTY;
-            }
-        }
-        else
-        {
-            rec->pitchTime = SEQ_TIME_EMPTY;
-        }
-        rec->pitchVal = 0x2000;
-        if (*(u32*)(t + 8) != 0)
-        {
-            if ((rec->modCur = (u32)synthReadVariablePair(
-                     (u8*)(*(u32*)(t + 8) + (u32)((SynthMidiState*)gSynthCurrentVoice)->seqData), &timeVal,
-                     &rec->modStep)) != 0)
-            {
-                rec->modTime = timeVal;
-            }
-            else
-            {
-                rec->modTime = SEQ_TIME_EMPTY;
-            }
-        }
-        else
-        {
-            rec->modTime = SEQ_TIME_EMPTY;
-        }
-        rec->modVal = 0;
+        seqInitStream(&rec->pitchBend, *(u32*)(t + 4));
+        rec->pitchBend.val = 0x2000;
+        seqInitStream(&rec->modulation, *(u32*)(t + 8));
+        rec->modulation.val = 0;
         rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + trackId +
                            *(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8));
-        prog = d->prgChange;
-        if (prog != 0xff)
+        if (d->prgChange != 0xff)
         {
             SynthMidiState* sv2 = (SynthMidiState*)gSynthCurrentVoice;
             u8 chan = rec->chan;
@@ -228,7 +238,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = 0xFFFF;
             if (chan != 9)
             {
-                idx = sv2->progs[prog];
+                idx = sv2->progs[d->prgChange];
                 if (idx != 0xff)
                 {
                     sv2->chanPatch[chan].macroId = sv2->patchTable[idx].macroId;
@@ -238,7 +248,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             }
             else
             {
-                idx = sv2->drumProgs[prog];
+                idx = sv2->drumProgs[d->prgChange];
                 if (idx != 0xff)
                 {
                     sv2->chanPatch[chan].macroId = sv2->drumTable[idx].macroId;
@@ -430,46 +440,16 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
     {
         SynthChanRec* t = (SynthChanRec*)((SeqEvent*)event)->chanRec;
 
-        t->pitchVal += t->pitchStep;
-        if ((u8*)t->pitchCur != NULL)
-        {
-            if ((t->pitchCur = (u32)synthReadVariablePair((u8*)t->pitchCur, &pbVal2, &t->pitchStep)) != 0)
-            {
-                t->pitchTime += pbVal2;
-            }
-            else
-            {
-                t->pitchTime = SEQ_TIME_EMPTY;
-            }
-        }
-        else
-        {
-            t->pitchTime = SEQ_TIME_EMPTY;
-        }
-        inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->pitchVal);
+        inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, t->chan, gSynthCurrentVoiceSlotIndex & 0xff,
+                         seqHandleStream(&t->pitchBend));
         break;
     }
     case 1:
     {
         SynthChanRec* t = (SynthChanRec*)((SeqEvent*)event)->chanRec;
 
-        t->modVal += t->modStep;
-        if ((u8*)t->modCur != NULL)
-        {
-            if ((t->modCur = (u32)synthReadVariablePair((u8*)t->modCur, &pbVal1, &t->modStep)) != 0)
-            {
-                t->modTime += pbVal1;
-            }
-            else
-            {
-                t->modTime = SEQ_TIME_EMPTY;
-            }
-        }
-        else
-        {
-            t->modTime = SEQ_TIME_EMPTY;
-        }
-        inpSetMidiCtrl14(MCMD_CTRL_MODULATION, t->chan, gSynthCurrentVoiceSlotIndex & 0xff, t->modVal);
+        inpSetMidiCtrl14(MCMD_CTRL_MODULATION, t->chan, gSynthCurrentVoiceSlotIndex & 0xff,
+                         seqHandleStream(&t->modulation));
         break;
     }
     case 3:
@@ -546,6 +526,23 @@ void fn_8026E90C(u8 voice)
     }
 }
 
+static inline u32 seqGetNextEventTime(SeqQueue* section)
+{
+    return section->eventList == NULL ? 0 : section->eventList->time;
+}
+
+static inline SeqEvent* seqGetGlobalEvent(SeqQueue* section)
+{
+    SeqEvent* ev;
+
+    ev = section->eventList;
+    if (ev != NULL && (section->eventList = (SeqEvent*)ev->next) != NULL)
+    {
+        section->eventList->prev = NULL;
+    }
+    return ev;
+}
+
 #pragma fp_contract off
 static inline f32 seq_fmod(f32 x, f32 y)
 {
@@ -580,13 +577,9 @@ int fn_8026E9D0(u8 voice, u32 param)
     k80 = lbl_803E7780;
     k84 = lbl_803E7784;
     vp = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-    while (((event = (u8*)vp->eventList) == NULL ? 0 : ((SeqEvent*)event)->time) <= vp->time[vp->timeIndex].high)
+    while (seqGetNextEventTime(vp) <= vp->time[vp->timeIndex].high)
     {
-        if (event != NULL && (vp->eventList = (SeqEvent*)((SeqEvent*)event)->next) != NULL)
-        {
-            vp->eventList->prev = NULL;
-        }
-        if (event == NULL)
+        if ((event = (u8*)seqGetGlobalEvent(vp)) == NULL)
         {
             if (flag == 0)
             {
