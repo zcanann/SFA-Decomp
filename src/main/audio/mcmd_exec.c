@@ -557,8 +557,8 @@ void macHandleActive(McmdVoiceState* sv)
     }
 
     lbl_803DE2D0 = 0;
-    dlsScaleMax = lbl_803E7810;
     one = lbl_803E7814;
+    dlsScaleMax = lbl_803E7810;
     para1 = &lbl_803DE2E8.value;
 
     do
@@ -1033,7 +1033,7 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         case 0x39: /* set age counter by volume */
         {
-            u32 age = ((s32)((*para1 & 0xffff) * ((sv->volume >> 0x10) & 0xff)) >> 7) + (cmd >> 0x10);
+            u32 age = (cmd >> 0x10) + ((s32)((*para1 & 0xffff) * ((sv->volume >> 0x10) & 0xff)) >> 7);
             sv->priorityValue = age > 60000 ? 0x75300000 : age << 0xf;
             hwSetPriority(sv->voiceHandle & 0xff, ((u32)sv->priorityGroup << 0x18) | (sv->priorityValue >> 0xf));
             break;
