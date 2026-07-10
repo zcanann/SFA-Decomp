@@ -599,7 +599,6 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     *(u32*)&((KTRexArenaState*)gKTRexState)->phaseFlags |= 0x100000LL;
 }
 
-#pragma opt_lifetimes off
 void ktrex_update(int obj)
 {
     void* runtime;
@@ -607,11 +606,11 @@ void ktrex_update(int obj)
     f32 d[3];
     f32* dp;
     u32 tmp;
-    s16* bitA;
     int zc[1];
     u8 zm[1];
+    s16* bitA;
     s16* bitB;
-    u8 flags;
+    int flags;
     int mm;
     int phase;
     f32 dx, dz, frac;
@@ -635,14 +634,15 @@ void ktrex_update(int obj)
     {
         player = ((KTRexRuntime*)runtime)->playerObj;
         dp = d;
-        dp[0] = ((GameObject*)player)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        dp[1] = ((GameObject*)player)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        dp[2] = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        for (zc[0] = 0; zc[0] < 3; zc[0]++)
+        {
+            dp[zc[0]] = (&((GameObject*)player)->anim.worldPosX)[zc[0]] - (&((GameObject*)obj)->anim.worldPosX)[zc[0]];
+        }
         ((KTRexRuntime*)runtime)->playerDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
-    zc[0] = 0;
-    zm[0] = zc[0];
+    zm[0] = 0;
+    zc[0] = zm[0];
     bitA = lbl_803DC290;
     for (; zc[0] < 4; zc[0]++)
     {
@@ -675,10 +675,10 @@ void ktrex_update(int obj)
         tmp = lbl_803E67B0;
         st->currentLaneMask = ((u8*)&tmp)[(t >> 1) & 3];
     }
-    flags = ((KTRexArenaState*)gKTRexState)->currentLaneMask;
-    zc[0] = 0;
-    zm[0] = zc[0];
+    zm[0] = 0;
+    zc[0] = zm[0];
     bitB = lbl_803DC298;
+    flags = ((KTRexArenaState*)gKTRexState)->currentLaneMask;
     for (; zc[0] < 4; zc[0]++)
     {
         mm = 1 << zc[0];
@@ -700,7 +700,6 @@ void ktrex_update(int obj)
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     ((GameObject*)obj)->anim.localPosY = ((KTRexArenaState*)gKTRexState)->posY;
 }
-#pragma opt_lifetimes reset
 
 int ktrex_stateHandlerB05(int obj, int runtime)
 {

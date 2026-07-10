@@ -1200,7 +1200,20 @@ void fn_802BB4B4(int obj, int frameStep, int slot)
     fn_802BB998(obj, (int)state, (int)state);
 }
 
-#pragma opt_lifetimes off
+static inline s16 DIMSnowHorn1_angleTo(int obj, char* found)
+{
+    s16 angleDelta = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
+    if (angleDelta > 0x8000)
+    {
+        angleDelta = angleDelta - 0xffff;
+    }
+    if (angleDelta < -0x8000)
+    {
+        angleDelta = angleDelta + 0xffff;
+    }
+    return angleDelta;
+}
+
 void DIMSnowHorn1_update(int obj)
 {
     f32 nearDist;
@@ -1318,15 +1331,7 @@ void DIMSnowHorn1_update(int obj)
                     (*gMapEventInterface)->restartPoint((void*)(player + 0xc), 0x584, layer, 0);
                     buttonDisable(0, PAD_BUTTON_A);
                     mainSetBits(GAMEBIT_SNOWHORN_RIDING, 1);
-                    angleDelta = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
-                    if (angleDelta > 0x8000)
-                    {
-                        angleDelta = angleDelta - 0xffff;
-                    }
-                    if (angleDelta < -0x8000)
-                    {
-                        angleDelta = angleDelta + 0xffff;
-                    }
+                    angleDelta = DIMSnowHorn1_angleTo(obj, found);
                     if (angleDelta > 0x4000 || angleDelta < -0x4000)
                     {
                         mainSetBits(GAMEBIT_NW_ClimbOnSnowHorn, 1);
@@ -1364,15 +1369,7 @@ void DIMSnowHorn1_update(int obj)
                         modeIndex = 2;
                         break;
                     }
-                    angleDelta = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
-                    if (angleDelta > 0x8000)
-                    {
-                        angleDelta = angleDelta - 0xffff;
-                    }
-                    if (angleDelta < -0x8000)
-                    {
-                        angleDelta = angleDelta + 0xffff;
-                    }
+                    angleDelta = DIMSnowHorn1_angleTo(obj, found);
                     if (modeIndex >= 0)
                     {
                         SnowHornEntry* tbl = (SnowHornEntry*)base;
@@ -1423,7 +1420,6 @@ void DIMSnowHorn1_update(int obj)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
 }
-#pragma opt_lifetimes reset
 
 #pragma opt_propagation off
 void DIMSnowHorn1_release(void)
