@@ -215,9 +215,10 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         SeqTrackEntry* d = (SeqTrackEntry*)((SeqEvent*)event)->data;
         SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
         u8* seq = sv->seqData;
-        u8* t = seq + *(u32*)(seq + d->pattern * 4 + *(u32*)(seq + 4));
-        u8 trackId = ((SeqEvent*)event)->trackId;
-        SynthChanRec* rec = &sv->records[trackId];
+        u32* pTab = (u32*)(seq + *(u32*)(seq + 4));
+        u8* t = seq + pTab[d->pattern];
+        SynthChanRec* rec = &sv->records[((SeqEvent*)event)->trackId];
+        u8 prog;
 
         rec->dataPtr = (u32)(t + 0xc);
         rec->unk0 = 0;
@@ -227,9 +228,10 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         rec->pitchBend.val = 0x2000;
         seqInitStream(&rec->modulation, *(u32*)(t + 8));
         rec->modulation.val = 0;
-        rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + trackId +
+        rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + ((SeqEvent*)event)->trackId +
                            *(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8));
-        if (d->prgChange != 0xff)
+        prog = d->prgChange;
+        if (prog != 0xff)
         {
             SynthMidiState* sv2 = (SynthMidiState*)gSynthCurrentVoice;
             u8 chan = rec->chan;
@@ -238,7 +240,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = 0xFFFF;
             if (chan != 9)
             {
-                idx = sv2->progs[d->prgChange];
+                idx = sv2->progs[prog];
                 if (idx != 0xff)
                 {
                     sv2->chanPatch[chan].macroId = sv2->patchTable[idx].macroId;
@@ -248,7 +250,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             }
             else
             {
-                idx = sv2->drumProgs[d->prgChange];
+                idx = sv2->drumProgs[prog];
                 if (idx != 0xff)
                 {
                     sv2->chanPatch[chan].macroId = sv2->drumTable[idx].macroId;
