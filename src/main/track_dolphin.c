@@ -3504,6 +3504,7 @@ void renderGlows(void)
     f32 sunMtx[12];
     f32 dir[3];
     f32 cam[3];
+    void* viewMtx;
     int alpha;
     u8 sky;
     f32 sunDot;
@@ -3526,7 +3527,7 @@ void renderGlows(void)
     sky = skyFn_8008919c(2);
     if (sky != 0 && (renderFlags & 0x40))
     {
-        void* viewMtx = Camera_GetViewMatrix();
+        viewMtx = Camera_GetViewMatrix();
         fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
         cam[0] = *(f32*)((char*)viewMtx + 0x20);
         cam[1] = *(f32*)((char*)viewMtx + 0x24);
