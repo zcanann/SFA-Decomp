@@ -2491,10 +2491,10 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
 {
     extern f32 gMapSavedPlayerOffsetX;
     extern f32 gMapSavedPlayerOffsetZ;
-    u8* mtx;
     int off[2];
     u8* prevSphere;
     int i;
+    u8* mtx;
     u8* hitReact;
     u8* samples;
     u8* src;
