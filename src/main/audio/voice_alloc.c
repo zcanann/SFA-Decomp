@@ -52,6 +52,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
     s32 num;
     s32 voice;
     SynthVoiceListNode* sfv;
+    SynthVoiceListNode* fl;
     VidListTables* vb = (VidListTables*)vidListNodes;
 
     if (!synthIdleWaitActive)
@@ -185,9 +186,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             goto _fail;
         }
 
-        sfv = vb->freeList + voice;
-        if (sfv->user == 1)
+        fl = (SynthVoiceListNode*)((u8*)vb + voice * 4);
+        if (fl[944].user == 1)
         {
+            sfv = (SynthVoiceListNode*)((u8*)fl + 3776);
             i = sfv->prev;
 
             if (i != 0xff)
