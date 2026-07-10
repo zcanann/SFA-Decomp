@@ -431,21 +431,20 @@ void expgfxRemoveAll(void)
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId)
 {
     u32 currentMask;
-    s8* poolActiveCounts;
-    int searchIndex;
+    u32* activeMaskPtr;
+    int chosenPool;
     s16* poolSlotTypeIds;
     u32* sourceIdWalk;
     s8* activeCountWalk;
     u32 activeBit;
     ExpgfxRuntimeDataLayout* runtime;
-    u32* activeMaskPtr;
-    short foundPool;
     short foundPoolIndex;
+    short foundPool;
+    s8* poolActiveCounts;
     int slotIndex;
     int batchGroup;
     int batchSlot;
-    int chosenPool;
-
+    int searchIndex;
     runtime = EXPGFX_RUNTIME_DATA;
     foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
     foundPool = 0;
@@ -1814,7 +1813,6 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
     int poolIndex;
     u8* poolFrameFlags;
     u32 bit;
-
     result = EXPGFX_SOURCE_FRAME_STATE_NONE;
     lbl_803DD253 = 0;
     poolIndex = 0;
