@@ -665,8 +665,10 @@ void andross_update(int obj)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
-        if ((u16)(val = ((AndrossState*)state)->hitsRemaining0, val += ((AndrossState*)state)->hitsRemaining1,
-                  val + ((AndrossState*)state)->hitsRemaining2) == 0)
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
+        if ((val & 0xffff) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -699,8 +701,10 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 2;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u16)(val = ((AndrossState*)state)->hitsRemaining0, val += ((AndrossState*)state)->hitsRemaining1,
-                  val + ((AndrossState*)state)->hitsRemaining2) == 0)
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
+        if ((val & 0xffff) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -743,8 +747,10 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 3;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u16)(val = ((AndrossState*)state)->hitsRemaining0, val += ((AndrossState*)state)->hitsRemaining1,
-                  val + ((AndrossState*)state)->hitsRemaining2) == 0)
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
+        if ((val & 0xffff) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -805,8 +811,10 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionPending = 1;
             mainSetBits(0xd, 0);
         }
-        if ((u16)(val = ((AndrossState*)state)->hitsRemaining0, val += ((AndrossState*)state)->hitsRemaining1,
-                  val + ((AndrossState*)state)->hitsRemaining2) == 0)
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
+        if ((val & 0xffff) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -1817,14 +1825,14 @@ void andross_update(int obj)
         }
         break;
     case 5:
-        ref = *(int*)(((AndrossState*)state)->handObjA + 0xb8);
-        found = *(int*)(((AndrossState*)state)->handObjB + 0xb8);
+        work = *(int*)(((AndrossState*)state)->handObjA + 0xb8);
+        ref = *(int*)(((AndrossState*)state)->handObjB + 0xb8);
         if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
-            work = *(int*)&((GameObject*)obj)->extra;
+            found = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x16, lbl_803E74D4, 0);
-            *(f32*)(work + 100) = lbl_8032C098[22];
+            *(f32*)(found + 100) = lbl_8032C098[22];
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 0;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 0;
         }
@@ -1854,8 +1862,8 @@ void andross_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_and_laugh);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 1;
         }
-        bval = *(char*)&((AndrossState*)ref)->handState;
-        if ((((bval != 2) && (bval != 1)) && (bval = *(char*)&((AndrossState*)found)->handState, bval != 2)) &&
+        bval = *(char*)&((AndrossState*)work)->handState;
+        if ((((bval != 2) && (bval != 1)) && (bval = *(char*)&((AndrossState*)ref)->handState, bval != 2)) &&
             (bval != 1))
         {
             if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
