@@ -3855,26 +3855,11 @@ void cMenuSelectFirstEnabledItem(int idx, s8 flag)
 
 /* Frees all cached HUD/item textures and
  * resets the item slot tables. */
-#pragma opt_propagation off
-void GameUI_release(void)
+static void gameUiClearItemSlots(GameUiHud* g)
 {
-    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
-    void** p;
-    int i;
     u8 j;
     s16* rowS16;
     u8* rowU8;
-
-    for (i = 0, p = g->hudTextures; i < 102; p++, i++)
-    {
-        if (*p != 0)
-            textureFree(*p);
-    }
-
-    gameUiResetMenuState();
-
-    /* Retail clears the 64-slot item table twice: once around gameUiResetMenuState
-     * and again after the icon-cache teardown below (both loops are in the asm). */
     for (j = 0; j < 64; j++)
     {
         void** tex;
@@ -3890,6 +3875,26 @@ void GameUI_release(void)
         rowU8 = (u8*)g + k;
         rowU8[1096] = 1;
     }
+}
+
+#pragma opt_propagation off
+void GameUI_release(void)
+{
+    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
+    int i;
+    void** p;
+
+    for (i = 0, p = g->hudTextures; i < 102; p++, i++)
+    {
+        if (*p != 0)
+            textureFree(*p);
+    }
+
+    gameUiResetMenuState();
+
+    /* Retail clears the 64-slot item table twice: once around gameUiResetMenuState
+     * and again after the icon-cache teardown below (both loops are in the asm). */
+    gameUiClearItemSlots(g);
 
     if (lbl_803DD7C8 != 0)
     {
@@ -3903,21 +3908,7 @@ void GameUI_release(void)
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = 0;
 
-    for (j = 0; j < 64; j++)
-    {
-        void** tex;
-        int k = j;
-        tex = (void**)((u8*)&g->itemTextures + k * 4);
-        if (*tex != NULL)
-        {
-            textureFree(*tex);
-            *tex = NULL;
-        }
-        rowS16 = (s16*)((u8*)g + k * 2);
-        rowS16[1188] = -1;
-        rowU8 = (u8*)g + k;
-        rowU8[1096] = 1;
-    }
+    gameUiClearItemSlots(g);
 
     textureFree(gGameUiBlinkTexture);
 }
