@@ -2299,7 +2299,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.initialAlpha = randomGetRange(0x96, 0xfa);
         break;
     case 0x73:
-        cfg.scale = lbl_803DF61C * (f32)(s32)randomGetRange(4, 5) * lbl_803DF530;
+        cfg.scale = lbl_803DF61C * (f32)(s32)randomGetRange(4, 5);
+        cfg.scale *= lbl_803DF530;
         cfg.lifetimeFrames = randomGetRange(0x1e, 0x28);
         cfg.behaviorFlags = 0x0;
         cfg.renderFlags = 2;
