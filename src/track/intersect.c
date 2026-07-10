@@ -151,7 +151,6 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     u8 i;
     int sfx;
     u8 vecIdx;
-    u8 j;
     u8 cnt;
     f32* vec;
     int n;
@@ -193,7 +192,6 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         break;
     }
     flags = 0;
-    i = 0;
     for (i = 0; i < hits[0x1b]; i++)
     {
         switch (hits[0x13 + i])
@@ -251,7 +249,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         vec = vecs + vecIdx * 3;
         if (((BaddieState*)st)->waterDepth > Vachuff_803DEE20)
         {
-            (*(void (**)(u8*, int, f32*, u8*))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st);
+            (*(void (**)(u8*, int, f32*, u8*, f32))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st, unused);
             sfx = 5;
         }
         if (obj == Obj_GetPlayerObject())
@@ -272,11 +270,11 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     {
         return;
     }
-    j = 0;
+    i = 0;
     scale = __THPHuffmanBits_803DEE24 * scale;
     while (flags != 0)
     {
-        vec = vecs + j * 3;
+        vec = vecs + i * 3;
         v.x = vec[0];
         v.y = vec[1];
         v.z = vec[2];
@@ -284,7 +282,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         {
             if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x416)
             {
-                playerEarthWalkerAudioFn_8006f950(obj, (f32*)&v, j & 1, sfx);
+                playerEarthWalkerAudioFn_8006f950(obj, (f32*)&v, i & 1, sfx);
             }
             ps.pos.x = vec[0];
             ps.pos.y = vec[1];
@@ -316,7 +314,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
             }
         }
         flags = flags >> 1;
-        j++;
+        i++;
     }
 }
 
