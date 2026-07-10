@@ -936,7 +936,7 @@ void macHandleActive(McmdVoiceState* sv)
             u8* macro = dataGetMacro(cmd >> 0x10);
             if (macro != 0)
             {
-                u32 t = (lbl_803DE2E8.value >> 8) & 0xff;
+                u32 t = (lbl_803DE2E8.flags >> 8) & 0xff;
                 sv->trapMacroBase[t] = macro;
                 sv->trapMacroCursor[t] = macro + ((lbl_803DE2E8.value & 0xffff) << 3);
                 sv->hasTriggerMacros = 1;
