@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-/* MusyX synthdata.c — see src/main/audio/data_tables.c */
+/* MusyX synthdata.c - see src/main/audio/data_tables.c */
 
 s32 dataInsertLayer(u16 cid, void *layerdata, u16 size);
 s32 dataRemoveLayer(u16 sid);

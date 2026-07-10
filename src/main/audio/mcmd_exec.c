@@ -644,11 +644,10 @@ void macHandleActive(McmdVoiceState* sv)
         {
             u32 voiceid;
             u32 i;
-            u32 hi;
+            u16 hi;
             hi = cmd >> 0x10;
-            hi <<= 0x10;
             voiceid = (sv->keyBase + ((cmd >> 8) & 0xff)) << 8;
-            voiceid |= hi;
+            voiceid |= hi << 0x10;
             for (i = 0; i < lbl_803BD150[0x210]; i++)
             {
                 if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
@@ -751,16 +750,13 @@ void macHandleActive(McmdVoiceState* sv)
             McmdDlsAdsrInfo adsr;
             sScale = voiceAdsrSustainTable[(u16)inpGetMidiCtrl(cmd >> 0x18, sv->midiSlot, sv->midiEvent) >> 7];
             adsr.atime =
-                ((MacDataTables*)lbl_8032EDD0)
-                    ->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff, sv->midiSlot, sv->midiEvent) >>
+                ((MacDataTables*)lbl_8032EDD0)->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff, sv->midiSlot, sv->midiEvent) >>
                                    7];
-            adsr.dtime = ((MacDataTables*)lbl_8032EDD0)
-                             ->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff, sv->midiSlot,
+            adsr.dtime = ((MacDataTables*)lbl_8032EDD0)->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff, sv->midiSlot,
                                                                 sv->midiEvent) >>
                                             7];
             adsr.slevel = 0xc1 - voiceAdsrDecayTable[(u32)(dlsScaleMax * sScale)];
-            adsr.rtime = ((MacDataTables*)lbl_8032EDD0)
-                             ->midi2TimeTab[(u16)inpGetMidiCtrl((u8)*para1, sv->midiSlot, sv->midiEvent) >> 7];
+            adsr.rtime = ((MacDataTables*)lbl_8032EDD0)->midi2TimeTab[(u16)inpGetMidiCtrl((u8)*para1, sv->midiSlot, sv->midiEvent) >> 7];
             adsr.ascale = 0x80000000;
             adsr.dscale = 0x80000000;
             hwSetADSR(sv->voiceHandle & 0xff, &adsr, 2);
