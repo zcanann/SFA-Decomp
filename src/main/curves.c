@@ -130,6 +130,7 @@ void Curve_BuildSegmentLengthTable(Curve* curve, int count)
 }
 #pragma dont_inline reset
 
+#pragma opt_lifetimes off
 int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
 {
     int seg, savedIdx;
@@ -292,6 +293,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
     }
     return 0;
 }
+#pragma opt_lifetimes reset
 
 void curvesSetupMoveNetworkCurve(Curve* curve)
 {
