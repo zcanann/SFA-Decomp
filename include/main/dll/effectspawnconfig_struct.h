@@ -47,28 +47,38 @@ typedef struct EffectSpawnConfig {
         f32 srcZ;
     };
     union {
-        f32 velocityX;
-        f32 velX;
+        struct {
+            union {
+                f32 velocityX;
+                f32 velX;
+            };
+            union {
+                f32 velocityY;
+                f32 velY;
+            };
+            union {
+                f32 velocityZ;
+                f32 velZ;
+            };
+        };
+        f32 velocity[3];
     };
     union {
-        f32 velocityY;
-        f32 velY;
-    };
-    union {
-        f32 velocityZ;
-        f32 velZ;
-    };
-    union {
-        f32 startPosX;
-        f32 posX;
-    };
-    union {
-        f32 startPosY;
-        f32 posY;
-    };
-    union {
-        f32 startPosZ;
-        f32 posZ;
+        struct {
+            union {
+                f32 startPosX;
+                f32 posX;
+            };
+            union {
+                f32 startPosY;
+                f32 posY;
+            };
+            union {
+                f32 startPosZ;
+                f32 posZ;
+            };
+        };
+        f32 startPos[3];
     };
     f32 scale;
     union {
