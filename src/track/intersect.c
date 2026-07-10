@@ -256,25 +256,30 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
 void timeFn_8006f400(f32 step)
 {
     int i;
+    u8* a;
+    u8* b;
+    u8 value;
     extern u8 gWaterSplashQuads[];
     extern u8 gWaterRipples[];
     extern f32 Vachuff_803DEE20;
 
     for (i = 0; i < 256; i++) {
-        u8* a = &gWaterSplashQuads[i * 0x38];
-        u8* b = &gWaterRipples[i * 0x10];
-        if (a[0x33] != 0) {
-            if ((f32)(u32)a[0x33] - step <= Vachuff_803DEE20) {
+        a = &gWaterSplashQuads[i * 0x38];
+        b = &gWaterRipples[i * 0x10];
+        value = a[0x33];
+        if (value != 0) {
+            if ((f32)(u32)value - step <= Vachuff_803DEE20) {
                 a[0x33] = 0;
             } else {
-                a[0x33] = (f32)(u32)a[0x33] - step;
+                a[0x33] = (f32)(u32)value - step;
             }
         }
-        if (b[0x0E] != 0) {
-            if ((f32)(u32)b[0x0E] - step <= Vachuff_803DEE20) {
+        value = b[0x0E];
+        if (value != 0) {
+            if ((f32)(u32)value - step <= Vachuff_803DEE20) {
                 b[0x0E] = 0;
             } else {
-                b[0x0E] = (f32)(u32)b[0x0E] - step;
+                b[0x0E] = (f32)(u32)value - step;
             }
         }
     }
