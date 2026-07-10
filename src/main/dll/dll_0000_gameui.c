@@ -1907,11 +1907,21 @@ void cMenuRun(void)
     gCMenuCloseSfx = 0;
 
     {
-        CMenuSection* sec = &gCMenuSections[gCMenuCurSection];
-        int handle = (int)sec->items;
+        register int rawSection;
+        register int section;
+        register int offset;
+        CMenuSection* sec;
+        int handle;
+        rawSection = gCMenuCurSection;
+        section = (s8)rawSection;
+        asm {
+            slwi offset, section, 4
+        }
+        sec = (CMenuSection*)((u8*)gCMenuSections + offset);
+        handle = (int)sec->items;
         cursor = &sec->cursor;
         flags = sec->flags;
-        if (gCMenuCurSection == 2)
+        if (section == 2)
         {
             isTricky = 1;
         }
