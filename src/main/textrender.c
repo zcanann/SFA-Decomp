@@ -1754,7 +1754,7 @@ void gameTextLoadTaskText(int taskId)
         gGameTextPendingDir = (void*)dirId;
         if (dirId == 0x29)
         {
-            loadGameTextSequence();
+            loadGameTextSequence(dirId, textId);
             gGameTextSequenceMode = 1;
         }
         else
