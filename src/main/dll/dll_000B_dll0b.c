@@ -781,7 +781,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     {
         int k;
         int off;
-        for (off = k = 0; k < 3; k++, off += 4)
+        for (off = k = 0; k < 3; off += 4, k++)
         {
             u8* q = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot];
             int idx = off + 0x84;
@@ -821,7 +821,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     {
         int k;
         int off;
-        for (off = k = 0; k < 3; k++, off += 4)
+        for (off = k = 0; k < 3; off += 4, k++)
         {
             u8* q = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot];
             int idx = off + 0x78;
@@ -872,13 +872,13 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[5] = st->sequenceParams[5];
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[6] = st->sequenceParams[6];
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands =
-        (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->inlineData + base0 + 0x100;
+        (u8*)(base0 + (int)((PartfxEffectState**)gPartfxActiveEffects)[slot]->inlineData) + 0x100;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->auxSequenceBuffer = NULL;
     if (total != 0)
     {
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->auxSequenceBuffer =
             (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands +
-            ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount * 0x18;
+            st->pendingSpawnCount * 0x18;
     }
 
     {
