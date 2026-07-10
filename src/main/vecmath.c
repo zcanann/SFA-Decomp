@@ -303,6 +303,8 @@ f32 Vec3_Normalize(f32* v)
 }
 
 #pragma fp_contract off
+#pragma opt_lifetimes off
+#pragma opt_dead_assignments off
 void mtxRotateByVec3s(f32* mtx, void* transform)
 {
     f32 cx;
@@ -376,6 +378,8 @@ void mtxRotateByVec3s(f32* mtx, void* transform)
     mtx[14] = t;
     mtx[15] = lbl_803DE7C4;
 }
+#pragma opt_dead_assignments reset
+#pragma opt_lifetimes reset
 
 #pragma fp_contract on
 void mtx44_mult(f32* a, f32* b, f32* out)
