@@ -575,8 +575,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         *dst++ = 0;
     }
 
-    buffer[0] = (char*)buffer + lineOff;
-    dst = buffer[0];
+    dst = buffer[0] = (char*)buffer + lineOff;
     lineIdx = 0;
     charPos = 0;
     src = str;
@@ -589,32 +588,36 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             for (;;)
             {
                 int k = 6;
-                do
+            retry:
+                ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
+                if (k == charLen2)
                 {
-                    ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
-                    if (k == charLen2)
+                    if (isSpace(ch))
                     {
-                        if (!isSpace(ch))
+                        int j = charLen2;
+                        while (j-- != 0)
                         {
-                            goto foundBreak;
+                            *--dst = 0;
                         }
-                        {
-                            int j = charLen2;
-                            while (j-- != 0)
-                            {
-                                *--dst = 0;
-                            }
-                        }
+                    }
+                    else
+                    {
+                        q[1] = q[0];
+                        q[0] = 0;
+                        dst = q + 1;
+                        *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst++;
                         break;
                     }
+                }
+                else
+                {
                     k--;
-                } while (k > 0);
+                    if (k > 0)
+                    {
+                        goto retry;
+                    }
+                }
             }
-        foundBreak:
-            q[1] = q[0];
-            q[0] = 0;
-            dst = q + 1;
-            *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst++;
             boundary++;
             lineIdx++;
         }
