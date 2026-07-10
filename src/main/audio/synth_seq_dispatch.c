@@ -215,8 +215,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         SeqTrackEntry* d = (SeqTrackEntry*)((SeqEvent*)event)->data;
         SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
         u8* seq = sv->seqData;
-        u32* pTab = (u32*)(seq + *(u32*)(seq + 4));
-        u8* t = seq + pTab[d->pattern];
+        u8* t = seq + *(u32*)(seq + d->pattern * 4 + *(u32*)(seq + 4));
         u8 trackId = ((SeqEvent*)event)->trackId;
         SynthChanRec* rec = &sv->records[trackId];
         u8 prog;
