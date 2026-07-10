@@ -5876,6 +5876,7 @@ void fn_8007CAF4(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
+#pragma opt_common_subs off
 void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
@@ -5928,8 +5929,8 @@ void gxTextureSetupFn_8007cf7c(void)
     PSMTXScale(mtx_9c, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
     PSMTXRotRad(mtx_6c, 'z', lbl_803DEEF0);
     PSMTXConcat(mtx_6c, mtx_9c, mtx_9c);
+    mtx_9c[0][3] = fB;
     mtx_9c[1][3] = fB;
-    mtx_9c[2][3] = fB;
     GXLoadTexMtxImm(mtx_9c, GX_TEXMTX4, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX4, GX_FALSE, GX_PTIDENTITY);
 
@@ -5954,12 +5955,15 @@ void gxTextureSetupFn_8007cf7c(void)
     else
     {
         u8 ignoredLightColor;
+        u8* p1;
+        u8* p2;
         (*gSkyInterface)
-            ->getCurrentAmbientAndLightColors((u8*)&lbl_803DB67C, (u8*)&lbl_803DB67C + 1, (u8*)&lbl_803DB67C + 2,
-                                              &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
+            ->getCurrentAmbientAndLightColors((u8*)&lbl_803DB67C, p1 = (u8*)&lbl_803DB67C + 1,
+                                              p2 = (u8*)&lbl_803DB67C + 2, &ignoredLightColor, &ignoredLightColor,
+                                              &ignoredLightColor);
         ((u8*)&lbl_803DB67C)[0] = (u8)(((u8*)&lbl_803DB67C)[0] >> 3);
-        ((u8*)&lbl_803DB67C)[1] = (u8)(((u8*)&lbl_803DB67C)[1] >> 3);
-        ((u8*)&lbl_803DB67C)[2] = (u8)(((u8*)&lbl_803DB67C)[2] >> 3);
+        *p1 = (u8)(*p1 >> 3);
+        *p2 = (u8)(*p2 >> 3);
         ((u8*)&lbl_803DB67C)[3] = lbl_803DB678;
     }
     temp = *(GXColor*)&lbl_803DB67C;
@@ -6037,6 +6041,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
+#pragma opt_common_subs reset
 void fn_8007D670(void)
 {
     f32* base = (f32*)&lbl_803967C0;
