@@ -2752,14 +2752,14 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                 expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
                 return EXPGFX_INVALID_POOL_INDEX;
             }
+            resourceHandle->refCount++;
+            resourceHandle->linkGroup = config->linkGroup;
         }
         else
         {
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
-        resourceHandle->refCount++;
-        resourceHandle->linkGroup = config->linkGroup;
 
         behaviorFlags = slot->behaviorFlags;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0)
