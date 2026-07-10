@@ -140,6 +140,23 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)AppleOnTree_update + 0x71C),
 };
 
+static inline void appleontree_markFallen(int obj)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
+    {
+        Obj_FreeObject(obj);
+    }
+    else
+    {
+        if (((GameObject*)obj)->anim.hitReactState != NULL)
+        {
+            ObjHits_DisableObject(obj);
+        }
+        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
+    }
+}
+
 void AppleOnTree_setPosition(GameObject* obj, float* pos)
 {
     AppleOnTreeState* state = obj->extra;
@@ -191,19 +208,7 @@ void appleontree_handleCollectableHit(int obj)
         playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
         itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
-        state = *(int*)&((GameObject*)obj)->extra;
-        if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
-        {
-            Obj_FreeObject(obj);
-        }
-        else
-        {
-            if (((GameObject*)obj)->anim.hitReactState != NULL)
-            {
-                ObjHits_DisableObject(obj);
-            }
-            ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
-        }
+        appleontree_markFallen(obj);
     }
 }
 
@@ -268,19 +273,7 @@ void fn_8017D854(int obj, int msg)
     if (fn_80065684(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, (f32*)(state + 0x30), 0) == 0)
     {
-        state = *(int*)&((GameObject*)obj)->extra;
-        if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
-        {
-            Obj_FreeObject(obj);
-        }
-        else
-        {
-            if (((GameObject*)obj)->anim.hitReactState != NULL)
-            {
-                ObjHits_DisableObject(obj);
-            }
-            ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
-        }
+        appleontree_markFallen(obj);
     }
     else
     {
