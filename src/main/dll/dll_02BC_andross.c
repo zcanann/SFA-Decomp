@@ -1920,10 +1920,9 @@ void andross_update(int obj)
             ((AndrossState*)state)->camOffsetAccum = fval;
             *(u8*)(state + 0x2e) = 0;
             *(s16*)(*state + 6) = *(s16*)(*state + 6) & ~0x4000;
-            sval = arwarwing_getRotY(*state);
-            fval = (f32)sval;
-            fval += fc * lbl_803DC49C;
-            ref = (int)fval;
+            ref = arwarwing_getRotY(*state);
+            fval = (f32)(s16)ref;
+            ref = (int)(fval + fc * lbl_803DC49C);
             arwarwing_setRotY(*state, ref);
             thrustB.x = lbl_803E74D4;
             thrustB.y = lbl_803E74D4;
@@ -1964,10 +1963,9 @@ void andross_update(int obj)
             ((AndrossState*)state)->camOffsetAccum = fval;
             *(u8*)(state + 0x2e) = 0;
             *(s16*)(*state + 6) = *(s16*)(*state + 6) & ~0x4000;
-            sval = arwarwing_getRotY(*state);
-            fval = (f32)sval;
-            fval += fc * lbl_803DC4AC;
-            ref = (int)fval;
+            ref = arwarwing_getRotY(*state);
+            fval = (f32)(s16)ref;
+            ref = (int)(fval + fc * lbl_803DC4AC);
             arwarwing_setRotY(*state, ref);
             thrustA.x = lbl_803E74D4;
             thrustA.y = lbl_803E74D4;
