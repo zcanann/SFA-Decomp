@@ -7879,7 +7879,11 @@ void playerDoHitDetection(int obj)
     if (((ByteFlags*)((char*)inner + 0x3f2))->b20 != 0 &&
         (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
     {
-        ((PlayerState*)inner)->baddie.physicsActive = 0;
+        register int innerReg = inner;
+        register int zero = 0;
+        asm {
+            stb zero, 0x25f(innerReg)
+        }
     }
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
