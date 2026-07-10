@@ -538,22 +538,24 @@ static inline f32 seq_fmod(f32 x, f32 y)
     return x - y * (f32)(s64)(u64)(x / y);
 }
 
+static inline void seqSetTickDelta(SeqQueue* section, u32 deltaTime)
+{
+    f32 tickDelta;
+
+    tickDelta = (1.f / 40960000.f) * ((f32)section->bpm * deltaTime);
+    tickDelta *= (1.f / 256.f) * (f32)section->speed;
+    section->scratch[section->timeIndex].low = seq_fmod(65536.f * tickDelta, 65536.f);
+    section->scratch[section->timeIndex].high = (int)floorf(tickDelta);
+}
+
 int fn_8026E9D0(u8 voice, u32 param)
 {
     SeqQueue* vp;
-    SeqQueue* vp2;
     u8* event;
     int res;
-    f32 fm;
-    f32 k88;
-    f32 k84;
-    f32 k80;
     u32 flag;
 
     flag = 0;
-    k88 = lbl_803E7788;
-    k80 = lbl_803E7780;
-    k84 = lbl_803E7784;
     vp = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
     while ((vp->eventList == NULL ? 0 : vp->eventList->time) <= vp->time[vp->timeIndex].high)
     {
@@ -577,10 +579,7 @@ int fn_8026E9D0(u8 voice, u32 param)
             {
                 *(int*)(gSynthCurrentVoice + voice * 56 + 0x14ec) = *(int*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
                 fn_8026CF78(voice);
-                vp2 = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
-                fm = (k80 * ((f32)vp2->bpm * param)) * (k84 * (f32)vp2->speed);
-                vp2->scratch[vp2->timeIndex].low = seq_fmod(k88 * fm, k88);
-                vp2->scratch[vp2->timeIndex].high = (int)floorf(fm);
+                seqSetTickDelta((SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8), param);
             }
             vp->loopCount += 1;
             fn_8026E90C(voice);
