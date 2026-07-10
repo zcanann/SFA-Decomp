@@ -319,6 +319,25 @@ static inline u32 ExecuteTrap(McmdVoiceState* sv, u8 trapType)
  * Queue a message onto the voice owning a vid handle, resuming its
  * message-trap macro stream when armed.
  */
+/*
+ * Key off one voice identified by a full voice handle.
+ */
+static inline int SendSingleKeyOff(u32 voiceid)
+{
+    u32 i;
+
+    if (voiceid != 0xffffffff)
+    {
+        i = voiceid & 0xff;
+        if (voiceid == ((McmdVoiceState*)synthVoice)[i].voiceHandle)
+        {
+            macSetExternalKeyoff(&((McmdVoiceState*)synthVoice)[i]);
+            return 0;
+        }
+    }
+    return -1;
+}
+
 static inline u32 macPostMessage(u32 vid, u32 mesg)
 {
     McmdVoiceState* sv;
@@ -591,24 +610,13 @@ void macHandleActive(McmdVoiceState* sv)
         {
             u32 voiceid;
             u32 i;
-            int off;
             voiceid = (sv->keyBase + ((cmd >> 8) & 0xff)) << 8;
-            voiceid |= (cmd >> 0x10) << 0x10;
-            i = 0;
-            off = 0;
-            for (; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++)
+            voiceid |= ((u16)(cmd >> 0x10)) << 0x10;
+            for (i = 0; i < lbl_803BD150[0x210]; i++)
             {
-                u32 id = voiceid | i;
-                if (((McmdVoiceState*)(synthVoice + off))->voiceHandle == id)
+                if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
                 {
-                    if (id != 0xffffffff)
-                    {
-                        u32 slot = id & 0xff;
-                        if (((McmdVoiceState*)(synthVoice + slot * SYNTH_VOICE_STRIDE))->voiceHandle == id)
-                        {
-                            macSetExternalKeyoff((McmdVoiceState*)(synthVoice + slot * SYNTH_VOICE_STRIDE));
-                        }
-                    }
+                    SendSingleKeyOff(voiceid | i);
                 }
             }
             break;
