@@ -82,71 +82,64 @@ void inpResetMidiCtrl(u8 channel, u8 key, u32 mode)
  * Read a 14-bit MIDI controller value from either the global channel defaults
  * or the per-key controller bank.
  */
-u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key)
+u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key)
 {
-    u32 slotIdx;
-    u32 keyIdx;
-    u32 ctrl;
     InpMidiState* st;
 
     st = (InpMidiState*)lbl_803CD760;
-    slotIdx = slot & 0xff;
-    if (slotIdx != INP_INVALID_SLOT)
+    if (slot != INP_INVALID_SLOT)
     {
-        keyIdx = key & 0xff;
-        if (keyIdx != INP_INVALID_SLOT)
+        if (key != INP_INVALID_SLOT)
         {
-            ctrl = controller & 0xff;
-            if (ctrl < 0x40)
+            if (controller < 0x40)
             {
-                u8* base = (u8*)st + keyIdx * INP_MIDI_KEY_STRIDE + slotIdx * INP_MIDI_CTRL_BANK_SIZE + (ctrl & 0x1f);
-                return (u16)(((u32)base[0xC0] << 7) | base[0xE0]);
+                return st->midiCtrl[key][slot][controller & 0x1f] << 7 |
+                       st->midiCtrl[key][slot][(controller & 0x1f) + 0x20];
             }
-            if (ctrl < 0x46)
+            if (controller < 0x46)
             {
-                return (u16)((st->midiCtrl[keyIdx][slotIdx][ctrl] < 0x40) ? 0 : 0x3fff);
+                return (st->midiCtrl[key][slot][controller] < 0x40) ? 0 : 0x3fff;
             }
-            if (ctrl >= 0x60 && ctrl < 0x66)
+            if (controller >= 0x60 && controller < 0x66)
             {
                 return 0;
             }
-            if (((controller - 0x80) & 0xff) <= 1U)
+            if (controller == 0x80 || controller == 0x81)
             {
-                return (u16)(((u32)st->midiCtrl[(u8)key][(u8)slot][controller & 0xfe] << 7) |
-                             st->midiCtrl[(u8)key][(u8)slot][(controller & 0xfe) + 1]);
+                return (st->midiCtrl[key][slot][controller & 0xfe] << 7) |
+                             st->midiCtrl[key][slot][(controller & 0xfe) + 1];
             }
-            if (((controller - 0x84) & 0xff) <= 1U)
+            if (controller == 0x84 || controller == 0x85)
             {
-                return (u16)(((u32)st->midiCtrl[(u8)key][(u8)slot][controller & 0xfe] << 7) |
-                             st->midiCtrl[(u8)key][(u8)slot][(controller & 0xfe) + 1]);
+                return (st->midiCtrl[key][slot][controller & 0xfe] << 7) |
+                             st->midiCtrl[key][slot][(controller & 0xfe) + 1];
             }
-            return (u16)((u32)st->midiCtrl[(u8)key][(u8)slot][(u8)controller] << 7);
+            return st->midiCtrl[key][slot][controller] << 7;
         }
 
-        ctrl = controller & 0xff;
-        if (ctrl < 0x40)
+        if (controller < 0x40)
         {
-            return (u16)(((u32)st->fxCtrl[slotIdx][ctrl & 0x1f] << 7) | st->fxCtrl[slotIdx][(ctrl & 0x1f) + 0x20]);
+            return (st->fxCtrl[slot][controller & 0x1f] << 7) | st->fxCtrl[slot][(controller & 0x1f) + 0x20];
         }
-        if (ctrl < 0x46)
+        if (controller < 0x46)
         {
-            return (u16)((st->fxCtrl[slotIdx][ctrl] < 0x40) ? 0 : 0x3fff);
+            return (st->fxCtrl[slot][controller] < 0x40) ? 0 : 0x3fff;
         }
-        if (ctrl >= 0x60 && ctrl < 0x66)
+        if (controller >= 0x60 && controller < 0x66)
         {
             return 0;
         }
-        if (((controller - 0x80) & 0xff) <= 1U)
+        if (controller == 0x80 || controller == 0x81)
         {
-            return (u16)(((u32)st->fxCtrl[(u8)slot][controller & 0xfe] << 7) |
-                         st->fxCtrl[(u8)slot][(controller & 0xfe) + 1]);
+            return (st->fxCtrl[slot][controller & 0xfe] << 7) |
+                         st->fxCtrl[slot][(controller & 0xfe) + 1];
         }
-        if (((controller - 0x84) & 0xff) <= 1U)
+        if (controller == 0x84 || controller == 0x85)
         {
-            return (u16)(((u32)st->fxCtrl[(u8)slot][controller & 0xfe] << 7) |
-                         st->fxCtrl[(u8)slot][(controller & 0xfe) + 1]);
+            return (st->fxCtrl[slot][controller & 0xfe] << 7) |
+                         st->fxCtrl[slot][(controller & 0xfe) + 1];
         }
-        return (u16)((u32)st->fxCtrl[(u8)slot][(u8)controller] << 7);
+        return st->fxCtrl[slot][controller] << 7;
     }
     return 0;
 }
