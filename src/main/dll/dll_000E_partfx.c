@@ -1006,8 +1006,8 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400200;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+        /* fall through */
     case 0x55c:
-    LAB_800a69a8:
         cfg.startPosY = lbl_803DF4FC;
         cfg.scale = lbl_803DF4E8;
         cfg.lifetimeFrames = 0xaf;
@@ -1016,8 +1016,8 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400100;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+        /* fall through */
     case 0x55d:
-    LAB_800a6a18:
         cfg.startPosY = lbl_803DF4FC;
         cfg.scale = lbl_803DF504;
         cfg.lifetimeFrames = 0x2d;
@@ -1026,9 +1026,8 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x200;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
-        goto LAB_800a6a6c;
+        /* fall through */
     case 0x557:
-    LAB_800a6a6c:
         cfg.startPosY = lbl_803DF4FC;
         if (extraArgs != NULL)
         {
@@ -1045,10 +1044,8 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400200;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
-        goto LAB_800a6aec;
+        /* fall through */
     case 0x558:
-
-    LAB_800a6aec:
         cfg.startPosY = lbl_803DF4FC;
         if (extraArgs != NULL)
         {
@@ -1065,8 +1062,8 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400200;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+        /* fall through */
     case 0x559:
-    LAB_800a6b6c:
         cfg.startPosY = lbl_803DF4FC;
         if (extraArgs != NULL)
         {
@@ -1083,6 +1080,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400100;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
+        /* fall through */
     case 0x55b:
         cfg.startPosY = lbl_803DF4FC;
         if (extraArgs != NULL)
@@ -2483,7 +2481,12 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
             (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
         }
         break;
-    LAB_800aa8ac:
+    case 0x3d:
+    case 0x3e:
+    case 0x3f:
+    case 0x43:
+    case 0x44:
+    case 0x4f:
         cfg.behaviorFlags = 0x20100100;
         cfg.lifetimeFrames = 400;
         if (effectId == 0x3d)
@@ -2552,13 +2555,6 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
             cfg.behaviorFlags |= 0x8000000LL;
         }
         break;
-    case 0x3d:
-    case 0x3e:
-    case 0x3f:
-    case 0x43:
-    case 0x44:
-    case 0x4f:
-        goto LAB_800aa8ac;
     case 0x48:
 
         if (spawnParams == NULL)
@@ -3922,7 +3918,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.overrideColor2 = 0xe000;
         cfg.colorWord2 = (u16)cfg.overrideColor2;
         cfg.textureId = 0x567;
-        goto LAB_800aeb30;
+        break;
     }
     case 0x564:
         cfg.scale = lbl_803DF5A0 * (f32)(s32)randomGetRange(0x32, 100);
@@ -3941,16 +3937,14 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.textureId = 0x5b1;
         break;
     case 0x324:
-        goto LAB_800aeb30;
+        break;
     case 0xb:
     case 0x327:
     case 0x52e:
     case 0x555:
     default:
-    LAB_800aeb28:
         return -1;
     }
-LAB_800aeb30:
     cfg.behaviorFlags = (cfg.behaviorFlags | spawnFlags);
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
     {
