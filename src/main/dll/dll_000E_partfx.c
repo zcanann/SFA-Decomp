@@ -513,6 +513,8 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
     f32 ftmp0;
     f32 ftmp1;
     f32 ftmp2;
+    f32 ftmp3;
+    f32 ftmp4;
     struct
     {
         s16 x, y, z;
@@ -1833,13 +1835,15 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x20;
         break;
     case 0x51b:
+
         cfg.scale = lbl_803DF568 * (f32)(s32)randomGetRange(0, 0xf) + lbl_803DF550;
         *startPtr = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffce, 0x32);
         cfg.startPosY = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffce, 0x32) + lbl_803DF580;
-        cfg.startPosZ = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffce, 0x32);
+        ftmp0 = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffce, 0x32);
+        cfg.startPosZ = ftmp0;
         cfg.velocityX = *startPtr / lbl_803DF5A4;
         cfg.velocityY = cfg.startPosY / lbl_803DF5A4;
-        cfg.velocityZ = cfg.startPosZ / lbl_803DF5A4;
+        cfg.velocityZ = ftmp0 / lbl_803DF5A4;
         cfg.lifetimeFrames = randomGetRange(0, 0x14) + 0x14;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x100110;
