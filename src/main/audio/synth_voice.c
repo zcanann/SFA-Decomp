@@ -249,7 +249,7 @@ typedef struct KeymapEntry
     u8 reserved[2]; /* 0x6 */
 } KeymapEntry;      /* size 0x8, MP4 musyx/synthdata.h KEYMAP */
 
-static inline u32 check_portamento(u32 key, u8 midi, u8 midiSet, u32 newVID, u32* vid)
+static inline u32 check_portamento(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* vid)
 {
     u32 rejected;
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
@@ -275,6 +275,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     KeymapEntry* keymap;
     s32 p;
     s32 k;
+    u32 handle;
 
     if ((keymap = (KeymapEntry*)dataGetKeymap(id)) != 0)
     {
@@ -313,7 +314,6 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 
                 if ((keymap[o].id & 0xC000) == 0)
                 {
-                    u32 handle;
                     if (!check_portamento(k & 0xFF, midi, midiSet, vidFlag, &handle))
                     {
                         return -1;
@@ -350,25 +350,17 @@ static inline void unblockAllAllocatedVoices(u32 vid)
     }
 }
 
-int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
+int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
                     u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
-    s32 prioTmp;
-    u32 clamped;
-    u8 pri;
     extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                         u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
     extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi,
                                      u8 midiSet, u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio,
                                      u32 itd);
 
-    prioTmp = prio + prioOffset;
-    clamped = (u8)prioTmp;
-    if (clamped > 0xFF)
-    {
-        clamped = 0xFF;
-    }
-    pri = clamped;
+    prio += prioOffset;
+    prio = prio > 0xFF ? 0xFF : prio;
 
     switch (id & 0xC000)
     {
@@ -383,12 +375,12 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         {
             return handle;
         }
-        return macStart(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup, studio,
+        return macStart(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup, studio,
                         itd);
     }
     case 0x4000:
     {
-        u32 vid = StartKeymap(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup,
+        u32 vid = StartKeymap(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid, 1, vGroup,
                               studio, itd);
         if (vid != 0xFFFFFFFF)
         {
@@ -398,7 +390,7 @@ int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
     }
     case 0x8000:
     {
-        u32 vid = audioLayerFn_8026f8b8(id, pri, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid,
+        u32 vid = audioLayerFn_8026f8b8(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section, step, trackid,
                                         1, vGroup, studio, itd);
         if (vid != 0xFFFFFFFF)
         {
