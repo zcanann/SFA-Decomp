@@ -203,10 +203,19 @@ enum GameBitId {
      * text 0x3fd, icon 0xc7a; see cmenu_item_table.h). mcupgrade is generic -
      * every magic-cave ability (Freeze Blast, etc.) is one of these with a
      * different collectedGameBit. Live-verified with a write-watchpoint that
-     * caught mainSetBits(0x2d, 1) in mcupgrade_update on collection. You then
-     * return and shoot the red switch (below) to open the SharpClaw/Queen door.
+     * caught mainSetBits(0x2d, 1) in mcupgrade_update on collection. You use the
+     * ability immediately on the reward-room exit switch below, then return and
+     * shoot the separate red switch that opens the SharpClaw/Queen door.
      */
     GAMEBIT_STAFF_ABILITY_FIRE_BLASTER = 0x2D,
+
+    /*
+     * Fire Blaster reward-room exit gate. This bit is set while the iron gate is
+     * closed. ProjectileSwitch stores its inverted form (0x8246), so shooting the
+     * red switch turns it green, clears this underlying bit, and opens the gate.
+     * Live-verified against the gate and switch in the first Magic Cave.
+     */
+    GAMEBIT_MagicCaveDoorClosed = 0x246,
 
     /*
      * The red switch above the SharpClaw door (revealed when the arena clears).
@@ -480,7 +489,6 @@ enum GameBitId {
     GAMEBIT_ITEM_SilverKey241_Used = 0x242,              /* table 2 */
     GAMEBIT_ITEM_WCMoonStone_Used = 0x243,               /* table 2 */
     GAMEBIT_ITEM_TrickyFlame_Got = 0x245,                /* table 2 */
-    GAMEBIT_MagicCaveDoorClosed = 0x246,                 /* table 2; controls iron gate and switches in 1st cave */
     GAMEBIT_WM_DoorToKrazTest1Opened = 0x24E,            /* table 2; ref warlock/HitAnimator target */
     GAMEBIT_ITEM_WCGoldTooth_Used = 0x25A,               /* table 2 */
     GAMEBIT_ITEM_WCSilverTooth_Used = 0x25B,             /* table 2 */
