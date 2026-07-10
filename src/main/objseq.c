@@ -2529,8 +2529,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     case SEQACT_CONDITION:
         if (doUpdate != 0 && *(s16*)(cmd + 2) > 0 && lbl_803DD0C0 < 0x14)
         {
-            entry = base + lbl_803DD0C0 * 8;
-            *(u8**)(entry + 0x2b34) = cmd + 4;
+            *(u8**)((entry = base + lbl_803DD0C0 * 8) + 0x2b34) = cmd + 4;
             *(s16*)(entry + 0x2b3a) = ((ObjSeqState*)seq)->curFrame;
             reps = *(s16*)(cmd + 2);
             lbl_803DD0C0 = lbl_803DD0C0 + 1;
