@@ -554,6 +554,7 @@ int fn_8026E9D0(u8 voice, u32 param)
     u8* event;
     int res;
     u32 flag;
+    SeqTimeWord unusedTime;
 
     flag = 0;
     vp = (SeqQueue*)(gSynthCurrentVoice + voice * 56 + 0x14e8);
