@@ -3709,8 +3709,8 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
     extern f32 hudScale;
-    extern f32 lbl_803DEEDC;
-    extern f32 lbl_803DEEE4;
+    extern const f32 lbl_803DEEDC;
+    extern const f32 lbl_803DEEE4;
     extern u8 gHudTintAlpha;
     extern Mtx hudMatrix;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
@@ -3783,14 +3783,14 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXWGFifo.s16 = sx;
     GXWGFifo.s16 = sy;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = *(const f32*)&lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
     GXWGFifo.s16 = sy;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DEEE4;
+    GXWGFifo.f32 = *(const f32*)&lbl_803DEEE4;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
