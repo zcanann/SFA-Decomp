@@ -295,6 +295,7 @@ void andross_update(int obj)
     u8 flag;
     u8 moveChanged;
     int ref;
+    int durationBeforeStep;
     GameObject* objAlias;
     u32 val;
     f32 fval;
@@ -368,35 +369,31 @@ void andross_update(int obj)
             return;
         }
     }
-    /*
-     * spawnObj[val] (state+0x18+val*4) intentionally kept as the indexed raw
-     * deref: the original sources the handle this way and the lwzx index reg
-     * coloring only matches in this form. spawnDelta[val] (state+0x28+val*12)
-     * is the typed SunVec3 array.
-     */
+    /* Update each linked spawn object from its cached relative position. */
     for (work = 0; (u8)work < 4; work = work + 1)
     {
         val = work & 0xff;
-        if (*(void**)((int)state + val * 4 + 0x18) == NULL)
+        found = val * 4 + 0x18;
+        if (*(void**)((int)state + found) == NULL)
         {
-            *(int*)((int)state + val * 4 + 0x18) = ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
-            if (*(void**)((int)state + val * 4 + 0x18) != NULL)
+            *(int*)((int)state + found) = ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
+            if (*(void**)((int)state + found) != NULL)
             {
                 ((AndrossState*)state)->spawnDelta[val].x =
-                    *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0xc) - ((GameObject*)obj)->anim.localPosX;
+                    *(float*)(*(int*)((int)state + found) + 0xc) - ((GameObject*)obj)->anim.localPosX;
                 ((AndrossState*)state)->spawnDelta[val].y =
-                    *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x10) - ((GameObject*)obj)->anim.localPosY;
+                    *(float*)(*(int*)((int)state + found) + 0x10) - ((GameObject*)obj)->anim.localPosY;
                 ((AndrossState*)state)->spawnDelta[val].z =
-                    *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+                    *(float*)(*(int*)((int)state + found) + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             }
         }
         else
         {
-            *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0xc) =
+            *(float*)(*(int*)((int)state + found) + 0xc) =
                 ((GameObject*)obj)->anim.localPosX + ((AndrossState*)state)->spawnDelta[val].x;
-            *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x10) =
+            *(float*)(*(int*)((int)state + found) + 0x10) =
                 ((GameObject*)obj)->anim.localPosY + ((AndrossState*)state)->spawnDelta[val].y;
-            *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x14) =
+            *(float*)(*(int*)((int)state + found) + 0x14) =
                 ((GameObject*)obj)->anim.localPosZ + ((AndrossState*)state)->spawnDelta[val].z;
         }
     }
@@ -1544,7 +1541,7 @@ void andross_update(int obj)
             (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         ((AndrossState*)state)->actionTimer -= framesThisStep;
-        work = (int)((AndrossState*)state)->durationTimer;
+        durationBeforeStep = (int)((AndrossState*)state)->durationTimer;
         ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - framesThisStep;
         if (((AndrossState*)state)->fightPhase == 5)
         {
@@ -1560,7 +1557,7 @@ void andross_update(int obj)
         {
             if (((((void*)((AndrossState*)state)->spawnedObj == NULL) &&
                   (((AndrossState*)state)->actionTimer <= delayPair[(u8)ref])) &&
-                 ((short)work > delayPair[(u8)ref])) &&
+                 ((short)durationBeforeStep > delayPair[(u8)ref])) &&
                 (Obj_IsLoadingLocked() != 0))
             {
                 found = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_SPAWNED);
