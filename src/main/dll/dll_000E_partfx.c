@@ -1523,8 +1523,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
 
         if (extraArgs != NULL)
         {
-            intVal = (int)(gPartfxAlphaByteScale * (lbl_803DF4D0 - *extraArgs));
-            cfg.initialAlpha = intVal;
+            intVal = cfg.initialAlpha = (int)(gPartfxAlphaByteScale * (lbl_803DF4D0 - *extraArgs));
             logPrintf(sModgfxAlphaDebugFormat, intVal);
         }
         cfg.scale = lbl_803DF54C;
