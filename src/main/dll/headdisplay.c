@@ -234,13 +234,13 @@ void drawFn_80125424(void)
         {
             wave = lbl_803E204C * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
             wave = lbl_803E204C * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
-            alphaTmp = (int)((f32)alpha * (lbl_803E2050 + wave));
+            alphaTmp = (int)((f32)(s16)alpha * (lbl_803E2050 + wave));
             alphaI = alphaTmp < 0 ? 0 : alphaTmp;
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i),
                                (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
-            alphaI = (int)((f32)alpha * (lbl_803E2010 + wave));
+            alphaI = (int)((f32)(s16)alpha * (lbl_803E2010 + wave));
             if (alphaI < 0)
             {
                 alphaI = 0;
