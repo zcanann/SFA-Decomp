@@ -1940,7 +1940,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 #pragma opt_common_subs off
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
-    void* viewMatrix;
+    s16 angleB;
     int alpha;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
@@ -1948,7 +1948,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 sinA, cosA;
     int slotIndex;
     u32 texture;
-    u32 behaviorFlags;
+    ExpgfxSourceObject* sourceObject;
     u32 renderFlags;
     u32 state;
     ExpgfxCameraViewSlot* cameraSlot;
@@ -1957,9 +1957,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 sx, sy, sz;
     f32 scaleFactor;
     s16 angleA;
-    s16 angleB;
+    void* viewMatrix;
     f32 sinB, cosB;
-    ExpgfxSourceObject* sourceObject;
+    u32 behaviorFlags;
     f32 sinC, cosC;
     f32 worldX, worldY, worldZ;
     f32 aimDelta[3];
