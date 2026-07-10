@@ -984,7 +984,7 @@ void dbegg_update(int obj)
             }
             else
             {
-                n = (int)(PSVECMag(obj + 0x24) / lbl_803E6260);
+                int n = (int)(PSVECMag(obj + 0x24) / lbl_803E6260);
                 for (i = 0; i < n; i++)
                 {
                     (*gPartfxInterface)->spawnObject((void*)obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
@@ -1013,7 +1013,9 @@ void dbegg_update(int obj)
                 {
                     if ((((DbEggState*)eggState)->flags119 & 1) == 0)
                     {
-                        playerObj = Obj_GetPlayerObject();
+                        int placement;
+                        int pickupState;
+                        int playerObj = Obj_GetPlayerObject();
                         pickupState = *(int*)&((GameObject*)obj)->extra;
                         placement = *(int*)&((GameObject*)obj)->anim.placementData;
                         ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
