@@ -1060,7 +1060,6 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x400100;
         cfg.textureId = 0xe4;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
-        break;
     case 0x55b:
         cfg.startPosY = lbl_803DF4FC;
         if (extraArgs != NULL)
