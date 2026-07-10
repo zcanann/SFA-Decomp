@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
+#pragma exceptions on
+
 typedef struct InpMidiState
 {
     u8 pad0[0xC0];
