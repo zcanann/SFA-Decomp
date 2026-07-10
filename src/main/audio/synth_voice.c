@@ -56,15 +56,29 @@ extern void macHandle(u32 delta);
 extern u8 lbl_803BCD90[];
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
-extern u8 synthAuxBMIDI;
-extern u8 synthAuxBIndex;
-extern u8 synthAuxAMIDI;
-extern u8 synthAuxAIndex;
+extern u8 synthAuxBMIDI[8];
+extern u8 synthAuxBIndex[8];
+extern u8 synthAuxAMIDI[8];
+extern u8 synthAuxAIndex[8];
 extern u8* synthVoice;
 extern int synthRealTimeHi;
 extern f32 lbl_803E77D0;
 
-typedef void (*SynthAuxCallback)(int active, u16* samples, u32 user);
+typedef union SynthAuxInfo
+{
+    struct
+    {
+        u16 para[4];
+    } parameterUpdate;
+    struct
+    {
+        s32* left;
+        s32* right;
+        s32* surround;
+    } bufferUpdate;
+} SynthAuxInfo;
+
+typedef void (*SynthAuxCallback)(int active, SynthAuxInfo* info, u32 user);
 
 extern u16 inpGetVolume(McmdVoiceState* state);
 extern u16 inpGetPanning(McmdVoiceState* state);
@@ -1054,21 +1068,14 @@ void synthDispatchFadeAction(SynthFade* fade)
  */
 void audioFn_80271498(u32 delta)
 {
-    u32 fadeIndex;
+    u32 i;
+    u32 s;
     f32* fade;
     u32 mask;
     SynthJobTab* jobTab;
-    u32 i;
-    u32 channel;
     f32 zeroThreshold;
     u8* stateBase;
     f32 fadeDelta;
-    SynthAuxCallback* auxBCallback;
-    u8* auxAIndex;
-    u8* auxAMIDI;
-    u8* auxBIndex;
-    u8* auxBMIDI;
-    SynthAuxCallback* auxACallback;
 
     stateBase = lbl_803BCD90;
     if (*(u32*)(stateBase + 0x3c4) != 0)
@@ -1085,7 +1092,7 @@ void audioFn_80271498(u32 delta)
             {
                 zeroThreshold = lbl_803E77D0;
                 fade = (f32*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
-                for (fadeIndex = 0, mask = 1; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++)
+                for (i = 0, mask = 1; i < SYNTH_FADE_COUNT; i++)
                 {
                     if ((synthMasterFaderActiveFlags & mask) != 0)
                     {
@@ -1122,38 +1129,26 @@ void audioFn_80271498(u32 delta)
                     fade += 12;
                 }
             }
-            auxAMIDI = &synthAuxAMIDI;
-            auxBMIDI = &synthAuxBMIDI;
-            auxACallback = (SynthAuxCallback*)(stateBase + 0xc34);
-            auxBCallback = (SynthAuxCallback*)(stateBase + 0xc74);
-            auxAIndex = &synthAuxAIndex;
-            auxBIndex = &synthAuxBIndex;
-            for (i = 0; i < 8; i++)
+            for (s = 0; s < 8; s++)
             {
-                if (*auxAIndex != 0xff)
+                if (synthAuxAIndex[s] != 0xff)
                 {
-                    u16 auxSamplesA[8];
-                    for (channel = 0; channel < 4; channel++)
+                    SynthAuxInfo infoA;
+                    for (i = 0; i < 4; i++)
                     {
-                        auxSamplesA[channel] = inpGetAuxA(i, channel, *auxAIndex, *auxAMIDI);
+                        infoA.parameterUpdate.para[i] = inpGetAuxA(s, i, synthAuxAIndex[s], synthAuxAMIDI[s]);
                     }
-                    (*auxACallback)(1, auxSamplesA, ((u32*)(stateBase + 0xc14))[i]);
+                    ((SynthAuxCallback*)(stateBase + 0xc34))[s](1, &infoA, ((u32*)(stateBase + 0xc14))[s]);
                 }
-                if (*auxBIndex != 0xff)
+                if (synthAuxBIndex[s] != 0xff)
                 {
-                    u16 auxSamplesB[6];
-                    for (channel = 0; channel < 4; channel++)
+                    SynthAuxInfo infoB;
+                    for (i = 0; i < 4; i++)
                     {
-                        auxSamplesB[channel] = inpGetAuxB(i, channel, *auxBIndex, *auxBMIDI);
+                        infoB.parameterUpdate.para[i] = inpGetAuxB(s, i, synthAuxBIndex[s], synthAuxBMIDI[s]);
                     }
-                    (*auxBCallback)(1, auxSamplesB, ((u32*)(stateBase + 0xc54))[i]);
+                    ((SynthAuxCallback*)(stateBase + 0xc74))[s](1, &infoB, ((u32*)(stateBase + 0xc54))[s]);
                 }
-                auxAIndex++;
-                auxAMIDI++;
-                auxACallback++;
-                auxBIndex++;
-                auxBMIDI++;
-                auxBCallback++;
             }
         }
         hwFrameDone();
