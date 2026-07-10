@@ -923,20 +923,22 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             r = lbl_803E8314 * -r;
         }
         ((EarthWarriorState*)state)->baddie.animSpeedC += r;
-        {
-            f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
-            f32 lo = *(f32*)((EarthWarriorSub*)q)->configRow;
-            ((EarthWarriorState*)state)->baddie.animSpeedC =
-                (vv < lo) ? lo
-                          : ((vv > ((EarthWarriorSub*)q)->animSpeedMax) ? ((EarthWarriorSub*)q)->animSpeedMax : vv);
-        }
+        ((EarthWarriorState*)state)->baddie.animSpeedC =
+            (((EarthWarriorState*)state)->baddie.animSpeedC < *(f32*)((EarthWarriorSub*)q)->configRow)
+                ? *(f32*)((EarthWarriorSub*)q)->configRow
+                : ((((EarthWarriorState*)state)->baddie.animSpeedC > ((EarthWarriorSub*)q)->animSpeedMax)
+                       ? ((EarthWarriorSub*)q)->animSpeedMax
+                       : ((EarthWarriorState*)state)->baddie.animSpeedC);
         ((EarthWarriorState*)state)->baddie.animSpeedB = lbl_803E8304;
     }
     else
     {
-        f32 h = ((EarthWarriorSub*)q)->animSpeedMax;
-        f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
-        ((EarthWarriorState*)state)->baddie.animSpeedC = (vv < -h) ? -h : ((vv > h) ? h : vv);
+        ((EarthWarriorState*)state)->baddie.animSpeedC =
+            (((EarthWarriorState*)state)->baddie.animSpeedC < -((EarthWarriorSub*)q)->animSpeedMax)
+                ? -((EarthWarriorSub*)q)->animSpeedMax
+                : ((((EarthWarriorState*)state)->baddie.animSpeedC > ((EarthWarriorSub*)q)->animSpeedMax)
+                       ? ((EarthWarriorSub*)q)->animSpeedMax
+                       : ((EarthWarriorState*)state)->baddie.animSpeedC);
     }
     ((EarthWarriorState*)state)->baddie.animSpeedA +=
         interpolate(((EarthWarriorState*)state)->baddie.animSpeedC - ((EarthWarriorState*)state)->baddie.animSpeedA,
