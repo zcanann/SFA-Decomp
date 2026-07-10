@@ -55,7 +55,7 @@ typedef struct SalStudio
 #include "string.h"
 
 #define dspStudio       ((DSPstudioinfo*)lbl_803CC1E0)
-#define dspSortedVoices ((DSPvoice**)(lbl_803CC1E0 + 0x5e0))
+#define dspSortedVoices ((DSPvoice**)(msp + 8))
 
 extern u16* dspCmdLastLoad;
 extern u16* dspCmdLastBase;
@@ -209,7 +209,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     u32 endAddr;
     u32 loopAddr;
     u32 zeroAddr;
-    u32 frameCycles;
+    u32 busClock;
 
     msp = &dspStudio[0];
     dspCmdCurBase = dspCmdPtr = dspCmdList;
@@ -228,7 +228,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
         cyclesUsed += 45000;
     }
     rampResetOffsetFlags[0] = 0;
-    frameCycles = __OSBusClock / 400;
+    busClock = __OSBusClock;
     for (st = 0; st < salMaxStudioNum; st++)
     {
         if (msp[st].state == 1)
@@ -895,7 +895,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     {
                         cyclesUsed += pb->update.updNum[s] * 4;
                     }
-                    if (cyclesUsed > frameCycles)
+                    if (cyclesUsed > busClock / 400)
                     {
                         if ((newVoice == 0) && (VoiceDone == 0))
                         {
@@ -914,14 +914,14 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         }
                         for (st1 = st + 1; st1 < salMaxStudioNum; st1++)
                         {
-                            if (dspStudio[st1].state == 1)
+                            if (msp[st1].state == 1)
                             {
-                                for (dsp_vptr = dspStudio[st1].voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
+                                for (dsp_vptr = msp[st1].voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
                                 {
                                     next_dsp_vptr = dsp_vptr->next;
                                     if (dsp_vptr->state == 2)
                                     {
-                                        HandleDepopVoice(&dspStudio[st1], dsp_vptr);
+                                        HandleDepopVoice(&msp[st1], dsp_vptr);
                                     }
                                     salDeactivateVoice((SalVoice*)dsp_vptr);
                                     salSynthSendMessage((int)dsp_vptr, 1);
