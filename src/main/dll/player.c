@@ -5794,15 +5794,8 @@ int playerState19(int obj, int state)
         inner->stateHandler = 0;
     }
     {
-        register u32 mask;
-        register u32 value;
-        register int inner2 = *(int*)&((GameObject*)obj)->extra;
-        asm {
-            lwz value, 0x360(inner2)
-            li mask, -3
-            and mask, value, mask
-            stw mask, 0x360(inner2)
-        }
+        int inner2 = *(int*)&((GameObject*)obj)->extra;
+        *(int*)((char*)inner2 + 0x360) &= ~0x2LL;
         *(int*)((char*)inner2 + 0x360) |= 0x2000;
     }
     *(int*)((char*)state + 0x4) |= 0x100000;
@@ -7879,11 +7872,7 @@ void playerDoHitDetection(int obj)
     if (((ByteFlags*)((char*)inner + 0x3f2))->b20 != 0 &&
         (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
     {
-        register int innerReg = inner;
-        register int zero = 0;
-        asm {
-            stb zero, 0x25f(innerReg)
-        }
+        ((PlayerState*)inner)->baddie.physicsActive = 0;
     }
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));

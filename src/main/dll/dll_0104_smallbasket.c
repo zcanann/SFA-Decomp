@@ -790,7 +790,7 @@ void SmallBasket_update(int obj)
     int def;
     CfperchState* state;
     int playerState;
-    register int flag;
+    int flag;
     s8 contactFlags;
     u8 subtype;
     int level;
@@ -822,9 +822,7 @@ void SmallBasket_update(int obj)
     if (state->hiddenTimer != 0)
     {
         flag = 0;
-        asm {
-            stb flag, 0x36(r27)
-        }
+        ((GameObject*)obj)->anim.alpha = flag;
         state->hiddenTimer -= (s16)(int)(timeDelta * animSpeed);
         if (state->hiddenTimer <= 0)
         {

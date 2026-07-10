@@ -114,21 +114,15 @@ float fn_802943F4(float x) {
     }
 }
 
-#pragma peephole off
+#pragma peephole on
 float fn_8029454C(float x) {
     u16 n;
     float y = trigReduceQuadrant(&n, x);
     float y2 = y * y;
     float result = y * (((lbl_803E7E2C * y2 + lbl_803E7E28) * y2 + lbl_803E7E24) * y2 + lbl_803E7E20);
 
-    asm {
-        lhz r0, 0xc(r1)
-        rlwinm. r0, r0, 0, 30, 30
-        beq _reciprocal_done
-    }
-    result = lbl_803E7E18 / result;
-    asm {
-_reciprocal_done:
+    if (n & 2) {
+        result = lbl_803E7E18 / result;
     }
 
     if (x >= lbl_803E7E1C) {
