@@ -1347,3 +1347,11 @@ through the store). Next lever class: red/green web-LENGTH manipulation around t
 e.g. the score-store spelling (direct field vs green var), or the blue-max's operand roles
 (blue's chain reads selectionScore — reloading vs reusing green's reg changes green's end).
 The enumeration is 3-4 spellings from closing this fn's map too.
+
+
+## Round 19: select-pair result-flow family closed
+Under the E1 max-form, all result-flow spellings (red-store+alias, direct-store+reload,
+E1+red-alias) = 13 (the red/green pair swap persists). The pair's web order under the
+arm1-extension needs the cls-3 removal/degree comparison (degtrace baseline-vs-E1) to
+see which clamped web's creation position shifts — next session's first instrument run.
+With that, this fn (and by class curves-c2/vecmath) resolves or formally closes.
