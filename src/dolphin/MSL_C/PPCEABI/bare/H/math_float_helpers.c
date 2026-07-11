@@ -4,23 +4,20 @@
 
 
 
-// exp2f constants
-extern float lbl_803E7978;  // -127.0f
-extern float lbl_803E797C;  // 0.0f
-extern float lbl_803E7980;  // 1.0f
-extern float lbl_803E7984;  // exp2_p0
-extern float lbl_803E7988;  // exp2_p1
-extern float lbl_803E798C;  // exp2_p2
-extern float lbl_803E7990;  // exp2_p3
-extern float lbl_803E7994;  // exp2_p4
-// expf constants
-extern float lbl_803E7998;  // log2e (1.4426950216293335f)
-// internal floorf-like helper constants
-extern float lbl_803E79A0;  // 65536.0f (small_int_limit)
-extern float lbl_803E79A4;  // 0.0f
-extern float lbl_803E79A8;  // -1.0f
-extern float lbl_803E79AC;  // 8388608.0f (large_int_limit)
-extern float lbl_803E79B0;  // 1.0f
+extern const float lbl_803E7978;
+extern const float lbl_803E797C;
+extern const float lbl_803E7980;
+extern const float lbl_803E7984;
+extern const float lbl_803E7988;
+extern const float lbl_803E798C;
+extern const float lbl_803E7990;
+extern const float lbl_803E7994;
+extern const float lbl_803E7998;
+extern const float lbl_803E79A0;
+extern const float lbl_803E79A4;
+extern const float lbl_803E79A8;
+extern const float lbl_803E79AC;
+extern const float lbl_803E79B0;
 
 float fabsf(float x)
 {
@@ -163,3 +160,21 @@ float fastFloorf(float x)
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset
+
+const float lbl_803E7978 = -127.0f;
+const float lbl_803E797C = 0.0f;
+const float lbl_803E7980 = 1.0f;
+const float lbl_803E7984 = 1.0000035762786865f;
+const float lbl_803E7988 = 0.692969560623169f;
+const float lbl_803E798C = 0.24162131547927856f;
+const float lbl_803E7990 = 0.05171773582696915f;
+const float lbl_803E7994 = 0.013683983124792576f;
+const float lbl_803E7998 = 1.4426950216293335f;
+const float lbl_803E79A0 = 65536.0f;
+const float lbl_803E79A4 = 0.0f;
+const float lbl_803E79A8 = -1.0f;
+const float lbl_803E79AC = 8388608.0f;
+const float lbl_803E79B0 = 1.0f;
+const float lbl_803E79B4 = 0.0f;
+const float lbl_803E79B8 = 176.0f;
+const float lbl_803E79BC = -0.0f;
