@@ -483,6 +483,8 @@ void andross_update(int obj)
     u8 delayIndex;
     int index;
     AndrossState* state;
+    AndrossState* animState;
+    GameObject* aimTarget;
     GameObject** spawnSlot;
     AndrossState* signalState;
     AndrossHandState* handStateA;
@@ -494,8 +496,8 @@ void andross_update(int obj)
     s16 durationBeforeStep;
     u32 val;
     u32 spawnArrayIndex;
-    f32 fc;
     f32 fval;
+    f32 fc;
     s16 sval;
     int found;
     s8 bval;
@@ -578,11 +580,12 @@ void andross_update(int obj)
             (*spawnSlot)->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[spawnArrayIndex].z;
         }
     }
-    if (state->fightPhase != state->prevFightPhase)
+    index = state->fightPhase;
+    if (index != state->prevFightPhase)
     {
         phaseChanged = 1;
     }
-    state->prevFightPhase = state->fightPhase;
+    state->prevFightPhase = index;
     fval = gAndrossZero;
     state->velX = gAndrossZero;
     state->velY = fval;
@@ -805,18 +808,19 @@ void andross_update(int obj)
         break;
     }
     flag = moveChanged;
-    if (state->actionState != state->prevActionState)
+    index = state->actionState;
+    if (index != state->prevActionState)
     {
         flag = 1;
     }
-    state->prevActionState = state->actionState;
+    state->prevActionState = index;
     switch (state->actionState)
     {
     case 0:
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[0];
             }
@@ -860,7 +864,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0xc, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[12];
             }
@@ -896,7 +900,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0xe, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[14];
             }
@@ -942,7 +946,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0xd, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[13];
             }
@@ -968,7 +972,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[0];
             }
@@ -1008,7 +1012,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[0];
             }
@@ -1055,7 +1059,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[0];
             }
@@ -1220,7 +1224,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 1, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[1];
             }
@@ -1323,7 +1327,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 2, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[2];
             }
@@ -1398,7 +1402,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 2, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[2];
             }
@@ -1523,7 +1527,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x10, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[16];
             }
@@ -1549,7 +1553,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x10, gAndrossZero, 0);
                 animState->animSpeed = 0.04f;
             }
@@ -1590,7 +1594,7 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_and_falcoflyby);
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x15, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[21];
             }
@@ -1622,7 +1626,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x12, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[18];
             }
@@ -1636,12 +1640,17 @@ void andross_update(int obj)
         state->fadeAlpha -= 0.05f;
         fval = (gAndrossZero > state->fadeAlpha) ? gAndrossZero : state->fadeAlpha;
         state->fadeAlpha = fval;
-        fc = state->fadeAlpha;
-        model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
-        for (index = 0, fval = 255.0f * fc; index < model->renderOpCount; index++)
         {
-            renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
-            renderOp->alpha = fval;
+            f32 alpha = state->fadeAlpha;
+
+            model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
+            index = 0;
+            alpha = 255.0f * alpha;
+            for (; index < model->renderOpCount; index++)
+            {
+                renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
+                renderOp->alpha = alpha;
+            }
         }
         if ((state->fightPhase == 5) && (state->actionToggle == 0))
         {
@@ -1681,7 +1690,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x13, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[19];
             }
@@ -1777,7 +1786,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x14, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[20];
             }
@@ -1823,7 +1832,7 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, SFXTRIG__UNK_832);
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 4, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[4];
             }
@@ -1931,12 +1940,17 @@ void andross_update(int obj)
             mapUnload(objId, 0x20000000);
             Music_Trigger(MUSICTRIG_Mound_Music, 0);
         }
-        fc = state->fadeAlpha;
-        model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
-        for (index = 0, fval = 255.0f * fc; index < model->renderOpCount; index++)
         {
-            renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
-            renderOp->alpha = fval;
+            f32 alpha = state->fadeAlpha;
+
+            model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
+            index = 0;
+            alpha = 255.0f * alpha;
+            for (; index < model->renderOpCount; index++)
+            {
+                renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
+                renderOp->alpha = alpha;
+            }
         }
         break;
     case 0x1d:
@@ -1966,7 +1980,7 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[0];
             }
@@ -2018,7 +2032,7 @@ void andross_update(int obj)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x16, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[22];
             }
@@ -2072,7 +2086,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 3, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[3];
             }
@@ -2125,7 +2139,7 @@ void andross_update(int obj)
         if (flag)
         {
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x11, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[17];
             }
@@ -2248,7 +2262,6 @@ void andross_update(int obj)
     }
     if (state->fightPhase < 6)
     {
-        GameObject* aimTarget;
         searchDist0 = 10000.0f;
         aimTarget = ObjList_FindNearestObjectByDefNo(boss, 0x7e5, &searchDist0);
         if (aimTarget != NULL)
