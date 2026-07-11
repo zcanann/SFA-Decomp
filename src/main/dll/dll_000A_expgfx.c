@@ -433,7 +433,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     u32 currentMask;
     u32* activeMaskPtr;
     int chosenPool;
-    s16* poolSlotTypeIds;
+    s16* poolSlotTypeIds[1];
     u32* sourceIdWalk;
     s8* activeCountWalk;
     u32 activeBit;
@@ -450,21 +450,21 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     foundPool = 0;
     searchIndex = 0;
     sourceIdWalk = runtime->poolSourceIds;
-    poolSlotTypeIds = &gExpgfxStaticPoolSlotTypeIds[0];
+    poolSlotTypeIds[0] = &gExpgfxStaticPoolSlotTypeIds[0];
     poolActiveCounts = runtime->poolActiveCounts;
     activeCountWalk = poolActiveCounts;
     for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT; batchGroup++)
     {
         for (batchSlot = 0; batchSlot < EXPGFX_POOL_SEARCH_BATCH_SIZE; batchSlot++)
         {
-            if ((sourceIdWalk[batchSlot] == sourceId) && (slotType == *poolSlotTypeIds) &&
+            if ((sourceIdWalk[batchSlot] == sourceId) && (slotType == *poolSlotTypeIds[0]) &&
                 (activeCountWalk[batchSlot] < EXPGFX_SLOTS_PER_POOL))
             {
                 foundPoolIndex = (s16)searchIndex;
                 foundPool = 1;
                 goto poolSearchDone;
             }
-            poolSlotTypeIds++;
+            poolSlotTypeIds[0]++;
             searchIndex++;
         }
         sourceIdWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE;
