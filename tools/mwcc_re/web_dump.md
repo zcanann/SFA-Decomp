@@ -747,3 +747,11 @@ requires new external information (retail toolchain invocation details or a
 compiler build not in build/compilers/). The full mechanism chain that proves
 this — tracers, formulas, traces, and ~270 mapped variants — is in the
 2026-07-10/11 entries above.
+
+## Audit-completing negatives (2026-07-11, round 17)
+Right-operand pure-reference carriers — `i-- != 0 && (ch, 1)`,
+`&& ((void)ch, 1)`, `i-- != (ch, 0)` — all compile to the byte-identical
+409-instr stream with the pair unchanged: side-effect-free references are
+stripped before the numbering reference-walk. No ghost-reference carrier
+exists. This was the final identified hole in the impossibility argument;
+the principled-cap verdict for Music_Update / ObjectChannel3D stands complete.
