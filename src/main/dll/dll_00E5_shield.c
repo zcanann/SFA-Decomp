@@ -627,8 +627,11 @@ void Shield_hitDetect(void)
 
 void Shield_update(int* obj)
 {
-    f32* tbl = lbl_80320A28;
-    f32* state = ((GameObject*)obj)->extra;
+    f32* tbl[1];
+    f32* state;
+
+    tbl[0] = lbl_80320A28;
+    state = ((GameObject*)obj)->extra;
 
     if (state[1] != state[2])
     {
@@ -682,10 +685,10 @@ void Shield_update(int* obj)
         int i;
         i = 0;
         ps = (s16*)state;
-        t8 = tbl + 8;
+        t8 = tbl[0] + 8;
         pf = state;
-        t12 = tbl + 12;
-        t4 = tbl + 4;
+        t12 = tbl[0] + 12;
+        t4 = tbl[0] + 4;
         for (; i < 4; i++)
         {
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
@@ -701,14 +704,14 @@ void Shield_update(int* obj)
                 f32 c = fcos16(ps[26]);
                 f32 sum = lbl_803E33C4 + c;
                 c = sum * lbl_803E33A8;
-                pf[9] = *tbl * c;
+                pf[9] = *tbl[0] * c;
                 pf[5] = *t4;
             }
             ps++;
             t8++;
             pf++;
             t12++;
-            tbl++;
+            tbl[0]++;
             t4++;
         }
     }
