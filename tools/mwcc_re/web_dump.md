@@ -1278,3 +1278,16 @@ plus-two-edges exact — the tightest spec of the campaign.
   which arm carries the penalty); what blocks/permits the call-result union (controls
   idx 38-vs-74); mixed one-sv + union-block combos. The space is ~4 spellings from
   closed at zero emission.
+
+
+## Round 13: sv-denial family fuzzy-CLOSED (both arms measured)
+vec0-arm-only direct-deref: fn 99.171 -> 98.717 (regression; reverted). Both-arm was
+97.59. The per-branch-sth emission penalty exists in EITHER arm => the entire sv-denial
+family fails the report gate despite flipping the register cycle. fn_802BCA10's
+zero-emission +2 is now CLOSED across: sv-denial (both arms), neighbor elimination
+(net-zero law), #114 casts (fold), s16 retypes (extsh), fn-scoping (inert), decl perms
+(inert on renumbered webs). Remaining unexplored: what governs the call-result
+union/renumber (idx 38-vs-74) — the one lever class untested, needs the union-site
+disasm (0x57b947 caller context). If that also closes, this fn joins the
+needs-new-idea-class list alongside objlib-pre-helper — historically those DID crack
+(5 precedents), each via a structural-origin insight not in the current enumeration.
