@@ -729,3 +729,21 @@ latch references; the latch source order (ch++ then i--) is emission-pinned.
 latch pushes without reordering the latch instructions." If no C form exists,
 both audio holdouts are formally principled caps; the search space for such a
 form is small and precisely defined (latch-reference tree positions).
+
+## FORMAL CAP (2026-07-11, final round): latch-push reorder space is EMPTY
+Closing probes: (a) `} while (ch++, i-- != 0);` — byte-identical stream, pair
+STILL swapped (even with ch++ inside the condition tree the push order holds);
+(b) post-loop `(void)ch;` — DCE'd before the reference walk, no cell pushed;
+(c) latch restructure `i--; ch++; } while (i != -1);` — emission diverges
+(cmpwi -1). With these, every construct class is exhausted: statement orders,
+comma trees, dead uses, folding tautologies, phi inits, decl/name/ownership
+layouts (~270 variants), all opt pragmas/levels, and 7 compiler versions.
+VERDICT: Music_Update (99.596) and Sfx_UpdateObjectChannel3D (99.01) are
+PRINCIPLED CAPS under the MWCC GC family as configured — the retail ordering
+of their @-temp webs is not reachable from C source through this binary's
+reference-walk. main/audio source-reachable state: 99.917% (84/87), with
+Sfx_UpdateLoopedObjectSounds at 99.35 (+0.97 this campaign). Any future 100%
+requires new external information (retail toolchain invocation details or a
+compiler build not in build/compilers/). The full mechanism chain that proves
+this — tracers, formulas, traces, and ~270 mapped variants — is in the
+2026-07-10/11 entries above.
