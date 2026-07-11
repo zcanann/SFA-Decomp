@@ -353,6 +353,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
 /*
  * s3dInsertActiveEmitter - active spatial voice node insert.
  */
+#pragma opt_lifetimes off
 int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3, f32 arg4)
 {
     S3DMixGroup* group;
@@ -427,6 +428,7 @@ int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 ar
     ((S3DActiveNode*)(base + 0x450))[lbl_803DE36C++].distance = distance;
     return 1;
 }
+#pragma opt_lifetimes reset
 
 void s3dStartQueuedEmitters(void)
 {
