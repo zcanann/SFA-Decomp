@@ -871,3 +871,28 @@ STATE OF THE HUNT (param nadj=29==K, needs -1; ~40 respellings mapped inert):
   two of them. Alternatively: A/B whether committing `#pragma opt_lifetimes off` +
   fixing the 2 residual shapes from source is viable (v-join resisted ternary/if under
   the pragma; piece swap untested).
+
+
+## OC3D round-20 negatives + the init-web kill-switch (2026-07-10/11)
+- fctiwz COUNT identical (6) in target and ours — the 1219/1234 `(int)(f64)volf`
+  double-execution is retail-faithful; conversion-CSE theory dead.
+- Decl permutations (slot/level/f32s, 4 orders) and MU-style dead decl-inits
+  (`int level = 0;`, `void* slot = NULL;`, combos) ALL INERT on this fn — unique among
+  studied fns: the pop cascade is dominated by the lifetime-pass pieces + the stuck param,
+  not named-web indices.
+- KILL-SWITCH FOUND: the level INIT-VALUE web (def `level = volf` @1198, read ONLY by the
+  outer-else `v = level`). Killing its long range flips param to r29 with target prologue:
+  (a) deleting the init (D2, illegal semantics), (b) respelling `v = (int)volf` (E1, legal,
+  CSE keeps value in the fctiwz slot) — BOTH give mrs=[mr r29,r3; mr r31,r3]. BUT target
+  asm proves retail wrote `v = level` (else-arm reads the init web via `mr r0,r30` — E1
+  instead re-executes fctiwz there, and D2/E1 shrink the frame 128->112). So the init web
+  exists in retail with its param edge — the -1 lives elsewhere. E1 diffs ~15 structural
+  (init conv deleted, v-join decoalesced, frame) — NOT closer than baseline overall.
+- Corpus: HuAR_MRAMtoARAM2 (mp4, both_off) = the param->r29-with-later-copies-above analog,
+  but small-fn regime (no stuck web); no transferable lever visible in its C.
+NEXT INSTRUMENT (unchanged, now the only path): def-PC per appended web — walk the web
+descriptor to its first pcode ref and map pieces 40-54 to statements; then diff piece
+structure against small source perturbations to find the one that merges/deletes ONE
+param-edge web under default flags. The two pragma states (O2 / opt_lifetimes off) remain
+the reachability proof + a fallback (their shared residual: conversion-piece A/B reg swap
+[34,137]=r30 vs [76,90,106]=r31, and the v-join li-direct form).
