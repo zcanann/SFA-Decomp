@@ -591,8 +591,8 @@ void macHandleActive(McmdVoiceState* sv)
     u32* para1;
     int lastNote;
     u8* channelDefaults;
-    f32 dlsScaleMax;
     f32 one;
+    f32 dlsScaleMax;
 
     if (MAC_CFLAGS(sv) & 3)
     {
@@ -674,8 +674,8 @@ void macHandleActive(McmdVoiceState* sv)
     }
 
     lbl_803DE2D0 = 0;
-    one = lbl_803E7814;
     dlsScaleMax = lbl_803E7810;
+    one = lbl_803E7814;
     para1 = &lbl_803DE2E8.value;
 
     do
