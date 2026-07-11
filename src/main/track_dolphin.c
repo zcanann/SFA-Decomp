@@ -2386,18 +2386,18 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 {
     u32 fmt;
     u32 w;
-    u32 h;
-    int texA;
-    u32 wA;
+    int bf;
     u32 wB;
-    int redA;
-    int j;
-    int i;
+    u32 wA;
     int texB;
+    int redA;
+    int texA;
+    int i;
+    int j;
     int redB;
     int rf;
     int gf;
-    int bf;
+    u32 h;
 
     if (src1 == NULL)
         return;
