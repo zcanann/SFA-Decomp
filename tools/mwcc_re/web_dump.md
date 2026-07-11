@@ -1411,3 +1411,15 @@ is easier: shorten their ranges or split per-use via #130 web-decouple on `rec` 
 second derived pointer). Next session: identify 62/64's def sites (rec = the bounds-
 record pointer; the other = TBD via def-site dump), then apply range-shortening spellings.
 This is the most tractable open item in the whole batch (reduction beats addition).
+
+
+## Round 26: drawLightmap converges on THE UNION-CONTROL KEYSTONE
+Correction to round 25: target's rec IS saved (r25, granted LAST); ours renumbers rec
+(idx 62/64) so it grants FIRST. Same for fn_802BCA10's vec9 (73/74 vs named 38/39) and
+likely tex_dolphin callList's relocated web. THE decode that unlocks all three (plus
+loadChannelLight's view): the UNION PREDICATE — what makes MWCC attempt/skip the
+copy-coalesce renumber for a derived/call-result web. Instrument: disasm the CALLER of
+the union site 0x57b947 (find its call sites in mwcc_full.dis, read the guard
+conditions), or trace U-events with per-web context (which copies union, which do not,
+correlate with web properties). ONE predicate = FOUR functions across THREE units.
+This is the next session's single task.
