@@ -2086,9 +2086,9 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
     f32 f28 = (f32)(ranges[4] + 5);
     f32 f27 = (f32)(ranges[2] - 5);
     f32 f26 = (f32)(ranges[5] + 5);
-    ObjAnimComponent** resetObjects;
-    int flag80;
     s16 i;
+    int flag80;
+    ObjAnimComponent** resetObjects;
     TrackBlockDescriptor* desc;
     TrackBlockDescriptor* descEnd;
     int cur;
