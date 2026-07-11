@@ -1056,3 +1056,25 @@ the instrument layer here is exhausted: every field of the mechanism is measured
 the requirement is self-contradictory in C-at-O4 semantics. If new info appears, the
 entry points are: what creates a live-but-emission-free first segment, or what else
 routes a named def through the remat path.
+
+
+## objlib COMPLETE 65/65 (2026-07-11, round 5): THE INLINE-HELPER CRACK
+playerEyeAnimFn_80038988 99.66 -> 100 (commit 0451e903d0). The "formal cap" verdict from
+round 3 was WRONG — the obstruction chain was valid but rested on the unstated premise
+that the source was straight-line. The crack (fresh-eyes question: "why would a 2002 dev
+write the identical scan twice?"):
+    static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
+called twice with LEFT/RIGHT tags. Two effects, both previously unreachable:
+- INLINE-EXPANSION LOCALS route through the temp/copy machinery, NOT top-level named
+  webs => their const-0 defs go down the remat path => the li+mr+mr zero-reuse form in
+  BOTH expansions (the exact thing no straight-line spelling could produce at O4).
+- The expansion temps pop LIFO of the helper's DECL ORDER => reversing the helper's decl
+  list [jointCount, jointData, poseOffset, jointDataOffset, model, joint] (inits as
+  separate statements to keep emission order) lands the target volatile map exactly.
+Replaces the round-2 landed workarounds (dead decl-inits + joint-first + (int)-base cast
+kept inside the helper). diffs=0, and the source is dramatically more plausible.
+LESSON (add to the mental playbook next to the decl-order law): when a fn contains
+near-identical repeated blocks AND a within-block register/emission form that no
+straight-line spelling reaches (esp. the li+mr constant-reuse form), RECONSTRUCT THE
+INLINE HELPER — `-inline auto` expansions have their own web/temp classing. This is the
+5th "impossible" residual cracked by a structural-origin insight rather than a spelling.
