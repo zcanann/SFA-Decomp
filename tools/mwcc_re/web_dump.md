@@ -1355,3 +1355,14 @@ E1+red-alias) = 13 (the red/green pair swap persists). The pair's web order unde
 arm1-extension needs the cls-3 removal/degree comparison (degtrace baseline-vs-E1) to
 see which clamped web's creation position shifts — next session's first instrument run.
 With that, this fn (and by class curves-c2/vecmath) resolves or formally closes.
+
+
+## Round 20: comparative cls-3 trace — join re-creation law
+baseline: red-clamp=@871 (created 1st, we4=46, pops 1st -> f2 ✓); E1: red's extended web
+RE-CREATED at the join (=@876, created last, we4=43, pops last -> f3 ✗). So the arm1
+join-extension RENUMBERS the web — UNLESS (hypothesis) the result-var IS arm1's variable
+(join writes into the original web, no re-creation). The result-red form
+(`red = (red > green) ? red : green; score = red;`) previously scored 13 but its DETAIL
+was never read — next session: read it; if its 13 is a different composition (clamp-region
+consts vs the pair), the fix may be one spelling away. This same re-creation law likely
+governs curves-c2 (the magic web) and vecmath.
