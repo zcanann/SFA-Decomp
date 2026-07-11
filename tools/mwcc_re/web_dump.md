@@ -834,3 +834,40 @@ Next instruments: dump slot(40)/level(35) adjacency + the U-event list for OC3D;
 appended-band webs against a variant; identify which temp union creates the param<->r29 edge.
 Tools: adjtrace.py (WEB32 dump at fallback, 0xa0 bytes), nametrace2.py (names+pri),
 nadjtrace.py (names+nadj) — scratchpad; recipe unchanged (wibo::loadModule, 2 continues, arm).
+
+
+## OC3D round-19 corrections + pragma reachability (2026-07-10 late)
+CORRECTIONS to the round-18 entry (both my errors, verified by burst mapping):
+- There is NO round-1/round-2 for OC3D — ONE numbering burst, ONE select. The "round-1
+  assigns slot=r31/level=r30, param fails" claim was the PREVIOUS fn's event stream
+  (Sfx_KeepAlive*; its webs 32-37 alias OC3D's indices). Disregard the spill-round model.
+- The `lwz rX,36(r1)` sites are NOT level spill-reloads: 32/36(r1) is the shared fctiwz
+  TRANSFER slot (fctiwz; stfd 32(r1); lwz 36(r1) idiom). "level spills in both" is wrong —
+  level lives in a reg; the reload-looking webs are #83 CONVERSION-POOL result temps,
+  grouped [34,137] (piece A) + [76,90,106] (piece B). Their grouping/count is
+  source-influenced (#83 statement-join flush, #89 mixed clamp split).
+- Trailing entries read past the inline adjacency array (the "id-29 hard-node edge",
+  27696, etc.) are GARBAGE — web struct: idx@+0x10, nadj-word@+0x12?, flags@+0x14,
+  nadj-dword@+0x18, INLINE 16-bit adjacency from +0x1c with LIMITED capacity (overflow
+  location unknown). Param true edges: 11 hard [1,3..12] + fx/pan/level/@644 + 13
+  appended conversion/call-cluster webs = 28 readable + 1 overflow.
+STATE OF THE HUNT (param nadj=29==K, needs -1; ~40 respellings mapped inert):
+- inert: dead copies/inits (fold to zero webs — dead defs only matter for SPLITTER order,
+  MU-style, not for edges), ternary/if conversions of v and the level clamps, guard
+  split/reorder, (u8)/(int) cast noise, keyoff arm reorder, u32 store spelling,
+  #114 cast-node injections on args (absorbed), decl permutations (param index already
+  natural-low; block decls below fn-scope per the law).
+- REACHABILITY PROVEN by two pragma states, BOTH landing target's prologue
+  (mr r29,r3 param / mr r31,r3 slot): `#pragma optimization_level 2` and
+  `#pragma opt_lifetimes off`. Their residual vs target is IDENTICAL in GPRs:
+  conversion-piece A/B regs swapped (A=r30 wanted [34,137], B=r31 wanted [76,90,106])
+  + the v else-arm join decoalesced (li r0/b/mr r0 instead of li r31 direct).
+  Per the fn_801B3DE4 lesson: the structural feature is reachable; hunt the source form
+  that produces it under default flags. Most promising axis: the #83 conversion-pool
+  grouping (piece webs) — under default flags the pool packs [A,B] such that param's
+  edge count hits exactly 29; one fewer pool web (or one more coalesce) = 28 = done.
+  Next: dump the pool-slot value chains (which conversion feeds which lwz), map each of
+  the 13 appended webs to its statement, and find the join/regroup spelling that merges
+  two of them. Alternatively: A/B whether committing `#pragma opt_lifetimes off` +
+  fixing the 2 residual shapes from source is viable (v-join resisted ternary/if under
+  the pragma; piece swap untested).
