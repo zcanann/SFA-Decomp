@@ -1326,3 +1326,14 @@ join law to THEM: their arm1 choices determine the f0/f2/f3 map). NEXT SESSION: 
 the whole rgb clamp+max chain arm1-consistently per this law (each ternary's arm1 = the
 reg that must hold the result), then curves-c2 and vecmath with the same law.
 This is the FPR-trio unlock, derived from matched code as the goal suggested.
+
+
+## Round 17: join-law analysis of the rgb chain (modellight)
+The clamp ternaries ALREADY obey the join law (outer arm1 = 0.0f const -> join f2 =
+target ✓). Only the max needs arm1=red — but flipping it EXTENDS red's clamped web
+through the join, which shifts the clamp-const reuse (the observed 13-diff cascade).
+The chain is a simultaneous system: solve by choosing arm1 per ternary such that each
+join reg matches target AND the resulting web extensions keep the const-reuse pattern.
+Target regs: red-clamp consts f2, red-clamped f2 (fmr f2,f0), green consts f3,
+max-join f2, score-blue-max join f1 (fmr f1,f0). Next session: enumerate the ~8
+arm1-consistent chain spellings against these six anchors (each 8s compile).
