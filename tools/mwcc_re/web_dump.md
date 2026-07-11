@@ -792,3 +792,45 @@ Corollaries:
   laws. MU's i3/ch3 ARE @-temps (split webs) — their relative order is set by split creation
   order, not source statements; and any conversion-def in their webs is now a lever (u16
   absorb). The 180-variant cross-product never included the narrow-absorb spelling.
+
+
+## Music_Update CRACKED to 100% (2026-07-10, round 18 cont.)
+`int i = 0;` — ONE DEAD DECL-INITIALIZER (folded, zero emission) — was the entire fix
+(99.60 -> 100, commit fc63c07b10). Mechanism, all trace-verified:
+- The live-range splitter processes parent variables in FIRST-DEF PROGRAM ORDER and
+  creates each parent's split @-temps reverse-chronologically (loop3 seg before loop2 seg).
+  @-temp numbering is reverse-creation => earliest-created split = HIGHEST index = pops first.
+- Baseline: ch's first def (loop-1 init) precedes i's => ch split first => ch3 popped first,
+  took fresh r22 (target: i3=r22, ch3=r21). Statement swap of loop-1 inits flips the pair but
+  breaks the init emission order (target emits ch-init first).
+- `int i = 0;` gives i a FIRST DEF at the declaration (dead store, eliminated later, emits
+  nothing) => splitter order [i, ch] => i3 created first => pops first => fresh r22; ch3 then
+  reuses r21. Loop-1's named ch/i reuse r21/r22 as before. difflines=0.
+- Select-phase model refined (MU + fn1 data): simplify removes degree<K webs in ASCENDING
+  index order per round (K~29 GPRs); pop = reverse => within a removal round, pops are
+  index-DESCENDING. Parked (stuck) webs pop before earlier-removed rounds. Grant rules as
+  decoded (fresh=r31-descending exhaust; reuse=lowest reserved non-interfering).
+
+## Sfx_UpdateObjectChannel3D — exact frontier (99.011, the last audio holdout)
+3-rotation param/slot/level (T: slot r31, level r30, param r29; C: param r31, slot r30, level r29).
+Trace facts (nametrace/nadjtrace/adjtrace in scratchpad):
+- Webs: param objectChannel=32 (LOWEST index, natural), fx 33, pan 34, level 35, slot 36,
+  @644/643/642 37-39; appended (post-union/spill) 40-54 band.
+- param nadj = 29 == K exactly => excluded from round-1 simplify-removal => parked last =>
+  POPS FIRST => fresh r31. Target needs param removable round-1 (pops LAST => r29):
+  retail param nadj <= 28. THE WHOLE FIX IS -1 INTERFERENCE EDGE (inverse of the
+  DIMSnowHorn1 +1 lever).
+- param's inline adjacency (web+0x1c, 16-bit ids, nadj at +0x18 dword): [1, 3..12 hard,
+  33 fx, 34 pan, 35 level, 37 @644, 40,41,42,43,45,46,47,48,49,50,51,52,54 appended, 29(!)].
+  The id-29 edge = HARD NODE r29 — param is precolor-EXCLUDED from r29 in our build; target
+  has param IN r29 => that edge does not exist in retail's compile. Likely spill-round debris
+  (level spills in both; round-2 rebuild may add colored-neighbor edges). Kill that edge OR
+  any one other edge => param drops to 28 and the whole rotation resolves.
+- Mapped inert: u32-param retype (+casts), same-type/void* copy local (front-end same-value
+  merge eats it; opt_propagation off does NOT help), #131 self-or (const/self folds),
+  (int)(long) cast-node injections on args, level-def respellings, fcmpo operand swap,
+  gSfxPanScale launder flips (regress), named handle/trig temps (fold or regress).
+Next instruments: dump slot(40)/level(35) adjacency + the U-event list for OC3D; diff the
+appended-band webs against a variant; identify which temp union creates the param<->r29 edge.
+Tools: adjtrace.py (WEB32 dump at fallback, 0xa0 bytes), nametrace2.py (names+pri),
+nadjtrace.py (names+nadj) — scratchpad; recipe unchanged (wibo::loadModule, 2 continues, arm).
