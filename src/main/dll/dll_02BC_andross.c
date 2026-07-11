@@ -884,11 +884,11 @@ hit_cue_ready_1:;
             (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         flag = 0;
-        found = *(int*)&boss->extra;
-        signals = *(u8*)(found + 0xad);
+        moveState = (AndrossState*)boss->extra;
+        signals = moveState->signalFlags;
         if ((signals & 1) != 0)
         {
-            *(u8*)(found + 0xad) = signals & ~1;
+            moveState->signalFlags = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
@@ -914,11 +914,11 @@ hit_cue_ready_1:;
             (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         flag = 0;
-        found = *(int*)&boss->extra;
-        signals = *(u8*)(found + 0xad);
+        moveState = (AndrossState*)boss->extra;
+        signals = moveState->signalFlags;
         if ((signals & 1) != 0)
         {
-            *(u8*)(found + 0xad) = signals & ~1;
+            moveState->signalFlags = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
@@ -945,11 +945,11 @@ hit_cue_ready_1:;
             (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         flag = 0;
-        found = *(int*)&boss->extra;
-        signals = *(u8*)(found + 0xad);
+        moveState = (AndrossState*)boss->extra;
+        signals = moveState->signalFlags;
         if ((signals & 1) != 0)
         {
-            *(u8*)(found + 0xad) = signals & ~1;
+            moveState->signalFlags = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
@@ -976,11 +976,11 @@ hit_cue_ready_1:;
             (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         flag = 0;
-        found = *(int*)&boss->extra;
-        signals = *(u8*)(found + 0xad);
+        moveState = (AndrossState*)boss->extra;
+        signals = moveState->signalFlags;
         if ((signals & 1) != 0)
         {
-            *(u8*)(found + 0xad) = signals & ~1;
+            moveState->signalFlags = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
@@ -1019,11 +1019,11 @@ hit_cue_ready_1:;
                 androsshand_setState(state->handObjB, 5, 0);
             }
             flag = 0;
-            found = *(int*)&boss->extra;
-            signals = *(u8*)(found + 0xad);
+            moveState = (AndrossState*)boss->extra;
+            signals = moveState->signalFlags;
             if ((signals & 1) != 0)
             {
-                *(u8*)(found + 0xad) = signals & ~1;
+                moveState->signalFlags = signals & ~1;
                 flag = 1;
             }
             if (flag != 0)
