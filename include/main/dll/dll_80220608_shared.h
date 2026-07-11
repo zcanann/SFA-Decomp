@@ -1291,22 +1291,22 @@ extern int loadObjectAtObject(int obj);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int lbl_803DC4E8;
+extern int gAndrossProjectileForwardStep;
 
 
-extern int lbl_803DC4D8;
-extern int lbl_803DC4DC;
-extern int lbl_803DC4E0;
-extern f32 lbl_803DC4E4;
+extern int gAndrossAimedProjectileSpeed;
+extern int gAndrossAimedProjectileLifetime;
+extern int gAndrossRingProjectileLifetime;
+extern f32 gAndrossRingProjectileScale;
 extern int gGfLevelConProjectilePitch;
 extern int lbl_803DDDC0;
 extern s16 gGfLevelConProjectileYaw;
 extern s16 lbl_803DDDC6;
 
-extern f32 lbl_803DC4C0;
+extern f32 gAndrossForwardDistanceThreshold;
 extern f32 gAndrossArwingVelDamp;
 
-extern u8 lbl_803DC4C8[4];
+extern u8 gAndrossPartTextureIndices[4];
 
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 

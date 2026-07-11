@@ -97,7 +97,7 @@ extern int lbl_803DC464;
 extern int lbl_803DC46C;
 extern int lbl_803DC484;
 extern int lbl_803DC48C;
-extern int lbl_803DC4EC;
+extern int gAndrossSpawnedObjectLifetime;
 extern s16 gAndrossSwayPhaseStepX;
 extern s16 gAndrossSwayPhaseStepY;
 extern s16 gAndrossSwayPhaseY;
@@ -156,7 +156,7 @@ void fn_80239EAC(int obj, int state)
                 dx = *(f32*)(state + 0xc0) - ((GameObject*)cur)->anim.localPosX;
                 ((GameObject*)cur)->anim.rotX = getAngle(dx, dz);
                 ((GameObject*)cur)->anim.rotY = -(s16)getAngle(dy, dz);
-                arwprojectile_placeForward((GameObject*)(cur), (f32)(int)lbl_803DC4E8);
+                arwprojectile_placeForward((GameObject*)(cur), (f32)(int)gAndrossProjectileForwardStep);
             }
             objs++;
         }
@@ -191,8 +191,8 @@ void fn_80239FCC(int obj, int state)
         proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
         if ((u32)proj != 0)
         {
-            ((GameObject*)proj)->anim.rootMotionScale = lbl_803DC4E4;
-            arwprojectile_setLifetime((GameObject*)(proj), lbl_803DC4E0);
+            ((GameObject*)proj)->anim.rootMotionScale = gAndrossRingProjectileScale;
+            arwprojectile_setLifetime((GameObject*)(proj), gAndrossRingProjectileLifetime);
             arwprojectile_placeForward((GameObject*)(proj), gAndrossProjectileSpeed);
         }
     }
@@ -253,8 +253,8 @@ void fn_8023A268(int obj, int state, int p3)
         obj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
         if ((void*)obj != NULL)
         {
-            arwprojectile_setLifetime((GameObject*)(obj), lbl_803DC4DC);
-            arwprojectile_placeForward((GameObject*)(obj), (f32)(int)lbl_803DC4D8);
+            arwprojectile_setLifetime((GameObject*)(obj), gAndrossAimedProjectileLifetime);
+            arwprojectile_placeForward((GameObject*)(obj), (f32)(int)gAndrossAimedProjectileSpeed);
         }
     }
 }
@@ -353,7 +353,7 @@ void fn_8023A3E4(int objArg, int hitState)
         }
         state = p[0xB9];
         adjusted = state;
-        texIdx = lbl_803DC4C8[idx];
+        texIdx = gAndrossPartTextureIndices[idx];
         if ((u32)texIdx < 2 && state == 1)
             adjusted = 0;
         tex = objFindTexture((GameObject*)obj, texIdx * 2, 0);
@@ -390,7 +390,7 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
     dz = state->cachedPosZ - state->arwingObj->anim.localPosZ;
     dist = sqrtf(dx * dx + dy * dy);
     yaw = (s16)getAngle(dx, dy);
-    if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
+    if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > gAndrossForwardDistanceThreshold)
         result = 1;
     mag = (dist / scale < -clampRange) ? -clampRange : ((dist / scale > clampRange) ? clampRange : dist / scale);
     ang = gAndrossPi * yaw / gAndrossHalfTurn;
@@ -1762,7 +1762,7 @@ void andross_update(int obj)
                 {
                     state->spawnedObj->anim.alpha = 0xff;
                     state->spawnedObj->anim.pad37[0] = 0xff;
-                    state->spawnedObjLifetime = lbl_803DC4EC;
+                    state->spawnedObjLifetime = gAndrossSpawnedObjectLifetime;
                 }
             }
         }
@@ -2421,15 +2421,15 @@ f32 lbl_803DC4B4 = 2.0f;
 f32 lbl_803DC4B8 = 100.0f;
 s16 gAndrossSwayPhaseStepX = 150;
 s16 gAndrossSwayPhaseStepY = 280;
-f32 lbl_803DC4C0 = 50.0f;
+f32 gAndrossForwardDistanceThreshold = 50.0f;
 f32 gAndrossArwingVelDamp = 0.2f;
-u8 lbl_803DC4C8[4] = {1, 0, 2, 0};
+u8 gAndrossPartTextureIndices[4] = {1, 0, 2, 0};
 u32 gAndrossDistortFilterParam = 0x0000ff00;
 f32 gAndrossDistortPhaseStep = 0.006f;
 f32 gAndrossDistortPhaseReset = 3.142f;
-int lbl_803DC4D8 = 10;
-int lbl_803DC4DC = 90;
-int lbl_803DC4E0 = 110;
-f32 lbl_803DC4E4 = 5.0f;
-int lbl_803DC4E8 = 7;
-int lbl_803DC4EC = 200;
+int gAndrossAimedProjectileSpeed = 10;
+int gAndrossAimedProjectileLifetime = 90;
+int gAndrossRingProjectileLifetime = 110;
+f32 gAndrossRingProjectileScale = 5.0f;
+int gAndrossProjectileForwardStep = 7;
+int gAndrossSpawnedObjectLifetime = 200;
