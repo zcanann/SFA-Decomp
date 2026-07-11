@@ -523,8 +523,8 @@ void mainSetBits(int eventId, int value)
     }
     start = *(u16*)(gGameBitTable + id * 4);
     bit = 1;
-    end = (gGameBitTable[id * 4 + 2] & GAMEBIT_FLAG_WIDTH_MASK) + start;
-    for (i = start; i <= end; i++)
+    end = (gGameBitTable[id * 4 + 2] & GAMEBIT_FLAG_WIDTH_MASK) + start + 1;
+    for (i = start; i < end; i++)
     {
         int shift = i & 7;
         int byteIdx = i >> 3;
