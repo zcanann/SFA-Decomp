@@ -1207,3 +1207,17 @@ interacts with pass membership in an unmodeled way, (c) vec9's mr participates i
 different union that inflates its adjacency. Next instrument run (fresh session): adjtrace
 vec9 (full 0xa0 dump) + read K per class (0x4fe520 rets) + hand-simulate the passes —
 then the lever is computable.
+
+
+## Round 8: K CONFIRMED (GPR K=29, FPR K=32) + fn_802BCA10 adjacency data
+ktrace.py (bp 0x508a32 reads K after 0x4fe520; fallback dumps full adjacency):
+- K(cls4 GPR)=29, K(cls3 FPR)=32 — the simplify threshold, now exact.
+- vec9(73) nadj=25 adj=[r0-hard,3..12, obj, sub, 37, vec0, 77..86]; vec0(74) nadj=31
+  adj=[3..12, obj, sub, 35, 36, 37, vec9, 77..90]. Delta = {35,36,87..90}: the pre-vec9
+  temps (call1/call2 arg webs die at vec9's birth) + two block-locals. Simulation with
+  K=29 reproduces our color order exactly. Target needs vec9 static >= ~30: +5 edges in
+  [call2..end] at identical instruction count. fn-scoping the arms' sv/t = INERT (31).
+  Remaining candidates: temps whose RANGES retail extended past call2 (e.g. if the li 9
+  arg web or call-2 arg chain outlived the call), or an unmodeled union. Fresh-session
+  entry: def-site dump for temps 77-90 to name them, then reconstruct which retail
+  expression keeps one alive past vec9's birth.
