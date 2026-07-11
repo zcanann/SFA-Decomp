@@ -565,3 +565,17 @@ IroPropagate's split predicate (0x470060 band, already partially recovered)
 or probe C shapes on the harness watching the numbering trace for ch/i moving
 to the pass-2 batch. This unifies BOTH remaining audio functions AND the
 andross residual into one predicate decode.
+## H1 confirmation + session terminus (2026-07-11)
+p-for-middle + #pragma opt_lifetimes off: ch/i become SINGLE webs spanning
+both loops — pair CONSISTENT (r29/r28 both loops), proving single-web = the
+consistency structure. But the whole-fn pragma merges every other split too,
+shifting the entire bank (pair lands r29/r28, decl block displaced) — retail
+matches pristine everywhere EXCEPT the pair, so retail had normal splitting
+globally with only the ch/i pair behaving as-if-unsplit (or family-unioned
+across the split via the copy/union window gates 0x5ea1da/0x5e9730).
+REMAINING (one predicate, now cornered from three sides): the condition under
+which a split pair's webs union/color as one family (or never split). Sources:
+splitter pass + union window gate + IroPropagate canonicalization — all three
+partially recovered; the numbering/select tracers verify any candidate in 8s.
+This same predicate resolves ObjectChannel3D (param web class) and andross
+(stateChanged @-temp) — three residual families, one decode.
