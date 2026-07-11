@@ -896,3 +896,30 @@ structure against small source perturbations to find the one that merges/deletes
 param-edge web under default flags. The two pragma states (O2 / opt_lifetimes off) remain
 the reachability proof + a fallback (their shared residual: conversion-piece A/B reg swap
 [34,137]=r30 vs [76,90,106]=r31, and the v-join li-direct form).
+
+
+## OC3D round-21: creation-site map + the @644/level-split edge (2026-07-11)
+Instruments landed (all in scratchpad, recipes as before):
+- wetrace.py: WATCHPOINT on webEnd[4] (0x5e9b14) — logs every cls-4 web creation PC.
+  Works on lldb/Rosetta. Semantics: "W pc we4=N" => web N-1 just allocated.
+- Creator sites for the appended band (idx 40+, created AFTER the numbering burst):
+  0x4e1xxx/0x4e2xxx family (pcode-lowering fresh-vreg helpers; 0x4e2f3c dominant),
+  0x453e2c (movswl-fed: the s16-load/neg arg temps), 0x528983 (small-struct init w/
+  cx->+0x2: copy/move insertion), 0x44efxx (front-end). These are per-statement lowering
+  temps in program order — NOT a separate lifetime pass.
+- adjtrace on `#pragma opt_lifetimes off` build: **param nadj = 28** (vs 29 default) and
+  the numbering burst has only @643/@642 — **@644 does not exist**. @644 (default build)
+  = the lifetime-split piece of LEVEL (its adjacency = {param, fx, pan, late temps}).
+  So the +1 edge sticking the param = the level web split (init-segment vs clamp-segment
+  each edging the param). @643/@642 = call-result r3-temps (U 38->3, 39->3), fixed.
+- v-coalesce shape (li rX,0 direct into the clamp-web reg) present in BOTH target and
+  default build => retail compiled with default lifetimes ON.
+OPEN CRUX for next round: whether target's level is also two webs. Target occupancy:
+r31 = {slot[14-63], clamp-values[76,90,106], v-join[158]}, r30 = {init-value[34],
+fx[137-151], else-read mr r0,r30[169]}. If init+fx+else-read in r30 are THREE disjoint
+webs, retail nadj(param)=29 too and the differentiator is numbering/scan order (find the
+zero-emission reorder lever, MU-style). If retail merged level's segments (nadj 28),
+find the source form that avoids the hole-split under lifetimes ON. Next: per-reg
+occupancy annotation of both streams + M-burst/W-map for a variant that changes the
+@-temp block, to locate the order lever. Pragma fallbacks unchanged (O2 / lifetimes-off,
+shared residual: piece A/B swap + v-join decoalesce).
