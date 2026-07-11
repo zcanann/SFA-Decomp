@@ -668,3 +668,13 @@ completing the walk model (log block boundaries alongside numbering commits:
 one more tracer field), after which the required retail block structure can be
 back-derived and its C shape read off. All tools, traces, and ~260 mapped
 variants are in the entries above.
+
+## Pipeline shape confirmed + push-site negative (2026-07-11, last round)
+Interleaved V(block-visit 0x4dd684)/M(Number 0x4d03a0) trace: for each fn ALL
+block visits complete (33 w=8 + 1 w=1 for Music_Update), THEN the numbering
+commits run as one burst (we4 32..78 consecutive) — accumulate-then-number,
+not per-block numbering. The worklist consumed by the burst is NOT fed by the
+0x4f0e90 codegen-time push (MU's numbered value ptrs never pass it) — the
+numbering-time list is built inside the 0x4dd650 walker band; its list-append
+internals are the remaining read to complete the order model (then back-derive
+retail's required block/def structure for the loop-3 pair and read off the C).
