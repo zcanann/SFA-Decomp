@@ -985,7 +985,7 @@ extern f32 lbl_803E2340;
 #pragma opt_common_subs off
 void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 {
-    int yb;
+    int i;
     Texture* tex;
     int xb;
     f32* mtx;
@@ -996,7 +996,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     int a;
     u16 boxIndex;
     int idx;
-    int i;
+    int yb;
     int r;
 
     m = (lbl_803DD9C4 = lbl_803DD9C4 + timeDelta);
