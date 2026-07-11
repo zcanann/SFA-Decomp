@@ -108,7 +108,7 @@ void optionsMenu_openGeneralPanel(void)
     int lastUnlocked;
     int entryOffset;
     int cheatId;
-    int* slot;
+    int* slot[1];
     int cheatId2;
     int entryOffset2;
     int lastUnlocked2;
@@ -160,8 +160,8 @@ void optionsMenu_openGeneralPanel(void)
 
     lbl_803A87D0[0] =
         (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x366, 0x22, 0, 1, lbl_803DD708[6]);
-    slot = &lbl_803A87D0[0];
-    slot[1] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(0x36b, 0x23, 0, 1,
+    slot[0] = &lbl_803A87D0[0];
+    slot[0][1] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(0x36b, 0x23, 0, 1,
                                                                                      (s16)(lbl_803DD708[8] == 0));
 
     cheatId = 0;
@@ -171,16 +171,16 @@ void optionsMenu_openGeneralPanel(void)
         {
             if (cheatId == CHEAT_SEPIA_MODE)
             {
-                slot[2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
+                slot[0][2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
                     0x507, cheatId + 0x24, 0, 1, Rcp_GetColorFilterEnabled());
             }
             else
             {
-                slot[2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
+                slot[0][2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
                     0x36b, cheatId + 0x24, 0, 1, (s16)(saveFileStruct_isCheatActive((u8)cheatId) == 0));
             }
         }
-        slot++;
+        slot[0]++;
         cheatId++;
     } while (cheatId <= 1);
 
