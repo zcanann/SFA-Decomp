@@ -614,3 +614,25 @@ allocation run is the entry). Recommend: treat (b) as the one remaining
 research item for the whole reg-perm family; if it also shows no source key,
 this fn is a principled permanent bank at 99.596 and main/audio's realistic
 ceiling is 99.92 pending compiler-config archaeology.
+
+## DECODED (2026-07-11): block-reverse numbering walk + the final verdict
+0x4f0a90 read: it is the per-BLOCK worklist reset — allocates a block node
+(weight +0x8 defaulted to 1, later bumped to 8 by the loop pass), prepends it
+to the 0x5e9cd8 chain, zeroes both per-block value lists. The numbering-time
+block walker (0x4dd650, the weight setter) consumes the chain head-first =
+REVERSE program order — which reproduces every observed vreg: loop-3 preheader
+values number before mid's (47 < 48), loop-1's name-bound webs number last
+(44/45), and pass-2 (predicate 0x4e9380: value+0xa NULL or kind 0x40/0x24)
+collects deferred values across blocks after the barrier (ch3 → 49).
+Within the loop-3 preheader, i3's def (VN class: integer constant) and ch3's
+(VN class: symbol address) land in fixed pass-1/pass-2 lists by their VALUE
+CLASSES — spellings cannot move a compile-time constant or a symbol address
+out of its class while preserving the emitted li/lis+addi. VERDICT: the
+i3/ch3 numbering order in this shape is NOT source-reachable; retail's
+opposite order implies a different front-end/pass configuration for that
+compile (or a compiler sub-version numbering blocks forward). Music_Update
+banks PRINCIPLED at 99.596 alongside the sparse-switch jump-table cap;
+main/audio's source-reachable ceiling stands at 99.92 pending compiler-config
+archaeology (candidate: block-chain direction differences across MWCC 2.0
+builds — testable by diffing 0x4f0aa3-0x4f0aaa against other mwcceppc
+binaries in build/compilers/).
