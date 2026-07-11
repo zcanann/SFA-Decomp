@@ -1088,8 +1088,8 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     float disc;
     float q;
     float sc;
-    float bestDepth;
     float bestX;
+    float bestDepth;
     float bestZ;
     float defs[8];
     float sphs[8];
