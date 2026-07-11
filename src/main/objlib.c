@@ -2156,13 +2156,13 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
 {
 
     PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;
-    ObjModelInstance* model;
-    int jointDataOffset;
+    int joint = 0;
+    ObjModelInstance* model = NULL;
+    int jointDataOffset = 0;
     f32 leftScale;
-    int poseOffset;
-    u8* jointData;
+    int poseOffset = 0;
+    u8* jointData = NULL;
     s16 rotation;
-    int joint;
     ObjAnimComponent* objAnim;
     f32 phase;
     u8 step;
@@ -2295,7 +2295,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         for (jointCount = model->jointCount; jointCount > 0; jointCount--)
         {
             jointData = (u8*)model->jointData;
-            if (((int)jointData[objAnim->bankIndex + jointDataOffset + 1] != 0xff) &&
+            if (((int)*(u8*)((int)jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
                 ((int)jointData[jointDataOffset] == OBJLIB_BLINK_LEFT_JOINT_TAG))
             {
                 joint = (int)objAnim->jointPoseData + poseOffset;
@@ -2316,7 +2316,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         for (jointCount = model->jointCount; jointCount > 0; jointCount--)
         {
             jointData = (u8*)model->jointData;
-            if (((int)jointData[objAnim->bankIndex + jointDataOffset + 1] != 0xff) &&
+            if (((int)*(u8*)((int)jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
                 ((int)jointData[jointDataOffset] == OBJLIB_BLINK_RIGHT_JOINT_TAG))
             {
                 joint = (int)objAnim->jointPoseData + poseOffset;
