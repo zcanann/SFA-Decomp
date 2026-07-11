@@ -3331,17 +3331,17 @@ void gameTextInitFn_8001c794(void)
 #pragma peephole off
 void subtitleBuildLineTable(void)
 {
-    int total;
-    SubtitleLineTable* s = (SubtitleLineTable*)gSubtitleLineTable;
+    int savedCharset;
+    SubtitleLineTable* s[1];
     f32 delta;
     f32 curTime;
-    int savedCharset;
     SubtitleTextEntry* t;
     u8* win;
+    int m;
     int i;
     char* str;
     int k;
-    int m;
+    int total;
     int oldDelay;
     char** strLines;
     int found;
@@ -3352,6 +3352,7 @@ void subtitleBuildLineTable(void)
     f32 ftotal;
     void** blk;
 
+    s[0] = (SubtitleLineTable*)gSubtitleLineTable;
     total = 0;
     curTime = lbl_803DE730;
     if (gGameTextSequenceMode != 0)
@@ -3365,7 +3366,7 @@ void subtitleBuildLineTable(void)
     gSubtitleBlockCount = 0;
     for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
     {
-        s->times[i] = gSubtitleNoTimeSentinel;
+        s[0]->times[i] = gSubtitleNoTimeSentinel;
     }
     for (i = 0; i < t->count; i++)
     {
@@ -3374,33 +3375,33 @@ void subtitleBuildLineTable(void)
         if (n != 0)
         {
             q = args[2] / 60;
-            s->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
+            s[0]->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
         }
         strLines = textMeasureFn_80016c9c(str, (f32)(u32) * (u16*)(win + 2), *(f32*)(win + 0xc), &count, NULL);
         if (strLines != NULL)
         {
             for (k = 0; k < count; k++)
             {
-                s->lines[gSubtitleLineCount++] = strLines[k];
+                s[0]->lines[gSubtitleLineCount++] = strLines[k];
             }
-            blk = (void**)((u8*)s + gSubtitleBlockCount * 4);
+            blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
             if (*blk != NULL)
             {
                 oldDelay = mmSetFreeDelay(0);
-                blk = (void**)((u8*)s + gSubtitleBlockCount * 4);
+                blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
                 mm_free(*blk);
                 mmSetFreeDelay(oldDelay);
             }
-            blk = (void**)((u8*)s + gSubtitleBlockCount++ * 4);
+            blk = (void**)((u8*)s[0] + gSubtitleBlockCount++ * 4);
             *blk = strLines;
         }
     }
     for (k = 0; k < gSubtitleLineCount; k++)
     {
-        if (gSubtitleNoTimeSentinel != s->times[k])
+        if (gSubtitleNoTimeSentinel != s[0]->times[k])
         {
-            curTime = s->times[k];
-            total = GameText_CountPrintableChars((u8*)s->lines[k]);
+            curTime = s[0]->times[k];
+            total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
         }
         else
         {
@@ -3411,19 +3412,19 @@ void subtitleBuildLineTable(void)
                 ftotal = total;
                 if (m < 255)
                 {
-                    if (gSubtitleNoTimeSentinel != s->times[m + 1])
+                    if (gSubtitleNoTimeSentinel != s[0]->times[m + 1])
                     {
-                        delta = s->times[m + 1] - curTime;
+                        delta = s[0]->times[m + 1] - curTime;
                         found = 1;
                     }
-                    n = GameText_CountPrintableChars((u8*)s->lines[m]);
-                    s->times[m] = n;
+                    n = GameText_CountPrintableChars((u8*)s[0]->lines[m]);
+                    s[0]->times[m] = n;
                     total += n;
                     if (found != 0)
                     {
                         for (q = m; q >= k; q--)
                         {
-                            s->times[q] = s->times[q + 1] - delta * (s->times[q] / total);
+                            s[0]->times[q] = s[0]->times[q + 1] - delta * (s[0]->times[q] / total);
                         }
                         break;
                     }
