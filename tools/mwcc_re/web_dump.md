@@ -1250,3 +1250,17 @@ but were absorbed). NEXT: dump vec9 adjacency at BUILD time (before simplify —
 graph builder) or log +0x12 current-degree at each visit (bp in the scan loop 0x508a64).
 One of these two numbers resolves the last discrepancy, then the retail spelling is
 computable. rmtrace.py added to the kit.
+
+
+## Round 11: vec9 visit-degree MEASURED = 27 (needs 29; +2 exactly)
+degtrace.py (bp 0x508a64, current-degree +0x12 at each scan visit): fn_802BCA10 pass-1
+visits: obj=46, sub=60 (survive), t(35)=1, sv(36)=2, sv(37)=3 (removed), vec0(73)=24
+(removed), vec9(74)=27 (removed — 2 short of K=29); pass-2: obj=14, sub=13.
+So vec9 loses exactly 4 pre-visit (t, sv, sv, vec0) from static 31 — the fallback
+adjacency dump WAS incomplete (35/36 are real neighbors). Retail needs vec9 at >= 29:
+remove TWO of the four early neighbors (the both-sv direct-deref does it and flips the
+cycle — but its per-branch sth emission regresses fuzzy), or gain +2 static edges above
+index 74 (needs new instructions ✗), or retype/re-scope sv/t so their webs move above 74.
+UNTESTED NEXT: sv/t as s16/u16 (#115 absorb may eliminate their separate webs at equal
+emission), or one sv direct + t eliminated via an abs helper. The problem is now
+plus-two-edges exact — the tightest spec of the campaign.
