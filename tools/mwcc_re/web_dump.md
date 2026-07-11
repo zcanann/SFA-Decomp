@@ -1467,3 +1467,11 @@ per-fn — but what SETS the window low bound 42 = the first temp index = f(name
 one dead decl shifts every temp index +1 AND the window +1 — net invariant? — but the
 window is [firstTemp, ...] so relative positions hold... unless the PROTECTED web
 (0x5e9d86) or the temp-canonical parent selection shifts. UNTESTED.)
+
+
+## Round 30: window-base-shift invariant CONFIRMED (pad locals x3 inert)
+Dead named locals shift temp indices and the window together — net zero, as the null
+hypothesis predicted. fn_802BCA10 absorb-analog family: 5 tested, all negative.
+The four-fn GPR cluster awaits either the remaining absorb spellings (void*-return,
+second named pointer, #115 idx-arg width) or a temp-canonical PRIORITY lever (the
+temp-canonicals' own pri/deg — never probed as a target). Session round-count: 30.
