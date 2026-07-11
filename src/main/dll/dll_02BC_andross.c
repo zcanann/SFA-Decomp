@@ -166,7 +166,6 @@ void andross_setPartSignal(GameObject* obj, int signal)
     ((AndrossState*)state)->signalFlags |= signal;
 }
 
-#pragma scheduling off
 int andross_SeqFn(GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;
@@ -189,7 +188,6 @@ int andross_SeqFn(GameObject* obj)
     return 0;
 }
 
-#pragma peephole off
 void andross_init(int obj, u8* setup)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -290,20 +288,15 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
 
 void andross_update(int obj)
 {
-    GameObject* boss;
-    u8 flag;
-    u8 stateChanged;
+    int* state;
     int work;
-    u8 pathAdjusted;
-    AndrossState* state;
-    AndrossState* moveState;
-    AndrossHandState* handStateA;
-    AndrossHandState* handStateB;
-    GameObject* aimTarget;
+    u8 stateChanged;
+    u8 flag;
+    u8 moveChanged;
     int ref;
     int durationBeforeStep;
+    GameObject* objAlias;
     u32 val;
-    f32 fc;
     f32 fval;
     s16 sval;
     int found;
@@ -311,10 +304,10 @@ void andross_update(int obj)
     s16 randVal;
     int objId;
     u8 signals;
-    u8 i;
     f32 fa;
     f32 fb;
     f32 zero;
+    f32 fc;
     s16 delayPair[2];
     SunVec3 thrustB;
     SunVec3 thrustA;
@@ -335,700 +328,708 @@ void andross_update(int obj)
     f32 searchDist2;
     f32 searchDist3;
     f32 searchDist;
-    boss = (GameObject*)obj;
-    state = (AndrossState*)boss->extra;
+    objAlias = (GameObject*)obj;
+    state = ((GameObject*)obj)->extra;
     flag = 0;
     stateChanged = 0;
-    pathAdjusted = 0;
-    if (state->startupDelay != 0)
+    moveChanged = 0;
+    if (((AndrossState*)state)->startupDelay != 0)
     {
-        state->startupDelay -= 1;
+        ((AndrossState*)state)->startupDelay -= 1;
         return;
     }
-    if (state->handObjA == NULL)
+    if (*(void**)&((AndrossState*)state)->handObjA == NULL)
     {
         found = ObjList_FindObjectById(0x47b78);
-        state->handObjA = (GameObject*)found;
+        ((AndrossState*)state)->handObjA = (GameObject*)found;
     }
-    if (state->handObjB == NULL)
+    if (*(void**)&((AndrossState*)state)->handObjB == NULL)
     {
         found = ObjList_FindObjectById(0x47b6a);
-        state->handObjB = (GameObject*)found;
+        ((AndrossState*)state)->handObjB = (GameObject*)found;
     }
-    if (state->lightAnchorObj == NULL)
+    if (*(void**)&((AndrossState*)state)->lightAnchorObj == NULL)
     {
         found = ObjList_FindObjectById(0x47dd9);
-        state->lightAnchorObj = (GameObject*)found;
+        ((AndrossState*)state)->lightAnchorObj = (GameObject*)found;
     }
-    if (state->arwingObj == NULL)
+    if (*(void**)state == NULL)
     {
         found = getArwing();
-        state->arwingObj = (GameObject*)found;
-        if (state->arwingObj != NULL)
+        *state = found;
+        if (*(void**)state != NULL)
         {
-            state->savedPosZ = state->arwingObj->anim.localPosZ;
-            arwarwing_setFlightHalfWidth((int)state->arwingObj, gAndrossFlightHalfWidth);
+            ((AndrossState*)state)->savedPosZ = ((GameObject*)*state)->anim.localPosZ;
+            arwarwing_setFlightHalfWidth(*state, gAndrossFlightHalfWidth);
         }
         else
         {
             return;
         }
     }
+    /* Update each linked spawn object from its cached relative position. */
     for (work = 0; (u8)work < 4; work++)
     {
         val = work & 0xff;
-        if (state->spawnObj[val] == NULL)
+        found = val * 4 + 0x18;
+        if (*(void**)((int)state + found) == NULL)
         {
-            state->spawnObj[val] = (GameObject*)ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
-            if (state->spawnObj[val] != NULL)
+            *(int*)((int)state + found) = ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
+            if (*(void**)((int)state + found) != NULL)
             {
-                state->spawnDelta[val].x = state->spawnObj[val]->anim.localPosX - boss->anim.localPosX;
-                state->spawnDelta[val].y = state->spawnObj[val]->anim.localPosY - boss->anim.localPosY;
-                state->spawnDelta[val].z = state->spawnObj[val]->anim.localPosZ - boss->anim.localPosZ;
+                ((AndrossState*)state)->spawnDelta[val].x =
+                    *(float*)(*(int*)((int)state + found) + 0xc) - ((GameObject*)obj)->anim.localPosX;
+                ((AndrossState*)state)->spawnDelta[val].y =
+                    *(float*)(*(int*)((int)state + found) + 0x10) - ((GameObject*)obj)->anim.localPosY;
+                ((AndrossState*)state)->spawnDelta[val].z =
+                    *(float*)(*(int*)((int)state + found) + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             }
         }
         else
         {
-            state->spawnObj[val]->anim.localPosX = boss->anim.localPosX + state->spawnDelta[val].x;
-            state->spawnObj[val]->anim.localPosY = boss->anim.localPosY + state->spawnDelta[val].y;
-            state->spawnObj[val]->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[val].z;
+            *(float*)(*(int*)((int)state + found) + 0xc) =
+                ((GameObject*)obj)->anim.localPosX + ((AndrossState*)state)->spawnDelta[val].x;
+            *(float*)(*(int*)((int)state + found) + 0x10) =
+                ((GameObject*)obj)->anim.localPosY + ((AndrossState*)state)->spawnDelta[val].y;
+            *(float*)(*(int*)((int)state + found) + 0x14) =
+                ((GameObject*)obj)->anim.localPosZ + ((AndrossState*)state)->spawnDelta[val].z;
         }
     }
-    found = state->fightPhase;
-    if (found != state->prevFightPhase)
+    found = ((AndrossState*)state)->fightPhase;
+    if (found != ((AndrossState*)state)->prevFightPhase)
     {
         stateChanged = 1;
     }
-    state->prevFightPhase = found;
+    ((AndrossState*)state)->prevFightPhase = found;
     fval = lbl_803E74D4;
-    state->velX = lbl_803E74D4;
-    state->velY = fval;
-    state->velZ = fval;
-    if ((-0x4000 < state->targetRotX) && (boss->anim.rotX < 0x4000))
+    ((AndrossState*)state)->velX = lbl_803E74D4;
+    ((AndrossState*)state)->velY = fval;
+    ((AndrossState*)state)->velZ = fval;
+    if ((-0x4000 < ((AndrossState*)state)->targetRotX) && (((GameObject*)obj)->anim.rotX < 0x4000))
     {
-        pathAdjusted = 1;
+        flag = 1;
     }
-    ObjPath_GetPointWorldPosition(
-        obj, pathAdjusted, &state->cachedPosX, &state->cachedPosY, &state->cachedPosZ, 0);
-    if (pathAdjusted == 1)
+    ObjPath_GetPointWorldPosition(obj, flag, (f32*)(state + 0x30), (f32*)(state + 0x31), (f32*)(state + 0x32), 0);
+    if (flag == 1)
     {
-        fa = state->cachedPosY;
+        fa = ((AndrossState*)state)->cachedPosY;
         fval = gAndrossPathPosOffset;
-        state->cachedPosY = fa + fval;
-        state->cachedPosZ += fval;
+        ((AndrossState*)state)->cachedPosY = fa + fval;
+        ((AndrossState*)state)->cachedPosZ += fval;
     }
-    switch (state->fightPhase)
+    switch (((AndrossState*)state)->fightPhase)
     {
     case 1:
         if (stateChanged)
         {
-            if (state->handsInitialized != 0)
+            if (((AndrossState*)state)->handsInitialized != 0)
             {
-                state->handsInitialized = 0;
+                ((AndrossState*)state)->handsInitialized = 0;
             }
             else
             {
-                androsshand_setState(state->handObjA, 2, 1);
-                androsshand_setState(state->handObjB, 2, 1);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 2, 1);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 2, 1);
             }
-            state->hitsRemaining0 = 10;
-            state->hitsRemaining1 = 10;
-            state->hitsRemaining2 = 10;
+            ((AndrossState*)state)->hitsRemaining0 = 10;
+            ((AndrossState*)state)->hitsRemaining1 = 10;
+            ((AndrossState*)state)->hitsRemaining2 = 10;
         }
-        if (state->actionPending != 0)
+        if (((AndrossState*)state)->actionPending != 0)
         {
-            switch (state->actionState)
+            switch (((AndrossState*)state)->actionState)
             {
             default:
             case 3:
             case 0x17:
-                state->actionState = 0;
+                ((AndrossState*)state)->actionState = 0;
                 break;
             case 0:
-                state->actionState = 1;
+                ((AndrossState*)state)->actionState = 1;
                 break;
             case 0x16:
-                if (state->arwingFlightActive != 0)
+                if (*(u8*)(state + 0x2e) != 0)
                 {
-                    state->actionState = 0x17;
+                    ((AndrossState*)state)->actionState = 0x17;
                 }
                 else
                 {
-                    state->actionState = 0;
+                    ((AndrossState*)state)->actionState = 0;
                 }
                 break;
             }
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionPending = 0;
         }
         break;
     case 2:
-        if ((stateChanged) && (state->signalFlags &= ~0x6,
-                               state->actionState == 0x16))
+        if ((stateChanged) && (((AndrossState*)state)->signalFlags &= ~0x6,
+                               ((AndrossState*)state)->actionState == 0x16))
         {
-            androsshand_setState(state->handObjA, 1, 1);
-            androsshand_setState(state->handObjB, 1, 1);
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 1, 1);
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 1, 1);
         }
-        if (state->actionPending != 0)
+        if (((AndrossState*)state)->actionPending != 0)
         {
-            switch (state->actionState)
+            switch (((AndrossState*)state)->actionState)
             {
             default:
             case 5:
             case 0x16:
-                state->actionState = 6;
+                ((AndrossState*)state)->actionState = 6;
                 break;
             case 6:
-                state->actionState = 7;
+                ((AndrossState*)state)->actionState = 7;
                 break;
             case 7:
-                state->actionState = 10;
+                ((AndrossState*)state)->actionState = 10;
                 break;
             case 10:
-                state->actionState = 0x12;
+                ((AndrossState*)state)->actionState = 0x12;
                 break;
             case 0x14:
-                state->actionState = 0xb;
+                ((AndrossState*)state)->actionState = 0xb;
                 break;
             case 0x11:
-                state->actionState = 0x16;
-                state->targetRotX = 0x8000;
-                state->fightPhase--;
+                ((AndrossState*)state)->actionState = 0x16;
+                ((AndrossState*)state)->targetRotX = 0x8000;
+                ((AndrossState*)state)->fightPhase--;
             }
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionPending = 0;
         }
         break;
     case 3:
         if (stateChanged)
         {
-            state->hitsRemaining0 = 0xf;
-            state->hitsRemaining1 = 0xf;
-            state->hitsRemaining2 = 0xf;
-            state->actionState = 0;
-            state->attackCycleCount = 0;
+            ((AndrossState*)state)->hitsRemaining0 = 0xf;
+            ((AndrossState*)state)->hitsRemaining1 = 0xf;
+            ((AndrossState*)state)->hitsRemaining2 = 0xf;
+            ((AndrossState*)state)->actionState = 0;
+            ((AndrossState*)state)->attackCycleCount = 0;
         }
-        if (state->actionPending != 0)
+        if (((AndrossState*)state)->actionPending != 0)
         {
-            switch (state->actionState)
+            switch (((AndrossState*)state)->actionState)
             {
             default:
             case 0:
-                state->actionState = 1;
+                ((AndrossState*)state)->actionState = 1;
                 break;
             case 3:
-                state->actionState = 4;
+                ((AndrossState*)state)->actionState = 4;
                 break;
             case 4:
-                state->attackCycleCount++;
-                if (state->attackCycleCount > 3)
+                ((AndrossState*)state)->attackCycleCount++;
+                if (((AndrossState*)state)->attackCycleCount > 3)
                 {
-                    state->fightPhase--;
-                    state->actionState = 0x16;
-                    state->targetRotX = 0;
+                    ((AndrossState*)state)->fightPhase--;
+                    ((AndrossState*)state)->actionState = 0x16;
+                    ((AndrossState*)state)->targetRotX = 0;
                 }
                 else
                 {
-                    state->actionState = 0;
+                    ((AndrossState*)state)->actionState = 0;
                 }
                 break;
             }
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionPending = 0;
         }
         break;
     case 4:
-        if (state->actionPending != 0)
+        if (((AndrossState*)state)->actionPending != 0)
         {
-            switch (state->actionState)
+            switch (((AndrossState*)state)->actionState)
             {
             default:
             case 5:
             case 0x16:
-                state->actionState = 6;
+                ((AndrossState*)state)->actionState = 6;
                 break;
             case 6:
-                state->actionState = 7;
+                ((AndrossState*)state)->actionState = 7;
                 break;
             case 7:
-                state->actionState = 10;
+                ((AndrossState*)state)->actionState = 10;
                 break;
             case 10:
-                state->actionState = 0x12;
+                ((AndrossState*)state)->actionState = 0x12;
                 break;
             case 0x14:
-                state->actionState = 0xb;
+                ((AndrossState*)state)->actionState = 0xb;
                 break;
             case 0xf:
-                state->actionState = 9;
+                ((AndrossState*)state)->actionState = 9;
                 break;
             case 9:
-                state->actionState = 8;
+                ((AndrossState*)state)->actionState = 8;
                 break;
             case 0x11:
-                state->actionState = 0x18;
+                ((AndrossState*)state)->actionState = 0x18;
             }
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionPending = 0;
         }
         break;
     case 5:
         if (stateChanged)
         {
-            state->actionState = 0xd;
-            state->actionToggle = 0;
+            ((AndrossState*)state)->actionState = 0xd;
+            ((AndrossState*)state)->actionToggle = 0;
         }
-        if (state->actionPending != 0)
+        if (((AndrossState*)state)->actionPending != 0)
         {
-            switch (state->actionState)
+            switch (((AndrossState*)state)->actionState)
             {
             default:
             case 0x1b:
-                state->unkB1[0] = 3;
+                ((AndrossState*)state)->unkB1[0] = 3;
             case 0xf:
-                state->actionState = 0x12;
-                state->actionToggle = 0;
+                ((AndrossState*)state)->actionState = 0x12;
+                ((AndrossState*)state)->actionToggle = 0;
                 break;
             case 0x14:
-                switch (state->actionToggle)
+                switch (((AndrossState*)state)->actionToggle)
                 {
                 case 0:
-                    state->actionState = 0x15;
+                    ((AndrossState*)state)->actionState = 0x15;
                     break;
                 case 1:
-                    state->actionState = 0xb;
+                    ((AndrossState*)state)->actionState = 0xb;
                     break;
                 }
-                state->actionToggle ^= 1;
+                ((AndrossState*)state)->actionToggle ^= 1;
                 break;
             case 0x15:
-                state->actionState = 0x12;
+                ((AndrossState*)state)->actionState = 0x12;
                 break;
             case 0x11:
-                state->actionState = 0x18;
+                ((AndrossState*)state)->actionState = 0x18;
                 break;
             case 0x19:
-                state->fightPhase = 6;
+                ((AndrossState*)state)->fightPhase = 6;
                 break;
             case 0x1a:
-                state->actionState = 0x1b;
+                ((AndrossState*)state)->actionState = 0x1b;
             }
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionPending = 0;
         }
         break;
     case 6:
         if (stateChanged)
         {
-            state->actionState = 0x1c;
-            state->actionToggle = 0;
+            ((AndrossState*)state)->actionState = 0x1c;
+            ((AndrossState*)state)->actionToggle = 0;
         }
         break;
     }
-    found = state->actionState;
-    if (found != state->prevActionState)
+    flag = moveChanged;
+    found = ((AndrossState*)state)->actionState;
+    if (found != ((AndrossState*)state)->prevActionState)
     {
-        flag += 1;
+        flag = 1;
     }
-    state->prevActionState = found;
-    switch (state->actionState)
+    ((AndrossState*)state)->prevActionState = found;
+    switch (((AndrossState*)state)->actionState)
     {
     case 0:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
-            if (state->fightPhase == 1)
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[0];
+            if (((AndrossState*)state)->fightPhase == 1)
             {
-                state->durationTimer = lbl_803E74E4;
+                ((AndrossState*)state)->durationTimer = lbl_803E74E4;
             }
             else
             {
-                state->durationTimer = lbl_803E74E8;
+                ((AndrossState*)state)->durationTimer = lbl_803E74E8;
             }
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        state->durationTimer -= timeDelta;
-        if (state->durationTimer < lbl_803E74D4)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
-        val = state->hitsRemaining0;
-        val = val + state->hitsRemaining1;
-        val = val + state->hitsRemaining2;
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
         if ((val & 0xffff) == 0)
         {
-            state->fightPhase++;
-            state->actionState = 5;
-            state->actionPending = 0;
+            ((AndrossState*)state)->fightPhase++;
+            ((AndrossState*)state)->actionState = 5;
+            ((AndrossState*)state)->actionPending = 0;
             mainSetBits(0xd, 0);
         }
         break;
     case 1:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0xc, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[12];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[12];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionState = 2;
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionState = 2;
+            ((AndrossState*)state)->actionPending = 0;
         }
-        val = state->hitsRemaining0;
-        val = val + state->hitsRemaining1;
-        val = val + state->hitsRemaining2;
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
         if ((val & 0xffff) == 0)
         {
-            state->fightPhase++;
-            state->actionState = 5;
-            state->actionPending = 0;
+            ((AndrossState*)state)->fightPhase++;
+            ((AndrossState*)state)->actionState = 5;
+            ((AndrossState*)state)->actionPending = 0;
             mainSetBits(0xd, 0);
         }
         break;
     case 2:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[14];
-            state->durationTimer = lbl_803E74F0;
-            state->actionTimer = 0xffff;
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[14];
+            ((AndrossState*)state)->durationTimer = lbl_803E74F0;
+            ((AndrossState*)state)->actionTimer = 0xffff;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_roar1);
-        state->actionTimer -= framesThisStep;
-        if (state->actionTimer < 0)
+        ((AndrossState*)state)->actionTimer -= framesThisStep;
+        if (((AndrossState*)state)->actionTimer < 0)
         {
             fn_8023A268(obj, (int)state, 0);
-            state->actionTimer = lbl_803DC43C;
+            ((AndrossState*)state)->actionTimer = lbl_803DC43C;
         }
-        state->durationTimer -= timeDelta;
-        if (state->durationTimer < lbl_803E74D4)
+        ((AndrossState*)state)->durationTimer -= timeDelta;
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
-            state->actionState = 3;
-            state->actionPending = 0;
+            ((AndrossState*)state)->actionState = 3;
+            ((AndrossState*)state)->actionPending = 0;
         }
-        val = state->hitsRemaining0;
-        val = val + state->hitsRemaining1;
-        val = val + state->hitsRemaining2;
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
         if ((val & 0xffff) == 0)
         {
-            state->fightPhase++;
-            state->actionState = 5;
-            state->actionPending = 0;
+            ((AndrossState*)state)->fightPhase++;
+            ((AndrossState*)state)->actionState = 5;
+            ((AndrossState*)state)->actionPending = 0;
             mainSetBits(0xd, 0);
         }
         break;
     case 3:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[13];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[13];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 4:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[0];
             mainSetBits(0xd, 1);
-            state->durationTimer = lbl_803E7504;
+            ((AndrossState*)state)->durationTimer = lbl_803E7504;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        state->durationTimer -= timeDelta;
-        if (state->durationTimer < lbl_803E74D4)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
             mainSetBits(0xd, 0);
         }
-        val = state->hitsRemaining0;
-        val = val + state->hitsRemaining1;
-        val = val + state->hitsRemaining2;
+        val = ((AndrossState*)state)->hitsRemaining0;
+        val = val + ((AndrossState*)state)->hitsRemaining1;
+        val = val + ((AndrossState*)state)->hitsRemaining2;
         if ((val & 0xffff) == 0)
         {
-            state->fightPhase++;
-            state->actionState = 5;
-            state->actionPending = 0;
+            ((AndrossState*)state)->fightPhase++;
+            ((AndrossState*)state)->actionState = 5;
+            ((AndrossState*)state)->actionPending = 0;
             mainSetBits(0xd, 0);
         }
         break;
     case 0x15:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[0];
             mainSetBits(0xd, 1);
-            state->durationTimer = lbl_803E7504;
+            ((AndrossState*)state)->durationTimer = lbl_803E7504;
         }
-        for (i = 0; i < 6; i++)
+        for (ref = 0; (u8)ref < 6; ref++)
         {
-            if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+            if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
-                state->timer = 0x3c;
-                goto hit_cue_ready_1;
+                ((AndrossState*)state)->timer = 0x3c;
+                goto hit_cue_ready_15;
             }
         }
-        state->timer -= framesThisStep;
-        if (state->timer <= 0)
+        ((AndrossState*)state)->timer -= framesThisStep;
+        if (((AndrossState*)state)->timer <= 0)
         {
             ref = randomGetRange(0, 5);
             mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-            state->timer = 0x3c;
+            ((AndrossState*)state)->timer = 0x3c;
         }
-hit_cue_ready_1:;
+    hit_cue_ready_15:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        state->durationTimer -= timeDelta;
-        if (state->durationTimer < lbl_803E74D4)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        ((AndrossState*)state)->durationTimer -= timeDelta;
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
             mainSetBits(0xd, 0);
         }
         break;
     case 6:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
-            androsshand_setState(state->handObjB, 4, 0);
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[0];
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 4, 0);
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7508) ? lbl_803E7508 : ((fb > lbl_803E750C) ? lbl_803E750C : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74E8 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74E8 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         flag = 0;
-        moveState = (AndrossState*)boss->extra;
-        signals = moveState->signalFlags;
+        found = *(int*)&((GameObject*)obj)->extra;
+        signals = *(u8*)(found + 0xad);
         if ((signals & 1) != 0)
         {
-            moveState->signalFlags = signals & ~1;
+            *(u8*)(found + 0xad) = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 7:
         if (flag)
         {
-            androsshand_setState(state->handObjA, 4, 0);
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 4, 0);
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7508) ? lbl_803E7508 : ((fb > lbl_803E750C) ? lbl_803E750C : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74E8 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74E8 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         flag = 0;
-        moveState = (AndrossState*)boss->extra;
-        signals = moveState->signalFlags;
+        found = *(int*)&((GameObject*)obj)->extra;
+        signals = *(u8*)(found + 0xad);
         if ((signals & 1) != 0)
         {
-            moveState->signalFlags = signals & ~1;
+            *(u8*)(found + 0xad) = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 9:
         if (flag)
         {
-            androsshand_setState(state->handObjA, 6, 0);
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 6, 0);
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         flag = 0;
-        moveState = (AndrossState*)boss->extra;
-        signals = moveState->signalFlags;
+        found = *(int*)&((GameObject*)obj)->extra;
+        signals = *(u8*)(found + 0xad);
         if ((signals & 1) != 0)
         {
-            moveState->signalFlags = signals & ~1;
+            *(u8*)(found + 0xad) = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 8:
         if (flag)
         {
-            androsshand_setState(state->handObjB, 6, 0);
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 6, 0);
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7500) ? lbl_803E7500 : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         flag = 0;
-        moveState = (AndrossState*)boss->extra;
-        signals = moveState->signalFlags;
+        found = *(int*)&((GameObject*)obj)->extra;
+        signals = *(u8*)(found + 0xad);
         if ((signals & 1) != 0)
         {
-            moveState->signalFlags = signals & ~1;
+            *(u8*)(found + 0xad) = signals & ~1;
             flag = 1;
         }
         if (flag != 0)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 10:
-        if ((state->signalFlags & 6) == 6)
+        if ((((AndrossState*)state)->signalFlags & 6) == 6)
         {
-            state->fightPhase++;
-            if (state->fightPhase < 5)
+            ((AndrossState*)state)->fightPhase++;
+            if (((AndrossState*)state)->fightPhase < 5)
             {
                 Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
-                state->actionState = 0x16;
-                state->targetRotX = 0x8000;
+                ((AndrossState*)state)->actionState = 0x16;
+                ((AndrossState*)state)->targetRotX = 0x8000;
             }
         }
         else
         {
             gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
             gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-            fb = (state->arwingObj->anim.localPosX - state->homePosX);
-            fa = (state->arwingObj->anim.localPosY - state->homePosY);
+            fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+            fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
             fc = (fb < lbl_803E7508) ? lbl_803E7508 : ((fb > lbl_803E750C) ? lbl_803E750C : fb);
             fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
             fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-            state->targetPosX = (lbl_803E74E8 * fa + (float)(state->homePosX + fc));
+            ((AndrossState*)state)->targetPosX = (lbl_803E74E8 * fa + (float)(((AndrossState*)state)->homePosX + fc));
             fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-            state->targetPosY =
-                (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-            state->targetPosZ = state->homePosZ;
+            ((AndrossState*)state)->targetPosY =
+                (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+            ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
             if (flag)
             {
-                androsshand_setState(state->handObjA, 5, 0);
-                androsshand_setState(state->handObjB, 5, 0);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 5, 0);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 5, 0);
             }
             flag = 0;
-            moveState = (AndrossState*)boss->extra;
-            signals = moveState->signalFlags;
+            found = *(int*)&((GameObject*)obj)->extra;
+            signals = *(u8*)(found + 0xad);
             if ((signals & 1) != 0)
             {
-                moveState->signalFlags = signals & ~1;
+                *(u8*)(found + 0xad) = signals & ~1;
                 flag = 1;
             }
             if (flag != 0)
             {
-                state->actionPending = 1;
+                ((AndrossState*)state)->actionPending = 1;
             }
         }
         break;
@@ -1036,66 +1037,66 @@ hit_cue_ready_1:;
     case 0xd:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[1];
-            if (state->fightPhase < 5)
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[1];
+            if (((AndrossState*)state)->fightPhase < 5)
             {
-                androsshand_setState(state->handObjA, 0, 0);
-                androsshand_setState(state->handObjB, 0, 0);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 0, 0);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 0, 0);
             }
             else
             {
-                androsshand_setState(state->handObjA, 9, 1);
-                androsshand_setState(state->handObjB, 9, 1);
-                state->signalFlags |= 6;
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 9, 1);
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 9, 1);
+                ((AndrossState*)state)->signalFlags |= 6;
             }
         }
-        if ((state->fightPhase == 5) && (state->actionState == 0xb))
+        if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionState == 0xb))
         {
-            for (i = 0; i < 6; i++)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
-                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    state->timer = 0x3c;
-                    goto hit_cue_ready_2;
+                    ((AndrossState*)state)->timer = 0x3c;
+                    goto hit_cue_ready_b_or_d;
                 }
             }
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
-hit_cue_ready_2:;
         }
+    hit_cue_ready_b_or_d:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7510) ? lbl_803E7510 : ((fb > gAndrossSwayAmplitudeY) ? gAndrossSwayAmplitudeY : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeY * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeY * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY = (lbl_803E7514 * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY = (lbl_803E7514 * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            switch (state->actionState)
+            switch (((AndrossState*)state)->actionState)
             {
             default:
             case 0xb:
-                state->actionState = 0xc;
+                ((AndrossState*)state)->actionState = 0xc;
                 break;
             case 0xd:
-                state->actionState = 0xe;
+                ((AndrossState*)state)->actionState = 0xe;
                 break;
             }
         }
-        fval = lbl_803E74B8 * boss->anim.currentMoveProgress;
+        fval = lbl_803E74B8 * ((GameObject*)obj)->anim.currentMoveProgress;
         if (fval < lbl_803E74B8)
         {
             fc = -(lbl_803E74C0 * (lbl_803E74C4 * fval) - lbl_803E74BC);
@@ -1114,10 +1115,10 @@ hit_cue_ready_2:;
         {
             gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
         }
-        turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
+        turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         break;
     case 0xe:
-        fval = lbl_803E74B8 * boss->anim.currentMoveProgress + lbl_803E74B8;
+        fval = lbl_803E74B8 * ((GameObject*)obj)->anim.currentMoveProgress + lbl_803E74B8;
         if (fval < lbl_803E74B8)
         {
             fc = -(lbl_803E74C0 * (lbl_803E74C4 * fval) - lbl_803E74BC);
@@ -1136,48 +1137,48 @@ hit_cue_ready_2:;
         {
             gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
         }
-        turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
+        turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[2];
-            state->unkB1[0] = 0;
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[2];
+            ((AndrossState*)state)->unkB1[0] = 0;
             mainSetBits(0x10, 0);
-            state->actionTimer = lbl_803DC44C;
-            state->durationTimer = lbl_803E74D4;
+            ((AndrossState*)state)->actionTimer = lbl_803DC44C;
+            ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E7508) ? lbl_803E7508 : ((fa > lbl_803E750C) ? lbl_803E750C : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeY * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeY * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY = (lbl_803E7514 * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        fn_8023A6A4(state, lbl_803DC440, lbl_803DC444, lbl_803DC448);
+        ((AndrossState*)state)->targetPosY = (lbl_803E7514 * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        fn_8023A6A4((AndrossState*)state, lbl_803DC440, lbl_803DC444, lbl_803DC448);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
-        if ((state->actionTimer != 0) &&
-            (state->actionTimer -= framesThisStep, state->actionTimer <= 0))
+        if ((((AndrossState*)state)->actionTimer != 0) &&
+            (((AndrossState*)state)->actionTimer -= framesThisStep, ((AndrossState*)state)->actionTimer <= 0))
         {
-            state->actionTimer = 0;
+            ((AndrossState*)state)->actionTimer = 0;
             mainSetBits(0xf, 1);
         }
-        state->durationTimer -= timeDelta;
-        if (state->durationTimer < lbl_803E74D4)
+        ((AndrossState*)state)->durationTimer -= timeDelta;
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             fn_80239FCC(obj, (int)state);
-            state->durationTimer += (f32)(lbl_803DC450);
+            ((AndrossState*)state)->durationTimer += (f32)(lbl_803DC450);
         }
         fn_80239EAC(obj, (int)state);
         if ((u32)mainGetBit(0x10) != 0)
         {
             mainSetBits(0x10, 0);
-            state->actionState = 0x1a;
+            ((AndrossState*)state)->actionState = 0x1a;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
             gAndrossDistortPhase = fval;
@@ -1185,13 +1186,13 @@ hit_cue_ready_2:;
             {
                 gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
-            turnOnDistortionFilter(&state->cachedPosX, lbl_803E74BC, &gAndrossDistortFilterParam,
+            turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
         }
         break;
     case 0xc:
-        fval = lbl_803E74B8 * boss->anim.currentMoveProgress + lbl_803E74B8;
+        fval = lbl_803E74B8 * ((GameObject*)obj)->anim.currentMoveProgress + lbl_803E74B8;
         if (fval < lbl_803E74B8)
         {
             fc = -(lbl_803E74C0 * (lbl_803E74C4 * fval) - lbl_803E74BC);
@@ -1210,55 +1211,55 @@ hit_cue_ready_2:;
         {
             gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
         }
-        turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
+        turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[2];
-            if (state->fightPhase < 5)
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[2];
+            if (((AndrossState*)state)->fightPhase < 5)
             {
-                state->unkB1[0] = 1;
+                ((AndrossState*)state)->unkB1[0] = 1;
             }
-            state->actionTimer = lbl_803DC460;
-            state->durationTimer = lbl_803E74D4;
+            ((AndrossState*)state)->actionTimer = lbl_803DC460;
+            ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
-        if (state->fightPhase == 5)
+        if (((AndrossState*)state)->fightPhase == 5)
         {
-            for (i = 0; i < 6; i++)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
-                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    state->timer = 0x3c;
-                    goto hit_cue_ready_3;
+                    ((AndrossState*)state)->timer = 0x3c;
+                    goto hit_cue_ready_c;
                 }
             }
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
-hit_cue_ready_3:;
         }
+    hit_cue_ready_c:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74F4) ? lbl_803E74F4 : ((fb > lbl_803E74F8) ? lbl_803E74F8 : fb);
         fb = (fa < lbl_803E7510) ? lbl_803E7510 : ((fa > gAndrossSwayAmplitudeY) ? gAndrossSwayAmplitudeY : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeY * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeY * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY = (lbl_803E7514 * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        bval = fn_8023A6A4(state, lbl_803DC454, lbl_803DC458, lbl_803DC45C);
+        ((AndrossState*)state)->targetPosY = (lbl_803E7514 * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        bval = fn_8023A6A4((AndrossState*)state, lbl_803DC454, lbl_803DC458, lbl_803DC45C);
         if (bval != 0)
         {
-            state->actionState = 0xf;
+            ((AndrossState*)state)->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
             gAndrossDistortPhase = fval;
@@ -1266,26 +1267,26 @@ hit_cue_ready_3:;
             {
                 gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
-            turnOnDistortionFilter(&state->cachedPosX, lbl_803E74BC, &gAndrossDistortFilterParam,
+            turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
         }
-        state->durationTimer -= timeDelta;
-        if (state->durationTimer < lbl_803E74D4)
+        ((AndrossState*)state)->durationTimer -= timeDelta;
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
             fn_80239FCC(obj, (int)state);
-            state->durationTimer += (f32)(lbl_803DC464);
+            ((AndrossState*)state)->durationTimer += (f32)(lbl_803DC464);
         }
         fn_80239EAC(obj, (int)state);
-        if (state->hitReactionFlag != 0)
+        if (((AndrossState*)state)->hitReactionFlag != 0)
         {
-            if (state->fightPhase == 5)
+            if (((AndrossState*)state)->fightPhase == 5)
             {
-                state->actionState = 0x19;
+                ((AndrossState*)state)->actionState = 0x19;
             }
             else
             {
-                state->actionState = 0xf;
+                ((AndrossState*)state)->actionState = 0xf;
             }
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
@@ -1294,18 +1295,18 @@ hit_cue_ready_3:;
             {
                 gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
-            turnOnDistortionFilter(&state->cachedPosX, lbl_803E74BC, &gAndrossDistortFilterParam,
+            turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
         }
         else
         {
-            if (state->arwingObj->anim.localPosZ > state->cachedPosZ)
+            if (((GameObject*)*state)->anim.localPosZ > ((AndrossState*)state)->cachedPosZ)
             {
-                state->actionState = 0x10;
-                state->arwingFlightActive = 1;
-                state->arwingObj->anim.localPosZ = state->cachedPosZ;
-                state->velZ = lbl_803E74D4;
+                ((AndrossState*)state)->actionState = 0x10;
+                *(u8*)(state + 0x2e) = 1;
+                ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->cachedPosZ;
+                ((AndrossState*)state)->velZ = lbl_803E74D4;
                 gAndrossDistortPhase = gAndrossDistortPhaseReset;
                 fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
                 gAndrossDistortPhase = fval;
@@ -1313,16 +1314,16 @@ hit_cue_ready_3:;
                 {
                     gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
                 }
-                turnOnDistortionFilter(&state->cachedPosX, lbl_803E74BC, &gAndrossDistortFilterParam,
+                turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam,
                                        gAndrossDistortPhase);
                 Rcp_DisableDistortionFilter();
                 break;
             }
         }
-        state->actionTimer -= framesThisStep;
-        if (state->actionTimer < 0)
+        ((AndrossState*)state)->actionTimer -= framesThisStep;
+        if (((AndrossState*)state)->actionTimer < 0)
         {
-            state->actionState = 0xf;
+            ((AndrossState*)state)->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
             gAndrossDistortPhase = fval;
@@ -1330,7 +1331,7 @@ hit_cue_ready_3:;
             {
                 gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
-            turnOnDistortionFilter(&state->cachedPosX, lbl_803E74BC, &gAndrossDistortFilterParam,
+            turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
         }
@@ -1338,209 +1339,212 @@ hit_cue_ready_3:;
     case 0xf:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[16];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[16];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7500) ? lbl_803E7500 : ((fb > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74E8 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74E8 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x10:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_803E7518;
+            ((AndrossState*)ref)->animSpeed = lbl_803E7518;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
         zero = *(f32*)&lbl_803E74D4;
         fb = (fa < zero) ? zero : ((fa > zero) ? zero : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74D4 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74D4 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY = (lbl_803E74D4 * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        fc = state->cachedPosX - state->arwingObj->anim.localPosX;
+        ((AndrossState*)state)->targetPosY = (lbl_803E74D4 * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
         velCalc3.x = fc * lbl_803DC468;
-        fc = state->cachedPosY - state->arwingObj->anim.localPosY;
+        fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
         velCalc3.y = fc * lbl_803DC468;
-        fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
+        fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
         velCalc3.z = fc * lbl_803DC468;
         velArg3 = velCalc3;
-        arwarwing_setVelocity((int)state->arwingObj, (int)&velArg3);
-        fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - state->camOffsetAccum))
+        arwarwing_setVelocity(*state, (int)&velArg3);
+        fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->camOffsetAccum))
                    ? lbl_803E74EC
-                   : -(lbl_803E74B0 * timeDelta - state->camOffsetAccum);
-        state->camOffsetAccum = fval;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+                   : -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->camOffsetAccum);
+        ((AndrossState*)state)->camOffsetAccum = fval;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            *(s16*)(state->arwingObj + 6) = *(s16*)(state->arwingObj + 6) | 0x4000;
-            state->actionState = 0x11;
+            *(s16*)(*state + 6) = *(s16*)(*state + 6) | 0x4000;
+            ((AndrossState*)state)->actionState = 0x11;
         }
         break;
     case 0x11:
         if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_and_falcoflyby);
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x15, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[21];
-            arwarwing_addHealth((int)state->arwingObj, 0xfffffffc);
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[21];
+            arwarwing_addHealth(*state, 0xfffffffc);
         }
-        fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - state->camOffsetAccum))
+        fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->camOffsetAccum))
                    ? lbl_803E74EC
-                   : -(lbl_803E74B0 * timeDelta - state->camOffsetAccum);
-        state->camOffsetAccum = fval;
+                   : -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->camOffsetAccum);
+        ((AndrossState*)state)->camOffsetAccum = fval;
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
         zero = *(f32*)&lbl_803E74D4;
         fb = (fa < zero) ? zero : ((fa > zero) ? zero : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74D4 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74D4 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY = (lbl_803E74D4 * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY = (lbl_803E74D4 * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x12:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[18];
-            androsshand_setState(state->handObjA, 0, 0);
-            androsshand_setState(state->handObjB, 0, 0);
-            if ((state->fightPhase == 5) && (state->actionToggle != 0))
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[18];
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 0, 0);
+            androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 0, 0);
+            if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle != 0))
             {
                 mainSetBits(0xe, 1);
             }
         }
-        state->fadeAlpha -= gAndrossFadeAlphaStep;
-        fval = (lbl_803E74D4 > state->fadeAlpha) ? lbl_803E74D4 : state->fadeAlpha;
-        state->fadeAlpha = fval;
-        fc = state->fadeAlpha;
-        ref = *(int*)Obj_GetActiveModel(obj);
-        work = 0;
-        fval = gAndrossAlpha255 * fc;
-        for (; work < *(u8*)(ref + 0xf8); work++)
+        ((AndrossState*)state)->fadeAlpha -= gAndrossFadeAlphaStep;
+        fval = (lbl_803E74D4 > ((AndrossState*)state)->fadeAlpha) ? lbl_803E74D4 : ((AndrossState*)state)->fadeAlpha;
+        ((AndrossState*)state)->fadeAlpha = fval;
         {
-            found = ObjModel_GetRenderOp(ref, work);
-            *(s8*)(found + 0x43) = fval;
-        }
-        if ((state->fightPhase == 5) && (state->actionToggle == 0))
-        {
-            for (i = 0; i < 6; i++)
+            f32 alpha = ((AndrossState*)state)->fadeAlpha;
+
+            ref = *(int*)Obj_GetActiveModel(obj);
+            work = 0;
+            alpha = gAndrossAlpha255 * alpha;
+            for (; work < (int)(u32) * (u8*)(ref + 0xf8); work++)
             {
-                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                found = ObjModel_GetRenderOp(ref, work);
+                ((AndrossState*)found)->alpha = alpha;
+            }
+        }
+        if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
+        {
+            for (ref = 0; (u8)ref < 6; ref++)
+            {
+                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    state->timer = 0x3c;
-                    goto hit_cue_ready_4;
+                    ((AndrossState*)state)->timer = 0x3c;
+                    goto hit_cue_ready_12;
                 }
             }
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
-hit_cue_ready_4:;
         }
+    hit_cue_ready_12:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E74F4) ? lbl_803E74F4 : ((fa > lbl_803E74F8) ? lbl_803E74F8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74E8 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74E8 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionState = 0x13;
+            ((AndrossState*)state)->actionState = 0x13;
         }
         break;
     case 0x13:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[19];
-            if (state->fightPhase == 5)
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[19];
+            if (((AndrossState*)state)->fightPhase == 5)
             {
-                state->durationTimer = lbl_803E74A8;
+                ((AndrossState*)state)->durationTimer = lbl_803E74A8;
             }
             else
             {
-                state->durationTimer = lbl_803E74F0;
+                ((AndrossState*)state)->durationTimer = lbl_803E74F0;
             }
-            state->actionTimer = 0xffff;
+            ((AndrossState*)state)->actionTimer = 0xffff;
         }
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_spitout);
-        if ((state->fightPhase == 5) && (state->actionToggle == 0))
+        if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (i = 0; i < 6; i++)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
-                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    state->timer = 0x3c;
-                    goto hit_cue_ready_5;
+                    ((AndrossState*)state)->timer = 0x3c;
+                    goto hit_cue_ready_13;
                 }
             }
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
-hit_cue_ready_5:;
         }
+    hit_cue_ready_13:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E7520) ? lbl_803E7520 : ((fb > lbl_803E74A8) ? lbl_803E74A8 : fb);
         fb = (fa < lbl_803E7524) ? lbl_803E7524 : ((fa > lbl_803E7528) ? lbl_803E7528 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX = (lbl_803E74E8 * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX = (lbl_803E74E8 * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        state->actionTimer -= framesThisStep;
-        durationBeforeStep = (int)state->durationTimer;
-        state->durationTimer -= framesThisStep;
-        if (state->fightPhase == 5)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        ((AndrossState*)state)->actionTimer -= framesThisStep;
+        durationBeforeStep = (int)((AndrossState*)state)->durationTimer;
+        ((AndrossState*)state)->durationTimer -= framesThisStep;
+        if (((AndrossState*)state)->fightPhase == 5)
         {
             delayPair[0] = 300;
             delayPair[1] = 600;
@@ -1550,82 +1554,82 @@ hit_cue_ready_5:;
             delayPair[0] = 0x122;
             delayPair[1] = 0x28;
         }
-        for (work = 0; (u8)work < 2; work++)
+        for (ref = 0; (u8)ref < 2; ref++)
         {
-            if ((((state->spawnedObj == NULL) &&
-                  (state->actionTimer <= (randVal = delayPair[(u8)work]))) &&
-                 ((short)durationBeforeStep > randVal)) &&
+            if (((((void*)((AndrossState*)state)->spawnedObj == NULL) &&
+                  (((AndrossState*)state)->actionTimer <= delayPair[(u8)ref])) &&
+                 ((short)durationBeforeStep > delayPair[(u8)ref])) &&
                 (Obj_IsLoadingLocked() != 0))
             {
                 found = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_SPAWNED);
-                ((ObjPlacement*)found)->posX = state->cachedPosX;
-                ((ObjPlacement*)found)->posY = state->cachedPosY;
-                ((ObjPlacement*)found)->posZ = state->cachedPosZ;
-                ((ObjPlacement*)found)->color[0] = 1;
-                ((ObjPlacement*)found)->color[1] = 1;
+                *(f32*)&((AndrossState*)found)->handObjB = ((AndrossState*)state)->cachedPosX;
+                *(f32*)&((AndrossState*)found)->lightAnchorObj = ((AndrossState*)state)->cachedPosY;
+                *(f32*)&((AndrossState*)found)->effectHandle = ((AndrossState*)state)->cachedPosZ;
+                *(u8*)(found + 4) = 1;
+                *(u8*)(found + 5) = 1;
                 ((AndrossState*)found)->unk20 = 0xffff;
                 found = ((int (*)(int, int))loadObjectAtObject)(obj, found);
-                state->spawnedObj = (GameObject*)found;
-                if (state->spawnedObj != NULL)
+                ((AndrossState*)state)->spawnedObj = (GameObject*)found;
+                if ((void*)((AndrossState*)state)->spawnedObj != NULL)
                 {
-                    state->spawnedObj->anim.alpha = 0xff;
-                    state->spawnedObj->anim.pad37[0] = 0xff;
-                    state->spawnedObjLifetime = lbl_803DC4EC;
+                    ((GameObject*)((AndrossState*)state)->spawnedObj)->anim.alpha = 0xff;
+                    *((u8*)((AndrossState*)state)->spawnedObj + 0x37) = 0xff;
+                    ((AndrossState*)state)->spawnedObjLifetime = lbl_803DC4EC;
                 }
             }
         }
-        if (state->actionTimer < 0)
+        if (((AndrossState*)state)->actionTimer < 0)
         {
             fn_8023A168(obj, (int)state);
-            state->actionTimer = lbl_803DC46C;
+            ((AndrossState*)state)->actionTimer = lbl_803DC46C;
         }
-        if (state->durationTimer < lbl_803E74D4)
+        if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
         {
-            state->actionState = 0x14;
+            ((AndrossState*)state)->actionState = 0x14;
         }
         break;
     case 0x14:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[20];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[20];
         }
-        if ((state->fightPhase == 5) && (state->actionToggle == 0))
+        if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (i = 0; i < 6; i++)
+            for (ref = 0; (u8)ref < 6; ref++)
             {
-                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    state->timer = 0x3c;
-                    goto hit_cue_ready_6;
+                    ((AndrossState*)state)->timer = 0x3c;
+                    goto hit_cue_ready_14;
                 }
             }
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
-hit_cue_ready_6:;
         }
+    hit_cue_ready_14:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
+        fb = (((GameObject*)*state)->anim.localPosX - ((AndrossState*)state)->homePosX);
+        fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         fc = (fb < lbl_803E74EC) ? lbl_803E74EC : ((fb > lbl_803E74F0) ? lbl_803E74F0 : fb);
         fb = (fa < lbl_803E752C) ? lbl_803E752C : ((fa > lbl_803E74E8) ? lbl_803E74E8 : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) / lbl_803E74A4));
-        state->targetPosX =
-            (gAndrossSwayAmplitudeX * fa + (float)(state->homePosX + fc));
+        ((AndrossState*)state)->targetPosX =
+            (gAndrossSwayAmplitudeX * fa + (float)(((AndrossState*)state)->homePosX + fc));
         fc = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseY)) / lbl_803E74A4));
-        state->targetPosY =
-            (gAndrossSwayAmplitudeY * fc + (float)(state->homePosY + fb));
-        state->targetPosZ = state->homePosZ;
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        ((AndrossState*)state)->targetPosY =
+            (gAndrossSwayAmplitudeY * fc + (float)(((AndrossState*)state)->homePosY + fb));
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x19:
@@ -1633,173 +1637,176 @@ hit_cue_ready_6:;
         if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG__UNK_832);
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[4];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[4];
         }
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x1b:
         if (flag)
         {
             mainSetBits(0x10, 0);
-            state->actionTimer = 0x1e;
-            arwarwing_resetFlightState(state->arwingObj);
-            state->arwingObj->anim.localPosZ = state->savedPosZ;
-            state->camOffsetAccum = lbl_803E74D4;
+            ((AndrossState*)state)->actionTimer = 0x1e;
+            arwarwing_resetFlightState((GameObject*)(*state));
+            ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->savedPosZ;
+            ((AndrossState*)state)->camOffsetAccum = lbl_803E74D4;
         }
-        state->targetPosX = state->homePosX;
-        state->targetPosY = state->homePosY;
-        state->targetPosZ = state->homePosZ;
-        if (((u32)mainGetBit(0x10) != 0) && (state->actionTimer-- == 0))
+        ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
+        ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY;
+        ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
+        if (((u32)mainGetBit(0x10) != 0) && (((AndrossState*)state)->actionTimer-- == 0))
         {
             mainSetBits(0x10, 0);
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x1c:
         if (flag)
         {
-            androssbrain_setState(state->lightAnchorObj, 1, 0);
+            androssbrain_setState((GameObject*)(((AndrossState*)state)->lightAnchorObj), 1, 0);
             ObjHits_DisableObject(obj);
-            state->actionTimer = 0x3c;
-            state->durationTimer = lbl_803E74D8;
-            state->targetPosX = state->homePosX;
-            state->targetPosY = state->homePosY;
-            state->targetPosZ = state->homePosZ;
+            ((AndrossState*)state)->actionTimer = 0x3c;
+            ((AndrossState*)state)->durationTimer = lbl_803E74D8;
+            ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
+            ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY;
+            ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
             fval = lbl_803E74D4;
-            boss->anim.velocityX = lbl_803E74D4;
-            boss->anim.velocityY = fval;
-            boss->anim.velocityZ = fval;
-            state->springStiffness = lbl_803E74C8;
-            state->springDamping = gAndrossSpringDamping;
+            ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
+            ((GameObject*)obj)->anim.velocityY = fval;
+            ((GameObject*)obj)->anim.velocityZ = fval;
+            ((AndrossState*)state)->springStiffness = lbl_803E74C8;
+            ((AndrossState*)state)->springDamping = gAndrossSpringDamping;
         }
-        state->fadeAlpha += gAndrossFadeAlphaStep;
-        fval = (gAndrossFadeAlphaMax < state->fadeAlpha) ? gAndrossFadeAlphaMax
-                                                                          : state->fadeAlpha;
-        state->fadeAlpha = fval;
-        for (i = 0; i < 6; i++)
+        ((AndrossState*)state)->fadeAlpha += gAndrossFadeAlphaStep;
+        fval = (gAndrossFadeAlphaMax < ((AndrossState*)state)->fadeAlpha) ? gAndrossFadeAlphaMax
+                                                                          : ((AndrossState*)state)->fadeAlpha;
+        ((AndrossState*)state)->fadeAlpha = fval;
+        for (ref = 0; (u8)ref < 6; ref++)
         {
-            if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+            if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
-                state->timer = 0x3c;
-                goto hit_cue_ready_7;
+                ((AndrossState*)state)->timer = 0x3c;
+                goto hit_cue_ready_1c;
             }
         }
-        state->timer -= framesThisStep;
-        if (state->timer <= 0)
+        ((AndrossState*)state)->timer -= framesThisStep;
+        if (((AndrossState*)state)->timer <= 0)
         {
             ref = randomGetRange(0, 5);
             mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-            state->timer = 0x3c;
+            ((AndrossState*)state)->timer = 0x3c;
         }
-hit_cue_ready_7:;
-        state->actionTimer -= framesThisStep;
-        if (state->actionTimer < 0)
+    hit_cue_ready_1c:
+        ((AndrossState*)state)->actionTimer -= framesThisStep;
+        if (((AndrossState*)state)->actionTimer < 0)
         {
-            state->durationTimer -= lbl_803E74DC;
-            if (state->durationTimer < lbl_803E74D4)
+            ((AndrossState*)state)->durationTimer -= lbl_803E74DC;
+            if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
             {
-                state->actionToggle += 1;
-                if (state->actionToggle > 3)
+                ((AndrossState*)state)->actionToggle += 1;
+                if (((AndrossState*)state)->actionToggle > 3)
                 {
-                    state->fightPhase = 5;
-                    state->prevFightPhase = 5;
-                    state->actionToggle = 0;
-                    state->actionState = 0x12;
-                    androssbrain_setState(state->lightAnchorObj, 0, 0);
+                    ((AndrossState*)state)->fightPhase = 5;
+                    ((AndrossState*)state)->prevFightPhase = 5;
+                    ((AndrossState*)state)->actionToggle = 0;
+                    ((AndrossState*)state)->actionState = 0x12;
+                    androssbrain_setState((GameObject*)(((AndrossState*)state)->lightAnchorObj), 0, 0);
                     ObjHits_EnableObject(obj);
                 }
                 else
                 {
-                    state->actionState = 0x1d;
+                    ((AndrossState*)state)->actionState = 0x1d;
                 }
             }
             else
             {
                 randVal = randomGetRange(0x14, 0x1e);
-                state->actionTimer = randVal;
-                state->targetPosX =
+                ((AndrossState*)state)->actionTimer = randVal;
+                ((AndrossState*)state)->targetPosX =
                     (f32)(int)randomGetRange((int)-gAndrossSpawnRandX, gAndrossSpawnRandX) +
-                    state->homePosX;
-                state->targetPosY =
+                    ((AndrossState*)state)->homePosX;
+                ((AndrossState*)state)->targetPosY =
                     (f32)(int)randomGetRange((int)-gAndrossSpawnRandY, gAndrossSpawnRandY) +
-                    state->homePosY;
-                state->targetPosZ =
+                    ((AndrossState*)state)->homePosY;
+                ((AndrossState*)state)->targetPosZ =
                     (f32)(int)randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ) +
-                    state->homePosZ;
+                    ((AndrossState*)state)->homePosZ;
             }
         }
-        if ((state->signalFlags & 8) != 0)
+        if ((((AndrossState*)state)->signalFlags & 8) != 0)
         {
             arwingHudSetVisible(2);
             mainSetBits(1, 1);
             mainSetBits(0x4b1, 1);
-            state->actionState = 0x1e;
+            ((AndrossState*)state)->actionState = 0x1e;
             unlockLevel(0, 0, 1);
             objId = mapGetDirIdx(ANDROSS_MAP_SHRINE);
             mapUnload(objId, 0x20000000);
             Music_Trigger(MUSICTRIG_Mound_Music, 0);
         }
-        fc = state->fadeAlpha;
-        ref = *(int*)Obj_GetActiveModel(obj);
-        work = 0;
-        fval = gAndrossAlpha255 * fc;
-        for (; work < *(u8*)(ref + 0xf8); work++)
         {
-            found = ObjModel_GetRenderOp(ref, work);
-            *(s8*)(found + 0x43) = fval;
+            f32 alpha = ((AndrossState*)state)->fadeAlpha;
+
+            ref = *(int*)Obj_GetActiveModel(obj);
+            work = 0;
+            alpha = gAndrossAlpha255 * alpha;
+            for (; work < (int)(u32) * (u8*)(ref + 0xf8); work++)
+            {
+                found = ObjModel_GetRenderOp(ref, work);
+                ((AndrossState*)found)->alpha = alpha;
+            }
         }
         break;
     case 0x1d:
         if (flag)
         {
-            androssbrain_setState(state->lightAnchorObj, 1, 0);
+            androssbrain_setState((GameObject*)(((AndrossState*)state)->lightAnchorObj), 1, 0);
             ObjHits_DisableObject(obj);
-            state->actionTimer = lbl_803DC484;
-            state->targetPosX = state->arwingObj->anim.localPosX;
-            state->targetPosY = state->arwingObj->anim.localPosY + gAndrossSpawnOffsetY;
-            state->targetPosZ = state->arwingObj->anim.localPosZ + gAndrossSpawnOffsetZ;
+            ((AndrossState*)state)->actionTimer = lbl_803DC484;
+            ((AndrossState*)state)->targetPosX = ((GameObject*)*state)->anim.localPosX;
+            ((AndrossState*)state)->targetPosY = ((GameObject*)*state)->anim.localPosY + gAndrossSpawnOffsetY;
+            ((AndrossState*)state)->targetPosZ = ((GameObject*)*state)->anim.localPosZ + gAndrossSpawnOffsetZ;
             fval = lbl_803E74D4;
-            boss->anim.velocityX = lbl_803E74D4;
-            boss->anim.velocityY = fval;
-            boss->anim.velocityZ = fval;
-            Sfx_PlayFromObject((int)boss,
+            ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
+            ((GameObject*)obj)->anim.velocityY = fval;
+            ((GameObject*)obj)->anim.velocityZ = fval;
+            Sfx_PlayFromObject((int)objAlias,
                                randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
         }
-        state->actionTimer -= framesThisStep;
-        if (state->actionTimer < 0)
+        ((AndrossState*)state)->actionTimer -= framesThisStep;
+        if (((AndrossState*)state)->actionTimer < 0)
         {
-            state->actionState = 0x1c;
+            ((AndrossState*)state)->actionState = 0x1c;
         }
         break;
     case 0x16:
         if (flag)
         {
             Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[0];
         }
-        if (state->arwingFlightActive != 0)
+        if (*(u8*)(state + 0x2e) != 0)
         {
-            fc = state->cachedPosX - state->arwingObj->anim.localPosX;
+            fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
             velCalc2.x = fc * lbl_803DC488;
-            fc = state->cachedPosY - state->arwingObj->anim.localPosY;
+            fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
             velCalc2.y = fc * lbl_803DC488;
-            fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
             velCalc2.z = fc * lbl_803DC488;
             velArg2 = velCalc2;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&velArg2);
-            fval = (lbl_803E7538 > -(lbl_803E753C * timeDelta - state->camOffsetAccum))
+            arwarwing_setVelocity(*state, (int)&velArg2);
+            fval = (lbl_803E7538 > -(lbl_803E753C * timeDelta - ((AndrossState*)state)->camOffsetAccum))
                        ? lbl_803E7538
-                       : -(lbl_803E753C * timeDelta - state->camOffsetAccum);
-            state->camOffsetAccum = fval;
+                       : -(lbl_803E753C * timeDelta - ((AndrossState*)state)->camOffsetAccum);
+            ((AndrossState*)state)->camOffsetAccum = fval;
         }
-        sval = state->targetRotX - (u16)boss->anim.rotX;
+        sval = ((AndrossState*)state)->targetRotX - (u16)((GameObject*)obj)->anim.rotX;
         if (0x8000 < sval)
         {
             sval = sval - 0xffff;
@@ -1815,171 +1822,168 @@ hit_cue_ready_7:;
         }
         if (ref < 2000)
         {
-            handStateA = (AndrossHandState*)state->handObjA->extra;
-            handStateB = (AndrossHandState*)state->handObjB->extra;
-            bval = handStateA->handState;
-            if ((((bval != 2) && (bval != 1)) &&
-                 (bval = handStateB->handState, bval != 2)) &&
+            found = *(int*)((int)((AndrossState*)state)->handObjB + 0xb8);
+            bval = *(char*)(*(int*)((int)((AndrossState*)state)->handObjA + 0xb8) + 0x23);
+            if ((((bval != 2) && (bval != 1)) && (bval = *(char*)&((AndrossState*)found)->handState, bval != 2)) &&
                 (bval != 1))
             {
-                state->actionPending = 1;
+                ((AndrossState*)state)->actionPending = 1;
             }
         }
         break;
     case 5:
-        handStateA = (AndrossHandState*)state->handObjA->extra;
-        handStateB = (AndrossHandState*)state->handObjB->extra;
+        work = *(int*)((int)((AndrossState*)state)->handObjA + 0xb8);
+        ref = *(int*)((int)((AndrossState*)state)->handObjB + 0xb8);
         if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
-            moveState = (AndrossState*)boss->extra;
+            found = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x16, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[22];
-            ((AndrossFlagByte*)&state->soundEventFlags)->f80 = 0;
-            ((AndrossFlagByte*)&state->soundEventFlags)->f40 = 0;
+            *(f32*)(found + 100) = gAndrossMoveAnimSpeeds[22];
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 0;
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 0;
         }
-        fc = boss->anim.currentMoveProgress;
+        fc = ((GameObject*)obj)->anim.currentMoveProgress;
         if (fc < lbl_803E7540)
         {
             fc = mathSinf(
                 ((lbl_803E74A0 * (float)(lbl_803E7548 * (lbl_803E7550 * (fc / lbl_803E7540)))) / lbl_803E74A4));
-            state->targetPosZ = (lbl_803E74A8 * fc + state->homePosZ);
+            ((AndrossState*)state)->targetPosZ = (lbl_803E74A8 * fc + ((AndrossState*)state)->homePosZ);
         }
         else
         {
             fc = mathSinf(((lbl_803E74A0 * (float)(lbl_803E7548 * (lbl_803E7558 * ((fc - lbl_803E7540) / lbl_803E7560) +
                                                                    lbl_803E7550))) /
                            lbl_803E74A4));
-            state->targetPosZ = ((f32)(lbl_803DC48C)*fc + state->homePosZ);
+            ((AndrossState*)state)->targetPosZ = ((f32)(lbl_803DC48C)*fc + ((AndrossState*)state)->homePosZ);
         }
-        if ((boss->anim.currentMoveProgress > lbl_803E7568) &&
-            ((state->soundEventFlags >> 6 & 1) == 0u))
+        if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7568) &&
+            ((((AndrossState*)state)->soundEventFlags >> 6 & 1) == 0u))
         {
             Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
-            ((AndrossFlagByte*)&state->soundEventFlags)->f40 = 1;
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 1;
         }
-        if ((boss->anim.currentMoveProgress > lbl_803E7570) &&
-            (((AndrossFlagByte*)&state->soundEventFlags)->f80 == 0))
+        if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7570) &&
+            (((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 == 0))
         {
             Sfx_PlayFromObject(obj, SFXTRIG_and_laugh);
-            ((AndrossFlagByte*)&state->soundEventFlags)->f80 = 1;
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 1;
         }
-        bval = handStateA->handState;
-        if ((((bval != 2) && (bval != 1)) &&
-             (bval = handStateB->handState, bval != 2)) &&
+        bval = *(char*)&((AndrossState*)work)->handState;
+        if ((((bval != 2) && (bval != 1)) && (bval = *(char*)&((AndrossState*)ref)->handState, bval != 2)) &&
             (bval != 1))
         {
-            if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
             {
-                state->actionPending = 1;
+                ((AndrossState*)state)->actionPending = 1;
             }
-            else if (boss->anim.currentMoveProgress > lbl_803E7568)
+            else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7568)
             {
-                state->targetRotX = 0;
-                androsshand_setState(state->handObjA, 1,
-                                     (u8)((state->fightPhase == 4) + 1));
-                androsshand_setState(state->handObjB, 1,
-                                     (u8)((state->fightPhase == 4) + 1));
-                state->signalFlags &= ~0x6;
+                ((AndrossState*)state)->targetRotX = 0;
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjA), 1,
+                                     (u8)((((AndrossState*)state)->fightPhase == 4) + 1));
+                androsshand_setState((GameObject*)(((AndrossState*)state)->handObjB), 1,
+                                     (u8)((((AndrossState*)state)->fightPhase == 4) + 1));
+                ((AndrossState*)state)->signalFlags &= ~0x6;
             }
         }
         break;
     case 0x17:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[3];
-            state->soundTimer = lbl_803E74D4;
-            ((AndrossFlagByte*)&state->soundEventFlags)->f20 = 0;
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[3];
+            ((AndrossState*)state)->soundTimer = lbl_803E74D4;
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
-        state->soundTimer += timeDelta;
-        if ((state->soundTimer > lbl_803E7578) &&
-            ((state->soundEventFlags >> 5 & 1) == 0u))
+        ((AndrossState*)state)->soundTimer += timeDelta;
+        if ((((AndrossState*)state)->soundTimer > lbl_803E7578) &&
+            ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_pain1);
-            ((AndrossFlagByte*)&state->soundEventFlags)->f20 = 1;
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
         }
-        if (boss->anim.currentMoveProgress <= lbl_803DC490)
+        if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803DC490)
         {
-            state->cachedPosX = boss->anim.localPosX;
-            state->cachedPosY = boss->anim.localPosY - gAndrossCachedPosOffsetY;
-            state->cachedPosZ = boss->anim.localPosZ - gAndrossCachedPosOffsetZ;
-            fc = state->cachedPosX - state->arwingObj->anim.localPosX;
+            ((AndrossState*)state)->cachedPosX = ((GameObject*)obj)->anim.localPosX;
+            ((AndrossState*)state)->cachedPosY = ((GameObject*)obj)->anim.localPosY - gAndrossCachedPosOffsetY;
+            ((AndrossState*)state)->cachedPosZ = ((GameObject*)obj)->anim.localPosZ - gAndrossCachedPosOffsetZ;
+            fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
             velCalc1.x = fc * lbl_803DC494;
-            fc = state->cachedPosY - state->arwingObj->anim.localPosY;
+            fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
             velCalc1.y = fc * lbl_803DC494;
-            fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
             velCalc1.z = fc * lbl_803DC494;
             velArg1 = velCalc1;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&velArg1);
+            arwarwing_setVelocity(*state, (int)&velArg1);
         }
         else
         {
-            fc = (state->savedPosZ - state->arwingObj->anim.localPosZ);
-            fval = (lbl_803E74D4 < lbl_803E753C * timeDelta + state->camOffsetAccum)
+            fc = (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
+            fval = (lbl_803E74D4 < lbl_803E753C * timeDelta + ((AndrossState*)state)->camOffsetAccum)
                        ? lbl_803E74D4
-                       : lbl_803E753C * timeDelta + state->camOffsetAccum;
-            state->camOffsetAccum = fval;
-            state->arwingFlightActive = 0;
-            *(s16*)(state->arwingObj + 6) = *(s16*)(state->arwingObj + 6) & ~0x4000;
-            ref = (int)((f32)(s16)arwarwing_getRotY((int)state->arwingObj) + fc * lbl_803DC49C);
-            arwarwing_setRotY((int)state->arwingObj, ref);
+                       : lbl_803E753C * timeDelta + ((AndrossState*)state)->camOffsetAccum;
+            ((AndrossState*)state)->camOffsetAccum = fval;
+            *(u8*)(state + 0x2e) = 0;
+            *(s16*)(*state + 6) = *(s16*)(*state + 6) & ~0x4000;
+            ref = (int)((f32)(s16)arwarwing_getRotY(*state) + fc * lbl_803DC49C);
+            arwarwing_setRotY(*state, ref);
             thrustB.x = lbl_803E74D4;
             thrustB.y = lbl_803E74D4;
             thrustB.z = (float)(fc * lbl_803DC498);
             thrustBArg = thrustB;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&thrustBArg);
+            arwarwing_setVelocity(*state, (int)&thrustBArg);
         }
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x18:
         if (flag)
         {
-            moveState = (AndrossState*)boss->extra;
+            ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E74D4, 0);
-            moveState->animSpeed = gAndrossMoveAnimSpeeds[17];
-            ((AndrossFlagByte*)&state->soundEventFlags)->f20 = 0;
+            ((AndrossState*)ref)->animSpeed = gAndrossMoveAnimSpeeds[17];
+            ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
-        if (boss->anim.currentMoveProgress <= lbl_803DC4A0)
+        if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803DC4A0)
         {
-            fc = state->cachedPosX - state->arwingObj->anim.localPosX;
+            fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
             velCalc0.x = fc * lbl_803DC4A4;
-            fc = state->cachedPosY - state->arwingObj->anim.localPosY;
+            fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
             velCalc0.y = fc * lbl_803DC4A4;
-            fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->spawnedObj;
             velCalc0.z = fc * lbl_803DC4A4;
             velArg0 = velCalc0;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&velArg0);
+            arwarwing_setVelocity(*state, (int)&velArg0);
         }
         else
         {
-            fc = (state->savedPosZ - state->arwingObj->anim.localPosZ);
-            fval = (lbl_803E74D4 < lbl_803E7514 * timeDelta + state->camOffsetAccum)
+            fc = (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
+            fval = (lbl_803E74D4 < lbl_803E7514 * timeDelta + ((AndrossState*)state)->camOffsetAccum)
                        ? lbl_803E74D4
-                       : lbl_803E7514 * timeDelta + state->camOffsetAccum;
-            state->camOffsetAccum = fval;
-            state->arwingFlightActive = 0;
-            *(s16*)(state->arwingObj + 6) = *(s16*)(state->arwingObj + 6) & ~0x4000;
-            ref = (int)((f32)(s16)arwarwing_getRotY((int)state->arwingObj) + fc * lbl_803DC4AC);
-            arwarwing_setRotY((int)state->arwingObj, ref);
+                       : lbl_803E7514 * timeDelta + ((AndrossState*)state)->camOffsetAccum;
+            ((AndrossState*)state)->camOffsetAccum = fval;
+            *(u8*)(state + 0x2e) = 0;
+            *(s16*)(*state + 6) = *(s16*)(*state + 6) & ~0x4000;
+            ref = (int)((f32)(s16)arwarwing_getRotY(*state) + fc * lbl_803DC4AC);
+            arwarwing_setRotY(*state, ref);
             thrustA.x = lbl_803E74D4;
             thrustA.y = lbl_803E74D4;
             thrustA.z = (float)(fc * lbl_803DC4A8);
             thrustAArg = thrustA;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&thrustAArg);
-            if ((state->soundEventFlags >> 5 & 1) == 0u)
+            arwarwing_setVelocity(*state, (int)&thrustAArg);
+            if ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_drak_pain1);
-                ((AndrossFlagByte*)&state->soundEventFlags)->f20 = 1;
+                ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
             }
         }
-        if (boss->anim.currentMoveProgress >= lbl_803E74DC)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
-            state->actionPending = 1;
+            ((AndrossState*)state)->actionPending = 1;
         }
         break;
     case 0x1e:
@@ -1993,48 +1997,48 @@ hit_cue_ready_7:;
             objId = mapGetDirIdx(ANDROSS_MAP_SHRINE);
             lockLevel(objId, 1);
             warpToMap(0x4e, 0);
-            state->fadeAlpha = lbl_803E74D4;
-            state->actionState = 0x1f;
+            ((AndrossState*)state)->fadeAlpha = lbl_803E74D4;
+            ((AndrossState*)state)->actionState = 0x1f;
         }
         break;
     case 0x1f:
         break;
     }
-    camActionParam = lbl_803E7584 + state->camOffsetAccum;
+    camActionParam = lbl_803E7584 + ((AndrossState*)state)->camOffsetAccum;
     (*gCameraInterface)->releaseAction(&camActionParam, 4);
-    boss->anim.velocityX = state->springStiffness *
-                                             (state->targetPosX - boss->anim.localPosX) +
-                                         boss->anim.velocityX;
-    boss->anim.velocityY = state->springStiffness *
-                                             (state->targetPosY - boss->anim.localPosY) +
-                                         boss->anim.velocityY;
-    boss->anim.velocityZ = state->springStiffness *
-                                             (state->targetPosZ - boss->anim.localPosZ) +
-                                         boss->anim.velocityZ;
-    boss->anim.velocityX = boss->anim.velocityX * state->springDamping;
-    boss->anim.velocityY = boss->anim.velocityY * state->springDamping;
-    boss->anim.velocityZ = boss->anim.velocityZ * state->springDamping;
-    boss->anim.localPosX = boss->anim.localPosX + boss->anim.velocityX;
-    boss->anim.localPosY = boss->anim.localPosY + boss->anim.velocityY;
-    boss->anim.localPosZ = boss->anim.localPosZ + boss->anim.velocityZ;
-    if (lbl_803E74D4 == state->velZ)
+    ((GameObject*)obj)->anim.velocityX = ((AndrossState*)state)->springStiffness *
+                                             (((AndrossState*)state)->targetPosX - ((GameObject*)obj)->anim.localPosX) +
+                                         ((GameObject*)obj)->anim.velocityX;
+    ((GameObject*)obj)->anim.velocityY = ((AndrossState*)state)->springStiffness *
+                                             (((AndrossState*)state)->targetPosY - ((GameObject*)obj)->anim.localPosY) +
+                                         ((GameObject*)obj)->anim.velocityY;
+    ((GameObject*)obj)->anim.velocityZ = ((AndrossState*)state)->springStiffness *
+                                             (((AndrossState*)state)->targetPosZ - ((GameObject*)obj)->anim.localPosZ) +
+                                         ((GameObject*)obj)->anim.velocityZ;
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * ((AndrossState*)state)->springDamping;
+    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * ((AndrossState*)state)->springDamping;
+    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * ((AndrossState*)state)->springDamping;
+    ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)obj)->anim.velocityX;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((GameObject*)obj)->anim.velocityY;
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((GameObject*)obj)->anim.velocityZ;
+    if (lbl_803E74D4 == ((AndrossState*)state)->velZ)
     {
-        if (state->arwingFlightActive != 0)
+        if (*(u8*)(state + 0x2e) != 0)
         {
-            fn_8023A6A4(state, lbl_803DC4B4, lbl_803DC4B8, lbl_803E74D4);
+            fn_8023A6A4((AndrossState*)state, lbl_803DC4B4, lbl_803DC4B8, lbl_803E74D4);
         }
         else
         {
-            state->velZ =
-                lbl_803DC4B0 * (state->savedPosZ - state->arwingObj->anim.localPosZ);
+            ((AndrossState*)state)->velZ =
+                lbl_803DC4B0 * (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
         }
     }
-    if (state->arwingObj->pendingParentObj == NULL)
+    if (*(void**)(*state + 0xc0) == NULL)
     {
-        velAdd = *(SunVec3*)&state->velX;
-        arwarwing_addVelocity((int)state->arwingObj, (int)&velAdd);
+        velAdd = *(SunVec3*)(state + 0x36);
+        arwarwing_addVelocity(*state, (int)&velAdd);
     }
-    sval = state->targetRotX - (u16)boss->anim.rotX;
+    sval = ((AndrossState*)state)->targetRotX - (u16)((GameObject*)obj)->anim.rotX;
     if (0x8000 < sval)
     {
         sval = sval - 0xffff;
@@ -2043,109 +2047,110 @@ hit_cue_ready_7:;
     {
         sval = sval + 0xffff;
     }
-    state->rotXSpeed =
-        (short)(state->rotXSpeed +
-                (((int)sval / lbl_803DC430 - (int)state->rotXSpeed) / lbl_803DC434));
-    state->rotYSpeed =
-        (short)(state->rotYSpeed +
-                ((-(int)boss->anim.rotY / lbl_803DC430 - (int)state->rotYSpeed) /
+    ((AndrossState*)state)->rotXSpeed =
+        (short)(((AndrossState*)state)->rotXSpeed +
+                (((int)sval / lbl_803DC430 - (int)((AndrossState*)state)->rotXSpeed) / lbl_803DC434));
+    ((AndrossState*)state)->rotYSpeed =
+        (short)(((AndrossState*)state)->rotYSpeed +
+                ((-(int)((GameObject*)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState*)state)->rotYSpeed) /
                  lbl_803DC434));
-    boss->anim.rotX += state->rotXSpeed;
-    boss->anim.rotY += state->rotYSpeed;
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
+    ((GameObject*)obj)->anim.rotX += ((AndrossState*)state)->rotXSpeed;
+    ((GameObject*)obj)->anim.rotY += ((AndrossState*)state)->rotYSpeed;
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((AndrossState*)state)->animSpeed, timeDelta, 0);
     fn_8023A3E4(obj, (int)state);
-    fn_8023A87C(boss, (int)state);
-    if (state->spawnedObj != NULL)
+    fn_8023A87C((GameObject*)(obj), (int)state);
+    ref = (int)((AndrossState*)state)->spawnedObj;
+    if (*(void**)&((AndrossState*)state)->spawnedObj != NULL)
     {
-        state->spawnedObj->anim.localPosZ -= lbl_803E74D8;
-        state->spawnedObjLifetime -= framesThisStep;
-        if (state->spawnedObjLifetime < 0)
+        *(float*)&((AndrossState*)ref)->spawnedObj = *(float*)&((AndrossState*)ref)->spawnedObj - lbl_803E74D8;
+        ((AndrossState*)state)->spawnedObjLifetime -= framesThisStep;
+        if (((AndrossState*)state)->spawnedObjLifetime < 0)
         {
-            Obj_FreeObject((int)state->spawnedObj);
-            state->spawnedObjLifetime = 0;
-            state->spawnedObj = NULL;
+            Obj_FreeObject((int)((AndrossState*)state)->spawnedObj);
+            ((AndrossState*)state)->spawnedObjLifetime = 0;
+            ((AndrossState*)state)->spawnedObj = NULL;
         }
     }
-    if (state->fightPhase < 6)
+    if (((AndrossState*)state)->fightPhase < 6)
     {
         searchDist0 = lbl_803E7490;
-        aimTarget = (GameObject*)ObjList_FindNearestObjectByDefNo(boss, 0x7e5, &searchDist0);
-        if (aimTarget != NULL)
+        ref = ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x7e5, &searchDist0);
+        if ((u32)ref != 0)
         {
-            if (aimTarget->pendingParentObj != NULL)
+            if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
             {
-                aimTarget = (GameObject*)aimTarget->pendingParentObj;
+                ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
-            if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+            if ((((AndrossState*)ref)->unk44 != 0x10) ||
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
-                aimTarget->anim.placement->posX = boss->anim.localPosX;
-                aimTarget->anim.placement->posY = boss->anim.localPosY;
-                aimTarget->anim.placement->posZ = boss->anim.localPosZ;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
         searchDist1 = lbl_803E7490;
-        aimTarget = (GameObject*)ObjList_FindNearestObjectByDefNo(boss, 0x1e, &searchDist1);
-        if (aimTarget != NULL)
+        ref = ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x1e, &searchDist1);
+        if ((u32)ref != 0)
         {
-            if (aimTarget->pendingParentObj != NULL)
+            if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
             {
-                aimTarget = (GameObject*)aimTarget->pendingParentObj;
+                ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
-            if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+            if ((((AndrossState*)ref)->unk44 != 0x10) ||
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
-                aimTarget->anim.placement->posX = boss->anim.localPosX;
-                aimTarget->anim.placement->posY = boss->anim.localPosY;
-                aimTarget->anim.placement->posZ = boss->anim.localPosZ;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
         searchDist2 = lbl_803E7490;
-        aimTarget = (GameObject*)ObjList_FindNearestObjectByDefNo(boss, 0x76f, &searchDist2);
-        if (aimTarget != NULL)
+        ref = ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x76f, &searchDist2);
+        if ((u32)ref != 0)
         {
-            if (aimTarget->pendingParentObj != NULL)
+            if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
             {
-                aimTarget = (GameObject*)aimTarget->pendingParentObj;
+                ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
-            if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+            if ((((AndrossState*)ref)->unk44 != 0x10) ||
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
-                aimTarget->anim.placement->posX = boss->anim.localPosX;
-                aimTarget->anim.placement->posY = boss->anim.localPosY;
-                aimTarget->anim.placement->posZ = boss->anim.localPosZ;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
         searchDist3 = lbl_803E7490;
-        aimTarget = (GameObject*)ObjList_FindNearestObjectByDefNo(boss, 0x814, &searchDist3);
-        if (aimTarget != NULL)
+        ref = ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x814, &searchDist3);
+        if ((u32)ref != 0)
         {
-            if (aimTarget->pendingParentObj != NULL)
+            if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
             {
-                aimTarget = (GameObject*)aimTarget->pendingParentObj;
+                ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
-            if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+            if ((((AndrossState*)ref)->unk44 != 0x10) ||
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
-                aimTarget->anim.placement->posX = boss->anim.localPosX;
-                aimTarget->anim.placement->posY = boss->anim.localPosY;
-                aimTarget->anim.placement->posZ = boss->anim.localPosZ;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
         searchDist = lbl_803E7490;
-        aimTarget = (GameObject*)ObjList_FindNearestObjectByDefNo(boss, 0x6cf, &searchDist);
-        if (aimTarget != NULL)
+        ref = ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x6cf, &searchDist);
+        if ((u32)ref != 0)
         {
-            if (aimTarget->pendingParentObj != NULL)
+            if (*(void**)&((AndrossState*)ref)->cachedPosX != NULL)
             {
-                aimTarget = (GameObject*)aimTarget->pendingParentObj;
+                ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
-            if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+            if ((((AndrossState*)ref)->unk44 != 0x10) ||
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
-                aimTarget->anim.placement->posX = boss->anim.localPosX;
-                aimTarget->anim.placement->posY = boss->anim.localPosY;
-                aimTarget->anim.placement->posZ = boss->anim.localPosZ;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(((AndrossState*)ref)->targetPosPtr + 0x10) = ((GameObject*)obj)->anim.localPosZ;
             }
         }
     }

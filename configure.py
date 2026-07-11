@@ -1637,7 +1637,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_02B9_mcstaffeffe.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BA_mclightning.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_02BB_gflevelcon.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_02BC_andross.c"),
+            Object(NonMatching, "main/dll/dll_02BC_andross.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_02BD_androsshand.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BE_androssbrain.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BF_androssligh.c", cflags=cflags_dll_noopt),
