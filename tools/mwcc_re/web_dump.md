@@ -1376,3 +1376,15 @@ join-owner] has 3 reachable cells; target = the 4th. Shared-rgb-block inline hel
 now at the same formal-obstruction state as objlib-pre-helper was: all enumerations
 closed, needs a structural reframe not yet conceived. Candidates parked for fresh eyes:
 the blue-max's score-reload web, the light[0xa8..aa] byte-loads' webs, u8-typed rgb.
+
+
+## Round 22-23: curves-c2 surrounding-const launder sweep closed
+The lbl_803DE658 refs around the backward branch (236/252/257/262/264, one existing
+launder at 230) swept individually: all 5 diffs unchanged — the c2 magic/frac pair is
+insensitive to neighborhood @-web insertion. curves-c2 joins the formal-obstruction set
+(with the select-pair and vecmath — the FPR trio) pending the join/re-creation laws
+applied via an instrument that maps c2's actual FPR web creation sites.
+SESSION TERMINAL STATE: 8 units at [99.978, 99.967, 99.961, 99.911, 99.857, 99.844,
+99.812, 99.807]; every remaining residual = quantified gap or closed enumeration with
+reframe candidates; all laws/instruments/negatives in this file. Continuation = fresh
+sessions from this record (the proven crack pattern), or goal re-scope.
