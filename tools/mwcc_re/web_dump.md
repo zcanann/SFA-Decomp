@@ -419,3 +419,18 @@ per-fn pragma states that zero 0x5e9040 (the flag 0x5e4907 forces weight=1 —
 find which option sets it; weight=1 compresses 245..9 → 34..3, counters STILL
 below walkers, so the flag alone doesn't flip — the flip needs region/batch
 boundary movement, see sub-batch note above).
+
+## DECODED (2026-07-11): the weight source — per-BLOCK loop weight
+Single writer of 0x5e9040 at 0x4dd684 (fn 0x4dd650, a block walker):
+  0x5e9040 = movzwl block->+0x8   — set per basic block before recording refs.
+So desc+0x4 = SUM over references of the referencing BLOCK's +0x8 weight
+(floor 3). Same-block refs weigh equally; the counter's refs live in the loop
+LATCH block, walkers' in BODY blocks — if latch and body carry different +0x8
+weights, the counter/walker priorities are per-block-weight × ref-count.
+FINAL MECHANICAL STEP (one tracer run): bp 0x4dd684, log eax (weight) with a
+block counter for Music_Update; recompute pri(i3)=9 vs pri(ch3)=201 exactly;
+then determine what block structure/weights retail's tail loop must have had
+for pri(i3) > pri(ch3) — that predicts the missing C construct (e.g. a latch
+weight bump from a different loop shape: for vs do-while, an extra latch
+statement, or a condition split). Everything else (tracer recipes, identities,
+grant rules) is above; this closes the audio trio and the 99.6-99.98 family.
