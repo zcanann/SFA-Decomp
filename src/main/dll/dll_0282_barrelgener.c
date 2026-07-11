@@ -153,7 +153,7 @@ void barrelgener_update(GameObject* obj)
             }
         }
         state->releaseAnimPlaying =
-            !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E6C34, timeDelta, 0);
+            !ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6C34, timeDelta, 0);
     }
 }
 

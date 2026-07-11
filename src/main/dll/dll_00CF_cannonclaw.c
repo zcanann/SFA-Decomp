@@ -94,7 +94,7 @@ void cannonclaw_update(u8* obj)
     {
         ObjAnim_SetCurrentMove((int)obj, CANNONCLAW_MOVE_ARM, lbl_803E2F34, 0);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E2F38, timeDelta, NULL);
     if (trickyState == NULL)
         return;
     if (mainGetBit(((GameObject*)trickyState)->anim.placementData[13]) == 0)

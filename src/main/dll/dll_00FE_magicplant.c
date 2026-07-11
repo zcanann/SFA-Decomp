@@ -363,7 +363,7 @@ void MagicPlant_update(int obj)
         break;
     }
 
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, NULL);
 }
 
 int MagicPlant_getExtraSize(void)

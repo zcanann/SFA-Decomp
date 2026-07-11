@@ -248,7 +248,7 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
 
     if ((int)objAnim->banks[objAnim->bankIndex] != 0)
     {
-        ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, (int)obj, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5A60, timeDelta, NULL);
     }
 
     switch ((obj)->anim.seqId)
@@ -441,7 +441,7 @@ void shopitem_update(GameObject* obj)
         }
         if ((obj)->anim.seqId != SHOPITEM_SEQ_STATIC && (obj)->anim.seqId != SHOPITEM_SEQ_BSPLINE)
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5A60, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5A60, timeDelta, NULL);
         }
         if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) == 0)
         {

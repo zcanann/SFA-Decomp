@@ -408,7 +408,7 @@ void Scarab_update(GameObject* obj)
                     obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
                     speed = sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
                     ObjAnim_SampleRootCurvePhase(speed, (ObjAnimComponent*)obj, &phase);
-                    ((int (*)(void*, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, phase, timeDelta, NULL);
+                    ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, NULL);
                 }
                 flag = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E3A00, 0,
                                           bufs.hitResults, obj, 8, -1, 0, 0);

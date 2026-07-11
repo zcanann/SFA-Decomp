@@ -210,7 +210,7 @@ void drawFn_80125424(void)
                       (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
         if (*(u8**)&gHeadDisplayModelObjs[type] != NULL)
         {
-            ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[type], timeDelta, gHeadDisplayModelObjs[type], NULL);
+            ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[type], lbl_8031BFA8[type], timeDelta, NULL);
             if (*(u32*)&((GameObject*)gHeadDisplayModelObjs[type])->anim.placementData > 0x90000000u)
             {
                 *(u32*)&((GameObject*)gHeadDisplayModelObjs[type])->anim.placementData = 0;

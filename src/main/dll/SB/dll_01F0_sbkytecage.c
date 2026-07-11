@@ -106,7 +106,7 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     if (obj->seqIndex != -1)
     {
         animUpdate->hitVolumePair &= ~4;
-        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f, timeDelta, NULL) != 0)
+        if (ObjAnim_AdvanceCurrentMove((int)obj, 0.004f, timeDelta, NULL) != 0)
         {
             Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
         }
@@ -203,7 +203,7 @@ void SB_KyteCage_update(GameObject* obj)
             ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
         }
     }
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, 0.004f, timeDelta, NULL) != 0)
+    if (ObjAnim_AdvanceCurrentMove((int)obj, 0.004f, timeDelta, NULL) != 0)
     {
         Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
     }

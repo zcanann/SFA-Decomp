@@ -830,5 +830,5 @@ void ARWSquadron_update(int obj)
     if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
         arwsquadron_emitEffects(obj, (int)state);
     if (((GameObject*)obj)->anim.modelInstance->flags == 0)
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E71BC, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E71BC, timeDelta, 0);
 }

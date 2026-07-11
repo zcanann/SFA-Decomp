@@ -706,12 +706,12 @@ void AppleOnTree_update(int objArg)
                 {
                     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                     {
-                        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3804, timeDelta,
+                        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3804, timeDelta,
                                                                                     0);
                     }
                     else
                     {
-                        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3808, timeDelta,
+                        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3808, timeDelta,
                                                                                     0);
                     }
                 }

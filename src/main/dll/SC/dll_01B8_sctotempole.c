@@ -153,7 +153,7 @@ void sc_totempole_update(int obj)
             state->animSpeed = lbl_803E55DC;
         }
     }
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                 (ObjAnimEventList*)&animEvents);
     ObjHits_PollPriorityHitEffectWithCooldown((GameObject*)(obj), 8, 0xff, 0xff, 0x78, 0x129, (f32*)&lbl_803DDC08);
 }

@@ -232,7 +232,7 @@ void tree_init(GameObject* obj, u8* setup)
         state->scale = lbl_803E7308;
     }
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72F8, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
     if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
     {
         state->flags |= TREE_FLAG_HIT_ENABLED;
@@ -298,7 +298,7 @@ void tree_update(GameObject* obj)
     f32* colorPtr;
     ObjAnimEventList animOut;
 
-    ObjAnim_AdvanceCurrentMove(state->swayTimer, timeDelta, (int)obj, &animOut);
+    ObjAnim_AdvanceCurrentMove((int)obj, state->swayTimer, timeDelta, &animOut);
     if (state->flags != 0)
     {
         if (state->playerBurstCooldown > lbl_803E72F8)

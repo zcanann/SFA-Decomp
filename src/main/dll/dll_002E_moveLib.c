@@ -583,7 +583,7 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, char* st, s16 a, s16 b)
                 break;
             }
             *(int*)&s->lastTarget = player;
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, s->animPhase, framesThisStep, NULL);
+            ObjAnim_AdvanceCurrentMove((int)obj, s->animPhase, framesThisStep, NULL);
             if (s->phase == MOVELIB_PHASE_FINISH)
             {
                 s16* v;

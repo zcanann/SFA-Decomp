@@ -17,11 +17,6 @@ typedef int (*ObjAnimSampleRootCurveObjectFirstFn)(int objAnimHandle,f32 distanc
                                                    float *phaseOut);
 typedef int (*ObjAnimSetCurrentMoveObjectFirstFn)(int objAnimHandle,int moveId,f32 moveProgress,
                                                   int moveControlFlags);
-typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimHandle,double moveStepScale,double deltaTime,
-                                           ObjAnimEventList *events);
-typedef int (*ObjAnimAdvanceObjectFirstF32Fn)(int objAnimHandle,f32 moveStepScale,f32 deltaTime,
-                                              ObjAnimEventList *events);
-
 extern char gObjAnimMissingCachedMoveWarning[];
 
 #define OBJANIM_STATE_INDEX_CURRENT 0
@@ -48,8 +43,7 @@ u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount);
 int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut);
-int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
-                               ObjAnimEventList *events);
+int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events);
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int moveControlFlags);
 void *ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);

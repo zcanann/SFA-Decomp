@@ -239,7 +239,7 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
         }
         else
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E423C, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E423C, timeDelta, 0);
         }
     }
     else
@@ -260,7 +260,7 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
             {
                 t = -(s16)shifted >> 2;
             }
-            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
         }
     }
 }
@@ -398,7 +398,7 @@ int fn_8019E3F4(int* obj)
             ((WormSpitByte*)&sub->spitFlags)->spitLatch = 0;
         }
     }
-    ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, speed, timeDelta, 0);
     return 1;
 }
 #pragma opt_common_subs reset
@@ -629,7 +629,7 @@ void babycloudrunner_update(int* obj)
                             {
                                 ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
                             }
-                            ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E422C, timeDelta,
+                            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E422C, timeDelta,
                                                                                       0);
                         }
                         else
@@ -714,7 +714,7 @@ void babycloudrunner_update(int* obj)
                         ((WormSpitByte*)&sub->spitFlags)->_p0 = 1;
                         mainSetBits(0x66, 0);
                     }
-                    ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBE44, timeDelta, 0);
+                    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803DBE44, timeDelta, 0);
                 }
                 else
                 {
@@ -724,7 +724,7 @@ void babycloudrunner_update(int* obj)
                         sub->unkB0 = 1;
                     }
                     sandworm_turnTowardTargetAnim((int)obj, (int)Obj_GetPlayerObject(), sub, 1);
-                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, sub->animSpeed, timeDelta,
+                    if (ObjAnim_AdvanceCurrentMove((int)obj, sub->animSpeed, timeDelta,
                                                                                   0) != 0)
                     {
                         if (randFn_80080100(2) != 0)

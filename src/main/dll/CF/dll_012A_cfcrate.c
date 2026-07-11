@@ -250,10 +250,10 @@ void CFCrate_update(GameObject* obj)
     case 0x65c:
         break;
     case 0x65d:
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3DF8, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3DF8, timeDelta, NULL);
         break;
     case 0x6b4: /* MMP_Organic... */
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3DF8, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3DF8, timeDelta, NULL);
         break;
     case 0x708: /* VFP_newball... */
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0)

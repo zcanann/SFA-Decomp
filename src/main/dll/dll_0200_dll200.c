@@ -65,7 +65,7 @@ void fn_801F20D4(GameObject* obj)
         {
             ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E5D98, 0);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
                                                                      NULL);
     }
     else
@@ -74,7 +74,7 @@ void fn_801F20D4(GameObject* obj)
         {
             ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5D98, 0);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
                                                                      NULL);
     }
     if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
@@ -105,7 +105,7 @@ void fn_801F27E4(GameObject* obj)
     {
         ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5D98, 0);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
                                                                  NULL);
     ((Dll200State*)state)->latch24 = 1;
     if (((Dll200State*)state)->latch24 == 0)
@@ -326,7 +326,7 @@ void dll_200_update(int obj)
             {
                 ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
             }
-            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
                                                                          NULL);
             break;
         case 6:
@@ -434,7 +434,7 @@ void fn_801F2290(int obj)
             }
             else if (mode == 13)
             {
-                if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
+                if (ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                                  &animEvents) != 0)
                 {
                     if ((f32)(int)((GameObject*)obj)->anim.currentMove ==
@@ -498,7 +498,7 @@ void fn_801F2290(int obj)
                     ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
                 ((GameObject*)obj)->anim.localPosZ =
                     ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-                ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta,
+                ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                              &animEvents);
             }
         }

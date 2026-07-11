@@ -305,7 +305,7 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
                                             magnitude);
     }
 
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, moveStep, (f32)(u8)framesThisStep,
+    if (ObjAnim_AdvanceCurrentMove((int)obj, moveStep, (f32)(u8)framesThisStep,
                                                                     NULL) != 0 &&
         (obj)->anim.currentMove != *(u16*)&((SnowclawState*)inner)->moveIdBase)
     {

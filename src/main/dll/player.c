@@ -3296,7 +3296,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 1);
                 }
             }
-            ((void (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(obj, 0.005f, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, 0);
             result = 1;
         }
         else if (c == 5)
@@ -3367,7 +3367,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 ((PlayerState*)inner)->bodyLeanAngle = *(s16*)(va + 2);
                 ((PlayerState*)inner)->headYaw = -*(s16*)va;
             }
-            ((void (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(obj, 0.005f, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, 0);
             result = 1;
         }
         else if (c == 6)
@@ -3379,7 +3379,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 seq->movementState = 0;
             }
-            ((void (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(obj, 0.005f, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, 0);
             result = 0;
         }
         else
@@ -9195,7 +9195,7 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     if (sel != 0)
     {
         ((int (*)(int, int, u8, f32))ObjAnim_SetCurrentMove)(obj, a, mf, lbl_803E7EA4);
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, f, lbl_803E7EA4, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, f, lbl_803E7EA4, NULL);
         ObjModel_SampleJointTransform(model, 0, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     else
@@ -9290,7 +9290,7 @@ int playerStateOnBike(GameObject* obj, int state)
             inner->moveSequence = (int)lbl_803332B0;
         }
         ObjAnim_SetCurrentMove((int)obj, *(s16*)(inner->moveSequence + 0x2), lbl_803E7EA4, 0);
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E7EA4, *(f32*)&lbl_803E7EA4, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E7EA4, *(f32*)&lbl_803E7EA4, NULL);
     }
     if ((inner->moveSequenceFlags & 0x4) != 0)
     {

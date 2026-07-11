@@ -187,7 +187,7 @@ void spdrape_update(GameObject* obj)
         break;
     }
     ((SpdrapeState*)state)->moveActive =
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, *state, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, *state, timeDelta, NULL);
 }
 
 void spdrape_init(int* obj, u8* def)

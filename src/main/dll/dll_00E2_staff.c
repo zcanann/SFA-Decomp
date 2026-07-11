@@ -1247,7 +1247,7 @@ void staff_update(int* obj)
     int n;
     int* model = Obj_GetActiveModel((int)obj);
     *(u16*)((char*)model + 0x18) &= ~0x8;
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, ((StaffState*)state)->moveSpeed, timeDelta,
+    ObjAnim_AdvanceCurrentMove((int)obj, ((StaffState*)state)->moveSpeed, timeDelta,
                                                                  NULL);
 
     swp = (SwipeRecord*)state;

@@ -3677,7 +3677,7 @@ void pauseMenuAnimateCarousel(void)
         f32 spin = lbl_803E218C * lbl_803DD78C;
         *(f32*)((u8*)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803DD868[1], lbl_803E1E58, timeDelta,
+    ObjAnim_AdvanceCurrentMove((int)lbl_803DD868[1], lbl_803E1E58, timeDelta,
                                                                  &animEvents);
     watermark = 0x90000000;
     for (; k <= last; k++)
@@ -3700,7 +3700,7 @@ void pauseMenuAnimateCarousel(void)
         sel = sel * lbl_803DD784;
         *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * lbl_803E2190;
         *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
+        ObjAnim_AdvanceCurrentMove((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
                                                                      &animEvents);
         a = lbl_803E1E64 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;

@@ -656,7 +656,7 @@ noCurve:
     return 0;
 }
 
-int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle, ObjAnimEventList* events)
+int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
 {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;

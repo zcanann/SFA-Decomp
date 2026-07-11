@@ -32,7 +32,7 @@ int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE)
     {
         OSReport(sObjHitReactHitstateFrameString, objAnim->currentMoveProgress);
-        moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)(obj, (double)*reactionStepScale,
+        moveEnded = ObjAnim_AdvanceCurrentMove((int)obj, (double)*reactionStepScale,
                                                                               (double)timeDelta, NULL);
         if (moveEnded != 0)
         {

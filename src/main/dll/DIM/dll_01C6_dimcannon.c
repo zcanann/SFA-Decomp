@@ -389,7 +389,7 @@ void DIMCannon_update(int* obj)
     }
 
     gDimCannonAnimAdvanceSpeedCur = gDimCannonAnimAdvanceSpeed;
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, gDimCannonAnimAdvanceSpeed, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, gDimCannonAnimAdvanceSpeed, timeDelta, NULL);
 }
 
 int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -551,7 +551,7 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 Sfx_StopObjectChannel((u32)obj, 2);
             }
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, gDimCannonAnimAdvanceSpeedCur,
+            ObjAnim_AdvanceCurrentMove((int)obj, gDimCannonAnimAdvanceSpeedCur,
                                                                         timeDelta, NULL);
         }
     }

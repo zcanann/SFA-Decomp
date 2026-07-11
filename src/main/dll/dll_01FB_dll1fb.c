@@ -101,8 +101,7 @@ void dll_1FB_update(int* obj)
         buttonDisable(0, PAD_BUTTON_A);
         mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-        ((int)obj, lbl_803E5D04, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D04, timeDelta, NULL);
 }
 
 void dll_1FB_init(int* obj, u8* def)

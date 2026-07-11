@@ -353,7 +353,7 @@ void SB_CloudRunner_UpdateSteer(s16* obj, u8* state)
             ObjAnim_SetCurrentMove((int)obj, CLOUDRUNNER_MOVE_GLIDE, lbl_803E5C70, 0);
         }
     }
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, spd, timeDelta, (ObjAnimEventList*)&events);
+    ObjAnim_AdvanceCurrentMove((int)obj, spd, timeDelta, (ObjAnimEventList*)&events);
 
     ((GameObject*)obj)->anim.localPosX = ((SBCloudRunnerState*)state)->spawnPosX;
     ((GameObject*)obj)->anim.localPosY = ((SBCloudRunnerState*)state)->spawnPosY;

@@ -1420,7 +1420,7 @@ void Tricky_update(int obj)
     {
         ObjAnim_SetMoveProgress(((TrickyState*)state)->arcMoveProgress, (ObjAnimComponent*)obj);
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((TrickyState*)state)->moveProgress, timeDelta,
+    if (ObjAnim_AdvanceCurrentMove((int)obj, ((TrickyState*)state)->moveProgress, timeDelta,
                                                                     (void*)(state + 0x80c)) != 0)
     {
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x8000000LL;
@@ -1667,15 +1667,15 @@ void Tricky_update(int obj)
             }
             ((TrickyState*)state)->childPhaseTimer0 -= lbl_803E2550;
         }
-        ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->child, 0);
+        ObjAnim_AdvanceCurrentMove(*(int*)&((TrickyState*)state)->child, lbl_803E23EC, timeDelta, 0);
     }
     if (*(void**)&((TrickyState*)state)->childB != NULL)
     {
-        ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->childB, 0);
+        ObjAnim_AdvanceCurrentMove(*(int*)&((TrickyState*)state)->childB, lbl_803E23EC, timeDelta, 0);
     }
     if (*(void**)&((TrickyState*)state)->childA != NULL)
     {
-        ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->childA, 0);
+        ObjAnim_AdvanceCurrentMove(*(int*)&((TrickyState*)state)->childA, lbl_803E23EC, timeDelta, 0);
     }
 }
 

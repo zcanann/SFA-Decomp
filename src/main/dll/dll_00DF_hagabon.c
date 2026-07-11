@@ -221,7 +221,7 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
 
     objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
             obj->anim.velocityZ * timeDelta);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, state->animSpeed, timeDelta,
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                 (ObjAnimEventList*)animEvents);
 
     player = state->player;

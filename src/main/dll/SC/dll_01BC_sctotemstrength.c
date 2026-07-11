@@ -291,13 +291,13 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             {
                 st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
             }
-            if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+            if (ObjAnim_AdvanceCurrentMove(
                     player, ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E569C, timeDelta, 0) != 0 &&
                 playerObj->anim.currentMoveProgress < lbl_803E5678)
             {
                 playerObj->anim.currentMoveProgress = lbl_803E567C + playerObj->anim.currentMoveProgress;
             }
-            if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+            if (ObjAnim_AdvanceCurrentMove(
                     st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / lbl_803E569C, timeDelta,
                     0) != 0)
             {

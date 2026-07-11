@@ -86,7 +86,7 @@ void DeathSeq_update(int* obj)
             AudioStream_Play(0x51e1, AudioStream_StartPrepared);
             ObjAnim_SetCurrentMove((int)obj, 0x92, lbl_803E3D1C, 0);
         }
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3D20, timeDelta, NULL);
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
         {
             tex = objFindTexture((GameObject*)(obj), 5, 0);
@@ -123,7 +123,7 @@ void DeathSeq_update(int* obj)
         state->distTarget = lbl_803E3D2C;
         if ((*gScreenTransitionInterface)->isFinished() != 0)
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3D20, timeDelta, NULL);
             ready = 1;
         }
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)

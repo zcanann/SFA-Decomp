@@ -244,7 +244,7 @@ void duster_update(GameObject* obj)
 
     if (state->settleTimer == 0 && state->hitReactTimer == 0)
     {
-        if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, state->moveStepScale, timeDelta,
+        if (ObjAnim_AdvanceCurrentMove((int)obj, state->moveStepScale, timeDelta,
                                                                         NULL) != 0 ||
             state->priorityHit != 0)
         {

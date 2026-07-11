@@ -2298,7 +2298,7 @@ void andross_update(int obj)
                         lbl_803DC434;
     boss->anim.rotX += state->rotXSpeed;
     boss->anim.rotY += state->rotYSpeed;
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, 0);
     fn_8023A3E4(obj, (int)state);
     fn_8023A87C(boss, (int)state);
     if (state->spawnedObj != NULL)

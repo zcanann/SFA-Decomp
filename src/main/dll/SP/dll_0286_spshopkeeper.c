@@ -289,7 +289,7 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     ((ShopkeeperState*)state)->flags9D4 |= SHOPKEEPER_FLAG_FACING;
     if (advance != 0)
     {
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, speed, timeDelta, NULL);
     }
     if ((obj)->seqIndex == -1)
     {

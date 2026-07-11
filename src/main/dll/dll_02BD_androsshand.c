@@ -308,7 +308,7 @@ void AndrossHand_update(int obj)
     {
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     }
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, 0);
 }
 #pragma opt_common_subs reset
 

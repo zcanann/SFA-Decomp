@@ -260,7 +260,7 @@ void sc_musictree_update(GameObject* obj)
     int* p;
     int* q;
 
-    ObjAnim_AdvanceCurrentMove(((ScMusictreeState*)inner)->moveStepScale, timeDelta, (int)obj,
+    ObjAnim_AdvanceCurrentMove((int)obj, ((ScMusictreeState*)inner)->moveStepScale, timeDelta,
                                (ObjAnimEventList*)&stk);
     if (((ScMusictreeState*)inner)->flags == 0)
     {
@@ -423,7 +423,7 @@ void sc_musictree_init(GameObject* obj, SCMusicTreeSetup* setup)
     ratio = (f32)(s32)
     randomGetRange(1, 99) / 100.0f;
     ObjAnim_SetCurrentMove((int)obj, 0, ratio, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, 1.0f, 1.0f,
+    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f,
                                                                 (ObjAnimEventList*)&stk);
     ObjHitbox_SetCapsuleBounds((int)obj, (s32)(15.0f * state->scale), -5, 0xff);
     if (state->flags & SCMUSICTREE_FLAG_SATELLITES)

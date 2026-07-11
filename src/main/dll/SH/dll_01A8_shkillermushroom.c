@@ -502,7 +502,7 @@ void enemymushroom_update(int* obj)
         ObjAnim_SetCurrentMove((int)obj, gKillerMushroomStateAnimMoves[((EnemyMushroomState*)state)->stateId],
                                lbl_803E52FC, 0);
     }
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+    if (ObjAnim_AdvanceCurrentMove(
             (int)obj, gKillerMushroomStateAnimRates[((EnemyMushroomState*)state)->stateId], timeDelta, NULL) != 0)
     {
         ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_ANIM_DONE;

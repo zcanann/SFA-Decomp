@@ -379,7 +379,7 @@ void dll_16C_update(int* obj)
         (*(void (**)(int*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
         blend = lbl_803E474C;
         (*(void (**)(int*, f32*, f32*))(**(int**)((char*)sub + 0x68) + 0x40))(sub, &a, &b);
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, blend, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, blend, (f32)(u32)framesThisStep, NULL);
         if (extra->linkedObj != NULL)
         {
             f32 fade;

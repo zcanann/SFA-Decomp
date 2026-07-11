@@ -563,7 +563,7 @@ void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags)
 
     buf.flag = 0;
     *(s8*)&((BaddieState*)obj)->moveDone =
-        ObjAnim_AdvanceCurrentMove(((BaddieState*)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList*)&buf);
+        ObjAnim_AdvanceCurrentMove((int)moveState, ((BaddieState*)obj)->moveSpeed, dt, (ObjAnimEventList*)&buf);
 
     ((BaddieState*)obj)->eventFlags = 0;
     i = 0;
@@ -791,7 +791,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         int i;
 
         animEvents[0x1b] = 0;
-        *(s8*)&((BaddieState*)state)->moveDone = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
+        *(s8*)&((BaddieState*)state)->moveDone = ObjAnim_AdvanceCurrentMove(
             (int)pos, ((BaddieState*)state)->moveSpeed, dt, (ObjAnimEventList*)animEvents);
         ((BaddieState*)state)->eventFlags = 0;
         for (i = 0; i < (s8)animEvents[0x1b]; i++)

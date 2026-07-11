@@ -226,7 +226,7 @@ void sh_queenearthwalker_update(GameObject* obj)
     {
         ObjAnim_SetCurrentMove((int)obj, targetMove, lbl_803E53F8, 0);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+    ObjAnim_AdvanceCurrentMove(
         (int)obj, gQueenEarthWalkerMoveSpeedTable[((QueenEarthWalkerState*)state)->stateIndex], timeDelta, NULL);
 
     stateFlags = ((QueenEarthWalkerState*)state)->flags;

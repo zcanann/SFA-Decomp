@@ -44,7 +44,7 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     lantern = (GameObject*)obj;
     gSClanternObjAnimEvents.triggerCount = 0;
     gSClanternObjAnimEvents.rootCurveValid = 0;
-    advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale, timeDelta, obj, &gSClanternObjAnimEvents);
+    advanceResult = ObjAnim_AdvanceCurrentMove((int)obj, moveStepScale, timeDelta, &gSClanternObjAnimEvents);
     if (gSClanternObjAnimEvents.rootCurveValid != 0)
     {
         lantern->anim.rotX += gSClanternObjAnimEvents.rootPitch;

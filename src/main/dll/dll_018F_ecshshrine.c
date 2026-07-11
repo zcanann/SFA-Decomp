@@ -233,7 +233,7 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
     trigB = trigB + trigA;
     obj->pitch = lbl_803E4FA8 * trigB;
 
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4FAC, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4FAC, timeDelta, &animEvents);
 
     if (player != NULL)
     {

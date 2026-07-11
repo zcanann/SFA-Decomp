@@ -603,8 +603,7 @@ void TitleScreen_update(u8* obj)
             {
                 progress = ((TrickyState*)state)->moveProgress;
             }
-            evt = ((int (*)(f32, int, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(
-                progress, objHandle, timeDelta, (ObjAnimEventList*)buf);
+            evt = ObjAnim_AdvanceCurrentMove(objHandle, progress, timeDelta, (ObjAnimEventList*)buf);
             if (evt != 0)
             {
                 if (((TitlescreenState*)state)->poseIndex == lbl_803DD990 && ((TitlescreenState*)state)->animPhase == 1)

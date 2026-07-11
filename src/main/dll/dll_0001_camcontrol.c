@@ -208,7 +208,7 @@ void camcontrol_updateTargetFeedback(void)
             }
             else
             {
-                ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)reticle, gCamcontrolReticleFadeOutStep,
+                ObjAnim_AdvanceCurrentMove((int)reticle, gCamcontrolReticleFadeOutStep,
                                                                             timeDelta, NULL);
             }
         }
@@ -240,7 +240,7 @@ void camcontrol_updateTargetFeedback(void)
         }
         else
         {
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)reticle, gCamcontrolReticleFadeInStep,
+            ObjAnim_AdvanceCurrentMove((int)reticle, gCamcontrolReticleFadeInStep,
                                                                         timeDelta, NULL);
         }
         result = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);

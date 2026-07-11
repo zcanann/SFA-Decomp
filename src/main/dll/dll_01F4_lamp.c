@@ -115,7 +115,7 @@ void Lamp_update(int obj)
             ((GameObject*)obj)->unkF8 = 1;
             ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / 100.0f, (ObjAnimComponent*)obj);
         }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, 0.003f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.003f, timeDelta, NULL);
     }
 
     if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)

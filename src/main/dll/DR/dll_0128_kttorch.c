@@ -44,7 +44,7 @@ void KT_Torch_update(GameObject* obj)
     int visBit;
 
     placement = *(int*)&(obj)->anim.placementData;
-    ObjAnim_AdvanceCurrentMove((f32)((KtTorchPlacement*)placement)->animSpeed / 10000.0f, timeDelta, (int)obj,
+    ObjAnim_AdvanceCurrentMove((int)obj, (f32)((KtTorchPlacement*)placement)->animSpeed / 10000.0f, timeDelta,
                                (ObjAnimEventList*)0);
     visBit = ((KtTorchPlacement*)placement)->visGameBit;
     if (visBit != -1)

@@ -774,7 +774,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
         }
         state->animStepScale = table->stateMoveStepScales[state->stateIndex];
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, state->animStepScale, timeDelta,
+    if (ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta,
                                                                     &state->animEvents) != 0)
     {
         state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_ANIM_ENDED);

@@ -68,7 +68,7 @@ void dimwooddoor2_update(int* obj)
     int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
     DimWoodDoor2State* sub = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
-    ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, sub->animSpeed, timeDelta, 0);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
     {
         f32 rs = sub->riseSpeed;

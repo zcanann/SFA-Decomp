@@ -354,7 +354,7 @@ void worldobj_update(GameObject* obj)
         }
         break;
     case 0x740:
-        ((int (*)(void*, f32, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6694, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6694, timeDelta, NULL);
         obj->anim.rotX = lbl_803E668C * timeDelta + (f32)obj->anim.rotX;
         break;
     case 0x5dc:
@@ -428,7 +428,7 @@ void worldobj_update(GameObject* obj)
         obj->anim.rotX += 1;
         break;
     case 0x602:
-        ((int (*)(void*, f32, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E66A4, timeDelta,
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E66A4, timeDelta,
                                                                      (ObjAnimEventList*)&vec[3]);
         break;
     case 0x5e3:
@@ -448,7 +448,7 @@ void worldobj_update(GameObject* obj)
             }
         }
         state->spinZStep = gAudioStreamCurrentId != 0;
-        ((int (*)(void*, f32, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(obj, gWorldObjAdvanceMoveTable[state->controlByte],
+        ObjAnim_AdvanceCurrentMove((int)obj, gWorldObjAdvanceMoveTable[state->controlByte],
                                                                      timeDelta, (ObjAnimEventList*)&vec[3]);
         if (state->effectState == 0 && *(void**)&state->light != NULL)
         {

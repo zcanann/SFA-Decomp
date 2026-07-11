@@ -268,7 +268,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
     child = *(int*)state;
     if ((void*)child != NULL)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+        ObjAnim_AdvanceCurrentMove(
             child, (obj)->anim.currentMoveProgress - ((GameObject*)child)->anim.currentMoveProgress, timeDelta, NULL);
     }
 

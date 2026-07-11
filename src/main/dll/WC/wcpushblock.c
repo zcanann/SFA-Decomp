@@ -325,7 +325,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
         ObjAnim_SetCurrentMove((int)obj, WCPUSHBLOCK_RIDE_MOVE_ID, lbl_803E5C70, 0);
     }
 
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC, timeDelta, NULL) != 0)
+    if (ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5CAC, timeDelta, NULL) != 0)
     {
         state->rideState = 0;
     }

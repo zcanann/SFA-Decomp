@@ -388,7 +388,7 @@ void earthwalker_update(int obj)
         break;
     }
 
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
 }
 
 /*
@@ -533,7 +533,7 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
     }
     if ((s8)shouldAdvanceMove != 0)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove((int)obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {

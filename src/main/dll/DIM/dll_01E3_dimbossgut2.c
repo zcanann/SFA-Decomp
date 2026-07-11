@@ -256,7 +256,7 @@ void DIM_BossGut2_update(GameObject* obj)
         posData->timer16 += framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4D20, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4D20, timeDelta, NULL);
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumePriority = 9;
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumeId = 1;
         ObjHits_RegisterActiveHitVolumeObject((int)obj);
@@ -328,7 +328,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     }
     ((Dimbossgut2Curve*)curve)->fC += (obj)->anim.localPosY;
     ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4D20, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4D20, timeDelta, NULL);
     ((Dimbossgut2Curve*)curve)->light = (int)objCreateLight((int)obj, 1);
     if ((void*)((Dimbossgut2Curve*)curve)->light != NULL)
     {

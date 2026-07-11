@@ -471,7 +471,7 @@ void SHthorntail_update(SHthorntailObject* obj)
                                    SHTHORNTAIL_TIMER_DONE_THRESHOLD, 0);
             runtime->storedFacingAngle = obj->facingAngle;
         }
-        val = ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+        val = ObjAnim_AdvanceCurrentMove(
             (int)obj, SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState], timeDelta, &animEvents);
         if (val != 0)
         {

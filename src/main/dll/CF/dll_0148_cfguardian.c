@@ -965,7 +965,7 @@ int cfguardian_updateMain(GameObject* obj)
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, framesThisStep, stk.evbuf) !=
+    if (ObjAnim_AdvanceCurrentMove((int)obj, sub->moveSpeed, framesThisStep, (ObjAnimEventList*)stk.evbuf) !=
             0 &&
         (sub->flagsA9B & GUARDIAN_FLAG_MOVE_LATCHED) != 0 &&
         obj->anim.currentMove != GUARDIAN_MOVE_FLY && obj->anim.currentMove != 9)

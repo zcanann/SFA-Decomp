@@ -161,7 +161,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         {
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
-        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+        if (ObjAnim_AdvanceCurrentMove(
                 player, ((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100, timeDelta, NULL) != 0)
         {
             if (((GameObject*)player)->anim.currentMoveProgress < lbl_803E50EC)
@@ -172,7 +172,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         }
         if (state->partnerObj != NULL)
         {
-            if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+            if (ObjAnim_AdvanceCurrentMove(
                     *(int*)&state->partnerObj, -((f32)state->spinProgress - state->prevSpinProgress) / lbl_803E5100,
                     timeDelta, NULL) != 0)
             {

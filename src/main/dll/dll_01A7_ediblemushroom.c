@@ -434,7 +434,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         ObjAnim_SetCurrentMove((int)obj, moveId, 0.25f, 0);
     }
 
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+    if (ObjAnim_AdvanceCurrentMove(
             (int)obj, gEdibleMushroomAnimEventTable[((EdibleMushroomState*)state)->animState], timeDelta,
             (ObjAnimEventList*)animOut) != 0)
     {
@@ -722,7 +722,7 @@ void EdibleMushroom_init(GameObject* obj, int aux)
     ((EdibleMushroomState*)state)->mapParamScale = 0.2f * ((f32)((EdibleMushroomPlacement*)aux)->paramByte / 255.0f);
 
     ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f, &animEvents);
     ((EdibleMushroomState*)state)->lungeRange = animEvents.rootDeltaX;
     if (((EdibleMushroomState*)state)->lungeRange < 0.0f)
     {
@@ -733,7 +733,7 @@ void EdibleMushroom_init(GameObject* obj, int aux)
     ((EdibleMushroomState*)state)->lungeRange += 20.0f;
 
     ObjAnim_SetCurrentMove((int)obj, 4, 0.0f, 0);
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f, &animEvents);
     ((EdibleMushroomState*)state)->retreatRange = animEvents.rootDeltaZ;
     if (((EdibleMushroomState*)state)->retreatRange < 0.0f)
     {

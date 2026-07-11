@@ -626,7 +626,7 @@ void cclightfoot_update(int obj)
             }
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[state->state], timeDelta,
+    if (ObjAnim_AdvanceCurrentMove((int)obj, tbl->animSpeeds[state->state], timeDelta,
                                                                     NULL) != 0)
     {
         state->flags |= 1;

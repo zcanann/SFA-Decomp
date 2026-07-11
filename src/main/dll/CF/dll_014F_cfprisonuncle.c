@@ -177,7 +177,7 @@ void cfprisonuncle_update(int* obj)
         else
         {
             objAnimFn_80038f38((GameObject*)obj, (char*)sub + 0x34);
-            ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E428C,
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E428C,
                                                                         (f32)(u32)framesThisStep, 0);
         }
     }

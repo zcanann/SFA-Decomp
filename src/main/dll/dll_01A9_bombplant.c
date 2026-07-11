@@ -488,7 +488,7 @@ void bombplant_update(void* obj)
         ObjAnim_SetCurrentMove((int)obj, *(s16*)entry, lbl_803E536C, 0);
     }
 
-    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+    if (ObjAnim_AdvanceCurrentMove(
         (int)obj, *(f32*)(entry + 0x4), timeDelta, NULL) != 0)
     {
         ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_MOVE_ACTIVE;

@@ -643,7 +643,7 @@ void DR_LaserCannon_update(GameObject* obj)
             (*(void (**)(int, void*, int, int))(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
         }
     }
-    hit = ((int (*)(void*, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, 0);
+    hit = ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, 0);
     if ((obj)->anim.currentMove == 1 && hit != 0)
     {
         ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E690C, 0);

@@ -93,7 +93,7 @@ void SB_ShipMast_update(GameObject* obj)
         }
         speed = 0.03f;
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, speed, (f32)(u32)framesThisStep, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, speed, (f32)(u32)framesThisStep, NULL);
 }
 
 void SB_ShipMast_init(void)

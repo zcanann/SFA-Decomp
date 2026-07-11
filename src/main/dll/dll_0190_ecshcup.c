@@ -341,7 +341,7 @@ void fn_801C8B68(int obj)
     angB = angB + angA;
     *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * angB);
 
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta,
+    ObjAnim_AdvanceCurrentMove(self, lbl_803E50BC, timeDelta,
                                                                  (ObjAnimEventList*)&local_var);
 
     if (player == NULL)

@@ -260,7 +260,7 @@ void fn_801C70F0(s16* obj)
         c2 = mathSinf((gGpShShrinePi * (f32)sub->anglePhase[0]) / gGpShShrineAngleHalfRange);
         c2 = c2 + c1;
         ((GameObject*)obj)->anim.rotY = lbl_803E5018 * c2;
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E501C, timeDelta,
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E501C, timeDelta,
                                                                      (ObjAnimEventList*)buf);
         if (player != NULL)
         {

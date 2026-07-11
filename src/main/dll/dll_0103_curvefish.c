@@ -285,7 +285,7 @@ void CurveFish_update(int obj)
             }
         }
 
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, state->moveStepScale, timeDelta, NULL);
         state->animTimer += timeDelta;
     default:
         return;

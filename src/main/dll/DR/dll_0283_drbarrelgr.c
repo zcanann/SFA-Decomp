@@ -301,7 +301,7 @@ void DR_BarrelGr_update(GameObject* obj)
         break;
     }
 
-    ((int (*)(void*, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CC0, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6CC0, timeDelta, 0);
     if (newMode != -1 && newMode != ((DrbarrelgrState*)state)->mode)
     {
         ((DrbarrelgrState*)state)->prevMode = ((DrbarrelgrState*)state)->mode;

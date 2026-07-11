@@ -287,7 +287,7 @@ void SB_ShipHead_update(GameObject* obj)
         setup[7] = 0xff;
         Obj_SetupObject(setup, 5, -1, -1, 0);
     }
-    proj = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, gSbShipHeadAnimAdvanceRate, timeDelta,
+    proj = ObjAnim_AdvanceCurrentMove((int)obj, gSbShipHeadAnimAdvanceRate, timeDelta,
                                                                        NULL);
     if ((object->anim.currentMove == 1) && (proj != 0))
     {

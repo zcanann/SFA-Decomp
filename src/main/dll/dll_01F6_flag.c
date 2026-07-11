@@ -63,7 +63,7 @@ void Flag_update(int obj)
 
     if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_FLUTTER)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59AC, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E59AC, (f32)(u32)framesThisStep, NULL);
     }
     else if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_TIED)
     {
@@ -82,7 +82,7 @@ void Flag_update(int obj)
     }
     else
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E59B0, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E59B0, (f32)(u32)framesThisStep, NULL);
     }
 }
 

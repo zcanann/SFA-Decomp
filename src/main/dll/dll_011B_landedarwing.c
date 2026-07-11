@@ -669,7 +669,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingState* state)
         }
         ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
     }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, state->path8Fx, timeDelta, &events);
+    ObjAnim_AdvanceCurrentMove((int)obj, state->path8Fx, timeDelta, &events);
 }
 
 void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingState* state)

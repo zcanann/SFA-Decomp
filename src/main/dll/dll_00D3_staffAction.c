@@ -939,7 +939,7 @@ void dll_D3_update(int* obj)
         }
     }
 
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, extra->animSpeed, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, extra->animSpeed, timeDelta, NULL);
 
     if (((TreasureChestState*)state)->targetState != 1)
     {

@@ -832,7 +832,7 @@ void animatedobj_update(int* obj)
                         child = Obj_SetupObject(alloc, 4, -1, -1, 0);
                         ObjLink_AttachChild(obj, child, 0);
                         ObjAnim_SetCurrentMove((int)child, 0, lbl_803E322C, 0);
-                        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+                        ObjAnim_AdvanceCurrentMove(
                             (int)child, lbl_803E3228, timeDelta, NULL);
                     }
                     break;

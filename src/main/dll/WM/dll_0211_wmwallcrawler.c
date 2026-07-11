@@ -321,7 +321,7 @@ void wmwallcrawler_update(int obj)
             {
                 ((GameObject*)ob)->anim.rootMotionScale = ((GameObject*)ob)->anim.rootMotionScale * lbl_803E5FC8;
             }
-            if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(ob, lbl_803E5FCC, framesThisStep, NULL) !=
+            if (ObjAnim_AdvanceCurrentMove(ob, lbl_803E5FCC, framesThisStep, NULL) !=
                 0)
             {
                 if (((WmwallcrawlerState*)st)->counterGameBit != 0 && ((WmwallcrawlerState*)st)->counterGameBit != -1)
@@ -475,7 +475,7 @@ void wmwallcrawler_update(int obj)
                             speed = sqrtf(sq);
                         }
                         ((WmwallcrawlerState*)st)->animSpeed = lbl_803E5FDC * speed;
-                        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
+                        ObjAnim_AdvanceCurrentMove(
                             ob, ((WmwallcrawlerState*)st)->animSpeed, framesThisStep, NULL);
                         ((GameObject*)ob)->anim.localPosX =
                             ((GameObject*)ob)->anim.velocityX * timeDelta + ((GameObject*)ob)->anim.localPosX;
@@ -717,7 +717,7 @@ void wmwallcrawler_update(int obj)
                                     ((WmwallcrawlerState*)st)->animSpeed = lbl_803E5FCC;
                                     break;
                                 }
-                                if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
+                                if (ObjAnim_AdvanceCurrentMove(
                                         ob, ((WmwallcrawlerState*)st)->animSpeed, framesThisStep, NULL) != 0 &&
                                     ((GameObject*)ob)->anim.currentMove != 0)
                                 {

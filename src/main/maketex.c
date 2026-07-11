@@ -1251,7 +1251,7 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
                 fa = fa * 3.142f / 325767.0f;
                 ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent*)obj, &out);
-                ((int (*)(void*, f32, f32, ObjAnimEventList*))ObjAnim_AdvanceCurrentMove)(obj, out, (f32)framesThisStep, NULL);
+                ObjAnim_AdvanceCurrentMove((int)obj, out, (f32)framesThisStep, NULL);
             }
         }
         if (((ObjSeqTurnState*)state)->blend > 1.0f)
