@@ -1291,3 +1291,13 @@ union/renumber (idx 38-vs-74) — the one lever class untested, needs the union-
 disasm (0x57b947 caller context). If that also closes, this fn joins the
 needs-new-idea-class list alongside objlib-pre-helper — historically those DID crack
 (5 precedents), each via a structural-origin insight not in the current enumeration.
+
+
+## Round 14: wrap-angle inline helper INERT (fn_802BCA10)
+The twice-repeated +-0x8000 wrap block extracted as static inline DR_EarthWarrior_wrapAngle
+(the objlib/tricky/curves pattern): expansion produces identical webs — 31 diffs unchanged.
+The wrap value (delta) is a plain named fn-scope web either way; expansion temp-classing
+only matters when the repeated block OWNS locals (objlib) or walkers (tricky). fn_802BCA10
+enumeration now closed across 15+ spelling families; open levers: union-control disasm
+(0x57b947 call context) and any structural reading not yet conceived. Moving the round
+budget to the other units next.
