@@ -475,25 +475,25 @@ void andross_hitDetect(void)
 void andross_update(int obj)
 {
     GameObject* boss;
-    u8 actionChanged;
     u8 phaseChanged;
+    u8 flag;
+    u8 moveChanged;
     u8 spawnIndex;
-    u8 pathIndex;
     u8 cueIndex;
     u8 delayIndex;
     int index;
-    u8 signalReceived;
     AndrossState* state;
+    GameObject** spawnSlot;
     AndrossState* signalState;
     AndrossHandState* handStateA;
     AndrossHandState* handStateB;
-    GameObject** spawnSlot;
     ModelFileHeader* model;
     AndrossRenderOp* renderOp;
     AndrossChildSetup* childSetup;
     int rotationDelta;
     s16 durationBeforeStep;
     u32 val;
+    u32 spawnArrayIndex;
     f32 fc;
     f32 fval;
     s16 sval;
@@ -524,7 +524,9 @@ void andross_update(int obj)
     f32 searchDist;
     boss = (GameObject*)obj;
     state = boss->extra;
-    pathIndex = 0;
+    flag = 0;
+    phaseChanged = 0;
+    moveChanged = 0;
     if (state->startupDelay != 0)
     {
         state->startupDelay -= 1;
@@ -557,26 +559,25 @@ void andross_update(int obj)
     }
     for (spawnIndex = 0; spawnIndex < 4; spawnIndex++)
     {
-        spawnSlot = &state->spawnObj[spawnIndex];
+        spawnArrayIndex = spawnIndex;
+        spawnSlot = &state->spawnObj[spawnArrayIndex];
         if (*spawnSlot == NULL)
         {
-            *spawnSlot = (GameObject*)ObjList_FindObjectById(gAndrossSpawnObjectIds[spawnIndex]);
+            *spawnSlot = (GameObject*)ObjList_FindObjectById(gAndrossSpawnObjectIds[spawnArrayIndex]);
             if (*spawnSlot != NULL)
             {
-                state->spawnDelta[spawnIndex].x = (*spawnSlot)->anim.localPosX - boss->anim.localPosX;
-                state->spawnDelta[spawnIndex].y = (*spawnSlot)->anim.localPosY - boss->anim.localPosY;
-                state->spawnDelta[spawnIndex].z = (*spawnSlot)->anim.localPosZ - boss->anim.localPosZ;
+                state->spawnDelta[spawnArrayIndex].x = (*spawnSlot)->anim.localPosX - boss->anim.localPosX;
+                state->spawnDelta[spawnArrayIndex].y = (*spawnSlot)->anim.localPosY - boss->anim.localPosY;
+                state->spawnDelta[spawnArrayIndex].z = (*spawnSlot)->anim.localPosZ - boss->anim.localPosZ;
             }
         }
         else
         {
-            (*spawnSlot)->anim.localPosX = boss->anim.localPosX + state->spawnDelta[spawnIndex].x;
-            (*spawnSlot)->anim.localPosY = boss->anim.localPosY + state->spawnDelta[spawnIndex].y;
-            (*spawnSlot)->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[spawnIndex].z;
+            (*spawnSlot)->anim.localPosX = boss->anim.localPosX + state->spawnDelta[spawnArrayIndex].x;
+            (*spawnSlot)->anim.localPosY = boss->anim.localPosY + state->spawnDelta[spawnArrayIndex].y;
+            (*spawnSlot)->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[spawnArrayIndex].z;
         }
     }
-    phaseChanged = 0;
-    actionChanged = 0;
     if (state->fightPhase != state->prevFightPhase)
     {
         phaseChanged = 1;
@@ -588,11 +589,11 @@ void andross_update(int obj)
     state->velZ = fval;
     if (-0x4000 < state->targetRotX && boss->anim.rotX < 0x4000)
     {
-        pathIndex = 1;
+        flag = 1;
     }
-    ObjPath_GetPointWorldPosition((GameObject*)obj, pathIndex, &state->cachedPosX, &state->cachedPosY,
+    ObjPath_GetPointWorldPosition((GameObject*)obj, flag, &state->cachedPosX, &state->cachedPosY,
                                   &state->cachedPosZ, 0);
-    if (pathIndex == 1)
+    if (flag == 1)
     {
         state->cachedPosY += 30.0f;
         state->cachedPosZ += 30.0f;
@@ -803,15 +804,16 @@ void andross_update(int obj)
         }
         break;
     }
+    flag = moveChanged;
     if (state->actionState != state->prevActionState)
     {
-        actionChanged = 1;
+        flag = 1;
     }
     state->prevActionState = state->actionState;
     switch (state->actionState)
     {
     case 0:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -855,7 +857,7 @@ void andross_update(int obj)
         }
         break;
     case 1:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -891,7 +893,7 @@ void andross_update(int obj)
         }
         break;
     case 2:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -937,7 +939,7 @@ void andross_update(int obj)
         }
         break;
     case 3:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -963,7 +965,7 @@ void andross_update(int obj)
         }
         break;
     case 4:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1003,7 +1005,7 @@ void andross_update(int obj)
         }
         break;
     case 0x15:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1050,7 +1052,7 @@ void andross_update(int obj)
         }
         break;
     case 6:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1071,20 +1073,20 @@ void andross_update(int obj)
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
-        signalReceived = 0;
+        flag = 0;
         signalState = boss->extra;
         if ((signalState->signalFlags & 1) != 0)
         {
             signalState->signalFlags &= ~1;
-            signalReceived = 1;
+            flag = 1;
         }
-        if (signalReceived)
+        if (flag)
         {
             state->actionPending = 1;
         }
         break;
     case 7:
-        if (actionChanged)
+        if (flag)
         {
             androsshand_setState(state->handObjA, 4, 0);
         }
@@ -1100,20 +1102,20 @@ void andross_update(int obj)
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
-        signalReceived = 0;
+        flag = 0;
         signalState = boss->extra;
         if ((signalState->signalFlags & 1) != 0)
         {
             signalState->signalFlags &= ~1;
-            signalReceived = 1;
+            flag = 1;
         }
-        if (signalReceived)
+        if (flag)
         {
             state->actionPending = 1;
         }
         break;
     case 9:
-        if (actionChanged)
+        if (flag)
         {
             androsshand_setState(state->handObjA, 6, 0);
         }
@@ -1129,20 +1131,20 @@ void andross_update(int obj)
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
-        signalReceived = 0;
+        flag = 0;
         signalState = boss->extra;
         if ((signalState->signalFlags & 1) != 0)
         {
             signalState->signalFlags &= ~1;
-            signalReceived = 1;
+            flag = 1;
         }
-        if (signalReceived)
+        if (flag)
         {
             state->actionPending = 1;
         }
         break;
     case 8:
-        if (actionChanged)
+        if (flag)
         {
             androsshand_setState(state->handObjB, 6, 0);
         }
@@ -1158,14 +1160,14 @@ void andross_update(int obj)
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
-        signalReceived = 0;
+        flag = 0;
         signalState = boss->extra;
         if ((signalState->signalFlags & 1) != 0)
         {
             signalState->signalFlags &= ~1;
-            signalReceived = 1;
+            flag = 1;
         }
-        if (signalReceived)
+        if (flag)
         {
             state->actionPending = 1;
         }
@@ -1195,19 +1197,19 @@ void andross_update(int obj)
             fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
             state->targetPosY = (20.0f * fc + (state->homePosY + fb));
             state->targetPosZ = state->homePosZ;
-            if (actionChanged)
+            if (flag)
             {
                 androsshand_setState(state->handObjA, 5, 0);
                 androsshand_setState(state->handObjB, 5, 0);
             }
-            signalReceived = 0;
+            flag = 0;
             signalState = boss->extra;
             if ((signalState->signalFlags & 1) != 0)
             {
                 signalState->signalFlags &= ~1;
-                signalReceived = 1;
+                flag = 1;
             }
-            if (signalReceived)
+            if (flag)
             {
                 state->actionPending = 1;
             }
@@ -1215,7 +1217,7 @@ void andross_update(int obj)
         break;
     case 0xb:
     case 0xd:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1318,7 +1320,7 @@ void andross_update(int obj)
             gAndrossDistortPhase = fval - 6.28318f;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1393,7 +1395,7 @@ void andross_update(int obj)
             gAndrossDistortPhase = fval - 6.28318f;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1518,7 +1520,7 @@ void andross_update(int obj)
         }
         break;
     case 0xf:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1544,7 +1546,7 @@ void andross_update(int obj)
         }
         break;
     case 0x10:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1584,7 +1586,7 @@ void andross_update(int obj)
         }
         break;
     case 0x11:
-        if (actionChanged)
+        if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_and_falcoflyby);
             {
@@ -1617,7 +1619,7 @@ void andross_update(int obj)
         }
         break;
     case 0x12:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1676,7 +1678,7 @@ void andross_update(int obj)
         }
         break;
     case 0x13:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1772,7 +1774,7 @@ void andross_update(int obj)
         }
         break;
     case 0x14:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -1817,7 +1819,7 @@ void andross_update(int obj)
         break;
     case 0x19:
     case 0x1a:
-        if (actionChanged)
+        if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG__UNK_832);
             {
@@ -1832,7 +1834,7 @@ void andross_update(int obj)
         }
         break;
     case 0x1b:
-        if (actionChanged)
+        if (flag)
         {
             mainSetBits(0x10, 0);
             state->actionTimer = 0x1e;
@@ -1850,7 +1852,7 @@ void andross_update(int obj)
         }
         break;
     case 0x1c:
-        if (actionChanged)
+        if (flag)
         {
             androssbrain_setState(state->lightAnchorObj, 1, 0);
             ObjHits_DisableObject(obj);
@@ -1938,7 +1940,7 @@ void andross_update(int obj)
         }
         break;
     case 0x1d:
-        if (actionChanged)
+        if (flag)
         {
             androssbrain_setState(state->lightAnchorObj, 1, 0);
             ObjHits_DisableObject(obj);
@@ -1960,7 +1962,7 @@ void andross_update(int obj)
         }
         break;
     case 0x16:
-        if (actionChanged)
+        if (flag)
         {
             Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
             {
@@ -2012,7 +2014,7 @@ void andross_update(int obj)
     case 5:
         handStateA = state->handObjA->extra;
         handStateB = state->handObjB->extra;
-        if (actionChanged)
+        if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
             {
@@ -2067,7 +2069,7 @@ void andross_update(int obj)
         }
         break;
     case 0x17:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
@@ -2120,7 +2122,7 @@ void andross_update(int obj)
         }
         break;
     case 0x18:
-        if (actionChanged)
+        if (flag)
         {
             {
                 AndrossState* animState = boss->extra;
