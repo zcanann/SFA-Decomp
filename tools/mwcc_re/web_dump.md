@@ -755,3 +755,40 @@ Right-operand pure-reference carriers — `i-- != 0 && (ch, 1)`,
 stripped before the numbering reference-walk. No ghost-reference carrier
 exists. This was the final identified hole in the impossibility argument;
 the principled-cap verdict for Music_Update / ObjectChannel3D stands complete.
+
+
+## THE DECL-ORDER LAW (2026-07-10, round 18) — fn1 CRACKED to 100%
+
+Sfx_UpdateLoopedObjectSounds 99.35 -> 100. The lever came from reading the name-resolving
+numbering trace (nametrace.py: Number-commit 0x4d03a0 + name string at node[+0xa..], node =
+*(value+0xa)) against the source decls. Three laws, all verified empirically on this unit:
+
+1. **Named-web numbering order = REVERSE DECLARATION ORDER, exactly.** fn1's M-burst ascending
+   [sz, removeSound, obj, index2, index, i, fp, ip, op, table] == decls reversed; block-scope
+   locals (i2/ip2/op2) slot by their own decl positions (reversed) below; params below locals
+   (sibling fn: obj param lowest). Statement order, init order, use order: ALL INERT (6-perm
+   init battery + tail-perm battery + arm-swap all no-ops — the numbering ignores them).
+2. **Saved-reg grants = web-index DESCENDING = DECLARATION ORDER.** F-event sequence idx
+   51,47,43,42,41,40,38 -> r31..r25. First-declared local -> r31 (after any @-temps steal
+   their slots, see 3). This is the mechanism under playbook #5/#16/#108 decl-order effects.
+3. **The live-range splitter turns a CONVERSION-defined named web that crosses in-loop calls
+   into an @-temp (which numbers ABOVE all named webs -> steals the TOP saved reg).**
+   fn1: `index = (u16)i` (int index) -> @378 got r30, named index web died (A reg=0).
+   An ADD-defined web (index2 = index + 1) does NOT split (r25 at decl slot). A REAL `& 0xFFFF`
+   def doesn't split either but materializes the s16->int promotion (extra extsh + count temp
+   r3-vs-r0 displacement). Loop-EXIT paths don't split (the 100% sibling fns return from the
+   arm — same spelling, no @-temp).
+   **THE CLEAN FIX: narrow-typed lvalue absorbs the conversion (#115): `u16 index; index = i;`**
+   — def emits the bare clrlwi (no extsh, low-bits-only semantics), web stays NAMED (no split),
+   numbers at its decl slot. Then decl order [table, fp, op, ip, index, i, index2] hands out
+   r31..r25 exactly as retail. difflines=0 over the whole fn.
+
+Corollaries:
+- The '(u16)i-at-every-use' spelling (old V25 fix) CREATED the CSE @-temp — un-naming and
+  naming were both wrong; the narrow NAMED var is the third option that dodges the splitter.
+- Register outcome for saved-homed locals is a PURE function of the decl list + splitter
+  behavior. Statement-level probes cannot move them (explains dozens of banked negatives).
+- REOPENS Music_Update + Sfx_UpdateObjectChannel3D: the principled-cap verdicts predate these
+  laws. MU's i3/ch3 ARE @-temps (split webs) — their relative order is set by split creation
+  order, not source statements; and any conversion-def in their webs is now a lever (u16
+  absorb). The 180-variant cross-product never included the narrow-absorb spelling.
