@@ -477,14 +477,14 @@ void andross_hitDetect(void)
 void andross_update(int obj)
 {
     GameObject* boss;
+    AndrossState* state;
     u8 flag;
     u8 phaseChanged;
-    u8 moveChanged;
     u8 spawnIndex;
+    u8 pathAdjusted;
     u8 cueIndex;
     u8 delayIndex;
     int index;
-    AndrossState* state;
     AndrossState* animState;
     GameObject* aimTarget;
     GameObject** spawnSlot;
@@ -528,7 +528,7 @@ void andross_update(int obj)
     state = boss->extra;
     flag = 0;
     phaseChanged = 0;
-    moveChanged = 0;
+    pathAdjusted = 0;
     if (state->startupDelay != 0)
     {
         state->startupDelay -= 1;
@@ -592,11 +592,11 @@ void andross_update(int obj)
     state->velZ = fval;
     if (-0x4000 < state->targetRotX && boss->anim.rotX < 0x4000)
     {
-        flag = 1;
+        pathAdjusted = 1;
     }
-    ObjPath_GetPointWorldPosition((GameObject*)obj, flag, &state->cachedPosX, &state->cachedPosY,
+    ObjPath_GetPointWorldPosition((GameObject*)obj, pathAdjusted, &state->cachedPosX, &state->cachedPosY,
                                   &state->cachedPosZ, 0);
-    if (flag == 1)
+    if (pathAdjusted == 1)
     {
         state->cachedPosY += 30.0f;
         state->cachedPosZ += 30.0f;
@@ -807,7 +807,6 @@ void andross_update(int obj)
         }
         break;
     }
-    flag = moveChanged;
     index = state->actionState;
     if (index != state->prevActionState)
     {
