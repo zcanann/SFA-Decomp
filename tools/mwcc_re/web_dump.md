@@ -225,3 +225,22 @@ family member is the min. The remaining unknown for the andross sc/swf swap
 is the vreg-numbering batch rule (per-instruction worklists, 0x4f0a90 reset)
 — next instrumentation: log 0x4fe550 value ptrs + 0x57b947 union pairs and
 reconstruct families offline.
+
+## DECODED (2026-07-11): the vreg-numbering DEFERRAL (two-pass split)
+CodeGen numbering runs TWO passes over worklist 0x5e99c4 (driver 0x435de5):
+- PASS 1 (call site 0x435e4a): numbers cells where predicate 0x4e9380 is 0.
+- barrier 0x4d0220, then PASS 2 (0x435eba): numbers cells where it is 1.
+Predicate 0x4e9380(cell->value+0xa): TRUE iff the pointer is NULL or points
+to a node whose kind byte (+0xa) is 0x40 or 0x24. Traced on andross_update:
+the early flags (state/pathAdjusted/work/flag/boss) carry NAME pointers at
+value+0xa (predicate false -> pass 1 -> low vregs -> good saved regs), while
+stateChanged's canonical value is an EXPRESSION NODE of kind 0x40 (pass 2 ->
+vreg ~72 -> tops the desc-index color order -> r29). This is the whole
+sc(r29)/switch-flag(r28) swap on andross_update, and it is INERT to every
+source-level lever tried (24 decl perms, 6 init perms, +=/=, latch temps,
+scratch-variable identity, block scoping): the canonicalization happens at
+CIR level (which flag's zero-init/phi becomes a kind-0x40 temp), i.e. the
+same IroLinearForm frontier already documented for smallbasket axes.
+Remaining unlock for this family: identify node kind 0x40/0x24 semantics in
+the CIR opcode table and what C shape flips a flag between name-canonical
+and expression-canonical.
