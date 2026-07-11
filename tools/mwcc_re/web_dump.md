@@ -972,3 +972,33 @@ One round with the decoded model (commit 592d8b76c8). The r29/r30 adjacent swap
 Pattern now 4-for-4 on "adjacent saved-pair swap" fns: check the M-burst for a MISSING
 named web first — a ternary/conversion def whose @-temp carries the value is the usual
 thief; kill the node kind (if/else, u16 lvalue, narrow extern) rather than respelling uses.
+
+
+## objlib playerEyeAnimFn_80038988 99.19 -> 99.66 (2026-07-11) — 2 lines from 100
+Landed (commit 0001d98a6e), full-opt unit (-O4,p WITH peephole+scheduling — the laws
+still hold): three combined levers, each independently verified:
+1. `int joint;` decl moved FIRST of the volatile six + DEAD DECL-INITS on
+   joint/model/jointDataOffset/poseOffset/jointData (= 0/NULL, all folded, zero emission):
+   orders the splitter parents (first-def program order — MU law) so block-2's segments
+   pop onto the SAME regs as block-1's named webs (r4-r9 target map). rotation gets NO
+   decl-init => its segment created last => pops last => r9.
+2. `*(u8*)((int)jointData + objAnim->bankIndex + jointDataOffset + 1)` int-base arith:
+   stops the canonicalizer grouping (jData+jDO+1) with the extsb'd bankIndex as lbzx
+   BASE (r0-illegal) — with jData as base the extsb temp colors r0 like retail.
+   Plain [] regroupings (parens, term order, ptr-chain) are ALL canonicalized away —
+   only the (int) cast on the base survives.
+3. Everything else falls out (30-line volatile rotation collapsed).
+RESIDUAL (2 lines): block-1's jDO/pose re-inits emit `li r6,0; li r7,0`; target has
+`mr r6,r4; mr r7,r4` (copies of joint's zero). Block-2's equivalents DO emit the mr form
+(segment-entry connectors reading the incoming zero). Mapped inert: explicit copy
+spellings (const-fold eats them, even adjacent ObjHitbox-style), chained assigns,
+self-or/add (#131 folds here), dead-use sinks, bs->amount=joint reals, block-scoping,
+register class, opt_lifetimes off (loses block-2's mrs AND these), deleting the
+re-inits (decl-inits become real saved-reg webs, -348 lines). Open question for the
+splitter-remat: what makes retail's block-1 defs segment-connectors — likely retail's
+named first-segments end before block-1 via some real-but-invisible reference; find it
+with a def-node kind dump (value+0xe kind byte) on the jDO/pose defs, or accept ~99.66.
+NOTE ObjHitbox_SetStateIndex (same file, MATCHED) emits li+mr+mr from
+`slotIndex = 0; slotOffset = slotIndex; clearedState = slotIndex;` — plain adjacent
+copies of a multi-def loop counter DO survive there; the discriminator vs our fold is
+still undecoded (its zero-var is the loop counter itself; ours isn't).
