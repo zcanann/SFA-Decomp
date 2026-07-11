@@ -1666,8 +1666,7 @@ void modelCalcVtxGroupMtxs(int def, int model)
         m1 = ObjModel_GetJointMatrix((int*)model, grp[0]);
         m2 = ObjModel_GetJointMatrix((int*)model, grp[1]);
 
-        w = grp[2];
-        w *= 0.25f;
+        w = (f32)grp[2] / 4.0f;
         wi = 1.0f - w;
 
         jd = (char*)(*(int*)(def + 0x3c) + grp[0] * 0x1c);
