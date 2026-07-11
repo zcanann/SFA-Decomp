@@ -327,3 +327,24 @@ Battery (final-reg reads, all keeping 44<45): init order, +0, casts, &[0],
 no-op |=, register, decl perms/reversals, fresh i2/ch2 (fn+block scope),
 block middle loop, ternary/handle temps, O1/O2/O3, opt_lifetimes off,
 loop_invariants/strength off. All inert or regressive on the pair.
+
+## Music_Update union-pair trace (2026-07-11, combo tracer: N+U+A/F in one run)
+Union write decoded at 0x57b947: `movw %cx,(%eax,%edi,2)` — cx=min root (new
+parent), bx/edi=max root (child). Music_Update cls=4 unions:
+  76→67, 75→65, 109→48(middle volatile walker), 74→59, 73→58, 118→49(i1)
+NO union touches 44 (loop-3 walker) or 45 (loop-3 counter) — they are own
+roots, so the counter's pri=245 vs walker's pri=9 is INTRINSIC, not family
+accumulation. Numbering commits run in vreg order (44 before 45) regardless of
+priority — priority does not order commits within the batch; it must gate
+something else (worklist scan pick under equal batch conditions?).
+OPEN (the actual flip): why does the loop-3 counter value carry pri 245 (and
+i1 201) while the 30-ref walkers carry 9? 245/201 smell like loop-weighted
+CONSTANT ref weights (the 15/0x1f4 constants?) — if 45 is actually the
+CONSTANT-15 value web (not the counter variable!), then the loop-3 'counter'
+register is the constant's web and the flip lever is how the 15 literal is
+seeded (shared vs per-loop). Next probe: apply-trace idx 44/45/49 operand dump
+to identify their defs (5-minute run with tools/mwcc_re/apply_trace_lldb.py,
+filter idx in {44,45,47,48,49}, read PCode opcodes).
+Combo tracer script pattern saved in this entry's session scratchpad; recipe
+identical to the select tracer with extra bps 0x4fe563 (numbering commit) and
+0x57b947 (union write).
