@@ -451,8 +451,8 @@ s8 slot;
 
 void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 {
-    SaveGameMapState* s = &gSaveGameMapState;
-    u8 createTransient = 0;
+    SaveGameMapState* s[1];
+    u8 createTransient;
     u32 newStatus;
     int oldStatus;
     u32 bit;
@@ -461,9 +461,12 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     MapBitTransient* slot;
     s8 found;
 
+    s[0] = &gSaveGameMapState;
+    createTransient = 0;
+
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
-        idx = s->extendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+        idx = s[0]->extendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
     }
     if (!(idx < SAVEGAME_MAP_COUNT && gSaveGameMapObjGroupBits[idx] != 0))
     {
@@ -502,7 +505,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         {
             if ((oldStatus & (1 << shift)) == 0)
             {
-                u32* gp = s->groupStatuses;
+                u32* gp = s[0]->groupStatuses;
                 for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
                 {
                     if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
@@ -514,7 +517,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         }
         else
         {
-            u32* gp = s->groupStatuses;
+            u32* gp = s[0]->groupStatuses;
             for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
             {
                 if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
@@ -525,7 +528,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 
             if (!createTransient)
             {
-                for (i = 0, transient = s->transient; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; transient++, i++)
+                for (i = 0, transient = s[0]->transient; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; transient++, i++)
                 {
                     if (idx == transient->mapId && shift == transient->shift)
                     {
@@ -539,9 +542,9 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 {
                     for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                     {
-                        if (s->transient[i].mapId == -1)
+                        if (s[0]->transient[i].mapId == -1)
                         {
-                            (slot = &s->transient[i])->mapId = idx;
+                            (slot = &s[0]->transient[i])->mapId = idx;
                             slot->shift = shift;
                             slot->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
                             break;
