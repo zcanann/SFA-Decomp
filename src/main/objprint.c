@@ -1709,12 +1709,12 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     extern ObjPrintFlipFlag lbl_803DCC00;
     s16 src[2];
     s16 dst[2];
-    int i;
-    s16 ret;
     GameObject* go = (GameObject*)obj;
     s16* found[1];
     s16* sp2;
     f32 dx, dy, dz, dist;
+    int i;
+    s16 ret;
 
     sp2 = spd + 0xf;
     dx = pos[0] - ((GameObject*)tgt)->anim.localPosX;
@@ -1790,25 +1790,25 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
             for (n2 = 0; n2 < 2; n2++)
             {
                 s16 v;
-                int lim;
+                s16 lim;
                 if (n2 % 2 != 0)
                 {
-                    lim = (s32)(gObjPrintDegToAngle * (f32)sp2[i]);
+                    lim = (s16)(gObjPrintDegToAngle * (f32)sp2[i]);
                 }
                 else
                 {
-                    lim = (s32)(gObjPrintDegToAngle * (f32)spd[i]);
+                    lim = (s16)(gObjPrintDegToAngle * (f32)spd[i]);
                 }
                 v = src[n2];
                 dst[n2] = v;
-                if (v > (s16)lim)
+                if (v > lim)
                 {
                     dst[n2] = lim;
                     src[n2] -= lim;
                 }
-                else if (v < -(s16)lim)
+                else if (v < -lim)
                 {
-                    dst[n2] = -(s16)lim;
+                    dst[n2] = -lim;
                     src[n2] += lim;
                 }
                 else
@@ -2106,6 +2106,15 @@ typedef struct ObjPrintS10Color
     s16 r, g, b, a;
 } ObjPrintS10Color;
 
+static inline int shaderProjDisabled(int p)
+{
+    int flag;
+    int mode;
+    extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);
+    modelLightStruct_getProjectionTevModes(p, &flag, &mode);
+    return flag;
+}
+
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
     extern u8* ObjModel_GetRenderOp(int m, int p);
@@ -2265,20 +2274,12 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A2);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
-    if (lbl_803DCC5C != 0)
+    if (lbl_803DCC5C != 0 && shaderProjDisabled(lbl_803DCC64) == 0)
     {
-        int projModeOut0;
-        int projDisabled;
-        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &projDisabled, &projModeOut0);
-        if (projDisabled != 0)
-        {
-            goto notfancy;
-        }
         fancy = 1;
     }
     else
     {
-    notfancy:
         fancy = 0;
     }
     if (fancy)
