@@ -2152,22 +2152,46 @@ typedef struct PlayerBlinkState
     u8 amount; /* 0x2d */
 } PlayerBlinkState;
 
+static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
+{
+    int jointCount;
+    u8* jointData;
+    int poseOffset;
+    int jointDataOffset;
+    ObjModelInstance* model;
+    int joint;
+
+    joint = 0;
+    model = objAnim->modelInstance;
+    if (model != 0)
+    {
+        jointDataOffset = 0;
+        poseOffset = 0;
+        for (jointCount = model->jointCount; jointCount > 0; jointCount--)
+        {
+            jointData = (u8*)model->jointData;
+            if (((int)*(u8*)((int)jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
+                ((int)jointData[jointDataOffset] == tag))
+            {
+                joint = (int)objAnim->jointPoseData + poseOffset;
+            }
+            jointDataOffset += model->modelCount + 1;
+            poseOffset += 0x12;
+        }
+    }
+    return joint;
+}
+
 void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
 {
 
     PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;
-    int joint = 0;
-    ObjModelInstance* model = NULL;
-    int jointDataOffset = 0;
     f32 leftScale;
-    int poseOffset = 0;
-    u8* jointData = NULL;
     s16 rotation;
     ObjAnimComponent* objAnim;
     f32 phase;
     u8 step;
     f32 rightScale;
-    int jointCount;
     f32 wave;
 
     objAnim = (ObjAnimComponent*)obj;
@@ -2286,46 +2310,10 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
     wave = lbl_803DE9A8 * fn_802943F4(phase);
     wave = wave * bs->amount / lbl_803DE9B0;
     rotation = (gObjLibBlinkAngleUnitScale * (leftScale * wave)) / gObjLibBlinkAnglePiDivisor;
-    joint = 0;
-    model = objAnim->modelInstance;
-    if (model != 0)
-    {
-        jointDataOffset = 0;
-        poseOffset = 0;
-        for (jointCount = model->jointCount; jointCount > 0; jointCount--)
-        {
-            jointData = (u8*)model->jointData;
-            if (((int)*(u8*)((int)jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
-                ((int)jointData[jointDataOffset] == OBJLIB_BLINK_LEFT_JOINT_TAG))
-            {
-                joint = (int)objAnim->jointPoseData + poseOffset;
-            }
-            jointDataOffset += model->modelCount + 1;
-            poseOffset += 0x12;
-        }
-    }
-    *(s16*)(joint + 2) = rotation;
+    *(s16*)(playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG) + 2) = rotation;
 
     rotation = (gObjLibBlinkAngleUnitScale * (rightScale * wave)) / gObjLibBlinkAnglePiDivisor;
-    joint = 0;
-    model = objAnim->modelInstance;
-    if (model != 0)
-    {
-        jointDataOffset = 0;
-        poseOffset = 0;
-        for (jointCount = model->jointCount; jointCount > 0; jointCount--)
-        {
-            jointData = (u8*)model->jointData;
-            if (((int)*(u8*)((int)jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
-                ((int)jointData[jointDataOffset] == OBJLIB_BLINK_RIGHT_JOINT_TAG))
-            {
-                joint = (int)objAnim->jointPoseData + poseOffset;
-            }
-            jointDataOffset += model->modelCount + 1;
-            poseOffset += 0x12;
-        }
-    }
-    *(s16*)(joint + 2) = -rotation;
+    *(s16*)(playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG) + 2) = -rotation;
 }
 
 typedef struct ObjLibFlagByte
