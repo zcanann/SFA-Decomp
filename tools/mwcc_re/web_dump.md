@@ -1193,3 +1193,17 @@ which pass vec9 falls in — a 1-2 edge change to THOSE may re-order passes with
 touching vec9 itself).
 The chooser (pri/degree + fixed-const class) presumably DOES run in bigger fns (MU/OC3D
 bands) — instrument stands for those.
+
+
+## Round 7 verification: fn_802BCA10 target r31=vec9 confirmed; reuse chains consistent
+Target call order verified [vec0-call -> vec9-call(bl 448, mr r31,r3) -> getVec(4) ->
+getVec(5)]; r31 = vec9 beyond doubt (cmplwi r31 null-check + sth 0/2(r31) stores).
+Reuse simulation: both compiles are internally consistent — the ONLY free variable is
+vec9's REMOVAL PASS: ours dies pass 1 (static 25 < K); target's must outlive sub(60)/
+obj(46), i.e. survive to the final pass. With identical instruction counts the missing
+degree cannot be new temps. Remaining hypotheses: (a) vec9 NOT renumbered in retail
+(named idx 38) AND K smaller than assumed, (b) the renumbered-web scan-visit position
+interacts with pass membership in an unmodeled way, (c) vec9's mr participates in a
+different union that inflates its adjacency. Next instrument run (fresh session): adjtrace
+vec9 (full 0xa0 dump) + read K per class (0x4fe520 rets) + hand-simulate the passes —
+then the lever is computable.
