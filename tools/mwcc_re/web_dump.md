@@ -1236,3 +1236,17 @@ the clamp bounds via u16, or accepting the 3-instr different alignment cost mode
 Also open: the +-364 chain r4-vs-r0 (resists ternary/if/embedded spellings; if-form
 gives the r4 chain but shrinks the frame by 16).
 LESSON REINFORCED: line-diffs and fuzzy DIVERGE on this codebase — always gate on report.
+
+
+## Round 10: REMOVAL-ORDER GROUND TRUTH (rmtrace.py, bp 0x508a8c)
+fn_802BCA10 cls-4 removal sequence measured: pass 1 = [34..90 index-ascending, one pass,
+51 absent(renumbered away)], pass 2 = [32(obj), 33(sub)]. Coloring = reverse => [sub, obj,
+...vols..., vec9(74), vec0(73), ...] — reproduces our asm EXACTLY. Model fully validated.
+TARGET needs vec9 removed LAST overall (after sub) => vec9 current-degree >= K=29 through
+pass 1 AND most of pass 2. At vec9 visit, removed-neighbors per the dumped adjacency = 2
+(37, 73) => current 29 >= K should have SURVIVED — but it was removed => the fallback-time
+adjacency dump under-reports pass-1 interference (list may be pruned or 35/36 edges exist
+but were absorbed). NEXT: dump vec9 adjacency at BUILD time (before simplify — hook the
+graph builder) or log +0x12 current-degree at each visit (bp in the scan loop 0x508a64).
+One of these two numbers resolves the last discrepancy, then the retail spelling is
+computable. rmtrace.py added to the kit.
