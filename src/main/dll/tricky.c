@@ -334,6 +334,7 @@ extern f32 fn_8029454C(f32);
 extern int depthReadRequestPoll(int x, int y, void* fn);
 extern void gameTextSetColor(int, int, int, int);
 
+#pragma opt_propagation off
 void gameUiLoadResources(void)
 {
     char* base = lbl_803A87F0;
@@ -343,11 +344,12 @@ void gameUiLoadResources(void)
         char** arrB;
         int i;
         int val;
-        u32 limit;
         char** arrC;
+        u32 limit;
         int* ids;
         char* p;
         u32* cnt;
+        char* volatile* slots;
         f32 fb, fc, fa;
         f32 gb, ga;
 
@@ -378,19 +380,20 @@ void gameUiLoadResources(void)
             arrB++;
         }
 
-        lbl_803DD868[0] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, 0);
-        ((GameObject*)lbl_803DD868[0])->anim.localPosX = lbl_803E1E3C;
-        ((GameObject*)lbl_803DD868[0])->anim.localPosY = lbl_803E1E48;
-        ((GameObject*)lbl_803DD868[0])->anim.localPosZ = lbl_803E1E4C;
-        ((GameObject*)lbl_803DD868[0])->anim.rotX = 0x7447;
-        *(f32*)(lbl_803DD868[0] + 0x8) = lbl_803E1E50;
+        slots = lbl_803DD868;
+        slots[0] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, 0);
+        ((GameObject*)slots[0])->anim.localPosX = lbl_803E1E3C;
+        ((GameObject*)slots[0])->anim.localPosY = lbl_803E1E48;
+        ((GameObject*)slots[0])->anim.localPosZ = lbl_803E1E4C;
+        ((GameObject*)slots[0])->anim.rotX = 0x7447;
+        *(f32*)(slots[0] + 0x8) = lbl_803E1E50;
 
-        lbl_803DD868[1] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, 0);
-        ((GameObject*)lbl_803DD868[1])->anim.localPosX = lbl_803E1E3C;
-        ((GameObject*)lbl_803DD868[1])->anim.localPosY = lbl_803E1E54;
-        ((GameObject*)lbl_803DD868[1])->anim.localPosZ = lbl_803E1E4C;
-        ((GameObject*)lbl_803DD868[1])->anim.rotX = 0x7447;
-        *(f32*)(lbl_803DD868[1] + 0x8) = lbl_803E1E58;
+        slots[1] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, 0);
+        ((GameObject*)slots[1])->anim.localPosX = lbl_803E1E3C;
+        ((GameObject*)slots[1])->anim.localPosY = lbl_803E1E54;
+        ((GameObject*)slots[1])->anim.localPosZ = lbl_803E1E4C;
+        ((GameObject*)slots[1])->anim.rotX = 0x7447;
+        *(f32*)(slots[1] + 0x8) = lbl_803E1E58;
 
         p = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, 0);
         lbl_803DD860[0] = p;
@@ -428,6 +431,7 @@ void gameUiLoadResources(void)
         gameUiResourcesLoaded = 1;
     }
 }
+#pragma opt_propagation reset
 
 #pragma scheduling on
 #pragma peephole on
