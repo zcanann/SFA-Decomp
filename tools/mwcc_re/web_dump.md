@@ -694,3 +694,17 @@ latch-decrement value vs the address value. The last read (small): 0x4e9380
 (already located, ~20 instrs) + what sets value+0xa for (a) a symbol-address
 assign and (b) a post-decrement compare value — then the C shape (or
 infeasibility) falls out directly. All traces to verify are in place.
+
+## Predicate read + kind-flip probes (2026-07-11, terminal round)
+0x4e9380 read: TRUE (defer to pass 2) iff value+0xa node NULL or kind byte
+== 0x40 or 0x24 — confirms the doc. Kind-flip probes: (a) `(MusicChannel*)
+(int)gMusicChannels` cast on ch3 — regs unchanged (either cast node also in
+the defer set, or folded); (b) inlined static getter for i3's 15 — CInline
+substitutes the return expression BEFORE numbering, the call node vanishes,
+const kind restored → inert. No source-level carrier found for moving the
+deferral between the loop-3 pair. Remaining: identify kinds 0x40/0x24 in the
+CIR opcode table (shared open item with the andross investigation) and what
+front-end constructs produce them at an assignment's value node; then either
+the C shape exists or both audio holdouts are principled caps. main/audio
+stands 99.917 (84/87): UpdateLoopedObjectSounds 99.35 (+0.97 this campaign),
+Music_Update 99.596, ObjectChannel3D 99.01.
