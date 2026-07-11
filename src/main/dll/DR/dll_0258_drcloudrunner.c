@@ -592,7 +592,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         s1.mat[3] = lbl_803E83A4;
         s1.mat[0] = lbl_803E83A8;
         vecC.x =
-            ((CloudRunnerState*)baddie)->baddie.moveInputX * lbl_803E83D4 * *(f32*)(base + ((int)idx >> 1) * 4 + 0x90);
+            ((CloudRunnerState*)baddie)->baddie.moveInputX * *(f32*)&lbl_803E83D4 * *(f32*)(base + ((int)idx >> 1) * 4 + 0x90);
         vecC.y =
             -((CloudRunnerState*)baddie)->baddie.moveInputZ * lbl_803E83D4 * *(f32*)(base + ((int)idx >> 1) * 4 + 0x9c);
         vecC.z = lbl_803E83A4;
