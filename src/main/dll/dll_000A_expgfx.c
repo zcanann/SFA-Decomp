@@ -2984,53 +2984,53 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
 #pragma dont_inline on
 void expgfx_onMapSetup(void)
 {
-    ExpgfxRuntimeDataLayout* runtime;
+    ExpgfxRuntimeDataLayout* runtime[1];
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTrackedSourceFrameMask* trackedFrameMasks;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
-    s16* poolSlotTypeIds;
-    u8* poolFrameFlags;
+    s16* poolSlotTypeIds[1];
+    u8* poolFrameFlags[1];
     u8* poolSourceModes;
     u32* poolSourceIds;
     int poolIndex;
     int resourceIndex;
 
-    runtime = EXPGFX_RUNTIME_DATA;
+    runtime[0] = EXPGFX_RUNTIME_DATA;
     expgfxRemoveAll();
 
-    poolActiveMasks = runtime->poolActiveMasks;
-    poolActiveCounts = runtime->poolActiveCounts;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-    poolFrameFlags = gExpgfxStaticPoolFrameFlags;
-    poolSourceModes = runtime->poolSourceModes;
-    poolSourceIds = runtime->poolSourceIds;
+    poolActiveMasks = runtime[0]->poolActiveMasks;
+    poolActiveCounts = runtime[0]->poolActiveCounts;
+    poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
+    poolFrameFlags[0] = gExpgfxStaticPoolFrameFlags;
+    poolSourceModes = runtime[0]->poolSourceModes;
+    poolSourceIds = runtime[0]->poolSourceIds;
 
     for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++)
     {
         *poolActiveMasks = 0;
         *poolActiveCounts = 0;
-        *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
-        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
+        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
+        *poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         *poolSourceModes = EXPGFX_POOL_SOURCE_MODE_STANDALONE;
         *poolSourceIds = 0;
 
         poolActiveMasks++;
         poolActiveCounts++;
-        poolSlotTypeIds++;
-        poolFrameFlags++;
+        poolSlotTypeIds[0]++;
+        poolFrameFlags[0]++;
         poolSourceModes++;
         poolSourceIds++;
     }
 
-    trackedFrameMasks = runtime->trackedSourceFrameMasks;
+    trackedFrameMasks = runtime[0]->trackedSourceFrameMasks;
     trackedFrameMasks[0].lowWord = 0;
     trackedFrameMasks[0].highWord = 0;
     trackedFrameMasks[1].lowWord = 0;
     trackedFrameMasks[1].highWord = 0;
 
     gExpgfxTextureFreeInProgress = 1;
-    resourceEntry = runtime->resourceTable;
+    resourceEntry = runtime[0]->resourceTable;
     for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++, resourceIndex++)
     {
         if (resourceEntry->resource != NULL)
