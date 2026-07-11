@@ -1615,13 +1615,13 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
         return 1;
     }
 
-    if (state->reverse == 0)
+    if (state->reverse != 0)
     {
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
     }
     else
     {
-        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
     }
     if (nextId == -1)
     {
