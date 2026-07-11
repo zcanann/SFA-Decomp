@@ -474,12 +474,12 @@ int Minimap_update(void)
                         yrel = -((GameObject*)player)->anim.worldPosZ + gMinimapRegionMaxZ;
                     }
                     e = boxW - texW * gMinimapZoom;
-                    e = e * 0.5f;
+                    e = e / 2.0f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
                     panx = -t;
                     e = boxH - texH * gMinimapZoom;
-                    e = e * 0.5f;
+                    e = e / 2.0f;
                     t = 0.0f;
                     t = (t > e) ? t : e;
                     pany = -t;
