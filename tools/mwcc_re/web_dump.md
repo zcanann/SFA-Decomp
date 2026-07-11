@@ -678,3 +678,19 @@ not per-block numbering. The worklist consumed by the burst is NOT fed by the
 numbering-time list is built inside the 0x4dd650 walker band; its list-append
 internals are the remaining read to complete the order model (then back-derive
 retail's required block/def structure for the loop-3 pair and read off the C).
+
+## DECODED (2026-07-11, terminal): the walker is a statement dispatcher
+0x4dd650 = CIR STATEMENT walker (per statement node: weight = node+0x8 →
+0x5e9040; dispatch on stmt kind node+0x4 via jump table 0x5b9bf0; handlers
+call 0x4dda30 = the expression-tree walker that records refs and pushes value
+cells). Numbering scan then runs over the accumulated (prepended) cell list:
+head = LATEST push = latest program reference; duplicate cells of committed
+values are skipped; predicate-deferred values (0x4e9380) skip to pass 2.
+This explains the loop-3 triple exactly: i3 commits first (latch i-- is the
+latest push, pass 1 → 47); ch3's cell is predicate-DEFERRED (pass 2 → 49);
+mid's latest push commits as the following pass-1 entry (48). RETAIL requires
+the deferral to land on i3 instead of ch3 — the 0x4e9380 predicate on the
+latch-decrement value vs the address value. The last read (small): 0x4e9380
+(already located, ~20 instrs) + what sets value+0xa for (a) a symbol-address
+assign and (b) a post-decrement compare value — then the C shape (or
+infeasibility) falls out directly. All traces to verify are in place.
