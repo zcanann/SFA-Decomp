@@ -546,3 +546,22 @@ Fixed tonight by HUMAN-FORM rewrites (each verified byte-stable or better):
 - ObjPlacement-typed spawn setup + moveState->signalFlags drains: byte-neutral.
 Tools: apply_trace_lldb.py extended per-web; adjacency dumps via 0x5089c4/
 0x50899e breakpoint (web+0x1a s16 list) directly identify reuse blockers.
+## Music_Update cross-product EXECUTED (2026-07-11, 120 variants, no dual hit)
+norm/C/*/ic lands LOOP1 = r21/r22 exactly; norm/*/C/ic lands LOOP3 = r21/r22
+exactly — the C slot (decl after s2VolB) owns the r21/r22 reservation depth,
+and named pairs always take FRESH grants at their decl-slot depth (no reuse
+among named webs in any of 120 layouts). Both-pairs-on-r21/r22 requires one
+pair FRESH + one pair REUSE — i.e. the pristine names+splits structure, NOT
+5 named vars. Re-deriving target pops from retail asm with the grant rules:
+loop1 = FRESH in order [i r22, ch r21], loop3 = REUSE [ch r21, i r22] ⇒ in
+RETAIL, the loop-1 (name) webs popped BEFORE the splits ⇒ the ch/i name webs
+carried HIGH vregs = numbered in PASS 2 (expression-canonical), like the
+fadeA/B call-result webs (vregs 79/80, r24/r23). Our build has them pass-1
+(name-canonical, vregs 44/45, colored last via reuse).
+=> FINAL QUESTION (one item): what C dataflow makes a multi-def loop variable
+EXPRESSION-canonical (value+0xa kind 0x40, pass 2)? Same question as the
+andross stateChanged @-temp (IroPropagate split predicate). Decode
+IroPropagate's split predicate (0x470060 band, already partially recovered)
+or probe C shapes on the harness watching the numbering trace for ch/i moving
+to the pass-2 batch. This unifies BOTH remaining audio functions AND the
+andross residual into one predicate decode.
