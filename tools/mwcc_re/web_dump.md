@@ -579,3 +579,20 @@ splitter pass + union window gate + IroPropagate canonicalization — all three
 partially recovered; the numbering/select tracers verify any candidate in 8s.
 This same predicate resolves ObjectChannel3D (param web class) and andross
 (stateChanged @-temp) — three residual families, one decode.
+
+## Music_Update FINAL NARROWING (2026-07-11): splitter group order only
+Full grant-rule simulation over all orderings (with interference sets) shows
+EXACTLY ONE divergence from retail remains: the live-range splitter emits
+split-web groups per variable in i-group-then-ch-group order (vregs 46,47 =
+i's; 48,49 = ch's); retail requires ch-group-then-i-group. Everything else —
+name vregs (44=i,45=ch), name reuse pops (ch1→r21 then i1→r22, interference-
+blocked correctly), split F-grants — already matches once the groups flip:
+  [46,47]=ch(mid,loop3) [48,49]=i(midctr,loop3) → F: i3(49)→r22 ✓ ch3(47)→r21 ✓
+  names: ch1(45)→reuse r21 ✓ i1(44)→r21 blocked by ch1 → r22 ✓ = 100%.
+Splitter variable order is NOT: decl order (decl-swap flips names too — net
+same), reverse decl (= current), first-split-point program order (P2 fresh-j
+inert), alphabetical (RN1 rename inert). Remaining candidates: nadj/degree
+order, live-range start/end order, or an internal hash — read the splitter
+walk in the SpillCode.c/lifetime band (its name-node allocation run for split
+webs is the entry point; the numbering trace verifies any hypothesis in 8s).
+This is the last bit standing between main/audio and 100% on Music_Update.
