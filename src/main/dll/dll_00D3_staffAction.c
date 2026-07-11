@@ -478,41 +478,44 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 u32 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
+    GameObject* o;
 
-    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
+    o = (GameObject*)obj;
+
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&o->extra)->control;
     *(u8*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
-        ObjHits_EnableObject((u32)obj);
-        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise((u16)*obj);
-        ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
-        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*obj);
+        ObjHits_EnableObject((u32)o);
+        o->anim.velocityX = -(state->speed) * fsin16Precise((u16)*(s16*)o);
+        o->anim.velocityY = lbl_803E2FDC;
+        o->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*(s16*)o);
         *params |= 0x2004000;
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
+        ObjAnim_SetCurrentMove((int)o, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
     }
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
-    *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6c) = 9;
-    *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
-    (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)o, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
+    *(u8*)(*(int*)&o->anim.hitReactState + 0x6c) = 9;
+    *(u8*)(*(int*)&o->anim.hitReactState + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)o);
+    (*gPathControlInterface)->advance((s16*)o, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         if (state->surfaceMode == 6)
         {
             if (((state->flags92 >> 2) & 1) != 0u)
             {
-                fn_80165B3C((GameObject*)obj, (int)state);
+                fn_80165B3C(o, (int)state);
             }
             else
             {
-                fn_80166444((int)obj, (int)state);
+                fn_80166444((int)o, (int)state);
             }
         }
         else
         {
-            landedarwing_moveSurfaceCrawler(obj, state);
+            landedarwing_moveSurfaceCrawler((s16*)o, state);
         }
     }
     return 0;
