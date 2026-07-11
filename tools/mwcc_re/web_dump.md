@@ -1388,3 +1388,14 @@ SESSION TERMINAL STATE: 8 units at [99.978, 99.967, 99.961, 99.911, 99.857, 99.8
 99.812, 99.807]; every remaining residual = quantified gap or closed enumeration with
 reframe candidates; all laws/instruments/negatives in this file. Continuation = fresh
 sessions from this record (the proven crack pattern), or goal re-scope.
+
+
+## Round 24 correction: UNOPENED work remains (not all re-tread)
+tex_dolphin traced successfully (bursts identified for setShader + the render fns).
+Correcting the session-terminal framing: the CLOSED enumerations cover the OPENED fns
+(fn_802BCA10, select-pair, curves-c2, tricky-residual, mainSetBits, removeButton-partial,
+loadChannelLight). UNOPENED with full kit available: tex_dolphin x3 (traces now in
+scratchpad/nadjtrace.txt), objprint x3, stateHandler02. Each = the standard measured
+loop (~30-60min of session time apiece). These are the next rounds' work queue, in
+tractability order: drawLightmapIndirectPasses (single pair class), setShader (volatile
+pair), objMathFn (r6/r7), callList, shaderFuzz, modelCalcVtxGroupMtxs, stateHandler02.
