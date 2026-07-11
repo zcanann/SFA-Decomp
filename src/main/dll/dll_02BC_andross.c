@@ -107,7 +107,7 @@ extern s16 gAndrossSwayPhaseX;
 extern u32 gAndrossDistortFilterParam;
 extern void turnOnDistortionFilter(f32* pos, f32 a, u32* color, f32 c);
 
-void fn_80239DD8(GameObject* obj, int state)
+void fn_80239DD8(GameObject* obj, AndrossState* state)
 {
     f32 maxDist;
     GameObject* nearObj;
@@ -125,12 +125,12 @@ void fn_80239DD8(GameObject* obj, int state)
             ((ObjPlacement*)newObj)->posZ = nearObj->anim.localPosZ;
             ((ObjPlacement*)newObj)->color[0] = 1;
             ((ObjPlacement*)newObj)->color[1] = 1;
-            *(int*)(state + 0x10) = ((int (*)(int, int))loadObjectAtObject)((int)obj, newObj);
-            if (*(void**)(state + 0x10) != NULL)
+            state->effectHandle = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, newObj);
+            if (state->effectHandle != NULL)
             {
-                ((GameObject*)*(int*)(state + 0x10))->anim.alpha = 0xff;
-                *(u8*)(*(int*)(state + 0x10) + 0x37) = 0xff;
-                *(int*)(state + 0x90) = 0x12c;
+                state->effectHandle->anim.alpha = 0xff;
+                *(u8*)((int)state->effectHandle + 0x37) = 0xff;
+                state->effectLifetime = 0x12c;
             }
         }
     }
@@ -400,57 +400,57 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
     state->velZ = zVel;
     return result;
 }
-void fn_8023A87C(GameObject* obj, int state)
+void fn_8023A87C(GameObject* obj, AndrossState* andross)
 {
-    void* spawned;
+    GameObject* spawned;
 
-    spawned = *(void**)&((AndrossState*)state)->effectHandle;
+    spawned = andross->effectHandle;
     if (spawned != NULL)
     {
-        ((GameObject*)spawned)->anim.localPosZ -= 3.0f;
-        ((AndrossState*)state)->effectLifetime -= framesThisStep;
-        if (((AndrossState*)state)->effectLifetime < 0)
+        spawned->anim.localPosZ -= 3.0f;
+        andross->effectLifetime -= framesThisStep;
+        if (andross->effectLifetime < 0)
         {
-            arwbombcoll_setLifetime((GameObject*)(((AndrossState*)state)->effectHandle), 5);
-            ((AndrossState*)state)->effectLifetime = 0;
-            ((AndrossState*)state)->effectHandle = 0;
+            arwbombcoll_setLifetime(andross->effectHandle, 5);
+            andross->effectLifetime = 0;
+            andross->effectHandle = 0;
         }
     }
     else
     {
-        f32 cooldown = ((AndrossState*)state)->spawnCooldown;
+        f32 cooldown = andross->spawnCooldown;
         f32 zero = gAndrossZero;
         if (cooldown >= zero)
         {
-            ((AndrossState*)state)->spawnCooldown = cooldown - timeDelta;
-            if (((AndrossState*)state)->spawnCooldown < zero)
-                fn_80239DD8(obj, state);
+            andross->spawnCooldown = cooldown - timeDelta;
+            if (andross->spawnCooldown < zero)
+                fn_80239DD8(obj, andross);
         }
         else if ((u32)mainGetBit(GAMEBIT_AndrossRelated0012) != 0)
         {
-            ((AndrossState*)state)->spawnCooldown = (f32)(int)randomGetRange(1, 0x14);
+            andross->spawnCooldown = (f32)(int)randomGetRange(1, 0x14);
             mainSetBits(GAMEBIT_AndrossRelated0012, 0);
         }
     }
 }
 int andross_SeqFn(GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
+    AndrossState* state = obj->extra;
     int i;
     f32 fade;
     f32 alpha;
     int model;
-    int op;
+    AndrossRenderOp* op;
 
-    *(f32*)(state + 0x68) = gAndrossZero;
-    fade = ((AndrossState*)state)->fadeAlpha;
+    state->fadeAlpha = gAndrossZero;
+    fade = state->fadeAlpha;
     model = *(int*)Obj_GetActiveModel((int)obj);
     i = 0;
     alpha = 255.0f * fade;
-    for (; i < *(u8*)(model + 0xf8); i++)
+    for (; i < ((ModelFileHeader*)model)->renderOpCount; i++)
     {
-        op = ObjModel_GetRenderOp(model, i);
-        *(s8*)(op + 0x43) = alpha;
+        op = (AndrossRenderOp*)ObjModel_GetRenderOp(model, i);
+        op->alpha = alpha;
     }
     return 0;
 }
@@ -2247,7 +2247,7 @@ void andross_update(int obj)
 
     ObjAnim_AdvanceCurrentMove(obj, state->animSpeed, timeDelta, 0);
     fn_8023A3E4((GameObject*)obj, state);
-    fn_8023A87C(boss, (int)state);
+    fn_8023A87C(boss, state);
     if (state->spawnedObj != NULL)
     {
         state->spawnedObj->anim.localPosZ -= 3.0f;

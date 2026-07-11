@@ -16,7 +16,7 @@ typedef struct AndrossState {
     GameObject* handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
     GameObject* handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
     GameObject* lightAnchorObj;
-    int effectHandle;
+    GameObject* effectHandle;
     GameObject* spawnedObj;
     /*
      * 0x18..0x58 is genuinely a pair of per-spawn arrays on the Andross state
@@ -136,6 +136,6 @@ STATIC_ASSERT(offsetof(AndrossState, partTextureState) == 0xB9);
 
 int andross_SeqFn(GameObject* obj);
 int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);
-void fn_8023A87C(GameObject* obj, int state);
+void fn_8023A87C(GameObject* obj, AndrossState* state);
 
 #endif /* MAIN_DLL_ANDROSS_H_ */
