@@ -6466,7 +6466,7 @@ int initLoadFiles(void)
     s16* owners;
     u8* himem;
     int* ids;
-    char** names;
+    char** names[1];
     int* sizes;
     u8* flags;
     u32* ptrs;
@@ -6491,7 +6491,7 @@ int initLoadFiles(void)
         ptrs = (u32*)(himem - 27176);   /* tbl->ptrs */
         owners = (s16*)(himem - 26824); /* tbl->owners */
         ids = (int*)(himem - 28360);    /* tbl->ids */
-        names = sResourceFileNameTable;
+        names[0] = sResourceFileNameTable;
         sizes = (int*)(himem - 28008); /* tbl->sizes */
         flags = himem - 28448;         /* tbl->loadedFlags */
         for (i = 0; i <= 0x57; i++)
@@ -6552,7 +6552,7 @@ int initLoadFiles(void)
                 if (*ptrs == 0)
                 {
                     int fi = AtomicSList_Pop(lbl_803DCC8C);
-                    DVDOpen(*names, (void*)fi);
+                    DVDOpen(*names[0], (void*)fi);
                     *sizes = DVD_FI_LENGTH(fi);
                     *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
                     lbl_803DCC88 = lbl_803DCC88 + 1;
@@ -6566,7 +6566,7 @@ int initLoadFiles(void)
             ptrs++;
             owners++;
             ids++;
-            names++;
+            names[0]++;
             sizes++;
             flags++;
         }
