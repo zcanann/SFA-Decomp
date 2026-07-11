@@ -144,3 +144,25 @@ without lldb — sjiswrap is load-bearing, so the gdb doc's direct invocation
 does not transfer. Next session: either replicate sjiswrap's env/handshake for
 a direct-wibo run, or make lldb follow into the spawned child
 (target.process.follow-fork-mode child equivalent / attach-on-spawn by name).
+
+## lldb port part 2 + corpus mining (2026-07-10 late, audio trio)
+- Direct `wibo mwcceppc.exe` does NOT hang (earlier note wrong — env artifact).
+- lldb tracer arms PE breakpoints fine (script: gdb flow as -o sequence, arm via
+  script fn after the call_EntryProc stop). BLOCKER: first `process continue`
+  dies at EXC_BAD_ACCESS code=2 addr=0x982180 — wibo's guard-page/lazy-commit
+  fault, which lldb intercepts as a Mach exception BEFORE wibo's signal handler.
+  `process handle SIGSEGV/SIGBUS --pass` does not help (Mach layer);
+  `settings set platform.plugin.darwin.ignored-exceptions EXC_BAD_ACCESS`
+  (even via -O pre-target) did NOT suppress interception on lldb-1700/darwin25.
+  Next: try debugserver flag, or run the gdb tracer on a Linux host (works as
+  documented), or teach wibo to pre-commit its arenas under a debugger env var.
+- refcorpus (mp4, both_off, 9740 fns) mined: HuAR_MRAMtoARAM2 (armem.c) shows a
+  prologue param→r29 (LOW saved) with call-result copies above it — but its
+  param has only 3 pass-through refs (no derefs). audio.c ObjectChannel3D param
+  (13 derefs) resists ALL spellings: u32 retype+casts, void*+casts, void*+typed
+  local, same-type copy last-decl — all byte-inert on coloring. In-repo oracle:
+  no other matched unit has the Music_Update addi/mr/li walker+counter pair.
+- Music_Update extra negatives: #131 no-op `|` on ch init VN-folds (symbol addr
+  is cheap-remat, no surviving copy); loop-3 block-scope ch2/n split −1.4;
+  ternary-temp/handle-web injections fold. The i/ch pair swap remains
+  tracer-gated (need live nadj/web-index values).
