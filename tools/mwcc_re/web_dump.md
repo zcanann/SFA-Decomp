@@ -1264,3 +1264,17 @@ index 74 (needs new instructions ✗), or retype/re-scope sv/t so their webs mov
 UNTESTED NEXT: sv/t as s16/u16 (#115 absorb may eliminate their separate webs at equal
 emission), or one sv direct + t eliminated via an abs helper. The problem is now
 plus-two-edges exact — the tightest spec of the campaign.
+
+
+## Round 12: vec9 +2 enumeration continues
+- NET-ZERO LAW derived: eliminating a neighbor web entirely is useless (static -1 AND
+  removals -1 cancel). The +2 must come from (a) neighbors surviving past vec9's visit
+  (impossible for low-index named locals — they are visited first and are low-degree),
+  (b) new HIGH-INDEX webs in vec9's range (need instructions — only renumbered temps
+  qualify; #114 cast injections FOLD, tested x2), or (c) vec9 visited earlier
+  (unrenumbered idx 38 => -3 instead of -4 => 28, one short; would need +1 more).
+- Remaining candidates for next session: one-arm sv-denial + fuzzy-gate measurement per
+  arm (the both-arm version flips the cycle but regressed fuzzy 99.17->97.59 — measure
+  which arm carries the penalty); what blocks/permits the call-result union (controls
+  idx 38-vs-74); mixed one-sv + union-block combos. The space is ~4 spellings from
+  closed at zero emission.
