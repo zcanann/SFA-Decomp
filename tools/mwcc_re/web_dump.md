@@ -958,3 +958,17 @@ LESSONS FOR THE PLAYBOOK:
   allocator's numbering/park/grant rules with the live tracer.
 main/audio: 99.897 (start of campaign) -> 100.00000, 87/87. Unit flip readiness is the
 team lead's call (pool claim + symbol layout per the playbook checklist).
+
+
+## dll_0256_dimsnowhorn1 COMPLETE 39/39 (2026-07-11): fn_802BB4B4 98.94->100
+One round with the decoded model (commit 592d8b76c8). The r29/r30 adjacent swap
+(matchFrame vs state) was the fn1 select-hoist pattern verbatim:
+- Trace showed NO named matchFrame web — the ternary `(slot != -1) ? (...) : 1` def made
+  the SELECT @-temp carry the value; @-temps number above named webs -> popped before
+  state -> stole r30 (target r29).
+- FIX: if/else per-arm assignment (kills the select node; matchFrame = named multi-def
+  web at its decl slot) + decls split from inits in order [state, viewSlot, matchFrame]
+  (statements keep original order — assignment order does not move indices). diffs=0.
+Pattern now 4-for-4 on "adjacent saved-pair swap" fns: check the M-burst for a MISSING
+named web first — a ternary/conversion def whose @-temp carries the value is the usual
+thief; kill the node kind (if/else, u16 lvalue, narrow extern) rather than respelling uses.
