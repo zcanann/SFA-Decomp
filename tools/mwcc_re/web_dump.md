@@ -394,3 +394,28 @@ OPEN in CodeGenNumbering.c (static disasm task, no tracer needed).
 Sfx_UpdateObjectChannel3D falls to the same rule (param 13×memory-uses ≈ high
 pri → highest vreg in its region → pops first → r31; retail wants slot first).
 One decode closes both functions and likely the whole 99.6-99.98 family.
+
+## DECODED (2026-07-11): the desc+0x4 ACCUMULATION SITES (the doc's OPEN item)
+Three writers, all ~0x4e0b00-0x4e0d50 (CFunc use-recorder band; found via
+`addl %reg,0x4(%eax)` scan over the full objdump):
+  0x4e0baa / 0x4e0c7d (two branches of one recorder, routed at 0x4e0b85 by
+  edi+0x14 vs edi+0x10 window compare) and 0x4e0d48.
+Site 1 disasm (0x4e0b89-0x4e0bb3):
+  call RegInfo_Desc(value); desc->eligible(+0x23)=1;
+  ecx = (byte[0x5e4907] != 0) ? 1 : dword[0x5e9040];   <- THE WEIGHT
+  desc->pri += ecx;  if (desc->pri < 3) desc->pri = 3;  <- floor 3
+=> per-REFERENCE weight is the CONTEXT global 0x5e9040 (loop-nesting weight,
+set by the enclosing walker) — uniform for all values referenced at the same
+loop depth, floored at 3. CONSEQUENCE (closes the source-lever question): a
+same-loop counter (2-3 refs) can NEVER out-priority a 29-use walker by any
+spelling — Music_Update's loop-3 flip and ObjectChannel3D's param-first are
+NOT reachable from C under this pass config. Retail's opposite order therefore
+implies a DIFFERENT weight context at their reference sites (0x5e9040 setter =
+next decode: find writers of 0x5e9040 — likely IroLoop nesting enter/exit) or
+a retail-side pass-config difference for this TU.
+NEXT (mechanical): grep writers of 0x5e9040/0x5e4907, decode the depth rule,
+recompute expected pris for retail's shape; if no context explains it, test
+per-fn pragma states that zero 0x5e9040 (the flag 0x5e4907 forces weight=1 —
+find which option sets it; weight=1 compresses 245..9 → 34..3, counters STILL
+below walkers, so the flag alone doesn't flip — the flip needs region/batch
+boundary movement, see sub-batch note above).
