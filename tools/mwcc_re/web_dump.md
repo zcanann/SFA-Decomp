@@ -524,3 +524,26 @@ trail position × ownership × order, ~60 variants) with the select tracer
 verifying pop sequences — scriptable end-to-end with the harness in these
 notes (8s/variant ≈ 10 minutes total). That script is the single remaining
 action for Music_Update.
+
+## andross_update wave-2 findings (2026-07-11, at 99.760)
+Fixed tonight by HUMAN-FORM rewrites (each verified byte-stable or better):
+- gAndrossMoveAnimSpeeds (retail 0x8032C098, 23 floats) adopted into the unit
+  (was extern lbl_; split/symbols updated; .data now emits spawnIds+speeds in
+  retail order).
+- delayPair loop: `randVal = delayPair[(u8)work]` single-read. As a STATEMENT
+  it hoists the lhax above the retail null-check (fuzzy -0.19) BUT flips the
+  whole flag ladder correct (swf=r29/sc=r28/pa=r26!) via two case-local parked
+  temps (the loop's stack-base addi ghost + counter) reserving r29/r28 that
+  the flags then REUSE (non-interfering piggyback). As an ASSIGNMENT-IN-
+  CONDITION `actionTimer <= (randVal = delayPair[(u8)work])` the site bytes
+  match retail exactly but the ghost temp dies and web 56 (unidentified,
+  nadj 38, interferes with the switch flag) blocks the r29 reuse -> flags
+  stay swapped. Retail = site bytes AND flags => retail's compile had a
+  case-local parked temp reserving r29 that ours only produces in the
+  statement form. The remaining search: which construct creates that ghost
+  (a loop-PRE'd address temp that rematerializes at use - reserved but
+  instruction-less) while keeping in-condition evaluation order.
+- ObjPlacement-typed spawn setup + moveState->signalFlags drains: byte-neutral.
+Tools: apply_trace_lldb.py extended per-web; adjacency dumps via 0x5089c4/
+0x50899e breakpoint (web+0x1a s16 list) directly identify reuse blockers.
+>>>>>>> 3b2cfd8626 (mwcc_re: andross wave-2 log (ghost-temp piggyback mechanism; statement-vs-condition knife edge))
