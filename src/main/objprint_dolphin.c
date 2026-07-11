@@ -1313,11 +1313,11 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     } blk;
     int* mdl = p2;
     u8* data = (u8*)mdl[22];
-    f32* vm = Camera_GetViewMatrix();
     s16* uvs;
     s16* verts;
     int i;
     int off;
+    f32* vm = Camera_GetViewMatrix();
     Obj_BuildWorldTransformMatrix((int*)obj, wm, 0);
     PSMTXConcat(vm, wm, cm);
     GXLoadPosMtxImm(cm, gObjGxPosMtxIdTable[0]);
