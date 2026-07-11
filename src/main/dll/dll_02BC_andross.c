@@ -265,9 +265,9 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
     int hitType;
     int hitObj;
     int got;
-    u8 adjusted;
+    u8 partState;
     u8 texIdx;
-    u8 state;
+    u8 textureState;
     u8* stateBytes = (u8*)stateData;
     ObjTextureRuntimeSlot* tex;
 
@@ -292,7 +292,8 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
         case 1:
         case 2:
         {
-            if (stateData->partHealth[ht] != 0 && stateData->partHitTimer[ht] == 0)
+            partState = stateData->partHealth[ht];
+            if (partState != 0 && stateData->partHitTimer[ht] == 0)
             {
                 stateData->partHealth[ht] -= 1;
                 stateData->partHitTimer[hitType] = 6;
@@ -346,17 +347,17 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
             {
                 stateData->partTextureState[idx] = 2;
             }
-            state = stateData->partTextureState[idx];
-            adjusted = state;
+            textureState = stateData->partTextureState[idx];
+            partState = textureState;
             texIdx = gAndrossPartTextureIndices[idx];
-            if ((u32)texIdx < 2 && state == 1)
-                adjusted = 0;
+            if ((u32)texIdx < 2 && textureState == 1)
+                partState = 0;
             tex = objFindTexture(obj, texIdx * 2, 0);
-            tex->textureId = adjusted << 8;
-            if ((u32)texIdx == 2 && state == 1)
-                state = 0;
+            tex->textureId = partState << 8;
+            if ((u32)texIdx == 2 && textureState == 1)
+                textureState = 0;
             tex = objFindTexture(obj, texIdx * 2 + 1, 0);
-            tex->textureId = state << 8;
+            tex->textureId = textureState << 8;
         }
     }
 }
@@ -475,8 +476,8 @@ void andross_hitDetect(void)
 void andross_update(int obj)
 {
     GameObject* boss;
-    u8 phaseChanged;
     u8 flag;
+    u8 phaseChanged;
     u8 moveChanged;
     u8 spawnIndex;
     u8 cueIndex;
@@ -487,8 +488,6 @@ void andross_update(int obj)
     GameObject* aimTarget;
     GameObject** spawnSlot;
     AndrossState* signalState;
-    AndrossHandState* handStateA;
-    AndrossHandState* handStateB;
     ModelFileHeader* model;
     AndrossRenderOp* renderOp;
     AndrossChildSetup* childSetup;
@@ -1295,11 +1294,10 @@ void andross_update(int obj)
         {
             fc = 200.0f;
         }
-        fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-        gAndrossDistortPhase = fval;
-        if (fval > 6.28318f)
+        gAndrossDistortPhase += gAndrossDistortPhaseStep;
+        if (gAndrossDistortPhase > 6.28318f)
         {
-            gAndrossDistortPhase = fval - 6.28318f;
+            gAndrossDistortPhase -= 6.28318f;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         break;
@@ -1317,11 +1315,10 @@ void andross_update(int obj)
         {
             fc = 200.0f;
         }
-        fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-        gAndrossDistortPhase = fval;
-        if (fval > 6.28318f)
+        gAndrossDistortPhase += gAndrossDistortPhaseStep;
+        if (gAndrossDistortPhase > 6.28318f)
         {
-            gAndrossDistortPhase = fval - 6.28318f;
+            gAndrossDistortPhase -= 6.28318f;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (flag)
@@ -1367,11 +1364,10 @@ void andross_update(int obj)
             mainSetBits(0x10, 0);
             state->actionState = 0x1a;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-            gAndrossDistortPhase = fval;
-            if (fval > 6.28318f)
+            gAndrossDistortPhase += gAndrossDistortPhaseStep;
+            if (gAndrossDistortPhase > 6.28318f)
             {
-                gAndrossDistortPhase = fval - 6.28318f;
+                gAndrossDistortPhase -= 6.28318f;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1392,11 +1388,10 @@ void andross_update(int obj)
         {
             fc = 200.0f;
         }
-        fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-        gAndrossDistortPhase = fval;
-        if (fval > 6.28318f)
+        gAndrossDistortPhase += gAndrossDistortPhaseStep;
+        if (gAndrossDistortPhase > 6.28318f)
         {
-            gAndrossDistortPhase = fval - 6.28318f;
+            gAndrossDistortPhase -= 6.28318f;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (flag)
@@ -1448,11 +1443,10 @@ void andross_update(int obj)
         {
             state->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-            gAndrossDistortPhase = fval;
-            if (fval > 6.28318f)
+            gAndrossDistortPhase += gAndrossDistortPhaseStep;
+            if (gAndrossDistortPhase > 6.28318f)
             {
-                gAndrossDistortPhase = fval - 6.28318f;
+                gAndrossDistortPhase -= 6.28318f;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1476,11 +1470,10 @@ void andross_update(int obj)
                 state->actionState = 0xf;
             }
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-            gAndrossDistortPhase = fval;
-            if (fval > 6.28318f)
+            gAndrossDistortPhase += gAndrossDistortPhaseStep;
+            if (gAndrossDistortPhase > 6.28318f)
             {
-                gAndrossDistortPhase = fval - 6.28318f;
+                gAndrossDistortPhase -= 6.28318f;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1495,11 +1488,10 @@ void andross_update(int obj)
                 state->arwingObj->anim.localPosZ = state->cachedPosZ;
                 state->velZ = gAndrossZero;
                 gAndrossDistortPhase = gAndrossDistortPhaseReset;
-                fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-                gAndrossDistortPhase = fval;
-                if (fval > 6.28318f)
+                gAndrossDistortPhase += gAndrossDistortPhaseStep;
+                if (gAndrossDistortPhase > 6.28318f)
                 {
-                    gAndrossDistortPhase = fval - 6.28318f;
+                    gAndrossDistortPhase -= 6.28318f;
                 }
                 turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                        gAndrossDistortPhase);
@@ -1512,11 +1504,10 @@ void andross_update(int obj)
         {
             state->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
-            gAndrossDistortPhase = fval;
-            if (fval > 6.28318f)
+            gAndrossDistortPhase += gAndrossDistortPhaseStep;
+            if (gAndrossDistortPhase > 6.28318f)
             {
-                gAndrossDistortPhase = fval - 6.28318f;
+                gAndrossDistortPhase -= 6.28318f;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -2016,18 +2007,21 @@ void andross_update(int obj)
         }
         if (rotationDelta < 2000)
         {
-            handStateA = state->handObjA->extra;
-            handStateB = state->handObjB->extra;
-            bval = handStateA->handState;
-            if ((((bval != 2) && (bval != 1)) && (bval = handStateB->handState, bval != 2)) && (bval != 1))
+            AndrossHandState* leftHandState = state->handObjA->extra;
+            AndrossHandState* rightHandState = state->handObjB->extra;
+
+            bval = leftHandState->handState;
+            if ((((bval != 2) && (bval != 1)) && (bval = rightHandState->handState, bval != 2)) && (bval != 1))
             {
                 state->actionPending = 1;
             }
         }
         break;
     case 5:
-        handStateA = state->handObjA->extra;
-        handStateB = state->handObjB->extra;
+    {
+        AndrossHandState* leftHandState = state->handObjA->extra;
+        AndrossHandState* rightHandState = state->handObjB->extra;
+
         if (flag)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
@@ -2066,8 +2060,8 @@ void andross_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_and_laugh);
             state->laughPlayed = 1;
         }
-        bval = handStateA->handState;
-        if ((((bval != 2) && (bval != 1)) && (bval = handStateB->handState, bval != 2)) && (bval != 1))
+        bval = leftHandState->handState;
+        if ((((bval != 2) && (bval != 1)) && (bval = rightHandState->handState, bval != 2)) && (bval != 1))
         {
             if (boss->anim.currentMoveProgress >= 1.0f)
             {
@@ -2082,6 +2076,7 @@ void andross_update(int obj)
             }
         }
         break;
+    }
     case 0x17:
         if (flag)
         {

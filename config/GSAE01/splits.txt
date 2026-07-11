@@ -2844,7 +2844,7 @@ main/dll/dll_02BC_andross.c:
 	.text       start:0x80239DD8 end:0x8023F05C
 	.data       start:0x8032C088 end:0x8032C0F4
 	.sdata      start:0x803DC430 end:0x803DC4F0
-	.sdata2     start:0x803E7490 end:0x803E75A0
+	.sdata2     start:0x803E7490 end:0x803E759C
 
 main/dll/dll_02BD_androsshand.c:
 	.text       start:0x8023F05C end:0x8023FC8C
