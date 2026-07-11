@@ -1649,7 +1649,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         f32 y;
         f32 z;
     } pos;
-    s8 flags;
+    u8* activeObj;
     f32* posp;
     int out;
     u8* cmd;
@@ -1659,7 +1659,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     int found;
     int i;
     int targetFrame;
-    u8* activeObj;
+    s8 flags;
     int stop;
     int frame;
     f32 val;
