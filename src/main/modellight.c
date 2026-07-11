@@ -992,7 +992,7 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
 #pragma opt_lifetimes on
 void modelLightChannels_applyGXControls(void)
 {
-    ModelLightChannelState* entry;
+    ModelLightChannelState* entry = NULL;
     int channel;
     u8 activeMask;
     int lightMask;
