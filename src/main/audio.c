@@ -2474,7 +2474,7 @@ void Music_Update(void)
 {
     extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
     MusicChannel* ch;
-    int i;
+    int i = 0;
     int lowPriority = 0x7fff;
     u32 bestActive18 = 0;
     u32 bestLow18 = 0;
