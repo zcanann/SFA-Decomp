@@ -1023,11 +1023,12 @@ void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
 #pragma opt_propagation off
 void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 {
-    char* base = lbl_803A87F0;
+    char* base[1];
     char** objs;
     s16 sa, sb, sc;
     f32 mA[12];
     f32 mB[12];
+    base[0] = lbl_803A87F0;
     gTrickyHudIconPosX = f1;
     gTrickyHudIconPosY = f2;
     gTrickyHudIconPosZ = f3;
@@ -1043,12 +1044,12 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
     PSMTXScale(mB, gTrickyHudIconScale, gTrickyHudIconScale, gTrickyHudIconScale);
     PSMTXConcat(mB, mA, mA);
     PSMTXTrans(mB, gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ);
-    PSMTXConcat(mB, mA, (f32*)(base + 0x160));
+    PSMTXConcat(mB, mA, (f32*)(base[0] + 0x160));
     PSMTXScale(mA, gTrickyHudTexScaleX, -gTrickyHudTexScaleY, gTrickyHudTexScaleZ);
     PSMTXTrans(mB, lbl_803E1E98, lbl_803E1E68, lbl_803E1E3C);
     PSMTXConcat(mB, mA, mB);
-    PSMTXConcat((f32*)(base + 0x160), mB, (f32*)(base + 0x40));
-    C_MTXPerspective((f32*)base, gTrickyHudIconFovY, gTrickyHudIconAspect, gTrickyHudIconNearPlane,
+    PSMTXConcat((f32*)(base[0] + 0x160), mB, (f32*)(base[0] + 0x40));
+    C_MTXPerspective((f32*)base[0], gTrickyHudIconFovY, gTrickyHudIconAspect, gTrickyHudIconNearPlane,
                      gTrickyHudIconFarPlane);
     lbl_803DD7FC = Camera_GetFovY();
     Camera_SetFovY(gTrickyHudIconFovY);
