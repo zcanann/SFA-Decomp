@@ -1451,7 +1451,7 @@ void errDisplayThreadMain(void)
  * the passes when the log produced any extent. */
 void debugPrintDraw(int ctx)
 {
-    u32 ys;
+    u32 yv;
     u32 y2;
     u32 xa, xb, ya, yb;
     u32 xs;
@@ -1464,7 +1464,7 @@ void debugPrintDraw(int ctx)
     int pass;
     u32 res;
     u32 sw;
-    u32 yv;
+    u32 ys;
     u32 sh;
 
     res = getScreenResolution();
