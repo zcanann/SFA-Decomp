@@ -1002,3 +1002,29 @@ NOTE ObjHitbox_SetStateIndex (same file, MATCHED) emits li+mr+mr from
 `slotIndex = 0; slotOffset = slotIndex; clearedState = slotIndex;` — plain adjacent
 copies of a multi-def loop counter DO survive there; the discriminator vs our fold is
 still undecoded (its zero-var is the loop counter itself; ours isn't).
+
+
+## objlib eyeAnim final-2-lines round (2026-07-11): negative map complete
+The `mr r6,r4 / mr r7,r4` vs `li r6,0 / li r7,0` residual (block-1 jDO/pose inits copying
+joint's zero) resisted every source-level route:
+- ObjHitbox_SetStateIndex's li+mr+mr precedent is an **O1 PRAGMA ISLAND** (`#pragma
+  optimization_level 1` + `scheduling off` at objlib.c:176) — its plain copies survive
+  because O1 has no const-prop. Mutating its copies to `= 0` breaks its mrs (li x3) —
+  the copies are load-bearing THERE, but the same spelling folds at O4.
+- playerEyeAnimFn is NOT an island: O1=326 diffs, O2=218, O3=identical-to-O4 (2).
+- Folded/inert at O4 (in the landed config): copy spellings (= joint), chained assigns,
+  copies+opt_propagation off (the eliminator is the front-end same-value merge, not the
+  propagation pass), dead RUNTIME decl-inits (= blinkState/obj — DCE precedes the
+  splitter here, unlike MU's noopt unit), real early uses via the switch zero-stores
+  (both plain and def+use spellings — const-prop rewrites the use to 0 and the def dies),
+  early-segment attempts via bs->amount/timer.
+- Mechanism (consistent, unfalsified): target's block-1 defs are lifetime-SEGMENT defs
+  whose remat emitter reuses joint's r4-resident zero (our block-2 does exactly this);
+  our block-1 stays the named web's first real segment, whose original const-0 IR emits li.
+  Every route to making block-1 a segment at O4 either folds or explodes (deleting the
+  re-inits -> decl-init webs go live-through-switch in saved regs, 348 diffs).
+NEXT INSTRUMENT (only remaining path): def-node kind byte dump (node+0xa via value+0xa)
+at the Number events for jDO/pose defs + the segment-builder walk for THIS fn, to see
+what retail's IR must contain; or accept 99.664 (fn) / 99.966 (unit) as the cap pending
+new info. All levers so far = the audio-campaign toolkit; this residual is a NEW class
+(O4 const-emitter li-vs-mr), one node-kind dump away from resolution.
