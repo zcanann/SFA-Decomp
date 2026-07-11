@@ -1223,7 +1223,7 @@ static inline void errDisplayFillBackdrop(int xcb, int x)
 void errDisplayThreadMain(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
-    void (*self)(void);
+    void (*self[1])(void);
     int y;
     u32* sp;
     int depth;
@@ -1252,7 +1252,7 @@ void errDisplayThreadMain(void)
         GXSetBreakPtCallback(NULL);
         __GXAbortWaitPECopyDone();
         OSRestoreInterrupts(lvl);
-        self = errDisplayThreadMain;
+        self[0] = errDisplayThreadMain;
         while (1)
         {
             if (enableDebugText != 0)
@@ -1260,7 +1260,7 @@ void errDisplayThreadMain(void)
                 x = 0;
                 errDisplayFillBackdrop(x, x);
             }
-            debugPrintfxy(0x10, 0x15, strs + 0x140, self);
+            debugPrintfxy(0x10, 0x15, strs + 0x140, self[0]);
             debugPrintfxy(0x10, 0x2a, strs + 0x154);
             switch (*(u16*)&gErrExceptionType)
             {
