@@ -434,3 +434,17 @@ for pri(i3) > pri(ch3) — that predicts the missing C construct (e.g. a latch
 weight bump from a different loop shape: for vs do-while, an extra latch
 statement, or a condition split). Everything else (tracer recipes, identities,
 grant rules) is above; this closes the audio trio and the 99.6-99.98 family.
+
+## VERIFIED NUMERICALLY (2026-07-11): the complete priority formula
+Block-weight trace (bp 0x4dd684) on Music_Update: weights are 8 (loop-depth-1
+blocks, 164 of them) and 1 (non-loop, 23). desc+0x4 = Σ per-ref block-weight:
+  ch3: 25 in-loop refs ×8 + 1 (init) = 201  ✓ traced value
+  i3:   1 in-loop ref  ×8 + 1        =   9  ✓ traced value
+  (ch1: ~30×8+5 = 245 ✓, mid: ~8×8+5 = 69 ✓ — model fits every observed web.)
+With ×8-per-depth weights, a latch counter can only outrank a 25-ref walker
+from loop depth 3+ — no such construct exists in this fn. CONCLUSION: retail's
+loop-3 pop order CANNOT be priority-driven for this shape; the difference must
+be in the numbering REGION/sub-batch boundaries ({47,48,49} grouping) — the
+region-formation rule (worklist chain 0x4f0a90 / driver 0x435de5 batching) is
+the one remaining decode, now with a numerically-validated model on both sides
+of it. All tracer recipes + data in the entries above.
