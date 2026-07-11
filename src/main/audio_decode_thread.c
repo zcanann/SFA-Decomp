@@ -16,11 +16,12 @@ extern THPAudioDecodeContext lbl_803A4448;
 
 BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
 {
-    THPAudioDecodeContext* context = &lbl_803A4448;
+    THPAudioDecodeContext* context[1];
+    context[0] = &lbl_803A4448;
 
     if (param != NULL)
     {
-        if (OSCreateThread(&context->thread, AudioDecoderForOnMemory, param, &context->thread, 0x1000, priority, 1) ==
+        if (OSCreateThread(&context[0]->thread, AudioDecoderForOnMemory, param, &context[0]->thread, 0x1000, priority, 1) ==
             0)
         {
             return 0;
@@ -28,13 +29,13 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
     }
     else
     {
-        if (OSCreateThread(&context->thread, AudioDecoder, NULL, &context->thread, 0x1000, priority, 1) == 0)
+        if (OSCreateThread(&context[0]->thread, AudioDecoder, NULL, &context[0]->thread, 0x1000, priority, 1) == 0)
         {
             return 0;
         }
     }
-    OSInitMessageQueue(&context->decodedQueue, context->decodedAudioBuffers, 3);
-    OSInitMessageQueue(&context->freeQueue, context->freeAudioBuffers, 3);
+    OSInitMessageQueue(&context[0]->decodedQueue, context[0]->decodedAudioBuffers, 3);
+    OSInitMessageQueue(&context[0]->freeQueue, context[0]->freeAudioBuffers, 3);
     gAttractMovieAudioThreadActive = 1;
     return 1;
 }
