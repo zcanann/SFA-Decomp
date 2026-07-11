@@ -68,4 +68,4 @@ char sPlatform1ControlNoLongerSupported[] = "<platform1 control>No Longer suppor
  * retail pad gap_07_80329DCA_data) so .data ends 8-aligned at +0xB8 as in
  * retail. The 2-/3-byte gaps after the first two strings are ordinary 4-byte
  * object alignment and need no explicit padding. */
-char sPlatform1InitNoLongerSupported[44] = "<platform1 Init>No Longer supported \n";
+char sPlatform1InitNoLongerSupported[] = "<platform1 Init>No Longer supported \n";
