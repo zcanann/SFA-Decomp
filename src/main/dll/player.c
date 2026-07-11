@@ -13354,7 +13354,7 @@ int playerState25(int obj, int state)
             az = -az;
         }
         ax = ((PlayerState*)state)->baddie.animSpeedA;
-        if (ax < lbl_803E7EA4)
+        if (ax < *(f32*)&lbl_803E7EA4)
         {
             ax = -ax;
         }
