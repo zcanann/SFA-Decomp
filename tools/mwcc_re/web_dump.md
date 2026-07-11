@@ -1173,3 +1173,23 @@ its pri/deg to beat sub's), loadChannelLight, callList, the objprint rotations, 
 FPR pairs (same machinery, cls 3). NEXT SESSION: read the constant at 0x5bcbf4 + boundary
 0x5e0898, log (idx, pri, deg, score) at 0x508ad2's walk via lldb, and each residual
 becomes a computable pri/deg source tweak (add/remove one ref or one edge).
+
+
+## CORRECTION (2026-07-11, round 6): no parking in these fns — pure multi-pass simplify
+Score-tracer (scoretrace.py: bps 0x508ae2/0x508b1a/0x508b71) on the DR unit: ZERO
+stuck-chooser hits — list B is always empty here; every web eventually simplifies.
+So coloring order = passes of index-ASCENDING scans, each pass PREPENDING its removals
+(LIFO): color order = [pass-N reversed, ..., pass-1 reversed]. A web is colored earlier
+by SURVIVING more passes (current degree >= K longer). fn_802BCA10: vec9 (nadj 25)
+dies in pass 1 -> colored last; target's vec9 colored FIRST -> retail's vec9 survived
+to the last pass -> needs >= ~29 initial degree... BUT target instruction count is
+IDENTICAL (187) => the extra edges cannot come from added temps => they must come from
+longer ranges of existing webs or an earlier call position — both currently excluded by
+the matched regions. OPEN CONTRADICTION — next entry point: dump vec9's adjacency in
+ours (adjtrace 0xa0) and enumerate what retail could add; also verify K per class
+(0x4fe520 return) and whether pass-boundaries can be moved by degree changes among
+NEIGHBORS (sub/obj at 60/46 are untouchable, but the mid-tier temps around 25-31 decide
+which pass vec9 falls in — a 1-2 edge change to THOSE may re-order passes without
+touching vec9 itself).
+The chooser (pri/degree + fixed-const class) presumably DOES run in bigger fns (MU/OC3D
+bands) — instrument stands for those.
