@@ -1078,3 +1078,31 @@ near-identical repeated blocks AND a within-block register/emission form that no
 straight-line spelling reaches (esp. the li+mr constant-reuse form), RECONSTRUCT THE
 INLINE HELPER — `-inline auto` expansions have their own web/temp classing. This is the
 5th "impossible" residual cracked by a structural-origin insight rather than a spelling.
+
+
+## 8-unit batch campaign, round 1 (2026-07-11): 3 landed, full survey maps
+LANDED: curves 99.951->99.978 (#81 launder, cluster-1 2nd count ref; parity law:
+exactly-one-of-four refs laundered flips one cluster — the 16-combo matrix maxes there);
+tricky_substates 99.940->99.961 (trickyAdvanceNode inline helper — the two node-advance
+loops are one static inline; li+mr walker init in expansion 2); modellight
+applyGXControls 99.40->100 (`entry = NULL` dead decl-init kills the fn-top addr-temp
+mr — MU lever, THIRD confirmation). REVERTED: mainSetBits end+1 (line-diffs improved
+9<11 but objdiff fuzzy REGRESSED 98.55->97.91 — LESSON: always gate on report fuzzy,
+line-diff is probe-only).
+REMAINING MAPS (all decoded to the exact residual):
+- curves c2: magic-double<->frac f1/f3 swap; launder matrix exhausted; volatile-FPR class.
+- tricky residual (99.72): off<->table volatile swap + c1 li-vs-mr (helper decl perms swept,
+  13-diff floor); cmpw operand at ~437.
+- vecmath mtxRotateByVec3s (98.65): FPR temp naming scramble across the matrix build —
+  needs expression-level reconstruction of the temp set (t1/t2/u/v/s/zero).
+- gameloop removeButtonObject (98.09): ONE pair — unroller guard srwi+cmplwi (T) vs fused
+  srwi. (C) under `#pragma peephole on` island; pragma combos + types swept; the fusion
+  is the only structural diff. mainSetBits (98.55): r4/r5 volatile pair + the +1 fold
+  (T folds (width+start)+1 late with add+addi; every C spelling folds early or regresses).
+- objprint: all 3 = saved-reg permutations of param homes (objMathFn r6/r7 volatile;
+  modelCalcVtxGroupMtxs 3-param rotation + stack-slot layout 28-vs-20(r1);
+  shaderFuzz 3-param rotation) — fn-scope decl perms inert so far; block-scope/@-temp count drives it.
+- drearthwarrior: fn_802BCA10 params shifted one reg (r29/r30 T vs r30/r31 C — one extra
+  high web in target) + clamp temp r4-vs-r0; stateHandler02 = flag-in-r0(!) vs r5 + temp
+  chain r3-vs-r0 (long-range r0 web legal — no calls in span).
+- tex_dolphin: unsurveyed this round.
