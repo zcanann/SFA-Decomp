@@ -933,3 +933,28 @@ ordering or an invisible (folded-but-numbered) temp difference. Paths remaining:
 what source can perturb it; (b) count folded temps via the webEnd watchpoint on variant
 batteries (a folded temp still increments the counter — compare W-counts per variant);
 (c) pragma fallback (O2/lifetimes-off) + crack its 2-shape residual.
+
+
+## OC3D CRACKED to 100% — main/audio UNIT COMPLETE 87/87 (2026-07-11, round 22)
+THE FIX WAS ONE LINE: a block-scope narrow extern inside the fn (commit 14da0fcd95):
+    extern int sndFXCtrl(int handle, u8 controller, u8 value);
+(audio.c file-scope sees engine_shared.h's `(u32,u32,u32)` decl; snd_synth_api.h carries
+the narrow signature — and Music_Update in this same TU already block-declares
+sndSeqVolume with narrow params, so this is retail's own pattern.)
+MECHANISM (#115 + the round-18..21 model): with u32 params, each `(u8)pan/(u8)fx/(u8)v`
+call-arg cast is a PERSISTENT conversion node = extra lowering-temp webs; with u8 params
+the casts ABSORB into the arg slots. The temp-web difference moves the param web off the
+nadj==K park boundary (29 -> lower), so it simplifies early, pops LAST, and takes r29 —
+slot/level/pieces cascade onto r31/r30 exactly as retail. Zero instruction change
+(caller-side clrlwi masks emit identically for u8 params).
+LESSONS FOR THE PLAYBOOK:
+- #115 callee-decl width is not just a "web creation order" lever — it changes the
+  TEMP-WEB COUNT and therefore park/stuck boundaries. Check BLOCK-SCOPE extern width
+  overrides (#57) whenever a param/local is stuck at the K boundary; look for a sibling
+  fn in the same TU already doing it (Music_Update's sndSeqVolume was the tell here).
+- The three audio holdouts fell to: (1) u16 narrow-absorb decl (fn1), (2) dead decl-init
+  splitter reorder (Music_Update), (3) narrow callee extern (OC3D) — all three are
+  ZERO-EMISSION IR-shape levers, invisible to asm diffing, found only after decoding the
+  allocator's numbering/park/grant rules with the live tracer.
+main/audio: 99.897 (start of campaign) -> 100.00000, 87/87. Unit flip readiness is the
+team lead's call (pool claim + symbol layout per the playbook checklist).
