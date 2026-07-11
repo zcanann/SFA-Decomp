@@ -2254,7 +2254,8 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     }
     else
     {
-        z[1] = (z[0] = 0);
+        z[0] = 0;
+        z[1] = z[0];
     }
     *(int*)((&gSky2State)[z[1]]) = z[0];
     (&gSky2State)[z[1]][0x317] = 1;
