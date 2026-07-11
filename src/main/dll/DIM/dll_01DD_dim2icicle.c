@@ -105,7 +105,7 @@ void dim2icicle_update(GameObject *obj)
         break;
     case DIM2ICICLE_MODE_WOBBLE:
         (obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
-        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * lbl_803E4B6C;
+        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * *(f32*)&lbl_803E4B6C;
         if ((obj)->anim.rotY >= 10)
         {
             break;
