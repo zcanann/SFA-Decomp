@@ -10819,7 +10819,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             break;
         default:
             *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0;
-            if (((PlayerState*)state)->sinkOffsetY < lbl_803E7EA4)
+            if (((PlayerState*)state)->sinkOffsetY < *(f32*)&lbl_803E7EA4)
             {
                 fv2 = lbl_803E7EFC * ((PlayerState*)cfg)->baddie.animSpeedA + ((PlayerState*)state)->sinkOffsetY;
                 ((PlayerState*)state)->sinkOffsetY = (fv2 < lbl_803E7EA4) ? fv2 : lbl_803E7EA4;
