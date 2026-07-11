@@ -1423,3 +1423,21 @@ the union site 0x57b947 (find its call sites in mwcc_full.dis, read the guard
 conditions), or trace U-events with per-web context (which copies union, which do not,
 correlate with web properties). ONE predicate = FOUR functions across THREE units.
 This is the next session's single task.
+
+
+## Round 27: UNION PREDICATE DECODED (disasm 0x57b877-0x57b94b)
+The coalesce guard sequence:
+1. Interference bit-matrix test (triangular index math, matrix at 0x5e3144) — interfering
+   pair => NO union.
+2. If both indices >= webBase(0x5e9800[cls]): ELIGIBILITY WINDOW check — union requires
+   BOTH indices in [ 0x5ea1da[cls] (word), 0x5e9730[cls] (dword) ]; either outside => NO
+   union. (This window is the undecoded variable controlling which copies coalesce —
+   likely set per-fn/per-pass; READ IT via tracer.)
+3. cls==4 special case: skip if the max index equals the protected web at 0x5e9d86.
+4. Union: parent = MIN(index1,index2), unionFind(0x5e3140)[max*2] = min — LOWER INDEX
+   WINS (the canonical web keeps the low/named index).
+Consequence: the 73/74-style high indices at F-events are NOT union products (mr survives
+= union blocked); they are a separate renumber path (TBD — possibly the copy-temp webs
+themselves popping as proxies). NEXT: tracer reads of the window globals + per-attempt
+logging at 0x57b8ca (indices + window + outcome) for fn_802BCA10 — one run disambiguates
+vec9-the-web vs the copy-temp and reveals whether retail's difference is window-driven.
