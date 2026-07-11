@@ -1133,3 +1133,20 @@ is LOAD-BEARING (removal = 136 diffs). Lever needed: ~5 extra interfering webs i
 vec9 range with zero emission (DIMSnowHorn +1 family — ternary select temps / named
 loads in the vec0/vec9 clamp blocks), or the band-boundary decode. The sv/t clamp
 blocks (both arms) are the natural web-donor sites.
+
+
+## THE ONE BLOCKING UNKNOWN for the 8-unit batch (2026-07-11, round 5)
+Six of the 14 remaining functions (fn_802BCA10, loadChannelLight, callList,
+drawLightmapIndirectPasses, objprint x3-ish) reduce to the SAME undecoded rule:
+**the pop order WITHIN the parked band** (webs with nadj >= ~30, incl. union-renumbered
+call-results and @-temps). Measured facts: ours pops [params(33,32), renumbered(74,73)];
+targets need renumbered-first or interleaved. Not index-desc, not decl, not nadj-desc
+(all falsified by fn_802BCA10 + MU vols [43..37,80,79] + OC3D). The web_dump.gdb doc
+says "(index, park-round): r31 to the first-declared web of the HIGHEST park round" —
+the park-ROUND (which simplify iteration parked each web) is the unobserved variable.
+NEXT INSTRUMENT: find the park/stuck-push site in the select driver (0x508680 region,
+IroRegAlloc Simplify loop), breakpoint it, log (web idx, round#) — then each of the six
+functions becomes a computable decl/edge tweak. The FPR-pair fns (curves-c2, vecmath,
+setShader, select-pair) need the same for cls-3.
+This is the highest-leverage single decode remaining: one breakpoint address unlocks
+6+ functions across 5 units.
