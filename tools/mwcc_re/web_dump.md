@@ -300,3 +300,30 @@ doc's OPEN item) is the only remaining path. lldb blockers logged above; the
 accumulation-site STATIC disasm may be the cheaper route: objdump the
 0x435650-0x4357ef numbering loop's callers writing desc+0x4 and read the
 weight rule directly.
+## Music_Update TRACED (2026-07-11, this host — tracer recipe confirmed working)
+Working invocation on this host (paths differ per session; adapt LOG path):
+  lldb -b -o "command script import <scratch>/mwcc_trace.py" -o "b wibo::loadModule" \
+    -o "process launch -s -- <compiler> <exact build.ninja cflags> -c probe.c -o probe.o" \
+    -o continue -o continue -o mwcc_trace_setup -o "breakpoint delete 1" -o continue \
+    build/tools/wibo
+  (TWO continues before setup: first loadModule stop is BEFORE the PE maps; arm
+   at the SECOND stop, then delete bp 1. Arming early → guard-fault EXC_BAD_ACCESS.)
+Select trace, cls=4, Music_Update batch (pristine source):
+  F 43→r31 42→r30 41→r29 40→r28 39→r27 38→r26 37→r25 (decl-block, reverse-decl)
+  F 80→r24, 79→r23 (fadeA/fadeB call-result copies, pass-2 high vregs)
+  F 49→r22 (i1)  |  A 48→r3 nadj=30 (middle volatile walker)  |  F 47→r21 (ch1)
+  A 45→r21 (loop-3 counter family)  |  A 44→r22 (loop-3 walker)  ← THE RESIDUAL
+  F 36→r20 (found20)  F 35→r19 (found19)
+Numbering commits (0x4fe563): idx44 pri=9, idx45 pri=245, idx47 pri=9,
+idx48 pri=69, idx49 pri=201. The loop-3 counter's ROOT web (45) carries pri 245
+(union-find family accumulation — cf. root=MIN-vreg decode above); the walker
+web 44 only 9. Statement-order swap of the loop-3 inits flips EMISSION but the
+vregs stay 44/45 (canonicalized upstream) — confirmed by identical trace.
+=> The flip needs idx44 to commit AFTER idx45: either the union family around
+45 must lose a member numbered before 44, or 44's value must go pass-2
+(name→expression canonical). NEXT: log union pairs at 0x57b917-0x57b947 for
+this batch and reconstruct the 245-family; then find which C value seeds it.
+Battery (final-reg reads, all keeping 44<45): init order, +0, casts, &[0],
+no-op |=, register, decl perms/reversals, fresh i2/ch2 (fn+block scope),
+block middle loop, ternary/handle temps, O1/O2/O3, opt_lifetimes off,
+loop_invariants/strength off. All inert or regressive on the pair.
