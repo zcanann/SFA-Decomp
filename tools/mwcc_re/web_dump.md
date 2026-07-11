@@ -373,3 +373,24 @@ loop-3 C shape that either lowers the walker below 9 or (more likely) reveals
 the ORIGINAL used a different construct entirely (e.g. the counter carrying an
 address or the walker derived per-iteration). The accumulation site is the one
 OPEN in CodeGenNumbering.c (static disasm task, no tracer needed).
+
+## Music_Update final negatives + next-session seed (2026-07-11)
+- Folded-alias weight transfer ((MusicChannel*)((u32)ch + (i - i)))->f: the
+  (i-i) does NOT fold clean under -O4,p noopt (subf/add materialize, +8 instrs,
+  volatile churn) — the identical-asm-paradox trick can't move tree weight here.
+- Same-value phi init across the fadeA if: front-end merges (no phi web).
+- Sub-batch-region hypothesis (untestable by source): numbering sub-batches map
+  to program regions ({loop1}, {found/fade}, {mid+loop3}); if i3's value could
+  number in a LATER region than ch3's, the pops flip and loop 3 matches. But
+  moving either init statement relocates its lis/addi emission (target pins
+  both inits after the middle loop), so no statement-motion spelling exists.
+  The flip therefore hinges on the desc+0x4 accumulation/region rule ONLY:
+  either the weight rule gives retail's counter >201 somehow (different use
+  kinds?), or region boundaries in the retail compile differed (pass config?).
+  NEXT: static-disasm the accumulation site(s) writing desc+0x4 (CIR walk,
+  callers of RegInfo_Desc around 0x4d0150) + the worklist chain reset 0x4f0a90
+  to pin region boundaries. All live data needed to verify a candidate rule is
+  in the traces above (245/201/69/13/9 for known webs).
+Sfx_UpdateObjectChannel3D falls to the same rule (param 13×memory-uses ≈ high
+pri → highest vreg in its region → pops first → r31; retail wants slot first).
+One decode closes both functions and likely the whole 99.6-99.98 family.
