@@ -468,3 +468,24 @@ Also negative: driver 0x435de5 region is a LINEAR two-list walk (no priority
 compare in the loop) — the "ascending-priority sub-batch" observation emerges
 from LIST ORDER; priorities gate eligibility elsewhere. The recovered
 CodeGenNumbering.c max-scan pseudocode describes a different band — reconcile.
+
+## Music_Update STRUCTURAL ANSWER FOUND (2026-07-11): five-variable form
+Coupling proof: with shared ch/i + splitter, name-web order and split order
+both derive from the same variable order — loop-1 correct forces loop-3
+swapped and vice versa. BOTH loops matching is IMPOSSIBLE with 2 shared
+variables ⇒ retail used SEPARATE loop variables. Empirical confirmation:
+fresh fn-scope pair for loop 3 (FR1: +i2,ch2; FR3: +p for the middle loop too)
+makes the walker/counter registers CONSISTENT ACROSS LOOPS for the first time
+in ~60 variants — the target's invariant. Web count also matches (2 named + 3
+splits = 5 named webs). Remaining: the five vars' decl positions set their
+pop order among themselves and vs the decl-init block; FR1/FR3 shifted the
+reservation bank (fades grabbed r31). NEXT (bounded, mechanical): sweep decl
+orders/positions of {ch,i,p,ch2,i2} relative to the init'd decls (~20 perms ×
+8s probe harness), reading pops directly with the select tracer; land the one
+matching retail's sequence [declblock r31..r25, fadeA r24, fadeB r23,
+i-web r22, mid r3(volatile), ch-web r21, found20 r20, found19 r19] and regs
+r21/r22 shared by both loops' pairs. Loop-1 keeps the mr-form init, loop-3
+folds (union window) — verify per variant. This is the close-out path for
+Music_Update; ObjectChannel3D likely falls to the same separate-variable
+insight (its param/slot/level rotation may need a fresh local for the
+level-reload path).
