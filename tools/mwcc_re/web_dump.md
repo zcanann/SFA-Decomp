@@ -348,3 +348,28 @@ filter idx in {44,45,47,48,49}, read PCode opcodes).
 Combo tracer script pattern saved in this entry's session scratchpad; recipe
 identical to the select tracer with extra bps 0x4fe563 (numbering commit) and
 0x57b947 (union write).
+
+## DECODED (2026-07-11): Music_Update loop-3 pair — full mechanism, identities corrected
+Apply-trace (P-lines, operand dumps) fixes the identities:
+  vreg44=i1 (li/cmpwi/addi -1 pattern, 4 uses), vreg45=ch1 (34 base-uses, def=copy
+  from addi-temp vreg83 — the surviving mr r21,r0), vreg47=i3 (4 uses),
+  vreg48=middle volatile walker, vreg49=ch3 (29 uses; addi-temp 118 UNIONS into it
+  → the direct addi r22,r3,0 form ✓ shapes all match target).
+MECHANISM (all traced): numbering runs in program-region sub-batches; within a
+sub-batch, vregs are assigned in ASCENDING desc+0x4 priority
+  loop1 region: {i1:9, ch1:245} → 44,45;  tail region: {i3:9, mid:69, ch3:201} → 47,48,49.
+Select pops descending vreg; saved-reg FRESH grants come from the persistent
+r31-descending exhaust counter (NOT lowest-free): after the decl block + fade
+copies eat r31..r23, ch3(49) pops first → r22, i3(47) → r21; loop-1 webs then
+REUSE (lowest-free reserved): ch1(45)→r21, i1(44)→r22. Loop 1 matches retail;
+loop 3 is swapped. Retail requires i3 to pop BEFORE ch3 ⇒ i3-pri > ch3-pri in
+the tail region ⇒ the counter must out-priority a 29-use walker (201) — no C
+spelling reaches that (counter has ~4 refs). Phi-init (same-value both arms),
+i|=i, |=const all constant-fold; statement order canonicalizes; decl order,
+fresh vars, block scopes shift whole banks (regress).
+REMAINING UNLOCK (precise, small): the desc+0x4 ACCUMULATION rule — what makes
+245/201 for walkers, 9 for counters, 69 for the volatile walker — then find the
+loop-3 C shape that either lowers the walker below 9 or (more likely) reveals
+the ORIGINAL used a different construct entirely (e.g. the counter carrying an
+address or the walker derived per-iteration). The accumulation site is the one
+OPEN in CodeGenNumbering.c (static disasm task, no tracer needed).
