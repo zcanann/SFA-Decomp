@@ -1120,3 +1120,16 @@ REMAINING MAPS (all decoded to the exact residual):
   temps (13/18) regardless of result-var (incl. chained). Comparison-direction is coupled
   to the clamp webs; needs the FPR volatile trace to find the actual coupling.
 - tex_dolphin setShader (8): fogColor/data r6-r7 volatile pair; order/pad probes inert.
+
+
+## Batch round 4 addendum: fn_802BCA10 traced (2026-07-11)
+Grants (ours): sub(33)->r31, obj(32)->r30, then renumbered vec0(74)->r29, vec9(73)->r28.
+vec0/vec9 = union-renumbered call-results (appended reverse-chronologically: vec9=73,
+vec0=74). nadj: sub 60, obj 46, vec0 31, vec9 25. Target: vec9->r31 FIRST (above params),
+sub r30, obj r29, vec0 r28 => target's vec9 parks in the TOP band => its nadj must cross
+the park threshold (~30): +5 edges over ours in vec9's [call2..fn-end] range. Decl perms
+fully inert (renumbered webs ignore decl slots). `#pragma opt_common_subs off` on this fn
+is LOAD-BEARING (removal = 136 diffs). Lever needed: ~5 extra interfering webs in the
+vec9 range with zero emission (DIMSnowHorn +1 family — ternary select temps / named
+loads in the vec0/vec9 clamp blocks), or the band-boundary decode. The sv/t clamp
+blocks (both arms) are the natural web-donor sites.
