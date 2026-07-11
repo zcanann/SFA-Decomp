@@ -653,3 +653,18 @@ remaining avenue for 100%: compare the numbering walk direction code
 build/compilers/ — if a sibling build chains/walks forward, the audio TU (and
 this whole reg-perm family) may need that binary. Otherwise: principled caps,
 main/audio source ceiling 99.92%.
+
+## Compiler-version sweep (2026-07-11): NEGATIVE — the last avenue closed
+GC/2.0p1, 1.3.2, 1.3.2r, 2.5, 2.6, 2.7 all emit Music_Update's loop-3 pair as
+addi r22/li r21 (identical to 2.0) — the numbering behavior is stable across
+the MWCC GC family; version archaeology does not explain retail's r21/r22.
+Retail's order therefore comes from a source/block-structure difference the
+current model cannot yet derive (the block/def-reverse walk approximates but
+mis-predicts some orderings, e.g. mid=48 between latch-encountered webs).
+STATE: main/audio = 99.917% (84/87). Sfx_UpdateLoopedObjectSounds 99.35 (this
+session's +0.97). Music_Update 99.596 and ObjectChannel3D 99.01 remain, both
+reduced to the numbering-walk fidelity question — the next concrete step is
+completing the walk model (log block boundaries alongside numbering commits:
+one more tracer field), after which the required retail block structure can be
+back-derived and its C shape read off. All tools, traces, and ~260 mapped
+variants are in the entries above.
