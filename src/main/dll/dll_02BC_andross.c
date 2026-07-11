@@ -1552,17 +1552,18 @@ hit_cue_ready_5:;
         }
         for (work = 0; (u8)work < 2; work++)
         {
+            randVal = delayPair[(u8)work];
             if ((((state->spawnedObj == NULL) &&
-                  (state->actionTimer <= delayPair[(u8)work])) &&
-                 ((short)durationBeforeStep > delayPair[(u8)work])) &&
+                  (state->actionTimer <= randVal)) &&
+                 ((short)durationBeforeStep > randVal)) &&
                 (Obj_IsLoadingLocked() != 0))
             {
                 found = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_SPAWNED);
-                *(f32*)&((AndrossState*)found)->handObjB = state->cachedPosX;
-                *(f32*)&((AndrossState*)found)->lightAnchorObj = state->cachedPosY;
-                *(f32*)&((AndrossState*)found)->effectHandle = state->cachedPosZ;
-                *(u8*)(found + 4) = 1;
-                *(u8*)(found + 5) = 1;
+                ((ObjPlacement*)found)->posX = state->cachedPosX;
+                ((ObjPlacement*)found)->posY = state->cachedPosY;
+                ((ObjPlacement*)found)->posZ = state->cachedPosZ;
+                ((ObjPlacement*)found)->color[0] = 1;
+                ((ObjPlacement*)found)->color[1] = 1;
                 ((AndrossState*)found)->unk20 = 0xffff;
                 found = ((int (*)(int, int))loadObjectAtObject)(obj, found);
                 state->spawnedObj = (GameObject*)found;
