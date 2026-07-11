@@ -291,17 +291,15 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
 void andross_update(int obj)
 {
     GameObject* boss;
-    u8 pathAdjusted;
+    u8 flag;
     u8 stateChanged;
     int work;
-    u8 flag;
+    u8 pathAdjusted;
     AndrossState* state;
     AndrossState* moveState;
     AndrossHandState* handStateA;
     AndrossHandState* handStateB;
     GameObject* aimTarget;
-    GameObject** spawnSlot;
-    u8 spawnIndex;
     int ref;
     int durationBeforeStep;
     u32 val;
@@ -338,9 +336,9 @@ void andross_update(int obj)
     f32 searchDist;
     boss = (GameObject*)obj;
     state = (AndrossState*)boss->extra;
-    pathAdjusted = 0;
-    stateChanged = 0;
     flag = 0;
+    stateChanged = 0;
+    pathAdjusted = 0;
     if (state->startupDelay != 0)
     {
         state->startupDelay -= 1;
@@ -377,26 +375,22 @@ void andross_update(int obj)
     }
     for (work = 0; (u8)work < 4; work++)
     {
-        spawnIndex = work;
-        spawnSlot = &state->spawnObj[spawnIndex];
-        if (*spawnSlot == NULL)
+        val = work & 0xff;
+        if (state->spawnObj[val] == NULL)
         {
-            *spawnSlot = (GameObject*)ObjList_FindObjectById(gAndrossSpawnObjectIds[spawnIndex]);
-            if (*spawnSlot != NULL)
+            state->spawnObj[val] = (GameObject*)ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
+            if (state->spawnObj[val] != NULL)
             {
-                state->spawnDelta[spawnIndex].x =
-                    (*spawnSlot)->anim.localPosX - boss->anim.localPosX;
-                state->spawnDelta[spawnIndex].y =
-                    (*spawnSlot)->anim.localPosY - boss->anim.localPosY;
-                state->spawnDelta[spawnIndex].z =
-                    (*spawnSlot)->anim.localPosZ - boss->anim.localPosZ;
+                state->spawnDelta[val].x = state->spawnObj[val]->anim.localPosX - boss->anim.localPosX;
+                state->spawnDelta[val].y = state->spawnObj[val]->anim.localPosY - boss->anim.localPosY;
+                state->spawnDelta[val].z = state->spawnObj[val]->anim.localPosZ - boss->anim.localPosZ;
             }
         }
         else
         {
-            (*spawnSlot)->anim.localPosX = boss->anim.localPosX + state->spawnDelta[spawnIndex].x;
-            (*spawnSlot)->anim.localPosY = boss->anim.localPosY + state->spawnDelta[spawnIndex].y;
-            (*spawnSlot)->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[spawnIndex].z;
+            state->spawnObj[val]->anim.localPosX = boss->anim.localPosX + state->spawnDelta[val].x;
+            state->spawnObj[val]->anim.localPosY = boss->anim.localPosY + state->spawnDelta[val].y;
+            state->spawnObj[val]->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[val].z;
         }
     }
     found = state->fightPhase;
@@ -837,19 +831,17 @@ void andross_update(int obj)
             if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
                 state->timer = 0x3c;
-                break;
+                goto hit_cue_ready_1;
             }
         }
-        if (ref == 6)
+        state->timer -= framesThisStep;
+        if (state->timer <= 0)
         {
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
-            {
-                ref = randomGetRange(0, 5);
-                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
-            }
+            ref = randomGetRange(0, 5);
+            mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+            state->timer = 0x3c;
         }
+hit_cue_ready_1:;
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
         fb = (state->arwingObj->anim.localPosX - state->homePosX);
@@ -1065,19 +1057,17 @@ void andross_update(int obj)
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto hit_cue_ready_2;
                 }
             }
-            if (ref == 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    ref = randomGetRange(0, 5);
-                    mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                ref = randomGetRange(0, 5);
+                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+hit_cue_ready_2:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1240,19 +1230,17 @@ void andross_update(int obj)
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto hit_cue_ready_3;
                 }
             }
-            if (ref == 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    ref = randomGetRange(0, 5);
-                    mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                ref = randomGetRange(0, 5);
+                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+hit_cue_ready_3:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1471,19 +1459,17 @@ void andross_update(int obj)
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto hit_cue_ready_4;
                 }
             }
-            if (ref == 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    ref = randomGetRange(0, 5);
-                    mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                ref = randomGetRange(0, 5);
+                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+hit_cue_ready_4:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1526,19 +1512,17 @@ void andross_update(int obj)
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto hit_cue_ready_5;
                 }
             }
-            if (ref == 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    ref = randomGetRange(0, 5);
-                    mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                ref = randomGetRange(0, 5);
+                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+hit_cue_ready_5:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1613,19 +1597,17 @@ void andross_update(int obj)
                 if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto hit_cue_ready_6;
                 }
             }
-            if (ref == 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    ref = randomGetRange(0, 5);
-                    mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                ref = randomGetRange(0, 5);
+                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+hit_cue_ready_6:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1703,19 +1685,17 @@ void andross_update(int obj)
             if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
                 state->timer = 0x3c;
-                break;
+                goto hit_cue_ready_7;
             }
         }
-        if (ref == 6)
+        state->timer -= framesThisStep;
+        if (state->timer <= 0)
         {
-            state->timer -= framesThisStep;
-            if (state->timer <= 0)
-            {
-                ref = randomGetRange(0, 5);
-                mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                state->timer = 0x3c;
-            }
+            ref = randomGetRange(0, 5);
+            mainSetBits(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+            state->timer = 0x3c;
         }
+hit_cue_ready_7:;
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0)
         {
@@ -1786,7 +1766,7 @@ void andross_update(int obj)
             boss->anim.velocityX = lbl_803E74D4;
             boss->anim.velocityY = fval;
             boss->anim.velocityZ = fval;
-            Sfx_PlayFromObject(obj,
+            Sfx_PlayFromObject((int)boss,
                                randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
         }
         state->actionTimer -= framesThisStep;
