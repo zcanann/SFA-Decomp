@@ -636,3 +636,20 @@ main/audio's source-reachable ceiling stands at 99.92 pending compiler-config
 archaeology (candidate: block-chain direction differences across MWCC 2.0
 builds — testable by diffing 0x4f0aa3-0x4f0aaa against other mwcceppc
 binaries in build/compilers/).
+
+## ObjectChannel3D TRACED + closed (2026-07-11)
+Select-trace section identified (F 49→r31=param, 37→r30=slot, 33→r29=level;
+spill-reload webs 35-39 reuse r29-r31 = level's stack reloads ✓). The
+block-reverse/def-reverse numbering model fits exactly: within block 1,
+numbering = reverse def order → the param's entry copy (first def of the fn)
+always numbers LAST → highest vreg → pops first → r31. Guard-split probe
+(two separate ifs, param test in its own block) INERT — the entry copy is the
+def; use position does not move it. Retail's param=r29 therefore also requires
+a numbering-order difference not expressible in source under this binary —
+same verdict as Music_Update. Both remaining audio holdouts are one family:
+block/def-reverse numbering vs retail's apparent forward variant. The single
+remaining avenue for 100%: compare the numbering walk direction code
+(0x4f0aa3 chain-prepend + 0x4dd650 walker) across other mwcceppc binaries in
+build/compilers/ — if a sibling build chains/walks forward, the audio TU (and
+this whole reg-perm family) may need that binary. Otherwise: principled caps,
+main/audio source ceiling 99.92%.
