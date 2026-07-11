@@ -1162,7 +1162,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             gYButtonIconAnim =
                 gYButtonIconAnim -
                 (gHudYButtonAnimDecayBias + (timeDelta * (gYButtonIconAnim - gHudYButtonAnimDecayBias)) / lbl_803DBA84);
-            if (gYButtonIconAnim > lbl_803E1E3C)
+            if (gYButtonIconAnim > *(f32*)&lbl_803E1E3C)
             {
                 gHudYButtonIconScale = lbl_803E1E68;
             }
