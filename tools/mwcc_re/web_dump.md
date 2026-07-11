@@ -923,3 +923,13 @@ find the source form that avoids the hole-split under lifetimes ON. Next: per-re
 occupancy annotation of both streams + M-burst/W-map for a variant that changes the
 @-temp block, to locate the order lever. Pragma fallbacks unchanged (O2 / lifetimes-off,
 shared residual: piece A/B swap + v-join decoalesce).
+
+Round-21 addendum: K&R param def, register param, decl perms, dead inits — all inert
+(~60 total variants mapped on OC3D). Target partition re-verified two-web (init r30 /
+clamps r31; the else-arm per-arm (u8) materialization matches ours modulo the cycle).
+Both graphs provably near-identical => the differentiator is inside Simplify/park
+ordering or an invisible (folded-but-numbered) temp difference. Paths remaining:
+(a) decode the Simplify scan/park loop (0x4fe6xx band) to find its exact order rule +
+what source can perturb it; (b) count folded temps via the webEnd watchpoint on variant
+batteries (a folded temp still increments the counter — compare W-counts per variant);
+(c) pragma fallback (O2/lifetimes-off) + crack its 2-shape residual.
