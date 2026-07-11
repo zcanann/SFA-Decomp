@@ -508,3 +508,19 @@ between each pair, after fadeA) with order [i,ch] + trailing [i2,ch2,p] (or
 i2/ch2 reusing via later position), pick the variant whose pop sequence
 matches; then verify the loop-1 mr-form/loop-3 fold split and diff to 100.
 All harness+tracer invocations in the entries above; probe compiles are 8s.
+
+## Music_Update placement sweep EXECUTED (2026-07-11, 11 variants)
+Round 1 (pair=loop1's i/ch swept A-F, trail i2/ch2/p at F): counter reg by
+position: A→r29, B→r28, C→r22(!), D→r20, E→r20, F→r20; loop3 pair stuck
+r19/r20-ish. Position C (after s2VolB) puts the fed loop's counter at r22 —
+the bank slot is real and reachable.
+Round 2 (ownership flipped: loop3 keeps i/ch at swept position, loop1 on
+i2/ch2@F): loop3 counter=r29 for B-E (position-insensitive!), r20@F — the
+sensitivity inverts with ownership; the two pairs' interactions are not
+separable by position alone.
+=> The C-slot reachability + FR1/FR3 consistency proof stand; landing both
+pairs on r21/r22 simultaneously needs the full cross-product (pair position ×
+trail position × ownership × order, ~60 variants) with the select tracer
+verifying pop sequences — scriptable end-to-end with the harness in these
+notes (8s/variant ≈ 10 minutes total). That script is the single remaining
+action for Music_Update.
