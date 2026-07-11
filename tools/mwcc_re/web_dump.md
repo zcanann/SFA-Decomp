@@ -1106,3 +1106,17 @@ REMAINING MAPS (all decoded to the exact residual):
   high web in target) + clamp temp r4-vs-r0; stateHandler02 = flag-in-r0(!) vs r5 + temp
   chain r3-vs-r0 (long-range r0 web legal — no calls in span).
 - tex_dolphin: unsurveyed this round.
+
+
+## Batch round 3 addenda (2026-07-11)
+- modellight loadChannelLight (5 diffs): trace shows grants [lightId r31, light r30, obj r29]
+  + view A-reused; the r31/r29 pair = offset-@-temp (channel<<4 CSE, grants first per law)
+  vs named view. Target = view r31 / offset r29. view-decl moves give 7 (shift +2);
+  named-offset spelling breaks address shapes (19). Next: demote the @-temp via the
+  OC3D-class levers (what un-splits/renames the channel<<4 CSE) or promote view via
+  call-result union (blocked by interference — view crosses PSVEC calls).
+- modellight select pair (3/8 diffs): the ble-to-assign ternary form requires assign-on-LE
+  into the RED-side reg; `<` gives blt, `<=` gives cror, `>`-direction breaks the clamp
+  temps (13/18) regardless of result-var (incl. chained). Comparison-direction is coupled
+  to the clamp webs; needs the FPR volatile trace to find the actual coupling.
+- tex_dolphin setShader (8): fogColor/data r6-r7 volatile pair; order/pad probes inert.
