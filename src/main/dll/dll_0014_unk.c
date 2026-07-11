@@ -2219,6 +2219,9 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaPatch* patchBase = gObjfsaPatches;
     u8 blockFlags[0x78];
     u8 pairs[364];
+    f32 z1;
+    f32 x1;
+    int back;
     ObjfsaPatch* np;
     u8 groupB;
     char* slotPtr;
@@ -2226,9 +2229,8 @@ void walkgroupFindExitPointFn_800dc398(void)
     int found;
     int curveCount;
     u8* pp;
-    int** listWalk;
     int listIndex;
-    int back;
+    int** listWalk;
     int slot;
     int curve;
     u32 linked;
@@ -2260,8 +2262,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 exitFz;
     f32 x0;
     f32 z0;
-    f32 x1;
-    f32 z1;
     f32 x2;
     f32 z2;
     f32 x3;
