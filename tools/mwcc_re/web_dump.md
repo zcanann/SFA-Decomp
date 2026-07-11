@@ -596,3 +596,21 @@ order, live-range start/end order, or an internal hash — read the splitter
 walk in the SpillCode.c/lifetime band (its name-node allocation run for split
 webs is the entry point; the numbering trace verifies any hypothesis in 8s).
 This is the last bit standing between main/audio and 100% on Music_Update.
+
+## Music_Update DEFINITIVE CHARACTERIZATION (2026-07-11, 180-variant closure)
+Extended cross-product (trail-order axis added, 60 more variants): the r21/r22
+reservation depth belongs exclusively to whichever pair's decls sit at the
+C-slot; the other named pair always takes fresh r19/r20 — named webs NEVER
+enter the reuse path. Dual r21/r22 occupancy therefore REQUIRES the pristine
+names+splits structure (splits take fresh grants, low-vreg name webs reuse),
+and within it the ONLY free parameter is the splitter's per-variable group
+order — which resisted every source-side key (decl/name/order/init/program
+position; 180 variants total across both sweeps). CONCLUSION: Music_Update's
+last two regions are either (a) flipped by a splitter-order key not expressible
+in source (=> config/pass-order-bound, same class as the documented sparse-
+switch jump-table cap — bank as such), or (b) unlocked by reading the actual
+splitter walk in the binary (SpillCode/lifetime band; the split name-node
+allocation run is the entry). Recommend: treat (b) as the one remaining
+research item for the whole reg-perm family; if it also shows no source key,
+this fn is a principled permanent bank at 99.596 and main/audio's realistic
+ceiling is 99.92 pending compiler-config archaeology.
