@@ -1311,3 +1311,18 @@ branch sense), same class as the li-vs-mr emitter fork. Source directions were c
 in rounds 2-3 (<, <=, >, result-var, chained — all measured). Next lever = the ternary
 join lowering disasm (find the join-emit site, read what selects copy direction), which
 would also resolve curves-c2 (magic/frac) and vecmath — the FPR trio shares this class.
+
+
+## Round 16: TERNARY-JOIN LAW from corpus (mp4 fn_1_19C8, m413Dll/main.c)
+Matched-code evidence: `temp_f30 = (temp_f30 > 1.0f) ? 1.0f : temp_f30;` compiles to
+[lfs f1,C; fcmpo f0,f1; ble->fmr f1,f0; ...] — the JOIN REGISTER = ARM1's register
+(the const C in f1); the fmr copies ARM2 in on the branch path. So MWCC ternary joins
+land in the FIRST arm's reg, branch = assign-ARM2-when-condition-false.
+Applied to modellight select-pair (T: join=f2=red, fmr f2,f3 on ble): retail condition
+= (red > green), arm1 = red — CONFIRMED form `(red > green) ? red : green`. My probes
+of that form broke the CLAMPS (13 diffs) — so retail's clamp spellings must ALSO differ
+to be consistent with the >-form (the clamp ternaries are the same construct — apply the
+join law to THEM: their arm1 choices determine the f0/f2/f3 map). NEXT SESSION: rewrite
+the whole rgb clamp+max chain arm1-consistently per this law (each ternary's arm1 = the
+reg that must hold the result), then curves-c2 and vecmath with the same law.
+This is the FPR-trio unlock, derived from matched code as the goal suggested.
