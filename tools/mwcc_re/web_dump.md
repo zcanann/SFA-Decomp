@@ -1399,3 +1399,15 @@ scratchpad/nadjtrace.txt), objprint x3, stateHandler02. Each = the standard meas
 loop (~30-60min of session time apiece). These are the next rounds' work queue, in
 tractability order: drawLightmapIndirectPasses (single pair class), setShader (volatile
 pair), objMathFn (r6/r7), callList, shaderFuzz, modelCalcVtxGroupMtxs, stateHandler02.
+
+
+## Round 25: drawLightmapIndirectPasses OPENED and diagnosed
+Trace burst: [blockData, shader, bitReader, viewMtx, off, i, flags, bitPos, bits,
+byteBase]; C grants SIX+ saved regs incl two renumbered webs (idx 64 nadj=31, idx 62
+nadj=32) at r31/r30 — TARGET uses only r25-r29 (no r30/r31 at all) => T keeps those two
+webs VOLATILE. They sit just OVER K=29 in ours; retail's equivalents are under =>
+need -2/-3 edges on webs 62/64 (the vec9 problem INVERTED — reduction this time, which
+is easier: shorten their ranges or split per-use via #130 web-decouple on `rec` and the
+second derived pointer). Next session: identify 62/64's def sites (rec = the bounds-
+record pointer; the other = TBD via def-site dump), then apply range-shortening spellings.
+This is the most tractable open item in the whole batch (reduction beats addition).
