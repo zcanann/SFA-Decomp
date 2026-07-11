@@ -489,3 +489,22 @@ folds (union window) — verify per variant. This is the close-out path for
 Music_Update; ObjectChannel3D likely falls to the same separate-variable
 insight (its param/slot/level rotation may need a fresh local for the
 level-reload path).
+
+## Music_Update 5-var sweep data (2026-07-11, closing state)
+Decl-order/position sweep of {i,ch,p,i2,ch2} (probe harness, both loops read):
+- Order controls pair direction: [ch,i,..] → walker=higher reg; [i,ch,..] →
+  walker=lower. Consistency across loops holds when loop-3 pair decl order
+  mirrors loop-1's ([i,ch,p,ch2,i2]-style); crossed orders (i2 before ch2 with
+  ch,i) break it.
+- Position moves the absolute bank: top → r28/r29; after found19 → r19/r20;
+  after fadeA → r19/r20 AND inconsistent (loop1 ch=r19/i=r20, loop3 flipped).
+  The decl-block's reservation order interacts globally — placement cannot be
+  eyeballed; run the select tracer per variant and match the full pop sequence
+  [declblock r31..r25, fadeA r24, fadeB r23, i r22, mid r3, ch r21, found20
+  r20, found19 r19].
+NEXT SESSION (mechanical, ~20 tracer-guided variants): sweep {i,ch} pair decl
+position through each slot of the init'd-decl block (before lowPriority,
+between each pair, after fadeA) with order [i,ch] + trailing [i2,ch2,p] (or
+i2/ch2 reusing via later position), pick the variant whose pop sequence
+matches; then verify the loop-1 mr-form/loop-3 fold split and diff to 100.
+All harness+tracer invocations in the entries above; probe compiles are 8s.
