@@ -203,3 +203,25 @@ Findings on andross_update (validated against retail regs, 2026-07-11):
   the heavily-tested switch flag never defers. Mechanism not yet pinned —
   next target: trace CodeGen_NumberWebs' worklist (0x4f0e90 push, 0x4357c5
   Number commit) to see batch boundaries and the deferral gate directly.
+
+## DECODED (2026-07-11): web identity = vreg union-find, root = MIN vreg
+0x57b470 (WebBuilder) allocates gWebArray[webEnd[cls]] — ONE WEB PER VREG
+(web+0x10 = the vreg number). Adjacency comes from the triangular bitmatrix
+at 0x5e3144 indexed by vreg pairs (i*i/2+j). A union-find parent array at
+0x5e3140 (s16 per vreg) coalesces copy-related vregs:
+- Union site 0x57b917-0x57b947 (InterferenceGraph.c): after find(src)/find(dst)
+  (path-walk at 0x57b820/0x57b840), if the roots differ, do NOT interfere
+  (bitmatrix test 0x57b86c-0x57b8c2), pass the per-class special-vreg gate
+  (0x5e9d86, cls 4) and the per-function vreg-window gate
+  ([0x5ea1da[cls], 0x5e9730[cls]] for vregs >= regcount):
+      parent[max(rootA, rootB)] = min(rootA, rootB)
+  => the merged family is colored at the MINIMUM member's vreg position.
+- 0x57b470 then marks non-root webs flags|=4 and stores the root in web+0x14,
+  so Simplify/Select only ever see the root web.
+CONSEQUENCE: a variable's effective coloring index can be PULLED DOWN by any
+coalesceable copy whose value numbered earlier (smaller vreg), and the
+"deferral"/"pin" families observed in select traces are artifacts of which
+family member is the min. The remaining unknown for the andross sc/swf swap
+is the vreg-numbering batch rule (per-instruction worklists, 0x4f0a90 reset)
+— next instrumentation: log 0x4fe550 value ptrs + 0x57b947 union pairs and
+reconstruct families offline.
