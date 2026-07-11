@@ -13867,7 +13867,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     vel[0] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityX;
                     vel[1] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityY;
                     vel[2] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityZ;
-                    pfx.x = lbl_803E8018 * ((GameObject*)obj)->anim.velocityX + ((PlayerState*)inner)->fxOffsetX;
+                    pfx.x = *(f32*)&lbl_803E8018 * ((GameObject*)obj)->anim.velocityX + ((PlayerState*)inner)->fxOffsetX;
                     pfx.y = lbl_803E8018 * ((GameObject*)obj)->anim.velocityY + ((PlayerState*)inner)->fxOffsetY;
                     pfx.z = lbl_803E8018 * ((GameObject*)obj)->anim.velocityZ + ((PlayerState*)inner)->fxOffsetZ;
                     pfx.scale = lbl_803E7F18;
