@@ -1177,6 +1177,7 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
 
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
 {
+    extern int sndFXCtrl(int handle, u8 controller, u8 value);
     void* slot;
     int level;
     f32 dist;
