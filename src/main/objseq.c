@@ -2591,13 +2591,17 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         if ((s8)lbl_803DD113 < 10)
         {
+            s8* envfxType;
             entry = base + lbl_803DD113 * 8;
             *(u8**)(entry + 0x3ca4) = activeObj;
-            *(s8*)(entry + 0x3caa) = (s8)((*(s16*)(cmd + 2) >> 12) & 0xf);
-            if ((s8) * (entry + 0x3caa) == 0xb || (s8) * (entry + 0x3caa) == 0xc)
+            envfxType = (s8*)(entry + 0x3caa);
+            *envfxType = (s8)((*(s16*)(cmd + 2) >> 12) & 0xf);
+            if (*envfxType == 0xb || *envfxType == 0xc)
             {
+                u8* entry2;
                 val = *(s16*)(cmd + 6);
-                *(s16*)(base + (s8)(lbl_803DD113++) * 8 + 0x3ca8) = val;
+                entry2 = base + (s8)(lbl_803DD113++) * 8;
+                *(s16*)(entry2 + 0x3ca8) = val;
             }
             else
             {
