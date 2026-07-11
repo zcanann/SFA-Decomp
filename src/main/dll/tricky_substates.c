@@ -140,6 +140,29 @@ static inline void trickyPlayWhineSfx(u32 id, u8* obj)
     }
 }
 
+static inline void trickyAdvanceNode(u8* state)
+{
+    int idx;
+    int off;
+    int k;
+    int v;
+    idx = 0;
+    off = 0;
+    for (k = 4; k != 0; k--)
+    {
+        v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
+        if (v > -1 && v != ((TrickyCurveNode*)((TrickyState*)state)->unk700)->id)
+        {
+            ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
+            ((TrickyState*)state)->unk704 =
+                (u8*)(*gRomCurveInterface)->getById(((int*)((char*)((TrickyState*)state)->unk704 + 0x1c))[idx]);
+            break;
+        }
+        off += 4;
+        idx++;
+    }
+}
+
 void trickyDigTunnel(u8* obj, u8* state)
 {
     u32 sfxTable;
@@ -255,21 +278,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         if (((u8(**)(u8*))(**(u8***)(((TrickyState*)state)->followObj + 0x68)))[9](((TrickyState*)state)->followObj) !=
             0)
         {
-            idx = 0;
-            off = 0;
-            for (k = 4; k != 0; k--)
-            {
-                v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
-                if (v > -1 && v != ((TrickyCurveNode*)((TrickyState*)state)->unk700)->id)
-                {
-                    ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
-                    ((TrickyState*)state)->unk704 =
-                        (u8*)(*gRomCurveInterface)->getById(((int*)((char*)((TrickyState*)state)->unk704 + 0x1c))[idx]);
-                    break;
-                }
-                off += 4;
-                idx++;
-            }
+            trickyAdvanceNode(state);
             **(u8**)state -= 4;
             Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
             state[0xa] = 5;
@@ -290,17 +299,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
         if (trickyMove(obj, pos) == 0)
         {
-            for (idx = 0; idx < 4; idx++)
-            {
-                v = ((TrickyCurveNode*)((TrickyState*)state)->unk704)->links[idx];
-                if (v > -1 && v != ((TrickyCurveNode*)((TrickyState*)state)->unk700)->id)
-                {
-                    ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
-                    ((TrickyState*)state)->unk704 =
-                        (u8*)(*gRomCurveInterface)->getById(((int*)((char*)((TrickyState*)state)->unk704 + 0x1c))[idx]);
-                    break;
-                }
-            }
+            trickyAdvanceNode(state);
             state[0xa] = 6;
         }
         break;
