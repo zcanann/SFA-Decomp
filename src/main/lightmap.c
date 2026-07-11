@@ -1264,8 +1264,9 @@ void renderSceneGeometry(int* p1, s8* order)
         for (y = box0[2]; y <= box0[3]; y++)
         {
             int xs = box0[0];
-            int xe = box0[1];
+            int xe;
             p = map + (y + 7) * 0x10 + xs;
+            xe = box0[1];
             for (x0 = xs; x0 <= xe; x0++)
             {
                 p[7] = 1;
@@ -1275,8 +1276,9 @@ void renderSceneGeometry(int* p1, s8* order)
         for (y = box1[2]; y <= box1[3]; y++)
         {
             int xs = box1[0];
-            int xe = box1[1];
+            int xe;
             p = map + (y + 7) * 0x10 + xs;
+            xe = box1[1];
             for (x0 = xs; x0 <= xe; x0++)
             {
                 p[7] = 1;
@@ -1286,8 +1288,9 @@ void renderSceneGeometry(int* p1, s8* order)
         for (y = box2[2]; y <= box2[3]; y++)
         {
             int xs = box2[0];
-            int xe = box2[1];
+            int xe;
             p = map + (y + 7) * 0x10 + xs;
+            xe = box2[1];
             for (x0 = xs; x0 <= xe; x0++)
             {
                 p[7] = 1;
@@ -1297,8 +1300,9 @@ void renderSceneGeometry(int* p1, s8* order)
         for (y = box3[2]; y <= box3[3]; y++)
         {
             int xs = box3[0];
-            int xe = box3[1];
+            int xe;
             p = map + (y + 7) * 0x10 + xs;
+            xe = box3[1];
             for (x0 = xs; x0 <= xe; x0++)
             {
                 p[7] = 1;
