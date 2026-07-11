@@ -1441,3 +1441,17 @@ Consequence: the 73/74-style high indices at F-events are NOT union products (mr
 themselves popping as proxies). NEXT: tracer reads of the window globals + per-attempt
 logging at 0x57b8ca (indices + window + outcome) for fn_802BCA10 — one run disambiguates
 vec9-the-web vs the copy-temp and reveals whether retail's difference is window-driven.
+
+
+## Round 28: WINDOW SEMANTICS — temps-only coalescing; 73/74 identity resolved
+uniontrace2 (bp 0x57b8ca attempts + 0x57b947 commits + window reads): fn_802BCA10
+cls-4 window = [42,91] = exactly the TEMP index range => named webs (32-41) NEVER
+union; only temp-temp copies coalesce (observed: (40,41) rejected below-window;
+(51,42) united, parent=min=42). cls-3 window [33,61] same structure.
+IDENTITY RESOLUTION: the granted 73/74 = TEMP-CANONICALS (unions of the call-result/
+copy temps) carrying vec0/vec9's values; the NAMED vec webs (38/39) are absorbed/dead —
+THE SAME named-web-dead-temp-carries pattern as fn1's index/@378. The fn1 fix class
+applies: make the NAMED web the value owner (fn1 used the narrow-lvalue absorb; the
+call-result analog = TBD — maybe a same-type local copy chain, or the andross embedded-
+assign form `(vec9 = getVec(...))` in a use). NEXT: find the call-result analog of the
+u16-absorb — 3-4 candidate spellings, then this fn computes.
