@@ -193,10 +193,13 @@ void staffFn_80170380(int* obj, int cmd)
     extern int objCreateLight(int* obj, int arg);
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
     extern void Sfx_PlayFromObject(int* obj, int sfx);
-    f32* tbl = lbl_80320A28;
-    u8* state = ((GameObject*)obj)->extra;
+    f32* tbl[1];
+    u8* state;
     int* glow;
-    int* player = Obj_GetPlayerObject();
+    int* player;
+    tbl[0] = lbl_80320A28;
+    state = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
     glow = NULL;
     if (player != NULL)
     {
@@ -290,7 +293,7 @@ void staffFn_80170380(int* obj, int cmd)
                 i = 0;
                 hw = state;
                 w = state;
-                t1 = (f32*)((char*)tbl + 0x10);
+                t1 = (f32*)((char*)tbl[0] + 0x10);
                 k = lbl_803E33A8;
                 for (; i < 4; i++)
                 {
@@ -300,11 +303,11 @@ void staffFn_80170380(int* obj, int cmd)
                     wave = fcos16((u16) * (s16*)(hw + 0x34));
                     sum = amp + wave;
                     wave = sum * k;
-                    *(f32*)(w + 0x24) = *tbl * wave;
+                    *(f32*)(w + 0x24) = *tbl[0] * wave;
                     *(f32*)(w + 0x14) = *t1;
                     *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                     hw += 2;
-                    tbl += 1;
+                    tbl[0] += 1;
                     w += 4;
                     t1 += 1;
                 }
@@ -371,7 +374,7 @@ void staffFn_80170380(int* obj, int cmd)
             i = 0;
             hw = state;
             w = state;
-            t1 = (f32*)((char*)tbl + 0x10);
+            t1 = (f32*)((char*)tbl[0] + 0x10);
             k = lbl_803E33A8;
             for (; i < 4; i++)
             {
@@ -381,10 +384,10 @@ void staffFn_80170380(int* obj, int cmd)
                 wave = fcos16((u16) * (s16*)(hw + 0x34));
                 sum = amp + wave;
                 wave = sum * k;
-                *(f32*)(w + 0x24) = *tbl * wave;
+                *(f32*)(w + 0x24) = *tbl[0] * wave;
                 *(f32*)(w + 0x14) = *t1;
                 hw += 2;
-                tbl += 1;
+                tbl[0] += 1;
                 w += 4;
                 t1 += 1;
             }
@@ -416,9 +419,9 @@ void staffFn_80170380(int* obj, int cmd)
             f32 k;
             i = 0;
             hw = state;
-            t0 = (f32*)((char*)tbl + 0x20);
+            t0 = (f32*)((char*)tbl[0] + 0x20);
             w = state;
-            t1 = (f32*)((char*)tbl + 0x30);
+            t1 = (f32*)((char*)tbl[0] + 0x30);
             k = lbl_803E33A8;
             for (; i < 4; i++)
             {
@@ -452,9 +455,9 @@ void staffFn_80170380(int* obj, int cmd)
         f32 k;
         i = 0;
         hw = state;
-        t0 = (f32*)((char*)tbl + 0x20);
+        t0 = (f32*)((char*)tbl[0] + 0x20);
         w = state;
-        t1 = (f32*)((char*)tbl + 0x30);
+        t1 = (f32*)((char*)tbl[0] + 0x30);
         amp = lbl_803E33C4;
         k = lbl_803E33A8;
         for (; i < 4; i++)
