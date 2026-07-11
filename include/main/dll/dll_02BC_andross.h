@@ -71,18 +71,29 @@ typedef struct AndrossState {
     f32 camOffsetAccum; /* eased camera offset: += rate*timeDelta (clamped both ways); read as camActionParam = base + this */
     u8 actionToggle;
     u8 signalFlags; /* |= signal (the setter param name) */
-    u8 hitsRemaining0; /* 0xAE: hits-remaining counter; set to 10/15 alongside 1,2; phase advances when (u16)(0+1+2)==0 */
-    u8 hitsRemaining1; /* 0xAF */
-    u8 hitsRemaining2; /* 0xB0 */
-    u8 unkB1[0xB5 - 0xB1];
-    u8 hitReactionFlag; /* 0xB5: set externally on damage; nonzero -> hurt/stagger action state */
+    union {
+        u8 partHealth[4];
+        struct {
+            u8 hitsRemaining0; /* phase advances when the first three part health values reach zero */
+            u8 hitsRemaining1;
+            u8 hitsRemaining2;
+            u8 centralHealth;
+        };
+    };
+    union {
+        u8 partHitTimer[4];
+        struct {
+            u8 unkB2[3];
+            u8 hitReactionFlag; /* central-part hit timer; also drives the hurt/stagger action */
+        };
+    };
     u8 startupDelay; /* 0xB6: init to 5; update decrements and returns early until it hits 0 (spawn settle) */
     u8 attackCycleCount; /* 0xB7: repeat counter; phase advances after 3 attack cycles */
     union {
         int seqQueryObj;
         struct {
             u8 arwingFlightActive;
-            u8 unkB9[3];
+            s8 partTextureState[3];
         };
     };
     u8 handsInitialized; /* 0xBC: 1 at init; first phase-1 entry clears it and skips the hand reset */
@@ -119,9 +130,9 @@ STATIC_ASSERT(offsetof(AndrossState, spawnDelta) == 0x28);
 STATIC_ASSERT(offsetof(AndrossState, targetPosPtr) == 0x4C);
 STATIC_ASSERT(offsetof(AndrossState, homePosX) == 0x58);
 STATIC_ASSERT(offsetof(AndrossState, actionTimer) == 0x98);
-// STATIC_ASSERT(offsetof(AndrossState, partHealth) == 0xAE);
-// STATIC_ASSERT(offsetof(AndrossState, partHitTimer) == 0xB2);
-// STATIC_ASSERT(offsetof(AndrossState, partTextureState) == 0xB9);
+STATIC_ASSERT(offsetof(AndrossState, partHealth) == 0xAE);
+STATIC_ASSERT(offsetof(AndrossState, partHitTimer) == 0xB2);
+STATIC_ASSERT(offsetof(AndrossState, partTextureState) == 0xB9);
 
 int andross_SeqFn(GameObject* obj);
 int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);
