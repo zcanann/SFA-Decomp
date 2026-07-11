@@ -272,3 +272,31 @@ transformation that splits a zero-init'd, conditionally-set u8's dataflow
 into an @-temp — the predicate that fired on OUR stateChanged but not on
 retail's — then find the C shape (or absence) that retail used. All tracer
 tooling to verify a candidate in minutes is checked in.
+## audio trio part 3 (2026-07-10 later): fast probe harness + residuals LOCALIZED
+Harness: copy audio.c to scratch probe.c, compile DIRECTLY via
+`wibo sjiswrap mwcceppc <exact build.ninja flags>` (~8s vs ~40s locked_ninja
+loop), objdump the one fn, grep the pair regs. Battery of ~15 more variants run.
+- Music_Update DECISIVELY LOCALIZED: prologue, loop-1 (ch=r21,i=r22 with the
+  addi r0/mr r21 init) and middle loop (volatile r3 walker, mtctr) ALL MATCH
+  TARGET already. The ONLY divergence is loop-3's re-init webs: variables split
+  per live range (3 webs each for ch/i); loop-3's ch3/i3 pop in the wrong order
+  → Select's lowest-reserved-free grant gives i3 r21/ch3 r22 (target: ch3 r21,
+  i3 r22). Loop-1 grant order is IDENTICAL in both builds (i1 pops first,
+  fresh-reservation descending gives i1=r22, ch1=r21) — the fallback-vs-reuse
+  grant asymmetry means the same pop order yields opposite regs at loop 3.
+- KEY negative: swapping loop-3 init statement order FLIPS THE EMISSION
+  (li r21,15 before lis/addi r22) but NOT the coloring — pop order between the
+  two webs is invariant to evaluation order, creation order, decl order/position
+  (incl. fn-scope re-decls), variable NAMES, init spellings (+0, casts, &[0],
+  no-op |=), register keyword. It is priority(desc+0x4)-driven and desc+0x4 for
+  these two webs differs in a way none of those levers touch.
+- Sfx_UpdateObjectChannel3D: param-web-first is equally invariant (u32/void*
+  retypes, alias locals, register, full decl reversals). Param usage-bound web
+  outranks all locals in our build; target has it below ALL — same class as the
+  mmp_moonrock cross-scope gap (doc'd unreachable by decl means).
+=> Both fns now reduce to reading desc+0x4 for 2-3 specific webs. The tracer
+(or the desc+0x4 accumulation-site disasm in CodeGenNumbering.c band — the
+doc's OPEN item) is the only remaining path. lldb blockers logged above; the
+accumulation-site STATIC disasm may be the cheaper route: objdump the
+0x435650-0x4357ef numbering loop's callers writing desc+0x4 and read the
+weight rule directly.
