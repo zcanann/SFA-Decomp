@@ -543,6 +543,47 @@ void hudDrawCMenu(int p1, int p2, int p3)
     Camera_ApplyFullViewport();
 }
 
+static inline s16 cMenuMinRingAbs(void)
+{
+    s16 curd;
+    s16 d2;
+    s16 d1;
+    s16 d3;
+    s16 best;
+
+    curd = lbl_803DD79C;
+    d1 = curd;
+    if (curd > 0x8000)
+    {
+        d1 = (s16)(curd - 0xFFFF);
+    }
+    if (d1 < -0x8000)
+    {
+        d1 = (s16)(d1 + 0xFFFF);
+    }
+    d2 = (s16)(curd - 0x5555);
+    if (d2 > 0x8000)
+    {
+        d2 = (s16)(d2 - 0xFFFF);
+    }
+    if (d2 < -0x8000)
+    {
+        d2 = (s16)(d2 + 0xFFFF);
+    }
+    d3 = (s16)(curd - 0xAAAA);
+    if (d3 > 0x8000)
+    {
+        d3 = (s16)(d3 - 0xFFFF);
+    }
+    if (d3 < -0x8000)
+    {
+        d3 = (s16)(d3 + 0xFFFF);
+    }
+    best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2)) ? (d1 < 0 ? -d1 : d1) : (d2 < 0 ? -d2 : d2);
+    best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
+    return best;
+}
+
 void cMenuRotateFn_80124d80(void)
 {
     u16 uend;
@@ -550,10 +591,6 @@ void cMenuRotateFn_80124d80(void)
     s16 step;
     int cur;
     s16 diff2;
-    s16 curd;
-    s16 d1;
-    s16 d2;
-    s16 d3;
     s16 best;
     s16 r;
     int t1;
@@ -611,36 +648,7 @@ void cMenuRotateFn_80124d80(void)
         rot += 0x5555;
         *(s16*)gCMenuRingObjs[2] = rot;
         *(s16*)gCMenuRingFrontObjs[2] = rot;
-        curd = lbl_803DD79C;
-        d1 = curd;
-        if (curd > 0x8000)
-        {
-            d1 = (s16)(curd - 0xFFFF);
-        }
-        if (d1 < -0x8000)
-        {
-            d1 = (s16)(d1 + 0xFFFF);
-        }
-        d2 = (s16)(curd - 0x5555);
-        if (d2 > 0x8000)
-        {
-            d2 = (s16)(d2 - 0xFFFF);
-        }
-        if (d2 < -0x8000)
-        {
-            d2 = (s16)(d2 + 0xFFFF);
-        }
-        d3 = (s16)(curd - 0xAAAA);
-        if (d3 > 0x8000)
-        {
-            d3 = (s16)(d3 - 0xFFFF);
-        }
-        if (d3 < -0x8000)
-        {
-            d3 = (s16)(d3 + 0xFFFF);
-        }
-        best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2)) ? (d1 < 0 ? -d1 : d1) : (d2 < 0 ? -d2 : d2);
-        best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
+        best = cMenuMinRingAbs();
         r = (s16)(int)-(lbl_803E2030 * best - lbl_803E2028);
         lbl_803DD8D4 = (r > 0) ? r : 0;
     }
@@ -654,36 +662,7 @@ void cMenuRotateFn_80124d80(void)
     rot += 0x5555;
     *(s16*)gCMenuRingObjs[2] = rot;
     *(s16*)gCMenuRingFrontObjs[2] = rot;
-    curd = lbl_803DD79C;
-    d1 = curd;
-    if (curd > 0x8000)
-    {
-        d1 = (s16)(curd - 0xFFFF);
-    }
-    if (d1 < -0x8000)
-    {
-        d1 = (s16)(d1 + 0xFFFF);
-    }
-    d2 = (s16)(curd - 0x5555);
-    if (d2 > 0x8000)
-    {
-        d2 = (s16)(d2 - 0xFFFF);
-    }
-    if (d2 < -0x8000)
-    {
-        d2 = (s16)(d2 + 0xFFFF);
-    }
-    d3 = (s16)(curd - 0xAAAA);
-    if (d3 > 0x8000)
-    {
-        d3 = (s16)(d3 - 0xFFFF);
-    }
-    if (d3 < -0x8000)
-    {
-        d3 = (s16)(d3 + 0xFFFF);
-    }
-    best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2)) ? (d1 < 0 ? -d1 : d1) : (d2 < 0 ? -d2 : d2);
-    best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
+    best = cMenuMinRingAbs();
     r = (s16)(int)-(lbl_803E2030 * best - lbl_803E2028);
     lbl_803DD8D4 = (r > 0) ? r : 0;
 }
