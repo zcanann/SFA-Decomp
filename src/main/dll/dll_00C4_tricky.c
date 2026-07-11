@@ -1632,7 +1632,7 @@ void Tricky_update(int obj)
         ((TrickyState*)state)->childPhaseTimer0 += timeDelta;
         ((TrickyState*)state)->childPhaseTimer1 += timeDelta;
         ((TrickyState*)state)->childPhaseTimer2 += timeDelta;
-        if (((TrickyState*)state)->childPhaseTimer2 > lbl_803E24C8)
+        if (((TrickyState*)state)->childPhaseTimer2 > *(f32*)&lbl_803E24C8)
         {
             ((TrickyState*)state)->childPhaseTimer2 -= lbl_803E24C8;
         }
