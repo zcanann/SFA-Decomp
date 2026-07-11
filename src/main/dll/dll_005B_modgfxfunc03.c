@@ -67,15 +67,17 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    u8* base = lbl_80311E30;
+    u8* base[1];
     GfxCmd* cmd;
     u8* model;
     int spawnCount;
     GfxCmd* cmdList;
     int emitCount;
     void* texture;
-    int result = 0;
+    int result;
     u8* activeModel;
+    base[0] = lbl_80311E30;
+    result = 0;
     model = Gameplay_GetActiveModel(sourceObj);
     *(u32*)&r = lbl_803E0730;
     if (countRange != NULL)
@@ -85,7 +87,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     }
     if (sourceObj == 0)
     {
-        debugPrintf((char*)&base[0x70]);
+        debugPrintf((char*)&base[0][0x70]);
         return -1;
     }
     m.pos[0] = lbl_803E0734;
@@ -113,13 +115,13 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     buf.v59 = 4;
     buf.v5a = 0;
     buf.v5b = 0;
-    buf.hw[0] = *(s16*)&base[0x40];
-    buf.hw[1] = *(s16*)&base[0x42];
-    buf.hw[2] = *(s16*)&base[0x44];
-    buf.hw[3] = *(s16*)&base[0x46];
-    buf.hw[4] = *(s16*)&base[0x48];
-    buf.hw[5] = *(s16*)&base[0x4a];
-    buf.hw[6] = *(s16*)&base[0x4c];
+    buf.hw[0] = *(s16*)&base[0][0x40];
+    buf.hw[1] = *(s16*)&base[0][0x42];
+    buf.hw[2] = *(s16*)&base[0][0x44];
+    buf.hw[3] = *(s16*)&base[0][0x46];
+    buf.hw[4] = *(s16*)&base[0][0x48];
+    buf.hw[5] = *(s16*)&base[0][0x4a];
+    buf.hw[6] = *(s16*)&base[0][0x4c];
     emitCount = randomGetRange(r.lo, r.hi);
     if (effectId == 0xc)
     {
@@ -286,7 +288,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         buf.count = (cmd + 1) - cmdList;
         buf.flags = 0x4000000;
         buf.flags |= spawnFlags;
-        result = (*gModgfxInterface)->spawnEffect(&buf, 0, 4, base, 4, &base[0x28], 0, texture);
+        result = (*gModgfxInterface)->spawnEffect(&buf, 0, 4, base[0], 4, &base[0][0x28], 0, texture);
     }
     spawnCount = randomGetRange(2, 6);
     if (effectId == 7)
