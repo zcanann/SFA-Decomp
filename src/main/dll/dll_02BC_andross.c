@@ -39,7 +39,7 @@ typedef struct
     u8 f20 : 1;
 } AndrossFlagByte;
 
-extern f32 lbl_8032C098[];
+extern f32 gAndrossMoveAnimSpeeds[23];
 extern f32 lbl_803DC440;
 extern f32 lbl_803DC444;
 extern f32 lbl_803DC448;
@@ -311,6 +311,7 @@ void andross_update(int obj)
     s16 randVal;
     int objId;
     u8 signals;
+    u8 i;
     f32 fa;
     f32 fb;
     f32 zero;
@@ -632,7 +633,7 @@ void andross_update(int obj)
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[0];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
             if (state->fightPhase == 1)
             {
                 state->durationTimer = lbl_803E74E4;
@@ -676,7 +677,7 @@ void andross_update(int obj)
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0xc, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[12];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[12];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -712,7 +713,7 @@ void andross_update(int obj)
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[14];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[14];
             state->durationTimer = lbl_803E74F0;
             state->actionTimer = 0xffff;
         }
@@ -758,7 +759,7 @@ void andross_update(int obj)
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[13];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[13];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -783,7 +784,7 @@ void andross_update(int obj)
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[0];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
             mainSetBits(0xd, 1);
             state->durationTimer = lbl_803E7504;
         }
@@ -822,13 +823,13 @@ void andross_update(int obj)
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[0];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
             mainSetBits(0xd, 1);
             state->durationTimer = lbl_803E7504;
         }
-        for (ref = 0; (u8)ref < 6; ref++)
+        for (i = 0; i < 6; i++)
         {
-            if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+            if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
                 state->timer = 0x3c;
                 goto hit_cue_ready_1;
@@ -867,7 +868,7 @@ hit_cue_ready_1:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[0];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
             androsshand_setState(state->handObjB, 4, 0);
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
@@ -1037,7 +1038,7 @@ hit_cue_ready_1:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[1];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[1];
             if (state->fightPhase < 5)
             {
                 androsshand_setState(state->handObjA, 0, 0);
@@ -1052,9 +1053,9 @@ hit_cue_ready_1:;
         }
         if ((state->fightPhase == 5) && (state->actionState == 0xb))
         {
-            for (ref = 0; (u8)ref < 6; ref++)
+            for (i = 0; i < 6; i++)
             {
-                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
                     goto hit_cue_ready_2;
@@ -1140,7 +1141,7 @@ hit_cue_ready_2:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[2];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[2];
             state->unkB1[0] = 0;
             mainSetBits(0x10, 0);
             state->actionTimer = lbl_803DC44C;
@@ -1214,7 +1215,7 @@ hit_cue_ready_2:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[2];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[2];
             if (state->fightPhase < 5)
             {
                 state->unkB1[0] = 1;
@@ -1225,9 +1226,9 @@ hit_cue_ready_2:;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
         if (state->fightPhase == 5)
         {
-            for (ref = 0; (u8)ref < 6; ref++)
+            for (i = 0; i < 6; i++)
             {
-                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
                     goto hit_cue_ready_3;
@@ -1339,7 +1340,7 @@ hit_cue_ready_3:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[16];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[16];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1402,7 +1403,7 @@ hit_cue_ready_3:;
             Sfx_PlayFromObject(obj, SFXTRIG_and_falcoflyby);
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x15, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[21];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[21];
             arwarwing_addHealth((int)state->arwingObj, 0xfffffffc);
         }
         fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - state->camOffsetAccum))
@@ -1432,7 +1433,7 @@ hit_cue_ready_3:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[18];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[18];
             androsshand_setState(state->handObjA, 0, 0);
             androsshand_setState(state->handObjB, 0, 0);
             if ((state->fightPhase == 5) && (state->actionToggle != 0))
@@ -1454,9 +1455,9 @@ hit_cue_ready_3:;
         }
         if ((state->fightPhase == 5) && (state->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref++)
+            for (i = 0; i < 6; i++)
             {
-                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
                     goto hit_cue_ready_4;
@@ -1493,7 +1494,7 @@ hit_cue_ready_4:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[19];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[19];
             if (state->fightPhase == 5)
             {
                 state->durationTimer = lbl_803E74A8;
@@ -1507,9 +1508,9 @@ hit_cue_ready_4:;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_spitout);
         if ((state->fightPhase == 5) && (state->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref++)
+            for (i = 0; i < 6; i++)
             {
-                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
                     goto hit_cue_ready_5;
@@ -1549,11 +1550,11 @@ hit_cue_ready_5:;
             delayPair[0] = 0x122;
             delayPair[1] = 0x28;
         }
-        for (ref = 0; (u8)ref < 2; ref++)
+        for (work = 0; (u8)work < 2; work++)
         {
             if ((((state->spawnedObj == NULL) &&
-                  (state->actionTimer <= delayPair[(u8)ref])) &&
-                 ((short)durationBeforeStep > delayPair[(u8)ref])) &&
+                  (state->actionTimer <= delayPair[(u8)work])) &&
+                 ((short)durationBeforeStep > delayPair[(u8)work])) &&
                 (Obj_IsLoadingLocked() != 0))
             {
                 found = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_SPAWNED);
@@ -1588,13 +1589,13 @@ hit_cue_ready_5:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[20];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[20];
         }
         if ((state->fightPhase == 5) && (state->actionToggle == 0))
         {
-            for (ref = 0; (u8)ref < 6; ref++)
+            for (i = 0; i < 6; i++)
             {
-                if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
                     goto hit_cue_ready_6;
@@ -1634,7 +1635,7 @@ hit_cue_ready_6:;
             Sfx_PlayFromObject(obj, SFXTRIG__UNK_832);
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[4];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[4];
         }
         if (boss->anim.currentMoveProgress >= lbl_803E74DC)
         {
@@ -1680,9 +1681,9 @@ hit_cue_ready_6:;
         fval = (gAndrossFadeAlphaMax < state->fadeAlpha) ? gAndrossFadeAlphaMax
                                                                           : state->fadeAlpha;
         state->fadeAlpha = fval;
-        for (ref = 0; (u8)ref < 6; ref++)
+        for (i = 0; i < 6; i++)
         {
-            if ((u32)mainGetBit((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+            if ((u32)mainGetBit(i + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
                 state->timer = 0x3c;
                 goto hit_cue_ready_7;
@@ -1781,7 +1782,7 @@ hit_cue_ready_7:;
             Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[0];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[0];
         }
         if (state->arwingFlightActive != 0)
         {
@@ -1833,7 +1834,7 @@ hit_cue_ready_7:;
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x16, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[22];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[22];
             ((AndrossFlagByte*)&state->soundEventFlags)->f80 = 0;
             ((AndrossFlagByte*)&state->soundEventFlags)->f40 = 0;
         }
@@ -1888,7 +1889,7 @@ hit_cue_ready_7:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[3];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[3];
             state->soundTimer = lbl_803E74D4;
             ((AndrossFlagByte*)&state->soundEventFlags)->f20 = 0;
         }
@@ -1940,7 +1941,7 @@ hit_cue_ready_7:;
         {
             moveState = (AndrossState*)boss->extra;
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E74D4, 0);
-            moveState->animSpeed = lbl_8032C098[17];
+            moveState->animSpeed = gAndrossMoveAnimSpeeds[17];
             ((AndrossFlagByte*)&state->soundEventFlags)->f20 = 0;
         }
         if (boss->anim.currentMoveProgress <= lbl_803DC4A0)
@@ -2156,4 +2157,9 @@ int gAndrossSpawnObjectIds[] = {
     0x0004AA66,
     0x0004AA96,
     0x0004AA97,
+};
+
+f32 gAndrossMoveAnimSpeeds[23] = {
+    0.01f, 0.01f, 0.005f, 0.005f, 0.08f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f,
+    0.03f, 0.03f, 0.02f,  0.02f,  0.01f, 0.02f,  0.02f,  0.02f,  0.02f,  0.007f, 0.003f,
 };
