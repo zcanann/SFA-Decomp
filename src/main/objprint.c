@@ -1653,13 +1653,13 @@ void modelCalcVtxGroupMtxs(int def, int model)
 
     for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
     {
-        u8* grp;
         f32* out;
-        f32* m2;
         f32* m1;
+        char* jd;
+        f32* m2;
+        u8* grp;
         f32 w;
         f32 wi;
-        char* jd;
 
         grp = (u8*)(*(int*)(def + 0x54) + off);
         out = ObjModel_GetJointMatrix((int*)model, i + *(u8*)(def + 0xf3));
