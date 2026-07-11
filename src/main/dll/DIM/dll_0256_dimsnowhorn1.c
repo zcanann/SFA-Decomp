@@ -1131,9 +1131,20 @@ void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
 {
     extern u32 getButtonsJustPressed(int port);
     extern u32 getButtonsHeld(int port);
-    int matchFrame = (slot != -1) ? ((framesThisStep - 1 - slot) == 0) : 1;
-    int* viewSlot = (int*)Camera_GetCurrentViewSlot();
-    DIMSnowHorn1State* state = (obj)->extra;
+    DIMSnowHorn1State* state;
+    int* viewSlot;
+    int matchFrame;
+
+    if (slot != -1)
+    {
+        matchFrame = ((framesThisStep - 1 - slot) == 0);
+    }
+    else
+    {
+        matchFrame = 1;
+    }
+    viewSlot = (int*)Camera_GetCurrentViewSlot();
+    state = (obj)->extra;
 
     state->baddie.hitPoints = 0;
     *(u32*)state &= ~0x8000;
