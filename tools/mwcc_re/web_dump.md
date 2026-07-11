@@ -1150,3 +1150,26 @@ functions becomes a computable decl/edge tweak. The FPR-pair fns (curves-c2, vec
 setShader, select-pair) need the same for cls-3.
 This is the highest-leverage single decode remaining: one breakpoint address unlocks
 6+ functions across 5 units.
+
+
+## DECODED: THE SELECT-ORDER LAW COMPLETE (2026-07-11, round 5) — disasm 0x508a20
+The "get next web to color" fn (0x508a20, called from the Select driver loop at 0x50875b)
+is a WORKLIST SCAN, not a stack:
+1. SIMPLIFY: repeated passes scanning webs INDEX-ASCENDING; any unprocessed web with
+   CURRENT degree (+0x12) < K (from 0x4fe520(cls)) is "removed": neighbors' degrees
+   decremented (adjacency walk at +0x1a/+0x18), flag |=2, PREPENDED to list A (LIFO =>
+   within a pass, later-index = nearer head; passes stack). Webs with degree >= K go to
+   list B (rebuilt per pass).
+2. STUCK CHOICE: when nothing is removable and list B is non-empty, walk B computing
+   score = PRIORITY (+0xc, int) / CURRENT-DEGREE (+0x12) via fild/fdivp — EXCEPT webs
+   with index >= the boundary at 0x5e0898 (i.e. RENUMBERED/appended webs: unions,
+   spill-splits) which get the FIXED constant at 0x5bcbf4 instead. Best-scoring web =
+   the spill/park candidate.
+3. Coloring order = the sequence these returns produce; assign (0x50899e) tries reserved
+   regs vs the adjacency mask, fallback (0x5089c4) reserves fresh (r31-descending).
+CONSEQUENCES: pop order within the "parked band" = pri/degree ranking (+ the fixed-score
+class for renumbered webs) — this is the missing variable behind fn_802BCA10 (vec9 needs
+its pri/deg to beat sub's), loadChannelLight, callList, the objprint rotations, and the
+FPR pairs (same machinery, cls 3). NEXT SESSION: read the constant at 0x5bcbf4 + boundary
+0x5e0898, log (idx, pri, deg, score) at 0x508ad2's walk via lldb, and each residual
+becomes a computable pri/deg source tweak (add/remove one ref or one edge).
