@@ -1366,3 +1366,13 @@ join-extension RENUMBERS the web — UNLESS (hypothesis) the result-var IS arm1'
 was never read — next session: read it; if its 13 is a different composition (clamp-region
 consts vs the pair), the fix may be one spelling away. This same re-creation law likely
 governs curves-c2 (the magic web) and vecmath.
+
+
+## Round 21: select-pair — result-red detail read (identical pair-swap), helper reframe negative
+result-red form detail = IDENTICAL 13-diff pair swap as E1 => the "unless result-var=arm1"
+refinement is falsified; ANY >-direction max puts red's web last. The 2x2 [pair-order x
+join-owner] has 3 reachable cells; target = the 4th. Shared-rgb-block inline helper
+(both select fns) = negative (27/18 — fn-scope rgb webs load-bearing). This fn's map is
+now at the same formal-obstruction state as objlib-pre-helper was: all enumerations
+closed, needs a structural reframe not yet conceived. Candidates parked for fresh eyes:
+the blue-max's score-reload web, the light[0xa8..aa] byte-loads' webs, u8-typed rgb.
