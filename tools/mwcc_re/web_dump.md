@@ -1337,3 +1337,13 @@ join reg matches target AND the resulting web extensions keep the const-reuse pa
 Target regs: red-clamp consts f2, red-clamped f2 (fmr f2,f0), green consts f3,
 max-join f2, score-blue-max join f1 (fmr f1,f0). Next session: enumerate the ~8
 arm1-consistent chain spellings against these six anchors (each 8s compile).
+
+
+## Round 18: rgb chain — clamp-order matrix closed
+E1 (`(red > green) ? red : green`) = correct structure; residual = red/green WEBS swapped
+throughout (13 diffs, pure pair). Clamp-order reversals (red/green/both) = 15/15/17 —
+worse, closed. The pair order under E1 couples to the join-extension (arm1's web extends
+through the store). Next lever class: red/green web-LENGTH manipulation around the max —
+e.g. the score-store spelling (direct field vs green var), or the blue-max's operand roles
+(blue's chain reads selectionScore — reloading vs reusing green's reg changes green's end).
+The enumeration is 3-4 spellings from closing this fn's map too.
