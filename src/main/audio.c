@@ -669,11 +669,11 @@ void Sfx_ClearLoopedObjectSounds(void)
 void Sfx_UpdateLoopedObjectSounds(void)
 {
     SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
+    u8* fp;
     u32* op;
     u16* ip;
-    u8* fp;
+    u16 index;
     s16 i;
-    int index;
     int index2;
     u32 obj;
     int removeSound;
@@ -695,11 +695,11 @@ void Sfx_UpdateLoopedObjectSounds(void)
         {
             Sfx_StopFromObject(obj, *ip);
             gSfxLoopedObjectSoundCount--;
-            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + (u16)i, (u32*)table->objects + (index2 = index + 1), sz);
-            memmove((u16*)table->ids + (u16)i, (u16*)table->ids + index2,
-                    (u16)((gSfxLoopedObjectSoundCount - (u16)i) << 1));
-            memmove(table->flags + (u16)i, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - (u16)i));
+            sz = (u16)((gSfxLoopedObjectSoundCount - (index = i)) << 2);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
+                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
         }
         else
         {
