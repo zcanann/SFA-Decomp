@@ -1866,7 +1866,7 @@ int playerStateMoving(int obj, int state)
             spd = ((PlayerState*)state)->baddie.animSpeedB;
             spd = (spd < lbl_803E7EA4) ? -spd : spd;
             t = ((PlayerState*)state)->baddie.animSpeedA;
-            t = (t < lbl_803E7EA4) ? -t : t;
+            t = (t < *(f32*)&lbl_803E7EA4) ? -t : t;
             {
                 int r = ((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)(
                     obj, ((PlayerState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0));
