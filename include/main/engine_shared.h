@@ -523,7 +523,6 @@ typedef struct {
     int f10;
 } TextDisplayState;
 
-extern void Movie_SetVolumeFade();
 extern u32 gAudioResetting;
 extern u32 gAudioManagedChannelMask;
 extern u32 gAudioActiveChannelMask;
@@ -583,7 +582,7 @@ extern void AudioStream_UpdateFadeTimer(void);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_CancelPrepared(void);
 extern void streamFn_8000a380(int mask, int mode, int time);
-extern void Movie_SetVolumeFade(u32 volume, u32 fadeMs);
+extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void AISetStreamPlayState(u32 state);
 extern void AISetStreamVolLeft(u8 volume);
 extern void AISetStreamVolRight(u8 volume);
