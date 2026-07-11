@@ -2750,7 +2750,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
 
 static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
 {
-    RomCurveDef* curve;
     int high;
     int low;
     int mid;
@@ -2765,18 +2764,17 @@ static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
     while (high >= low)
     {
         mid = (high + low) >> 1;
-        curve = romCurves[mid];
-        if (curveId > curve->id)
+        if (curveId > RomCurve_GetId(romCurves[mid]))
         {
             low = mid + 1;
         }
-        else if (curveId < curve->id)
+        else if (curveId < RomCurve_GetId(romCurves[mid]))
         {
             high = mid - 1;
         }
         else
         {
-            return curve;
+            return romCurves[mid];
         }
     }
 
