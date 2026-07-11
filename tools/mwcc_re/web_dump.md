@@ -166,3 +166,40 @@ a direct-wibo run, or make lldb follow into the spawned child
   is cheap-remat, no surviving copy); loop-3 block-scope ch2/n split −1.4;
   ternary-temp/handle-web injections fold. The i/ch pair swap remains
   tracer-gated (need live nadj/web-index values).
+
+## lldb port WORKING (2026-07-11, macOS arm64 + Rosetta)
+The port works; the two prior blockers resolve as:
+- macOS wibo has no `call_EntryProc` symbol. Break on `wibo::loadModule`
+  instead (fires after the PE is mmapped at its preferred base 0x400000),
+  THEN create the address breakpoints and continue. Address breakpoints set
+  before the mapping never re-arm (wibo maps the PE manually, lldb sees no
+  module event).
+- Direct `wibo mwcceppc.exe <full ninja flag line> -c unit.c -o /tmp/x.o`
+  runs fine on dll_02BC_andross.c (ASCII-only). If a unit hangs without
+  sjiswrap, suspect SJIS content, not the spawn model.
+Scripts: `select_trace_lldb.py` (Color_Select assign 0x50899e / fallback
+0x5089c4 / driver 0x508680 -> "A/F cls= idx= nadj= reg=" stream) and
+`numbering_trace_lldb.py` (0x4fe563, ebx=RegInfo desc after 0x4d0150 call:
+logs webIndex=webEnd[cls]++ order plus desc+0x4 priority and desc+0x24 flags).
+Driver template (batch file): import script; bp wibo::loadModule;
+process launch -s -- <compiler argv>; continue; <setup cmd>; continue.
+
+Findings on andross_update (validated against retail regs, 2026-07-11):
+- Select order observed = parked pair first (obj nadj~1008 -> r31, state
+  nadj~975 -> r30 in every variant), then the named long-lived webs in
+  strictly DESCENDING web-index order taking r29,r28,... then low-degree
+  webs (case-body `moveState = boss->extra` chains, nadj 15-20) coloring
+  LAST via reuse = lowest-numbered reserved reg free of interference.
+- GetReservedReg hands r31..r24 in first-need order (persistent counter
+  confirmed); a web that colors after r25/r24 are reserved will reuse them
+  (the andross case-web r26(T) vs r24/r25(C) family) — the fix class is
+  making the r25/r24 claimants color AFTER the case webs (index order),
+  not register hacking.
+- desc+0x4 priority is real and accumulates (state 1362, obj 252, spawnSlot
+  60, switch-flag 30-33, stateChanged/work 17, pathAdjusted 4 on this fn);
+  numbering order is NOT globally priority-sorted — it is batched, with one
+  u8 flag per compile deferred ~20 slots past its init batch (the "73-slot").
+  Which flag defers follows declaration order among the non-switch flags;
+  the heavily-tested switch flag never defers. Mechanism not yet pinned —
+  next target: trace CodeGen_NumberWebs' worklist (0x4f0e90 push, 0x4357c5
+  Number commit) to see batch boundaries and the deferral gate directly.
