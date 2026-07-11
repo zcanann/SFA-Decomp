@@ -305,3 +305,5 @@ void CurveFish_init(GameObject* obj, u8* setup)
     ((CurveFishState*)state)->mode = CURVEFISH_MODE_SPAWN;
     ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / 100.0f;
 }
+
+const float lbl_803E392C = 0.0f;
