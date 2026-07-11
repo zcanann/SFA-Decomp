@@ -708,3 +708,24 @@ front-end constructs produce them at an assignment's value node; then either
 the C shape exists or both audio holdouts are principled caps. main/audio
 stands 99.917 (84/87): UpdateLoopedObjectSounds 99.35 (+0.97 this campaign),
 Music_Update 99.596, ObjectChannel3D 99.01.
+
+## DECODED (2026-07-11): kinds 0x40/0x24 ARE ASCII — '@' and '$'
+Kind-byte trace over Music_Update's numbering commits: the "+0xa kind byte"
+values are the FIRST CHARACTER of the value's NAME string — 0x6c='l'owPriority,
+0x69='i', 0x63='c'h, 0x73='s'2Vol*, 0x66='f'ound/fade..., and 0x40='@' for all
+33 split/temp webs. The 0x4e9380 predicate is simply "name starts with '@' or
+'$' (or no name)" = COMPILER-GENERATED TEMP CHECK. Pass 1 = user-named values,
+pass 2 = @/$-temps. This closes the andross "kind 0x40/0x24 semantics" open
+item: stateChanged's canonical value was an @-temp by NAME, and the whole
+pass-2 family = temp-named values. Split webs are @-named → always pass 2 →
+their order = deferred-list scan order (latest-reference-first within it, per
+the MU data: i3@latch-newest 47, mid 48, ch3 49).
+Retail's flip (ch3 before i3) needs ch's LAST-pushed reference to postdate
+i's in the loop-3 latch. Probe `while (i-- != (int)(ch - ch))`: the stream
+folds byte-identically but the ch refs vanish before the push (front-end
+fold) — inert. No emission-preserving construct found that reorders the two
+latch references; the latch source order (ch++ then i--) is emission-pinned.
+=> The last blocker is now a one-line characterization: "reorder two @-temp
+latch pushes without reordering the latch instructions." If no C form exists,
+both audio holdouts are formally principled caps; the search space for such a
+form is small and precisely defined (latch-reference tree positions).
