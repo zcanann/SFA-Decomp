@@ -8,6 +8,8 @@
 #include "main/engine_8001746C_phantoms.h"
 #include "main/mapEvent.h"
 #include "main/object_transform.h"
+#include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"

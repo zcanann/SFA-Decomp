@@ -2136,7 +2136,7 @@ int playerStateOnLadder(int obj, int state)
     inner = *(int*)&((GameObject*)obj)->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty();
+        ObjHits_MarkObjectPositionDirty(obj);
         if (gPlayerPathObject != 0 && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
         {
             ((PlayerState*)inner)->staffActionRequest = 1;
@@ -2649,7 +2649,7 @@ int playerStateClimbWall(GameObject* obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         gPlayerCurrentMoveId = 0x10;
-        ObjHits_MarkObjectPositionDirty();
+        ObjHits_MarkObjectPositionDirty(obj);
     }
     {
         int base = *(int*)&obj->extra;
@@ -8165,7 +8165,8 @@ void fn_802AFB0C(int obj, int inner, int state)
             gPlayerSfxTimerA = 0;
         }
     }
-    work = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObj, &surfIdx, &damage, &pos.x, &pos.y, &pos.z);
+    work = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), (int*)&hitObj, &surfIdx, (u32*)&damage, &pos.x,
+                                              &pos.y, &pos.z);
     orig = work;
     if (**(s8**)&((PlayerState*)inner)->playerStatus <= 0)
     {
@@ -10735,7 +10736,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             if ((*(s16*)&((PlayerState*)state)->hitIntervalTimer -= dt) <= 0)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
-                ObjHits_RecordObjectHit(obj, 0, 0x14, 2, 0);
+                ObjHits_RecordObjectHit((int)obj, 0, 0x14, 2, 0);
             }
             break;
         case SURFACE_CONVEYOR:
@@ -10757,7 +10758,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             }
             break;
         case SURFACE_INSTANT_DEATH:
-            ObjHits_RecordObjectHit(obj, 0, 1, 0, 0);
+            ObjHits_RecordObjectHit((int)obj, 0, 1, 0, 0);
             break;
         case 28:
             if (mainGetBit(0x21) == 0)
@@ -16423,7 +16424,7 @@ int playerStateSlideDownLadder(GameObject* obj, int state, f32 fv)
     PlayerState* inner = obj->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty();
+        ObjHits_MarkObjectPositionDirty(obj);
         lbl_803DE498 = lbl_803E7EA4;
         ObjAnim_SetCurrentMove((int)obj, 0x35, lbl_803E7EA4, 1);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20;
@@ -16620,7 +16621,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
     PlayerState* inner = ((GameObject*)obj)->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty();
+        ObjHits_MarkObjectPositionDirty(obj);
     }
     setBButtonIcon(0xa);
     {
@@ -16815,7 +16816,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
     s16 item;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty();
+        ObjHits_MarkObjectPositionDirty(obj);
     }
     if ((s16)getYButtonItem(&item) == 1 && item == 0x957)
     {
@@ -17029,7 +17030,7 @@ int playerState1B(GameObject* obj, int state, f32 fv)
     {
         *(s16*)((char*)state + 0x278) = 0x1b;
         inner->stateHandler = (int)objUpdateHitboxPos;
-        ObjHits_MarkObjectPositionDirty();
+        ObjHits_MarkObjectPositionDirty(obj);
     }
     {
         int in2 = *(int*)&obj->extra;

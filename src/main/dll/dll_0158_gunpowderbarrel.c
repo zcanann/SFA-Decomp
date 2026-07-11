@@ -277,7 +277,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
          * and spawn the explosion effect at a raised Y. */
         ObjHits_ClearFlags((int)obj, 0x80);
         ObjHits_SetSourceMask((int)obj, 1);
-        ObjHitbox_SetCapsuleBounds((int)obj, 0x14, -5, 0x14);
+        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 0x14, -5, 0x14);
         ObjHits_EnableObject((int)obj);
         ObjHits_SetHitVolumeSlot((int)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
@@ -654,7 +654,6 @@ void gunpowderbarrel_init(int obj, u8* def)
 #pragma opt_common_subs off
 void gunpowderbarrel_update(GameObject *obj)
 {
-    extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
     GunpowderBarrelState* state = (obj)->extra;
     u8* player;
     GunpowderbarrelPlacement* def;
@@ -677,7 +676,7 @@ void gunpowderbarrel_update(GameObject *obj)
             state->motionFlags |= 1;
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ObjHits_ClearHitVolumes((int)obj);
-            ObjHitbox_SetCapsuleBounds((int)obj, 8, -2, 0x19);
+            ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 8, -2, 0x19);
             ObjHits_EnableObject((int)obj);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
             gunpowderbarrel_updatePhysics((int*)obj);
@@ -765,7 +764,8 @@ void gunpowderbarrel_update(GameObject *obj)
         state->fuseFrames + lbl_803E42DC;
         {
             f32 r = state->hitRadius;
-            ObjHitbox_SetCapsuleBounds((int)obj, r, (s32)(-r * lbl_803E4328), (s32)(r * lbl_803E4328));
+            ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r * lbl_803E4328),
+                                       (s32)(r * lbl_803E4328));
         }
         if (*(void* *)&state->linkedTimerObject != NULL)
         {

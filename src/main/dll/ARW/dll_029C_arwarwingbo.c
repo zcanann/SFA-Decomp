@@ -109,7 +109,7 @@ void arwarwingbo_update(int obj)
             objAnim->alpha = 0;
             (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
-            ObjHitbox_SetSphereRadius(obj, 0x280);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
             ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
         }
@@ -133,7 +133,7 @@ void arwarwingbo_update(int obj)
         objAnim->alpha = 0;
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
         spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
-        ObjHitbox_SetSphereRadius(obj, 0x280);
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
         ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
     }

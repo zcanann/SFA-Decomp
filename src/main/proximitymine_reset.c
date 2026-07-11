@@ -11,7 +11,6 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void fn_8009A8C8(void* obj, f32 param2);
@@ -42,7 +41,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
         f32 dist = state->triggerDistance - lbl_803E6774;
         spawnExplosion(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
     }
-    ObjHitbox_SetCapsuleBounds(obj, state->triggerDistance, -5, 10);
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot((u32)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((u32)obj);
     if (state->effectHandle != NULL)

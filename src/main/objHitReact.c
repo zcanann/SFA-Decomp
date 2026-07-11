@@ -5,6 +5,8 @@
 #include "main/mm.h"
 #include "main/objanim_internal.h"
 #include "main/objfx.h"
+#include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 #include "main/frame_timing.h"

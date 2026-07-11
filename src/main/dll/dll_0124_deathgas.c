@@ -3,12 +3,12 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/objhits.h"
 #include "main/frame_timing.h"
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 #define DEATHGAS_AIRMETER_BGTEXTURE 0x603
 extern int playerIsDisguised(void);
-extern u32 ObjHits_RecordObjectHit();
 extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
 
@@ -117,7 +117,7 @@ void DeathGas_update(int* obj)
             if (state->hitTimer < floor)
             {
                 state->hitTimer += 120.0f;
-                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
             }
         }
     }

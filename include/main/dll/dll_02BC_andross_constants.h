@@ -20,7 +20,8 @@
 extern f32 gAndrossZero;
 #define gAndrossThree                          3.0f
 #define gAndrossOne                            1.0f
-#define gAndrossPathOffset                     30.0f
+// extern f32 gAndrossPathOffset;
+// #define gAndrossPathOffset                     30.0f
 #define gAndrossLongDuration                   180.0f
 #define gAndrossShortDuration                  100.0f
 #define gAndrossWideMin                        -300.0f

@@ -12,6 +12,7 @@
 #include "main/model.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
+#include "main/objhits.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/player_motion.h"
@@ -78,15 +79,6 @@ typedef struct
 } EmitCtrlTbl;
 
 /* external symbol declarations */
-extern u32 ObjHits_MarkObjectPositionDirty();
-extern u32 ObjHits_SyncObjectPositionIfDirty();
-extern u32 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
-extern u16 ObjHits_IsObjectEnabled();
-extern u32 ObjHits_RecordObjectHit();
-extern u32 ObjHits_RecordPositionHit();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();

@@ -1,9 +1,8 @@
 /* DLL 0x00E4 (flamethrowerspe) - Flame thrower special effect [0x80170004-0x801702D4). */
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/engine_shared.h"
+#include "main/objhits.h"
 
-extern u32 ObjHitbox_SetSphereRadius();
-extern u32 ObjHits_SetHitVolumeSlot();
 
 /* object group this object joins while active */
 #define FLAMETHROWERSPE_OBJGROUP 7
@@ -132,14 +131,14 @@ void flamethrowerspe_update(int* obj)
             return;
         }
         ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
         {
             f32 dt = (f32)(f64)timeDelta;
             objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
                     ((GameObject*)obj)->anim.velocityZ * dt);
         }
         ObjHitbox_SetSphereRadius(
-            obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
+            (ObjAnimComponent*)obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
                        (((f32)lbl_803DBD64 - ((FlamethrowerspeState*)state)->lifeTimer) / lbl_803DBD64)));
         break;
     }

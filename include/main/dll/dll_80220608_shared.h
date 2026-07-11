@@ -15,6 +15,7 @@
 #include "main/objanim_internal.h"
 #include "main/objfx.h"
 #include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
@@ -63,7 +64,6 @@ extern f32 lbl_803E6E24;
 extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
 extern int randomGetRange(int min, int max);
-extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
 extern void objRenderFn_80041018(int obj);
@@ -504,7 +504,7 @@ extern void modelLightStruct_setProjectionTevModes(ModelLight* light, int a, int
 extern void modelLightStruct_setProjectionNearZ(ModelLight* light, f32 v);
 extern void modelLightStruct_setProjectionFarZ(ModelLight* light, f32 v);
 
-extern int* ObjGroup_GetObjects(int group, int* count);
+extern u32* ObjGroup_GetObjects(int group, int* count);
 extern f32 Vec_distance(int a, int b);
 
 typedef struct TimerFlags
@@ -672,7 +672,6 @@ extern f32 lbl_803E7430;
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern void ObjHits_DisableObject(u32 obj);
 extern void ObjHits_EnableObject(u32 obj);
-extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 
 extern int lbl_8032BEF8[];
 extern u8 lbl_803DC42C;
@@ -759,7 +758,6 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E70EC;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
-extern void ObjHits_SetTargetMask(int obj, u8 targetMask);
 extern void setMatrixFromObjectPos(void* mtx, void* src);
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void gameTextFn_80125ba4(int id);
@@ -888,7 +886,7 @@ extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
 
 extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
+extern void ObjPath_GetPointWorldPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z, int p6);
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
                                     int k);
 extern int lbl_803DC508;
@@ -993,13 +991,11 @@ extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern const f32 lbl_803E72F8;
 extern const f32 lbl_803E7308;
-extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern void vecRotateZXY(int obj, f32* vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex,
                                               u32* outHitVolume, float* outHitPosX, float* outHitPosY,
                                               float* outHitPosZ);
-extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);
 extern int Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 x);
 extern f32 gTreeEffectColors[];
@@ -1017,7 +1013,7 @@ extern const f32 lbl_803E732C;
 
 #pragma dont_inline reset
 
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern void* ObjList_GetObjects(int* startIndex, int* objectCount);
 
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
@@ -1294,7 +1290,6 @@ extern int loadObjectAtObject(int obj);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, f32* maxDistanceSq);
 
 #pragma dont_inline on
 #pragma dont_inline reset

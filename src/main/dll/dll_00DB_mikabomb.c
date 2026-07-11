@@ -17,14 +17,13 @@
 #include "main/resource.h"
 #include "main/objprint.h"
 #include "main/obj_placement.h"
+#include "main/objhits.h"
 #define MIKABOMB_HIT_VOLUME_SLOT 5
 
 /* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
 
 extern int randomGetRange(int lo, int hi);
-extern u32 ObjHitbox_SetSphereRadius();
-extern u32 ObjHits_SetHitVolumeSlot();
 extern ModgfxInterface** gModgfxInterface;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E31C0;
@@ -142,7 +141,7 @@ void MikaBomb_update(int* obj)
     {
         u32 localB;
         u32 localA;
-        ObjHits_SetHitVolumeSlot(obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
@@ -157,7 +156,7 @@ void MikaBomb_update(int* obj)
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
                     obj, rnd, 0, 2, -1, &localB);
-                ObjHitbox_SetSphereRadius(obj,
+                ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           (s32)(gMikaBombHitSphereRadiusScale *
                                                 (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
@@ -166,7 +165,7 @@ void MikaBomb_update(int* obj)
                 Obj_FreeObject((int*)*st);
                 *st = 0;
             }
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
         }
         else
         {
@@ -180,7 +179,7 @@ void MikaBomb_update(int* obj)
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
                     obj, rnd, 0, 2, -1, &localA);
-                ObjHitbox_SetSphereRadius(obj,
+                ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           (s32)(gMikaBombHitSphereRadiusScale *
                                                 (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,

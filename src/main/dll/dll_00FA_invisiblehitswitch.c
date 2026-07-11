@@ -159,7 +159,7 @@ void InvisibleHitSwitch_init(GameObject *obj, u8* placement)
         }
     }
     ObjHitbox_SetSphereRadius(
-        (int)obj,
+        (ObjAnimComponent*)obj,
         (s16)((placement[0x1d] * (int)(obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     info->active = mainGetBit(((InvisibleHitSwitchPlacement*)placement)->gameBitId);
     switch ((placement[0x23] & 0xe) >> 1)

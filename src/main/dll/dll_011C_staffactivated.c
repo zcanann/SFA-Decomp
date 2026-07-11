@@ -15,6 +15,7 @@
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
+#include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 
@@ -71,7 +72,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int playerIsPathFollowing(void);
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
 extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
@@ -296,7 +296,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
 
     if (obj->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius((int)obj,
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                   (int)((f32)((ObjHitsPriorityState*)obj->anim.hitReactState)->primaryRadius * scale));
     }
 

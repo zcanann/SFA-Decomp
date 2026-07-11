@@ -380,7 +380,7 @@ void androsshand_handleDamage(GameObject* obj, int hand)
                 state->handState = ANDROSSHAND_STATE_DEAD;
                 andross_setPartSignal((GameObject*)(state->androssObj), 1);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11);
-                ObjPath_GetPointWorldPosition((int)obj, 0, &x, &y, &z, 0);
+                ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
                 DIMexplosionFn_8009a96c((int)obj, x, y, z, 120.0f, 1, 1, 1, 1, 0, 1, 0);
             }
             break;
@@ -435,7 +435,7 @@ void androsshand_spawnShot(int obj, int hand, int p3)
 
     if (Obj_IsLoadingLocked())
     {
-        ObjPath_GetPointWorldPosition(obj, 0, &pt[0], &pt[1], &pt[2], 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &pt[0], &pt[1], &pt[2], 0);
         dx = pt[0] - ((GameObject*)state->arwingObj)->anim.localPosX;
         dz = pt[2] - ((GameObject*)state->arwingObj)->anim.localPosZ;
         dist = sqrtf(dx * dx + dz * dz);

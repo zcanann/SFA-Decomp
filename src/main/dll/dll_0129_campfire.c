@@ -16,7 +16,6 @@ extern void ModelLightStruct_free(void* effect);
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
-extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int h, int v);
 extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
@@ -209,7 +208,8 @@ void CampFire_init(int obj, int def)
         f32 scale =
             ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         int hitState = *(int*)&((GameObject*)obj)->anim.hitReactState;
-        ObjHitbox_SetCapsuleBounds(obj, (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
+        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj,
+                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
                                    (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
                                    (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetB * scale));
     }

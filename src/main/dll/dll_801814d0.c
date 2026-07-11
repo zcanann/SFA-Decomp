@@ -13,6 +13,7 @@
  */
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -53,11 +54,6 @@ extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 
 extern void Obj_StartModelFadeIn(int obj, int frames);
-extern void ObjHits_ClearHitVolumes(int objPtr);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern int ObjHits_IsObjectEnabled();
-extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex);
-extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_801816F8(int obj, int arg, u8* state);
@@ -77,7 +73,7 @@ void fn_801814D0(int obj, int arg, u8* state)
     f32 candidateY;
     f32 launchVel;
 
-    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitWork[3], &hitWork[2], &hitWork[1],
+    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitWork[3], &hitWork[2], (u32*)&hitWork[1],
                                                  &effectPos.x, &effectPos.y, &effectPos.z);
     if (hitType != 0)
     {
@@ -105,7 +101,7 @@ void fn_801814D0(int obj, int arg, u8* state)
                 objects = groupObjects;
                 for (; i < hitWork[0]; i++)
                 {
-                    if (ObjHits_IsObjectEnabled(*objects) != 0)
+                    if (ObjHits_IsObjectEnabled((ObjAnimComponent*)*objects) != 0)
                     {
                         candidateY = ((GameObject*)*objects)->anim.localPosY;
                         dusterY = ((GameObject*)obj)->anim.localPosY;

@@ -1,6 +1,8 @@
 #include <string.h>
 #include "main/game_object.h"
 #include "main/model.h"
+#include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"

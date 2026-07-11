@@ -3,8 +3,6 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
-#include "main/objHitReact.h"
-#include "main/objhits.h"
 
 typedef struct ObjAnimBank ObjAnimBank;
 typedef void (*ObjContactCallback)(int objA, int objB);
@@ -12,21 +10,14 @@ typedef void (*ObjContactCallback)(int objA, int objB);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 extern char sObjMsgOverflowInObjectWarning[];
 
-void ObjHitbox_SetStateIndex(int obj, int hitState, int stateIndex);
-void ObjHitbox_SetSphereRadius(int obj, s16 radius);
-void ObjHitbox_SetCapsuleBounds(int obj, s16 radius, s16 verticalMin, s16 verticalMax);
-void ObjHits_SetHitVolumeMasks(int obj, int hitVolume, int hitType, int sourceMask);
-int ObjHits_AllocObjectState(int obj, u32 arena);
-void ObjHits_ResetWorkBuffers(void);
-void ObjHits_InitWorkBuffers(void);
 u32 ObjGroup_ContainsObject(u32 obj, int group);
 int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistance);
-int ObjGroup_FindNearestObjectForObject(int group, u32 obj, float* maxDistance);
-int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
+int ObjGroup_FindNearestObjectForObject(int group, int obj, float* maxDistance);
+int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance);
 u32* ObjGroup_GetObjects(int group, int* countOut);
-void ObjGroup_RemoveObject(u32 obj, int group);
+void ObjGroup_RemoveObject(int obj, int group);
 int ObjGroup_GetObjectGroup(u32 obj);
-void ObjGroup_AddObject(u32 obj, int group);
+void ObjGroup_AddObject(int obj, int group);
 void ObjGroup_ClearAll(void);
 u32 ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam);
 u32 ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
@@ -34,17 +25,17 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
 void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
 u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 void ObjMsg_AllocQueue(void* obj, int capacity);
-u32 Obj_IsObjectAlive(u32 param_1);
+int Obj_IsObjectAlive(int obj);
 bool ObjTrigger_UpdateIdBlockFlag(int obj);
 void ObjLink_DetachChild(GameObject* param_1, int param_2);
-void ObjLink_AttachChild(int param_1, int param_2, u16 param_3);
+void ObjLink_AttachChild(int parent, int child, int linkMode);
 void ObjContact_DispatchCallbacks(int objA, int objB);
 void ObjContact_RemoveObjectCallbacks(int param_1);
-u32 ObjContact_AddCallback(int param_1, int param_2, ObjContactCallback callback);
+int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback);
 u32 ObjTrigger_IsSetById(int obj, short triggerId);
-u32 ObjTrigger_IsSet(GameObject* obj);
+int ObjTrigger_IsSet(int obj);
 void* ObjList_GetObjects(int* startIndex, int* objectCount);
-int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq);
+GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq);
 u32 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(GameObject* obj, int pointIndex, int count, float* positions);
 void ObjPath_GetPointLocalPosition(GameObject* param_1, int param_2, float* param_3, float* param_4, float* param_5);

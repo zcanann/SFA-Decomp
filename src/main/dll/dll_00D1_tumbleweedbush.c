@@ -25,6 +25,7 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/obj_placement.h"
+#include "main/objhits.h"
 #include "main/sky_interface.h"
 #include "main/sfa_shared_decls.h"
 
@@ -44,7 +45,6 @@ typedef struct TumbleweedBushState
     u8 pad51[3];
 } TumbleweedBushState;
 
-extern u32 ObjHitbox_SetCapsuleBounds();
 
 extern f32 timeDelta;
 extern f32 lbl_803E2F48;
@@ -110,7 +110,8 @@ void TumbleWeedBush_init(u8* obj, u8* params, int param3)
     ((GameObject*)obj)->anim.rotX = (s16)(params[0x1a] << 8);
     ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(params + 0x1c);
     t = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds(obj, (s32)(lbl_803E2F4C * t), (s32)(lbl_803E2F50 * t), (s32)(lbl_803E2F54 * t));
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(lbl_803E2F4C * t), (s32)(lbl_803E2F50 * t),
+                               (s32)(lbl_803E2F54 * t));
     switch (((GameObject*)obj)->anim.seqId)
     {
     case TUMBLEWEEDBUSH_SEQ_A:

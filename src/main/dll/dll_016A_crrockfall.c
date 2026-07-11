@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/objhits.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -51,8 +52,6 @@ extern f32 lbl_803E4714;
 extern f32 lbl_803E4718;
 extern f32 lbl_803E471C;
 extern f32 gRockfallGravity;
-extern u32 ObjHitbox_SetCapsuleBounds();
-extern u32 ObjHits_DisableObject();
 extern void* Obj_GetPlayerObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -155,10 +154,10 @@ void crrockfall_init(int* obj, u8* params)
     if (hitState != NULL)
     {
         f32 scale = ((GameObject*)obj)->anim.rootMotionScale;
-        ObjHitbox_SetCapsuleBounds(obj, (int)((f32)hitState->primaryRadius * scale),
+        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)((f32)hitState->primaryRadius * scale),
                                    (int)((f32)hitState->primaryCapsuleOffsetA * scale),
                                    (int)((f32)hitState->primaryCapsuleOffsetB * scale));
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
     }
 
     modelState = ((GameObject*)obj)->anim.modelState;

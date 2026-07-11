@@ -26,6 +26,7 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
@@ -42,7 +43,6 @@
 #define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
 
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32* a, f32* b, f32* out);
 extern void fn_8003B950(void* mtx);
@@ -858,8 +858,6 @@ typedef struct DllD3Placement
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
-extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
-extern int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
@@ -903,8 +901,7 @@ void dll_D3_update(int* obj)
         extra->surfaceMode = 6;
         if (((u32)extra->flags92 >> 4 & 0xF) != 0u)
         {
-            if ((extra->boundsObj =
-                     (void*)ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x4ad, &searchRadius)) != NULL)
+            if ((extra->boundsObj = ObjList_FindNearestObjectByDefNo((GameObject*)(obj), 0x4ad, &searchRadius)) != NULL)
             {
                 (*(void (**)(int, int, int))(*(int**)*(int**)(*(int*)&extra->boundsObj + 0x68) + 0x20 / 4))(
                     *(int*)&extra->boundsObj, (int)&extra->boundsMinX, (int)&extra->bounceFlags);
@@ -933,7 +930,7 @@ void dll_D3_update(int* obj)
 
     if (((StaffBits*)&extra->flags92)->b1 == 0u)
     {
-        if (ObjContact_AddCallback(obj, (int)player, fn_80167550) != 0)
+    if (ObjContact_AddCallback((int)obj, (int)player, fn_80167550) != 0)
         {
             ((StaffBits*)&extra->flags92)->b1 = 1;
         }
@@ -1131,8 +1128,8 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     0,
 };
 
-void fn_80167550(int* obj)
+void fn_80167550(int obj, int otherObj)
 {
     int* state = ((GameObject*)obj)->extra;
-    ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])(obj, state, 2);
+    ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])((int*)obj, state, 2);
 }

@@ -38,6 +38,6 @@ void siderepel_init(int obj, int placement)
     ObjGroup_AddObject(obj, SIDEREPEL_OBJGROUP);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(obj, (s16)(((SideRepelPlacement*)placement)->radius >> 3));
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)(((SideRepelPlacement*)placement)->radius >> 3));
     }
 }

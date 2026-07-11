@@ -33,7 +33,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, s16 verticalMax);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
@@ -94,7 +93,7 @@ void fn_80185868(GameObject* obj, f32 arg)
     {
         ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
-    ObjHitbox_SetCapsuleBounds((int)obj, sub->radius, -5, 10);
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, sub->radius, -5, 10);
     ObjHits_SetHitVolumeSlot((int)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((int)obj);
 }

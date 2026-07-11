@@ -8,10 +8,10 @@
  * (arwarwing_getExtraSize == 0x498). */
 typedef struct ArwingState {
     int unk00;
-    int escortObj;       /* 0x004: def 0x606 link */
-    int gunObjL;         /* 0x008: def 0x610 */
-    int gunObjR;         /* 0x00c: def 0x615 */
-    int bombObj;         /* 0x010: def 0x611 */
+    GameObject* escortObj; /* 0x004: def 0x606 link */
+    GameObject* gunObjL;   /* 0x008: def 0x610 */
+    GameObject* gunObjR;   /* 0x00c: def 0x615 */
+    GameObject* bombObj;   /* 0x010: def 0x611 */
     f32 homeX;           /* 0x014: spawn position */
     f32 homeY;
     f32 homeZ;

@@ -151,7 +151,7 @@ void arwproximit_update(GameObject* obj)
             if (state->light != NULL)
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
             spawnExplosion((int)obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
-            ObjHitbox_SetSphereRadius((int)obj, 0x12c);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x12c);
             ObjHits_SetHitVolumeSlot((int)obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty((int)obj);

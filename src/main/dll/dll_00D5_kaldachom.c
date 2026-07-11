@@ -46,7 +46,6 @@ extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern u32 Obj_SetModelColorFadeRecursive();
-extern u32 ObjHitbox_SetSphereRadius();
 extern u8 Obj_IsLoadingLocked();
 extern u32 Obj_GetPlayerObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -542,7 +541,7 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
     control->spawnedDustObj = NULL;
     (obj)->objectFlags = (obj)->objectFlags | KALDACHOM_OBJFLAG_HITDETECT_DISABLED;
     (obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32) * (s8*)(data + 0x28) / lbl_803E30A4;
-    ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E30CC * (obj)->anim.rootMotionScale));
+    ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (int)(lbl_803E30CC * (obj)->anim.rootMotionScale));
     if (skip_alloc == 0)
     {
         gKaldachomEffectResource = Resource_Acquire(KALDACHOM_EFFECT_RESOURCE_ID, 1);

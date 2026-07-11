@@ -109,7 +109,7 @@ void carryable_break_respawn_update(GameObject* obj)
         {
             (*(void (*)(int, Dll109State*)) * (int*)((u8*)*gCarryableInterface + 0x30))((int)obj, state);
             Sfx_PlayFromObject((int)obj, SFXTRIG_crtsmsh6);
-            ObjHitbox_SetSphereRadius((int)obj, 0x28);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x28);
             ObjHits_SetHitVolumeSlot((int)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
             if (Obj_IsLoadingLocked() != 0)
             {

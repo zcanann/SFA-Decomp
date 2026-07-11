@@ -119,6 +119,9 @@ STATIC_ASSERT(offsetof(AndrossState, spawnDelta) == 0x28);
 STATIC_ASSERT(offsetof(AndrossState, targetPosPtr) == 0x4C);
 STATIC_ASSERT(offsetof(AndrossState, homePosX) == 0x58);
 STATIC_ASSERT(offsetof(AndrossState, actionTimer) == 0x98);
+// STATIC_ASSERT(offsetof(AndrossState, partHealth) == 0xAE);
+// STATIC_ASSERT(offsetof(AndrossState, partHitTimer) == 0xB2);
+// STATIC_ASSERT(offsetof(AndrossState, partTextureState) == 0xB9);
 
 int andross_SeqFn(GameObject* obj);
 int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);

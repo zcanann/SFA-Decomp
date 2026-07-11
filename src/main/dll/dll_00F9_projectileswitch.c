@@ -236,7 +236,7 @@ void ProjectileSwitch_init(GameObject *obj, u8* initData)
         (obj)->anim.rootMotionScale = scaledRadius / 64.0f;
     }
     ObjHitbox_SetSphereRadius(
-        (int)obj,
+        (ObjAnimComponent*)obj,
         (short)(((int)placement->scale64 * (int)(obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     objAnim->bankIndex = placement->modelIndexAndMode >> 2;
     if ((int)objAnim->bankIndex >= objAnim->modelInstance->modelCount)

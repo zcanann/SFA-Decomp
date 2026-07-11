@@ -27,6 +27,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebit_ids.h"
 
@@ -667,13 +668,13 @@ void arwarwing_spawnLaserShot(GameObject* obj, int state, int side, int level, i
         return;
     if (side == 0)
     {
-        ObjPath_GetPointWorldPosition((int)obj, 3, &px, &py, &pz, 0);
-        arwarwinggu_setActiveVisible((GameObject*)(((ArwingState*)state)->gunObjL), 1, level == 2);
+        ObjPath_GetPointWorldPosition(obj, 3, &px, &py, &pz, 0);
+        arwarwinggu_setActiveVisible(((ArwingState*)state)->gunObjL, 1, level == 2);
     }
     else
     {
-        ObjPath_GetPointWorldPosition((int)obj, 4, &px, &py, &pz, 0);
-        arwarwinggu_setActiveVisible((GameObject*)(((ArwingState*)state)->gunObjR), 1, level == 2);
+        ObjPath_GetPointWorldPosition(obj, 4, &px, &py, &pz, 0);
+        arwarwinggu_setActiveVisible(((ArwingState*)state)->gunObjR, 1, level == 2);
     }
     {
         ArwArwingProjectileSetup* setup =
@@ -760,7 +761,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
     f32 vol;
     f64 sum;
 
-    vec = objModelGetVecFn_800395d8((GameObject*)(((ArwingState*)state)->escortObj), 0x14);
+    vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
     if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && mainGetBit(GAMEBIT_ArwingRelated09D6) == 0 &&
         mainGetBit(GAMEBIT_ARWING_FLIGHT_RINGS_PASSED) == 0)
@@ -771,7 +772,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
-    arwarwinggu_setTextureFrame((GameObject*)(((ArwingState*)state)->escortObj), ((ArwingState*)state)->enginePitch);
+    arwarwinggu_setTextureFrame(((ArwingState*)state)->escortObj, ((ArwingState*)state)->enginePitch);
 
     if (((ArwingState*)state)->rollCooldown <= lbl_803E6ECC)
     {
@@ -905,39 +906,39 @@ void arwarwing_initAttachments(GameObject* obj, int state)
     radius = gArwingEscortSearchRadius;
     mev = (int)(*gMapEventInterface)->getCurCharacterState();
 
-    if (*(void**)&((ArwingState*)state)->escortObj == 0)
+    if (((ArwingState*)state)->escortObj == NULL)
     {
         ((ArwingState*)state)->escortObj = ObjList_FindNearestObjectByDefNo(obj, 0x606, &radius);
-        if (*(void**)&((ArwingState*)state)->escortObj != 0)
+        if (((ArwingState*)state)->escortObj != NULL)
         {
-            ObjLink_AttachChild((int)obj, ((ArwingState*)state)->escortObj, 0);
+            ObjLink_AttachChild((int)obj, (int)((ArwingState*)state)->escortObj, 0);
         }
     }
 
     if (((ArwingState*)state)->fullLoadout != 0)
     {
-        if (*(void**)&((ArwingState*)state)->bombObj == 0)
+        if (((ArwingState*)state)->bombObj == NULL)
         {
             ((ArwingState*)state)->bombObj = ObjList_FindNearestObjectByDefNo(obj, 0x611, &radius);
-            if (*(void**)&((ArwingState*)state)->bombObj != 0)
+            if (((ArwingState*)state)->bombObj != NULL)
             {
-                ObjLink_AttachChild((int)obj, ((ArwingState*)state)->bombObj, 0);
+                ObjLink_AttachChild((int)obj, (int)((ArwingState*)state)->bombObj, 0);
             }
         }
-        if (*(void**)&((ArwingState*)state)->gunObjL == 0)
+        if (((ArwingState*)state)->gunObjL == NULL)
         {
             ((ArwingState*)state)->gunObjL = ObjList_FindNearestObjectByDefNo(obj, 0x610, &radius);
-            if (*(void**)&((ArwingState*)state)->gunObjL != 0)
+            if (((ArwingState*)state)->gunObjL != NULL)
             {
-                ObjLink_AttachChild((int)obj, ((ArwingState*)state)->gunObjL, 0);
+                ObjLink_AttachChild((int)obj, (int)((ArwingState*)state)->gunObjL, 0);
             }
         }
-        if (*(void**)&((ArwingState*)state)->gunObjR == 0)
+        if (((ArwingState*)state)->gunObjR == NULL)
         {
             ((ArwingState*)state)->gunObjR = ObjList_FindNearestObjectByDefNo(obj, 0x615, &radius);
-            if (*(void**)&((ArwingState*)state)->gunObjR != 0)
+            if (((ArwingState*)state)->gunObjR != NULL)
             {
-                ObjLink_AttachChild((int)obj, ((ArwingState*)state)->gunObjR, 0);
+                ObjLink_AttachChild((int)obj, (int)((ArwingState*)state)->gunObjR, 0);
             }
         }
     }
@@ -972,15 +973,15 @@ void arwarwing_initAttachments(GameObject* obj, int state)
                 modelLightStruct_setDiffuseTargetColor(((ArwingState*)state)->light, 0x14, 0x64, 0xc8, 0);
             }
         }
-        if (*(void**)&((ArwingState*)state)->escortObj != 0 && *(void**)&((ArwingState*)state)->bombObj != 0 &&
-            *(void**)&((ArwingState*)state)->gunObjL != 0 && *(void**)&((ArwingState*)state)->gunObjR != 0)
+        if (((ArwingState*)state)->escortObj != NULL && ((ArwingState*)state)->bombObj != NULL &&
+            ((ArwingState*)state)->gunObjL != NULL && ((ArwingState*)state)->gunObjR != NULL)
         {
             found = 1;
         }
     }
     else
     {
-        if (*(void**)&((ArwingState*)state)->escortObj != 0)
+        if (((ArwingState*)state)->escortObj != NULL)
         {
             found = 1;
         }
@@ -1118,7 +1119,7 @@ void arwarwing_resetFlightState(GameObject* obj)
     obj->anim.rotX = 0;
     obj->anim.rotY = 0;
     obj->anim.rotZ = 0;
-    arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
+    arwarwingbo_setActiveVisible(state->bombObj, 0, 0);
 }
 #pragma scheduling reset
 
@@ -1153,7 +1154,7 @@ void arwarwing_handlePathDamage(GameObject* obj, int state)
         doRumble(lbl_803E6F2C);
         if ((s8)((ArwingState*)state)->health <= 0)
         {
-            arwarwingbo_setActiveVisible((GameObject*)(((ArwingState*)state)->bombObj), 0, 0);
+            arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
             if ((obj)->anim.mapEventSlot == 0x26)
                 mainSetBits(GAMEBIT_ArwingRelated0E74, 1);
             else
@@ -1234,7 +1235,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, int state)
     if (((ArwingState*)state)->mode != ARWING_MODE_DEAD && ((ArwingState*)state)->mode != ARWING_MODE_EXPLODE &&
         ((ArwingState*)state)->mode != ARWING_MODE_WARPOUT && (s8)((ArwingState*)state)->health <= 0)
     {
-        arwarwingbo_setActiveVisible((GameObject*)(((ArwingState*)state)->bombObj), 0, 0);
+        arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
         if (obj->anim.mapEventSlot == 0x26)
             mainSetBits(GAMEBIT_ArwingRelated0E74, 1);
         ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
@@ -1270,8 +1271,8 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     arwarwing_updateRollAndEngine((int)obj, state);
     arwarwing_updateThrusters(obj, state);
-    if (*(void**)&((ArwingState*)state)->bombObj != 0)
-        arwarwingbo_setActiveVisible((GameObject*)(((ArwingState*)state)->bombObj), 0, 0);
+    if (((ArwingState*)state)->bombObj != NULL)
+        arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 0, 0);
     ((GameObject*)((ArwingState*)state)->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = 0;
     ((GameObject*)((ArwingState*)state)->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;

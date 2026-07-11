@@ -3,6 +3,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/IM/IMspacecraft.h"
+#include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -38,11 +39,6 @@ extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern int getAngle(float y, float x);
-extern void ObjHitbox_SetSphereRadius(int obj, int r);
-extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);
-extern void ObjHits_DisableObject(u32 objPtr);
-extern void ObjHits_EnableObject(u32 objPtr);
-extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -74,7 +70,8 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = lbl_803E4468;
     (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ObjHitbox_SetSphereRadius((int)obj, (s32)(lbl_803E446C * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
+    ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
+                              (s32)(lbl_803E446C * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
     player = Obj_GetPlayerObject();
     if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
     {
@@ -187,7 +184,7 @@ void RollingBarrel_update(GameObject* obj)
         }
 
         state->hitVolumeSlot = 10;
-        ObjHitbox_SetSphereRadius((int)obj, (obj)->anim.modelInstance->primaryHitboxRadius);
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (obj)->anim.modelInstance->primaryHitboxRadius);
 
         if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
         {
@@ -289,13 +286,13 @@ void RollingBarrel_update(GameObject* obj)
 
     if (state->hitVolumeSlot != 0)
     {
-        ObjHits_EnableObject((int)obj);
-        ObjHits_SetHitVolumeSlot((int)obj, state->hitVolumeSlot, 1, 0);
+        ObjHits_EnableObject((u32)obj);
+        ObjHits_SetHitVolumeSlot((u32)obj, state->hitVolumeSlot, 1, 0);
     }
     else
     {
-        ObjHits_DisableObject((int)obj);
-        ObjHits_SetHitVolumeSlot((int)obj, state->hitVolumeSlot, 0, 0);
+        ObjHits_DisableObject((u32)obj);
+        ObjHits_SetHitVolumeSlot((u32)obj, state->hitVolumeSlot, 0, 0);
     }
 }
 

@@ -29,8 +29,6 @@
 /* object group this object joins while active */
 #define FLAMMABLEVINE_OBJGROUP 0x31
 
-extern void ObjHitbox_SetCapsuleBounds();
-extern void ObjHits_DisableObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_RemoveFromUpdateList(int obj);
@@ -164,7 +162,7 @@ checked_vine_use:
             state->flags = state->flags & ~1;
             state->flags = state->flags | 2;
             Obj_RemoveFromUpdateList((int)obj);
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
         }
     }
 
@@ -229,14 +227,14 @@ void FlammableVine_init(GameObject* obj, int def)
     }
 
     scale = (obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds(obj, (s16)(14.0f * scale), 0, (s16)(25.0f * scale));
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s16)(14.0f * scale), 0, (s16)(25.0f * scale));
     state->burnIntensity = 0.001f;
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, 0.0f);
 
     if (((FlammablevineObjectDef*)def)->burnedBit != -1 && mainGetBit(((FlammablevineObjectDef*)def)->burnedBit) != 0)
     {
         Obj_RemoveFromUpdateList((int)obj);
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         (obj)->anim.alpha = 0;
         state->flags = state->flags | 2;
     }

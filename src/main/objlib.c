@@ -2,6 +2,9 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mm.h"
+#include "main/objHitReact.h"
+#define OBJHITS_IMPLEMENTATION
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
@@ -231,13 +234,10 @@ void ObjHits_SetTargetMask(int objPtr, u8 targetMask)
     return;
 }
 
-void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
+void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, s16 radius)
 {
-    ObjAnimComponent* obj;
-    ObjHitsPriorityState* hitState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
 
-    obj = (ObjAnimComponent*)objPtr;
-    hitState = (ObjHitsPriorityState*)obj->hitReactState;
     if (hitState != 0)
     {
         if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0)
@@ -255,6 +255,7 @@ void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
                 hitState->primaryRadiusXZ = (float)(s32)hitState->primaryRadius;
             }
         }
+
         if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0)
         {
             hitState->secondaryRadius = radius;
@@ -269,6 +270,7 @@ void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
                 hitState->secondaryRadiusXZ = (float)(s32)hitState->secondaryRadius;
             }
         }
+
         hitState->sweepRadiusX = hitState->primaryRadiusXZ;
         if (hitState->secondaryRadiusXZ > hitState->sweepRadiusX)
         {
@@ -278,15 +280,13 @@ void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
     return;
 }
 
-void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, s16 verticalMax)
+void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalMin, s16 verticalMax)
 {
-    ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
     float absMin;
     float absMax;
     s32 absVal;
 
-    obj = (ObjAnimComponent*)objPtr;
     hitState = (ObjHitsPriorityState*)obj->hitReactState;
     if (hitState != 0)
     {
@@ -527,9 +527,9 @@ void ObjHits_EnableObject(u32 objPtr)
     return;
 }
 
-u16 ObjHits_IsObjectEnabled(int objPtr)
+int ObjHits_IsObjectEnabled(ObjAnimComponent* obj)
 {
-    return ((ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState)->flags & OBJHITS_PRIORITY_STATE_ENABLED;
+    return ((ObjHitsPriorityState*)obj->hitReactState)->flags & OBJHITS_PRIORITY_STATE_ENABLED;
 }
 
 void ObjHits_SyncObjectPosition(u32 objPtr)
@@ -1063,7 +1063,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
 #pragma opt_loop_invariants reset
 
 #pragma opt_loop_invariants off
-int ObjGroup_FindNearestObjectForObject(int group, u32 obj, float* maxDistance)
+int ObjGroup_FindNearestObjectForObject(int group, int obj, float* maxDistance)
 {
     u32* entry;
     u32 nearest;
@@ -1110,7 +1110,7 @@ int ObjGroup_FindNearestObjectForObject(int group, u32 obj, float* maxDistance)
     return nearest;
 }
 
-int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance)
+int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance)
 {
     u32* entry;
     u32 nearest;
@@ -1169,7 +1169,7 @@ u32* ObjGroup_GetObjects(int group, int* countOut)
     return (u32*)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
 
-void ObjGroup_RemoveObject(u32 obj, int group)
+void ObjGroup_RemoveObject(int obj, int group)
 {
     u8* offset;
     u8 count;
@@ -1234,7 +1234,7 @@ int ObjGroup_GetObjectGroup(u32 obj)
     return 0;
 }
 
-void ObjGroup_AddObject(u32 obj, int group)
+void ObjGroup_AddObject(int obj, int group)
 {
     u8* offset;
     int count;
@@ -1525,9 +1525,10 @@ void ObjMsg_AllocQueue(void* obj, int capacity)
     return;
 }
 
-u32 Obj_IsObjectAlive(u32 obj)
+int Obj_IsObjectAlive(int objArg)
 {
     u32 alive;
+    u32 obj = objArg;
 
     alive = 0;
     if ((obj != 0) && ((((GameObject*)obj)->objectFlags & OBJLINK_FLAGS_DEAD) == 0))
@@ -1655,7 +1656,7 @@ void ObjLink_DetachChild(GameObject* obj, int child)
     return;
 }
 
-void ObjLink_AttachChild(int parent, int child, u16 linkMode)
+void ObjLink_AttachChild(int parent, int child, int linkMode)
 {
     int childIndex;
     GameObject* parentObj;
@@ -1726,7 +1727,7 @@ void ObjContact_RemoveObjectCallbacks(int obj)
     return;
 }
 
-u32 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
+int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
 {
     int count;
     ObjContactCallbackEntry* entry;
@@ -1785,8 +1786,9 @@ u32 ObjTrigger_IsSetById(int obj, short eventId)
     return 0;
 }
 
-u32 ObjTrigger_IsSet(GameObject* obj)
+int ObjTrigger_IsSet(int objPtr)
 {
+    GameObject* obj = (GameObject*)objPtr;
     u32 flags;
     int playerState;
     int triggerFlags;
@@ -1820,7 +1822,7 @@ u32 ObjTrigger_IsSet(GameObject* obj)
 }
 
 #pragma opt_loop_invariants off
-int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq)
+GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq)
 {
     int startIndex;
     int objectCount;
@@ -1830,16 +1832,18 @@ int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDista
     int objectIndex;
     int* objects;
     int* walker;
-    int foundObj;
+    GameObject* foundObj;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
     foundObj = 0;
     *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
     walker = objects + startIndex;
+
     if (defNo != -1)
     {
         objectIndex = startIndex;
         walker = objects + startIndex;
+
         while (objectIndex < objectCount)
         {
             otherObj = *walker;
@@ -1848,7 +1852,7 @@ int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDista
                  distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
-                foundObj = *walker;
+                foundObj = (GameObject*)*walker;
             }
             walker++;
             objectIndex++;
@@ -1859,18 +1863,20 @@ int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDista
         objectIndex = startIndex;
         walker = objects + startIndex;
         invalidDistance = lbl_803DE970;
+
         while (objectIndex < objectCount)
         {
             distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)*walker)->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
-                foundObj = *walker;
+                foundObj = (GameObject*)*walker;
             }
             walker++;
             objectIndex++;
         }
     }
+
     return foundObj;
 }
 #pragma opt_loop_invariants reset

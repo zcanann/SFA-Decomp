@@ -144,7 +144,7 @@ void cnthitobjec_update(GameObject* obj)
         state->remainingHealth = setup->startHealth;
         if (setup->mode != CNTHIT_MODE_VISIBLE_OBJECT)
         {
-            ObjHitbox_SetSphereRadius((int)obj, setup->explosionSize);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, setup->explosionSize);
         }
     }
 }

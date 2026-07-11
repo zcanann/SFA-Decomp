@@ -455,9 +455,9 @@ void arwarwing_spawnBomb(GameObject* obj, int state, int side)
         return;
     arwing->bombCount--;
     if (side == 0)
-        ObjPath_GetPointWorldPosition((int)obj, 5, &px, &py, &pz, 0);
+        ObjPath_GetPointWorldPosition(obj, 5, &px, &py, &pz, 0);
     else
-        ObjPath_GetPointWorldPosition((int)obj, 6, &px, &py, &pz, 0);
+        ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
     setup = Obj_AllocObjectSetup(0x20, WCFLOORTILE_CHILD_OBJ_BOMB);
     ((ArwingBombSetup*)setup)->head.posX = px;
     ((ArwingBombSetup*)setup)->head.posY = py;

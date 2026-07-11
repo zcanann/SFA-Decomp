@@ -1035,7 +1035,7 @@ void superQuakeFn_8016d9fc(f32* pos)
         {
             ((ObjAnimComponent*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->bankIndex = 1;
         }
-        ObjHitbox_SetSphereRadius((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 1);
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 1);
         ObjHits_SetHitVolumeSlot((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object,
                                  STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
         ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.rootMotionScale = lbl_803E32D0;
@@ -1334,7 +1334,7 @@ void staff_update(int* obj)
             f32 sc = q->scale + lbl_803E32E0;
             f32 fade;
             q->scale = sc;
-            ObjHitbox_SetSphereRadius((int)q->object, sc);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)q->object, sc);
             ObjHits_SetHitVolumeSlot((int)q->object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
             fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + lbl_803E32E4;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = fade;

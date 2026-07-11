@@ -27,6 +27,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include <string.h>
 #include "main/game_object.h"
@@ -773,7 +774,6 @@ buildTransform:
 
 void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 {
-    extern int ObjHits_IsObjectEnabled(int obj);
     u32 flags;
     int matrixSource;
     int iv[2];
@@ -792,7 +792,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
         if (*(void**)&((GameObject*)obj)->anim.parent != NULL)
         {
             if ((*(void**)(*(int*)&((GameObject*)obj)->anim.parent + 0x58) != NULL) &&
-                (ObjHits_IsObjectEnabled(*(int*)&((GameObject*)obj)->anim.parent) != 0))
+                (ObjHits_IsObjectEnabled((ObjAnimComponent*)((GameObject*)obj)->anim.parent) != 0))
             {
                 matrixSource = *(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0x58);
                 matrixOffset = (*(u8*)(matrixSource + 0x10c) + 2) * 0x10;
@@ -1072,7 +1072,6 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
 #pragma opt_common_subs off
 void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step)
 {
-    extern int ObjHits_IsObjectEnabled(int obj);
     int flags;
     CurvesCollisionState* collision;
     f32* pf;
@@ -1154,7 +1153,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             if (*(void**)(curveObj + 0x18) != NULL)
             {
                 if ((*(void**)(*(int*)(curveObj + 0x18) + 0x58) != NULL) &&
-                    (ObjHits_IsObjectEnabled(*(int*)(curveObj + 0x18)) != 0))
+                    (ObjHits_IsObjectEnabled(*(ObjAnimComponent**)(curveObj + 0x18)) != 0))
                 {
                     outOff = (*(u8*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) + 2) * 0x10;
                     Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) + outOff,
@@ -1433,7 +1432,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
     if (*(void**)(curveObj + 0x18) != NULL)
     {
         if ((*(void**)(*(int*)(curveObj + 0x18) + 0x58) != NULL) &&
-            (ObjHits_IsObjectEnabled(*(int*)(curveObj + 0x18)) != 0))
+            (ObjHits_IsObjectEnabled(*(ObjAnimComponent**)(curveObj + 0x18)) != 0))
         {
             outOff = (u32) * (u8*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
             Matrix_TransformPoint((f32*)(*(int*)(*(int*)(curveObj + 0x18) + 0x58)) + outOff,
@@ -1460,7 +1459,6 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
 
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 {
-    extern int ObjHits_IsObjectEnabled(int obj);
     f32 maxX;
     f32 minX;
     f32 radius;
@@ -1494,7 +1492,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         if (*(void**)&obj->anim.parent != NULL)
         {
             if ((*(void**)(*(int*)&obj->anim.parent + 0x58) != NULL) &&
-                (ObjHits_IsObjectEnabled(*(int*)&obj->anim.parent) != 0))
+                (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj->anim.parent) != 0))
             {
                 idx3 = (*(u8*)(*(int*)(*(int*)&obj->anim.parent + 0x58) + 0x10c) + 2) * 0x10;
                 Matrix_TransformPoint((f32*)(*(int*)(*(int*)&obj->anim.parent + 0x58)) + idx3, obj->anim.localPosX,

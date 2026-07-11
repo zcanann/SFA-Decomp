@@ -12,6 +12,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
+#include "main/objhits.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -117,8 +118,6 @@ extern u32 randomGetRange(int min, int max);
 extern int DR_CageControl_SeqFn(GameObject* obj);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
 extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjHits_EnableObject(u32 obj);
-extern void ObjHits_DisableObject(u32 obj);
 extern void* objCreateLight(int v1, int v2);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
@@ -219,7 +218,6 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern f32 lbl_803E69F0;
 extern f32 gHighTopGroundMarkerMtx[];
 extern void ObjPath_GetPointLocalPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z);
-extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern int dll_2E_func07(GameObject* obj, u8* arg, char* p, int a, int b);
 extern f32 lbl_803E68C0;
@@ -246,7 +244,6 @@ extern int lbl_803DC2F0;
 extern int lbl_803DDD70;
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(void* light, f32 f);
-extern void ObjHits_SetTargetMask(int obj, u8 targetMask);
 extern f32 lbl_803E6940;
 extern f32 lbl_803E6944;
 extern f32 lbl_803E6948;
@@ -285,7 +282,6 @@ extern int Obj_PredictInterceptPoint(GameObject* player, f32 v, f32* objPos, f32
 extern void PSVECNormalize(f32* out, f32* in);
 extern void PSVECScale(f32* out, f32* in, f32 scale);
 extern void PSVECAdd(f32* out, f32* a, f32* b);
-extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803DC2B0;
 extern f32 lbl_803DC2B4;
@@ -332,8 +328,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
 extern void lightningRender(void* p);
-extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex,
-                                              u32* outHitVolume, f32* outHitPosX, f32* outHitPosY, f32* outHitPosZ);
 extern void Obj_SpawnHitLightAndFade(int obj, f32* p, f32 v);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int ObjGroup_FindNearestObject(int group, int obj, void* out);
@@ -347,7 +341,6 @@ extern int gKytesMumQuestIdleSfxTable[];
 extern int ObjTrigger_IsSet(int obj);
 extern void saveGame_saveObjectPos(int obj);
 extern int objGetAnimState80A(GameObject* obj);
-extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
 extern f32 gKytesMumFleeDistance;
 extern f32 lbl_803E698C;
 extern f32 lbl_803E6990;
@@ -394,7 +387,6 @@ extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern s16 lbl_803DC290[4];
 extern s16 lbl_803DC298[4];
 extern u32 lbl_803E67B0;
-extern void ObjHits_SetHitVolumeMasks(int obj, int a, int b, int c);
 extern void ktrex_updateContactEffects(GameObject* obj, void* runtime);
 extern s16 lbl_803DC250;
 extern f32 lbl_803E6810;
@@ -482,7 +474,6 @@ extern f32 lbl_803E6B24;
 extern f32 lbl_803E6B28;
 extern f32 lbl_803E6B2C;
 extern s16 gHighTopBandMoveIds;
-extern void ObjHits_SyncObjectPositionIfDirty(u32 obj);
 extern f32 lbl_803E6AAC;
 extern f32 lbl_803E6AB0;
 extern f32 lbl_803E6AD8;
@@ -493,8 +484,6 @@ extern f32 lbl_803E6AEC;
 extern f32 lbl_803E6AF0;
 extern void fn_80039264(void* p);
 extern void objModelAndSoundFn_80039118(int obj, void* p);
-extern void ObjHits_MarkObjectPositionDirty(int obj);
-extern void ObjHits_ClearSourceMask(int obj, int mask);
 extern f32 lbl_803E6B04;
 extern f32 gHighTopDegToAngle;
 extern f32 lbl_803E6B0C;

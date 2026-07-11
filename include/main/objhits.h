@@ -88,6 +88,16 @@ extern const f32 gObjHitsScalarZero;
 extern f32 gObjHitsScalarOne;
 extern char sObjHitsTooManyHitSpheresWarning[];
 
+void ObjHitbox_SetStateIndex(int obj, int hitState, int stateIndex);
+#ifndef OBJHITS_IMPLEMENTATION
+void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius);
+void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax);
+#endif
+void ObjHits_SetHitVolumeMasks(int obj, int hitVolume, int hitType, int sourceMask);
+int ObjHits_AllocObjectState(int obj, u32 arena);
+void ObjHits_ResetWorkBuffers(void);
+void ObjHits_InitWorkBuffers(void);
+
 #define gObjHitsPrimaryHitboxBufferScratch1   (&gObjHitsPrimaryHitboxBufferScratch0)[1]
 #define gObjHitsSecondaryHitboxBufferScratch1 (&gObjHitsSecondaryHitboxBufferScratch0)[1]
 
@@ -286,25 +296,30 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                void* scratchE, int depth);
 void ObjHits_CheckTrackContact(int objA, int objB);
 void ObjHits_Update(int objectCount);
-void ObjHits_SetTargetMask(int obj, u8 targetMask);
+#ifndef OBJHITS_IMPLEMENTATION
+void ObjHits_SetTargetMask();
+#endif
 void ObjHits_ClearHitVolumes(int obj);
 void ObjHits_SetHitVolumeMasks(int obj, int hitVolume, int hitType, int sourceMask);
-void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
+void ObjHits_SetHitVolumeSlot();
 void ObjHits_ClearSourceMask(int obj, int sourceMask);
-void ObjHits_SetSourceMask(int obj, u8 sourceMask);
+#ifndef OBJHITS_IMPLEMENTATION
+void ObjHits_SetSourceMask();
+#endif
 void ObjHits_ClearFlags(int obj, int flags);
 void ObjHits_SetFlags(int obj, int flags);
-void ObjHits_MarkObjectPositionDirty(int obj);
-void ObjHits_SyncObjectPositionIfDirty(u32 obj);
-void ObjHits_DisableObject(u32 obj);
-void ObjHits_EnableObject(u32 obj);
-u16 ObjHits_IsObjectEnabled(int obj);
+void ObjHits_MarkObjectPositionDirty();
+void ObjHits_SyncObjectPositionIfDirty();
+void ObjHits_DisableObject();
+void ObjHits_EnableObject();
+int ObjHits_IsObjectEnabled(ObjAnimComponent* obj);
 void ObjHits_SyncObjectPosition(u32 obj);
 void ObjHits_RefreshObjectState(int obj);
 void ObjHits_AddContactObject(int obj, int contactObj);
-int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 sphereIndex);
-int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, s8 priority, s8 hitVolume,
-                              s8 sphereIndex);
+#ifndef OBJHITS_IMPLEMENTATION
+int ObjHits_RecordObjectHit();
+int ObjHits_RecordPositionHit();
+#endif
 int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
                                        float* outHitPosX, float* outHitPosY, float* outHitPosZ);
 int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);

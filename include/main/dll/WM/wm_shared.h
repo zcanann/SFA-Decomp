@@ -9,6 +9,7 @@
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/objhits.h"
 
 extern u64 FUN_80006724();
 extern u64 FUN_80006728();
@@ -42,11 +43,6 @@ extern u32 FUN_80017ae8();
 extern int FUN_80017af8();
 extern int FUN_8002fc3c();
 extern u32 FUN_800305f8();
-extern u32 ObjHits_SyncObjectPositionIfDirty();
-extern u64 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
-extern u32 ObjHits_RecordObjectHit();
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();

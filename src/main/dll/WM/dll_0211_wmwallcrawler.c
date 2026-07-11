@@ -245,13 +245,13 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         }
         else if (*(void**)(*(int*)&(obj)->anim.placementData + 0x14) == NULL)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             Obj_FreeObject((int)obj);
         }
         else
         {
             Obj_RemoveFromUpdateList((int)obj);
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             ObjGroup_RemoveObject(obj, WMWALLCRAWLER_OBJGROUP);
             (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
@@ -267,7 +267,7 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         {
             target = ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, obj, &stk);
         }
-        ObjHits_RecordObjectHit(target, obj, 0xb, 1, 0);
+        ObjHits_RecordObjectHit((int)target, (int)obj, 0xb, 1, 0);
         state->mode = WMWALLCRAWLER_MODE_DIE;
         ((WcHitBits*)&state->hitBits)->hit = 0;
     }
@@ -331,13 +331,13 @@ void wmwallcrawler_update(int obj)
                 }
                 if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                 {
-                    ObjHits_DisableObject(ob);
+                    ObjHits_DisableObject((u32)ob);
                     Obj_FreeObject(ob);
                 }
                 else
                 {
                     Obj_RemoveFromUpdateList(ob);
-                    ObjHits_DisableObject(ob);
+                    ObjHits_DisableObject((u32)ob);
                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
@@ -361,13 +361,13 @@ void wmwallcrawler_update(int obj)
                     ((GameObject*)ob)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                     if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                     {
-                        ObjHits_DisableObject(ob);
+                        ObjHits_DisableObject((u32)ob);
                         Obj_FreeObject(ob);
                     }
                     else
                     {
                         Obj_RemoveFromUpdateList(ob);
-                        ObjHits_DisableObject(ob);
+                        ObjHits_DisableObject((u32)ob);
                         ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                         ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     }
@@ -382,13 +382,13 @@ void wmwallcrawler_update(int obj)
             {
                 if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                 {
-                    ObjHits_DisableObject(ob);
+                    ObjHits_DisableObject((u32)ob);
                     Obj_FreeObject(ob);
                 }
                 else
                 {
                     Obj_RemoveFromUpdateList(ob);
-                    ObjHits_DisableObject(ob);
+                    ObjHits_DisableObject((u32)ob);
                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
@@ -429,13 +429,13 @@ void wmwallcrawler_update(int obj)
                                 }
                                 else if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                                 {
-                                    ObjHits_DisableObject(ob);
+                                    ObjHits_DisableObject((u32)ob);
                                     Obj_FreeObject(ob);
                                 }
                                 else
                                 {
                                     Obj_RemoveFromUpdateList(ob);
-                                    ObjHits_DisableObject(ob);
+                                    ObjHits_DisableObject((u32)ob);
                                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                                 }
@@ -822,8 +822,8 @@ void wmwallcrawler_init(GameObject* obj, int spawn)
         *(u32*)state |= 0x40008;
     }
     (obj)->animEventCallback = wmwallcrawler_animEventCallback;
-    ObjHits_EnableObject(obj);
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_EnableObject((u32)obj);
+    ObjHits_SyncObjectPositionIfDirty((u32)obj);
 }
 
 void wmwallcrawler_release(void)

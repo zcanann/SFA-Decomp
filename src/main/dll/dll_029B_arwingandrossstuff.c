@@ -312,7 +312,8 @@ void arwingandrossstuff_update(GameObject* obj)
         if ((obj)->anim.seqId == ARW_SEQID_CHARGE)
         {
             (obj)->anim.rootMotionScale += lbl_803DC3D0;
-            ObjHitbox_SetSphereRadius((int)obj, (int)((obj)->anim.rootMotionScale * lbl_803DC3D8));
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)(int)obj,
+                                      (int)(obj->anim.rootMotionScale * lbl_803DC3D8));
             (obj)->anim.rotZ = (f32)(obj)->anim.rotZ + lbl_803DC3D4;
         }
     }

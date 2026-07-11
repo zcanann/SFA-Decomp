@@ -644,7 +644,7 @@ void cmbsrc_init(int obj, u8* setup)
     {
         state->hitFlags.disabled = 1;
         ObjHitbox_SetSphereRadius(
-            obj, (int)(2.0f * (mapData->radius *
+            (ObjAnimComponent*)obj, (int)(2.0f * (mapData->radius *
                                (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->colorIndex]))));
         if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME)
         {

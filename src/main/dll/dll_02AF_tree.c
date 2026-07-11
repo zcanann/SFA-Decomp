@@ -250,7 +250,8 @@ void tree_init(GameObject* obj, u8* setup)
         break;
     case 0x70c:
         state->effectProfileIndex = 0x7;
-        ObjHitbox_SetCapsuleBounds((int)obj, (int)(lbl_803E732C * obj->anim.rootMotionScale), -0x5, 0x64);
+        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(lbl_803E732C * obj->anim.rootMotionScale), -0x5,
+                                   0x64);
         break;
     case 0x625:
         state->effectProfileIndex = 0x6;

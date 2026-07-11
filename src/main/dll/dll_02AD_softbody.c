@@ -132,7 +132,7 @@ void SoftBody_init(GameObject* obj, int setup)
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E7298, 0);
     if (object->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius((int)obj,
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                   (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
                                         object->anim.rootMotionScale));
     }

@@ -14,16 +14,13 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
+#include "main/objhits.h"
 #include "main/sfa_shared_decls.h"
 
 #define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
 #define MODEL_LIGHT_KIND_POINT 2
-extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_EnableObject();
-extern void ObjHits_DisableObject(u32 objPtr);
 extern f32 timeDelta;
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
@@ -162,9 +159,9 @@ void dimbossfire_update(GameObject *obj)
         if ((state->flags & DIMBOSSFIRE_FLAG_START_BURST) != 0)
         {
             state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
-            ObjHits_SetHitVolumeSlot(obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
-            ObjHitbox_SetSphereRadius((int)obj, 0xf);
-            ObjHits_EnableObject(obj);
+            ObjHits_SetHitVolumeSlot((u32)obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0xf);
+            ObjHits_EnableObject((u32)obj);
             if (((obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
             {
                 ref = 0;
@@ -225,9 +222,9 @@ void dimbossfire_update(GameObject *obj)
                 ModelLightStruct_free(state->light);
                 state->light = 0;
             }
-            ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
-            ObjHitbox_SetSphereRadius((int)obj, 0);
-            ObjHits_DisableObject((int)obj);
+            ObjHits_SetHitVolumeSlot((u32)obj, 0, 0, 0);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
+            ObjHits_DisableObject((u32)obj);
         }
         else
         {
@@ -250,18 +247,17 @@ void dimbossfire_init(GameObject *obj, u32 arg2, int placement)
     extern int randomGetRange(int lo, int hi);
     u32 ua;
     u8 randVal;
-    int state;
+    DimbossfireState* state;
 
-    state = *(int*)&(obj)->extra;
+    state = obj->extra;
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
-    ObjHitbox_SetSphereRadius((int)obj, 0);
-    ObjHits_DisableObject((int)obj);
+    ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
+    ObjHits_DisableObject((u32)obj);
     if (placement == 0)
     {
-        ((DimbossfireState*)state)->cooldownTimer = (f32)(int)
-        randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
+        state->cooldownTimer = (f32)(int)randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
         randVal = randomGetRange(0, 9);
-        *(u8*)(state + 1) = randVal;
+        state->flameIndex = randVal;
     }
     return;
 }

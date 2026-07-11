@@ -5,6 +5,7 @@
  */
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 
 #define DIMGATE_TRIGGER_OBJ_TYPE 399
@@ -24,7 +25,6 @@ typedef struct DimgatePlacement
     s16 gateGameBit;
 } DimgatePlacement;
 
-extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int stateIndex);
 extern f32 lbl_803E4878;
 
 int dimgate_SeqFn(void) { return 0x0; }
@@ -58,7 +58,7 @@ void dimgate_update(int obj)
             int i;
             if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPENING)
             {
-                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPENING);
+                ObjHitbox_SetStateIndex(obj, (int)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPENING);
             }
             found = 0;
             for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
@@ -74,7 +74,7 @@ void dimgate_update(int obj)
                 mainSetBits(((DimgatePlacement*)def)->gateGameBit, 1);
                 if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
                 {
-                    ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
+                    ObjHitbox_SetStateIndex(obj, (int)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
                 }
                 *(s8*)extra = DIMGATE_STATE_OPEN;
             }
@@ -86,7 +86,7 @@ void dimgate_update(int obj)
         {
             if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
             {
-                ObjHitbox_SetStateIndex(obj, (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
+                ObjHitbox_SetStateIndex(obj, (int)((GameObject*)obj)->anim.hitReactState, DIMGATE_STATE_OPEN);
             }
             break;
         }

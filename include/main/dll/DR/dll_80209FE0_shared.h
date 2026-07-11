@@ -10,29 +10,19 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 
-extern u32 ObjHits_SetTargetMask();
-extern u32 ObjHitbox_SetSphereRadius();
-extern u32 ObjHits_ClearHitVolumes();
-extern u64 ObjHits_SetHitVolumeSlot();
-extern u64 ObjHits_DisableObject();
-extern u64 ObjHits_EnableObject();
-extern u32 ObjHits_RecordObjectHit();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern int Obj_IsObjectAlive();
-extern int ObjHits_PollPriorityHitEffectWithCooldown();
 extern u32 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
-extern int ObjList_FindNearestObjectByDefNo();
 extern u32 ObjPath_GetPointModelMtx();
 extern u32 SnowBike_hitDetect();
 extern double SeekTwiceBeforeRead();

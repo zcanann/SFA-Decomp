@@ -6,6 +6,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objfx.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
@@ -25,9 +26,6 @@
 #define BOMBPLANT_FLAG_STATE_ENTERED 0x2
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 #define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
-extern u32 ObjHits_ClearHitVolumes();
-extern u32 ObjHits_DisableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 lbl_803E5370;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* getTrickyObject(void);
@@ -48,10 +46,6 @@ extern int objIsFrozen(u8* obj);
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern u32 ObjHitbox_SetCapsuleBounds();
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_MarkObjectPositionDirty();
-extern u32 ObjHits_EnableObject();
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
@@ -416,7 +410,7 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x1) != 0)
     {
-        hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &outA, &outB, &outC, &hitX,
+        hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &outA, &outB, (u32*)&outC, &hitX,
                                                      &hitY, &hitZ);
         if (hitType != 0 && outC != 0)
         {
@@ -434,30 +428,31 @@ void bombplant_update(void* obj)
                 ((BombPlantState*)state)->stateIndex = 4;
                 ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
                 p50 = ((GameObject*)obj)->anim.modelInstance;
-                ObjHitbox_SetCapsuleBounds(obj, (s16)(((ObjDef*)p50)->primaryHitboxRadius + 0x50),
+                ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj,
+                                           (s16)(((ObjDef*)p50)->primaryHitboxRadius + 0x50),
                                            (s16)(((ObjDef*)p50)->primaryCapsuleOffsetA - 0x50),
                                            (s16)(((ObjDef*)p50)->primaryCapsuleOffsetB + 0x50));
-                ObjHits_MarkObjectPositionDirty(obj);
+                ObjHits_MarkObjectPositionDirty((int)obj);
             }
         }
     }
 
     if ((entry[8] & 0x8) != 0)
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
     }
     else
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
     }
 
     if ((entry[8] & 0x10) != 0)
     {
-        ObjHits_SetHitVolumeSlot(obj, BOMBPLANT_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, BOMBPLANT_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
-        ObjHits_ClearHitVolumes(obj);
+        ObjHits_ClearHitVolumes((int)obj);
     }
 
     if ((entry[8] & 0x2) != 0)

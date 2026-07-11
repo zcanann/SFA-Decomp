@@ -41,7 +41,6 @@ extern u64 FUN_80006a68();
 extern u32 FUN_80006a6c();
 extern double FUN_80017708();
 extern u32 FUN_8001776c();
-extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern u32 objAnimFn_80038f38();
 extern u32 FUN_80039468();
 extern u32 FUN_8003a1c4();

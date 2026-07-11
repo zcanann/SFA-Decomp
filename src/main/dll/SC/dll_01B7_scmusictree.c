@@ -79,7 +79,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
@@ -425,7 +424,7 @@ void sc_musictree_init(GameObject* obj, SCMusicTreeSetup* setup)
     ObjAnim_SetCurrentMove((int)obj, 0, ratio, 0);
     ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f,
                                                                 (ObjAnimEventList*)&stk);
-    ObjHitbox_SetCapsuleBounds((int)obj, (s32)(15.0f * state->scale), -5, 0xff);
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(15.0f * state->scale), -5, 0xff);
     if (state->flags & SCMUSICTREE_FLAG_SATELLITES)
     {
         state->flags = state->flags | SCMUSICTREE_FLAG_HIT_ACTIVE;

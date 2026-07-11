@@ -17,7 +17,6 @@ extern f32 lbl_803E5540;
 extern f32 lbl_803E5544;
 extern f32 lbl_803E5548;
 
-extern void ObjHitbox_SetCapsuleBounds();
 
 void SH_EmptyTumbleW_update(GameObject* obj)
 {
@@ -33,7 +32,7 @@ void SH_EmptyTumbleW_init(s16* obj, ShEmptyTumblewPlacement* def)
     ((GameObject*)obj)->anim.rotX = def->rotXByte << 8;
     ((GameObject*)obj)->anim.rootMotionScale = def->scale;
     scale = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E5540 * scale), (int)(lbl_803E5544 * scale),
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(lbl_803E5540 * scale), (int)(lbl_803E5544 * scale),
                                (int)(lbl_803E5548 * scale));
     ((GameObject*)obj)->objectFlags |= SHEMPTYTUMBLEW_OBJFLAG_HIDDEN;
 }
