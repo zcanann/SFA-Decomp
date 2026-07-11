@@ -1552,9 +1552,8 @@ hit_cue_ready_5:;
         }
         for (work = 0; (u8)work < 2; work++)
         {
-            randVal = delayPair[(u8)work];
             if ((((state->spawnedObj == NULL) &&
-                  (state->actionTimer <= randVal)) &&
+                  (state->actionTimer <= (randVal = delayPair[(u8)work]))) &&
                  ((short)durationBeforeStep > randVal)) &&
                 (Obj_IsLoadingLocked() != 0))
             {
