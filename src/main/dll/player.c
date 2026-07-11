@@ -1399,19 +1399,19 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNo() != 0)
         {
             int i;
-            void** p;
+            void** p[1];
             hi = 0;
             lbl_803DE42C = hi;
             i = hi;
-            p = gPlayerSpawnedObjects;
+            p[0] = gPlayerSpawnedObjects;
             do
             {
-                if (*p != NULL)
+                if (*p[0] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = (void*)hi;
+                    Obj_FreeObject((int)*p[0]);
+                    *p[0] = (void*)hi;
                 }
-                p++;
+                p[0]++;
                 i++;
             } while (i < 7);
             if (gPlayerResource != NULL)
