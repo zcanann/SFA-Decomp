@@ -2085,7 +2085,7 @@ int playerStateMoving(int obj, int state)
         {
             pos = 0;
         }
-        if (t < lbl_803E7EA4)
+        if (t < *(f32*)&lbl_803E7EA4)
         {
             ad = -t;
         }
