@@ -199,7 +199,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         step += lengths[seg + 1];
         base = seg / gCurveSegmentCount;
         frac = step / lengths[seg + 1];
-        t = frac * ((f32)(seg + 1) / gCurveSegmentCount - base) + base;
+        t = frac * ((f32)(seg + 1) / *(f32*)&gCurveSegmentCount - base) + base;
         if (curve->px != NULL)
         {
             curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
