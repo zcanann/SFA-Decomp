@@ -546,4 +546,3 @@ Fixed tonight by HUMAN-FORM rewrites (each verified byte-stable or better):
 - ObjPlacement-typed spawn setup + moveState->signalFlags drains: byte-neutral.
 Tools: apply_trace_lldb.py extended per-web; adjacency dumps via 0x5089c4/
 0x50899e breakpoint (web+0x1a s16 list) directly identify reuse blockers.
->>>>>>> 3b2cfd8626 (mwcc_re: andross wave-2 log (ghost-temp piggyback mechanism; statement-vs-condition knife edge))
