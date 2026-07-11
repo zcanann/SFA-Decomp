@@ -1221,3 +1221,18 @@ ktrace.py (bp 0x508a32 reads K after 0x4fe520; fallback dumps full adjacency):
   arg web or call-2 arg chain outlived the call), or an unmodeled union. Fresh-session
   entry: def-site dump for temps 77-90 to name them, then reconstruct which retail
   expression keeps one alive past vec9's birth.
+
+
+## Round 9: fn_802BCA10 vec9 mechanism SOLVED but spelling regresses fuzzy
+CORRECTED identities: renumber order chronological (vec0->73, vec9->74); vec9 = the
+nadj-31 web. It dies pass-1 ONLY because its low-indexed named neighbors (arm locals
+sv/t, idx 35-37) are removed before its visit (-4 => 27 < K=29). Direct-deref clamps
+(remove sv from both arms) FLIP the whole saved cycle (31->16 line diffs, vec9->r31 ✓)
+— BUT objdiff fuzzy REGRESSES 99.17->97.59 (alignment penalty elsewhere; reverted).
+The mechanism is confirmed; the exact retail spelling must remove/raise the sv webs
+differently (keep instruction alignment). Candidates for next round: sv named but
+declared to index ABOVE 74 (impossible for named), sv-as-fn-scope-with-later-decl,
+the clamp bounds via u16, or accepting the 3-instr different alignment cost model.
+Also open: the +-364 chain r4-vs-r0 (resists ternary/if/embedded spellings; if-form
+gives the r4 chain but shrinks the frame by 16).
+LESSON REINFORCED: line-diffs and fuzzy DIVERGE on this codebase — always gate on report.
