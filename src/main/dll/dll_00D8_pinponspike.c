@@ -134,7 +134,7 @@ void pinponspike_update(int obj)
         }
         ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
         ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
-        ObjHits_SetHitVolumeSlot(obj, PINPONSPIKE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PINPONSPIKE_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==

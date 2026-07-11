@@ -444,7 +444,7 @@ int dbstealerworm_stateHandlerA03(int obj, int baddie)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     ((BaddieState*)baddie)->moveSpeed = lbl_803E62F4;
     if (*(char*)&((BaddieState*)baddie)->moveJustStartedA != '\0')
     {
@@ -663,7 +663,7 @@ int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie)
     }
     else
     {
-        ObjHits_SetHitVolumeSlot((int)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     }
 
     if ((s32)(s8)bs->moveDone != 0)
@@ -765,7 +765,7 @@ int dbstealerworm_stateHandlerA04(GameObject* obj, int baddie)
     {
         ObjHits_EnableObject((int)obj);
     }
-    ObjHits_SetHitVolumeSlot((int)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     bs->moveSpeed = lbl_803E62F4;
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
@@ -968,7 +968,7 @@ int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie)
     {
         ObjHits_EnableObject((int)obj);
     }
-    ObjHits_SetHitVolumeSlot((int)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
         if ((int)randomGetRange(0, 1) != 0)
@@ -1898,7 +1898,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     {
         ObjHits_EnableObject((int)obj);
     }
-    ObjHits_ClearHitVolumes((int)obj);
+    ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     ((BaddieState*)baddie)->moveSpeed = lbl_803E62F4;
     if (*(void**)&sub->linkedObj == NULL)
     {
@@ -2254,7 +2254,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
     {
         ObjHits_EnableObject((int)obj);
-        ObjHits_ClearHitVolumes((int)obj);
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     }
     ((BaddieState*)baddie)->moveSpeed = lbl_803E62F4;
     if (*(void**)&sub->linkedObj == NULL)

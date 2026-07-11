@@ -232,7 +232,7 @@ void DIMLogFire_update(GameObject* obj)
         vec.y = lbl_803E482C;
         vec.z = lbl_803E4828;
         fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
-        ObjHits_SetHitVolumeSlot((int)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:
         if (*(int**)&state->light != NULL)
@@ -256,7 +256,7 @@ void DIMLogFire_update(GameObject* obj)
             }
             (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
-        ObjHits_SetHitVolumeSlot((int)obj, 0, 0, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
         break;
     case DIMLOGFIRE_MODE_ANIM_HELD:
         break;

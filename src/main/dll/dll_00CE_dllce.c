@@ -46,7 +46,6 @@
 #define DLLCE_HIT_VOLUME_SLOT 10
 extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
-extern void ObjHits_SetHitVolumeSlot();
 extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();
@@ -64,7 +63,7 @@ int fn_8015E3A0(GameObject* obj, int state)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -312,7 +311,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -504,7 +503,7 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
     }
     else
     {
-        ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairPriority = 10;
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairHitVolume = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -979,7 +978,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     {
         ObjHits_EnableObject(obj);
     }
-    ObjHits_SetHitVolumeSlot(obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);

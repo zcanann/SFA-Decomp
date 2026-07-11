@@ -107,7 +107,7 @@ void CampFire_update(int obj)
         {
             modelLightStruct_setEnabled((int)state->light, 1, 1.0f);
         }
-        ObjHits_SetHitVolumeSlot(obj, CAMPFIRE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CAMPFIRE_HIT_VOLUME_SLOT, 1, 0);
         state->nightTimer -= timeDelta;
         if (state->nightTimer <= 0.0f)
         {
@@ -132,7 +132,7 @@ void CampFire_update(int obj)
         {
             modelLightStruct_setEnabled((int)state->light, 0, 1.0f);
         }
-        ObjHits_ClearHitVolumes(obj);
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         state->dayTimer -= timeDelta;
         if (state->dayTimer <= 0.0f)
         {

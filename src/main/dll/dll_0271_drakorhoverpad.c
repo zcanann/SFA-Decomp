@@ -579,7 +579,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
         {
             ((DrakorHoverpadUpdateMainState*)p)->verticalVel += (absV > *(f32*)p) ? -limit : limit;
         }
-        ObjHits_SetHitVolumeSlot((int)obj, DRAKORHOVERPAD_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DRAKORHOVERPAD_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {

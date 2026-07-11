@@ -82,7 +82,7 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         sub->animSpeed = lbl_803E3008;
     }
 
-    ObjHits_SetHitVolumeSlot(obj, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(obj);

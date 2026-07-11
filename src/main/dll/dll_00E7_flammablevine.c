@@ -123,7 +123,7 @@ checked_vine_use:
     {
         if (state->setupParam == 0)
         {
-            ObjHits_SetHitVolumeSlot((int)obj, FLAMMABLEVINE_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FLAMMABLEVINE_HIT_VOLUME_SLOT, 1, 0);
         }
         ObjHits_EnableObject((int)obj);
 
@@ -242,7 +242,7 @@ void FlammableVine_init(GameObject* obj, int def)
     state->setupParam = ((FlammablevineObjectDef*)def)->setupParam;
     if (state->setupParam == 1)
     {
-        ObjHits_MarkObjectPositionDirty((int)obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)(int)obj);
     }
 }
 

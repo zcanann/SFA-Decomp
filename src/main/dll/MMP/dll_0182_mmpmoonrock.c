@@ -105,7 +105,7 @@ void fn_801A7B10(GameObject* obj)
     blockIdx = objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ);
     if (blockIdx == -1)
         return;
-    ObjHits_SetHitVolumeSlot((int)obj, MMPMOONROCK_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MMPMOONROCK_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((int)obj);
     obj->anim.velocityY = obj->anim.velocityY - gMoonRockGravity * timeDelta;
     {

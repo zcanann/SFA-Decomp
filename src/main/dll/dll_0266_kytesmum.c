@@ -305,7 +305,7 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
     {
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
-        ObjHits_SetHitVolumeSlot((int)obj, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
         ObjHits_RegisterActiveHitVolumeObject((int)obj);
     }
     return 0;

@@ -260,7 +260,7 @@ int DIMbossHitDetect_liftImpact(int obj, int p2)
     zeroProgress = lbl_803E4BD8;
     ((BaddieState*)p2)->animSpeedA = zeroProgress;
     ((BaddieState*)p2)->animSpeedB = zeroProgress;
-    ObjHits_SetHitVolumeSlot(obj, DIM2LIFT_HIT_VOLUME_SLOT_10, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIM2LIFT_HIT_VOLUME_SLOT_10, 1, -1);
 
     if ((s32)(s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
@@ -342,7 +342,7 @@ int DIMbossHitDetect_trackTargetMove(GameObject* obj, int runtime, f32 hitAmount
 
 int DIMbossHitDetect_lungeAttack(GameObject* obj, int runtime, f32 hitAmount)
 {
-    ObjHits_SetHitVolumeSlot((u32)obj, DIM2LIFT_HIT_VOLUME_SLOT_9, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIM2LIFT_HIT_VOLUME_SLOT_9, 1, -1);
     if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         f32 animSpeed;
@@ -525,7 +525,7 @@ int DIMbossHitDetect_randomSwipe(GameObject* obj, int runtime, f32 arg)
 {
     int eventFlags;
     f32 animSpeed;
-    ObjHits_SetHitVolumeSlot((u32)obj, DIM2LIFT_HIT_VOLUME_SLOT_9, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIM2LIFT_HIT_VOLUME_SLOT_9, 1, -1);
     if (*(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0)
     {
         obj->anim.activeMove = -1;

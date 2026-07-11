@@ -66,7 +66,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         if (hitState != NULL)
         {
             int* vol;
-            ObjHits_SetHitVolumeSlot((u32)obj, DLL801B1D84_HIT_VOLUME_SLOT,
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLL801B1D84_HIT_VOLUME_SLOT,
                                      ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitVolumeSlot, 0);
             vol = (int*)hitState->lastHitObject;
             if (vol != NULL && vol != *(int**)extra)

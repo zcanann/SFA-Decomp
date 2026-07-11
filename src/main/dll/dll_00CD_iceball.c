@@ -200,7 +200,7 @@ void IceBall_update(u16* obj, int unused)
     ((GameObject*)objInt)->anim.rotY += 910;
     objMove(objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta,
             ((GameObject*)objInt)->anim.velocityY * timeDelta, ((GameObject*)objInt)->anim.velocityZ * timeDelta);
-    ObjHits_SetHitVolumeSlot(objInt, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)objInt, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)objInt, 5);
     ObjHits_EnableObject(objInt);
     if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject != 0 &&

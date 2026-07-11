@@ -330,7 +330,7 @@ void wispbaddie_update(GameObject* obj)
         (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleParam);
         particleParam = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleParam);
-        ObjHits_SetHitVolumeSlot((int)obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject((int)obj);
     }
 

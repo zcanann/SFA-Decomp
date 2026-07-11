@@ -92,7 +92,7 @@ int fn_8017805C(GameObject* obj, FlameblastState* state)
     }
     else
     {
-        ObjHits_ClearHitVolumes((int)obj);
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     }
     return 1;
 }
@@ -130,7 +130,7 @@ void flameblast_update(GameObject* obj)
         {
             if (state->hitVolumeDelay == 0)
             {
-                ObjHits_SetHitVolumeSlot((u32)obj, FLAMEBLAST_HIT_VOLUME_SLOT, 1, 0);
+                ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FLAMEBLAST_HIT_VOLUME_SLOT, 1, 0);
             }
         }
     }

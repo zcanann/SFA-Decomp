@@ -226,7 +226,7 @@ void enemymushroom_update(int* obj)
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     src = *(int**)&((GameObject*)obj)->anim.placementData;
-    ObjHits_ClearHitVolumes((int)obj);
+    ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_ACTIVE;
 

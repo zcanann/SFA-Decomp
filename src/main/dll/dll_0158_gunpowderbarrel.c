@@ -275,11 +275,11 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         }
         /* Reconfigure the hitbox into a blast-damage volume, play the boom SFX
          * and spawn the explosion effect at a raised Y. */
-        ObjHits_ClearFlags((int)obj, 0x80);
-        ObjHits_SetSourceMask((int)obj, 1);
+        ObjHits_ClearFlags((ObjAnimComponent*)obj, 0x80);
+        ObjHits_SetSourceMask((ObjAnimComponent*)obj, 1);
         ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 0x14, -5, 0x14);
         ObjHits_EnableObject((int)obj);
-        ObjHits_SetHitVolumeSlot((int)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
         (obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
@@ -344,7 +344,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
     }
     if (((GunpowderBarrelState*)sub)->detonateTrigger == 0 && ((((GunpowderBarrelState*)sub)->motionFlags & 2) || ((GunpowderBarrelState*)sub)->throwVelY > lbl_803E430C))
     {
-        ObjHits_SetHitVolumeSlot((u32)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY, 1, 0);
         ObjHits_EnableObject((u32)obj);
     }
     if (!((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->playerHeld)
@@ -675,7 +675,7 @@ void gunpowderbarrel_update(GameObject *obj)
             state->detonateTrigger = 0;
             state->motionFlags |= 1;
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ObjHits_ClearHitVolumes((int)obj);
+            ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 8, -2, 0x19);
             ObjHits_EnableObject((int)obj);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
@@ -824,7 +824,7 @@ void gunpowderbarrel_update(GameObject *obj)
                 storeZeroToFloatParam(&state->releaseTimer);
                 s16toFloat(&state->releaseTimer, 0x5a);
                 barrelgener_queueObjectRelease((GameObject*)(gen), (int)obj, 0x46);
-                ObjHits_ClearHitVolumes((int)obj);
+                ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
                 ObjHits_DisableObject((int)obj);
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
@@ -872,7 +872,7 @@ void gunpowderbarrel_update(GameObject *obj)
             }
             else if (fn_8029669C(player) != 0) /* controlMode 7: launch at target */
             {
-                ObjHits_MarkObjectPositionDirty((int)obj);
+                ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
                 gunpowderbarrel_launchAtTarget(obj, 1);
             }
             else if (lbl_803E42C0 == Player_GetLiftVelocityY((int)player)) /* no lift: gentle toss */
@@ -988,8 +988,8 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((GpbHeldFlags*)&sub->heldFlags)->playerHeld = 1;
         sub->motionFlags = (u8)(sub->motionFlags & ~2);
-        ObjHits_SetFlags(o, OBJHITS_PRIORITY_STATE_IMMOVABLE | 0x80);
-        ObjHits_ClearSourceMask(o, 1);
+        ObjHits_SetFlags((ObjAnimComponent*)o, OBJHITS_PRIORITY_STATE_IMMOVABLE | 0x80);
+        ObjHits_ClearSourceMask((ObjAnimComponent*)o, 1);
         ObjHits_EnableObject(o);
         ObjHits_SyncObjectPositionIfDirty(o);
     }
@@ -999,7 +999,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         h[0x6b] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x64];
         ((GpbHeldFlags*)&sub->heldFlags)->playerHeld = 0;
         *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-        ObjHits_ClearFlags(o, OBJHITS_PRIORITY_STATE_IMMOVABLE);
+        ObjHits_ClearFlags((ObjAnimComponent*)o, OBJHITS_PRIORITY_STATE_IMMOVABLE);
         sub->motionFlags = (u8)(sub->motionFlags | 1);
     }
 }

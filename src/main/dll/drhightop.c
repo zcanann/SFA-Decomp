@@ -396,11 +396,11 @@ void fn_801EB634(GameObject* obj, int stateRaw)
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
         {
-            ((void (*)(void*, int, int, int))ObjHits_SetHitVolumeSlot)(obj, DRHIGHTOP_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DRHIGHTOP_HIT_VOLUME_SLOT, 1, 0);
         }
         else
         {
-            ((void (*)(void*))ObjHits_ClearHitVolumes)(obj);
+            ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             ((void (*)(void*))ObjHits_SyncObjectPositionIfDirty)(obj);
         }
         hitKind = ObjHits_GetPriorityHit(obj, &hitObj, &hitOutB, &hitOutC);

@@ -55,7 +55,6 @@ typedef struct Dll109MapData
 
 STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
 
-extern void ObjHits_ClearHitVolumes();
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
@@ -110,7 +109,7 @@ void carryable_break_respawn_update(GameObject* obj)
             (*(void (*)(int, Dll109State*)) * (int*)((u8*)*gCarryableInterface + 0x30))((int)obj, state);
             Sfx_PlayFromObject((int)obj, SFXTRIG_crtsmsh6);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x28);
-            ObjHits_SetHitVolumeSlot((int)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ);
@@ -125,7 +124,7 @@ void carryable_break_respawn_update(GameObject* obj)
         }
         break;
     case DLL109_PHASE_BREAKING:
-        ObjHits_ClearHitVolumes();
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         ObjHits_DisableObject((int)obj);
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         state->phase = DLL109_PHASE_RESPAWNING;

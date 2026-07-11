@@ -196,7 +196,7 @@ void bossdrakor_update(int obj)
     {
         if (((BossDrakorState*)state)->moveState == 0)
         {
-            ObjHits_ClearHitVolumes(obj);
+            ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             ((DrakorFlags*)((char*)state + 0x198))->b04 = 0;
             ((DrakorFlags*)((char*)state + 0x198))->b08 = 0;
             if (!((DrakorFlags*)((char*)state + 0x198))->b40)
@@ -238,7 +238,7 @@ void bossdrakor_update(int obj)
                 }
                 else
                 {
-                    ObjHits_SetHitVolumeSlot(obj, BOSSDRAKOR_HIT_VOLUME_SLOT, 1, 0);
+                    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, BOSSDRAKOR_HIT_VOLUME_SLOT, 1, 0);
                     ((BossDrakorState*)state)->moveState = 0x15;
                     ((BossDrakorState*)state)->moveSpeed = lbl_803E6574;
                 }

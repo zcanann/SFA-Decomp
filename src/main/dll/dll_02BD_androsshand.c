@@ -87,7 +87,7 @@ void AndrossHand_update(int obj)
     ((GameObject*)obj)->anim.alpha = 0xff;
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rotY = 0;
-    ObjHits_SetHitVolumeSlot(obj, ANDROSSHAND_HIT_VOLUME_SLOT, 2, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ANDROSSHAND_HIT_VOLUME_SLOT, 2, -1);
     ObjHits_EnableObject(obj);
 
     if (state->androssObj != 0u)

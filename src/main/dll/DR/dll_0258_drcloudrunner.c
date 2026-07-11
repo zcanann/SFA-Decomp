@@ -23,6 +23,7 @@
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0258_drcloudrunner.h"
@@ -970,7 +971,7 @@ void DR_CloudRunner_hitDetect(GameObject* obj)
     s16* hits[4];
     s16 diff;
     if (inner->airTimeRemaining != 0 && (obj)->anim.currentMove != 0xf &&
-        (hitResult = ObjHits_GetPriorityHit(obj, hits, 0, 0)) != 0 && hitResult != 0xf &&
+        (hitResult = ObjHits_GetPriorityHit(obj, (int*)hits, 0, 0)) != 0 && hitResult != 0xf &&
         inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
         diff = (obj)->anim.rotX - (u16)*hits[0];
@@ -1090,7 +1091,7 @@ void DR_CloudRunner_update(GameObject* obj)
     }
     if (inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         inner->moveFlags |= 1;
     }
     else

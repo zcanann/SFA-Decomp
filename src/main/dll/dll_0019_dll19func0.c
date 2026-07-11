@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/mm.h"
 #include "main/objseq.h"
 
@@ -45,9 +46,6 @@ typedef struct Dll19Placement
 #define DLL19_FLAG_OSC_RISING 0x20  /* oscillation phase 1 (initial rise) */
 #define DLL19_FLAG_OSC_ACTIVE 0x40  /* oscillation phase 2 (active/return) */
 
-extern void ObjHits_DisableObject(u32 objPtr);
-extern void ObjHits_EnableObject(u32 objPtr);
-extern int ObjHits_GetPriorityHitWithPosition();
 extern u32 ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern int ObjMsg_Pop();
@@ -61,7 +59,6 @@ extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern const f32 lbl_803E1C2C;
-extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
 extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -207,7 +204,7 @@ void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f)
     ((BaddieState*)state)->cameraYaw = 0;
     if (*(void**)((char*)obj + 0x54) != NULL)
     {
-        ObjHits_SetHitVolumeSlot((void*)obj, 0, 0, -1);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, -1);
     }
     if (field25f != -1)
     {
@@ -613,7 +610,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
     {
         return 0;
     }
-    hit = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitId, &v28, &v24, &posX, &posY, &posZ);
+    hit = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitId, &v28, (u32*)&v24, &posX, &posY, &posZ);
     *(s8*)(state + 1034) = v28;
     if (hit != 0)
     {

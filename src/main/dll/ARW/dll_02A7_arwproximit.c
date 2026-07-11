@@ -11,6 +11,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/ARW/dll_02A7_arwproximit.h"
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
@@ -96,7 +97,7 @@ void arwproximit_update(GameObject* obj)
                 modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E71F0);
             }
             ObjHits_EnableObject((int)obj);
-            ObjHits_MarkObjectPositionDirty((int)obj);
+            ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             state->phase = ARWPROXIMIT_PHASE_FADEIN;
         }
@@ -152,9 +153,9 @@ void arwproximit_update(GameObject* obj)
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
             spawnExplosion((int)obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x12c);
-            ObjHits_SetHitVolumeSlot((int)obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_MarkObjectPositionDirty((int)obj);
+            ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
             state->phase = ARWPROXIMIT_PHASE_DETONATE;
         }
         break;
@@ -187,7 +188,7 @@ void arwproximit_update(GameObject* obj)
             spawnExplosion((int)obj, lbl_803E71DC, 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject((int)obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_MarkObjectPositionDirty((int)obj);
+            ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
             state->phase = ARWPROXIMIT_PHASE_DONE;
         }
         (obj)->anim.rotZ = timeDelta * state->spinSpeed + (f32)(obj)->anim.rotZ;
@@ -217,7 +218,7 @@ void arwproximit_init(GameObject* obj, int setup, int flag)
     storeZeroToFloatParam((void*)&state->warningTimer);
     storeZeroToFloatParam((void*)&state->despawnTimer);
     ObjHits_DisableObject((int)obj);
-    ObjHits_MarkObjectPositionDirty((int)obj);
+    ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
 }
 
 void arwproximit_release(void)

@@ -1355,7 +1355,7 @@ void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
         ObjGroup_AddObject((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->baddie.inWhirlpoolGroup = 1;
     }
-    ObjHits_SetHitVolumeSlot((int)obj, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
     hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     (obj)->anim.rotX -= 256;

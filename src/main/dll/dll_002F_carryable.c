@@ -18,6 +18,7 @@
  * 0x04 drop-disabled, 0x08 suppress position save.
  */
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/player_objects.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
@@ -266,7 +267,7 @@ int Carryable_updateHeld(u8* obj)
     }
     else
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
         {

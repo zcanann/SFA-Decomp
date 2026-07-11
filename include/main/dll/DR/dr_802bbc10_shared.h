@@ -10,6 +10,7 @@
 #include "main/mapEventTypes.h"
 #include "main/model.h"
 #include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
@@ -46,13 +47,6 @@ typedef struct
     u8 pad_22[2];
 } SnowHornEntry;
 
-extern u32 ObjHits_RegisterActiveHitVolumeObject();
-extern u32 ObjHits_MarkObjectPositionDirty();
-extern u32 ObjHits_SyncObjectPositionIfDirty();
-extern u32 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjHits_GetPriorityHit();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();

@@ -183,12 +183,12 @@ void drakord_thornbush_update(GameObject* obj)
         case THORNBUSH_SEQ_THORN:
             if (playerGetFocusObject((int)Obj_GetPlayerObject()) != NULL)
             {
-                ObjHits_ClearHitVolumes((int)obj);
+                ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
                 ObjHits_EnableObject((u32)obj);
             }
             else
             {
-                ObjHits_SetHitVolumeSlot((u32)obj, DRAKORDTHORNBUSH_HIT_VOLUME_SLOT, 1, 0);
+                ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DRAKORDTHORNBUSH_HIT_VOLUME_SLOT, 1, 0);
             }
             break;
         case THORNBUSH_SEQ_LIGHTNING:

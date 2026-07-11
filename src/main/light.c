@@ -396,7 +396,7 @@ void VFPDragHead_init(GameObject* obj, int data)
     {
         state->despawnTimer = 0x78;
         (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
-        ObjHits_SetHitVolumeSlot((int)obj, LIGHT_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, LIGHT_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {

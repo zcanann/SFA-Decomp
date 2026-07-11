@@ -2,6 +2,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/crfueltank.h"
 #include "main/gamebits.h"
+#include "main/objhits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
 /* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): hides the tank from
@@ -12,9 +13,6 @@
 extern f32 lbl_803E6760;
 
 extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
-extern void ObjHits_DisableObject(void* obj);
-extern void ObjHits_EnableObject(void* obj);
-extern void ObjHits_SetHitVolumeSlot(void* obj, int hitVolume, int hitType, int sourceSlot);
 
 extern int fn_80080150(void* timer);
 extern void storeZeroToFloatParam(void* timer);
@@ -100,7 +98,7 @@ void crfueltank_update(CrFuelTankObject* obj)
         }
         else
         {
-            ObjHits_SetHitVolumeSlot(obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
         }
     }
     return;
@@ -112,7 +110,7 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
 
     state = obj->state;
     ObjHits_EnableObject(obj);
-    ObjHits_SetHitVolumeSlot(obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
     storeZeroToFloatParam(state->timer);
     if ((def->hitEvent != -1) && (mainGetBit(def->hitEvent) != 0))
     {

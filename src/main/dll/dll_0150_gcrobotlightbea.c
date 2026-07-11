@@ -25,6 +25,7 @@
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/modgfx.h"
@@ -72,9 +73,6 @@ extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
 
-extern u32 ObjHits_SetHitVolumeSlot();
-extern u32 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern u32 ObjLink_DetachChild();
 extern void* Obj_GetPlayerObject(void);
 extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
@@ -133,7 +131,7 @@ void gcrobotlightbea_hitDetect(GameObject* obj)
     ((Bit80*)&sub->hitFlags)->top = 0;
     if ((obj)->ownerObj == NULL)
         return;
-    if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) == 0)
+    if (ObjHits_GetPriorityHit(obj, (int*)&hit, 0, 0) == 0)
     {
         hit = (void*)(*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject;
         if (hit == NULL)
@@ -171,7 +169,7 @@ void gcrobotlightbea_update(int* obj)
             modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, 12.0f + lbl_803DBE58);
         }
     }
-    ObjHits_SetHitVolumeSlot(obj, GCROBOTLIGHTBEA_HIT_VOLUME_SLOT, 0, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GCROBOTLIGHTBEA_HIT_VOLUME_SLOT, 0, 0);
     vec[0] = lbl_80322C38[0];
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];

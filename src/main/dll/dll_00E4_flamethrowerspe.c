@@ -131,7 +131,7 @@ void flamethrowerspe_update(int* obj)
             return;
         }
         ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot((u32)obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
         {
             f32 dt = (f32)(f64)timeDelta;
             objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,

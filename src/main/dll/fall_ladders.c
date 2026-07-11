@@ -85,7 +85,7 @@ void fn_801540A0(int obj, int state)
 
     *(f32*)(state + 0x32c) = lbl_803E294C;
     done = 0;
-    ObjHits_SetHitVolumeSlot(obj, FALL_LADDERS_HIT_VOLUME_SLOT, 1, -1);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FALL_LADDERS_HIT_VOLUME_SLOT, 1, -1);
     if (*(void**)(state + 0x340) != 0)
     {
         done = 1;

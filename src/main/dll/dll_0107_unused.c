@@ -87,14 +87,14 @@ void fn_80185868(GameObject* obj, f32 arg)
     (obj)->unkF8 = 0;
     (obj)->unkF4 = 2;
     ObjHits_EnableObject((int)obj);
-    ObjHits_MarkObjectPositionDirty((int)obj);
+    ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     sub->spitTimer = 0;
     if (arg < sub->radius)
     {
         ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, sub->radius, -5, 10);
-    ObjHits_SetHitVolumeSlot((int)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((int)obj);
 }
 #pragma opt_common_subs reset
@@ -391,7 +391,7 @@ void dll_107_update(GameObject* obj)
         state->liftTimer -= framesThisStep;
         if (*(s8*)&state->launchPhase == 1)
         {
-            ObjHits_SetHitVolumeSlot((int)obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
             if ((obj)->anim.velocityY > lbl_803E3A70)
             {
                 (obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + (obj)->anim.velocityY;
@@ -440,7 +440,7 @@ void dll_107_update(GameObject* obj)
             (obj)->unkF8 = 0;
             ObjHits_EnableObject((int)obj);
             *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            ObjHits_ClearHitVolumes((int)obj);
+            ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         }
     }
 }

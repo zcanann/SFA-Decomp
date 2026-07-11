@@ -17,6 +17,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
@@ -648,12 +649,12 @@ void cmbsrc_init(int obj, u8* setup)
                                (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->colorIndex]))));
         if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME)
         {
-            ObjHits_SetHitVolumeSlot(obj, CMBSRC_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CMBSRC_HIT_VOLUME_SLOT, 1, 0);
             state->hitFlags.disabled = 0;
         }
         else
         {
-            ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
         }
         if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_SYNC_HIT_POSITION)
         {
@@ -662,7 +663,7 @@ void cmbsrc_init(int obj, u8* setup)
         }
         else
         {
-            ObjHits_MarkObjectPositionDirty(obj);
+            ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         }
         if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK)
         {

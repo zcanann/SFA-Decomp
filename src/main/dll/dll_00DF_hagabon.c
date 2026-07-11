@@ -425,7 +425,7 @@ void Hagabon_update(int obj)
                 mainSetBits(((HagabonPlacement*)data)->armGameBit, 1);
             }
         }
-        ObjHits_SetHitVolumeSlot(obj, HAGABON_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, HAGABON_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
     }
 

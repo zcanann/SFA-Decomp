@@ -268,7 +268,7 @@ void Pollen_update(int obj)
         }
         objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
-        ObjHits_SetHitVolumeSlot((u32)obj, POLLEN_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLEN_HIT_VOLUME_SLOT, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 7);
         ObjHits_EnableObject((u32)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&

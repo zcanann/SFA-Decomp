@@ -365,99 +365,79 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalM
     return;
 }
 
-void ObjHits_ClearHitVolumes(int objPtr)
+void ObjHits_ClearHitVolumes(ObjAnimComponent* obj)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
     hitState->hitVolumePriority = 0;
     hitState->hitVolumeId = 0;
     hitState->objectHitMask = 0;
     hitState->skeletonHitMask = 0;
-    return;
 }
 
-void ObjHits_SetHitVolumeMasks(int objPtr, int hitVolume, int hitType, int sourceMask)
+void ObjHits_SetHitVolumeMasks(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceMask)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
     hitState->hitVolumePriority = hitVolume;
     hitState->hitVolumeId = hitType;
+
     if (sourceMask == 0)
     {
         return;
     }
+
     hitState->objectHitMask = sourceMask << 4;
     hitState->skeletonHitMask = sourceMask << 4;
-    return;
 }
 
-void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot)
+void ObjHits_SetHitVolumeSlot(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceSlot)
 {
-    int hitMask;
-    ObjHitsPriorityState* hitState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
 
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
     if (hitState == 0)
     {
         return;
     }
+
     hitState->hitVolumePriority = hitVolume;
     hitState->hitVolumeId = hitType;
+
     if (sourceSlot == -1)
     {
         return;
     }
-    hitMask = 1 << (sourceSlot + 4);
-    hitState->objectHitMask = hitMask;
-    hitState->skeletonHitMask = hitMask;
-    return;
+
+    hitState->objectHitMask = 1 << (sourceSlot + 4);
+    hitState->skeletonHitMask = 1 << (sourceSlot + 4);
 }
 
-void ObjHits_ClearSourceMask(int objPtr, int sourceMask)
+void ObjHits_ClearSourceMask(ObjAnimComponent* obj, int sourceMask)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
-    hitState->sourceMask = (u8)(hitState->sourceMask & ~sourceMask);
-    return;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
+    hitState->sourceMask &= ~sourceMask;
 }
 
-void ObjHits_SetSourceMask(int objPtr, u8 sourceMask)
+void ObjHits_SetSourceMask(ObjAnimComponent* obj, u8 sourceMask)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
     hitState->sourceMask |= sourceMask;
-    return;
 }
 
-void ObjHits_ClearFlags(int objPtr, int flags)
+void ObjHits_ClearFlags(ObjAnimComponent* obj, int flags)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
-    hitState->flags = (s16)(hitState->flags & ~flags);
-    return;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
+    hitState->flags &= ~flags;
 }
 
-void ObjHits_SetFlags(int objPtr, int flags)
+void ObjHits_SetFlags(ObjAnimComponent* obj, int flags)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
-    hitState->flags = (s16)(hitState->flags | flags);
-    return;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
+    hitState->flags |= flags;
 }
 
-void ObjHits_MarkObjectPositionDirty(int objPtr)
+void ObjHits_MarkObjectPositionDirty(ObjAnimComponent* obj)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
-    hitState->flags = (s16)(hitState->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
-    return;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
+    hitState->flags |= OBJHITS_PRIORITY_STATE_POSITION_DIRTY;
 }
 
 void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)

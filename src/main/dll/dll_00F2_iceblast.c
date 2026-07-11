@@ -64,7 +64,7 @@ void iceblast_update(GameObject* obj)
     {
         return;
     }
-    ObjHits_SetHitVolumeSlot((u32)obj, ICEBLAST_HIT_VOLUME_SLOT, def->useAltHitVolume != 0 ? 3 : 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ICEBLAST_HIT_VOLUME_SLOT, def->useAltHitVolume != 0 ? 3 : 1, 0);
 
     state->timer -= timeDelta;
     if (state->timer <= 0.0f)

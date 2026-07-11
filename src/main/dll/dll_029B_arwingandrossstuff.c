@@ -247,12 +247,13 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
 
 void arwingandrossstuff_update(GameObject* obj)
 {
-    ArwProjectileState* state = (obj)->extra;
+    GameObject* object = obj;
+    ArwProjectileState* state = object->extra;
     int arwing = getArwing();
 
     if ((void*)arwing != NULL && (((GameObject*)arwing)->objectFlags & ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK) != 0)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject((int)object);
         return;
     }
     {
@@ -263,13 +264,13 @@ void arwingandrossstuff_update(GameObject* obj)
             state->despawnTimer = dt - timeDelta;
             if (state->despawnTimer <= zero)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject((int)object);
             }
             return;
         }
     }
-    ObjHits_SetHitVolumeSlot((int)obj, ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT, state->hitVolumeMode, 0);
-    (obj)->anim.alpha = 0xff;
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)object, ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT, state->hitVolumeMode, 0);
+    object->anim.alpha = 0xff;
     {
         f32 lt = state->lifetime;
         f32 zero = lbl_803E7008;
@@ -279,7 +280,7 @@ void arwingandrossstuff_update(GameObject* obj)
             if (state->lifetime <= zero)
             {
                 state->lifetime = zero;
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject((int)object);
                 return;
             }
         }
@@ -287,34 +288,34 @@ void arwingandrossstuff_update(GameObject* obj)
         {
             return;
         }
-        if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0)
+        if (((ObjHitsPriorityState*)object->anim.hitReactState)->contactFlags != 0)
         {
-            if ((obj)->anim.seqId != ARW_SEQID_INVINCIBLE)
+            if (object->anim.seqId != ARW_SEQID_INVINCIBLE)
             {
-                Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_ar_laser116, 4);
+                Sfx_PlayFromObjectLimited((int)object, SFXTRIG_ar_laser116, 4);
             }
             state->despawnTimer = lbl_803E7028;
-            (obj)->anim.alpha = 0;
-            projectileParticleFxFn_80099660((int)obj, lbl_803E701C, state->param0.particleKind);
+            object->anim.alpha = 0;
+            projectileParticleFxFn_80099660((int)object, lbl_803E701C, state->param0.particleKind);
             if (state->light != NULL)
             {
                 ModelLightStruct_free(state->light);
                 state->light = NULL;
             }
         }
-        objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
-                (obj)->anim.velocityZ * timeDelta);
-        if ((obj)->anim.seqId == ARW_SEQID_BOMB)
+        objMove((int)object, object->anim.velocityX * timeDelta, object->anim.velocityY * timeDelta,
+                object->anim.velocityZ * timeDelta);
+        if (object->anim.seqId == ARW_SEQID_BOMB)
         {
-            (obj)->anim.rotZ += state->rotZSpeed;
-            (obj)->anim.rotY += state->rotYSpeed;
+            object->anim.rotZ += state->rotZSpeed;
+            object->anim.rotY += state->rotYSpeed;
         }
-        if ((obj)->anim.seqId == ARW_SEQID_CHARGE)
+        if (object->anim.seqId == ARW_SEQID_CHARGE)
         {
-            (obj)->anim.rootMotionScale += lbl_803DC3D0;
-            ObjHitbox_SetSphereRadius((ObjAnimComponent*)(int)obj,
-                                      (int)(obj->anim.rootMotionScale * lbl_803DC3D8));
-            (obj)->anim.rotZ = (f32)(obj)->anim.rotZ + lbl_803DC3D4;
+            object->anim.rootMotionScale += lbl_803DC3D0;
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)object,
+                                      (int)(object->anim.rootMotionScale * lbl_803DC3D8));
+            object->anim.rotZ = (f32)object->anim.rotZ + lbl_803DC3D4;
         }
     }
 }

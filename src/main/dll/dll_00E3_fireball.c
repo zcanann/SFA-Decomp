@@ -13,6 +13,7 @@
  */
 #include "main/dll/xyzanimator.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
@@ -29,7 +30,6 @@
 #define FIREBALL_ROT_COUNT 5
 
 extern int randomGetRange(int lo, int hi);
-extern u32 ObjHits_SetHitVolumeSlot();
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
@@ -109,7 +109,6 @@ typedef struct FireballState
 /* anim.seqId of the hit object that triggers combat-source recolor. */
 #define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6e8
 
-extern u32 ObjHits_ClearHitVolumes();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
@@ -141,11 +140,9 @@ extern void queueGlowRender(int light);
 extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
 extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
-extern u32 ObjHits_EnableObject();
 extern int objCreateLight(int* obj, int arg);
 extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Obj_FreeObject(int* obj);
-extern u64 ObjHits_DisableObject();
 
 /* fireball light tint per colorIndex; lives in the staff TU's data (0x80320978) */
 extern u32 lbl_80320978[];
@@ -448,7 +445,7 @@ void Fireball_update(int* obj)
     ((FireballState*)state)->elapsedTime += timeDelta;
     if (((FireballState*)state)->elapsedTime > ((FireballState*)state)->flightDuration)
     {
-        ObjHits_SetHitVolumeSlot(obj, FIREBALL_HIT_VOLUME_SLOT, *(s8*)((char*)params + 0x19) != 0 ? 3 : 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREBALL_HIT_VOLUME_SLOT, *(s8*)((char*)params + 0x19) != 0 ? 3 : 1, 0);
     }
     if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_POS_LATCHED) == 0)
     {
@@ -505,7 +502,7 @@ void Fireball_update(int* obj)
         ((GameObject*)obj)->anim.velocityX = lbl_803E3330;
         ((GameObject*)obj)->anim.velocityY = lbl_803E3330;
         ((GameObject*)obj)->anim.velocityZ = lbl_803E3330;
-        ObjHits_ClearHitVolumes(obj);
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         ((FireballState*)state)->fadeoutTimer -= timeDelta;
         if (((FireballState*)state)->fadeoutTimer <= lbl_803E3330)
         {

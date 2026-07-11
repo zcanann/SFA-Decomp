@@ -432,7 +432,7 @@ void bombplant_update(void* obj)
                                            (s16)(((ObjDef*)p50)->primaryHitboxRadius + 0x50),
                                            (s16)(((ObjDef*)p50)->primaryCapsuleOffsetA - 0x50),
                                            (s16)(((ObjDef*)p50)->primaryCapsuleOffsetB + 0x50));
-                ObjHits_MarkObjectPositionDirty((int)obj);
+                ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
             }
         }
     }
@@ -448,11 +448,11 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x10) != 0)
     {
-        ObjHits_SetHitVolumeSlot((u32)obj, BOMBPLANT_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, BOMBPLANT_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
-        ObjHits_ClearHitVolumes((int)obj);
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     }
 
     if ((entry[8] & 0x2) != 0)

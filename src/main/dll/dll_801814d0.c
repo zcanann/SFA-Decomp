@@ -129,7 +129,7 @@ void fn_801814D0(int obj, int arg, u8* state)
             launchVel = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityZ = launchVel;
-            ObjHits_ClearHitVolumes(obj);
+            ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             if (lbl_803DBDA0 != 0)
             {
                 ObjHits_DisableObject(obj);

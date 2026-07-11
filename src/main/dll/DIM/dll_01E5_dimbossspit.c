@@ -130,7 +130,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
     radius = 0x94 - (burstTimer >> 2);
     if (alpha >= 0)
     {
-        ObjHits_SetHitVolumeSlot((int)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 2, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 2, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)((radius - 0x40) >> 1));
         (obj)->anim.alpha = alpha;
     }
@@ -144,7 +144,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
         (obj)->anim.alpha = 0;
         if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50)
         {
-            ObjHits_SetHitVolumeSlot((int)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_9, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_9, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)((radius - 0x40) >> 1));
         }
     }
@@ -212,7 +212,7 @@ void DIMbossspit_update(GameObject* obj)
             Obj_FreeObject((int)obj);
             return;
         }
-        ObjHits_SetHitVolumeSlot((int)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 4, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 4, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 10);
         (obj)->anim.velocityY = (obj)->anim.velocityY - gDimBossSpitGravity * timeDelta;
         (obj)->anim.velocityY = (obj)->anim.velocityY * gDimBossSpitVelocityDamping;
@@ -280,7 +280,7 @@ void DIMbossspit_init(int obj)
         modelLightStruct_setGlowProjectionRadius(((DIMbossspitState*)state)->light, lbl_803E4D80);
     }
     ((GameObject*)obj)->unkF4 = 0xb4;
-    ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
     ((DIMbossspitState*)state)->unk0 = 0;
     ((DIMbossspitState*)state)->unk2 = 0;

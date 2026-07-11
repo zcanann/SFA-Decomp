@@ -117,7 +117,7 @@ void drakormissile_startActiveLaunch(GameObject* obj)
     (obj)->anim.rootMotionScale = lbl_803E6958 * (obj)->anim.modelInstance->rootMotionScaleBase;
     state->timer = DRAKORMISSILE_ACTIVE_TIMER;
     ObjHits_SetTargetMask((int)obj, DRAKORMISSILE_TARGET_MASK);
-    ObjHits_SetHitVolumeSlot((int)obj, DRAKORMISSILE_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DRAKORMISSILE_HIT_VOLUME_SLOT, 1, 0);
     Sfx_PlayFromObject((int)obj, DRAKORMISSILE_ACTIVE_SFX_A);
     Sfx_PlayFromObject((int)obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }

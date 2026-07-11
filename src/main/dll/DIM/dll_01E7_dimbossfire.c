@@ -159,7 +159,7 @@ void dimbossfire_update(GameObject *obj)
         if ((state->flags & DIMBOSSFIRE_FLAG_START_BURST) != 0)
         {
             state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
-            ObjHits_SetHitVolumeSlot((u32)obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0xf);
             ObjHits_EnableObject((u32)obj);
             if (((obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
@@ -222,7 +222,7 @@ void dimbossfire_update(GameObject *obj)
                 ModelLightStruct_free(state->light);
                 state->light = 0;
             }
-            ObjHits_SetHitVolumeSlot((u32)obj, 0, 0, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
             ObjHits_DisableObject((u32)obj);
         }
@@ -250,7 +250,7 @@ void dimbossfire_init(GameObject *obj, u32 arg2, int placement)
     DimbossfireState* state;
 
     state = obj->extra;
-    ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
     ObjHits_DisableObject((u32)obj);
     if (placement == 0)

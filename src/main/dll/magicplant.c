@@ -246,7 +246,7 @@ void fn_80153248(GameObject* obj, int state)
             }
         }
     }
-    ObjHits_SetHitVolumeSlot((int)obj, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
     trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
     vec[0] = ((GameObject*)trackedObj)->anim.localPosX - (obj)->anim.localPosX;
     vec[1] = (lbl_803E28D8 + ((GameObject*)trackedObj)->anim.localPosY) - (obj)->anim.localPosY;

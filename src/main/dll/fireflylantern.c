@@ -113,7 +113,7 @@ void fn_80154870(GameObject* obj, int* state)
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
     }
-    ObjHits_SetHitVolumeSlot((int)obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
     flag = playerGetFlags3F0Bit5((GameObject*)(Obj_GetPlayerObject()));
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - (obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;

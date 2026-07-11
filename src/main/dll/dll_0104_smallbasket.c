@@ -33,6 +33,7 @@
 #include "main/dll/cfperch_state.h"
 #include "main/dll/player_status.h"
 #include "main/objfx.h"
+#include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
@@ -135,14 +136,9 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, double scale);
 extern void* Obj_GetPlayerObject(void);
-extern u32 ObjHits_DisableObject();
-extern u32 ObjHits_EnableObject();
 extern f32 Vec_distance(f32* a, f32* b);
 
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void ObjHits_ClearHitVolumes(int objPtr);
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern void ObjHits_SyncObjectPositionIfDirty(u32 objPtr);
 
 extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);
@@ -984,7 +980,7 @@ void SmallBasket_update(GameObject* obj)
                         (obj)->anim.velocityZ = zf;
                         ObjHits_EnableObject(obj);
                         *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                        ObjHits_ClearHitVolumes((int)obj);
+                        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
                     }
                     else
                     {
@@ -1019,7 +1015,7 @@ void SmallBasket_update(GameObject* obj)
             state->respawnTimer -= framesThisStep;
             if (*(s8*)&state->throwState == 1)
             {
-                ObjHits_SetHitVolumeSlot((int)obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
+                ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
                 if ((obj)->anim.velocityY > lbl_803E3994)
                 {
                     (obj)->anim.velocityY = lbl_803E3998 * timeDelta + (obj)->anim.velocityY;
@@ -1047,7 +1043,7 @@ void SmallBasket_update(GameObject* obj)
                 zf = lbl_803E3938;
                 (obj)->anim.velocityX = zf;
                 (obj)->anim.velocityZ = zf;
-                ObjHits_ClearHitVolumes((int)obj);
+                ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             }
             else if ((contactFlags != 0) && (*(s8*)&state->throwState == 2))
             {
@@ -1059,7 +1055,7 @@ void SmallBasket_update(GameObject* obj)
                 (obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ObjHits_ClearHitVolumes((int)obj);
+                ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             }
         }
         state->randomTimer -= framesThisStep;
@@ -1076,7 +1072,7 @@ void SmallBasket_update(GameObject* obj)
                 (obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ObjHits_ClearHitVolumes((int)obj);
+                ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             }
         }
         else

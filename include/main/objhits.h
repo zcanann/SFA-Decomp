@@ -93,7 +93,6 @@ void ObjHitbox_SetStateIndex(int obj, int hitState, int stateIndex);
 void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius);
 void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax);
 #endif
-void ObjHits_SetHitVolumeMasks(int obj, int hitVolume, int hitType, int sourceMask);
 int ObjHits_AllocObjectState(int obj, u32 arena);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
@@ -299,16 +298,16 @@ void ObjHits_Update(int objectCount);
 #ifndef OBJHITS_IMPLEMENTATION
 void ObjHits_SetTargetMask();
 #endif
-void ObjHits_ClearHitVolumes(int obj);
-void ObjHits_SetHitVolumeMasks(int obj, int hitVolume, int hitType, int sourceMask);
-void ObjHits_SetHitVolumeSlot();
-void ObjHits_ClearSourceMask(int obj, int sourceMask);
+void ObjHits_ClearHitVolumes(ObjAnimComponent* obj);
+void ObjHits_SetHitVolumeMasks(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceMask);
+void ObjHits_SetHitVolumeSlot(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceSlot);
+void ObjHits_ClearSourceMask(ObjAnimComponent* obj, int sourceMask);
 #ifndef OBJHITS_IMPLEMENTATION
-void ObjHits_SetSourceMask();
+void ObjHits_SetSourceMask(ObjAnimComponent* obj, u8 sourceMask);
 #endif
-void ObjHits_ClearFlags(int obj, int flags);
-void ObjHits_SetFlags(int obj, int flags);
-void ObjHits_MarkObjectPositionDirty();
+void ObjHits_ClearFlags(ObjAnimComponent* obj, int flags);
+void ObjHits_SetFlags(ObjAnimComponent* obj, int flags);
+void ObjHits_MarkObjectPositionDirty(ObjAnimComponent* obj);
 void ObjHits_SyncObjectPositionIfDirty();
 void ObjHits_DisableObject();
 void ObjHits_EnableObject();

@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/engine_shared.h"
 
 typedef struct EcshCupState
@@ -63,9 +64,6 @@ extern const f32 lbl_803E50C4;
 extern const f32 lbl_803E50C8;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void ObjHits_SetHitVolumeSlot(u32 objPtr, int hitVolume, int hitType, int sourceSlot);
-extern u32 ObjHits_SyncObjectPositionIfDirty();
-extern u32 ObjHits_EnableObject();
 extern u32 ObjGroup_FindNearestObject();
 extern f32 Vec_distance(f32* a, f32* b);
 extern int getAngle(float y, float x);
@@ -143,13 +141,13 @@ void ecsh_cup_update(short* obj)
             ((GameObject*)obj)->anim.localPosX = state->velX * timeDelta + ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.localPosZ = state->velZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
             ObjHits_EnableObject((int)obj);
-            ObjHits_SetHitVolumeSlot((int)obj, ECSHCUP_HIT_VOLUME_SLOT, 1, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ECSHCUP_HIT_VOLUME_SLOT, 1, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
         }
         else
         {
             ObjHits_EnableObject((int)obj);
-            ObjHits_SetHitVolumeSlot((int)obj, 0, 0, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
         }
         m = mode;
@@ -299,7 +297,7 @@ void ecsh_cup_init(int obj, int def)
         gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
     }
     ObjHits_EnableObject(obj);
-    ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
 

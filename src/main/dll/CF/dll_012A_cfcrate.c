@@ -192,7 +192,7 @@ void CFCrate_update(GameObject* obj)
         break;
     case 0x71b: /* DFP_WaterHi... */
         state->lingerTimer -= framesThisStep;
-        ObjHits_SetHitVolumeSlot((int)obj, CFCRATE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CFCRATE_HIT_VOLUME_SLOT, 1, 0);
         if (state->lingerTimer <= 0)
         {
             Obj_FreeObject((int)obj);

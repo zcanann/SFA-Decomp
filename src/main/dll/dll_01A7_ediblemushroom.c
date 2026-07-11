@@ -354,7 +354,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         break;
     case 9:
-        ObjHits_ClearSourceMask((int)obj, 1);
+        ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 1);
         Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_cagelp_c);
         if (((EdibleMushroomState*)state)->burrowAttackTimer <= 0.0f)
         {
@@ -364,7 +364,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         ((EdibleMushroomState*)state)->burrowAttackTimer = timer;
         if (timer <= 0.0f)
         {
-            ObjHits_SetSourceMask((int)obj, 1);
+            ObjHits_SetSourceMask((ObjAnimComponent*)obj, 1);
             (*gExpgfxInterface)->freeSource((int)obj);
             ((EdibleMushroomState*)state)->animState = 0;
             ((EdibleMushroomState*)state)->flags &= ~EDIBLEMUSHROOM_FLAG_STRUCK;

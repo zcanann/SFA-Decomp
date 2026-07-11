@@ -110,7 +110,7 @@ void arwarwingbo_update(int obj)
             (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
             spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
-            ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
         }
         (*gPartfxInterface)->spawnObject((void*)obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
@@ -120,7 +120,7 @@ void arwarwingbo_update(int obj)
     {
         return;
     }
-    ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0xf, 0, 0);
     if ((*(ObjHitsPriorityState**)&objAnim->hitReactState)->lastHitObject != 0 ||
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->contactFlags != 0 ||
         (getButtonsJustPressed(0) & PAD_BUTTON_B))
@@ -134,7 +134,7 @@ void arwarwingbo_update(int obj)
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
         spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
-        ObjHits_SetHitVolumeSlot(obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
     }
     objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta, objAnim->velocityZ * timeDelta);

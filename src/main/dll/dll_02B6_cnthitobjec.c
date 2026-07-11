@@ -19,6 +19,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -160,7 +161,7 @@ void cnthitobjec_init(GameObject* obj, int setup)
     state->allowedHitSourceCount = (&lbl_803DC42C)[setupData->hitSourceProfile];
     if ((void*)state->allowedHitSources == &lbl_803DC428)
     {
-        ObjHits_ClearSourceMask((int)obj, 8);
+        ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 8);
     }
     if (setupData->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {

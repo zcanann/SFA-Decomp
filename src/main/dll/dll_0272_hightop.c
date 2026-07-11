@@ -18,6 +18,7 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/baddie_state.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -897,8 +898,8 @@ int hightop_stateHandler04(int obj, int stateArg)
         HighTopRuntime* state2;
         RomCurveInterface* curve;
         mainSetBits(0x62f, 1);
-        ObjHits_MarkObjectPositionDirty(obj);
-        ObjHits_ClearSourceMask(obj, 1);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
+        ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
         *(s8*)&state->substate = -1;
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_FOLLOW;

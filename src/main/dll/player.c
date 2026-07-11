@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
@@ -2136,7 +2137,7 @@ int playerStateOnLadder(int obj, int state)
     inner = *(int*)&((GameObject*)obj)->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         if (gPlayerPathObject != 0 && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
         {
             ((PlayerState*)inner)->staffActionRequest = 1;
@@ -2649,7 +2650,7 @@ int playerStateClimbWall(GameObject* obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         gPlayerCurrentMoveId = 0x10;
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     {
         int base = *(int*)&obj->extra;
@@ -6144,7 +6145,7 @@ int playerState1D(int obj, int state, f32 fv)
             inner->stickTargetY = z;
         }
         ((ByteFlags*)((char*)inner + 0x3f3))->b80 = 0;
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     inner->aimInputZ = lbl_803E7F2C;
     {
@@ -9090,7 +9091,7 @@ int playerStateClimbOntoWall(GameObject* obj, int state)
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
         }
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     flag549 = inner->climbMoveVariant;
     if (flag549 != 0)
@@ -9820,7 +9821,7 @@ int playerStateClimbDownFromWall(GameObject* obj, int state)
         int model;
         f32 buf2[2];
         f32 buf1[3];
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         ic = inner->curAnimId;
         if (ic != 0x48 && ic != 0x47)
         {
@@ -9898,7 +9899,7 @@ int playerStateClimbUpFromWall(GameObject* obj, int state)
         int model;
         f32 buf2[2];
         f32 buf1[3];
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         ic = inner->curAnimId;
         if (ic != 0x48 && ic != 0x47)
         {
@@ -11174,7 +11175,7 @@ int playerStateThrowing(GameObject* obj, int state)
     {
         if (*(void**)((char*)inner + 0x7f8) != NULL)
         {
-            ObjHits_MarkObjectPositionDirty(inner->heldObj);
+            ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)inner->heldObj);
         }
         ObjAnim_SetCurrentMove((int)obj, 0x443, lbl_803E7EAC, 0);
         *(s16*)((char*)state + 0x278) = 1;
@@ -11229,7 +11230,7 @@ int playerState34(GameObject* obj, int state)
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     k = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedC = k;
@@ -14180,7 +14181,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                         *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
                         ((PlayerState*)inner)->heldObj = 0;
                     }
-                    ((void (*)(int))ObjHits_MarkObjectPositionDirty)(obj);
+                    ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
                     *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
                     return 3;
                 }
@@ -14751,7 +14752,7 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
             f32 vy;
             f32 vz;
         } vb;
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
             inner->staffActionRequest = 1;
@@ -16424,7 +16425,7 @@ int playerStateSlideDownLadder(GameObject* obj, int state, f32 fv)
     PlayerState* inner = obj->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         lbl_803DE498 = lbl_803E7EA4;
         ObjAnim_SetCurrentMove((int)obj, 0x35, lbl_803E7EA4, 1);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20;
@@ -16621,7 +16622,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
     PlayerState* inner = ((GameObject*)obj)->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     setBButtonIcon(0xa);
     {
@@ -16816,7 +16817,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
     s16 item;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     if ((s16)getYButtonItem(&item) == 1 && item == 0x957)
     {
@@ -17030,7 +17031,7 @@ int playerState1B(GameObject* obj, int state, f32 fv)
     {
         *(s16*)((char*)state + 0x278) = 0x1b;
         inner->stateHandler = (int)objUpdateHitboxPos;
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     {
         int in2 = *(int*)&obj->extra;
@@ -17294,7 +17295,7 @@ int playerState35(GameObject* obj, int state)
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     f = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedC = f;
@@ -17418,7 +17419,7 @@ int playerStateSuperQuake(GameObject* obj, int state, f32 fv)
         {
             ((PlayerState*)inner)->chargeCapacity = 0xa;
         }
-        ObjHits_MarkObjectPositionDirty(obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 && lbl_803E7EA4 != inner->verticalVel)
     {

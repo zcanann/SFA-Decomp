@@ -676,7 +676,6 @@ extern void ObjHits_EnableObject(u32 obj);
 extern int lbl_8032BEF8[];
 extern u8 lbl_803DC42C;
 extern int lbl_803DC428;
-extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
 extern int arrayIndexOf(int array, int count, int value);
 extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
@@ -711,7 +710,6 @@ extern f32 lbl_803E7218;
 extern f32 lbl_803E7100;
 extern f32 lbl_803E71E4;
 extern f32 lbl_803E704C;
-extern void ObjHits_MarkObjectPositionDirty(int obj);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -796,7 +794,6 @@ extern f32 lbl_803DC3D0;
 extern f32 lbl_803DC3D4;
 extern f32 lbl_803DC3D8;
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);

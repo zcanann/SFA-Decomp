@@ -135,7 +135,7 @@ void dll_19D_update(GameObject* obj)
         ((GameObject*)self)->anim.velocityX = zero;
         ((GameObject*)self)->anim.velocityY = zero;
         ((GameObject*)self)->anim.velocityZ = zero;
-        ObjHits_ClearHitVolumes(self);
+        ObjHits_ClearHitVolumes((ObjAnimComponent*)self);
         ((Dll19DState*)state)->despawnTimer -= 1;
         if (((Dll19DState*)state)->despawnTimer <= 0)
         {
@@ -194,7 +194,7 @@ void dll_19D_init(GameObject* obj)
     {
         slot = 1;
     }
-    ObjHits_SetHitVolumeSlot(self, DLL19D_HIT_VOLUME_SLOT, slot, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)self, DLL19D_HIT_VOLUME_SLOT, slot, 0);
 
     if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 1)
     {

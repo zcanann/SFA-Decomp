@@ -491,7 +491,7 @@ void crawler_initTailModel(int* obj, int* st)
         Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
     }
     ((FCVars*)st)->emergeTimer = lbl_803E2C58;
-    ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
+    ObjHits_SetHitVolumeMasks((ObjAnimComponent*)obj, 0xe, 1, 0xfff);
     ((FireCrawlerState*)st)->tailModelChain = ObjModelChain_Alloc(gCrawlerModelChainIds, 5);
     ObjModelChain_SetOrigin(((FireCrawlerState*)st)->tailModelChain, lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
     ((BaddieState*)st)->reactionFlags = ((BaddieState*)st)->reactionFlags | 0x100;
@@ -956,7 +956,7 @@ void hoodedZyck_update(s16* obj, u8* state)
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityY = z;
         ((GameObject*)obj)->anim.velocityZ = z;
-        ObjHits_SetHitVolumeSlot((int)obj, FIRECRAWLER_HIT_VOLUME_SLOT, 1, -1);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIRECRAWLER_HIT_VOLUME_SLOT, 1, -1);
         ang =
             getAngle(
                 ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,

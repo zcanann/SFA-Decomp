@@ -1164,7 +1164,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
         obj->anim.rotX = inner->sub.appliedYaw;
         if (inner->baddie.controlMode != 3)
         {
-            int hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &hx, &hy, &hz);
+            int hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObj, 0, 0, &hx, &hy, &hz);
             if (hit != 0)
             {
                 if (objGetFlagsE5_2((int)obj) != 0 && inner->sub.rideState == 2)

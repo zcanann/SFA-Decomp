@@ -77,7 +77,7 @@ void dfppowersl_init(DfpPowerSlObject* obj, DfpPowerSlMapData* mapData)
         state->spawnObjectId = mapData->spawnObjectId;
         state->eventId = mapData->eventId;
         obj->modeWord = mapData->mode << DFPPOWERSL_MODE_WORD_SHIFT;
-        ObjHits_SetHitVolumeSlot((u32)obj, DFPPOWERSL_HIT_VOLUME_SLOT, DFPPOWERSL_HIT_VOLUME_ENABLED, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DFPPOWERSL_HIT_VOLUME_SLOT, DFPPOWERSL_HIT_VOLUME_ENABLED, 0);
     }
     return;
 }

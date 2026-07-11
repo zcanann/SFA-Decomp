@@ -20,7 +20,6 @@ extern f32 gDimTrickyLosCamOffsetDist;
 extern f32 lbl_803E51D8;
 extern f32 lbl_803E51DC;
 extern int objUpdateOpacity(char* obj);
-extern int ObjHits_GetPriorityHit(GameObject *obj, int a, int b, int c);
 extern s8 gDimTrickyEggSequenceStage;
 extern u32 gDimTrickyEggResArgsTemplate[4];
 extern f32 lbl_803E51E0;

@@ -368,7 +368,7 @@ void fn_80155948(int* obj, int state)
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
              (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
     {
-        ObjHits_SetHitVolumeSlot((int)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
         move = *(short*)(obj + 0x28);
         if (move == 3)
         {
@@ -683,7 +683,7 @@ void fn_8015625C(u32 obj, int state)
     }
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    ObjHits_SetHitVolumeSlot(obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c_261);
@@ -775,7 +775,7 @@ void fn_8015652C(u32 obj, int state)
     placement = ((GameObject*)obj)->anim.placement;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    ObjHits_SetHitVolumeSlot(obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c_261);

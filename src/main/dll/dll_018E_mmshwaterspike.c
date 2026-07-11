@@ -62,7 +62,7 @@ void mmsh_waterspike_update(int obj)
     int placement;
 
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    ObjHits_SetHitVolumeSlot(obj, MMSHWATERSPIKE_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MMSHWATERSPIKE_HIT_VOLUME_SLOT, 1, 0);
     animObj = ObjList_FindObjectById(((GameObject*)obj)->unkF8);
     if (animObj != NULL)
     {
