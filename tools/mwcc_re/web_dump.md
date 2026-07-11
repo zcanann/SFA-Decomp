@@ -1455,3 +1455,15 @@ applies: make the NAMED web the value owner (fn1 used the narrow-lvalue absorb; 
 call-result analog = TBD — maybe a same-type local copy chain, or the andross embedded-
 assign form `(vec9 = getVec(...))` in a use). NEXT: find the call-result analog of the
 u16-absorb — 3-4 candidate spellings, then this fn computes.
+
+
+## Round 29: absorb-analog first candidates negative
+int-return extern + (s16*) casts on both call results: inert (31). Self-assign: folds.
+Remaining family candidates for next session: void*-return variant, a used-once second
+named pointer, the extern declared with a DIFFERENT param signature (#115 width games on
+the int idx arg), or forcing the copy-temp UNION-INELIGIBLE via... (the window is fixed
+per-fn — but what SETS the window low bound 42 = the first temp index = f(named count!)
+=> ADDING dead named locals RAISES the window base and changes WHICH temps coalesce!!! —
+one dead decl shifts every temp index +1 AND the window +1 — net invariant? — but the
+window is [firstTemp, ...] so relative positions hold... unless the PROTECTED web
+(0x5e9d86) or the temp-canonical parent selection shifts. UNTESTED.)
