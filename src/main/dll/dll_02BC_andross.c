@@ -524,8 +524,6 @@ void andross_update(int obj)
     f32 searchDist;
     boss = (GameObject*)obj;
     state = boss->extra;
-    phaseChanged = 0;
-    actionChanged = 0;
     pathIndex = 0;
     if (state->startupDelay != 0)
     {
@@ -577,6 +575,8 @@ void andross_update(int obj)
             (*spawnSlot)->anim.localPosZ = boss->anim.localPosZ + state->spawnDelta[spawnIndex].z;
         }
     }
+    phaseChanged = 0;
+    actionChanged = 0;
     if (state->fightPhase != state->prevFightPhase)
     {
         phaseChanged = 1;
