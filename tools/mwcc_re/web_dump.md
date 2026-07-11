@@ -1301,3 +1301,13 @@ only matters when the repeated block OWNS locals (objlib) or walkers (tricky). f
 enumeration now closed across 15+ spelling families; open levers: union-control disasm
 (0x57b947 call context) and any structural reading not yet conceived. Moving the round
 budget to the other units next.
+
+
+## Round 15: modellight select-pair — FPR ordering lever EXCLUDED by trace
+cls-3 removal trace (selectObjectLights): one clean ascending pass, no parking, no
+renumber anomalies => the 3-diff ble/fmr residual is NOT an allocation-order problem.
+It is the ternary-join lowering fork (which operand reg receives the join copy +
+branch sense), same class as the li-vs-mr emitter fork. Source directions were closed
+in rounds 2-3 (<, <=, >, result-var, chained — all measured). Next lever = the ternary
+join lowering disasm (find the join-emit site, read what selects copy direction), which
+would also resolve curves-c2 (magic/frac) and vecmath — the FPR trio shares this class.
