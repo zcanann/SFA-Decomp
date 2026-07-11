@@ -1028,3 +1028,31 @@ at the Number events for jDO/pose defs + the segment-builder walk for THIS fn, t
 what retail's IR must contain; or accept 99.664 (fn) / 99.966 (unit) as the cap pending
 new info. All levers so far = the audio-campaign toolkit; this residual is a NEW class
 (O4 const-emitter li-vs-mr), one node-kind dump away from resolution.
+
+
+## objlib eyeAnim: OBSTRUCTION CHAIN COMPLETE (2026-07-11, round 3)
+New compiler knowledge from the web-struct dump (webdump2.py, value+web raw dumps):
+- Web struct +0x12 (16-bit) = DEF COUNT — and it COUNTS DEAD DEFS (a folded dead
+  decl-init still increments it; that is WHY dead decl-inits reorder the splitter).
+- Web flags +0x16 bit 0x40 = CONSTANT-VALUE TRACKING flag (set on all const-0-initialized
+  webs and their segments; the zero-reuse emitter consults it).
+- THE EMITTER LAW (verified across configs): a NAMED web def materializes constants
+  fresh (li); a SEGMENT (lifetime-split @-web) def goes through the remat path, which
+  REUSES a register already holding the constant (mr rD,rS) — first segment-def in a
+  cluster still li, subsequent ones mr. Our block-2 = segments (mr ✓ matches target);
+  block-1 = named first-live-segment (li ✗ target has mr).
+FORMAL OBSTRUCTION (each link measured):
+  target block-1 mr => block-1 defs are SEGMENT defs => a LIVE segment precedes block-1
+  => a live def before block-1 that emits nothing => every candidate use const-folds
+  (call args, stores, casts — all mapped) => no O4 C source produces it. Version sweep
+  at full-O4 (GC/1.2.5, 1.2.5n, 1.3, 1.3.2, 1.3.2r, 2.0, 2.0p1, 2.5, 2.6, 2.7): the
+  2-diff residual is IDENTICAL on 1.3-2.7 (1.2.5x diverges wholesale). O1/O2/O3 islands
+  ruled out. opt_propagation off ineffective (front-end merge). Single-def joint (F2a)
+  does not enable the reuse for named dests and breaks the splitter order.
+VERDICT: fn capped at 99.664 (unit 99.966) pending information outside this repo
+(retail flags for this TU, an unseen pass toggle, or a compiler build not in
+build/compilers/). Same verdict CLASS as the audio trio pre-crack — but unlike those,
+the instrument layer here is exhausted: every field of the mechanism is measured and
+the requirement is self-contradictory in C-at-O4 semantics. If new info appears, the
+entry points are: what creates a live-but-emission-free first segment, or what else
+routes a named def through the remat path.
