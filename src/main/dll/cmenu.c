@@ -139,12 +139,12 @@ int cMenuSetItems(s16* items, char useTricky)
     s16 saved[CMENU_ITEM_SLOT_COUNT];
 
     base = lbl_803A87F0;
-    ids = (s16*)(base + 0x948);
-    w1 = ids;
-    dst = saved;
-    w2 = dst;
     stP = (s16*)(base + 0x548);
     w3 = stP;
+    dst = saved;
+    w2 = dst;
+    ids = (s16*)(base + 0x948);
+    w1 = ids;
     flP = base + 0x448;
     w4 = flP;
     for (i = 0; i < CMENU_ITEM_SLOT_COUNT; i++)
