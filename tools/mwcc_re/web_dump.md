@@ -244,3 +244,31 @@ same IroLinearForm frontier already documented for smallbasket axes.
 Remaining unlock for this family: identify node kind 0x40/0x24 semantics in
 the CIR opcode table and what C shape flips a flag between name-canonical
 and expression-canonical.
+
+## andross_update residual (2026-07-11): full root-cause map at 99.760
+The remaining 215 regions on andross_update all hang off ONE numbering fact:
+a compiler temp (HashName "@1348", per-class GPR vreg 72) outranks every
+user-named local (names number pass-1 into vregs ~44-50, reverse-decl order;
+@/$ temps number pass-2, always higher). Select colors descending vreg, so
+the temp takes the r29 reservation and shifts the switch flag (vreg 49,
+nadj 168) to r28 — retail has the switch flag ON r29. Facts pinned live:
+- vreg spaces are PER-CLASS (webEnd[cls]); FPR vreg 72 is a different web.
+- @1348's web (Apply operand trace, tools/mwcc_re/apply_trace_lldb.py):
+  an li def + a guarded-merge pseudo (dst==src, label operand) + clrlwi
+  reads — i.e. part of stateChanged's latch dataflow, live-range-split off
+  the named web (vreg 48; the two share r29 F+A without interfering).
+- `#pragma opt_propagation off` removes the temp (sc name-binds to r28) at
+  the cost of +40 instrs -> IroPropagate creates it. Not shippable.
+- INERT levers (all tried, byte-stable at 215 regions): 24 decl perms,
+  6 init orders, latch temp choice (found/ref/work), found-free latches
+  (both), if/else-empty + braceless + +=/= forms, case-scratch variable
+  identity (flag vs stateChanged), (void)&x and *(&x)=0 escapes,
+  block-scoped loop locals, 8 spawn-loop formulations.
+- Downstream of the same layer: case-body webs reuse r25/r24 instead of
+  r26 (the off/zext temps' reservations land before the case webs color),
+  and the f30/f31 fadeAlpha pair.
+NEXT UNLOCK (precise): decode IroPropagate's driver (0x470060 band) for the
+transformation that splits a zero-init'd, conditionally-set u8's dataflow
+into an @-temp — the predicate that fired on OUR stateChanged but not on
+retail's — then find the C shape (or absence) that retail used. All tracer
+tooling to verify a candidate in minutes is checked in.
