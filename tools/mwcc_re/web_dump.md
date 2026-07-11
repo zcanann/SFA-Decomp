@@ -1475,3 +1475,12 @@ hypothesis predicted. fn_802BCA10 absorb-analog family: 5 tested, all negative.
 The four-fn GPR cluster awaits either the remaining absorb spellings (void*-return,
 second named pointer, #115 idx-arg width) or a temp-canonical PRIORITY lever (the
 temp-canonicals' own pri/deg — never probed as a target). Session round-count: 30.
+
+
+## Round 31: absorb-analog family CLOSED (8/8 negative)
+void*-return+cast, s16/u8 idx-arg widths: all inert (31). The call-result absorb has no
+spelling analog in the tested space — the named-web-dead pattern for call results is
+emitter-fixed. Remaining lever for the 4-fn GPR cluster: the TEMP-CANONICALS' pri/deg
+as targets (their scores at the stuck-choice/simplify determine everything; sources =
+ref counts of the temps' expressions — computable from the traces, manipulable via
+use-count spellings on the temp-feeding expressions). That computation = next session.
