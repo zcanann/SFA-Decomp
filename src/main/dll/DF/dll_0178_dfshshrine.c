@@ -103,10 +103,10 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 #define DFSHRINE_MODE_AFTER_FINISH  6 /* one frame after the finish transition */
 #define DFSHRINE_MODE_FINISH        7 /* start the finishing screen transition */
 
-#define DFSH_REWARD_BIT(idx)    (base[(idx)])
-#define DFSH_REWARD_DELAY(idx)  (base[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx)  (((u16*)((u8*)base + 40))[(idx)])
-#define DFSH_TARGET_OBJECT(idx) (((int*)((u8*)base + 0x3c))[(idx)])
+#define DFSH_REWARD_BIT(idx)    (base[0][(idx)])
+#define DFSH_REWARD_DELAY(idx)  (base[0][10 + (idx)])
+#define DFSH_REQUIRED_BIT(idx)  (((u16*)((u8*)base[0] + 40))[(idx)])
+#define DFSH_TARGET_OBJECT(idx) (((int*)((u8*)base[0] + 0x3c))[(idx)])
 
 #define DFSH_FLAGS(state) ((DfshShrineFlagsBits*)&(state)->flags)
 
@@ -334,7 +334,7 @@ void DFSH_Shrine_update(int objArg)
 {
 
     extern int Obj_GetPlayerObject(void);
-    u16* base;
+    u16* base[1];
     DfshShrineState* state;
     int player;
     s16 i;
@@ -342,7 +342,7 @@ void DFSH_Shrine_update(int objArg)
     u16* required;
     GameObject* obj = (GameObject*)objArg;
 
-    base = gDfShShrineRewardTable;
+    base[0] = gDfShShrineRewardTable;
     state = obj->extra;
     player = Obj_GetPlayerObject();
     if (obj->unkF4 != 0)
@@ -428,7 +428,7 @@ void DFSH_Shrine_update(int objArg)
         anyMissing = 0;
         for (i = 0; i < 10; i++)
         {
-            if (mainGetBit(*(u16*)((u8*)&base[20] + i * 2)) == 0u)
+            if (mainGetBit(*(u16*)((u8*)&base[0][20] + i * 2)) == 0u)
             {
                 anyMissing = 1;
                 i = 10;
@@ -501,12 +501,12 @@ void DFSH_Shrine_update(int objArg)
         mainSetBits(0x589, 1);
         {
             s16 j;
-            for (j = 0, required = (u16*)((u8*)base + 40); j < 10; j++)
+            for (j = 0, required = (u16*)((u8*)base[0] + 40); j < 10; j++)
             {
                 mainSetBits(*required, 0);
-                mainSetBits(*base, 0);
+                mainSetBits(*base[0], 0);
                 required++;
-                base++;
+                base[0]++;
             }
         }
         obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
