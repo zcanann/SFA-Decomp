@@ -78,12 +78,12 @@ void androssligh_updateBeam(GameObject* obj, int beam)
     if (*(void**)(beam + 4) == NULL)
     {
         *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C, lbl_803DC520, lbl_803DC524, 0);
-        *(f32*)(beam + 8) = lbl_803E7608;
+        *(f32*)(beam + 8) = 0.0f;
     }
     else
     {
         *(f32*)(beam + 8) += timeDelta;
-        *(u16*)(*(int*)(beam + 4) + 0x20) = (int)(lbl_803E760C + *(f32*)(beam + 8));
+        *(u16*)(*(int*)(beam + 4) + 0x20) = (int)(0.5f + *(f32*)(beam + 8));
         if (*(u16*)(*(int*)(beam + 4) + 0x20) >= *(u16*)(*(int*)(beam + 4) + 0x22))
         {
             mm_free((void*)*(int*)(beam + 4));

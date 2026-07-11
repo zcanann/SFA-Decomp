@@ -11,6 +11,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+static const f32 gAndrossBrainRenderScale[2] = {1.0f, 0.0f};
+
 typedef struct AndrossBrainState
 {
     GameObject* andross;   /* objId ANDROSS_OBJ_ID, main andross object */
@@ -93,7 +95,7 @@ void AndrossBrain_free(void)
 
 void AndrossBrain_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7600);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gAndrossBrainRenderScale[0]);
 }
 
 void AndrossBrain_hitDetect(void)

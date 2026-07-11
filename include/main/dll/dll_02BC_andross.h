@@ -93,11 +93,23 @@ typedef struct AndrossState {
     f32 targetPosX; /* tracked target: K*sin(t) + homePos + clamped arwing delta */
     f32 targetPosY;
     f32 targetPosZ;
-    f32 velX; /* horizontal velocity = clampedDist * sin(yaw), minus damped arwing vel */
-    f32 velY; /* horizontal velocity = clampedDist * cos(yaw), minus damped arwing vel */
-    f32 velZ;
+    union {
+        struct {
+            f32 velX; /* horizontal velocity = clampedDist * sin(yaw), minus damped arwing vel */
+            f32 velY; /* horizontal velocity = clampedDist * cos(yaw), minus damped arwing vel */
+            f32 velZ;
+        };
+        SunVec3 velocity;
+    };
     f32 soundTimer; /* += timeDelta; on threshold plays sfx 0x46f and latches a flag */
-    u8 soundEventFlags;
+    union {
+        u8 soundEventFlags;
+        struct {
+            u8 laughPlayed : 1;
+            u8 ringPlayed : 1;
+            u8 roarPlayed : 1;
+        };
+    };
     u8 unkE9[0xEC - 0xE9];
 } AndrossState;
 
@@ -107,5 +119,9 @@ STATIC_ASSERT(offsetof(AndrossState, spawnDelta) == 0x28);
 STATIC_ASSERT(offsetof(AndrossState, targetPosPtr) == 0x4C);
 STATIC_ASSERT(offsetof(AndrossState, homePosX) == 0x58);
 STATIC_ASSERT(offsetof(AndrossState, actionTimer) == 0x98);
+
+int andross_SeqFn(GameObject* obj);
+int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);
+void fn_8023A87C(GameObject* obj, int state);
 
 #endif /* MAIN_DLL_ANDROSS_H_ */

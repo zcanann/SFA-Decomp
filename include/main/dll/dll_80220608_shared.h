@@ -852,9 +852,7 @@ extern void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* se
 extern void fn_8006CB24(int obj);
 extern void Rcp_DisableDistortionFilter(void);
 extern void lightningRender(void* p);
-extern f32 lbl_803E74DC;
-extern f32 lbl_803E75B0;
-extern f32 lbl_803E7600;
+extern const f32 lbl_803E75B0;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -862,7 +860,7 @@ extern f32 lbl_803E7600;
 extern int ObjList_FindObjectById(int id);
 extern void androsshand_handleDamage(GameObject* obj, int hand);
 extern void androsshand_spawnShot(int p1, int p2, int p3);
-extern f32 lbl_803E75AC;
+extern const f32 lbl_803E75AC;
 extern f32 gAndrossHandMoveAnimSpeeds[];
 extern f32 lbl_803DC4F0;
 extern f32 lbl_803DC4F4;
@@ -870,39 +868,33 @@ extern f32 lbl_803DC4F8;
 extern int lbl_803DC4FC;
 extern int lbl_803DC500;
 extern int lbl_803DC504;
-extern f32 lbl_803E75B4;
+extern const f32 lbl_803E75B4;
 extern f32 gAndrossHandPi;
 extern f32 gAndrossHandHalfAngleScale;
-extern f32 lbl_803E75C0;
-extern f32 lbl_803E75C4;
-extern f32 lbl_803E75C8;
+extern const f32 lbl_803E75C0;
+extern const f32 lbl_803E75C4;
+extern const f32 lbl_803E75C8;
 extern double lbl_803E75D0;
-extern f32 lbl_803E75D8;
-extern f32 lbl_803E75DC;
-extern f32 lbl_803E75E0;
+extern const f32 lbl_803E75D8;
+extern const f32 lbl_803E75DC;
+extern const f32 lbl_803E75E0;
 extern double lbl_803E75E8;
-extern f32 lbl_803E75F0;
-extern f32 lbl_803E75F4;
-extern f32 lbl_803E75F8;
+extern const f32 lbl_803E75F0;
+extern const f32 lbl_803E75F4;
+extern const f32 lbl_803E75F8;
 
 extern void fn_8006CB50(void);
 extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern f32 gAndrossAlpha255;
-extern f32 lbl_803E74D4;
-extern f32 gAndrossSpringDamping;
-extern f32 gAndrossInitAnimSpeed;
-extern f32 gAndrossInitSpawnCooldown;
-extern f32 gAndrossSpringStiffness;
 
 extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
                                     int k);
 extern int lbl_803DC508;
-extern f32 lbl_803E75A8;
+extern const f32 lbl_803E75A8;
 
-extern f32 lbl_803E75AC;
+extern const f32 lbl_803E75AC;
 extern f32 gAndrossHandMoveAnimSpeeds[];
 
 extern int ObjList_FindObjectById(int id);
@@ -919,12 +911,10 @@ extern f32 lbl_803DC520;
 extern f32 lbl_803DC524;
 extern f32 lbl_803DC528;
 extern f32 lbl_803DC52C;
-extern f32 lbl_803E7608;
-extern f32 lbl_803E760C;
 
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
-extern f32 lbl_803E7480;
+extern const f32 lbl_803E7480;
 extern int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
 extern void gf_levelcon_findLinkedObjects(int obj);
 extern int loadMapAndParent(int mapId);
@@ -934,27 +924,27 @@ extern void warpToMap(int map, int p2);
 extern void loadUiDll(int id);
 extern void creditsStart(void);
 extern void gameTextShow(int id);
-extern f32 lbl_803E7460;
-extern f32 lbl_803E7464;
-extern f32 lbl_803E7468;
-extern f32 lbl_803E746C;
-extern f32 lbl_803E7470;
-extern f32 lbl_803E7474;
-extern f32 lbl_803E7478;
-extern f32 lbl_803E747C;
-extern f32 lbl_803E7484;
-extern f32 lbl_803E7488;
-extern f32 lbl_803E748C;
+extern const f32 lbl_803E7460;
+extern const f32 lbl_803E7464;
+extern const f32 lbl_803E7468;
+extern const f32 lbl_803E746C;
+extern const f32 lbl_803E7470;
+extern const f32 lbl_803E7474;
+extern const f32 lbl_803E7478;
+extern const f32 lbl_803E747C;
+extern const f32 lbl_803E7484;
+extern const f32 lbl_803E7488;
+extern const f32 lbl_803E748C;
 extern f32 timeDelta;
 
-extern f32 lbl_803E745C;
+extern const f32 lbl_803E745C;
 extern int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E7440;
 
 extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
-extern f32 lbl_803E7450;
-extern f32 lbl_803E7454;
-extern f32 lbl_803E7458;
+extern const f32 lbl_803E7450;
+extern const f32 lbl_803E7454;
+extern const f32 lbl_803E7458;
 
 extern f32 lbl_803E738C;
 extern int cmbsrc_update(GameObject* obj);
@@ -1305,17 +1295,12 @@ extern int loadObjectAtObject(int obj);
 #pragma dont_inline reset
 
 extern int ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, f32* maxDistanceSq);
-extern f32 lbl_803E7490;
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
 extern int lbl_803DC4E8;
 
-extern f32 lbl_803E74AC;
-extern f32 lbl_803E74B0;
-extern f32 lbl_803E74D4;
-extern f32 lbl_803E74D8;
 
 extern int lbl_803DC4D8;
 extern int lbl_803DC4DC;
@@ -1325,14 +1310,11 @@ extern int gGfLevelConProjectilePitch;
 extern int lbl_803DDDC0;
 extern s16 gGfLevelConProjectileYaw;
 extern s16 lbl_803DDDC6;
-extern f32 lbl_803E74A0;
-extern f32 lbl_803E74A4;
-extern f32 lbl_803E74A8;
 
 extern f32 lbl_803DC4C0;
 extern f32 gAndrossArwingVelDamp;
 
-extern u8 lbl_803DC4C8;
+extern u8 lbl_803DC4C8[4];
 
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
@@ -2086,7 +2068,7 @@ int andross_getObjectTypeId(void);
 void andross_free(int obj);
 void andross_hitDetect(void);
 void andross_render(int obj, int p2, int p3, int p4, int p5);
-void andross_setPartSignal(GameObject* obj, int signal);
+void andross_setPartSignal(GameObject* obj, u8 signal);
 int AndrossHand_getExtraSize(void);
 int AndrossHand_getObjectTypeId(void);
 void AndrossHand_free(void);
