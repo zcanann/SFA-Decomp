@@ -2389,10 +2389,10 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
     int bf;
     u32 wB;
     u32 wA;
-    int texB;
+    int i;
     int redA;
     int texA;
-    int i;
+    int texB;
     int j;
     int redB;
     int rf;
