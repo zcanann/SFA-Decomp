@@ -1170,32 +1170,39 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
 
 int fn_800119FC(s16* dest, s16* start, s16* out)
 {
+    int shiftLo;
     VoxPos cur = *(VoxPos*)dest;
-    VoxPos found;
     VoxState* st;
     int shiftHi;
     int z6lo;
+    VoxPos found;
     int z6hi;
-    int bitmapCol;
     u8 buf[3][4];
     u8* p;
-    int sumA, sumB;
-    int adj, blocked;
-    int voxXand7;
+    int sumA;
+    int sumB;
+    int bitmapCol;
+    int blocked;
+    int adj;
     int row;
     int slot;
     u8* node;
-    int i, next;
-    int shiftLo;
-    VoxActiveMap* map;
+    int i;
+    int next;
+    int err;
+    int steps;
     int voxX6;
     int voxZ6;
     int voxX;
     int voxZ;
-    int err, steps;
-    int xstep, ystep;
-    int dx2, dy2;
-    int dx, dy;
+    int voxXand7;
+    VoxActiveMap* map;
+    int xstep;
+    int ystep;
+    int dx2;
+    int dy2;
+    int dx;
+    int dy;
 
     xstep = 2;
     dx = ((VoxPos*)start)->x - cur.x;
