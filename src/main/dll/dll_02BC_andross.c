@@ -1018,22 +1018,22 @@ void andross_update(int obj)
             mainSetBits(0xd, 1);
             state->durationTimer = gAndrossVerticalMax;
         }
-        for (cueIndex = 0; cueIndex < 6; cueIndex++)
         {
-            if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+            for (cueIndex = 0; cueIndex < 6; cueIndex++)
             {
-                state->timer = 0x3c;
-                break;
+                if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                {
+                    state->timer = 0x3c;
+                    goto cue_done_0;
+                }
             }
-        }
-        if (cueIndex >= 6)
-        {
             state->timer -= framesThisStep;
             if (state->timer <= 0)
             {
                 mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
                 state->timer = 0x3c;
             }
+        cue_done_0:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1246,18 +1246,16 @@ void andross_update(int obj)
                 if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto cue_done_1;
                 }
             }
-            if (cueIndex >= 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+        cue_done_1:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1422,18 +1420,16 @@ void andross_update(int obj)
                 if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto cue_done_2;
                 }
             }
-            if (cueIndex >= 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+        cue_done_2:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1563,12 +1559,12 @@ void andross_update(int obj)
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
-        fc = gAndrossZero;
-        fc = (fb < fc) ? fc : ((fb > fc) ? fc : fb);
-        fb = gAndrossZero;
-        fb = (fa < fb) ? fb : ((fa > fb) ? fb : fa);
+        {
+            f32 deltaX = state->arwingObj->anim.localPosX - state->homePosX;
+            f32 deltaY = state->arwingObj->anim.localPosY - state->homePosY;
+            fc = (deltaX < 0.0f) ? 0.0f : ((deltaX > 0.0f) ? 0.0f : deltaX);
+            fb = (deltaY < 0.0f) ? 0.0f : ((deltaY > 0.0f) ? 0.0f : deltaY);
+        }
         fa = mathSinf(((gAndrossPi * gAndrossSwayPhaseX) / gAndrossHalfTurn));
         state->targetPosX = (gAndrossZero * fa + (state->homePosX + fc));
         fc = mathSinf(((gAndrossPi * gAndrossSwayPhaseY) / gAndrossHalfTurn));
@@ -1609,12 +1605,12 @@ void andross_update(int obj)
         state->camOffsetAccum = fval;
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
-        fb = (state->arwingObj->anim.localPosX - state->homePosX);
-        fa = (state->arwingObj->anim.localPosY - state->homePosY);
-        fc = gAndrossZero;
-        fc = (fb < fc) ? fc : ((fb > fc) ? fc : fb);
-        fb = gAndrossZero;
-        fb = (fa < fb) ? fb : ((fa > fb) ? fb : fa);
+        {
+            f32 deltaX = state->arwingObj->anim.localPosX - state->homePosX;
+            f32 deltaY = state->arwingObj->anim.localPosY - state->homePosY;
+            fc = (deltaX < 0.0f) ? 0.0f : ((deltaX > 0.0f) ? 0.0f : deltaX);
+            fb = (deltaY < 0.0f) ? 0.0f : ((deltaY > 0.0f) ? 0.0f : deltaY);
+        }
         fa = mathSinf(((gAndrossPi * gAndrossSwayPhaseX) / gAndrossHalfTurn));
         state->targetPosX = (gAndrossZero * fa + (state->homePosX + fc));
         fc = mathSinf(((gAndrossPi * gAndrossSwayPhaseY) / gAndrossHalfTurn));
@@ -1657,18 +1653,16 @@ void andross_update(int obj)
                 if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto cue_done_3;
                 }
             }
-            if (cueIndex >= 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+        cue_done_3:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1712,18 +1706,16 @@ void andross_update(int obj)
                 if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto cue_done_4;
                 }
             }
-            if (cueIndex >= 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+        cue_done_4:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1800,18 +1792,16 @@ void andross_update(int obj)
                 if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
                     state->timer = 0x3c;
-                    break;
+                    goto cue_done_5;
                 }
             }
-            if (cueIndex >= 6)
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                state->timer -= framesThisStep;
-                if (state->timer <= 0)
-                {
-                    mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                    state->timer = 0x3c;
-                }
+                mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
+                state->timer = 0x3c;
             }
+        cue_done_5:;
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1884,22 +1874,22 @@ void andross_update(int obj)
         state->fadeAlpha += gAndrossFadeStep;
         fval = (gAndrossMaxFadeAlpha < state->fadeAlpha) ? gAndrossMaxFadeAlpha : state->fadeAlpha;
         state->fadeAlpha = fval;
-        for (cueIndex = 0; cueIndex < 6; cueIndex++)
         {
-            if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+            for (cueIndex = 0; cueIndex < 6; cueIndex++)
             {
-                state->timer = 0x3c;
-                break;
+                if (mainGetBit(cueIndex + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
+                {
+                    state->timer = 0x3c;
+                    goto cue_done_6;
+                }
             }
-        }
-        if (cueIndex >= 6)
-        {
             state->timer -= framesThisStep;
             if (state->timer <= 0)
             {
                 mainSetBits(randomGetRange(0, 5) + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
                 state->timer = 0x3c;
             }
+        cue_done_6:;
         }
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0)
@@ -1965,7 +1955,8 @@ void andross_update(int obj)
             boss->anim.velocityX = gAndrossZero;
             boss->anim.velocityY = fval;
             boss->anim.velocityZ = fval;
-            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
+            Sfx_PlayFromObject((int)boss,
+                               randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
         }
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0)
