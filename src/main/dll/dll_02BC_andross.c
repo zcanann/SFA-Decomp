@@ -267,7 +267,7 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
     int got;
     u8 partState;
     u8 texIdx;
-    u8 textureState;
+    s8 textureState;
     u8* stateBytes = (u8*)stateData;
     ObjTextureRuntimeSlot* tex;
 
@@ -292,8 +292,7 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
         case 1:
         case 2:
         {
-            partState = stateData->partHealth[ht];
-            if (partState != 0 && stateData->partHitTimer[ht] == 0)
+            if (stateData->partHealth[ht] != 0 && stateData->partHitTimer[ht] == 0)
             {
                 stateData->partHealth[ht] -= 1;
                 stateData->partHitTimer[hitType] = 6;
@@ -350,14 +349,14 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
             textureState = stateData->partTextureState[idx];
             partState = textureState;
             texIdx = gAndrossPartTextureIndices[idx];
-            if ((u32)texIdx < 2 && textureState == 1)
+            if ((u32)texIdx < 2 && (u8)textureState == 1)
                 partState = 0;
             tex = objFindTexture(obj, texIdx * 2, 0);
             tex->textureId = partState << 8;
-            if ((u32)texIdx == 2 && textureState == 1)
+            if ((u32)texIdx == 2 && (u8)textureState == 1)
                 textureState = 0;
             tex = objFindTexture(obj, texIdx * 2 + 1, 0);
-            tex->textureId = textureState << 8;
+            tex->textureId = (u8)textureState << 8;
         }
     }
 }
@@ -1632,11 +1631,12 @@ void andross_update(int obj)
         fval = (gAndrossZero > state->fadeAlpha) ? gAndrossZero : state->fadeAlpha;
         state->fadeAlpha = fval;
         {
-            f32 alpha = state->fadeAlpha;
+            f32 fade = state->fadeAlpha;
+            f32 alpha;
 
             model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
             index = 0;
-            alpha = 255.0f * alpha;
+            alpha = 255.0f * fade;
             for (; index < model->renderOpCount; index++)
             {
                 renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
@@ -1932,11 +1932,12 @@ void andross_update(int obj)
             Music_Trigger(MUSICTRIG_Mound_Music, 0);
         }
         {
-            f32 alpha = state->fadeAlpha;
+            f32 fade = state->fadeAlpha;
+            f32 alpha;
 
             model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
             index = 0;
-            alpha = 255.0f * alpha;
+            alpha = 255.0f * fade;
             for (; index < model->renderOpCount; index++)
             {
                 renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
