@@ -2428,8 +2428,8 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 driftZ;
     f32 stepX;
     f32 stepZ;
-    f32 yb;
     f32 size;
+    f32 yb;
     int base;
     f32 mtxB[16];
     f32 mtxT[12];
@@ -2439,8 +2439,14 @@ int snowPrintSnowCloud(int arg, int cloudId)
     volatile f32 vy[3];
     volatile f32 vz[3];
     volatile SnowFlakeUVs uvs;
+    f32* qx;
+    f32* qy;
+    f32* qz;
 
     uvs = lbl_802C1FCC;
+    qx = (f32*)vx;
+    qy = (f32*)vy;
+    qz = (f32*)vz;
     scale = lbl_803DF1A4;
     if (renderModeSetOrGet(-1) == 1)
     {
@@ -2594,8 +2600,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
         }
         yb = part->y - *(f32*)(p + part->angle * 4 + 8);
         base = part->quadIndex * 0x2c;
-        size = part->fallSpeed;
-        vx[0] = *(f32*)(p + base + 0x1008) * size + part->x;
+        vx[0] = *(f32*)(p + base + 0x1008) * (size = part->fallSpeed) + part->x;
         vy[0] = *(f32*)(p + base + 0x1014) * size + yb;
         vz[0] = *(f32*)(p + base + 0x1020) * size + part->z;
         vx[1] = *(f32*)(p + base + 0x100c) * size + part->x;
@@ -2604,19 +2609,19 @@ int snowPrintSnowCloud(int arg, int cloudId)
         vx[2] = *(f32*)(p + base + 0x1010) * size + part->x;
         vy[2] = *(f32*)(p + base + 0x101c) * size + yb;
         vz[2] = *(f32*)(p + base + 0x1028) * size + part->z;
-        GXWGFifo.f32 = vx[0];
-        GXWGFifo.f32 = vy[0];
-        GXWGFifo.f32 = vz[0];
+        GXWGFifo.f32 = (f64)qx[0];
+        GXWGFifo.f32 = (f64)qy[0];
+        GXWGFifo.f32 = (f64)qz[0];
         GXWGFifo.s16 = uvs.uv[0];
         GXWGFifo.s16 = uvs.uv[1];
-        GXWGFifo.f32 = vx[1];
-        GXWGFifo.f32 = vy[1];
-        GXWGFifo.f32 = vz[1];
+        GXWGFifo.f32 = (f64)qx[1];
+        GXWGFifo.f32 = (f64)qy[1];
+        GXWGFifo.f32 = (f64)qz[1];
         GXWGFifo.s16 = uvs.uv[2];
         GXWGFifo.s16 = uvs.uv[3];
-        GXWGFifo.f32 = vx[2];
-        GXWGFifo.f32 = vy[2];
-        GXWGFifo.f32 = vz[2];
+        GXWGFifo.f32 = (f64)qx[2];
+        GXWGFifo.f32 = (f64)qy[2];
+        GXWGFifo.f32 = (f64)qz[2];
         GXWGFifo.s16 = uvs.uv[4];
         GXWGFifo.s16 = uvs.uv[5];
         part += 1;
