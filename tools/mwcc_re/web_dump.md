@@ -448,3 +448,23 @@ be in the numbering REGION/sub-batch boundaries ({47,48,49} grouping) — the
 region-formation rule (worklist chain 0x4f0a90 / driver 0x435de5 batching) is
 the one remaining decode, now with a numerically-validated model on both sides
 of it. All tracer recipes + data in the entries above.
+
+## Numbering VALUE-IDENTITY trace (2026-07-11): split-web name arenas
+Number() entry (0x4d03a0) trace with value+0xa name pointers, Music_Update:
+vregs 44/45 carry OLD-ARENA name nodes (0x6c1b/0x6c1c — interned early, the
+original 'i'/'ch' names, loop-1 webs, apply-pattern confirmed i=44 ch=45);
+vregs 46..69+ carry FRESH sequential name nodes (0x6c7cc018 descending by
+0x38 per alloc) — the live-range-SPLIT webs get generated name nodes in one
+allocation run. Split numbering order observed: i-split(47), ch-mid-split(48),
+ch-loop3-split(49) — i's split numbers FIRST. Retail needs i's loop-3 split
+numbered LAST (pops first → r22). Renaming the counter to a never-interned
+identifier (musChanIdx) is INERT → the order is NOT lexical intern order; it
+is the SPLITTER's processing order. NEXT DECODE (small): the live-range
+splitter (opt_lifetimes pass) — find the name-node allocator callsites for
+split webs (alloc run at 0x6c7cb*-0x6c7cc* addresses; bp the allocator, walk
+back to the per-variable split loop) and read what orders variables there
+(hash order? decl order? vreg order?). One 8s tracer run + one disasm read.
+Also negative: driver 0x435de5 region is a LINEAR two-list walk (no priority
+compare in the loop) — the "ascending-priority sub-batch" observation emerges
+from LIST ORDER; priorities gate eligibility elsewhere. The recovered
+CodeGenNumbering.c max-scan pseudocode describes a different band — reconcile.
