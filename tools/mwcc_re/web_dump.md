@@ -133,3 +133,14 @@ Music_Update 99.60: single ch(r21T/r22C)↔i(r22T/r21C) adjacent swap ×27 regio
   i parked too or ch unparked — needs the live tracer to see nadj values.
 => All three = the parked pop-interleave family. Next unlock: lldb port of
 select_dump.gdb (gdb absent on this host) to read nadj/web indices live.
+
+## lldb port attempt (2026-07-10, this host)
+Scratchpad script web_dump_lldb.py (python callbacks mirroring the gdb tracer,
+rbx/rcx/rax low-32 reads) arms cleanly, but: (1) the build invokes
+`wibo sjiswrap.exe mwcceppc.exe ...` and the compiler runs where the parent
+lldb session's call_EntryProc one-shot never fired (spawn model unclear);
+(2) direct `wibo mwcceppc.exe ...` (no sjiswrap) HANGS >2min on this host even
+without lldb — sjiswrap is load-bearing, so the gdb doc's direct invocation
+does not transfer. Next session: either replicate sjiswrap's env/handshake for
+a direct-wibo run, or make lldb follow into the spawned child
+(target.process.follow-fork-mode child equivalent / attach-on-spawn by name).
