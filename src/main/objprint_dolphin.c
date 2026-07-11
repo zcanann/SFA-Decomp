@@ -939,7 +939,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         lbl_803DCC48 = 2;
     }
     {
-        u8* tbl;
+        u8* tbl[1];
         int i;
         int count;
         f32 tmp[12];
@@ -956,7 +956,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
             count = (w >> (pos & 7)) & 0xf;
         }
         i = 0;
-        tbl = gObjGxPosMtxIdTable;
+        tbl[0] = gObjGxPosMtxIdTable;
         for (; i < count; i++)
         {
             int idx;
@@ -975,14 +975,14 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
             }
             if (lbl_803DCC48 == 2)
             {
-                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl);
+                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl[0]);
             }
             else
             {
                 PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl);
+                GXLoadPosMtxImm(tmp, *tbl[0]);
             }
-            tbl++;
+            tbl[0]++;
         }
     }
 }
@@ -1180,8 +1180,10 @@ extern void OSReport(const char* msg, ...);
 #pragma optimization_level 2
 void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
-    u8* tbl = gObjGxPosMtxIdTable;
-    char* cache = getCache();
+    u8* tbl[1];
+    char* cache;
+    tbl[0] = gObjGxPosMtxIdTable;
+    cache = getCache();
     if (lbl_803DCC48 == 1)
     {
         if (skip == 0)
@@ -1225,10 +1227,10 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
         }
         if (count < 0 || count > 20)
         {
-            OSReport((char*)&tbl[0x48], count);
+            OSReport((char*)&tbl[0][0x48], count);
         }
         i = 0;
-        tbl2 = tbl + 0xc;
+        tbl2 = tbl[0] + 0xc;
         for (; i < count; i++)
         {
             int idx;
@@ -1247,20 +1249,20 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
             {
                 u8* pm = (u8*)(cache + idx * 0x30);
                 u8* nm = pm + 0x12c0;
-                GXLoadPosMtxImm((f32*)pm, *tbl);
+                GXLoadPosMtxImm((f32*)pm, *tbl[0]);
                 if (skip == 0 && tex != 0)
                 {
                     GXLoadTexMtxImm((f32*)nm, *tbl2, 0);
                 }
                 if (skip == 0 && nrm != 0)
                 {
-                    GXLoadNrmMtxImm((f32*)nm, *tbl);
+                    GXLoadNrmMtxImm((f32*)nm, *tbl[0]);
                 }
             }
             else
             {
                 PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl);
+                GXLoadPosMtxImm(tmp, *tbl[0]);
                 if (skip == 0 && (nrm != 0 || tex != 0))
                 {
                     tmp[3] = lbl_803DEA04;
@@ -1273,11 +1275,11 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
                     }
                     if (nrm != 0)
                     {
-                        GXLoadNrmMtxImm(tmp, *tbl);
+                        GXLoadNrmMtxImm(tmp, *tbl[0]);
                     }
                 }
             }
-            tbl++;
+            tbl[0]++;
             tbl2++;
         }
     }
