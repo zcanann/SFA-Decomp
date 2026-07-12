@@ -19,6 +19,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/swarmbaddiestate_struct.h"
+#include "main/curve.h"
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/curve_walker.h"
@@ -76,25 +77,22 @@ extern int gSwarmBaddieLastCurvePoint;
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
 {
-    int curve;
-    RomCurveWalker* walker;
+    RomCurveWalker* curve;
     int done;
     f32 step;
 
     curve = state->curve;
-    walker = (RomCurveWalker*)curve;
-    done = Curve_AdvanceAlongPath(curve, state->curveStep);
-    if (((done != 0) || (walker->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
+    done = Curve_AdvanceAlongPath(&curve->curve, state->curveStep);
+    if (((done != 0) || (curve->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2678, &lbl_803DBC78, -1) != 0))
     {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
-    gSwarmBaddieLastCurvePoint = walker->atSegmentEnd;
+    gSwarmBaddieLastCurvePoint = curve->atSegmentEnd;
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         step = lbl_803E267C;
@@ -106,9 +104,9 @@ void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
     else
     {
         step = lbl_803E267C;
-        (obj)->anim.velocityX = step * (walker->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
-        (obj)->anim.velocityY = step * (walker->posY - (obj)->anim.localPosY) + (obj)->anim.velocityY;
-        (obj)->anim.velocityZ = step * (walker->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
+        (obj)->anim.velocityX = step * (curve->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+        (obj)->anim.velocityY = step * (curve->posY - (obj)->anim.localPosY) + (obj)->anim.velocityY;
+        (obj)->anim.velocityZ = step * (curve->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
 
     (obj)->anim.velocityX = (obj)->anim.velocityX * (step = lbl_803E2684);
@@ -194,7 +192,7 @@ void SwarmBaddie_update(GameObject* obj)
     } d;
     f32* dp = &d.x;
     f32 volume;
-    int oldTarget;
+    RomCurveWalker* oldTarget;
     int hitD;
     int hitE;
     int hitC;
@@ -229,12 +227,11 @@ void SwarmBaddie_update(GameObject* obj)
         d.z = state->player->anim.worldPosZ - (obj)->anim.worldPosZ;
         state->playerDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    if ((void*)oldTarget != NULL)
+    if (oldTarget != NULL)
     {
-        RomCurveWalker* walker = (RomCurveWalker*)oldTarget;
-        d.x = walker->posX - (obj)->anim.worldPosX;
-        d.y = walker->posY - (obj)->anim.worldPosY;
-        d.z = walker->posZ - (obj)->anim.worldPosZ;
+        d.x = oldTarget->posX - (obj)->anim.worldPosX;
+        d.y = oldTarget->posY - (obj)->anim.worldPosY;
+        d.z = oldTarget->posZ - (obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > lbl_803E26C4))
@@ -262,10 +259,10 @@ void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc)
     state->hitVolumeEnvelope = lbl_803E26B4;
     if (skip_alloc == 0)
     {
-        *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
-        if (*(void**)&state->curve != NULL)
+        state->curve = mmAlloc(0x108, 0x1A, 0);
+        if (state->curve != NULL)
         {
-            memset(*(void**)&state->curve, 0, 0x108);
+            memset(state->curve, 0, 0x108);
         }
         if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, &lbl_803DBC78, -1) ==
             0)

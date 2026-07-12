@@ -2,12 +2,13 @@
 #define MAIN_DLL_SWARMBADDIESTATE_STRUCT_H_
 
 #include "types.h"
+#include "main/dll/curve_walker.h"
 
 typedef struct GameObject GameObject;
 
 typedef struct SwarmBaddieState
 {
-    int curve;
+    RomCurveWalker* curve;
     GameObject* player;
     f32 curveStep;
     f32 playerDistance;

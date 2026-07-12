@@ -4,7 +4,9 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 
-void dimbossgut2_updateTracking(GameObject* obj, int state);
+typedef struct Dimbossgut2State Dimbossgut2State;
+
+void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state);
 void DIM_BossGut2_free(int param_9);
 void DIM_BossGut2_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void DIM_BossGut2_update(GameObject* obj);
