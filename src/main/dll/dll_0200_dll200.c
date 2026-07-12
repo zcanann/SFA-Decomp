@@ -18,7 +18,12 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/pad.h"
+#include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0200_dll200.h"
 

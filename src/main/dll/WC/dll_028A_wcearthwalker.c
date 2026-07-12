@@ -31,7 +31,20 @@
  * Exact game-bit meanings and several encounter sub-states are inferred
  * from use, not confirmed.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/audio/sfx.h"
+#include "main/curve.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim.h"
+#include "main/objHitReact.h"
+#include "main/objseq.h"
+#include "main/pad.h"
+#include "main/vecmath.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/moveLib.h"
 #include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
