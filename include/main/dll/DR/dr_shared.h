@@ -240,7 +240,6 @@ extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E6B68;
 extern f32 lbl_803E6B6C;
 extern f32 lbl_803E6964;
-extern int* Obj_GetActiveModel();
 extern f32* ObjModel_GetJointMatrix(int* model, int jointIdx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern f32 lbl_803E67BC;

@@ -17,6 +17,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/cmenu_item_table.h"
 #include "main/pause_menu_api.h"
 #include "main/gamebits.h"
@@ -99,7 +100,6 @@ extern void hudDrawTimedElement(int obj, void* p);
 extern int getHudHiddenFrameCount(void);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void gxColorFn_80052764(void* p);
-extern int Obj_GetActiveModel(int obj);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern float mathCosf(float x);
 
@@ -500,10 +500,10 @@ void hudDrawCMenu(int p1, int p2, int p3)
         {
             break;
         }
-        model = Obj_GetActiveModel(gCMenuRingObjs[sel]);
+        model = (int)Obj_GetActiveModel((GameObject*)gCMenuRingObjs[sel]);
         *(u16*)(model + 0x18) &= ~8;
         *(u8*)(gCMenuRingObjs[sel] + 0x37) = cMenuFadeCounter;
-        model = Obj_GetActiveModel(gCMenuRingFrontObjs[sel]);
+        model = (int)Obj_GetActiveModel((GameObject*)gCMenuRingFrontObjs[sel]);
         *(u16*)(model + 0x18) &= ~8;
         *(u8*)(gCMenuRingFrontObjs[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
         if (best > lbl_803E1E3C)

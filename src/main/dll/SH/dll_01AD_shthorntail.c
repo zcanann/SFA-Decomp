@@ -95,7 +95,6 @@ extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex
                                           int useInputPosition);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern u32 Obj_GetActiveModel();
 extern u32 modelInitBones();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_8003B228(GameObject* obj, int p2);
@@ -623,7 +622,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
         break;
     }
     obj->modelScale = *(float*)((int)obj->anim.modelInstance + 4) * ((float)config->initScale / lbl_803E545C);
-    Obj_GetActiveModel((int)obj);
+    Obj_GetActiveModel((GameObject*)obj);
     modelInitBones((double)obj->modelScale);
     moveScratch = (int)runtime->moveScratch;
     (*gSHthorntailPathControlInterface)

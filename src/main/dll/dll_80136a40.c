@@ -26,6 +26,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/mapEventTypes.h"
@@ -181,7 +182,6 @@ extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern u32 getScreenResolution(void);
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
-extern int* Obj_GetActiveModel(int obj);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
@@ -657,7 +657,7 @@ void fn_80138D7C(int obj, int state)
                 }
                 else
                 {
-                    *(u8*)(*(int*)((char*)Obj_GetActiveModel(obj) + 0x34) + 8) = ratio;
+                    *(u8*)(*(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x34) + 8) = ratio;
                     alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
                 }
                 Obj_SetModelColorOverrideRecursive(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
@@ -681,10 +681,10 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
 {
     int model;
     f32 target;
-    Obj_GetActiveModel(obj);
+    Obj_GetActiveModel((GameObject*)obj);
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0)
     {
-        model = (int)Obj_GetActiveModel(obj);
+        model = (int)Obj_GetActiveModel((GameObject*)obj);
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
@@ -747,7 +747,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 }
             }
         }
-        ObjModel_SetBlendChannelWeight((int)Obj_GetActiveModel(obj), 1,
+        ObjModel_SetBlendChannelWeight((int)Obj_GetActiveModel((GameObject*)obj), 1,
                                        lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
     }
 }

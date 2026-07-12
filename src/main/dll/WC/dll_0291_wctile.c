@@ -17,6 +17,7 @@
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_0291_wctile.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 
 #define WCTILE_EXTRA_SIZE          0xc
 #define WCTILE_RENDER_TYPE_BASE    0x400
@@ -242,7 +243,7 @@ void wctile_init(GameObject* obj, WCTileSetup* setup)
         objAnim->bankIndex = 0;
     }
     state->targetTile = setup->initialTile;
-    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     objAnim->alpha = 0;
 }
 

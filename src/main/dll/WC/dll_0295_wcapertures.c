@@ -14,6 +14,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model.h"
 
 #define WCAPERTURES_EXTRA_SIZE        8
@@ -222,7 +223,7 @@ void wcapertures_init(GameObject* obj, WCAperturesSetup* setup)
     }
     objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
     state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
-    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     state->light = objCreateLight(obj, 1);
     if (state->light != NULL)
     {

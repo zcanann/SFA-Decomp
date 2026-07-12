@@ -57,7 +57,6 @@ extern void ObjLink_DetachChild(int obj, int child);
 extern int randFn_80080100(int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80296464(void);
-extern int* Obj_GetActiveModel(int player);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int loadMapAndParent(int mapId);
@@ -139,7 +138,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         player = (void*)Obj_GetPlayerObject();
         if (player != NULL && fn_80296464() != 0)
         {
-            model = Obj_GetActiveModel((int)player);
+            model = (int*)Obj_GetActiveModel(player);
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
             ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex, &x, &y, &z,
                                           0);

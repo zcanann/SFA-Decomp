@@ -30,6 +30,7 @@
 #include "main/dll/cmenu_item_table.h"
 #include "main/dll/hud_textures.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
@@ -323,7 +324,6 @@ extern u8 lbl_803DBAA2;
 extern f32 lbl_803E1E60;
 extern PauseTbl lbl_8031AE20;
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
-extern void* Obj_GetActiveModel(u8* obj);
 extern void objShadowFn_8006c5f0(void* obj, u32* outTexture, f32* outScale, int* outX, int* outY);
 extern void hudDrawColored(u32 texture, int x, int y, u32* color, int scale, int flags);
 extern void* lbl_803DD868[2];

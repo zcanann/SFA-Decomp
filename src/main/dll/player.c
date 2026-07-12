@@ -8826,7 +8826,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             {
                 int* mdl;
                 ((PlayerState*)inner)->heldObj = p;
-                mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
+                mdl = (int*)Obj_GetActiveModel((GameObject*)((PlayerState*)inner)->heldObj);
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
                     *(u8*)(((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
@@ -8847,7 +8847,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             {
                 int* mdl;
                 ((PlayerState*)inner)->heldObj = p;
-                mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
+                mdl = (int*)Obj_GetActiveModel((GameObject*)((PlayerState*)inner)->heldObj);
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
                     *(u8*)(((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
@@ -9449,7 +9449,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
         vec[1] = 0;
         vec[2] = 0;
     }
-    ObjModel_ClearBlendChannels(Obj_GetActiveModel((int)obj));
+    ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
     tex = objFindTexture(obj, 1, 0);
     tex->offsetS = 0;
     tex->offsetT = 0;
@@ -12499,9 +12499,9 @@ void playerSetDisguised(GameObject* obj, int mode)
         mainSetBits(GAMEBIT_PlayerIsDisguised, 1);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_lrope_powerup);
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x801, NULL, 0x50, NULL);
-        oldModel = Obj_GetActiveModel((int)obj);
+        oldModel = (int)Obj_GetActiveModel(obj);
         Obj_SetActiveModelIndex(obj, 2);
-        newModel = Obj_GetActiveModel((int)obj);
+        newModel = (int)Obj_GetActiveModel(obj);
         memcpy((void*)*(int*)((char*)newModel + 0x2c), (void*)*(int*)((char*)oldModel + 0x2c), 0x68);
         memcpy((void*)*(int*)((char*)newModel + 0x30), (void*)*(int*)((char*)oldModel + 0x30), 0x68);
         if (mode == 2)
@@ -12515,9 +12515,9 @@ void playerSetDisguised(GameObject* obj, int mode)
         ((ByteFlags*)((char*)inner + 0x3f3))->b08 = 0;
         ((ByteFlags*)((char*)inner + 0x3f4))->b80 = 0;
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x801, NULL, 0x50, NULL);
-        oldModel = Obj_GetActiveModel((int)obj);
+        oldModel = (int)Obj_GetActiveModel(obj);
         Obj_SetActiveModelIndex(obj, 1);
-        newModel = Obj_GetActiveModel((int)obj);
+        newModel = (int)Obj_GetActiveModel(obj);
         memcpy((void*)*(int*)((char*)newModel + 0x2c), (void*)*(int*)((char*)oldModel + 0x2c), 0x68);
         memcpy((void*)*(int*)((char*)newModel + 0x30), (void*)*(int*)((char*)oldModel + 0x30), 0x68);
         mainSetBits(GAMEBIT_PlayerIsDisguised, 0);
@@ -13816,7 +13816,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             if ((void*)gPlayerHeldObject == NULL)
             {
                 int i;
-                int m = *(int*)Obj_GetActiveModel(obj);
+                int m = *(int*)Obj_GetActiveModel((GameObject*)obj);
                 for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
                 {
                     int op = ObjModel_GetRenderOp(m, i);
@@ -18312,7 +18312,7 @@ void staffAnimate(int obj, int state)
     f32 f31;
     void* p;
 
-    model = *(int*)((char*)Obj_GetActiveModel(obj) + 0x30);
+    model = *(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x30);
     prevChanged = 0;
 
     if (*(s16*)&((PlayerState*)state)->staffAnimState != 3)

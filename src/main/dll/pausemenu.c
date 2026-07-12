@@ -3,6 +3,7 @@
  */
 
 #include "main/dll/hud_textures.h"
+#include "main/object_api.h"
 #include "ghidra_import.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
@@ -118,7 +119,6 @@ extern void gameTextFn_80016810(int a, int b, int c);
 extern float mathCosf(float x);
 extern float fn_802943F4(float x);
 extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
-extern void* Obj_GetActiveModel(u8* obj);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9);

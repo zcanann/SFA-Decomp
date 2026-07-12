@@ -61,7 +61,7 @@ void arwarwinggu_applyTextureFrame(GameObject* obj)
     ObjTextureRuntimeSlot* texture;
     ArwingGuState* state = (obj)->extra;
     int anim;
-    model = Obj_GetActiveModel((int)obj);
+    model = (int)Obj_GetActiveModel(obj);
     texture = objFindTexture(obj, 0, 0);
     anim = ObjModel_GetTexture(*(int*)model, 0);
     fn_800541A4(anim, (u16)state->texture.textureFrame);
@@ -114,7 +114,7 @@ void ARWArwingGu_update(GameObject* obj)
     case ARWGU_DEF_ENGINE:
     {
         ArwingGuState* state = (obj)->extra;
-        int model = Obj_GetActiveModel((int)obj);
+        int model = (int)Obj_GetActiveModel(obj);
         ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         int anim = ObjModel_GetTexture(*(int*)model, 0);
         fn_800541A4(anim, (u16)state->texture.textureFrame);

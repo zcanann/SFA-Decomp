@@ -192,7 +192,6 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void* obj, int f);
-extern void* Obj_GetActiveModel(u8* obj);
 extern u8 gMinimapBlipPulse;
 extern f32 gMinimapF110;
 extern f32 gMinimapF43;
@@ -747,7 +746,7 @@ void Minimap_drawCompassBlip(void)
     for (i = 0; i < count; i++)
     {
         objRender(0, 0, 0, 0, lbl_803DBBC8[i], 1);
-        model = Obj_GetActiveModel((u8*)lbl_803DBBC8[i]);
+        model = (int*)Obj_GetActiveModel((GameObject*)lbl_803DBBC8[i]);
         *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
         *(u8*)((char*)lbl_803DBBC8[i] + 55) = 255;
     }

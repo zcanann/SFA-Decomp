@@ -32,7 +32,6 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(int obj);
 extern char sMagicGemCollectedMessage[];
 
-extern int Obj_GetActiveModel(int obj);
 extern u16 lbl_803E34A8;
 extern u16 lbl_803E34AC;
 extern u8 lbl_80320CB8[];
@@ -368,7 +367,7 @@ void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)
         obj->anim.modelState->shadowTintA = 100;
         obj->anim.modelState->shadowTintB = 0x96;
     }
-    ref = Obj_GetActiveModel((int)obj);
+    ref = (int)Obj_GetActiveModel(obj);
     mode = obj->anim.seqId;
     switch (mode)
     {

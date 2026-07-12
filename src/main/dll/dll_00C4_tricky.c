@@ -189,7 +189,6 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern int Obj_GetActiveModel(int obj);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern u32 ObjPath_GetPointWorldPositionArray();
@@ -415,7 +414,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 == 0)
         {
-            ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
+            ObjModel_ClearBlendChannels((int)Obj_GetActiveModel((GameObject*)obj));
             ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit6 = 0;
         }
     }
@@ -1710,7 +1709,7 @@ void Tricky_init(GameObject* obj)
     ((TrickyState*)state)->homePosZ = (obj)->anim.worldPosZ;
     modelVariant = *(u8*)(((TrickyState*)state)->progressPtr + 2) / 10;
     ((TrickyState*)state)->modelVariant = modelVariant;
-    model = Obj_GetActiveModel((int)obj);
+    model = (int)Obj_GetActiveModel(obj);
     *(u8*)(*(int*)(model + 0x34) + 8) = ((TrickyState*)state)->modelVariant;
     pathState = (int)&((TrickyState*)state)->pathControlFlags;
     (*gPathControlInterface)->init((void*)pathState, 1, 0xa7, 1);

@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -836,7 +837,6 @@ typedef struct
 } GXColor8;
 
 extern u8 framesThisStep;
-extern int* Obj_GetActiveModel(int* obj);
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
@@ -1107,7 +1107,7 @@ void sceneDrawTransparentPolys(void)
             break;
         case 1:
             block = (int*)e[i][0];
-            Obj_GetActiveModel(block);
+            Obj_GetActiveModel((GameObject*)block);
             player = Obj_GetPlayerObject();
             if ((GameObject*)block == player)
             {
@@ -1128,7 +1128,7 @@ void sceneDrawTransparentPolys(void)
             break;
         case 3:
             fn_8000F9B4();
-            objDrawFn_80061654((int*)e[i][0], Obj_GetActiveModel((int*)e[i][0]));
+            objDrawFn_80061654((int*)e[i][0], (int*)Obj_GetActiveModel((GameObject*)e[i][0]));
             Camera_ApplyFullViewport();
             break;
         case 4:
@@ -1461,7 +1461,7 @@ void getVisibleObjects(s8* opacity)
                 if (gVisibleObjectSortKeyCount < 1000)
                 {
                     key = 0;
-                    model = Obj_GetActiveModel((int*)o);
+                    model = (int*)Obj_GetActiveModel((GameObject*)o);
                     if (*(u8*)(o + 0x37) == 0xff && (((GameObject*)o)->anim.flags & 0x80) == 0 &&
                         ((tf = ((ObjAnimComponent*)o)->modelInstance->flags) & 0x40000) == 0 &&
                         *(void**)(model + 0x16) == NULL)
@@ -1556,7 +1556,7 @@ extern void objRenderFn_8003d980(int* obj, int* model);
 
 void objDrawFn_8005da48(int* obj)
 {
-    int* model = Obj_GetActiveModel(obj);
+    int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
     if (*(void**)((char*)model + 0x58) != NULL)
     {
         objRenderFn_8003d980(obj, model);

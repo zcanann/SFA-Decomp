@@ -4,6 +4,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mm.h"
 #include "main/objHitReact.h"
 #define OBJHITS_IMPLEMENTATION
@@ -26,7 +27,6 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void OSReport(const char* msg, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
-extern int* Obj_GetActiveModel(int obj);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 
@@ -1927,7 +1927,7 @@ u32 ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex)
     ObjPathPoint* pathPoint;
     int jointIndex;
 
-    model = Obj_GetActiveModel((int)obj);
+    model = (int*)Obj_GetActiveModel(obj);
     pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINTS_OFFSET));
     pathPoint += pointIndex;
     jointIndex = pathPoint->modelIndex[(int)*(char*)((int)obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
@@ -1964,7 +1964,7 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
     }
     else
     {
-        model = Obj_GetActiveModel((int)obj);
+        model = (int*)Obj_GetActiveModel(obj);
         pathPoint = (ObjPathPoint*)(*(int*)(*(int*)&obj->anim.modelInstance + OBJPATH_POINTS_OFFSET));
         pointOffset = pointIndex * sizeof(ObjPathPoint);
         pathPoint = (ObjPathPoint*)((int)pathPoint + pointOffset);

@@ -23,6 +23,7 @@
 #include "main/camera.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
@@ -286,7 +287,6 @@ extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void* Obj_GetActiveModel(u8* obj);
 
 /* Set up the title-screen translation matrix at gTitleScreenMtx and derive
  * the three normalized cursor positions from the supplied (a, b) coordinates. */
@@ -672,7 +672,7 @@ void TitleScreen_update(u8* obj)
         {
             characterDoEyeAnims((GameObject*)(obj), state);
         }
-        model = Obj_GetActiveModel(obj);
+        model = Obj_GetActiveModel((GameObject*)obj);
         if (model->file->morphTargetCount != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
             randomGetRange(0xf0, 0x168) == 0xf0)
         {

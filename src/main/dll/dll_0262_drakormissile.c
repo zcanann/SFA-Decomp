@@ -15,6 +15,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -402,7 +403,7 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
         savedRotY = (obj)->anim.rotY;
         savedScale = (obj)->anim.rootMotionScale;
         objAnim->bankIndex = 1;
-        model = Obj_GetActiveModel();
+        model = (int*)Obj_GetActiveModel(obj);
         i = 0;
         for (; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
         {

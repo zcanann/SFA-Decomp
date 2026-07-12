@@ -6,6 +6,7 @@
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/curve_eval.h"
 #include "main/frame_timing.h"
@@ -178,7 +179,6 @@ extern void fn_8008C9F4(u8* cfg, u8 flags);
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
-extern void* Obj_GetActiveModel(void* obj);
 extern void ObjModel_SetRenderCallback(void* model, void* callback);
 extern int moonFxCb_80074110(int obj, int* model, int param);
 extern void modelLightStruct_setDirection(void* model, f32 x, f32 y, f32 z);
@@ -2997,7 +2997,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
             if (vis == 0 && (u8)visible != 0)
             {
-                model = Obj_GetActiveModel(gSkySunObject);
+                model = (u8*)Obj_GetActiveModel((GameObject*)gSkySunObject);
                 *(u16*)(model + 0x18) &= ~8;
                 objRender(a, b, c, d, gSkySunObject, 1);
             }
@@ -3014,7 +3014,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
             if (vis == 0 && (u8)visible != 0)
             {
-                model = Obj_GetActiveModel(gSkyMoonObject);
+                model = (u8*)Obj_GetActiveModel(gSkyMoonObject);
                 *(u16*)(model + 0x18) &= ~8;
                 objRender(a, b, c, d, gSkyMoonObject, 1);
             }

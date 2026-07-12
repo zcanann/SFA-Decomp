@@ -14,6 +14,7 @@
 #include "main/dll/xyzanimator.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
@@ -114,7 +115,6 @@ typedef struct FireballState
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
-extern int* Obj_GetActiveModel(int obj);
 extern const f32 lbl_803E3330;
 extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
 extern const f32 lbl_803E3354;
@@ -305,7 +305,7 @@ void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
     ((ObjAnimComponent*)obj)->bankIndex = 1;
-    model = Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
     savedRot4 = ((GameObject*)obj)->anim.rotZ;
     savedRot2 = ((GameObject*)obj)->anim.rotY;
@@ -325,7 +325,7 @@ void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((GameObject*)obj)->anim.rotY = savedRot2;
     ((GameObject*)obj)->anim.rootMotionScale = savedF8;
     ((ObjAnimComponent*)obj)->bankIndex = 0;
-    model = Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3354);
     if (*(int**)state != NULL)

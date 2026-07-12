@@ -4,6 +4,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx.h"
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
@@ -54,7 +55,6 @@ extern void setTextColor(void* ctx, int r, int g, int b, int a);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
 extern void drawFn_8005cf8c(void* a, void* b, int count);
-extern void* Obj_GetActiveModel(void);
 extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 static inline int* Modgfx_GetActiveModel(void* obj)
@@ -443,7 +443,7 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
     int i;
     BoneSpawnData data;
 
-    model = Obj_GetActiveModel();
+    model = Obj_GetActiveModel(obj);
     for (i = 0; i < *(u8*)(*(int*)model + 0xf3); i++)
     {
         if ((int)randomGetRange(1, 0x64) <= prob)

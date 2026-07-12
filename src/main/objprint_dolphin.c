@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/shader_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -383,7 +384,6 @@ int fn_80041D98(DVDCommandBlock* block)
 }
 
 extern f32 lbl_803DEA04;
-extern int* Obj_GetActiveModel(int* obj);
 #pragma dont_inline on
 void objRenderShadow(int* obj)
 {
@@ -393,7 +393,7 @@ void objRenderShadow(int* obj)
         return;
     }
     {
-        int* m = (int*)*Obj_GetActiveModel(obj);
+        int* m = *(int**)Obj_GetActiveModel((GameObject*)obj);
         if (*(u8*)((char*)m + 246) != 0)
         {
             objRenderShadow2(obj, obj, (u8*)m, 1);
@@ -453,7 +453,7 @@ void objRenderFn_800413d4(int* obj)
     int* model;
     u32 savedMtx;
     gObjFuzzStep = 4;
-    model = Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     savedMtx = curObjMtx;
     lbl_803DCC3D = gObjFuzzPhase;
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
@@ -474,7 +474,7 @@ void fuzzRenderFn_800412dc(int* obj)
     int* model;
     u32 savedMtx;
     gObjFuzzStep = 1;
-    model = Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     savedMtx = curObjMtx;
     lbl_803DCC3D = gObjFuzzPhase;
     ObjModel_SetRenderCallback(model, modelRenderCb_8003c268);
@@ -557,7 +557,7 @@ void objRenderFuzz(int* obj)
         {
             n = maxN;
         }
-        model = Obj_GetActiveModel(obj);
+        model = (int*)Obj_GetActiveModel((GameObject*)obj);
         savedMtx = curObjMtx;
         ObjModel_SetRenderCallback(model, shaderFuzzFn_8003cc1c);
         for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++)
@@ -581,7 +581,7 @@ void objRenderFn_80041018(int* obj)
     q = ((GameObject*)obj)->anim.hitVolumeTransforms;
     if (!(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x28))
     {
-        model = Obj_GetActiveModel(obj);
+        model = (int*)Obj_GetActiveModel((GameObject*)obj);
         i = 0;
         p = base;
         for (; i < ((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i++)
@@ -673,7 +673,7 @@ void objRenderModel(int* obj)
     s32 sy;
     s32 sz;
     u32 col;
-    int* model = Obj_GetActiveModel(obj);
+    int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
     if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
     {
         curObjMtx = 0;
@@ -784,9 +784,9 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         curObjMtx = 0;
         return;
     }
-    Obj_GetActiveModel(child);
+    Obj_GetActiveModel((GameObject*)child);
     {
-        int* pmodel = Obj_GetActiveModel(parent);
+        int* pmodel = (int*)Obj_GetActiveModel((GameObject*)parent);
         ChildEnt* ent;
         int j;
         u8* tbl = *(u8**)(*(int*)&((GameObject*)parent)->anim.modelInstance + 0x2c);
@@ -1757,7 +1757,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     MtxBitStream bs;
     u8 color[4];
     ObjModelRenderCb cb;
-    int* am = Obj_GetActiveModel(obj);
+    int* am = (int*)Obj_GetActiveModel((GameObject*)obj);
     if (curObjMtx != 0)
     {
         PSMTXCopy((f32*)curObjMtx, wm);
@@ -1934,7 +1934,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     int done;
     u32 sh;
 
-    am = Obj_GetActiveModel(obj);
+    am = (int*)Obj_GetActiveModel((GameObject*)obj);
     vm = Camera_GetViewMatrix();
     if (curObjMtx != 0)
     {
@@ -2219,7 +2219,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     gObjGxKColorCache[2] = 0;
     gObjGxKColorCache[1] = 0;
     gObjGxKColorCache[0] = 0;
-    am = Obj_GetActiveModel(obj);
+    am = (int*)Obj_GetActiveModel((GameObject*)obj);
     vm = Camera_GetViewMatrix();
     if (curObjMtx != 0)
     {

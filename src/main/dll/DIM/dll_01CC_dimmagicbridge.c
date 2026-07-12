@@ -15,6 +15,7 @@
 #include "main/model.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/DIM/DIM2flameburst.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
@@ -35,7 +36,6 @@ extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 
-extern int Obj_GetActiveModel(int obj);
 extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern int EmissionController_IsLingering(GameObject* player);
 extern float mathSinf(float x);
@@ -51,7 +51,7 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
     ObjModel* model;
     f32 amp;
     DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
-    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    model = Obj_GetActiveModel((GameObject*)obj);
     mdl = model->file;
     i = 0;
     amp = lbl_803E4A00;
@@ -219,7 +219,7 @@ void dimmagicbridge_init(u8* obj, u8* params)
     ((GameObject*)obj)->animEventCallback = dimmagicbridge_SeqFn;
     state = ((GameObject*)obj)->extra;
     minY = 0;
-    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    model = Obj_GetActiveModel((GameObject*)obj);
     modelData = model->file;
 
     i = 0;

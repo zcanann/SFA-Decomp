@@ -7,6 +7,7 @@
  * (lbl_803DD4C4) aimed by the camcontrol normalized vector for lighting the icon.
  */
 #include "main/dll/dll_B4.h"
+#include "main/object_api.h"
 #include "main/dll/dll_B3.h"
 #include "main/dll/dll_B2.h"
 #include "main/model_light.h"
@@ -20,7 +21,6 @@
 extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
 
-extern void* Obj_GetActiveModel(u8* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern void lightSetColor(int a, int b, int c, int d);
 
@@ -30,11 +30,11 @@ void lockIconInit(void)
     {
         gCamcontrolTargetReticle = (CamcontrolReticleObject*)Obj_SetupObject(
             Obj_AllocObjectSetup(0x18, DLLB4_CHILD_OBJ_RETICLE), 4, -1, -1, NULL);
-        ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), lockIconTexCb);
+        ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)gCamcontrolTargetReticle), lockIconTexCb);
         gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_LOCKON;
-        ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), aButtonIconTexCb);
+        ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)gCamcontrolTargetReticle), aButtonIconTexCb);
         gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_A_BUTTON;
-        ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), aButtonIconTexCb);
+        ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)gCamcontrolTargetReticle), aButtonIconTexCb);
         lightSetColor(1, 0x32, 0x3C, 0x28);
         lbl_803DD4C4 = objCreateLight(NULL, 1);
         if (lbl_803DD4C4 != NULL)

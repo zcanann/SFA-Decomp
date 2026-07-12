@@ -1,4 +1,5 @@
 #include "main/newclouds_state.h"
+#include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/shader_api.h"
 #include "main/audio/sfx.h"
@@ -46,7 +47,6 @@
 #define NEWCLOUD_LTG_MED        0x10 /* medium lightning cadence */
 #define NEWCLOUD_LTG_FAST       0x20 /* fast lightning cadence */
 
-extern void* Obj_GetActiveModel(void* obj);
 extern f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1D8;
 extern const f32 lbl_803DF1DC;

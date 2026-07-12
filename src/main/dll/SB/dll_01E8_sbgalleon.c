@@ -24,6 +24,7 @@
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/object_api.h"
 #include "main/render.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -67,7 +68,6 @@ extern void fn_80089578(int idx, int r, int g, int b);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
-extern int* Obj_GetActiveModel(int obj);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern f32 gSbGalleonSkyLightVecs[12];
 extern u8 lbl_803DC078[4];
@@ -365,7 +365,7 @@ void fn_801E1588(int obj, int state)
     {
         skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
     }
-    model = Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     i = 0;
     {
         f32 scale = lbl_803E57F4;

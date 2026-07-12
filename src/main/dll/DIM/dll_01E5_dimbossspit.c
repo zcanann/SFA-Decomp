@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
@@ -73,7 +74,6 @@ extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
 extern void lightSetField4D(ModelLightStruct* p, u8 v);
-extern int Obj_GetActiveModel(int obj);
 extern void postRenderSetAlphaBlendState(void);
 extern f32 lbl_803E4D70;
 extern f32 lbl_803E4D74;
@@ -284,7 +284,7 @@ void DIMbossspit_init(int obj)
     ((DIMbossspitState*)state)->unk0 = 0;
     ((DIMbossspitState*)state)->unk2 = 0;
     ObjHits_EnableObject(obj);
-    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((GameObject*)obj), postRenderSetAlphaBlendState);
 }
 
 void DIMbossspit_release(void)

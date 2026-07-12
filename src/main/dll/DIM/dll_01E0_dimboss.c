@@ -42,10 +42,11 @@ extern void Music_Trigger(int id, int arg);
 extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
-extern int Obj_GetActiveModel();
 extern u32 Obj_BuildWorldTransformMatrix();
 extern u32 getTrickyObject();
 extern u64 ObjGroup_RemoveObject();
+
+#define Obj_GetActiveModelLegacy ((int (*)())Obj_GetActiveModel)
 
 
 
@@ -232,7 +233,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
             DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
-            model = Obj_GetActiveModel((int)obj);
+            model = Obj_GetActiveModelLegacy((int)obj);
             ObjModel_ClearRenderAttachment(model);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
             break;
@@ -571,7 +572,7 @@ void DIMboss_update(DIMbossObject* obj)
                     if (topState->stompDustDelay == 0)
                     {
                         Obj_BuildWorldTransformMatrix(obj, gDIMbossRenderMtx, 0);
-                        targetModel = Obj_GetActiveModel(obj);
+                        targetModel = Obj_GetActiveModelLegacy(obj);
                         ObjModel_EnableDefaultRenderCallback
                             (obj, targetModel, gDIMbossRenderMtx, 1,
                              (double)(obj->anim.hitboxScale * obj->anim.rootMotionScale));

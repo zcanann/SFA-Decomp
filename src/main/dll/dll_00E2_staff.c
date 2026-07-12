@@ -280,7 +280,6 @@ void restartmarker_init(int* obj, int* state);
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
 void staffFn_80170380(int* obj, int cmd);
-extern int* Obj_GetActiveModel(int obj);
 
 void Shield_init(int* obj, void* initData);
 
@@ -1244,7 +1243,7 @@ void staff_update(int* obj)
     u8* state = ((GameObject*)obj)->extra;
     SwipeRecord* swp;
     int n;
-    int* model = Obj_GetActiveModel((int)obj);
+    int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
     *(u16*)((char*)model + 0x18) &= ~0x8;
     ObjAnim_AdvanceCurrentMove((int)obj, ((StaffState*)state)->moveSpeed, timeDelta,
                                                                  NULL);
@@ -1395,7 +1394,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
         angle = (gStaffPi * (f32)(int)-ang) / gStaffAngleUnitScale;
         sinv = mathSinf(angle);
         cosv = mathCosf(angle);
-        model2 = *(u8**)((char*)Obj_GetActiveModel((int)obj) + 0x2c);
+        model2 = *(u8**)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x2c);
         weaponDaTable = ((GameObject*)obj)->anim.weaponDaTable;
         if (weaponDaTable != NULL && weaponDaTable->byteCount > 0)
         {

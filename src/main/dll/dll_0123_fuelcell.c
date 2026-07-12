@@ -3,6 +3,7 @@
 #include "main/vecmath.h"
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/gameloop_api.h"
@@ -119,7 +120,6 @@ typedef struct
 void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 {
     extern f32 vec3f_distanceSquared(f32* a, f32* b);
-    extern void* Obj_GetActiveModel(int* obj);
     int** list;
     u8* slot;
     FuelcellState* state;
@@ -152,7 +152,7 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
             objfx_spawnDirectionalBurst(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, 0, 0);
         }
         {
-            int op = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
+            int op = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel((GameObject*)obj), 0);
             *(u8*)(op + 0x43) = 0x7f;
         }
         ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
@@ -318,8 +318,7 @@ void FuelCell_update(int* obj)
 
 void FuelCell_init(int* obj)
 {
-    extern void* Obj_GetActiveModel(int* obj);
     ((GameObject*)obj)->animEventCallback = FuelCell_SeqFn;
-    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((GameObject*)obj), fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }

@@ -14,6 +14,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/model.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/WC/dll_0297_wctemplebri.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE        0x68
@@ -153,7 +154,7 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
             objAnim->alpha = a;
         }
     }
-    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    model = Obj_GetActiveModel(obj);
     modelBase = model->file;
     i = 0;
     waveScale = *(f32*)&lbl_803E6E70;
@@ -230,7 +231,7 @@ void wctemplebri_update(GameObject* obj)
     Obj_GetPlayerObject();
     state = obj->extra;
     wctemplebri_updateModelWarp(obj, (int)state);
-    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    model = Obj_GetActiveModel(obj);
     modelBase = model->file;
     i = 0;
     waveScale = *(f32*)&lbl_803E6E70;
@@ -297,7 +298,7 @@ void wctemplebri_init(GameObject* obj, int initData)
     obj->animEventCallback = wctemplebri_SeqFn;
     state = obj->extra;
     maxY = 0;
-    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    model = Obj_GetActiveModel(obj);
     modelData = model->file;
     for (i = 0; i < modelData->vertexCount; i++)
     {

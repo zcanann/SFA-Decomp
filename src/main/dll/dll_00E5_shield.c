@@ -105,7 +105,6 @@ extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, v
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
-extern int* Obj_GetActiveModel(int obj);
 extern void postRenderSetAlphaBlendState(void);
 extern int getHudHiddenFrameCount(void);
 extern void vecRotateZXY(int* obj, f32* p);
@@ -525,7 +524,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         f32 dt;
         ShieldFxVec s;
         u8 savedB36;
-        model = Obj_GetActiveModel((int)obj);
+        model = (int*)Obj_GetActiveModel((GameObject*)obj);
         savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
         savedB36 = ((GameObject*)obj)->anim.alpha;
         saved0 = ((GameObject*)obj)->anim.rotX;
@@ -721,7 +720,7 @@ void Shield_update(int* obj)
 
 void Shield_init(int* obj, void* initData)
 {
-    int* model = Obj_GetActiveModel((int)obj);
+    int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
     ObjModel_SetPostRenderCallback((ObjModel*)model, postRenderSetAlphaBlendState);
     if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
     {

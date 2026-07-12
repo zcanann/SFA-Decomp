@@ -22,6 +22,7 @@
  */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
@@ -96,7 +97,6 @@ extern f32 lbl_803E2068;
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
-extern int Obj_GetActiveModel(int obj);
 extern float fsin16Approx(int angle);
 extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e, int f);
 extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
@@ -203,7 +203,7 @@ void drawFn_80125424(void)
             }
             *(u8*)(gHeadDisplayModelObjs[type] + 0x37) = 0xff;
             objRender(0, 0, 0, 0, gHeadDisplayModelObjs[type], 1);
-            *(u16*)(Obj_GetActiveModel(gHeadDisplayModelObjs[type]) + 0x18) &= ~8;
+            *(u16*)((u8*)Obj_GetActiveModel((GameObject*)gHeadDisplayModelObjs[type]) + 0x18) &= ~8;
         }
         Camera_SetCurrentViewIndex(0);
         if (lbl_803DD7E0 != 0)

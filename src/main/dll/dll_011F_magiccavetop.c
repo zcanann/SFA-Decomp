@@ -65,7 +65,6 @@ typedef struct MagiccavetopState
     f32 timer;
 } MagiccavetopState;
 
-extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
 
 extern void staffSetGlow(void* a, int b, int c);
@@ -353,7 +352,7 @@ void MagicCaveTop_init(int* obj, s8* def)
         state->fadeTimer = 100.0f;
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)((MagiccavetopObjectDef*)def)->rotByte << 8);
-    refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
+    refs = ObjModel_GetRenderOpTextureRefs((int)Obj_GetActiveModel((GameObject*)obj), 0);
     if (((MagiccavetopObjectDef*)def)->swapGameBit > 0)
     {
         if (mainGetBit(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)

@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/model.h"
 #include "main/dll/dll_02B3_vortex.h"
 #include "main/gameloop_api.h"
@@ -102,7 +103,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_A, particleArgs, 2, -1, NULL);
         }
 
-        model = Obj_GetActiveModel((int)obj);
+        model = (int)Obj_GetActiveModel(obj);
         objScale = obj->anim.rootMotionScale;
         objAlpha = obj->anim.alpha;
         objRotY = obj->anim.rotX;
@@ -136,7 +137,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             texture->offsetS -= 10000;
         }
 
-        model = Obj_GetActiveModel((int)obj);
+        model = (int)Obj_GetActiveModel(obj);
         objScale = obj->anim.rootMotionScale;
         objAlpha = obj->anim.alpha;
         objRotY = obj->anim.rotX;
@@ -178,7 +179,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_B, particleArgs, 2, -1, NULL);
         }
 
-        model = Obj_GetActiveModel((int)obj);
+        model = (int)Obj_GetActiveModel(obj);
         objScale = obj->anim.rootMotionScale;
         objAlpha = obj->anim.alpha;
         objRotY = obj->anim.rotX;
@@ -264,7 +265,7 @@ void Vortex_init(int obj, int initData)
         }
     }
     o->objectFlags |= VORTEX_OBJFLAG_HITDETECT_DISABLED;
-    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel((int)o), postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(o), postRenderSetAlphaBlendState);
     if (state->flags.active != 0)
         state->alpha = lbl_803E73E0;
     else

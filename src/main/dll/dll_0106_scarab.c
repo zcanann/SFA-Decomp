@@ -547,7 +547,7 @@ void Scarab_init(int* obj, u8* def)
     state->yawSpeed = randomGetRange(0x3e8, 0xfa0);
     state->riseLimit = randomGetRange(0x32, 0x64);
     state->baseY = ((ObjPlacement*)def)->posY;
-    model = (int*)Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x3d3:
@@ -583,7 +583,6 @@ void Scarab_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-extern int Obj_GetActiveModel(int obj);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, int model, int mode, u8 chance, f32 alpha,
                                         int flags, int unused);

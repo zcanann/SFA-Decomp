@@ -2,6 +2,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -259,7 +260,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
         mm_free(((void**)((char*)gKTRexState + 0x17c))[slot]);
         ((void**)((char*)gKTRexState + 0x17c))[slot] = NULL;
     }
-    model = Obj_GetActiveModel(obj);
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
     localPoint[0] = lbl_803E67B8;
     localPoint[1] = lbl_803E67B8;
     localPoint[2] = lbl_803E67B8;

@@ -161,7 +161,6 @@ extern f32 lbl_803E2CF0;
 extern f32 lbl_803E2CF4;
 extern f32 lbl_803E2CF8;
 extern f32 lbl_803E2CFC;
-extern int* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
 
@@ -1236,7 +1235,7 @@ void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
     state->baddie.unk31C = fz;
     state->baddie.seqEntryIndex = 1;
     state->baddie.inWhirlpoolGroup = 0;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), renderWhirlpool);
+    ObjModel_SetRenderCallback((int*)Obj_GetActiveModel((GameObject*)obj), renderWhirlpool);
 }
 
 #pragma peephole off

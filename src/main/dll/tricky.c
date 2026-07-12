@@ -21,6 +21,7 @@
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/gamebits.h"
 #include "main/camera_interface.h"
@@ -265,7 +266,6 @@ extern char sTrickyDebugXCoordFormat[];
 extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void* Obj_GetActiveModel(char* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern int fn_8011E0D8();
 extern void cutsceneFadeInOut(int a);
@@ -331,13 +331,13 @@ void gameUiLoadResources(void)
             ((GameObject*)(*arrA))->anim.localPosZ = fc;
             ((GameObject*)(*arrA))->anim.rotX = val;
             *(s8*)(*arrA + 0xad) = i;
-            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), cMenuRingModelRenderFn);
+            ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)*arrA), cMenuRingModelRenderFn);
             *arrB = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_ICON), 4, -1, -1, NULL);
             ((GameObject*)(*arrB))->anim.localPosX = fa;
             ((GameObject*)(*arrB))->anim.localPosY = fb;
             ((GameObject*)(*arrB))->anim.localPosZ = fc;
             ((GameObject*)(*arrB))->anim.rotX = val;
-            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrB), cMenuRingIconRenderFn);
+            ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)*arrB), cMenuRingIconRenderFn);
             val += 0x5555;
             arrA++;
             arrB++;

@@ -118,6 +118,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 timeDelta;
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
@@ -188,7 +189,6 @@ extern void GCbaddieShield_update(int* obj);
 
 extern void Shield_update(int* obj);
 
-extern int* Obj_GetActiveModel(int obj);
 extern void objSetSlot(int* obj, int slot);
 extern f32 lbl_803E3270;
 
@@ -747,7 +747,7 @@ void dim2roofrub_spawnEffects(int* obj)
     }
     else if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_TREAD)
     {
-        int* model = Obj_GetActiveModel((int)obj);
+        int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = 2;
         if ((((GameObject*)obj)->objectFlags & DIM2ROOFRUB_OBJFLAG_RENDERED) != 0)
         {

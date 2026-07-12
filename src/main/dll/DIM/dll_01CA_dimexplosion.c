@@ -106,7 +106,6 @@ extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
 
 extern void textureFree(int tex);
-extern int Obj_GetActiveModel(void* obj);
 extern void ModelLightStruct_free(void*);
 extern f32 expf(f32 x);
 extern void GXSetCurrentMtx(u32 id);
@@ -308,7 +307,7 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
     colA = lbl_803E4928;
     colB = lbl_803E8468;
     state = *(int*)&obj->extra;
-    model = Obj_GetActiveModel(obj);
+    model = (int)Obj_GetActiveModel(obj);
     cursor = state;
     if (visible != 0)
     {

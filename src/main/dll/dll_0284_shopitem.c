@@ -101,7 +101,6 @@ extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
 extern f32 timeDelta;
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void* Obj_GetActiveModel(int);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_801F4C28(int, int);
 extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
@@ -162,7 +161,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
         objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
     }
     {
-        int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(obj), 0);
+        int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel((GameObject*)obj), 0);
         *(u8*)(renderOp + 0x43) = 0x7F;
     }
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
@@ -473,7 +472,7 @@ void shopitem_init(GameObject* obj, int data)
         (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);
         break;
     case SHOPITEM_SEQ_SPARKLE:
-        ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel((int)obj), fn_801E832C);
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
         ObjGroup_AddObject((int)obj, SHOPITEM_OBJGROUP);
         break;
     }

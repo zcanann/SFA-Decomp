@@ -20,6 +20,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
@@ -400,7 +401,7 @@ int andross_SeqFn(GameObject* obj)
 
     state->fadeAlpha = gAndrossZero;
     fade = state->fadeAlpha;
-    model = *(int*)Obj_GetActiveModel((int)obj);
+    model = *(int*)Obj_GetActiveModel(obj);
     i = 0;
     alpha = 255.0f * fade;
     for (; i < ((ModelFileHeader*)model)->renderOpCount; i++)
@@ -1592,7 +1593,7 @@ void andross_update(int obj)
             f32 fade = state->fadeAlpha;
             f32 alpha;
 
-            model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
+            model = *(ModelFileHeader**)Obj_GetActiveModel((GameObject*)obj);
             index = 0;
             alpha = 255.0f * fade;
             for (; index < model->renderOpCount; index++)
@@ -1893,7 +1894,7 @@ void andross_update(int obj)
             f32 fade = state->fadeAlpha;
             f32 alpha;
 
-            model = *(ModelFileHeader**)Obj_GetActiveModel(obj);
+            model = *(ModelFileHeader**)Obj_GetActiveModel((GameObject*)obj);
             index = 0;
             alpha = 255.0f * fade;
             for (; index < model->renderOpCount; index++)
@@ -2331,7 +2332,7 @@ void andross_init(int obj, ObjPlacement* setup)
     ObjHits_SetTargetMask(obj, 4);
     ((GameObject*)obj)->animEventCallback = andross_SeqFn;
     fn_8006CB50();
-    i = Obj_GetActiveModel(obj);
+    i = (int)Obj_GetActiveModel((GameObject*)obj);
     model = *(int*)i;
     for (i = 0, val = i; i < *(u8*)(model + 0xf8); i++)
     {

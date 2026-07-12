@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/mm.h"
@@ -277,7 +278,6 @@ extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
-extern int* Obj_GetActiveModel(int* obj);
 extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern u8 fn_800626C8(int* obj, int frames);
@@ -2507,7 +2507,7 @@ void shadowRenderFn_8006b558(int* obj)
         objRender(0, 0, 0, 0, obj, 1);
         set_shadowFlag_803dcc29(0);
         ((GameObject*)obj)->anim.rootMotionScale = saved;
-        model = Obj_GetActiveModel(obj);
+        model = (int*)Obj_GetActiveModel((GameObject*)obj);
         *(u16*)((char*)model + 0x18) &= ~0x8;
         gxSetZMode_(1, GX_LEQUAL, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
@@ -2739,7 +2739,7 @@ void renderShadows(void)
             ((ObjModelState*)of64)->shadowOffsetZ = -vA[2];
             setScreenWidth(screenW);
             {
-                f32* m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
+                f32* m = ObjModel_GetJointMatrix((int*)Obj_GetActiveModel((GameObject*)obj), 0);
                 slot->x = dirX + m[3];
                 slot->y = dirY + m[7];
                 slot->z = dirZ + m[11];

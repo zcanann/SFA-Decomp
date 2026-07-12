@@ -75,7 +75,6 @@ extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, in
 extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
-extern int Obj_GetActiveModel(int obj);
 
 int SPScarab_getExtraSize(void)
 {
@@ -201,7 +200,7 @@ void SPScarab_init(GameObject* obj, int def)
     *(int*)(def + 0x14) = -1;
 
     Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_scarab_runloop);
-    model = Obj_GetActiveModel((int)obj);
+    model = (int)Obj_GetActiveModel(obj);
 
     switch ((s8) * (u8*)(def + 0x19))
     {
