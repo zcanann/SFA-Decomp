@@ -1,4 +1,8 @@
-#include "main/engine_shared.h"
+#include "main/curve.h"
+#include "main/debug.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 

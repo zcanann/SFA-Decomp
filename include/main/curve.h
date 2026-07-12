@@ -60,6 +60,9 @@ extern f32 lbl_803DE658;
 extern f32 lbl_803DE674;
 extern f32 lbl_803DE67C;
 extern f32 lbl_803DE660;
+extern f32 lbl_803DE664;
+extern f32 lbl_803DE668;
+extern f32 lbl_803DE66C;
 extern f32 lbl_803DE680;
 
 extern char sCurvesSetupMoveNetworkCurveTooFewControlPoints[];
