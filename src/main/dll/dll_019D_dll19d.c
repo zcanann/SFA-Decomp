@@ -139,7 +139,7 @@ void dll_19D_update(GameObject* obj)
         ((Dll19DState*)state)->despawnTimer -= 1;
         if (((Dll19DState*)state)->despawnTimer <= 0)
         {
-            Obj_FreeObject(self);
+            Obj_FreeObject((GameObject*)self);
         }
     }
     else
@@ -173,7 +173,7 @@ void dll_19D_update(GameObject* obj)
         ((GameObject*)self)->unkF4 = lifetime - frames;
         if ((int)(lifetime - frames) < 0)
         {
-            Obj_FreeObject(self);
+            Obj_FreeObject((GameObject*)self);
         }
     }
 }

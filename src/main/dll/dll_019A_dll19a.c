@@ -58,9 +58,6 @@ STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
 
 extern f32 lbl_803E5180;
 
-extern int Obj_AllocObjectSetup(int size, int typeId);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-
 int dll_19A_getExtraSize(void)
 {
     return 0x4;
@@ -87,13 +84,13 @@ void dll_19A_hitDetect(void)
 
 void dll_19A_update(int obj)
 {
-    int setup;
+    Dll19APlacement* setup;
     short* state;
     int* res;
     Dll19ASpawnSetup* newObj;
-    char* r;
+    GameObject* r;
 
-    setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    setup = (Dll19APlacement*)((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     if (mainGetBit(GAMEBIT_DLL19A_RESET) != 0)
     {
@@ -126,9 +123,9 @@ void dll_19A_update(int obj)
             newObj->posX = ((ObjPlacement*)setup)->posX;
             newObj->posY = ((ObjPlacement*)setup)->posY;
             newObj->posZ = ((ObjPlacement*)setup)->posZ;
-            newObj->color[0] = ((Dll19APlacement*)setup)->color[0];
-            newObj->color[1] = ((Dll19APlacement*)setup)->color[1];
-            newObj->color[2] = ((Dll19APlacement*)setup)->color[2];
+            newObj->color[0] = setup->color[0];
+            newObj->color[1] = setup->color[1];
+            newObj->color[2] = setup->color[2];
             newObj->color[3] = ((Dll19APlacement*)setup)->color[3];
             newObj->unk27 = 1;
             newObj->unk18 = 0x1e7;
@@ -146,11 +143,11 @@ void dll_19A_update(int obj)
             newObj->unk29 = 0xff;
             newObj->unk2E = -1;
             {
-                int linkIdx = ((Dll19APlacement*)setup)->gateBitIndex;
+                int linkIdx = setup->gateBitIndex;
                 newObj->linkIndex = linkIdx;
             }
-            r = Obj_SetupObject((int)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
-                                *(int*)&((GameObject*)obj)->anim.parent);
+            r = Obj_SetupObject((ObjPlacement*)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
+                                ((GameObject*)obj)->anim.parent);
             if ((r != 0) && (((GameObject*)r)->extra != 0))
             {
                 *(u8*)(*(int*)&((GameObject*)r)->extra + 0x404) = 0x20;

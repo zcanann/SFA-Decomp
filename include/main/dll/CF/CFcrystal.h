@@ -36,7 +36,7 @@ STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1C) == 0x1C);
 
 typedef struct FireFlyLanternState
 {
-    int fireflies[7];
+    GameObject* fireflies[7];
     u8 fireflyCount;
     u8 remainingCount;
     u8 flags;
@@ -77,7 +77,7 @@ void FireFlyLantern_free(int obj);
 void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FireFlyLantern_update(GameObject* obj);
 void FireFlyLantern_init(GameObject* param_1, int param_2);
-int FireFlyLantern_spawnFireFly(int* obj);
+GameObject* FireFlyLantern_spawnFireFly(int* obj);
 int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 int FlammableVine_getExtraSize(void);

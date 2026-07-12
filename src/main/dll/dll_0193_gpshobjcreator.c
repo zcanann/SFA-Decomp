@@ -31,27 +31,20 @@ typedef struct GpshObjcreatorObjectDef
  * plus class-specific tail. */
 typedef struct GpshObjcreatorSpawnSetup
 {
-    s16 objType;     /* 0x00 */
-    u8 pad02[2];     /* 0x02 */
-    u8 color[4];     /* 0x04 */
-    f32 posX;        /* 0x08 */
-    f32 posY;        /* 0x0c */
-    f32 posZ;        /* 0x10 */
-    u8 pad14[4];     /* 0x14 */
+    ObjPlacement base; /* 0x00..0x17 */
     u8 rotByte;      /* 0x18 */
     u8 pad19;        /* 0x19 */
     s16 unk1A;       /* 0x1a */
     u8 pad1C[8];     /* 0x1c */
 } GpshObjcreatorSpawnSetup;
 
-STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, posX) == 0x8);
+STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, base.posX) == 0x8);
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, rotByte) == 0x18);
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, unk1A) == 0x1a);
 STATIC_ASSERT(sizeof(GpshObjcreatorSpawnSetup) == 0x24);
 
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern s16 lbl_803263B8[];
 
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
@@ -73,7 +66,6 @@ void gpsh_objcreator_hitDetect(void)
 
 void gpsh_objcreator_update(int* obj)
 {
-    extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
     u8* sub;
     GpshObjcreatorSpawnSetup* setup;
 
@@ -101,18 +93,19 @@ void gpsh_objcreator_update(int* obj)
     if (*(f32*)sub <= 0.0f)
     {
         Sfx_PlayFromObjectLimited(0, SFXTRIG_wp_hitpos_6_167, 1);
-        setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
+        setup = (GpshObjcreatorSpawnSetup*)Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
         ((GpshShrineFlags*)(sub + 5))->b80 = 1;
-        setup->color[3] = 0xff;
-        setup->color[0] = 0x20;
-        setup->color[1] = 2;
-        setup->posX = ((GameObject*)obj)->anim.localPosX;
-        setup->posY = ((GameObject*)obj)->anim.localPosY;
-        setup->posZ = ((GameObject*)obj)->anim.localPosZ;
-        setup->objType = (s16)(sub[4] + 0x1f4);
+        setup->base.color[3] = 0xff;
+        setup->base.color[0] = 0x20;
+        setup->base.color[1] = 2;
+        setup->base.posX = ((GameObject*)obj)->anim.localPosX;
+        setup->base.posY = ((GameObject*)obj)->anim.localPosY;
+        setup->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+        setup->base.objectId = (s16)(sub[4] + 0x1f4);
         setup->rotByte = (u8)((s32) * (s16*)obj >> 8);
         setup->unk1A = lbl_803263B8[sub[4]];
-        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
+        Obj_SetupObject(&setup->base, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                        ((GameObject*)obj)->anim.parent);
     }
 }
 

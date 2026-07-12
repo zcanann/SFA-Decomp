@@ -143,7 +143,7 @@ void ShipBattle_update(GameObject* obj)
         (*gObjectTriggerInterface)->endSequence(groupId2);
     }
     (obj)->seqIndex = -1;
-    Obj_FreeObject((int)obj);
+    Obj_FreeObject(obj);
 }
 
 void ShipBattle_init(GameObject* obj, int def)

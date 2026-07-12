@@ -56,9 +56,6 @@ typedef struct Dll109MapData
 
 STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
 
-extern int Obj_AllocObjectSetup(int size, int type);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-
 int dll_109_getExtraSize_ret_16(void)
 {
     return 0x10;
@@ -95,7 +92,7 @@ void carryable_break_respawn_update(GameObject* obj)
 {
     Dll109State* state;
     ObjPlacement* placement;
-    int setup;
+    ObjPlacement* setup;
     u32 hitVolume;
 
     state = (obj)->extra;
@@ -113,10 +110,10 @@ void carryable_break_respawn_update(GameObject* obj)
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ);
-                ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-                Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+                setup->posX = (obj)->anim.localPosX;
+                setup->posY = (obj)->anim.localPosY;
+                setup->posZ = (obj)->anim.localPosZ;
+                Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
             }
             (*gPartfxInterface)->spawnObject((void*)obj, 0x355, NULL, 0, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x352, NULL, 0, -1, NULL);

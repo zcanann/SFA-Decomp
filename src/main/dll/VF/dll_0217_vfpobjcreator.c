@@ -28,8 +28,6 @@
 #define VFP_OBJCREATOR_FALLING_OBJECT_ID    0x263
 #define VFP_OBJCREATOR_PROJECTILE_OBJECT_ID 0x549
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16* angles, f32* vec);
 
 int VFP_ObjCreator_getExtraSize(void)
@@ -77,10 +75,10 @@ void VFP_ObjCreator_update(int* obj)
         state->spawnTimer -= (s16)timeDelta;
         if (state->spawnTimer <= 0)
         {
-            u8* setupBuf;
-            char* spawned;
+            VfpObjCreatorSetup* setupBuf;
+            GameObject* spawned;
             state->spawnTimer = state->spawnInterval;
-            setupBuf = Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
+            setupBuf = (VfpObjCreatorSetup*)Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
             ((VfpObjCreatorSetup*)setupBuf)->base.color[2] = 0xff;
             ((VfpObjCreatorSetup*)setupBuf)->base.color[3] = 0xff;
             ((VfpObjCreatorSetup*)setupBuf)->base.color[0] = 2;
@@ -97,8 +95,8 @@ void VFP_ObjCreator_update(int* obj)
             ((VfpObjCreatorSetup*)setupBuf)->unk1A = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
             ((VfpObjCreatorSetup*)setupBuf)->unk1C = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
             ((VfpObjCreatorSetup*)setupBuf)->unk24 = 0;
-            spawned = Obj_SetupObject(setupBuf, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                      *(int*)&((GameObject*)obj)->anim.parent);
+            spawned = Obj_SetupObject(&setupBuf->base, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                      ((GameObject*)obj)->anim.parent);
             if (spawned == NULL)
             {
                 break;
@@ -112,15 +110,15 @@ void VFP_ObjCreator_update(int* obj)
         state->spawnTimer -= (s16)timeDelta;
         if (state->spawnTimer <= 0)
         {
-            u8* setupBuf;
-            char* spawned;
+            VfpObjCreatorSetup* setupBuf;
+            GameObject* spawned;
             struct
             {
                 s16 ang[3];
                 f32 v[4];
             } launch;
             state->spawnTimer = state->spawnInterval;
-            setupBuf = Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
+            setupBuf = (VfpObjCreatorSetup*)Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
             ((VfpObjCreatorSetup*)setupBuf)->base.posX = placement->base.posX;
             ((VfpObjCreatorSetup*)setupBuf)->base.posY = placement->base.posY;
             ((VfpObjCreatorSetup*)setupBuf)->base.posZ = placement->base.posZ;
@@ -130,8 +128,8 @@ void VFP_ObjCreator_update(int* obj)
             ((VfpObjCreatorSetup*)setupBuf)->base.color[3] = placement->base.color[3];
             ((VfpObjCreatorSetup*)setupBuf)->unk1E = -1;
             ((VfpObjCreatorSetup*)setupBuf)->unk20 = -1;
-            spawned = Obj_SetupObject(setupBuf, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                      *(int*)&((GameObject*)obj)->anim.parent);
+            spawned = Obj_SetupObject(&setupBuf->base, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                      ((GameObject*)obj)->anim.parent);
             if (spawned == NULL)
             {
                 break;
@@ -152,7 +150,7 @@ void VFP_ObjCreator_update(int* obj)
             launch.ang[2] = 0;
             launch.ang[1] = 0;
             launch.ang[0] = ((GameObject*)obj)->anim.rotX;
-            vecRotateZXY(launch.ang, (f32*)(spawned + 0x24));
+            vecRotateZXY(launch.ang, (f32*)((char*)spawned + 0x24));
             Sfx_PlayFromObject((int)spawned, SFXTRIG_id_10c);
             (*gPartfxInterface)->spawnObject(spawned, 0x39a, NULL, 0x10002, -1, NULL);
             (*gPartfxInterface)->spawnObject(spawned, 0x39b, NULL, 0x10002, -1, NULL);

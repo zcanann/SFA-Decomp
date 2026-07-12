@@ -96,7 +96,7 @@ void SB_FireBall_update(GameObject* obj)
         obj->unkF4 -= framesThisStep;
         if (obj->unkF4 < 0)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return;
         }
 

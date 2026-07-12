@@ -61,9 +61,6 @@ STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
 
 extern f32 lbl_803E4EB8;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
-
 int DFSH_ObjCreator_getExtraSize(void)
 {
     return 0x4;
@@ -94,7 +91,7 @@ void DFSH_ObjCreator_update(GameObject* obj)
     u8* setup = *(u8**)&(obj)->anim.placementData;
     DfshObjCreatorState* state = (obj)->extra;
     void* resource;
-    u8* spawnSetup;
+    DfshObjCreatorSetup* spawnSetup;
 
     if (mainGetBit(0x589) != 0)
     {
@@ -120,15 +117,15 @@ void DFSH_ObjCreator_update(GameObject* obj)
 
     if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0)
     {
-        spawnSetup = Obj_AllocObjectSetup(0x38, DFSHOBJCREATOR_SPIRITPRIZE_OBJ_ID);
-        ((DfshObjCreatorSetup*)spawnSetup)->base.posX = ((ObjPlacement*)setup)->posX;
-        ((DfshObjCreatorSetup*)spawnSetup)->base.posY = ((ObjPlacement*)setup)->posY;
-        ((DfshObjCreatorSetup*)spawnSetup)->base.posZ = ((ObjPlacement*)setup)->posZ;
-        ((DfshObjCreatorSetup*)spawnSetup)->base.mapId = ((ObjPlacement*)setup)->mapId;
-        ((DfshObjCreatorSetup*)spawnSetup)->base.color[0] = setup[0x04];
-        ((DfshObjCreatorSetup*)spawnSetup)->base.color[1] = setup[0x05];
-        ((DfshObjCreatorSetup*)spawnSetup)->base.color[2] = setup[0x06];
-        ((DfshObjCreatorSetup*)spawnSetup)->base.color[3] = setup[0x07];
+        spawnSetup = (DfshObjCreatorSetup*)Obj_AllocObjectSetup(0x38, DFSHOBJCREATOR_SPIRITPRIZE_OBJ_ID);
+        spawnSetup->base.posX = ((ObjPlacement*)setup)->posX;
+        spawnSetup->base.posY = ((ObjPlacement*)setup)->posY;
+        spawnSetup->base.posZ = ((ObjPlacement*)setup)->posZ;
+        spawnSetup->base.mapId = ((ObjPlacement*)setup)->mapId;
+        spawnSetup->base.color[0] = setup[0x04];
+        spawnSetup->base.color[1] = setup[0x05];
+        spawnSetup->base.color[2] = setup[0x06];
+        spawnSetup->base.color[3] = setup[0x07];
         ((DfshObjCreatorSetup*)spawnSetup)->unk27 = 3;
         ((DfshObjCreatorSetup*)spawnSetup)->unk18 = 0x1e7;
         ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;
@@ -147,7 +144,7 @@ void DFSH_ObjCreator_update(GameObject* obj)
         ((DfshObjCreatorSetup*)spawnSetup)->unk29 = 0xff;
         ((DfshObjCreatorSetup*)spawnSetup)->unk2E = -1;
         ((DfshObjCreatorSetup*)spawnSetup)->unk34 = 0xffff;
-        Obj_SetupObject(spawnSetup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+        Obj_SetupObject(&spawnSetup->base, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
         state->spawnTimer = 100;
         state->spawnTimerStep = 0;
     }

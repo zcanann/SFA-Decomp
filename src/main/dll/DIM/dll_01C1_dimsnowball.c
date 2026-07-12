@@ -125,7 +125,7 @@ void dimsnowball_update(GameObject* obj)
     player = Obj_GetPlayerObject();
     if (*(void**)state == NULL)
     {
-        Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         return;
     }
     frames = framesThisStep;
@@ -134,7 +134,7 @@ void dimsnowball_update(GameObject* obj)
     last = count - 1;
     if (idx[1] >= last)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject(obj);
         return;
     }
     idx[0] = idx[1] - 1;

@@ -30,6 +30,6 @@ void SH_StaffHaze_update(GameObject* obj)
 {
     if (((obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject(obj);
     }
 }

@@ -154,7 +154,7 @@ void VFP_MiniFire_update(GameObject* obj)
 
     if ((obj)->anim.localPosY < state->baseY - 360.0f)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject(obj);
     }
 }
 

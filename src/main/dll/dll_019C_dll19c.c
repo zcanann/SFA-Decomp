@@ -22,9 +22,6 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-
 /* type id of the child object dll_19C_update spawns once its gate bit + spawn timer elapse */
 #define DLL19C_CHILD_OBJ 0x248
 
@@ -51,7 +48,7 @@ void dll_19C_update(int* obj)
     u8* def;
     u8* sub;
     void* res;
-    void* setup;
+    ObjPlacement* setup;
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
@@ -82,16 +79,16 @@ void dll_19C_update(int* obj)
     if (((Dll19CState*)sub)->spawnTimer <= 0 && (s8)def[0x1f] == 0 && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x18, DLL19C_CHILD_OBJ);
-        ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;
-        ((ObjPlacement*)setup)->posY = 50.0f + ((Dll19CPlacement*)def)->posY;
-        ((ObjPlacement*)setup)->posZ = ((Dll19CPlacement*)def)->posZ;
-        *(s16*)setup = DLL19C_CHILD_OBJ;
-        ((ObjPlacement*)setup)->mapId = -1;
+        setup->posX = ((Dll19CPlacement*)def)->posX;
+        setup->posY = 50.0f + ((Dll19CPlacement*)def)->posY;
+        setup->posZ = ((Dll19CPlacement*)def)->posZ;
+        setup->objectId = DLL19C_CHILD_OBJ;
+        setup->mapId = -1;
         *(u8*)((char*)setup + 4) = def[4];
         *(u8*)((char*)setup + 5) = def[5];
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
-        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
+        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         ((Dll19CState*)sub)->spawnTimer = 0x64;
         ((Dll19CState*)sub)->active = 0;
     }
