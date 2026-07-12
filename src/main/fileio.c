@@ -1,5 +1,15 @@
-#include "main/engine_shared.h"
+#include "main/audio.h"
+#include "main/audio/sfx.h"
+#include "main/fileio.h"
+#include "main/gameloop_api.h"
+#include "main/gametext.h"
 #include "main/loaded_file_flags.h"
+#include "main/mm.h"
+#include "main/pad.h"
+#include "main/pi_dolphin_api.h"
+#include "dolphin/dvd.h"
+#include "dolphin/gx/GXLegacy.h"
+#include "dolphin/os/OSCache.h"
 
 // DVDGetDriveStatus() drive-status codes
 #define DVD_STATE_FATAL_ERROR -1
