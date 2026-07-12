@@ -27,10 +27,28 @@
 
 extern u8 gDll79EffectModelBlock[];
 extern u8 lbl_803DB8D8;
-extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;
-extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
-extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
-extern f32 lbl_803E0CF8, lbl_803E0CFC;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0CB0 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0CB4 = 16383.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CB8 = 5.2f;
+__declspec(section ".sdata2") f32 lbl_803E0CBC = 40.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CC0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CC4 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E0CC8 = 3.5f;
+__declspec(section ".sdata2") f32 lbl_803E0CCC = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CD0 = 32676.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CD4 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CD8 = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803E0CDC = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CE0 = 999.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CE4 = 96.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CE8 = 97.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CEC = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E0CF0 = -2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CF4 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CF8 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E0CFC = 800.0f;
 
 int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

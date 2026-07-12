@@ -19,13 +19,18 @@
 #define DLL7A_EFFECT_ID_VARIANT1 0xc0d
 
 extern u8 lbl_80314BD0[];
-extern f32 lbl_803E0D08;
-extern f32 lbl_803E0D0C;
-extern f32 lbl_803E0D10;
-extern f32 lbl_803E0D14;
-extern f32 lbl_803E0D18;
-extern f32 lbl_803E0D1C;
-extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0D08 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0D0C = 0.4f;
+__declspec(section ".sdata2") f32 lbl_803E0D10 = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803E0D14 = -16383.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D18 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D1C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D20 = 999.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D24 = 94.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D28 = 95.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D2C = 135.0f;
 
 int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
