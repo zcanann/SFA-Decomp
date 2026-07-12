@@ -5,6 +5,7 @@ extern const float __one_over_F[];
 extern const float lbl_803E7E50;
 extern const float lbl_803E7E54;
 extern const float lbl_803E7E58;
+extern const double lbl_803E7E60;
 extern float lbl_803DC648;
 extern float lbl_803DC64C;
 __declspec(section ".sdata") extern float lbl_803DC650[];
@@ -207,6 +208,11 @@ float powf(float x, float y)
     return 0.0f;
 }
 #pragma opt_propagation reset
+
+const float lbl_803E7E50 = 0.0f;
+const float lbl_803E7E54 = 1.375f;
+const float lbl_803E7E58 = 1.0f;
+const double lbl_803E7E60 = 4503601774854144.0;
 
 /* player head-move table + spawned-object list; owned here by link order */
 
