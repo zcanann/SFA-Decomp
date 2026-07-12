@@ -6,6 +6,7 @@
 #include "main/effect_interfaces.h"
 #include "main/texture.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/mapEvent.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
@@ -966,7 +967,6 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
 
 extern char lbl_803822C8[];
 extern void* gLoadedRomListPages[];
-extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
 
 #pragma opt_common_subs off
 void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
@@ -1072,7 +1072,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
                     vis = *(s8**)((char*)bm2 + 0x10);
                     vis[byteIdx] = vis[byteIdx] | bit;
                 }
-                Obj_SetupObject((int*)obj, 1, mapId, objIndex, p4);
+                Obj_SetupObject((ObjPlacement*)obj, 1, mapId, objIndex, (void*)p4);
             }
         }
         objIndex++;
