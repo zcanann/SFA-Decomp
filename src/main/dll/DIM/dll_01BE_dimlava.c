@@ -260,7 +260,7 @@ void lavaball1be_init(s16* obj, u8* p)
         {
             modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0x80, 0, 0);
-            modelLightStruct_setDistanceAttenuation((u8*)state->light, gDimLavaLightAttenNear,
+            modelLightStruct_setDistanceAttenuation(state->light, gDimLavaLightAttenNear,
                                                     gDimLavaLightAttenFar);
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0x80, 0, 0x64, gDimLavaGlowRadius);
             modelLightStruct_setGlowProjectionRadius(state->light, gDimLavaGlowRadius);

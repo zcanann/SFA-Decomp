@@ -85,7 +85,7 @@ void arwproximit_update(GameObject* obj)
             arwing = (GameObject*)Obj_GetPlayerObject();
         if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < gArwProximityActivateDistance)
         {
-            state->light = objCreateLight((int)obj, 1);
+            state->light = objCreateLight(obj, 1);
             if (state->light != NULL)
             {
                 modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);

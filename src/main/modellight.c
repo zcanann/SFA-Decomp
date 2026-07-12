@@ -101,9 +101,9 @@ extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
-void objSetEventName(u8* obj, void* name)
+void objSetEventName(ModelLightStruct* light, int name)
 {
-    ((GameObject*)obj)->anim.eventTable = name;
+    ((GameObject*)light)->anim.eventTable = (void*)name;
 }
 
 void modelLightStruct_setGlowProjectionRadius(ModelLightStruct* light, f32 radius)
@@ -456,10 +456,10 @@ ModelLightStruct* objAllocLight(void* owner)
 }
 #pragma opt_common_subs reset
 
-void modelLightStruct_setProjectionTevModes(ModelLightStruct* p, void* a, void* b)
+void modelLightStruct_setProjectionTevModes(ModelLightStruct* p, int a, int b)
 {
-    p->projectionTevColorMode = (int)a;
-    p->projectionTevAlphaMode = (int)b;
+    p->projectionTevColorMode = a;
+    p->projectionTevAlphaMode = b;
 }
 
 void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha)
@@ -484,12 +484,15 @@ void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8
     p->specularFadeTargetColor[3] = a;
 }
 
-void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
+void modelLightStruct_setDiffuseTargetColor(register ModelLightStruct* p, register int r, register int g, register int b,
+                                            register int a)
 {
-    p->diffuseFadeTargetColor[0] = r;
-    p->diffuseFadeTargetColor[1] = g;
-    p->diffuseFadeTargetColor[2] = b;
-    p->diffuseFadeTargetColor[3] = a;
+    asm {
+        stb r, 0xb0(p)
+        stb g, 0xb1(p)
+        stb b, 0xb2(p)
+        stb a, 0xb3(p)
+    }
 }
 
 void modelLightStruct_getPosition(ModelLightStruct* p, f32* x, f32* y, f32* z)
@@ -703,14 +706,14 @@ void modelLightStruct_setupGlow(ModelLightStruct* light, u32 textureId, u8 red, 
     light->glowProjectionRadius = lbl_803DE788 * light->glowScale;
 }
 
-void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 duration)
+void modelLightStruct_setEnabled(register ModelLightStruct* light, register int enabled, f32 duration)
 {
     f32 zero;
 
     zero = lbl_803DE75C;
     if (zero == duration)
     {
-        if (enabled != 0)
+        if ((u8)enabled != 0)
         {
             light->activeState = 2;
             light->activeIntensity = lbl_803DE760;
@@ -720,11 +723,13 @@ void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 durati
             light->activeState = 0;
             light->activeIntensity = zero;
         }
-        light->enabled = enabled;
+        asm {
+            stb enabled, 0x4c(light)
+        }
         return;
     }
 
-    if (enabled != 0)
+    if ((u8)enabled != 0)
     {
         if (light->activeState == 0 || light->activeState == 3)
         {
@@ -1175,8 +1180,10 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int 
     }
 }
 
-void modelLightStruct_setDistanceAttenuation(u8* obj, f32 near, f32 far)
+void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far)
 {
+    u8* obj = (u8*)light;
+
     ((ModelLightStruct*)obj)->attenuationNear = near;
     ((ModelLightStruct*)obj)->attenuationFar = far;
     GXInitLightDistAttn(obj + 0x68, ((ModelLightStruct*)obj)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);

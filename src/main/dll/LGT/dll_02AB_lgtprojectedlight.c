@@ -73,7 +73,7 @@ void ProjectedLight_init(GameObject* obj, int setup)
 
     if (state->light == NULL)
     {
-        state->light = objCreateLight((int)obj, 1);
+        state->light = objCreateLight(obj, 1);
     }
 
     if (state->light != NULL)

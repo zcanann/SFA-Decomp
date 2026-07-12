@@ -270,7 +270,7 @@ void DIMbossspit_init(int obj)
         modelLightStruct_setLightKind(((DIMbossspitState*)state)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
         modelLightStruct_setSpecularColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
-        modelLightStruct_setDistanceAttenuation((u8*)((DIMbossspitState*)state)->light, lbl_803E4D70,
+        modelLightStruct_setDistanceAttenuation(((DIMbossspitState*)state)->light, lbl_803E4D70,
                                                 lbl_803E4D74);
         lightSetField4D(((DIMbossspitState*)state)->light, 1);
         modelLightStruct_setEnabled(((DIMbossspitState*)state)->light, 1, lbl_803E4D78);

@@ -88,7 +88,7 @@ void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
         return;
     if (state->light != NULL)
         return;
-    state->light = objCreateLight((int)obj, 1);
+    state->light = objCreateLight(obj, 1);
     if (state->light == NULL)
         return;
     modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);

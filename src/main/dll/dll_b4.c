@@ -23,7 +23,6 @@ extern f32 lbl_803E1640;
 extern void* Obj_GetActiveModel(u8* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern void lightSetColor(int a, int b, int c, int d);
-extern void objSetEventName(ModelLightStruct* p, int a);
 
 void lockIconInit(void)
 {

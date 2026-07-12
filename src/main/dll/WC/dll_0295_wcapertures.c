@@ -65,7 +65,7 @@ typedef struct WCAperturesSetup
 
 typedef struct WCAperturesState
 {
-    void* light;
+    ModelLight* light;
     s16 targetAlpha;
     u8 mode;
     u8 flags;
@@ -116,7 +116,7 @@ int wcapertures_getObjectTypeId(GameObject* obj)
 void wcapertures_free(GameObject* obj)
 {
     WCAperturesState* state = obj->extra;
-    void* light = state->light;
+    ModelLight* light = state->light;
 
     if (light != NULL)
     {
@@ -137,10 +137,10 @@ void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     {
         state->flags &= ~WCAPERTURES_FLAG_VISIBLE;
     }
-    light = state->light;
+    light = (u8*)state->light;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
     {
-        queueGlowRender(light);
+        queueGlowRender((ModelLight*)light);
     }
     if (visible != 0)
     {
@@ -179,7 +179,7 @@ void wcapertures_update(GameObject* obj)
     WCAperturesSetup* setup = (WCAperturesSetup*)obj->anim.placementData;
     WCAperturesState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
-    void* light;
+    ModelLight* light;
     int alpha, target;
 
     state->targetAlpha = 0;
@@ -262,7 +262,7 @@ void wcapertures_init(GameObject* obj, int initData)
     objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
     state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
-    state->light = objCreateLight((int)obj, 1);
+    state->light = objCreateLight(obj, 1);
     if (state->light != NULL)
     {
         modelLightStruct_setLightKind(state->light, WCAPERTURES_LIGHT_KIND);

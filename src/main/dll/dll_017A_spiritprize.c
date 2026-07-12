@@ -149,7 +149,7 @@ afterTrigger:;
         {
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0x96, 0x32, 0xff, 0xff);
-            modelLightStruct_setDistanceAttenuation((u8*)state->light, lbl_803E4EB0, lbl_803E4EB4);
+            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4EB0, lbl_803E4EB4);
         }
     }
     ((GameObject*)obj)->anim.alpha = 0;

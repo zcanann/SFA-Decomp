@@ -204,7 +204,7 @@ void dimbossfire_update(GameObject *obj)
                     {
                         modelLightStruct_setDiffuseColor(state->light, 0x7f, 0xff, 0, 0);
                     }
-                    modelLightStruct_setDistanceAttenuation((u8*)state->light, lbl_803E4DB8, lbl_803E4DBC);
+                    modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4DB8, lbl_803E4DBC);
                     modelLightStruct_setEnabled(state->light, 1, lbl_803E4DA0);
                     modelLightStruct_setEnabled(state->light, 0, state->activeTimer / lbl_803E4DC0);
                 }

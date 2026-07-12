@@ -97,8 +97,7 @@ void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible != 0)
     {
         state->flags |= CMBSRC_STATE_RENDERED;
-        if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
-            ((CmbSrcLight*)state->light)->enabled != 0)
+        if (state->light != NULL && state->light->glowType != 0 && state->light->enabled != 0)
         {
             queueGlowRender(state->light);
         }
@@ -455,15 +454,14 @@ int cmbsrc_update(GameObject* obj)
                 Sfx_KeepAliveLoopedObjectSound(
                     (u32)obj, gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
-            if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
-                ((CmbSrcLight*)state->light)->enabled != 0)
+            if (state->light != NULL && state->light->glowType != 0 && state->light->enabled != 0)
             {
                 s16 v[1];
-                v[0] = (s16)(((CmbSrcLight*)state->light)->glowAlpha + ((CmbSrcLight*)state->light)->glowAlphaStep);
+                v[0] = (s16)(state->light->glowAlpha + state->light->glowAlphaStep);
                 if (v[0] < 0)
                 {
                     v[0] = 0;
-                    ((CmbSrcLight*)state->light)->glowAlphaStep = v[0];
+                    state->light->glowAlphaStep = v[0];
                 }
                 else if (v[0] > 0xc)
                 {
@@ -471,10 +469,10 @@ int cmbsrc_update(GameObject* obj)
                     if (v[0] > 0xff)
                     {
                         v[0] = 0xff;
-                        ((CmbSrcLight*)state->light)->glowAlphaStep = 0;
+                        state->light->glowAlphaStep = 0;
                     }
                 }
-                ((CmbSrcLight*)state->light)->glowAlpha = v[0];
+                state->light->glowAlpha = v[0];
             }
         }
         break;
@@ -504,7 +502,6 @@ int cmbsrc_update(GameObject* obj)
 
 void cmbsrc_init(int obj, u8* setup)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight * light, int r, int g, int b, int a);
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     u8* c2;
     u8* c1;
@@ -554,7 +551,7 @@ void cmbsrc_init(int obj, u8* setup)
 
         if (state->light == NULL)
         {
-            state->light = objCreateLight(obj, 1);
+            state->light = objCreateLight((void*)obj, 1);
         }
         if (state->light != NULL)
         {

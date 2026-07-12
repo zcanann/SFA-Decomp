@@ -14,6 +14,7 @@
 #include "main/object.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/model_light.h"
 #include "main/mm.h"
 #include "main/render.h"
 #include "main/obj_placement.h"
@@ -373,8 +374,6 @@ extern f32 lbl_803E6E94;
 extern f32 lbl_803E6E98;
 extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
-extern void ModelLightStruct_free(void* light);
-extern void queueGlowRender(void* light);
 extern int gWaterFlowPhaseDriver;
 extern f32 gWaterFlowIdlePhase;
 extern f32 gWaterFlowFlowPhase;
@@ -395,18 +394,12 @@ extern f32 lbl_803E6EBC;
 extern f32 lbl_803E6E28;
 extern f32 lbl_803E6E30;
 extern f32 lbl_803E6E34;
-extern void modelLightStruct_updateGlowAlpha(void* light);
 
 extern f32 lbl_803E6E3C;
 extern f32 lbl_803E6E40;
-extern void* objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(void* light, int v);
-extern void modelLightStruct_setupGlow(void* light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(void* light, f32 v);
 
 extern int fn_802969F0(int player);
 extern f32 Camera_GetFovY(void);
-extern void modelLightStruct_setEnabled(void* light, int flag, f32 val);
 extern f32 lbl_803E6E38;
 
 extern f32 gWaterFlowScaleDivisor;
@@ -438,42 +431,12 @@ extern f32 lbl_803E7124;
 extern f32 lbl_803E7138;
 extern const f32 lbl_803E713C;
 
-typedef void ModelLight;
-typedef struct PointLightVec
-{
-    f32 x, y, z;
-} PointLightVec;
-
-#define MODEL_LIGHT_KIND_POINT       2
-#define MODEL_LIGHT_KIND_DIRECTIONAL 4
-#define MODEL_LIGHT_KIND_PROJECTED   8
-
-#define LGT_POINTLIGHT_GROUP 0x35
-
 extern f32 lbl_802C25F8[];
 extern f32 lbl_803E7230;
 extern f32 lbl_803E7234;
 extern f32 lbl_803E7240;
-extern void ModelLightStruct_free(ModelLight* light);
-extern void modelLightStruct_setEnabled(ModelLight* light, int flag, f32 val);
-extern void queueGlowRender(ModelLight* light);
 extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
-extern void modelLightStruct_setDiffuseColor(ModelLight* light, u8 r, u8 g, u8 b, int a);
-extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, u8 r, u8 g, u8 b, int a);
-extern void modelLightStruct_updateGlowAlpha(ModelLight* light);
-extern ModelLight* objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(ModelLight* light, int v);
-extern void objSetEventName(ModelLight* light, int name);
-extern void modelLightStruct_setPosition(ModelLight* light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDistanceAttenuation(ModelLight* light, f32 near, f32 far);
-extern void modelLightStruct_setSpotAttenuation(ModelLight* light, f32 v, int x);
-extern void modelLightStruct_startColorFade(ModelLight* light, int a, s16 b);
-extern void modelLightStruct_setDirection(ModelLight* light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
-extern void modelLightStruct_setupGlow(ModelLight* light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(ModelLight* light, f32 v);
-extern void modelLightStruct_setAffectsAabbLightSelection(ModelLight* light, int v);
-extern void modelLightStruct_setSelectionPriority(ModelLight* light, u8 v);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -491,13 +454,6 @@ extern f32 lbl_803E7274;
 extern f32 lbl_803E7260;
 extern void textureFree(void* tex);
 extern void* textureLoadAsset(int id);
-extern void modelLightStruct_setProjectedLightChannelPreference(ModelLight* light, int v);
-extern void modelLightStruct_setProjectionTexture(ModelLight* light, void* tex);
-extern void modelLightStruct_setupOrthoProjection(ModelLight* light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
-extern void modelLightStruct_setupPerspectiveProjection(ModelLight* light, f32 a, f32 b);
-extern void modelLightStruct_setProjectionTevModes(ModelLight* light, int a, int b);
-extern void modelLightStruct_setProjectionNearZ(ModelLight* light, f32 v);
-extern void modelLightStruct_setProjectionFarZ(ModelLight* light, f32 v);
 
 
 typedef struct TimerFlags
@@ -588,7 +544,6 @@ extern f32 gVortexAlphaScaleInit838[2];
 extern f32 lbl_803E7404;
 extern int getHudHiddenFrameCount(void);
 
-extern int modelLightStruct_getActiveState(void* light);
 extern f32 lbl_803E70B0;
 
 typedef struct RingFlags
@@ -917,7 +872,6 @@ extern const f32 lbl_803E7458;
 extern f32 lbl_803E738C;
 extern int cmbsrc_update(GameObject* obj);
 
-extern void modelLightStruct_setSpecularColor(void* light, u8 r, u8 g, u8 b, int a);
 extern f32 lbl_803E7360;
 extern f32 lbl_803E7364;
 extern f32 lbl_803E7368;
@@ -1076,8 +1030,6 @@ extern f32 lbl_803E7018;
 extern f32 lbl_803E721C;
 extern f32 lbl_803E7220;
 
-extern void modelLightStruct_getDiffuseColor(void* light, u8* a, u8* b, u8* c, u8* d);
-extern void modelLightStruct_setGlowColor(void* light, u8 r, u8 g, u8 b, int e);
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;
 extern f32 lbl_803E71E0;
@@ -2060,7 +2012,6 @@ void cmbsrc_hitDetect(GameObject* obj);
 int cmbsrc_cycleColor(int obj, int state);
 void cmbsrc_updateVisuals(GameObject* obj, int state);
 int cmbsrc_update(GameObject* obj);
-void cmbsrc_init(int obj, u8* setup);
 void tree_spawnAmbientEffect(GameObject* obj, int p2, s8 index);
 void tree_updateAmbientEffects(GameObject* obj, int p2);
 void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
