@@ -45,8 +45,6 @@
 #include "main/screen_transition.h"
 #include "main/frame_timing.h"
 
-struct AndrossState;
-
 /* Pattern wrappers. */
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
@@ -75,7 +73,6 @@ extern void logPrintf(void* fmt, ...);
 extern f32 lbl_803E72E8;
 extern f32 lbl_803E72B0;
 
-extern f32 lbl_803E6EA0;
 
 
 
@@ -124,7 +121,6 @@ extern f32 lbl_803E7188;
 
 
 extern f32 lbl_803E6ED0;
-extern f32 lbl_803E6EE8;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
 
@@ -132,43 +128,15 @@ extern f32 lbl_803E6F00;
 
 extern f32 lbl_803E7154;
 
-extern const f32 lbl_803E75B0;
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern const f32 lbl_803E75AC;
-extern const f32 lbl_803E75B4;
-extern const f32 lbl_803E75C0;
-extern const f32 lbl_803E75C4;
-extern const f32 lbl_803E75C8;
-extern double lbl_803E75D0;
-extern const f32 lbl_803E75D8;
-extern const f32 lbl_803E75DC;
-extern const f32 lbl_803E75E0;
-extern double lbl_803E75E8;
-extern const f32 lbl_803E75F0;
-extern const f32 lbl_803E75F4;
-extern const f32 lbl_803E75F8;
-
-
-extern const f32 lbl_803E75A8;
 
 
 
 
 
-extern f32 lbl_803E7364;
-extern f32 lbl_803E7368;
-extern f32 lbl_803E736C;
-extern f32 lbl_803E7370;
-extern f32 lbl_803E73A8;
-extern f32 lbl_803E73AC;
-extern f32 lbl_803E73B0;
-extern f32 lbl_803E73B4;
-extern f32 lbl_803E73B8;
-extern f32 lbl_803E73BC;
-extern f32 lbl_803E73C0;
 
 #pragma dont_inline on
 
@@ -185,11 +153,6 @@ extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
 
 
 extern ModgfxInterface** gModgfxInterface;
-
-typedef struct Vec12
-{
-    int a, b, c;
-} Vec12;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -282,9 +245,6 @@ extern f32 fn_80291FF4(f32 x);
 
 extern void* playerGetFocusObject(void);
 
-
-
-extern f32 lbl_803E6ED8;
 
 
 #endif
