@@ -5488,6 +5488,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         (dS >= (*(f32*)&__AR_Callback) && dE <= (*(f32*)&__AR_Callback)))
                     {
                         f32 lo, hi;
+                        f32 cv;
                         if (dS != dE)
                         {
                             frac = dS / (dS - dE);
@@ -5501,7 +5502,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         lo = ts[(tri->minMaxY & 0xf) + 0xb] - maxStep;
                         if (hitpt[1] < lo)
                             continue;
-                        hi = ts[(tri->minMaxY >> 4) + 0xb] + maxStep;
+                        cv = ts[(tri->minMaxY >> 4) + 0xb];
+                        hi = cv + maxStep;
                         if (hitpt[1] > hi)
                             continue;
                         edge0[0] = tri->edgeN0[0];
