@@ -366,7 +366,6 @@ extern int mapTextureOverrideAcquire(int tex, int value, int type);
 extern int shouldDrawShadows(void);
 extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
-extern void Obj_BuildTransformMatrices(void* obj);
 extern void fn_80296EB4(u8* p1, u8* p2);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
@@ -2529,9 +2528,9 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
         return;
 
     if (oldParent != NULL)
-        Obj_BuildTransformMatrices(oldParent);
+        Obj_BuildTransformMatrices((GameObject*)oldParent);
     if (newParent != NULL)
-        Obj_BuildTransformMatrices(newParent);
+        Obj_BuildTransformMatrices((GameObject*)newParent);
 
     if (((GameObject*)obj)->anim.classId == 1)
     {

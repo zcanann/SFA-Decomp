@@ -130,7 +130,6 @@ extern f32 lbl_803E3540;
 extern int gPushableDefaultBox[];
 extern int fn_802969F0(void);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void Obj_BuildTransformMatrices(int* obj);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
 extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
 extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
@@ -978,7 +977,7 @@ void pushable_hitDetect(GameObject* obj)
     }
     if ((state->flags & PUSHABLE_FLAG_MOVING_Y) != 0 || (state->flags & 4) != 0)
     {
-        Obj_BuildTransformMatrices((int*)obj);
+        Obj_BuildTransformMatrices(obj);
         i = 0;
         wp = wpos;
         w = wp;
@@ -1072,7 +1071,7 @@ void pushable_hitDetect(GameObject* obj)
             state->flags = state->flags | 0xc;
         }
     }
-    Obj_BuildTransformMatrices((int*)obj);
+    Obj_BuildTransformMatrices(obj);
     i = 0;
     e = (u8*)state;
     for (; i < state->pointCount; i++)

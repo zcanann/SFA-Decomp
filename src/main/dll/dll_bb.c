@@ -27,7 +27,6 @@ extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
-extern void Obj_UpdateWorldTransform(s16* obj);
 extern void loadMapForCameraPos(f32 x, f32 y, f32 z);
 extern void OSReport(const char* msg, ...);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
@@ -151,7 +150,7 @@ void camcontrol_applyState(CamcontrolCameraState* camera)
         }
     }
     Camera_SetFovY(lbl_803DD4D0);
-    Obj_UpdateWorldTransform((s16*)view);
+    Obj_UpdateWorldTransform(view);
     loadMapForCameraPos(camera->worldX, camera->worldY, camera->worldZ);
     lbl_803DD4C0 = Camera_GetViewportYOffset();
     if ((int)lbl_803DD4C0 != camera->letterboxTargetOffset)

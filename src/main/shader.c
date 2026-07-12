@@ -1037,7 +1037,6 @@ void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
 }
 #pragma dont_inline reset
 
-extern void Obj_UpdateWorldTransform(void);
 
 void playerUpdateFn_8005649c(void)
 {
@@ -1052,7 +1051,7 @@ void playerUpdateFn_8005649c(void)
 
     objs = ObjGroup_GetObjects(6, &count);
     cam = (char*)Camera_GetCurrentViewSlot();
-    Obj_UpdateWorldTransform();
+    Obj_UpdateWorldTransform((CameraViewSlot*)cam);
     for (k = 0; k < 31; k++)
         *(int*)(lbl_80386648 + k * 0x10 + 0xc) = 0;
     *(f32*)(lbl_80386648 + 0) = *(f32*)(cam + 0x44);

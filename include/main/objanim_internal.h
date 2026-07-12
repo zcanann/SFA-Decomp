@@ -336,7 +336,8 @@ typedef struct ObjAnimComponent {
   f32 velocityY;
   f32 velocityZ;
   void *parent;
-  u8 pad34[2]; /* +0x35 is the signed yaw transform-table index. */
+  u8 pad34;
+  s8 transformMatrixIndex;
   u8 alpha;
   u8 pad37[0x38 - 0x37];
   void *next; /* 0x38: intrusive object-list link (wiki ObjInstance.next); list not ordered */

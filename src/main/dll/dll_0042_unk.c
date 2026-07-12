@@ -121,7 +121,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
         pos[2] = camera->anim.worldPosZ;
         hitDetect_calcSweptSphereBounds(bounds, &camera->probePosX, pos, (float*)(cameraAddr + 0x74), 1);
         hitDetectFn_800691c0(camObj, bounds, 0x240, 1);
-        hitDetectFn_80067958(camObj, &camera->probePosX, pos, 1, &camera->anim.pad34[0], 0);
+        hitDetectFn_80067958(camObj, &camera->probePosX, pos, 1, &camera->anim.pad34, 0);
         camera->anim.worldPosX = pos[0];
         camera->anim.worldPosY = pos[1];
         camera->anim.worldPosZ = pos[2];

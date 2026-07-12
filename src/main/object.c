@@ -212,7 +212,6 @@ extern void* textureFn_8006c5c4(void);
 extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
-extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -1860,7 +1859,7 @@ void Obj_UpdateAllObjects(u8 flags)
     while (obj != 0 && (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
     {
         Obj_UpdateObject((u8*)obj);
-        *(s8*)(obj + 0x35) = Obj_BuildTransformMatrixSlot(obj);
+        ((GameObject*)obj)->anim.transformMatrixIndex = Obj_BuildTransformMatrixSlot((GameObject*)obj);
         obj = *(int*)(obj + off);
     }
     if (timeStop == 0)

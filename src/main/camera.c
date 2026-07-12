@@ -49,32 +49,30 @@ void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex)
     }
 }
 
-void Obj_UpdateWorldTransform(s16* obj)
+void Obj_UpdateWorldTransform(CameraViewSlot* view)
 {
-    s16* parent;
+    GameObject* parent;
     s32 matrixIndex;
     f32* matrix;
 
-    parent = *(s16**)(obj + 0x20);
-    if (parent == 0)
+    parent = view->parentObject;
+    if (parent == NULL)
     {
-        *(f32*)(obj + 0x22) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(obj + 0x24) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(obj + 0x26) = ((GameObject*)obj)->anim.localPosZ;
-        obj[0x28] = obj[0];
-        obj[0x29] = obj[1];
-        obj[0x2A] = obj[2];
+        view->worldX = view->x;
+        view->worldY = view->y;
+        view->worldZ = view->z;
+        view->worldYaw = view->yaw;
+        view->worldPitch = view->pitch;
+        view->worldRoll = view->roll;
     }
     else
     {
-        matrixIndex = *(s8*)((u8*)parent + 0x35) << 4;
+        matrixIndex = parent->anim.transformMatrixIndex << 4;
         matrix = (f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2));
-        Matrix_TransformPoint(matrix, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                              ((GameObject*)obj)->anim.localPosZ, (f32*)(obj + 0x22), (f32*)(obj + 0x24),
-                              (f32*)(obj + 0x26));
-        obj[0x28] = obj[0] - parent[0];
-        obj[0x29] = obj[1];
-        obj[0x2A] = obj[2];
+        Matrix_TransformPoint(matrix, view->x, view->y, view->z, &view->worldX, &view->worldY, &view->worldZ);
+        view->worldYaw = view->yaw - parent->anim.rotX;
+        view->worldPitch = view->pitch;
+        view->worldRoll = view->roll;
     }
 }
 
@@ -197,10 +195,10 @@ typedef struct ObjTransformMatrixPool
     f32 scratch[16];
 } ObjTransformMatrixPool;
 
-void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
+void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex)
 {
     ObjTransformMatrixPool* base;
-    u32 ancestors[4];
+    GameObject* ancestors[4];
     ObjMatrixBuildTransform inverseTransform;
     f32* inverseYawMatrix;
     s32 matrixIndex;
@@ -221,24 +219,24 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     {
         ancestors[ancestorCount] = obj;
         ancestorCount++;
-        savedScale = ((GameObject*)obj)->anim.rootMotionScale;
-        if ((((GameObject*)obj)->objectFlags & 8) == 0)
+        savedScale = obj->anim.rootMotionScale;
+        if ((obj->objectFlags & 8) == 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803DE5F0;
+            obj->anim.rootMotionScale = lbl_803DE5F0;
         }
 
         if (hasParent == 0)
         {
-            setMatrixFromObjectPos(yawMatrix, (void*)obj);
+            setMatrixFromObjectPos(yawMatrix, obj);
         }
         else
         {
-            setMatrixFromObjectPos(base->scratch, (void*)obj);
+            setMatrixFromObjectPos(base->scratch, obj);
             mtx44_multSafe(yawMatrix, base->scratch, yawMatrix);
         }
 
-        ((GameObject*)obj)->anim.rootMotionScale = savedScale;
-        obj = (u32)((GameObject*)obj)->anim.parent;
+        obj->anim.rootMotionScale = savedScale;
+        obj = obj->anim.parent;
         hasParent = 1;
     }
 
@@ -246,30 +244,30 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     {
         ancestorCount--;
         obj = ancestors[ancestorCount];
-        inverseTransform.x = -((GameObject*)obj)->anim.localPosX;
-        inverseTransform.y = -((GameObject*)obj)->anim.localPosY;
-        inverseTransform.z = -((GameObject*)obj)->anim.localPosZ;
-        if ((((GameObject*)obj)->objectFlags & 8) == 0)
+        inverseTransform.x = -obj->anim.localPosX;
+        inverseTransform.y = -obj->anim.localPosY;
+        inverseTransform.z = -obj->anim.localPosZ;
+        if ((obj->objectFlags & 8) == 0)
         {
             inverseTransform.scale = lbl_803DE5F0;
         }
         else
         {
-            inverseTransform.scale = lbl_803DE5F0 / ((GameObject*)obj)->anim.rootMotionScale;
+            inverseTransform.scale = lbl_803DE5F0 / obj->anim.rootMotionScale;
         }
-        inverseTransform.rotX = -((GameObject*)obj)->anim.rotX;
-        inverseTransform.rotY = -((GameObject*)obj)->anim.rotY;
-        inverseTransform.rotZ = -((GameObject*)obj)->anim.rotZ;
+        inverseTransform.rotX = -obj->anim.rotX;
+        inverseTransform.rotY = -obj->anim.rotY;
+        inverseTransform.rotZ = -obj->anim.rotZ;
         mtxRotateByVec3s(inverseYawMatrix, &inverseTransform);
     }
 }
 
-void Obj_BuildTransformMatrices(u32 obj)
+void Obj_BuildTransformMatrices(GameObject* obj)
 {
-    Obj_BuildTransformMatricesForYaw(obj, *(s8*)(obj + 0x35));
+    Obj_BuildTransformMatricesForYaw(obj, obj->anim.transformMatrixIndex);
 }
 
-s32 Obj_BuildTransformMatrixSlot(u32 obj)
+s32 Obj_BuildTransformMatrixSlot(GameObject* obj)
 {
     Obj_BuildTransformMatricesForYaw(obj, gObjTransformMatrixSlot);
     gObjTransformMatrixSlot++;

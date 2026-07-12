@@ -193,12 +193,8 @@ extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *samp
 
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v);
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta);
-void Obj_UpdateWorldTransform(s16 *obj);
 s32 Angle_AddWrappedS16(s32 angle, s16 *delta);
 s32 Angle_SubWrappedS16(s32 angle, s16 *delta);
-void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex);
-void Obj_BuildTransformMatrices(u32 obj);
-s32 Obj_BuildTransformMatrixSlot(u32 obj);
 int return0xFFFF_80008B6C(void);
 int return0x64_8000A378(void);
 void doNothing_8000CF54(void);

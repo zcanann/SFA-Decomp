@@ -5,6 +5,7 @@
 #include "main/object_transform.h"
 
 typedef struct _GXRenderModeObj GXRenderModeObj;
+typedef struct GameObject GameObject;
 
 typedef struct CameraViewSlot {
     s16 yaw;
@@ -20,7 +21,14 @@ typedef struct CameraViewSlot {
     f32 shakeDuration;
     f32 shakeTimer;
     f32 shakeFalloff;
-    u8 pad40[0x1C];
+    GameObject* parentObject;
+    f32 worldX;
+    f32 worldY;
+    f32 worldZ;
+    s16 worldYaw;
+    s16 worldPitch;
+    s16 worldRoll;
+    u8 pad56[6];
     s8 shakeFlipTimer;
     s8 shakeActive;
     u8 pad5E[2];
@@ -110,6 +118,10 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 void CameraShake_SetAllMagnitudes(f32 magnitude);
 void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix);
+void Obj_UpdateWorldTransform(CameraViewSlot* view);
+void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex);
+void Obj_BuildTransformMatrices(GameObject* obj);
+s32 Obj_BuildTransformMatrixSlot(GameObject* obj);
 void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ);
 void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ);
 void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
