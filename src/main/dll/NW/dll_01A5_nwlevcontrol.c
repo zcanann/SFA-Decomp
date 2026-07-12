@@ -363,3 +363,10 @@ void nw_levcontrol_free(GameObject* obj)
     }
     gameTimerStop();
 }
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5278 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E527C = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E5280 = 300.0f;
+__declspec(section ".sdata2") f32 lbl_803E5284 = 0.0f;
+#pragma explicit_zero_data reset
