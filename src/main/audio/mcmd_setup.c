@@ -31,7 +31,6 @@ typedef struct SampleInfo
     u32 compType;
 } SampleInfo;
 
-extern SampleInfo dataSampleInfo;
 extern int dataGetSample(u16 key, SampleInfo* out);
 extern void hwInitSamplePlayback(u32 voice, u16 sampleId, SampleInfo* sampleInfo, u32 noKeySync, u32 priority,
                                  u32 handle, u32 noStartOffset, u8 itdMode);
@@ -130,45 +129,46 @@ void mcmdPlayMacro(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 #pragma opt_propagation off
 void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
-    SampleInfo* newsmp = &dataSampleInfo;
+    static SampleInfo newsmp;
     u16 smp;
 
     smp = cstep->flags >> 8;
 
-    if (dataGetSample(smp, newsmp) != 0)
+    if (dataGetSample(smp, &newsmp) != 0)
     {
         return;
     }
     switch ((u8)(cstep->flags >> 0x18))
     {
     case 0:
-        newsmp->offset = cstep->value;
+        newsmp.offset = cstep->value;
         break;
     case 1:
-        newsmp->offset = ((u8)(0x7f - (svoice->volume >> 0x10)) * cstep->value) / 0x7f;
+        newsmp.offset = ((u8)(0x7f - (svoice->volume >> 0x10)) * cstep->value) / 0x7f;
         break;
     case 2:
-        newsmp->offset = ((u8)(svoice->volume >> 0x10) * cstep->value) / 0x7f;
+        newsmp.offset = ((u8)(svoice->volume >> 0x10) * cstep->value) / 0x7f;
         break;
     default:
-        newsmp->offset = 0;
+        newsmp.offset = 0;
         break;
     }
 
     {
-        u32 length = newsmp->length;
-        u32* offset = &newsmp->offset;
+        u32 length = newsmp.length;
+        u32* offset = &newsmp.offset;
         if (*offset >= length)
         {
             *offset = length - 1;
         }
     }
 
-    hwInitSamplePlayback(svoice->voiceHandle & 0xFF, smp, newsmp, (MAC_CFLAGS(svoice) & MAC_FLAG64(0, 0x100)) == 0,
+    hwInitSamplePlayback(svoice->voiceHandle & 0xFF, smp, &newsmp,
+                         (MAC_CFLAGS(svoice) & MAC_FLAG64(0, 0x100)) == 0,
                          ((u32)svoice->priorityGroup << 24) | (svoice->priorityValue >> 15), svoice->voiceHandle,
                          (MAC_CFLAGS(svoice) & MAC_FLAG64(0x800, 0)) == 0, svoice->itdMode);
 
-    svoice->prevSampleId = newsmp->info;
+    svoice->prevSampleId = newsmp.info;
 
     if (svoice->targetPitch != -1)
     {
