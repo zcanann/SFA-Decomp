@@ -36,7 +36,7 @@ typedef struct GfLevelconFindLinkedObjectsState
 
 typedef struct GfLevelconHandleScriptEventsState
 {
-    s32 light;
+    void* light;
     void* scrollA;
     void* scrollB;
     f32 promptTimer;

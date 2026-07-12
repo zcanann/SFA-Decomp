@@ -2395,7 +2395,7 @@ void allocLotsOfTextures(void)
 void shadowCreate(int* obj)
 {
     CameraViewSlot* cam;
-    f32 dx, dy, dz, dist;
+    f32 dx, dy, dz, dist2;
     if (gNewShadowCasterCount < 0x12c)
     {
         gNewShadowCasterTable[gNewShadowCasterCount].obj = obj;
@@ -2403,8 +2403,18 @@ void shadowCreate(int* obj)
         dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
         dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
         dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
-        dist = sqrtf(dx * dx + dy * dy + dz * dz);
-        gNewShadowCasterTable[gNewShadowCasterCount].scale = ((GameObject*)obj)->anim.modelState->shadowScale / dist;
+        dist2 = dx * dx + dy * dy + dz * dz;
+        if (dist2 > lbl_803DED28)
+        {
+            double guess = __frsqrte((double)dist2);
+            volatile f32 root;
+            guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * dist2);
+            guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * dist2);
+            guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * dist2);
+            root = (f32)(dist2 * guess);
+            dist2 = root;
+        }
+        gNewShadowCasterTable[gNewShadowCasterCount].scale = ((GameObject*)obj)->anim.modelState->shadowScale / dist2;
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
         {
             gNewShadowCasterTable[gNewShadowCasterCount].flags = 1;

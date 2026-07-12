@@ -19,9 +19,10 @@
  */
 #include "main/game_object.h"
 #include "dolphin/os/OSReport.h"
-#include "main/dll/dll_0126_trigger.h"
 #include "main/dll/mmp_gyservent.h"
 #include "main/vecmath.h"
+
+extern void objInterpretSeq(int obj, int seqArg, s8 legCode, int distSq);
 
 /* placement instance id (+0x14) of the one vent that emits a debug OSReport */
 #define MMP_GYSERVENT_DEBUG_INSTANCE_ID 0x46a31

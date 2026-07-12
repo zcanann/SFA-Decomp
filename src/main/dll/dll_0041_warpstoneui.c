@@ -63,7 +63,6 @@ int gWarpStoneUiSelectedIndices[0x6];
 #pragma opt_lifetimes off
 int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
 {
-    u8* lastDst;
     u8* idp;
     u8* sp;
     u8* dp;
@@ -71,6 +70,7 @@ int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
     int slot;
     int entry;
     int tmp;
+    u8* lastDst;
 
     sp = src;
     dp = dst;

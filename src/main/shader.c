@@ -829,8 +829,8 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 {
     char* base;
     char* e;
-    char* e2;
     int idx;
+    int idx2;
     int slot;
     f32 init;
 
@@ -847,11 +847,11 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
         e += 0x10;
     }
     slot = -1;
-    for (idx = 0, e2 = base; idx < 0x3a; idx++, e2 += 0x10)
+    for (idx2 = 0, e = base; idx2 < 0x3a; e += 0x10, idx2++)
     {
-        if (*(u8*)(e2 + 0xc) == 0)
+        if (*(u8*)(e + 0xc) == 0)
         {
-            slot = idx;
+            slot = idx2;
             break;
         }
     }

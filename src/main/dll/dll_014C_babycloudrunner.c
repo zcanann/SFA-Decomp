@@ -222,9 +222,11 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* sub, int playMove)
 {
     int shifted;
+    register int sum;
     fn_8003ADC4((GameObject*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
     shifted = Obj_GetYawDeltaToObject(obj, target, 0);
-    ((GameObject*)obj)->anim.rotX += (shifted >>= 3);
+    sum = ((GameObject*)obj)->anim.rotX + (shifted >>= 3);
+    asm { sth sum, 0(r28) }
     if (playMove == 0)
         return;
     if ((s16)shifted > -200 && (s16)shifted < 200)
