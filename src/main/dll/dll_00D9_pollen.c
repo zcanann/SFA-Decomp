@@ -22,6 +22,7 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
@@ -30,7 +31,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #define POLLEN_HIT_VOLUME_SLOT 0x16
-extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;
@@ -298,6 +298,6 @@ void Pollen_update(int obj)
     }
     if (((GameObject*)obj)->anim.alpha == 0 && extra->fragmentSpawnTimer == 0)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
     }
 }

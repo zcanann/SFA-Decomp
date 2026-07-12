@@ -3,6 +3,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
@@ -134,7 +135,6 @@ extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
 extern int objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void AudioStream_CancelPrepared(void);
-extern void Obj_FreeObject(int obj);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
@@ -1307,7 +1307,7 @@ void endObjSequence(int seq)
     int j;
     int objCount;
     int objIdx;
-    int frees[32];
+    GameObject* frees[32];
     int* objs;
     int i;
     int nFree;
@@ -1333,7 +1333,7 @@ void endObjSequence(int seq)
                 {
                     lbl_803DD0B8 = 0;
                 }
-                frees[nFree++] = obj;
+                frees[nFree++] = (GameObject*)obj;
                 if (st->resetVecCb != NULL)
                 {
                     (*(void (**)(int, int, int))&st->resetVecCb)(st->cbArg, obj, (int)st);

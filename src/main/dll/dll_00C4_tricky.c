@@ -8,6 +8,7 @@
 #include "main/frustum.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
@@ -190,7 +191,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern int Obj_GetActiveModel(int obj);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
-extern void Obj_FreeObject(int obj);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup, int b, int c, int d, int e);
 extern u32 ObjPath_GetPointWorldPositionArray();
@@ -839,11 +839,11 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     if (*(void**)&((TrickyState*)state)->spawnedChild != NULL)
     {
         ObjLink_DetachChild(obj, *(int*)&((TrickyState*)state)->spawnedChild);
-        Obj_FreeObject(*(int*)&((TrickyState*)state)->spawnedChild);
+        Obj_FreeObject((GameObject*)((TrickyState*)state)->spawnedChild);
     }
     if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0u) && (gTrickyHelperObject != 0))
     {
-        Obj_FreeObject(gTrickyHelperObject);
+        Obj_FreeObject((GameObject*)gTrickyHelperObject);
         gTrickyHelperObject = 0;
     }
     return;
@@ -1867,7 +1867,7 @@ void tricky_handleDefeat(GameObject* obj, int state)
         *(u32*)&(obj)->unkF4 = 1;
         if ((u32)((ObjPlacement*)setup)->mapId == 0xFFFFFFFF)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
         else
         {
@@ -2333,7 +2333,7 @@ void baddieInstantiateWeapon(GameObject* obj, int state)
         {
             child = (obj)->childObjs[0];
             ObjLink_DetachChild(obj, child);
-            Obj_FreeObject((int)child);
+            Obj_FreeObject((GameObject*)child);
         }
         if (Obj_IsLoadingLocked() != 0)
         {

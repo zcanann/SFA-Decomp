@@ -21,6 +21,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/gamebits.h"
@@ -183,8 +184,7 @@ extern f32 gMinimapF74;
 
 #pragma scheduling off
 #pragma peephole off
-extern void* lbl_803DBBC8[2];
-extern void Obj_FreeObject(u8* obj);
+extern GameObject* lbl_803DBBC8[2];
 extern int Obj_AllocObjectSetup(int a, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 gMinimapFNeg15;
@@ -712,7 +712,7 @@ void Minimap_setupCompassBlip(void)
     scale = gMinimapF0_05;
     for (; i < 2; i++)
     {
-        lbl_803DBBC8[i] = (void*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
+        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
         ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
         ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
         ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
@@ -750,20 +750,20 @@ void Minimap_drawCompassBlip(void)
     for (i = 0; i < count; i++)
     {
         objRender(0, 0, 0, 0, lbl_803DBBC8[i], 1);
-        model = Obj_GetActiveModel(lbl_803DBBC8[i]);
+        model = Obj_GetActiveModel((u8*)lbl_803DBBC8[i]);
         *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
         *(u8*)((char*)lbl_803DBBC8[i] + 55) = 255;
     }
     viewFn_80129c74();
 }
 
-static inline void Minimap_freeObjectSlots(void** slots, int count)
+static inline void Minimap_freeObjectSlots(GameObject** slots, int count)
 {
     u8 z[1];
-    void* null;
+    GameObject* null;
 
     z[0] = 0;
-    null = (void*)z[0];
+    null = (GameObject*)z[0];
     while ((u32)z[0] < count)
     {
         if (slots[(u8)z[0]] != NULL)
