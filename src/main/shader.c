@@ -2529,7 +2529,7 @@ typedef struct MapCellEnt
 #pragma opt_unroll_loops off
 void doPendingMapLoads(void)
 {
-    s16* cellCursor;
+    int col;
     u8 waited;
     int slot;
     s16* rowCursor;
@@ -2540,7 +2540,7 @@ void doPendingMapLoads(void)
     int i;
     char* base;
     s16* recsCursor;
-    int col;
+    s16* cellCursor;
     int doLoad;
     int cnt;
     s16* o1;
