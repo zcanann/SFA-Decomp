@@ -561,11 +561,11 @@ void earthwalker_init(GameObject* obj, int setup)
     local = gEarthWalkerMoveBlendData;
     ewObj->animEventCallback = earthwalker_SeqFn;
     dll_2E_func05(obj, (MoveLibState*)ewState, -8192, 12743, 2);
-    dll_2E_func09((int)ewState, 0, &local, 2);
+    dll_2E_func09((MoveLibState*)ewState, 0, &local, 2);
     /* moveLib state+0x614: head look-at only engages while the target is
      * within this distance (live-verified in Dolphin - drop it below the
      * player distance and the head snaps back to neutral). */
-    dll_2E_setLookAtMaxDistance((int)ewState, gEarthWalkerLookAtMaxDistance);
+    dll_2E_setLookAtMaxDistance((MoveLibState*)ewState, gEarthWalkerLookAtMaxDistance);
     ewState->moveLibFlags611 |= 2;
     ewObj->facingAngle = (s16)((s8) * (s8*)(setup + 0x18) << 8);
     ewState->encounterType = *(u8*)(setup + 0x19);

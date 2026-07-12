@@ -187,8 +187,6 @@ extern void vecRotateZXY(int obj, f32* vec);
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
 extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
-extern void dll_2E_func09(int p1, void* p2, void* p3, int p4);
-extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 
 
 extern ModgfxInterface** gModgfxInterface;
@@ -287,7 +285,6 @@ extern f32 fn_80291FF4(f32 x);
 
 
 
-extern int dll_2E_func0A(int a, void* out);
 
 extern void* playerGetFocusObject(void);
 extern void setAButtonIcon(int icon);

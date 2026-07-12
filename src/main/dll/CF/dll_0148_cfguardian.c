@@ -173,9 +173,7 @@ extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
 extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
-extern void dll_2E_func0A(int a, int* obj);
 extern void dll_2E_func08(u8* sub, int b, int c);
-extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void objSeqInitFn_80080078(void* p, int n);
 extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
@@ -1113,7 +1111,7 @@ void cfguardian_init(int* obj, u8* params)
     ObjHits_EnableObject(obj);
     dll_2E_func05((GameObject*)obj, (MoveLibState*)sub, -0x2000, 0x2800, 4);
     dll_2E_func08((u8*)sub, 0x12c, 0x64);
-    dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
+    dll_2E_func09((MoveLibState*)sub, &stk2, &stk1, 4);
     objSeqInitFn_80080078(gCfGuardianSeqStreamTable, 0xf);
     sub->flags611 = (u8)(sub->flags611 | 0x2);
 }

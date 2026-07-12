@@ -11,6 +11,7 @@
  * offset 4.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/moveLib.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
 

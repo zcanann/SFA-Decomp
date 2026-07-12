@@ -103,7 +103,7 @@ void dll_28B_init(GameObject* obj)
     blockB = gDll28BMoveBlendDataB;
     curveParam = 2;
     dll_2E_func05(obj, &state->moveLib, -0x2AAA, 0x638E, 8);
-    dll_2E_func09((int)&state->moveLib, &blockB, &blockA, 8);
+    dll_2E_func09(&state->moveLib, &blockB, &blockA, 8);
     state->moveLib.modeBits |= 0x22;
     (*gRomCurveInterface)->initCurve(&state->route, obj, gDll28BCurveInitParam, &curveParam, -1);
     (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))((int)obj, (int)state, 4, 4);

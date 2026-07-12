@@ -206,9 +206,9 @@ int dll_2E_func0F_ret_0(void)
     return 0x0;
 }
 
-void dll_2E_setLookAtMaxDistance(int* state, f32 value)
+void dll_2E_setLookAtMaxDistance(MoveLibState* state, f32 value)
 {
-    ((MoveLibState*)state)->lookAtMaxDistance = value;
+    state->lookAtMaxDistance = value;
 }
 void dll_2E_func04(int* state, int target)
 {
@@ -223,9 +223,9 @@ void dll_2E_func08(int obj, int v1, int v2)
     s->reattackTimer = v1;
 }
 
-void dll_2E_func09(int obj, void* src1, void* src2)
+void dll_2E_func09(MoveLibState* s, const void* src1, const void* src2, int count)
 {
-    MoveLibState* s = (MoveLibState*)obj;
+    (void)count;
     if (src1 == NULL)
         src1 = gMoveLibDefaultMoveData;
     if (src2 == NULL)
@@ -275,7 +275,7 @@ typedef struct CurvePointResult
 
 /* Copies a curve point's position and packed angle into the caller's
  * record. */
-int dll_2E_func0A(int idx, char* outArg)
+int dll_2E_func0A(int idx, void* outArg)
 {
     CurvePointResult* out = (CurvePointResult*)outArg;
     int curveId;
@@ -358,7 +358,7 @@ void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
     fn_8003AC14(obj, seqFn_800394a0(), count);
     objFn_8003acfc(obj, seqFn_800394a0(), count, (char*)s->animChannels);
     fn_8003A9C0((char*)s->animChannels, s->pointCount, 0, 0);
-    dll_2E_func09((int)s, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData);
+    dll_2E_func09(s, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData, s->pointCount);
 }
 
 /* Latches the path-relative start offset on first use and refreshes the

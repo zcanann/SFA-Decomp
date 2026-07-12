@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/moveLib.h"
+#include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
@@ -253,8 +254,6 @@ extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
 extern char gEarthWarriorTailChainDesc;
 extern void setAButtonIcon(int x);
-extern void dll_2E_func09(int p, void* a, void* b, int c);
-extern void dll_2E_setLookAtMaxDistance(int p, f32 f);
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 extern void doRumble(f32 duration);
 extern float mathSinf(float x);
@@ -1390,8 +1389,8 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     ObjHits_EnableObject(obj);
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->trackContactMask = 9;
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x3ec), -0x2000, 0x31c7, 2);
-    dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
-    dll_2E_setLookAtMaxDistance(inner + 0x3ec, lbl_803E8388);
+    dll_2E_func09((MoveLibState*)(inner + 0x3ec), &r1, &r2, 2);
+    dll_2E_setLookAtMaxDistance((MoveLibState*)(inner + 0x3ec), lbl_803E8388);
     ((DREarthWarriorState*)inner)->unk9FD |= 2;
     ((DREarthWarriorState*)inner)->unk1444 = lbl_803E82E8;
     ((DREarthWarriorState*)inner)->airMeterCapacity = ((DREarthWarriorPlacement*)def)->airMeterMax;

@@ -12,6 +12,7 @@
 #include "main/object_api.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
+#include "main/dll/moveLib.h"
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -59,7 +60,6 @@ extern void loadDataFiles(void);
 
 
 
-extern u32 dll_2E_func09();
 extern void fn_801B9ECC(void);
 extern u32 dll_2E_func04();
 
@@ -657,7 +657,7 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     gDIMbossSequenceFlags = 0;
     mainSetBits(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
     dll_2E_func05((GameObject*)obj, (MoveLibState*)gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
-    dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
+    dll_2E_func09((MoveLibState*)gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
     *animFlagsByte |= 8;
     *animFlagsByte &= ~1;
