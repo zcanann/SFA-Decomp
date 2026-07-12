@@ -127,8 +127,7 @@ void worldplanet_initialise(void)
 void worldplanet_init(GameObject* obj)
 {
     WorldPlanetState* state;
-    int i;
-    int mask;
+    int z[2];
     int layer;
     int j;
     int flag;
@@ -136,13 +135,14 @@ void worldplanet_init(GameObject* obj)
     state = obj->extra;
     gWorldPlanetSelectConfirmTimer = 0;
     mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
-    mask = 0;
-    for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++)
+    z[0] = 0;
+    z[1] = z[0];
+    for (; z[1] < WORLDPLANET_PLANET_COUNT; z[1]++)
     {
-        if (mainGetBit(gWorldPlanetGameBitTable[i]) != 0)
+        if (mainGetBit(gWorldPlanetGameBitTable[z[1]]) != 0)
         {
             flag = 1;
-            if (gWorldPlanetHintFlagTable[i] != 0)
+            if (gWorldPlanetHintFlagTable[z[1]] != 0)
             {
                 if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD)
                 {
@@ -151,11 +151,11 @@ void worldplanet_init(GameObject* obj)
             }
             if ((u8)flag != 0)
             {
-                mask |= 1 << i;
+                z[0] |= 1 << z[1];
             }
         }
     }
-    state->unlockedPlanetMask = mask;
+    state->unlockedPlanetMask = z[0];
     if (gWorldPlanetSavedSelection != -1)
     {
         state->selectedPlanet = gWorldPlanetSavedSelection;
@@ -383,11 +383,14 @@ void worldplanet_update(GameObject* obj)
         prevPlanet = state->selectedPlanet;
         {
             u8 ok;
-            u32 mask = 0;
-            int k;
-            int* ids = tbl[3];
-            u8* hints = gWorldPlanetHintFlagTable;
-            for (k = mask; k < 5; k++)
+            u32 z[2];
+            int* ids;
+            u8* hints;
+            z[0] = 0;
+            z[1] = z[0];
+            ids = tbl[3];
+            hints = gWorldPlanetHintFlagTable;
+            for (; z[1] < 5; z[1]++)
             {
                 if (mainGetBit(*ids) != 0)
                 {
@@ -398,13 +401,13 @@ void worldplanet_update(GameObject* obj)
                     }
                     if (ok)
                     {
-                        mask |= 1 << k;
+                        z[0] |= 1 << z[1];
                     }
                 }
                 ids += 1;
                 hints += 1;
             }
-            state->unlockedPlanetMask = mask;
+            state->unlockedPlanetMask = z[0];
         }
         if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
         {
