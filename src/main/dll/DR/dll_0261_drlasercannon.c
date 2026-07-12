@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "main/dll/player_objects.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"
 #include "main/objfx.h"
@@ -541,7 +542,7 @@ void DR_LaserCannon_update(GameObject* obj)
         {
             if ((void*)target == (void*)player)
             {
-                objGetFirstChild(player);
+                objGetFirstChild((GameObject*)player);
             }
             switch (state->hasFirepipe)
             {

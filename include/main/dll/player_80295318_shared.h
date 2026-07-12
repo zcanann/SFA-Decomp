@@ -945,7 +945,6 @@ int playerGetTimeScale(GameObject* obj, f32* out);
 int playerSetHeldObject(int obj, int held);
 int fn_8029669C(int obj);
 int fn_802966B4(GameObject* obj);
-int objGetFirstChild(int obj);
 int playerGetHeldObject(GameObject* obj, int* out);
 f32 fn_802966F4(GameObject* obj);
 int objFn_80296700(int obj);

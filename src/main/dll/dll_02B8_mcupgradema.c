@@ -17,6 +17,7 @@
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_00E2_staff.h"
+#include "main/dll/player_objects.h"
 /* mcupgrade_state.h: only McUpgradeMaSetup + MCUPGRADE_OBJ_FLAG_COLLECTED used here. */
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
@@ -52,15 +53,17 @@ void mcupgradema_init(GameObject* obj)
 
 int mcstaffeffe_SeqFn(McStaffEffectObject* staffEffect, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int staff;
+    GameObject* player;
+    GameObject* staff;
     int i;
 
-    if ((void*)Obj_GetPlayerObject() == NULL)
+    player = Obj_GetPlayerObject();
+    if (player == NULL)
     {
         return 0;
     }
-    staff = objGetFirstChild();
-    if ((void*)staff == NULL)
+    staff = objGetFirstChild(player);
+    if (staff == NULL)
     {
         return 0;
     }
@@ -69,13 +72,13 @@ int mcstaffeffe_SeqFn(McStaffEffectObject* staffEffect, int unused, ObjAnimUpdat
         switch (animUpdate->eventIds[i])
         {
         case MCSTAFFEFFECT_EVENT_FORCE_GLOW:
-            staffSetGlow((int*)staff, 5, 1);
+            staffSetGlow(staff, 5, 1);
             break;
         case MCSTAFFEFFECT_EVENT_RESTORE_GLOW:
-            staffSetGlow((int*)staff, 5, (u8)staffEffect->staffGlowLevel);
+            staffSetGlow(staff, 5, (u8)staffEffect->staffGlowLevel);
             break;
         case MCSTAFFEFFECT_EVENT_CLEAR_GLOW:
-            staffSetGlow((int*)staff, 5, 0);
+            staffSetGlow(staff, 5, 0);
             break;
         }
     }

@@ -390,7 +390,6 @@ extern f32 lbl_803DDD68;
 extern void ObjLink_AttachChild(int obj, int child, int v);
 extern void firepipe_setLinkedUpdateFlag(int handle);
 extern void objfx_spawnFrameTimedHitPulse(int obj, f32 a, int b, int c, f32 d);
-extern void objGetFirstChild(int obj);
 extern int gKTRexMsgTemplate[];
 extern int gKTRexContactEffectCooldown;
 extern f32 lbl_803E6820;

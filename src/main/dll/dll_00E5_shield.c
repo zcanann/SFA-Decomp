@@ -192,15 +192,15 @@ void staffFn_80170380(int* obj, int cmd)
     extern void Sfx_PlayFromObject(int* obj, int sfx);
     f32* tbl[1];
     u8* state;
-    int* glow;
-    int* player;
+    GameObject* glow;
+    GameObject* player;
     tbl[0] = lbl_80320A28;
     state = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     glow = NULL;
     if (player != NULL)
     {
-        glow = (int*)Player_GetStaffObject((int)player);
+        glow = Player_GetStaffObject(player);
     }
     switch ((u8)cmd)
     {

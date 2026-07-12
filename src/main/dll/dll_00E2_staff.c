@@ -664,9 +664,9 @@ void playerRenderQuakeSpell(int* obj)
 }
 
 #pragma dont_inline on
-void staffSetGlow(int* obj, u8 attackType, u8 enable)
+void staffSetGlow(GameObject* obj, u8 attackType, u8 enable)
 {
-    u8* state = (u8*)(int*)((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     ((StaffState*)state)->glowAttackType = attackType;
     ((StaffState*)state)->glowEnable = enable;
 }

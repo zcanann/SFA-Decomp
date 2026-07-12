@@ -322,12 +322,12 @@ void shop_hitDetect(void)
 void shop_update(GameObject* obj)
 {
 
-    int player;
+    GameObject* player;
 
-    player = (int)Obj_GetPlayerObject();
-    if ((void*)Player_GetStaffObject(player) != NULL && mainGetBit(GAMEBIT_STAFF_ACQUIRED) == 0u)
+    player = Obj_GetPlayerObject();
+    if (Player_GetStaffObject(player) != NULL && mainGetBit(GAMEBIT_STAFF_ACQUIRED) == 0u)
     {
-        staffToggle((GameObject*)(player), 0);
+        staffToggle(player, 0);
     }
 
     if ((obj)->unkF4 == 0)

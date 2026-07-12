@@ -168,7 +168,6 @@ extern f32 lbl_803E6EF8;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int objGetFirstChild(void);
 
 extern f32 fn_802945E0(f32 ratio);
 extern f32 lbl_803E6F80;

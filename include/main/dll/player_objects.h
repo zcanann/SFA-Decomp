@@ -2,10 +2,10 @@
 #define MAIN_DLL_PLAYER_OBJECTS_H_
 
 #include "main/game_object.h"
-int objGetFirstChild(int playerObj);
+GameObject* objGetFirstChild(GameObject* playerObj);
 int playerGetHeldObject(GameObject* playerObj, int* out);
 
-static inline int Player_GetStaffObject(int playerObj)
+static inline GameObject* Player_GetStaffObject(GameObject* playerObj)
 {
     return objGetFirstChild(playerObj);
 }

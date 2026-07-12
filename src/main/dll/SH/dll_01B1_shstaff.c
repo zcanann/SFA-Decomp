@@ -510,7 +510,7 @@ void sh_staff_update(GameObject* obj)
 {
     ShStaffState* state = (obj)->extra;
     int setup = *(int*)&(obj)->anim.placementData;
-    void* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     f32 dist = getXZDistance(&(obj)->anim.worldPosX, (f32*)((int)player + 0x18));
     u8 mode = state->phase;
 
@@ -518,7 +518,7 @@ void sh_staff_update(GameObject* obj)
     {
         if (player == NULL)
             goto end;
-        if ((void*)Player_GetStaffObject((int)player) == NULL)
+        if (Player_GetStaffObject(player) == NULL)
             goto end;
         if (mainGetBit(GAMEBIT_STAFF_ACQUIRED) != 0)
         {

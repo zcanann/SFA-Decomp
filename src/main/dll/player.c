@@ -17,6 +17,7 @@
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/player_state.h"
 #include "main/dll/player.h"
+#include "main/dll/player_objects.h"
 #include "main/dll/tricky_api.h"
 #include "main/gamebits.h"
 #include "main/dll/DIM/dll_802B9780_shared.h"
@@ -218,9 +219,9 @@ void playerSetOverrideParentSlack(GameObject* obj)
     ((ByteFlags*)((char*)inner + 0x3f2))->b80 = 1;
 }
 
-int objGetFirstChild(int obj)
+GameObject* objGetFirstChild(GameObject* obj)
 {
-    return *(int*)&((GameObject*)obj)->childObjs[0];
+    return obj->childObjs[0];
 }
 
 void saveSetOverrideHealth(int v)
