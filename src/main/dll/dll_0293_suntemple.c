@@ -26,9 +26,17 @@
  * visible (modelInstance->flags & 1) - a guard absent from the generic
  * hitDetect helper.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_0293_suntemple.h"
+#include "main/game_timer.h"
+#include "main/game_ui_interface.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim_update.h"
+#include "main/objseq.h"
+#include "main/objtexture.h"
+#include "main/pad.h"
 #include "main/shader.h"
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
