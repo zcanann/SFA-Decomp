@@ -5367,7 +5367,7 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
             inner->hitTimer = z;
             inner->hitCount = 0;
             inner->lastHitObject = 0;
-            inner->activeHitWindow = -1;
+            *(u8*)&inner->activeHitWindow = 0xff;
             ((PlayerState*)state)->baddie.animSpeedC = z;
             ((PlayerState*)state)->baddie.animSpeedB = z;
             ((PlayerState*)state)->baddie.animSpeedA = z;
