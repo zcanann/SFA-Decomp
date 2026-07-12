@@ -3580,8 +3580,8 @@ void renderGlows(void)
                 sunDot = (f32)(u32)sky * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(displayOffsetH_803DEBFC * sunDot));
                 alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
-                sunDot = RecalibrateBits_803DEC3C * sunDot;
-                sunDot = sunDot * WaitingBits_803DEC40;
+                fade = RecalibrateBits_803DEC3C * sunDot;
+                sunDot = fade * WaitingBits_803DEC40;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 GXWGFifo.f32 = -sunDot;
                 GXWGFifo.f32 = -sunDot;
