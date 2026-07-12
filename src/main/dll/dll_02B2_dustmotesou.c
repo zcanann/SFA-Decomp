@@ -21,6 +21,11 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
+#include "main/objfx.h"
+
+#define objfx_spawnMaskedHitEffectSharedOrder(obj, type, mode, scale, mask, origin)                               \
+    ((void (*)(void*, int, int, f32, int, void*))objfx_spawnMaskedHitEffect)(                                    \
+        (void*)(obj), (type), (mode), (scale), (mask), (origin))
 
 int dustmotesou_getExtraSize(void)
 {
@@ -63,9 +68,8 @@ void dustmotesou_update(DustMoteSouObject* source)
         {
             return;
         }
-        objfx_spawnMaskedHitEffect((int)source, mapData->effectId, mapData->effectParamA, mapData->scale,
-                                   mapData->effectParamB,
-                                   0);
+        objfx_spawnMaskedHitEffectSharedOrder(source, mapData->effectId, mapData->effectParamA, mapData->scale,
+                                              mapData->effectParamB, 0);
         return;
     }
     if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK)

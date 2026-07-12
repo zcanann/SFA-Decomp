@@ -11,6 +11,7 @@
  */
 #include "main/dll/xyzanimator.h"
 #include "main/shader_api.h"
+#include "main/objfx.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -197,7 +198,9 @@ extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
 extern void objSetMtxFn_800412d4(f32* m);
-extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
+#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
+    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
+        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 v, void* params);
 extern void objfx_spawnDirectionalBurst(int* obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, u32 f);
 extern f32 gDim2RoofRubEffectScale;
@@ -708,7 +711,7 @@ void dim2roofrub_spawnEffects(int* obj)
             v.x = scale * (f * row->x);
             v.y = scale * (f * row->y);
             v.z = scale * (f * row->z);
-            objfx_spawnMaskedHitEffect(obj, f * row->w, 3, row->b1, row->b2, &v);
+            objfx_spawnMaskedHitEffectLegacy(obj, f * row->w, 3, row->b1, row->b2, &v);
         }
     }
     v.fade = lbl_803E3244;

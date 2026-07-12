@@ -171,7 +171,6 @@ extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, in
 
 extern int arrayIndexOf(int array, int count, int value);
 
-extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int e);
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);

@@ -9,6 +9,7 @@
 #include "main/worldobj.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/objlib.h"
+#include "main/objfx.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
 
@@ -85,7 +86,9 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
-extern void objfx_spawnMaskedHitEffect(void* obj, f32 scale, int a, int b, int c, void* params);
+#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
+    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
+        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
@@ -597,7 +600,7 @@ void worldobj_spawnGreatFoxEffects(GameObject* obj)
         params.offsetX = offsetScale * (scale * e->offsetX);
         params.offsetY = offsetScale * (scale * e->offsetY);
         params.offsetZ = offsetScale * (scale * e->offsetZ);
-        objfx_spawnMaskedHitEffect(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
+        objfx_spawnMaskedHitEffectLegacy(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
     }
     params.effectScale = lbl_803E6644;
     params.offsetX = lbl_803E6640 * (lbl_803E6648 * obj->anim.rootMotionScale);

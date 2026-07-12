@@ -30,6 +30,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie_state.h"
@@ -85,7 +86,9 @@ extern int fn_801A0174(int* obj);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void fn_8014D08C(GameObject* p1, void* p2, int p3, f32 f1, int p5, int p6);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 v, void* params);
-extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
+#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
+    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
+        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 extern f32 lbl_803DBCB0;
 extern f32 lbl_803DBCB4;
 extern f32 lbl_803E2814;
@@ -235,7 +238,7 @@ void fn_80152514(int* obj, u8* state)
         fx.a = lbl_803E2820;
         objfx_spawnLightPulse((GameObject*)(obj), lbl_803E2834, 2, 0, 6, lbl_803E2838, &fx);
         fx.c = lbl_803E283C;
-        objfx_spawnMaskedHitEffect(obj, lbl_803E2840, 1, 6, 0x20, &fx);
+        objfx_spawnMaskedHitEffectLegacy(obj, lbl_803E2840, 1, 6, 0x20, &fx);
         fx.b = lbl_803E2814;
         z = lbl_803E2844;
         fx.c = z;

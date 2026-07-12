@@ -216,12 +216,12 @@ void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* origin, f32 fva
     }
 }
 
-void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* origin, f32 fval)
+void objfx_spawnMaskedHitEffect(void* obj, u8 type, u8 mode, u8 mask, void* origin, f32 scale)
 {
     PartfxParams params;
     Tbl11 table1 = *(Tbl11*)lbl_802C20EC;
     Tbl7 table2 = *(Tbl7*)lbl_802C2104;
-    if (a == 0 || b == 0)
+    if (type == 0 || mode == 0)
     {
         return;
     }
@@ -229,8 +229,8 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* origin, f3
     {
         return;
     }
-    params.f8 = fval;
-    params.f6 = table1.v[b];
+    params.f8 = scale;
+    params.f6 = table1.v[mode];
     if (origin != NULL)
     {
         params.vec[0] = ((GameObject*)origin)->anim.localPosX;
@@ -243,7 +243,7 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* origin, f3
         params.vec[1] = lbl_803DF35C;
         params.vec[2] = lbl_803DF35C;
     }
-    (*gPartfxInterface)->spawnObject(obj, table2.v[a], &params, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject(obj, table2.v[type], &params, 2, -1, NULL);
 }
 
 void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mult, void* origin,

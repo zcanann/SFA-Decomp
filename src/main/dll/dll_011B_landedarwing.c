@@ -24,6 +24,7 @@
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
@@ -145,7 +146,9 @@ typedef struct LandedArwingState
 extern LandedArwingFxPoint gLandedArwingPathFxTable[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
-extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int arg4, int arg5, int arg6, void* pos);
+#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
+    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
+        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
 
 #pragma dont_inline on
@@ -166,9 +169,9 @@ void landed_arwing_renderPathEffects(GameObject* obj)
             scratch.x -= (obj)->anim.localPosX;
             scratch.y -= (obj)->anim.localPosY;
             scratch.z -= (obj)->anim.localPosZ;
-            objfx_spawnMaskedHitEffect((int)obj, (obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
-                                       gLandedArwingPathFxTable[i].arg5, gLandedArwingPathFxTable[i].arg6,
-                                       scratch.effectPos);
+            objfx_spawnMaskedHitEffectLegacy(obj, (obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale,
+                                             4, gLandedArwingPathFxTable[i].arg5,
+                                             gLandedArwingPathFxTable[i].arg6, scratch.effectPos);
             i++;
         }
     }
