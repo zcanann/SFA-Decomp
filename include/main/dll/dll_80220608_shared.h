@@ -32,12 +32,12 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
+#include "main/frame_timing.h"
 #include "main/dll/cnthitobjec_state.h"
 
 struct AndrossState;
 
 /* Pattern wrappers. */
-extern u8 framesThisStep;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
 extern void Obj_FreeObject(int obj);
@@ -67,7 +67,6 @@ extern f32 lbl_803E6E14;
 extern f32 lbl_803E6E18;
 extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
-extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
@@ -916,7 +915,6 @@ extern const f32 lbl_803E747C;
 extern const f32 lbl_803E7484;
 extern const f32 lbl_803E7488;
 extern const f32 lbl_803E748C;
-extern f32 timeDelta;
 
 extern const f32 lbl_803E745C;
 extern int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
@@ -1000,7 +998,6 @@ extern void* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 oneOverTimeDelta;
 extern f32 Vec_xzDistance(int a, int b);
 extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);

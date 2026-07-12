@@ -15,6 +15,7 @@
 #include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
+#include "main/frame_timing.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
 typedef struct
@@ -203,7 +204,6 @@ extern int textureLoadAsset(int id);
 extern char sWaterfxDllAllocFailed[];
 extern int gExpgfxRuntimeData[];
 extern int gExpgfxTextureFreeInProgress;
-extern u8 framesThisStep;
 extern void waterfx_drawFn_800953fc(void);
 extern void* gWaterfxSplashTexCoordArray;
 extern void* gWaterfxSplashPosArray;
@@ -266,7 +266,6 @@ extern f32 lbl_803DF320;
 extern f32 lbl_803DF2E8;
 extern f32 lbl_803DF338;
 extern f32 lbl_803DF33C;
-extern f32 timeDelta;
 extern f32 gWaterfxRippleGrowSpeed;
 extern f32 gWaterfxWakeGrowSpeed;
 extern f32 gWaterfxDropGravity;

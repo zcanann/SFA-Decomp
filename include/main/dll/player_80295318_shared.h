@@ -28,6 +28,7 @@
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
 #include "main/dll/path_control_interface.h"
+#include "main/frame_timing.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
 typedef struct CurvesCollisionState CurvesCollisionState;
@@ -543,7 +544,6 @@ extern f32 lbl_803E7FC4;
 extern f32 lbl_803E7F6C;
 extern f32 lbl_803E7F68;
 extern f32 lbl_803E7F1C;
-extern f32 timeDelta;
 extern void setAButtonIcon(int idx);
 extern void setBButtonIcon(int idx);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int id);
@@ -617,7 +617,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern u8 framesThisStep;
 extern int gPlayerEggObject;
 extern int gPlayerStaffObject;
 extern int gPlayerModelChain;
@@ -660,7 +659,6 @@ extern void fn_8014C66C(int* obj, int x);
 extern s8 padGetStickX(int channel);
 extern s8 padGetStickY(int channel);
 extern f32 lbl_803E7E98;
-extern f32 timeDelta;
 extern void fn_8011F34C(int a);
 extern int getAngle(f32 a, f32 b);
 extern f32 lbl_803E7F34;

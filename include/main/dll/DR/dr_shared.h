@@ -28,6 +28,7 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
+#include "main/frame_timing.h"
 
 typedef struct
 {
@@ -72,7 +73,6 @@ typedef struct
     u8 p7 : 1;
 } Flags377;
 
-extern u8 framesThisStep;
 extern const f32 lbl_803E6A3C;
 extern f32 lbl_803E6A40;
 extern f32 lbl_803E6AA8;
@@ -215,7 +215,6 @@ extern void objSetMtxFn_800412d4(void* mtx);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern int* objModelGetVecFn_800395d8(GameObject* obj, int i);
 extern f32 interpolate(f32 a, f32 b, f32 c);
-extern f32 oneOverTimeDelta;
 extern f32 gDrCageWithFindObjMaxDist;
 extern f32 lbl_803E69F8;
 extern f32 lbl_803E69FC;
@@ -301,7 +300,6 @@ extern f32 lbl_803E69E4;
 extern f32 lbl_803E6A18;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E695C;
-extern f32 timeDelta;
 extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
 extern void lightningRender(void* p);

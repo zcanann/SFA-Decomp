@@ -6,9 +6,11 @@
 /*
  * Per-frame timing globals (set by the main-loop / platform interface in
  * pi_dolphin). timeDelta is the elapsed time for this frame, used to
- * integrate motion; framesThisStep is the number of game frames advanced.
+ * integrate motion; oneOverTimeDelta is its reciprocal; framesThisStep is
+ * the number of game frames advanced.
  */
 extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;
 
 #endif
