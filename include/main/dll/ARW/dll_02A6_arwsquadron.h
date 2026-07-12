@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/dll/curve_walker.h"
 
 typedef struct SquadFlags
 {
@@ -99,13 +100,7 @@ typedef struct ArwSquadronPathCommand
 
 typedef struct ArwSquadronState
 {
-    u8 pad000[0x68];
-    f32 curveX;
-    f32 curveY;
-    f32 curveZ;
-    u8 pad74[0x28];
-    ArwSquadronPathCommand* commandData;
-    u8 padA0[0x68];
+    RomCurveWalker curve;
     f32 pathSpeed;
     f32 targetPathSpeed;
     f32 hitFlashTimer;
@@ -151,6 +146,7 @@ typedef struct ArwSquadronState
 } ArwSquadronState;
 
 STATIC_ASSERT(sizeof(ArwSquadronState) == 0x164);
+STATIC_ASSERT(offsetof(ArwSquadronState, curve) == 0x00);
 STATIC_ASSERT(offsetof(ArwSquadronState, pathSpeed) == 0x108);
 STATIC_ASSERT(offsetof(ArwSquadronState, volleyCooldownTimer) == 0x124);
 STATIC_ASSERT(offsetof(ArwSquadronState, leaderObj) == 0x13c);

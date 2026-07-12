@@ -215,7 +215,8 @@ void DR_BarrelGr_update(GameObject* obj)
     case DRBARRELGR_MODE_CARRY:
     {
         f32 spd = gDrBarrelGenCarrySpeedScale * (f32)((DrbarrelgrState*)state)->carrySpeed;
-        int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20, spd * timeDelta, lbl_803E6CBC, lbl_803E6CB4, 1);
+        int r = Obj_UpdateRomCurveFollowVelocity(obj, &((DrbarrelgrState*)state)->curve, spd * timeDelta,
+                                                 lbl_803E6CBC, lbl_803E6CB4, 1);
         ((void (*)(void*, f32, f32, f32))objMove)(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
         if (r != 0)
         {
@@ -308,10 +309,10 @@ void DR_BarrelGr_init(GameObject* obj, int setup)
     storeZeroToFloatParam((void*)(state + 0xc));
     s16toFloat((void*)(state + 0xc), ((DrbarrelgrPlacement*)setup)->range);
     obj->anim.rotX = (s16)((s8)((DrbarrelgrPlacement*)setup)->spawnYawByte << 8);
-    (*gRomCurveInterface)->initCurve((void*)(state + 0x20), (void*)obj, lbl_803E6CD0, &one, 0);
-    obj->anim.localPosX = ((DrbarrelgrState*)state)->startPosX;
-    obj->anim.localPosZ = ((DrbarrelgrState*)state)->startPosZ;
-    obj->anim.localPosY = ((DrbarrelgrState*)state)->startPosY;
+    (*gRomCurveInterface)->initCurve(&((DrbarrelgrState*)state)->curve, (void*)obj, lbl_803E6CD0, &one, 0);
+    obj->anim.localPosX = ((DrbarrelgrState*)state)->curve.posX;
+    obj->anim.localPosZ = ((DrbarrelgrState*)state)->curve.posZ;
+    obj->anim.localPosY = ((DrbarrelgrState*)state)->curve.posY;
 }
 
 void DR_BarrelGr_release(void)

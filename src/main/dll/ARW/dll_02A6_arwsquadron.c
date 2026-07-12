@@ -193,12 +193,12 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         {
             curveMode = 2;
         }
-        if ((*gRomCurveInterface)->initCurve(state, obj, lbl_803E71D4, &curveMode, -1) == 0)
+        if ((*gRomCurveInterface)->initCurve(&state->curve, obj, lbl_803E71D4, &curveMode, -1) == 0)
         {
             flags->b40 = 1;
-            obj->anim.localPosX = state->curveX;
-            obj->anim.localPosY = state->curveY;
-            obj->anim.localPosZ = state->curveZ;
+            obj->anim.localPosX = state->curve.posX;
+            obj->anim.localPosY = state->curve.posY;
+            obj->anim.localPosZ = state->curve.posZ;
             arwsquadron_applyCommandParams(obj, state);
         }
     }
@@ -214,7 +214,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
 void arwsquadron_applyCommandParams(GameObject* obj, ArwSquadronState* state)
 {
     SquadCmdFlags* flags = &state->flags.cmd;
-    ArwSquadronPathCommand* cmds = state->commandData;
+    ArwSquadronPathCommand* cmds = (ArwSquadronPathCommand*)state->curve.node9C;
     int i;
 
     if (cmds->signature == 0x28)
@@ -277,7 +277,7 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
     ArwSquadronSetup* setup = (ArwSquadronSetup*)objAnim->placementData;
     int pathResult;
 
-    pathResult = Obj_UpdateRomCurveFollowVelocity(obj, (int)state, state->pathSpeed, lbl_803E719C,
+    pathResult = Obj_UpdateRomCurveFollowVelocity(obj, &state->curve, state->pathSpeed, lbl_803E719C,
                                                   state->pathSpeed, 1);
     if (pathResult == -1)
     {
@@ -292,10 +292,10 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
         if (setup->pathMode == 2)
         {
             if (state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
-                Obj_SmoothTurnAnglesTowardVelocity(obj, (int)&objAnim->velocityX, 0xf, lbl_803E71A0,
+                Obj_SmoothTurnAnglesTowardVelocity(obj, (const Vec3f*)&objAnim->velocityX, 0xf, lbl_803E71A0,
                                                    lbl_803E7188);
             else
-                Obj_SmoothTurnAnglesTowardVelocity(obj, (int)&objAnim->velocityX, 0xf,
+                Obj_SmoothTurnAnglesTowardVelocity(obj, (const Vec3f*)&objAnim->velocityX, 0xf,
                                                    state->flags.cmd.f08 ? lbl_803E7168 : lbl_803E71A0, lbl_803E7188);
         }
         state->pathSpeed += interpolate(state->targetPathSpeed - state->pathSpeed, lbl_803E71A4, timeDelta);

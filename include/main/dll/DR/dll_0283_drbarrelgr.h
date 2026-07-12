@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_0283_DRBARRELGR_H
 
 #include "global.h"
+#include "main/dll/curve_walker.h"
 #include "main/game_object.h"
 
 typedef struct DrBarrelGrFlags
@@ -32,18 +33,14 @@ typedef struct DrbarrelgrState
     f32 grabX;
     f32 grabY;
     f32 grabZ;
-    u8 pad20[0x88 - 0x20];
-    f32 startPosX;
-    f32 startPosY;
-    f32 startPosZ;
-    u8 pad94[0x128 - 0x94];
+    RomCurveWalker curve;
     s16 carrySpeed;
     u8 pad12A[0x12C - 0x12A];
 } DrbarrelgrState;
 
 STATIC_ASSERT(offsetof(DrbarrelgrState, heldBarrel) == 0x8);
 STATIC_ASSERT(offsetof(DrbarrelgrState, grabX) == 0x14);
-STATIC_ASSERT(offsetof(DrbarrelgrState, startPosX) == 0x88);
+STATIC_ASSERT(offsetof(DrbarrelgrState, curve) == 0x20);
 STATIC_ASSERT(offsetof(DrbarrelgrState, carrySpeed) == 0x128);
 STATIC_ASSERT(sizeof(DrbarrelgrState) == 0x12C);
 
