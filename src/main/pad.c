@@ -295,6 +295,7 @@ int initControllers(void)
     u16* triggersReleased;
     u16* triggersPressed;
     PADStatus* statuses;
+    u8* secondStatus;
     s32 i;
 
     base[0] = (PadStateBlock*)gPadStateBlock;
@@ -340,7 +341,9 @@ int initControllers(void)
         *triggersReleased = 0;
         *triggersPressed = 0;
         memset(statuses, 0, sizeof(PADStatus));
-        memset((i + 4) * 0xc + 0x40 + (u8*)base[0], 0, sizeof(PADStatus));
+        secondStatus = (u8*)base[0];
+        secondStatus += (i + 4) * sizeof(PADStatus);
+        memset(secondStatus + 0x40, 0, sizeof(PADStatus));
 
         prevStickY++;
         prevStickX++;
