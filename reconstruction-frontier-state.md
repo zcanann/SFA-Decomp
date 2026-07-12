@@ -7476,3 +7476,63 @@ OPS NOTE: a Bash-timeout / SIGTERM kill of brute_match mid-run leaves the file i
 state; a later re-run then re-baselines against the dirty file and reports "restored original" while the
 stray swap persists. Caught+reverted 3 (object.c Obj_UpdateModelBlendStates, track_dolphin.c fn_80067B84,
 pi_dolphin.c initLoadFiles) via Edit-revert; rebuilt their .o. ALWAYS `git diff` your units after a killed run.
+
+## Jul12 — int-id PROTOTYPE-SWAP lever (arg-narrow CSE-merge) = EXHAUSTED on -O4,p frontier
+Chased the minimap Minimap_frameStart 99.49->100 lever (762bb18472): a u16/u8 PARAM in a called
+engine fn's PROTOTYPE narrows a RAW int arg (clrlwi) that CSE-MERGES with a same-width `(u16)x`
+cast-compare nearby; retail saw an int-param proto (raw `mr`, separate compare mask) -> swap to an
+ATTESTED int-param proto splits them. Full sweep of the 98-99.99% -O4,p near-miss set (skip
+audio/dolphin/player/model + sibling-WIP): 0 new wins. Vein is mined out.
+EVIDENCE / why dry:
+- EXACT source pattern (a bare int var passed RAW to Sfx_Play/StopFromObject AND `(u16)samevar`
+  compared) exists ONLY in audio.c (excluded, defines the fns). Tree-wide grep = 1 hit.
+- The two clean structural instances are ALREADY 100%: objHitReact_Update (s16 primaryHitSfxId passed
+  raw + `(u16)`-compare in Sfx_IsPlaying + `>NO_SFX_ID` guard) and DIM2icicle_updateDarkIceMinesWarp...
+  (int[] gDim2IcicleSequenceSfx[i] passed raw). minimap itself done.
+- Every OTHER near-miss Sfx call site casts the arg EXPLICITLY `(u16)state->sfxId` / uses a u16-typed
+  local/field -> both our+retail narrow, proto swap is inert (scarab/smallbasket/trigger/firecrawler/
+  fxemit/000F/spscarab/largecrate/groundanimator/alphaanimator/objprint objSoundFn all verified).
+- Prototype-conflict census (protoconflict.py, narrow-vs-wide same-arity): the only NON-GX/NON-audio
+  scalar-width conflicts are Sfx family (done), Resource_Acquire (canonical hdr is `u32 id` = WIDE
+  already; only dll_b7 local extern is u16, and it masks `&0xffff`), ObjLink_AttachChild (u16 linkMode
+  but every variable arg is `&3`/`>>K&3` = <=2-bit, li/rlwinm already-narrow; constants -> li),
+  mainGetBit/mainSetBits (uniformly `int`), _GetInputValue (audio, u8 callers). Rest are GX/SDK
+  (NULL SET) or pointer int-vs-typed (#130, leave raw).
+ADJACENT OPEN ITEM (NOT the proto lever): expgfx_updateActivePools 98.42% has a genuine 2-instr
+divergence — current emits `clrlwi r0,r0,16` before `sth` to u16 globals gExpgfxPhaseAngleA/B
+(src lines 722-723 `gExpgfxPhaseAngleA += (int)(lbl*timeDelta)`), target does bare `add;sth` (sth
+truncates). The documented #53 int-temp reroute (`int t=g+X; g=t;`) did NOT move it (identical asm) —
+this u16-lvalue RMW store-narrow is codegen-pinned harder than the s16 #53 case. Left raw/reverted.
+Refcorpus confirms MWCC DOES emit clrlwi-before-sth in 143 mp4 funcs, so it's a real conditional form,
+not a bug — cracking it needs finding the C shape that keeps the value known-narrow at the store.
+
+## SESSION structural-lever wave (dont_inline + opt_common_subs), 2 wins
+
+**WIN dll_0298_wcfloortile arwarwing_updateFlightPhysics 92.49->100.00 (d75b7c524f)**
+INLINE-SUPPRESS lever. Target keeps arwarwing_clampToFlightBounds as an out-of-line `bl`; MWCC was
+auto-inlining its ~44-instr body at the single call site. FIX: `#pragma dont_inline on`/`reset` around
+the clampToFlightBounds *definition* (line 210). Call restored, clamp stays a real 100% symbol (it's
+also called from dll_029A_arwarwing), no other fn in the unit moves. Residual 13 regions = pool-reloc
+(#70 score-neutral). SIGNATURE to hunt: ndiff region `T:[...'bl LBL','RELOC <projectsym>'] C:[big block]`.
+Broad scan of ALL non-hot main near-misses (80-99.9%) found this was the ONLY live inline-suppress
+instance — vein now exhausted for non-hot units.
+
+**WIN snowclaw snowclaw_init 95.72->98.81 (a8425bbb7d)**
+CSE-HOIST lever (same family as the 2h-earlier snowclaw_update SR/CSE win). Target re-derives
+`&state->attackTimer` (obj+152, a cheap `addi r3,r30,152`) inline at each of 2 consecutive helper
+calls; MWCC's CSE was hoisting it into a THIRD callee-saved reg (r29) -> frame 16->32 + two `mr r3,r29`.
+FIX: `#pragma opt_common_subs off` around the fn (works in noopt — CSE runs there). CAVEAT: opt_common_subs
+off ALSO drops the caching of the gSnowClawMoveTable global address (target keeps it in r31); recovered
+by feeding objSeqInitFn_80080078 the existing `table` local (== gSnowClawMoveTable) instead of
+re-materialising the global. Residual 1 instr = the PINNED r0-detour on the table saved-reg init
+(`addi r0,r5,0;mr r31,r0` vs target `addi r31,r5,0`) — cast-simplify inert, welded per playbook.
+
+**NEGATIVE dll_00DA_pollenfragment pollenfragment_update 98.82 (reverted)** — SAME CSE-hoist signature
+(target re-derives extra+0x20 (&deathTimer) at 3 calls; current caches in r29). `opt_common_subs off`
+killed the 3 mr-copies but the SAME toggle un-cached `def` (PollenFragmentExtra.def @0x1C, used 13x) ->
+extra `lwz 28(r31)` reload: NET-NEUTRAL 98.82->98.82. Attempted the snowclaw `table`-style recovery
+(local `PollenFragmentDef* def = extra->def;` + respell 13 uses) -> BACKFIRED to 50 reg-perm regions
+(forcing def into a fixed saved reg cascaded the whole allocation). LESSON: opt_common_subs off only wins
+where the SINGLE CSE collateral has a CLEAN pre-existing local to reuse (snowclaw's `table`); a
+heavily-reused field collateral (def, 13 sites) over-caches and regresses. RomCurve_goNextPoint /
+Checkpoint_func06 mr-copy candidates are coloring-welded (#110/#108), not opt_common_subs cases.
