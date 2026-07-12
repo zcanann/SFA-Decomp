@@ -11,6 +11,8 @@
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
     ((void (*)(u32))ObjHits_SyncObjectPositionIfDirty)((u32)(obj))
+#define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
+    ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -9729,22 +9731,20 @@ int playerState30(GameObject* obj, int state, f32 fv)
 
 int playerState31(GameObject* obj, int p2)
 {
-    PlayerState* n[1];
-    u8 s[2];
+    PlayerState* inner = obj->extra;
+    u8 state30 = 0x1a;
+    u8 state29 = 0x1a;
     void* near;
     f32 dist;
     f32 dir[3];
     f32 cosv;
     f32 sinv;
     f32 fz;
-    n[0] = obj->extra;
-    s[0] = 0x1a;
-    s[1] = 0x1a;
     dist = lbl_803E7F5C;
-    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, (int)obj, &dist);
-    ((ByteFlags*)((char*)n[0] + 0x3f4))->b20 = 1;
+    near = (void*)ObjGroup_FindNearestObjectLegacy(MAGICPLANT_OBJGROUP_B, obj, &dist);
+    ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
-    n[0]->buttonHoldTimer = fz;
+    inner->buttonHoldTimer = fz;
     if (near != 0)
     {
         dir[0] = *(f32*)((char*)near + 0xc) - obj->anim.localPosX;
@@ -9752,54 +9752,54 @@ int playerState31(GameObject* obj, int p2)
         dir[2] = *(f32*)((char*)near + 0x14) - obj->anim.localPosZ;
         dir[1] = fz;
         Vec3_Normalize(dir);
-        cosv = mathSinf(gPlayerPi * (f32)n[0]->targetYaw / lbl_803E7F98);
-        sinv = mathCosf(gPlayerPi * (f32)n[0]->targetYaw / lbl_803E7F98);
+        cosv = mathSinf(gPlayerPi * (f32)inner->targetYaw / lbl_803E7F98);
+        sinv = mathCosf(gPlayerPi * (f32)inner->targetYaw / lbl_803E7F98);
         switch (*(u8*)(*(int*)((char*)near + 0x50) + 0x75))
         {
         case 3:
             if (dir[2] * cosv - dir[0] * sinv > lbl_803E7EA4)
             {
-                s[1] = 0x1a;
+                state29 = 0x1a;
             }
-            s[0] = s[1];
+            state30 = state29;
             break;
         case 2:
-            s[1] = 0x1a;
+            state29 = 0x1a;
             break;
         case 1:
-            s[0] ^= s[1];
-            s[1] ^= s[0];
-            s[0] ^= s[1];
+            state30 ^= state29;
+            state29 ^= state30;
+            state30 ^= state29;
             break;
         case 0:
         default:
-            n[0]->altMoveToggle = (u8)(n[0]->altMoveToggle ^ 1);
-            if (n[0]->altMoveToggle != 0)
+            inner->altMoveToggle = (u8)(inner->altMoveToggle ^ 1);
+            if (inner->altMoveToggle != 0)
             {
-                s[1] = 0x1a;
+                state29 = 0x1a;
             }
             break;
         }
     }
     else
     {
-        n[0]->altMoveToggle = (u8)(n[0]->altMoveToggle ^ 1);
-        if (n[0]->altMoveToggle != 0)
+        inner->altMoveToggle = (u8)(inner->altMoveToggle ^ 1);
+        if (inner->altMoveToggle != 0)
         {
-            s[1] = 0x1a;
+            state29 = 0x1a;
         }
     }
     if (*(u8*)((char*)p2 + 0x34b) == 2 && ((PlayerState*)p2)->baddie.inputMagnitude > lbl_803E7EAC)
     {
-        ObjAnim_SetCurrentMove((int)obj, gPlayerMoveSlotTable[((s16*)((char*)n[0]->moveSlots + 2))[(u8)s[0] * 88]],
+        ObjAnim_SetCurrentMove((int)obj, gPlayerMoveSlotTable[((s16*)((char*)inner->moveSlots + 2))[(u8)state30 * 88]],
                                lbl_803E7EA4, 0);
-        n[0]->moveSlotIndex = s[0];
+        inner->moveSlotIndex = state30;
         *(int*)&((PlayerState*)p2)->baddie.unk308 = (int)fn_8029BC08;
         return 0x27;
     }
-    ObjAnim_SetCurrentMove((int)obj, gPlayerMoveSlotTable[((s16*)((char*)n[0]->moveSlots + 2))[(u8)s[1] * 88]],
+    ObjAnim_SetCurrentMove((int)obj, gPlayerMoveSlotTable[((s16*)((char*)inner->moveSlots + 2))[(u8)state29 * 88]],
                            lbl_803E7EA4, 0);
-    n[0]->moveSlotIndex = s[1];
+    inner->moveSlotIndex = state29;
     *(int*)&((PlayerState*)p2)->baddie.unk308 = (int)fn_8029BC08;
     return 0x27;
 }

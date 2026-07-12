@@ -18,6 +18,11 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+
+#define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
+    ((u32 (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
+#define ObjTrigger_IsSetLegacy(obj) \
+    ((int (*)())ObjTrigger_IsSet)((obj))
 #define NWMAMMOTH_PARTFX               0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED     0x800
@@ -383,16 +388,13 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
 }
 
-#pragma opt_strength_reduction on
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b);
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
     GameObject* tw;
-    int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, (int)obj, 0);
+    int nearestObj = ObjGroup_FindNearestObjectLegacy(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
     switch (state->stateIndex)
     {
     case 9:
@@ -420,7 +422,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
-        if (ObjTrigger_IsSet((int)obj) != 0)
+        if (ObjTrigger_IsSetLegacy(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, -1);
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
@@ -618,10 +620,6 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
     }
 }
-#pragma opt_strength_reduction reset
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-
 void NW_mammoth_free(GameObject* obj)
 {
     extern void ObjGroup_RemoveObject(void* obj, int group);

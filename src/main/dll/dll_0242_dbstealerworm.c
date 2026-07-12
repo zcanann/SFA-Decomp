@@ -52,6 +52,11 @@
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/dll/dll_022C_dll22c.h"
 
+#define ObjGroup_FindNearestObjectForObjectLegacy(group, obj, distance) \
+    ((int (*)())ObjGroup_FindNearestObjectForObject)((group), (obj), (distance))
+#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
+    ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
+
 typedef struct DbstealerwormPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -1282,8 +1287,6 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
 #pragma fp_contract reset
 #pragma opt_common_subs reset
 
-#pragma opt_dead_assignments on
-#pragma opt_loop_invariants off
 int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
 {
 
@@ -1320,7 +1323,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     for (; i < n; i++)
     {
         stk.range = rangeInit;
-        nearest = ObjGroup_FindNearestObjectForObject(*objCursor, (int)obj, &stk.range);
+        nearest = ObjGroup_FindNearestObjectForObjectLegacy(*objCursor, obj, &stk.range);
         if (nearest != 0)
         {
             if (stk.range == lbl_803E62A8)
@@ -1361,9 +1364,6 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     state->animSpeedB = (v < -limit) ? -limit : (v > limit) ? limit : v;
     return 0;
 }
-#pragma opt_dead_assignments reset
-#pragma opt_loop_invariants reset
-
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 {
 
@@ -1554,7 +1554,8 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
             sub->linkedObj = 0;
             sub->msgSlotIndex = -1;
         }
-        obj->anim.rotX += Obj_GetYawDeltaToObject(obj, ((BaddieState*)baddie)->targetObj, 0);
+        obj->anim.rotX +=
+            Obj_GetYawDeltaToObjectLegacy((int)obj, *(int*)&((BaddieState*)baddie)->targetObj, 0);
         ((BaddieState*)baddie)->stateTag = 0x11;
         if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
         {

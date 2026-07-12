@@ -32,6 +32,12 @@
 #include "main/frame_timing.h"
 #include "main/mm.h"
 
+#define ObjMsg_SendToObjectsLegacy(target, flags, sender, message, param) \
+    ((void (*)(int, int, void*, int, void*))ObjMsg_SendToObjects)((target), (flags), (sender), (message), (param))
+#define ObjMsg_SendToNearbyObjectsLegacy(target, radius, flags, sender, message, param) \
+    ((void (*)(int, f32, int, void*, int, void*))ObjMsg_SendToNearbyObjects)( \
+        (target), (radius), (flags), (sender), (message), (param))
+
 typedef struct ObjSeqBgCmd
 {
     int object;
@@ -942,10 +948,10 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 switch ((s8)gObjSeqMsgSendModes[arg10])
                 {
                 case 1:
-                    ObjMsg_SendToObjects(0, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
+                    ObjMsg_SendToObjectsLegacy(0, 2, obj, gObjSeqMsgIds[arg10], obj);
                     break;
                 case 2:
-                    ObjMsg_SendToNearbyObjects(0, gObjSeqMsgNearbyRadius, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
+                    ObjMsg_SendToNearbyObjectsLegacy(0, gObjSeqMsgNearbyRadius, 2, obj, gObjSeqMsgIds[arg10], obj);
                     break;
                 default:
                     ObjMsg_SendToObject((GameObject*)sourceObj, gObjSeqMsgIds[arg10], obj, 0);
