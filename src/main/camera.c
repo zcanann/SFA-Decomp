@@ -1,12 +1,17 @@
-#include "main/engine_shared.h"
+#include "main/camera.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/pause_menu_api.h"
+#include "main/rcp_dolphin_api.h"
+#include "main/shader_api.h"
+#include "main/vecmath.h"
+#include "track/intersect_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/gx/GXEnum.h"
+#include "dolphin/gx/GXLegacy.h"
 #include "dolphin/gx/GXStruct.h"
-
-extern f32 lbl_803967C0[12];
-extern f32 lbl_803967F0[12];
-extern f32 lbl_80396820[12];
-extern f32 lbl_80396850[12];
+#include "dolphin/mtx/mtx_legacy.h"
 
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
@@ -380,15 +385,15 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
 
     if (matrix == NULL)
     {
-        mtx44Transpose(modelMatrix, lbl_803967C0);
+        mtx44Transpose(modelMatrix, (f32*)lbl_803967C0);
     }
     else
     {
-        mtx44Transpose(matrix, lbl_803967C0);
+        mtx44Transpose(matrix, (f32*)lbl_803967C0);
     }
 
-    PSMTXConcat(gCameraViewMatrix, lbl_803967C0, lbl_803967C0);
-    GXLoadPosMtxImm(lbl_803967C0, GX_PNMTX0);
+    PSMTXConcat(gCameraViewMatrix, (f32*)lbl_803967C0, (f32*)lbl_803967C0);
+    GXLoadPosMtxImm((f32*)lbl_803967C0, GX_PNMTX0);
     transform->x += playerMapOffsetX;
     transform->z += playerMapOffsetZ;
 }
@@ -735,11 +740,11 @@ void Camera_UpdateProjection(void* viewportArg)
         {
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                              gCameraFarPlane);
-            C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
+            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
                                   lbl_803DE62C, *(f32*)&lbl_803DE62C);
-            C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
+            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
                                   *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
-            C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
+            C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
                                   *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
@@ -775,11 +780,11 @@ void Camera_UpdateProjection(void* viewportArg)
         {
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                              gCameraFarPlane);
-            C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
+            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
                                   lbl_803DE62C, *(f32*)&lbl_803DE62C);
-            C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
+            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
                                   *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
-            C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
+            C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
                                   *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
@@ -1017,11 +1022,11 @@ void Camera_RebuildProjectionMatrix(void)
     else
     {
         C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane, gCameraFarPlane);
-        C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
+        C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
                               lbl_803DE62C, *(f32*)&lbl_803DE62C);
-        C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
+        C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
                               *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
-        C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
+        C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
                               *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
     }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
@@ -1124,10 +1129,10 @@ void Camera_InitState(void)
     else
     {
         C_MTXPerspective((f32*)(base + 5824), gCameraFovY, gCameraAspectRatio, gCameraNearPlane, gCameraFarPlane);
-        C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628, 0.5f,
+        C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628, 0.5f,
                               0.5f);
-        C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, 0.5f, 0.5f, 0.5f, 0.5f);
-        C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, 0.5f, lbl_803DE630, 0.5f, 0.5f);
+        C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, 0.5f, 0.5f, 0.5f, 0.5f);
+        C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, 0.5f, lbl_803DE630, 0.5f, 0.5f);
     }
     GXSetProjection((f32*)(base + 5824), gCameraProjectionMode);
 

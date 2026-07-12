@@ -201,7 +201,6 @@ extern void geomDrawFn_800796f0(void);
 extern void textRenderSetupFn_80079804(void);
 extern void textureSetupFn_800799c0(void);
 extern void fn_8007D670(void);
-extern f32 lbl_803967C0[3][4];
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;
 extern f32 lbl_803DF350;

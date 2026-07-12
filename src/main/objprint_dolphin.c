@@ -2807,7 +2807,6 @@ extern void fn_80050A28(int t);
 extern void textureFn_8004c330(void* tex, f32* m);
 extern void gxTextureFn_8004d5b4(int* op);
 extern void gxTextureFn_80052638(u8* color);
-extern f32 lbl_803967F0[];
 extern u8 lbl_803DCC3C;
 
 #pragma opt_propagation off
@@ -3007,7 +3006,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         f32* vm = Camera_GetViewMatrix();
         Obj_BuildWorldTransformMatrix((int*)obj, wm, 0);
         PSMTXConcat(vm, wm, t1);
-        PSMTXConcat(lbl_803967F0, t1, t2);
+        PSMTXConcat((f32*)lbl_803967F0, t1, t2);
         GXLoadTexMtxImm(t2, 0x24, 0);
         fn_8004D928();
     }

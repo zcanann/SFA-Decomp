@@ -240,7 +240,6 @@ extern f32 lbl_803DF944;
 extern f32 lbl_803DF948;
 extern f32 lbl_803DF96C;
 extern f32 lbl_803DEBCC;
-extern u8 lbl_803967F0[];
 extern s8 gShadowFlag;
 extern u8 mapBlockFlag;
 extern u32 gSunFlareScissorX;

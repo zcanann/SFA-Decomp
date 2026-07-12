@@ -5338,7 +5338,6 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
 }
 
 extern struct piIndMtx lbl_802C1E10;
-extern f32 lbl_80396820[3][4];
 extern void selectReflectionTexture(int id);
 
 void fn_8004D6D8(void)

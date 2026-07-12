@@ -234,7 +234,6 @@ extern int lbl_803E1E30;
 extern int lbl_802C21AC[];
 extern f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
 extern f32 lbl_803DD850;
-extern f32 lbl_80396820[];
 extern f32 gTrickyHudTexMtxScale;
 extern int gTrickyHudIconKColor;
 extern s16 cMenuFadeCounter;
@@ -1255,7 +1254,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     GXSetIndTexOrder(1, 0, 2);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
-    PSMTXConcat(lbl_80396820, lbl_803A8950, m1);
+    PSMTXConcat((f32*)lbl_80396820, lbl_803A8950, m1);
     sval = lbl_803E1E70 * (lbl_803DD850 * lbl_803DD850);
     PSMTXScale(m3, sval, sval, lbl_803E1E68);
     PSMTXConcat(m3, m1, m1);

@@ -47,9 +47,6 @@ typedef struct DepthReadRequest
     s32 key;   /* 0x8: opaque request key */
 } DepthReadRequest;
 
-extern Mtx lbl_803967C0;
-extern Mtx lbl_80396820;
-extern Mtx lbl_80396850;
 extern f32 lbl_803DFB10;
 extern f32 sqrtf(f32 x);
 
@@ -993,8 +990,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern Mtx lbl_80396850;
-    extern Mtx lbl_80396820;
     extern f32 lbl_8030EAA0[3][3];
     extern int ObjModel_GetRenderOp(void* model, int slot);
     extern int* Shader_getLayer(void* op, int slot);
@@ -1957,7 +1952,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern Mtx lbl_80396820;
     extern f32 lbl_8030EA58[3][3];
     extern int ObjModel_GetRenderOp(void* model, int slot);
     extern void* getTextureFn_8006c744(void);
@@ -2197,7 +2191,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
  */
 void quakeSpellTextureFn_8007366c(u8 alpha)
 {
-    extern Mtx lbl_80396820;
     extern f32 lbl_803DEF28;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
@@ -2529,7 +2522,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern f32 lbl_803DB6B0, lbl_803DB6B4;
     extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_802C1F68[6];
-    extern Mtx lbl_80396820;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -2754,7 +2746,6 @@ u32 objCallback_80074d04(int handle, void* model)
     extern f32 lbl_803DB6AC;
     extern f32 hudScale;
     extern f32 gSynthDelayedActionWord0;
-    extern Mtx lbl_80396820;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -5529,7 +5520,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
     extern f32 lbl_803DEF64;
     extern u32 lbl_803DB690, lbl_803DB694, lbl_803DB698;
     extern GXColor gFogColor;
-    extern Mtx lbl_80396820;
     extern f32 lbl_8030EA10[3][3];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;

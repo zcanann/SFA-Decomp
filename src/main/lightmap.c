@@ -736,8 +736,6 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void gxTextureSetupFn_8007cf7c(void);
-extern f32 lbl_80396850[12];
-extern f32 lbl_80396820[12];
 
 #pragma dont_inline on
 void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
@@ -753,9 +751,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     int i;
     u8* s0;
 
-    PSMTXConcat(lbl_80396850, p3, m);
+    PSMTXConcat((f32*)lbl_80396850, p3, m);
     GXLoadTexMtxImm(m, GX_TEXMTX0, GX_MTX3x4);
-    PSMTXConcat(lbl_80396820, p3, m);
+    PSMTXConcat((f32*)lbl_80396820, p3, m);
     GXLoadTexMtxImm(m, GX_TEXMTX1, GX_MTX3x4);
     gxTextureSetupFn_8007cf7c();
     countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
