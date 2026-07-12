@@ -7311,3 +7311,61 @@ Straggler sweep after family agents (tricky/dim/scarab/drakor/andross/snowbike/e
 - 14 headers, 5 path-scoped commits (85db0f7f58 game_object.h, d9ee59d5ec player_80295318_shared.h, b689b0fff8 dll_4E.h, 7dee3b0a2d core-headers, 56564bafce dll-headers). all_source EXIT=0, 0 FAILED.
 - Synced: dbstealerworm_stateHandlerA0F/07/08/0B/0C p2->baddie; optionsMenu_apply*/openSelectedSubmenu p1,p2->action,option; fn_8029605C p2,p3->outX,outY; fn_802960E8 p2->effectId; fn_80296414 p2->otherObj; fn_80296A9C p2->delta; playerLock p2->lock; objShadowFn_80062498 p2->param2; modelCalcVtxGroupMtxs p1,p2->def,model; fn_80060C14 6 params->triBuf/planesOut/vertsOut/offX/offZ/kindMask; fn_800659A8 5 params->triStart/triEnd/qx/qz/allowDown; hwSetVolume ->vol/auxa/auxb; baddieAfterUpdateBonesCb p2->bones; audioAllocFn_80008df4 p5/6/7->cbArg1/2/3; player_followCurve/updateParticles/doProjGfx/findCurve; CameraModeForceBehind_init p2/p3->unused/params; fn_8015ED1C/EB6C ->obj/state/target; dll_199_SeqFn p2->unused; gcRobotLight_init p2->childId.
 - SKIPPED both-generic (def ALSO p2/p3): all *_render fns (treebird/blasted/largecrate/MagicPlant/duster/attractor/pushable), hudDrawCMenu, adsrHandleLowPrecision, salCallback, dll_54_init (p1/p3 generic), fn_80296124, playerCancelSpell. SKIPPED objfx_spawnDirectionalBurst/ArcedBurst (proto types int/void* diverge from def u8/f32 across many local externs -> not a clean name-only sync). SKIPPED objRenderChild (p3 generic in def), playerTailFn_80026b3c (def single-letter a/b/p/d generic). No hot/foreign collisions (most-recent header commit was 4h old; lightfoot.c actively edited by sibling but I touched no .c).
+
+## zlbDecompress (main/pi_dolphin.c) OPT-LEVEL SWEEP — Jul12, ref-mining specialist — 73.13% is a HARD local optimum; prior lead CORRECTED
+Ran a fuzzy-measured pragma sweep on the tree's ONLY sub-85% target (`zlbDecompress`, HEAD-tuned to `optimize_for_size on` + `optimization_level 2` + `opt_common_subs off` + `opt_propagation off` + `use_lmw_stmw on`). All numbers are report.json fuzzy (proto f3 at name+17), NOT ndiff.
+- **BASELINE (HEAD, O2+optsize): 73.133%** — confirmed optimum. Every deviation REGRESSES:
+  - `optimization_level 4` (optsize kept on): **57.808%** (C 662->677 instrs; light unrolling of the 8 zero-init loops).
+  - raw inherited `-O4,p` (all overrides -> reset): **15.867%** (C 662->937; massive unroll of every init loop). optimize_for_size is doing CRITICAL anti-unroll work.
+  - `optimize_for_size off` @O4: ndiff C=928 (unroll explosion) — not even worth fuzzy.
+  - `opt_common_subs on`, `opt_propagation on`, `opt_strength_reduction on` (layered on O2/optsize base): all **73.133% (INERT)** — no movement.
+- **CRITICAL TOOLING TRAP (verified twice):** for this function **ndiff region-count is ANTI-correlated with fuzzy.** O4 gave 30 ndiff regions (vs O2's 81) yet fuzzy DROPPED 73->58; raw-O4,p gave 6 ndiff regions yet fuzzy=16. ndiff collapses large unrolled/rescheduled blocks into few "regions" that objdiff scores terribly per-instruction. **Measure zlbDecompress (and any unroll-sensitive fn) by FUZZY ONLY, never ndiff regions.**
+- **CORRECTION to the prior MATCH-COVERAGE-AUDIT lead:** that lead proposed the target's `stmw r14`+LR-save reg-pool (18 saved regs) and `andi.` masks were the score path. EMPIRICALLY FALSE as a *fuzzy* path: the `stmw r14`/`andi.`/higher-reg-pressure signature IS a higher-opt-level artifact, but you cannot reach it without the opt level ALSO unrolling the 8 counted zero-init loops, which craters fuzzy far below 73. The target was compiled in a mode our pragma space can't reproduce without the unroll side-effect. The residual (reg-pool + andi./clrlwi + LZ mtctr loop) is therefore an opt-level-WELDED bundle, not a source/pragma-reachable win. Class = #67 frame/saved-reg + instruction-selection, WELDED under the anti-unroll constraint.
+- VERDICT: **zlbDecompress is capped at 73.13% under our toolchain; the whole DOL is now at its coloring/opt ceiling with NO source-reachable sub-100 win remaining.** Reopen only if a new MWCC flag (e.g. a per-loop unroll-disable that lets opt level rise without unrolling the init loops) is discovered. No edit, no commit; pi_dolphin.o restored to HEAD (md5 42b9fe97dba1a9d103d2ae3459898db9).
+
+
+## FUZZY-BAND TRIAGE Jul12 (93-95%% band, -O4,p units) — ALL WELDED, no source-reachable win
+Specialist swept the strict 93.0-95.0%% band (10 fns; proto decode of report.json). Every candidate is coloring/FP-perm/frame welded, corroborating the prior "frontier coloring-capped" verdict:
+- **textrender gameTextInitFn_8001c794 (93.38)**: unrolled halfword-copy loops, pervasive GPR reg-perm + unroll-factor (#108/#113). Welded.
+- **shader doPendingMapLoads (94.22)**: T=954 C=944; 96 reg-perm dominant, minor li-const/sched. Welded (position-perm).
+- **render fn_80007F78 (94.24)**: T=589 > C=579 — TARGET is LESS-optimized (extra surviving `mr` copies + unfolded `bne X;b Y` where current folds to `beq`). Reverse-direction peephole/coalescer weld; memory documents `#pragma peephole off` does NOT re-add. Welded (can't force de-optimization).
+- **dll_000A_expgfx expgfxGetSlot**: ALREADY improved by concurrent owner (Jack) to T=C=204; now pure reg-perm. Owned — skip.
+- **newshadows fn_8006CB50 (94.66)**: T=C=134; ENTIRE FP register file uniformly rotated (target f0-first, current f9-first) = #82 FP-perm. Relocs are base+disp (Udchuff_803DEDA0+0xN) vs current direct-symbol (#70, score-neutral). Welded.
+- **dll_000B dll_0B_func04 (94.22)**: T=C=627; 7 params copied to saved regs — target homes them r23-r29 (reserving r30/r31 for counter web), current r25-r31 (counter to low r21). Pure position-perm (#108/#126).
+  - **EMPIRICAL decl-order test (built+measured)**: reordered locals (total/i to top) → param homing UNCHANGED (still r25-r31), only counter shifted r21→r22, net neutral (139 regions both). CONFIRMS memory #126: param saved-reg pool numbering is NOT decl-order-controllable. Reverted, .o restored to HEAD, gate EXIT=0.
+VERDICT: 93-95%% band holds no source-level win under our toolchain; concurrent owner is already landing the structural levers (base-homing array[1] wraps, strength-reduction toggles) that DO move these units. Reopen on new team commits only.
+
+## FUZZY-BAND TRIAGE Jul12 (96-98%% band, -O4,p + noopt units) — 7 fns, ALL welded, no source-reachable win
+Specialist swept the strict 96-98%% band (proto-decode of freshly-regenerated report; 40 fns in band, skipped audio/dolphin/player/model). Every examined candidate is a documented or freshly-confirmed coloring/reg-perm/reloc/opt weld:
+- **dll_0017_savegame SaveGame_gplaySetObjGroupStatus (97.98)**: transient-scan SR-fold (already banked; 4+ prior transforms net-negative, SR-off wrecks the sibling loops). Welded #112/SR.
+- **objseq ObjSeq_runBgCmds (97.18)**: entire diff = GPR reg-perm cascade (base r26↔r31, counter r21↔r30↔r26 rotation) + downstream li-const placement. #108. Welded.
+- **DR/drshackle drshackle_updateAttachedPosition (97.86)**: single clean param-home SWAP cascading whole-fn — target homes object→r30, swingState→r31; current reversed. EMPIRICAL TEST (built+measured): reordered the `int state`/`ShackleSwingState* s`/`int obj` launder decls so the swingState web is created first → **INERT** (obj stayed r31, T=C=248, 42 regions unchanged). Confirms #126 param saved-reg pool numbering not decl-order-controllable. Reverted, .o restored to HEAD, drshackle.c clean. (NOTE: file has an active owner using this exact decl-reorder lever on sibling drshackle_updateSwingBlend — left for them.) Welded #126.
+- **lightmap renderSceneGeometry (97.25)**: opens with gLightmapU32ToDoubleBias vs `@176` bias-double reloc (#70, score-neutral) + `addi r30,r1,80` scheduling reorder. Neutral/welded.
+- **objseq ObjSeq_RebuildCurveStateToFrame (97.93)**: mr r26↔r27 reg-perm cascade + lbl-vs-@NNN reloc. #108/#70. Welded.
+- **dll_0014_unk walkgroupFindExitPointFn_800dc398 (96.64)**: gObjfsaPatches+0x4C48(19528) flag store — target `add;stb 19528(r3)` (base homed r30) vs current `addi;stbx r30,r0` (r0-detour). Already banked r0-detour/base-home #107/#108. Welded.
+- **DR/dll_0261 drlasercannon_aimAtTarget (97.66)**: getAngle yaw/pitch double-`extsh` vs current `extsh`+`mr` — banked #82/#108 coupled reg-perm on the getAngle-result live-range (many prior attempts net-negative). Welded.
+VERDICT: corroborates the standing "DOL at its coloring ceiling" finding — the 96-98%% band holds no source-level win under our toolchain. The one live lead (drshackle param-home) empirically welded by #126. Reopen on new team commits only.
+
+
+## brute_match.py DECL-ORDER FUZZY SWEEP — Jul12, tool-builder specialist — CRACKED a "welded" 93-95 case
+Finalized `tools/brute_match.py` (now fuzzy-scored, committed bc283029cc): parses a fn's leading decl block,
+generates decl-order permutations (swaps/moves/shuffles, time-boxed), rebuilds the unit per variant, and ranks
+by TRUE objdiff fuzzy_match_percent (proto decode of a fresh report.json) — NOT the ndiff region proxy. Applies
+the best iff it strictly beats baseline AND re-confirms after apply; restores HEAD otherwise. asm-free by design
+(never touches asm{}). Usage: `python3 tools/brute_match.py <unit>.c <sym> [--strategy all|swaps|moves] [--max-variants N] [--time-budget S] [--dry-run]`.
+- **WIN: textrender gameTextInitFn_8001c794 93.534 -> 93.662% (committed 7e8f1b60d1).** Pure swap of the leading
+  `s16* p` / `void** q` decls under the fn's `#pragma peephole off` bracket reorders the saved-reg homes to match
+  the retail prologue. This fn was banked as "unroll+reg-perm WELDED" by the prior 93-95 band triage (region-count
+  method) — the fuzzy-scored sweep found a real (small) gain the region proxy missed. Lesson: decl-order is NOT
+  universally inert on the coloring frontier; a true-fuzzy sweep is worth running before banking a fn as welded.
+- **WELDS CONFIRMED by full true-fuzzy sweep (restored, no edit):**
+  - newshadows allocLotsOfTextures (95.050): all 5-local orderings tie EXACTLY at 95.0504 — uniform-int locals, no
+    decl-order leverage (#108 within-class GPR perm).
+  - lightmap renderSceneGeometry (97.254): all 55 sampled orderings tie at 97.2540 — leading decls are arrays
+    (u8 map[256], int box[4]...), no saved-reg home to move.
+  - objseq ObjSeq_runBgCmds (97.185): baseline is ALREADY optimal; every swap REGRESSES (96.11-97.10). Target's
+    decl-order is matched — nothing to gain.
+- MECHANISM: the win requires (a) leading decls that are actually SAVED-REG-HOMED scalars/pointers (not arrays,
+  not a uniform int pool) and (b) usually a peephole/schedule pragma bracket so the reorder isn't re-canonicalized.
+  Where those hold, sweep by fuzzy; where the leading block is arrays or a uniform-class pool, it's welded on sight.
+- Gate: all_source EXIT=0, 0 FAILED after the textrender commit; both commits path-scoped, asm-clean.
