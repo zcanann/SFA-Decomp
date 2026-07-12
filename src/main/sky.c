@@ -3172,7 +3172,8 @@ void skyFn_8008aee8(void)
         ambientColor[2] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
         texC = (u8*)sky[((SkyTimeBlend*)sky)->texSel + 2];
         cam = Camera_GetCurrentViewSlot();
-        frac = Camera_GetFovY() * lbl_803DF068;
+        frac = Camera_GetFovY();
+        frac = frac * lbl_803DF068;
         widthF = (f32)(u32) * (u16*)(texC + 0xc);
         sinProd = widthF * frac / lbl_803DF0D8;
         sinProd *= lbl_803DF0DC;
