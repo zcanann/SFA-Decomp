@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/texture.h"
 #include "main/game_object.h"
@@ -72,7 +73,6 @@
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
 extern u32 FUN_800033a8();
-extern int randomGetRange(int lo, int hi);
 extern u32 FUN_80017830();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);

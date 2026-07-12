@@ -6,6 +6,7 @@
  * combat-state driver that runs the AI and controls Tricky interaction.
  */
 #include "main/dll/DIM/DIM2lift.h"
+#include "main/vecmath.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
@@ -34,7 +35,6 @@ static inline int* DIM2Icicle_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-extern int randomGetRange(int lo, int hi);
 
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);

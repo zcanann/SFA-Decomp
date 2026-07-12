@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -88,7 +89,6 @@ extern int gSnowClawDropBombAngle;
 extern void storeZeroToFloatParam(void* p);
 extern void objSeqInitFn_80080078(void* table, int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);

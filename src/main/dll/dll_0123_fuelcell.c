@@ -1,5 +1,6 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
+#include "main/vecmath.h"
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
 #include "main/gamebits.h"
@@ -9,7 +10,6 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/frame_timing.h"
 
 #define FUELCELL_OBJGROUP 0x4f
-extern int randomGetRange(int lo, int hi);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();

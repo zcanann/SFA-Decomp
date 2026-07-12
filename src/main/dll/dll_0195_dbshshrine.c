@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/vecmath.h"
 #include "main/render.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
@@ -67,7 +68,6 @@ extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5,
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void* objCreateLight(int arg, u8 addToList);
-extern int randomGetRange(int lo, int hi);
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {

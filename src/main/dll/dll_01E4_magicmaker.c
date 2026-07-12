@@ -10,6 +10,7 @@
  * immediately after spawn.
  */
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/dll_01E4_magicmaker.h"
 
@@ -22,7 +23,6 @@ extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
-extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 Obj_IsLoadingLocked(void);
 extern void mainSetBits(int eventId, int value);

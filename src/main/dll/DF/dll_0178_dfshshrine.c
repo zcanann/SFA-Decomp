@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/vecmath.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/obj_placement.h"
@@ -138,7 +139,6 @@ extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-extern int randomGetRange(int lo, int hi);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern void skyFn_80088c94(int flags, int mode);
 extern void playerAddRemoveMagic(int obj, int amount);

@@ -1623,7 +1623,6 @@ void dll_0B_func05(void)
     BoneSpawnData tmpl;
     int objCount;
     int objIdx;
-    extern int randomGetRange(int min, int max);
 
     emIdx = 0;
     gExpgfxUpdatingActivePools = 2;

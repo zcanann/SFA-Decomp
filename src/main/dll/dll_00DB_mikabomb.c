@@ -9,6 +9,7 @@
  * Resource 0x5b is acquired at init.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -23,7 +24,6 @@
 /* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
 
-extern int randomGetRange(int lo, int hi);
 extern ModgfxInterface** gModgfxInterface;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E31C0;

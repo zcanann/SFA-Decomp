@@ -2,6 +2,7 @@
 #define MAIN_DLL_MODGFX_H_
 
 #include "ghidra_import.h"
+#include "main/vecmath.h"
 #include "main/expgfx_internal.h"
 #include "main/object_descriptor.h"
 #include "main/rcp_dolphin.h"
@@ -15,7 +16,6 @@ extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
 extern u32 FUN_800033a8();
 extern u32 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
 extern u32 FUN_80017814();
 extern u32 FUN_80017830();
 extern u32 FUN_80017ac8();

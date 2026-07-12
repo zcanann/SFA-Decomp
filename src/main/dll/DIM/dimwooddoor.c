@@ -6,6 +6,7 @@
  * the launch angle and speed from the door's current aim state.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
@@ -64,7 +65,6 @@ extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 value);
 
-extern int randomGetRange(int lo, int hi);
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
 extern f32 lbl_803DBEF0;

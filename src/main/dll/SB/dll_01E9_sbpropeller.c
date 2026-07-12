@@ -10,6 +10,7 @@
  * (offsets 0x20/0x24/0x28) for camera/state info.
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/vecmath.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
@@ -34,7 +35,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_PARTFX_SMOKE  0x9f  /* smokeTimer-gated smoke burst at the hub */
 #define SB_PROPELLER_PARTFX_DEBRIS 0x7aa /* bankIndex==1 debris trail from path point 0 */
 
-extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern f32 timeDelta;

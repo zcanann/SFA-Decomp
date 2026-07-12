@@ -15,6 +15,7 @@
  * resetHitboxMode interaction bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
@@ -76,7 +77,6 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_801E83B0(int obj, int, int, int, int);

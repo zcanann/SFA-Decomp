@@ -18,6 +18,7 @@
  * placement def and random spread; explodable_spawnFragmentObject spawns the fragment object.
  */
 #include "main/dll/dll_015A_explodable.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "track/intersect_api.h"
 #include "main/dll/dll_015F_attractor.h"
@@ -126,7 +127,6 @@ extern void exploded_initialise(void);
 extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
-extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

@@ -7,6 +7,7 @@
  * state-light helpers used by the capture effect.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
@@ -25,7 +26,6 @@
 /* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
 #define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
 
-extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
 

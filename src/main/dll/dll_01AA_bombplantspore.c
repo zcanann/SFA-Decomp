@@ -1,5 +1,6 @@
 /* DLL 0x01AA (bombplantspore) - Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
@@ -79,7 +80,6 @@ extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
 
 extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);

@@ -112,7 +112,6 @@ extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
-extern int randomGetRange(int lo, int hi);
 extern void setMotionBlur(u8 enabled, f32 amount);
 extern f32 sqrtf(f32);
 extern void fn_8009A8C8();

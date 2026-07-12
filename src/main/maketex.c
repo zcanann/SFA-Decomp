@@ -1,4 +1,5 @@
 #include "main/camera_interface.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
@@ -123,7 +124,6 @@ extern f32 lbl_803DD074;
 extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
-extern int randomGetRange(int lo, int hi);
 extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int taskId);

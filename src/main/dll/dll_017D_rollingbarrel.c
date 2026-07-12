@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -38,7 +39,6 @@ extern f32 gRollingBarrelCurveInitData;
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
-extern int randomGetRange(int lo, int hi);
 extern int getAngle(float y, float x);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);

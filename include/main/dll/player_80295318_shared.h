@@ -631,7 +631,6 @@ extern f32 lbl_803DC670;
 extern f32 lbl_803DC674;
 extern f32 lbl_803DC678;
 extern int coordsToMapCell(f32 x, f32 z);
-extern int randomGetRange(int lo, int hi);
 extern int getYButtonItem(s16* out);
 extern f32 lbl_803E8234;
 extern f32 lbl_803DC740[2];

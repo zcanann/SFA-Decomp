@@ -107,7 +107,6 @@ extern void Obj_FreeObject(int obj);
 extern void storeZeroToFloatParam(void* timer);
 extern GameUIInterface** gGameUIInterface;
 extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-extern u32 randomGetRange(int min, int max);
 extern int DR_CageControl_SeqFn(GameObject* obj);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
 extern void ObjLink_DetachChild(int obj, int child);

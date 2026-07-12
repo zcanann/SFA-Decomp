@@ -1,5 +1,6 @@
 /* DLL 0x01B7 — SC music-tree objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
@@ -77,7 +78,6 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
-extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);

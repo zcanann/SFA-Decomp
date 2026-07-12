@@ -19,6 +19,7 @@
  * here only so the descriptor tables can take their addresses.
  */
 #include "main/objanim.h"
+#include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
@@ -44,7 +45,6 @@
 /* spray burst spawned 10x when the baddie-control fx flag bit 4 is set */
 #define DLLCE_PARTFX_SPRAY    0x343
 #define DLLCE_HIT_VOLUME_SLOT 10
-extern int randomGetRange(int lo, int hi);
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();

@@ -168,7 +168,6 @@ int bombplant_SeqFn(int* obj)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
     extern void ObjHits_RefreshObjectState(int* obj);
-    extern int randomGetRange(int lo, int hi);
     float* state = ((GameObject*)obj)->extra;
 
     if (((EnemyMushroomState*)state)->resetToSpawn != 0)
@@ -268,7 +267,6 @@ void bombplant_update(void* obj)
     extern void Sfx_PlayFromObject(void* obj, int sndId);
     extern void bombplant_explode(void* obj, void* stateEntry, void* state);
     extern u32 ObjHits_RefreshObjectState();
-    extern int randomGetRange(int lo, int hi);
     void* state;
     u8* entry;
     void* param;

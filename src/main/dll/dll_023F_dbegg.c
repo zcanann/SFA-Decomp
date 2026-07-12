@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -110,7 +111,6 @@ typedef enum DbEggMode
     DBEGG_MODE_HOMING = 0xD,        /* homing back to its target reposition point */
 } DbEggMode;
 extern u32 FUN_80006824();
-extern int randomGetRange(int lo, int hi);
 extern u64 FUN_800305f8();
 extern u32 ObjMsg_SendToObject();
 extern f32 lbl_803E6F40;

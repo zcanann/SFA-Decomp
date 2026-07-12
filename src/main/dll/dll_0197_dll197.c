@@ -13,6 +13,7 @@
  * emitting the 0x1f7 sparkle particle on a randomized cooldown.
  */
 #include "main/dll/dll197state_struct.h"
+#include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/resource.h"
@@ -65,7 +66,6 @@ extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 
 extern int Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);

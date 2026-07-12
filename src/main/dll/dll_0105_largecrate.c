@@ -18,6 +18,7 @@
  * GAMEBIT_SFX_MUTE (0xa71) gates the rob-wave warning sfx.
  */
 #include "main/camera_interface.h"
+#include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -46,7 +47,6 @@
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern int randomGetRange(int lo, int hi);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(float y, float x);

@@ -18,6 +18,7 @@
  * complete bit lives at activeGameBit + 0x64.
  */
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -94,7 +95,6 @@ extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 
-extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();

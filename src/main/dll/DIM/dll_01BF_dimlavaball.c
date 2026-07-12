@@ -4,6 +4,7 @@
  * and relaunches it on each fire cycle.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/vecmath.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
@@ -31,7 +32,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-extern int randomGetRange(int lo, int hi);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 

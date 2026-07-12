@@ -15,6 +15,7 @@
  * flames, and ends the player's carry.
  */
 #include "main/game_object.h"
+#include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"
 
@@ -146,7 +147,6 @@ extern void sc_levelcontrol_initialise(void);
 extern void sc_musictree_initialise(void);
 extern void sc_totempole_initialise(void);
 
-extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();

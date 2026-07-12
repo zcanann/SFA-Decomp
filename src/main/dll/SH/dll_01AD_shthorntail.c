@@ -1,5 +1,6 @@
 /* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
 #include "main/audio/sfx.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
@@ -104,7 +105,6 @@ extern void dll_2E_func03(SHthorntailObject* obj, SHthorntailRuntime* runtime);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int Obj_GetPlayerObject();
-extern int randomGetRange(int lo, int hi);
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {

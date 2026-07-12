@@ -5,6 +5,7 @@
  * that douses the flame when depleted.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"
@@ -59,7 +60,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 #define DIMLOGFIRE_GROUP 0x31
 
-extern int randomGetRange(int lo, int hi);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;

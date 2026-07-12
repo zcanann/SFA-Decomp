@@ -12,6 +12,7 @@
  * setScale is the trigger-volume callback that cuts/harvests.
  */
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -45,7 +46,6 @@
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
 
-extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);

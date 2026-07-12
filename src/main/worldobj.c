@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
@@ -71,7 +72,6 @@ extern f32 lbl_803E66B8;
 
 extern void ModelLightStruct_free(int model);
 extern void objRenderModelAndHitVolumes(f32 e);
-extern int randomGetRange(int lo, int hi);
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern void vecRotateZXY(void* in, void* out);

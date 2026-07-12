@@ -13,6 +13,7 @@
  * pollenfragment) plus the PollenFragmentConfig tables.
  */
 #include "main/effect_interfaces.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
@@ -41,7 +42,6 @@ extern f32 lbl_803E30FC;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
 extern int getAngle(float y, float x);

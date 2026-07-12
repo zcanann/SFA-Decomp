@@ -16,6 +16,7 @@
  * Hit state is packed into a one-byte flag word (LandedArwingHitFlagBits).
  */
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
@@ -85,7 +86,6 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateDamageTexturePlacement;
 
-extern int randomGetRange(int lo, int hi);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);

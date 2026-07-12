@@ -1,5 +1,6 @@
 /* DLL 0x00FF — magic-gem / collectible objects [80173224-801732A4) */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/dll/magicgemstate_struct.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/path_control_interface.h"
@@ -53,7 +54,6 @@ extern const f32 gMagicGemBounceRestitutionY;
 extern const f32 gMagicGemBounceRestitutionXZ;
 extern const f32 gMagicGemPickupYRange;
 extern const f32 gMagicGemPickupRadiusBase;
-extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);

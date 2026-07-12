@@ -11,6 +11,7 @@
  * on the struck triangles relative to the camera.
  */
 #include "main/dll/bonespawndata_struct.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/camera.h"
 #include "main/dll/DR/dr_shared.h"
@@ -55,7 +56,6 @@ f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
  * so (vert - offs) + objPos recovers the world-space triangle corners. */
 void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
-    extern int randomGetRange(int min, int max);
     BoneSpawnData data;
     GameObject* cam;
     u8 found;

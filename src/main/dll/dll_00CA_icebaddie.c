@@ -29,6 +29,7 @@
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
 #include "main/game_object.h"
+#include "main/vecmath.h"
 #include "main/objanim.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -109,7 +110,6 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #define ICEBADDIE_PARTICLE_PUFF    0x57 /* puff / impact burst particle */
 #define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
 
-extern int randomGetRange(int lo, int hi);
 
 extern u8 lbl_803DDA78;
 extern u8 lbl_803DDA79;

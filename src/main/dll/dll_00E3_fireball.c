@@ -29,7 +29,6 @@
 
 #define FIREBALL_ROT_COUNT 5
 
-extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);

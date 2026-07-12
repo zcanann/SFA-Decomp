@@ -26,6 +26,7 @@
  * point-light that tracks the emitter.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0273_firepipe.h"
@@ -41,7 +42,6 @@
 #define FIREPIPE_OBJFLAG_RENDERED        0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void modelLightStruct_freeSlot(int p);
-extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_FreeObject(int obj);

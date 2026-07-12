@@ -3,6 +3,7 @@
  * beetles. TU = 0x801843C0..0x80185868.
  */
 #include "main/dll/CF/CFguardian.h"
+#include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
@@ -62,7 +63,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(void* obj);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
-extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void playerAddMoney(int obj, int amount);

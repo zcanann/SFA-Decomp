@@ -16,6 +16,7 @@
  * (callers: dll_00C9_enemy, duster.)
  */
 #include "main/game_object.h"
+#include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
@@ -27,7 +28,6 @@
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
-extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);

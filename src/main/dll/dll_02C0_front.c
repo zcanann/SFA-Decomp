@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/vecmath.h"
 #include "main/render.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
@@ -520,7 +521,6 @@ void fn_80134870(int obj, u8* arr);
  * blend, and the one-shot envfx/sky setup. */
 void TitleScreen_update(u8* obj)
 {
-    extern int randomGetRange(int lo, int hi);
     extern void characterDoEyeAnims(GameObject * obj, void* state);
     extern void fn_8003B228(GameObject * obj, void* p);
     extern void Sfx_StopFromObject(u8 * obj, u32 sfxId);

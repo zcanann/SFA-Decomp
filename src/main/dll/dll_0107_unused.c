@@ -3,6 +3,7 @@
  * references it: retail cut content). TU = 0x80185868..0x8018646C.
  */
 #include "main/camera_interface.h"
+#include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
@@ -37,7 +38,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
 extern int Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
 

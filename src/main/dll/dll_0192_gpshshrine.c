@@ -1,5 +1,6 @@
 /* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 #include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"
@@ -69,7 +70,6 @@ extern void DBSH_Symbol_init(void);
 #define GPSHSHRINE_OBJGROUP 0xb
 #define GPSHSHRINE_MAP_SHRINE 0xb
 #define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
-extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
 

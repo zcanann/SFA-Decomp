@@ -15,6 +15,7 @@
  * cfPrisonGuard_getPullRateMode: clamps the setup size param to [0,2].
  */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/mapEventTypes.h"
@@ -53,7 +54,6 @@ extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern s16 lbl_803DBDE0[4];
-extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern u8 Obj_IsLoadingLocked(void);

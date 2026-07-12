@@ -5,6 +5,7 @@
  * definitions here are collapsed to forward prototypes.
  */
 #include "main/dll/cfguardian_state.h"
+#include "main/vecmath.h"
 #include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/cfprisonunclestate_struct.h"
 #include "main/dll/babycloudrunnerflags_struct.h"
@@ -117,7 +118,6 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();

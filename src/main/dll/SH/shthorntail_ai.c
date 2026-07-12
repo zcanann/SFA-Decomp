@@ -13,6 +13,7 @@
  *    player distance, leash radius, facing error and frustum visibility.
  */
 #include "main/dll/SH/shthorntail_ai.h"
+#include "main/vecmath.h"
 #include "main/frustum.h"
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
@@ -38,7 +39,6 @@ extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 extern f32 getXZDistance(Vec* a, Vec* b);
 extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);

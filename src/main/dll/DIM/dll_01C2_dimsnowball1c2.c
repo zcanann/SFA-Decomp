@@ -5,6 +5,7 @@
  * from the placement params and resets the spawn countdown.
  */
 #include "main/dll/dimicewallstate_struct.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -50,7 +51,6 @@ typedef struct Dimsnowball1c2Setup
     s16 childZOffset;  /* 0x1C <- def->childZOffset + random */
 } Dimsnowball1c2Setup;
 
-extern int randomGetRange(int lo, int hi);
 extern f32 lbl_803E4860;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 framesThisStep;

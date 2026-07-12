@@ -19,6 +19,7 @@
  * TU: 0x8016B230-0x8016B2E0.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -30,7 +31,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
 #define MODEL_LIGHT_KIND_POINT 2
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);

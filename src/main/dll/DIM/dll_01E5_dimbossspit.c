@@ -7,6 +7,7 @@
  * light whose intensity flickers frame-by-frame.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
@@ -51,7 +52,6 @@ typedef struct DIMbossspitState
 } DIMbossspitState;
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
-extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4D44;

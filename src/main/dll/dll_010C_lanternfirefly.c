@@ -2,6 +2,7 @@
  * LanternFireFly (DLL 0x10C). TU = 0x80186704..0x801871C8.
  */
 #include "main/dll/CF/CFcrystal.h"
+#include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
@@ -66,7 +67,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
-extern int randomGetRange(int lo, int hi);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);

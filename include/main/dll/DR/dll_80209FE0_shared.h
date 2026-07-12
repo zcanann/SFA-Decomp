@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
@@ -135,7 +136,6 @@ extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
 extern void storeZeroToFloatParam(f32* p);
 extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);
-extern int randomGetRange(int lo, int hi);
 extern int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6588;
 extern f32 gThornBushLightScaleMax;

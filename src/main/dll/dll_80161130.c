@@ -10,6 +10,7 @@
  * vtable[5] based on the signed planar distance to the current target.
  */
 #include "main/dll/chukchukstate_struct.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -43,7 +44,6 @@ extern f32 lbl_803E2EF8;
 extern f32 lbl_803E2EFC;
 extern f32 lbl_803E2EEC;
 
-extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int* obj);
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32);

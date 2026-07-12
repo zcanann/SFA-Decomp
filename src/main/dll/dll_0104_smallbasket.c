@@ -24,6 +24,7 @@
  * a held basket.
  */
 #include "main/dll/dll_0104_smallbasket.h"
+#include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -100,7 +101,6 @@ typedef struct SmallBasketThrowSetup
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
 
-extern int randomGetRange(int lo, int hi);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);

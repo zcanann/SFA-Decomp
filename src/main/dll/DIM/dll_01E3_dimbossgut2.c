@@ -6,6 +6,7 @@
  * hitbox that resets after each contact burst.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
@@ -43,7 +44,6 @@ extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
 
 extern void ModelLightStruct_free(void* light);
-extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();

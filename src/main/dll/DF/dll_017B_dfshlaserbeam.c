@@ -4,6 +4,7 @@
  * geometry and texture, drives sfx channels and proximity damage.
  */
 #include "main/effect_interfaces.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
@@ -142,7 +143,6 @@ extern const f32 lbl_803E4F44;
 extern const f32 lbl_803E4F48;
 extern const f32 lbl_803E4F4C;
 
-extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);

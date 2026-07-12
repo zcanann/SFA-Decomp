@@ -1,5 +1,6 @@
 /* DLL 0x0117 - appleontree / groundAnimator group. TU: 0x8017D818-0x8017E1A0. */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/dll/appleontreestate_struct.h"
 #include "main/dll/groundAnimator.h"
 #include "main/dll_000A_expgfx.h"
@@ -75,7 +76,6 @@ extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
-extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 Vec_xzDistance(f32* a, f32* b);

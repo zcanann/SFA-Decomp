@@ -1,5 +1,6 @@
 /* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
 #include "main/dll/VF/vf_shared.h"
+#include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -631,7 +632,6 @@ void SeqPoint_update(int* obj)
 void VFPDragHead_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj);
-    extern int randomGetRange(int lo, int hi);
     int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
     VfpDragHeadState* self2;
 

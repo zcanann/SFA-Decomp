@@ -11,6 +11,7 @@
  * swings (0x140) and flutters (0x141) and re-opens if the player lingers.
  */
 #include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -48,7 +49,6 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void* Obj_GetPlayerObject(void);
-extern int randomGetRange(int lo, int hi);
 
 ObjectDescriptor gSPDrapeObjDescriptor = {
     0,

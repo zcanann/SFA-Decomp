@@ -51,7 +51,6 @@
 #include "dolphin/os/OSRtc.h"
 #include "dolphin/pad.h"
 
-extern int randomGetRange(int min, int max);
 extern int getCurSeqNo(void);
 extern f32 sqrtf(f32 x);
 extern void debugPrintf(char *message, ...);

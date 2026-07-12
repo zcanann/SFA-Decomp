@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "main/objanim.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -172,7 +173,6 @@ struct VisBits16
 #define BADDIE_PLACEMENT_DEATH_GAMEBIT          0x18 /* s16: gamebit incremented on defeat */
 #define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
-extern int randomGetRange(int lo, int hi);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Sfx_PlayFromObject(int obj, int sfxId);

@@ -7,6 +7,7 @@
  * sphere hitbox.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -112,7 +113,6 @@ void dimbossfire_hitDetect(void)
 
 void dimbossfire_update(GameObject *obj)
 {
-    extern int randomGetRange(int lo, int hi);
     u32 bitVal;
     ModelLightStruct* light;
     int ref;
@@ -245,7 +245,6 @@ void dimbossfire_update(GameObject *obj)
 
 void dimbossfire_init(GameObject *obj, u32 arg2, int placement)
 {
-    extern int randomGetRange(int lo, int hi);
     u32 ua;
     u8 randVal;
     DimbossfireState* state;

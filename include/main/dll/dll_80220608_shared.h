@@ -67,7 +67,6 @@ extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
-extern int randomGetRange(int min, int max);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
 extern void objRenderFn_80041018(int obj);

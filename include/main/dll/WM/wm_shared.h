@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -256,7 +257,6 @@ extern int getAngle(f32 dx, f32 dy);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void gameBitIncrement(int eventId);
-extern u32 randomGetRange(int min, int max);
 extern void fn_801F4D54(int obj, int state);
 extern f32 timeDelta;
 extern f32 lbl_803E5EA8;
