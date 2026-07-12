@@ -1732,7 +1732,7 @@ int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
     return 1;
 }
 
-u32 ObjTrigger_IsSetById(int obj, short eventId)
+int ObjTrigger_IsSetById(int obj, int eventId)
 {
     int playerState;
     int triggerFlags;
@@ -1744,7 +1744,8 @@ u32 ObjTrigger_IsSetById(int obj, short eventId)
     if (flagEnabled != 0)
     {
         flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
-        if ((flagBlocked == 0) && (playerState = (*gGameUIInterface)->isEventReady((int)eventId), playerState != 0))
+        if ((flagBlocked == 0) &&
+            (playerState = (*gGameUIInterface)->isEventReady((int)(short)eventId), playerState != 0))
         {
             playerState = objGetAnimState80A((GameObject*)(Obj_GetPlayerObject()));
             if (playerState == OBJTRIGGER_PLAYER_STATE_NONE)

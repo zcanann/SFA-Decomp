@@ -32,7 +32,7 @@ void ObjLink_AttachChild(int parent, int child, int linkMode);
 void ObjContact_DispatchCallbacks(int objA, int objB);
 void ObjContact_RemoveObjectCallbacks(int param_1);
 int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback);
-u32 ObjTrigger_IsSetById(int obj, short triggerId);
+int ObjTrigger_IsSetById(int obj, int triggerId);
 int ObjTrigger_IsSet(int obj);
 void* ObjList_GetObjects(int* startIndex, int* objectCount);
 GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq);

@@ -16,6 +16,7 @@
  * unlock sequence.
  */
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/dll/doorlockstate_struct.h"
 #include "main/dll/alphaanim.h"
@@ -46,12 +47,8 @@ typedef struct DoorlockPlacement
 
 extern f32 lbl_803E3798;
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objRenderFn_80041018(int obj);
-extern int ObjTrigger_IsSetById(int obj, int id);
-extern int ObjTrigger_IsSet(int obj);
 
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -239,7 +236,7 @@ void Lock_DoorLock_init(short* obj, DoorLockPlacement* config)
     }
     state = ((GameObject*)obj)->extra;
     state->unlocked = mainGetBit(config->lockGameBit);
-    ObjGroup_AddObject((u32)obj, DOORLOCK_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DOORLOCK_OBJGROUP);
     if ((config->flags & 1) != 0)
     {
         if (state->unlocked != 0)
