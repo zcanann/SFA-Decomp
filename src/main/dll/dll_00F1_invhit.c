@@ -53,12 +53,12 @@ typedef struct InvhitObjectDef
 #define INVHIT_MODE_FIXED_RADIUS      6 /* fixed primary-radius hit volume */
 #define INVHIT_MODE_SELF_FREE         7 /* self-free once owner hit list drops it */
 
-extern f32 lbl_803E35E8;
+__declspec(section ".sdata2") f32 lbl_803E35E8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E35EC = 48.0f;
+__declspec(section ".sdata2") f32 lbl_803E35F0 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E35F4 = 20.0f;
 /* single-precision override for codegen */
 extern f32 lbl_803AC780[];
-extern f32 lbl_803E35EC;
-extern f32 lbl_803E35F0;
-extern f32 lbl_803E35F4;
 
 extern int ObjList_ContainsObject(int obj);
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
