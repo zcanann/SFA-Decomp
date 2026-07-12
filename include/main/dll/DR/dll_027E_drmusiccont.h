@@ -5,6 +5,16 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "global.h"
 
+extern f32 lbl_803E6BC8;
+extern f32 gDrMusicControlCloudOverridePosX;
+extern f32 gDrMusicControlCloudOverridePosY;
+extern f32 gDrMusicControlCloudOverridePosZ;
+extern f32 lbl_803E6BD8;
+extern f32 gDrMusicControlStingerTimerDuration;
+extern f32 gDrMusicControlRestartPointX;
+extern f32 gDrMusicControlRestartPointY;
+extern f32 gDrMusicControlRestartPointZ;
+
 typedef struct DrMusicContFlags
 {
     u8 b_state : 1;

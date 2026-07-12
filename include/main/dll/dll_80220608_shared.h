@@ -50,7 +50,6 @@ struct AndrossState;
 /* Pattern wrappers. */
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
 extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
@@ -543,15 +542,6 @@ extern f32 lbl_803E6C80;
 extern f32 lbl_803E6C68;
 
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
-extern f32 gDrMusicControlCloudOverridePosX;
-extern f32 gDrMusicControlCloudOverridePosY;
-extern f32 gDrMusicControlCloudOverridePosZ;
-extern f32 lbl_803E6BD8;
-extern f32 gDrMusicControlStingerTimerDuration;
-extern f32 gDrMusicControlRestartPointX;
-extern f32 gDrMusicControlRestartPointY;
-extern f32 gDrMusicControlRestartPointZ;
-
 extern f32 lbl_803E6CA4;
 extern f32 lbl_803E6CD0;
 
