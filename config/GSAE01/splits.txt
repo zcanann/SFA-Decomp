@@ -3338,6 +3338,7 @@ main/audio/mcmd_exec.c:
 	extab       start:0x800058D0 end:0x80005958
 	extabindex  start:0x800060C8 end:0x80006194
 	.text       start:0x8027656C end:0x80278F0C
+	.sdata2     start:0x803E7810 end:0x803E7818
 
 main/audio/vid_init.c:
 	.text       start:0x80278F0C end:0x80279004

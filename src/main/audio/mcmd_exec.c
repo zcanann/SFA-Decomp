@@ -1630,3 +1630,6 @@ void macInit(void)
         ((McmdVoiceState*)synthVoice)[i].loopCounter = 0;
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803E7810 = 1023.0f;
+__declspec(section ".sdata2") f32 lbl_803E7814 = 1.0f;
