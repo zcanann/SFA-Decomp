@@ -542,32 +542,10 @@ extern f32 lbl_803E6C80;
 extern f32 lbl_803E6C68;
 
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
-extern f32 lbl_803E6CA4;
-extern f32 lbl_803E6CD0;
-
 extern int gunpowderbarrel_isHeld(int obj);
 extern int gunpowderbarrel_canBeGrabbed(int obj);
 extern void gunpowderbarrel_addThrowVelocity(int obj, void* vec);
 extern void gunpowderbarrel_setHeldState(int obj);
-extern f32 lbl_803E6CA0;
-extern f32 lbl_803E6CA8;
-extern f32 gDrBarrelGenGrabRange;
-extern f32 lbl_803E6CB4;
-extern f32 gDrBarrelGenCarrySpeedScale;
-extern f32 lbl_803E6CBC;
-extern f32 lbl_803E6CC0;
-extern f32 lbl_803DC3B0;
-extern f32 gDrBarrelGenGrabYOffset;
-
-extern f32 lbl_803E6CAC;
-
-typedef struct DrBarrelGrRenderParams
-{
-    s16 a;
-    s16 b;
-    s16 c;
-    f32 d;
-} DrBarrelGrRenderParams;
 
 extern int dll_2E_func0A(int a, void* out);
 extern f32 lbl_803E6BB8;

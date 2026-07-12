@@ -5,6 +5,27 @@
 #include "main/dll/curve_walker.h"
 #include "main/game_object.h"
 
+extern f32 lbl_803E6CA0;
+extern f32 lbl_803E6CA4;
+extern f32 lbl_803E6CA8;
+extern f32 lbl_803E6CAC;
+extern f32 gDrBarrelGenGrabRange;
+extern f32 lbl_803E6CB4;
+extern f32 gDrBarrelGenCarrySpeedScale;
+extern f32 lbl_803E6CBC;
+extern f32 lbl_803E6CC0;
+extern f32 lbl_803E6CD0;
+extern f32 lbl_803DC3B0;
+extern f32 gDrBarrelGenGrabYOffset;
+
+typedef struct DrBarrelGrRenderParams
+{
+    s16 a;
+    s16 b;
+    s16 c;
+    f32 d;
+} DrBarrelGrRenderParams;
+
 typedef struct DrBarrelGrFlags
 {
     u8 bit80 : 1;
