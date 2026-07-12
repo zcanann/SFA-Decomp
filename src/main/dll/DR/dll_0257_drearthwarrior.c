@@ -23,7 +23,7 @@ typedef struct DREarthWarriorState
     u8 pad4[0x9FD - 0x4];
     u8 unk9FD;
     u8 pad9FE[0xB54 - 0x9FE];
-    s32 helperObj;
+    GameObject* helperObj;
     u8 padB58[0xF50 - 0xB58];
     s32 unkF50;
     u8 padF54[0xF58 - 0xF54];
@@ -184,7 +184,7 @@ typedef struct EarthWarriorState
     u8 pad35C[0x9fd - 0x35c];
     u8 unk9FD;
     u8 pad9FE[0xb54 - 0x9fe];
-    int helperObj;
+    GameObject* helperObj;
     EarthWarriorSub sub; /* 0xb58 */
 } EarthWarriorState;
 
@@ -253,7 +253,6 @@ extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void dll_2E_setLookAtMaxDistance(int p, f32 f);
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
-extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
 extern void doRumble(f32 duration);
 extern float mathSinf(float x);
@@ -459,7 +458,7 @@ void DR_EarthWarrior_free(GameObject* obj)
     }
     if (*(void**)&inner->helperObj != NULL)
     {
-        ObjLink_DetachChild(obj, inner->helperObj);
+        ObjLink_DetachChild(obj, (int)inner->helperObj);
         Obj_FreeObject(inner->helperObj);
     }
 }
@@ -1163,7 +1162,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
             int hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObj, 0, 0, &hx, &hy, &hz);
             if (hit != 0)
             {
-                if (objGetFlagsE5_2((int)obj) != 0 && inner->sub.rideState == 2)
+                if (objGetFlagsE5_2((u8*)obj) != 0 && inner->sub.rideState == 2)
                 {
                     return;
                 }
@@ -1263,9 +1262,9 @@ void DR_EarthWarrior_update(GameObject* obj)
     hitState->hitVolumeId = 0;
     if (*(void**)&inner->helperObj == NULL && Obj_IsLoadingLocked() != 0)
     {
-        int setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
-        int newObj = Obj_SetupObject(setup, 4, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
-        ObjLink_AttachChild(obj, newObj, 2);
+        ObjPlacement* setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
+        GameObject* newObj = Obj_SetupObject(setup, 4, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+        ObjLink_AttachChild(obj, (int)newObj, 2);
         inner->helperObj = newObj;
     }
     inner->sub.unk986 = 5;
@@ -1427,7 +1426,7 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     s16toFloat(inner + 0x14f0, 0x1e);
     ((ByteFlags*)((char*)inner + 0x14ec))->b02 = 0;
     ((DREarthWarriorState*)inner)->unk14F5 = 1;
-    ((DREarthWarriorState*)inner)->helperObj = 0;
+    ((DREarthWarriorState*)inner)->helperObj = NULL;
     if (mainGetBit(0x9ec) != 0)
     {
         ((DREarthWarriorState*)inner)->unk14ED = 1;

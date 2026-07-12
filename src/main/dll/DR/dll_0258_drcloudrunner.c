@@ -913,8 +913,8 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, int baddie)
             s16 angles[4];
             f32 mat[4];
         } s1;
-        void* newObj;
-        int setup;
+        GameObject* newObj;
+        ObjPlacement* setup;
         inner->flagsBB6 &= ~8;
         ((ObjHitsPriorityState*)hitState)->flags = ((ObjHitsPriorityState*)hitState)->flags | 0x200;
         ObjAnim_SetCurrentMove((int)obj, 0xd, lbl_803E83A4, 0);
@@ -925,14 +925,14 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, int baddie)
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_11e);
         setup = Obj_AllocObjectSetup(0x18, DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE);
-        ((ObjPlacement*)setup)->color[2] = 0xff;
-        ((ObjPlacement*)setup)->color[3] = 0xff;
-        ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = 1;
-        ((ObjPlacement*)setup)->posX = inner->spawnPosX;
-        ((ObjPlacement*)setup)->posY = inner->spawnPosY;
-        ((ObjPlacement*)setup)->posZ = inner->spawnPosZ;
-        newObj = (void*)Obj_SetupObject(setup, 5, -1, -1, 0);
+        setup->color[2] = 0xff;
+        setup->color[3] = 0xff;
+        setup->color[0] = 2;
+        setup->color[1] = 1;
+        setup->posX = inner->spawnPosX;
+        setup->posY = inner->spawnPosY;
+        setup->posZ = inner->spawnPosZ;
+        newObj = Obj_SetupObject(setup, 5, -1, -1, NULL);
         if (newObj != NULL)
         {
             s1.mat[1] = lbl_803E83A4;
@@ -1149,8 +1149,8 @@ void fn_802BF4D8(GameObject* obj)
         f32 mat[4];
     } s1;
     CloudRunnerState* inner = (obj)->extra;
-    void* newObj;
-    int setup;
+    GameObject* newObj;
+    ObjPlacement* setup;
     f32 dist;
         if (Obj_IsLoadingLocked() == 0)
     {
@@ -1158,14 +1158,14 @@ void fn_802BF4D8(GameObject* obj)
     }
     Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_11e);
     setup = Obj_AllocObjectSetup(0x24, DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE);
-    ((ObjPlacement*)setup)->color[2] = 0xff;
-    ((ObjPlacement*)setup)->color[3] = 0xff;
-    ((ObjPlacement*)setup)->color[0] = 2;
-    ((ObjPlacement*)setup)->color[1] = 1;
-    ((ObjPlacement*)setup)->posX = inner->spawnPosX;
-    ((ObjPlacement*)setup)->posY = inner->spawnPosY;
-    ((ObjPlacement*)setup)->posZ = inner->spawnPosZ;
-    newObj = (void*)Obj_SetupObject(setup, 5, -1, -1, 0);
+    setup->color[2] = 0xff;
+    setup->color[3] = 0xff;
+    setup->color[0] = 2;
+    setup->color[1] = 1;
+    setup->posX = inner->spawnPosX;
+    setup->posY = inner->spawnPosY;
+    setup->posZ = inner->spawnPosZ;
+    newObj = Obj_SetupObject(setup, 5, -1, -1, NULL);
     if (newObj == NULL)
     {
         return;

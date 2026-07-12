@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -110,7 +111,6 @@ extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 extern f32 lbl_803E8304;
-extern int Obj_FreeObject(int obj);
 extern int objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int p5, int p6);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
@@ -171,8 +171,6 @@ extern void fn_8003B500(GameObject* obj, int q, f32 f);
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int s, int b, int c, int d, int e);
 extern void vecRotateZXY(void* a, void* b);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;

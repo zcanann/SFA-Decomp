@@ -130,8 +130,8 @@ void WM_ObjCreator_update(GameObject* obj)
        re-creates per-arm webs in the retail saved-reg spread, where
        block locals coalesce (#108 crack; case 1 and case 4's setup
        really were block-scope - see below). */
-    int setup;
-    int spawned;
+    ObjPlacement* setup;
+    GameObject* spawned;
     int n;
     WmObjCreatorPlacement* placement;
     WmObjCreatorState* state;
@@ -188,7 +188,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((WmGalleonSpawnSetup*)setup)->unk1E = 0xffff;
                 ((WmGalleonSpawnSetup*)setup)->unk1A = 2;
                 ((WmGalleonSpawnSetup*)setup)->yawByte = placement->yaw;
-                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
                     ((GameObject*)spawned)->unkF4 = 8;
@@ -201,7 +201,8 @@ void WM_ObjCreator_update(GameObject* obj)
             if ((mainGetBit(state->gameBit) != 0 || state->gameBit == -1) &&
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
-                int setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
+                ObjPlacement* setup =
+                    Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
                 ((ObjPlacement*)setup)->color[0] = 0x20;
                 ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->color[3] = 0xff;
@@ -214,7 +215,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((LfxEmitterPlacement*)setup)->spinRoll = randomGetRange(-500, 500) + 0x5dc;
                 ((LfxEmitterPlacement*)setup)->spinPitch = 0;
                 ((LfxEmitterPlacement*)setup)->spinYaw = randomGetRange(-500, 500) + 0x5dc;
-                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
                     ((GameObject*)spawned)->anim.velocityX = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
@@ -233,7 +234,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-100, 100);
                 ((WmWallcrawlerSpawnSetup*)setup)->triggerRadius = 0x31;
                 ((WmWallcrawlerSpawnSetup*)setup)->heightOffset = 200;
-                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
                     lbl_803DDC68 += 1;
@@ -253,7 +254,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
                 ((HoodedZyckSpawnSetup*)setup)->triggerGameBit = state->gameBit;
                 ((HoodedZyckSpawnSetup*)setup)->unk22 = 1;
-                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x1c3, NULL, 2, -1, NULL);
@@ -276,7 +277,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((LfxEmitterPlacement*)setup)->enableBit = 0xffff;
                 ((LfxEmitterPlacement*)setup)->spinRoll = randomGetRange(-500, 500) + 0x5dc;
                 ((LfxEmitterPlacement*)setup)->spinYaw = randomGetRange(-500, 500) + 0x5dc;
-                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
                     ((GameObject*)spawned)->anim.velocityX = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
@@ -291,7 +292,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 n = 2;
                 do
                 {
-                    int setup;
+                    ObjPlacement* setup;
                     n -= 1;
                     setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
                     ((ObjPlacement*)setup)->color[0] = 0x20;
@@ -307,7 +308,7 @@ void WM_ObjCreator_update(GameObject* obj)
                     ((LfxEmitterPlacement*)setup)->spinPitch = 0;
                     ((LfxEmitterPlacement*)setup)->spinYaw = 0;
                     ((LfxEmitterPlacement*)setup)->followCurve = 0;
-                    spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                    spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                     if ((u32)spawned != 0)
                     {
                         *(u8*)(*(int*)&((GameObject*)spawned)->extra + 0x120) |= 2;
@@ -342,7 +343,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((LfxEmitterPlacement*)setup)->enableBit = 0xffff;
                 ((LfxEmitterPlacement*)setup)->spinRoll = randomGetRange(-500, 500) + 0x5dc;
                 ((LfxEmitterPlacement*)setup)->spinYaw = randomGetRange(-500, 500) + 0x5dc;
-                Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
@@ -359,7 +360,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 ((ObjPlacement*)setup)->color[3] = 0xff;
                 ((WmRockSpawnSetup*)setup)->unk1E = 0xffff;
                 ((WmRockSpawnSetup*)setup)->yawByte = obj->anim.rotX >> 8;
-                Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 for (n = randomGetRange(2, 5); n != 0; n -= 1)
                 {
                     vec.pos[0] = lbl_803E5CC8;

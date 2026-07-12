@@ -230,21 +230,22 @@ void DIM2PathGenerator_update(int* obj)
     }
     if (Obj_IsLoadingLocked())
     {
-        int* np = (int*)Obj_AllocObjectSetup(36, ((s16*)((Dim2PathGeneratorState*)extra)->spawnTypes)[toggle]);
-        ((Dim2SpawnSetup*)np)->posX = ((Dim2PathGeneratorState*)extra)->originX;
-        ((Dim2SpawnSetup*)np)->posY = ((Dim2PathGeneratorState*)extra)->originY;
-        ((Dim2SpawnSetup*)np)->posZ = ((Dim2PathGeneratorState*)extra)->originZ;
-        ((Dim2SpawnSetup*)np)->colorR = ((Dim2pathgeneratorPlacement*)def)->colorR;
-        ((Dim2SpawnSetup*)np)->colorB = ((Dim2pathgeneratorPlacement*)def)->colorB;
-        ((Dim2SpawnSetup*)np)->colorG = ((Dim2pathgeneratorPlacement*)def)->colorG;
-        ((Dim2SpawnSetup*)np)->colorA = ((Dim2pathgeneratorPlacement*)def)->colorA;
-        ((Dim2SpawnSetup*)np)->colorA = 255;
-        ((Dim2SpawnSetup*)np)->unk3 = ((Dim2pathgeneratorPlacement*)def)->unk3;
-        ((Dim2SpawnSetup*)np)->unk18 = (s8) * (u8*)((char*)def + 0x1c);
-        ((Dim2SpawnSetup*)np)->childRot = *(u8*)((char*)def + 0x1a);
-        ((Dim2SpawnSetup*)np)->unk1C = *(u8*)((char*)def + 0x1b);
-        ((Dim2SpawnSetup*)np)->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
-        Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+        Dim2SpawnSetup* np =
+            (Dim2SpawnSetup*)Obj_AllocObjectSetup(36, ((s16*)((Dim2PathGeneratorState*)extra)->spawnTypes)[toggle]);
+        np->posX = ((Dim2PathGeneratorState*)extra)->originX;
+        np->posY = ((Dim2PathGeneratorState*)extra)->originY;
+        np->posZ = ((Dim2PathGeneratorState*)extra)->originZ;
+        np->colorR = ((Dim2pathgeneratorPlacement*)def)->colorR;
+        np->colorB = ((Dim2pathgeneratorPlacement*)def)->colorB;
+        np->colorG = ((Dim2pathgeneratorPlacement*)def)->colorG;
+        np->colorA = ((Dim2pathgeneratorPlacement*)def)->colorA;
+        np->colorA = 255;
+        np->unk3 = ((Dim2pathgeneratorPlacement*)def)->unk3;
+        np->unk18 = (s8) * (u8*)((char*)def + 0x1c);
+        np->childRot = *(u8*)((char*)def + 0x1a);
+        np->unk1C = *(u8*)((char*)def + 0x1b);
+        np->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
+        Obj_SetupObject((ObjPlacement*)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, NULL);
         ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
     }
 }
