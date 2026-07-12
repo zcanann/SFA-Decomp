@@ -70,6 +70,9 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 extern u16 gWaterfxSplashDisplayListSize;
 extern const f32 lbl_803DF2E0;
+extern const f32 lbl_803DF2E4;
+extern const f32 lbl_803DF2F0;
+extern const f32 lbl_803DF2F4;
 extern const f32 lbl_803DF2F8;
 extern const f32 lbl_803DF304;
 extern f32 gWaterfxPi;
@@ -752,7 +755,7 @@ void fn_80095164(WaterParticle* s)
     {
         f32 life = s->f10;
         f32 ph = lbl_803DF2E0;
-        f32 bandOfs = 0.9f * ((f32)i / 7.0f);
+        f32 bandOfs = lbl_803DF2E4 * ((f32)i / lbl_803DF2F8);
         f32 dd;
         f32 lim;
         f32 sc;
@@ -760,8 +763,8 @@ void fn_80095164(WaterParticle* s)
         f32 alpha;
         ph = (ph + bandOfs) * life;
         dd = ph - 0.5f;
-        fade = -(4.0f * (dd * dd) - 1.0f);
-        lim = 0.05f + bandOfs;
+        fade = -(lbl_803DF2F0 * (dd * dd) - 1.0f);
+        lim = lbl_803DF2F4 + bandOfs;
         if (life < lim)
         {
             alpha = 1.0f;
