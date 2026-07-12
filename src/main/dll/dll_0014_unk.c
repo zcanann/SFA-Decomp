@@ -1193,8 +1193,8 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     }
     else
     {
-        low = 0;
         high = nRomCurves - 1;
+        low = 0;
         while (high >= low)
         {
             mid = (high + low) >> 1;
