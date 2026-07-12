@@ -5082,7 +5082,7 @@ int playerStateAimStaff(int obj, int state)
         if (lbl_803DE42C != 0)
         {
             f32 x;
-            int hi;
+            int h[1];
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_whit3_c);
             x = inner->stateTimer - timeDelta;
             inner->stateTimer = x;
@@ -5103,20 +5103,31 @@ int playerStateAimStaff(int obj, int state)
             }
             ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
             pfx.scale = lbl_803E7F9C;
-            hi = 0x200000;
+            h[0] = 0x200000;
             pfx.mode = 0;
-            (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
             pfx.mode = 1;
-            (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
             if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
                 *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
                 getCurSeqNo() != 0)
             {
-                int i;
-                hi = 0;
-                lbl_803DE42C = hi;
-                i = hi;
-                playerFreeSpawnedObjects(gPlayerSpawnedObjects, i, hi);
+                int z[2];
+                void** p[1];
+                z[0] = 0;
+                lbl_803DE42C = z[0];
+                z[1] = z[0];
+                p[0] = gPlayerSpawnedObjects;
+                do
+                {
+                    if (*p[0] != NULL)
+                    {
+                        Obj_FreeObject((int)*p[0]);
+                        *p[0] = NULL;
+                    }
+                    p[0]++;
+                    z[1]++;
+                } while (z[1] < 7);
                 if (gPlayerResource != NULL)
                 {
                     Resource_Release(gPlayerResource);
