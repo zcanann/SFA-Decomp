@@ -13,6 +13,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
@@ -28,7 +29,6 @@ extern f32 timeDelta;
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern void lightSetFieldBC_8001db14(ModelLightStruct* p, u8 v);
 
-extern int Obj_GetPlayerObject(void);
 extern f32 lbl_80325D68[];
 extern f32 lbl_803E4DA0;
 extern f32 lbl_803E4DA4;
@@ -177,7 +177,7 @@ void dimbossfire_update(GameObject *obj)
                 }
                 while (ref < 0x32);
             }
-            ref = Obj_GetPlayerObject();
+            ref = (int)Obj_GetPlayerObject();
             if (((void*)ref != NULL) && ((((GameObject*)ref)->objectFlags & DIMBOSSFIRE_OBJFLAG_PARENT_SLACK) == 0))
             {
                 playerDist = Vec_distance((float*)&(obj)->anim.worldPosX, (float*)(ref + 0x18));

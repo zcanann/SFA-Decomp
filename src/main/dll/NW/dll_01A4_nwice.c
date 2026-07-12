@@ -1,13 +1,13 @@
 /* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
 #include "main/objlib.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/NW/dll_01A4_nwice.h"
 
 #define NWICE_OBJGROUP      0x3c
 #define NWICE_LINK_OBJGROUP 0x3d /* scanned to find the paired ice object by linkId */
 
 extern void fn_80296D20(int obj, void* arg);
-extern int Obj_GetPlayerObject(void);
 
 int NW_ice_getExtraSize(void)
 {
@@ -47,7 +47,7 @@ void NW_ice_update(int* obj)
         if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
         {
             ObjHits_DisableObject((u32)obj);
-            fn_80296D20(Obj_GetPlayerObject(), obj);
+            fn_80296D20((int)Obj_GetPlayerObject(), obj);
         }
         else
         {

@@ -19,6 +19,7 @@
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -104,7 +105,6 @@ extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 
@@ -265,7 +265,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     sd = lbl_803E3648;
     list = ObjList_GetObjects(&objIdx, &objCount);
     animUpdate->sequenceEventActive = 0;
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     dx = ((GameObject*)player)->anim.localPosX - def->head.posX;
     dy = ((GameObject*)player)->anim.localPosZ - def->head.posZ;
     dist = sqrtf(dx * dx + dy * dy);

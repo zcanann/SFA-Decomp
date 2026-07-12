@@ -26,6 +26,7 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
@@ -89,7 +90,6 @@ extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
 extern int lbl_803DBC70;
 extern f32 timeDelta;
-extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);

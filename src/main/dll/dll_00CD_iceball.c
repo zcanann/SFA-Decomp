@@ -17,6 +17,7 @@
  * the camera view-Y offset for the impact shake.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
@@ -37,7 +38,6 @@ extern f32 lbl_803E2E50;
 
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
-extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int* obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* ObjList_GetObjects(int* outA, int* outB);
@@ -205,7 +205,7 @@ void IceBall_update(u16* obj, int unused)
     ObjHits_EnableObject(objInt);
     if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject != 0 &&
         ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject ==
-             Obj_GetPlayerObject() ||
+             (int)Obj_GetPlayerObject() ||
          (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject == getTrickyObject()))
     {
         fn_8015FCCC((GameObject*)(objInt));

@@ -7,6 +7,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
 #include "main/dll/sfxplayer.h"
@@ -48,7 +49,6 @@ typedef struct TrickyCurveBurstFxParams
 #define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
 
 extern f32 lbl_803E6448;
-extern int Obj_GetPlayerObject(void);
 extern u32 ObjMsg_SendToObject();
 extern void fn_80206C18(int* obj);
 extern void fn_80206968(int* obj);
@@ -68,7 +68,7 @@ void TrickyCurve_updateBurstTrigger(GameObject* obj)
     int burstParticles;
 
     state = (obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     insideCount = 0;
     xSide = 0;
     ySide = 0;

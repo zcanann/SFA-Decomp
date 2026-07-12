@@ -9,6 +9,7 @@
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/baddie_state.h"
@@ -44,7 +45,6 @@ extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p
 extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* p);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
 extern void* objCreateLight(int arg, u8 addToList);

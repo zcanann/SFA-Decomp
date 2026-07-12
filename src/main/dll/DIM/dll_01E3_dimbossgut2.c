@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
 #include "main/objhits.h"
@@ -51,7 +52,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void queueGlowRender(void* light);
 extern int Curve_AdvanceAlongPath(int a, f32 f);
 extern int getAngle(float y, float x);
-extern int Obj_GetPlayerObject(void);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void* objCreateLight(int arg, u8 addToList);
@@ -120,7 +120,7 @@ void dimbossgut2_updateTracking(GameObject* obj, int state)
     }
     else
     {
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         rel = (int)(u16)getAngle(-(((GameObject*)player)->anim.worldPosX - (obj)->anim.worldPosX),
                                  -(((GameObject*)player)->anim.worldPosZ - (obj)->anim.worldPosZ)) -
               (int)(u16)(obj)->anim.rotX;

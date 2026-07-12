@@ -24,6 +24,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
@@ -57,7 +58,6 @@ extern u8 gTumbleweedBushPieceOffsetTable[];
 extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8 gTumbleweedBushHitCooldownState;
-extern void* Obj_GetPlayerObject(void);
 
 extern int Sfx_PlayFromObject(int* obj, int sfx);
 extern f32 lbl_803E2F44;
@@ -170,7 +170,7 @@ void TumbleWeedBush_update(int* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
         if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), (float*)&gTumbleweedBushHitCooldownState, &hit0,
                                                 (float*)hitExtra) != 0)
     {
