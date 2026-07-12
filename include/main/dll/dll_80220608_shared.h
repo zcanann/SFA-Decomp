@@ -691,15 +691,6 @@ extern f32 lbl_8032B4A8[];
 
 
 /* Forward declarations for graduated functions (split from placeholder_80220608). */
-int Dummy29E_getExtraSize(void);
-int Dummy29E_getObjectTypeId(void);
-void Dummy29E_free(void);
-void Dummy29E_render(void);
-void Dummy29E_hitDetect(void);
-void Dummy29E_update(void);
-void Dummy29E_init(void);
-void Dummy29E_release(void);
-void Dummy29E_initialise(void);
 void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c);
 int Obj_UpdateRomCurveFollowVelocity(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag);
 int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag, int* p6);

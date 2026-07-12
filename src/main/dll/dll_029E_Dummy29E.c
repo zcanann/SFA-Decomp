@@ -10,6 +10,7 @@
  * here purely because of where it landed in the link order.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_029E_dummy.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/game_object.h"
 
