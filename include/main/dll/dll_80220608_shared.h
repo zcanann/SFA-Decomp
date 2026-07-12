@@ -50,7 +50,6 @@ struct AndrossState;
 /* Pattern wrappers. */
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern void cloudClearOverridePosition(int obj);
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 
 extern f32 lbl_803E6DB4;
@@ -315,7 +314,6 @@ extern f32 fn_80291FF4(f32 x);
 
 
 
-extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
 
 extern int dll_2E_func0A(int a, void* out);
 

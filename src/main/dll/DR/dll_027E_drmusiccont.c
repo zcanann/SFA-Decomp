@@ -16,6 +16,7 @@
 #include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/newclouds.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -39,7 +40,7 @@ int drmusiccont_getObjectTypeId(void)
 
 void drmusiccont_free(int obj)
 {
-    cloudClearOverridePosition(obj);
+    cloudClearOverridePosition();
 }
 
 void drmusiccont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -92,7 +93,7 @@ void drmusiccont_update(GameObject* obj)
     u32 bit2;
     u32 bit3;
 
-    cloudSetOverridePosition((int)obj, gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
+    cloudSetOverridePosition(gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
                              gDrMusicControlCloudOverridePosZ);
     if ((obj)->unkF4 == 0)
     {
