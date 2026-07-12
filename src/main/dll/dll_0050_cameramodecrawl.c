@@ -19,10 +19,12 @@
 #include "main/mm.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
+#include "main/frame_timing.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/CAM/camcrawl_state.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
-#include "main/dll/dll_80220608_shared.h"
 #include "main/object_transform.h"
 #include "main/dll/dll_0050_cameramodecrawl.h"
 

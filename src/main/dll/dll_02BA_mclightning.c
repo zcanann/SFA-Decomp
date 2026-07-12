@@ -1,7 +1,10 @@
 #define OBJFX_HIT_DETECT_SCALE_SECOND_INT_LEGACY
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/mm.h"
 #include "main/newclouds.h"
+#include "main/objanim_update.h"
 #include "main/objfx.h"
+#include "main/objlib.h"
 #include "main/dll/dll_02BA_mclightning.h"
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"

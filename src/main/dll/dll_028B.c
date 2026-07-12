@@ -13,9 +13,13 @@
  * block at state+0x980, and a ROM-curve walker at state+0x9B0. render()
  * draws the model and the moveLib attachment when visible.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 #include "main/track_dolphin_api.h"
+#include "main/vecmath.h"
 #include "main/dll/moveLib.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/dll/dll_028B.h"

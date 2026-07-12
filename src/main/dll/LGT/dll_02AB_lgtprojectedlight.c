@@ -11,8 +11,10 @@
  * fade and target colour. update just spins the light by its per-axis rotation
  * speeds.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
+#include "main/texture.h"
 #include "main/dll/LGT/dll_02AB_lgtprojectedlight.h"
 
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
@@ -59,10 +61,10 @@ void ProjectedLight_update(GameObject* obj)
 }
 
 #pragma opt_common_subs off
-void ProjectedLight_init(GameObject* obj, int setup)
+void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
 {
     PointLightVec vec;
-    ProjectedLightSetup* setupData = (ProjectedLightSetup*)setup;
+    ProjectedLightSetup* setupData = setup;
     ProjectedLightState* state = (obj)->extra;
 
     vec = *(PointLightVec*)lbl_802C2618;
