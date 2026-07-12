@@ -5057,9 +5057,12 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
 
             dx = bx2 - ax2;
             dz = bz2 - az2;
-            if (dx * dx + dz * dz == __AR_Callback)
-                continue;
-            len = sqrtf(dx * dx + dz * dz);
+            {
+                f32 dd = dx * dx + dz * dz;
+                if (dd == __AR_Callback)
+                    continue;
+                len = sqrtf(dd);
+            }
             dx = dx / len;
             dz = dz / len;
             lb[0] = dx;
