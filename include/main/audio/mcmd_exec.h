@@ -7,9 +7,9 @@
 void mcmdRandomKey(McmdVoiceState *state, McmdCommandArgs *args);
 void SelectSource(McmdVoiceState *svoice, McmdInputSlot *dest, McmdCommandArgs *cstep,
                   u64 tstflag, u32 dirtyFlag);
-u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index);
-int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index);
-void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value);
+s32 varGet32(McmdVoiceState *state, u32 useExCtrl, u8 index);
+s16 varGet(McmdVoiceState *state, u32 useExCtrl, u8 index);
+void varSet32(McmdVoiceState *state, u32 useExCtrl, u8 index, s32 value);
 void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op);
 void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args);

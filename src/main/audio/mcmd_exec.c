@@ -206,7 +206,7 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
 /*
  * Read a 32-bit synth register, either from the voice or EX controller bank.
  */
-u32 varGet32(McmdVoiceState* state, u32 useExCtrl, u32 index)
+s32 varGet32(McmdVoiceState* state, u32 useExCtrl, u8 index)
 {
     if (useExCtrl != 0)
     {
@@ -223,7 +223,7 @@ u32 varGet32(McmdVoiceState* state, u32 useExCtrl, u32 index)
 /*
  * Read a signed 16-bit synth register.
  */
-int varGet(McmdVoiceState* state, u32 useExCtrl, u32 index)
+s16 varGet(McmdVoiceState* state, u32 useExCtrl, u8 index)
 {
     return (s16)varGet32(state, useExCtrl, index);
 }
@@ -237,7 +237,7 @@ static inline s16 varGetSigned(McmdVoiceState* state, u32 useExCtrl, u8 index)
  * Write a synth register, routing high registers to the EX controller bank.
  */
 #pragma dont_inline on
-void varSet32(McmdVoiceState* state, u32 useExCtrl, u32 index, u32 value)
+void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
 {
     if (useExCtrl != 0)
     {
