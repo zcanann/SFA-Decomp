@@ -1,5 +1,11 @@
-#include "main/engine_shared.h"
+#include "main/audio/sfx.h"
+#include "main/camera.h"
+#include "main/frame_timing.h"
+#include "main/gametext.h"
 #include "main/gametext_internal.h"
+#include "main/mm.h"
+#include "main/rcp_dolphin_api.h"
+#include "main/textrender_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 /* In-string formatting control codes (Unicode PUA). */
@@ -13,33 +19,6 @@
 #define LANGUAGE_ITALIAN  3
 #define LANGUAGE_JAPANESE 4
 #define LANGUAGE_SPANISH  5
-
-extern char sMapDirectoryNameArwing[];
-extern char sMapDirectoryNameBoot[];
-extern char sMapDirectoryNameCRFort[];
-extern char sMapDirectoryNameDFPTop[];
-extern char sMapDirectoryNameDesert[];
-extern char sMapDirectoryNameLINKG[];
-extern char sMapDirectoryNameLink[];
-extern char sMapDirectoryNameLinkB[];
-extern char sMapDirectoryNameLinkC[];
-extern char sMapDirectoryNameLinkD[];
-extern char sMapDirectoryNameLinkE[];
-extern char sMapDirectoryNameLinkF[];
-extern char sMapDirectoryNameLinkH[];
-extern char sMapDirectoryNameLinkJ[];
-extern char sMapDirectoryNameMMPass[];
-extern char sMapDirectoryNameNWastes[];
-extern char sMapDirectoryNameShop[];
-extern char sMapDirectoryNameSwapHol[];
-extern char sMapDirectoryNameVolcano[];
-extern char sMapDirectoryNameWarlock[];
-
-extern char sLanguageNameEnglish[];
-extern char sLanguageNameFrench[];
-extern char sLanguageNameGerman[];
-extern char sLanguageNameItalian[];
-extern char sLanguageNameSpanish[];
 
 #pragma auto_inline off
 int isSpace(u32 c)
