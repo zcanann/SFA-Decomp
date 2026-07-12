@@ -969,15 +969,11 @@ extern int lbl_803DCE7C;
 
 int mapGetRomListAndOffsets(int p1, int flag)
 {
-    int tabOff = p1 * 7;
-    int offset0;
-    int tailLen;
+    int tabOff = (p1 * 7) * 4;
+    int offset0 = *(int*)(lbl_803DCE7C + tabOff);
+    int tailLen = *(int*)((lbl_803DCE7C + 0x1c) + tabOff) - offset0;
     int v0, v1, v2;
     int i;
-
-    tabOff *= 4;
-    offset0 = *(int*)(lbl_803DCE7C + tabOff);
-    tailLen = *(int*)((lbl_803DCE7C + 0x1c) + tabOff) - offset0;
 
     mapsBinGetRomlistSize(offset0, &v0, &v1, &v2);
     lbl_803DCEA0 = mmAlloc(tailLen + (v0 + 7 >> 3) + 0x401 + v2, 5, 0);
