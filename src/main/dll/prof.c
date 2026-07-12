@@ -160,9 +160,9 @@ void optionsMenu_openGeneralPanel(void)
 
     lbl_803A87D0[0] =
         (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x366, 0x22, 0, 1, lbl_803DD708[6]);
-    slot[0] = &lbl_803A87D0[0];
-    slot[0][1] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(0x36b, 0x23, 0, 1,
-                                                                                     (s16)(lbl_803DD708[8] == 0));
+    lbl_803A87D0[1] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
+        0x36b, 0x23, 0, 1, (s16)(lbl_803DD708[8] == 0));
+    slot[0] = lbl_803A87D0;
 
     cheatId = 0;
     do
