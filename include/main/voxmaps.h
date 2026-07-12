@@ -139,8 +139,8 @@ extern f32 gVoxMapsHCostScale;
 extern char sVoxMapsDebugStrings[];
 
 int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ);
-void voxmaps_freeRouteWork(void** work);
-void voxmaps_allocRouteWork(void** work);
+void voxmaps_freeRouteWork(RouteState* state);
+void voxmaps_allocRouteWork(RouteState* state);
 void voxmaps_updateTimers(void);
 void voxmaps_gridToWorld(f32* out, s16* grid);
 void voxmaps_worldToGrid(f32* in, s16* out);

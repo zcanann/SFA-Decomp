@@ -58,7 +58,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
-extern void voxmaps_freeRouteWork(void* p);
 extern const f32 lbl_803E1C2C;
 extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
@@ -71,7 +70,6 @@ extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
 extern f32 fn_8029610C(int obj);
-extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
 extern f32 lbl_803E1C40;
 extern f32 lbl_803E1C44;
@@ -84,7 +82,6 @@ extern f32 lbl_803E1C58;
 extern const f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
 extern GameObject* gDll19NearestObj;
-extern void voxmaps_allocRouteWork(u8 * work);
 extern u32 lbl_803E1C28;
 extern u8 lbl_8031A054[];
 extern u8 lbl_8031A048[];
@@ -148,7 +145,7 @@ void dll_19_func12(int* obj, int* state, u8 flag)
             (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
         }
     }
-    voxmaps_freeRouteWork((char*)state + 900);
+    voxmaps_freeRouteWork(&((GroundBaddieState*)state)->routeState);
     if (*(u32*)&((GroundBaddieState*)state)->path != 0)
     {
         mm_free((void*)*(u32*)&((GroundBaddieState*)state)->path);
@@ -522,11 +519,11 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     gridIn[0] = ((GameObject*)self)->anim.localPosX;
                     gridIn[1] = lbl_803E1C68 + ((GameObject*)self)->anim.localPosY;
                     gridIn[2] = ((GameObject*)self)->anim.localPosZ;
-                    voxmaps_worldToGrid(gridIn, gridA);
+                    voxmaps_worldToIntGrid(gridIn, gridA);
                     gridIn[0] = ((GameObject*)obj)->anim.localPosX;
                     gridIn[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
                     gridIn[2] = ((GameObject*)obj)->anim.localPosZ;
-                    voxmaps_worldToGrid(gridIn, gridB);
+                    voxmaps_worldToIntGrid(gridIn, gridB);
                     traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
@@ -917,7 +914,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     }
     if (b1 == 0 && (flags & 0x20) == 0)
     {
-        voxmaps_allocRouteWork(state + 900);
+        voxmaps_allocRouteWork(&((GroundBaddieState*)state)->routeState);
         state[898] = 4;
         state[899] = 20;
     }
@@ -1194,7 +1191,7 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
     world[0] = obj->anim.localPosX;
     world[1] = lbl_803E1C68 + obj->anim.localPosY;
     world[2] = obj->anim.localPosZ;
-    voxmaps_worldToGrid(world, grid0);
+    voxmaps_worldToIntGrid(world, grid0);
     ovr = *(s16**)&obj->anim.parent;
     if (ovr != NULL)
     {
@@ -1210,7 +1207,7 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
         world[0] = obj->anim.localPosX - dist * mathSinf(a);
         world[1] = lbl_803E1C68 + obj->anim.localPosY;
         world[2] = obj->anim.localPosZ - dist * mathCosf(a);
-        voxmaps_worldToGrid(world, grid1);
+        voxmaps_worldToIntGrid(world, grid1);
         if (obj->anim.parent != NULL)
         {
             ok = 1;

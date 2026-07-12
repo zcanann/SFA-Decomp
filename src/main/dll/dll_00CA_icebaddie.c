@@ -795,14 +795,14 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     {
         return 8;
     }
-    route = (int)sub->route35C;
+    route = (int)&sub->routeNav;
     neutralBlend = lbl_803E2D14;
     ((GroundBaddieState*)state)->baddie.moveInputX = neutralBlend;
     ((GroundBaddieState*)state)->baddie.moveInputZ = neutralBlend;
     memcpy((void*)route, &((GameObject*)obj)->anim.localPosX, 0xc);
-    memcpy((void*)(sub->route35C + 0xc),
+    memcpy((void*)sub->routeNav.curPos,
            (void*)&((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX, 0xc);
-    voxmaps_updateRoutePath((RouteNav*)route, (RouteState*)(sub->route35C + 0x28));
+    voxmaps_updateRoutePath(&sub->routeNav, &sub->routeState);
     if (*(u8*)(route + 0x25) == 0)
     {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(

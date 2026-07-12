@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/voxmaps.h"
 
 /*
  * BaddieState - the engine-wide actor-control record that lives at the
@@ -171,7 +172,9 @@ STATIC_ASSERT(offsetof(BaddieState, hitPoints) == 0x354);
  */
 typedef struct GroundBaddieState {
     BaddieState baddie;
-    u8 route35C[0x3DC - 0x35C]; /* route/voxmap buffer handed to gBaddieControlInterface[10] */
+    RouteNav routeNav; /* 0x35c: route destination/current/target and update budget */
+    RouteState routeState; /* 0x384: allocated route nodes, heap, and recovered path */
+    u8 eyeAnimState[0x3DC - 0x3AC];
     void *path; /* rom-curve/path record */
     int savedObjC0; /* obj+0xC0 swap slot around the player-interface update */
     u8 unk3E4[4];
@@ -202,6 +205,9 @@ typedef struct GroundBaddieState {
 } GroundBaddieState;
 
 STATIC_ASSERT(sizeof(GroundBaddieState) == 0x410);
+STATIC_ASSERT(offsetof(GroundBaddieState, routeNav) == 0x35C);
+STATIC_ASSERT(offsetof(GroundBaddieState, routeState) == 0x384);
+STATIC_ASSERT(offsetof(GroundBaddieState, eyeAnimState) == 0x3AC);
 STATIC_ASSERT(offsetof(GroundBaddieState, targetState) == 0x402);
 STATIC_ASSERT(offsetof(GroundBaddieState, control) == 0x40C);
 

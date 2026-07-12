@@ -1,6 +1,20 @@
-#include "main/engine_shared.h"
+#include "main/asset_load.h"
+#include "main/curve.h"
+#include "main/debug.h"
+#include "main/lightmap_api.h"
+#include "main/mldf_fileid.h"
 #include "main/model_engine.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
 #include "main/pi_dolphin.h"
+#include "main/rcp_dolphin_api.h"
+#include "main/shader_api.h"
+#include "main/table_file.h"
+#include "main/voxmaps.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/os/OSReport.h"
 
 #define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
@@ -135,20 +149,20 @@ void Stack_Free(RingBufferQueue* stack)
     mm_free(stack);
 }
 
-void voxmaps_freeRouteWork(void** p)
+void voxmaps_freeRouteWork(RouteState* state)
 {
-    if (p[0] != NULL)
+    if (state->nodes != NULL)
     {
-        mm_free(p[0]);
-        p[0] = NULL;
+        mm_free(state->nodes);
+        state->nodes = NULL;
     }
 }
 
-void voxmaps_allocRouteWork(void** p)
+void voxmaps_allocRouteWork(RouteState* state)
 {
-    p[0] = mmAlloc(0xe88, 0x10, 0);
-    p[1] = (u8*)p[0] + 0xaf0;
-    p[2] = (u8*)p[1] + 0x320;
+    state->nodes = mmAlloc(0xe88, 0x10, 0);
+    state->queue = (CurveHeapNode*)((u8*)state->nodes + 0xaf0);
+    state->pathPoints = (f32*)((u8*)state->queue + 0x320);
 }
 
 void voxmaps_updateTimers(void)

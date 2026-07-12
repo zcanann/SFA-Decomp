@@ -7,7 +7,7 @@
  * (gRomCurveInterface / Curve_AdvanceAlongPath) copying the curve's
  * position/orientation onto the object. dll_CB_seqFn drives an objseq
  * sub-state machine (subMode 0/1/2) handling player tracking, route paths
- * (route35C) and game-bit gating (gameBitC / DllCBPlacement.gameBitId yield).
+ * (routeNav/routeState) and game-bit gating (gameBitC / DllCBPlacement.gameBitId yield).
  * dll_CB_initialise installs the two callback tables gDllCBMoveHandlers /
  * gDllCBStateHandlers used by the player-interface update.
  *
@@ -111,13 +111,13 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     if (*(void**)&state->baddie.targetObj != NULL)
     {
         (*gPlayerInterface)->setState((void*)obj, state, 1);
-        routePath = (char*)sub->route35C;
+        routePath = (char*)&sub->routeNav;
         zero = lbl_803E2E68;
         state->baddie.moveInputX = zero;
         state->baddie.moveInputZ = zero;
         memcpy(routePath, &obj->anim.localPosX, 12);
-        memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 12);
-        voxmaps_updateRoutePath((RouteNav*)routePath, (RouteState*)(sub->route35C + 0x28));
+        memcpy((void*)sub->routeNav.curPos, (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 12);
+        voxmaps_updateRoutePath(&sub->routeNav, &sub->routeState);
         if (state->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)
         {
             return 5;
@@ -227,16 +227,16 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
         d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         state->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    characterDoEyeAnims((GameObject*)(obj), sub->route35C + 0x50);
+    characterDoEyeAnims((GameObject*)(obj), sub->eyeAnimState);
     if ((sub->configFlags & 1) == 0)
     {
         (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(
             obj, (u8*)state, (u8*)&sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
     }
     (*(void (**)(int*, u8*, u8*, int, u8*, int, int, int))(*(int*)gBaddieControlInterface + 0x54))(
-        obj, (u8*)state, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0);
+        obj, (u8*)state, (u8*)&sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0);
     stateResult = (*(int (**)(int*, u8*, u8*, int, u8*, u8*, int, int))(*(int*)gBaddieControlInterface + 0x50))(
-        obj, (u8*)state, sub->route35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
+        obj, (u8*)state, (u8*)&sub->routeNav, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
     if (stateResult >= 4)
     {
         *(s8*)&sub->subMode = 2;
@@ -382,7 +382,7 @@ void dll_CB_update(int* obj)
     if ((sub->flags400 & 2) != 0)
     {
         ((void (*)(int*, u8*, u8*, s16, u8*, int, int, int, int))((int**)*(int**)gBaddieControlInterface)[10])(
-            obj, (u8*)sub, sub->route35C, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
+            obj, (u8*)sub, (u8*)&sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
     if (((int (*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8*)sub, 1) == 0)
