@@ -12,7 +12,13 @@
  * The animEventCallback snapshots tracked-tile positions or resets the
  * object and clears solvedBit.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim_update.h"
+#include "main/objlib.h"
+#include "main/objtexture.h"
 #include "main/debug.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
@@ -37,9 +43,6 @@
 
 #define WCPRESSURES_FOUND_TIMER  5
 #define WCPRESSURES_SOLVED_TIMER 0x1e
-
-#define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
-#define WCPRESSURES_OBJECT_STATE_OFFSET 0xb8
 
 #define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
 #define WCPRESSURES_OBJECT_Y_OFFSET     0x10

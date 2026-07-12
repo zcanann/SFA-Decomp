@@ -16,8 +16,15 @@
  * Per-mode timing/particle parameters come from lbl_8032B720[mode]
  * (RingTable); the optional glow is a ModelLightStruct.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/objhits.h"
+#include "main/vecmath.h"
 #include "main/object_api.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"

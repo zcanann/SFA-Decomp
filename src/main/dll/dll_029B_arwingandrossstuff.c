@@ -17,8 +17,16 @@
  * front of the Arwing; arwprojectile_setLifetime and fn_8022ED74 configure
  * its lifetime and speed; all four are called from wcfloortile.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
+#include "main/pad.h"
+#include "main/vecmath.h"
 #include "main/object_api.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
