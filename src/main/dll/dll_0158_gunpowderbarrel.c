@@ -945,28 +945,28 @@ void gunpowderbarrel_update(GameObject *obj)
  * update/hitDetect callers above (they were extern bls before the
  * re-split, and the retail unit keeps the bls). */
 
-u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((GameObject*)obj)->extra)->heldFlags >> 5) & 1; }
+int gunpowderbarrel_isHeld(GameObject* obj) { return (((GunpowderBarrelState*)obj->extra)->heldFlags >> 5) & 1; }
 
 /* Flag the barrel as held, mark obj active, and clear its physics-sleep bit. */
-void gunpowderbarrel_setHeldState(int* obj)
+void gunpowderbarrel_setHeldState(GameObject* obj)
 {
-    GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
+    GunpowderBarrelState* sub = obj->extra;
     ((GpbHeldFlags*)&sub->heldFlags)->held = 1;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     sub->motionFlags = (u8)(sub->motionFlags & ~2);
 }
 
 /* Zero the barrel's velocity/throw vectors, mark it sleeping, clear
  * obj-active and the held flag. */
-void gunpowderbarrel_clearHeldState(int* obj)
+void gunpowderbarrel_clearHeldState(GameObject* obj)
 {
-    GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
+    GunpowderBarrelState* sub = obj->extra;
     f32 z = lbl_803E42C0;
     sub->throwVelY = z;
     sub->throwVelX = z;
     sub->throwVelZ = z;
     sub->motionFlags = (u8)(sub->motionFlags | 1);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+    *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     sub->fallAccum = z;
     ((GpbHeldFlags*)&sub->heldFlags)->held = 0;
 }
@@ -1003,9 +1003,9 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
     }
 }
 
-void gunpowderbarrel_addThrowVelocity(int* obj, f32* params)
+void gunpowderbarrel_addThrowVelocity(GameObject* obj, f32* params)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     if (((GunpowderBarrelState*)state)->heldByCarryInterface != 0) return;
     if (((GunpowderBarrelState*)state)->fuseFrames != 0) return;
     ((GunpowderBarrelState*)state)->throwVelY = ((GunpowderBarrelState*)state)->throwVelY + params[1];
@@ -1014,9 +1014,9 @@ void gunpowderbarrel_addThrowVelocity(int* obj, f32* params)
     ((GunpowderBarrelState*)state)->motionFlags = (u8)(((GunpowderBarrelState*)state)->motionFlags | 1);
 }
 
-int gunpowderbarrel_canBeGrabbed(int* obj)
+int gunpowderbarrel_canBeGrabbed(GameObject* obj)
 {
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
+    GunpowderBarrelState* state = obj->extra;
     int result = 0;
     if (state->heldByCarryInterface == 0 &&
         state->respawnTimer == lbl_803E42C0 &&

@@ -13,5 +13,10 @@
 void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer);
 void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b);
 void gunpowderbarrel_launchAtTarget(GameObject* obj, u8 flag);
+int gunpowderbarrel_isHeld(GameObject* obj);
+void gunpowderbarrel_setHeldState(GameObject* obj);
+void gunpowderbarrel_clearHeldState(GameObject* obj);
+void gunpowderbarrel_addThrowVelocity(GameObject* obj, f32* velocity);
+int gunpowderbarrel_canBeGrabbed(GameObject* obj);
 
 #endif

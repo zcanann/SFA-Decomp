@@ -53,7 +53,6 @@ extern f32 lbl_803E6BB0;
 extern void cloudClearOverridePosition(int obj);
 extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
-extern void gunpowderbarrel_clearHeldState(int obj);
 extern f32 lbl_803E6CE0;
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(GameObject* obj, int seq, int hitId, int p4, int p5);
@@ -542,10 +541,6 @@ extern f32 lbl_803E6C80;
 extern f32 lbl_803E6C68;
 
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
-extern int gunpowderbarrel_isHeld(int obj);
-extern int gunpowderbarrel_canBeGrabbed(int obj);
-extern void gunpowderbarrel_addThrowVelocity(int obj, void* vec);
-extern void gunpowderbarrel_setHeldState(int obj);
 
 extern int dll_2E_func0A(int a, void* out);
 extern f32 lbl_803E6BB8;

@@ -48,21 +48,24 @@ typedef struct DrbarrelgrState
 {
     s32 mode;
     s32 prevMode;
-    s32 heldBarrel;
-    u8 padC[0x10 - 0xC];
+    GameObject* heldBarrel;
+    f32 timer;
     f32 unk10;
     f32 grabX;
     f32 grabY;
     f32 grabZ;
     RomCurveWalker curve;
     s16 carrySpeed;
-    u8 pad12A[0x12C - 0x12A];
+    DrBarrelGrFlags flags;
+    u8 pad12B;
 } DrbarrelgrState;
 
 STATIC_ASSERT(offsetof(DrbarrelgrState, heldBarrel) == 0x8);
+STATIC_ASSERT(offsetof(DrbarrelgrState, timer) == 0xc);
 STATIC_ASSERT(offsetof(DrbarrelgrState, grabX) == 0x14);
 STATIC_ASSERT(offsetof(DrbarrelgrState, curve) == 0x20);
 STATIC_ASSERT(offsetof(DrbarrelgrState, carrySpeed) == 0x128);
+STATIC_ASSERT(offsetof(DrbarrelgrState, flags) == 0x12a);
 STATIC_ASSERT(sizeof(DrbarrelgrState) == 0x12C);
 
 int DR_BarrelGr_getExtraSize(void);
