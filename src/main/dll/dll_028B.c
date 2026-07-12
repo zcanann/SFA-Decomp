@@ -14,6 +14,7 @@
  * draws the model and the moveLib attachment when visible.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/dll/dll_028B.h"
 

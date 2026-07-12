@@ -14,6 +14,7 @@
 #include "main/dll/headdisplay.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/gameloop_api.h"
 #include "main/dll/dll_02A0_ring.h"
 
 #include "main/audio/sfx_ids.h"

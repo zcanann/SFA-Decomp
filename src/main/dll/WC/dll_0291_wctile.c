@@ -13,6 +13,7 @@
  * FADE_OUT -> FADE_IN re-snaps the position. Bit meanings inferred.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/model.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_0291_wctile.h"
 #include "main/game_object.h"

@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/model.h"
 #include "main/dll/dll_02B3_vortex.h"
 #include "main/gameloop_api.h"
 

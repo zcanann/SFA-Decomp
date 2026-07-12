@@ -32,6 +32,7 @@
  * from use, not confirmed.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/render.h"
 #include "main/game_object.h"

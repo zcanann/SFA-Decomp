@@ -12,6 +12,7 @@
  * arrays) appears only partly wired; behavior is inferred.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/model.h"
 #include "main/game_object.h"
 #include "main/dll/WC/dll_0297_wctemplebri.h"
 

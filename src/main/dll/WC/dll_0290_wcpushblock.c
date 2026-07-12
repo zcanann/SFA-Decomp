@@ -20,6 +20,7 @@
  * co-located in this TU. Offsets/bit values inferred from code.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/gameloop_api.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
 #include "main/dll/WC/dll_0290_wcpushblock.h"

@@ -16,6 +16,7 @@
  * it calls.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/sky_state.h"
 #include "main/game_object.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 

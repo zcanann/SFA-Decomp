@@ -72,16 +72,13 @@ extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
-extern void postRenderSetAlphaBlendState(void);
 
 extern void dll_2E_func03(int obj, int p2);
-extern void characterDoEyeAnims(GameObject* obj, int p2);
 
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);
-extern int gameBitIncrement(int id);
 
 extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
@@ -164,7 +161,6 @@ extern f32 lbl_803E6E38;
 
 extern int getAngle(f32 dx, f32 dz);
 
-extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
 extern void Obj_SetActiveModelIndex(int obj, int index);
 
 #pragma dont_inline on

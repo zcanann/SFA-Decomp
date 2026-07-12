@@ -14,6 +14,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
 #include "main/game_object.h"
+#include "main/model.h"
 
 #define WCAPERTURES_EXTRA_SIZE        8
 #define WCAPERTURES_RENDER_TYPE_BASE  0x400
