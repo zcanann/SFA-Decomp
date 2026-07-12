@@ -55,8 +55,14 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
-#include "main/engine_shared.h"
+#include "main/audio/sfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #define DIMLAVA_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MODEL_LIGHT_KIND_POINT             2
@@ -95,11 +101,7 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern u32 ObjHits_EnableObject();
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void ModelLightStruct_free(void* light);
-extern void queueGlowRender(int* obj);
-extern int modelLightStruct_getActiveState(int* p);
 extern f32 lbl_803E47F0;
-extern void modelLightStruct_updateGlowAlpha(int p);
 extern f32 gDimLavaDebrisGravity, gDimLavaGravity, lbl_803E47F8, lbl_803E47FC;
 extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDimLavaAngleUnitsHalfCircle;
 extern f32 gDimLavaLightAttenNear, gDimLavaLightAttenFar, gDimLavaGlowRadius;
@@ -107,12 +109,6 @@ extern u8 gDimLavaDebrisBaseVec[];
 extern void vecRotateZXY(void* in, void* out);
 
 extern int ObjList_FindObjectById(int id);
-extern u8* objCreateLight(s16* obj, int b);
-extern void modelLightStruct_setLightKind(u8* light, int value);
-extern void modelLightStruct_setDiffuseColor(u8* light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(u8* light, int p3, int p4, int p5, int p6, int p7, f32 a);
-extern void modelLightStruct_setGlowProjectionRadius(u8* light, f32 a);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
@@ -191,11 +187,11 @@ void lavaball1be_free(GameObject* obj)
 void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 {
     Lavaball1beState* state = ((GameObject*)obj)->extra;
-    if ((int*)state->light != NULL)
+    if (state->light != NULL)
     {
-        if (modelLightStruct_getActiveState((int*)state->light) != 0)
+        if (modelLightStruct_getActiveState(state->light) != 0)
         {
-            queueGlowRender((int*)state->light);
+            queueGlowRender(state->light);
         }
     }
     ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E47F0);
@@ -229,7 +225,7 @@ void lavaball1be_init(s16* obj, u8* p)
         f32 vy;
         f32 vxz;
         int* sub;
-        u8* light;
+        ModelLightStruct* light;
         Lavaball1bePlacement* placement = (Lavaball1bePlacement*)p;
 
         ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->spawnRotX << 8);
@@ -254,7 +250,7 @@ void lavaball1be_init(s16* obj, u8* p)
         {
             ((GameObject*)obj)->anim.modelState->flags |= 0x810;
         }
-        *(int*)&state->targetObj = ObjList_FindObjectById(state->linkedId);
+        state->targetObj = (GameObject*)ObjList_FindObjectById(state->linkedId);
         state->flags |= LAVA1BE_FLAG_INACTIVE;
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->objectFlags |= DIMLAVA_OBJFLAG_HITDETECT_DISABLED;
@@ -264,7 +260,8 @@ void lavaball1be_init(s16* obj, u8* p)
         {
             modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0x80, 0, 0);
-            modelLightStruct_setDistanceAttenuation(state->light, gDimLavaLightAttenNear, gDimLavaLightAttenFar);
+            modelLightStruct_setDistanceAttenuation((u8*)state->light, gDimLavaLightAttenNear,
+                                                    gDimLavaLightAttenFar);
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0x80, 0, 0x64, gDimLavaGlowRadius);
             modelLightStruct_setGlowProjectionRadius(state->light, gDimLavaGlowRadius);
         }
@@ -277,7 +274,7 @@ void lavaball1be_update(s16* obj)
     extern int Sfx_PlayFromObject(int* obj, int sfxId);
     extern void Obj_FreeObject(void* o);
     Lavaball1beState* state;
-    int* sub;
+    ObjHitsPriorityState* sub;
 
     if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
@@ -329,14 +326,14 @@ void lavaball1be_update(s16* obj)
             {
                 state->flags &= ~LAVA1BE_FLAG_FALLING;
             }
-            sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
+            sub = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (sub != NULL)
             {
-                *((u8*)sub + 0x6e) = 0xb;
-                *((u8*)sub + 0x6f) = 1;
-                sub[0x48 / 4] = 0x10;
-                sub[0x4c / 4] = 0x10;
-                if (*(void**)&((ObjHitsPriorityState*)sub)->lastHitObject != NULL)
+                sub->hitVolumePriority = 0xb;
+                sub->hitVolumeId = 1;
+                sub->objectHitMask = 0x10;
+                sub->skeletonHitMask = 0x10;
+                if (*(void**)&sub->lastHitObject != NULL)
                 {
                     if (state->explodeCooldown != 0)
                     {
@@ -366,9 +363,9 @@ void lavaball1be_update(s16* obj)
             {
                 state->flags |= LAVA1BE_FLAG_HOMING_OFF;
             }
-            if ((void*)state->light != NULL && modelLightStruct_getActiveState((int*)state->light) != 0)
+            if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
             {
-                modelLightStruct_updateGlowAlpha((int)state->light);
+                modelLightStruct_updateGlowAlpha(state->light);
             }
         }
     }
@@ -384,13 +381,13 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     vxz = gDimLavaVelocityScale * horizSpeed;
-    x = ((GameObject*)state->targetObj)->anim.localPosX;
+    x = state->targetObj->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosX = x;
     ((GameObject*)obj)->anim.localPosX = x;
-    x = ((GameObject*)state->targetObj)->anim.localPosY;
+    x = state->targetObj->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosY = x;
     ((GameObject*)obj)->anim.localPosY = x;
-    x = ((GameObject*)state->targetObj)->anim.localPosZ;
+    x = state->targetObj->anim.localPosZ;
     ((GameObject*)obj)->anim.worldPosZ = x;
     ((GameObject*)obj)->anim.localPosZ = x;
     x = ((GameObject*)obj)->anim.localPosX;
