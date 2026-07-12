@@ -12,6 +12,7 @@
  * course-specific text; commitRingChoice picks the follow-up music.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/lightmap.h"
 #include "main/dll/ARW/dll_02A1_arwlevelcon.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/headdisplay.h"

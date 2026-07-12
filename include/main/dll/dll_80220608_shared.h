@@ -208,7 +208,6 @@ extern f32 lbl_803E7058;
 extern f32 lbl_803E70E0;
 extern f32 lbl_803E7188;
 extern void arwingHudSetVisible(int mode);
-extern void setIsOvercast(int value);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -264,7 +263,6 @@ extern f32 lbl_803E70E8;
 extern void skyFn_80089710(int p1, u8 p2, int p3);
 extern void skyFn_800895e0(int p1, int p2, int p3, int p4, int p5, int p6);
 extern void skyFn_800894a8(int p1, f32 p2, f32 p3, f32 p4);
-extern void setDrawLights(int value);
 extern int mapBlockFn_800592e4(void);
 
 extern f32 lbl_803E7154;
