@@ -115,7 +115,6 @@ extern f32 lbl_803E704C;
 #pragma dont_inline reset
 
 extern f32 lbl_803E7188;
-extern void arwingHudSetVisible(int mode);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -296,7 +295,6 @@ extern f32 lbl_803E6F40;
 
 
 
-extern void registerNewScore(int a, int b, int c, int d);
 
 extern f32 PSVECMag(f32* v);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);

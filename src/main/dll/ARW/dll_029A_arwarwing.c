@@ -27,6 +27,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/maketex.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
 #include "main/object.h"

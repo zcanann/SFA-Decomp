@@ -7,6 +7,7 @@ typedef int (*CMenuGetSelectedItemIntFn)(void);
 
 s16 cMenuGetSelectedItem(void);
 void drawHudBox(s16 x, s16 y, s16 width, s16 height, int alpha, u8 flags);
+int registerNewScore(s8 tableId, int score, u8 kind, int mode);
 
 #define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 

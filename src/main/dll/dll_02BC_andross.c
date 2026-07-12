@@ -19,6 +19,7 @@
  * 0x405/0x4B1/1 the clear/credits transition.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/tricky.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
