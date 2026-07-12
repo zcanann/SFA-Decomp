@@ -26,6 +26,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00CB_dllcb.h"
 #include "main/dll/dll_00CD_iceball.h"
+#include "main/voxmaps.h"
 
 typedef struct DllCBPlacement
 {
@@ -78,7 +79,6 @@ extern f32 lbl_803E2E94;
 extern u64 ObjGroup_RemoveObject();
 extern void Obj_FreeObject(int* obj);
 extern void* memcpy(void* dst, const void* src, int n);
-extern void voxmaps_updateRoutePath(char* a, char* b);
 extern int Obj_GetPlayerObject(void);
 extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
 extern void characterDoEyeAnims(GameObject* obj, u8* a);
@@ -117,7 +117,7 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
         state->baddie.moveInputZ = zero;
         memcpy(routePath, &obj->anim.localPosX, 12);
         memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 12);
-        voxmaps_updateRoutePath(routePath, (char*)(sub->route35C + 0x28));
+        voxmaps_updateRoutePath((RouteNav*)routePath, (RouteState*)(sub->route35C + 0x28));
         if (state->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)
         {
             return 5;

@@ -46,6 +46,7 @@
 #include "main/objlib_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00CD_iceball.h"
+#include "main/voxmaps.h"
 
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
@@ -176,7 +177,6 @@ extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
 
 extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void voxmaps_updateRoutePath(void* from, void* to);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
@@ -804,7 +804,7 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     memcpy((void*)route, &((GameObject*)obj)->anim.localPosX, 0xc);
     memcpy((void*)(sub->route35C + 0xc),
            (void*)&((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX, 0xc);
-    voxmaps_updateRoutePath((void*)route, (void*)(sub->route35C + 0x28));
+    voxmaps_updateRoutePath((RouteNav*)route, (RouteState*)(sub->route35C + 0x28));
     if (*(u8*)(route + 0x25) == 0)
     {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(

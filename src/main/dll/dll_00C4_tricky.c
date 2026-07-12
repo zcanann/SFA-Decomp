@@ -19,6 +19,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_state.h"
 #include "main/gamebit_ids.h"
+#include "main/voxmaps.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -176,8 +177,6 @@ extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-extern int voxmaps_traceLine(void* from, void* to, int coordOut, u8* hit, int skipFirst);
-extern void voxmaps_worldToGrid(Vec* world, void* grid);
 extern void* ObjList_FindObjectById(int objId);
 extern void* getTrickyObject(void);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
@@ -2385,17 +2384,17 @@ u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to)
             probe.y += lbl_803E25A0;
             keepGroundOffset = 0;
         }
-        voxmaps_worldToGrid(&probe, fromGrid);
+        voxmaps_worldToGrid((f32*)&probe, fromGrid);
         probe.x = *(f32*)((int)to + 0);
         probe.y = lbl_803E25A0 + *(f32*)((int)to + 4);
         probe.z = *(f32*)((int)to + 8);
-        voxmaps_worldToGrid(&probe, toGrid);
+        voxmaps_worldToGrid((f32*)&probe, toGrid);
         PSVECSubtract((Vec*)from, &probe, &delta);
         if (PSVECMag(&delta) < enemySightRange)
         {
             if (*(u32*)&(obj)->anim.parent == 0)
             {
-                visible = voxmaps_traceLine(toGrid, fromGrid, 0, traceHit, 0);
+                visible = voxmaps_traceLine((VoxPos*)toGrid, (VoxPos*)fromGrid, NULL, traceHit, 0);
             }
             if ((keepGroundOffset == 0) && (traceHit[0] == 1))
             {
@@ -2433,7 +2432,7 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     probe.x = ((GameObject*)obj)->anim.localPosX;
     probe.y = lbl_803E25A0 + ((GameObject*)obj)->anim.localPosY;
     probe.z = ((GameObject*)obj)->anim.localPosZ;
-    voxmaps_worldToGrid(&probe, baseGrid);
+    voxmaps_worldToGrid((f32*)&probe, baseGrid);
     if (*(u32*)&((GameObject*)obj)->anim.parent != 0)
     {
         baseAngle = *(s16*)obj + **(s16**)&((GameObject*)obj)->anim.parent;
@@ -2455,7 +2454,7 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
         {
             probe.y += lbl_803E25A0;
         }
-        voxmaps_worldToGrid(&probe, probeGrid);
+        voxmaps_worldToGrid((f32*)&probe, probeGrid);
         PSVECSubtract((Vec*)(obj + 0x18), &probe, &delta);
         if (PSVECMag(&delta) < enemySightRange)
         {
@@ -2465,7 +2464,7 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
             }
             else
             {
-                visible = voxmaps_traceLine(probeGrid, baseGrid, 0, traceHit, 0);
+                visible = voxmaps_traceLine((VoxPos*)probeGrid, (VoxPos*)baseGrid, NULL, traceHit, 0);
                 if (traceHit[0] == 1)
                 {
                     visible = 1;
