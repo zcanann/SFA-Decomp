@@ -1118,7 +1118,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     f32 dy2;
     f32 dz;
     f32 scale;
-    f32 rate;
+    register f32 rate;
     f32 dy;
     int rotYMode;
     int rotZMode;
@@ -1175,11 +1175,16 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     rotYMode = a;
     if (rotYMode != 0)
     {
-        f32 t;
+        register f32 t;
         if (rotYMode == 1)
         {
-            t = gGunpowderBarrelAngleUnit - (f32)(u16)((GameObject*)obj)->anim.rotY;
-            t = t * rate;
+            register f32 temp;
+            t = gGunpowderBarrelAngleUnit;
+            temp = (f32)(u16)((GameObject*)obj)->anim.rotY;
+            asm {
+                fsubs temp, t, temp
+                fmuls t, temp, rate
+            }
         }
         else
         {

@@ -605,7 +605,17 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x40;
+            {
+                register u32 mask;
+                register u32 flags;
+                register int stateReg = state;
+                asm {
+                    lwz flags, 0x2dc(stateReg)
+                    li mask, -65
+                    and mask, flags, mask
+                    stw mask, 0x2dc(stateReg)
+                }
+            }
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;

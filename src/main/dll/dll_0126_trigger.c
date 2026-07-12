@@ -127,15 +127,16 @@ void Trigger_initialise(void)
 
 void Trigger_free(GameObject* obj)
 {
-    u8 i;
-    u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
+    register GameObject* object = obj;
+    register u8* entry = *(u8**)&object->anim.placementData + 0x18;
+    register u8 i;
     i = 0;
 
     while (i < 8)
     {
         if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
         {
-            Sfx_StopFromObject((u32)obj, (u16)((entry[2] << 8) | entry[3]));
+            Sfx_StopFromObject((u32)object, (u16)((entry[2] << 8) | entry[3]));
         }
         i++;
         entry += 4;

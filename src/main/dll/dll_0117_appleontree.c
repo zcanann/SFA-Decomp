@@ -634,12 +634,15 @@ void AppleOnTree_update(int objArg)
                                 (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
-                i = 0;
-                do
                 {
-                    (*gPartfxInterface)->spawnObject((void*)obj, APPLEONTREE_PARTFX_BURST, NULL, 2, -1, NULL);
-                    i = i + 1;
-                } while (i < 8);
+                    register int burstIndex;
+                    asm { li burstIndex, 0 }
+                    do
+                    {
+                        (*gPartfxInterface)->spawnObject((void*)obj, APPLEONTREE_PARTFX_BURST, NULL, 2, -1, NULL);
+                        burstIndex = burstIndex + 1;
+                    } while (burstIndex < 8);
+                }
                 if (*(void**)((u8*)obj + 0x54) != 0)
                 {
                     ObjHits_DisableObject(obj);
@@ -727,16 +730,17 @@ void AppleOnTree_update(int objArg)
             }
             else
             {
+                f32 fallScale;
                 val = *(int*)&((GameObject*)obj)->extra;
-                fb = -(*(float*)(val + 4) * *(float*)(val + 0x14) - *(float*)(val + 8)) /
-                     (*(float*)(val + 4) * (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
+                fallScale = -(*(float*)(val + 4) * *(float*)(val + 0x14) - *(float*)(val + 8)) /
+                            (*(float*)(val + 4) * (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
                 fa = *(float*)(val + 8);
                 fc = fa * fa;
                 fc = fc * fc;
                 state = 0x100 - (int)((fc * fc) / *(float*)(val + 0x54));
                 modelIdxPtr = (int*)objFindTexture((GameObject*)obj, 0, 0);
                 *modelIdxPtr = state;
-                *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
+                *(float*)(val + 0x24) = lbl_803E37D0 * fallScale + lbl_803E37CC;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * *(float*)(val + 0x24);
                 Obj_SetActiveModelIndex((GameObject*)obj, 1);
@@ -774,7 +778,9 @@ void AppleOnTree_update(int objArg)
             }
             else
             {
-                val = placement = 0;
+                register int iteration;
+                placement = 0;
+                asm { li iteration, 0 }
                 fd = lbl_803E37D4;
                 while (placement == 0)
                 {
@@ -789,8 +795,8 @@ void AppleOnTree_update(int objArg)
                     {
                         placement = fn_8017DCD4((GameObject*)(obj), state, fc);
                     }
-                    val = val + 1;
-                    if (!((val == 100) || (val != 0x66)))
+                    iteration = iteration + 1;
+                    if (!((iteration == 100) || (iteration != 0x66)))
                         break;
                 }
                 if (lbl_803E37D4 != ((AppleOnTreeState*)state)->dropHeight)
