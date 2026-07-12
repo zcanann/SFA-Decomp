@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -90,7 +91,6 @@ extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void modelLightStruct_setLightKind(void* light, int value);
 extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(void* light, int value);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);

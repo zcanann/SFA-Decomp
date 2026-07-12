@@ -119,7 +119,6 @@ extern void ModelLightStruct_free(void* p);
 extern const f32 lbl_803E3330;
 extern const f32 lbl_803E3354;
 extern const f32 lbl_803E3358;
-extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern const f32 lbl_803E3378;
 extern const f32 lbl_803E337C;
@@ -595,7 +594,7 @@ void Fireball_init(int* obj)
                 modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
                 lightSetField4D((ModelLightStruct*)*(int*)state, 0);
                 modelLightStruct_setPosition(*(int*)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
-                lightSetFieldBC_8001db14(*(int*)state, 1);
+                lightSetFieldBC_8001db14((ModelLightStruct*)*(int*)state, 1);
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(
                     *(int**)state, ((u8*)lbl_80320978)[c],

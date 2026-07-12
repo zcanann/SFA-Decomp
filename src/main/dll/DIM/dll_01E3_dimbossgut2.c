@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/rom_curve_interface.h"
@@ -53,7 +54,6 @@ extern void queueGlowRender(void* light);
 extern int Curve_AdvanceAlongPath(int a, f32 f);
 extern int getAngle(float y, float x);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern void lightSetFieldBC_8001db14(int light, int v);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
@@ -335,7 +335,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     {
         modelLightStruct_setLightKind(((Dimbossgut2Curve*)curve)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(((Dimbossgut2Curve*)curve)->light, 0, 255, 0, 0);
-        lightSetFieldBC_8001db14(((Dimbossgut2Curve*)curve)->light, 1);
+        lightSetFieldBC_8001db14((ModelLightStruct*)((Dimbossgut2Curve*)curve)->light, 1);
         modelLightStruct_setDistanceAttenuation(((Dimbossgut2Curve*)curve)->light, lbl_803E4D2C, lbl_803E4CE0);
         modelLightStruct_setupGlow(((Dimbossgut2Curve*)curve)->light, 0, 0, 255, 0, 127, lbl_803E4D30);
         modelLightStruct_setGlowProjectionRadius(((Dimbossgut2Curve*)curve)->light, lbl_803E4D04);

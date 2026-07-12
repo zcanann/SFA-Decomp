@@ -6,5 +6,6 @@
 typedef struct ModelLightStruct ModelLightStruct;
 
 void lightSetField4D(ModelLightStruct* light, u8 value);
+void lightSetFieldBC_8001db14(ModelLightStruct* light, u8 value);
 
 #endif /* MAIN_MODELLIGHT_API_H_ */

@@ -379,7 +379,6 @@ extern f32 lbl_803E6F20;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void lightSetFieldBC_8001db14(void* light, int v);
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 extern f32 lbl_803E7018;

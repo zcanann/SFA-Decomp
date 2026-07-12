@@ -21,6 +21,7 @@
 extern int getAngle(float y, float x);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -212,7 +213,6 @@ void SB_CloudBall_update(GameObject* obj)
 void SB_CloudBall_init(GameObject* obj)
 {
     extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-    extern void lightSetFieldBC_8001db14(int light, int v);
     extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
     extern void modelLightStruct_setLightKind(int light, int v);
     extern int objCreateLight(int* obj, int mode);
@@ -228,7 +228,7 @@ void SB_CloudBall_init(GameObject* obj)
         {
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
-            lightSetFieldBC_8001db14(state->light, 1);
+            lightSetFieldBC_8001db14((ModelLightStruct*)state->light, 1);
             modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear,
                                                     gSbCloudBallLightAttenFar);
         }

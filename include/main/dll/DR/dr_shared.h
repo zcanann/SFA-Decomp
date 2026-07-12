@@ -204,7 +204,6 @@ extern void Obj_RemoveFromUpdateList(int obj);
 extern f32 lbl_803E68C0;
 extern void modelLightStruct_setEnabled(void* light, int v, f32 f);
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void lightSetFieldBC_8001db14(void* light, int v);
 extern void ObjModel_CopyJointTranslation(void* model, int joint, f32* out);
 extern void objSetMtxFn_800412d4(void* mtx);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);

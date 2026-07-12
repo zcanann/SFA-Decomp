@@ -8,6 +8,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/curve.h"
@@ -71,7 +72,6 @@ extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -265,7 +265,7 @@ void LanternFireFly_update(GameObject* obj)
         {
             modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(light, 100, 0xff, 100, 0);
-            lightSetFieldBC_8001db14(light, 1);
+            lightSetFieldBC_8001db14((ModelLightStruct*)light, 1);
             modelLightStruct_setDistanceAttenuation(light, lbl_803E3A98, lbl_803E3A9C);
             modelLightStruct_setAffectsAabbLightSelection(light, 1);
         }

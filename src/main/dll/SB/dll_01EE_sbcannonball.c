@@ -8,6 +8,7 @@
  * freeing itself. TU: 0x801E341C-0x801E34C0.
  */
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -41,7 +42,6 @@ extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, i
 extern u8* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(u8* p, int v);
 extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
-extern void lightSetFieldBC_8001db14(u8* p, int v);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
 int SB_CannonBall_getExtraSize(void)
