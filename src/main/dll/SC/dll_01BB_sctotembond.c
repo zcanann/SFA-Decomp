@@ -17,6 +17,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
@@ -83,8 +84,6 @@ extern f32 gTotemBondRingRotateSpeed;
 extern f32 gTotemBondCameraDistance;
 extern f32 lbl_803E5650;
 
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_GetPlayerObject(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
 extern float mathSinf(float x);
@@ -234,7 +233,7 @@ static inline void sc_totembond_finishOrbGame(ScTotemBondObject* obj, ScTotemBon
     int player;
 
     state->completionTimer = lbl_803E5654;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     (*gMapEventInterface)->clearRestartPoint();
     (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
     obj->mapAlpha = 0xff;
@@ -268,7 +267,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
     u8 allOrbsCollected;
 
     state = obj->state;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_START_ORBS) != 0)
     {
         state->active = 1;

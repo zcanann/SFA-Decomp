@@ -16,6 +16,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -68,7 +69,6 @@ extern f32 lbl_803E4620;
 
 extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
-extern int Obj_GetPlayerObject(void);
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 extern f32 gCcGasVentAirMeterMax;
@@ -186,7 +186,7 @@ void ccgasventcontrol_update(GameObject* obj)
     case CCGASVENT_STATE_ACTIVE:
         if (b != 0)
         {
-            int player = Obj_GetPlayerObject();
+            int player = (int)Obj_GetPlayerObject();
             ((CcgasventcontrolState*)ex)->fogRise = ((CcgasventcontrolState*)ex)->fogRise + timeDelta / lbl_803E4618;
             if (((CcgasventcontrolState*)ex)->fogRise > gCcGasVentFogRiseMax)
             {
@@ -241,7 +241,7 @@ void ccgasventcontrol_update(GameObject* obj)
         break;
     case CCGASVENT_STATE_SAVE_POINT:
     {
-        int player = Obj_GetPlayerObject();
+        int player = (int)Obj_GetPlayerObject();
         (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
         ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_CLEAR;
         break;

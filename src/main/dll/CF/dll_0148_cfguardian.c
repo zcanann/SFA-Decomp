@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0015_curves.h"
@@ -179,7 +180,6 @@ extern void objSeqInitFn_80080078(void* p, int n);
 extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
-extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
 extern f32 timeDelta;
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -542,7 +542,7 @@ int cfguardian_updateMain(GameObject* obj)
     sub = obj->extra;
     sub->flagsA9B &= ~GUARDIAN_FLAG_PATH_FLYING;
     sub->moveSpeed = lbl_803E4134;
-    player = Obj_GetPlayerObject();
+    player = (char*)Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag((int)obj);
     if (def->variant == 1 && mainGetBit(GAMEBIT_GUARDIAN_CONVERGENCE) == 0)
     {

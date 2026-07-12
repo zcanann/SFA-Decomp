@@ -13,6 +13,7 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -48,7 +49,6 @@ extern f32 lbl_803E5ACC;
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void* Obj_GetPlayerObject(void);
 
 ObjectDescriptor gSPDrapeObjDescriptor = {
     0,
@@ -95,7 +95,7 @@ void spdrape_update(GameObject* obj)
     char* player;
 
     state = (obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (char*)Obj_GetPlayerObject();
     switch ((obj)->anim.currentMove)
     {
     case 0: /* idle: rustle, and swing open when the player is near */
@@ -209,7 +209,7 @@ void spdrape_init(int* obj, u8* def)
     state[2] = mathCosf(gSpDrapePi * (f32)(s32) * (s16*)obj / lbl_803E5ACC);
     state[3] = -(state[1] * ((GameObject*)obj)->anim.localPosX + state[2] * ((GameObject*)obj)->anim.localPosZ);
     ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 0x12c);
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     if (player != NULL)
     {
         if (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ +

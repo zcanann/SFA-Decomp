@@ -12,6 +12,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -41,7 +42,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
-extern int Obj_GetPlayerObject(void);
 extern u32 getSbGalleon(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern u8 Obj_IsLoadingLocked(void);
@@ -162,7 +162,7 @@ void SB_ShipHead_update(GameObject* obj)
 
     object = obj;
     fireCue = 0;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     galleon = *(u8**)&object->anim.parent;
     if (galleon == 0)
     {
@@ -273,7 +273,7 @@ void SB_ShipHead_update(GameObject* obj)
     if ((fireCue == 1) && (Obj_IsLoadingLocked() != 0))
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_gcexp1_c);
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         setup = Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJID);
         ((ObjPlacement*)setup)->posX = lbl_803E5854 + ((GameObject*)player)->anim.worldPosX;
         ((ObjPlacement*)setup)->posY =

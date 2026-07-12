@@ -14,6 +14,8 @@
  */
 #include "main/carryable_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
 
@@ -42,8 +44,6 @@ extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */
 extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */
 extern f32 lbl_803E37C4; /* 60.0: pickup prompt distance */
 
-extern f32 Vec_distance(f32* a, f32* b);
-extern int Obj_GetPlayerObject(void);
 extern u32 playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int x);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -107,7 +107,7 @@ void WM_Column_update(int obj)
                 }
             }
         }
-        playerFlags = Obj_GetPlayerObject();
+        playerFlags = (int)Obj_GetPlayerObject();
         ObjGroup_FindNearestObject(WMCOLUMN_TARGET_OBJGROUP, obj, &nearest);
         playerFlags = playerGetStateFlag310(playerFlags);
         if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4))
@@ -153,7 +153,7 @@ void WM_Column_update(int obj)
                 }
             }
         }
-        playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
+        playerFlags = playerGetStateFlag310((int)Obj_GetPlayerObject());
         if ((playerFlags & 0x4000) != 0)
         {
             (*gCarryableInterface)->setVisible(state, 0);
