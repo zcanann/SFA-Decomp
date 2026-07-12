@@ -87,7 +87,7 @@ extern void s16toFloat(void* p, int duration);
 extern u8 gSnowClawMoveTable[];
 extern f32 lbl_803E66EC;
 extern int gSnowClawDropBombAngle;
-extern void storeZeroToFloatParam(void* p);
+extern void storeZeroToFloatParam(f32* p);
 extern void objSeqInitFn_80080078(void* table, int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objUpdateOpacity(int sub);
@@ -173,7 +173,7 @@ void snowclaw_free(GameObject* obj)
 void snowclaw_init(int* obj, u8* init)
 {
     u8* table;
-    int* inner;
+    SnowclawState* inner;
 
     table = (u8*)(int)gSnowClawMoveTable;
     ((GameObject*)obj)->animEventCallback = snowclaw_animEventCallback;
@@ -209,8 +209,8 @@ void snowclaw_init(int* obj, u8* init)
     ((SnowclawState*)inner)->tickCounter = 0;
     ((SnowclawState*)inner)->attackDelay = 0x64;
     ((SnowclawState*)inner)->unk30 = lbl_803E66EC;
-    storeZeroToFloatParam(&((SnowclawState*)inner)->attackTimer);
-    s16toFloat(&((SnowclawState*)inner)->attackTimer, (s16) * (int*)(table + 0x3c));
+    storeZeroToFloatParam(&inner->attackTimer);
+    s16toFloat(&inner->attackTimer, (s16) * (int*)(table + 0x3c));
     objSeqInitFn_80080078((u8*)(int)gSnowClawMoveTable, 6);
     gSnowClawDropBombAngle = 0x96;
     ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 0;
