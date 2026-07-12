@@ -519,7 +519,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
     f32 absH;
     f32 absV;
     GameObject* nearest;
-    int yawDelta;
+    s16 yawDelta;
     int c;
     int angle;
     int clamped;
