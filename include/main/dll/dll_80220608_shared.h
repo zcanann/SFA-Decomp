@@ -176,7 +176,6 @@ extern f32 lbl_803E704C;
 
 /* Arwing family (untouched: arwarwing, arwarwinggu, arwingandrossstuff, arwlevelcon, arwsquadron). */
 extern int gArwing;
-extern f32 lbl_803E701C;
 extern f32 lbl_803E7058;
 extern f32 lbl_803E70E0;
 extern f32 lbl_803E7188;
@@ -190,14 +189,6 @@ extern void arwingHudSetVisible(int mode);
 
 extern void PSVECNormalize(void* src, void* dst);
 extern void C_VECHalfAngle(void* out, void* a, void* b);
-extern f32 lbl_803E7008;
-extern f32 lbl_803E7014;
-extern f32 lbl_803E7028;
-extern f32 lbl_803E702C;
-extern f32 gArwingAndrossPi;
-extern f32 gArwingAndrossBinAngScale;
-extern f32 lbl_803E7038;
-extern f32 lbl_803E703C;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -222,9 +213,6 @@ extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
 
 extern f32 lbl_803E705C;
 extern f32 lbl_803E7060;
-extern f32 lbl_803DC3D0;
-extern f32 lbl_803DC3D4;
-extern f32 lbl_803DC3D8;
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
 extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
@@ -367,9 +355,6 @@ extern f32 lbl_803E6F20;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E700C;
-extern f32 lbl_803E7010;
-extern f32 lbl_803E7018;
 
 #pragma dont_inline on
 #pragma dont_inline reset
