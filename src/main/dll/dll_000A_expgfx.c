@@ -2986,8 +2986,8 @@ void expgfx_onMapSetup(void)
     ExpgfxRuntimeDataLayout* runtime[1];
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTrackedSourceFrameMask* trackedFrameMasks;
-    u32* poolActiveMasks;
-    s8* poolActiveCounts;
+    u32* poolActiveMasks[1];
+    s8* poolActiveCounts[1];
     s16* poolSlotTypeIds[1];
     u8* poolFrameFlags[1];
     u8* poolSourceModes;
@@ -2998,8 +2998,8 @@ void expgfx_onMapSetup(void)
     runtime[0] = EXPGFX_RUNTIME_DATA;
     expgfxRemoveAll();
 
-    poolActiveMasks = runtime[0]->poolActiveMasks;
-    poolActiveCounts = runtime[0]->poolActiveCounts;
+    poolActiveMasks[0] = runtime[0]->poolActiveMasks;
+    poolActiveCounts[0] = runtime[0]->poolActiveCounts;
     poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
     poolFrameFlags[0] = gExpgfxStaticPoolFrameFlags;
     poolSourceModes = runtime[0]->poolSourceModes;
@@ -3007,15 +3007,15 @@ void expgfx_onMapSetup(void)
 
     for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++)
     {
-        *poolActiveMasks = 0;
-        *poolActiveCounts = 0;
+        *poolActiveMasks[0] = 0;
+        *poolActiveCounts[0] = 0;
         *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
         *poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         *poolSourceModes = EXPGFX_POOL_SOURCE_MODE_STANDALONE;
         *poolSourceIds = 0;
 
-        poolActiveMasks++;
-        poolActiveCounts++;
+        poolActiveMasks[0]++;
+        poolActiveCounts[0]++;
         poolSlotTypeIds[0]++;
         poolFrameFlags[0]++;
         poolSourceModes++;
