@@ -24,6 +24,7 @@
 #include "main/dll/dll_4E.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/gameplay.h"
+#include "main/lightmap.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"
 
@@ -64,7 +65,6 @@ extern s8 lbl_803DD705;  /* transition pending flag */
 extern u8* lbl_803DD708; /* saved volumes at [10..12] */
 extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
-extern void setWidescreen(u8 enabled);
 extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);
 

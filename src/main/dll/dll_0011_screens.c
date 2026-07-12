@@ -33,7 +33,6 @@ extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
 extern void* gameTextGet(int textId);
 extern int getCurGameText(void);
-extern void gameTextLoadDir(int dirId);
 
 void hintTextFn_800ea174(u8* out)
 {

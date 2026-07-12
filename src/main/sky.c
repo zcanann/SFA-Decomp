@@ -14,6 +14,7 @@
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/sky.h"
+#include "main/lightmap.h"
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
 
@@ -171,7 +172,6 @@ extern int lbl_803DB754;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
-extern void setDrawCloudsAndLights(int mode);
 extern void fn_8008C9F4(u8* cfg, u8 flags);
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern void playerEnvFxFn_80088ad4(u8 envFxValue);

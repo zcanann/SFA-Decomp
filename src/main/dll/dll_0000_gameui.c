@@ -296,7 +296,6 @@ extern f32 lbl_803E21CC;
 extern u8 AudioStream_IsPreparing(void);
 extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
-extern void gameTextLoadDir(int dirId);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8* buf);
 extern void Obj_FreeObject(char* obj);

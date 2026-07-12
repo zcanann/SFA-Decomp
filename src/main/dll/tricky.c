@@ -272,7 +272,6 @@ extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern int fn_8011E0D8();
 extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);
-extern void gameTextLoadDir(int dirId);
 extern void* memset(void* p, int v, int n);
 extern void Obj_FreeObject(int* obj);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);

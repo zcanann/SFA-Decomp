@@ -179,7 +179,6 @@ extern f32 lbl_803E68BC;
 extern f32 lbl_803E67A4;
 extern f32 lbl_803E67A8;
 extern int lbl_803DDD40;
-extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);
 extern void skyFn_80088e54(int a, f32 b);
 extern int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);

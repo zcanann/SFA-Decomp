@@ -625,7 +625,6 @@ extern void loadTaskTexts(void);
 
 extern int getDataFileSize(int id);
 
-extern void setDrawCloudsAndLights(int v);
 
 extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];

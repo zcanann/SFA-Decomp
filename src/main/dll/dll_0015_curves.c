@@ -28,6 +28,8 @@
 #include "main/camera_interface.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
+#include "main/lightmap.h"
+#include "main/textrender.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include <string.h>
@@ -90,8 +92,6 @@ extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int
 extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
-extern void setWidescreen(u8 enabled);
-extern void setSubtitlesEnabled(u8 enabled);
 extern void setRumbleEnabled(u8 enabled);
 extern void audioSetSoundMode(int mode, u8 forceFlag);
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);

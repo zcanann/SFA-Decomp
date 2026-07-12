@@ -14,12 +14,18 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll/dll_4E.h"
+#include "main/frame_timing.h"
+#include "main/gametext.h"
+#include "main/gameplay_runtime.h"
+#include "main/lightmap.h"
+#include "main/pad.h"
 #include "main/screen_transition.h"
+#include "main/textrender.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/dll_4D.h"
 #include "main/dll/FRONT/title_menu.h"
-#include "main/engine_shared.h"
 #include "main/dll/savedata_struct.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/dll_0037_optionsscreen.h"
@@ -58,10 +64,6 @@ extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void titleScreenShowCopyright(u8 arg);
-extern void gameTextLoadDir(int dirId);
-extern void setDrawCloudsAndLights(int v);
-extern void setWidescreen(u8 enabled);
-extern void setSubtitlesEnabled(u8 enabled);
 
 #pragma scheduling off
 #pragma peephole off

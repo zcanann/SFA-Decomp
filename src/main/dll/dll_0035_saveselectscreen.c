@@ -67,7 +67,6 @@ typedef struct SaveSelectPanel
 /* texture asset loaded into gSaveSelectTexture */
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
 
-extern void gameTextLoadDir(int dirId);
 
 extern s8 gSaveSelectPanelIndex;
 extern u8 lbl_803DB424;
