@@ -5372,7 +5372,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 *sp1, *sp2;
     u8* slotp;
     f32* outp;
-    f32 *wyp, *wzp, *syp, *szp;
+    f32 *szp, *syp, *wzp, *wyp;
     f32 *edge1p, *edge2p, *vbp, *evecp;
     u8* typeSlotp;
     s16 i;
@@ -5419,7 +5419,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     u8 found;
     s16 hit;
 
-    descEnd = gActiveTrackBlockCount + (descBase = gTrackBlockDescriptors);
+    descEnd = (descBase = gTrackBlockDescriptors) + gActiveTrackBlockCount;
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5432,8 +5432,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     sp2 = (f32*)startPos;
     slotp = slots;
     outp = slots;
-    szp = &ws[2];
     syp = &ws[1];
+    szp = &ws[2];
     wzp = &we[2];
     wyp = &we[1];
     edge1p = edge1;
