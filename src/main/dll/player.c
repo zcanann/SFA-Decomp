@@ -5119,9 +5119,7 @@ int playerStateAimStaff(int obj, int state)
             {
                 int z[2];
                 void** p[1];
-                z[0] = 0;
-                lbl_803DE42C = z[0];
-                z[1] = z[0];
+                z[1] = lbl_803DE42C = z[0] = 0;
                 p[0] = gPlayerSpawnedObjects;
                 do
                 {
