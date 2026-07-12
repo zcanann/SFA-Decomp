@@ -15,8 +15,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/player_api.h"
 
-extern void* playerGetFocusObject(void* obj);
 
 #define PLAYER_VTABLE_GET_MODE 0x48
 

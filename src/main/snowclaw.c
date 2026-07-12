@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
@@ -81,7 +82,6 @@ typedef struct SnowClawBombSetup
     s16 launchAngle; /* 0x1a */
 } SnowClawBombSetup;
 
-extern int playerGetFocusObject(int obj);
 extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern void s16toFloat(void* p, int duration);
 extern u8 gSnowClawMoveTable[];
@@ -522,7 +522,7 @@ void snowclaw_hitDetect(GameObject* obj)
                 ((SnowclawState*)inner)->velY = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
                 ((SnowclawState*)inner)->velZ =
                     lbl_803E6728 * mathCosf(gSnowClawPi * (f32)obj->anim.rotX / lbl_803E6730);
-                player = (int*)playerGetFocusObject((int)Obj_GetPlayerObject());
+                player = (int*)playerGetFocusObject(Obj_GetPlayerObject());
                 if (player != 0)
                 {
                     int* sub3 = ((GameObject*)player)->extra;

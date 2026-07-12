@@ -19,6 +19,7 @@
  * input-override state round it out.
  */
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/dll/player_api.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -286,7 +287,6 @@ extern void* Shader_getLayer(char* base, int idx);
 extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
 extern int objIsCurModelNotZero(void* obj);
-extern int playerGetFocusObject(int* player);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
 extern int getAngle(float y, float x);
@@ -1345,7 +1345,7 @@ void hudDrawFn_80121440(void)
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
         if (!(base->magicCur > lbl_803E1F9C && base->magicCur < lbl_803E1FA8 && ((int)base->magicCur & 8)) &&
             !(base->scarabCur > *(f32*)&lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 && ((int)base->scarabCur & 8)) &&
-        !(cell == 0 && (void*)playerGetFocusObject((int*)player) != NULL))
+        !(cell == 0 && playerGetFocusObject((GameObject*)player) != NULL))
         {
             for (i = 0; (int)(u8)i < (base->magicCount >> 2); i++)
             {

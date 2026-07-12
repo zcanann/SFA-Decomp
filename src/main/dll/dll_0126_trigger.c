@@ -25,6 +25,7 @@
  * any sfx the trigger started.
  */
 #include "main/dll/DR/hightop.h"
+#include "main/dll/player_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -104,7 +105,6 @@ extern void mainSetBits(int eventId, int value);
 extern int getTrickyObject(void);
 extern void gameTextFn_80125ba4(int id);
 extern void envFxFn_800887cc(void);
-extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
 extern void objSeqFn_801992ec(GameObject* obj, int target);
@@ -781,7 +781,7 @@ void Trigger_hitDetect(GameObject* obj)
         triggerObj = (int)Obj_GetPlayerObject();
         if ((void*)triggerObj != NULL)
         {
-            inside = playerGetFocusObject();
+            inside = (int)playerGetFocusObject((GameObject*)triggerObj);
             if ((void*)inside != NULL)
             {
                 triggerObj = inside;

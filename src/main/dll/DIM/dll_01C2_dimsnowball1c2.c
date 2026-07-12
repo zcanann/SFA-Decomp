@@ -5,6 +5,7 @@
  * from the placement params and resets the spawn countdown.
  */
 #include "main/dll/dimicewallstate_struct.h"
+#include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -55,7 +56,6 @@ typedef struct Dimsnowball1c2Setup
 extern f32 lbl_803E4860;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 framesThisStep;
-extern u32 playerGetFocusObject(int player);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 lbl_803E4864;
@@ -88,7 +88,7 @@ void dimsnowball1c2_update(int* obj)
         int* extra = ((GameObject*)obj)->extra;
         if ((*(s16*)extra -= framesThisStep) <= 0)
         {
-    if (playerGetFocusObject((int)Obj_GetPlayerObject()) == 0)
+    if (playerGetFocusObject(Obj_GetPlayerObject()) == NULL)
             {
                 ObjPlacement* np;
                 Dimsnowball1c2Placement* def;

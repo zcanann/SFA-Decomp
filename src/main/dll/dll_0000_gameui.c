@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/player_api.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/objseq_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -411,7 +412,6 @@ extern s8 gCMenuCloseSfx;
 extern void* gameTextGetBox(int box);
 extern void gameTextAppendStr(char* str, int arg2);
 extern int cMenuSetItems(int handle, int flag);
-extern void* playerGetFocusObject(void* player);
 
 /* ===== EN v1.0 retargeted leaves ========================================== */
 /* Getter for the u8 at gPauseMenuTokenConfirmFlag. */
@@ -2628,7 +2628,7 @@ void pauseMenuFn_80129ee0(void)
     if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
         (player != 0 &&
          coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
-         playerGetFocusObject(player) != 0))
+         playerGetFocusObject((GameObject*)player) != NULL))
     {
         menuMax = 4;
     }
@@ -3612,7 +3612,7 @@ void pauseMenuAnimateCarousel(void)
     if (player != NULL)
     {
         flag = (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
-                playerGetFocusObject(player) == 0);
+                playerGetFocusObject((GameObject*)player) == NULL);
     }
     else
     {
@@ -4030,7 +4030,7 @@ void GameUI_update(void)
         if (lbl_803DD75B != 0)
             timeListFn_8012be84();
 
-        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
+        if (playerGetFocusObject((GameObject*)player) != NULL || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0)
         {
             buttonDisable(0, 0xf0000);
@@ -4047,7 +4047,7 @@ void GameUI_update(void)
             }
         }
 
-        if (playerGetFocusObject(player) != 0 || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
+        if (playerGetFocusObject((GameObject*)player) != NULL || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
             (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || shouldCloseCMenu != 0 ||
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0)
         {

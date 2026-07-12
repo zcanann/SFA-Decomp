@@ -16,6 +16,7 @@
  * Hit state is packed into a one-byte flag word (LandedArwingHitFlagBits).
  */
 #include "main/obj_placement.h"
+#include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -103,7 +104,6 @@ extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern int playerGetFocusObject(int obj);
 
 typedef struct LandedArwingFxPoint
 {
@@ -505,7 +505,7 @@ void landed_arwing_update(GameObject* obj)
         arwarwinggu_applyTextureFrame(state->childObject);
     }
 
-    if ((u32)player != 0 && (u32)playerGetFocusObject(player) != 0)
+    if ((u32)player != 0 && playerGetFocusObject((GameObject*)player) != NULL)
     {
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }

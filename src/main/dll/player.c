@@ -235,10 +235,10 @@ f32 fn_802966F4(GameObject* obj)
     return inner->probeHitDist;
 }
 
-int playerGetFocusObject(int obj)
+GameObject* playerGetFocusObject(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
-    return inner->focusObject;
+    PlayerState* inner = obj->extra;
+    return (GameObject*)inner->focusObject;
 }
 
 int EmissionController_IsLingering(GameObject* obj)

@@ -18,6 +18,7 @@
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/objprint_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -63,7 +64,6 @@ extern f32 lbl_803E3458;
 extern f32 gCollectibleLaunchSpeed;
 extern f32 gCollectibleLaunchAngle;
 extern f32 lbl_803E348C;
-extern u8* playerGetFocusObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(u8 * player);
 extern f32 gCollectiblePickupRange;
@@ -860,7 +860,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
     {
         return;
     }
-    focus = playerGetFocusObject();
+    focus = (u8*)playerGetFocusObject((GameObject*)player);
     if (focus == NULL)
     {
         focus = (u8*)player;

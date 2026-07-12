@@ -17,6 +17,7 @@
  * defined in another DR DLL translation unit.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/dll/player_api.h"
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
@@ -185,7 +186,7 @@ void drakord_thornbush_update(GameObject* obj)
         switch ((obj)->anim.seqId)
         {
         case THORNBUSH_SEQ_THORN:
-            if (playerGetFocusObject((int)Obj_GetPlayerObject()) != NULL)
+            if (playerGetFocusObject(Obj_GetPlayerObject()) != NULL)
             {
                 ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
                 ObjHits_EnableObject((u32)obj);

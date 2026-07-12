@@ -976,7 +976,6 @@ void playerSetInCutscene(GameObject* obj);
 void playerSetCutsceneCameraFlag(GameObject* obj);
 void playerSetOverrideParentSlack(GameObject* obj);
 u32 playerGetStateFlag310(GameObject* obj);
-int playerGetFocusObject(int obj);
 void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8);
 int fn_80297498(void);
 int playerState41(GameObject* obj, int state, f32 fv);

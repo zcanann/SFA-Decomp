@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/tricky_api.h"
+#include "main/dll/player_api.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
@@ -53,7 +54,7 @@ void drearthcal_update(GameObject* obj)
 
     player = Obj_GetPlayerObject();
     searchDist = lbl_803E6C08;
-    if (playerGetFocusObject() != NULL)
+    if (playerGetFocusObject(player) != NULL)
     {
         obj->anim.resetHitboxFlags &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
         if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)

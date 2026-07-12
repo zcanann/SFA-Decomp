@@ -14,6 +14,7 @@
  * Most of the mode's vtable slots are empty no-op stubs.
  */
 #include "main/mm.h"
+#include "main/dll/player_api.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
@@ -30,7 +31,6 @@ extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
 extern int getAngle(float y, float x);
-extern int playerGetFocusObject(int obj);
 
 void CameraModeCloudRunner_copyToCurrent(void)
 {
@@ -59,7 +59,7 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 matrix[16];
 
     Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
-    curve = (u8*)playerGetFocusObject((int)target);
+    curve = (u8*)playerGetFocusObject(target);
     if (curve != NULL)
     {
         if (*(s16*)(curve + 70) == CLOUDRUNNER_CURVE_TAG)

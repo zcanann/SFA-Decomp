@@ -215,7 +215,6 @@ extern f32 fn_80291FF4(f32 x);
 
 
 
-extern void* playerGetFocusObject(void);
 
 
 

@@ -1,4 +1,5 @@
 #include "main/crcloudrace.h"
+#include "main/dll/player_api.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
@@ -8,7 +9,6 @@ typedef void (*CrCloudRaceRenderScaleFn)(double scale);
 extern f32 lbl_803E6748;
 extern f32 lbl_803E6740;
 extern f32 lbl_803E6744;
-extern u32 playerGetFocusObject(int obj);
 
 ObjectDescriptor gCrCloudRaceObjDescriptor = {
     0,
@@ -50,7 +50,8 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
     {
         mainSetBits(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME, 1);
         setMotionBlur(0, lbl_803E6744);
-        if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 && playerGetFocusObject(player) == 0)
+        if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 &&
+            playerGetFocusObject((GameObject*)player) == NULL)
         {
             near = ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, obj, &dist);
             if (near != 0)
@@ -79,7 +80,7 @@ void crcloudrace_updateRaceState(int obj)
         {
             mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 1);
         }
-        if (playerGetFocusObject(player) != 0)
+        if (playerGetFocusObject((GameObject*)player) != NULL)
         {
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 1);
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 1);

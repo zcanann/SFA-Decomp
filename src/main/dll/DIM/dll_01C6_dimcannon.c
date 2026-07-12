@@ -5,6 +5,7 @@
  * The 0x1D6 sub-variant is a falling-debris prop shared with DIMwooddoor.
  */
 #include "main/dll/DIM/dimcannon_state.h"
+#include "main/dll/player_api.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -47,7 +48,6 @@ extern f32 lbl_803E48B8;
 extern void DIMwooddoor_updateShardAim(GameObject* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void* playerGetFocusObject(void* player);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -254,7 +254,7 @@ void DIMCannon_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (playerGetFocusObject(player) != 0)
+    if (playerGetFocusObject((GameObject*)player) != NULL)
     {
         *(int*)&((DimCannonState*)state)->targetPlayer = 0;
     }

@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/player_objects.h"
+#include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"
 #include "main/objfx.h"
@@ -297,8 +298,8 @@ void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char
 int drlasercannon_getTrackedTarget(int obj, int* arg)
 {
     int* tricky = getTrickyObject();
-    void* player;
-    void* target;
+    GameObject* player;
+    GameObject* target;
     int cooldown;
     if (tricky != 0 && arg != 0 &&
         (u8)(*(int (**)(int*))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x40))(tricky))
@@ -315,12 +316,12 @@ int drlasercannon_getTrackedTarget(int obj, int* arg)
     player = Obj_GetPlayerObject();
     if (player != 0)
     {
-        target = (void*)playerGetFocusObject();
-        if (target != 0 && (((GameObject*)target)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
+        target = playerGetFocusObject(player);
+        if (target != 0 && (target->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
             return (int)target;
         }
-        if ((((GameObject*)player)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
+        if ((player->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
             return (int)player;
         }
