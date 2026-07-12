@@ -18,7 +18,7 @@ typedef struct TreasureChestSetup
 } TreasureChestSetup;
 
 void staffactivated_init(int obj, int setup);
-int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int TreasureChest_getExtraSize(void);
 int TreasureChest_getObjectTypeId(void);
 void TreasureChest_free(void);
