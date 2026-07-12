@@ -106,7 +106,7 @@ void lightfoot_free(GameObject* obj, int flag)
             ObjLink_DetachChild(obj, child);
             if (flag == 0)
             {
-                Obj_FreeObject((int)child);
+                Obj_FreeObject(child);
             }
         }
     }
@@ -130,7 +130,7 @@ void lightfoot_update(GameObject* obj)
         ((LightfootSub*)anim)->lifeTimer = fv - timeDelta;
         if (((LightfootSub*)anim)->lifeTimer <= limit)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
     }
 

@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objseq_api.h"
@@ -443,7 +444,6 @@ extern void cutsceneEnterExit(int a, int b);
 extern f32 lbl_803E8060;
 extern f32 lbl_803E7F4C;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void Obj_FreeObject(int obj);
 extern int* gBaddieControlInterface;
 extern int fn_802AC7DC(int a, int b, int c, f32 fv);
 extern int lbl_80332EC0[];
@@ -527,8 +527,6 @@ extern f32 lbl_803E7F44;
 extern const f32 lbl_803E7EE0;
 extern f32 lbl_803E8038;
 extern f32 lbl_803E7F34;
-extern int Obj_AllocObjectSetup();
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 Camera_GetFovY(void);
 extern f32 Camera_GetAspectRatio(void);
 extern int getScreenResolution(void);
@@ -614,8 +612,6 @@ extern f32 lbl_803E811C;
 extern f32 lbl_803E80E4;
 extern const f32 lbl_803E7ED8;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern int Obj_AllocObjectSetup();
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern int gPlayerEggObject;
 extern int gPlayerStaffObject;
 extern int gPlayerModelChain;
