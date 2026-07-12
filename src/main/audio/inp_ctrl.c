@@ -16,7 +16,6 @@ extern AuxInputSlots lbl_803BDEF4;
 extern u32 lbl_803D3CA0[];
 extern u32 lbl_8032FFE0[];
 extern u32 lbl_8032FFF0[];
-extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 
 s16 sndSintab[1036] = {
     0,    6,    12,   18,   25,   31,   37,   43,   50,   56,   62,   69,   75,   81,   87,   94,   100,  106,  113,

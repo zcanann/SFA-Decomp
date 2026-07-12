@@ -11,7 +11,6 @@
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/mcmd_wait.h"
 extern int mcmdLoop();
-extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
 extern u8* synthVoice;
 extern u8 lbl_803BD150[];
 extern int macActiveRoot;
