@@ -17,6 +17,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "main/vecmath.h"
+#include "main/camera.h"
 
 #define BONE_PARTICLE_EFFECT_PARTFX       0x28c
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
@@ -48,7 +49,6 @@ extern const f32 lbl_803DF4BC;
 extern f32 lbl_803DF4C0;
 extern f32 lbl_803DF4C4;
 
-extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
@@ -296,7 +296,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
-    Camera_LoadModelViewMatrix(ctx, renderParam, &vtx, lbl_803DF4B8, lbl_803DF4A8, 0);
+    ((void (*)(void*, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
+        ctx, renderParam, &vtx, lbl_803DF4B8, lbl_803DF4A8, 0);
     GXSetCullMode(GX_CULL_NONE);
     _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();

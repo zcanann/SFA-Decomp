@@ -16,6 +16,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/camera.h"
 
 #define DFROPENODE_OBJGROUP 0x17
 
@@ -26,7 +27,6 @@ extern f32 gRopeNodeMaxDistance;
 extern f32 gRopeNodeDamping;
 extern const f32 gRopeNodeBoundsMargin;
 
-extern void Camera_LoadModelViewMatrix(int unused0, int unused1, int obj, f32 scale, f32 unused, int p6);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textRenderSetupFn_80079804(void);
@@ -433,7 +433,8 @@ void dfropenode_render(int obj, int p2, int p3)
     {
         originalScale = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4DF8;
-        Camera_LoadModelViewMatrix(0, p3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
+        ((void (*)(int, int, int, f32, f32, int))Camera_LoadModelViewMatrix)(
+            0, p3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
         ((GameObject*)obj)->anim.rootMotionScale = originalScale;
         textureSetupFn_800799c0();
         textRenderSetupFn_800795e8();

@@ -50,7 +50,6 @@ extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern f32 fn_8008ED88(void);
 extern void fn_8008EDE8(f32* pos);
-extern void Camera_RebuildProjectionMatrix(void);
 extern void textureSetupFn_800799c0(void);
 extern void gxTextureFn_800794e0(void);
 extern void textRenderSetupFn_80079804(void);

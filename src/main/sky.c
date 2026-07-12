@@ -11,6 +11,7 @@
 #include "main/frame_timing.h"
 #include "main/fileio.h"
 #include "main/gameplay_runtime.h"
+#include "main/camera.h"
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
@@ -188,16 +189,11 @@ extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32 mtx[3][4], int flags);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
-extern s16* Camera_GetCurrentViewSlot(void);
 extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
 extern void modelLightStruct_getWorldPosition(u8* p, f32* a, f32* b, f32* c);
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
-extern f32* Camera_GetInverseViewMatrix(void);
-extern f32 Camera_GetFarPlane(void);
-extern void Camera_SetFarPlane(f32 dist, int mode);
-extern void Camera_RebuildProjectionMatrix(void);
 extern void vecRotateZXY(void* rot, f32* vec);
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
@@ -236,7 +232,6 @@ extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
 extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i);
 extern int coordsToMapCell(f32 x, f32 z);
-extern f32 Camera_GetFovY(void);
 extern u32 getScreenResolution(void);
 extern void* memset(void* dst, int c, int n);
 extern u8* saveGameGetEnvState(void);
@@ -1323,7 +1318,7 @@ void sky2_run(void)
     u8 red;
     u8 green;
     u8 blue;
-    s16* cam;
+    CameraViewSlot* cam;
     u8** pp;
     int i;
     u8* p;
@@ -1415,7 +1410,7 @@ void sky2_run(void)
     q.y = zv;
     q.z = zv;
     q.w = lbl_803DF114;
-    *(s16*)&q.rx = -cam[0];
+    *(s16*)&q.rx = -cam->yaw;
     q.rz = 0;
     q.ry = 0;
     vecRotateZXY(&q, vec);
@@ -2803,7 +2798,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     SkyVec3 sunDir;
     SkyVec3 moonDir;
     int v;
-    s16* cam;
+    CameraViewSlot* cam;
     f32 far;
     f32 yaw;
     f32 scale;
@@ -2905,12 +2900,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         gSkySunDirection[0] = vec[0];
         gSkySunDirection[1] = vec[1];
         gSkySunDirection[2] = vec[2];
-        ((GameObject*)gSkySunObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)vec[0];
-        ((GameObject*)gSkySunObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)vec[1];
-        ((GameObject*)gSkySunObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)vec[2];
+        ((GameObject*)gSkySunObject)->anim.localPosX = cam->worldX + (f32)(s16)(int)vec[0];
+        ((GameObject*)gSkySunObject)->anim.localPosY = cam->worldY + (f32)(s16)(int)vec[1];
+        ((GameObject*)gSkySunObject)->anim.localPosZ = cam->worldZ + (f32)(s16)(int)vec[2];
         ((GameObject*)gSkySunObject)->anim.rootMotionScale = gSkySunMoonScale * scale;
-        *(s16*)gSkySunObject = 0x10000 - cam[0];
-        ((GameObject*)gSkySunObject)->anim.rotY = cam[1];
+        *(s16*)gSkySunObject = 0x10000 - cam->yaw;
+        ((GameObject*)gSkySunObject)->anim.rotY = cam->pitch;
         ((GameObject*)gSkySunObject)->anim.rotZ = 0;
         gSkySunObject[0x37] = *(s16*)&gSkySunAlpha;
         time2 = ((SkyState*)gSkyState)->timeOfDay;
@@ -2985,12 +2980,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         gSkyMoonDirection[0] = vec[0];
         gSkyMoonDirection[1] = vec[1];
         gSkyMoonDirection[2] = vec[2];
-        ((GameObject*)gSkyMoonObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)vec[0];
-        ((GameObject*)gSkyMoonObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)vec[1];
-        ((GameObject*)gSkyMoonObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)vec[2];
+        ((GameObject*)gSkyMoonObject)->anim.localPosX = cam->worldX + (f32)(s16)(int)vec[0];
+        ((GameObject*)gSkyMoonObject)->anim.localPosY = cam->worldY + (f32)(s16)(int)vec[1];
+        ((GameObject*)gSkyMoonObject)->anim.localPosZ = cam->worldZ + (f32)(s16)(int)vec[2];
         ((GameObject*)gSkyMoonObject)->anim.rootMotionScale = gSkySunMoonScale * scale;
-        *(s16*)gSkyMoonObject = 0x10000 - cam[0];
-        ((GameObject*)gSkyMoonObject)->anim.rotY = cam[1];
+        *(s16*)gSkyMoonObject = 0x10000 - cam->yaw;
+        ((GameObject*)gSkyMoonObject)->anim.rotY = cam->pitch;
         ((GameObject*)gSkyMoonObject)->anim.rotZ = 0;
         vis = 0;
         ((u8*)gSkyMoonObject)[0x37] = *(s16*)&gSkyMoonAlpha;
@@ -3037,7 +3032,7 @@ void skyFn_8008aee8(void)
     int texA;
     int texB;
     u8* texC;
-    s16* cam;
+    CameraViewSlot* cam;
     GameObject* player;
     int cell;
     u8* tbl;
@@ -3181,8 +3176,8 @@ void skyFn_8008aee8(void)
         widthF = (f32)(u32) * (u16*)(texC + 0xc);
         sinProd = widthF * frac / lbl_803DF0D8;
         sinProd *= lbl_803DF0DC;
-        sinProd *= mathCosf(gSkyPi * (f32)-cam[0x2a] / lbl_803DF0E4);
-        angle = widthF * lbl_803DF068 - lbl_803DF0E8 - lbl_803DF0DC * (widthF * cam[0x29]) / lbl_803DF0E4 + sinProd;
+        sinProd *= mathCosf(gSkyPi * (f32)-cam->worldRoll / lbl_803DF0E4);
+        angle = widthF * lbl_803DF068 - lbl_803DF0E8 - lbl_803DF0DC * (widthF * cam->worldPitch) / lbl_803DF0E4 + sinProd;
         angle *= lbl_803DF0EC;
         (*gSky2Interface)->applyTextColor(0);
         GXSetFog(GX_FOG_NONE, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
