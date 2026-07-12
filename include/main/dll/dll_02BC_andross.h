@@ -3,8 +3,10 @@
 
 #include "ghidra_import.h"
 #include "global.h"
-
-typedef struct GameObject GameObject;
+#include "main/game_object.h"
+#include "main/object_descriptor.h"
+#include "main/obj_placement.h"
+#include "main/vec_types.h"
 
 /*
  * AndrossState - andross.c's obj+0xB8 extra record (andross_getExtraSize =
@@ -30,7 +32,7 @@ typedef struct AndrossState {
     union {
         struct {
             GameObject* spawnObj[4]; /* 0x18: ObjList_FindObjectById(gAndrossSpawnObjectIds[i]) */
-            SunVec3 spawnDelta[4]; /* 0x28: spawnObj[i] world pos - Andross local pos */
+            Vec3f spawnDelta[4]; /* 0x28: spawnObj[i] world pos - Andross local pos */
         };
         struct {
             u8 unk18[0x20 - 0x18];
@@ -110,7 +112,7 @@ typedef struct AndrossState {
             f32 velY; /* horizontal velocity = clampedDist * cos(yaw), minus damped arwing vel */
             f32 velZ;
         };
-        SunVec3 velocity;
+        Vec3f velocity;
     };
     f32 soundTimer; /* += timeDelta; on threshold plays sfx 0x46f and latches a flag */
     union {
@@ -134,8 +136,83 @@ STATIC_ASSERT(offsetof(AndrossState, partHealth) == 0xAE);
 STATIC_ASSERT(offsetof(AndrossState, partHitTimer) == 0xB2);
 STATIC_ASSERT(offsetof(AndrossState, partTextureState) == 0xB9);
 
-int andross_SeqFn(GameObject* obj);
+extern ObjectDescriptor gAndrossObjDescriptor;
+
+extern f32 gAndrossMoveAnimSpeeds[23];
+extern f32 gAndrossZero;
+extern f32 gAndrossSwayAmplitudeX;
+extern f32 gAndrossSwayAmplitudeY;
+extern f32 gAndrossMissileClampRange;
+extern f32 gAndrossMissileVelocityScale;
+extern f32 gAndrossMissileForwardVelocity;
+extern f32 gAndrossCentralMissileClampRange;
+extern f32 gAndrossCentralMissileVelocityScale;
+extern f32 gAndrossCentralMissileForwardVelocity;
+extern f32 gAndrossArwingApproachVelocityScale;
+extern f32 gAndrossSpawnRandX;
+extern f32 gAndrossSpawnRandY;
+extern f32 gAndrossSpawnRandZ;
+extern f32 gAndrossSpawnOffsetY;
+extern f32 gAndrossSpawnOffsetZ;
+extern f32 gAndrossArwingReturnVelocityScale;
+extern f32 gAndrossArwingPullProgressLimit;
+extern f32 gAndrossArwingPullVelocityScale;
+extern f32 gAndrossArwingThrustScale;
+extern f32 gAndrossArwingRotationScale;
+extern f32 gAndrossArwingReleaseProgressLimit;
+extern f32 gAndrossArwingReleaseVelocityScale;
+extern f32 gAndrossArwingReleaseThrustScale;
+extern f32 gAndrossArwingReleaseRotationScale;
+extern f32 gAndrossArwingFollowScale;
+extern f32 gAndrossArwingFlightClampRange;
+extern f32 gAndrossArwingFlightVelocityScale;
+extern f32 gAndrossForwardDistanceThreshold;
+extern f32 gAndrossArwingVelDamp;
+extern f32 gAndrossRingProjectileScale;
+extern f32 gAndrossDistortPhaseStep;
+extern f32 gAndrossDistortPhaseReset;
+extern f32 gAndrossDistortPhase;
+extern int gAndrossSpawnObjectIds[4];
+extern int gAndrossRotationTargetDivisor;
+extern int gAndrossRotationSmoothingDivisor;
+extern int gAndrossFlightHalfWidth;
+extern int gAndrossRingSpawnInterval;
+extern int gAndrossMissileAttackDuration;
+extern int gAndrossMissileSpawnInterval;
+extern int gAndrossCentralAttackDuration;
+extern int gAndrossCentralMissileSpawnInterval;
+extern int gAndrossAsteroidSpawnInterval;
+extern int gAndrossBrainAttackDuration;
+extern int gAndrossMoveTailDistance;
+extern int gAndrossAimedProjectileSpeed;
+extern int gAndrossAimedProjectileLifetime;
+extern int gAndrossRingProjectileLifetime;
+extern int gAndrossProjectileForwardStep;
+extern int gAndrossSpawnedObjectLifetime;
+extern s16 gAndrossSwayPhaseStepX;
+extern s16 gAndrossSwayPhaseStepY;
+extern s16 gAndrossSwayPhaseY;
+extern s16 gAndrossSwayPhaseX;
+extern u8 gAndrossPartTextureIndices[4];
+extern u32 gAndrossDistortFilterParam;
+
+void fn_80239DD8(GameObject* obj, AndrossState* state);
+void fn_80239EAC(GameObject* obj, AndrossState* state);
+void fn_80239FCC(GameObject* obj, AndrossState* state);
+void fn_8023A168(GameObject* obj, AndrossState* state);
+void fn_8023A268(GameObject* obj, AndrossState* state, int p3);
+void fn_8023A3E4(GameObject* obj, AndrossState* state);
 int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);
 void fn_8023A87C(GameObject* obj, AndrossState* state);
+
+int andross_SeqFn(GameObject* obj);
+int andross_getExtraSize(void);
+int andross_getObjectTypeId(void);
+void andross_free(int obj);
+void andross_hitDetect(void);
+void andross_render(int obj, int p2, int p3, int p4, int p5);
+void andross_setPartSignal(GameObject* obj, u8 signal);
+void andross_update(int obj);
+void andross_init(int obj, ObjPlacement* setup);
 
 #endif /* MAIN_DLL_ANDROSS_H_ */

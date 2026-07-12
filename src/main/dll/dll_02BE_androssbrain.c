@@ -8,6 +8,7 @@
  * the defeated state, signalling andross and the lightning object.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"

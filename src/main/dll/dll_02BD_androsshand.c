@@ -13,6 +13,7 @@
  * damage texture index is written into the model's texture slot.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02BC_andross.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02BD_androsshand.h"
@@ -55,8 +56,8 @@ void AndrossHand_update(int obj)
     f32 fScale = lbl_803DC4F8;
     AndrossHandState* state = ((GameObject*)obj)->extra;
     u8 changed = 0;
-    SunVec3 swipeVel;
-    SunVec3 grabVel;
+    Vec3f swipeVel;
+    Vec3f grabVel;
 
     if (state->androssObj == NULL)
     {
@@ -160,7 +161,7 @@ void AndrossHand_update(int obj)
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (hitState->lastHitObject != 0)
             {
-                SunVec3 vel;
+                Vec3f vel;
                 swipeVel.x = state->sideFlag ? -20.0f : 20.0f;
                 swipeVel.y = 0.0f;
                 swipeVel.z = 0.0f;
@@ -215,7 +216,7 @@ void AndrossHand_update(int obj)
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (hitState->lastHitObject != 0)
             {
-                SunVec3 vel;
+                Vec3f vel;
                 grabVel.x = 0.0f;
                 grabVel.y = -10.0f;
                 grabVel.z = 0.0f;

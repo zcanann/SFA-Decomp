@@ -86,7 +86,7 @@ int suntemple_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* 
     GameObject* gameObj = obj;
     SunTempleSetup* cfg = (SunTempleSetup*)gameObj->anim.placementData;
     int i;
-    SunVec3 restartPos = *(SunVec3*)lbl_802C25D8;
+    Vec3f restartPos = *(Vec3f*)lbl_802C25D8;
 
     gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     for (i = 0; i < animUpdate->eventCount; i++)

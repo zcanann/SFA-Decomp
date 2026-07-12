@@ -35,6 +35,7 @@
 #include "main/objtexture.h"
 #include "main/voxmaps.h"
 #include "main/vecmath.h"
+#include "main/vec_types.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/dll/path_control_interface.h"
@@ -173,13 +174,6 @@ int suntemple_interactCallback(GameObject* obj, int p2, ObjAnimUpdateState* anim
 
 extern f32 lbl_802C25D8[];
 extern int getCurMapLayer(void);
-
-typedef struct
-{
-    f32 x, y, z;
-} SunVec3;
-
-
 
 extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
 extern void Obj_SetActiveModelIndex(int obj, int index);
@@ -565,22 +559,10 @@ extern int loadObjectAtObject(int obj);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int gAndrossProjectileForwardStep;
-
-
-extern int gAndrossAimedProjectileSpeed;
-extern int gAndrossAimedProjectileLifetime;
-extern int gAndrossRingProjectileLifetime;
-extern f32 gAndrossRingProjectileScale;
 extern int gGfLevelConProjectilePitch;
 extern int gGfLevelConRingProjectilePitch;
 extern s16 gGfLevelConProjectileYaw;
 extern s16 gGfLevelConRingProjectilePitchSource;
-
-extern f32 gAndrossForwardDistanceThreshold;
-extern f32 gAndrossArwingVelDamp;
-
-extern u8 gAndrossPartTextureIndices[4];
 
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
@@ -868,14 +850,6 @@ void arwarwing_hitDetect(GameObject* obj);
 void ARWArwingGu_update(GameObject* obj);
 void arwingandrossstuff_update(GameObject* obj);
 void arwlevelcon_update(GameObject* obj);
-int andross_getExtraSize(void);
-int andross_getObjectTypeId(void);
-void andross_free(int obj);
-void andross_hitDetect(void);
-void andross_render(int obj, int p2, int p3, int p4, int p5);
-void andross_setPartSignal(GameObject* obj, u8 signal);
-int andross_SeqFn(GameObject* obj);
-void andross_init(int obj, u8* setup);
 void arwarwing_setFlightHalfWidth(int arwing, f32 width);
 int arwarwing_getRotY(int arwing);
 void arwarwing_setRotY(int arwing, int rotY);
@@ -919,14 +893,6 @@ void fn_8022ED74(GameObject* obj, int v);
 void arwarwinggu_applyTextureFrame(GameObject* obj);
 void fn_8022ECE0(GameObject* obj, f32 param);
 void arwarwing_spawnBomb(GameObject* obj, int state, int side);
-void fn_80239DD8(GameObject* obj, struct AndrossState* state);
-void fn_80239EAC(int p1, int p2);
-void fn_8023A168(int p1, int p2);
-void fn_8023A87C(GameObject* obj, struct AndrossState* state);
-void fn_8023A268(int p1, int p2, int p3);
-void fn_80239FCC(int p1, int p2);
-int fn_8023A6A4(struct AndrossState* state, f32 a, f32 b, f32 c);
-void fn_8023A3E4(GameObject* obj, struct AndrossState* state);
 void arwarwing_resetFlightState(GameObject* obj);
 void arwarwingbo_update(int obj);
 void arwarwing_updateThrusters(GameObject* obj, int state);

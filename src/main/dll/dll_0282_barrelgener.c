@@ -529,5 +529,5 @@ void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
     voxmaps_worldToGrid(endPos, (s16*)gridB);
     if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) == 0)
         voxmaps_gridToWorld(endPos, (s16*)gridOut);
-    *(SunVec3*)out = *(SunVec3*)endPos;
+    *(Vec3f*)out = *(Vec3f*)endPos;
 }

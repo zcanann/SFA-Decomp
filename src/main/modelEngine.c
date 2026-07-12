@@ -13,6 +13,7 @@
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_02BA_mclightning.h"
 #include "main/dll/dll_02BB_gflevelcon.h"
+#include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BD_androsshand.h"
@@ -46,7 +47,7 @@ extern ResourceDescriptor gARWArwingBoObjDescriptor, gARWArwingGuObjDescriptor, 
     gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor, gARWLevelConObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor, gAlphaAnimatorObjDescriptor,
-    gAndrossObjDescriptor, gAnimSharpclawObjDescriptor;
+    gAnimSharpclawObjDescriptor;
 extern ResourceDescriptor gAnimatedObjDescriptor, gAppleOnTreeObjDescriptor, gAreaFXEmitObjDescriptor,
     gAreaObjDescriptor, gArwingAndrossStuffObjDescriptor, gAttractorObjDescriptor, gBabyCloudRunnerObjDescriptor,
     gBaddieInterestPObjDescriptor;
@@ -1579,7 +1580,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gMCStaffEffeObjDescriptor,
     (ResourceDescriptor*)&gMCLightningObjDescriptor,
     (ResourceDescriptor*)&gGF_LevelConObjDescriptor,
-    &gAndrossObjDescriptor,
+    (ResourceDescriptor*)&gAndrossObjDescriptor,
     (ResourceDescriptor*)&gAndrossHandObjDescriptor,
     (ResourceDescriptor*)&gAndrossBrainObjDescriptor,
     (ResourceDescriptor*)&gAndrossLighObjDescriptor,

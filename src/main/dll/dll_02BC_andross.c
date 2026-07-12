@@ -57,56 +57,7 @@ typedef struct AndrossChildSetup
     s16 flags;
 } AndrossChildSetup;
 
-extern f32 gAndrossMoveAnimSpeeds[23];
-extern f32 gAndrossZero;
-extern f32 gAndrossSwayAmplitudeX;
-extern f32 gAndrossSwayAmplitudeY;
-extern f32 gAndrossMissileClampRange;
-extern f32 gAndrossMissileVelocityScale;
-extern f32 gAndrossMissileForwardVelocity;
-extern f32 gAndrossCentralMissileClampRange;
-extern f32 gAndrossCentralMissileVelocityScale;
-extern f32 gAndrossCentralMissileForwardVelocity;
-extern f32 gAndrossArwingApproachVelocityScale;
-extern f32 gAndrossSpawnRandX;
-extern f32 gAndrossSpawnRandY;
-extern f32 gAndrossSpawnRandZ;
-extern f32 gAndrossSpawnOffsetY;
-extern f32 gAndrossSpawnOffsetZ;
-extern f32 gAndrossArwingReturnVelocityScale;
-extern f32 gAndrossArwingPullProgressLimit;
-extern f32 gAndrossArwingPullVelocityScale;
-extern f32 gAndrossArwingThrustScale;
-extern f32 gAndrossArwingRotationScale;
-extern f32 gAndrossArwingReleaseProgressLimit;
-extern f32 gAndrossArwingReleaseVelocityScale;
-extern f32 gAndrossArwingReleaseThrustScale;
-extern f32 gAndrossArwingReleaseRotationScale;
-extern f32 gAndrossArwingFollowScale;
-extern f32 gAndrossArwingFlightClampRange;
-extern f32 gAndrossArwingFlightVelocityScale;
-extern f32 gAndrossDistortPhaseStep;
-extern f32 gAndrossDistortPhaseReset;
-extern f32 gAndrossDistortPhase;
 extern int animatedObjGetSeqId(int obj);
-extern int gAndrossSpawnObjectIds[];
-extern int gAndrossRotationTargetDivisor;
-extern int gAndrossRotationSmoothingDivisor;
-extern int gAndrossFlightHalfWidth;
-extern int gAndrossRingSpawnInterval;
-extern int gAndrossMissileAttackDuration;
-extern int gAndrossMissileSpawnInterval;
-extern int gAndrossCentralAttackDuration;
-extern int gAndrossCentralMissileSpawnInterval;
-extern int gAndrossAsteroidSpawnInterval;
-extern int gAndrossBrainAttackDuration;
-extern int gAndrossMoveTailDistance;
-extern int gAndrossSpawnedObjectLifetime;
-extern s16 gAndrossSwayPhaseStepX;
-extern s16 gAndrossSwayPhaseStepY;
-extern s16 gAndrossSwayPhaseY;
-extern s16 gAndrossSwayPhaseX;
-extern u32 gAndrossDistortFilterParam;
 extern void turnOnDistortionFilter(f32* pos, f32 a, u32* color, f32 c);
 
 void fn_80239DD8(GameObject* obj, AndrossState* state)
@@ -138,7 +89,7 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
     }
 }
 
-void fn_80239EAC(int obj, int state)
+void fn_80239EAC(GameObject* obj, AndrossState* state)
 {
     f32 dx, dy, dz;
     int* objs;
@@ -155,9 +106,9 @@ void fn_80239EAC(int obj, int state)
             defNo = *(s16*)(*(int*)&((GameObject*)cur)->anim.placementData);
             if (defNo == ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD || defNo == ANDROSS_CHILD_OBJ_PROJECTILE_RING)
             {
-                dy = *(f32*)(state + 0xc4) - ((GameObject*)cur)->anim.localPosY;
-                dz = *(f32*)(state + 0xc8) - ((GameObject*)cur)->anim.localPosZ;
-                dx = *(f32*)(state + 0xc0) - ((GameObject*)cur)->anim.localPosX;
+                dy = state->cachedPosY - ((GameObject*)cur)->anim.localPosY;
+                dz = state->cachedPosZ - ((GameObject*)cur)->anim.localPosZ;
+                dx = state->cachedPosX - ((GameObject*)cur)->anim.localPosX;
                 ((GameObject*)cur)->anim.rotX = getAngle(dx, dz);
                 ((GameObject*)cur)->anim.rotY = -(s16)getAngle(dy, dz);
                 arwprojectile_placeForward((GameObject*)(cur), (f32)(int)gAndrossProjectileForwardStep);
@@ -167,7 +118,7 @@ void fn_80239EAC(int obj, int state)
     }
 }
 
-void fn_80239FCC(int obj, int state)
+void fn_80239FCC(GameObject* obj, AndrossState* state)
 {
     f32 ang;
     int rndDur;
@@ -184,15 +135,15 @@ void fn_80239FCC(int obj, int state)
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_RING);
         ang = 3.1415927f * (f32)(int)rndYaw / 32768.0f;
-        newObj->head.posX = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
-        newObj->head.posY = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
-        newObj->head.posZ = *(f32*)(state + 0xc8) - 500.0f;
-        newObj->yawHi = (*(s16*)obj + yaw) >> 8;
+        newObj->head.posX = (f32)(int)rndDur * mathSinf(ang) + state->arwingObj->anim.localPosX;
+        newObj->head.posY = (f32)(int)rndDur * mathCosf(ang) + state->arwingObj->anim.localPosY;
+        newObj->head.posZ = state->cachedPosZ - 500.0f;
+        newObj->yawHi = (obj->anim.rotX + yaw) >> 8;
         newObj->pitch = gGfLevelConRingProjectilePitch;
         newObj->roll = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
+        proj = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
         if ((u32)proj != 0)
         {
             ((GameObject*)proj)->anim.rootMotionScale = gAndrossRingProjectileScale;
@@ -202,7 +153,7 @@ void fn_80239FCC(int obj, int state)
     }
 }
 
-void fn_8023A168(int obj, int state)
+void fn_8023A168(GameObject* obj, AndrossState* state)
 {
     int proj;
     int yawRnd;
@@ -214,15 +165,15 @@ void fn_8023A168(int obj, int state)
         yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
         newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD);
-        newObj->head.posX = *(f32*)(state + 0xc0);
-        newObj->head.posY = *(f32*)(state + 0xc4);
-        newObj->head.posZ = *(f32*)(state + 0xc8);
-        newObj->yawHi = (*(s16*)obj + yawRnd) >> 8;
+        newObj->head.posX = state->cachedPosX;
+        newObj->head.posY = state->cachedPosY;
+        newObj->head.posZ = state->cachedPosZ;
+        newObj->yawHi = (obj->anim.rotX + yawRnd) >> 8;
         newObj->pitch = pitchRnd;
         newObj->roll = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
+        proj = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
         if ((void*)proj != NULL)
         {
             ((GameObject*)proj)->anim.rootMotionScale = 5.0f;
@@ -232,7 +183,7 @@ void fn_8023A168(int obj, int state)
     }
 }
 
-void fn_8023A268(int obj, int state, int p3)
+void fn_8023A268(GameObject* obj, AndrossState* state, int p3)
 {
     f32 dx, dz, dist;
     int yaw;
@@ -240,25 +191,25 @@ void fn_8023A268(int obj, int state, int p3)
 
     if (Obj_IsLoadingLocked())
     {
-        dx = *(f32*)(state + 0xc0) - *(f32*)(*(int*)state + 0xc);
-        dz = *(f32*)(state + 0xc8) - *(f32*)(*(int*)state + 0x14);
+        dx = state->cachedPosX - state->arwingObj->anim.localPosX;
+        dz = state->cachedPosZ - state->arwingObj->anim.localPosZ;
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz);
-        gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(state + 0xc4) - *(f32*)(*(int*)state + 0x10), dist) >> 8;
+        gGfLevelConProjectilePitch = (u16)getAngle(state->cachedPosY - state->arwingObj->anim.localPosY, dist) >> 8;
         newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_AIMED);
-        newObj->head.posX = *(f32*)(state + 0xc0);
-        newObj->head.posY = *(f32*)(state + 0xc4);
-        newObj->head.posZ = *(f32*)(state + 0xc8);
-        newObj->yawHi = (*(s16*)obj + yaw) >> 8;
+        newObj->head.posX = state->cachedPosX;
+        newObj->head.posY = state->cachedPosY;
+        newObj->head.posZ = state->cachedPosZ;
+        newObj->yawHi = (obj->anim.rotX + yaw) >> 8;
         newObj->pitch = gGfLevelConProjectilePitch;
         newObj->roll = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        obj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
-        if ((void*)obj != NULL)
+        obj = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+        if (obj != NULL)
         {
-            arwprojectile_setLifetime((GameObject*)(obj), gAndrossAimedProjectileLifetime);
-            arwprojectile_placeForward((GameObject*)(obj), (f32)(int)gAndrossAimedProjectileSpeed);
+            arwprojectile_setLifetime(obj, gAndrossAimedProjectileLifetime);
+            arwprojectile_placeForward(obj, (f32)(int)gAndrossAimedProjectileSpeed);
         }
     }
 }
@@ -367,14 +318,14 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
 
 void andross_setPartSignal(GameObject* obj, u8 signal)
 {
-    int state;
+    AndrossState* state;
 
     if ((void*)obj == NULL)
     {
         return;
     }
-    state = *(int*)&(obj)->extra;
-    ((AndrossState*)state)->signalFlags |= signal;
+    state = (AndrossState*)obj->extra;
+    state->signalFlags |= signal;
 }
 int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
 {
@@ -507,19 +458,19 @@ void andross_update(int obj)
     f32 fa;
     f32 fb;
     s16 delayPair[2];
-    SunVec3 thrustB;
-    SunVec3 thrustA;
-    SunVec3 thrustBArg;
-    SunVec3 thrustAArg;
-    SunVec3 velAdd;
-    SunVec3 velArg3;
-    SunVec3 velCalc3;
-    SunVec3 velArg2;
-    SunVec3 velCalc2;
-    SunVec3 velArg1;
-    SunVec3 velCalc1;
-    SunVec3 velArg0;
-    SunVec3 velCalc0;
+    Vec3f thrustB;
+    Vec3f thrustA;
+    Vec3f thrustBArg;
+    Vec3f thrustAArg;
+    Vec3f velAdd;
+    Vec3f velArg3;
+    Vec3f velCalc3;
+    Vec3f velArg2;
+    Vec3f velCalc2;
+    Vec3f velArg1;
+    Vec3f velCalc1;
+    Vec3f velArg0;
+    Vec3f velCalc0;
     f32 camActionParam;
     f32 searchDist0;
     f32 searchDist1;
@@ -923,7 +874,7 @@ void andross_update(int obj)
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0)
         {
-            fn_8023A268(obj, (int)state, 0);
+            fn_8023A268((GameObject*)obj, state, 0);
             state->actionTimer = gAndrossRingSpawnInterval;
         }
         state->durationTimer -= timeDelta;
@@ -1358,10 +1309,10 @@ void andross_update(int obj)
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
         {
-            fn_80239FCC(obj, (int)state);
+            fn_80239FCC((GameObject*)obj, state);
             state->durationTimer += gAndrossMissileSpawnInterval;
         }
-        fn_80239EAC(obj, (int)state);
+        fn_80239EAC((GameObject*)obj, state);
         if (mainGetBit(0x10) != 0)
         {
             mainSetBits(0x10, 0);
@@ -1458,10 +1409,10 @@ void andross_update(int obj)
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
         {
-            fn_80239FCC(obj, (int)state);
+            fn_80239FCC((GameObject*)obj, state);
             state->durationTimer += gAndrossCentralMissileSpawnInterval;
         }
-        fn_80239EAC(obj, (int)state);
+        fn_80239EAC((GameObject*)obj, state);
         if (state->hitReactionFlag != 0)
         {
             if (state->fightPhase == 5)
@@ -1769,7 +1720,7 @@ void andross_update(int obj)
         }
         if (state->actionTimer < 0)
         {
-            fn_8023A168(obj, (int)state);
+            fn_8023A168((GameObject*)obj, state);
             state->actionTimer = gAndrossAsteroidSpawnInterval;
         }
         if (state->durationTimer < gAndrossZero)
@@ -2350,16 +2301,16 @@ void andross_update(int obj)
     return;
 }
 
-void andross_init(int obj, u8* setup)
+void andross_init(int obj, ObjPlacement* setup)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int i;
     int model;
     int val;
 
-    ((AndrossState*)state)->homePosX = ((ObjPlacement*)setup)->posX;
-    ((AndrossState*)state)->homePosY = ((ObjPlacement*)setup)->posY;
-    ((AndrossState*)state)->homePosZ = ((ObjPlacement*)setup)->posZ;
+    ((AndrossState*)state)->homePosX = setup->posX;
+    ((AndrossState*)state)->homePosY = setup->posY;
+    ((AndrossState*)state)->homePosZ = setup->posZ;
     ((AndrossState*)state)->actionTimer = 0;
     ((AndrossState*)state)->actionState = 0;
     ((AndrossState*)state)->prevActionState = -1;
