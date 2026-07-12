@@ -2,7 +2,7 @@
  * pressureswitchfb (DLL 0x00FB) - a weight-activated pressure switch / floor
  * pad. While any tracked object (player, tricky, or seqId 0x754/0x6d) stands
  * far enough above the pad, the switch is held depressed: it slides on its
- * local Y toward the pressed target (CfGuardianState.targetPosY) at
+ * local Y toward the pressed target (PressureSwitchFbState.targetPosY) at
  * velocityY * timeDelta, sets the placement's "pressed" game bit
  * (placement->pressedGameBit) and swaps to the pressed texture (id 0x100). When the
  * weight leaves it springs back up and clears the game bit.
@@ -15,7 +15,6 @@
  * drive a linked Tricky object via its vtable when not pressed.
  */
 #include "main/game_object.h"
-#include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -25,6 +24,7 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00FB_pressureswitchfb.h"
 
 #define PRESSURESWITCHFB_PARTFX                  0x7c3
 #define PRESSURESWITCHFB_STATE_IDLE              0
@@ -63,7 +63,6 @@
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 #define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
-extern int ObjGroup_FindNearestObject();
 extern int fn_80295C5C(GameObject* player);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
@@ -131,34 +130,12 @@ int PressureSwitchFB_getExtraSize(void)
     return PRESSURESWITCHFB_EXTRA_SIZE;
 }
 
-void PressureSwitchFB_free(int obj)
+void PressureSwitchFB_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, PRESSURESWITCHFB_REMOVE_GROUP_ID);
+    ObjGroup_RemoveObject((int)obj, PRESSURESWITCHFB_REMOVE_GROUP_ID);
 }
 
-typedef void (*TrickyVtableFn)(int, int, int, int);
-
-typedef struct PressureswitchfbState
-{
-    u8 pad0[0x68 - 0x0];
-    s32 linkedTrickyObj; /* obj ref; vtable[0x28] invoked to signal linked Tricky-driven object */
-    u8 pad6C[0x70 - 0x6C];
-} PressureswitchfbState;
-
-typedef struct PressureswitchfbPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 pressedGameBit;
-    u8 pressDepth;
-    u8 unk1D;
-    u8 drivesTricky;
-    u8 pad1F[0x20 - 0x1F];
-    s16 enableGameBit;
-    s16 unk22;
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} PressureswitchfbPlacement;
+typedef void (*TrickyVtableFn)(GameObject* tricky, GameObject* switchObj, int enabled, int mode);
 
 typedef struct FxArgs
 {
@@ -170,15 +147,6 @@ typedef struct FxArgs
     f32 y;
     f32 z;
 } FxArgs;
-
-typedef struct SwitchFlags
-{
-    u8 active : 1;
-    u8 playerOnly : 1;
-    u8 released : 1;
-    u8 latched : 1;
-    u8 rest : 4;
-} SwitchFlags;
 
 static inline int pfb_scanTrackedSlots(int slots2, u8 j2, int found, int zid)
 {
@@ -204,13 +172,13 @@ static inline int pfb_scanTrackedSlots(int slots2, u8 j2, int found, int zid)
     return found;
 }
 
-void PressureSwitchFB_update(int obj)
+void PressureSwitchFB_update(GameObject* obj)
 {
     int found;
     int off;
     u32 other;
-    int def;
-    char* state;
+    PressureswitchfbPlacement* def;
+    PressureSwitchFbState* state;
     int i;
     int tmp;
     u8 j;
@@ -224,38 +192,39 @@ void PressureSwitchFB_update(int obj)
     int slots2;
     int base2;
     u32 otherObj;
+    GameObject* tricky;
     f32 nearDist;
     FxArgs fx;
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
-    if ((((SwitchFlags*)(state + 0x84))->active) != 0)
+    def = (PressureswitchfbPlacement*)obj->anim.placementData;
+    state = obj->extra;
+    if (state->flags.update.active != 0)
     {
-        if ((((SwitchFlags*)(state + 0x84))->released) == 0)
+        if (state->flags.update.released == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         }
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
-    if ((((PressureswitchfbPlacement*)def)->enableGameBit == -1) ||
-        (mainGetBit(((PressureswitchfbPlacement*)def)->enableGameBit) != 0))
+    if ((def->enableGameBit == -1) ||
+        (mainGetBit(def->enableGameBit) != 0))
     {
-        if (--*state < 0)
+        if (--state->contactTimer < 0)
         {
-            *state = 0;
+            state->contactTimer = 0;
         }
         nearDist = lbl_803E3758;
-        nearest = ObjGroup_FindNearestObject(PRESSURESWITCHFB_TARGET_OBJGROUP, obj, &nearDist);
+        nearest = ObjGroup_FindNearestObject(PRESSURESWITCHFB_TARGET_OBJGROUP, (int)obj, &nearDist);
         if (nearest != 0)
         {
-            *state = 5;
+            state->contactTimer = 5;
         }
         if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
         {
@@ -274,12 +243,12 @@ void PressureSwitchFB_update(int obj)
                 }
                 if (isTarget && (other != nearest))
                 {
-                    if (((GameObject*)other)->anim.localPosY - ((GameObject*)obj)->anim.localPosY >
-                        (f32)(u32) * (u8*)(def + 0x1d))
+                    if (((GameObject*)other)->anim.localPosY - obj->anim.localPosY >
+                        (f32)(u32)def->unk1D)
                     {
-                        tmp = *(int*)&((GameObject*)obj)->extra;
+                        tmp = *(int*)&obj->extra;
                         j = 0;
-                        if ((((SwitchFlags*)(tmp + 0x84))->playerOnly) != 0)
+                        if (state->flags.update.playerOnly != 0)
                         {
                             if (other == (u32)Obj_GetPlayerObject())
                                 goto do_insert;
@@ -300,60 +269,60 @@ void PressureSwitchFB_update(int obj)
                 off += 4;
             }
         }
-        slots2 = *(volatile int*)&((GameObject*)obj)->extra;
+        slots2 = *(volatile int*)&obj->extra;
         found = pfb_scanTrackedSlots(slots2, 0, 0, 0);
         if (found & 0xff)
         {
-            *state = 5;
+            state->contactTimer = 5;
         }
         i = 0;
-        if ((*state != 0) && ((((SwitchFlags*)(state + 0x84))->latched) == 0))
+        if ((state->contactTimer != 0) && (state->flags.update.latched == 0))
         {
-            if ((((SwitchFlags*)(state + 0x84))->active) != 0)
+            if (state->flags.update.active != 0)
             {
                 if (fn_80295C5C((GameObject*)(Obj_GetPlayerObject())) != 0)
                 {
-                    ((SwitchFlags*)(state + 0x84))->released = 0;
+                    state->flags.update.released = 0;
                 }
             }
-            if ((((SwitchFlags*)(state + 0x84))->released) == 0)
+            if (state->flags.update.released == 0)
             {
                 target =
-                    ((CfGuardianState*)state)->targetPosY - (f32)(u32)((PressureswitchfbPlacement*)def)->pressDepth;
-                cur = ((GameObject*)obj)->anim.localPosY;
+                    state->targetPosY - (f32)(u32)def->pressDepth;
+                cur = obj->anim.localPosY;
                 if (cur < target)
                 {
-                    ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)state)->velocityY * timeDelta + cur;
-                    if (((GameObject*)obj)->anim.localPosY > target)
+                    obj->anim.localPosY = state->velocityY * timeDelta + cur;
+                    if (obj->anim.localPosY > target)
                     {
-                        ((GameObject*)obj)->anim.localPosY = target;
+                        obj->anim.localPosY = target;
                     }
-                    mainSetBits(((PressureswitchfbPlacement*)def)->pressedGameBit, 1);
-                    if ((((SwitchFlags*)(state + 0x84))->active) != 0)
+                    mainSetBits(def->pressedGameBit, 1);
+                    if (state->flags.update.active != 0)
                     {
-                        tex = objFindTexture((GameObject*)obj, 0, 0);
+                        tex = objFindTexture(obj, 0, 0);
                         if (tex != NULL)
                         {
                             tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
                         }
-                        ((SwitchFlags*)(state + 0x84))->latched = 1;
+                        state->flags.update.latched = 1;
                     }
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.localPosY = -(((CfGuardianState*)state)->velocityY * timeDelta - cur);
-                    if (((GameObject*)obj)->anim.localPosY < target)
+                    obj->anim.localPosY = -(state->velocityY * timeDelta - cur);
+                    if (obj->anim.localPosY < target)
                     {
-                        ((GameObject*)obj)->anim.localPosY = target;
-                        mainSetBits(((PressureswitchfbPlacement*)def)->pressedGameBit, 1);
-                        if ((((SwitchFlags*)(state + 0x84))->active) != 0)
+                        obj->anim.localPosY = target;
+                        mainSetBits(def->pressedGameBit, 1);
+                        if (state->flags.update.active != 0)
                         {
-                            tex = objFindTexture((GameObject*)obj, 0, 0);
+                            tex = objFindTexture(obj, 0, 0);
                             if (tex != NULL)
                             {
                                 tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
                             }
-                            ((SwitchFlags*)(state + 0x84))->latched = 1;
+                            state->flags.update.latched = 1;
                         }
                     }
                     else
@@ -364,11 +333,11 @@ void PressureSwitchFB_update(int obj)
             }
             else
             {
-                ((GameObject*)obj)->anim.localPosY =
-                    ((CfGuardianState*)state)->velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-                if (((GameObject*)obj)->anim.localPosY > ((CfGuardianState*)state)->targetPosY)
+                obj->anim.localPosY =
+                    state->velocityY * timeDelta + obj->anim.localPosY;
+                if (obj->anim.localPosY > state->targetPosY)
                 {
-                    ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)state)->targetPosY;
+                    obj->anim.localPosY = state->targetPosY;
                 }
                 else
                 {
@@ -378,16 +347,16 @@ void PressureSwitchFB_update(int obj)
         }
         else
         {
-            if ((((SwitchFlags*)(state + 0x84))->latched) == 0)
+            if (state->flags.update.latched == 0)
             {
-                cur = ((GameObject*)obj)->anim.localPosY;
-                if (cur < ((CfGuardianState*)state)->targetPosY)
+                cur = obj->anim.localPosY;
+                if (cur < state->targetPosY)
                 {
-                    ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)state)->velocityY * timeDelta + cur;
-                    if (((GameObject*)obj)->anim.localPosY > ((CfGuardianState*)state)->targetPosY)
+                    obj->anim.localPosY = state->velocityY * timeDelta + cur;
+                    if (obj->anim.localPosY > state->targetPosY)
                     {
-                        ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)state)->targetPosY;
-                        mainSetBits(((PressureswitchfbPlacement*)def)->pressedGameBit, 0);
+                        obj->anim.localPosY = state->targetPosY;
+                        mainSetBits(def->pressedGameBit, 0);
                     }
                     else
                     {
@@ -397,23 +366,23 @@ void PressureSwitchFB_update(int obj)
             }
             else
             {
-                if (mainGetBit(((PressureswitchfbPlacement*)def)->pressedGameBit) == 0)
+                if (mainGetBit(def->pressedGameBit) == 0)
                 {
-                    tex = objFindTexture((GameObject*)obj, 0, 0);
+                    tex = objFindTexture(obj, 0, 0);
                     if (tex != NULL)
                     {
                         tex->textureId = 0;
                     }
-                    ((SwitchFlags*)(state + 0x84))->latched = 0;
-                    ((SwitchFlags*)(state + 0x84))->released = 1;
+                    state->flags.update.latched = 0;
+                    state->flags.update.released = 1;
                 }
             }
         }
-        if (((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) &&
-            ((((SwitchFlags*)(state + 0x84))->latched) == 0) && ((((SwitchFlags*)(state + 0x84))->active) != 0))
+        if (((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) &&
+            (state->flags.update.latched == 0) && (state->flags.update.active != 0))
         {
             tmp = (int)Obj_GetPlayerObject();
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)tmp)->anim.worldPosX) < lbl_803E375C)
+            if (Vec_distance(&obj->anim.worldPosX, &((GameObject*)tmp)->anim.worldPosX) < lbl_803E375C)
             {
                 fx.x = lbl_803E3760;
                 fx.y = lbl_803E3764;
@@ -431,75 +400,61 @@ void PressureSwitchFB_update(int obj)
         }
         if ((s8)i != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_en_firlp6);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_en_firlp6);
         }
         else
         {
-            Sfx_StopObjectChannel(obj, 8);
+            Sfx_StopObjectChannel((u32)obj, 8);
         }
-        if (((((PressureswitchfbPlacement*)def)->drivesTricky != 0) &&
-             ((char*)(tmp = (int)getTrickyObject()) != NULL)) &&
-            (mainGetBit(((PressureswitchfbPlacement*)def)->pressedGameBit) == 0))
+        if (((def->drivesTricky != 0) &&
+             ((tricky = (GameObject*)getTrickyObject()) != NULL)) &&
+            (mainGetBit(def->pressedGameBit) == 0))
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+            *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                (*(TrickyVtableFn*)(*(int*)(((PressureswitchfbState*)tmp)->linkedTrickyObj) + 0x28))(tmp, obj, 1, 3);
+                (*(TrickyVtableFn*)((u8*)*tricky->anim.dll + 0x28))(tricky, obj, 1, 3);
             }
         }
     }
 }
 
-typedef struct PressureSwitchFbFlags
-{
-    u8 usePressedTexture : 1;
-    u8 startPressed : 1;
-    u8 canRelease : 1;
-    u8 autoPress : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} PressureSwitchFbFlags;
-
-void PressureSwitchFB_init(u8* obj, u8* params)
+void PressureSwitchFB_init(GameObject* obj, PressureswitchfbPlacement* params)
 {
     ObjAnimComponent* objAnim;
-    u8* sub;
+    PressureSwitchFbState* state;
     ObjTextureRuntimeSlot* tex;
     f32 defaultOffset;
     PressureSwitchFbFlags* flags;
 
     objAnim = (ObjAnimComponent*)obj;
-    sub = ((GameObject*)obj)->extra;
-    flags = (PressureSwitchFbFlags*)(sub + 0x84);
-    ((GameObject*)obj)->anim.rotX = (s16)(params[0x18] << 8);
-    ((GameObject*)obj)->objectFlags =
-        (u16)(((GameObject*)obj)->objectFlags |
-              (PRESSURESWITCHFB_OBJFLAG_HIDDEN | PRESSURESWITCHFB_OBJFLAG_HITDETECT_DISABLED));
-    objAnim->bankIndex = params[0x19];
+    state = obj->extra;
+    flags = &state->flags.init;
+    obj->anim.rotX = (s16)(params->initialYaw << 8);
+    obj->objectFlags =
+        (u16)(obj->objectFlags | (PRESSURESWITCHFB_OBJFLAG_HIDDEN | PRESSURESWITCHFB_OBJFLAG_HITDETECT_DISABLED));
+    objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
     defaultOffset = lbl_803E3778;
-    ((CfGuardianState*)sub)->velocityY = defaultOffset;
-    if (((GameObject*)obj)->anim.seqId == PRESSURESWITCHFB_OBJ_WM_PRESSURE)
+    state->velocityY = defaultOffset;
+    if (obj->anim.seqId == PRESSURESWITCHFB_OBJ_WM_PRESSURE)
     {
         flags->usePressedTexture = 1;
         flags->startPressed = 1;
         flags->canRelease = 1;
-        ((CfGuardianState*)sub)->velocityY = defaultOffset;
+        state->velocityY = defaultOffset;
     }
-    ((CfGuardianState*)sub)->targetPosY = *(f32*)(params + 0xc);
-    if (mainGetBit(((PressureswitchfbPlacement*)params)->pressedGameBit) != 0)
+    state->targetPosY = params->base.posY;
+    if (mainGetBit(params->pressedGameBit) != 0)
     {
         s16 model;
-        ((GameObject*)obj)->anim.localPosY =
-            ((CfGuardianState*)sub)->targetPosY - (f32)(u32)((PressureswitchfbPlacement*)params)->pressDepth;
-        sub[0] = 0x1e;
+        obj->anim.localPosY = state->targetPosY - (f32)(u32)params->pressDepth;
+        state->contactTimer = 0x1e;
         flags->canRelease = 0;
-        model = ((GameObject*)obj)->anim.seqId;
+        model = obj->anim.seqId;
         if (model != PRESSURESWITCHFB_OBJ_LINK_SNOWPR)
         {
             if (model != PRESSURESWITCHFB_OBJ_SH_PRESSURE)
@@ -515,7 +470,7 @@ void PressureSwitchFB_init(u8* obj, u8* params)
         }
         if (flags->usePressedTexture)
         {
-            tex = objFindTexture((GameObject*)obj, 0, 0);
+            tex = objFindTexture(obj, 0, 0);
             if (tex != NULL)
             {
                 tex->textureId = PRESSURESWITCHFB_PRESSED_TEXTURE_ID;
@@ -523,15 +478,15 @@ void PressureSwitchFB_init(u8* obj, u8* params)
         }
     }
     ObjGroup_AddObject((int)obj, PRESSURESWITCHFB_REMOVE_GROUP_ID);
-    ((CfGuardianState*)sub)->unk4 = 0;
-    ((CfGuardianState*)sub)->unk8 = 0;
-    ((CfGuardianState*)sub)->unkC = 0;
-    ((CfGuardianState*)sub)->unk10 = 0;
-    ((CfGuardianState*)sub)->unk14 = 0;
-    ((CfGuardianState*)sub)->unk18 = 0;
-    ((CfGuardianState*)sub)->unk1C = 0;
-    ((CfGuardianState*)sub)->unk20 = 0;
-    ((CfGuardianState*)sub)->unk24 = 0;
-    ((CfGuardianState*)sub)->unk28 = 0;
-    ((GameObject*)obj)->animEventCallback = PressureSwitchFB_SeqFn;
+    state->trackedObjects[0] = NULL;
+    state->trackedObjects[1] = NULL;
+    state->trackedObjects[2] = NULL;
+    state->trackedObjects[3] = NULL;
+    state->trackedObjects[4] = NULL;
+    state->trackedObjects[5] = NULL;
+    state->trackedObjects[6] = NULL;
+    state->trackedObjects[7] = NULL;
+    state->trackedObjects[8] = NULL;
+    state->trackedObjects[9] = NULL;
+    obj->animEventCallback = PressureSwitchFB_SeqFn;
 }

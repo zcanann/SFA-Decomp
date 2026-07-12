@@ -12,6 +12,7 @@
 #include "main/dll/dll_00F6_area.h"
 #include "main/dll/dll_00F8_levelname.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
+#include "main/dll/dll_00FB_pressureswitchfb.h"
 
 #define AREA_OBJFLAG_UPDATE_DISABLED    0x8000
 #define AREA_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -38,17 +39,12 @@ extern void Lock_DoorLock_getExtraSize(void);
 extern void Lock_DoorLock_init(void);
 extern void Lock_DoorLock_render(void);
 extern void Lock_DoorLock_update(GameObject*);
-extern void PressureSwitchFB_free(void);
-extern void PressureSwitchFB_getExtraSize(void);
-extern void PressureSwitchFB_init(void);
-extern void PressureSwitchFB_update(void);
 extern void SeqObject_free(void);
 extern void SeqObject_getExtraSize(void);
 extern void SeqObject_getObjectTypeId(void);
 extern void SeqObject_init(void);
 extern void SeqObject_render(void);
 extern void SeqObject_update(void);
-
 int area_getExtraSize(void)
 {
     return 0x0;
