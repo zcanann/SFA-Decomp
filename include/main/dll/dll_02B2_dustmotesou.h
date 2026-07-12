@@ -61,11 +61,11 @@ extern ObjectDescriptor gDustMoteSouObjDescriptor;
 
 int dustmotesou_getExtraSize(void);
 int dustmotesou_getObjectTypeId(void);
-void dustmotesou_free(int obj);
-void dustmotesou_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void dustmotesou_free(DustMoteSouObject* obj);
+void dustmotesou_render(DustMoteSouObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dustmotesou_hitDetect(void);
-void dustmotesou_update(int obj);
-void dustmotesou_init(int obj,int setup);
+void dustmotesou_update(DustMoteSouObject* obj);
+void dustmotesou_init(DustMoteSouObject* obj, DustMoteSouMapData* setup);
 void dustmotesou_release(void);
 void dustmotesou_initialise(void);
 
