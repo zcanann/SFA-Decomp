@@ -1774,7 +1774,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int linkId;
     int linkCurve;
     int insertIndex;
-    int selectedIndex;
+    int sel[2];
     int found;
     int i;
     int j;
@@ -1917,15 +1917,16 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         }
 
         *previousCurveId = *(s32*)(startCurve + 0x14);
-        selectedIndex = 0;
-        for (i = 0; i < candidateCount; i++)
+        sel[0] = 0;
+        sel[1] = sel[0];
+        for (; sel[1] < candidateCount; sel[1]++)
         {
-            if (candidateDistances[i] < candidateDistances[selectedIndex])
+            if (candidateDistances[sel[1]] < candidateDistances[sel[0]])
             {
-                selectedIndex = i;
+                sel[0] = sel[1];
             }
         }
-        return candidateIds[selectedIndex];
+        return candidateIds[sel[0]];
     }
     return -1;
 }
