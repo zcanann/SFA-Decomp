@@ -14,6 +14,11 @@ typedef struct ObjMatrixBuildTransform {
     f32 z;
 } ObjMatrixBuildTransform;
 
+extern f32 lbl_803967C0[12];
+extern f32 lbl_803967F0[12];
+extern f32 lbl_80396820[12];
+extern f32 lbl_80396850[12];
+
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
 u8 lbl_80338090[0x100];
