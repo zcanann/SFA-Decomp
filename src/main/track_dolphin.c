@@ -1848,8 +1848,8 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
         gPrevSunDir[1] = vec[1];
         gPrevSunDir[2] = vec[2];
         gSunDirChanged = 0;
+        gShadowFlag = 1;
     }
-    gShadowFlag = 1;
 }
 #pragma opt_propagation reset
 
