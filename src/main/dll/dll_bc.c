@@ -8,6 +8,7 @@
  *     current target's kind (talk NPC/object, A-button hint, context-B).
  */
 #include "main/dll/dll_BC.h"
+#include "main/dll/tricky_api.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_80220608_shared.h"
 

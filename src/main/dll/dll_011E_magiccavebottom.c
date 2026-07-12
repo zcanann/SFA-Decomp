@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/dll/tricky_api.h"
 #include "main/audio/music_trigger_ids.h"
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);

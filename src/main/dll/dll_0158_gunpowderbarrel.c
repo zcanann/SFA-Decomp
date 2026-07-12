@@ -20,6 +20,7 @@
  * is the v1.0 body. GunpowderBarrelState (extra) layout lives in
  * main/dll/DR/gunpowderbarrel_state.h.
  */
+#include "main/dll/tricky_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/maketex.h"
 #include "main/lightmap_api.h"
@@ -101,7 +102,6 @@ extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern u32 playerGetStateFlag310(u8 * player);
-extern void setAButtonIcon(int x);
 extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
 extern float mathSinf(float x);

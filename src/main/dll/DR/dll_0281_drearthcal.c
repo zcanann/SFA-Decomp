@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/tricky_api.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/game_object.h"
 #include "main/objfx.h"

@@ -17,6 +17,7 @@
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/player_state.h"
 #include "main/dll/player.h"
+#include "main/dll/tricky_api.h"
 #include "main/gamebits.h"
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/audio/sfx_trigger_ids.h"

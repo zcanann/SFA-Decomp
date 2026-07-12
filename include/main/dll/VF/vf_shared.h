@@ -264,7 +264,6 @@ extern void lockLevel(int mapDir, int locked);
 extern void warpToMap(int mapId, int transition);
 extern void skyFn_80088c94(int skyId, int enabled);
 extern void Rcp_SetSpiritVisionEnabled(int enabled);
-extern void setAButtonIcon(int iconId);
 extern int getSkyColorFn_80088e08(int skyId);
 extern void objSetAnimStateFlags(int obj, int arg, int enable);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);

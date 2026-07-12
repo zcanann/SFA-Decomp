@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll/VF/platform1.h"
+#include "main/dll/tricky_api.h"
 #include "main/mapEventTypes.h"
 #include "main/model_engine.h"
 #include "main/objseq.h"
@@ -27,7 +28,6 @@
 #define SCTOTEMSTRENGTH_MAP_LIGHTFOOT 0xe
 
 
-extern void setAButtonIcon(int x);
 
 extern int isGameTimerDisabled(void);
 extern void fn_801DE320(void* dst, int val);

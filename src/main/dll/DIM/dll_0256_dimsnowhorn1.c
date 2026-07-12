@@ -9,6 +9,7 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/object_api.h"
 #include "main/dll/moveLib.h"
+#include "main/dll/tricky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"

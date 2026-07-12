@@ -1,5 +1,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/moveLib.h"
+#include "main/dll/tricky_api.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/gamebit_ids.h"
@@ -253,7 +254,6 @@ extern EWPathRange lbl_802C2CA8;
 extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
 extern char gEarthWarriorTailChainDesc;
-extern void setAButtonIcon(int x);
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 extern void doRumble(f32 duration);
 extern float mathSinf(float x);

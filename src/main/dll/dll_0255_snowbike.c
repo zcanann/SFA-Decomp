@@ -15,6 +15,7 @@
 #include "main/pad.h"
 #include "main/frame_timing.h"
 #include "main/maketex.h"
+#include "main/dll/tricky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SNOWBIKE_OBJGROUP           0xa
@@ -175,7 +176,6 @@ extern void setMotionBlur(u8 enabled, f32 amount);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* dst);
 extern float powfBitEstimate(float x, float y);
-extern void setAButtonIcon(int x);
 extern void setBButtonIcon(int icon);
 extern int getAngle(float y, float x);
 extern f32 lbl_803E5B6C;

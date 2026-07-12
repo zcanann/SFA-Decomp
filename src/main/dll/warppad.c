@@ -20,6 +20,7 @@
  * is WarpPadPlacement (both in CF/warp_pad.h).
  */
 #include "main/effect_interfaces.h"
+#include "main/dll/tricky_api.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/dll/CF/warp_pad.h"
@@ -59,7 +60,6 @@ extern f32 gWarpPadTriggerDist;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void setAButtonIcon(int x);
 
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
