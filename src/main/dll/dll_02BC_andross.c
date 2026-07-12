@@ -482,6 +482,7 @@ void andross_update(int obj)
     u8 phaseChanged;
     u8 spawnIndex;
     u8 pathIndex;
+    s16 durationBeforeStep;
     u8 cueIndex;
     u8 delayIndex;
     u8 signalReceived;
@@ -493,7 +494,6 @@ void andross_update(int obj)
     AndrossRenderOp* renderOp;
     AndrossChildSetup* childSetup;
     int rotationDelta;
-    s16 durationBeforeStep;
     u32 val;
     u32 spawnArrayIndex;
     f32 fval;
@@ -2200,15 +2200,15 @@ void andross_update(int obj)
     }
     camActionParam = -180.0f + state->camOffsetAccum;
     (*gCameraInterface)->releaseAction(&camActionParam, 4);
-    boss->anim.velocityX = state->springStiffness * (state->targetPosX - boss->anim.localPosX) + boss->anim.velocityX;
-    boss->anim.velocityY = state->springStiffness * (state->targetPosY - boss->anim.localPosY) + boss->anim.velocityY;
-    boss->anim.velocityZ = state->springStiffness * (state->targetPosZ - boss->anim.localPosZ) + boss->anim.velocityZ;
-    boss->anim.velocityX = boss->anim.velocityX * state->springDamping;
-    boss->anim.velocityY = boss->anim.velocityY * state->springDamping;
-    boss->anim.velocityZ = boss->anim.velocityZ * state->springDamping;
-    boss->anim.localPosX = boss->anim.localPosX + boss->anim.velocityX;
-    boss->anim.localPosY = boss->anim.localPosY + boss->anim.velocityY;
-    boss->anim.localPosZ = boss->anim.localPosZ + boss->anim.velocityZ;
+    boss->anim.velocityX += state->springStiffness * (state->targetPosX - boss->anim.localPosX);
+    boss->anim.velocityY += state->springStiffness * (state->targetPosY - boss->anim.localPosY);
+    boss->anim.velocityZ += state->springStiffness * (state->targetPosZ - boss->anim.localPosZ);
+    boss->anim.velocityX *= state->springDamping;
+    boss->anim.velocityY *= state->springDamping;
+    boss->anim.velocityZ *= state->springDamping;
+    boss->anim.localPosX += boss->anim.velocityX;
+    boss->anim.localPosY += boss->anim.velocityY;
+    boss->anim.localPosZ += boss->anim.velocityZ;
 
     if (gAndrossZero == state->velZ)
     {
