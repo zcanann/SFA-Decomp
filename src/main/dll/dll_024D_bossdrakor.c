@@ -135,7 +135,8 @@ void bossdrakor_update(int obj)
             modelLightStruct_setSpecularTargetColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0x80, 0x40);
             modelLightStruct_startColorFade(((BossDrakorState*)state)->lightObj, 2, 0x28);
             modelLightStruct_setAffectsAabbLightSelection(((BossDrakorState*)state)->lightObj, 1);
-            modelLightStruct_setGlowProjectionRadius(((BossDrakorState*)state)->lightObj, lbl_803E6550);
+            modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)((BossDrakorState*)state)->lightObj,
+                                                      lbl_803E6550);
         }
     }
     moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(

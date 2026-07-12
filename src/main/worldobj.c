@@ -2,6 +2,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 
@@ -86,7 +87,6 @@ extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
@@ -199,7 +199,7 @@ void worldobj_init(GameObject* obj, int arg)
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0xff, 0xff, 0);
             modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66AC, lbl_803E66D0);
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
-            modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E66A0);
+            modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)state->light, lbl_803E66A0);
         }
         break;
     case 0x5f5:

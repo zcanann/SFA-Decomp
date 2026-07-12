@@ -67,7 +67,6 @@ extern void modelLightStruct_setEnabled(void*, int, f32);
 extern void modelLightStruct_startColorFade(void*, int, int);
 extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
 extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
-extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
 extern u8 gLightSourceColorTable[];
 
 int lightsource_getExtraSize(void)

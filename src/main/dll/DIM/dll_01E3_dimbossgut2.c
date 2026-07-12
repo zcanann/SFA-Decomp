@@ -59,7 +59,6 @@ extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 
 void dimbossgut2_updateTracking(GameObject* obj, int state)
 {
@@ -338,7 +337,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
         lightSetFieldBC_8001db14((ModelLightStruct*)((Dimbossgut2Curve*)curve)->light, 1);
         modelLightStruct_setDistanceAttenuation(((Dimbossgut2Curve*)curve)->light, lbl_803E4D2C, lbl_803E4CE0);
         modelLightStruct_setupGlow(((Dimbossgut2Curve*)curve)->light, 0, 0, 255, 0, 127, lbl_803E4D30);
-        modelLightStruct_setGlowProjectionRadius(((Dimbossgut2Curve*)curve)->light, lbl_803E4D04);
+        modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)((Dimbossgut2Curve*)curve)->light, lbl_803E4D04);
     }
 }
 

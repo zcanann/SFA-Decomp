@@ -1,5 +1,6 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/sky_interface.h"
@@ -25,7 +26,6 @@ extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 
 /* CampfireExtra - the per-class extra state block (GameObject.extra) for the
  * campfire object class; CampFire_getExtraSize() returns 0x14. Single-owner;
@@ -240,6 +240,6 @@ void CampFire_init(int obj, int def)
         modelLightStruct_setDiffuseTargetColor((int)state->light, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow((int)state->light, 0, 0xff, 0x7f, 0, 0x87,
                                    40.0f * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setGlowProjectionRadius((int)state->light, 30.0f);
+        modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)state->light, 30.0f);
     }
 }

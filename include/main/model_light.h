@@ -2,6 +2,7 @@
 #define MAIN_MODEL_LIGHT_H_
 
 #include "ghidra_import.h"
+#include "main/modellight_api.h"
 
 typedef struct ModelLightStruct {
     void *owner;
@@ -137,7 +138,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct *light, f32 nearZ);
 void modelLightStruct_setProjectionFarZ(ModelLightStruct *light, f32 farZ);
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *light, f32 fovY, f32 aspect);
 void modelLightStruct_setupOrthoProjection(ModelLightStruct *light, f32 top, f32 bottom, f32 left, f32 right, f32 scaleS, f32 scaleT);
-void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius);
 void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale);
 

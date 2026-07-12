@@ -119,7 +119,6 @@ extern void ModelLightStruct_free(void* p);
 extern const f32 lbl_803E3330;
 extern const f32 lbl_803E3354;
 extern const f32 lbl_803E3358;
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern const f32 lbl_803E3378;
 extern const f32 lbl_803E337C;
 extern const f32 lbl_803E3380;
@@ -604,7 +603,7 @@ void Fireball_init(int* obj)
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], base1[c], base2[c], 32,
                                            lbl_803E337C);
-                modelLightStruct_setGlowProjectionRadius(*(int*)state, lbl_803E337C);
+                modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)*(int*)state, lbl_803E337C);
             }
         }
         ((GameObject*)obj)->anim.alpha = 200;

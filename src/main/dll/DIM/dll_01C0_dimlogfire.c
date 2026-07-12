@@ -14,6 +14,7 @@
 #include "main/dll/imanimspacecraftstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
@@ -298,7 +299,6 @@ void DIMLogFire_update(GameObject* obj)
 
 void DIMLogFire_init(int obj, int def)
 {
-    extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius);
     extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius);
     extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
     extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
@@ -339,6 +339,6 @@ void DIMLogFire_init(int obj, int def)
         modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87,
                                    lbl_803E483C * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
+        modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)state->light, lbl_803E4834);
     }
 }

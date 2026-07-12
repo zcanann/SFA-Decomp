@@ -2,6 +2,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

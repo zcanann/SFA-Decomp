@@ -222,7 +222,6 @@ extern f32 lbl_803E6A28;
 extern int lbl_803DC2F0;
 extern int lbl_803DDD70;
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(void* light, f32 f);
 extern f32 lbl_803E6940;
 extern f32 lbl_803E6944;
 extern f32 lbl_803E6948;
