@@ -2180,7 +2180,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     (P).planes[K].normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                      \
     (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
 
-#define OBJFSA_WG(GRP) ((ObjfsaWalkGroup*)((char*)patchBase + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
+#define OBJFSA_WG(GRP) ((ObjfsaWalkGroup*)((char*)patchBase[0] + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
 
 #define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
     exitFz = (f32)(ZF);                                                                                                \
@@ -2195,7 +2195,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
         }                                                                                                              \
     }
 
-#define OBJFSA_NEWPATCH (patchBase[gObjfsaPatchCount])
+#define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
 
 #define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                                                                 \
     po = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                             \
@@ -2215,7 +2215,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 #pragma opt_propagation off
 void walkgroupFindExitPointFn_800dc398(void)
 {
-    ObjfsaPatch* patchBase = gObjfsaPatches;
+    ObjfsaPatch* patchBase[1];
     u8 blockFlags[0x78];
     u8 pairs[364];
     f32 z1;
@@ -2268,6 +2268,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 fy0;
     f32 fy1;
     f32 zero;
+    patchBase[0] = gObjfsaPatches;
     mapBlockFn_80059c2c(blockFlags);
 
     checksum = 1;
@@ -2299,8 +2300,8 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
 
         curveList = (int**)(*gRomCurveInterface)->getCurves(&curveCount);
-        memset((char*)patchBase + OBJFSA_ACTIVE_WALKGROUPS_OFFSET, 0, OBJFSA_WALKGROUP_COUNT);
-        sp = patchBase;
+        memset((char*)patchBase[0] + OBJFSA_ACTIVE_WALKGROUPS_OFFSET, 0, OBJFSA_WALKGROUP_COUNT);
+        sp = patchBase[0];
         for (pi = 8; pi != 0; pi--)
         {
             sp[0].groupId = 0;
@@ -2345,9 +2346,9 @@ void walkgroupFindExitPointFn_800dc398(void)
             if (*(s8*)(curve + 0x19) == 0x26)
             {
                 gi = *(u8*)(curve + 3);
-                wg = &((ObjfsaWalkGroup*)patchBase)[gi];
+                wg = &((ObjfsaWalkGroup*)patchBase[0])[gi];
                 wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
-                *((u8*)patchBase + gi + OBJFSA_ACTIVE_WALKGROUPS_OFFSET) = 1;
+                *((u8*)patchBase[0] + gi + OBJFSA_ACTIVE_WALKGROUPS_OFFSET) = 1;
 
                 x0 = OBJFSA_CORNER(curve, curve + 0x4, 0x8);
                 z0 = OBJFSA_CORNER(curve, curve + 0x5, 0x10);
@@ -2395,7 +2396,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                         }
 
                         found = 1;
-                        sp = &patchBase[1];
+                        sp = &patchBase[0][1];
                         for (searchCount = 1; searchCount < gObjfsaPatchCount; searchCount++)
                         {
                             if (pairId == sp->groupId)
@@ -2418,7 +2419,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 back = 4;
                             }
                             wg->patchIndices[slot] = gObjfsaPatchCount;
-                            np = &patchBase[gObjfsaPatchCount];
+                            np = &patchBase[0][gObjfsaPatchCount];
                             np->groupId = pairId;
                             pairs[gObjfsaPatchCount * 2] = *(u8*)(curve + 3);
                             pairs[gObjfsaPatchCount * 2 + 1] = *(u8*)(linked + 3);
@@ -2481,12 +2482,12 @@ void walkgroupFindExitPointFn_800dc398(void)
         pp = &pairs[2];
         zero = lbl_803E05F0;
         div = lbl_803E060C;
-        p = &patchBase[1];
+        p = &patchBase[0][1];
         for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
-            wg = &((ObjfsaWalkGroup*)patchBase)[pp[0]];
+            wg = &((ObjfsaWalkGroup*)patchBase[0])[pp[0]];
             wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
-            wgB = &((ObjfsaWalkGroup*)patchBase)[pp[1]];
+            wgB = &((ObjfsaWalkGroup*)patchBase[0])[pp[1]];
             wgB = (ObjfsaWalkGroup*)((char*)wgB + 0x3000);
             fdx = (f32)(p->exit1X - p->exit0X);
             fdz = (f32)(p->exit1Z - p->exit0Z);
