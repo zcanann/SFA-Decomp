@@ -2029,7 +2029,6 @@ main/dll/dll_019C_dll19c.c:
 
 main/dll/dll_019D_dll19d.c:
 	.text       start:0x801CC998 end:0x801CCFA4
-	.sdata2     start:0x803E51B8 end:0x803E51C0
 	.sdata2     start:0x803E51C0 end:0x803E51C8
 
 main/dll/DIM/dll_019E_dim_tricky.c:

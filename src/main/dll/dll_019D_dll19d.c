@@ -34,10 +34,7 @@ typedef struct Dll19DState
 } Dll19DState;
 
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E51B8 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E51BC = 0.0f;
-#pragma explicit_zero_data off
+extern f32 lbl_803E51B8;
 
 /* partfx ids: 0x2a0 = impact burst (spawned 3x on hit in dll_19D_hitDetect
  * and the update hit-link branch); 0x29d = per-frame flight trail. */
