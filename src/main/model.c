@@ -126,9 +126,9 @@ void postRenderSetAlphaBlendState(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void ObjModel_SetPostRenderCallback(u8* model, void* callback)
+void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback)
 {
-    ((ObjModel*)model)->postRenderCallback = callback;
+    model->postRenderCallback = callback;
 }
 
 void* ObjModel_GetRenderCallback(u8* model)

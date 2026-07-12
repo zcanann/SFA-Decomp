@@ -9,6 +9,7 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/newclouds.h"
+#include "main/model.h"
 
 #define FUELCELL_OBJGROUP 0x4f
 extern void* ObjGroup_GetObjects();
@@ -35,7 +36,6 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_PlayFromObject(int* obj, int soundId);
@@ -320,6 +320,6 @@ void FuelCell_init(int* obj)
 {
     extern void* Obj_GetActiveModel(int* obj);
     ((GameObject*)obj)->animEventCallback = FuelCell_SeqFn;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
+    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }

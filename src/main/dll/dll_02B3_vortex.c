@@ -264,7 +264,7 @@ void Vortex_init(int obj, int initData)
         }
     }
     o->objectFlags |= VORTEX_OBJFLAG_HITDETECT_DISABLED;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)o), postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel((int)o), postRenderSetAlphaBlendState);
     if (state->flags.active != 0)
         state->alpha = lbl_803E73E0;
     else

@@ -222,7 +222,7 @@ void wcapertures_init(GameObject* obj, WCAperturesSetup* setup)
     }
     objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
     state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback((ObjModel*)Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
     state->light = objCreateLight(obj, 1);
     if (state->light != NULL)
     {

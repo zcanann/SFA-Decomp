@@ -22,6 +22,7 @@
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/genprops.h"
@@ -106,7 +107,6 @@ extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern int* Obj_GetActiveModel(int obj);
 extern void postRenderSetAlphaBlendState(void);
-extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
 extern int getHudHiddenFrameCount(void);
 extern void vecRotateZXY(int* obj, f32* p);
 extern f32 fcos16(u16 angle);
@@ -722,7 +722,7 @@ void Shield_update(int* obj)
 void Shield_init(int* obj, void* initData)
 {
     int* model = Obj_GetActiveModel((int)obj);
-    ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback((ObjModel*)model, postRenderSetAlphaBlendState);
     if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
     {
         staffFn_80170380(obj, 5);

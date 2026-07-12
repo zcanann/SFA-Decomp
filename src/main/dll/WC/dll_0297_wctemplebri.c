@@ -343,5 +343,5 @@ void wctemplebri_init(GameObject* obj, int initData)
         objAnim->alpha = 0;
     }
     obj->objectFlags |= (WCTEMPLEBRI_OBJFLAG_HIDDEN | WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED);
-    ObjModel_SetPostRenderCallback((int)model, postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }

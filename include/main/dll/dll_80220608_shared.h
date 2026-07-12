@@ -72,7 +72,6 @@ extern f32 lbl_803E6E18;
 extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 extern int Obj_GetActiveModel(int obj);
-extern void ObjModel_SetPostRenderCallback(int model, void* callback);
 
 extern void dll_2E_func03(int obj, int p2);
 
