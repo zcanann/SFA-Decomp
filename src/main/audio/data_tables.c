@@ -481,6 +481,7 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
     return 0;
 }
 
+#pragma opt_dead_assignments off
 s32 dataInsertMacro(u16 mid, void* macroaddr)
 {
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
@@ -550,6 +551,7 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
     sndEnd();
     return 0;
 }
+#pragma opt_dead_assignments reset
 
 s32 dataRemoveMacro(u16 mid)
 {
