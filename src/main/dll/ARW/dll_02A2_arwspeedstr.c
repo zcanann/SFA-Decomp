@@ -93,9 +93,9 @@ void fn_80231028(GameObject* obj, int speed)
     state->speed = speed;
 }
 
-void fn_80231058(GameObject* obj, int src)
+void fn_80231058(GameObject* obj, ARWSpeedStrVelocity* velocity)
 {
-    obj->anim.velocityX = ((ARWSpeedStrVelocity*)src)->x;
-    obj->anim.velocityY = ((ARWSpeedStrVelocity*)src)->y;
-    obj->anim.velocityZ = ((ARWSpeedStrVelocity*)src)->z;
+    obj->anim.velocityX = velocity->x;
+    obj->anim.velocityY = velocity->y;
+    obj->anim.velocityZ = velocity->z;
 }

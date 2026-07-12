@@ -16,21 +16,9 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
+#include "main/dll/ARW/dll_02A3.h"
+#include "main/dll/ARW/dll_02A4.h"
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
-
-typedef struct Dll2A4State
-{
-    f32 fadeTimer; /* 0x00: counts down by timeDelta; frees obj at 0 */
-    s16 spinRateX; /* 0x04 */
-    s16 spinRateY; /* 0x06 */
-    s16 spinRateZ; /* 0x08 */
-    u8 padA[0x0C - 0x0A];
-} Dll2A4State;
-
-STATIC_ASSERT(sizeof(Dll2A4State) == 0x0c);
-STATIC_ASSERT(offsetof(Dll2A4State, spinRateX) == 0x04);
-STATIC_ASSERT(offsetof(Dll2A4State, spinRateY) == 0x06);
-STATIC_ASSERT(offsetof(Dll2A4State, spinRateZ) == 0x08);
 
 /* Spawn-setup buffer for a squadron ship: ObjPlacement head (pos/color) plus
  * the class-specific rotation bytes the parent seeds (all 0) at +0x18. */
@@ -84,9 +72,9 @@ void dll_2A4_render(int obj, int p2, int p3, int p4, int p5)
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7138);
 }
 
-void dll_2A4_update(int obj)
+void dll_2A4_update(GameObject* obj)
 {
-    Dll2A4State* state = ((GameObject*)obj)->extra;
+    Dll2A4State* state = obj->extra;
 
     if (state->fadeTimer > lbl_803E713C)
     {
@@ -94,17 +82,17 @@ void dll_2A4_update(int obj)
         if (state->fadeTimer <= lbl_803E713C)
         {
             state->fadeTimer = lbl_803E713C;
-            Obj_FreeObject((GameObject*)obj);
+            Obj_FreeObject(obj);
             return;
         }
     }
 
-    ((GameObject*)obj)->anim.rotX = (s16)((f32)state->spinRateX * timeDelta + (f32) * (s16*)(obj + 0));
-    ((GameObject*)obj)->anim.rotY = (s16)((f32)state->spinRateY * timeDelta + (f32) * (s16*)(obj + 2));
-    ((GameObject*)obj)->anim.rotZ = (s16)((f32)state->spinRateZ * timeDelta + (f32) * (s16*)(obj + 4));
+    obj->anim.rotX = (s16)((f32)state->spinRateX * timeDelta + (f32)obj->anim.rotX);
+    obj->anim.rotY = (s16)((f32)state->spinRateY * timeDelta + (f32)obj->anim.rotY);
+    obj->anim.rotZ = (s16)((f32)state->spinRateZ * timeDelta + (f32)obj->anim.rotZ);
 
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
+    objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+            obj->anim.velocityZ * timeDelta);
 }
 
 void dll_2A4_init(GameObject* obj)
@@ -122,7 +110,7 @@ void dll_2A4_init(GameObject* obj)
 void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
-    f32 dir[3];
+    Dll2A3Velocity dir;
 
     if (Obj_IsLoadingLocked())
     {
@@ -142,10 +130,10 @@ void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
         newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
-        dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
-        dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
-        dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_8023137C((GameObject*)(newObj), dir);
+        dir.x = setup->velocityX / *(f32*)&lbl_803E7140;
+        dir.y = setup->velocityY / *(f32*)&lbl_803E7140;
+        dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
+        fn_8023137C((GameObject*)(newObj), &dir);
         fn_8023134C((GameObject*)(newObj), setup->projectileSpeed);
     }
 }
@@ -153,7 +141,7 @@ void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
 void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
-    f32 dir[3];
+    ARWSpeedStrVelocity dir;
 
     if (Obj_IsLoadingLocked())
     {
@@ -173,10 +161,10 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
         newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
-        dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
-        dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
-        dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_80231058((GameObject*)(newObj), (int)dir);
+        dir.x = setup->velocityX / *(f32*)&lbl_803E7140;
+        dir.y = setup->velocityY / *(f32*)&lbl_803E7140;
+        dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
+        fn_80231058((GameObject*)(newObj), &dir);
         fn_80231028((GameObject*)(newObj), setup->projectileSpeed);
     }
 }

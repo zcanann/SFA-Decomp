@@ -187,15 +187,6 @@ typedef struct
 } SunVec3;
 
 
-extern int lbl_803DDD90;
-extern int lbl_803DDD94;
-extern f32 lbl_803E7118;
-extern f32 lbl_803E711C;
-extern f32 lbl_803E7120;
-extern f32 lbl_803E7124;
-
-extern f32 lbl_803E7138;
-extern const f32 lbl_803E713C;
 
 extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
 extern void Obj_SetActiveModelIndex(int obj, int index);
@@ -636,7 +627,6 @@ extern f32 lbl_803E6EF4;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E7140;
 
 extern f32 lbl_803E7044;
 #pragma dont_inline on
@@ -933,24 +923,6 @@ void Dummy29E_update(void);
 void Dummy29E_init(void);
 void Dummy29E_release(void);
 void Dummy29E_initialise(void);
-int dll_2A3_getExtraSize_ret_12(void);
-int dll_2A3_getObjectTypeId(void);
-void dll_2A3_release_nop(void);
-void dll_2A3_initialise_nop(void);
-int dll_2A4_getExtraSize_ret_12(void);
-int dll_2A4_getObjectTypeId(void);
-void dll_2A4_free_nop(void);
-void dll_2A4_hitDetect_nop(void);
-void dll_2A4_release_nop(void);
-void dll_2A4_initialise_nop(void);
-void dll_2A3_free(void);
-void dll_2A3_render(int obj, int p2, int p3, int p4, int p5);
-void dll_2A3_hitDetect(void);
-void dll_2A3_update(int obj);
-void dll_2A3_init(GameObject* obj);
-void dll_2A4_render(int obj, int p2, int p3, int p4, int p5);
-void dll_2A4_update(int obj);
-void dll_2A4_init(GameObject* obj);
 int brokenpipe_getExtraSize(void);
 void brokenpipe_init(GameObject* obj, int setup);
 void brokenpipe_update(GameObject* obj);
@@ -1121,9 +1093,7 @@ void arwarwing_updateRollAndEngine(int obj, int state);
 void arwarwinggu_setTextureFrame(GameObject* obj, int p2);
 void arwarwing_clearAimSnapshot(GameObject* obj);
 void arwarwing_initAttachments(GameObject* obj, int state);
-void fn_8023137C(GameObject* obj, f32* src);
 void fn_8022ED74(GameObject* obj, int v);
-void fn_8023134C(GameObject* obj, int v);
 void arwarwinggu_applyTextureFrame(GameObject* obj);
 void fn_8022ECE0(GameObject* obj, f32 param);
 void arwarwing_spawnBomb(GameObject* obj, int state, int side);
