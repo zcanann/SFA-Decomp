@@ -182,6 +182,7 @@ extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
+void Obj_FreeObject(GameObject* obj);
 extern void Obj_RegisterObject(u8* obj, int b);
 extern void objLoadPlayerFromSave(u8* obj);
 extern void modelInitBones(f32 scale, void* model);
@@ -191,7 +192,6 @@ extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern int getDataFileSize(int id);
 extern void fn_802B4DE0(u8* obj, int flag);
-extern void Obj_FreeObject(u8* obj);
 extern void fn_80059A50(int arg);
 extern void* textureFn_8006c5c4(void);
 extern void playerUpdateWhileTimeStopped(u8* obj);
@@ -2260,7 +2260,7 @@ void Obj_RegisterObject(u8* obj, int flags)
 }
 
 #pragma dont_inline off
-void Obj_FreeObject(u8* obj)
+void Obj_FreeObject(GameObject* obj)
 {
     u8** p;
     int n;
@@ -2269,17 +2269,17 @@ void Obj_FreeObject(u8* obj)
     int off;
     u8* q;
 
-    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_FREED)
+    if (obj->objectFlags & OBJECT_FLAG_FREED)
     {
         return;
     }
     Sfx_RemoveLoopedObjectSoundForObject((u32)obj);
     Sfx_StopObjectChannel((u32)obj, 0x7f);
-    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
+    if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            if (((u8**)gObjList)[i] == obj)
+            if (((GameObject**)gObjList)[i] == obj)
             {
                 break;
             }
@@ -2299,7 +2299,7 @@ void Obj_FreeObject(u8* obj)
         {
             OSReport(sObjFreeNonExistentObjectWarning);
         }
-        if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
+        if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
             objList_remove(&gObjUpdateList, obj);
         }
@@ -2308,14 +2308,14 @@ void Obj_FreeObject(u8* obj)
     for (i = 0; i < gObjDeferredFreeCount; i++)
     {
     }
-    ((GameObject*)obj)->objectFlags |= OBJECT_FLAG_FREED;
-    if (((GameObject*)obj)->unkEA != 0)
+    obj->objectFlags |= OBJECT_FLAG_FREED;
+    if (obj->unkEA != 0)
     {
         i = 0;
         base = lbl_803DCB90;
         for (; i < lbl_803DCB8C; i++)
         {
-            if (base[i] == obj)
+            if (base[i] == (u8*)obj)
             {
                 break;
             }
@@ -2324,7 +2324,7 @@ void Obj_FreeObject(u8* obj)
         {
             if (lbl_803DCB8C < 0x18)
             {
-                ((u8**)lbl_803DCB90)[lbl_803DCB8C] = obj;
+                ((GameObject**)lbl_803DCB90)[lbl_803DCB8C] = obj;
                 lbl_803DCB8C++;
                 return;
             }
@@ -2341,7 +2341,7 @@ void Obj_FreeObject(u8* obj)
         {
             for (i = 0; i < gObjDeferredFreeCount; i++)
             {
-                if (((u8**)gObjDeferredFreeList)[i] == obj)
+                if (((GameObject**)gObjDeferredFreeList)[i] == obj)
                 {
                     break;
                 }
@@ -2349,7 +2349,7 @@ void Obj_FreeObject(u8* obj)
         }
         if (i == gObjDeferredFreeCount)
         {
-            ((u8**)gObjDeferredFreeList)[gObjDeferredFreeCount] = obj;
+            ((GameObject**)gObjDeferredFreeList)[gObjDeferredFreeCount] = obj;
             gObjDeferredFreeCount++;
             if (gObjDeferredFreeCount == 400)
             {
@@ -2359,7 +2359,7 @@ void Obj_FreeObject(u8* obj)
     }
     else
     {
-        objFreeObjDef(obj, !gObjDefCaptureMode);
+        objFreeObjDef((u8*)obj, !gObjDefCaptureMode);
     }
 }
 
