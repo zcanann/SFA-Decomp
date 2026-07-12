@@ -8,6 +8,44 @@
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2
 #define SFX_LOOPED_OBJECT_STOP_FLAG 0x40
 
+#define STREAM_FADEBITS_FLAGA_SHIFT 6
+#define STREAM_FADEBITS_FLAGB_SHIFT 4
+#define STREAM_FADEBITS_STOPSFX_SHIFT 2
+#define STREAM_VOLBITS_CHANMASK_BIT 7
+#define STREAM_VOLBITS_VOLUME_MASK 0x7F
+
+typedef struct TextCallbackEntry {
+    u8 pad[0x20];
+    void (*fn)(int, int, int);
+    int a;
+    int b;
+    int c;
+} TextCallbackEntry;
+
+typedef struct MusicTrackSlot {
+    s16 id;
+    u8 unk2;
+    u8 unk3;
+    char* name;
+    int offset;
+    int size;
+} MusicTrackSlot;
+
+typedef struct StreamEntry {
+    u16 id;
+    u8 fadeBits;
+    u8 volBits;
+    u16 lengthRaw;
+    char name[0xF];
+    u8 flag;
+} StreamEntry;
+
+typedef struct MusicTrigger {
+    u16 id;
+    u16 track;
+    u8 pad[0xc];
+} MusicTrigger;
+
 typedef struct SfxLoopedObjectSoundTable {
     u8 flags[0x80];
     u16 ids[0x80];
@@ -150,6 +188,55 @@ extern f32 lbl_803DE5B4;
 extern f32 lbl_803DE5B8;
 extern double lbl_803DE5C0;
 extern double lbl_803DE5C8;
+extern volatile int gAudioArqRequestDone;
+extern int gAudioArqRequestIndex;
+extern TextCallbackEntry gAudioArqRequests[];
+extern u32 gAudioPendingLoadFlags;
+extern volatile u32 gAudioCompletedLoadFlags;
+extern char sMidiWadLoadedCallbackLoadError[];
+extern u8 gMidiWadLoadStarted;
+extern int gMidiWadLoadedSize;
+extern void* gMidiWadFileData;
+extern void* gMidiWadPayloadStart;
+extern int gMidiWadPayloadSize;
+extern int gMidiWadArenaSize;
+extern char sMidiWadPath[];
+extern MusicTrackSlot sMusicTrackTable[];
+extern char sPoolDataMLoadedCallbackLoadError[];
+extern char sPoolDataSLoadedCallbackLoadError[];
+extern char sProjectDataMLoadedCallbackLoadError[];
+extern char sProjectDataSLoadedCallbackLoadError[];
+extern char sSampleBufferMLoadedCallbackLoadError[];
+extern char sSampleBufferSLoadedCallbackLoadError[];
+extern char sSampleDirectoryMLoadedCallbackLoadError[];
+extern char sSampleDirectorySLoadedCallbackLoadError[];
+extern char sSfxTriggersLoadedCallbackLoadError[];
+extern char sMusicTriggersLoadedCallbackLoadError[];
+extern char sStreamsLoadedCallbackLoadError[];
+extern StreamEntry* gStreamsData;
+extern int gStreamsCount;
+extern int gAudioStreamFadeTable[];
+extern f32 gAudioStreamEndPosInfinite;
+extern MusicTrigger* gMusicTriggersData;
+extern int gMusicTriggersCount;
+extern f32 gAudioFramesPerSecond;
+extern s8 gAudioSoundMode;
+extern u8 gAudioHardwareInitialized;
+extern u8 gAudioMusicGroupReady;
+extern u8 gAudioSfxGroupsReady;
+extern u8 gAudioReady;
+extern void* gAudioStarfoxMPoolDataHandle;
+extern void* gAudioStarfoxMProjectDataHandle;
+extern void* gAudioStarfoxMSampleDirectoryHandle;
+extern void* gAudioStarfoxMSampleBufferHandle;
+extern void* gAudioStarfoxSPoolDataHandle;
+extern void* gAudioStarfoxSProjectDataHandle;
+extern void* gAudioStarfoxSSampleDirectoryHandle;
+extern void* gAudioStarfoxSSampleBufferHandle;
+extern int gAudioMemAllocHook;
+extern int gAudioMemFreeHook;
+extern u8 gAudioReverbSettings[];
+extern u8 gAudioAramBlock[];
 
 int sndSeqPlayEx(int a, int b, void* bank, MusicSeqStartParams* params, int e);
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
@@ -160,5 +247,7 @@ void Sfx_StopAllObjectSounds(void);
 void AudioStream_UpdateFadeTimer(void);
 void AudioStream_CancelCallback(s32 result);
 void fn_8000D0B4(void);
+void fn_80008EDC(TextCallbackEntry* entry);
+void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 
 #endif /* MAIN_AUDIO_INTERNAL_H_ */

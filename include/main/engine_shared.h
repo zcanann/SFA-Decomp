@@ -159,54 +159,10 @@ typedef struct PadStatusLite {
     s8 error;
 } PadStatusLite;
 typedef struct {
-    u8 pad[0x20];
-    void (*fn)(int, int, int);
-    int a;
-    int b;
-    int c;
-} TextCallbackEntry;
-typedef struct {
     u16 textSeqId;
     u16 dirId;
     u16 objSeqId;
 } TaskTextEntry;
-typedef struct MusicTrackSlot {
-    s16 id;
-    u8 unk2;
-    u8 unk3;
-    char* name;
-    int offset;
-    int size;
-} MusicTrackSlot;
-typedef struct {
-    u16 id;          // 0x0
-    u8 fadeBits;     // 0x2
-    u8 volBits;      // 0x3
-    u16 lengthRaw;   // 0x4
-    char name[0xF];  // 0x6
-    u8 flag;         // 0x15
-} StreamEntry;
-// StreamEntry.fadeBits/volBits bit layout (see AudioStream_Play in src/main/audio.c)
-#define STREAM_FADEBITS_FLAGA_SHIFT 6    // >>6 & 3, indexes gAudioStreamFadeTable -> gAudioStreamMusicFadeFlagA
-#define STREAM_FADEBITS_FLAGB_SHIFT 4    // >>4 & 3, indexes gAudioStreamFadeTable -> gAudioStreamMusicFadeFlagB
-#define STREAM_FADEBITS_STOPSFX_SHIFT 2  // >>2 & 3, non-zero stops all object sfx
-#define STREAM_VOLBITS_CHANMASK_BIT 7    // >>7 & 1: selects gAudioActiveChannelMask
-#define STREAM_VOLBITS_VOLUME_MASK 0x7F  // base volume 0-127
-typedef struct {
-    u16 id;
-    u16 track;
-    u8 pad[0xc];
-} MusicTrigger;
-/* Partial view of the synth sequence-player record; the FULL layout is
- * src/main/audio/synth_internal.h's SynthVoice (sizeof 0x1868 and state
- * @0x08 probe-verified against it; the two headers are never co-included,
- * recipe-#57 per-TU view). NOT the 0x404 per-voice record - that is
- * McmdVoiceState (mcmd.h). */
-typedef struct SynthVoice {
-    u8 pad0[8]; /* next/prev */
-    u8 state;   /* 0x08 */
-    u8 pad9[0x1868 - 9];
-} SynthVoice;
 typedef struct {
     u16 gridX;
     u16 gridZ;
@@ -436,7 +392,6 @@ void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
 extern void sndSeqVolume(int voice, int a, int handle, int b);
-extern int synthResolveHandle(int handle);
 extern int randomGetRange(int min, int max);
 extern int sndFXStartEx(s16 a, int b, int c, int d);
 extern f32 mathSinf(f32 x);
@@ -580,8 +535,6 @@ extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
 extern f32 lbl_803DE6E0;
 extern f32 lbl_803DE6E8;
-extern volatile int gAudioArqRequestDone;
-extern int gAudioArqRequestIndex;
 extern int gRenderMode;
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
@@ -601,38 +554,13 @@ extern void* gameTextDrawFunc;
 extern char* lbl_803DC9C4;
 extern char* gameStrcpy(char* dst, char* src);
 extern void gameTextFn_8001658c(int a, int b, int c);
-extern TextCallbackEntry gAudioArqRequests[];
 extern TaskTextEntry gTaskTextTable[];
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
-extern u32 gAudioPendingLoadFlags;
-extern volatile u32 gAudioCompletedLoadFlags;
-extern char sMidiWadLoadedCallbackLoadError[];
 extern void gameTextRenderStrs(char* str, int arg2);
-extern u8 gMidiWadLoadStarted;
-extern int gMidiWadLoadedSize;
-extern void *gMidiWadFileData;
-extern void *gMidiWadPayloadStart;
-extern int gMidiWadPayloadSize;
-extern int gMidiWadArenaSize;
-extern char sMidiWadPath[];
 extern u32 mmSetFreeDelay(u32 delay);
 extern u8 testAndSet_onlyUseHeap3(int arg);
 extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
 extern void fn_80008F38(void *addr, u32 dest, u32 size);
-extern MusicTrackSlot sMusicTrackTable[];
-extern char sPoolDataMLoadedCallbackLoadError[];
-extern char sPoolDataSLoadedCallbackLoadError[];
-extern char sProjectDataMLoadedCallbackLoadError[];
-extern char sProjectDataSLoadedCallbackLoadError[];
-extern char sSampleBufferMLoadedCallbackLoadError[];
-extern char sSampleBufferSLoadedCallbackLoadError[];
-extern char sSampleDirectoryMLoadedCallbackLoadError[];
-extern char sSampleDirectorySLoadedCallbackLoadError[];
-extern char sSfxTriggersLoadedCallbackLoadError[];
-extern char sMusicTriggersLoadedCallbackLoadError[];
-extern char sStreamsLoadedCallbackLoadError[];
-extern StreamEntry* gStreamsData;
-extern int gStreamsCount;
 extern int gVoxMapsSlotTimers[];
 extern u32 gVoxMapsTransformObj;
 extern f32 lbl_803DE6B0;
@@ -652,9 +580,7 @@ extern void mmFreeTick(int arg);
 extern void padUpdate(void);
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
-extern int gAudioStreamFadeTable[];
 extern f32 lbl_803DE5D4;
-extern f32 gAudioStreamEndPosInfinite;
 extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
 extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
 extern f32 lbl_803DE6BC;
@@ -674,15 +600,10 @@ extern u8 pauseMenuState;
 extern int getHudHiddenFrameCount(void);
 extern int getMinimapY(void);
 extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
-extern MusicTrigger* gMusicTriggersData;
-extern int gMusicTriggersCount;
-extern void Music_LoadChannelForTrigger(MusicTrigger *trigger);
-extern f32 gAudioFramesPerSecond;
 extern f32 lbl_803DE568;
 extern void sndSeqStop(int handle);
 extern void sndSeqMute(int handle, int a, int b);
 extern void sndSeqContinue(int handle);
-extern SynthVoice gSynthVoices[];
 extern VoxMaps gVoxMaps;
 extern u8 gVoxMapsSlotInUse[8];
 extern int *gVoxMapsMapList;
@@ -704,7 +625,6 @@ extern VoxState gVoxMapsRouteState;
 extern char sVoxmapsRouteNodesListOverflow[];
 extern int getTableFileEntry(int fileId, int index, int *out);
 extern void loadVoxMaps(int handle, int *outCount, int *outSize);
-extern s8 gAudioSoundMode;
 extern void sndOutputMode(int mode);
 extern u32 OSGetSoundMode(void);
 extern void OSSetSoundMode(int mode);
@@ -748,27 +668,10 @@ extern int lbl_803DC998;
 extern int lbl_803DC99C;
 extern f32 lbl_803DE700;
 extern f32 lbl_803DB3D0;
-extern void* gSfxTriggersData;
-extern u8 gAudioHardwareInitialized;
-extern u8 gAudioMusicGroupReady;
-extern u8 gAudioSfxGroupsReady;
-extern u8 gAudioReady;
-extern void *gAudioStarfoxMPoolDataHandle;
-extern void *gAudioStarfoxMProjectDataHandle;
-extern void *gAudioStarfoxMSampleDirectoryHandle;
-extern void *gAudioStarfoxMSampleBufferHandle;
-extern void *gAudioStarfoxSPoolDataHandle;
-extern void *gAudioStarfoxSProjectDataHandle;
-extern void *gAudioStarfoxSSampleDirectoryHandle;
-extern void *gAudioStarfoxSSampleBufferHandle;
-extern int gAudioMemAllocHook;
-extern int gAudioMemFreeHook;
 extern f32 lbl_803DE550;
 extern f32 lbl_803DE554;
 extern f32 lbl_803DE558;
 extern f32 lbl_803DE55C;
-extern u8 gAudioReverbSettings[];
-extern u8 gAudioAramBlock[];
 extern void ARInit(void *arena, int count);
 extern void ARQInit(void);
 extern void AIInit(int arg);
@@ -888,7 +791,6 @@ void gameTextFn_80016c18(int a, int b);
 void voxmaps_freeRouteWork(void** p);
 void voxmaps_allocRouteWork(void** p);
 void gameTextFreePhrase(int* p);
-void fn_80008EDC(TextCallbackEntry* p);
 void gameTextFn_80016810(int a, int b, int c);
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId);
 void gameTextShowTimeStr(char* str);

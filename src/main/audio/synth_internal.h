@@ -1,6 +1,7 @@
 #ifndef SFA_AUDIO_SYNTH_INTERNAL_H
 #define SFA_AUDIO_SYNTH_INTERNAL_H
 
+#ifndef SYNTH_INTERNAL_USE_PROJECT_TYPES
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -9,6 +10,7 @@ typedef int s32;
 typedef short s16;
 typedef float f32;
 typedef signed char s8;
+#endif
 
 #include "main/audio/mcmd.h"
 
