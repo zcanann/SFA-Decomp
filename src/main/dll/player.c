@@ -1334,7 +1334,7 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
 {
     PlayerState* inner = obj->extra;
     int r;
-    int hi;
+    int h[1];
     f32 timer;
     struct
     {
@@ -1394,30 +1394,30 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
-        hi = 0x200000;
+        h[0] = 0x200000;
         pfx.mode = 0;
-        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         pfx.mode = 1;
-        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         if ((((PlayerState*)inner)->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNo() != 0)
         {
-            int i;
+            int z[2];
             void** p[1];
-            hi = 0;
-            lbl_803DE42C = hi;
-            i = hi;
+            z[0] = 0;
+            lbl_803DE42C = z[0];
+            z[1] = z[0];
             p[0] = gPlayerSpawnedObjects;
             do
             {
                 if (*p[0] != NULL)
                 {
                     Obj_FreeObject((int)*p[0]);
-                    *p[0] = (void*)hi;
+                    *p[0] = NULL;
                 }
                 p[0]++;
-                i++;
-            } while (i < 7);
+                z[1]++;
+            } while (z[1] < 7);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
