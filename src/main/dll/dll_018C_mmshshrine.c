@@ -16,6 +16,7 @@
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -87,7 +88,6 @@ extern f32 lbl_803E4F60;
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int arg, int addToList);
-extern int Obj_GetPlayerObject(void);
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
@@ -142,7 +142,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
     int i;
 
     runtime = ((MMSHShrineObject*)objArg)->runtime;
-    playerObj = Obj_GetPlayerObject();
+    playerObj = (int)Obj_GetPlayerObject();
     seq->targetObject = -1;
     seq->activeCommand = 0;
 
@@ -291,7 +291,7 @@ void MMSH_Shrine_update(int objArg)
 
     obj = (MMSHShrineObject*)objArg;
     runtime = obj->runtime;
-    playerObj = Obj_GetPlayerObject();
+    playerObj = (int)Obj_GetPlayerObject();
 
     if (obj->loadTriggerTimer != 0)
     {

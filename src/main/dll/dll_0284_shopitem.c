@@ -19,6 +19,8 @@
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/dll/player_api.h"
 #include "main/curve_eval.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0284_shopitem.h"
@@ -95,10 +97,8 @@ extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 #define GX_ALWAYS      7
 #define GX_AOP_AND     0
 
-extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern int playerGetMoney(void* player);
 extern void* Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void ObjGroup_AddObject(u32 obj, int group);

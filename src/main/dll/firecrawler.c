@@ -27,6 +27,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
@@ -190,7 +191,6 @@ extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
 extern int fn_80295C88(void* player);
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E2B3C;
 extern f32 lbl_803E2B48;
 extern f32 lbl_803E2B50;

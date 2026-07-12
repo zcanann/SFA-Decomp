@@ -12,6 +12,7 @@
 #include "main/render.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/audio/music_trigger_ids.h"
@@ -54,7 +55,6 @@ extern f32 lbl_803E50D8;
 
 extern void skyFn_80088c94(int flags, int mode);
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
 extern void audioStopByMask(int mask);
@@ -77,7 +77,7 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
     u32 event;
 
     runtime = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
 
@@ -185,7 +185,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
     DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((void*)player == NULL)
     {
         return;

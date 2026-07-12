@@ -13,6 +13,8 @@
  */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/dll/player_api.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
@@ -23,9 +25,6 @@
 #define PAYMENTKIOSK_OBJFLAG_HIDDEN             0x4000
 #define PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern int Obj_GetPlayerObject(void);
-extern int playerGetMoney(int player);
-extern void playerAddMoney(int obj, int amount);
 
 extern void objRenderFn_80041018(int obj);
 
@@ -55,7 +54,7 @@ u32 PaymentKiosk_testEvent(GameObject* obj, int unused, int ev)
 {
     PaymentKioskMapData* setup = (PaymentKioskMapData*)obj->anim.placementData;
     PaymentKioskState* st = obj->extra;
-    int player;
+    GameObject* player;
     u32 r;
 
     player = Obj_GetPlayerObject();
@@ -97,7 +96,7 @@ int PaymentKiosk_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
 {
     PaymentKioskState* st = obj->extra;
     PaymentKioskMapData* setup = (PaymentKioskMapData*)obj->anim.placementData;
-    int player;
+    GameObject* player;
     int i;
     u8 ev;
     player = Obj_GetPlayerObject();

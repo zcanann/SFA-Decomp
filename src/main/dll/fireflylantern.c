@@ -16,6 +16,7 @@
  * (callers: dll_00C9_enemy, duster.)
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
@@ -29,7 +30,6 @@
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
-extern int Obj_GetPlayerObject(void);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
@@ -118,7 +118,7 @@ void fn_80154870(GameObject* obj, int* state)
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - (obj)->anim.localPosX;
     dvec[1] = lbl_803E2990;
     dvec[2] = *(f32*)(state[0xa7] + 0x14) - (obj)->anim.localPosZ;
-    if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == Obj_GetPlayerObject()))
+    if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
         ((FireflyState*)state)->trackTimer = lbl_803E2990;
