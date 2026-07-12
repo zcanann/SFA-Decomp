@@ -330,13 +330,13 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 {
     SDIR_TAB* p;
     s32 i;
-    SynthDataTables* t;
+    SynthDataTables* t[1];
     SDIR_DATA* s;
     u16 count;
     u16 j;
     u16 k;
 
-    for (i = 0, p = (t = (SynthDataTables*)dataSmpSDirTable)->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
+    for (i = 0, p = (t[0] = (SynthDataTables*)dataSmpSDirTable)->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
         ;
 
     if (i == dataSmpSDirNum)
@@ -354,8 +354,8 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
             {
                 for (i = 0; i < dataSmpSDirNum; ++i)
                 {
-                    s = t->sdir[i].data;
-                    for (k = 0; k < t->sdir[i].numSmp; ++k)
+                    s = t[0]->sdir[i].data;
+                    for (k = 0; k < t[0]->sdir[i].numSmp; ++k)
                     {
                         if (sdir[j].id == s[k].id)
                             goto found_id;
@@ -373,9 +373,9 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
             }
 
             i = dataSmpSDirNum;
-            t->sdir[i].data = sdir;
-            t->sdir[i].numSmp = count;
-            t->sdir[i].base = smp_data;
+            t[0]->sdir[i].data = sdir;
+            t[0]->sdir[i].numSmp = count;
+            t[0]->sdir[i].base = smp_data;
             ++dataSmpSDirNum;
             sndEnd();
             return 1;
