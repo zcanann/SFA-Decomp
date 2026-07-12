@@ -3156,8 +3156,8 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
 {
-    s16* p;
     void** q;
+    s16* p;
     int x0;
     int off;
     int x3;
