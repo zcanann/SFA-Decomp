@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/maketex.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/crfueltank.h"
@@ -14,7 +15,6 @@
 extern f32 lbl_803E6760;
 
 
-extern int fn_80080150(void* timer);
 extern void storeZeroToFloatParam(void* timer);
 extern void s16toFloat(void* timer, int duration);
 extern int timerCountDown(void* timer);
@@ -80,9 +80,9 @@ void crfueltank_update(CrFuelTankObject* obj)
 
     def = obj->def;
     state = obj->state;
-    if (fn_80080150(state->timer) != 0)
+    if (fn_80080150(&state->timer) != 0)
     {
-        if (timerCountDown(state->timer) != 0)
+        if (timerCountDown(&state->timer) != 0)
         {
             ObjHits_EnableObject(obj);
             obj->flags = (s16)(obj->flags & ~CRFUELTANK_OBJFLAG_HIDDEN);
@@ -94,7 +94,7 @@ void crfueltank_update(CrFuelTankObject* obj)
         if (obj->fadeTimer < 0xff)
         {
             obj->flags = (s16)(obj->flags | CRFUELTANK_OBJFLAG_HIDDEN);
-            s16toFloat(state->timer, 0x708);
+            s16toFloat(&state->timer, 0x708);
         }
         else
         {
@@ -111,10 +111,10 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
     state = obj->state;
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
-    storeZeroToFloatParam(state->timer);
+    storeZeroToFloatParam(&state->timer);
     if ((def->hitEvent != -1) && (mainGetBit(def->hitEvent) != 0))
     {
-        s16toFloat(state->timer, 0x708);
+        s16toFloat(&state->timer, 0x708);
         ObjHits_DisableObject(obj);
         obj->flags = (s16)(obj->flags | CRFUELTANK_OBJFLAG_HIDDEN);
         obj->fadeTimer = 0;

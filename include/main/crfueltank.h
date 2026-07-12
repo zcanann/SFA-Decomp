@@ -6,7 +6,7 @@
 
 typedef struct CrFuelTankState {
   u8 unk0[0xc];
-  u8 timer[4];
+  f32 timer;
 } CrFuelTankState;
 
 typedef struct CrFuelTankDef {

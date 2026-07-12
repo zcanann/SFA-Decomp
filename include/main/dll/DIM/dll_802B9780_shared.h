@@ -51,8 +51,6 @@ extern u32 FUN_8003b870();
 extern u32 FUN_80053754();
 extern u32 FUN_80053758();
 extern int FUN_80056600();
-extern u32 FUN_8007f6e4();
-extern u32 FUN_8007f718();
 extern u32 FUN_800e8630();
 extern u32 FUN_801141dc();
 extern u32 FUN_801141e8();

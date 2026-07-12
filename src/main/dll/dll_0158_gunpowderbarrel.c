@@ -21,6 +21,7 @@
  * main/dll/DR/gunpowderbarrel_state.h.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/maketex.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
@@ -84,7 +85,6 @@ extern f32 lbl_803E4318;
 extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
-extern int fn_80080150(f32* p);
 extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern f32 PSVECMag(f32 * v);

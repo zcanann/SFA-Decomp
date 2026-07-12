@@ -17,6 +17,7 @@
  * game bits 0x2AA-0x2AF are set.
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/maketex.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -112,7 +113,6 @@ enum
 
 extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
-extern int fn_80080150(void* timer);
 extern int randFn_80080100(int n);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 gWallCrawlerSpeedCap;
@@ -396,7 +396,7 @@ void wmwallcrawler_update(int obj)
             }
             else
             {
-                if (fn_80080150(st + 0x288) != 0)
+                if (fn_80080150((const f32*)(st + 0x288)) != 0)
                 {
                     timerCountDown(st + 0x288);
                 }

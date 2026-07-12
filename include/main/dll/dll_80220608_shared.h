@@ -95,7 +95,6 @@ extern int getAngle(f32 dx, f32 dz);
 
 
 
-extern int fn_80080150(int state);
 
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;

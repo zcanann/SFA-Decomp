@@ -17,6 +17,7 @@
  * quartet, and the 0x3F0.. counters).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/maketex.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
@@ -118,7 +119,7 @@ typedef struct HighTopRuntime
     f32 lookTargetY;
     f32 lookTargetZ;
     f32 curveFollowSpeedScale;
-    u8 padC2C[4];
+    f32 transitionTimer;
     f32 stateTimer; /* per-state countdown; -= framesThisStep, re-armed from random */
     u8 padC34[4];
     f32 sfxIntervalTimer;
@@ -1230,7 +1231,7 @@ int hightop_stateHandler09(GameObject* obj, int stateArg)
             ((HightopPlacement*)stateArg)->unk2A0 = lbl_803E6AAC;
         }
     }
-    if (fn_80080150((char*)state + 0xc2c) != 0)
+    if (fn_80080150(&state->transitionTimer) != 0)
     {
         if (timerCountDown((char*)state + 0xc2c) != 0)
         {

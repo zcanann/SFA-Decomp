@@ -59,5 +59,6 @@ void endObjSequence(int seq);
 void cameraFocusNpc(int param1, u8* obj);
 
 int randFn_80080100(int n);
+int fn_80080150(const f32* value);
 
 #endif /* MAIN_MAKETEX_H_ */

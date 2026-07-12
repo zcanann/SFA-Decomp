@@ -215,7 +215,7 @@ void seqClearTaskTexts(void)
     lbl_803DB71C = v;
 }
 
-int fn_80080150(f32* p)
+int fn_80080150(const f32* p)
 {
     return lbl_803DEFA0 != *p;
 }

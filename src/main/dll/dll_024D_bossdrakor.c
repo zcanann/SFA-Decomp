@@ -19,6 +19,7 @@
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/render.h"
 #include "main/object.h"
@@ -383,7 +384,7 @@ void bossdrakor_updateHeadTracking(GameObject* obj, int state)
         neck[0] += (s16)step;
         PSVECSubtract(&((BossDrakorState*)state)->homePosX, &(obj)->anim.localPosX, prm.vec);
         prm.val = lbl_803E651C;
-        if (fn_80080150((int)&((BossDrakorState*)state)->jawAnimAngle) != 0)
+        if (fn_80080150(&((BossDrakorState*)state)->jawAnimAngle) != 0)
         {
             vecF = objModelGetVecFn_800395d8(obj, 0xf);
             if (vecF != NULL)

@@ -17,6 +17,7 @@
  * defined in another DR DLL translation unit.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -155,7 +156,7 @@ void drakord_thornbush_update(GameObject* obj)
     int inner = *(int*)&(obj)->extra;
     int setup = *(int*)&(obj)->anim.placementData;
     int setup2;
-    if (fn_80080150((int)((char*)inner + 0xc)) != 0)
+    if (fn_80080150(&((DrakordThornbushState*)inner)->growth) != 0)
     {
         if (((DrakordThornbushState*)inner)->growth < (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius)
         {

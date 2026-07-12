@@ -1,5 +1,6 @@
 /* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
+#include "main/maketex.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
@@ -38,7 +39,6 @@ extern f32 lbl_803E679C;
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 extern void queueGlowRender(void* effect);
-extern int fn_80080150(f32* p);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void modelLightStruct_updateGlowAlpha(void* light);

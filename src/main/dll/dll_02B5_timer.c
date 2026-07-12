@@ -12,6 +12,7 @@
  * running timer.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/maketex.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -75,7 +76,7 @@ void timer_forceStart(GameObject* obj)
 void timer_addDuration(GameObject* obj, int duration)
 {
     TimerState* state = obj->extra;
-    if (fn_80080150((int)state) != 0)
+    if (((int (*)(int))fn_80080150)((int)state) != 0)
     {
         state->countdownTimer = state->countdownTimer + duration;
         if (state->mode == TIMER_MODE_GLOBAL)
@@ -127,7 +128,7 @@ void timer_update(GameObject* obj)
     setup = (TimerSetup*)(obj)->anim.placementData;
     flags = &state->flags;
 
-    if (fn_80080150((int)state) != 0)
+    if (((int (*)(int))fn_80080150)((int)state) != 0)
     {
         expiredThisFrame = 0;
         if (flags->manual == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
@@ -200,7 +201,7 @@ void timer_update(GameObject* obj)
             }
         }
     tail:
-        if (state->mode == TIMER_MODE_EFFECT && fn_80080150((int)state) != 0)
+        if (state->mode == TIMER_MODE_EFFECT && ((int (*)(int))fn_80080150)((int)state) != 0)
         {
             ModelLight* light = state->lightSlot;
             f32 glowAlpha; /* embedded-assign pins lbl_803DC41C to glowAlpha's reg */

@@ -8,6 +8,7 @@
  * field re-arms if the collapse bit is cleared again.
  */
 #include "main/game_object.h"
+#include "main/maketex.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -73,7 +74,6 @@ extern int lbl_803DBE94;   /* burst position jitter, +/- units */
 extern int lbl_803DBE98;   /* collapse rotY rate */
 extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
-extern int fn_80080150(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern int timerCountDown(f32* p);
 extern void storeZeroToFloatParam(f32* p);

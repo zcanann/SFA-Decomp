@@ -17,6 +17,7 @@
  * voxmaps_trace* world-line wrappers).
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
@@ -112,7 +113,7 @@ void barrelgener_update(GameObject* obj)
             mainSetBits(GAMEBIT_BARRELGENER_TRIGGERED, 1);
         }
     }
-    if (fn_80080150((int)&state->releaseTimer) != 0)
+    if (fn_80080150(&state->releaseTimer) != 0)
     {
         if (state->releaseTimer <= lbl_803E6C28 && state->releaseAnimPlaying == 0)
         {

@@ -153,7 +153,6 @@ extern f32 lbl_803E65C8;
 extern void s16toFloat(void* p, int v);
 extern int timerCountDown(f32* p);
 extern int arrayIndexOf();
-extern int fn_80080150(int p);
 extern void* playerGetFocusObject(int obj);
 extern f32 lbl_803E6598;
 extern f32 lbl_803E65A8;

@@ -26,6 +26,7 @@
  * point-light that tracks the emitter.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/maketex.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
@@ -58,7 +59,6 @@ extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern int objIsFrozen(FirePipeObject* obj);
-extern int fn_80080150(int timer);
 extern int timerCountDown(int timer);
 extern int modelLightStruct_createPointLight(FirePipeObject* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
@@ -322,7 +322,7 @@ void firepipe_updateState(FirePipeObject* obj)
         mainSetBits(mapData->gameBit, flags->lastGameBitState);
     }
 
-    if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->emitting == 0))
+    if ((fn_80080150(&extra->cycleTimer) != 0) && (flags->emitting == 0))
     {
         if (extra->cycleTimer < lbl_803DC348)
         {

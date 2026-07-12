@@ -13,6 +13,7 @@
  * pollen, pollenfragment).
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/maketex.h"
 #include "main/object_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/objseq_api.h"
@@ -40,7 +41,6 @@ typedef struct
     u8 usePath : 1;    /* 0x12 bit 4 */
 } PollenFragmentDef;
 
-/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
 typedef struct PollenFragmentExtra
 {
     int ownerObj; /* 0x00: owner captured on first update */
@@ -51,6 +51,8 @@ typedef struct PollenFragmentExtra
     f32 velZ;     /* 0x14 */
     u8 unk18[4];
     PollenFragmentDef* def; /* 0x1C */
+    f32 deathTimer;         /* 0x20 */
+    f32 lifetimeTimer;      /* 0x24 */
 } PollenFragmentExtra;
 
 typedef struct
@@ -84,7 +86,6 @@ extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void s16toFloat(void* timer, int duration);
 extern void storeZeroToFloatParam(void* timer);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int fn_80080150(int p);
 extern int timerCountDown(int timer);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
@@ -240,8 +241,8 @@ PollenFragmentConfig* lbl_8032059C[] = {
 
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    int* state = ((GameObject*)obj)->extra;
-    if (fn_80080150((int)((char*)state + 0x20)) != 0)
+    PollenFragmentExtra* state = ((GameObject*)obj)->extra;
+    if (fn_80080150(&state->deathTimer) != 0)
         return;
     ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3158);
 }
@@ -270,7 +271,7 @@ void pollenfragment_hitDetect(GameObject* obj)
     int hitObject;
 
     extra = *(u8**)&(obj)->extra;
-    if (fn_80080150((int)(extra + 0x20)) == 0)
+    if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) == 0)
     {
         hitType = ObjHits_GetPriorityHit(obj, &hitObject, 0, 0);
         if (hitType == 0xe || hitType == 0xf)
@@ -315,7 +316,7 @@ void pollenfragment_update(int obj)
         Obj_FreeObject(obj);
         return;
     }
-    if (fn_80080150((int)extra + 0x20) != 0)
+    if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
     {
         if (timerCountDown((int)(extra + 0x20)) != 0)
         {

@@ -275,7 +275,6 @@ extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A7C;
 extern f32 lbl_803E6A80;
 extern f32 lbl_803E6A84;
-extern int fn_80080150(void* timer);
 extern void s16toFloat(void* timer, int v);
 extern int timerCountDown(void* timer);
 extern void objRenderFn_80041018(int obj);
