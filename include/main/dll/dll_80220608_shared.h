@@ -165,7 +165,6 @@ extern f32 lbl_803E70D8;
 
 extern int arrayIndexOf(int array, int count, int value);
 
-extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
 
 
 

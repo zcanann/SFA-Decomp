@@ -184,7 +184,7 @@ void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d)
     (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)res + 4)))(0, 1, &s1, 0x401, -1, args);
 }
 
-void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* origin, f32 fval)
+void hitDetectFn_80097070(GameObject* obj, u8 a, u8 b, u8 count, GameObject* origin, f32 fval)
 {
     PartfxParams params;
     Tbl11 table = *(Tbl11*)lbl_802C2114;
@@ -200,9 +200,9 @@ void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* origin, f32 fva
     params.f6 = table.v[b];
     if (origin != NULL)
     {
-        params.vec[0] = ((GameObject*)origin)->anim.localPosX;
-        params.vec[1] = ((GameObject*)origin)->anim.localPosY;
-        params.vec[2] = ((GameObject*)origin)->anim.localPosZ;
+        params.vec[0] = origin->anim.localPosX;
+        params.vec[1] = origin->anim.localPosY;
+        params.vec[2] = origin->anim.localPosZ;
     }
     else
     {

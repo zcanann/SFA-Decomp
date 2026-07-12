@@ -4,6 +4,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#define OBJFX_HIT_DETECT_SCALE_SECOND_INTPTR_LEGACY
+#include "main/objfx.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -43,7 +45,6 @@ STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, rotByte) == 0x18);
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, unk1A) == 0x1a);
 STATIC_ASSERT(sizeof(GpshObjcreatorSpawnSetup) == 0x24);
 
-extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 
 extern s16 lbl_803263B8[];
 

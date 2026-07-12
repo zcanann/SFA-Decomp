@@ -4,6 +4,8 @@
 #include "main/dll/staffflags_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#define OBJFX_HIT_DETECT_SCALE_FIRST_LEGACY
+#include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/objseq.h"
@@ -61,7 +63,6 @@ extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
 extern void playerPullOutStaff(GameObject* obj, int enabled);
 
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

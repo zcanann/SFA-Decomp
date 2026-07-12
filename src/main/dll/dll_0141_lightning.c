@@ -6,12 +6,11 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/newclouds.h"
+#define OBJFX_HIT_DETECT_DOUBLE_SCALE_LEGACY
 #include "main/objfx.h"
 
 
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
-extern void hitDetectFn_80097070(u8* obj, double radius, int arg3, int arg4, int arg5,
-                                 int arg6);
 #define objfx_spawnDirectionalBurstDouble(obj, idx, radius, kind, mode, chance, scale, origin, flags)             \
     ((void (*)(u8*, int, double, int, int, int, f32, int, int))objfx_spawnDirectionalBurst)(                     \
         (u8*)(obj), (idx), (radius), (kind), (mode), (chance), (scale), (origin), (flags))

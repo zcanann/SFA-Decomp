@@ -64,4 +64,20 @@ void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, 
 
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
+#if defined(OBJFX_HIT_DETECT_SCALE_FIRST_LEGACY)
+void hitDetectFn_80097070(f32 scale, int obj, int effect, int variant, int count, int origin);
+#elif defined(OBJFX_HIT_DETECT_DOUBLE_SCALE_LEGACY)
+void hitDetectFn_80097070(u8* obj, double scale, int effect, int variant, int count, int origin);
+#elif defined(OBJFX_HIT_DETECT_SCALE_SECOND_INTPTR_LEGACY)
+void hitDetectFn_80097070(int* obj, f32 scale, int effect, int variant, int count, int origin);
+#elif defined(OBJFX_HIT_DETECT_SCALE_SECOND_CHARPTR_LEGACY)
+void hitDetectFn_80097070(char* obj, f32 scale, int effect, int variant, int count, int origin);
+#elif defined(OBJFX_HIT_DETECT_SCALE_SECOND_INT_LEGACY)
+void hitDetectFn_80097070(int obj, f32 scale, int effect, int variant, int count, int origin);
+#elif defined(OBJFX_HIT_DETECT_SCALE_FOURTH_LEGACY)
+void hitDetectFn_80097070(int obj, int effect, int variant, f32 scale, int count, int origin);
+#else
+void hitDetectFn_80097070(GameObject* obj, u8 effect, u8 variant, u8 count, GameObject* origin, f32 scale);
+#endif
+
 #endif /* MAIN_OBJFX_H_ */

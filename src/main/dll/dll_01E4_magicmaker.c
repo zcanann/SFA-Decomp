@@ -12,6 +12,8 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#define OBJFX_HIT_DETECT_SCALE_SECOND_CHARPTR_LEGACY
+#include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/dll/dll_01E4_magicmaker.h"
 
@@ -29,7 +31,6 @@ extern void mainSetBits(int eventId, int value);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
 
 int magicmaker_getExtraSize(void)
 {

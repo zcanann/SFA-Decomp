@@ -346,7 +346,6 @@ void waterfx_initialise(void);
 void viewFinderSetZoom(f32 zoom);
 void viewFinderSetZoomTo50(void);
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
-void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* p7, f32 fval);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
 void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);

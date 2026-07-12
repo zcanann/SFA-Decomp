@@ -19,6 +19,7 @@
  * id or required param skips that branch. The gameBit field gates all
  * spawning when non-(-1) and clear.
  */
+#define OBJFX_HIT_DETECT_SCALE_FOURTH_LEGACY
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
 #include "main/objfx.h"
