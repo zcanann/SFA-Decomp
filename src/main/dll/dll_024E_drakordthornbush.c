@@ -135,7 +135,7 @@ void drakord_thornbush_hitDetect(int obj)
             }
             else if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
             }
             else
             {
@@ -167,7 +167,7 @@ void drakord_thornbush_update(GameObject* obj)
             ((DrakorFlags*)((char*)inner + 0x79))->b80 = 1;
             if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject((GameObject*)obj);
             }
         }
     }

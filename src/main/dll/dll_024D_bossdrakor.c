@@ -489,7 +489,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
     f32 spd;
     f32 prod;
     f32* mstate;
-    u8* setup;
+    ObjPlacement* setup;
     f32 target[3];
     f32 vecA[3];
     f32 vecB[3];
@@ -511,16 +511,16 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                 if (Obj_IsLoadingLocked() != 0)
                 {
                     setup = Obj_AllocObjectSetup(0x20, BOSSDRAKOR_CHILD_OBJ_MISSILE);
-                    ((ObjPlacement*)setup)->posX = ((BossDrakorState*)state)->homePosX;
-                    ((ObjPlacement*)setup)->posY = ((BossDrakorState*)state)->homePosY;
-                    ((ObjPlacement*)setup)->posZ = ((BossDrakorState*)state)->homePosZ;
-                    setup[4] = 1;
-                    setup[5] = 1;
-                    setup[6] = 0xff;
-                    setup[7] = 0xff;
+                    setup->posX = ((BossDrakorState*)state)->homePosX;
+                    setup->posY = ((BossDrakorState*)state)->homePosY;
+                    setup->posZ = ((BossDrakorState*)state)->homePosZ;
+                    setup->color[0] = 1;
+                    setup->color[1] = 1;
+                    setup->color[2] = 0xff;
+                    setup->color[3] = 0xff;
                     if ((void*)player != NULL)
                     {
-                        missile = loadObjectAtObject((int)obj, setup);
+                        missile = loadObjectAtObject((int)obj, (u8*)setup);
                         if ((void*)missile != NULL)
                         {
                             prod = lbl_803DC188 * Vec_distance(&(obj)->anim.worldPosX,
@@ -560,17 +560,17 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                 if (Obj_IsLoadingLocked() != 0)
                 {
                     setup = Obj_AllocObjectSetup(0x24, BOSSDRAKOR_CHILD_OBJ_ATTACK);
-                    setup[4] = 2;
-                    setup[5] = 1;
-                    setup[6] = 0xff;
-                    setup[7] = 0xff;
-                    ((ObjPlacement*)setup)->posX = ((BossDrakorState*)state)->homePosX;
-                    ((ObjPlacement*)setup)->posY = ((BossDrakorState*)state)->homePosY;
-                    ((ObjPlacement*)setup)->posZ = ((BossDrakorState*)state)->homePosZ;
+                    setup->color[0] = 2;
+                    setup->color[1] = 1;
+                    setup->color[2] = 0xff;
+                    setup->color[3] = 0xff;
+                    setup->posX = ((BossDrakorState*)state)->homePosX;
+                    setup->posY = ((BossDrakorState*)state)->homePosY;
+                    setup->posZ = ((BossDrakorState*)state)->homePosZ;
                     ((BossdrakorPlacement*)setup)->airMeterMax = 0x3c;
                     ((BossdrakorPlacement*)setup)->unk1C = lbl_803DC194;
                     ((BossdrakorPlacement*)setup)->curveStartIndex = lbl_803DC190;
-                    loadObjectAtObject((int)obj, setup);
+                    loadObjectAtObject((int)obj, (u8*)setup);
                     Sfx_PlayFromObject((int)obj, SFXTRIG__UNK);
                 }
             }

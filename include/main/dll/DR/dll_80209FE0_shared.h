@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -153,7 +154,6 @@ extern f32 lbl_803E65C8;
 extern void s16toFloat(void* p, int v);
 extern int timerCountDown(f32* p);
 extern int arrayIndexOf();
-extern int Obj_FreeObject(int obj);
 extern int fn_80080150(int p);
 extern void* playerGetFocusObject(int obj);
 extern f32 lbl_803E6598;
@@ -205,7 +205,6 @@ extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECScale(f32* in, f32* out, f32 scale);
 extern f32 PSVECMag(f32* v);
 extern int getAngle(f32 dx, f32 dz);
-extern u8* Obj_AllocObjectSetup(int size, int typeId);
 extern int loadObjectAtObject(int obj, u8* setup);
 extern void drakormissile_startActiveLaunch(GameObject* obj);
 extern void skyFn_80088e54(int p, f32 v);
