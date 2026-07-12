@@ -490,7 +490,7 @@ void andross_update(int obj)
     GameObject* aimTarget;
     GameObject** spawnSlot;
     AndrossState* signalState;
-    ModelFileHeader* model;
+    ModelFileHeader* model = NULL;
     AndrossRenderOp* renderOp;
     AndrossChildSetup* childSetup;
     int rotationDelta;
@@ -2022,14 +2022,18 @@ void andross_update(int obj)
         break;
     case 5:
     {
-        AndrossHandState* leftHandState = state->handObjA->extra;
-        AndrossHandState* rightHandState = state->handObjB->extra;
+        AndrossHandState* rightHandState;
+        AndrossHandState* leftHandState;
+        AndrossState* animState;
+
+        leftHandState = state->handObjA->extra;
+        rightHandState = state->handObjB->extra;
 
         if (actionChanged)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
             {
-                AndrossState* animState = boss->extra;
+                animState = boss->extra;
                 ObjAnim_SetCurrentMove(obj, 0x16, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[22];
             }
