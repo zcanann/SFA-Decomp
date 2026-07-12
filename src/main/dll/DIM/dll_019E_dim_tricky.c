@@ -12,18 +12,23 @@
 
 
 
-extern f32 gDimTrickyLosMinDist;
-extern f32 lbl_803E51CC;
-extern f32 gDimTrickyLosObjOffsetDist;
-extern f32 gDimTrickyLosCamOffsetDist;
-extern f32 lbl_803E51D8;
-extern f32 lbl_803E51DC;
+__declspec(section ".sdata2") f32 gDimTrickyLosMinDist = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E51CC = 1.0f;
+__declspec(section ".sdata2") f32 gDimTrickyLosObjOffsetDist = 32.0f;
+__declspec(section ".sdata2") f32 gDimTrickyLosCamOffsetDist = -20.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E51D8 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E51DC = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E51E0 = -2.0f;
+__declspec(section ".sdata2") f32 gDimTrickyScaleTimerDivisor = 8192.0f;
+__declspec(section ".sdata2") f32 lbl_803E51E8 = 0.1f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E51EC = 0.0f;
+#pragma explicit_zero_data off
 extern int objUpdateOpacity(char* obj);
 extern s8 gDimTrickyEggSequenceStage;
 extern u32 gDimTrickyEggResArgsTemplate[4];
-extern f32 lbl_803E51E0;
-extern f32 gDimTrickyScaleTimerDivisor;
-extern f32 lbl_803E51E8;
 
 /* Partfx: idle sparkle emitted in render while the object is visible (losVisible);
  * the egg-activation burst emitted 100x in update when the egg turns active. */
