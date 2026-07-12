@@ -15,6 +15,7 @@
 #include "main/dll/objfsa_romcurve.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
@@ -57,7 +58,6 @@ extern const f32 lbl_803E05BC;
 extern const f32 lbl_803E05C0;
 extern const f32 lbl_803E05C4;
 extern int getAngle(float y, float x);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 
 #pragma opt_common_subs off
@@ -454,7 +454,7 @@ void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)
     if ((flags & mask) != 0)
     {
         *(int*)&((BaddieState*)state)->eventFlags = flags & ~mask;
-        Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
+        Sfx_PlayFromObject((u32)obj, (u16)sfxTable[idx]);
     }
 }
 
@@ -467,7 +467,7 @@ void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
     if ((flags & mask) != 0)
     {
         *(int*)&((BaddieState*)state)->eventFlags = flags & ~mask;
-        Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
+        Sfx_PlayFromObject((u32)obj, (u16)sfxTable[idx]);
     }
 }
 

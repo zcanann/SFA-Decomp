@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
@@ -81,7 +82,6 @@ extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
 
 extern void ModelLightStruct_free(void* light);
-extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
 extern void Obj_FreeObject(u8* obj);
 extern void objMove(void* obj, f32 x, f32 y, f32 z);
@@ -269,7 +269,7 @@ void BombPlantSpore_update(void* obj)
             {
             case BOMBPLANTSPORE_MSG_DETONATE:
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
-                Sfx_PlayFromObject(obj, SFXTRIG_sc_gemrun0122);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_gemrun0122);
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
                 {
@@ -370,7 +370,7 @@ void BombPlantSpore_update(void* obj)
         if (hitObj != NULL && (hitId = ((GameObject*)hitObj)->anim.seqId, hitId != 0x36d) && hitId != 0x198 &&
             hitId != 0x63c)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_sc_eatthefood16);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_eatthefood16);
             BOMBPLANTSPORE_FLAGS(state)->hitSurface = 1;
             if (state->fuseTimer > *(f32*)&lbl_803E53C0)
             {
@@ -399,7 +399,7 @@ void BombPlantSpore_update(void* obj)
         state->fuseTimer = fuse;
         if (fuse <= lbl_803E5394)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_en_majring2);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_en_majring2);
             (*gExpgfxInterface)->freeSource((u32)obj);
             for (j = 0; j < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; j++)
             {

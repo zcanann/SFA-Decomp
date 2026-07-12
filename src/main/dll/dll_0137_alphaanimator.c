@@ -18,6 +18,7 @@
  * releases the mode-3 buffer.
  */
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -61,7 +62,6 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void* mapGetBlock(int i);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Sfx_PlayFromObject(int* obj, int id);
 
 int AlphaAnimator_getExtraSize(void)
 {
@@ -162,7 +162,7 @@ void AlphaAnimator_update(int* obj)
         {
             if ((d->modeFlags >> 2) != 0)
             {
-                Sfx_PlayFromObject(obj, d->sfxId);
+                Sfx_PlayFromObject((u32)obj, d->sfxId);
             }
             s->doneCount = 0;
             s->prevGate = s->gateVal;
@@ -187,7 +187,7 @@ void AlphaAnimator_update(int* obj)
             }
             if ((d->modeFlags >> 2) != 0)
             {
-                Sfx_PlayFromObject(obj, d->sfxId);
+                Sfx_PlayFromObject((u32)obj, d->sfxId);
             }
         }
     }

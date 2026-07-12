@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -58,7 +59,6 @@ extern f32 lbl_803E4D44;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void Sfx_PlayFromObject(int obj, int id);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void doRumble(f32 duration);
 extern f32 lbl_803E4D38;
