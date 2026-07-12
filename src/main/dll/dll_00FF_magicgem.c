@@ -7,6 +7,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/objlib.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 #include "main/gamebits.h"
@@ -19,10 +20,6 @@
 #define MAGICGEM_MSG_PICKUP                 0x7000b /* collect: award magic + burst */
 #define MAGICGEM_GAMEBIT_CLAIMED            0x90d   /* per-frame single-pickup latch */
 
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
-extern void ObjLink_DetachChild(int obj, int child);
 extern f32 lbl_803E34B0;
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int obj, int amount);
@@ -59,7 +56,7 @@ void MagicDust_free(GameObject* obj)
 {
     if (*(u32*)&obj->ownerObj != 0)
     {
-        ObjLink_DetachChild(*(int*)&obj->ownerObj, (int)obj);
+        ObjLink_DetachChild((GameObject*)obj->ownerObj, (int)obj);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
     return;
@@ -108,7 +105,7 @@ void MagicDust_update(GameObject* obj)
 
     player = (int)Obj_GetPlayerObject();
     state = obj->extra;
-    while (ref = ObjMsg_Pop(obj, msg, 0x0, 0x0), ref != 0)
+    while (ref = ObjMsg_Pop(obj, (u32*)msg, 0x0, 0x0), ref != 0)
     {
         switch (msg[0])
         {
@@ -282,7 +279,7 @@ void MagicDust_update(GameObject* obj)
                     if (val == 0)
                     {
                         *(s16*)&state->pickupMsgArg = 0xffff;
-                        ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, (int)state + 0x280);
+                        ObjMsg_SendToObject((void*)player, MAGICGEM_MSG_IN_RANGE, obj, (int)state + 0x280);
                         ObjHits_DisableObject(obj);
                         mainSetBits(MAGICGEM_GAMEBIT_CLAIMED, 1);
                         state->flags27A = state->flags27A | MAGICGEM_FLAG_CLAIMED;
