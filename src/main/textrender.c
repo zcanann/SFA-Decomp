@@ -2879,13 +2879,13 @@ void gameTextLoadGraphicsFn_8001a918(void)
     u8* buf;
     int sizeA;
     int y;
+    int sizeB;
     int x;
     u8* bufA;
     u8* bufB;
     int savedHeap;
     int count;
     u8* glyph;
-    int sizeB;
     u8* fontData;
     u8 s[3];
     int width;
