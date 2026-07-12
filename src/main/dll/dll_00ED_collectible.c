@@ -873,7 +873,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             if (mainGetBit(GAMEBIT_SawBigHealth) == 0)
             {
-                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 mainSetBits(GAMEBIT_SawBigHealth, 1);
             }
             else
@@ -891,7 +891,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case COLLECTIBLE_ITEM_APPLE:
             if (mainGetBit(GAMEBIT_SawApple) == 0)
             {
-                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 mainSetBits(GAMEBIT_SawApple, 1);
             }
             else
@@ -903,7 +903,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case 0x6a6:
             if (mainGetBit(GAMEBIT_CollectedFlag09A8) == 0)
             {
-                ObjMsg_SendToObject((void*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 mainSetBits(GAMEBIT_CollectedFlag09A8, 1);
             }
             else
@@ -917,7 +917,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
             {
                 mainSetBits(GAMEBIT_EnableCMenu, 1);
                 ((CollectibleState*)state)->pickupMsgValue = attach[0xf];
-                ObjMsg_SendToObject((void*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 state[0x37] |= 1;
                 if ((obj)->anim.modelState != NULL)
                 {

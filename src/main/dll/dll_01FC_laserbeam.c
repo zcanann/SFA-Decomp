@@ -415,11 +415,11 @@ void LaserBeam_update(int obj2)
                         beamKind = b->beamKind;
                         if (beamKind == 0 || beamKind == 1)
                         {
-                            ObjMsg_SendToObject((u8*)player, LASERBEAM_MSG_PLAYER_HIT, (char*)b + 0x34, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_HIT, (char*)b + 0x34, 0);
                         }
                         else if ((u8)(beamKind - 2) <= 1 || beamKind == 30)
                         {
-                            ObjMsg_SendToObject((u8*)player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
                         }
                         *(u8*)&b->fireCooldown = 2;
                     }

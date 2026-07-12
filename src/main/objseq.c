@@ -947,7 +947,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                     ObjMsg_SendToNearbyObjects(0, gObjSeqMsgNearbyRadius, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
                     break;
                 default:
-                    ObjMsg_SendToObject(sourceObj, gObjSeqMsgIds[arg10], obj, 0);
+                    ObjMsg_SendToObject((GameObject*)sourceObj, gObjSeqMsgIds[arg10], obj, 0);
                     break;
                 }
             }

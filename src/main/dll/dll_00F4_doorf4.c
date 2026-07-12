@@ -233,15 +233,15 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int msg;
     int objCount;
     int objIdx;
-    int* other;
+    GameObject* other;
     int gb;
     u8 gbToggle;
     int active;
-    int* list;
-    int* player;
+    GameObject** list;
+    GameObject* player;
     DoorF4Placement* def;
     DoorF4State* sub;
-    int** walk;
+    GameObject** walk;
     CameraViewSlot* vs;
     u8 ev;
     f32 ang[1];
@@ -256,9 +256,9 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     def = *(DoorF4Placement**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
     sd = lbl_803E3648;
-    list = ObjList_GetObjects(&objIdx, &objCount);
+    list = (GameObject**)ObjList_GetObjects(&objIdx, &objCount);
     animUpdate->sequenceEventActive = 0;
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     dx = ((GameObject*)player)->anim.localPosX - def->head.posX;
     dy = ((GameObject*)player)->anim.localPosZ - def->head.posZ;
     dist = sqrtf(dx * dx + dy * dy);
@@ -373,7 +373,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         if (gb != 0)
         {
-            for (i = objIdx, walk = (int**)((char*)list + i * 4); i < objCount && active == 0; walk++, i++)
+            for (i = objIdx, walk = (GameObject**)((char*)list + i * 4); i < objCount && active == 0; walk++, i++)
             {
                 other = *walk;
                 if (((GameObject*)other)->anim.seqId == 0x7c)

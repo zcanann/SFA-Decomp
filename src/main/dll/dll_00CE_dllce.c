@@ -36,6 +36,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/player_control_interface.h"
 
 /* object group this object belongs to */
@@ -51,7 +52,6 @@
 #define DLLCE_HIT_VOLUME_SLOT 10
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_EnableObject();
-extern void ObjMsg_SendToObjects();
 
 int fn_8015E3A0(GameObject* obj, int state)
 {
@@ -373,7 +373,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
     }
     else if (*(char*)&state->baddie.moveDone != '\0')
     {
-        ObjMsg_SendToObjects(0, 3, (int)obj, 0xe0000, (int)obj);
+        ObjMsg_SendToObjects(0, 3, obj, 0xe0000, (u32)obj);
         if (obj->anim.placementData == NULL)
         {
             Obj_FreeObject((GameObject*)obj);

@@ -100,7 +100,7 @@ extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
  * and player-mode handoff. The spring model pulls a rider toward the
  * lift column and lifts it with the wind; slot->phaseFlags carries the rider's
  * phase bits. */
-void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
+void fn_8019C784(GameObject* obj, GameObject* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
 {
     GameObject* player;
     f32 lim;
@@ -397,7 +397,7 @@ void WindLift_update(int* obj)
             }
             if (player != NULL)
             {
-                fn_8019C784(obj, (int*)player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
+                fn_8019C784((GameObject*)obj, player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
             }
         }
         else
@@ -473,7 +473,8 @@ void WindLift_update(int* obj)
                 }
                 else if (rider != NULL)
                 {
-                    fn_8019C784(obj, *objs++, &sub->slots[found], pull, gb2, 0, sub->duration, sub->liftHeight);
+                    fn_8019C784((GameObject*)obj, (GameObject*)*objs++, &sub->slots[found], pull, gb2, 0,
+                                sub->duration, sub->liftHeight);
                 }
             }
         }

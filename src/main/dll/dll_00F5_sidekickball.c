@@ -155,13 +155,13 @@ void trickyBallFn_801793b8(GameObject* obj, u8* paramsRaw)
 {
 
     SidekickBallState* params = (SidekickBallState*)paramsRaw;
-    int* player;
+    GameObject* player;
     int* playerState;
     s16 yItem;
     u32 btns;
     f32 lcl[6];
 
-    player = (int*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     playerState = ((GameObject*)player)->extra;
 
     if (params->triggerArmed == 1)
@@ -183,7 +183,7 @@ void trickyBallFn_801793b8(GameObject* obj, u8* paramsRaw)
     btns = getButtonsJustPressed(0);
     if ((btns & PAD_BUTTON_A) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & PAD_BUTTON_Y) != 0))
     {
-        if (isTrickyNear(player) != 0)
+        if (isTrickyNear((int*)player) != 0)
         {
             params->sendHoldMessage[0] = 0;
         }
@@ -202,7 +202,7 @@ void trickyBallFn_801793b8(GameObject* obj, u8* paramsRaw)
     if (((GameObject*)obj)->unkF8 != 0)
         goto end;
 
-    if (fn_8029669C(player) == 0)
+    if (fn_8029669C((int*)player) == 0)
         goto fading;
 
     params->triggerHit = 0;

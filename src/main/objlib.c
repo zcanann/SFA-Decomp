@@ -1447,21 +1447,19 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
     return;
 }
 
-u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param)
+u32 ObjMsg_SendToObject(GameObject* obj, u32 message, void* sender, u32 param)
 {
     u32 count;
-    void* dstObj;
     void* senderObj;
     ObjMsgQueue* queue;
     ObjMsgQueueSlotBase* slot;
 
-    dstObj = obj;
     senderObj = sender;
-    if (dstObj == 0x0)
+    if (obj == NULL)
     {
         return 0;
     }
-    queue = *(ObjMsgQueue**)((u8*)dstObj + OBJMSG_QUEUE_OFFSET);
+    queue = *(ObjMsgQueue**)((u8*)obj + OBJMSG_QUEUE_OFFSET);
     if (queue != (ObjMsgQueue*)0x0)
     {
         count = queue->count;
@@ -1474,8 +1472,8 @@ u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param)
             queue->count = queue->count + 1;
             return queue->count;
         }
-        debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)((GameObject*)dstObj)->anim.classId,
-                    (int)((GameObject*)dstObj)->anim.seqId, (int)((GameObject*)senderObj)->anim.seqId);
+        debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId, (int)obj->anim.seqId,
+                    (int)((GameObject*)senderObj)->anim.seqId);
     }
     return 0;
 }

@@ -1824,13 +1824,13 @@ void cMenuRun(void)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     s16* cursor;
-    u8* player;
+    GameObject* player;
     int flags;
     int isTricky;
     u16 btn16;
     u32 btn;
 
-    player = (u8*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     isTricky = 0;
     cMenuSelectedItem = -1;
     if (player == 0)
@@ -2143,7 +2143,7 @@ void cMenuRun(void)
                                     {
                                         cMenuOpen = 0;
                                         gCMenuActivatedId = cMenuSelectedItem;
-                                        cMenuPlayTrickyCommandSfx(player);
+                                        cMenuPlayTrickyCommandSfx((u8*)player);
                                         gCMenuCloseSfx = 0;
                                     }
                                 }
@@ -2175,7 +2175,7 @@ void cMenuRun(void)
                     if (gTrickyHudItemMask & (1 << yButtonItem))
                     {
                         gCMenuActivatedId = yButtonItem;
-                        cMenuPlayTrickyCommandSfx(player);
+                        cMenuPlayTrickyCommandSfx((u8*)player);
                         buttonDisable(0, 0x900);
                     }
                 }

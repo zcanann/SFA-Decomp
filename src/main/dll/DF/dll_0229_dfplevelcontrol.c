@@ -93,7 +93,7 @@ void fn_80204098(GameObject* obj)
         if (mainGetBit(0x5e5) != 0)
         {
             state->timer = 300;
-            ObjMsg_SendToObject((void*)player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 0);
+            ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 0);
         }
     }
     if (mainGetBit(0x7a1) != 0)
@@ -154,7 +154,7 @@ void fn_80204320(GameObject* obj)
         if (mainGetBit(1509) != 0)
         {
             sub->timer = 300;
-            ObjMsg_SendToObject((void*)player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 1);
+            ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 1);
         }
     }
 }

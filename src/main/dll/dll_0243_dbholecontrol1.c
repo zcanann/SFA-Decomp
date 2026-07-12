@@ -17,6 +17,7 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/objhits.h"
+#include "main/obj_message.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 
@@ -118,7 +119,6 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);
     extern int* ObjGroup_GetObjects(int, int*);
-    extern void ObjMsg_SendToObjects(int, int, int, int, int);
     int newObj;
     void* res;
     int* objs;
@@ -153,7 +153,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     if (mainGetBit(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
         objs = ObjGroup_GetObjects(DBEGG_OBJGROUP, &count);
-        ObjMsg_SendToObjects(0, 3, obj, 17, 0);
+        ObjMsg_SendToObjects(0, 3, (void*)obj, 17, 0);
         while (count-- != 0)
         {
             ObjGroup_RemoveObject(*objs++, DBEGG_OBJGROUP);
