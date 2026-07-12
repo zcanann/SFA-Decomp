@@ -12,6 +12,7 @@
  * course-specific text; commitRingChoice picks the follow-up music.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/ARW/dll_02A1_arwlevelcon.h"
 #include "main/dll/headdisplay.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -24,41 +25,6 @@
 
 /* camera mode DLL 0x56 = dll_0056_cameramodearwing */
 #define ARWLEVELCON_CAMMODE_ARWING 0x56
-
-typedef struct ARWLevelConSetup
-{
-    u8 pad00[0x14];
-    int routeSignature;
-} ARWLevelConSetup;
-
-typedef struct ARWLevelConState
-{
-    f32 sequenceParam0;
-    f32 sequenceParam1;
-    f32 sequenceParam2;
-    f32 sequenceParam3;
-    u8 pad10[4];
-    s16 sequenceSlot;
-    s16 sequenceCameraId;
-    u8 skyConfigured;
-    u8 sequenceStarted;
-    u8 ringChoiceTriggered;
-    u8 alternateRoute;
-    int streamId;
-    u16 ringChoiceTriggerId;
-    u8 pad22[2];
-} ARWLevelConState;
-
-STATIC_ASSERT(sizeof(ARWLevelConState) == 0x24);
-STATIC_ASSERT(offsetof(ARWLevelConState, sequenceSlot) == 0x14);
-STATIC_ASSERT(offsetof(ARWLevelConState, sequenceCameraId) == 0x16);
-STATIC_ASSERT(offsetof(ARWLevelConState, skyConfigured) == 0x18);
-STATIC_ASSERT(offsetof(ARWLevelConState, sequenceStarted) == 0x19);
-STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggered) == 0x1a);
-STATIC_ASSERT(offsetof(ARWLevelConState, alternateRoute) == 0x1b);
-STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1c);
-STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
-STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
 
 void arwlevelcon_onSeqFree(GameObject* obj)
 {
@@ -75,11 +41,10 @@ void arwlevelcon_onSeqFree(GameObject* obj)
     arwingHudSetVisible(1);
 }
 
-int arwlevelcon_SeqFn(GameObject* obj, int unused, int data)
+int arwlevelcon_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
 {
     int i;
     int textId;
-    ObjSeqState* seq = (ObjSeqState*)data;
 
     seq->freeCallback = (ObjAnimSequenceFreeCallback)arwlevelcon_onSeqFree;
     for (i = 0; i < seq->eventCount; i++)
@@ -211,10 +176,9 @@ void arwlevelcon_update(GameObject* obj)
     }
 }
 
-void arwlevelcon_init(GameObject* obj, u8* setup)
+void arwlevelcon_init(GameObject* obj, ARWLevelConSetup* setup)
 {
     ARWLevelConState* state = obj->extra;
-    ARWLevelConSetup* mapData = (ARWLevelConSetup*)setup;
 
     obj->animEventCallback = arwlevelcon_SeqFn;
     state->sequenceSlot = 1;
@@ -226,7 +190,7 @@ void arwlevelcon_init(GameObject* obj, u8* setup)
     }
     state->sequenceParam2 = lbl_803E70F0;
     state->sequenceParam3 = lbl_803E70F4;
-    if (mapData->routeSignature == 0x48f7e)
+    if (setup->routeSignature == 0x48f7e)
     {
         state->alternateRoute = 1;
     }

@@ -242,7 +242,6 @@ extern f32 lbl_803E70F4;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-int arwlevelcon_SeqFn(GameObject* obj, int p2, int data);
 
 extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EE8;
@@ -720,19 +719,8 @@ int arwarwing_getObjectTypeId(void);
 void arwarwing_free(GameObject* obj);
 void arwarwing_release(void);
 void arwarwing_initialise(void);
-int arwlevelcon_getExtraSize(void);
-int arwlevelcon_getObjectTypeId(void);
-void arwlevelcon_free(void);
-void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5);
-void arwlevelcon_hitDetect(void);
-void arwlevelcon_onSeqFree(GameObject* obj);
-void arwlevelcon_release(void);
-void arwlevelcon_initialise(void);
-void arwlevelcon_init(GameObject* obj, u8* setup);
-int arwlevelcon_SeqFn(GameObject* obj, int p2, int data);
 void arwarwing_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void arwarwing_hitDetect(GameObject* obj);
-void arwlevelcon_update(GameObject* obj);
 void arwarwing_setFlightHalfWidth(int arwing, f32 width);
 int arwarwing_getRotY(int arwing);
 void arwarwing_setRotY(int arwing, int rotY);
