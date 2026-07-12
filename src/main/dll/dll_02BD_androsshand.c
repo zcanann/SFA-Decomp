@@ -13,6 +13,7 @@
  * damage texture index is written into the model's texture slot.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/objfx_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/dll/dll_02BC_andross.h"
@@ -373,7 +374,7 @@ void androsshand_handleDamage(GameObject* obj, AndrossHandState* state)
                 andross_setPartSignal(state->androssObj, 1);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11);
                 ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
-                DIMexplosionFn_8009a96c((int)obj, x, y, z, 120.0f, 1, 1, 1, 1, 0, 1, 0);
+                DIMexplosionFn_8009a96c((u8*)obj, x, y, z, 120.0f, 1, 1, 1, 1, 0, 1, 0);
             }
             break;
         }

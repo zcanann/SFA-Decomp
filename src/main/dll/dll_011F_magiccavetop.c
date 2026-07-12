@@ -8,6 +8,7 @@
 #include "main/model.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/player_objects.h"
+#include "main/dll/dll_00E2_staff.h"
 #include "main/gamebits.h"
 #include "main/objprint_dolphin.h"
 #include "main/pad.h"
@@ -68,7 +69,6 @@ typedef struct MagiccavetopState
 } MagiccavetopState;
 
 
-extern void staffSetGlow(void* a, int b, int c);
 
 
 
@@ -86,12 +86,12 @@ void MagicCaveTop_free(int* obj)
     MagiccavetopState* state = ((GameObject*)obj)->extra;
     MagiccavetopPlacement* def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
     void* player;
-    void* staff;
+    int* staff;
     stopRumble2();
     player = Obj_GetPlayerObject();
     if (player != NULL)
     {
-        staff = (void*)Player_GetStaffObject((int)player);
+        staff = (int*)Player_GetStaffObject((int)player);
         if (staff != NULL)
         {
             staffSetGlow(staff, 5, 0);
@@ -124,7 +124,7 @@ void MagicCaveTop_update(int* obj)
     int gb;
     u8 dirIdx;
     int range;
-    void* staff;
+    int* staff;
     f32 dist;
     f32 originXZ;
 
@@ -221,7 +221,7 @@ void MagicCaveTop_update(int* obj)
                         stopRumble();
                         if (player != NULL)
                         {
-                            staff = (void*)Player_GetStaffObject((int)player);
+                            staff = (int*)Player_GetStaffObject((int)player);
                             if (staff != NULL)
                             {
                                 staffSetGlow(staff, 5, 0);
@@ -236,7 +236,7 @@ void MagicCaveTop_update(int* obj)
                             stopRumble();
                             if (player != NULL)
                             {
-                                staff = (void*)Player_GetStaffObject((int)player);
+                                staff = (int*)Player_GetStaffObject((int)player);
                                 if (staff != NULL)
                                 {
                                     staffSetGlow(staff, 5, 0);
@@ -249,7 +249,7 @@ void MagicCaveTop_update(int* obj)
                             stopRumble2();
                             if (player != NULL)
                             {
-                                staff = (void*)Player_GetStaffObject((int)player);
+                                staff = (int*)Player_GetStaffObject((int)player);
                                 if (staff != NULL)
                                 {
                                     staffSetGlow(staff, 5, 0);
@@ -263,7 +263,7 @@ void MagicCaveTop_update(int* obj)
                         stopRumble2();
                         if (player != NULL)
                         {
-                            staff = (void*)Player_GetStaffObject((int)player);
+                            staff = (int*)Player_GetStaffObject((int)player);
                             if (staff != NULL)
                             {
                                 staffSetGlow(staff, 5, 0);
@@ -279,7 +279,7 @@ void MagicCaveTop_update(int* obj)
                     doRumble(3.0f);
                     if (player != NULL)
                     {
-                        staff = (void*)Player_GetStaffObject((int)player);
+                        staff = (int*)Player_GetStaffObject((int)player);
                         if (staff != NULL)
                         {
                             staffSetGlow(staff, 5, 2);

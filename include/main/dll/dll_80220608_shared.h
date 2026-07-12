@@ -154,8 +154,6 @@ extern const f32 lbl_803E75F4;
 extern const f32 lbl_803E75F8;
 
 
-extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
-                                    int k);
 extern const f32 lbl_803E75A8;
 
 
@@ -235,7 +233,6 @@ extern f32 lbl_803E6EF8;
 #pragma dont_inline reset
 
 extern int objGetFirstChild(void);
-extern void staffSetGlow(int staff, int p2, int p3);
 
 extern f32 fn_802945E0(f32 ratio);
 extern f32 lbl_803E6F80;

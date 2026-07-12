@@ -16,6 +16,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
+#include "main/dll/dll_00E2_staff.h"
 /* mcupgrade_state.h: only McUpgradeMaSetup + MCUPGRADE_OBJ_FLAG_COLLECTED used here. */
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
@@ -68,13 +69,13 @@ int mcstaffeffe_SeqFn(McStaffEffectObject* staffEffect, int unused, ObjAnimUpdat
         switch (animUpdate->eventIds[i])
         {
         case MCSTAFFEFFECT_EVENT_FORCE_GLOW:
-            staffSetGlow(staff, 5, 1);
+            staffSetGlow((int*)staff, 5, 1);
             break;
         case MCSTAFFEFFECT_EVENT_RESTORE_GLOW:
-            staffSetGlow(staff, 5, (u8)staffEffect->staffGlowLevel);
+            staffSetGlow((int*)staff, 5, (u8)staffEffect->staffGlowLevel);
             break;
         case MCSTAFFEFFECT_EVENT_CLEAR_GLOW:
-            staffSetGlow(staff, 5, 0);
+            staffSetGlow((int*)staff, 5, 0);
             break;
         }
     }

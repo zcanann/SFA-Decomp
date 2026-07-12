@@ -31,6 +31,7 @@
 #include "main/objprint.h"
 #include "main/objlib.h"
 #include "main/dll/dll_00E5_shield.h"
+#include "main/dll/dll_00E2_staff.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
@@ -133,7 +134,6 @@ extern f32 lbl_803E33CC;
  * descriptor-catalogue data (0x80320A28), split out of this TU */
 extern f32 lbl_80320A28[];
 
-void staffSetGlow(int* obj, u8 a, u8 b);
 
 void Shield_hitDetect(void);
 void Shield_release(void);
