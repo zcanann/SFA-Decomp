@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 #include "main/dll/ediblemushroom.h"
@@ -44,7 +45,6 @@ extern f32 gBombPlantSporeOffsetScale;
 extern f32 gBombPlantGrowRateMin;
 extern f32 gBombPlantGrowDuration;
 extern int objIsFrozen(u8* obj);
-extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern f32 gBombPlantTriggerDistSq;

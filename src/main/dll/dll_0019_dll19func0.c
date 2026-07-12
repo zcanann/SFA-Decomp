@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/lightmap_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -63,7 +64,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
-extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
@@ -297,7 +297,7 @@ int dll_19_func13(GameObject *obj, u8* state, f32 distThreshold, int requireFar)
 {
     extern f32 lbl_803E1C68;
     extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i);
-    int player = Obj_GetPlayerObject();
+    int player = (int)Obj_GetPlayerObject();
     int result = 0;
 
     if ((s8)((BaddieState*)state)->moveDone != 0)
@@ -456,7 +456,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
     int delta;
     u8 traced;
 
-    objs[0] = Obj_GetPlayerObject();
+    objs[0] = (int)Obj_GetPlayerObject();
     objs[1] = 0;
     dp = diff;
     list = objs;
@@ -547,7 +547,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
 int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate, u8* hitPosOut)
 {
     u8* state = *(u8**)(obj + 184);
-    int player = Obj_GetPlayerObject();
+    int player = (int)Obj_GetPlayerObject();
     int hit;
     int v28;
     int v24;

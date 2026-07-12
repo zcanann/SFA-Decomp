@@ -15,6 +15,7 @@
  * flames, and ends the player's carry.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"
@@ -152,7 +153,6 @@ extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern void* Obj_GetPlayerObject(void);
 extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);

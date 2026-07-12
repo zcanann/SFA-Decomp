@@ -7,6 +7,7 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/effect_interfaces.h"
@@ -70,7 +71,6 @@ extern u32 ModelLightStruct_free();
 #define DIMBOSS_ENVFX_A 0xdb
 #define DIMBOSS_ENVFX_B 0xdc
 extern void Obj_FreeObject(u8* obj);
-extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                         u32 p4, u32 p5, f32 scale);
@@ -596,7 +596,7 @@ void DIMboss_update(DIMbossObject* obj)
                 }
                 else
                 {
-                    targetModel = Obj_GetPlayerObject();
+                    targetModel = (u32)Obj_GetPlayerObject();
                     runtime->targetModel = targetModel;
                 }
                 childObject = obj->childObject;

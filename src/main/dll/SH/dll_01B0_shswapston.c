@@ -12,6 +12,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model_engine.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
@@ -55,7 +56,6 @@ extern void ObjLink_DetachChild(int obj, int child);
 extern void Obj_FreeObject(int obj);
 extern int randFn_80080100(int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int Obj_GetPlayerObject(void);
 extern int fn_80296464(void);
 extern int* Obj_GetActiveModel(int player);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
@@ -493,7 +493,7 @@ void warpstone_update(int obj)
 
     if (((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer != 0)
     {
-        target = Obj_GetPlayerObject();
+        target = (int)Obj_GetPlayerObject();
     }
     else
     {

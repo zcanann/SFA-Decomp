@@ -18,6 +18,7 @@
 #include "main/dll/dll_00F4_doorf4.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/dll/sidekickball_state.h"
 #include "main/dll/path_control_interface.h"
@@ -75,7 +76,6 @@ extern const f32 lbl_803E36D4;
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
 extern u8 gSidekickBallPathPointData[];
-extern void* Obj_GetPlayerObject(void);
 
 enum SidekickBallMode
 {
@@ -163,7 +163,7 @@ void trickyBallFn_801793b8(GameObject* obj, u8* paramsRaw)
     u32 btns;
     f32 lcl[6];
 
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     playerState = ((GameObject*)player)->extra;
 
     if (params->triggerArmed == 1)
@@ -269,7 +269,7 @@ void SidekickBall_update(u8* self)
         (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     state->onPathPoint = 0;
 
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     other = getTrickyObject();
     if (player == NULL || (((GameObject*)player)->objectFlags & SIDEKICKBALL_OBJFLAG_PARENT_SLACK) != 0 ||
         other == NULL ||
