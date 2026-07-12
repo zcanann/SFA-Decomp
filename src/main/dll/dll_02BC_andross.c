@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/dll/dll_02BC_andross.h"
+#include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/dll/dll_02BD_androsshand.h"

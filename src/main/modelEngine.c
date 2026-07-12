@@ -13,6 +13,7 @@
 #include "main/dll/WC/WCbeacon.h"
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/dll/ARW/dll_029D_arwarwinggu.h"
+#include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
@@ -59,7 +60,7 @@ extern ResourceDescriptor gARWArwingObjDescriptor,
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor, gAlphaAnimatorObjDescriptor,
     gAnimSharpclawObjDescriptor;
 extern ResourceDescriptor gAnimatedObjDescriptor, gAppleOnTreeObjDescriptor, gAreaFXEmitObjDescriptor,
-    gAreaObjDescriptor, gArwingAndrossStuffObjDescriptor, gAttractorObjDescriptor, gBabyCloudRunnerObjDescriptor,
+    gAreaObjDescriptor, gAttractorObjDescriptor, gBabyCloudRunnerObjDescriptor,
     gBaddieInterestPObjDescriptor;
 extern ResourceDescriptor gBaddieObjDescriptor, gBarrelPadObjDescriptor,
     gBlastedObjDescriptor, gBombPlantObjDescriptor, gBombPlantSporeObjDescriptor, gBombPlantingSpotObjDescriptor,
@@ -1557,7 +1558,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gWCFloorTileObjDescriptor,
     (ResourceDescriptor*)&dll_299,
     &gARWArwingObjDescriptor,
-    &gArwingAndrossStuffObjDescriptor,
+    (ResourceDescriptor*)&gArwingAndrossStuffObjDescriptor,
     (ResourceDescriptor*)&gARWArwingBoObjDescriptor,
     (ResourceDescriptor*)&gARWArwingGuObjDescriptor,
     &lbl_8032B6B0,

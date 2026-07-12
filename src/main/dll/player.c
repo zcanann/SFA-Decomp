@@ -7,6 +7,7 @@
 #include "main/objfx.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/player_state.h"
 #include "main/dll/player.h"
 #include "main/gamebits.h"

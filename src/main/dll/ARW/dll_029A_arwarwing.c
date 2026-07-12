@@ -35,6 +35,7 @@
 #include "main/dll/ARW/arwing_state.h"
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/dll/ARW/dll_029D_arwarwinggu.h"
+#include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
