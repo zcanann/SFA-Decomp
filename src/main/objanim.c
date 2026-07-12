@@ -658,15 +658,13 @@ noCurve:
 
 int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
 {
+    int segmentCount;
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
-    ObjAnimState* state;
     ObjAnimEventTable* eventTable;
     ObjAnimMoveData* moveData;
     ObjAnimRootCurve* curve;
     ObjAnimRootCurve* blendCurve;
-    s16* axis;
-    s16* blendAxis;
     f32 clampedStepScale;
     f32 prevFrameLength;
     f32 value;
@@ -686,15 +684,17 @@ int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTi
     f32 blendWeight;
     f32 moveWeight;
     f32 sampleSpan;
-    int wrapped;
     int countdown;
     int previousFrame;
     int currentFrame;
+    ObjAnimState* state;
     int scanMode;
     int eventCount;
+    int wrapped;
     int eventIndex;
     int axisIndex;
-    int segmentCount;
+    s16* axis;
+    s16* blendAxis;
     int previousSampleIndex;
     int currentSampleIndex;
     ObjAnimPackedEvent eventEntry;
