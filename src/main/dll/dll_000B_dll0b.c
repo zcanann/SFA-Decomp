@@ -19,6 +19,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
@@ -200,7 +201,6 @@ void dll_0B_release(void)
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 void* gPartfxActiveEffects[0x32];
-extern void Obj_FreeObject(void* obj);
 #pragma peephole off
 void dll_0B_initialise(void)
 {
@@ -1784,7 +1784,7 @@ void dll_0B_func05(void)
                         {
                             if (*(s16*)((char*)list + 0x44) == (int)((ModgfxPendingSpawn*)(E9 + emOff))->posX)
                             {
-                                Obj_FreeObject(o);
+                                Obj_FreeObject((GameObject*)o);
                                 *(int*)eff = 0;
                                 ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->modelOrResource ^= 0x10000000;
                                 if (((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posZ >= lbl_803DF430 &&

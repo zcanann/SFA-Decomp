@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_MODGFX_TYPES_H_
 #define MAIN_DLL_MODGFX_TYPES_H_
 
-#include "types.h"
+#include "main/game_object.h"
 
 typedef struct
 {
@@ -147,7 +147,7 @@ typedef struct ModgfxSpawnContext
 
 typedef struct PartfxEffectState
 {
-    void* instanceObject;
+    GameObject* instanceObject;
     void* sourceObject;
     void* auxSequenceBuffer;
     s16 sourceRotX;

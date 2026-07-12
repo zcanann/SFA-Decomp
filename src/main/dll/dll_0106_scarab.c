@@ -11,6 +11,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
@@ -61,7 +62,6 @@ extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
 extern u32 lbl_802C2298[3];
 extern u32 lbl_802C22A4[3];
-extern void Obj_FreeObject(void* obj);
 extern s16 getAngle(f32 dx, f32 dz);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern void playerAddMoney(int obj, int amount);
@@ -168,7 +168,7 @@ void Scarab_update(GameObject* obj)
         if (((ScarabState*)state)->despawnTimer <= 0)
         {
             ((ScarabState*)state)->despawnTimer = 0;
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         }
     }
     else

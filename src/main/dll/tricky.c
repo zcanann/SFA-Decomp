@@ -20,6 +20,7 @@
  */
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gamebits.h"
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
@@ -272,7 +273,6 @@ extern int fn_8011E0D8();
 extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);
 extern void* memset(void* p, int v, int n);
-extern void Obj_FreeObject(int* obj);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void textureFn_8004c264(void* this, int x);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
@@ -670,7 +670,7 @@ void gameUiResetMenuState(void)
                 ((int*)arr[z[1]][0x19])[2] = 0;
                 if ((u32)arr[z[1]][0x13] > 0x90000000)
                     arr[z[1]][0x13] = 0;
-                Obj_FreeObject(arr[z[1]]);
+                Obj_FreeObject((GameObject*)arr[z[1]]);
                 arr[z[1]] = NULL;
             }
         }

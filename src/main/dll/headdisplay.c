@@ -22,6 +22,7 @@
  */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/gx/GXStruct.h"
@@ -99,7 +100,6 @@ extern float fsin16Approx(int angle);
 extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e, int f);
 extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
 extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
-extern void Obj_FreeObject(int* obj);
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
@@ -267,7 +267,7 @@ void fn_80125D04(void)
             {
                 *(int*)&((GameObject*)obj)->anim.placementData = 0;
             }
-            Obj_FreeObject((int*)gHeadDisplayModelObjs[i]);
+            Obj_FreeObject((GameObject*)gHeadDisplayModelObjs[i]);
             gHeadDisplayModelObjs[i] = 0;
         }
     }

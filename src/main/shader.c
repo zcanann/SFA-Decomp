@@ -41,6 +41,7 @@ extern u8 lbl_80386648[];
 extern const f32 gMapBlockWorldSize;
 extern void OSReport(const char* msg, ...);
 
+#include "main/object.h"
 int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
 {
     char* strs;
@@ -1983,7 +1984,6 @@ int objUpdateOpacity(char* obj)
 
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern int objShouldUnload(char* obj);
-extern void Obj_FreeObject(char* obj);
 extern int SaveGame_findTransientMapBit(int mapId, int bit);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
@@ -2109,7 +2109,7 @@ void mapLoadUnloadObjects(int flag)
                         w2++;
                     }
                 }
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
                 i--;
                 objCount--;
             }

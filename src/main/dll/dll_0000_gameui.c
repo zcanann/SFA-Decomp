@@ -29,6 +29,7 @@
 #include "main/dll/cmenu_item_table.h"
 #include "main/dll/hud_textures.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
@@ -298,7 +299,6 @@ extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8* buf);
-extern void Obj_FreeObject(char* obj);
 extern int fn_80296C4C(u8* player);
 extern void playerHeal(u8* player);
 extern void AudioStream_StopCurrent(void);
@@ -3006,7 +3006,7 @@ void pauseMenuFn_80129ee0(void)
                             {
                                 *(u32*)(*p + 0x4c) = 0;
                             }
-                            Obj_FreeObject(*p);
+                            Obj_FreeObject((GameObject*)*p);
                             *p = 0;
                         }
                     }

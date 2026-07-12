@@ -26,6 +26,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -177,7 +178,6 @@ extern u64 ObjLink_DetachChild();
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern u32 mainGetBit(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
-extern void Obj_FreeObject(u8* obj);
 extern u32 getScreenResolution(void);
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
@@ -754,7 +754,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
 
 PPCWGPipe GXWGFifo : (0xCC008000);
 
-void objAnimFreeChildren(int a, int b, void** c)
+void objAnimFreeChildren(int a, int b, GameObject** c)
 {
     char buf[4];
     void *v0, *v1, *v2;
