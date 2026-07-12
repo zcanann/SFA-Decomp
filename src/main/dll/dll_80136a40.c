@@ -458,7 +458,7 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
  *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
  *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
 #pragma peephole off
-int fn_80138920(u8* obj, int sfxId, int vol)
+int fn_80138920(GameObject* obj, int sfxId, int vol)
 {
     u8* b = ((GameObject*)obj)->extra;
     s16 v;
@@ -476,9 +476,9 @@ int fn_80138920(u8* obj, int sfxId, int vol)
     case 47:
         return 0;
     }
-    if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0)
+    if (Sfx_IsPlayingFromObjectChannel((u8*)obj, 16) != 0)
         return 0;
-    objAudioFn_800393f8(obj, b + 936, sfxId, vol, -1, 0);
+    objAudioFn_800393f8((u8*)obj, b + 936, sfxId, vol, -1, 0);
     return 1;
 }
 
@@ -523,7 +523,7 @@ void debugPrintReset(void)
 }
 
 /* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
-void fn_80138908(u8* obj, int v)
+void fn_80138908(GameObject* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
 }

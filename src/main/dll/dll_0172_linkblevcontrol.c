@@ -12,6 +12,7 @@
  */
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/render.h"
 #include "main/mapEvent.h"
 #include "main/object_descriptor.h"
@@ -71,7 +72,6 @@ extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
-extern void fn_80138908(int* tricky, int mode);
 
 int linkb_levcontrol_getExtraSize(void)
 {
@@ -132,13 +132,13 @@ void linkb_levcontrol_update(int* obj)
     }
     if (tricky != NULL)
     {
-        fn_80138908(tricky, 0);
+        fn_80138908((GameObject*)tricky, 0);
         switch (state->stage)
         {
         case LINKBLEVCONTROL_STAGE_START:
             if (mainGetBit(GAMEBIT_LINKB_STAGE_1) != 0)
             {
-                fn_80138908(tricky, 1);
+                fn_80138908((GameObject*)tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->unk_02_low = 0;
@@ -151,7 +151,7 @@ void linkb_levcontrol_update(int* obj)
                 if (!(((GameObject*)player)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
                     mainSetBits(GAMEBIT_LINKB_STAGE_2, 1);
-                    fn_80138908(tricky, 1);
+                    fn_80138908((GameObject*)tricky, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                     state->stage++;
                     state->unk_02_low = 0;
@@ -162,7 +162,7 @@ void linkb_levcontrol_update(int* obj)
         case LINKBLEVCONTROL_STAGE_2:
             if (cur[0] != 0)
             {
-                fn_80138908(tricky, 1);
+                fn_80138908((GameObject*)tricky, 1);
                 if (state->trickyHitCount-- == -1 &&
                     !(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
@@ -189,7 +189,7 @@ void linkb_levcontrol_update(int* obj)
             if (state->altPath != 0)
             {
                 mainSetBits(GAMEBIT_LINKB_STAGE_4, 1);
-                fn_80138908(tricky, 1);
+                fn_80138908((GameObject*)tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->unk_02_low = 0;
@@ -199,7 +199,7 @@ void linkb_levcontrol_update(int* obj)
         case LINKBLEVCONTROL_STAGE_4:
             if (mainGetBit(GAMEBIT_LINKB_STAGE_5) != 0)
             {
-                fn_80138908(tricky, 1);
+                fn_80138908((GameObject*)tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->unk_02_low = 0;

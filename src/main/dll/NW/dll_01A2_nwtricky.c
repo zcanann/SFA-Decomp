@@ -11,6 +11,7 @@
  */
 #include "main/gameplay_runtime.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -31,7 +32,6 @@ extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 enemy_getHealthFraction(int* obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void fn_80138920(int* obj, int a, int b);
 extern const f32 lbl_803E5260;
 extern f32 lbl_803E5264;
 extern f32 lbl_803E5268;
@@ -123,7 +123,7 @@ void NW_tricky_update(int* obj)
                 if (timer >= lbl_803E5264)
                 {
                     ((NwTrickyState*)state)->timer = timer - lbl_803E5264;
-                    fn_80138920(tricky, 0x152, 0x1000);
+                    fn_80138920((GameObject*)tricky, 0x152, 0x1000);
                 }
             }
 
