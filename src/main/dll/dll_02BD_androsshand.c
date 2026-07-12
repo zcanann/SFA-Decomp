@@ -12,7 +12,16 @@
  * health the hand explodes (DIMexplosionFn) and goes to state 9. The
  * damage texture index is written into the model's texture slot.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
+#include "main/objtexture.h"
+#include "main/pad.h"
+#include "main/vecmath.h"
 #include "main/dll/objfx_api.h"
 #include "main/object_api.h"
 #include "main/object.h"

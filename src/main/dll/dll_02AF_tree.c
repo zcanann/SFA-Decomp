@@ -16,7 +16,15 @@
  * The target binary has no ObjectDescriptor global nor lifecycle stubs for
  * this DLL - the .text holds only the functions below.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object.h"
+#include "main/objanim.h"
+#include "main/objHitReact.h"
+#include "main/objlib.h"
+#include "main/vecmath.h"
+#include "main/shader_api.h"
 #include "main/objprint_api.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/dll/dll_02AF_tree.h"
