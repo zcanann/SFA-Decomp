@@ -673,7 +673,6 @@ extern f32 lbl_803E703C;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E7008;
 extern f32 lbl_803E70EC;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
@@ -696,7 +695,6 @@ extern void Obj_BuildWorldTransformMatrix(int obj, void* mtx, int p3);
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
 
-extern f32 lbl_803E7028;
 extern f32 lbl_803E705C;
 extern f32 lbl_803E7060;
 extern f32 lbl_803DC3D0;
@@ -790,8 +788,6 @@ extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, 
 extern int lbl_803DC508;
 extern const f32 lbl_803E75A8;
 
-extern const f32 lbl_803E75AC;
-extern f32 gAndrossHandMoveAnimSpeeds[];
 
 extern void androssligh_updateBeam(GameObject* obj, int state);
 
@@ -848,7 +844,6 @@ extern f32 lbl_803E7378;
 extern f32 lbl_803E737C;
 extern f32 lbl_803E7380;
 extern f32 lbl_803E7388;
-extern f32 lbl_803E738C;
 extern f32 lbl_803E7390;
 extern f32 lbl_803E7394;
 extern f32 lbl_803E7398;
@@ -955,9 +950,6 @@ extern f32 lbl_803E6ECC;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E6ED0;
-extern f32 lbl_803E6EFC;
-extern f32 lbl_803E6F00;
 extern void PSVECSubtract(void* a, void* b, void* ab);
 
 extern f32 lbl_803E6F08;
@@ -975,7 +967,6 @@ extern f32 lbl_803E6F20;
 extern void lightSetFieldBC_8001db14(void* light, int v);
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
-extern f32 lbl_803E7014;
 extern f32 lbl_803E7018;
 
 #pragma dont_inline on
@@ -1038,12 +1029,10 @@ extern f32 lbl_803E6F60;
 extern f32 lbl_803E6F64;
 extern f32 lbl_803E6F68;
 extern f32 lbl_803E6F38;
-extern f32 lbl_803E6EF8;
 void arwarwinggu_setTextureFrame(GameObject* obj, int p2);
 
 extern void ObjLink_AttachChild(int obj, int child, int p3);
 extern f32 lbl_803E6F2C;
-extern f32 lbl_803E6F34;
 extern f32 lbl_803E6F70;
 extern f32 lbl_803E6F74;
 extern f32 lbl_803E6F78;
@@ -1161,46 +1150,15 @@ extern u8 gAndrossPartTextureIndices[4];
 
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
-extern f32 lbl_803E6ECC;
-extern f32 lbl_803E6ED0;
-extern f32 lbl_803E6F5C;
-extern f32 lbl_803E6F64;
-extern f32 lbl_803E6F70;
-extern f32 lbl_803E6F74;
-extern f32 lbl_803E6F78;
-extern f32 lbl_803E6F7C;
-extern f32 lbl_803E6F80;
-extern f32 lbl_803E6F84;
-extern f32 lbl_803E6F88;
-extern f32 lbl_803E6F8C;
-extern f32 lbl_803E6F90;
-extern f32 lbl_803E6F94;
-extern f32 lbl_803E6F98;
-extern f32 lbl_803E6F9C;
-extern f32 lbl_803E6FA0;
-extern f32 lbl_803E6FA4;
-extern f32 lbl_803E6FA8;
-extern f32 lbl_803E6FAC;
-extern f32 lbl_803E6FB0;
-extern f32 lbl_803E6FB4;
-extern f32 lbl_803E6FB8;
-extern f32 lbl_803E6FBC;
 
 extern f32 lbl_803E7040;
 extern f32 lbl_803E7048;
 
-extern f32 lbl_803E6EF0;
-extern f32 lbl_803E6EF4;
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 gArwingExplodeModeTime;
-extern f32 lbl_803E6F28;
-extern f32 lbl_803E6F2C;
 extern f32 lbl_803E6F30;
-extern f32 lbl_803E6F34;
-extern f32 lbl_803E6F38;
 extern f32 lbl_803E6F3C;
 extern f32 lbl_803E6F40;
 
@@ -1257,8 +1215,6 @@ typedef struct
     u8 f08 : 1;
     u8 : 3;
 } SquadCmdFlags;
-extern f32 lbl_803E716C;
-extern f32 lbl_803E7170;
 
 #pragma dont_inline on
 
@@ -1343,8 +1299,6 @@ extern f32 lbl_803E6CC0;
 extern f32 lbl_803DC3B0;
 extern f32 gDrBarrelGenGrabYOffset;
 
-extern f32 lbl_803E6CA0;
-extern f32 lbl_803E6CA8;
 extern f32 lbl_803E6CAC;
 
 typedef struct DrBarrelGrRenderParams
@@ -1391,12 +1345,10 @@ extern f32 gBarrelGenTurnRateClampMax;
 extern f32 lbl_803E6C98;
 
 
-extern f32 lbl_803E70A0;
 extern f32 lbl_803E70B4;
 extern f32 lbl_803E70B8;
 extern f32 lbl_803E70BC;
 extern f32 lbl_803E70C0;
-extern f32 lbl_803E70C4;
 extern f32 lbl_803E70C8;
 extern f32 lbl_803E70CC;
 
@@ -1417,7 +1369,6 @@ extern f32 lbl_803E6ED8;
 extern void debugPrintSetColor(int r, int g, int b, int a);
 extern f32 lbl_8032B4A8[];
 
-extern f32 lbl_803E6EF8;
 
 /* Forward declarations for graduated functions (split from placeholder_80220608). */
 int DR_EnergyDisc_getExtraSize(void);
