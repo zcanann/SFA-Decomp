@@ -635,25 +635,6 @@ extern f32 lbl_803E6FF0;
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
 
-extern int lbl_803E7160;
-extern f32 lbl_803E716C;
-extern f32 lbl_803E7170;
-extern f32 lbl_803E71C0;
-extern f32 lbl_803E71C4;
-extern f32 lbl_803E71C8;
-extern f32 lbl_803E71CC;
-extern f32 lbl_803E71D0;
-extern f32 lbl_803E71D4;
-void arwsquadron_applyCommandParams(int p1, int p2);
-
-typedef struct
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
-} SquadFlags;
-
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma dont_inline on
@@ -749,44 +730,9 @@ extern f32 lbl_803E6C80;
 
 #pragma dont_inline reset
 
-typedef struct
-{
-    u8 f80 : 1;
-    u8 f40 : 1;
-    u8 f20 : 1;
-    u8 f10 : 1;
-    u8 f08 : 1;
-    u8 : 3;
-} SquadCmdFlags;
-
 #pragma dont_inline on
 
 extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* a, int b, int c, f32 d, f32 e);
-extern f32 lbl_803E7168;
-extern f32 lbl_803E719C;
-extern f32 lbl_803E71A0;
-extern f32 lbl_803E71A4;
-
-
-typedef struct
-{
-    s16 s0, s2, s4, s6;
-    f32 f8;
-    f32 fx, fy, fz;
-} SquadPfx;
-
-extern f32 lbl_803E71AC;
-extern f32 lbl_803E71B0;
-extern f32 lbl_803E71B4;
-
-extern f32 lbl_803E718C;
-extern f32 lbl_803E7190;
-extern f32 gArwingSquadronPi;
-extern f32 gArwingSquadronSwayPhaseToAngleDiv;
-
-extern f32 lbl_803E7164;
-extern f32 lbl_803E71B8;
-extern f32 lbl_803E71BC;
 
 extern f32 lbl_803E6C68;
 
@@ -1068,11 +1014,6 @@ void arwlevelcon_hitDetect(void);
 void arwlevelcon_onSeqFree(GameObject* obj);
 void arwlevelcon_release(void);
 void arwlevelcon_initialise(void);
-int ARWSquadron_getExtraSize(void);
-int ARWSquadron_getObjectTypeId(void);
-void ARWSquadron_free(void);
-void ARWSquadron_render(int obj, int p2, int p3, int p4, int p5);
-void ARWSquadron_hitDetect(void);
 void arwprojectile_setLifetime(GameObject* obj, int lifetime);
 void arwprojectile_placeForward(GameObject* obj, f32 dist);
 void arwingandrossstuff_init(GameObject* obj, u8* setup);
@@ -1171,7 +1112,6 @@ void arwarwing_updateBombFire(GameObject* obj, int state);
 void arwarwing_emitDamageEffects(int obj, int state);
 void arwarwing_warpByCourse(GameObject* obj);
 void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable);
-void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, u8 flag);
 void ARWSpeedStr_update(GameObject* obj);
 void arwarwing_updateWeaponFire(GameObject* obj, int state);
 void arwarwing_update(GameObject* obj);
@@ -1194,7 +1134,6 @@ void arwarwing_updateRollAndEngine(int obj, int state);
 void arwarwinggu_setTextureFrame(GameObject* obj, int p2);
 void arwarwing_clearAimSnapshot(GameObject* obj);
 void arwarwing_initAttachments(GameObject* obj, int state);
-void ARWSquadron_init(int obj, int setup);
 void fn_80231058(GameObject* obj, int src);
 void fn_8023137C(GameObject* obj, f32* src);
 void fn_8022ED74(GameObject* obj, int v);
@@ -1222,13 +1161,6 @@ void arwarwing_init(GameObject* obj);
 void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c);
 int Obj_UpdateRomCurveFollowVelocity(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag);
 int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag, int* p6);
-void arwsquadron_applyCommandParams(int p1, int p2);
-void arwsquadron_followPath(int p1, int p2);
-void arwsquadron_updateVolley(int p1, int p2, int p3);
-void arwsquadron_emitEffects(int p1, int p2);
-void arwsquadron_handleDamage(GameObject* obj, int state);
-void arwsquadron_followLeader(int p1, int p2);
-void ARWSquadron_update(int obj);
 void Obj_SpawnHitLightAndFade(int obj, f32* p2);
 void drearthcal_update(int obj);
 int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, ModelLight** light);
