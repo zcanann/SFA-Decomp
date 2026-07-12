@@ -35,6 +35,7 @@
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/baddie_state.h"
@@ -1225,7 +1226,6 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 void fn_80203144(GameObject* obj, int groundState, int baddie)
 {
 
-    extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int lbl_80329640[];
     extern f32 lbl_803E62B0;
@@ -1267,7 +1267,7 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
     }
     else
     {
-        player = Obj_GetPlayerObject();
+        player = (char*)Obj_GetPlayerObject();
         if (player != NULL)
         {
             stk.d[0] = ((GameObject*)player)->anim.worldPosX - obj->anim.worldPosX;
@@ -1581,7 +1581,6 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     extern int ObjGroup_ContainsObject(int, int);
     extern int* ObjGroup_GetObjects(int, int*);
 
-    extern int Obj_GetPlayerObject(void);
     extern f32 lbl_803E62B4;
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62CC;
@@ -1625,7 +1624,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
         ObjGroup_GetObjects(c30, &cnt1);
         if (cnt1 == 0)
         {
-            player = Obj_GetPlayerObject();
+            player = (int)Obj_GetPlayerObject();
             q = (int)sub->msgStack;
             msg0[0] = 0xf;
             msg0[1] = 1;
@@ -1775,7 +1774,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     {
         fn_80202A2C(obj, lbl_8032971C, lbl_8032972C, 4, frac);
     }
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     d = Obj_GetYawDeltaToObject(obj, player, &yawf);
     flag = 0;
     if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
@@ -1795,7 +1794,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
                 vec[0] = zero;
             }
         }
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         *(int*)&((BaddieState*)baddie)->targetObj = player;
         {
             RingBufferQueue* qH;
@@ -1833,7 +1832,6 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern int Obj_GetPlayerObject(void);
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E62CC;
@@ -1940,7 +1938,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     }
     else if (*(void**)&sub->linkedObj == NULL)
     {
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         d = Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
         if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
@@ -1960,7 +1958,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
                     vec[0] = zero;
                 }
             }
-            player = Obj_GetPlayerObject();
+            player = (int)Obj_GetPlayerObject();
             *(int*)&((BaddieState*)baddie)->targetObj = player;
             tmp2A = sub->objGroup;
             tmp2B = sub->msgMode;
@@ -2188,7 +2186,6 @@ void dbstealerworm_update(u8* objp)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 {
-    extern int Obj_GetPlayerObject(void);
     extern f32 lbl_803E62CC;
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62B4;
@@ -2278,7 +2275,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     }
     else if (*(void**)&sub->linkedObj == NULL)
     {
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         d = Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
         if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
@@ -2298,7 +2295,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
                     vec[0] = zero;
                 }
             }
-            player = Obj_GetPlayerObject();
+            player = (int)Obj_GetPlayerObject();
             *(int*)&((BaddieState*)baddie)->targetObj = player;
             tmp2A = sub->objGroup;
             tmp2B = sub->msgMode;
@@ -2382,7 +2379,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 {
-    extern int Obj_GetPlayerObject(void);
     extern int* ObjGroup_GetObjects(int, int*);
     extern f32 Vec_xzDistance(int, int);
     extern f32 vec3f_distanceSquared(int, int);
@@ -2424,7 +2420,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     logPrintf(tbl + 0x430, sub->savedTargetObj, sub->linkedObj);
     if (*(void**)&sub->savedTargetObj == NULL)
     {
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         obj = (GameObject*)sub->msgStack;
         msg0[0] = 0xf;
         msg0[1] = 1;
@@ -2474,11 +2470,11 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     {
         fn_80202A2C(obj, (int*)(tbl + 0x344), (f32*)(tbl + 0x354), 4, frac);
     }
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     ratio = (Vec_xzDistance((int)obj + 0x18, player + 0x18) - lbl_803E6304) / (lbl_803E6308 * blob->aggression);
     n = (int)(ratio < lbl_803E62A8 ? lbl_803E62A8 : (ratio > lbl_803E62B0 ? lbl_803E62B0 : ratio));
     logPrintf(tbl + 0x444, n);
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     best = 0;
     bestD = lbl_803E62A8;
     objs = ObjGroup_GetObjects(c30, &cnt);
