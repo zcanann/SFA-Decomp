@@ -7454,3 +7454,25 @@ Re-scanned all 147 band fns (excl audio/dolphin/player/model). Confirms prior CE
 - SCAN METHOD: /tmp/nrm2.py normalizes addr+@NNN-vs-named relocs to isolate genuine deltas; /tmp/triage.py tags
   REGPERM (opcode-set match, same len) vs REAL vs LENDELTA. ~110/147 are pure REGPERM. Prototype-width lever
   (minimap class) remains the only productive vein; none found this pass.
+
+## brute_match.py decl-order harvest (Jul12, Opus) — DRY except the known textrender crack
+Ran tools/brute_match.py (TRUE-fuzzy-scored decl-order register-permuter, asm-free) across the full
+-O4,p near-miss frontier (93-99.5%, skipping audio/dolphin-SDK/model/player + sibling-WIP files).
+Pre-filtered 52 candidates by dry-run to the ~30 with >=4 leading SCALAR/POINTER decls (the only
+plausible winners; array-led / single-decl blocks welded on sight).
+RESULT: 0 genuine wins. Every scalar/pointer-rich candidate = baseline decl-order ALREADY optimal
+(tool restored original each time). Confirms #108 within-class GPR reg-perm weld is total on this frontier.
+Welded-confirmed (base==best, no improvement): lightmap renderSceneGeometry/updateVisibleGeometry/sceneDraw,
+gameloop removeButtonObject/mainSetBits, object Obj_UpdateModelBlendStates/loadCharacter/objFreeObjDef,
+objanim ObjAnim_AdvanceCurrentMove/SampleRootCurvePhase, vecmath mtxRotateByVec3s, main fn_801FD6B4,
+warpstoneui WarpstoneUI_getMenuItems, dll_02C0_front gameTextBoxFn_80134d40,
+dll_0018_boneparticleeffect boneParticleEffect_update, dll_0016_screentransition screenRectFn_800d7568,
+pi_dolphin fn_8004B31C/fn_8004AB5C/loadDataFiles(1-decl)/initLoadFiles,
+track_dolphin fn_80069B1C/fn_800659A8/hitDetectFn_80065e50/MapBlock_initShaders/fn_80069EB8/fn_80065768/
+intersectModLineBuild/objShadowFn_80062498/hitDetectFn_800658a4/fn_80067B84.
+LESSON: brute_match's swaps+moves (cap 60) only explores baseline-neighbors; where target==baseline
+locally it finds nothing. The textrender gameTextInitFn +0.13% remains the sole crack; the vein is dry.
+OPS NOTE: a Bash-timeout / SIGTERM kill of brute_match mid-run leaves the file in a PERMUTED (un-reverted)
+state; a later re-run then re-baselines against the dirty file and reports "restored original" while the
+stray swap persists. Caught+reverted 3 (object.c Obj_UpdateModelBlendStates, track_dolphin.c fn_80067B84,
+pi_dolphin.c initLoadFiles) via Edit-revert; rebuilt their .o. ALWAYS `git diff` your units after a killed run.
