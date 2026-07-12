@@ -668,10 +668,12 @@ extern f32 lbl_803DEB9C;
 #pragma opt_propagation off
 void textureFn_80053d58(void* vobj)
 {
-    u8* obj = (u8*)vobj;
-    u8 mipmap = 0;
+    register u8* obj = (u8*)vobj;
+    register u8 mipmap = 0;
     void* texObj;
-    *(int*)(obj + 64) = mipmap; /* clears Texture.tmemAddr (0x40) */
+    asm {
+        stw mipmap, 64(obj)
+    }
     ((Texture*)obj)->preloaded = mipmap;
     texObj = (void*)(obj + 32); /* 0x20: embedded GXTexObj, not named in Texture */
     if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0)

@@ -9606,7 +9606,7 @@ int playerState30(GameObject* obj, int state, f32 fv)
             void** p[1];
             z[0] = 0;
             lbl_803DE42C = z[0];
-            z[1] = z[0];
+            z[1] = lbl_803DE42C;
             p[0] = gPlayerSpawnedObjects;
             do
             {

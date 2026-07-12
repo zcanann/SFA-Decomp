@@ -3161,7 +3161,7 @@ void objDrawFn_80061654(int obj, int placementObj)
     {
         alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
         kColor.a = alpha;
-        if (alpha != 0)
+        if (kColor.a != 0)
         {
             viewMtx = Camera_GetViewMatrix();
             Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
