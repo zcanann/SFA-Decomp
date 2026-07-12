@@ -204,7 +204,7 @@ void AndrossHand_update(int obj)
             andross_setPartSignal(state->androssObj, 1);
             *(u8*)&state->handState = ANDROSSHAND_STATE_IDLE2;
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress < 1.555f)
+        if (((GameObject*)obj)->anim.currentMoveProgress < 1.555)
         {
             state->animSpeed = 0.002f;
         }
