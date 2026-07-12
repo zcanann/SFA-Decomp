@@ -2,6 +2,7 @@
 #define MAIN_DLL_CURVE_WALKER_H_
 
 #include "global.h"
+#include "main/curve_types.h"
 
 /* rom-curve walker record (the f32* "state" the RomCurve_* family walks) -
  * sits at the head of curve-following extra blocks (objfsa.c census, lifted
@@ -10,23 +11,28 @@
  * curves.h's prototype namespace; curves.h includes this, so its consumers
  * see RomCurveWalker as before. */
 typedef struct RomCurveWalker {
-    f32 phase; /* 0x00: position along the current segment */
-    u8 unk04[0x10 - 0x04];
-    s32 atSegmentEnd; /* 0x10: nonzero = segment end/advance flag (magicPlant/seqObj11E/NWsfx census) */
-    u8 unk14[0x68 - 0x14];
-    f32 posX; /* 0x68: current position X */
-    f32 posY; /* 0x6C: current position Y */
-    f32 posZ; /* 0x70: current position Z */
-    f32 tangentX; /* 0x74 */
-    f32 tangentY; /* 0x78: heading/derivative term (sign tested) */
-    f32 tangentZ; /* 0x7C */
-    s32 reverse; /* 0x80: walk direction */
-    void *coeffX; /* 0x84: active hermite coefficient set, X (-> hermX/hermX2) */
-    void *coeffY; /* 0x88: active hermite coefficient set, Y */
-    void *coeffZ; /* 0x8C: active hermite coefficient set, Z */
-    s32 moveNetwork; /* 0x90 */
-    void *node94; /* curve-node history: oldest.. */
-    void *node98;
+    union {
+        Curve curve;
+        struct {
+            f32 phase; /* 0x00: position along the current segment */
+            u8 unk04[0x10 - 0x04];
+            s32 atSegmentEnd; /* 0x10: segment index/end state */
+            u8 unk14[0x68 - 0x14];
+            f32 posX; /* 0x68: current position X */
+            f32 posY; /* 0x6C: current position Y */
+            f32 posZ; /* 0x70: current position Z */
+            f32 tangentX; /* 0x74 */
+            f32 tangentY; /* 0x78: heading/derivative term (sign tested) */
+            f32 tangentZ; /* 0x7C */
+            s32 reverse; /* 0x80: walk direction */
+            void *coeffX; /* 0x84: active coordinate array, X */
+            void *coeffY; /* 0x88: active coordinate array, Y */
+            void *coeffZ; /* 0x8C: active coordinate array, Z */
+            s32 moveNetwork; /* 0x90: control-point count/network state */
+            void *node94; /* 0x94: curve evaluation callback */
+            void *node98; /* 0x98: coefficient callback */
+        };
+    };
     void *node9C;
     void *nodeA0; /* current node */
     void *nodeA4; /* next node */
@@ -39,9 +45,11 @@ typedef struct RomCurveWalker {
 } RomCurveWalker;
 
 STATIC_ASSERT(offsetof(RomCurveWalker, atSegmentEnd) == 0x10);
+STATIC_ASSERT(offsetof(RomCurveWalker, curve) == 0x00);
 STATIC_ASSERT(offsetof(RomCurveWalker, posX) == 0x68);
 STATIC_ASSERT(offsetof(RomCurveWalker, tangentX) == 0x74);
 STATIC_ASSERT(offsetof(RomCurveWalker, reverse) == 0x80);
 STATIC_ASSERT(offsetof(RomCurveWalker, hermX) == 0xA8);
+STATIC_ASSERT(sizeof(RomCurveWalker) == 0x108);
 
 #endif /* MAIN_DLL_CURVE_WALKER_H_ */
