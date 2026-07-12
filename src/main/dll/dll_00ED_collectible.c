@@ -25,6 +25,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/obj_placement.h"
 #include "main/dll/collectible_state.h"
 #include "main/gameplay_runtime.h"
@@ -779,7 +780,6 @@ void collectible_hitDetect(void)
 
 int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
     int* state = (obj)->extra;
     f32 buf[6];
     int j;
@@ -797,7 +797,7 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
         switch ((obj)->anim.seqId)
         {
         case 0x6a6:
-            objfx_spawnDirectionalBurst((int)obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+            objfx_spawnDirectionalBurstLegacy((int)obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
             break;
         }
     }
@@ -943,7 +943,6 @@ void collectible_update(int obj)
     extern void Obj_FreeObject(int obj);
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     extern void collectible_applyPickup(int obj);
-    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
     int msgParam;
@@ -980,7 +979,7 @@ void collectible_update(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x6a6:
-        objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+        objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
         break;
     }
     timer = ((CollectibleState*)state)->lifetimeTimer;
@@ -1068,7 +1067,6 @@ void collectible_update(int obj)
 
 void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
 {
-    extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
     int state = *(int*)&(obj)->extra;
     if (visible != 0 && ((CollectibleState*)state)->despawnTimer == lbl_803E345C && (obj)->unkF4 == 0
         && ((obj)->anim.seqId == 0x156 || ((CollectibleState*)state)->visibilityBitClear == 0))
@@ -1080,7 +1078,7 @@ void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
         objRenderModelAndHitVolumes((int)obj, a, b, c, d, lbl_803E3454);
         if ((obj)->anim.seqId == 0xa8)
         {
-            objfx_spawnDirectionalBurst((int)obj, 7, lbl_803E3454, 5, 1, 10, lbl_803E348C, 0, 0x20000000);
+            objfx_spawnDirectionalBurstLegacy((int)obj, 7, lbl_803E3454, 5, 1, 10, lbl_803E348C, 0, 0x20000000);
         }
     }
 }

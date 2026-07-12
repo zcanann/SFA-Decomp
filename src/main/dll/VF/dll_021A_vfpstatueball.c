@@ -15,6 +15,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_021A_vfpstatueball.h"
@@ -24,8 +25,6 @@
 #define VFPSTATUEBALL_HIT_SEQID 0x14b /* staff-strike object seq id */
 
 extern f32 lbl_803E60B8;
-extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, f32 scale, int model, int mode, u8 chance, f32 alpha,
-                                        int flags, int unused);
 extern u8 fn_8016F16C(int* obj);
 
 int VFP_statueball_getExtraSize(void)

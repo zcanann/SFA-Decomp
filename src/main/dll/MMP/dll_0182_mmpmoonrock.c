@@ -17,6 +17,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/dll/MMP/dll_0182_mmpmoonrock.h"
@@ -522,7 +523,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u8 volume, f32 scale);
 
-extern void objfx_spawnDirectionalBurst(void* obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(void* obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);
 extern char gMoonRockSpawnParams[];
@@ -579,8 +579,8 @@ void mmp_moonrock_update(GameObject* obj)
         }
         return;
     }
-    objfx_spawnDirectionalBurst(obj, 1, lbl_803E457C, 5, 1, 0xA, lbl_803E454C, 0, 0);
-    objfx_spawnDirectionalBurst(obj, 5, lbl_803E457C, 5, 1, 0x14, lbl_803E454C, 0, 0);
+    objfx_spawnDirectionalBurstLegacy(obj, 1, lbl_803E457C, 5, 1, 0xA, lbl_803E454C, 0, 0);
+    objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E457C, 5, 1, 0x14, lbl_803E454C, 0, 0);
     if ((state->flags & MOONROCK_FLAG_THROWN) != 0)
     {
         fn_801A7B10(obj);

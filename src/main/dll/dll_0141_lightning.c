@@ -6,13 +6,15 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/newclouds.h"
+#include "main/objfx.h"
 
 
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
 extern void hitDetectFn_80097070(u8* obj, double radius, int arg3, int arg4, int arg5,
                                  int arg6);
-extern void objfx_spawnDirectionalBurst(u8* obj, int idx, double radius, int kind, int mode,
-                                        int chance, f32 scale, int origin, int flags);
+#define objfx_spawnDirectionalBurstDouble(obj, idx, radius, kind, mode, chance, scale, origin, flags)             \
+    ((void (*)(u8*, int, double, int, int, int, f32, int, int))objfx_spawnDirectionalBurst)(                     \
+        (u8*)(obj), (idx), (radius), (kind), (mode), (chance), (scale), (origin), (flags))
 
 int lightning_getExtraSize(void) { return 0x28; }
 
@@ -177,13 +179,12 @@ void lightning_update(u8* obj)
             }
             if ((state->modeBits.mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst(obj, 5, state->burstRadius, 1, 1, 100, 5.0f,
-                                            0, 0);
+                objfx_spawnDirectionalBurstDouble(obj, 5, state->burstRadius, 1, 1, 100, 5.0f, 0, 0);
             }
             if ((((LightningMode*)(data + 0x24))->mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst((u8*)*slot, 5, ((LightningState*)data)->burstRadius,
-                                            1, 1, 100, 5.0f, 0, 0);
+                objfx_spawnDirectionalBurstDouble((u8*)*slot, 5, ((LightningState*)data)->burstRadius, 1, 1, 100,
+                                                   5.0f, 0, 0);
             }
         }
     }

@@ -20,6 +20,7 @@
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/dll/player_api.h"
 #include "main/curve_eval.h"
 #include "main/objseq.h"
@@ -107,7 +108,6 @@ extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
 
 extern void objRenderFn_80041018(int obj);
-extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
@@ -154,11 +154,11 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 
     if (b->flag_40)
     {
-        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
+        objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
     }
     else
     {
-        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
+        objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
     }
     {
         int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel((GameObject*)obj), 0);

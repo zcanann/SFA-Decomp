@@ -4,6 +4,7 @@
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/gameloop_api.h"
@@ -41,7 +42,6 @@ extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_PlayFromObject(int* obj, int soundId);
 extern f32 getXZDistance(void* a, void* b);
-extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
 extern int ObjModel_GetRenderOp(int model, int idx);
 typedef struct
 {
@@ -145,11 +145,11 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
     {
         if (state->unkBit5)
         {
-            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 1, 1, 0x14, 3.5f, 0, 0);
+            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 1, 1, 0x14, 3.5f, 0, 0);
         }
         else
         {
-            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, 0, 0);
+            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, 0, 0);
         }
         {
             int op = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel((GameObject*)obj), 0);

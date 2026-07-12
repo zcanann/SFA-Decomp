@@ -17,6 +17,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/dll/dll_0106_scarab.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -584,8 +585,6 @@ void Scarab_init(int* obj, u8* def)
 }
 
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, int model, int mode, u8 chance, f32 alpha,
-                                        int flags, int unused);
 
 extern u8 gScarabColorVariantsD;
 extern f32 lbl_803E3A04;

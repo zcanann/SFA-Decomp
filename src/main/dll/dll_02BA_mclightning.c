@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/newclouds.h"
+#include "main/objfx.h"
 #include "main/dll/dll_02BA_mclightning.h"
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
@@ -99,15 +100,13 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             }
             if (state->flags.spawnFlags & 2)
             {
-                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2,
-                                                        void* p8, int p9);
-                objfx_spawnDirectionalBurst((int)obj, 5, state->burstEffectChance, 1, 1, 0x64, lbl_803E7454, 0, 0);
+                objfx_spawnDirectionalBurstLegacy((int)obj, 5, state->burstEffectChance, 1, 1, 0x64, lbl_803E7454,
+                                                   0, 0);
             }
             if (foundState->flags.spawnFlags & 2)
             {
-                extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2,
-                                                        void* p8, int p9);
-                objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64, lbl_803E7454, 0, 0);
+                objfx_spawnDirectionalBurstLegacy(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64,
+                                                   lbl_803E7454, 0, 0);
             }
         }
     }

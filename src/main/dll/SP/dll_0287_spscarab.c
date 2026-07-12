@@ -19,6 +19,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -74,7 +75,6 @@ extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
-extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 
 int SPScarab_getExtraSize(void)
 {
@@ -164,7 +164,7 @@ void SPScarab_update(int obj)
     {
         if (((SpscarabState*)state)->burstCount != 0)
         {
-            objfx_spawnDirectionalBurst(obj, 5, gSpScarabPickupParticleScale, (u8)((SpscarabState*)state)->burstCount,
+            objfx_spawnDirectionalBurstLegacy(obj, 5, gSpScarabPickupParticleScale, (u8)((SpscarabState*)state)->burstCount,
                                         1, 0x14, gSpScarabDustBurstScale, 0, 0);
         }
     }

@@ -14,6 +14,7 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/objfx.h"
 #include "main/camera.h"
 #include "main/dll/WM/dll_0215_wmnewcrystal.h"
 
@@ -29,8 +30,6 @@ extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* out);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void WM_newcrystalFn_800969b0(GameObject* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e, int enabled);
-extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int kind, int mode, int chance, f32 speed,
-                                        void* origin, int flags);
 
 ObjectDescriptor gWM_newcrystalObjDescriptor = {
     0,
@@ -106,14 +105,14 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
         params.y *= obj->anim.rootMotionScale;
         params.z *= obj->anim.rootMotionScale;
         params.pathPoint = 1;
-        objfx_spawnDirectionalBurst((int*)obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
+        objfx_spawnDirectionalBurstLegacy((int*)obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
 
         ObjPath_GetPointLocalPosition((GameObject*)obj, 1, &params.x, &params.y, &params.z);
         params.x *= obj->anim.rootMotionScale;
         params.y *= obj->anim.rootMotionScale;
         params.z *= obj->anim.rootMotionScale;
         params.pathPoint = 0;
-        objfx_spawnDirectionalBurst((int*)obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
+        objfx_spawnDirectionalBurstLegacy((int*)obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
     }
     return 0;
 }

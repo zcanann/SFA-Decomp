@@ -201,7 +201,6 @@ extern void objSetMtxFn_800412d4(f32* m);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern void objfx_spawnDirectionalBurst(int* obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, u32 f);
 extern f32 gDim2RoofRubEffectScale;
 extern f32 lbl_803E3244;
 extern f32 lbl_803E3248;
@@ -744,7 +743,7 @@ void dim2roofrub_spawnEffects(int* obj)
     }
     if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_SLIDE)
     {
-        objfx_spawnDirectionalBurst(obj, 7, lbl_803E3270, 5, 1, 10, lbl_803E3274, 0, 0x20000000);
+        objfx_spawnDirectionalBurstLegacy(obj, 7, lbl_803E3270, 5, 1, 10, lbl_803E3274, 0, 0x20000000);
     }
     else if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_TREAD)
     {
@@ -752,7 +751,7 @@ void dim2roofrub_spawnEffects(int* obj)
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = 2;
         if ((((GameObject*)obj)->objectFlags & DIM2ROOFRUB_OBJFLAG_RENDERED) != 0)
         {
-            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3270, 2, 1, 20, lbl_803E3278, 0, 0);
+            objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E3270, 2, 1, 20, lbl_803E3278, 0, 0);
         }
     }
 }

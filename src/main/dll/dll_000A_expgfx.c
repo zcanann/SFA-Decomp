@@ -7,6 +7,7 @@
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "main/objfx.h"
 #include "main/lightmap.h"
 #include "main/mm.h"
 #include "main/sky_state.h"
@@ -3202,14 +3203,12 @@ ObjectDescriptor14 expgfx_funcs = {
 
 /* Switch jumptables for neighbouring objfx/itempickup particle fx code whose
  * .data was emitted in this unit's address range. */
-extern void objfx_spawnDirectionalBurst();
 extern void objfx_spawnArcedBurst();
 extern void objfx_spawnBoxBurst();
 extern void fn_80098B18();
 extern void projectileParticleFxFn_80099660();
 extern void itemPickupDoParticleFx();
 extern void objParticleFn_80099d84();
-extern void objLightFn_8009a1dc();
 
 void* jumptable_8030FA9C[8] = {
     (void*)((u8*)objfx_spawnDirectionalBurst + 0x390), (void*)((u8*)objfx_spawnDirectionalBurst + 0x170),

@@ -21,6 +21,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/objlib.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -52,7 +53,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 extern f32 getXZDistance(f32* a, f32* b);
 extern int getTrickyObject(void);
-extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern float mathSinf(float x);
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 
@@ -270,13 +270,13 @@ void MoonSeedPlantingSpot_update(int obj)
             if (player != NULL &&
                 getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
             {
-                objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
+                objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
                 (*(void (*)(int, int, int, int))(*(int*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28)))(tricky, obj,
                                                                                                           1, 4);
             }
             else
             {
-                objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
+                objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
             }
             if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == MSPLANTING_HIT_CUT)
             {
@@ -294,11 +294,11 @@ void MoonSeedPlantingSpot_update(int obj)
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
         if (getXZDistance(&((GameObject*)tricky)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
         {
-            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
+            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
         }
         else
         {
-            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
+            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
         }
         if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= 0.0f &&
             mainGetBit(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&

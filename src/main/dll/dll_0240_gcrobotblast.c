@@ -12,6 +12,7 @@
  */
 #include "main/dll/blastflags4_types.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/objanim_update.h"
 #include "main/dll/dll_0240_gcrobotblast.h"
 
@@ -20,7 +21,6 @@ STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 extern f32 lbl_803E6270;
 extern f32 lbl_803E6274;
 
-extern void objfx_spawnDirectionalBurst(int, int, f32, int, int, int, f32, int, int);
 
 int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -37,8 +37,8 @@ int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
         {
         case 0:
         case 1:
-            objfx_spawnDirectionalBurst((int)obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
-            objfx_spawnDirectionalBurst((int)obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, 0, 0x200000);
+            objfx_spawnDirectionalBurstLegacy((int)obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
+            objfx_spawnDirectionalBurstLegacy((int)obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, 0, 0x200000);
             break;
         }
     }

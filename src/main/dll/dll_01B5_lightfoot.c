@@ -12,6 +12,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -167,7 +168,8 @@ void lightfoot_update(GameObject* obj)
                     buf[5] = lbl_803E8180;
                     for (i = 0x14; i != 0; i--)
                     {
-                        objfx_spawnDirectionalBurst((int)obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                        objfx_spawnDirectionalBurstLegacy((int)obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf,
+                                                          0);
                     }
                     if (mainGetBit(0xc3b) && mainGetBit(0xc3c) && mainGetBit(0xc3d))
                     {
@@ -201,7 +203,8 @@ void lightfoot_update(GameObject* obj)
                     buf[5] = lbl_803E8180;
                     for (i = 0x14; i != 0; i--)
                     {
-                        objfx_spawnDirectionalBurst((int)obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                        objfx_spawnDirectionalBurstLegacy((int)obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf,
+                                                          0);
                     }
                     if (mainGetBit(0xc3e) && mainGetBit(0xc3f) && mainGetBit(0xc40))
                     {

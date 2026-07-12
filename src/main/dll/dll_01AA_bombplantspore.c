@@ -6,6 +6,7 @@
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/path_control_interface.h"
@@ -93,8 +94,6 @@ extern void lightSetFieldBC_8001db14(void* light, int value);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mult,
-                                        void* origin, int flags);
 
 int BombPlantSpore_getExtraSize(void)
 {
