@@ -253,7 +253,6 @@ end:
 
 void SidekickBall_update(u8* self)
 {
-    extern int ObjTrigger_IsSet(u8 * obj);
     extern void trickyBallFn_801793b8(GameObject * obj, u8 * state);
     SidekickBallState* state;
     u8* player;
@@ -301,7 +300,8 @@ void SidekickBall_update(u8* self)
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         gotHit = 0;
-        if ((buttonGetDisabled(0) & 0x100) == 0u && ((GameObject*)self)->unkF8 == 0 && ObjTrigger_IsSet(self) != 0)
+        if ((buttonGetDisabled(0) & 0x100) == 0u && ((GameObject*)self)->unkF8 == 0 &&
+            ObjTrigger_IsSet((int)self) != 0)
         {
             ObjHits_DisableObject((u32)self);
             gotHit = 1;
