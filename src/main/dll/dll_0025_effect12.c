@@ -300,7 +300,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             local.rot2 = 0;
             local.rot1 = 0;
             local.rot0 = ((GameObject*)obj)->anim.rotX;
-            vecRotateZXY(&local, &p.velX);
+            vecRotateZXY(&local.rotation.x, &p.velX);
             p.scale = lbl_803DFFB4;
             p.count = 100;
             p.alpha = 0xff;

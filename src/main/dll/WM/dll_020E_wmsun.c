@@ -150,7 +150,6 @@ extern f32 lbl_803E5F60; /* 0.001f */
 extern f32 lbl_803E5F64; /* -0.001f */
 extern f32 lbl_803E5F68; /* 0.01f */
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern void vecRotateZXY(s16* ang, WmSunVec3* vec);
 
 int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)
 {
@@ -189,7 +188,7 @@ void wmsun_updateGlare(GameObject* obj)
     if (cam != NULL)
     {
         g.ang[0] = 0x8000 - cam->yaw;
-        vecRotateZXY(g.ang, &sun);
+        vecRotateZXY(g.ang, &sun.x);
         dx = obj->anim.localPosX - cam->x;
         dy = obj->anim.localPosY - cam->y;
         dz = obj->anim.localPosZ - cam->z;

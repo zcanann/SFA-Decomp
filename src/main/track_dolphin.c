@@ -345,7 +345,6 @@ extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
 extern void* ObjGroup_GetObjects();
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void vecRotateZXY(void* xf, f32* out);
 extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
@@ -1793,7 +1792,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
             out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
         }
         out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
-        vecRotateZXY(&xf, &out[i * 3]);
+        vecRotateZXY(&xf.rotX, &out[i * 3]);
     }
 }
 #pragma dont_inline reset

@@ -428,7 +428,6 @@ extern f32 lbl_803DC6DC;
 extern f32 lbl_803DC6E0;
 extern f32 lbl_803DC6E4;
 extern f32 powfBitEstimate(f32 base, f32 exp);
-extern void vecRotateZXY(void* a, void* b);
 extern f32 lbl_803E7FA4;
 extern f32 lbl_803E7FE8;
 extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void* out1, void* out2);

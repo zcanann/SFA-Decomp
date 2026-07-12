@@ -106,7 +106,6 @@ typedef struct SmallBasketThrowSetup
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern int getAngle(float y, float x);
-extern void vecRotateZXY(void* in, void* out);
 extern f32 gSmallBasketHitVelocity[];
 extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;
@@ -288,7 +287,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
-        vecRotateZXY(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, (f32*)(spawned + 0x24));
         ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
@@ -341,7 +340,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
-        vecRotateZXY(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, (f32*)(spawned + 0x24));
         ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
@@ -394,7 +393,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
-        vecRotateZXY(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, (f32*)(spawned + 0x24));
         ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
@@ -465,7 +464,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
-        vecRotateZXY(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, (f32*)(spawned + 0x24));
         ang = (u16)(s16)getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
         diff = ((GameObject*)spawned)->anim.rotX - ang;
         if (diff > 0x8000)
@@ -965,7 +964,7 @@ void SmallBasket_update(GameObject* obj)
                         {
                             blk.h0 = blk.h0 + **(s16**)(player + 0x30);
                         }
-                        vecRotateZXY(&blk, &(obj)->anim.velocityX);
+                        vecRotateZXY((s16*)&blk, &(obj)->anim.velocityX);
                         Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_throw);
                     }
                     else if (fn_802966B4(player) != 0)
@@ -993,7 +992,7 @@ void SmallBasket_update(GameObject* obj)
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = ((GameObject*)player)->anim.rotX;
-                        vecRotateZXY(&blk, &(obj)->anim.velocityX);
+                        vecRotateZXY((s16*)&blk, &(obj)->anim.velocityX);
                         Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_throw);
                         state->carryAttached = 0;
                         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;

@@ -19,7 +19,7 @@ typedef struct SkyVec3
 
 typedef struct SkyRotQ
 {
-    u16 rx, ry, rz;
+    s16 rx, ry, rz;
     f32 w;
     f32 x, y, z;
 } SkyRotQ;

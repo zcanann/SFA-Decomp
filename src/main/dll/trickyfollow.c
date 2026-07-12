@@ -75,7 +75,6 @@ extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
 
 extern f32 getXZDistance(f32* a, f32* b);
-extern void vecRotateZXY(void* params, void* outVec);
 extern int isInWalkGroupOrPatch(f32* pos);
 extern void ObjHits_SyncObjectPosition(u8* obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
@@ -751,7 +750,7 @@ state_selected:
             rot.angle = -((GameObject*)obj)->anim.rotX;
             rot._pad0 = 0;
             rot._pad1 = 0;
-            vecRotateZXY(&rot, delta);
+            vecRotateZXY(&rot.angle, delta);
             if ((delta[2] > lbl_803E23DC) && (lbl_803E23DC != ((TrickyState*)state)->speed))
             {
                 for (step = 0; step < 4; step++)
@@ -1406,7 +1405,7 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         params.angle = -((GameObject*)obj)->anim.rotX;
         params._pad0 = 0;
         params._pad1 = 0;
-        vecRotateZXY(&params, delta);
+        vecRotateZXY(&params.angle, delta);
         if (delta[2] > lbl_803E23DC)
         {
             candidate = ((TrickyState*)state)->speed;

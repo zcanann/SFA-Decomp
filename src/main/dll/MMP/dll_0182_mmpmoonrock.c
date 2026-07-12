@@ -255,7 +255,6 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern void vecRotateZXY(void* in, void* out);
 extern f32 lbl_803E456C;
 extern f32 lbl_803E4570;
 extern f32 lbl_803E4574;

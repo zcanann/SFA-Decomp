@@ -131,7 +131,6 @@ extern void exploded_initialise(void);
 extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
-extern void vecRotateZXY(s16* rot, f32* vec);
 
 void explodable_render(void)
 {

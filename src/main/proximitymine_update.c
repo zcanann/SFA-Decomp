@@ -49,7 +49,6 @@ extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, 
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void vecRotateZXY(void* params, f32* vec);
 
 int ProximityMine_getExtraSize(void)
 {
@@ -282,7 +281,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             params.rotZ = 0;
             params.rotY = 0;
             params.rotX = obj->angle;
-            vecRotateZXY(&params, &obj->velocityX);
+            vecRotateZXY(&params.rotX, &obj->velocityX);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_f0);
         }
         case PROXIMITYMINE_MODE_FLIGHT:

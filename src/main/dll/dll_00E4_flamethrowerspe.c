@@ -51,7 +51,6 @@ extern f32 lbl_803E3388;
 extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
 extern f32 lbl_803E338C;
-extern void vecRotateZXY(int* obj, f32* p);
 extern void firepipe_releaseEffectObject(int* obj);
 extern f32 lbl_803E3390;
 extern f32 lbl_803E3394;
@@ -119,7 +118,7 @@ void flamethrowerspe_update(int* obj)
         ((GameObject*)obj)->anim.velocityZ =
             lbl_803DBD68 * (lbl_803E3390 * (((FlamethrowerspeState*)state)->sizeScale *
                                             (lbl_803E3394 * (f32)(s32)randomGetRange(0x64, 0x96))));
-        vecRotateZXY(obj, &((GameObject*)obj)->anim.velocityX);
+        vecRotateZXY(&((GameObject*)obj)->anim.rotX, &((GameObject*)obj)->anim.velocityX);
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
         s16toFloat(&((FlamethrowerspeState*)state)->lifeTimer, lbl_803DBD64);
         ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_ACTIVE;

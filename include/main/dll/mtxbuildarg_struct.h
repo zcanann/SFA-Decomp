@@ -2,12 +2,18 @@
 #define MAIN_DLL_MTXBUILDARG_STRUCT_H_
 
 #include "types.h"
+#include "main/vec_types.h"
 
 typedef struct MtxBuildArg
 {
-    s16 rx;
-    s16 ry;
-    s16 rz;
+    union {
+        struct {
+            s16 rx;
+            s16 ry;
+            s16 rz;
+        };
+        Vec3s rotation;
+    };
     u8 pad6[2];
     f32 w;
     f32 a;

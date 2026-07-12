@@ -550,8 +550,8 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
             s1.mat[3] = lbl_803E83A4;
             s1.mat[0] = lbl_803E83A8;
             vecD.z = lbl_803E83C8;
-            vecRotateZXY(&s1, &vecC);
-            vecRotateZXY(&s1, &vecD);
+            vecRotateZXY(s1.angles, &vecC.x);
+            vecRotateZXY(s1.angles, &vecD.x);
             vecC.x = vecC.x * accel;
             vecC.y = vecC.y * accel;
             vecC.z = vecC.z * accel;
@@ -567,7 +567,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
             s1.mat[2] = lbl_803E83A4;
             s1.mat[3] = lbl_803E83A4;
             s1.mat[0] = lbl_803E83A8;
-            vecRotateZXY(&s1, &vecD);
+            vecRotateZXY(s1.angles, &vecD.x);
             vecN.x = -((GameObject*)obj)->anim.velocityX;
             vecN.y = -((GameObject*)obj)->anim.velocityY;
             vecN.z = -((GameObject*)obj)->anim.velocityZ;
@@ -596,7 +596,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         vecC.y =
             -((CloudRunnerState*)baddie)->baddie.moveInputZ * lbl_803E83D4 * *(f32*)(base + ((int)idx >> 1) * 4 + 0x9c);
         vecC.z = lbl_803E83A4;
-        vecRotateZXY(&s1, &vecC);
+        vecRotateZXY(s1.angles, &vecC.x);
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + vecC.x;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + vecC.y;
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ + vecC.z;
@@ -610,7 +610,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         s1.mat[2] = lbl_803E83A4;
         s1.mat[3] = lbl_803E83A4;
         s1.mat[0] = lbl_803E83A8;
-        vecRotateZXY(&s1, &vecB);
+        vecRotateZXY(s1.angles, &vecB.x);
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + vecB.x;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + vecB.y;
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ + vecB.z;

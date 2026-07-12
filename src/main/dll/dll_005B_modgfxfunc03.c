@@ -245,7 +245,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmd[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
             m.rotY = randomGetRange(-0x7fff, -0xfa0);
             m.rotX = randomGetRange(0, 0xffff);
-            vecRotateZXY(&m, &cmd[2].x);
+            vecRotateZXY(&m.rotX, &cmd[2].x);
             cmd += 3;
         }
         else if (effectId == 0x11)
@@ -259,7 +259,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmd[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
             m.rotY = randomGetRange(-0x7fff, -0xfa0);
             m.rotX = randomGetRange(0, 0xffff);
-            vecRotateZXY(&m, &cmd[2].x);
+            vecRotateZXY(&m.rotX, &cmd[2].x);
             cmd += 3;
         }
         else
@@ -273,7 +273,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmd[2].z = lbl_803E0754 + (f32)(int)randomGetRange(0, 100);
             m.rotY = randomGetRange(-0x7fff, -0xfa0);
             m.rotX = randomGetRange(0, 0xffff);
-            vecRotateZXY(&m, &cmd[2].x);
+            vecRotateZXY(&m.rotX, &cmd[2].x);
             cmd += 3;
         }
         cmd[0].layer = 1;

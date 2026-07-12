@@ -151,7 +151,6 @@ extern f32 lbl_803E04C8;
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void vecRotateZXY(void* params, f32* vec);
 extern int randFn_80080100(int n);
 
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
@@ -925,7 +924,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.velocityX = lbl_803E0324;
             if (extraArgs != NULL)
             {
-                vecRotateZXY(extraArgs, &cfg.velocityX);
+                vecRotateZXY((s16*)extraArgs, &cfg.velocityX);
             }
             cfg.textureId = spawnParams->unk6;
         }
@@ -1577,13 +1576,13 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         if (spawnParams != NULL)
         {
             cfg.velocityZ = spawnParams->scale;
-            vecRotateZXY(spawnParams, &cfg.velocityX);
+            vecRotateZXY(&spawnParams->rotX, &cfg.velocityX);
             cfg.startPosX = cfg.startPosX + cfg.velocityX;
             cfg.startPosZ = cfg.startPosZ + cfg.velocityZ;
             cfg.velocityX = lbl_803E0324;
             cfg.velocityY = spawnParams->scale * (lbl_803E044C * (f32)(s32)randomGetRange(0x32, 100));
             cfg.velocityZ = spawnParams->scale * (lbl_803E0310 * (f32)(s32)randomGetRange(0x4b, 100));
-            vecRotateZXY(spawnParams, &cfg.velocityX);
+            vecRotateZXY(&spawnParams->rotX, &cfg.velocityX);
             cfg.scale = lbl_803E034C;
             cfg.lifetimeFrames = (int)(cfg.velocityY * (f32)(s32)randomGetRange(0x32, 100));
             cfg.initialAlpha = 0x7f;

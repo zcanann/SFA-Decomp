@@ -158,7 +158,6 @@ extern void fn_8003B500(GameObject* obj, int q, f32 f);
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
-extern void vecRotateZXY(void* a, void* b);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
 extern f32 lbl_803E82EC;

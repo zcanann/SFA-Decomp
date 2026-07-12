@@ -108,7 +108,6 @@ extern f32 gDimLavaDebrisGravity, gDimLavaGravity, lbl_803E47F8, lbl_803E47FC;
 extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDimLavaAngleUnitsHalfCircle;
 extern f32 gDimLavaLightAttenNear, gDimLavaLightAttenFar, gDimLavaGlowRadius;
 extern u8 gDimLavaDebrisBaseVec[];
-extern void vecRotateZXY(void* in, void* out);
 
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
@@ -213,7 +212,7 @@ void lavaball1be_init(s16* obj, u8* p)
         s.rot[2] = 0;
         s.rot[1] = randomGetRange(-0x2ee0, 0x2ee0);
         s.rot[0] = randomGetRange(0, 0xfffe);
-        vecRotateZXY((u8*)&s + 12, &s.vec);
+        vecRotateZXY((s16*)((u8*)&s + 12), (f32*)&s.vec);
         ((GameObject*)obj)->unkF4 = 0x4b;
         ((GameObject*)obj)->anim.velocityX = s.vec.x;
         ((GameObject*)obj)->anim.velocityY = s.vec.y;

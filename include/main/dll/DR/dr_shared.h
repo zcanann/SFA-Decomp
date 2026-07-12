@@ -132,7 +132,6 @@ extern void logPrintf(char* fmt, ...);
 extern const f32 lbl_803E69A8;
 extern void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int b);
 extern f32 lbl_803E68B8;
-extern void vecRotateZXY(int obj, f32* v);
 extern f32 lbl_803E689C;
 extern f32 lbl_803E68A0;
 extern f32 lbl_803E68A4;

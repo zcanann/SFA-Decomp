@@ -64,7 +64,6 @@ extern f32 lbl_803DBDCC;
 extern u32 lbl_802C2298[3];
 extern u32 lbl_802C22A4[3];
 extern s16 getAngle(f32 dx, f32 dz);
-extern void vecRotateZXY(void* rotation, f32* outVec);
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);
@@ -295,7 +294,7 @@ void Scarab_update(GameObject* obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = randomGetRange(-10000, 10000);
-                vecRotateZXY(&rot, &obj->anim.velocityX);
+                vecRotateZXY(&rot.ang, &obj->anim.velocityX);
                 ang = (u16)getAngle(obj->anim.velocityX, -obj->anim.velocityZ);
                 yawDelta = obj->anim.rotX - ang;
                 if (yawDelta > 0x8000)
@@ -376,7 +375,7 @@ void Scarab_update(GameObject* obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = obj->anim.rotX - ((ScarabState*)state)->spawnYaw;
-                vecRotateZXY(&rot, &obj->anim.velocityX);
+                vecRotateZXY(&rot.ang, &obj->anim.velocityX);
                 ((ScarabState*)state)->mode -= framesThisStep;
                 if (((ScarabState*)state)->mode <= 0)
                 {
@@ -599,7 +598,6 @@ typedef struct GuardianAngleParams
 void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
 {
     extern int getAngle(f32, f32);
-    extern void vecRotateZXY(void*, f32*);
     f32* velCache = ((GameObject*)obj)->extra;
     GuardianAngleParams rotParams;
     f32 buf[3];
@@ -643,7 +641,7 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     rotParams.b = 0;
     rotParams.a = ((GameObject*)obj)->anim.rotX;
 
-    vecRotateZXY(&rotParams, buf);
+    vecRotateZXY(&rotParams.a, buf);
 
     if (p2)
     {

@@ -85,7 +85,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void vecRotateZXY(int obj, void* vec);
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
@@ -389,7 +388,7 @@ end:
                 *(rv = &vec[0]) = 0.0f;
                 vec[1] = 200.0f * ((CloudRunnerState*)inner)->baddie.velX;
                 vec[2] = 0.0f;
-                vecRotateZXY((int)obj, rv);
+                vecRotateZXY(&obj->anim.rotX, rv);
                 objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 1, vec2,
                                              80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
                 ((ScMusictreeState*)inner)->proximityBurstTimer += 30.0f;

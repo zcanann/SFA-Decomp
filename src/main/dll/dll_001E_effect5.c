@@ -48,7 +48,6 @@ extern f32 gEffect5SinPhaseScale;
 extern f32 gEffect5AnimProgressA;
 extern f32 gEffect5AnimProgressB;
 extern float mathSinf(float x);
-extern void vecRotateZXY(void* obj, f32* vec);
 
 void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x00000000, (void*)0x00050000,
                           Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,
@@ -141,7 +140,7 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = 0;
         es.ry = 0;
         es.rx = spawnParams->rotX;
-        vecRotateZXY(&es, &cfg.velocityX);
+        vecRotateZXY(&es.rotation.x, &cfg.velocityX);
         cfg.scale = 0.002f * (f32)(s32)randomGetRange(4, 8);
         cfg.lifetimeFrames = 0x46;
         cfg.initialAlpha = 0x64;
@@ -179,7 +178,7 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = 0;
         es.ry = 0;
         es.rx = spawnParams->rotX;
-        vecRotateZXY(&es, &cfg.velocityX);
+        vecRotateZXY(&es.rotation.x, &cfg.velocityX);
         cfg.scale = 0.0001f * (f32)(s32)randomGetRange(4, 8);
         cfg.lifetimeFrames = 0x46;
         cfg.initialAlpha = 0xff;

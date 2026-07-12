@@ -81,7 +81,6 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void vecRotateZXY(s16* rotation, f32* outVec);
 extern int ObjHits_GetPriorityHit(GameObject* obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 /* .sdata2 constant pool */

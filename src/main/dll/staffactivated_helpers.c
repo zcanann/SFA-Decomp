@@ -60,7 +60,6 @@ extern int getTrickyObject(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
-extern void vecRotateZXY(void* rotation, void* vec);
 extern u16 getAngle(f32 x, f32 z);
 
 void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state)
@@ -205,7 +204,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
             rotate.z = 0;
             rotate.x = 0;
             rotate.y = randomGetRange(-10000, 10000);
-            vecRotateZXY(&rotate, (void*)(spawnedObj + 0x24));
+            vecRotateZXY((s16*)&rotate, (f32*)(spawnedObj + 0x24));
 
             yawDelta = ((GameObject*)spawnedObj)->anim.rotX -
                        getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);

@@ -150,7 +150,6 @@ typedef struct DbeggPlacement
 void dbegg_processMessages(GameObject* obj)
 {
     extern int gameBitIncrement(int bit);
-    extern void vecRotateZXY(void*, int);
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
@@ -180,20 +179,26 @@ void dbegg_processMessages(GameObject* obj)
                 break;
             case 17:
             {
-                f32 buf[6];
+                struct
+                {
+                    s16 rotation[3];
+                    u8 pad6[2];
+                    f32 scale;
+                    f32 vector[3];
+                } buf;
                 f32 v;
                 (obj)->anim.velocityX = ((DbEggState*)eggState)->launchVelX;
                 (obj)->anim.velocityY = ((DbEggState*)eggState)->launchVelY;
                 (obj)->anim.velocityZ = -((DbEggState*)eggState)->launchVelZ;
                 v = lbl_803E61C8;
-                buf[3] = v;
-                buf[4] = v;
-                buf[5] = v;
-                buf[2] = lbl_803E61CC;
-                ((s16*)buf)[2] = 0;
-                ((s16*)buf)[1] = 0;
-                ((s16*)buf)[0] = *(s16*)msgArg;
-                vecRotateZXY(buf, (int)obj + 0x24);
+                buf.vector[0] = v;
+                buf.vector[1] = v;
+                buf.vector[2] = v;
+                buf.scale = lbl_803E61CC;
+                buf.rotation[2] = 0;
+                buf.rotation[1] = 0;
+                buf.rotation[0] = *(s16*)msgArg;
+                vecRotateZXY(buf.rotation, &obj->anim.velocityX);
             }
             case 16:
                 ObjGroup_AddObject((int)obj, DBEGG_OBJGROUP);

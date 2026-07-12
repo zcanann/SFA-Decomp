@@ -20,7 +20,6 @@
 #include "main/dll/WM/dll_0210_wmplanets.h"
 
 extern u32 lbl_802C2500[3]; /* (0.0f, 0.0f, 0.0f) */
-extern void vecRotateZXY(void* angles, void* outVec);
 
 int WM_Planets_getExtraSize(void)
 {
@@ -75,7 +74,7 @@ void WM_Planets_update(int* obj)
     rotate.roll = 0;
     rotate.pitch = 0;
     rotate.yaw = state->orbitYaw;
-    vecRotateZXY(&rotate, vec.f);
+    vecRotateZXY(&rotate.yaw, vec.f);
 
     rotate.zeroX = lbl_803E5F9C;
     rotate.zeroY = lbl_803E5F9C;
@@ -84,7 +83,7 @@ void WM_Planets_update(int* obj)
     rotate.roll = 0;
     rotate.pitch = state->orbitPitch;
     rotate.yaw = 0;
-    vecRotateZXY(&rotate, vec.f);
+    vecRotateZXY(&rotate.yaw, vec.f);
 
     ((GameObject*)obj)->anim.localPosX = vec.f[0] + state->baseX;
     ((GameObject*)obj)->anim.localPosY = vec.f[1] + state->baseY;

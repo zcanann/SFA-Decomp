@@ -143,7 +143,6 @@ extern f32 lbl_803E6010;
 extern f32 lbl_803E6014;
 extern f32 lbl_803E6018;
 
-extern void vecRotateZXY(void* mtx, f32* vec);
 extern f32 lbl_803E5FB8;
 extern u16 gWallCrawlerVariantFlags[];
 extern u8 gWallCrawlerPointCollision[];
@@ -189,7 +188,7 @@ void wmwallcrawler_alignToFloorNormal(GameObject* obj, f32* floorData)
     mtx.r2 = 0;
     mtx.r1 = 0;
     mtx.r0 = obj->anim.rotX;
-    vecRotateZXY(&mtx, in);
+    vecRotateZXY(&mtx.r0, in);
     ang = getAngle(in[0], in[1]);
     ang2 = getAngle(in[2], in[1]);
     obj->anim.rotY = ang2;

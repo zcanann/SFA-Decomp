@@ -111,7 +111,7 @@ void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
         dir[1] = -(fr * lbl_803E689C);
     }
     dir[2] = scale;
-    vecRotateZXY((int)obj, dir);
+    vecRotateZXY(&obj->anim.rotX, dir);
     dir[0] += (obj)->anim.localPosX;
     dir[1] += (obj)->anim.localPosY;
     dir[2] += (obj)->anim.localPosZ;

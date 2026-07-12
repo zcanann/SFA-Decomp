@@ -2,6 +2,7 @@
 #define MAIN_DLL_EFFECTSRCPARAMS_STRUCT_H_
 
 #include "types.h"
+#include "main/vec_types.h"
 
 typedef struct EffectSrcParams
 {
@@ -28,6 +29,7 @@ typedef struct EffectSrcParams
       s16 arg2;
       s16 arg3;
     };
+    Vec3s rotation;
   };
   union
   {

@@ -38,7 +38,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
-extern void vecRotateZXY(void* rotation, f32* outVec);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E3A58 = 0.0f;
@@ -356,7 +355,7 @@ void dll_107_update(GameObject* obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = ((GameObject*)player)->anim.rotX;
-                vecRotateZXY(&rot, &(obj)->anim.velocityX);
+                vecRotateZXY(&rot.ang, &(obj)->anim.velocityX);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_6a);
             }
             else if ((s8)st21 == 2 && (obj)->unkF8 == 0)

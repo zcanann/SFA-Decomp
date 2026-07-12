@@ -103,7 +103,6 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);
-extern void vecRotateZXY(void* angles, void* outVec);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,
                               int arg9, int arg10);
@@ -260,7 +259,7 @@ void duster_update(GameObject* obj)
                 launch.roll = 0;
                 launch.pitch = 0;
                 launch.yaw = obj->anim.rotX;
-                vecRotateZXY(&launch, &obj->anim.velocityX);
+                vecRotateZXY(&launch.yaw, &obj->anim.velocityX);
             }
             else
             {

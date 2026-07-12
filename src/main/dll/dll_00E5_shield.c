@@ -108,7 +108,6 @@ extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void postRenderSetAlphaBlendState(void);
 extern int getHudHiddenFrameCount(void);
-extern void vecRotateZXY(int* obj, f32* p);
 extern f32 fcos16(u16 angle);
 extern void Sfx_SetObjectSfxVolume(s16* obj, int sfx, int vol, f32 ratio);
 extern f32 lbl_803E33A8;
@@ -602,7 +601,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                             s.pos[1] = cB * f8v;
                             s.pos[2] = cC;
                             ((GameObject*)obj)->anim.rotX += 32767;
-                            vecRotateZXY(obj, s.pos);
+                            vecRotateZXY(&((GameObject*)obj)->anim.rotX, s.pos);
                             s.pos[0] += ((GameObject*)obj)->anim.localPosX;
                             s.pos[1] += ((GameObject*)obj)->anim.localPosY;
                             s.pos[2] += ((GameObject*)obj)->anim.localPosZ;

@@ -36,6 +36,7 @@ int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
 int randomGetRange(int min, int max);
 
 void vecRotateYXZ(s16* angles, f32* vector);
+void vecRotateZXY(s16* rotation, f32* vector);
 f32 interpolate(f32 a, f32 t, f32 exp);
 void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 void mtx44_mult(f32* a, f32* b, f32* out);

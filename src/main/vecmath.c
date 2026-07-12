@@ -685,7 +685,7 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
 }
 
 #pragma fp_contract on
-void vecRotateZXY(u8* p, f32* v)
+void vecRotateZXY(s16* rotation, f32* vector)
 {
     f32 s2;
     f32 c2;
@@ -697,13 +697,13 @@ void vecRotateZXY(u8* p, f32* v)
     f32 t3;
     f32 t2;
 
-    angleToVec2(*(u16*)(p + 0x0), &s0, &c0);
-    angleToVec2(*(u16*)(p + 0x2), &s1, &c1);
-    angleToVec2(*(u16*)(p + 0x4), &s2, &c2);
-    t5 = v[0] * c2 - v[1] * s2;
-    t3 = v[1] * c2 + v[0] * s2;
-    v[1] = t3 * c1 - v[2] * s1;
-    t2 = v[2] * c1 + t3 * s1;
-    v[0] = t5 * c0 + t2 * s0;
-    v[2] = t2 * c0 - t5 * s0;
+    angleToVec2(*(u16*)((u8*)rotation + 0x0), &s0, &c0);
+    angleToVec2(*(u16*)((u8*)rotation + 0x2), &s1, &c1);
+    angleToVec2(*(u16*)((u8*)rotation + 0x4), &s2, &c2);
+    t5 = vector[0] * c2 - vector[1] * s2;
+    t3 = vector[1] * c2 + vector[0] * s2;
+    vector[1] = t3 * c1 - vector[2] * s1;
+    t2 = vector[2] * c1 + t3 * s1;
+    vector[0] = t5 * c0 + t2 * s0;
+    vector[2] = t2 * c0 - t5 * s0;
 }

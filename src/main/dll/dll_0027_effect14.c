@@ -426,7 +426,7 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         rotCtx.rot2 = ((GameObject*)obj)->anim.rotZ;
         rotCtx.rot1 = ((GameObject*)obj)->anim.rotY;
         rotCtx.rot0 = ((GameObject*)obj)->anim.rotX;
-        vecRotateZXY(&rotCtx, &p.velX);
+        vecRotateZXY(&rotCtx.rotation.x, &p.velX);
         p.flagsA = 0x3000000;
         p.flagsB = 0x200000;
         p.scale = lbl_803E000C;

@@ -136,7 +136,7 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
         params.vec[0] = mult * (1.0f - r * (r * r));
         params.vec[1] = 0.0f;
         params.vec[2] = 0.0f;
-        vecRotateZXY(rvec, params.vec);
+        vecRotateZXY((s16*)rvec, params.vec);
         if (origin != NULL)
         {
             params.vec[0] += ((GameObject*)origin)->anim.localPosX;
@@ -316,7 +316,7 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
         }
         params.vec[1] = lbl_803DF35C;
         params.vec[2] = lbl_803DF35C;
-        vecRotateZXY(rvec, params.vec);
+        vecRotateZXY((s16*)rvec, params.vec);
         if (origin != NULL)
         {
             params.vec[0] += ((GameObject*)origin)->anim.localPosX;
@@ -395,7 +395,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
         }
         fdelta = angBase - lo;
         params.vec[0] = params.vec[0] * (f29 * fdelta + lo);
-        vecRotateZXY(rvec, params.vec);
+        vecRotateZXY((s16*)rvec, params.vec);
         {
             f32 t = f29 - lbl_803DF358;
             params.vec[1] = t * hi;
@@ -659,7 +659,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
             lvec[3] = ((GameObject*)light)->anim.localPosX;
             lvec[4] = ((GameObject*)light)->anim.localPosY;
             lvec[5] = ((GameObject*)light)->anim.localPosZ;
-            vecRotateZXY(obj, &lvec[3]);
+            vecRotateZXY((s16*)obj, &lvec[3]);
             Camera_ProjectWorldPointWithOffset(
                 (obj)->anim.worldPosX + lvec[3] - playerMapOffsetX, (obj)->anim.worldPosY + lvec[4],
                 (obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ, lbl_803DF384, &proj[2], &proj[1], &proj[0]);

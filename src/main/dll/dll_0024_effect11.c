@@ -320,7 +320,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.velX = lbl_803DFF94 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF90;
         p.velY = lbl_803DFF98 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF74;
         p.velZ = lbl_803DFF98 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF74;
-        vecRotateZXY(src, &p.velX);
+        vecRotateZXY(&src->rotation.x, &p.velX);
         p.scale = lbl_803DFF9C * (f32)(int)randomGetRange(0x14, 0x1e);
         p.alpha = 0xff;
         p.count = 0xf0;

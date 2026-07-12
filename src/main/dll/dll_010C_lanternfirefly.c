@@ -67,7 +67,6 @@ extern f32 lbl_803DBDD8;
 
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
-extern void vecRotateZXY(void* rotation, f32* outVec);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -437,7 +436,7 @@ void fn_801868D0(GameObject* obj)
     rot.c = 0;
     rot.b = 0;
     rot.ang = state->randAngle;
-    vecRotateZXY(&rot, &state->offX);
+    vecRotateZXY(&rot.ang, &state->offX);
 }
 
 void fn_801869DC(GameObject* obj)

@@ -28,7 +28,6 @@
 #define VFP_OBJCREATOR_FALLING_OBJECT_ID    0x263
 #define VFP_OBJCREATOR_PROJECTILE_OBJECT_ID 0x549
 
-extern void vecRotateZXY(s16* angles, f32* vec);
 
 int VFP_ObjCreator_getExtraSize(void)
 {

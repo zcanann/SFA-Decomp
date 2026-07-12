@@ -486,7 +486,6 @@ void fn_800A0478(ModgfxState* state)
 #pragma peephole off
 void fn_800A081C(int state, int cmd, int mode)
 {
-    extern void vecRotateZXY(void*, f32*);
     extern f32 gModgfxMotionStep;
     extern f32 lbl_803DF430;
     extern f32 lbl_803DF434;

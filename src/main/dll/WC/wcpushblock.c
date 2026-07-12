@@ -137,7 +137,6 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-extern void vecRotateZXY(void* angles, void* out);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer, int linkId,
                                           void* parent);

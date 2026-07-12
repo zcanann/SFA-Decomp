@@ -194,7 +194,6 @@ extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
 extern void modelLightStruct_getWorldPosition(u8* p, f32* a, f32* b, f32* c);
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
-extern void vecRotateZXY(void* rot, f32* vec);
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
@@ -1412,7 +1411,7 @@ void sky2_run(void)
     *(s16*)&q.rx = -cam->yaw;
     q.rz = 0;
     q.ry = 0;
-    vecRotateZXY(&q, vec);
+    vecRotateZXY(&q.rx, vec);
     i = 0;
     pp = &gSky2State;
     do
@@ -2890,12 +2889,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[2] = lbl_803DF0B8 * sunDir.z;
         yaw = sky->sunYaw;
         q1.rx = sunT;
-        vecRotateZXY(&q1, vec);
+        vecRotateZXY(&q1.rx, vec);
         q1.w = EXIInputFlag;
         q1.rz = yaw;
         q1.ry = 0;
         q1.rx = 0;
-        vecRotateZXY(&q1, vec);
+        vecRotateZXY(&q1.rx, vec);
         gSkySunDirection[0] = vec[0];
         gSkySunDirection[1] = vec[1];
         gSkySunDirection[2] = vec[2];
@@ -2970,12 +2969,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[1] = lbl_803DF0B8 * moonDir.y;
         vec[2] = lbl_803DF0B8 * moonDir.z;
         q2.rx = moonTC;
-        vecRotateZXY(&q2, vec);
+        vecRotateZXY(&q2.rx, vec);
         q2.w = EXIInputFlag;
         q2.rz = yaw;
         q2.ry = 0;
         q2.rx = 0;
-        vecRotateZXY(&q2, vec);
+        vecRotateZXY(&q2.rx, vec);
         gSkyMoonDirection[0] = vec[0];
         gSkyMoonDirection[1] = vec[1];
         gSkyMoonDirection[2] = vec[2];

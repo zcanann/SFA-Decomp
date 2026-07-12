@@ -79,7 +79,6 @@ extern f32 lbl_803E66B8;
 extern void ModelLightStruct_free(int model);
 extern void objRenderModelAndHitVolumes(f32 e);
 extern void queueGlowRender(int model);
-extern void vecRotateZXY(void* in, void* out);
 extern int objCreateLight(int obj, int arg);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);

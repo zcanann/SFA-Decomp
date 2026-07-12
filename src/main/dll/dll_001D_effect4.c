@@ -111,7 +111,6 @@ extern f32 lbl_803DFBC0;
 extern f32 lbl_803DFBC4;
 extern f32 lbl_803DFBC8;
 extern FxNode9 lbl_8039C320;
-extern void vecRotateZXY(void* obj, f32* vec);
 
 void Effect4_func03_nop(void)
 {
@@ -339,7 +338,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = 0;
         es.ry = 0;
         es.rx = randomGetRange(0, 0xffff);
-        vecRotateZXY(&es, &cfg.startPosX);
+        vecRotateZXY(&es.rotation.x, &cfg.startPosX);
         cfg.scale = lbl_803DFAAC * (f32)(s32)randomGetRange(0xc8, 0x118);
         cfg.lifetimeFrames = 0x14;
         cfg.initialAlpha = 0xe1;
@@ -392,7 +391,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
-        vecRotateZXY(&es, &cfg.startPosX);
+        vecRotateZXY(&es.rotation.x, &cfg.startPosX);
         cfg.scale = lbl_803DFABC;
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xff;
@@ -408,7 +407,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
-        vecRotateZXY(&es, &cfg.startPosX);
+        vecRotateZXY(&es.rotation.x, &cfg.startPosX);
         cfg.scale = lbl_803DFAC4;
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xff;
@@ -425,7 +424,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = 0;
         es.ry = 0;
         es.rx = randomGetRange(0, 0xffff);
-        vecRotateZXY(&es, &cfg.startPosX);
+        vecRotateZXY(&es.rotation.x, &cfg.startPosX);
         cfg.scale = lbl_803DFACC * (f32)(s32)randomGetRange(1, 0x14);
         cfg.lifetimeFrames = 0xc8;
         cfg.initialAlpha = 0xff;
@@ -841,7 +840,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
-        vecRotateZXY(&es, &cfg.velocityX);
+        vecRotateZXY(&es.rotation.x, &cfg.velocityX);
         cfg.scale = lbl_803DFABC;
         cfg.linkGroup = 0x10;
         cfg.initialAlpha = 0xff;
@@ -855,7 +854,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.velocityY = lbl_803DFB60 * (f32)(s32)randomGetRange(-0xf, 0xf) + lbl_803DFA88;
         cfg.velocityZ = lbl_803DFB60 * (f32)(s32)randomGetRange(-0xf, 0xf) + lbl_803DFA88;
         cfg.startPosY = lbl_803DFB64;
-        vecRotateZXY(spawnParams, &cfg.velocityX);
+        vecRotateZXY(&spawnParams->rotX, &cfg.velocityX);
         cfg.scale = lbl_803DFB68 * (f32)(s32)randomGetRange(0x14, 0x1e);
         cfg.initialAlpha = 0xff;
         cfg.lifetimeFrames = 0x64;
@@ -878,7 +877,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         if (spawnParams == 0)
             return -1;
         cfg.velocityX = lbl_803DFA88 * (f32)(s32)randomGetRange(0, 0x640) + lbl_803DFB70;
-        vecRotateZXY(spawnParams, &cfg.velocityX);
+        vecRotateZXY(&spawnParams->rotX, &cfg.velocityX);
         if ((int)randomGetRange(0, 1) != 0)
         {
             cfg.scale = lbl_803DFABC;
@@ -982,7 +981,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
-        vecRotateZXY(&es, &cfg.startPosX);
+        vecRotateZXY(&es.rotation.x, &cfg.startPosX);
         cfg.velocityX = cfg.startPosX / lbl_803DFB30;
         cfg.velocityY = cfg.startPosY / lbl_803DFB30;
         cfg.velocityZ = cfg.startPosZ / lbl_803DFB30;

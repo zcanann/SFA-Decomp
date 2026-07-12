@@ -49,7 +49,6 @@
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(float y, float x);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
@@ -237,7 +236,7 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
         blk.rotY = 0;
         blk.rotX = 0;
         blk.rotZ = randomGetRange(-10000, 10000);
-        vecRotateZXY(&blk, (f32*)(newObj + 0x24));
+        vecRotateZXY((s16*)&blk, (f32*)(newObj + 0x24));
         angle = *(s16*)newObj -
                 ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) &
                  0xffff);
@@ -281,7 +280,7 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
         blk.rotY = 0;
         blk.rotX = 0;
         blk.rotZ = randomGetRange(-10000, 10000);
-        vecRotateZXY(&blk, (f32*)(newObj + 0x24));
+        vecRotateZXY((s16*)&blk, (f32*)(newObj + 0x24));
         angle = *(s16*)newObj -
                 ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) &
                  0xffff);
@@ -325,7 +324,7 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
         blk.rotY = 0;
         blk.rotX = 0;
         blk.rotZ = randomGetRange(-10000, 10000);
-        vecRotateZXY(&blk, (f32*)(newObj + 0x24));
+        vecRotateZXY((s16*)&blk, (f32*)(newObj + 0x24));
         angle = *(s16*)newObj -
                 ((int)(s16)getAngle(((GameObject*)newObj)->anim.velocityX, -((GameObject*)newObj)->anim.velocityZ) &
                  0xffff);

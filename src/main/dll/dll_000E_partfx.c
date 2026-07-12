@@ -25,7 +25,6 @@
 
 extern u8 lbl_80380209[];
 extern char sModgfxAlphaDebugFormat[];
-extern void vecRotateZXY(void* obj, f32* vec);
 extern void logPrintf(char* fmt, ...);
 
 f32 gPartfxSpawnAnimPhase0 = 0.1f;
@@ -743,7 +742,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = 0;
         rot.ry = 0;
         rot.rx = ((GameObject*)sourceObj)->anim.rotX;
-        vecRotateZXY(&rot, state.startPos);
+        vecRotateZXY(&rot.rotation.x, state.startPos);
         cfg.scale = 0.0032f;
         cfg.lifetimeFrames = 0x91;
         cfg.initialAlpha = 0xff;
@@ -1184,7 +1183,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = sourceObj[2];
         rot.ry = sourceObj[1];
         rot.rx = ((GameObject*)sourceObj)->anim.rotX;
-        vecRotateZXY(&rot, cfg.velocity);
+        vecRotateZXY(&rot.rotation.x, cfg.velocity);
         cfg.initialAlpha = 0xcd;
         cfg.behaviorFlags = 0x100110;
         cfg.scale = 0.00003f * (f32)(s32)randomGetRange(0x96, 200);
@@ -1221,7 +1220,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = sourceObj[2];
         rot.ry = sourceObj[1];
         rot.rx = ((GameObject*)sourceObj)->anim.rotX;
-        vecRotateZXY(&rot, cfg.velocity);
+        vecRotateZXY(&rot.rotation.x, cfg.velocity);
         cfg.scale = 0.0003f * (f32)(s32)randomGetRange(8, 0x14);
         cfg.lifetimeFrames = randomGetRange(0x3c, 0x78);
         cfg.behaviorFlags = 0x80180000;
@@ -1265,7 +1264,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = sourceObj[2];
         rot.ry = sourceObj[1];
         rot.rx = ((GameObject*)sourceObj)->anim.rotX;
-        vecRotateZXY(&rot, cfg.velocity);
+        vecRotateZXY(&rot.rotation.x, cfg.velocity);
         cfg.initialAlpha = 0xff;
         cfg.scale = 0.000006f * (f32)(s32)randomGetRange(0x96, 200);
         cfg.behaviorFlags = 0x2000110;
@@ -1286,7 +1285,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = sourceObj[2];
         rot.ry = sourceObj[1];
         rot.rx = ((GameObject*)sourceObj)->anim.rotX;
-        vecRotateZXY(&rot, cfg.velocity);
+        vecRotateZXY(&rot.rotation.x, cfg.velocity);
         cfg.initialAlpha = 0xff;
         cfg.scale = 0.00004f * (f32)(s32)randomGetRange(10, 0x14);
         cfg.behaviorFlags = 0x2000110;
@@ -2117,7 +2116,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = 2000 - randomGetRange(0, 4000);
         rot.ry = 2000 - randomGetRange(0, 4000);
         rot.rx = 2000 - randomGetRange(0, 4000);
-        vecRotateZXY(&rot, cfg.velocity);
+        vecRotateZXY(&rot.rotation.x, cfg.velocity);
         cfg.scale = 0.0036f;
         cfg.lifetimeFrames = 0x50;
         cfg.linkGroup = 8;
@@ -2408,7 +2407,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = rotZ;
         rot.ry = rotY;
         rot.rx = rotX;
-        vecRotateZXY(&rot, cfg.velocity);
+        vecRotateZXY(&rot.rotation.x, cfg.velocity);
         cfg.scale = 0.0005f;
         cfg.lifetimeFrames = 0x32;
         cfg.textureSetupFlags = 0;
@@ -2519,7 +2518,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = 0;
         rot.ry = 0;
         rot.rx = ((GameObject*)sourceObj)->anim.rotX;
-        vecRotateZXY(&rot, state.startPos);
+        vecRotateZXY(&rot.rotation.x, state.startPos);
         break;
     case 0xc:
         cfg.scale = 0.02f;
@@ -3062,7 +3061,7 @@ int partfx_spawnObject(s16* sourceObj, int effectValue, PartFxSpawnParams* spawn
         rot.rz = randomGetRange(0xffff8001, 0x7fff);
         rot.ry = randomGetRange(0xffff8001, 0x7fff);
         rot.rx = randomGetRange(0xffff8001, 0x7fff);
-        vecRotateZXY(&rot, state.startPos);
+        vecRotateZXY(&rot.rotation.x, state.startPos);
         cfg.velocityX = -(*state.startPos / 30.0f);
         cfg.velocityY = -(cfg.startPosY / 30.0f);
         cfg.velocityZ = -(cfg.startPosZ / 30.0f);

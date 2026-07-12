@@ -118,7 +118,7 @@ void fn_801F4D54(int obj, u8* rec)
     rot.rotY = 0;
     rot.rotX = 0;
     rot.rotZ = ((LgtFireFlyRec*)rec)->angle;
-    vecRotateZXY(&rot, rec + 0x34);
+    vecRotateZXY((s16*)&rot, (f32*)(rec + 0x34));
     ((LgtFireFlyRec*)rec)->offX = ((LgtFireFlyRec*)rec)->offX + ((LgtFireFlyRec*)rec)->posX;
     ((LgtFireFlyRec*)rec)->offY = ((LgtFireFlyRec*)rec)->offY + ((LgtFireFlyRec*)rec)->posY;
     ((LgtFireFlyRec*)rec)->offZ = ((LgtFireFlyRec*)rec)->offZ + ((LgtFireFlyRec*)rec)->posZ;

@@ -47,7 +47,6 @@
 #include "main/curve.h"
 extern void logPrintf(void* fmt, ...);
 extern int getAngle(f32 dx, f32 dz);
-extern void vecRotateZXY(int obj, f32* vec);
 extern int* gPlayerInterface;
 
 /* Preserve the effective compiler state of the imported header. */

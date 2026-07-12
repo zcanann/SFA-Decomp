@@ -109,7 +109,6 @@ extern f32 lbl_803DF854;
 extern f32 lbl_803DF858;
 extern FxNode9 lbl_8039C320;
 
-extern void vecRotateZXY(void* obj, f32* vec);
 
 void Effect1_func03_nop(void)
 {
@@ -499,7 +498,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = ((s16*)sourceObj)[2];
         es.ry = ((s16*)sourceObj)[1];
         es.rx = *(s16*)sourceObj;
-        vecRotateZXY(&es, &cfg.velocityX);
+        vecRotateZXY(&es.rotation.x, &cfg.velocityX);
         cfg.scale = lbl_803DF740;
         cfg.lifetimeFrames = 0x32;
         cfg.initialAlpha = 0xff;
@@ -525,7 +524,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.rz = ((s16*)sourceObj)[2];
         es.ry = ((s16*)sourceObj)[1];
         es.rx = *(s16*)sourceObj;
-        vecRotateZXY(&es, &cfg.velocityX);
+        vecRotateZXY(&es.rotation.x, &cfg.velocityX);
         cfg.scale = lbl_803DF764 * (f32)(s32)randomGetRange(8, 0x14);
         cfg.lifetimeFrames = randomGetRange(0x3c, 0x78);
         cfg.behaviorFlags = 0x80180000;

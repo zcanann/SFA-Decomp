@@ -47,7 +47,6 @@ extern const f32 gSidekickBallMaxAlpha;
 extern u16 getYButtonItem(s16* out);
 extern int isTrickyNear(int* player);
 extern int fn_8029669C(int* player);
-extern void vecRotateZXY(void* inParams, f32* outVec);
 extern const f32 lbl_803E3688;
 extern const f32 lbl_803E368C;
 extern const f32 lbl_803E3690;

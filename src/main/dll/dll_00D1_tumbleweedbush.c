@@ -56,7 +56,6 @@ extern f32 lbl_803E2F4C;
 extern f32 lbl_803E2F50;
 extern f32 lbl_803E2F54;
 extern u8 gTumbleweedBushPieceOffsetTable[];
-extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8 gTumbleweedBushHitCooldownState;
 

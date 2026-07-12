@@ -32,7 +32,6 @@ extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void vecRotateZXY(void* params, void* outVec);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject* obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
@@ -196,7 +195,7 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
             localOffset[0] = self->anim.worldPosX - galleon->anim.worldPosX;
             localOffset[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
             localOffset[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
-            vecRotateZXY(galleon, localOffset);
+            vecRotateZXY(&galleon->anim.rotX, localOffset);
             lbl_803DD548->camPosX = galleon->anim.worldPosX + localOffset[0];
             lbl_803DD548->camPosY = galleon->anim.worldPosY + localOffset[1];
             lbl_803DD548->camPosZ = galleon->anim.worldPosZ + localOffset[2];

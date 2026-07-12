@@ -286,7 +286,7 @@ void tree_update(GameObject* obj)
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
-                    vecRotateZXY((int)obj, colorPtr);
+                    vecRotateZXY(&obj->anim.rotX, colorPtr);
                     objfx_spawnRandomBurstLegacy(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
                                                  state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3],
                                                  0);
@@ -333,7 +333,7 @@ void tree_update(GameObject* obj)
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
-                    vecRotateZXY((int)obj, colorPtr);
+                    vecRotateZXY(&obj->anim.rotX, colorPtr);
                     objfx_spawnRandomBurstLegacy(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
                                                  state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3],
                                                  1);
@@ -346,7 +346,7 @@ void tree_update(GameObject* obj)
                     *(colorPtr = &colorVec[0]) = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 0];
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
-                    vecRotateZXY((int)obj, colorPtr);
+                    vecRotateZXY(&obj->anim.rotX, colorPtr);
                     objfx_spawnRandomBurstLegacy(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 1, burstVec,
                                                  state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3],
                                                  0);

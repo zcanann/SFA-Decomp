@@ -161,7 +161,6 @@ extern const f32 gExpgfxSlotMotionStep;
 
 extern f32 fn_80138F78(void* tricky);
 extern f32 fn_8029610C(void* player);
-extern void vecRotateZXY(void* params, void* vec);
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;
@@ -950,7 +949,7 @@ foundFirst:
                     *(s16*)&rot.angleZ = ((f32)slot->sourceVecZ * timeDelta);
                     *(s16*)&rot.angleY = ((f32)slot->sourceVecY * timeDelta);
                     *(s16*)&rot.angleX = ((f32)slot->sourceVecX * timeDelta);
-                    vecRotateZXY(&rot, &slot->posX.value);
+                    vecRotateZXY(&rot.angleX, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0)
                 {
@@ -1457,11 +1456,11 @@ foundFirst:
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         rot.angleZ = slot->sourceVecY;
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         quad[0].x = vecBuf[0];
                         quad[0].y = vecBuf[1];
                         quad[0].z = vecBuf[2];
@@ -1473,11 +1472,11 @@ foundFirst:
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         rot.angleZ = slot->sourceVecY;
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         quad[1].x = vecBuf[0];
                         quad[1].y = vecBuf[1];
                         quad[1].z = vecBuf[2];
@@ -1489,11 +1488,11 @@ foundFirst:
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         rot.angleZ = slot->sourceVecY;
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         quad[2].x = vecBuf[0];
                         quad[2].y = vecBuf[1];
                         quad[2].z = vecBuf[2];
@@ -1505,11 +1504,11 @@ foundFirst:
                         rot.angleZ = 0;
                         rot.angleY = 0;
                         rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         rot.angleZ = slot->sourceVecY;
                         rot.angleY = slot->sourceVecZ;
                         rot.angleX = 0;
-                        vecRotateZXY(&rot, vecBuf);
+                        vecRotateZXY(&rot.angleX, vecBuf);
                         quad[3].x = vecBuf[0];
                         quad[3].y = vecBuf[1];
                         quad[3].z = vecBuf[2];
@@ -1682,7 +1681,7 @@ foundFirst:
                     rotPos[2] = slot->posZ.value;
                     if ((rot.angleX | rot.angleY | rot.angleZ) != 0)
                     {
-                        vecRotateZXY(&rot, rotPos);
+                        vecRotateZXY(&rot.angleX, rotPos);
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0)
                     {

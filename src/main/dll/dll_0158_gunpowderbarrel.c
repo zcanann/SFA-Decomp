@@ -111,7 +111,6 @@ extern f32 gGunpowderBarrelPi;
 extern f32 gGunpowderBarrelHalfAngleUnit;
 extern f32 lbl_803DBE80;
 
-extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
 extern f32 lbl_803E42C8;
 extern f32 lbl_803E42CC;
 extern f32 lbl_803E42D0;
