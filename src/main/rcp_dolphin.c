@@ -2098,7 +2098,7 @@ void gxTextureFn_80052efc(void)
     GXColor8 texColor;
     GXColor8 matColor;
     u8* e; /* raw u8* + per-site casts are load-bearing: typed decls swap r28/r31 */
-    u8* slots;
+    u8* slots[1];
     int i;
     int clearSlot;
     int k;
@@ -2115,26 +2115,26 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
-    slots = gRcpDistortSlots;
+    slots[0] = gRcpDistortSlots;
     for (; i < 6; i++)
     {
-        tex = ((RcpDistortSlot*)slots)[i].texture;
-        if (((Texture*)tex)->refCount != 0 && ((RcpDistortSlot*)slots)[i].mode == 1 &&
-            gRcpDistortGroup == ((RcpDistortSlot*)slots)[i].group)
+        tex = ((RcpDistortSlot*)slots[0])[i].texture;
+        if (((Texture*)tex)->refCount != 0 && ((RcpDistortSlot*)slots[0])[i].mode == 1 &&
+            gRcpDistortGroup == ((RcpDistortSlot*)slots[0])[i].group)
         {
-            matColor.r = (((RcpDistortSlot*)slots)[i].colR * ((RcpDistortSlot*)slots)[i].scaleR) >> 8;
+            matColor.r = (((RcpDistortSlot*)slots[0])[i].colR * ((RcpDistortSlot*)slots[0])[i].scaleR) >> 8;
             matColor.g = 0;
-            matColor.b = (((RcpDistortSlot*)slots)[i].colB * ((RcpDistortSlot*)slots)[i].scaleB) >> 8;
+            matColor.b = (((RcpDistortSlot*)slots[0])[i].colB * ((RcpDistortSlot*)slots[0])[i].scaleB) >> 8;
             matColor.a = 0xff;
             GXSetChanMatColor(GX_COLOR0A0, matColor);
             GXSetChanMatColor(GX_COLOR1A1, matColor);
-            textureFn_80052bb4(((RcpDistortSlot*)slots)[i].model, ((RcpDistortSlot*)slots)[i].params);
+            textureFn_80052bb4(((RcpDistortSlot*)slots[0])[i].model, ((RcpDistortSlot*)slots[0])[i].params);
             resetLotsOfRenderVars();
             textureFn_8004ff20(gRcpDistortTexture, mtx, &texColor, 0);
             textureFn_800528bc();
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(((RcpDistortSlot*)slots)[i].texture + 0x60, 0);
-            tex = ((RcpDistortSlot*)slots)[i].texture;
+            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, 0);
+            tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
@@ -2160,17 +2160,17 @@ void gxTextureFn_80052efc(void)
     i = 0;
     for (; i < 6; i++)
     {
-        if (((Texture*)((RcpDistortSlot*)slots)[i].texture)->refCount != 0 && ((RcpDistortSlot*)slots)[i].mode == 0 &&
-            gRcpDistortGroup == ((RcpDistortSlot*)slots)[i].group)
+        if (((Texture*)((RcpDistortSlot*)slots[0])[i].texture)->refCount != 0 && ((RcpDistortSlot*)slots[0])[i].mode == 0 &&
+            gRcpDistortGroup == ((RcpDistortSlot*)slots[0])[i].group)
         {
-            model = ((RcpDistortSlot*)slots)[i].model;
+            model = ((RcpDistortSlot*)slots[0])[i].model;
             modelTextureFn_80089970(2 - (i - 3));
             gxLoadObjectLights(model, lights);
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(((RcpDistortSlot*)slots)[i].texture + 0x60, (i == clearSlot) ? 1 : 0);
-            tex = ((RcpDistortSlot*)slots)[i].texture;
+            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, (i == clearSlot) ? 1 : 0);
+            tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
