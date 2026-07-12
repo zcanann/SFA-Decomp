@@ -390,3 +390,8 @@ void duster_init(GameObject* obj, u8* params)
     ObjMsg_AllocQueue((void*)obj, 1);
     (obj)->animEventCallback = duster_SeqFn;
 }
+
+__declspec(section ".sdata2") f32 gDusterObjMoveStepScale = 0.02f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E38E4 = 0.0f;
+#pragma explicit_zero_data reset

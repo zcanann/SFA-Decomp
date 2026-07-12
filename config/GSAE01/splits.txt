@@ -1357,7 +1357,7 @@ main/dll/dll_0102_staypoint.c:
 
 main/dll/dll_0118_duster.c:
 	.text       start:0x801804C8 end:0x80180DC8
-	.sdata2     start:0x803E38D8 end:0x803E38E0
+	.sdata2     start:0x803E38D8 end:0x803E38E8
 
 main/dll/dll_0103_curvefish.c:
 	.text       start:0x80180DC8 end:0x801814D0
