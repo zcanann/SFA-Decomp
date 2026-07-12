@@ -3949,8 +3949,10 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
     f32 ytmp;
-    int count, i;
-    int flag8, flag20;
+    int count;
+    int flag8;
+    int i;
+    int flag20;
     int flag4;
     int hdr;
     int maxYi, minYi;
