@@ -2,7 +2,19 @@
 #define MAIN_DLL_ARW_DLL_02A7_ARWPROXIMIT_H_
 
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "global.h"
+
+extern f32 lbl_803E71D8;
+extern f32 lbl_803E71DC;
+extern f32 lbl_803E71E0;
+extern f32 gArwProximityTauntDistance;
+extern f32 gArwProximityActivateDistance;
+extern f32 lbl_803E71F0;
+extern f32 lbl_803E71F4;
+extern f32 lbl_803E71F8;
+extern f32 gArwProximityFadeInRate;
+extern f32 gArwProximityWarningDistance;
 
 typedef struct ARWProximitSetup
 {
@@ -14,7 +26,7 @@ typedef struct ARWProximitState
 {
     s16 spinSpeed;
     u8 pad02[2];
-    void* light;
+    ModelLightStruct* light;
     u8 pad08[4];
     f32 warningTimer;
     f32 despawnTimer;
