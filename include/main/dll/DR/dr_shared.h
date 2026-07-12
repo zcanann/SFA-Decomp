@@ -171,8 +171,6 @@ extern f32 lbl_803E69C4;
 extern f32 lbl_803E69C8;
 extern f32 lbl_803E69BC;
 extern f32 lbl_803E69B8;
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
 extern void modelLightStruct_updateGlowAlpha(void* p);
 extern f32 lbl_803E6898;
 extern f32 lbl_803E68BC;
