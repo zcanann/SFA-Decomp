@@ -11,6 +11,7 @@
  * This TU also defines fn_8015F5B0 and the ChukChuk ObjectDescriptor.
  */
 #include "main/obj_placement.h"
+#include "main/object_api.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -46,11 +47,10 @@ void fn_8015F5B0(short* obj)
 
     extern int Obj_AllocObjectSetup(int size, int id);
     extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-    extern int Obj_GetPlayerObject(void);
     ChukChukState* sub;
     int setup;
     u8* o;
-    int pl;
+    GameObject* pl;
     f32 sc;
 
     sub = ((GameObject*)obj)->extra;
@@ -68,12 +68,12 @@ void fn_8015F5B0(short* obj)
         {
             pl = Obj_GetPlayerObject();
             ((GameObject*)o)->anim.velocityX =
-                (((GameObject*)pl)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / (sc = 42.0f);
+                (pl->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / (sc = 42.0f);
             ((GameObject*)o)->anim.velocityY =
-                (((GameObject*)pl)->anim.localPosY + (f32)(u32)sub->aimHeightY - ((GameObject*)obj)->anim.localPosY) /
+                (pl->anim.localPosY + (f32)(u32)sub->aimHeightY - ((GameObject*)obj)->anim.localPosY) /
                 sc;
             ((GameObject*)o)->anim.velocityZ =
-                (((GameObject*)pl)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / sc;
+                (pl->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / sc;
         }
     }
 }
@@ -129,11 +129,10 @@ void ChukChuk_hitDetect(void)
 void ChukChuk_update(short* obj)
 {
     extern void objParticleFn_80099d84(f32, short*, int, f32, int);
-    extern int Obj_GetPlayerObject(void);
 
     ChukChukState* v;
     u16 di;
-    int pl;
+    GameObject* pl;
     ObjTextureRuntimeSlot* tex;
     int ang;
     int roll;
@@ -189,8 +188,8 @@ void ChukChuk_update(short* obj)
             tex->textureId = 0;
         }
         pl = Obj_GetPlayerObject();
-        dx = ((GameObject*)pl)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-        dz = ((GameObject*)pl)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+        dx = pl->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+        dz = pl->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
         di = sqrtf(dx * dx + dz * dz);
         if (di < v->triggerDistance)
         {
@@ -201,9 +200,9 @@ void ChukChuk_update(short* obj)
             }
             if ((v->flags & (CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK)) != 0)
             {
-                hit.toPlayer[0] = ((GameObject*)pl)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-                hit.toPlayer[1] = ((GameObject*)pl)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-                hit.toPlayer[2] = ((GameObject*)pl)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+                hit.toPlayer[0] = pl->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+                hit.toPlayer[1] = pl->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+                hit.toPlayer[2] = pl->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
                 ang = getAngle(hit.toPlayer[0], hit.toPlayer[2]) & 0xffff;
                 ang -= ((GameObject*)obj)->anim.rotX & 0xffff;
                 if (ang > 0x8000)

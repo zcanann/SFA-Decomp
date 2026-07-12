@@ -19,6 +19,7 @@
  * here only so the descriptor tables can take their addresses.
  */
 #include "main/objanim.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
@@ -108,14 +109,13 @@ int fn_8015E3A0(GameObject* obj, int state)
 int fn_8015E210(int* obj, GroundBaddieState* state)
 {
 
-    extern void* Obj_GetPlayerObject(void);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD4;
     int* objs;
     int count;
     int i;
     int* playerChild;
-    int* player;
+    GameObject* player;
     int result;
 
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
@@ -388,7 +388,6 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
 
 int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
 {
-    extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern int* gBaddieControlInterface;
     extern f32 lbl_803E2DC8;
@@ -569,7 +568,6 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 void fn_8015EB6C(GameObject* obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
-    extern void* Obj_GetPlayerObject(void);
     extern f32 timeDelta;
     extern f32 lbl_803E2DEC;
     extern f32 lbl_803E2E00;
@@ -623,7 +621,6 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
 void fn_8015ED1C(int obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
-    extern void* Obj_GetPlayerObject(void);
     extern u8 lbl_8031FEA8[];
     extern u8 lbl_8031FF20[];
     extern u8 lbl_803AC580[];

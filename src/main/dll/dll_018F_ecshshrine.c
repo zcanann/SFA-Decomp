@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/render.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"
@@ -197,7 +198,7 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
     u8* config;
     MmShrineAnimState* state;
-    void* player;
+    GameObject* player;
     f32 trigA;
     f32 trigB;
     f32 distance;
@@ -236,8 +237,8 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 
     if (player != NULL)
     {
-        angleDelta = (u16)getAngle(obj->posX - ((GameObject*)player)->anim.worldPosX,
-                                   obj->posZ - ((GameObject*)player)->anim.worldPosZ) -
+        angleDelta = (u16)getAngle(obj->posX - player->anim.worldPosX,
+                                   obj->posZ - player->anim.worldPosZ) -
                      (u16)obj->yaw;
         if (angleDelta > 0x8000)
         {
@@ -267,7 +268,7 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
     MmShrineAnimEvents* eventList;
-    void* player;
+    GameObject* player;
     int i;
     u8 event;
 
@@ -459,7 +460,6 @@ void ecsh_shrine_free(int* obj)
 #pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     extern void ecsh_shrine_updateMotion(s16 * obj);
     f32 t[2];
     int msgC;
@@ -467,7 +467,7 @@ void ecsh_shrine_update(s16* obj)
     int msgB;
     EcshPuzzleState* ps;
     u8* sub;
-    int* player;
+    GameObject* player;
     u8 gv;
     int pick;
     int n;
@@ -502,7 +502,7 @@ void ecsh_shrine_update(s16* obj)
     ecsh_shrine_updateMotion(obj);
     if (player != NULL && objIsCurModelNotZero(player) == 0)
     {
-        staffToggle((GameObject*)(player), 0);
+        staffToggle(player, 0);
     }
     msgC = 0;
     while (ObjMsg_Pop(obj, &msgA, &msgB, &msgC) != 0)
@@ -833,7 +833,7 @@ void ecsh_shrine_update(s16* obj)
         case 6:
             mainSetBits(GAMEBIT_ECSH_TestObservRunning, 0);
             audioStopByMask(3);
-            if (objGetAnimStateFlags(player, 8) != 0)
+            if (objGetAnimStateFlags((int*)player, 8) != 0)
             {
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 sub[0x2f] = 7;

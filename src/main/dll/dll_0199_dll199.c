@@ -1,5 +1,6 @@
 /* DLL 0x199 - NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
 #include "main/dll/dll197state_struct.h"
+#include "main/object_api.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll199state_struct.h"
 #include "main/effect_interfaces.h"
@@ -213,9 +214,8 @@ typedef struct Dll199ObjectDef
 void dll_199_update(int obj)
 {
     extern int* gTitleMenuControlInterface;
-    extern void* Obj_GetPlayerObject(void);
     short* state;
-    char* player;
+    GameObject* player;
     int queue;
     GameObject* found;
     f32 dist;
@@ -295,10 +295,10 @@ void dll_199_update(int obj)
     }
     else
     {
-        found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, (GameObject*)player, &dist);
+        found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, player, &dist);
         if ((found != 0) && (dist < lbl_803E5160) && (dist > lbl_803E5164))
         {
-            dz = found->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
+            dz = found->anim.localPosZ - player->anim.localPosZ;
             if (dz <= lbl_803E5168)
             {
                 if (dz < lbl_803E5168)
@@ -331,7 +331,7 @@ void dll_199_update(int obj)
                 mainSetBits(0x5b5, 1);
             }
             mainSetBits(0x5b9, 0);
-            if (Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < state[0])
+            if (Vec_distance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < state[0])
             {
                 ((Dll199State*)state)->phase = 1;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);

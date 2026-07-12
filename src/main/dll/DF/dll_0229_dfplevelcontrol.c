@@ -6,6 +6,7 @@
  * (1504/1505/1507/1508/1589/3671) plus level unlocks and music triggers.
  */
 #include "main/dll/dfp_types.h"
+#include "main/object_api.h"
 #include "main/main.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -44,7 +45,7 @@ extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
 void fn_80204098(GameObject* obj)
 {
     DfpLevelControlState* state = (obj)->extra;
-    void* player;
+    GameObject* player;
     s16 i;
 
     player = Obj_GetPlayerObject();
@@ -108,7 +109,7 @@ void fn_80204098(GameObject* obj)
 void fn_80204320(GameObject* obj)
 {
     DfpLevelControlState* sub;
-    void* player;
+    GameObject* player;
 
     sub = (obj)->extra;
     player = Obj_GetPlayerObject();
@@ -163,7 +164,7 @@ int DFP_LevelControl_SeqFn(int p1)
 {
 
     DfpLevelControlState* p_b8 = ((GameObject*)p1)->extra;
-    void* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     s16 timer = p_b8->timer;
     if (timer > 0)
     {
@@ -209,10 +210,9 @@ void DFP_LevelControl_hitDetect(void)
 
 void DFP_LevelControl_update(GameObject* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
 
     DfpLevelControlState* state = (obj)->extra;
-    char* player;
+    GameObject* player;
     u8 b1;
     u8 b2;
     u8 b3;
@@ -234,7 +234,7 @@ void DFP_LevelControl_update(GameObject* obj)
     {
         mainSetBits(0x5e8, 1);
     }
-    coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
+    coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
     mode = (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
     switch (mode)
     {

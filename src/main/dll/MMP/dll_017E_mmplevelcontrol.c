@@ -12,6 +12,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 #include "main/objanim_update.h"
@@ -51,11 +52,10 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int Obj_GetPlayerObject(void);
     int player;
     int i;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -103,7 +103,6 @@ void MMP_levelcontrol_hitDetect(void)
 
 void MMP_levelcontrol_update(GameObject* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     int playerForMap;
     int playerForFx;
 

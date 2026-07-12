@@ -1,5 +1,6 @@
 /* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
+#include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
@@ -179,9 +180,8 @@ STATIC_ASSERT(offsetof(GpshShrineState, puzzleState) == 0x14);
 
 int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void* Obj_GetPlayerObject(void);
     GpshShrineState* sub;
-    int* player;
+    GameObject* player;
     int i;
     u8 ev;
     void* light;
@@ -201,7 +201,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 sub->activatedFlag = 1;
                 break;
             case 7:
-                objSetAnimStateFlags(player, 0x80, 1);
+                objSetAnimStateFlags((int*)player, 0x80, 1);
                 mainSetBits(0x12b, 1);
                 mainSetBits(GAMEBIT_ITEM_Spirit5_Got, 1);
                 (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);
@@ -231,11 +231,10 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void fn_801C70F0(s16* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     u8 buf[32];
     u8* def;
     GpshShrineState* sub;
-    int* player;
+    GameObject* player;
     int diff;
     f32 c1;
     f32 c2;
@@ -301,10 +300,9 @@ void gpsh_shrine_update(GameObject *obj)
     extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
     extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
     extern void fn_801C70F0(int obj);
-    extern void* Obj_GetPlayerObject(void);
     int count;
     int data = *(int*)&(obj)->extra;
-    char* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     u8 b149;
     u8 b14c;
     u8 b14d;
