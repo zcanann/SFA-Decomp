@@ -13,6 +13,7 @@
  * each descriptor is defined by its own DLL.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
@@ -20,9 +21,6 @@
 
 /* object id sideload_update defers into existence once its arming game bit is set */
 #define SIDELOAD_CHILD_OBJ 0x24
-
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
 void sideload_update(int self)
 {
@@ -41,7 +39,7 @@ void sideload_update(int self)
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)self)->anim.localPosX;
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)self)->anim.localPosY;
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)self)->anim.localPosZ;
-        p = (short*)Obj_SetupObject(obj, 5, -1, -1, NULL);
+        p = (short*)Obj_SetupObject((ObjPlacement*)obj, 5, -1, -1, NULL);
         *p = (short)((u8)((SideloadPlacement*)state)->yawByte << 8);
     }
 }

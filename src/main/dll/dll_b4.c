@@ -10,6 +10,7 @@
 #include "main/dll/dll_B3.h"
 #include "main/dll/dll_B2.h"
 #include "main/model_light.h"
+#include "main/object.h"
 
 #define MODEL_LIGHT_KIND_DIRECTIONAL 4
 
@@ -19,8 +20,6 @@
 extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(u8* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern void lightSetColor(int a, int b, int c, int d);
@@ -31,7 +30,7 @@ void lockIconInit(void)
     if (gCamcontrolTargetReticle == NULL)
     {
         gCamcontrolTargetReticle = (CamcontrolReticleObject*)Obj_SetupObject(
-            Obj_AllocObjectSetup(0x18, DLLB4_CHILD_OBJ_RETICLE), 4, -1, -1, 0);
+            Obj_AllocObjectSetup(0x18, DLLB4_CHILD_OBJ_RETICLE), 4, -1, -1, NULL);
         ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), lockIconTexCb);
         gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_LOCKON;
         ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), aButtonIconTexCb);

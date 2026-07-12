@@ -43,9 +43,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 #pragma dont_inline on
 void Pollen_burst(GameObject* obj)
 {
-    extern u8 Obj_IsLoadingLocked(void);
-    extern void* Obj_AllocObjectSetup(int size, int b);
-    extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     extern f32 lbl_803E3144;
     int burstCounter;
     PollenExtra* extra;
@@ -59,7 +56,7 @@ void Pollen_burst(GameObject* obj)
     burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
     do
     {
-        fragment = Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
+        fragment = (u8*)Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
         ((GameObject*)fragment)->anim.rootMotionScale = (obj)->anim.localPosX;
         ((GameObject*)fragment)->anim.localPosX = (obj)->anim.localPosY;
         ((GameObject*)fragment)->anim.localPosY = (obj)->anim.localPosZ;
@@ -67,7 +64,7 @@ void Pollen_burst(GameObject* obj)
         *(u8*)(fragment + 5) = 1;
         *(u8*)&((GameObject*)fragment)->anim.flags = 0xff;
         *(u8*)(fragment + 7) = 0xff;
-        fragment = Obj_SetupObject(fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, 0);
+        fragment = (u8*)Obj_SetupObject((ObjPlacement*)fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, NULL);
         if (fragment != 0)
         {
             ((GameObject*)fragment)->anim.rotY = 0;
