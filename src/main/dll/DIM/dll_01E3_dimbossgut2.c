@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -48,8 +49,6 @@ extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
 
 extern void ModelLightStruct_free(void* light);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern int ObjMsg_Pop();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void queueGlowRender(void* light);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -164,7 +163,7 @@ void DIM_BossGut2_free(int objArg)
     {
         ModelLightStruct_free((void*)handle);
     }
-    ObjGroup_RemoveObject(obj, DIMBOSSGUT2_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DIMBOSSGUT2_OBJGROUP);
     childObj = ((GameObject*)obj)->childObjs[0];
     if (childObj != 0)
     {
@@ -228,7 +227,7 @@ void DIM_BossGut2_update(GameObject* obj)
         msgC = 0;
         do
         {
-            result = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
+            result = ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC);
         } while (result != 0);
         posData = state->curveData;
         if ((posData->f0 < lbl_803E4CD0) && (posData->f10 < lbl_803E4CD4))

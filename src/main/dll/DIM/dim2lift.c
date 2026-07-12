@@ -22,6 +22,7 @@
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/pad.h"
 #include "main/player_control_interface.h"
+#include "main/objlib.h"
 
 #define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10
@@ -29,8 +30,6 @@
 
 /* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
 #define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
-
-extern u32 ObjMsg_SendToObject();
 
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;

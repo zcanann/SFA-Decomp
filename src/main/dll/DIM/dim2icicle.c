@@ -21,6 +21,7 @@
 #include "main/camera.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/objlib_api.h"
+#include "main/objlib.h"
 #include "main/pad.h"
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"
@@ -38,8 +39,6 @@ static inline int* DIM2Icicle_GetActiveModel(void* obj)
 }
 
 
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
 extern void* getTrickyObject(void);
@@ -144,7 +143,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     }
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_7)
     {
-        ObjPath_GetPointWorldPosition(objIndex, 7, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
+        ObjPath_GetPointWorldPosition((GameObject*)objIndex, 7, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->y,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->z, 0);
         i = 0;
@@ -157,7 +156,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     }
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_8)
     {
-        ObjPath_GetPointWorldPosition(objIndex, 8, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
+        ObjPath_GetPointWorldPosition((GameObject*)objIndex, 8, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->y,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->z, 0);
         i = 0;
@@ -170,7 +169,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     }
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_9)
     {
-        ObjPath_GetPointWorldPosition(objIndex, 9, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
+        ObjPath_GetPointWorldPosition((GameObject*)objIndex, 9, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->y,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->z, 0);
         i = 0;
@@ -183,7 +182,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     }
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_ICICLE_DUST_POINT_10)
     {
-        ObjPath_GetPointWorldPosition(objIndex, 10, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
+        ObjPath_GetPointWorldPosition((GameObject*)objIndex, 10, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->y,
                                       &((IcicleFxPos*)&gDim2IcicleDustFxSource)->z, 0);
         i = 0;
@@ -196,7 +195,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     }
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_BREATH_BURST)
     {
-        memcpy(m, (void*)ObjPath_GetPointModelMtx(objIndex, 0xb), 0x30);
+        memcpy(m, (void*)ObjPath_GetPointModelMtx((GameObject*)objIndex, 0xb), 0x30);
         zero = lbl_803E4BD8;
         m[3] = zero;
         m[7] = zero;
@@ -213,7 +212,7 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
             gDIMbossAnimScratchBase.effectVelocity[1] = ((IcicleFxPos*)&gDim2IcicleDustFxSource)->y / prod;
             gDIMbossAnimScratchBase.effectVelocity[2] = lbl_803E4BCC;
             PSMTXMultVec(m, gDIMbossAnimScratchBase.effectVelocity, gDIMbossAnimScratchBase.effectVelocity);
-            ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
+            ObjPath_GetPointWorldPosition((GameObject*)objIndex, 0xb, &((IcicleFxPos*)&gDim2IcicleDustFxSource)->x,
                                           &((IcicleFxPos*)&gDim2IcicleDustFxSource)->y,
                                           &((IcicleFxPos*)&gDim2IcicleDustFxSource)->z, 1);
             (*gPartfxInterface)
@@ -229,11 +228,11 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     topState->breathBurstSource.rotZ = 0;
     topState->breathBurstSource.rotY = 0;
     topState->breathBurstSource.rotX = 0;
-    ObjPath_GetPointWorldPosition(objIndex, 0xd, &topState->breathBurstSource.x, &topState->breathBurstSource.y,
+    ObjPath_GetPointWorldPosition((GameObject*)objIndex, 0xd, &topState->breathBurstSource.x, &topState->breathBurstSource.y,
                                   &topState->breathBurstSource.z, 1);
-    ObjPath_GetPointWorldPosition(objIndex, 0xd, &topState->blueWhiteEffectSource.x, &topState->blueWhiteEffectSource.y,
+    ObjPath_GetPointWorldPosition((GameObject*)objIndex, 0xd, &topState->blueWhiteEffectSource.x, &topState->blueWhiteEffectSource.y,
                                   &topState->blueWhiteEffectSource.z, 0);
-    ObjPath_GetPointWorldPosition(objIndex, 0xb, &topState->tonsilDustSource.x, &topState->tonsilDustSource.y,
+    ObjPath_GetPointWorldPosition((GameObject*)objIndex, 0xb, &topState->tonsilDustSource.x, &topState->tonsilDustSource.y,
                                   &topState->tonsilDustSource.z, 0);
     topState->liftGlowSource.x = lbl_803E4BD8;
     topState->liftGlowSource.y = lbl_803E4C48;
@@ -242,9 +241,9 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
     topState->liftGlowSource.rotZ = 0;
     topState->liftGlowSource.rotY = 0;
     topState->liftGlowSource.rotX = 0;
-    ObjPath_GetPointWorldPosition(objIndex, 0xc, &topState->liftGlowSource.x, &topState->liftGlowSource.y,
+    ObjPath_GetPointWorldPosition((GameObject*)objIndex, 0xc, &topState->liftGlowSource.x, &topState->liftGlowSource.y,
                                   &topState->liftGlowSource.z, 1);
-    memcpy(topState->breathBurstMtx, (void*)ObjPath_GetPointModelMtx(objIndex, 0), 0x30);
+    memcpy(topState->breathBurstMtx, (void*)ObjPath_GetPointModelMtx((GameObject*)objIndex, 0), 0x30);
     zero = lbl_803E4BD8;
     topState->breathBurstMtx[3] = zero;
     topState->breathBurstMtx[7] = zero;
@@ -456,7 +455,6 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject* obj, DIMbossRunt
 }
 
 extern int fn_80295A04(int obj, int sel);
-extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
 extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
@@ -631,7 +629,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
             {
                 (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0xb);
             }
-            ObjMsg_SendToObject(hitId, DIM2ICICLE_ADVANCE_MSG, obj, 0);
+            ObjMsg_SendToObject((void*)hitId, DIM2ICICLE_ADVANCE_MSG, (void*)obj, 0);
         }
     }
 }

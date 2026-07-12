@@ -23,6 +23,7 @@
 #include "main/dll/tricky.h"
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/objlib.h"
 
 #define PAD_BUTTON_A                         0x100
 #define PAD_BUTTON_B                         0x200
@@ -34,15 +35,11 @@
 /* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
 #define CAMMODE_CANNON  0x51 /* dll_0051_cameramodecannon */
 #define CAMMODE_DEFAULT 0x42 /* dll_0042 - default/release camera */
-extern u64 ObjGroup_RemoveObject();
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 
 extern f32 lbl_803E48B8;
 
@@ -93,7 +90,7 @@ void DIMCannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject*)obj)->anim.rotX = (s16)((s8)def[0x28] << 8);
         ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
         ((GameObject*)obj)->anim.rotX = saved;
-        ObjPath_GetPointWorldPosition((int)obj, 0, &((DimCannonState*)sub)->posX, &((DimCannonState*)sub)->posY,
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &((DimCannonState*)sub)->posX, &((DimCannonState*)sub)->posY,
                                       &((DimCannonState*)sub)->posZ, 0);
     }
     else
@@ -147,7 +144,7 @@ void DIMCannon_free(int* obj)
         Resource_Release(lbl_803DDB50);
         lbl_803DDB50 = NULL;
     }
-    ObjGroup_RemoveObject(obj, DIMCANNON_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DIMCANNON_OBJGROUP);
 }
 
 #define DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED 0x13
