@@ -5,6 +5,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/object_render.h"
 #include "main/gamebits.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -41,7 +42,6 @@ extern const f32 lbl_803E34F0;
 extern const f32 lbl_803E34F4;
 extern const f32 lbl_803E34F8;
 extern const f32 lbl_803E34FC;
-extern f32 timeDelta;
 extern const f32 lbl_803E34B4;
 extern const f32 gMagicGemActivateDistSq;
 extern const f32 gMagicGemVelocityDamping;

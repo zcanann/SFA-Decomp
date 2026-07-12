@@ -15,6 +15,7 @@
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -102,7 +103,6 @@ extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
 extern f32 lbl_803E4218;
 extern f32 lbl_803E423C;
 extern f32 lbl_803E4240;
-extern f32 timeDelta;
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;

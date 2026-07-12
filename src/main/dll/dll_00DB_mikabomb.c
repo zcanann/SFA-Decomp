@@ -11,6 +11,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/genprops.h"
@@ -27,7 +28,6 @@
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E31C0;
-extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

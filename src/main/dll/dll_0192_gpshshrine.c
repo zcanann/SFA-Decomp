@@ -4,6 +4,7 @@
 #include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -73,7 +74,6 @@ extern void DBSH_Symbol_init(void);
 extern u64 ObjGroup_RemoveObject();
 
 
-extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);

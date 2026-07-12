@@ -14,6 +14,7 @@
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/dll/dll_00D5_kaldachom.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/texscroll2.h"
@@ -67,7 +68,6 @@ extern void* gKaldaChomStateHandlersA[];
 extern u32* gPlayerInterface;
 extern u32* gBaddieControlInterface;
 extern void* gKaldachomEffectResource;
-extern f32 timeDelta;
 extern f32 lbl_803E3060;
 extern f32 lbl_803E307C;
 extern f32 lbl_803E3078;

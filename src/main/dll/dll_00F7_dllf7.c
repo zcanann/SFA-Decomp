@@ -12,6 +12,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/dll/genprops.h"
 #include "main/mapEvent.h"
 #include "main/objhits.h"
@@ -33,7 +34,6 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern f32 timeDelta;
 
 typedef struct DllF7Placement
 {

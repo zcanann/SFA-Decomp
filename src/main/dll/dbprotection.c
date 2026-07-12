@@ -23,6 +23,7 @@
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
 #include "main/objseq.h"
@@ -61,7 +62,6 @@
 #define DBPROT_CLOUD_SET_B(flag)                  (*gCloudActionInterface)->func11Nop((flag))
 
 extern u8 framesThisStep;
-extern f32 timeDelta;
 extern s8 lbl_803DDC2C;
 extern f32 lbl_803E56CC;
 extern f32 gDBprotPi;
