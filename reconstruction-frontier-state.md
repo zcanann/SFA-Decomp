@@ -7734,3 +7734,27 @@ Two clean 100% wins by a single generalized mechanism:
 
 **MECHANISM (proven both int-launder AND genuine-pointer base): MWCC CSEs `&((T*)ptr)->field` (address-of-member) into a saved reg but RE-DERIVES `(cast)(ptr + CONST)` (pointer arithmetic) fresh at each use.** When the TARGET re-derives an address at N>=2 call sites (ndiff: current has `addi rN,base,K` + repeated `mr r3,rN`; target has N x `addi r3,base,K`), respell the address-of-member args as raw pointer arithmetic. Byte-neutral respell (matches house raw-offset style already in these files: `extra + 0xc`, `obj + 0x18`). BONUS: when the cached address needed an extra callee-saved reg, removing it cascades a whole reg-perm region-set to match (turns a "welded reg-perm" fn matchable). SIGNATURE to grep: mr-copy class with C>T instr count + `addi rN,rBASE,K` re-derive in target near call args.
 CAVEAT: only when target genuinely re-derives (check function_objdump for repeated `addi r3,base,K`). r0-detour (`addi r0,r3,0; mr rN,r0` base-home) is a DIFFERENT, still-welded pattern (sky2_run, boneParticleEffect_update, voxmaps_resetLoadedMaps confirmed welded this round). int->u8 store narrowing (`clrlwi;stb` vs raw `stb`) = VN weld, unmoved (modellight setEnabled, sky fn_80089A60, camera Camera_UpdateProjection all rejected). ObjHits_DetectObjectPair sx/sy/sz reorder = FP-perm, neutral, reverted.
+
+## Jul12 (Opus, hot-file harvest agent) — priority-file re-triage, 0 wins (all documented welds)
+Re-checked the HOT-earlier priority set once cold. All sub-100 -O4,p fns re-confirmed welded; matches
+the two sibling "0 wins" frontier sweeps committed minutes earlier (b91f863ed3, 34d88a24f0). Skipped
+files with an ACTIVE owner mid-session: expgfx (sibling running match wins 64min/2h prior + in modified
+tree), gameloop (sibling brute-forcing mainSetBits decl-order in-tree — left untouched).
+- **gameloop removeButtonObject 98.09%**: RE-CONFIRMED the srwi-dot-merge ⊗ unroll-disp-fold peephole
+  weld (already logged above). Empirically flipped its `#pragma peephole on`→`off`: unfused srwi (+1 as
+  target wants) but de-folded the 8x copy body (`lwz 4(r4);stw 0(r4);addi r4,4` ×8, C 66→74), fuzzy
+  98.09→87. Reverted. gameloop mainSetBits = #108 r4↔r5 GPR-perm (T=C=117), welded.
+- **object.c fn_8002B758 98.46%, d=+1**: SAME shape as removeButtonObject (array-remove memmove). Under
+  `#pragma peephole off` it already matches target's UNmerged srwi but carries a dead trailing `blr`
+  (unreachable epilogue after the search-loop back-branch); peephole-on would fold the blr BUT merge the
+  srwi = the same welded pair, mirrored. Not source-reproducible.
+- **object.c objFreeObjDef 98.93% (T=C=356) / Obj_UpdateModelBlendStates 99.07% (T=C=115)**: pure #108
+  GPR reg-perm (+ one #110 shared-zero `mr r31,r28` vs `li r31,0` in the latter). brute_match decl-order
+  (38 variants, all i/ioff swaps incl. the target mapping) found NO fuzzy>base — decl-order INERT,
+  #108 re-confirmed welded.
+- **boneparticleeffect boneParticleEffect_update 99.26%, d=+1**: r0-detour on `base =
+  (u8*)gBoneParticleConfigTable` (target `addi r25,r3,lo` direct; current `addi r0,r3,lo; mr r25,r0`).
+  Already in #16/#80 base-hoist form (named `base` local, used as base+disp) yet still detours =
+  confirms r0-detour welded independent of hoist.
+- **trickyfollow trickyUpdateApproachSpeed 98.63% (T=C=246)**: #82 FP-perm (f3↔f4 throughout) + one
+  local load-schedule swap around lbl_803E2420. Welded.
