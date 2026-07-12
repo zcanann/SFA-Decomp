@@ -38,7 +38,7 @@ void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
 void AudioStream_PlayAddrCallback(u32 result);
 int AudioStream_Play(int id, void (*preparedCallback)(void));
 void audioStopByMask(int mask);
-void streamFn_8000a380(int a, int b, int c);
+void streamFn_8000a380(int mask, int mode, int time);
 void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
 s32 Music_GetActivePriority(void);
 void Music_Trigger(int id, int arg);

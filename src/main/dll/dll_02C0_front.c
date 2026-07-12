@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/audio.h"
 #include "main/model_engine.h"
 #include "main/sky_api.h"
 #include "main/vecmath.h"
@@ -895,7 +896,6 @@ void fn_80134870(int obj, u8* arr)
 
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
-extern void streamFn_8000a380(int a, int b, int c);
 extern void gameTextFn_80016810(int a, int b, int c);
 
 typedef struct

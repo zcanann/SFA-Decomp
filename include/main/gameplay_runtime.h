@@ -33,6 +33,5 @@ void objRenderFn_80041018(int obj);
 int mapGetDirIdx(int mapId);
 void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void envFxActFn_800887f8(u8 value);
-void streamFn_8000a380(int mask, int mode, int time);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

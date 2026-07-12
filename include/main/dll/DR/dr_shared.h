@@ -338,7 +338,6 @@ extern f32 lbl_803E681C;
 extern f32 lbl_803E684C;
 extern f32 lbl_803E6850;
 extern f32 lbl_803E67F0;
-extern void streamFn_8000a380(int a, int b, int c);
 extern f32 lbl_802C2560[];
 extern f32 lbl_802C256C[];
 extern f64 gKTrexFloorSwitchPi;
