@@ -215,7 +215,6 @@ extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern f32 mathSinf(f32 x);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);
 extern void ObjHits_DisableObject(u32 obj);
@@ -736,7 +735,6 @@ extern int getArwing(void);
 extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 mathCosf(f32 x);
 extern void doRumble(f32 v);
 extern void PSVECNormalize(void* src, void* dst);
 extern void C_VECHalfAngle(void* out, void* a, void* b);
@@ -772,7 +770,6 @@ extern f32 lbl_803E6F00;
 extern f32 lbl_803E6F5C;
 extern f32 lbl_803E6FF4;
 extern f32 lbl_803E6FF8;
-extern f32 mathSinf(f32 x);
 extern void Obj_BuildWorldTransformMatrix(int obj, void* mtx, int p3);
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
@@ -1075,7 +1072,6 @@ extern f32 lbl_803E6ECC;
 extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
-extern f32 mathSinf(f32 x);
 extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECSubtract(void* a, void* b, void* ab);
 
@@ -1153,7 +1149,6 @@ extern int fn_80296A9C(GameObject* player, int p2);
 extern int objGetFirstChild(void);
 extern void staffSetGlow(int staff, int p2, int p3);
 
-extern f32 mathCosf(f32 x);
 extern f32 lbl_803E6BF0;
 extern f32 lbl_803E6BF4;
 extern f32 lbl_803E6BF8;
@@ -1548,8 +1543,6 @@ extern f32 lbl_803E70CC;
 extern int getArwing(void);
 extern int Obj_GetPlayerObject(void);
 extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
 
 typedef struct
 {
