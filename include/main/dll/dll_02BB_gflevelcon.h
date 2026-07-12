@@ -76,7 +76,7 @@ extern const f32 lbl_803E7484;
 extern const f32 lbl_803E7488;
 extern const f32 lbl_803E748C;
 
-int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
+int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate);
 int gf_levelcon_getExtraSize(void);
 int gf_levelcon_getObjectTypeId(void);
 void gf_levelcon_hitDetect(void);
