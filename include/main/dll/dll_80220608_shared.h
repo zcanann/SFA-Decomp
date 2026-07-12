@@ -99,9 +99,6 @@ extern int getAngle(f32 dx, f32 dz);
 #pragma dont_inline reset
 
 
-extern f32 lbl_803E6ED0;
-extern f32 lbl_803E6EFC;
-extern f32 lbl_803E6F00;
 
 
 
@@ -144,7 +141,6 @@ extern ModgfxInterface** gModgfxInterface;
 #pragma dont_inline reset
 
 
-extern f32 lbl_803E6ECC;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -159,7 +155,6 @@ extern f32 lbl_803E6ECC;
 
 
 
-extern f32 lbl_803E6EF8;
 
 #pragma dont_inline on
 
@@ -170,10 +165,6 @@ extern f32 lbl_803E6EF8;
 
 
 extern f32 fn_802945E0(f32 ratio);
-extern f32 lbl_803E6F80;
-extern f32 lbl_803E6F84;
-extern f32 lbl_803E6EF0;
-extern f32 lbl_803E6EF4;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -197,7 +188,6 @@ extern f32 lbl_803E6EF4;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E6F40;
 
 
 

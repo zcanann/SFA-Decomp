@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
 #include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
