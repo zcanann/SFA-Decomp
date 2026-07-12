@@ -2524,17 +2524,17 @@ void expgfx_resetAllPools(void)
     u32 activeBit;
     u32 inactiveBitMask;
     int tableIndex;
-    ExpgfxRuntimeDataLayout* runtime;
+    ExpgfxRuntimeDataLayout* runtime[1];
     int slotIndex;
     ExpgfxSlot* slot;
     staticData = EXPGFX_STATIC_DATA;
-    runtime = EXPGFX_RUNTIME_DATA;
+    runtime[0] = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
-    slotPoolBases = runtime->slotPoolBases;
-    poolActiveMasks = runtime->poolActiveMasks;
-    poolActiveCounts = runtime->poolActiveCounts;
+    slotPoolBases = runtime[0]->slotPoolBases;
+    poolActiveMasks = runtime[0]->poolActiveMasks;
+    poolActiveCounts = runtime[0]->poolActiveCounts;
     poolSlotTypeIds = staticData->poolSlotTypeIds;
-    poolSourceIds = runtime->poolSourceIds;
+    poolSourceIds = runtime[0]->poolSourceIds;
     poolFrameFlags = staticData->poolFrameFlags;
 
     while (poolIndex < EXPGFX_POOL_COUNT)
@@ -2545,15 +2545,15 @@ void expgfx_resetAllPools(void)
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0)
             {
-                if (((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0)
+                if (((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))
+                    textureFree((void*)((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))
                                     ->resource);
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                tableEntry = (ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16);
+                tableEntry = (ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16);
                 refCountPtr = &tableEntry->refCount;
                 if (*refCountPtr != 0)
                 {
@@ -2595,7 +2595,7 @@ void expgfx_resetAllPools(void)
         poolIndex++;
     }
 
-    resourceEntry = runtime->resourceTable;
+    resourceEntry = runtime[0]->resourceTable;
     expgfx_clearResourceTable(resourceEntry, 0, 0, 0, 0, 0);
 }
 #pragma opt_propagation reset
