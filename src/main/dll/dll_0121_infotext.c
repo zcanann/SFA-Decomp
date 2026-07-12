@@ -8,28 +8,30 @@ extern void objRenderFn_80041018(int obj);
 
 int infotext_getExtraSize(void) { return 0x4; }
 
-void infotext_update(GameObject *obj)
+void infotext_update(int obj)
 {
-    f32* sub = (obj)->extra;
+    f32* sub;
+    GameObject* objReg = (GameObject*)obj;
+    sub = objReg->extra;
     if (ObjTrigger_IsSet(obj) != 0 && isAreaNameTextActive() == 0)
     {
         *sub = 600.0f;
     }
     if (*sub > 0.0f)
     {
-        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        if ((*(u8*)&(objReg)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
             *sub = 0.0f;
         }
         else
         {
             *sub = *sub - timeDelta;
-            showHelpText((obj)->anim.modelInstance->helpTextIds[(*(u8**)&(obj)->anim.placementData)[0x19]]);
+            showHelpText((objReg)->anim.modelInstance->helpTextIds[(*(u8**)&(objReg)->anim.placementData)[0x19]]);
         }
     }
-    if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0)
+    if ((((ObjAnimComponent*)objReg)->modelInstance->flags & 1) != 0)
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((int)objReg);
     }
 }
 

@@ -2,6 +2,11 @@
 #define MAIN_DLL_DR_DLL_80209FE0_SHARED_H_
 
 #include "main/game_object.h"
+#include "main/obj_group.h"
+#include "main/obj_link.h"
+#include "main/obj_path.h"
+#include "main/obj_query.h"
+#include "main/obj_trigger.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
@@ -20,16 +25,6 @@
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern int Obj_IsObjectAlive();
-extern u32 ObjLink_DetachChild();
-extern u64 ObjLink_AttachChild();
-extern int ObjTrigger_IsSetById();
-extern int ObjTrigger_IsSet();
-extern u32 ObjPath_GetPointModelMtx();
 extern u32 SnowBike_hitDetect();
 extern double SeekTwiceBeforeRead();
 extern u32 countLeadingZeros();
@@ -207,9 +202,7 @@ extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, in
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
-extern int ObjPath_GetPointWorldPosition(int obj, int idx, void* x, void* y, void* z, int p);
 extern int gBossDrakorMoveSpeedTable[];
 extern int gBossDrakorTurnMoveStates[];
 extern s16 lbl_803DC198;

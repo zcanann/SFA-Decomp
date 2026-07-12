@@ -52,7 +52,7 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
         {
             *(u8*)&(obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
-            if (ObjTrigger_IsSetById(obj, 0xa9) != 0)
+            if (ObjTrigger_IsSetById((int)obj, 0xa9) != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 gameBitDecrement(GAMEBIT_ITEM_FireGem_Count);
@@ -98,7 +98,7 @@ void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
     {
         int doMark;
         Obj_SetActiveModelIndex(obj, 1);
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             gameBitIncrement(GAMEBIT_ITEM_FireGem_Count);

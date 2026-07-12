@@ -151,7 +151,7 @@ void bossdrakor_update(int obj)
         player = (int)Obj_GetPlayerObject();
         if ((void*)player != NULL)
         {
-            step = Obj_GetYawDeltaToObject(obj, player, 0);
+            step = Obj_GetYawDeltaToObject((GameObject*)obj, player, 0);
             ((GameObject*)obj)->anim.rotX +=
                 (s16)(((s16)step < -0x200) ? -0x200 : (((s16)step > 0x200) ? 0x200 : (s16)step));
             step = ((GameObject*)obj)->anim.rotY;
@@ -331,7 +331,7 @@ void bossdrakor_update(int obj)
         {
             f32 hxsq;
             f32 hzsq;
-            ObjPath_GetPointWorldPosition(obj, 4, &hx, &hy, &hz, 0);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, 4, &hx, &hy, &hz, 0);
             PSVECSubtract(&((GameObject*)player)->anim.localPosX, &hx, &hx);
             hxsq = hx * hx;
             hzsq = hz * hz;
@@ -584,7 +584,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
 void bossdrakor_free(GameObject* obj)
 {
     int inner = *(int*)&(obj)->extra;
-    ObjGroup_RemoveObject(obj, BOSSDRAKOR_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, BOSSDRAKOR_OBJGROUP);
     if ((obj)->childObjs[0] != NULL)
     {
         ObjLink_DetachChild(obj, *(int*)&(obj)->childObjs[0]);
@@ -793,7 +793,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
         switch (eventId)
         {
         case 6:
-            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, obj, 0);
+            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (int)obj, 0);
             if ((void*)target != NULL && (obj)->childCount != 0)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 2);
@@ -801,11 +801,11 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             }
             break;
         case 7:
-            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, obj, 0);
+            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (int)obj, 0);
             if ((void*)target != NULL)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 0);
-                ObjLink_AttachChild(obj, target, 1);
+                ObjLink_AttachChild((int)obj, target, 1);
                 ((BossDrakorState*)inner)->textTimer = lbl_803E6514;
             }
             break;
@@ -858,7 +858,7 @@ void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init)
     ((BossDrakorState*)inner)->textTimer = fz;
     ((DrakorFlags*)((char*)inner + 0x198))->b10 = 1;
     storeZeroToFloatParam(&((BossDrakorState*)inner)->attackTimer);
-    ObjGroup_AddObject(obj, BOSSDRAKOR_OBJGROUP);
+    ObjGroup_AddObject((int)obj, BOSSDRAKOR_OBJGROUP);
     storeZeroToFloatParam(&((BossDrakorState*)inner)->jawAnimAngle);
     (obj)->animEventCallback = bossdrakor_seqFn;
     Music_Trigger(MUSICTRIG_LVF_Tracking, 1);
@@ -875,11 +875,11 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     int light;
     int val;
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E651C);
-    ObjPath_GetPointWorldPosition(p1, 0, &((BossDrakorState*)inner)->homePosX, &((BossDrakorState*)inner)->homePosY,
+    ObjPath_GetPointWorldPosition((GameObject*)p1, 0, &((BossDrakorState*)inner)->homePosX, &((BossDrakorState*)inner)->homePosY,
                                   &((BossDrakorState*)inner)->homePosZ, 0);
     if (*(void**)&((BossDrakorState*)inner)->lightObj != NULL)
     {
-        ObjPath_GetPointWorldPosition(p1, 5, &pos0, &pos1, &pos2, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)p1, 5, &pos0, &pos1, &pos2, 0);
         modelLightStruct_setPosition(((BossDrakorState*)inner)->lightObj, pos0, pos1, pos2);
         light = ((BossDrakorState*)inner)->lightObj;
         if (*(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)
