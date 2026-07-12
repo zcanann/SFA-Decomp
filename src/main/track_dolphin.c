@@ -5086,6 +5086,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             lbl_803DCF50 = lbl_803DECD4 * (-dx * radius);
 
             {
+                f32 *ap, *bp, *dp;
                 s16* mp;
                 f32* zp;
                 f32* xp;
@@ -5101,7 +5102,6 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 {
                     s16 mb = 1;
                     f32 pz, px;
-                    f32 *ap, *bp, *dp;
                     *mp = 0;
                     n = 0;
                     pz = zp[0];
