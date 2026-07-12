@@ -170,7 +170,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     extern void* mapBlockFn_800606ec(int* obj, int idx);
     VertexS16* vtx;
     int vertexOffset[1];
-    int edgeData;
+    int e[2];
     int vertexIndex;
     int blockIndex;
     int blockLayer;
@@ -218,30 +218,30 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         }
     }
     DCStoreRange((void*)((MapBlockData*)block)->vertices, (u32)((MapBlockData*)block)->vertexCount * 6);
-    edgeOffset = 0;
-    edgeData = edgeOffset;
-    for (; edgeOffset < (int)(u32)((MapBlockData*)block)->edgeCount; edgeOffset++)
+    e[0] = 0;
+    e[1] = e[0];
+    for (; e[0] < (int)(u32)((MapBlockData*)block)->edgeCount; e[0]++)
     {
-        vertexOffset[0] = (int)fn_800606FC((int*)block, edgeOffset);
+        vertexOffset[0] = (int)fn_800606FC((int*)block, e[0]);
         shader = fn_8006070C((int*)block, *(u8*)(vertexOffset[0] + 0x13));
         shader = Shader_getLayer(shader, 0);
         if ((int)*(u8*)((int)shader + 5) == def->blockLayer)
         {
             scale = lbl_803E4008;
             ((EdgeVerts*)vertexOffset[0])->v0x =
-                (s16)(scale * state->offsetX + (f32) * (s16*)(state->edgeV0xBuffer + edgeData));
+                (s16)(scale * state->offsetX + (f32) * (s16*)(state->edgeV0xBuffer + e[1]));
             ((EdgeVerts*)vertexOffset[0])->v1x =
-                (s16)(scale * state->offsetX + (f32) * (s16*)(state->edgeV1xBuffer + edgeData));
+                (s16)(scale * state->offsetX + (f32) * (s16*)(state->edgeV1xBuffer + e[1]));
             ((EdgeVerts*)vertexOffset[0])->v0y =
-                (s16)(scale * state->offsetY + (f32) * (s16*)(state->edgeV0yBuffer + edgeData));
+                (s16)(scale * state->offsetY + (f32) * (s16*)(state->edgeV0yBuffer + e[1]));
             ((EdgeVerts*)vertexOffset[0])->v1y =
-                (s16)(scale * state->offsetY + (f32) * (s16*)(state->edgeV1yBuffer + edgeData));
+                (s16)(scale * state->offsetY + (f32) * (s16*)(state->edgeV1yBuffer + e[1]));
             ((EdgeVerts*)vertexOffset[0])->v0z =
-                (s16)(scale * state->offsetZ + (f32) * (s16*)(state->edgeV0zBuffer + edgeData));
+                (s16)(scale * state->offsetZ + (f32) * (s16*)(state->edgeV0zBuffer + e[1]));
             ((EdgeVerts*)vertexOffset[0])->v1z =
-                (s16)(scale * state->offsetZ + (f32) * (s16*)(state->edgeV1zBuffer + edgeData));
+                (s16)(scale * state->offsetZ + (f32) * (s16*)(state->edgeV1zBuffer + e[1]));
         }
-        edgeData += 2;
+        e[1] += 2;
     }
     *(int*)block = return0_80060B90((void*)block);
 }
