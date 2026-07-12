@@ -575,7 +575,7 @@ void* mapGetBlockIdx(int layer)
     return gMapBlockLayerTables[layer];
 }
 
-void* mapGetBlock(int i)
+MapBlockData* mapGetBlock(int i)
 {
     if (i < 0 || i >= lbl_803DCE98) return 0;
     return gMapBlocks[i];

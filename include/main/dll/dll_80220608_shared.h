@@ -108,7 +108,6 @@ extern void logPrintf(void* fmt, ...);
 extern char sWCPressuresActivateFormat[];
 extern f32 lbl_803E6E04;
 
-extern u8* mapGetBlock(int idx);
 extern int fn_8006070C(int block, int index);
 extern void mapTextureOverrideSetValue(int a, int b, int c);
 extern f32 lbl_803E6E58;

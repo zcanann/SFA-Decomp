@@ -60,7 +60,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void* mapGetBlock(int i);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int AlphaAnimator_getExtraSize(void)

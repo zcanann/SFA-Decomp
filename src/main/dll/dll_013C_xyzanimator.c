@@ -255,7 +255,6 @@ int XyzAnimator_getExtraSize(void)
 
 void XyzAnimator_free(GameObject* obj, int flag)
 {
-    extern int mapGetBlock(int blockIdx);
     int block;
     XyzAnimatorState* state;
     XyzAnimatorPlacement* setup;
@@ -271,7 +270,7 @@ void XyzAnimator_free(GameObject* obj, int flag)
     {
         block = objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
                                     (double)(obj)->anim.localPosZ);
-        block = mapGetBlock(block);
+        block = (int)mapGetBlock(block);
         if (((void*)block != NULL) && (state->vertexCount != 0))
         {
             fn_80194C40(setup, state, block);
@@ -297,7 +296,6 @@ void XyzAnimator_update(GameObject* obj)
     extern void fn_80194964(u8 * setup, u8 * state, int block);
     extern int mapBlockFn_80060678(void);
     extern u8* mapBlockFn_800606ec(int block, int idx);
-    extern int* mapGetBlock(int idx);
     u8* setup = *(u8**)&obj->anim.placementData;
     u8* state = obj->extra;
     int block;

@@ -2,6 +2,7 @@
 #define MAIN_LIGHTMAP_H_
 
 #include "ghidra_import.h"
+#include "main/lightmap_api.h"
 
 void updateVisibleGeometry(void);
 u32 FUN_8005af70(int param_1);
@@ -67,7 +68,6 @@ void sceneDrawTransparentPolys(void);
 void sceneDraw(void);
 
 u32 isOvercast(void);
-int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 void setDrawCloudsAndLights(int v);
 void setDrawLights(int v);
 void setIsOvercast(int v);

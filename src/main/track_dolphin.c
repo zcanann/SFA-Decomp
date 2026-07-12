@@ -1,4 +1,5 @@
 #include "main/map_block.h"
+#include "main/lightmap_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -411,12 +412,10 @@ extern void allocLotsOfTextures(void);
 extern u8* fn_80028364(int hdr, int i);
 extern u16* fn_80028354(int hdr, int tri);
 extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
-extern u8* mapGetBlockAtPos(int x, int z, int layer);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern u8* mapGetBlockIdx(int layer);
-extern void* mapGetBlock(int i);
 extern int getHudHiddenFrameCount(void);
 extern void logPrintf(char* fmt, ...);
 
@@ -4662,17 +4661,17 @@ void trackIntersect(void)
             {
                 if ((s8)*p >= 0)
                 {
-                    u8* blk = mapGetBlock((s8)*p);
+                    MapBlockData* blk = mapGetBlock((s8)*p);
                     int tn, toff;
                     f32 fx0;
                     tn = 0;
                     toff = 0;
                     fx0 = lbl_803DECE0 * gx;
-                    for (; tn < *(u16*)(blk + 0x9c); tn++, toff += 0x14)
+                    for (; tn < *(u16*)((u8*)blk + 0x9c); tn++, toff += 0x14)
                     {
                         if (gIntersectLineCount < 0x5dc)
                         {
-                            s16* tp = (s16*)(*(int*)(blk + 0x70) + toff);
+                            s16* tp = (s16*)((int)blk->hits + toff);
                             IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
                             f32 fx, fz;
                             u8* rp;

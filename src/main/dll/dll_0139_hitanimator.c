@@ -47,7 +47,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern MapBlockData* mapGetBlock(int i);
 extern void* fn_8006070C(MapBlockData* block, int idx);
 extern int fn_80065640(void);
 extern void fn_80065574(int matchVal, GameObject* obj, int flag);

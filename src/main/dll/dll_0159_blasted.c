@@ -14,7 +14,6 @@
 extern f32 lbl_803E4348;
 extern int lbl_803DDB18;
 
-extern void* mapGetBlock(int i);
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern u8* fn_8006070C(void* block, int idx);

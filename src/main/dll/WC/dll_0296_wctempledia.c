@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/lightmap_api.h"
 #include "main/dll/WC/dll_0296_wctempledia.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -23,8 +24,7 @@ void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
     int block;
     int slot;
 
-    block = (int)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                                 ((GameObject*)obj)->anim.localPosZ));
+    block = (int)mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
     if ((void*)block != NULL)
     {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++)

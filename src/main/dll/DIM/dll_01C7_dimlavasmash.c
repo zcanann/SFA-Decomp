@@ -124,7 +124,6 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
 
 int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int mapGetBlock(void);
     int* def;
     int hit;
     int block;
@@ -144,8 +143,8 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
                 {
                     ((DimlavasmashState*)state)->state = 2;
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_mushsporedisp22);
-                    objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ);
-                    block = mapGetBlock();
+                    block = (int)mapGetBlock(
+                        objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
                     if ((void*)block != NULL)
                     {
                         dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState*)state)->surfaceLayerId);
@@ -168,7 +167,6 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
 
 void dimlavasmash_init(s16* obj, s8* def)
 {
-    extern int* mapGetBlock(int idx);
     extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
     ObjAnimComponent* objAnim;
     int* block;
@@ -184,8 +182,9 @@ void dimlavasmash_init(s16* obj, s8* def)
     inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->gameBit);
     if (inner->state == 1)
     {
-        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                                ((GameObject*)obj)->anim.localPosZ));
+        block = (int*)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
+                                                      ((GameObject*)obj)->anim.localPosY,
+                                                      ((GameObject*)obj)->anim.localPosZ));
         if (block != NULL)
         {
             dimlavasmash_setBlockSurfaceFlags(block, 1, inner->surfaceLayerId);

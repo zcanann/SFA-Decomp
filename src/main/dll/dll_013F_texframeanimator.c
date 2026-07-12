@@ -69,7 +69,6 @@ extern u8 sfxplayerObj_update[];
 extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
 extern void logPrintf(char* fmt, ...);
-extern void* mapGetBlock(int i);
 
 char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
 
@@ -101,7 +100,7 @@ void TexFrameAnimator_update(int* obj)
 {
     TexFrameAnimatorState* state;
     u8* params;
-    int* block;
+    MapBlockData* block;
     int* textureHit;
     int* textureEntry;
 
@@ -119,11 +118,11 @@ void TexFrameAnimator_update(int* obj)
     {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                                 ((GameObject*)obj)->anim.localPosZ));
-        if (block == NULL || !(((MapBlockData*)block)->flags4 & 8))
+        if (block == NULL || !(block->flags4 & 8))
         {
             return;
         }
-        textureHit = return0_80056694(block, state->textureSlot);
+        textureHit = return0_80056694((int*)block, state->textureSlot);
         if (textureHit != NULL)
         {
             textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);

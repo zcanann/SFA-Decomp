@@ -46,7 +46,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define GROUNDANIMATOR_OBJGROUP        0x31
 #define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
-extern void* mapGetBlock(int i);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
@@ -139,7 +138,7 @@ void groundanimator_free(int* obj, int flag)
     int blkIdx;
     int mid;
     int inner;
-    void* block;
+    MapBlockData* block;
     GroundAnimatorState* w;
     int* r21;
     void* nv;
@@ -156,12 +155,12 @@ void groundanimator_free(int* obj, int flag)
         {
             for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
             {
-                entry = mapBlockFn_800606ec(block, blkIdx);
+                entry = mapBlockFn_800606ec((int*)block, blkIdx);
                 if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
                 {
                     for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {
-                        nv = fn_800606DC(block, mid);
+                        nv = fn_800606DC((int*)block, mid);
                         for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
                             cell = (int*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
@@ -245,7 +244,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     int htMid;
     int off[2];
     int inner;
-    void* block;
+    MapBlockData* block;
     int ix;
     int iz;
     int blkIdx;
@@ -271,7 +270,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     radsq = state->radius * state->radius;
     for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
     {
-        entry = mapBlockFn_800606ec(block, blkIdx);
+        entry = mapBlockFn_800606ec((int*)block, blkIdx);
         if (((GroundanimatorPlacement*)placement)->blockId == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
@@ -280,7 +279,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
             clampMax = lbl_803E3FC4;
             for (; mid < *(u16*)((char*)entry + 0x14); mid++)
             {
-                nv = fn_800606DC(block, mid);
+                nv = fn_800606DC((int*)block, mid);
                 for (inner = 0, vtx = nv, fallInn = fallMid, htInn = htMid; inner < 3; inner++)
                 {
                     void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
@@ -333,7 +332,7 @@ void groundanimator_update(int* obj)
     f32 nd;
     void* vtx;
     void* nv;
-    void* block;
+    MapBlockData* block;
     s8 bi;
     f32 vbuf[3];
     Obj_GetPlayerObject();
@@ -366,7 +365,7 @@ void groundanimator_update(int* obj)
     {
         int p;
         block = mapGetBlock(bi);
-        g->vertCount = (s16)(fn_80060688(block, ((GroundanimatorPlacement*)r20)->blockId) * 3);
+        g->vertCount = (s16)(fn_80060688((GameObject*)block, ((GroundanimatorPlacement*)r20)->blockId) * 3);
         if (g->vertCount > 0)
         {
             p = (int)mmAlloc(g->vertCount * 6, 5, 0);
@@ -467,13 +466,13 @@ void groundanimator_update(int* obj)
             blkIdx = 0;
             for (off2[0] = 0, off2[1] = off2[0]; blkIdx < g->entryCount; blkIdx++)
             {
-                entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
+                entry = mapBlockFn_800606ec((int*)block, g->blockEntries[blkIdx]);
                 mid = *(u16*)entry;
                 foffEntry = off2[0];
                 hoffEntry = off2[1];
                 for (; mid < *(u16*)((char*)entry + 0x14); mid++)
                 {
-                    nv = fn_800606DC(block, mid);
+                    nv = fn_800606DC((int*)block, mid);
                     for (inner = 0, foffVtx = foffEntry, vtx = nv, hoffVtx = hoffEntry; inner < 3; inner++)
                     {
                         if (*(f32*)((char*)g->falloffBuf + foffVtx) > lbl_803E3FB0)

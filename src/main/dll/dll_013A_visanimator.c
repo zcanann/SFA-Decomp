@@ -12,6 +12,7 @@
  * (VisAnimatorState.flags bit 1), which it then clears the same frame.
  */
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/dll/dll_80220608_shared.h"

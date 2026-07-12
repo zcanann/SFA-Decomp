@@ -20,7 +20,6 @@
 #include "main/dll/VF/vf_shared.h"
 
 extern f32 lbl_803E3F30;
-extern void* mapGetBlock(int i);
 extern void* getTablesBinEntry(int i);
 extern void* getLoadedTexture(int key);
 extern void* fn_8006070C(int* obj, int idx);
@@ -49,7 +48,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
     void* tex;
     int matIdx;
     int texWidthFixed, texHeightFixed;
-    void* block;
+    MapBlockData* block;
     int layerIdx;
     s16* placement;
 
@@ -73,7 +72,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
        tex+0xA/+0xC = u16 width/height. */
     for (layerIdx = 0; layerIdx < (s32)((MapBlockData*)block)->layerCount; layerIdx++)
     {
-        layer = fn_8006070C(block, layerIdx);
+        layer = fn_8006070C((int*)block, layerIdx);
         for (matIdx = 0, material = layer; matIdx < (s32) * (u8*)((char*)layer + 0x41); matIdx++)
         {
             if (*(void**)((char*)material + 0x24) == tex)
@@ -138,7 +137,7 @@ void texscroll2_hitDetect(void)
 void texscroll2_update(TexScroll2Object* obj)
 {
     TexScroll2State* state;
-    void* block;
+    MapBlockData* block;
     TexScrollPlacement* placement;
     int mapId;
 
