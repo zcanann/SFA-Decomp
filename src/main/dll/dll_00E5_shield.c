@@ -22,6 +22,7 @@
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
@@ -42,7 +43,6 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern void* Obj_GetPlayerObject(void);
 
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
  * staff-mode 5, otherwise mode 7"). */
@@ -101,7 +101,6 @@ STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
 STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
@@ -199,7 +198,7 @@ void staffFn_80170380(int* obj, int cmd)
     int* player;
     tbl[0] = lbl_80320A28;
     state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     glow = NULL;
     if (player != NULL)
     {

@@ -11,6 +11,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -60,7 +61,6 @@ extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
 extern u32 lbl_802C2298[3];
 extern u32 lbl_802C22A4[3];
-extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(void* obj);
 extern s16 getAngle(f32 dx, f32 dz);
 extern void vecRotateZXY(void* rotation, f32* outVec);
@@ -139,7 +139,7 @@ void Scarab_update(GameObject* obj)
     end = *(ScarabVec3*)lbl_802C22A4;
     flag = best[0];
     state = *(int*)&obj->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((((ScarabState*)state)->flags28 & 1) != 0)
     {
         while (ObjMsg_Pop(obj, &msg, 0, 0) != 0)

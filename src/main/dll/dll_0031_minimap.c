@@ -21,6 +21,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/gamebits.h"
 #include "dolphin/gx/GXCull.h"
@@ -117,7 +118,6 @@ MinimapMapEntry gMinimapCellTable[25] = {
 void Minimap_drawCompassBlip(void);
 void fn_8013351C(void);
 
-extern void* Obj_GetPlayerObject(void);
 extern s16 Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void* gameTextGetBox(int box);
@@ -269,7 +269,7 @@ int Minimap_update(void)
     found = 0;
     oy = ox = gMinimapZero;
     col = gMinimapBaseColor;
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     if (player != NULL)
     {
         if (((GameObject*)player)->anim.parent != NULL)

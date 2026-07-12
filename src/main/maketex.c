@@ -3,6 +3,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "util/carry.h"
@@ -147,7 +148,6 @@ extern s32 CARDUnmount(s32 chan);
 extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
 extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 extern void AudioStream_StartPrepared(void);
 extern void showMemCardError();
@@ -1129,7 +1129,7 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
     f32 rate;
     f32 yaw;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     yawThreshold = (s16)(182.04445f * yawThreshold);
     maxAngle = (s16)(182.04445f * maxAngle);
     turnDegrees = (s16)(182.04445f * turnDegrees);
