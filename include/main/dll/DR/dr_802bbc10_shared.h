@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DR_802BBC10_SHARED_H
 
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -64,7 +65,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);
-extern u8 framesThisStep;
 extern void* gEarthWarriorResource;
 extern GameUIInterface** gGameUIInterface;
 extern int gDRCloudRunnerStateHandlers[];
@@ -129,7 +129,6 @@ extern void dll_2E_func05(GameObject* obj, int q, int a, int b, int c);
 extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
-extern f32 timeDelta;
 extern void characterDoEyeAnims(GameObject* obj, int q);
 extern u8 gDRCloudRunnerMoveParamTable[];
 extern int lbl_803E83A0;

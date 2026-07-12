@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_WM_SHARED_H_
 
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
@@ -258,7 +259,6 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void gameBitIncrement(int eventId);
 extern void fn_801F4D54(int obj, int state);
-extern f32 timeDelta;
 extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EB4;
 extern f64 lbl_803E5ED0;
@@ -296,7 +296,6 @@ extern void fn_80053ED0(int n);
 extern void fn_80053EBC(int n);
 extern void doNothing_8005D148(int a, int b);
 extern void doNothing_8005D14C(int a, int b);
-extern u8 framesThisStep;
 extern f32 lbl_803E5F90;
 extern f32 lbl_803E5F24;
 extern f32 lbl_803E6088;

@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_80209FE0_SHARED_H_
 
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -155,7 +156,6 @@ extern int Obj_FreeObject(int obj);
 extern int fn_80080150(int p);
 extern void* playerGetFocusObject(int obj);
 extern int* Obj_GetPlayerObject(void);
-extern u8 framesThisStep;
 extern f32 lbl_803E6598;
 extern f32 lbl_803E65A8;
 extern f32 gThornBushLightScaleRate;
@@ -171,7 +171,6 @@ extern int gBossDrakorMoveStateTable[];
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void Obj_SpawnHitLightAndFade(int obj, f32* pos, f32 v);
-extern f32 timeDelta;
 extern void gameTextShow(int id);
 extern int warpToMap(int id, int flags);
 extern void timeOfDayFn_80055000(void);
