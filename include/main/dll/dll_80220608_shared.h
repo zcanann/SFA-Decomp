@@ -173,42 +173,6 @@ typedef struct
     u8 pad : 4;
 } PushBlockFlags;
 
-typedef struct WCLevelContInterface WCLevelContInterface;
-
-typedef struct WCLevelContInterface
-{
-    u8 pad00[0x20];
-    void (*tileAToWorldPos)(int obj, int tileX, int tileY, f32* outX, f32* outZ, WCLevelContInterface* iface);
-    void (*worldPosToTileA)(int obj, f32 x, f32 z, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
-    void (*setTileA)(int value, int tileX, int tileY, WCLevelContInterface* iface);
-    int (*getTileA)(int tileX, int tileY, WCLevelContInterface* iface);
-    void (*getInitialTileXYA)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
-    void (*getSolvedTileXYA)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
-    u8 (*traceMoveA)(int obj, int tileX, int tileY, f32* outX, f32* outZ, int dx, int dy, WCLevelContInterface* iface);
-    void (*tileBToWorldPos)(int obj, int tileX, int tileY, f32* outX, f32* outZ, WCLevelContInterface* iface);
-    void (*worldPosToTileB)(int obj, f32 x, f32 z, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
-    void (*setTileB)(int value, int tileX, int tileY, WCLevelContInterface* iface);
-    int (*getTileB)(int tileX, int tileY, WCLevelContInterface* iface);
-    void (*getInitialTileXYB)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
-    void (*getSolvedTileXYB)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
-    u8 (*traceMoveB)(int obj, int tileX, int tileY, f32* outX, f32* outZ, int dx, int dy, WCLevelContInterface* iface);
-} WCLevelContInterface;
-
-STATIC_ASSERT(offsetof(WCLevelContInterface, tileAToWorldPos) == 0x20);
-STATIC_ASSERT(offsetof(WCLevelContInterface, worldPosToTileA) == 0x24);
-STATIC_ASSERT(offsetof(WCLevelContInterface, setTileA) == 0x28);
-STATIC_ASSERT(offsetof(WCLevelContInterface, getTileA) == 0x2C);
-STATIC_ASSERT(offsetof(WCLevelContInterface, getInitialTileXYA) == 0x30);
-STATIC_ASSERT(offsetof(WCLevelContInterface, getSolvedTileXYA) == 0x34);
-STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveA) == 0x38);
-STATIC_ASSERT(offsetof(WCLevelContInterface, tileBToWorldPos) == 0x3C);
-STATIC_ASSERT(offsetof(WCLevelContInterface, worldPosToTileB) == 0x40);
-STATIC_ASSERT(offsetof(WCLevelContInterface, setTileB) == 0x44);
-STATIC_ASSERT(offsetof(WCLevelContInterface, getTileB) == 0x48);
-STATIC_ASSERT(offsetof(WCLevelContInterface, getInitialTileXYB) == 0x4C);
-STATIC_ASSERT(offsetof(WCLevelContInterface, getSolvedTileXYB) == 0x50);
-STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveB) == 0x54);
-
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, GameObject* player);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -232,12 +196,6 @@ extern f32 gWcPushBlockBobAmplitude;
 extern f32 gWcPushBlockPi;
 extern f32 gWcPushBlockAngleScale;
 
-extern u8 lbl_8032B0C8[][8];
-extern u8 lbl_8032B088[][8];
-extern u8 lbl_8032B048[][8];
-extern u8 lbl_8032B008[][8];
-extern u8 lbl_803AD298[][8];
-extern u8 lbl_803AD2D8[][8];
 extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
@@ -247,79 +205,12 @@ extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
 extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern const f32 lbl_803E6DA8;
-typedef struct WcLevelControlState WcLevelControlState;
-extern void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state);
-extern void fn_802251B4(int obj, WcLevelControlState* state);
 extern void skyFn_80088e54(int a, f32 b);
-extern int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern void* memcpy(void* dst, const void* src, u32 n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-typedef struct
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b18 : 2;
-    u8 b07 : 3;
-} WclevelcontFlags;
-
-/* WcLevelControlState.completionFlags: one-shot latches for each WC sub-puzzle.
- * 0x1/0x2 are transient (trigger-fired / event-active); the rest mirror gamebits. */
-#define WCLEVELCTL_FLAG_TRIGGERED    0x1   /* trigger callback fired this frame */
-#define WCLEVELCTL_FLAG_EVENT_ACTIVE 0x2   /* event running; update pass skips */
-#define WCLEVELCTL_FLAG_PUZZLE_A     0x4   /* gamebit 0x7f9 solved */
-#define WCLEVELCTL_FLAG_PUZZLE_B     0x8   /* gamebit 0x7fa solved */
-#define WCLEVELCTL_FLAG_TILE_A       0x10  /* gamebit 0x812: tile-A set solved */
-#define WCLEVELCTL_FLAG_TILE_B       0x20  /* gamebit 0x813: tile-B set solved */
-#define WCLEVELCTL_FLAG_TREX         0x40  /* gamebit 0x2a5: trex timer challenge */
-#define WCLEVELCTL_FLAG_SWITCHES     0x80  /* gamebit 0x205: three-switch puzzle */
-#define WCLEVELCTL_FLAG_FINAL        0x100 /* gamebit 0xbcf: final event */
-#define WCLEVELCTL_FLAG_EXTRA        0x200 /* gamebit 0xcac */
-
-/* WcLevelControlState.mode - WC level-controller event machine */
-#define WCLEVELCTL_MODE_IDLE        0 /* dispatch: watch game bits, kick off events */
-#define WCLEVELCTL_MODE_PUZZLE_A    1 /* puzzle-A event: timer running, await solve bit 0x7f9 */
-#define WCLEVELCTL_MODE_PUZZLE_B    2 /* puzzle-B event: timer running, await solve bit 0x7fa */
-#define WCLEVELCTL_MODE_SEQUENCE    3 /* post-solve sequence: await 0xcac, savePoint, then DONE */
-#define WCLEVELCTL_MODE_TREX_ACTIVE 4 /* trex challenge running: await 0x2a5 or timer expiry */
-#define WCLEVELCTL_MODE_TREX_INIT   6 /* trex challenge init: set up timer, then TREX_ACTIVE */
-#define WCLEVELCTL_MODE_DONE        7 /* terminal: sequence finished, no transitions */
-
-typedef struct WcLevelControlState
-{
-    f32 eventTimer;
-    f32 tileBResetTimer;
-    f32 tileAResetTimer;
-    u8 mode;
-    u8 previousMode;
-    u8 pad0E[0x10 - 0x0E];
-    u32 gameBitLatch;
-    WclevelcontFlags dialogueFlags;
-    u8 pad15;
-    u16 thorntailMusicId;
-    u16 ambientMusicId;
-    u16 completionFlags;
-} WcLevelControlState;
-
-STATIC_ASSERT(sizeof(WclevelcontFlags) == 1);
-STATIC_ASSERT(sizeof(WcLevelControlState) == 0x1C);
-STATIC_ASSERT(offsetof(WcLevelControlState, eventTimer) == 0x00);
-STATIC_ASSERT(offsetof(WcLevelControlState, tileBResetTimer) == 0x04);
-STATIC_ASSERT(offsetof(WcLevelControlState, tileAResetTimer) == 0x08);
-STATIC_ASSERT(offsetof(WcLevelControlState, mode) == 0x0C);
-STATIC_ASSERT(offsetof(WcLevelControlState, previousMode) == 0x0D);
-STATIC_ASSERT(offsetof(WcLevelControlState, gameBitLatch) == 0x10);
-STATIC_ASSERT(offsetof(WcLevelControlState, dialogueFlags) == 0x14);
-STATIC_ASSERT(offsetof(WcLevelControlState, thorntailMusicId) == 0x16);
-STATIC_ASSERT(offsetof(WcLevelControlState, ambientMusicId) == 0x18);
-STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1A);
-
-extern f32 gWcPushBlockTileResetTime;
-
 extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
 extern f32 lbl_803E6DE4;
@@ -1249,28 +1140,7 @@ extern f32 lbl_803E71BC;
 
 extern f32 lbl_803E6C68;
 
-typedef struct DrMusicContFlags
-{
-    u8 b_state : 1;
-    u8 pad8_lo : 1;
-    u8 b_e30 : 1;
-    u8 b_e31 : 1;
-    u8 b_e32 : 1;
-    u8 b_e33 : 1;
-    u8 b_e9c : 1;
-    u8 b_e38 : 1;
-    u8 b_e3c : 1;
-    u8 b_e3d : 1;
-    u8 b_e3e : 1;
-    u8 b_e39 : 1;
-    u8 b_9e0 : 1;
-    u8 b_9e1 : 1;
-    u8 b_9e2 : 1;
-    u8 b_9e7 : 1;
-} DrMusicContFlags;
-
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
-extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
 extern f32 gDrMusicControlCloudOverridePosX;
 extern f32 gDrMusicControlCloudOverridePosY;
 extern f32 gDrMusicControlCloudOverridePosZ;
@@ -1445,57 +1315,12 @@ void WCBouncyCra_update(GameObject* obj);
 void WCBouncyCra_init(GameObject* obj, int setup);
 void WCBouncyCra_release(void);
 void WCBouncyCra_initialise(void);
-int wcpushblock_getExtraSize(void);
-int wcpushblock_getObjectTypeId(GameObject* obj);
-void wcpushblock_free(void);
-void wcpushblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void wcpushblock_hitDetect(void);
-void wcpushblock_init(GameObject* obj, int setup);
-void wcpushblock_release(void);
-void wcpushblock_initialise(void);
-void wcpushblock_update(int obj);
-void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol);
-void wclevelcont_getInitialTileXYB(s16 value, s16* outRow, s16* outCol);
-int wclevelcont_getTileB(s16 i, s16 j);
-void wclevelcont_setTileB(int value, s16 i, s16 j);
-void wclevelcont_worldPosToTileB(GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol);
-void wclevelcont_tileBToWorldPos(GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp);
-void wclevelcont_getSolvedTileXYA(s16 value, s16* outRow, s16* outCol);
-void wclevelcont_getInitialTileXYA(s16 value, s16* outRow, s16* outCol);
-int wclevelcont_getTileA(s16 i, s16 j);
-void wclevelcont_setTileA(int value, s16 i, s16 j);
-void wclevelcont_worldPosToTileA(GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol);
-void wclevelcont_tileAToWorldPos(GameObject* obj, s16 col, s16 row, f32* outXp, f32* outZp);
-int wclevelcont_getExtraSize(void);
-int wclevelcont_getObjectTypeId(void);
-void wclevelcont_free(GameObject* obj);
-void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void wclevelcont_hitDetect(void);
-void wclevelcont_syncProgressBits(int state);
-void wclevelcont_update(GameObject* obj);
-void fn_802251B4(int obj, WcLevelControlState* state);
-int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy);
-void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state);
-int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy);
-void wclevelcont_init(GameObject* obj);
-void wclevelcont_release(void);
-void wclevelcont_initialise(void);
 int wcbeacon_aButtonCallback(GameObject* obj);
 int wcbeacon_getExtraSize(void);
 int wcbeacon_getObjectTypeId(GameObject* obj);
 void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcbeacon_init(u8* obj, u8* setup);
 void wcbeacon_update(GameObject* obj);
-int wctile_getExtraSize(void);
-int wctile_getObjectTypeId(GameObject* obj);
-void wctile_free(void);
-void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void wctile_hitDetect(void);
-void wctile_init(u8* obj, u8* setup);
-void wctile_release(void);
-void wctile_initialise(void);
-void wctile_update(GameObject* obj);
 int wcpressures_getExtraSize(void);
 int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int wcpressures_getObjectTypeId(int obj);

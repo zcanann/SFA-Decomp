@@ -63,8 +63,8 @@ void drmusiccont_initialise(void)
 
 void drmusiccont_init(GameObject* obj)
 {
-    int state = *(int*)&obj->extra;
-    DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
+    DrmusiccontState* state = obj->extra;
+    DrMusicContFlags* flags = &state->flags;
 
     flags->b_e30 = mainGetBit(0xe30);
     flags->b_e31 = mainGetBit(0xe31);
@@ -84,8 +84,8 @@ void drmusiccont_init(GameObject* obj)
 
 void drmusiccont_update(GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
-    DrMusicContFlags* flags = (DrMusicContFlags*)(state + 0x8);
+    DrmusiccontState* state = obj->extra;
+    DrMusicContFlags* flags = &state->flags;
     u32 bit0;
     u32 bit1;
     u32 bit2;
@@ -107,9 +107,9 @@ void drmusiccont_update(GameObject* obj)
         (obj)->unkF4 = 1;
     }
 
-    SCGameBitLatch_Update(state, 2, 0x1a7, 0x64b, 0xf0e, 0xe5);
-    SCGameBitLatch_UpdateInverted(state, 1, -1, -1, 0xe26, 0xb8);
-    SCGameBitLatch_Update(state, 4, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update(&state->gameBitLatch, 2, 0x1a7, 0x64b, 0xf0e, 0xe5);
+    SCGameBitLatch_UpdateInverted(&state->gameBitLatch, 1, -1, -1, 0xe26, 0xb8);
+    SCGameBitLatch_Update(&state->gameBitLatch, 4, -1, -1, 0xcbb, 0xc4);
 
     bit0 = (u8)mainGetBit(0xe30);
     bit1 = (u8)mainGetBit(0xe31);
@@ -156,16 +156,16 @@ void drmusiccont_update(GameObject* obj)
     {
         if (bit0 != flags->b_9e0 || bit1 != flags->b_9e1 || bit2 != flags->b_9e2 || bit3 != flags->b_9e7)
         {
-            ((DrmusiccontState*)state)->stingerTimer = gDrMusicControlStingerTimerDuration;
+            state->stingerTimer = gDrMusicControlStingerTimerDuration;
         }
     }
     {
-        f32 st = ((DrmusiccontState*)state)->stingerTimer;
+        f32 st = state->stingerTimer;
         f32 zero = lbl_803E6BD8;
         if (st > zero)
         {
-            ((DrmusiccontState*)state)->stingerTimer = st - timeDelta;
-            if (((DrmusiccontState*)state)->stingerTimer <= zero)
+            state->stingerTimer = st - timeDelta;
+            if (state->stingerTimer <= zero)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_4bd);
             }

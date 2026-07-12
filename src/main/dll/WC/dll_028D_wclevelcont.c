@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
@@ -178,7 +179,7 @@ int wclevelcont_getObjectTypeId(void)
 
 void wclevelcont_free(GameObject* obj)
 {
-    WcLevelControlState* state = (obj)->extra;
+    WcLevelControlState* state = obj->extra;
     u8 mode;
 
     ObjGroup_RemoveObject((int)obj, WCLEVELCONT_OBJGROUP);
@@ -200,11 +201,11 @@ void wclevelcont_free(GameObject* obj)
     gameTimerStop();
 }
 
-void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wclevelcont_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6DD8);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6DD8);
     }
 }
 
@@ -213,9 +214,8 @@ void wclevelcont_hitDetect(void)
 }
 
 #pragma opt_common_subs off
-void wclevelcont_syncProgressBits(int stateArg)
+void wclevelcont_syncProgressBits(WcLevelControlState* state)
 {
-    WcLevelControlState* state = (WcLevelControlState*)stateArg;
     int flag;
 
     if ((*gSkyInterface)->getSunPosition(0))
@@ -244,10 +244,10 @@ void wclevelcont_syncProgressBits(int stateArg)
             Music_Trigger(MUSICTRIG_fox_arwing, 1);
         }
     }
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update(&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
+    SCGameBitLatch_Update(&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
+    SCGameBitLatch_Update(&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
+    SCGameBitLatch_Update(&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
     if ((u32)mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 &&
         ((u32)mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
@@ -255,16 +255,16 @@ void wclevelcont_syncProgressBits(int stateArg)
         flag = 1;
     }
     mainSetBits(0xf31, flag);
-    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
+    SCGameBitLatch_Update(&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
 #pragma opt_common_subs reset
 
 void wclevelcont_update(GameObject* obj)
 {
-    WcLevelControlState* state = (obj)->extra;
+    WcLevelControlState* state = obj->extra;
     f32 sunTime;
 
-    if ((obj)->unkF4 == 0)
+    if (obj->unkF4 == 0)
     {
         if ((u32)mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
         {
@@ -275,19 +275,19 @@ void wclevelcont_update(GameObject* obj)
             skyFn_80088e54(0, lbl_803E6DA8);
             mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
         }
-        (obj)->unkF4 = 1;
+        obj->unkF4 = 1;
     }
-    switch ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot))
+    switch ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot))
     {
     case 1:
     default:
-        wcpushblock_updateLevelControlState((int)obj, state);
+        wcpushblock_updateLevelControlState(obj, state);
         break;
     case 2:
-        fn_802251B4((int)obj, state);
+        fn_802251B4(obj, state);
         break;
     }
-    wclevelcont_syncProgressBits((int)state);
+    wclevelcont_syncProgressBits(state);
     if ((*gSkyInterface)->getSunPosition(&sunTime))
     {
         mainSetBits(0x7f3, 1);
@@ -420,10 +420,10 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
 
 void wclevelcont_init(GameObject* obj)
 {
-    WcLevelControlState* state = (obj)->extra;
+    WcLevelControlState* state = obj->extra;
     u16 flags;
 
-    (obj)->animEventCallback = wclevelcont_seqFn;
+    obj->animEventCallback = wclevelcont_seqFn;
     mainSetBits(0x810, 0);
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     mainSetBits(0x811, 0);
@@ -458,7 +458,7 @@ void wclevelcont_init(GameObject* obj)
     mainSetBits(0x2a6, 1);
     mainSetBits(0x206, 1);
     mainSetBits(0x25f, 1);
-    (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
+    (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
     state->dialogueFlags.b40 = mainGetBit(0xc58);
     state->dialogueFlags.b20 = mainGetBit(0xc59);
     state->dialogueFlags.b18 = mainGetBit(0xc5a);
