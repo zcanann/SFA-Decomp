@@ -33,9 +33,6 @@
 #define CCLIGHTFOOT_STATE_DORMANT_TURN 0xd /* dormant, turning to face; back to DORMANT */
 #define CCLIGHTFOOT_STATE_DESPAWN      0xe /* free child, hide, disable update, return */
 
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-
-
 /* Per-object Lightfoot state block (obj->extra, cclightfoot_getExtraSize = 0x18). */
 typedef struct CcLightfootState
 {
@@ -55,6 +52,7 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
+#include "main/objlib.h"
 #include "main/dll/DIM/DIMsnowball.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
@@ -64,7 +62,6 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/audio/sfx_trigger_ids.h"
 #define CCLIGHTFOOT_OBJFLAG_HIDDEN 0x4000
 extern int ObjHits_PollPriorityHitWithCooldown();
-extern int ObjTrigger_IsSet();
 
 int cclightfoot_getExtraSize(void)
 {
@@ -80,14 +77,13 @@ void cclightfoot_init(int* obj, int* def)
 
 void cclightfoot_free(int* obj, int flag)
 {
-    extern u32 ObjLink_DetachChild();
     CcLightfootState* state = ((GameObject*)obj)->extra;
     GameObject* sub = state->childObj;
     if (sub != NULL)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
-            ObjLink_DetachChild(obj, (int)sub);
+            ObjLink_DetachChild((GameObject*)obj, (int)sub);
         }
         if (flag == 0)
         {
@@ -138,7 +134,6 @@ extern f32 lbl_803E4670;
 
 int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern u32 ObjLink_DetachChild();
     CcLightfootState* state = (obj)->extra;
     if (animUpdate->eventCount != 0)
     {
@@ -191,7 +186,6 @@ STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
 void cclightfoot_update(int obj)
 {
     extern f32 getXZDistance(f32 * a, f32 * b);
-    extern u32 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)gCcLightfootAnimTable;
     u32 fallback;
     CcLightfootState* state = ((GameObject*)obj)->extra;
@@ -571,7 +565,7 @@ void cclightfoot_update(int obj)
         {
             if (((GameObject*)obj)->childObjs[0] != NULL)
             {
-                ObjLink_DetachChild(obj, (int)state->childObj);
+                ObjLink_DetachChild((GameObject*)obj, (int)state->childObj);
             }
             Obj_FreeObject(state->childObj);
             state->childObj = 0;

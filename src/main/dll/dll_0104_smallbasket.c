@@ -37,6 +37,7 @@
 #include "main/dll/player_status.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
@@ -130,20 +131,15 @@ void SmallBasket_init(GameObject* obj, int def);
 void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 extern void* gSmallBasketResource;
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, double scale);
 
-extern void ObjGroup_AddObject(u32 obj, int group);
-
-extern int ObjTrigger_IsSet(int obj);
 extern int playerIsDisguised(int obj);
 extern u32 playerGetStateFlag310(int obj);
 
 extern int isTrickyNear(int obj);
 extern int fn_8029669C(int obj);
 extern int fn_802966B4(int obj);
-extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
 extern void fn_801814D0(int obj, int player, int state);
 extern f32 getXZDistance(f32* a, f32* b);
 extern f32 lbl_803E3934;
@@ -603,11 +599,11 @@ int SmallBasket_getExtraSize(void)
     return 0x24;
 }
 
-void SmallBasket_free(int obj)
+void SmallBasket_free(GameObject* obj)
 {
-    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gModgfxInterface)->detachSource(obj);
     Resource_Release(gSmallBasketResource);
-    ObjGroup_RemoveObject(obj, SMALLBASKET_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, SMALLBASKET_OBJGROUP);
 }
 
 void objThrowFn_80182504(GameObject* obj)
@@ -1001,7 +997,7 @@ void SmallBasket_update(GameObject* obj)
                 {
                     state->disableTimer = 0;
                     state->hiddenTimer = 0;
-                    ObjMsg_SendToObject(player, SMALLBASKET_MSG_PLAYER_GRAB, (int)obj,
+                    ObjMsg_SendToObject((void*)player, SMALLBASKET_MSG_PLAYER_GRAB, obj,
                                         (state->carryParam << 16) | ((u16)state->carryAngle));
                 }
             }
