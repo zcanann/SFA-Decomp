@@ -1804,6 +1804,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
 #pragma dont_inline reset
 
 #pragma opt_propagation off
+#pragma opt_strength_reduction on
 int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
     ExpgfxSourceObject* source;
@@ -1866,6 +1867,7 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
 
     return result;
 }
+#pragma opt_strength_reduction reset
 #pragma opt_propagation reset
 
 #pragma scheduling on
