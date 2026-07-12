@@ -36,7 +36,8 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
 #include "main/pause_menu_api.h"
-#include "main/audio/sfx.h"
+void Sfx_PlayFromObject(int obj, int id);
+void Sfx_StopFromObject(u32 obj, u32 sfxId);
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 
