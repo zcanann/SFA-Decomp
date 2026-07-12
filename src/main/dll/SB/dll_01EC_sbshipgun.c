@@ -453,3 +453,16 @@ void SB_ShipGun_init(GameObject* obj)
     state->health = SB_SHIPGUN_START_HEALTH;
     state->volleyCount = 0;
 }
+
+__declspec(section ".sdata2") f32 lbl_803E5888 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const f32 lbl_803E588C = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 lbl_803E5890 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E5894 = 135.0f;
+__declspec(section ".sdata2") f32 lbl_803E5898 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E589C = 10.0f;
+__declspec(section ".sdata2") f32 gSbShipGunCannonballSpeedBoost = 8.0f;
+__declspec(section ".sdata2") f32 gSbShipGunFireCameraShakeMagnitude = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E58A8 = 2.0f;
+__declspec(section ".sdata2") f32 gSbShipGunNearSfxRangeThreshold = 200.0f;
