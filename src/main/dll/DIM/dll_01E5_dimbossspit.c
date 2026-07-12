@@ -71,8 +71,6 @@ extern f32 gDimBossSpitGravity;
 extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
-extern void* objCreateLight(int arg, u8 addToList);
-extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 a, f32 b);
 extern void lightSetField4D(ModelLightStruct* p, u8 v);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* cb);
@@ -266,13 +264,14 @@ void DIMbossspit_init(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
 
-    *(void**)&((DIMbossspitState*)state)->light = objCreateLight(obj, 1);
+    *(void**)&((DIMbossspitState*)state)->light = objCreateLight((void*)obj, 1);
     if (*(void**)&((DIMbossspitState*)state)->light != NULL)
     {
         modelLightStruct_setLightKind(((DIMbossspitState*)state)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
         modelLightStruct_setSpecularColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
-        modelLightStruct_setDistanceAttenuation(((DIMbossspitState*)state)->light, lbl_803E4D70, lbl_803E4D74);
+        modelLightStruct_setDistanceAttenuation((u8*)((DIMbossspitState*)state)->light, lbl_803E4D70,
+                                                lbl_803E4D74);
         lightSetField4D(((DIMbossspitState*)state)->light, 1);
         modelLightStruct_setEnabled(((DIMbossspitState*)state)->light, 1, lbl_803E4D78);
         modelLightStruct_setAffectsAabbLightSelection(((DIMbossspitState*)state)->light, 1);

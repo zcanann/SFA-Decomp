@@ -17,6 +17,7 @@
  * constants in the DLL's shared .sdata2 pool.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/objfx_api.h"
 #include "main/obj_placement.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
@@ -1003,7 +1004,7 @@ void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval)
     }
 }
 
-void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light)
+void objParticleFn_80099d84(GameObject* obj, f32 scale, int type, f32 extraScale, ModelLightStruct* light)
 {
     PartfxParams params;
     f32 zoff = lbl_803DF394;

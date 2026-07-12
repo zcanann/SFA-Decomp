@@ -9,7 +9,7 @@
 #include "main/camera.h"
 #include "main/texture.h"
 
-void* objAllocLight(void* owner);
+ModelLightStruct* objAllocLight(void* owner);
 void updateLights(void);
 
 #endif

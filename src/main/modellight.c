@@ -174,16 +174,16 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
 
 void* gModelLightList[0x32];
 
-void* objCreateLight(int arg, u8 addToList)
+ModelLightStruct* objCreateLight(void* owner, u8 addToList)
 {
-    void* light;
+    ModelLightStruct* light;
     if (addToList)
     {
         if (gModelLightCount >= 0x32)
         {
             return NULL;
         }
-        light = objAllocLight((void*)arg);
+        light = objAllocLight(owner);
         if (light == NULL)
         {
             return NULL;
@@ -194,7 +194,7 @@ void* objCreateLight(int arg, u8 addToList)
         }
         return light;
     }
-    light = objAllocLight((void*)arg);
+    light = objAllocLight(owner);
     if (light != NULL)
     {
         return light;
@@ -273,7 +273,7 @@ void ModelLightStruct_free(ModelLightStruct* light)
 void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag)
 {
     u8* light;
-    u8* newLight;
+    ModelLightStruct* newLight;
 
     if (gModelLightCount >= 0x32)
     {
@@ -290,7 +290,7 @@ void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
         {
             int index = gModelLightCount++;
             gModelLightList[index] = newLight;
-            light = newLight;
+            light = (u8*)newLight;
         }
     }
 
@@ -320,7 +320,7 @@ void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
 }
 
 #pragma opt_common_subs off
-void* objAllocLight(void* owner)
+ModelLightStruct* objAllocLight(void* owner)
 {
     u8* light;
     f32 tmp[3];
@@ -453,7 +453,7 @@ void* objAllocLight(void* owner)
     zero = lbl_803DE75C;
     ((ModelLightStruct*)light)->attenuationK1 = zero;
     ((ModelLightStruct*)light)->attenuationK2 = zero;
-    return light;
+    return (ModelLightStruct*)light;
 }
 #pragma opt_common_subs reset
 

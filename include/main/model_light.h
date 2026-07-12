@@ -89,6 +89,9 @@ typedef struct ModelLightStruct {
     u8 pad2fd[0x300 - 0x2fd];
 } ModelLightStruct;
 
+ModelLightStruct* objCreateLight(void* owner, u8 addToList);
+void ModelLightStruct_free(ModelLightStruct* light);
+
 void queueGlowRender(ModelLightStruct *light);
 void modelLightStruct_updateGlowAlpha(ModelLightStruct *light);
 void modelLightStruct_updateColorFade(ModelLightStruct *light);
@@ -98,6 +101,7 @@ int modelLightStruct_getActiveState(ModelLightStruct *light);
 void modelLightStruct_setLightKind(ModelLightStruct *light, int lightKind);
 void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *light, int objectLightMaskIndex);
 void modelLightStruct_setAngularAttenuation(ModelLightStruct *light, f32 a0, f32 a1, f32 a2);
+void modelLightStruct_setDistanceAttenuation(u8* light, f32 near, f32 far);
 void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_getDiffuseColor(ModelLightStruct *light, u8 *red, u8 *green, u8 *blue, u8 *alpha);
 void modelLightStruct_setDiffuseColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);

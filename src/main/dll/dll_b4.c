@@ -24,7 +24,6 @@ extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(u8* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern void lightSetColor(int a, int b, int c, int d);
-extern void* objCreateLight(int arg, u8 addToList);
 extern void objSetEventName(ModelLightStruct* p, int a);
 
 void lockIconInit(void)
@@ -39,7 +38,7 @@ void lockIconInit(void)
         gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_A_BUTTON;
         ObjModel_SetRenderCallback(Obj_GetActiveModel((u8*)gCamcontrolTargetReticle), aButtonIconTexCb);
         lightSetColor(1, 0x32, 0x3C, 0x28);
-        lbl_803DD4C4 = objCreateLight(0, 1);
+        lbl_803DD4C4 = objCreateLight(NULL, 1);
         if (lbl_803DD4C4 != NULL)
         {
             modelLightStruct_setLightKind(lbl_803DD4C4, MODEL_LIGHT_KIND_DIRECTIONAL);

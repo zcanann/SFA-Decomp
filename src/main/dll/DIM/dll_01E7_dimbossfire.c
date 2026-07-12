@@ -29,8 +29,6 @@ extern void ModelLightStruct_free(ModelLightStruct* light);
 extern void lightSetFieldBC_8001db14(ModelLightStruct* p, u8 v);
 
 extern int Obj_GetPlayerObject(void);
-extern void* objCreateLight(int arg, u8 addToList);
-extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 min, f32 max);
 extern f32 lbl_80325D68[];
 extern f32 lbl_803E4DA0;
 extern f32 lbl_803E4DA4;
@@ -192,7 +190,7 @@ void dimbossfire_update(GameObject *obj)
             }
             if ((void*)state->light == NULL)
             {
-                light = objCreateLight((int)obj, 1);
+                light = objCreateLight(obj, 1);
                 state->light = light;
                 if ((void*)state->light != NULL)
                 {
@@ -206,7 +204,7 @@ void dimbossfire_update(GameObject *obj)
                     {
                         modelLightStruct_setDiffuseColor(state->light, 0x7f, 0xff, 0, 0);
                     }
-                    modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4DB8, lbl_803E4DBC);
+                    modelLightStruct_setDistanceAttenuation((u8*)state->light, lbl_803E4DB8, lbl_803E4DBC);
                     modelLightStruct_setEnabled(state->light, 1, lbl_803E4DA0);
                     modelLightStruct_setEnabled(state->light, 0, state->activeTimer / lbl_803E4DC0);
                 }

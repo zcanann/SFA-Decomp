@@ -11,22 +11,20 @@
  * and frees itself.
  */
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/dll/objfx_api.h"
+#include "main/frame_timing.h"
+#include "main/model_light.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
-#include "main/engine_shared.h"
 #include "main/objlib.h"
 #include "main/lightmap.h"
+#include "main/vecmath.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-extern void ModelLightStruct_free(void* light);
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-
 extern void Obj_FreeObject(int obj);
 
-extern void* objCreateLight(int* obj, int v);
-extern void modelLightStruct_setLightKind(void* light, int v);
 #define MODEL_LIGHT_KIND_POINT 2
-extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E98;
 extern f32 lbl_803E4E9C;
@@ -69,7 +67,7 @@ typedef struct SpiritPrizeState
     u8 queuedActions[0x8B - 0x81];
     u8 queuedActionCount;
     u8 pad8C[0x140 - 0x8C];
-    void* light;
+    ModelLightStruct* light;
     u8 useDetachedLight;
     u8 pad145[0x148 - 0x145];
     f32 sfxTimer;
@@ -90,7 +88,7 @@ void SpiritPrize_initialise(void)
 void SpiritPrize_free(GameObject* obj)
 {
     SpiritPrizeState* state;
-    void* light;
+    ModelLightStruct* light;
 
     state = obj->extra;
     light = state->light;
@@ -151,7 +149,7 @@ afterTrigger:;
         {
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0x96, 0x32, 0xff, 0xff);
-            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4EB0, lbl_803E4EB4);
+            modelLightStruct_setDistanceAttenuation((u8*)state->light, lbl_803E4EB0, lbl_803E4EB4);
         }
     }
     ((GameObject*)obj)->anim.alpha = 0;
@@ -177,14 +175,14 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4E98);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4E98);
         if (state->useDetachedLight != 0)
         {
-            objParticleFn_80099d84(obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, (int)state->light);
+            objParticleFn_80099d84((GameObject*)obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, state->light);
         }
         else
         {
-            objParticleFn_80099d84(obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, 0);
+            objParticleFn_80099d84((GameObject*)obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, NULL);
         }
     }
 }
