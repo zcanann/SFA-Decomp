@@ -473,7 +473,7 @@ int dll_28B_substateHandler1(int obj, int ai)
         state->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
-    if (Curve_AdvanceAlongPath(route, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
+    if (Curve_AdvanceAlongPath(&route->curve, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
     {
         (*gRomCurveInterface)->goNextPoint(route);
     }
