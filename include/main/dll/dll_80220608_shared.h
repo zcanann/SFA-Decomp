@@ -51,8 +51,6 @@ struct AndrossState;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
 extern void cloudClearOverridePosition(int obj);
-extern f32 lbl_803E6C20;
-extern int lbl_803DC398;
 extern f32 lbl_803E6CE0;
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(GameObject* obj, int seq, int hitId, int p4, int p5);
@@ -329,11 +327,6 @@ typedef struct Blob16
 } Blob16;
 extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 
-extern f32 lbl_803E6C24;
-extern f32 lbl_803E6C28;
-extern f32 lbl_803E6C2C;
-extern f32 lbl_803E6C30;
-extern f32 lbl_803E6C34;
 
 extern ModgfxInterface** gModgfxInterface;
 
@@ -519,16 +512,6 @@ extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 angle);
 extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern f32 fn_80291FF4(f32 x);
-extern f32 lbl_803E6C38;
-extern f32 lbl_803E6C6C;
-extern f32 lbl_803E6C70;
-extern f32 lbl_803E6C74;
-
-extern f32 gBarrelGenPi;
-extern f32 gBarrelGenAngleHalfRange;
-extern f32 lbl_803E6C78;
-extern f32 lbl_803E6C7C;
-extern f32 lbl_803E6C80;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -538,7 +521,6 @@ extern f32 lbl_803E6C80;
 #pragma dont_inline on
 
 
-extern f32 lbl_803E6C68;
 
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
 
@@ -556,23 +538,6 @@ extern f32 lbl_803E6C14;
 extern f32 lbl_803E6C18;
 extern f32 lbl_803E6C1C;
 
-extern f32 lbl_803E6C58;
-
-extern f32 lbl_803E6C3C;
-extern f32 lbl_803E6C40;
-extern f32 lbl_803E6C44;
-extern f32 lbl_803DC3A0;
-extern f32 lbl_803DC3A4;
-extern f32 lbl_803DC3A8;
-extern u16 lbl_803DC3AC;
-
-extern f32 lbl_803E6C5C;
-extern f32 gBarrelGenAngleWrapNeg;
-extern f32 gBarrelGenAngleWrapPos;
-extern f32 gBarrelGenAngleWrapThreshold;
-extern f32 gBarrelGenTurnRateClampMin;
-extern f32 gBarrelGenTurnRateClampMax;
-extern f32 lbl_803E6C98;
 
 
 extern f32 lbl_803E6EC8;

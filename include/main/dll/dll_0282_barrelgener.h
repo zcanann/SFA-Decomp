@@ -11,6 +11,38 @@
 struct ModelLightStruct;
 
 extern ObjectDescriptor gBarrelGenerObjDescriptor;
+extern int lbl_803DC398;
+extern f32 lbl_803DC3A0;
+extern f32 lbl_803DC3A4;
+extern f32 lbl_803DC3A8;
+extern u16 lbl_803DC3AC;
+extern f32 lbl_803E6C20;
+extern f32 lbl_803E6C24;
+extern f32 lbl_803E6C28;
+extern f32 lbl_803E6C2C;
+extern f32 lbl_803E6C30;
+extern f32 lbl_803E6C34;
+extern f32 lbl_803E6C38;
+extern f32 lbl_803E6C3C;
+extern f32 lbl_803E6C40;
+extern f32 lbl_803E6C44;
+extern f32 lbl_803E6C58;
+extern f32 lbl_803E6C5C;
+extern f32 gBarrelGenPi;
+extern f32 gBarrelGenAngleHalfRange;
+extern f32 lbl_803E6C68;
+extern f32 lbl_803E6C6C;
+extern f32 lbl_803E6C70;
+extern f32 lbl_803E6C74;
+extern f32 lbl_803E6C78;
+extern f32 lbl_803E6C7C;
+extern f32 lbl_803E6C80;
+extern f32 gBarrelGenAngleWrapNeg;
+extern f32 gBarrelGenAngleWrapPos;
+extern f32 gBarrelGenAngleWrapThreshold;
+extern f32 gBarrelGenTurnRateClampMin;
+extern f32 gBarrelGenTurnRateClampMax;
+extern f32 lbl_803E6C98;
 
 int barrelgener_getLinkId(GameObject* obj);
 void barrelgener_queueObjectRelease(GameObject* obj, GameObject* queuedObj, int releaseFrame);
