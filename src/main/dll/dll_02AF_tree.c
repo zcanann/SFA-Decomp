@@ -21,6 +21,7 @@
 #include "main/dll/dll_02AF_tree.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 
 #define TREE_AMBIENT_EFFECT_OBJECT_ID    0x210
 #define TREE_OBJECT_FLAGS_INIT           0x2000
@@ -32,6 +33,10 @@
 #define TREE_FLAG_HIT_WITH_POSITION        0xc0
 #define TREE_FLAG_AMBIENT_EFFECTS          0x80
 #define TREE_FLAG_DISABLE_PLAYER_PROXIMITY 0x100
+
+#define objfx_spawnRandomBurstLegacy(obj, type, count, origin, mult, flags)                                      \
+    ((void (*)(void*, int, int, void*, f32, int))objfx_spawnRandomBurst)(                                       \
+        (void*)(obj), (type), (count), (origin), (mult), (flags))
 
 int tree_getExtraSize(void)
 {
@@ -280,8 +285,9 @@ void tree_update(GameObject* obj)
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
                     vecRotateZXY((int)obj, colorPtr);
-                    objfx_spawnRandomBurst((int)obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
-                                           state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3], 0);
+                    objfx_spawnRandomBurstLegacy(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
+                                                 state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3],
+                                                 0);
                 }
                 state->swayTimer = lbl_803E7318;
                 state->hitCooldownTimer = lbl_803E731C;
@@ -326,8 +332,9 @@ void tree_update(GameObject* obj)
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
                     vecRotateZXY((int)obj, colorPtr);
-                    objfx_spawnRandomBurst((int)obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
-                                           state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3], 1);
+                    objfx_spawnRandomBurstLegacy(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 0x14, burstVec,
+                                                 state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3],
+                                                 1);
                     state->playerBurstCooldown = lbl_803E7320;
                 }
                 state->ambientBurstTimer -= timeDelta;
@@ -338,8 +345,9 @@ void tree_update(GameObject* obj)
                     colorVec[1] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 1];
                     colorVec[2] = intensity * gTreeEffectColors[state->effectProfileIndex * 4 + 2];
                     vecRotateZXY((int)obj, colorPtr);
-                    objfx_spawnRandomBurst((int)obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 1, burstVec,
-                                           state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3], 0);
+                    objfx_spawnRandomBurstLegacy(obj, state->flags & TREE_FLAG_BURST_MODE_MASK, 1, burstVec,
+                                                 state->scale * gTreeEffectColors[state->effectProfileIndex * 4 + 3],
+                                                 0);
                     state->ambientBurstTimer += lbl_803E7324;
                 }
             }

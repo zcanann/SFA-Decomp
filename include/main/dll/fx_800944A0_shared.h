@@ -346,7 +346,6 @@ void waterfx_release(void);
 void waterfx_initialise(void);
 void viewFinderSetZoom(f32 zoom);
 void viewFinderSetZoomTo50(void);
-void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagByte, f32 mult);
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* p7, f32 fval);
 void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fval);

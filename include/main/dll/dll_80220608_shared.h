@@ -326,8 +326,6 @@ extern f32 lbl_803E73C0;
 
 extern void fn_8003B608(int r, int g, int b);
 extern void vecRotateZXY(int obj, f32* vec);
-extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
-
 #pragma dont_inline on
 
 #pragma dont_inline reset

@@ -17,6 +17,10 @@
 
 #define SCMUSICTREE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define objfx_spawnRandomBurstLegacy(obj, type, count, origin, mult, flags)                                      \
+    ((void (*)(void*, int, int, void*, f32, int))objfx_spawnRandomBurst)(                                       \
+        (void*)(obj), (type), (count), (origin), (mult), (flags))
+
 /* placement mapIds: striking the three totem trees sets the combo bits
    sclevelcontrol watches; the three "gate" trees gate their bits on
    GAMEBIT_MUSICTREE_GATE. */
@@ -81,7 +85,6 @@ extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
@@ -333,8 +336,8 @@ void sc_musictree_update(GameObject* obj)
         vec[0] = zero;
         vec[1] = 200.0f * ((CloudRunnerState*)inner)->baddie.velX;
         vec[2] = zero;
-        objfx_spawnRandomBurst((int)obj, ((ScMusictreeState*)inner)->flags & 0xf, 0x14, vec2,
-                               80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
+        objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0x14, vec2,
+                                     80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
     }
     ((ScMusictreeState*)inner)->moveStepScale = 0.0225f;
     ((CloudRunnerState*)inner)->baddie.velZ = 20.0f;
@@ -374,8 +377,8 @@ end:
                 vec[0] = 0.0f;
                 vec[1] = 0.75f * (200.0f * ((CloudRunnerState*)inner)->baddie.velX);
                 vec[2] = 0.0f;
-                objfx_spawnRandomBurst((int)obj, ((ScMusictreeState*)inner)->flags & 0xf, 0xa, vec2,
-                                       80.0f * ((CloudRunnerState*)inner)->baddie.velX, 1);
+                objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0xa, vec2,
+                                             80.0f * ((CloudRunnerState*)inner)->baddie.velX, 1);
                 ((CloudRunnerState*)inner)->baddie.velY = 340.0f;
             }
             ((ScMusictreeState*)inner)->proximityBurstTimer = ((ScMusictreeState*)inner)->proximityBurstTimer - timeDelta;
@@ -386,8 +389,8 @@ end:
                 vec[1] = 200.0f * ((CloudRunnerState*)inner)->baddie.velX;
                 vec[2] = 0.0f;
                 vecRotateZXY((int)obj, rv);
-                objfx_spawnRandomBurst((int)obj, ((ScMusictreeState*)inner)->flags & 0xf, 1, vec2,
-                                       80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
+                objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 1, vec2,
+                                             80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
                 ((ScMusictreeState*)inner)->proximityBurstTimer += 30.0f;
             }
         }
