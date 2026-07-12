@@ -23,8 +23,13 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/engine_shared.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SBCLOUDBALL_PARTFX               0xa8

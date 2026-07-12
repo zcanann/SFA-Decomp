@@ -14,9 +14,15 @@
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/engine_shared.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
