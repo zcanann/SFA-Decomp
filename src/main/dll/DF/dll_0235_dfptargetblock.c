@@ -7,6 +7,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/fruit.h"
 #include "main/mapEvent.h"
 #include "main/model.h"
@@ -65,8 +66,6 @@ extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjHits_GetPriorityHit(GameObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -291,7 +290,8 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         buf[3] = lbl_803E648C;
         buf[4] = lbl_803E64C4;
         buf[5] = lbl_803E648C;
-        objfx_spawnArcedBurst((int)obj, 5, lbl_803E64C8, 1, 2, 0x32, lbl_803E64C4, lbl_803E64C4, lbl_803E64B0, buf, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, lbl_803E64C8, 1, 2, 0x32, lbl_803E64C4, lbl_803E64C4,
+                                   lbl_803E64B0, buf, 0);
     }
     else
     {

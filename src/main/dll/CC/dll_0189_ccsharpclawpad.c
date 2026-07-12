@@ -8,6 +8,7 @@
  * sets the gameBit and lights the pad.
  */
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
@@ -20,8 +21,6 @@
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int playerIsDisguised(int obj);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 int CCSharpclawPad_getExtraSize(void)
 {
@@ -42,9 +41,9 @@ void CCSharpclawPad_update(GameObject* obj)
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
     else
     {
@@ -85,9 +84,9 @@ void CCSharpclawPad_update(GameObject* obj)
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
 }
 

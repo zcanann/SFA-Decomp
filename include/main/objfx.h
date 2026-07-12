@@ -11,6 +11,13 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int colorIndex, u8 mode, vo
                            f32 intensity);
 void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult,
                                  void* origin, int flags);
+#if defined(OBJFX_ARCED_BURST_REORDERED_LEGACY)
+void objfx_spawnArcedBurst(void* obj, f32 scale, int kind, int mode, int idx, int chance, f32 angleBase, f32 angleLow,
+                           f32 angleHigh, void* origin, int flags);
+#else
+void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 angleBase, f32 angleLow,
+                           f32 angleHigh, void* origin, int flags);
+#endif
 void projectileParticleFxFn_80099660(void* obj, int mode);
 #if defined(OBJFX_SPAWN_EXPLOSION_POINTER_LEGACY)
 void spawnExplosion(int* source, f32 scale, int kind, int flag4, int flag8, int flag10, int doShake, int flag20,
@@ -30,6 +37,12 @@ void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, 
 #define objfx_spawnDirectionalBurstLegacy(obj, idx, scale, kind, mode, chance, mult, origin, flags)               \
     ((void (*)(void*, int, f32, int, int, int, f32, void*, int))objfx_spawnDirectionalBurst)(                    \
         (void*)(obj), (idx), (scale), (kind), (mode), (chance), (mult), (void*)(origin), (flags))
+
+#define objfx_spawnArcedBurstLegacy(obj, idx, scale, kind, mode, chance, angleBase, angleLow, angleHigh, origin,   \
+                                    flags)                                                                        \
+    ((void (*)(void*, int, f32, int, int, int, f32, f32, f32, void*, int))objfx_spawnArcedBurst)(                \
+        (void*)(obj), (idx), (scale), (kind), (mode), (chance), (angleBase), (angleLow), (angleHigh),             \
+        (void*)(origin), (flags))
 
 #define projectileParticleFxFn_80099660Legacy(obj, scale, mode)                                                   \
     ((void (*)(void*, f32, int))projectileParticleFxFn_80099660)((void*)(obj), (scale), (mode))

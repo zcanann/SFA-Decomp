@@ -25,6 +25,8 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#define OBJFX_ARCED_BURST_REORDERED_LEGACY
+#include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/mm.h"
 #include "main/audio/sfx_ids.h"
@@ -1615,7 +1617,6 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 #pragma opt_propagation reset
 
 extern int objFn_80296700(int* obj);
-extern void objfx_spawnArcedBurst(int* obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
 extern void fn_802961A4(int* obj, int* type, f32* power);
 extern void fn_802960F4(GameObject* objc4, u8** out);
 extern f32 lbl_803E328C;

@@ -6,6 +6,7 @@
  * object in the engine (objectFlags |= BARRELPAD_OBJFLAG_HITDETECT_DISABLED).
  */
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_012F_barrelpad.h"
 
@@ -15,8 +16,6 @@
 #define BARRELPAD_SEQ_LAUNCH_ACTIVE    0x79  /* active launch burst */
 #define BARRELPAD_SEQ_LAUNCH_SECONDARY 0x748 /* secondary launch state */
 
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 int BarrelPad_getExtraSize(void)
 {
@@ -49,14 +48,14 @@ void BarrelPad_update(s16* obj)
         particleArgs.offset[0] = 0.0f;
         particleArgs.offset[1] = 8.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.75f, 5, 2, 0x19, 12.0f, 12.0f, 2.0f, &particleArgs, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 5, 2, 0x19, 12.0f, 12.0f, 2.0f, &particleArgs, 0);
     }
     else if (((GameObject*)obj)->anim.seqId == BARRELPAD_SEQ_LAUNCH_SECONDARY)
     {
         particleArgs.offset[0] = 0.0f;
         particleArgs.offset[1] = 6.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurst((int)obj, 5, 0.25f, 5, 2, 5, 7.0f, 7.0f, 2.0f, &particleArgs, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.25f, 5, 2, 5, 7.0f, 7.0f, 2.0f, &particleArgs, 0);
     }
 }
 

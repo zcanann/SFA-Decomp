@@ -170,8 +170,6 @@ extern int arrayIndexOf(int array, int count, int value);
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
 
 
@@ -613,8 +611,6 @@ extern f32 lbl_803E6BC0;
 
 extern void* playerGetFocusObject(void);
 extern void setAButtonIcon(int icon);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern f32 lbl_803E6C08;
 extern f32 lbl_803E6C0C;
 extern f32 lbl_803E6C10;

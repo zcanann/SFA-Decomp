@@ -766,8 +766,6 @@ extern void fn_80098B18(f32 a, int obj, int b, int c, int d, void* out);
 extern f32 lbl_803E81C4;
 extern f32 lbl_803E8210;
 extern f32 lbl_803E81C8;
-extern void objfx_spawnArcedBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, f32 f3, f32 f4, void* p10,
-                                  int p11);
 extern f32 lbl_803E8214;
 extern f32 lbl_803E8218;
 extern f32 lbl_803E821C;

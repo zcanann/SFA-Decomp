@@ -21,6 +21,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
@@ -58,8 +59,6 @@ extern f32 gWarpPadTriggerDist;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern void setAButtonIcon(int x);
 
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
@@ -113,12 +112,14 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8,
+                                            *(f32*)&lbl_803E3EA8,
                                       lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EB0, 1, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EB0, 1, 6, 100, lbl_803E3EA8,
+                                            *(f32*)&lbl_803E3EA8,
                                       lbl_803E3EAC, &fx, 0);
             }
         }
@@ -133,12 +134,14 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8,
+                                            *(f32*)&lbl_803E3EA8,
                                       lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EB0, 5, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EB0, 5, 6, 100, lbl_803E3EA8,
+                                            *(f32*)&lbl_803E3EA8,
                                       lbl_803E3EAC, &fx, 0);
             }
         }
@@ -153,12 +156,14 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8,
+                                            *(f32*)&lbl_803E3EA8,
                                       lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst((int)obj, 1, lbl_803E3EB0, 3, 6, 100, lbl_803E3EA8, *(f32*)&lbl_803E3EA8,
+                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EB0, 3, 6, 100, lbl_803E3EA8,
+                                            *(f32*)&lbl_803E3EA8,
                                       lbl_803E3EAC, &fx, 0);
             }
         }

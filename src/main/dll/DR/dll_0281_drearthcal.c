@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 
 #define DREARTHCAL_OBJFLAG_RENDERED 0x800
 
@@ -99,7 +100,8 @@ void drearthcal_update(int obj)
         part.vec[0] = lbl_803E6C0C;
         part.vec[1] = lbl_803E6C10;
         part.vec[2] = lbl_803E6C0C;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E6C14, 2, 2, 0xf, lbl_803E6C18, *(f32*)&lbl_803E6C18, lbl_803E6C1C, &part,
+        objfx_spawnArcedBurstLegacy(obj, 5, lbl_803E6C14, 2, 2, 0xf, lbl_803E6C18, *(f32*)&lbl_803E6C18,
+                                   lbl_803E6C1C, &part,
                               0);
     }
 }

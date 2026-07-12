@@ -17,6 +17,7 @@
 #include "main/objlib.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
@@ -78,8 +79,6 @@ extern f32 lbl_803E5628;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
-                                  f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void sc_totempuzzle_animEventCallback(int obj);
 
@@ -147,9 +146,6 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
     if (solvedThisObject != 0)
     {
-        extern void objfx_spawnArcedBurst(SCTotemPuzzleObject * obj, int enabled, f32 radius, int particleKind,
-                                          int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
-                                          SCTotemPuzzleParticleBox* box, int flags);
         ObjTextureRuntimeSlot* solvedTexture;
         particleBox.x = lbl_803E55F4;
         particleBox.y = lbl_803E55F8;
@@ -158,8 +154,8 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
         for (objectIndex = 20; objectIndex != 0; objectIndex--)
         {
-            objfx_spawnArcedBurst(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604, *(f32*)&lbl_803E5604, lbl_803E5608,
-                                  &particleBox, 0);
+            objfx_spawnArcedBurstLegacy(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604, *(f32*)&lbl_803E5604,
+                                       lbl_803E5608, &particleBox, 0);
         }
 
         solvedTexture = objFindTexture((GameObject*)(obj), 0, 0);
@@ -219,7 +215,6 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/dll/SC/sctotembond.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 

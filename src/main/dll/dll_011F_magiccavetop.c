@@ -2,6 +2,7 @@
 #include "main/objseq.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/mapEventTypes.h"
@@ -76,9 +77,6 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 
 
-extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
-                                  void* args, int a);
 
 int MagicCaveTop_getExtraSize(void) { return 0xc; }
 
@@ -327,17 +325,17 @@ void MagicCaveTop_update(int* obj)
         fx.z = originXZ;
         if ((sub->flags & 8) != 0)
         {
-            objfx_spawnArcedBurst(obj, 1, 0.5f, 5, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
+            objfx_spawnArcedBurstLegacy(obj, 1, 0.5f, 5, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
                                   0);
             fx.y = 5.0f;
-            objfx_spawnArcedBurst(obj, 5, 0.5f, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
+            objfx_spawnArcedBurstLegacy(obj, 5, 0.5f, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
         else
         {
-            objfx_spawnArcedBurst(obj, 1, 0.5f, 2, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
+            objfx_spawnArcedBurstLegacy(obj, 1, 0.5f, 2, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
                                   0);
             fx.y = 5.0f;
-            objfx_spawnArcedBurst(obj, 5, 0.5f, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
+            objfx_spawnArcedBurstLegacy(obj, 5, 0.5f, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
     }
 }
