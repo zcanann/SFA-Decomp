@@ -1,0 +1,40 @@
+#ifndef MAIN_DLL_DLL_028B_H
+#define MAIN_DLL_DLL_028B_H
+
+#include "global.h"
+#include "main/dll/curve_walker.h"
+#include "main/game_object.h"
+
+typedef struct Dll28BState
+{
+    int objectFlagsMirror;
+    u8 pad4[0x35C - 0x4];
+    u8 moveLib[0x96D - 0x35C];
+    u8 flags96D;
+    u8 pad96E[0x980 - 0x96E];
+    u8 eyeAnim[0x9B0 - 0x980];
+    RomCurveWalker route;
+    f32 playerDistance;
+    u8 padABC[0xAC0 - 0xABC];
+    u8 flagsAC0;
+    u8 padAC1[0xAC4 - 0xAC1];
+} Dll28BState;
+
+STATIC_ASSERT(sizeof(Dll28BState) == 0xAC4);
+STATIC_ASSERT(offsetof(Dll28BState, moveLib) == 0x35C);
+STATIC_ASSERT(offsetof(Dll28BState, eyeAnim) == 0x980);
+STATIC_ASSERT(offsetof(Dll28BState, route) == 0x9B0);
+STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
+STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
+
+int dll_28B_getExtraSize(void);
+int dll_28B_getObjectTypeId(void);
+void dll_28B_free(int obj);
+void dll_28B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void dll_28B_hitDetect_nop(void);
+void dll_28B_update(int obj);
+void dll_28B_init(GameObject* obj);
+void dll_28B_release_nop(void);
+void dll_28B_initialise(void);
+
+#endif

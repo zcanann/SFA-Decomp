@@ -14,29 +14,8 @@
  * draws the model and the moveLib attachment when visible.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
-
-typedef struct Dll28BState
-{
-    int objectFlagsMirror; /* 0x00: receives OBJFLAG_BIT_2000000 each update */
-    u8 pad4[0x35C - 0x4];
-    u8 moveLib[0x96D - 0x35C]; /* 0x35C: dll_2E (moveLib) look-at/turn block */
-    u8 flags96D;               /* 0x96D: bit0 mirrors !(flagsAC0 & 1); 0x22 set at init */
-    u8 pad96E[0x980 - 0x96E];
-    u8 eyeAnim[0x9B0 - 0x980]; /* 0x980: eye-animation block */
-    RomCurveWalker route;      /* 0x9B0: ROM-curve walker */
-    f32 playerDistance;        /* 0xAB8: planar distance to the player object */
-    u8 padABC[0xAC0 - 0xABC];
-    u8 flagsAC0; /* 0xAC0: bit0 drives flags96D bit0 */
-    u8 padAC1[0xAC4 - 0xAC1];
-} Dll28BState;
-
-STATIC_ASSERT(sizeof(Dll28BState) == 0xAC4);
-STATIC_ASSERT(offsetof(Dll28BState, moveLib) == 0x35C);
-STATIC_ASSERT(offsetof(Dll28BState, eyeAnim) == 0x980);
-STATIC_ASSERT(offsetof(Dll28BState, route) == 0x9B0);
-STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
-STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
+#include "main/dll/WC/dll_028A_wcearthwalker.h"
+#include "main/dll/dll_028B.h"
 
 #define DLL28B_OBJ_GROUP    3
 #define OBJFLAG_BIT_2000000 0x2000000

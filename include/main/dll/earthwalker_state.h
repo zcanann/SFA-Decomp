@@ -10,7 +10,7 @@
  * record (dll_28B_stateHandlerN / dll_28B_substateHandlerN) are compiled into
  * the dll_028A_wcearthwalker TU, they are installed and driven exclusively by
  * dll_028B's update(); this is NOT the EarthWalker's own 0x660 record
- * (EarthWalkerState in dll_80220608_shared.h). dll_028B.c views the same block
+ * (EarthWalkerState in WC/dll_028A_wcearthwalker.h). dll_028B.c views the same block
  * through its private Dll28BState. Field widths mirror the observed deref
  * widths; unobserved ranges are padded. */
 typedef struct Dll28BAiState {
