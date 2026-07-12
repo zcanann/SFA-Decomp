@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
@@ -620,7 +621,6 @@ void dbegg_update(GameObject* obj)
 {
     extern void dbegg_setupFromDef(GameObject * obj, int* state);
     extern int Obj_GetPlayerObject(void);
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     extern void dbegg_processMessages(GameObject*);
     extern void fn_801FE774(int, f32*);
     extern void objMove(int, f32, f32, f32);

@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objhits.h"
@@ -58,7 +59,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern const f32 lbl_803E1C2C;
 extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);

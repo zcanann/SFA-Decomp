@@ -5,6 +5,7 @@
  * on completion.
  */
 #include "main/dll/DIM/dimcannon_state.h"
+#include "main/lightmap_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -24,7 +25,6 @@ STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 extern f32 lbl_803E48F8;
 
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);

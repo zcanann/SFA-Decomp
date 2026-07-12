@@ -3,6 +3,7 @@
  * TU = 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*).
  */
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/map_block.h"
@@ -13,7 +14,6 @@
 extern f32 lbl_803E4348;
 extern int lbl_803DDB18;
 
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int i);
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);

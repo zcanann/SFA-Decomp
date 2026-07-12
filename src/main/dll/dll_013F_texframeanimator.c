@@ -1,5 +1,6 @@
 /* DLL 0x13F - TexFrameAnimator [801948C0-80195008) */
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "main/map_block.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
@@ -69,7 +70,6 @@ extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
 extern void logPrintf(char* fmt, ...);
 extern void* mapGetBlock(int i);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
 char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
 

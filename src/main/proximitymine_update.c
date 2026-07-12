@@ -2,12 +2,18 @@
 #include "main/proximitymine.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/lightmap_api.h"
+#include "main/object_api.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 #define PROXIMITYMINE_PARTFX 0x51c
 
@@ -30,7 +36,6 @@ extern f32 lbl_803E679C;
 
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* effect);
 extern int fn_80080150(f32* p);
 extern void storeZeroToFloatParam(f32* p);

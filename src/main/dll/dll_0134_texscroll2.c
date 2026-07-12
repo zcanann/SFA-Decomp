@@ -14,12 +14,12 @@
  * (needsApply), e.g. after the block streams back in.
  */
 #include "main/gamebits.h"
+#include "main/lightmap_api.h"
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"
 
 extern f32 lbl_803E3F30;
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int i);
 extern void* getTablesBinEntry(int i);
 extern void* getLoadedTexture(int key);

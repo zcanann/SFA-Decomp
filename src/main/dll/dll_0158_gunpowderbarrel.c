@@ -21,6 +21,7 @@
  * main/dll/DR/gunpowderbarrel_state.h.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/lightmap_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
@@ -69,7 +70,6 @@ extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int 
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern void timer_clearManualFlags();
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 

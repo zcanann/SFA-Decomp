@@ -12,6 +12,7 @@
  * A game bit gates whether the animation runs.
  */
 #include "main/audio/sfx.h"
+#include "main/lightmap_api.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/gamebits.h"
@@ -61,7 +62,6 @@ extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
 extern void* fn_8006070C(int* obj, int idx);
 extern void* Shader_getLayer(char* base, int idx);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
