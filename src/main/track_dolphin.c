@@ -3207,7 +3207,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
 {
     f32* verts = buf48;
     f32* planes = bufA8;
-    f32 e2y, e2x, e1y, e1x, e1z, e2z;
+    f32 e2y, e1x, e1y, e1z, e2x, e2z;
     f32 nrm[3];
 
     e1x = verts[6] - verts[9];
