@@ -1515,6 +1515,7 @@ main/dll/CF/dll_0131_cfdoorlight.c:
 
 main/dll/dll_0134_texscroll2.c:
 	.text       start:0x80191F2C end:0x801922E4
+	.sdata2     start:0x803E3F30 end:0x803E3F38
 
 main/dll/dll_0135_texscroll.c:
 	.text       start:0x801922E4 end:0x80192394
@@ -1624,6 +1625,7 @@ main/dll/CF/dll_0153_cfperch.c:
 
 main/dll/CF/dll_0154_cfprisoncage.c:
 	.text       start:0x801A0614 end:0x801A0994
+	.sdata2     start:0x803E42B0 end:0x803E42B8
 
 main/dll/dll_0157_spiritdoorspirit.c:
 	.text       start:0x801A0994 end:0x801A0B14

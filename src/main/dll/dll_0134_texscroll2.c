@@ -192,3 +192,8 @@ void texscroll2_release(void)
 void texscroll2_initialise(void)
 {
 }
+
+__declspec(section ".sdata2") f32 lbl_803E3F30 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3F34 = 0.0f;
+#pragma explicit_zero_data reset

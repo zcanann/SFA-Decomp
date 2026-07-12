@@ -206,3 +206,8 @@ void CFPrisonCage_release(void)
 void CFPrisonCage_initialise(void)
 {
 }
+
+__declspec(section ".sdata2") f32 lbl_803E42B0 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E42B4 = 0.0f;
+#pragma explicit_zero_data reset
