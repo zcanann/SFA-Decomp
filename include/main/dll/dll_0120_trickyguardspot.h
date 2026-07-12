@@ -38,7 +38,7 @@ typedef struct TrickyGuardSpotStateFlags
 
 typedef struct TrickyGuardSpotState
 {
-    s32 resetTimer;
+    u32 resetTimer;
     TrickyGuardSpotStateFlags flags;
     u8 pad05[3];
 } TrickyGuardSpotState;
