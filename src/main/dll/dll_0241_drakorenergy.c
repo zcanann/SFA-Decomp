@@ -18,7 +18,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0241_drakorenergy.h"

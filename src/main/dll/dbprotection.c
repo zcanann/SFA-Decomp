@@ -29,7 +29,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING  0xa3c

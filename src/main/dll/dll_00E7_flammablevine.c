@@ -20,7 +20,7 @@
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
-#include "sfa_light_decls.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00E7_flammablevine.h"
 

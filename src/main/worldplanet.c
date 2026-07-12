@@ -9,7 +9,13 @@
 #include "main/worldobj.h"
 #include "main/worldplanet.h"
 #include "main/pad.h"
-#include "sfa_light_decls.h"
+#include "main/audio.h"
+#include "main/lightmap.h"
+#include "main/model.h"
+#include "main/objprint_dolphin.h"
+#include "main/rcp_dolphin.h"
+#include "main/shader.h"
+#include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define WORLDPLANET_CAMMODE_WORLDMAP 0x4e /* cameramode DLL dll_004E_cameramodeworldmap */

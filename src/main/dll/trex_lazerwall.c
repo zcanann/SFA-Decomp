@@ -23,7 +23,8 @@
 #include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
-#include "sfa_light_decls.h"
+#include "main/dll/tricky.h"
+#include "main/model_engine.h"
 #include "main/dll/trex_lazerwall.h"
 
 #define GAMEBIT_LAZERWALL_START   0x617

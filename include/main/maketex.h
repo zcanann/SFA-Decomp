@@ -58,4 +58,6 @@ void seqClearTaskTexts(void);
 void endObjSequence(int seq);
 void cameraFocusNpc(int param1, u8* obj);
 
+int randFn_80080100(int n);
+
 #endif /* MAIN_MAKETEX_H_ */

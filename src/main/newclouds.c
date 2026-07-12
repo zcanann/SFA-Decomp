@@ -13,7 +13,19 @@
 #include "dolphin/gx/GXEnum.h"
 #include "dolphin/os/OSCache.h"
 #include "main/sky_state.h"
-#include "sfa_light_decls.h"
+#include "dolphin/gx/GXLegacy.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "main/camera.h"
+#include "main/dll/dll_80136a40.h"
+#include "main/dll/savegame.h"
+#include "main/gameloop_api.h"
+#include "main/lightmap.h"
+#include "main/mm.h"
+#include "main/render.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "stdlib.h"
+#include "track/intersect_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
@@ -46,7 +58,6 @@ typedef struct LightningEffect
 } LightningEffect;
 
 extern void* Obj_GetActiveModel(void* obj);
-extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
 extern f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1D8;
@@ -54,7 +65,6 @@ extern const f32 lbl_803DF1DC;
 extern u8 gNewCloudBlizzardActive;
 extern u8* lbl_803DD19C;
 extern u8 gNewCloudInitialized;
-extern void PSVECNormalize(void* src, void* dst);
 
 void lightningRenderActive(void)
 {
@@ -252,15 +262,6 @@ void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g)
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
-typedef struct FogColor
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} FogColor;
-
-extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern int snowPrintSnowCloud(int arg, int x);
 extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
 f32 lbl_8039A8F0[4];
@@ -521,10 +522,8 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     out[2] = out[2] * scale;
 }
 
-extern void GXSetCullMode(int mode);
 
 
-extern void GXSetVtxDesc(int attr, int type);
 
 
 
@@ -532,12 +531,9 @@ extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
 extern void selectTexture(char* tex, int slot);
 
-extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(u32 id);
 
 extern void srand(int seed);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * ab);
-extern f32 PSVECMag(f32 * v);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int gNewCloudLightningFogColor;
@@ -719,7 +715,6 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
 extern void fn_800790AC(void);
 
 
-extern void GXSetPointSize(int size, int fmt);
 extern int gNewCloudStarFogColor;
 extern u8 gNewCloudStarAlphaRanges[8];
 u8 gNewCloudStarColorRanges[24] = {
@@ -752,7 +747,7 @@ void drawSkyStars(void)
     f32 t;
 
     timeOk = (*gSkyInterface)->getSunPosition(&t);
-    if (isOvercast() != 0)
+    if (((u8 (*)(void))isOvercast)() != 0)
     {
         if (timeOk != 0)
         {
@@ -841,27 +836,6 @@ void drawSkyStars(void)
 #pragma opt_common_subs reset
 
 
-typedef union PPCWGPipe2
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s8 s8;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-    f64 f64;
-} PPCWGPipe2;
-
-PPCWGPipe2 GXWGFifo : (0xCC008000);
-
-
-extern void PSVECScale(f32* in, f32* out, f32 scale);
-extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * axb);
-extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 rad);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * src, f32 * dst);
-extern void GXSetLineWidth(int width, int fmt);
-extern void GXBegin(int prim, int fmt, u16 count);
 extern const f32 gNewCloudUpVectorThreshold;
 extern f32 lbl_803DF1BC;
 extern const f32 lbl_803DF1C0;
@@ -1070,7 +1044,6 @@ void snowCloudUpdateFlakes(u8* snow)
     }
 }
 
-extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
 extern const f32 lbl_803DF1D0;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth,
@@ -1217,9 +1190,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     }
 }
 
-extern void GXSetMisc(int token, u32 val);
 
-extern void PSMTXRotRad(f32* mtx, int axis, f32 rad);
 extern u8 gNewCloudStarsInitialized;
 extern const f32 gNewCloudStarRadius;
 extern const f32 gNewCloudStarAxisThreshold;
@@ -2077,8 +2048,6 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
     }
 }
 
-extern void PSMTXIdentity(f32 * m);
-extern void PSMTXMultVec(f32 * matrix, f32 * in, f32 * out);
 extern const f32 lbl_803DF200;
 extern const f32 lbl_803DF208;
 extern const f32 lbl_803DF20C;
@@ -2411,7 +2380,7 @@ void dll_07_func06(void)
             }
             PSMTXConcat((void*)m, (void*)mtx, (void*)mtx);
             {
-                f32* m = mtx;
+                f32* m = (f32*)mtx;
                 PSMTXMultVec(m, (f32*)((u32)clouds + 0xd8), (f32*)((u32)clouds + 0xd8));
             }
             if (lbl_803DD190 < lbl_803DF278)

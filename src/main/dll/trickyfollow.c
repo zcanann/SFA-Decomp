@@ -12,7 +12,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/dll/dll_0014_api.h"
 #include "main/frame_timing.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot

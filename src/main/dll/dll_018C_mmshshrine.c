@@ -18,7 +18,10 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/audio.h"
+#include "main/objprint_dolphin.h"
+#include "main/pi_dolphin_api.h"
+#include "main/sky_api.h"
 #include "main/dll/dll_018D_mmshscales.h"
 #include "main/dll/dll_018E_mmshwaterspike.h"
 

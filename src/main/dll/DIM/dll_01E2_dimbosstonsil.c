@@ -13,7 +13,8 @@
 #include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/pad.h"
+#include "main/sky_api.h"
 #include "main/frame_timing.h"
 
 #define DIMBOSSTONSIL_OBJGROUP 3

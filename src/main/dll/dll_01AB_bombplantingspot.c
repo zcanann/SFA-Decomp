@@ -3,7 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gameloop_api.h"
 
 #define BOMBPLANTINGSPOT_OBJFLAG_HIDDEN 0x4000
 

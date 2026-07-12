@@ -85,4 +85,6 @@ void goToPrevMapLayer(void);
 void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
 void playerVecFn_8005a9b0(void);
 
+s32 getCurMapLayer(void);
+
 #endif /* MAIN_SHADER_H_ */

@@ -25,7 +25,12 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "sfa_light_decls.h"
+#include "main/dll/dll_02C0_front.h"
+#include "main/gametext.h"
+#include "main/mm.h"
+#include "main/model_engine.h"
+#include "main/objprint_dolphin.h"
+#include "main/textrender.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 

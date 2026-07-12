@@ -14,4 +14,6 @@ void playerItemGetAnimFn(int obj, int inner, int state);
 void fn_802AFB0C(int obj, int inner, int state);
 void playerDoHitDetection(int obj);
 
+int objFn_802962b4(GameObject* obj);
+
 #endif

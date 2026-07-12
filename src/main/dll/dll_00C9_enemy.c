@@ -29,7 +29,11 @@
 #include "main/vecmath.h"
 #include "main/dll/duster.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/dll/tricky.h"
+#include "main/lightmap.h"
+#include "main/model.h"
+#include "main/model_engine.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
 {

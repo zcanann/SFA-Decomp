@@ -9,7 +9,8 @@
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gameloop_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct LanternFireFlyPlacement

@@ -11,7 +11,8 @@
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_B8.h"
 #include "main/camera.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/vecmath.h"
 
 void firstPersonZoomOutOnExit(u8 blendFrames, u8 blendFlags)
 {

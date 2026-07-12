@@ -119,4 +119,6 @@ void FUN_80136870(void);
 extern ObjectDescriptor10WithPadding gTitleScreenObjDescriptor;
 extern ObjectDescriptor16WithPadding gTumbleweedObjDescriptor;
 
+void tumbleweed_updateRollingMotion(GameObject* obj, int aux);
+
 #endif /* MAIN_DLL_BADDIE_TUMBLEWEED_H_ */

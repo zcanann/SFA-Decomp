@@ -5,7 +5,8 @@
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 typedef struct
 {

@@ -56,4 +56,6 @@ void modelCalcVtxGroupMtxs(int def, int model);
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 
+void objAudioFn_80039270(u32 obj, void* p, u16 sfxId);
+
 #endif /* MAIN_OBJPRINT_H_ */

@@ -6,7 +6,8 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/obj_placement.h"
-#include "main/sfa_shared_decls.h"
+#include "main/maketex.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* object group queried to find this object's target */
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e

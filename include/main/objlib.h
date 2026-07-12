@@ -40,12 +40,14 @@ u32 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(GameObject* obj, int pointIndex, int count, float* positions);
 void ObjPath_GetPointLocalPosition(GameObject* param_1, int param_2, float* param_3, float* param_4, float* param_5);
 void ObjPath_GetPointLocalMtx(GameObject* param_1, int param_2, float* param_3);
-void ObjPath_GetPointModelMtx(GameObject* param_1, int param_2);
+u32 ObjPath_GetPointModelMtx(GameObject* param_1, int param_2);
 void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                    int useInputPosition);
 int Obj_GetYawDeltaToObject(u16* param_1, int param_2, float* param_3);
 u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 void fn_80038988(int param_1, int param_2, u32 param_3);
 void FUN_80038bb0(char param_1, int param_2);
+
+int ObjHits_PollPriorityHitWithCooldown();
 
 #endif /* MAIN_OBJLIB_H_ */

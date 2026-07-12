@@ -1,5 +1,6 @@
 #include "dolphin/os/OSFastCast.h"
-#include "sfa_light_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 
 

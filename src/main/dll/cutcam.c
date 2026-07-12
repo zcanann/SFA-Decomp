@@ -28,7 +28,9 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 #include "main/curve.h"
-#include "sfa_light_decls.h"
+#include "dolphin/os/OSTime.h"
+#include "main/dll/player_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 
 #define PAD_TRIGGER_Z 0x10
@@ -40,13 +42,11 @@
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
 extern u16 getPadFn_80014d9c(int controller);
-extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
 extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
 extern int getCurSeqNo();
-extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */

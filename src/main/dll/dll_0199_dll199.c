@@ -8,7 +8,7 @@
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/pad.h"
 #include "main/object_descriptor.h"
 
 #define PAD_BUTTON_A 0x100

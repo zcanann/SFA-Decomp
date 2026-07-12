@@ -6,7 +6,13 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXCull.h"
-#include "sfa_light_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
+#include "dolphin/gx/GXBump.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXTev.h"
+#include "main/objprint.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "track/intersect_api.h"
 
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1

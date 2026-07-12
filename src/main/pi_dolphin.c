@@ -16,7 +16,24 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSArena.h"
 #include "dolphin/gx/GXLighting.h"
-#include "sfa_light_decls.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXTexture.h"
+#include "dolphin/gx/GXTransform.h"
+#include "dolphin/os/OSTime.h"
+#include "dolphin/vi.h"
+#include "main/camera.h"
+#include "main/fileio.h"
+#include "main/gameloop_api.h"
+#include "main/mm.h"
+#include "main/objprint_dolphin.h"
+#include "main/pad.h"
+#include "main/pi_dolphin.h"
+#include "main/rcp_dolphin.h"
+#include "main/sky_api.h"
+#include "main/textrender.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "track/intersect_api.h"
 
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
@@ -1475,7 +1492,6 @@ extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;
 extern char sZlbBlockTag;
-extern int return0_8002A5B8(int p);
 
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern char sDirBlockTag;
@@ -3844,8 +3860,6 @@ void setDisplayCopyFilter(void)
     }
 }
 
-extern void GXLoadTexObj(void* obj, int id);
-extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
 extern void fn_80053C40(u8* tex, void* out);
 extern u8 lbl_803779A0[];
 #pragma peephole off
@@ -3866,7 +3880,7 @@ void textureFn_8004c264(u8* tex, int mapId)
     if (*(void**)(tex + 80) != NULL)
     {
         fn_80053C40(tex, lbl_803779A0);
-        GXLoadTexObj(lbl_803779A0, GX_TEXMAP1);
+        GXLoadTexObj((GXTexObj*)lbl_803779A0, GX_TEXMAP1);
     }
 }
 
@@ -4154,11 +4168,11 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
         char* tex = (char*)p1 + 0x20;
         if (*(u8*)((char*)p1 + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), texmap);
+        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
         }
         else
         {
-            GXLoadTexObj(tex, texmap);
+        GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
     lbl_803DCD90 = lbl_803DCD90 + 1;
@@ -4202,11 +4216,11 @@ void textureFn_80051348(void* p1, u8 p2)
         char* tex = (char*)p1 + 0x20;
         if (*(u8*)((char*)p1 + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), texmap);
+        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
         }
         else
         {
-            GXLoadTexObj(tex, texmap);
+        GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
@@ -4267,11 +4281,11 @@ void fn_80051528(void* p1, void* mtx)
             void* obj = (char*)p1 + 0x20;
             if (*(u8*)((char*)p1 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
     }
@@ -4296,7 +4310,6 @@ extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
 extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
-extern u32 randomGetRange(int min, int max);
 extern void newshadows_getReflectionScrollOffsets(f32* x, f32* y);
 extern float mathSinf(float x);
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
@@ -4381,11 +4394,11 @@ void textureFn_8004c330(void* p1, void* mtx)
             void* obj = (char*)p1 + 0x20;
             if (*(u8*)((char*)p1 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
     }
@@ -4397,11 +4410,11 @@ void textureFn_8004c330(void* p1, void* mtx)
             void* obj = tex + 0x20;
             if (*(u8*)(tex + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(tex + 0x40), id2);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex + 0x40), id2);
             }
             else
             {
-                GXLoadTexObj(obj, id2);
+                GXLoadTexObj((GXTexObj*)obj, id2);
             }
         }
     }
@@ -4430,9 +4443,6 @@ extern int lbl_803DCD6C;
 extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
 extern void GXSetTevColorS10(int id, void* color);
 extern void GXSetTevKColor(int id, void* color);
-extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, int wrap_s, int wrap_t, int mipmap);
-extern void GXInitTexObjLOD(void* obj, int min_filt, int mag_filt, f32 min_lod, f32 max_lod, f32 lod_bias,
-                            int bias_clamp, int do_edge_lod, int max_aniso);
 
 #pragma opt_common_subs off
 void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
@@ -4503,15 +4513,15 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
         GXSetTevKColor(lbl_803DCD74 + 1, &ck2);
         ck3 = lbl_803DEAC0;
         GXSetTevKColor(lbl_803DCD74 + 2, &ck3);
-        GXInitTexObj(buf5c, tex0, w, h, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD(buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
-        GXLoadTexObj(buf5c, lbl_803DCD8C);
-        GXInitTexObj(buf3c, tex1, w2 = w >> 1, h2 = h >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD(buf3c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
-        GXLoadTexObj(buf3c, lbl_803DCD8C + 1);
-        GXInitTexObj(buf1c, tex2, w2, h2, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD(buf1c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
-        GXLoadTexObj(buf1c, lbl_803DCD8C + 2);
+        GXInitTexObj((GXTexObj*)buf5c, tex0, w, h, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD((GXTexObj*)buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
+        GXLoadTexObj((GXTexObj*)buf5c, lbl_803DCD8C);
+        GXInitTexObj((GXTexObj*)buf3c, tex1, w2 = w >> 1, h2 = h >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD((GXTexObj*)buf3c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
+        GXLoadTexObj((GXTexObj*)buf3c, lbl_803DCD8C + 1);
+        GXInitTexObj((GXTexObj*)buf1c, tex2, w2, h2, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD((GXTexObj*)buf1c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
+        GXLoadTexObj((GXTexObj*)buf1c, lbl_803DCD8C + 2);
         lbl_803DCD90 = lbl_803DCD90 + 5;
         lbl_803DCD88 = lbl_803DCD88 + 2;
         lbl_803DCD8C = lbl_803DCD8C + 3;
@@ -4573,11 +4583,11 @@ void fn_8004DA54(char* p1)
         void* obj = tex24 + 0x20;
         if (*(u8*)(tex24 + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(tex24 + 0x40), 2);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex24 + 0x40), 2);
         }
         else
         {
-            GXLoadTexObj(obj, GX_TEXMAP2);
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP2);
         }
     }
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
@@ -4609,11 +4619,11 @@ void fn_8004DA54(char* p1)
         void* obj = tex2c + 0x20;
         if (*(u8*)(tex2c + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(tex2c + 0x40), 0);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex2c + 0x40), 0);
         }
         else
         {
-            GXLoadTexObj(obj, GX_TEXMAP0);
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP0);
         }
     }
     {
@@ -4636,11 +4646,11 @@ void fn_8004DA54(char* p1)
         void* obj = tex30 + 0x20;
         if (*(u8*)(tex30 + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(tex30 + 0x40), 1);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex30 + 0x40), 1);
         }
         else
         {
-            GXLoadTexObj(obj, GX_TEXMAP1);
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP1);
         }
     }
     PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
@@ -4802,11 +4812,11 @@ void fn_8004E0FC(void)
             void* obj = tex1c + 0x20;
             if (*(u8*)(tex1c + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(tex1c + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
     }
@@ -4881,11 +4891,11 @@ void fn_8004E0FC(void)
             void* obj = tex18 + 0x20;
             if (*(u8*)(tex18 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(tex18 + 0x40), id2);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex18 + 0x40), id2);
             }
             else
             {
-                GXLoadTexObj(obj, id2);
+                GXLoadTexObj((GXTexObj*)obj, id2);
             }
         }
     }
@@ -4945,11 +4955,11 @@ void renderHeavyFog(int* fogColorPtr)
             void* obj = tex20 + 0x20;
             if (*(u8*)(tex20 + 0x48) != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(tex20 + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex20 + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
     }
@@ -5020,11 +5030,11 @@ void renderHeavyFog(int* fogColorPtr)
                 void* obj = tex1c + 0x20;
                 if (*(u8*)(tex1c + 0x48) != 0)
                 {
-                    GXLoadTexObjPreLoaded(obj, *(void**)(tex1c + 0x40), id2);
+                    GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id2);
                 }
                 else
                 {
-                    GXLoadTexObj(obj, id2);
+                    GXLoadTexObj((GXTexObj*)obj, id2);
                 }
             }
         }
@@ -5081,11 +5091,11 @@ void textureFn_8004ff20(void* p1)
                 char* tex = (char*)p1 + 0x20;
                 if (*(u8*)((char*)p1 + 0x48) != 0)
                 {
-                    GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), id);
+                    GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), id);
                 }
                 else
                 {
-                    GXLoadTexObj(tex, id);
+                    GXLoadTexObj((GXTexObj*)tex, id);
                 }
             }
         }
@@ -5319,11 +5329,11 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
         char* tex = (char*)p1 + 0x20;
         if (*(u8*)((char*)p1 + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), texmap);
+            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
         }
         else
         {
-            GXLoadTexObj(tex, texmap);
+            GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
@@ -5369,11 +5379,11 @@ void fn_8004D6D8(void)
         void* obj = (char*)tex + 0x20;
         if (*(u8*)((char*)tex + 0x48) != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)((char*)tex + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)tex + 0x40), id);
         }
         else
         {
-            GXLoadTexObj(obj, id);
+            GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
     GXLoadTexMtxImm(lbl_80396820, lbl_803DCD80, 0);
@@ -5463,11 +5473,11 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
             u8* obj = src + 0x20;
             if (src[0x48] != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
         lbl_803DCD90 = lbl_803DCD90 + 2;
@@ -5548,11 +5558,11 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
             u8* obj = src + 0x20;
             if (src[0x48] != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
         lbl_803DCD90 = lbl_803DCD90 + 2;
@@ -5640,11 +5650,11 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
             u8* obj = src + 0x20;
             if (src[0x48] != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
         lbl_803DCD90 = lbl_803DCD90 + 2;
@@ -5709,11 +5719,11 @@ void fn_8005011C(int objInst)
         void* obj = src + 0x20;
         if (src[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
         }
         else
         {
-            GXLoadTexObj(obj, id);
+            GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
     id = lbl_803DCD8C + 1;
@@ -5723,11 +5733,11 @@ void fn_8005011C(int objInst)
         void* obj = obj2 + 0x20;
         if (obj2[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(obj2 + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj2 + 0x40), id);
         }
         else
         {
-            GXLoadTexObj(obj, id);
+            GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 6;
@@ -5858,11 +5868,11 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
         u8* tex = texSrc + 0x20;
         if (texSrc[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(tex, *(void**)(texSrc + 0x40), texmap);
+            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)(texSrc + 0x40), texmap);
         }
         else
         {
-            GXLoadTexObj(tex, texmap);
+            GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
@@ -5923,11 +5933,11 @@ void fn_8004D230(void)
         void* obj = obj1 + 0x20;
         if (obj1[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(obj1 + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj1 + 0x40), id);
         }
         else
         {
-            GXLoadTexObj(obj, id);
+            GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
@@ -5977,11 +5987,11 @@ void fn_8004D230(void)
         void* obj = obj2 + 0x20;
         if (obj2[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(obj2 + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj2 + 0x40), id);
         }
         else
         {
-            GXLoadTexObj(obj, id);
+            GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
     lbl_803DCD80 = lbl_803DCD80 + 3;
@@ -6035,11 +6045,11 @@ void fn_8004CE0C(void* viewMtx)
         void* obj = obj7c + 0x20;
         if (obj7c[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(obj7c + 0x40), 2);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj7c + 0x40), 2);
         }
         else
         {
-            GXLoadTexObj(obj, GX_TEXMAP2);
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP2);
         }
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
@@ -6064,11 +6074,11 @@ void fn_8004CE0C(void* viewMtx)
         void* obj = obj80 + 0x20;
         if (obj80[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(obj80 + 0x40), 3);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj80 + 0x40), 3);
         }
         else
         {
-            GXLoadTexObj(obj, GX_TEXMAP3);
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP3);
         }
     }
     mtx40[0][0] = lbl_803DEACC;
@@ -6108,7 +6118,6 @@ extern void logPrintf(char* fmt, ...);
 extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
-extern void loadTableFiles(void);
 
 void loadDataFiles(int arg)
 {
@@ -6154,7 +6163,6 @@ void loadDataFiles(int arg)
     loadTableFiles();
 }
 
-extern void VIConfigure(void* mode);
 #pragma peephole on
 void tvInit(void)
 {
@@ -6342,11 +6350,11 @@ void fn_8004FDA0(u8* texSrc, void* texMtx)
             void* obj = texSrc + 0x20;
             if (texSrc[0x48] != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(texSrc + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(texSrc + 0x40), id);
             }
             else
             {
-                GXLoadTexObj(obj, id);
+                GXLoadTexObj((GXTexObj*)obj, id);
             }
         }
     }
@@ -6656,7 +6664,7 @@ extern void* lbl_803DCCD8;
 extern void* lbl_803DCCE4;
 extern void* displayFrameBuffer;
 #pragma peephole on
-void videoSwapFrameBuffers(void)
+void videoSwapFrameBuffers(u32 retraceCount)
 {
     int sync;
     int tok[3];
@@ -6811,7 +6819,7 @@ extern u8 lbl_803DCCA4;
 extern u8 enableDebugText;
 extern char sProgramCounterFormat;
 
-void gpuErrorHandler(void)
+void gpuErrorHandler(u32 retraceCount)
 {
     char* strs = (char*)gLoadingScreenTextures;
     int tok[3];
@@ -6909,8 +6917,6 @@ extern void OSSetCurrentHeap(int heap);
 extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
-extern void VISetPreRetraceCallback(void (*cb)());
-extern void VISetPostRetraceCallback(void (*cb)());
 extern void GXSetBreakPtCallback(void (*cb)());
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
@@ -6920,16 +6926,10 @@ extern void GXSetDispCopyDst(int wd, int ht);
 extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
 extern void GXSetDither(int dither);
 extern void GXSetDispCopyGamma(int gamma);
-extern int VIWaitForRetrace();
 
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
-extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 
-extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
-extern void GXLoadPosMtxImm(void* mtx, int id);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetMisc(GXMiscToken token, u32 val);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;

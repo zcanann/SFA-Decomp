@@ -6,7 +6,7 @@
  */
 #include "main/dll/modgfx.h"
 #include "main/game_object.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/os/OSReport.h"
 
 #define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 

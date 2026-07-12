@@ -363,7 +363,6 @@ extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* sta
 extern void debugPrintf(char* fmt, ...);
 extern void memcpy(void* dst, void* src, int n);
 extern void checkLoadBlock(int v, int* outA, int* outB);
-extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int mapTextureOverrideAcquire(int tex, int value, int type);
 extern int shouldDrawShadows(void);
 extern u16 modelFileHeaderGetCullDistance(u8* modelFile);

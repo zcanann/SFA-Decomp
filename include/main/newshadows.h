@@ -55,4 +55,7 @@ f32 fn_8006C670(void);
 void drawReflectionTexture(void);
 void maybeHudFn_8006c91c(void);
 
+int getReflectionTexture1(void);
+void getReflectionTexture2(int* out);
+
 #endif /* MAIN_NEWSHADOWS_H_ */

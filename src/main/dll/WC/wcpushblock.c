@@ -19,7 +19,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 
 typedef struct WCPushBlockObjectSetup

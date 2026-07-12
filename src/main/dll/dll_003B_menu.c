@@ -18,7 +18,8 @@
 #include "types.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gameloop_api.h"
+#include "track/intersect_api.h"
 #include "main/frame_timing.h"
 
 #define PAD_BUTTON_A     0x100

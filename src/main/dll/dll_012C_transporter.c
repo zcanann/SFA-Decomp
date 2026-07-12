@@ -26,7 +26,11 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objprint_dolphin.h"
-#include "main/sfa_shared_decls.h"
+#include "main/lightmap.h"
+#include "main/objprint_dolphin.h"
+#include "main/pi_dolphin_api.h"
+#include "main/rcp_dolphin.h"
+#include "main/sky_api.h"
 
 /* Env-effect ids activated by Transporter_SeqFn case 8 (env-fx / sky restore
    on arrival), grouped by the destinationId that fires them. Opaque distinct

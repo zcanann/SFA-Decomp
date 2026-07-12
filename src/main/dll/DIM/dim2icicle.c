@@ -14,7 +14,12 @@
 #include "main/model_light.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/dll/DIM/DIM2icicle.h"
+#include "main/objlib_api.h"
+#include "main/pad.h"
+#include "main/rcp_dolphin.h"
+#include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */

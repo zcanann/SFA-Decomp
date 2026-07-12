@@ -8,7 +8,7 @@
 #include "main/audio/synth_delay.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"
-#include "main/sfa_shared_decls.h"
+#include "main/audio/synth_voice_api.h"
 
 #define S3D_UNLINK_EMITTER(emitter)                                                                                    \
     do                                                                                                                 \

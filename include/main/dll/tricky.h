@@ -67,4 +67,8 @@ void fearTestMeterDraw(void);
 void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c);
 void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
 
+void hudFn_8011f38c(u8 x);
+void setAButtonIcon(int x);
+void setBButtonIcon(int icon);
+
 #endif /* MAIN_DLL_TRICKY_H_ */

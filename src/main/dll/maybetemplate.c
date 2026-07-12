@@ -25,7 +25,8 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "sfa_light_decls.h"
+#include "main/gameloop_api.h"
+#include "main/textrender.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
@@ -208,8 +209,6 @@ extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
 extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
                                        int* outMinY);
-extern void textureFree(int texture);
-extern int textureLoadAsset(int id);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 
 void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
@@ -985,14 +984,14 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     }
     if (((u32)hudYButtonItemIconTexture != 0) && (gHudYButtonItemTextureCache != yButtonItemTextureId))
     {
-        textureFree(hudYButtonItemIconTexture);
+        textureFree((u8*)hudYButtonItemIconTexture);
         gHudYButtonItemTextureCache = -1;
         hudYButtonItemIconTexture = 0;
     }
     if (((u32)hudYButtonItemIconTexture == 0) && (yButtonItemTextureId > 0))
     {
         gHudYButtonItemTextureCache = yButtonItemTextureId;
-        hudYButtonItemIconTexture = textureLoadAsset(yButtonItemTextureId);
+    hudYButtonItemIconTexture = (int)textureLoadAsset(yButtonItemTextureId);
     }
     if (lbl_803DD83C != lbl_803E1E3C)
     {

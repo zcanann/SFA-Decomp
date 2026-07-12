@@ -20,7 +20,9 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0284_shopitem.h"
-#include "main/sfa_shared_decls.h"
+#include "main/dll/tricky.h"
+#include "main/gameloop_api.h"
+#include "main/pad.h"
 
 #define SHOPITEM_OBJGROUP        0x4F
 #define SHOPITEM_TARGET_OBJGROUP 9

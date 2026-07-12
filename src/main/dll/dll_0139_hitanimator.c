@@ -19,7 +19,7 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/lightmap.h"
 
 /* Map-block poly-group record (blk+0x50 table, 0x14 stride, returned by
  * mapBlockFn_800606ec) - layout matches MapTriGroup in track_dolphin.c.

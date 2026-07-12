@@ -10,4 +10,6 @@
  */
 void* trickyGetQueuedPathParticlePos(GameObject* obj);
 
+void debugPrintf(char* fmt, ...);
+
 #endif

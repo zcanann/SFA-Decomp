@@ -27,7 +27,8 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
-#include "main/sfa_shared_decls.h"
+#include "main/objfx.h"
+#include "main/objlib_api.h"
 
 typedef struct TumbleweedBushState
 {
@@ -61,7 +62,6 @@ extern int Sfx_PlayFromObject(int* obj, int sfx);
 extern float sqrtf(float x);
 extern f32 lbl_803E2F44;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 gTumbleweedBushNearestInitDist;
 extern u8 Obj_IsLoadingLocked(void);
@@ -171,7 +171,8 @@ void TumbleWeedBush_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), &gTumbleweedBushHitCooldownState, &hit0, hitExtra) != 0)
+        if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), (float*)&gTumbleweedBushHitCooldownState, &hit0,
+                                                (float*)hitExtra) != 0)
     {
         if (((GameObject*)hit0)->anim.seqId != TUMBLEWEEDBUSH_SIBLING_C)
         {
@@ -238,7 +239,7 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     bestDist = gTumbleweedBushNearestInitDist;
     bestObj = NULL;
     {
-        void** tmp = ObjGroup_GetObjects(TUMBLEWEEDBUSH_OBJGROUP, &count);
+    void** tmp = (void**)ObjGroup_GetObjects(TUMBLEWEEDBUSH_OBJGROUP, &count);
         i = 0;
         list = tmp;
     }

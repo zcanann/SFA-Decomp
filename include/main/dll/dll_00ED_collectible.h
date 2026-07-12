@@ -20,4 +20,6 @@ int collectible_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 /* extern-cleanup: defining-file public prototypes */
 void collectible_updateIdleMotion(GameObject* obj);
 
+void collectible_applyPickup(int* obj);
+
 #endif /* MAIN_DLL_GFXEMIT_H_ */

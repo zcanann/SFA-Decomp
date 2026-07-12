@@ -5,7 +5,8 @@
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/os/OSReport.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define MAGICGEM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAGICGEM_MSG_IN_RANGE               0x7000a /* sent to player when in pickup range */

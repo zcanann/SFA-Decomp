@@ -22,7 +22,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/scarab.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00CD_iceball.h"
 #include "main/dll/dll_00CB_dllcb.h"

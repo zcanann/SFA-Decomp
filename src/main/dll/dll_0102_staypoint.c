@@ -22,7 +22,7 @@
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "sfa_light_decls.h"
+#include "main/dll/dll_0000_gameui_api.h"
 
 typedef struct StayPointSetup
 {

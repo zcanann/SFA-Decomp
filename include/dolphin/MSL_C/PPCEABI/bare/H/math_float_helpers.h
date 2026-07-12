@@ -5,4 +5,6 @@
 
 float fastCastS16ToFloat(s16* p);
 
+float fastFloorf(float x);
+
 #endif

@@ -24,7 +24,7 @@
 #include "main/resource.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 /* object group this object belongs to */

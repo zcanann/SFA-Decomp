@@ -23,7 +23,8 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/lightmap.h"
-#include "sfa_light_decls.h"
+#include "main/dll/savegame.h"
+#include "main/sky_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/dll_0173_linklevcontrol.h"
 

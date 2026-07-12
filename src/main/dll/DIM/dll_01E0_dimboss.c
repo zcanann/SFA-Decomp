@@ -13,7 +13,16 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/pi_dolphin.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/os/OSReport.h"
+#include "main/camera.h"
+#include "main/fileio.h"
+#include "main/gameloop_api.h"
+#include "main/gametext.h"
+#include "main/lightmap.h"
+#include "main/mm.h"
+#include "main/pad.h"
+#include "main/rcp_dolphin.h"
+#include "main/sky_api.h"
 #include "main/frame_timing.h"
 
 #define DIMBOSS_OBJGROUP 3
@@ -65,7 +74,7 @@ extern void Obj_FreeObject(u8* obj);
 extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
-                                 u32 p4, u32 p5, f32 scale);
+                                        u32 p4, u32 p5, f32 scale);
 
 extern void queueGlowRender(void* effect);
 extern void dll_2E_func06(GameObject *obj, void* animController, int p3);

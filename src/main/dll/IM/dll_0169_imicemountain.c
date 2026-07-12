@@ -20,7 +20,9 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gametext.h"
+#include "main/objprint_dolphin.h"
+#include "main/rcp_dolphin.h"
 #include "main/audio/music_trigger_ids.h"
 
 /*

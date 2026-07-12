@@ -1926,7 +1926,7 @@ void ObjPath_GetPointLocalMtx(GameObject* obj, int pointIndex, float* mtxOut)
     return;
 }
 
-void ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex)
+u32 ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex)
 {
     int* model;
     ObjPathPoint* pathPoint;
@@ -1938,13 +1938,12 @@ void ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex)
     jointIndex = pathPoint->modelIndex[(int)*(char*)((int)obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
     if ((jointIndex >= 0) && (jointIndex < (int)(u32) * (u8*)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET)))
     {
-        ObjModel_GetJointMatrix(model, jointIndex);
+        return (u32)ObjModel_GetJointMatrix(model, jointIndex);
     }
     else
     {
-        ObjModel_GetJointMatrix(model, 0);
+        return (u32)ObjModel_GetJointMatrix(model, 0);
     }
-    return;
 }
 
 void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX, float* outY, float* outZ,

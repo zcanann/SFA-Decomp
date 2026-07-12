@@ -13,7 +13,7 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
 #include "main/camera.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/SP/dll_0288_spdrape.h"

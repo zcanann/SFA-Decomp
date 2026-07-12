@@ -15,4 +15,6 @@ void titleScreenPositionElements(f32 a, f32 b);
 void titleScreenShowCopyright(u8 arg);
 int TitleScreen_getObjectTypeId(u8* obj);
 
+void titleScreenTextDrawFunc(void);
+
 #endif

@@ -21,7 +21,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"
 
 /* Per-object extra state for the doorf4 door (DoorF4_getExtraSize == 0x24). */

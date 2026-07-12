@@ -17,7 +17,8 @@
 #include "main/pad.h"
 #include "main/dll/DIM/dll_01C6_dimcannon.h"
 #include "main/dll/dll_801b1d84.h"
-#include "main/sfa_shared_decls.h"
+#include "main/dll/tricky.h"
+#include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define PAD_BUTTON_A                         0x100

@@ -15,7 +15,8 @@
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/pad.h"
 
 #define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9

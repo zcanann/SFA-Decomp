@@ -4,7 +4,7 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gameloop_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 

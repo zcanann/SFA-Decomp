@@ -15,7 +15,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMboulder.h"
-#include "main/sfa_shared_decls.h"
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 

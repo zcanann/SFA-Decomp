@@ -18,7 +18,8 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/resource.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "stdlib.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_000E_partfx.h"
 

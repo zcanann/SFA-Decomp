@@ -38,7 +38,8 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
-#include "main/sfa_shared_decls.h"
+#include "main/dll/tricky.h"
+#include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe

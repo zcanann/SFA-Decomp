@@ -126,4 +126,6 @@ void CMenu_SetFadeCounter(s16 v);
 void pauseMenuDoSave(void);
 void perspectiveFn_80129db4(void);
 
+s16 cMenuGetSelectedItem(void);
+
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_H_ */

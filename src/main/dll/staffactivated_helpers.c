@@ -21,7 +21,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct PrisonGuardStateFlags

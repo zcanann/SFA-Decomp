@@ -8,7 +8,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/model.h"
-#include "main/sfa_shared_decls.h"
+#include "track/intersect_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"

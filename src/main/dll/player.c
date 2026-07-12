@@ -12,6 +12,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/object_transform.h"
 
 /* the player object's own group (joined at init, left on free) */
 #define PLAYER_OBJGROUP 0x25

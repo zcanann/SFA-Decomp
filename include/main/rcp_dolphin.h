@@ -94,4 +94,8 @@ void ShaderDef_free(int* def);
 void gxTextureFn_80052efc(void);
 void loadNextMap(void);
 
+void timeOfDayFn_80055000(void);
+void warpToMap(int idx, s8 transType);
+void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
+
 #endif /* MAIN_RCP_DOLPHIN_H_ */

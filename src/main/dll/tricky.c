@@ -32,7 +32,17 @@
 #include "dolphin/gx/GXEnum.h"
 #include "main/lightmap.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "sfa_light_decls.h"
+#include "dolphin/gx/GXBump.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXTev.h"
+#include "dolphin/gx/GXTransform.h"
+#include "main/camera.h"
+#include "main/dll/dll_0014_api.h"
+#include "main/dll/tricky.h"
+#include "main/gameloop_api.h"
+#include "main/textrender.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"
 
 typedef struct GameUIWork10
@@ -53,11 +63,6 @@ typedef struct TrickyAirMeter
     u16 bgTextureId; /* 0x2C background texture asset id (textureLoadAsset arg); selects meter variant */
     u8 pad2E[0x48 - 0x2E];
 } TrickyAirMeter;
-
-typedef struct
-{
-    u8 r, g, b, a;
-} GXColor;
 
 typedef struct
 {
@@ -260,7 +265,6 @@ extern char sTrickyDebugXCoordFormat[];
 extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int logicOp);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(char* obj);
@@ -272,29 +276,7 @@ extern void gameTextLoadDir(int dirId);
 extern void* memset(void* p, int v, int n);
 extern void Obj_FreeObject(int* obj);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
-extern void GXBegin(int type, int fmt, int n);
-extern void GXSetTevColor(int id, GXColor c);
-extern void GXSetTevKColor(int id, GXColor c);
-extern void GXLoadPosMtxImm(void* m, int id);
-extern void GXLoadNrmMtxImm(void* m, int id);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetNumChans(u8 nChans);
 extern void textureFn_8004c264(void* this, int x);
-extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
-extern void GXSetTevKColorSel(int stage, int sel);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevOrder(int stage, int a, int b, int c);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevSwapMode(int stage, int a, int b);
-extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetCullMode(int m);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXSetVtxDesc(int a, int b);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
@@ -305,18 +287,8 @@ extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
-extern void GXGetScissor(int* a, int* b, int* c, int* d);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void PSMTXCopy(f32* src, f32* dst);
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void GXSetIndTexOrder(int stage, int a, int b);
-extern void GXSetIndTexCoordScale(int stage, int a, int b);
-extern void GXSetIndTexMtx(int id, f32* m, int scale);
-extern void GXSetTevIndirect(int stage, int a, int b, int c, int d, int e, int f, int g, int h, int i);
-extern void GXSetChanCtrl(int chan, int a, int b, int c, int d, int e, int f);
-extern void GXSetChanMatColor(int chan, GXColor c);
-extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void* ObjModel_GetRenderOp(int op, int x);
 extern void* Shader_getLayer(char* base, int idx);
 extern void selectTexture(u8* tex, int mapId);
@@ -325,7 +297,6 @@ extern int objIsCurModelNotZero(void* obj);
 extern int playerGetFocusObject(int* player);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
-extern int Camera_GetCurrentViewSlot(void);
 extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -513,7 +484,7 @@ void cutSceneFn_8011dd30(void)
     setTimeStop(0xff);
     pauseMenuInit();
     pauseMenuState = 0xb;
-    lbl_803DD8DC = getCurGameText();
+    lbl_803DD8DC = (int)getCurGameText();
     gameTextLoadDir(0xb);
     lbl_803DD764 = lbl_803E1E60;
     lbl_803DD7D8 = 1;
@@ -645,7 +616,7 @@ void showDeathMenu(void)
     {
         pauseMenuState = 0xa;
     }
-    lbl_803DD8DC = getCurGameText();
+    lbl_803DD8DC = (int)getCurGameText();
     gameTextLoadDir(0xb);
     lbl_803DD764 = lbl_803E1E60;
     lbl_803DD7D8 = 1;
@@ -835,8 +806,8 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
     GXColor colB = *(GXColor*)&lbl_803E1E38;
     colA.a = a;
     GXSetTevColor(1, colA);
-    GXLoadPosMtxImm(lbl_803A8830, 0);
-    GXLoadNrmMtxImm(lbl_803A8830, 0);
+    GXLoadPosMtxImm((const f32(*)[4])lbl_803A8830, 0);
+    GXLoadNrmMtxImm((const f32(*)[4])lbl_803A8830, 0);
     GXSetCurrentMtx(0);
     GXSetNumTexGens(1);
     GXSetNumIndStages(0);
@@ -888,8 +859,8 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     s16 z;
-    GXLoadPosMtxImm(lbl_803A8830, 0);
-    GXLoadNrmMtxImm(lbl_803A8830, 0);
+    GXLoadPosMtxImm((const f32(*)[4])lbl_803A8830, 0);
+    GXLoadNrmMtxImm((const f32(*)[4])lbl_803A8830, 0);
     GXSetCurrentMtx(0);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1263,14 +1234,14 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     m2[2] = lbl_803E1E6C / gTrickyHudIconScale;
     m2[6] = lbl_803E1E6C / gTrickyHudIconScale;
     PSMTXConcat(m2, m1, m1);
-    GXLoadTexMtxImm(m1, 0x1e, 1);
+    GXLoadTexMtxImm((const f32(*)[4])m1, 0x1e, 1);
     GXSetNumTexGens(3);
     GXSetNumTevStages(3);
     GXSetNumIndStages(2);
     GXSetNumChans(1);
     GXSetIndTexOrder(0, 0, 2);
     GXSetIndTexCoordScale(0, 0, 0);
-    GXSetIndTexMtx(1, (f32*)&indmtx, 0);
+    GXSetIndTexMtx(1, (const f32(*)[3])&indmtx, 0);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     selectTexture(tex0, 0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -1291,7 +1262,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     PSMTXConcat(m3, m1, m1);
     PSMTXTrans(m3, lbl_803E1E70 * (lbl_803E1E68 - sval), lbl_803E1E70 * (lbl_803E1E68 - sval), lbl_803E1E3C);
     PSMTXConcat(m3, m1, m1);
-    GXLoadTexMtxImm(m1, 0x21, 0);
+    GXLoadTexMtxImm((const f32(*)[4])m1, 0x21, 0);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
@@ -1311,7 +1282,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     mtex[9] = 0.0f;
     mtex[10] = 0.0f;
     mtex[11] = 1.0f;
-    GXLoadTexMtxImm(mtex, 0x24, 1);
+    GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, 1);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     fn_8006C5CC(&tex2);
     selectTexture((void*)tex2, 1);
@@ -1541,7 +1512,7 @@ void drawViewFinderHud(void)
     f32 v;
 
     fovY = Camera_GetFovY();
-    slot = Camera_GetCurrentViewSlot();
+    slot = (int)Camera_GetCurrentViewSlot();
     if (Rcp_GetViewFinderHudEnabled() && pauseMenuState == 0)
     {
         gViewFinderFadeLevel = (f32)(lbl_803E1EA0 * timeDelta + gViewFinderFadeLevel);

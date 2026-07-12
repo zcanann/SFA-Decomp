@@ -3,7 +3,9 @@
 #include "main/dll/gameplay.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSArena.h"
-#include "sfa_light_decls.h"
+#include "dolphin/os/OSTime.h"
+#include "main/mm.h"
+#include "main/pi_dolphin_api.h"
 
 typedef f32 Mtx[3][4];
 

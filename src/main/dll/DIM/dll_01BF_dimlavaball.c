@@ -42,7 +42,6 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
 
 typedef struct Lavaball1bfPlacement
 {

@@ -1040,7 +1040,6 @@ void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
 #pragma dont_inline reset
 
 extern void Obj_UpdateWorldTransform(void);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 void playerUpdateFn_8005649c(void)
 {
@@ -1074,8 +1073,9 @@ void playerUpdateFn_8005649c(void)
         }
         else
         {
-            Obj_TransformWorldPointToLocal(*(f32*)(cam + 0x44), *(f32*)(cam + 0x48),
-                                           *(f32*)&((GameObject*)cam)->anim.placementData, &lx, &ly, &lz);
+            ((void (*)(f32, f32, f32, f32*, f32*, f32*))Obj_TransformWorldPointToLocal)(
+                *(f32*)(cam + 0x44), *(f32*)(cam + 0x48), *(f32*)&((GameObject*)cam)->anim.placementData,
+                &lx, &ly, &lz);
             *(f32*)(lbl_80386648 + slot * 0x10 + 0) = lx;
             *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ly;
             *(f32*)(lbl_80386648 + slot * 0x10 + 8) = lz;

@@ -17,7 +17,7 @@
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/pad.h"
 #include "main/frame_timing.h"
 #include "main/dll/SB/dll_01F0_sbkytecage.h"
 

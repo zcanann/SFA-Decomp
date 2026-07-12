@@ -15,7 +15,7 @@
 #include "main/sky_interface.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/pad.h"
 #include "main/frame_timing.h"
 #define UNUSED_HIT_VOLUME_SLOT 0xe
 

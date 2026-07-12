@@ -27,7 +27,10 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/dll/tricky.h"
+#include "main/object.h"
+#include "main/objlib_api.h"
+#include "main/pad.h"
 
 typedef struct SBCloudRunnerState
 {
@@ -151,18 +154,13 @@ extern f32 playerMapOffsetZ;
 extern const f32 lbl_803E5CBC;
 extern const f32 lbl_803E5CC0;
 
-extern void* ObjGroup_GetObjects();
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
-extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objSetMtxFn_800412d4(u32 x);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
@@ -410,7 +408,7 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
 
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &pos[0], &pos[1], &pos[2]) != 0)
     {
-        if (objGetFlagsE5_2((int)obj) == 0)
+        if (objGetFlagsE5_2((u8*)obj) == 0)
         {
             if (((GameObject*)hitObj)->anim.seqId != HIT_TYPE_INVULNERABLE)
             {
@@ -449,8 +447,8 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
     f32 mtx[16];
     if (visible == -1)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5C74);
-        ObjPath_GetPointWorldPosition((int)obj, 3, state, state + 1, state + 2, 0);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5C74);
+        ObjPath_GetPointWorldPosition(obj, 3, state, state + 1, state + 2, 0);
         if (obj->anim.parent != NULL)
         {
             *state = *state - playerMapOffsetX;
@@ -461,8 +459,8 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
     }
     else if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5C74);
-        ObjPath_GetPointWorldPosition((int)obj, 3, state, state + 1, state + 2, 0);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5C74);
+        ObjPath_GetPointWorldPosition(obj, 3, state, state + 1, state + 2, 0);
         if (obj->anim.parent != NULL)
         {
             *state = *state - playerMapOffsetX;
@@ -482,7 +480,7 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
 int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SBCloudRunnerState* state = obj->extra;
-    int player = Obj_GetPlayerObject();
+    int player = (int)Obj_GetPlayerObject();
     int i;
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)SB_CloudRunner_onSeqFree;
     state->spawnPosX = obj->anim.localPosX;
@@ -555,7 +553,7 @@ void SB_CloudRunner_update(GameObject* obj)
     if (*(void**)&state->targetObj == NULL)
     {
         int count;
-        int* objs = ObjGroup_GetObjects(3, &count);
+        int* objs = (int*)ObjGroup_GetObjects(3, &count);
         int i;
         for (i = 0; i < count; i++)
         {

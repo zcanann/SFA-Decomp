@@ -6,7 +6,11 @@
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
 #include "main/rcp_dolphin.h"
-#include "sfa_light_decls.h"
+#include "main/audio.h"
+#include "main/camera.h"
+#include "main/gameloop_api.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_010E_deathseq.h"
 

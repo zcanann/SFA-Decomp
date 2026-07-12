@@ -21,6 +21,7 @@
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
+#include "main/gameloop_api.h"
 
 void gameLoop(void);
 void doQueuedLoads(void);
@@ -30,8 +31,5 @@ void setShouldResetNextFrame(int v);
 void mapReload(void);
 void setGameState(int state);
 
-
-/* extern-cleanup: defining-file public prototypes */
-int gameBitDecrement(int bit);
 
 #endif

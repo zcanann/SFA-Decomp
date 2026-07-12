@@ -6,7 +6,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/SH/SHrocketmushroom.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gameloop_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct BombplantsporeStartDriftBurstPlacement
 {

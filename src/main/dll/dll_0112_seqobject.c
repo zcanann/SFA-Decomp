@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
-#include "main/sfa_shared_decls.h"
+#include "main/rcp_dolphin.h"
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);

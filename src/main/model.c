@@ -437,7 +437,6 @@ extern int getTableFileEntry(int fileId, int index, int* out);
 /* defined in pi_dolphin.c with 5 params; the retail caller here emits a
    6th arg (the model id) -- keep the caller-side arity */
 extern void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
-extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 
 #pragma dont_inline on
 void* ObjModel_LoadModelData(int id)

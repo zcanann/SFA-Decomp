@@ -14,7 +14,9 @@
 #include "main/objhits.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/dll/DIM/DIM2icicle.h"
+#include "main/pad.h"
 
 #define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10

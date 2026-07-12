@@ -25,7 +25,9 @@
 #include "main/camera.h"
 #include "string.h"
 #include "main/audio/sfx.h"
-#include "sfa_light_decls.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXTransform.h"
+#include "main/camera.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/DIM/dll_01CA_dimexplosion.h"
@@ -106,10 +108,7 @@ extern int Obj_GetActiveModel(void* obj);
 extern void ModelLightStruct_free(void*);
 extern f32 expf(f32 x);
 extern f32 sqrtf(f32 x);
-extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXBegin(int prim, int fmt, int n);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
@@ -340,7 +339,7 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                            ((ExplosionDebris*)cursor)->posZ - playerMapOffsetZ);
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
-                GXLoadPosMtxImm(mE, GX_PNMTX0);
+    GXLoadPosMtxImm((const f32(*)[4])mE, GX_PNMTX0);
                 ((u8*)&colA)[3] = ((ExplosionDebris*)cursor)->alpha;
                 cv = gExplosionDebrisColorScale *
                      (255.0f *

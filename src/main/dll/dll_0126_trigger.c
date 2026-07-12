@@ -35,7 +35,9 @@
 #include "main/lightmap.h"
 #include "main/rcp_dolphin.h"
 #include "main/shader.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/os/OSReport.h"
+#include "main/model.h"
+#include "main/sky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0126_trigger.h"
 

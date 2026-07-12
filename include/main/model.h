@@ -231,4 +231,8 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(void* model, int id, void* animBase);
 
+int loadModelAndAnimTabs(void);
+void postRenderSetAlphaBlendState(void);
+void playerTailFn_80026b3c();
+
 #endif

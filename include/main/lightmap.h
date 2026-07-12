@@ -66,4 +66,11 @@ void gameFlagFn_8005cd24(int v);
 void sceneDrawTransparentPolys(void);
 void sceneDraw(void);
 
+u32 isOvercast(void);
+int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+void setDrawCloudsAndLights(int v);
+void setDrawLights(int v);
+void setIsOvercast(int v);
+int setWidescreen(u8 enabled);
+
 #endif /* MAIN_LIGHTMAP_H_ */

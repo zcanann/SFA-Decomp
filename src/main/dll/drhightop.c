@@ -26,7 +26,11 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/gametext.h"
+#include "main/pad.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 

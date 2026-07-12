@@ -20,7 +20,7 @@
 #include "main/dll/doorlockstate_struct.h"
 #include "main/dll/alphaanim.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/pad.h"
 
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement

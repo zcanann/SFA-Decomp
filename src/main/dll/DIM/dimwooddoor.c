@@ -10,7 +10,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/sfa_shared_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #define DIMWOODDOOR_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMWOODDOOR_CHILD_OBJ_SHARD      0x1d6 /* debris shard projectile spawned by DIMwooddoor_spawnShard */

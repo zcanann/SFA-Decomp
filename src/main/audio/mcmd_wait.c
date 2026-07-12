@@ -4,7 +4,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"
-#include "main/sfa_shared_decls.h"
+#include "main/audio/inp_ctrl_api.h"
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)

@@ -29,7 +29,10 @@
 #include "main/dll/player_motion.h"
 #include "main/dll/player_objects.h"
 #include "main/rcp_dolphin.h"
-#include "sfa_light_decls.h"
+#include "main/camera.h"
+#include "main/pad.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 

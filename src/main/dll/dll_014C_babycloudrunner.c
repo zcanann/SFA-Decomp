@@ -21,7 +21,9 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
-#include "main/sfa_shared_decls.h"
+#include "main/gameloop_api.h"
+#include "main/maketex.h"
+#include "main/objprint.h"
 #include "main/dll/babycloudrunnerstate_struct.h"
 
 /* Per-object extra state for the baby CloudRunner
@@ -123,7 +125,6 @@ extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
-extern u32 objAnimFn_80038f38();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void storeZeroToFloatParam(void* p);
 extern u32 mainGetBit(int eventId);
@@ -590,7 +591,7 @@ void babycloudrunner_update(int* obj)
                 u16 sfxId = ((s16*)sub->mutterSfxTable)[randomGetRange(0, 3)];
                 objAudioFn_80039270((int)obj, sub->audioBlock, sfxId);
             }
-            objAnimFn_80038f38((GameObject*)obj, sub->audioBlock);
+            objAnimFn_80038f38((GameObject*)obj, (char*)sub->audioBlock);
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;

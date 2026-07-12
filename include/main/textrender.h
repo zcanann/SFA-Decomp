@@ -16,4 +16,11 @@ void gameTextLoadForCurMap(int sourceId);
 void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
 
+int gameTextGetCharset(void);
+void* getCurGameText(void);
+void gameTextRun(void);
+void gameTextLoadTaskText(int taskId);
+void gameTextSetCharset(int charset, int flags);
+int setSubtitlesEnabled(int enabled);
+
 #endif

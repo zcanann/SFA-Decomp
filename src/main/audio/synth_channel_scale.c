@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
-#include "sfa_light_decls.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #ifndef SYNTH_VOICE_STRIDE
 #define SYNTH_VOICE_STRIDE 0x404

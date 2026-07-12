@@ -5,4 +5,6 @@
 
 float fn_80292DEC(float x);
 
+void angleToVec2(int angle, f32* cosOut, f32* sinOut);
+
 #endif

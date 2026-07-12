@@ -42,7 +42,9 @@
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_00CA_icebaddie.h"
-#include "main/sfa_shared_decls.h"
+#include "main/camera.h"
+#include "main/objlib_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00CD_iceball.h"
 
 /*
@@ -107,12 +109,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
 
 extern int randomGetRange(int lo, int hi);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern u64 ObjMsg_SendToObjects();
 
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern u8 lbl_803DDA78;
 extern u8 lbl_803DDA79;
 
@@ -346,7 +343,7 @@ int iceBaddie_stateHandlerB02(GameObject* obj, int state)
     }
     else if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
-        ObjMsg_SendToObjects(0, 3, (int)obj, 0xe0000, (int)obj);
+            ObjMsg_SendToObjects(0, 3, obj, 0xe0000, (int)obj);
         if (obj->anim.placementData == NULL)
         {
             Obj_FreeObject((int)obj);

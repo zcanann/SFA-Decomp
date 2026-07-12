@@ -228,7 +228,6 @@ extern int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* a, f32 b, f32 c, 
 extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* angles, int p, f32 a, f32 b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
-extern void objAudioFn_80039270(int obj, int p, int sfxId);
 extern void objAnimFn_80038f38(GameObject* obj, int p);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, void* x, void* y, void* z, int p);
 extern f32 sqrtf(f32 x);

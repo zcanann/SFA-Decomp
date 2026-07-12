@@ -25,7 +25,10 @@
 #include "main/screen_transition.h"
 #include "main/pad.h"
 #include "main/gameplay_runtime.h"
-#include "sfa_light_decls.h"
+#include "main/dll/tricky.h"
+#include "main/model_engine.h"
+#include "main/pad.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 extern int Stack_IsFull(void* stack);
 extern int Stack_Push(void* stack, void* value);

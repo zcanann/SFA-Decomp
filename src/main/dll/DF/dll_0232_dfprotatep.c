@@ -5,7 +5,7 @@
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 #include "main/gamebits.h"
-#include "main/sfa_shared_decls.h"
+#include "main/model_engine.h"
 #include "main/frame_timing.h"
 
 typedef struct RingIdPair

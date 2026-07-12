@@ -33,7 +33,7 @@
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
-#include "main/sfa_shared_decls.h"
+#include "main/mm.h"
 
 #define FIREPIPE_OBJGROUP 0x4a
 

@@ -19,7 +19,7 @@
  */
 #include "main/dll/dll_015A_explodable.h"
 #include "main/game_object.h"
-#include "main/sfa_shared_decls.h"
+#include "track/intersect_api.h"
 #include "main/dll/dll_015F_attractor.h"
 #include "main/dll/dll_015D_slidingdoor.h"
 

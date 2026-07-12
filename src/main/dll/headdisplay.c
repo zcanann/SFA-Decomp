@@ -25,7 +25,10 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXTransform.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "sfa_light_decls.h"
+#include "dolphin/gx/GXTransform.h"
+#include "main/audio.h"
+#include "main/camera.h"
+#include "main/gametext.h"
 #include "main/frame_timing.h"
 #include "main/dll/headdisplay.h"
 

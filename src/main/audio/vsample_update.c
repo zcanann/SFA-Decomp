@@ -2,7 +2,7 @@
 
 #pragma exceptions on
 #include "main/audio/hw_stream.h"
-#include "main/sfa_shared_decls.h"
+#include "main/audio/hw_samplemem_api.h"
 
 typedef struct
 {

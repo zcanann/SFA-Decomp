@@ -85,4 +85,12 @@ void objRenderChild(int* child, int* parent, u8 isShadow);
 /* extern-cleanup: defining-file public prototypes */
 void* getCurrentDataFile(int id);
 
+int getTableFileEntry(int fileId, int index, int* out);
+int loadMapAndParent(int mapId);
+int lockLevel(s32 val, int idx);
+int mapUnload(int mapId, int flags);
+int unlockLevel(s32 val, int idx, int flag);
+void defragMemory(int mode);
+void setLoadedFileFlags_blocks1(void);
+
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

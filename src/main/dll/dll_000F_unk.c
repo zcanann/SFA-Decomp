@@ -20,7 +20,8 @@
 #include "main/dll/path_control_interface.h"
 #include "string.h"
 #include "main/vecmath.h"
-#include "main/sfa_shared_decls.h"
+#include "main/lightmap.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_000F_unk.h"
 
