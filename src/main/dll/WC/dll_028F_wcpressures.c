@@ -16,6 +16,7 @@
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
 #include "main/dll/WC/dll_0292_wctrexstatu.h"
+#include "main/dll/WC/dll_028F_wcpressures.h"
 #include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 
@@ -23,26 +24,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define WCPRESSURES_EXTRA_SIZE        0x7c
-#define WCPRESSURES_TRACKED_COUNT     10
 #define WCPRESSURES_OBJECT_GROUP      0x31
 #define WCPRESSURES_RENDER_TYPE_BASE  0x400
 #define WCPRESSURES_RENDER_TYPE_SHIFT 0xb
-
-#define WCPRESSURES_SETUP_POS_X_OFFSET          0x08
-#define WCPRESSURES_SETUP_POS_Y_OFFSET          0x0c
-#define WCPRESSURES_SETUP_POS_Z_OFFSET          0x10
-#define WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET 0x18
-#define WCPRESSURES_SETUP_MODEL_INDEX_OFFSET    0x19
-#define WCPRESSURES_SETUP_SOLVED_BIT_OFFSET     0x1a
-#define WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET    0x1c
-#define WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET 0x1d
-#define WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET   0x20
-
-#define WCPRESSURES_STATE_PRESS_TIMER 0x00
-#define WCPRESSURES_STATE_MODE        0x01
-#define WCPRESSURES_STATE_OBJECTS     0x04
-#define WCPRESSURES_STATE_SAVED_X     0x2c
-#define WCPRESSURES_STATE_SAVED_Z     0x30
 
 #define WCPRESSURES_MODE_RAISED   0
 #define WCPRESSURES_MODE_RISING   1
@@ -51,6 +35,9 @@
 
 #define WCPRESSURES_FOUND_TIMER  5
 #define WCPRESSURES_SOLVED_TIMER 0x1e
+
+#define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
+#define WCPRESSURES_OBJECT_STATE_OFFSET 0xb8
 
 #define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
 #define WCPRESSURES_OBJECT_Y_OFFSET     0x10
@@ -72,62 +59,15 @@
 #define WCPRESSURES_OBJFLAG_HIDDEN             0x4000
 #define WCPRESSURES_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-typedef struct WCPressuresSetup
-{
-    u8 pad00[WCPRESSURES_SETUP_POS_X_OFFSET];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad14[WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET - 0x14];
-    u8 objectTypeHi;
-    u8 modelIndex;
-    s16 solvedBit;
-    u8 pressDepth;
-    u8 triggerHeight;
-    u8 pad1E[WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET - 0x1e];
-    s16 activateBit;
-} WCPressuresSetup;
-
-typedef struct WCPressuresSavedPos
-{
-    f32 x;
-    f32 z;
-} WCPressuresSavedPos;
-
-typedef struct WCPressuresState
-{
-    s8 pressTimer;
-    s8 mode;
-    u8 pad02[2];
-    GameObject* objects[WCPRESSURES_TRACKED_COUNT];
-    WCPressuresSavedPos savedPos[WCPRESSURES_TRACKED_COUNT];
-} WCPressuresState;
-
-STATIC_ASSERT(sizeof(WCPressuresState) == WCPRESSURES_EXTRA_SIZE);
-STATIC_ASSERT(offsetof(WCPressuresState, pressTimer) == WCPRESSURES_STATE_PRESS_TIMER);
-STATIC_ASSERT(offsetof(WCPressuresState, mode) == WCPRESSURES_STATE_MODE);
-STATIC_ASSERT(offsetof(WCPressuresState, objects) == WCPRESSURES_STATE_OBJECTS);
-STATIC_ASSERT(offsetof(WCPressuresState, savedPos[0].x) == WCPRESSURES_STATE_SAVED_X);
-STATIC_ASSERT(offsetof(WCPressuresState, savedPos[0].z) == WCPRESSURES_STATE_SAVED_Z);
-STATIC_ASSERT(offsetof(WCPressuresSetup, x) == WCPRESSURES_SETUP_POS_X_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, y) == WCPRESSURES_SETUP_POS_Y_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, z) == WCPRESSURES_SETUP_POS_Z_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, objectTypeHi) == WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, modelIndex) == WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, solvedBit) == WCPRESSURES_SETUP_SOLVED_BIT_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, pressDepth) == WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, triggerHeight) == WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET);
-STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET);
-
 int wcpressures_getExtraSize(void)
 {
     return WCPRESSURES_EXTRA_SIZE;
 }
 
-int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int wcpressures_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    WCPressuresState* state = *(WCPressuresState**)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
-    WCPressuresSetup* setup = *(WCPressuresSetup**)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
+    WCPressuresState* state = (WCPressuresState*)obj->extra;
+    WCPressuresSetup* setup = (WCPressuresSetup*)obj->anim.placementData;
     u8 i;
 
     if (animUpdate->triggerCommand == WCPRESSURES_CALLBACK_SNAPSHOT_TILES)
@@ -150,9 +90,9 @@ int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         /* sic: setup->x is stored to the Z slot and overwritten just below,
            so localPosX (obj+0xc) is left unrestored - faithful to retail */
-        ((GameObject*)obj)->anim.localPosZ = setup->x;
-        ((GameObject*)obj)->anim.localPosY = setup->y;
-        ((GameObject*)obj)->anim.localPosZ = setup->z;
+        obj->anim.localPosZ = setup->base.posX;
+        obj->anim.localPosY = setup->base.posY;
+        obj->anim.localPosZ = setup->base.posZ;
         mainSetBits(setup->solvedBit, 0);
         animUpdate->triggerCommand = WCPRESSURES_CALLBACK_NONE;
     }
@@ -160,10 +100,10 @@ int wcpressures_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int wcpressures_getObjectTypeId(int obj)
+int wcpressures_getObjectTypeId(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCPressuresSetup* setup = *(WCPressuresSetup**)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
+    WCPressuresSetup* setup = (WCPressuresSetup*)obj->anim.placementData;
     int modelIndex = setup->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
@@ -174,16 +114,16 @@ int wcpressures_getObjectTypeId(int obj)
     return (modelIndex << WCPRESSURES_RENDER_TYPE_SHIFT) | WCPRESSURES_RENDER_TYPE_BASE;
 }
 
-void wcpressures_free(int obj)
+void wcpressures_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, WCPRESSURES_OBJECT_GROUP);
+    ObjGroup_RemoveObject((int)obj, WCPRESSURES_OBJECT_GROUP);
 }
 
-void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wcpressures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E00);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6E00);
     }
 }
 
@@ -299,30 +239,29 @@ void wcpressures_update(int obj)
     }
 }
 
-void wcpressures_init(u8* obj, u8* setup)
+void wcpressures_init(GameObject* obj, WCPressuresSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCPressuresState* state = ((GameObject*)obj)->extra;
-    WCPressuresSetup* setupData = (WCPressuresSetup*)setup;
+    WCPressuresState* state = (WCPressuresState*)obj->extra;
     s16 objType;
     u16 objFlags;
     s8 modelIndex;
     int i;
 
-    objType = (s16)(setupData->objectTypeHi << 8);
-    ((GameObject*)obj)->anim.rotX = objType;
-    objFlags = ((GameObject*)obj)->objectFlags | (WCPRESSURES_OBJFLAG_HIDDEN | WCPRESSURES_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->objectFlags = objFlags;
-    modelIndex = setupData->modelIndex;
+    objType = (s16)(setup->objectTypeHi << 8);
+    obj->anim.rotX = objType;
+    objFlags = obj->objectFlags | (WCPRESSURES_OBJFLAG_HIDDEN | WCPRESSURES_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = objFlags;
+    modelIndex = setup->modelIndex;
     objAnim->bankIndex = modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
 
-    if ((u32)mainGetBit(setupData->solvedBit) != 0)
+    if ((u32)mainGetBit(setup->solvedBit) != 0)
     {
-        ((GameObject*)obj)->anim.localPosY = setupData->y - setupData->pressDepth;
+        obj->anim.localPosY = setup->base.posY - setup->pressDepth;
         state->pressTimer = WCPRESSURES_SOLVED_TIMER;
         state->mode = WCPRESSURES_MODE_PRESSED;
     }
@@ -332,7 +271,7 @@ void wcpressures_init(u8* obj, u8* setup)
     {
         state->objects[i] = 0;
     }
-    ((GameObject*)obj)->animEventCallback = wcpressures_SeqFn;
+    obj->animEventCallback = wcpressures_SeqFn;
 }
 
 void wcpressures_release(void)
