@@ -150,7 +150,7 @@ void timer_init(GameObject* obj, int setup)
 
 void timer_update(GameObject* obj)
 {
-    int textureId;
+    int textureId[1];
     int expiredThisFrame;
     TimerFlags* flags;
     TimerSetup* setup;
@@ -240,16 +240,16 @@ void timer_update(GameObject* obj)
             ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
             if (texPtr != 0)
             {
-                textureId = texPtr->textureId + scroll * framesThisStep;
-                if (textureId > 512)
+                textureId[0] = texPtr->textureId + scroll * framesThisStep;
+                if (textureId[0] > 512)
                 {
-                    textureId -= 512;
+                    textureId[0] -= 512;
                 }
-                texPtr->textureId = textureId;
+                texPtr->textureId = textureId[0];
             }
             if (light != NULL)
             {
-                scroll = textureId >> 8;
+                scroll = textureId[0] >> 8;
             }
             else
             {
