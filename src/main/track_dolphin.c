@@ -4624,6 +4624,7 @@ void trackIntersect(void)
     s16 edges[0x6a4 * 2];
     int i, j, off;
     int layer;
+    int bi;
     s16 prev, t;
 
     lbl_803DCF44 = 0;
@@ -4659,10 +4660,9 @@ void trackIntersect(void)
         f32 scale = lbl_803DECE0;
         u8* idx = mapGetBlockIdx(layer);
         int gz, gx, base;
-        for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10)
+        for (gz = 0, base = 0; gz < 0x10; base += 0x10, gz++)
         {
             f32 fz0;
-            int bi;
             u8* p;
             gx = 0;
             bi = base;
@@ -4704,7 +4704,7 @@ void trackIntersect(void)
                             k = 0;
                             q = tp;
                             rp = (u8*)rec;
-                            for (; k < 2; k++, q++, rp += 2)
+                            for (; k < 2; q++, rp += 2, k++)
                             {
                                 f32 x = fx + q[0];
                                 f32 y = q[2];
