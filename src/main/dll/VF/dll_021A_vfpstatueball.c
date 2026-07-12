@@ -24,7 +24,10 @@
 
 #define VFPSTATUEBALL_HIT_SEQID 0x14b /* staff-strike object seq id */
 
-extern f32 lbl_803E60B8;
+__declspec(section ".sdata2") f32 lbl_803E60B8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E60BC = 0.0f;
+#pragma explicit_zero_data off
 extern u8 fn_8016F16C(int* obj);
 
 int VFP_statueball_getExtraSize(void)
