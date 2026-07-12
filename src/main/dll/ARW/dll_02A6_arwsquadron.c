@@ -318,6 +318,7 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
     }
 }
 
+#pragma dont_inline on
 void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquadronSetup* setup)
 {
     SquadCmdFlags* flags = &state->flags.cmd;
@@ -351,6 +352,7 @@ void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquad
         }
     }
 }
+#pragma dont_inline off
 
 void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
 {
@@ -520,6 +522,7 @@ void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
     }
 }
 
+#pragma dont_inline on
 void ARWSquadron_update(int obj)
 {
     ArwSquadronState* state = *(ArwSquadronState**)&((GameObject*)obj)->extra;
@@ -715,3 +718,4 @@ void ARWSquadron_update(int obj)
     if (((GameObject*)obj)->anim.modelInstance->flags == 0)
         ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E71BC, timeDelta, 0);
 }
+#pragma dont_inline off
