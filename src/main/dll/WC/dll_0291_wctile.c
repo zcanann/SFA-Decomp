@@ -19,18 +19,10 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 
-#define WCTILE_EXTRA_SIZE          0xc
 #define WCTILE_RENDER_TYPE_BASE    0x400
 #define WCTILE_RENDER_TYPE_SHIFT   0xb
 #define WCTILE_CONTROLLER_GROUP    9
 #define WCTILE_MODEL_INDEX_OFFSET  0x19
-#define WCTILE_INITIAL_TILE_OFFSET 0x1a
-
-#define WCTILE_STATE_CONTROLLER  0x00
-#define WCTILE_STATE_TILE_X      0x04
-#define WCTILE_STATE_TILE_Y      0x06
-#define WCTILE_STATE_TARGET_TILE 0x08
-#define WCTILE_STATE_MODE        0x0a
 
 #define WCTILE_MODE_INIT_MOVE 0
 #define WCTILE_MODE_SOLID     1
@@ -50,38 +42,9 @@
 
 #define WCTILE_STATE_IFACE(state) WC_LEVEL_CONT_INTERFACE((state)->controller)
 
-typedef struct WCTileState
-{
-    GameObject* controller;
-    s16 tileX;
-    s16 tileY;
-    s16 targetTile;
-    s16 mode;
-} WCTileState;
-
-struct WCTileSetup
-{
-    ObjPlacement base;
-    u8 unk18;
-    s8 modelIndex;
-    s16 initialTile;
-    u8 pad1C[0x24 - 0x1C];
-};
-
-STATIC_ASSERT(sizeof(WCTileState) == WCTILE_EXTRA_SIZE);
-STATIC_ASSERT(offsetof(WCTileState, controller) == WCTILE_STATE_CONTROLLER);
-STATIC_ASSERT(offsetof(WCTileState, tileX) == WCTILE_STATE_TILE_X);
-STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
-STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
-STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
-STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTileSetup, base.posY) == 0x0c);
-STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
-
 int wctile_getExtraSize(void)
 {
-    return WCTILE_EXTRA_SIZE;
+    return sizeof(WCTileState);
 }
 
 int wctile_getObjectTypeId(GameObject* obj)

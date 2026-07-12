@@ -57,9 +57,7 @@ extern f32 lbl_803E6D38;
 extern f32 lbl_803E6D54;
 extern f32 lbl_803E6DA0;
 extern f32 lbl_803E6DE0;
-extern f32 lbl_803E6DF0;
 extern f32 lbl_803E6E00;
-extern f32 lbl_803E6DFC;
 extern f32 lbl_803E6E10;
 extern f32 lbl_803E6E14;
 extern f32 lbl_803E6E18;
@@ -88,9 +86,6 @@ extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
 extern f32 lbl_803E6DE4;
 extern f32 lbl_803E6DE8;
-
-extern f32 lbl_803E6DF4;
-extern f32 lbl_803E6DF8;
 
 extern void logPrintf(void* fmt, ...);
 extern char sWCPressuresActivateFormat[];

@@ -3,8 +3,41 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
-typedef struct WCTileSetup WCTileSetup;
+typedef struct WCTileState
+{
+    GameObject* controller;
+    s16 tileX;
+    s16 tileY;
+    s16 targetTile;
+    s16 mode;
+} WCTileState;
+
+typedef struct WCTileSetup
+{
+    ObjPlacement base;
+    u8 unk18;
+    s8 modelIndex;
+    s16 initialTile;
+    u8 pad1C[8];
+} WCTileSetup;
+
+STATIC_ASSERT(sizeof(WCTileState) == 0xc);
+STATIC_ASSERT(offsetof(WCTileState, controller) == 0x0);
+STATIC_ASSERT(offsetof(WCTileState, tileX) == 0x4);
+STATIC_ASSERT(offsetof(WCTileState, tileY) == 0x6);
+STATIC_ASSERT(offsetof(WCTileState, targetTile) == 0x8);
+STATIC_ASSERT(offsetof(WCTileState, mode) == 0xa);
+STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTileSetup, base.posY) == 0xc);
+STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == 0x19);
+STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == 0x1a);
+
+extern f32 lbl_803E6DF0;
+extern f32 lbl_803E6DF4;
+extern f32 lbl_803E6DF8;
+extern f32 lbl_803E6DFC;
 
 int wctile_getExtraSize(void);
 int wctile_getObjectTypeId(GameObject* obj);
