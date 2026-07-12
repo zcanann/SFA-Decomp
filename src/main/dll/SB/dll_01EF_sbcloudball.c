@@ -68,16 +68,18 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 /* romlist type id the cloud ball reacts to on contact (plays the shatter sfx) */
 #define CLOUDBALL_TARGET_TYPE_ID 142
 
-extern f32 lbl_803E58E8;
-extern f32 lbl_803E58EC;
-extern f32 gSbCloudBallFadeTime;
+__declspec(section ".sdata2") f32 lbl_803E58E8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E58EC = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 gSbCloudBallFadeTime = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E58F4 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E58F8 = 0.005f;
+__declspec(section ".sdata2") f32 gSbCloudBallVelocityScale = 2.0f;
+__declspec(section ".sdata2") f32 gSbCloudBallTrailVelScale = 0.1f;
+__declspec(section ".sdata2") f32 gSbCloudBallTrailParticleScale = 0.22f;
 extern f32 gSbCloudBallLightAttenNear;
 extern f32 gSbCloudBallLightAttenFar;
-extern f32 lbl_803E58F4;
-extern f32 lbl_803E58F8;
-extern f32 gSbCloudBallVelocityScale;
-extern f32 gSbCloudBallTrailVelScale;
-extern f32 gSbCloudBallTrailParticleScale;
 
 int SB_CloudBall_getExtraSize(void)
 {
