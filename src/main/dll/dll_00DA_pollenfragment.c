@@ -295,6 +295,8 @@ void pollenfragment_hitDetect(GameObject* obj)
     }
 }
 
+#pragma opt_strength_reduction on
+#pragma opt_common_subs off
 void pollenfragment_update(int obj)
 {
     u8* extra;
@@ -445,3 +447,5 @@ void pollenfragment_update(int obj)
         s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_common_subs reset
