@@ -8,6 +8,7 @@
  * the defeated state, signalling andross and the lightning object.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -184,7 +185,7 @@ void AndrossBrain_update(GameObject* obj)
     case BRAIN_DEFEATED:
         if (stateChanged != 0)
         {
-            androssligh_setState((GameObject*)state->lightning, BRAIN_DEFEATED, 0);
+            androssligh_setState((GameObject*)state->lightning, (AndrossLighMode)BRAIN_DEFEATED, 0);
             (*gGameUIInterface)->airMeterShutdown();
         }
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

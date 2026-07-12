@@ -12,6 +12,7 @@
  * symbol table); it is a sub-object whose lifetime is driven externally.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
 
 enum
@@ -19,30 +20,7 @@ enum
     ANDROSSLIGH_ANCHOR_OBJ_ID = 0x47dd9
 };
 
-enum
-{
-    ANDROSSLIGH_IDLE = 0,
-    ANDROSSLIGH_ACTIVE = 1,
-    ANDROSSLIGH_DONE = 2
-};
-
-typedef struct AndrosslighState
-{
-    void* anchor; /* 0x00: light-anchor object (id 0x47dd9), position source */
-    void* bolt;   /* 0x04: lightningCreate handle, NULL when not built */
-    f32 boltAge;  /* 0x08: phase accumulator advancing the bolt */
-    s8 state;     /* 0x0C: ANDROSSLIGH_* */
-    u8 prevState; /* 0x0D: previous frame's state */
-    u8 padE[0x10 - 0x0E];
-} AndrosslighState;
-
-STATIC_ASSERT(sizeof(AndrosslighState) == 0x10);
-STATIC_ASSERT(offsetof(AndrosslighState, bolt) == 0x4);
-STATIC_ASSERT(offsetof(AndrosslighState, boltAge) == 0x8);
-STATIC_ASSERT(offsetof(AndrosslighState, state) == 0xC);
-STATIC_ASSERT(offsetof(AndrosslighState, prevState) == 0xD);
-
-void androssligh_updateBeam(GameObject* obj, int beam)
+void androssligh_updateBeam(GameObject* obj, AndrossLighState* state)
 {
     extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
     f32 start[3];
@@ -75,26 +53,26 @@ void androssligh_updateBeam(GameObject* obj, int beam)
     PSVECScale(offset, offset, lbl_803DC52C);
     PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), offset, offset);
     PSVECAdd(end, offset, end);
-    if (*(void**)(beam + 4) == NULL)
+    if (state->bolt == NULL)
     {
-        *(int*)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C, lbl_803DC520, lbl_803DC524, 0);
-        *(f32*)(beam + 8) = 0.0f;
+        state->bolt = lightningCreate(start, end, lbl_803DC518, lbl_803DC51C, lbl_803DC520, lbl_803DC524, 0);
+        state->boltAge = 0.0f;
     }
     else
     {
-        *(f32*)(beam + 8) += timeDelta;
-        *(u16*)(*(int*)(beam + 4) + 0x20) = (int)(0.5f + *(f32*)(beam + 8));
-        if (*(u16*)(*(int*)(beam + 4) + 0x20) >= *(u16*)(*(int*)(beam + 4) + 0x22))
+        state->boltAge += timeDelta;
+        *(u16*)((int)state->bolt + 0x20) = (int)(0.5f + state->boltAge);
+        if (*(u16*)((int)state->bolt + 0x20) >= *(u16*)((int)state->bolt + 0x22))
         {
-            mm_free((void*)*(int*)(beam + 4));
-            *(int*)(beam + 4) = 0;
+            mm_free(state->bolt);
+            state->bolt = NULL;
         }
     }
 }
 
-void androssligh_setState(GameObject* obj, int newState, u8 force)
+void androssligh_setState(GameObject* obj, AndrossLighMode newState, u8 force)
 {
-    AndrosslighState* state;
+    AndrossLighState* state;
 
     if ((void*)obj == NULL)
     {
@@ -113,7 +91,7 @@ void androssligh_setState(GameObject* obj, int newState, u8 force)
 
 int androssligh_getExtraSize(void)
 {
-    return sizeof(AndrosslighState);
+    return sizeof(AndrossLighState);
 }
 
 int androssligh_getObjectTypeId(void)
@@ -127,7 +105,7 @@ void androssligh_free(void)
 
 void androssligh_render(GameObject* obj)
 {
-    void* bolt = ((AndrosslighState*)obj->extra)->bolt;
+    void* bolt = ((AndrossLighState*)obj->extra)->bolt;
 
     if (bolt != NULL)
     {
@@ -141,17 +119,17 @@ void androssligh_hitDetect(void)
 
 void androssligh_update(GameObject* obj)
 {
-    AndrosslighState* state = (obj)->extra;
+    AndrossLighState* state = (obj)->extra;
 
     if (state->anchor == NULL)
     {
-        state->anchor = (void*)ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
+        state->anchor = (GameObject*)ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
     }
     if (state->anchor != NULL)
     {
-        (obj)->anim.localPosX = ((GameObject*)state->anchor)->anim.localPosX;
-        (obj)->anim.localPosY = ((GameObject*)state->anchor)->anim.localPosY;
-        (obj)->anim.localPosZ = ((GameObject*)state->anchor)->anim.localPosZ;
+        (obj)->anim.localPosX = state->anchor->anim.localPosX;
+        (obj)->anim.localPosY = state->anchor->anim.localPosY;
+        (obj)->anim.localPosZ = state->anchor->anim.localPosZ;
     }
     state->prevState = state->state;
     switch (state->state)
@@ -159,7 +137,7 @@ void androssligh_update(GameObject* obj)
     case ANDROSSLIGH_IDLE:
         break;
     case ANDROSSLIGH_ACTIVE:
-        androssligh_updateBeam(obj, (int)state);
+        androssligh_updateBeam(obj, state);
         break;
     case ANDROSSLIGH_DONE:
         break;

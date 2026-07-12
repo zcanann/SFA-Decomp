@@ -336,17 +336,10 @@ extern int lbl_803DC508;
 extern const f32 lbl_803E75A8;
 
 
-extern void androssligh_updateBeam(GameObject* obj, int state);
 
 extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
-extern f32 lbl_803DC518;
-extern f32 lbl_803DC51C;
-extern f32 lbl_803DC520;
-extern f32 lbl_803DC524;
-extern f32 lbl_803DC528;
-extern f32 lbl_803DC52C;
 
 
 extern void creditsStart(void);
@@ -901,11 +894,6 @@ int AndrossHand_getObjectTypeId(void);
 void AndrossHand_free(void);
 void AndrossHand_render(int obj, int p2, int p3, int p4, int p5);
 void AndrossHand_update(int obj);
-int androssligh_getExtraSize(void);
-int androssligh_getObjectTypeId(void);
-void androssligh_free(void);
-void androssligh_render(GameObject* obj);
-void androssligh_setState(GameObject* obj, int newState, u8 force);
 int andross_SeqFn(GameObject* obj);
 void andross_init(int obj, u8* setup);
 int AndrossBrain_getExtraSize(void);
@@ -913,16 +901,12 @@ int AndrossBrain_getObjectTypeId(void);
 void AndrossBrain_free(void);
 void AndrossBrain_render(int obj, int p2, int p3, int p4, int p5);
 void AndrossHand_hitDetect(void);
-void androssligh_hitDetect(void);
 void AndrossBrain_hitDetect(void);
 void androsshand_setState(GameObject* obj, int newState, u8 force);
 void androssbrain_setState(GameObject* obj, int newState, u8 force);
 void androsshand_handleDamage(GameObject* obj, int hand);
-void androssligh_init(void);
 void AndrossBrain_init(GameObject* obj);
 void AndrossHand_init(int obj, u8* setup);
-void androssligh_update(GameObject* obj);
-void androssligh_updateBeam(GameObject* obj, int beam);
 void AndrossBrain_update(GameObject* obj);
 void arwarwing_setFlightHalfWidth(int arwing, f32 width);
 int arwarwing_getRotY(int arwing);
