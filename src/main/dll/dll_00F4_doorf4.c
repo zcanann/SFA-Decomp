@@ -23,6 +23,15 @@
 #include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/objseq.h"
+
+#define ObjGroup_AddObjectLegacy(obj, group) \
+    ((void (*)())ObjGroup_AddObject)((obj), (group))
+#define ObjMsg_PeekLegacy(obj, msg, param, flags) \
+    ((int (*)())ObjMsg_Peek)((obj), (msg), (param), (flags))
+#define ObjMsg_PopLegacy(obj, msg, param, flags) \
+    ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
+#define ObjMsg_SendToNearbyObjectsLegacy(type, distance, group, sender, message, param) \
+    ((void (*)())ObjMsg_SendToNearbyObjects)((type), (distance), (group), (sender), (message), (param))
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -220,7 +229,7 @@ void DoorF4_init(int* obj, int* params)
         state->gameBitB = -1;
     }
 
-    ObjGroup_AddObject((int)obj, DOORF4_OBJ_GROUP);
+    ObjGroup_AddObjectLegacy(obj, DOORF4_OBJ_GROUP);
 
     state->cosYaw = mathSinf(gDoorF4Pi * (f32)(int)*(s16*)obj / gDoorF4BinaryAngleScale);
     state->sinYaw = mathCosf(gDoorF4Pi * (f32)(int)*(s16*)obj / gDoorF4BinaryAngleScale);
@@ -270,7 +279,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         gb = mainGetBit(sub->gameBitA);
     }
-    if (ObjMsg_Peek((void*)obj, (u32*)&msg, 0, 0) != 0)
+    if (ObjMsg_PeekLegacy(obj, &msg, 0, 0) != 0)
     {
         switch (msg)
         {
@@ -396,7 +405,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             if (active != 0)
             {
-                if (ObjMsg_Pop((void*)obj, (u32*)&msg, 0, 0) != 0)
+                if (ObjMsg_PopLegacy((void*)obj, &msg, 0, 0) != 0)
                 {
                     switch (msg)
                     {
@@ -469,7 +478,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
     }
-    while (ObjMsg_Pop((void*)obj, (u32*)&msg, 0, 0) != 0)
+    while (ObjMsg_PopLegacy((void*)obj, &msg, 0, 0) != 0)
     {
     }
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -501,28 +510,28 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     switch (((GameObject*)obj)->anim.seqId)
                     {
                     case 0x1a2:
-                        ObjMsg_SendToNearbyObjects(0x19c, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x19c, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x1ad:
-                        ObjMsg_SendToNearbyObjects(0x1ac, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x1ac, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x1bb:
-                        ObjMsg_SendToNearbyObjects(0x1b9, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x1b9, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x1ea:
-                        ObjMsg_SendToNearbyObjects(0x1e7, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x1e7, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x205:
-                        ObjMsg_SendToNearbyObjects(0x202, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x202, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x21a:
-                        ObjMsg_SendToNearbyObjects(0x217, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x217, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x238:
-                        ObjMsg_SendToNearbyObjects(0x233, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x233, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     case 0x23f:
-                        ObjMsg_SendToNearbyObjects(0x23c, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_OPEN, 0);
+                        ObjMsg_SendToNearbyObjectsLegacy(0x23c, lbl_803E3674, 0, obj, DOORMSG_PARTNER_OPEN, 0);
                         break;
                     }
                 }
@@ -564,28 +573,28 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 switch (((GameObject*)obj)->anim.seqId)
                 {
                 case 0x1a2:
-                    ObjMsg_SendToNearbyObjects(0x19c, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x19c, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x1ad:
-                    ObjMsg_SendToNearbyObjects(0x1ac, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x1ac, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x1bb:
-                    ObjMsg_SendToNearbyObjects(0x1b9, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x1b9, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x1ea:
-                    ObjMsg_SendToNearbyObjects(0x1e7, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x1e7, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x205:
-                    ObjMsg_SendToNearbyObjects(0x202, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x202, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x21a:
-                    ObjMsg_SendToNearbyObjects(0x217, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x217, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x238:
-                    ObjMsg_SendToNearbyObjects(0x233, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x233, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 case 0x23f:
-                    ObjMsg_SendToNearbyObjects(0x23c, lbl_803E3674, 0, (void*)obj, DOORMSG_PARTNER_CLOSE, 0);
+                    ObjMsg_SendToNearbyObjectsLegacy(0x23c, lbl_803E3674, 0, obj, DOORMSG_PARTNER_CLOSE, 0);
                     break;
                 }
                 break;

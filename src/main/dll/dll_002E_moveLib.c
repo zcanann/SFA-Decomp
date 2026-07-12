@@ -35,6 +35,9 @@
 #include "main/objlib.h"
 #include "main/frame_timing.h"
 
+#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
+    ((int (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
+
 /* Persistent movement-state block that sits at the start of the per-object
  * extra for the baddie/object DLLs that use moveLib. The anim-channel table
  * region (0x1c..0x5bb) and the two packed turn/event tables (0x5bc/0x5da) are
@@ -634,8 +637,6 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
-#pragma opt_common_subs on
-#pragma opt_propagation off
 void dll_2E_func03(GameObject* obj, MoveLibState* s)
 {
     extern int fn_8003A8B4();
@@ -647,8 +648,8 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
     extern int fn_8003A9C0();
     register int yawDelta;
     register int seqHandle;
-    register GameObject* target;
-    GameObject* targetObj;
+    register u32 target;
+    void* targetObj;
     int bit1;
     int ival;
     float dist;
@@ -703,16 +704,16 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
         else
         {
             targetObj = s->lockTarget;
-            target = targetObj != NULL
-                         ? targetObj
-                         : (targetObj = (GameObject*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, (int)obj, &sv));
+            target = (u32)(targetObj != NULL
+                               ? targetObj
+                               : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
             if (targetObj != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)
                 {
-                    sv.dx = s->targetX - targetObj->anim.localPosX;
-                    sv.dy = s->targetY - targetObj->anim.localPosY;
-                    sv.dz = s->targetZ - targetObj->anim.localPosZ;
+                    sv.dx = s->targetX - ((GameObject*)targetObj)->anim.localPosX;
+                    sv.dy = s->targetY - ((GameObject*)targetObj)->anim.localPosY;
+                    sv.dz = s->targetZ - ((GameObject*)targetObj)->anim.localPosZ;
                     blendA = sv.dx * sv.dx;
                     blendB = sv.dz * sv.dz;
                     dist = sqrtf(blendA + blendB);
@@ -728,7 +729,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                         s->targetZ = s->targetZ * blendA + ((GameObject*)obj)->anim.localPosZ * blendB;
                     }
                 }
-                if ((s->reattackDelayBase != -1) && (target == s->lastTarget))
+                if ((s->reattackDelayBase != -1) && (target == *(u32*)&s->lastTarget))
                 {
                     ival = -framesThisStep + s->reattackTimer;
                     s->reattackTimer = ival;
@@ -755,19 +756,20 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 {
                     s->reattackTimer = s->reattackDelayBase;
                 }
-                if ((target != s->lastTarget) && (target != NULL))
+                if ((target != *(u32*)&s->lastTarget) && (target != 0))
                 {
-                    if (target->anim.hitReactState != NULL)
+                    if (((GameObject*)target)->anim.hitReactState != NULL)
                     {
-                        if ((((PostMotionTarget*)target->anim.hitReactState)->flags & 2) != 0)
+                        if ((((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->flags & 2) != 0)
                         {
                             targetYaw =
                                 lbl_803E1CDC *
-                                (float)(int)((PostMotionTarget*)target->anim.hitReactState)->yawB;
+                                (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawB;
                         }
-                        else if ((((PostMotionTarget*)target->anim.hitReactState)->flags & 1) != 0)
+                        else if ((((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->flags & 1) != 0)
                         {
-                            targetYaw = (float)(int)((PostMotionTarget*)target->anim.hitReactState)->yawA;
+                            targetYaw =
+                                (float)(int)((PostMotionTarget*)((GameObject*)target)->anim.hitReactState)->yawA;
                         }
                         else
                         {
@@ -779,9 +781,9 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                         targetYaw = lbl_803E1CD0;
                     }
                 }
-                if (target != NULL)
+                if (target != 0)
                 {
-                    yawDelta = Obj_GetYawDeltaToObject(obj, target, NULL);
+                    yawDelta = Obj_GetYawDeltaToObjectLegacy(obj, target, NULL);
                 }
                 if ((s->modeBits & 0x10) != 0)
                 {
@@ -790,11 +792,11 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 }
                 ival = (short)yawDelta;
                 ival = (ival >= 0) ? ival : -ival;
-                if (((0x5555 < ival) || (target == NULL)) ||
-                    (Vec_distance(&obj->anim.worldPosX, &target->anim.worldPosX) >
+                if (((0x5555 < ival) || (target == 0)) ||
+                    (Vec_distance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) >
                      s->lookAtMaxDistance))
                 {
-                    if ((s->phase != MOVELIB_PHASE_IDLE) || ((target == NULL && s->lastTarget != NULL)))
+                    if ((s->phase != MOVELIB_PHASE_IDLE) || ((target == 0 && (*(u32*)&s->lastTarget != 0))))
                     {
                         objFn_8003acfc((GameObject*)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                         s->setupFlag = 10;
@@ -804,7 +806,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 }
                 else
                 {
-                    if ((target != s->lastTarget) || (s->phase == MOVELIB_PHASE_IDLE))
+                    if ((target != *(u32*)&s->lastTarget) || (s->phase == MOVELIB_PHASE_IDLE))
                     {
                         objFn_8003acfc((GameObject*)obj, seqHandle, (u32)s->pointCount, (char*)s->animChannels);
                         s->setupFlag = 1;
@@ -813,14 +815,14 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                     {
                         s->setupFlag = 0;
                     }
-                    objMathFn_8003a380((u16*)obj, (u32)target, &s->targetX, (s->setupFlag != 0) ? (int)s->animChannels : 0,
+                    objMathFn_8003a380((u16*)obj, target, &s->targetX, (s->setupFlag != 0) ? (int)s->animChannels : 0,
                                        s->turnTable, targetYaw, 8, s->yawLimitA);
                     s->phase = MOVELIB_PHASE_TURN;
                 }
-                s->lastTarget = target;
+                *(u32*)&s->lastTarget = target;
                 if (s->setupFlag == 0)
                 {
-                    s->lockTarget = NULL;
+                    *(u32*)&s->lockTarget = 0;
                 }
                 if (((s->modeBits & 8) == 0) && (s->setupFlag != 0))
                 {
@@ -830,9 +832,6 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
         }
     }
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning, PostControl* control,
                        float* turnSpeed, s16* moves)
 {

@@ -29,6 +29,9 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 
+#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
+    ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
+
 #define PAD_BUTTON_B 0x200
 
 typedef struct WarpstoneUpdateMenuAnimObjState
@@ -510,7 +513,7 @@ void warpstone_update(int obj)
     if (advanceResult != 0)
     {
         ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 0;
-        yawDelta = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, 0);
+        yawDelta = Obj_GetYawDeltaToObjectLegacy(obj, target, 0);
         yawDelta = yawDelta - lbl_803DDBF0;
         {
             int mag = yawDelta - 0x8000;

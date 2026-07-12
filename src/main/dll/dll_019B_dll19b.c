@@ -13,6 +13,11 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 
+#define ObjMsg_PopLegacy(obj, msg, param, flags) \
+    ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
+#define ObjGroup_FindNearestObjectLegacy(group, from, distance) \
+    ((int (*)())ObjGroup_FindNearestObject)((group), (from), (distance))
+
 #define DLL19B_TARGET_OBJGROUP 0xe
 
 /* env effects driven by anim events; ENVFX_B is the default when no override id set */
@@ -195,16 +200,13 @@ typedef struct Dll19BState
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
-#pragma opt_strength_reduction on
-#pragma opt_common_subs off
-#pragma opt_dead_assignments off
-void dll_19B_update(GameObject* obj)
+void dll_19B_update(int obj)
 {
     extern void* gTitleMenuControlInterface;
 
     Dll19BState* st;
-    GameObject* player;
-    GameObject* near;
+    int player;
+    int near;
     Dll19BState* st2;
     int v;
     f32 dy;
@@ -213,12 +215,12 @@ void dll_19B_update(GameObject* obj)
     int msg;
     int unk8;
 
-    st = obj->extra;
-    player = Obj_GetPlayerObject();
+    st = ((GameObject*)obj)->extra;
+    player = (int)Obj_GetPlayerObject();
     dist = lbl_803E518C;
-    st2 = obj->extra;
+    st2 = ((GameObject*)obj)->extra;
     unk16 = 0;
-    while (ObjMsg_Pop(obj, (u32*)&msg, (u32*)&unk8, (u32*)&unk16) != 0)
+    while (ObjMsg_PopLegacy(obj, &msg, &unk8, &unk16) != 0)
     {
         switch (msg)
         {
@@ -277,10 +279,10 @@ void dll_19B_update(GameObject* obj)
     }
     else
     {
-        near = (GameObject*)ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, (int)player, &dist);
+        near = ObjGroup_FindNearestObjectLegacy(DLL19B_TARGET_OBJGROUP, player, &dist);
         if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
         {
-            dy = near->anim.localPosZ - player->anim.localPosZ;
+            dy = ((GameObject*)near)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             if (dy <= lbl_803E5198)
             {
                 if (dy < lbl_803E5198)
@@ -308,19 +310,19 @@ void dll_19B_update(GameObject* obj)
         switch (st->phase)
         {
         case DLL19B_PHASE_IDLE:
-            if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < st->activationDist)
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st->activationDist)
             {
                 st->phase = DLL19B_PHASE_WAIT_EVENT;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
                     void* handle = Resource_Acquire(0x83, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))((int)obj, 1, 0, 1, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 {
                     void* handle = Resource_Acquire(0x84, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))((int)obj, 0, 0, 1, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 mainSetBits(0x126, 0);
@@ -376,7 +378,7 @@ void dll_19B_update(GameObject* obj)
             }
             else
             {
-                playerCancelSpell((int)player, -1);
+                playerCancelSpell(player, -1);
                 mainSetBits(0x126, 0);
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
@@ -406,7 +408,7 @@ void dll_19B_update(GameObject* obj)
             {
                 void* handle = Resource_Acquire(0x6a, 1);
                 st->gfxHandle =
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))((int)obj, 2, 0, 0x402, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
                 Resource_Release(handle);
             }
             mainSetBits(0x1d8, 0);
@@ -417,10 +419,6 @@ void dll_19B_update(GameObject* obj)
         }
     }
 }
-#pragma opt_strength_reduction reset
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
-
 void dll_19B_release(void)
 {
 }
