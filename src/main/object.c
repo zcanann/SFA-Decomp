@@ -1981,7 +1981,7 @@ void mapSetupPlayer(void)
     f32 x, y, z;
     int uiDll;
     u8* view;
-    u8* vp;
+    CameraViewSlot* vp;
     CharSpawn spawn;
 
     base = (u8*)(int)&gObjCameraSetupBlock;
@@ -2049,9 +2049,9 @@ void mapSetupPlayer(void)
         }
         vp = Camera_GetCurrentViewSlot();
         view = (*gCameraInterface)->getCamera();
-        *(f32*)(vp + 0xc) = *(f32*)(view + 0x18);
-        *(f32*)(vp + 0x10) = *(f32*)(view + 0x1c);
-        *(f32*)(vp + 0x14) = *(f32*)(view + 0x20);
+        vp->x = *(f32*)(view + 0x18);
+        vp->y = *(f32*)(view + 0x1c);
+        vp->z = *(f32*)(view + 0x20);
         (*(void (**)(u8*))(*(int*)gTitleMenuControlInterface + 0x10))(obj);
         lbl_803DCB70 = 0;
         playerUpdateFn_8005649c();

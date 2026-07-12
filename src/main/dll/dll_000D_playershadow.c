@@ -57,7 +57,7 @@ f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
     BoneSpawnData data;
-    GameObject* cam;
+    CameraViewSlot* cam;
     u8 found;
     u8 surfType;
     int i;
@@ -85,13 +85,13 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
     found = 0;
     cam = Camera_GetCurrentViewSlot();
     {
-        s16 camRotY = cam->anim.rotY;
-        lbl_803DD29A = cam->anim.rotX;
+        s16 camRotY = cam->pitch;
+        lbl_803DD29A = cam->yaw;
         gPlayerShadowCamRotY = camRotY;
     }
-    dx = cam->anim.localPosX - obj->anim.localPosX;
-    dy = cam->anim.localPosY - obj->anim.localPosY;
-    dz = cam->anim.localPosZ - obj->anim.localPosZ;
+    dx = cam->x - obj->anim.localPosX;
+    dy = cam->y - obj->anim.localPosY;
+    dz = cam->z - obj->anim.localPosZ;
     for (i = 0; i < count; i++)
     {
         surfType = hits[i].surfaceType;

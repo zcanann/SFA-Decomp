@@ -10,6 +10,7 @@
 #include "main/vecmath.h"
 #include "main/voxmaps.h"
 #include "main/audio/sfx.h"
+#include "main/camera.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
@@ -137,7 +138,6 @@ extern int lbl_803DC778;
 extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
-extern void* Camera_GetCurrentViewSlot(void);
 extern int padGetStickX(int p);
 extern int padGetStickY(int p);
 extern int getButtonsJustPressed(int p);

@@ -1285,21 +1285,21 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
         case 8:
         {
-            int cam = Camera_GetCurrentViewSlot();
-            ((ArwingState*)state)->aimOffsetX = *(f32*)(cam + 0xc) - obj->anim.localPosX;
-            ((ArwingState*)state)->aimOffsetY = *(f32*)(cam + 0x10) - obj->anim.localPosY;
-            ((ArwingState*)state)->aimOffsetZ = *(f32*)(cam + 0x14) - obj->anim.localPosZ;
-            ((ArwingState*)state)->aimYaw = obj->anim.rotX - (u16) * (s16*)(cam + 0);
+            CameraViewSlot* cam = Camera_GetCurrentViewSlot();
+            ((ArwingState*)state)->aimOffsetX = cam->x - obj->anim.localPosX;
+            ((ArwingState*)state)->aimOffsetY = cam->y - obj->anim.localPosY;
+            ((ArwingState*)state)->aimOffsetZ = cam->z - obj->anim.localPosZ;
+            ((ArwingState*)state)->aimYaw = obj->anim.rotX - (u16)cam->yaw;
             if (((ArwingState*)state)->aimYaw > 32768)
                 ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw - 65535;
             if (((ArwingState*)state)->aimYaw < -32768)
                 ((ArwingState*)state)->aimYaw = ((ArwingState*)state)->aimYaw + 65535;
-            ((ArwingState*)state)->aimPitch = obj->anim.rotY - (u16) * (s16*)(cam + 2);
+            ((ArwingState*)state)->aimPitch = obj->anim.rotY - (u16)cam->pitch;
             if (((ArwingState*)state)->aimPitch > 32768)
                 ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch - 65535;
             if (((ArwingState*)state)->aimPitch < -32768)
                 ((ArwingState*)state)->aimPitch = ((ArwingState*)state)->aimPitch + 65535;
-            ((ArwingState*)state)->aimRoll = *(s16*)(cam + 4) - obj->anim.rotZ;
+            ((ArwingState*)state)->aimRoll = cam->roll - obj->anim.rotZ;
             ((ArwingState*)state)->aimSnapshotValid = 1;
             break;
         }

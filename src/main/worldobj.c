@@ -281,7 +281,7 @@ void worldobj_update(GameObject* obj)
     u8 i;
     int child;
     ObjTextureRuntimeSlot* tex;
-    u8* view;
+    CameraViewSlot* view;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -472,9 +472,9 @@ void worldobj_update(GameObject* obj)
         if (obj->unkF4 != 0 && *(void**)&state->lookAtTargetRef != NULL)
         {
             view = Camera_GetCurrentViewSlot();
-            dx = *(f32*)(view + 0xc) - obj->anim.localPosX;
-            dy = *(f32*)(view + 0x10) - obj->anim.localPosY;
-            dz = *(f32*)(view + 0x14) - obj->anim.localPosZ;
+            dx = view->x - obj->anim.localPosX;
+            dy = view->y - obj->anim.localPosY;
+            dz = view->z - obj->anim.localPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
             if (dist > lbl_803E665C)
             {

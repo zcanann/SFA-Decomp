@@ -72,7 +72,7 @@ void DeathSeq_hitDetect(void)
 void DeathSeq_update(int* obj)
 {
 
-    s16* cam = Camera_GetCurrentViewSlot();
+    CameraViewSlot* cam = Camera_GetCurrentViewSlot();
     DeathSeqState* state = ((GameObject*)obj)->extra;
     int ready;
     GameObject* player = Obj_GetPlayerObject();
@@ -161,14 +161,14 @@ void DeathSeq_update(int* obj)
         f32 sin34 = state->dist * cosPitch;
         sin30 = sin34 * sin30;
         sin34 = sin34 * cos30;
-        cam[0] = 0x2000;
-        cam[1] = 0x1000;
+        cam->yaw = 0x2000;
+        cam->pitch = 0x1000;
         xTerm = lbl_803E3D38 * -mathSinf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
         zTerm = (fz = lbl_803E3D38) * -mathCosf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
-        ((GameObject*)cam)->anim.localPosX = sin30 + (((GameObject*)obj)->anim.worldPosX + xTerm);
+        cam->x = sin30 + (((GameObject*)obj)->anim.worldPosX + xTerm);
         fy = fz + ((GameObject*)obj)->anim.worldPosY;
-        ((GameObject*)cam)->anim.localPosY = fy + dz;
-        ((GameObject*)cam)->anim.localPosZ = sin34 + (((GameObject*)obj)->anim.worldPosZ + zTerm);
+        cam->y = fy + dz;
+        cam->z = sin34 + (((GameObject*)obj)->anim.worldPosZ + zTerm);
         Camera_SetFovY(gDeathSeqCameraFovY);
         state->camActive = 1;
         state->dist += interpolate(state->distTarget - state->dist, lbl_803E3D48, timeDelta);
@@ -176,11 +176,11 @@ void DeathSeq_update(int* obj)
     }
     else
     {
-        cam[0] = state->camRotY;
-        cam[1] = state->camRotX;
-        ((GameObject*)cam)->anim.localPosX = state->camX;
-        ((GameObject*)cam)->anim.localPosY = state->camY;
-        ((GameObject*)cam)->anim.localPosZ = state->camZ;
+        cam->yaw = state->camRotY;
+        cam->pitch = state->camRotX;
+        cam->x = state->camX;
+        cam->y = state->camY;
+        cam->z = state->camZ;
         state->camActive = 0;
     }
 
@@ -197,18 +197,18 @@ void DeathSeq_update(int* obj)
 void DeathSeq_init(int* obj)
 {
     DeathSeqState* state = ((GameObject*)obj)->extra;
-    s16* cam = Camera_GetCurrentViewSlot();
+    CameraViewSlot* cam = Camera_GetCurrentViewSlot();
     f32 dist;
 
     setScreenTransitionPause(1);
     (*gScreenTransitionInterface)->start(1, 1);
     ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
     state->timer = lbl_803E3D58;
-    state->camX = ((GameObject*)cam)->anim.localPosX;
-    state->camY = ((GameObject*)cam)->anim.localPosY;
-    state->camZ = ((GameObject*)cam)->anim.localPosZ;
-    state->camRotY = cam[0];
-    state->camRotX = cam[1];
+    state->camX = cam->x;
+    state->camY = cam->y;
+    state->camZ = cam->z;
+    state->camRotY = cam->yaw;
+    state->camRotX = cam->pitch;
     dist = lbl_803E3D2C;
     state->dist = dist;
     state->distTarget = dist;

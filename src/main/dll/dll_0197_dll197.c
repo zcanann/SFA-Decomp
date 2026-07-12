@@ -254,7 +254,7 @@ void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 endGrid[4];
     u8 traceOut[8];
     Cup197State* state = (obj)->extra;
-    u8* camera;
+    CameraViewSlot* camera;
     f32 dist;
     f32 scale;
     void* dirAlias = dir;
@@ -273,9 +273,9 @@ void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
     state->visibleToCamera = 1;
     camera = Camera_GetCurrentViewSlot();
-    dir[0] = *(f32*)(camera + 0xc) - (obj)->anim.localPosX;
-    dir[1] = *(f32*)(camera + 0x10) - (obj)->anim.localPosY;
-    dir[2] = *(f32*)(camera + 0x14) - (obj)->anim.localPosZ;
+    dir[0] = camera->x - (obj)->anim.localPosX;
+    dir[1] = camera->y - (obj)->anim.localPosY;
+    dir[2] = camera->z - (obj)->anim.localPosZ;
 
     dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
     if (dist > lbl_803E5120)
@@ -294,9 +294,9 @@ void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         cameraTrace[0] = lbl_803E512C * dir[0];
         cameraTrace[1] = lbl_803E512C * dir[1];
         cameraTrace[2] = lbl_803E512C * dir[2];
-        cameraTrace[0] = cameraTrace[0] + *(f32*)(camera + 0xc);
-        cameraTrace[1] = cameraTrace[1] + *(f32*)(camera + 0x10);
-        cameraTrace[2] = cameraTrace[2] + *(f32*)(camera + 0x14);
+        cameraTrace[0] = cameraTrace[0] + camera->x;
+        cameraTrace[1] = cameraTrace[1] + camera->y;
+        cameraTrace[2] = cameraTrace[2] + camera->z;
 
         voxmaps_worldToGrid((void*)objTrace, startGrid);
         voxmaps_worldToGrid((void*)cameraTrace, endGrid);

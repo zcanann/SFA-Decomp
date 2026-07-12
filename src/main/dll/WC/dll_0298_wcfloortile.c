@@ -476,7 +476,7 @@ void arwarwing_spawnBomb(GameObject* obj, int state, int side)
 void arwarwing_updateThrusters(GameObject* obj, int state)
 {
 
-    int slot;
+    CameraViewSlot* slot;
     f32 mtx[16];
     MatrixTransform src;
 
@@ -496,9 +496,9 @@ void arwarwing_updateThrusters(GameObject* obj, int state)
     *(f32*)(((ArwingState*)state)->thrusterL + 0x18) = *(f32*)(((ArwingState*)state)->thrusterL + 0xc);
     *(f32*)(((ArwingState*)state)->thrusterL + 0x1c) = *(f32*)(((ArwingState*)state)->thrusterL + 0x10);
     *(f32*)(((ArwingState*)state)->thrusterL + 0x20) = *(f32*)(((ArwingState*)state)->thrusterL + 0x14);
-    *(s16*)(((ArwingState*)state)->thrusterL + 4) = -*(s16*)(slot + 4);
-    *(s16*)(((ArwingState*)state)->thrusterL + 2) = -*(s16*)(slot + 2);
-    *(s16*)(((ArwingState*)state)->thrusterL + 0) = 0x8000 - *(s16*)slot;
+    *(s16*)(((ArwingState*)state)->thrusterL + 4) = -slot->roll;
+    *(s16*)(((ArwingState*)state)->thrusterL + 2) = -slot->pitch;
+    *(s16*)(((ArwingState*)state)->thrusterL + 0) = 0x8000 - slot->yaw;
 
     Matrix_TransformPoint(
         mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF4, (f32*)(((ArwingState*)state)->thrusterR + 0xc),
@@ -506,9 +506,9 @@ void arwarwing_updateThrusters(GameObject* obj, int state)
     *(f32*)(((ArwingState*)state)->thrusterR + 0x18) = *(f32*)(((ArwingState*)state)->thrusterR + 0xc);
     *(f32*)(((ArwingState*)state)->thrusterR + 0x1c) = *(f32*)(((ArwingState*)state)->thrusterR + 0x10);
     *(f32*)(((ArwingState*)state)->thrusterR + 0x20) = *(f32*)(((ArwingState*)state)->thrusterR + 0x14);
-    *(s16*)(((ArwingState*)state)->thrusterR + 4) = -*(s16*)(slot + 4);
-    *(s16*)(((ArwingState*)state)->thrusterR + 2) = -*(s16*)(slot + 2);
-    *(s16*)(((ArwingState*)state)->thrusterR + 0) = 0x8000 - *(s16*)slot;
+    *(s16*)(((ArwingState*)state)->thrusterR + 4) = -slot->roll;
+    *(s16*)(((ArwingState*)state)->thrusterR + 2) = -slot->pitch;
+    *(s16*)(((ArwingState*)state)->thrusterR + 0) = 0x8000 - slot->yaw;
 }
 
 /* the shared header leaves dont_inline stuck on; clamps must inline to match */

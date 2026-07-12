@@ -970,7 +970,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 
 void snowCloudUpdateFlakes(u8* snow)
 {
-    s16* cam;
+    CameraViewSlot* cam;
     SnowQuad* e;
     f32* m;
     int i;
@@ -1004,7 +1004,7 @@ void snowCloudUpdateFlakes(u8* snow)
                 timeDelta * (f32)e->angVelA + (f32)e->angA;
             e->angB =
                 timeDelta * (f32)e->angVelB + (f32)e->angB;
-            angleToVec2((u16)(0xffff - *cam), &c1, &s1);
+            angleToVec2((u16)(0xffff - cam->yaw), &c1, &s1);
             angleToVec2(e->angA, &c2, &s2);
             angleToVec2(e->angB, &c3, &s3);
             for (c = 0; c < 3; c++)
@@ -1026,7 +1026,7 @@ void snowCloudUpdateFlakes(u8* snow)
     {
         f32 size2;
         f32 negSize2;
-        angleToVec2((u16)(0xffff - *cam), &c1, &s1);
+        angleToVec2((u16)(0xffff - cam->yaw), &c1, &s1);
         size2 = gSnowFlakeSize;
         negSize2 = -size2;
         m = e->verts;
@@ -1363,7 +1363,7 @@ void snowReposSnowCloud(int cloudId)
 {
     u8* p;
     SnowFlake* part;
-    f32* cam;
+    CameraViewSlot* cam;
     f32* m;
     u8* q;
     int i;
@@ -1413,10 +1413,10 @@ void snowReposSnowCloud(int cloudId)
         return;
     }
     part = *(SnowFlake**)(p + 4);
-    cam = (f32*)Camera_GetCurrentViewSlot();
-    dx = cam[0x44 / 4] - ((NewCloud*)gNewClouds[i])->worldPosX;
-    dy = cam[0x48 / 4] - ((NewCloud*)gNewClouds[i])->worldPosY;
-    dz = cam[0x4c / 4] - ((NewCloud*)gNewClouds[i])->worldPosZ;
+    cam = Camera_GetCurrentViewSlot();
+    dx = cam->worldX - ((NewCloud*)gNewClouds[i])->worldPosX;
+    dy = cam->worldY - ((NewCloud*)gNewClouds[i])->worldPosY;
+    dz = cam->worldZ - ((NewCloud*)gNewClouds[i])->worldPosZ;
     distSq = dx * dx + dy * dy + dz * dz;
     sqrtf__inline((f32)distSq);
     ((NewCloud*)gNewClouds[i])->lightningTimer =
@@ -1436,7 +1436,7 @@ void snowReposSnowCloud(int cloudId)
             args.f10 = lbl_803DF1A4;
             args.fc = 0;
             args.fa = 0;
-            args.f8 = 0xffff - (*(s16*)cam + randomGetRange(-5000, 5000));
+            args.f8 = 0xffff - (cam->yaw + randomGetRange(-5000, 5000));
             vecRotateZXY(&args.f8, dir);
         }
         args.f14 = dir[0];
@@ -1451,32 +1451,32 @@ void snowReposSnowCloud(int cloudId)
         fwd[1] = m[9];
         fwd[2] = m[10];
         PSVECNormalize(fwd, fwd);
-        from[0] = (cam[0x44 / 4] + (int)
+        from[0] = (cam->worldX + (int)
         randomGetRange(-3000, 3000)
         )
         -
             gNewCloudLightningForwardDist * fwd[0];
-        from[1] = (cam[0x48 / 4] + (int)
+        from[1] = (cam->worldY + (int)
         randomGetRange(2000, 4000)
         )
         -
             gNewCloudLightningForwardDist * fwd[1];
-        from[2] = (cam[0x4c / 4] + (int)
+        from[2] = (cam->worldZ + (int)
         randomGetRange(-3000, 3000)
         )
         -
             gNewCloudLightningForwardDist * fwd[2];
-        to[0] = (cam[0x44 / 4] + (int)
+        to[0] = (cam->worldX + (int)
         randomGetRange(-3000, 3000)
         )
         -
             gNewCloudLightningForwardDist * fwd[0];
-        to[1] = (cam[0x48 / 4] - (int)
+        to[1] = (cam->worldY - (int)
         randomGetRange(2000, 4000)
         )
         -
             gNewCloudLightningForwardDist * fwd[1];
-        to[2] = (cam[0x4c / 4] + (int)
+        to[2] = (cam->worldZ + (int)
         randomGetRange(-3000, 3000)
         )
         -
@@ -2068,7 +2068,7 @@ extern const f32 lbl_803DF278;
 #pragma opt_propagation off
 void dll_07_func06(void)
 {
-    s16* cam;
+    CameraViewSlot* cam;
     void** clouds;
     u8** pp;
     int i;
@@ -2189,18 +2189,18 @@ void dll_07_func06(void)
                     args.f10 = lbl_803DF1A4;
                     args.fc = 0;
                     args.fa = 0;
-                    args.f8 = 0xffff - *cam;
+                    args.f8 = 0xffff - cam->yaw;
                     vecRotateZXY(&args.f8, vec);
-                    pos[0] = *(f32*)((u8*)cam + 0x44) + vec[0];
-                    t = *(f32*)((u8*)cam + 0x48) - gNewCloudCameraYOffset;
+                    pos[0] = cam->worldX + vec[0];
+                    t = cam->worldY - gNewCloudCameraYOffset;
                     pos[1] = t + vec[1];
-                    pos[2] = *(f32*)((u8*)cam + 0x4c) + vec[2];
+                    pos[2] = cam->worldZ + vec[2];
                 }
                 else
                 {
-                    pos[0] = *(f32*)((u8*)cam + 0x44);
-                    pos[1] = *(f32*)((u8*)cam + 0x48) - gNewCloudCameraYOffset;
-                    pos[2] = *(f32*)((u8*)cam + 0x4c);
+                    pos[0] = cam->worldX;
+                    pos[1] = cam->worldY - gNewCloudCameraYOffset;
+                    pos[2] = cam->worldZ;
                 }
             }
             ((NewCloud*)D7_CLOUD)->driftOffset = framesThisStep * ((NewCloud*)D7_CLOUD)->driftRate +

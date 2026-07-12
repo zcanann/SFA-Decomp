@@ -104,7 +104,7 @@ f32* Camera_GetViewRotationMatrix(void);
 f32* Camera_GetInverseViewRotationMatrix(void);
 f32* Camera_GetViewMatrix(void);
 f32* Camera_GetInverseViewMatrix(void);
-void* Camera_GetCurrentViewSlot(void);
+CameraViewSlot* Camera_GetCurrentViewSlot(void);
 u8 CameraShake_IsActive(void);
 void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 void CameraShake_SetAllMagnitudes(f32 magnitude);

@@ -151,7 +151,7 @@ extern u8 gNewShadowFrameIndex;
 extern const f32 lbl_803DED28;
 extern u8 lbl_8030E8B0[];
 extern u8 gNewShadowCasterCount;
-extern int* gNewShadowCurrentViewSlot;
+extern CameraViewSlot* gNewShadowCurrentViewSlot;
 extern f32 Ydchuff_803DED80;
 extern f32 Ydchuff_803DED90;
 extern const double TokenCB_803DED58;
@@ -2395,15 +2395,15 @@ void allocLotsOfTextures(void)
 #pragma opt_common_subs on
 void shadowCreate(int* obj)
 {
-    int* cam;
+    CameraViewSlot* cam;
     f32 dx, dy, dz, dist;
     if (gNewShadowCasterCount < 0x12c)
     {
         gNewShadowCasterTable[gNewShadowCasterCount].obj = obj;
         cam = gNewShadowCurrentViewSlot;
-        dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)((char*)cam + 0xc);
-        dy = ((GameObject*)obj)->anim.worldPosY - *(f32*)((char*)cam + 0x10);
-        dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)((char*)cam + 0x14);
+        dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
+        dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
+        dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
         gNewShadowCasterTable[gNewShadowCasterCount].scale = ((GameObject*)obj)->anim.modelState->shadowScale / dist;
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
@@ -2602,7 +2602,7 @@ void renderShadows(void)
     f32 mc54[3], mc48[3];
     f32 vA[3], v30[3];
     f32 dot24[3], proj[3];
-    int* slot;
+    CameraViewSlot* slot;
     char* B = (char*)gNewShadowEntries;
     int blkArr, blkCount;
     s8 casterIdx;
@@ -2618,13 +2618,13 @@ void renderShadows(void)
     savedFovY = Camera_GetFovY();
     Camera_SetFovY(gNewShadowFovY);
     Camera_SetAspectRatio(lbl_803DED2C);
-    sCamX = ((GameObject*)slot)->anim.localPosX;
-    sCamY = ((GameObject*)slot)->anim.localPosY;
-    sCamZ = ((GameObject*)slot)->anim.localPosZ;
-    savedRotY = ((GameObject*)slot)->anim.rotY;
-    savedRotX = ((GameObject*)slot)->anim.rotX;
-    savedRotZ = ((GameObject*)slot)->anim.rotZ;
-    ((GameObject*)slot)->anim.rotY = 0;
+    sCamX = slot->x;
+    sCamY = slot->y;
+    sCamZ = slot->z;
+    savedRotY = slot->pitch;
+    savedRotX = slot->yaw;
+    savedRotZ = slot->roll;
+    slot->pitch = 0;
     v30[0] = lbl_803DED28;
     v30[1] = lbl_803DED2C;
     v30[2] = lbl_803DED28;
@@ -2721,8 +2721,8 @@ void renderShadows(void)
                 f32 sqB = vAz * vAz;
                 gNewShadowLightAngleY = (u16)getAngle(sqrtf(sqA + sqB), vAy) - 0x3fc8;
             }
-            ((GameObject*)slot)->anim.rotY = gNewShadowLightAngleY;
-            ((GameObject*)slot)->anim.rotX = gNewShadowLightAngleX;
+            slot->pitch = gNewShadowLightAngleY;
+            slot->yaw = gNewShadowLightAngleX;
             {
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
                 if (mag > lbl_803DED28)
@@ -2733,28 +2733,28 @@ void renderShadows(void)
                     dirZ *= inv;
                 }
             }
-            *(int*)((char*)slot + 0x40) = 0;
+            slot->parentObject = NULL;
             ((ObjModelState*)of64)->shadowOffsetX = -vA[0];
             ((ObjModelState*)of64)->shadowOffsetY = -vA[1];
             ((ObjModelState*)of64)->shadowOffsetZ = -vA[2];
             setScreenWidth(screenW);
             {
                 f32* m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
-                ((GameObject*)slot)->anim.localPosX = dirX + m[3];
-                ((GameObject*)slot)->anim.localPosY = dirY + m[7];
-                ((GameObject*)slot)->anim.localPosZ = dirZ + m[11];
+                slot->x = dirX + m[3];
+                slot->y = dirY + m[7];
+                slot->z = dirZ + m[11];
             }
             if (*(u32*)&((GameObject*)obj)->anim.parent == 0)
             {
-                ((GameObject*)slot)->anim.localPosX += gMapSavedPlayerOffsetX;
-                ((GameObject*)slot)->anim.localPosZ += gMapSavedPlayerOffsetZ;
+                slot->x += gMapSavedPlayerOffsetX;
+                slot->z += gMapSavedPlayerOffsetZ;
             }
             vAz = *(f32*)of64;
             vAx = -vAz;
             if (*(u32*)&((GameObject*)obj)->anim.parent != 0)
             {
-                ((GameObject*)slot)->anim.localPosX += playerMapOffsetX;
-                ((GameObject*)slot)->anim.localPosZ += playerMapOffsetZ;
+                slot->x += playerMapOffsetX;
+                slot->z += playerMapOffsetZ;
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
@@ -2854,12 +2854,12 @@ void renderShadows(void)
         setDisplayCopyFilter();
     }
     clearScreenWidth();
-    ((GameObject*)slot)->anim.localPosX = sCamX;
-    ((GameObject*)slot)->anim.localPosY = sCamY;
-    ((GameObject*)slot)->anim.localPosZ = sCamZ;
-    ((GameObject*)slot)->anim.rotY = savedRotY;
-    ((GameObject*)slot)->anim.rotX = savedRotX;
-    ((GameObject*)slot)->anim.rotZ = savedRotZ;
+    slot->x = sCamX;
+    slot->y = sCamY;
+    slot->z = sCamZ;
+    slot->pitch = savedRotY;
+    slot->yaw = savedRotX;
+    slot->roll = savedRotZ;
     if (getDrawDistanceFlag_8005cd48() != 0)
     {
         Camera_SetCurrentViewIndex(0);

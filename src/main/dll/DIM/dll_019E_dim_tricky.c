@@ -64,7 +64,7 @@ void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
                     int p5, s8 visible)
 {
     Dll19EState* state;
-    u8* camera;
+    CameraViewSlot* camera;
     f32 dist;
     f32 invDist;
     f32 facz, facy, facx;
@@ -96,9 +96,9 @@ void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
     {
         state->losVisible = 1;
         camera = Camera_GetCurrentViewSlot();
-        stk.delta[0] = *(f32*)(camera + 0xc) - (obj)->anim.localPosX;
-        stk.delta[1] = *(f32*)(camera + 0x10) - (obj)->anim.localPosY;
-        stk.delta[2] = *(f32*)(camera + 0x14) - (obj)->anim.localPosZ;
+        stk.delta[0] = camera->x - (obj)->anim.localPosX;
+        stk.delta[1] = camera->y - (obj)->anim.localPosY;
+        stk.delta[2] = camera->z - (obj)->anim.localPosZ;
         dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
         if (dist > gDimTrickyLosMinDist)
         {
@@ -124,9 +124,9 @@ void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
             midB[1] = facy2;
             facz2 = gDimTrickyLosCamOffsetDist * nz;
             midB[2] = facz2;
-            midB[0] = facx2 + *(f32*)(camera + 0xc);
-            midB[1] = facy2 + *(f32*)(camera + 0x10);
-            midB[2] = facz2 + *(f32*)(camera + 0x14);
+            midB[0] = facx2 + camera->x;
+            midB[1] = facy2 + camera->y;
+            midB[2] = facz2 + camera->z;
             voxmaps_worldToGrid(midA, (s16*)gridA);
             voxmaps_worldToGrid(midB, (s16*)gridB);
             if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)traceOut, NULL, 0) == 0)

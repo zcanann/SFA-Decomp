@@ -854,7 +854,7 @@ void Minimap_frameStart(void)
     int sfx;
     int held;
     int pressed;
-    s16* slot;
+    CameraViewSlot* slot;
     int targetAngle;
     s16 angleDelta;
     s16 areaNameId;
@@ -1019,7 +1019,7 @@ void Minimap_frameStart(void)
                     targetAngle =
                         getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
                                  ((GameObject*)lbl_803DD934)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
-                    targetAngle = *slot + targetAngle;
+                    targetAngle = slot->yaw + targetAngle;
                     angleDelta = targetAngle - (u16)((GameObject*)lbl_803DBBC8[1])->anim.rotZ;
                     if (angleDelta > 0x8000)
                     {

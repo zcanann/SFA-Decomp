@@ -501,7 +501,7 @@ void objRenderFuzz(int* obj)
     u32 savedMtx;
     u8 strong;
     f32 dx, dy, dz, dist;
-    int* cam = Camera_GetCurrentViewSlot();
+    CameraViewSlot* cam = Camera_GetCurrentViewSlot();
     if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) ||
         ((GameObject*)obj)->anim.mapEventSlot == 0x3f || ((GameObject*)obj)->anim.seqId == 0x882 ||
         ((GameObject*)obj)->anim.seqId == 0x887)
@@ -526,15 +526,15 @@ void objRenderFuzz(int* obj)
         u32 m = curObjMtx;
         if (m != 0)
         {
-            dx = *(f32*)&((ModelFileHeader*)m)->dataSize - (((GameObject*)cam)->anim.localPosX - playerMapOffsetX);
-            dy = *(f32*)&((ModelFileHeader*)m)->unk1C - ((GameObject*)cam)->anim.localPosY;
-            dz = *(f32*)&((ModelFileHeader*)m)->normals - (((GameObject*)cam)->anim.localPosZ - playerMapOffsetZ);
+            dx = *(f32*)&((ModelFileHeader*)m)->dataSize - (cam->x - playerMapOffsetX);
+            dy = *(f32*)&((ModelFileHeader*)m)->unk1C - cam->y;
+            dz = *(f32*)&((ModelFileHeader*)m)->normals - (cam->z - playerMapOffsetZ);
         }
         else
         {
-            dx = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cam)->anim.localPosX;
-            dy = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)cam)->anim.localPosY;
-            dz = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cam)->anim.localPosZ;
+            dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
+            dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
+            dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
         }
     }
     dist = sqrtf(dx * dx + dy * dy + dz * dz);
@@ -808,14 +808,14 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
     }
     if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8)
     {
-        int* cam = Camera_GetCurrentViewSlot();
+        CameraViewSlot* cam = Camera_GetCurrentViewSlot();
         blk.scale = ((GameObject*)child)->anim.rootMotionScale;
-        dx = ((GameObject*)child)->anim.localPosX - ((GameObject*)cam)->anim.localPosX;
-        dz = ((GameObject*)child)->anim.localPosZ - ((GameObject*)cam)->anim.localPosZ;
+        dx = ((GameObject*)child)->anim.localPosX - cam->x;
+        dz = ((GameObject*)child)->anim.localPosZ - cam->z;
         blk.rotX = getAngle(dx, dz) + 0x8000;
-        blk.rotY = getAngle(((GameObject*)child)->anim.localPosY - ((GameObject*)cam)->anim.localPosY,
+        blk.rotY = getAngle(((GameObject*)child)->anim.localPosY - cam->y,
                               sqrtf(dx * dx + dz * dz));
-        blk.rotZ = ((s16*)cam)[2];
+        blk.rotZ = cam->roll;
         setMatrixFromObjectTransposed(&blk, m2);
         res[0] = m2[3];
         res[1] = m2[7];

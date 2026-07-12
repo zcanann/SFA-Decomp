@@ -668,7 +668,7 @@ void playerVecFn_8005a9b0(void)
     _ScalePack scales;
     _PlaneDirPack planes;
     GameObject* player;
-    int* viewSlot;
+    CameraViewSlot* viewSlot;
     f32* outPtr;
     int i;
     f32* invRotMtx;
@@ -678,9 +678,9 @@ void playerVecFn_8005a9b0(void)
     scales = sPlayerFrustumPlaneScales;
     player = Obj_GetPlayerObject();
     viewSlot = Camera_GetCurrentViewSlot();
-    camPos.x = *(f32*)((char*)viewSlot + 0x44) - playerMapOffsetX;
-    camPos.y = *(f32*)((char*)viewSlot + 0x48);
-    camPos.z = *(f32*)&((GameObject*)viewSlot)->anim.placementData - playerMapOffsetZ;
+    camPos.x = viewSlot->worldX - playerMapOffsetX;
+    camPos.y = viewSlot->worldY;
+    camPos.z = viewSlot->worldZ - playerMapOffsetZ;
     invRotMtx = Camera_GetInverseViewRotationMatrix();
     if (player != NULL)
     {
@@ -1042,35 +1042,35 @@ void playerUpdateFn_8005649c(void)
     int count;
     int slot;
     int** objs;
-    char* cam;
+    CameraViewSlot* cam;
     int k;
     int** e;
     int i;
     f32 lx, ly, lz;
 
     objs = ObjGroup_GetObjects(6, &count);
-    cam = (char*)Camera_GetCurrentViewSlot();
-    Obj_UpdateWorldTransform((CameraViewSlot*)cam);
+    cam = Camera_GetCurrentViewSlot();
+    Obj_UpdateWorldTransform(cam);
     for (k = 0; k < 31; k++)
         *(int*)(lbl_80386648 + k * 0x10 + 0xc) = 0;
-    *(f32*)(lbl_80386648 + 0) = *(f32*)(cam + 0x44);
-    *(f32*)(lbl_80386648 + 4) = *(f32*)(cam + 0x48);
-    *(f32*)(lbl_80386648 + 8) = *(f32*)&((GameObject*)cam)->anim.placementData;
+    *(f32*)(lbl_80386648 + 0) = cam->worldX;
+    *(f32*)(lbl_80386648 + 4) = cam->worldY;
+    *(f32*)(lbl_80386648 + 8) = cam->worldZ;
     *(int*)(lbl_80386648 + 0xc) = 1;
     for (i = 0, e = objs; i < count; e++, i++)
     {
         int* obj = *e;
         slot = *(s8*)((char*)obj + 0x35) + 1;
-        if (*(void**)(cam + 0x40) == obj)
+        if (cam->parentObject == (GameObject*)obj)
         {
-            *(f32*)(lbl_80386648 + slot * 0x10 + 0) = ((GameObject*)cam)->anim.localPosX;
-            *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ((GameObject*)cam)->anim.localPosY;
-            *(f32*)(lbl_80386648 + slot * 0x10 + 8) = ((GameObject*)cam)->anim.localPosZ;
+            *(f32*)(lbl_80386648 + slot * 0x10 + 0) = cam->x;
+            *(f32*)(lbl_80386648 + slot * 0x10 + 4) = cam->y;
+            *(f32*)(lbl_80386648 + slot * 0x10 + 8) = cam->z;
         }
         else
         {
             ((void (*)(f32, f32, f32, f32*, f32*, f32*))Obj_TransformWorldPointToLocal)(
-                *(f32*)(cam + 0x44), *(f32*)(cam + 0x48), *(f32*)&((GameObject*)cam)->anim.placementData,
+                cam->worldX, cam->worldY, cam->worldZ,
                 &lx, &ly, &lz);
             *(f32*)(lbl_80386648 + slot * 0x10 + 0) = lx;
             *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ly;
@@ -2302,7 +2302,7 @@ void beginLoadingMap(void)
     int mapKind;
     f32* p;
     f32 px, py, pz;
-    int* cam;
+    CameraViewSlot* cam;
     char* player;
     u8* env;
     int bo;
@@ -2375,9 +2375,9 @@ void beginLoadingMap(void)
     renderFlags &= ~4LL;
     trackIntersect();
     cam = Camera_GetCurrentViewSlot();
-    ((GameObject*)cam)->anim.localPosX = p[0];
-    ((GameObject*)cam)->anim.localPosY = p[1];
-    ((GameObject*)cam)->anim.localPosZ = p[2];
+    cam->x = p[0];
+    cam->y = p[1];
+    cam->z = p[2];
     mapSetupPlayer();
     lbl_803DCEBD = 0;
     (*gWaterfxInterface)->onMapSetup();

@@ -56,7 +56,7 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
 {
 
     DfpTorchState* state = (obj)->extra;
-    char* cam;
+    CameraViewSlot* cam;
     f32 dist;
     f32 scale;
     struct
@@ -86,9 +86,9 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         {
             state->visibleLatch = 1;
             cam = Camera_GetCurrentViewSlot();
-            stk2.d[0] = *(f32*)(cam + 0xc) - (obj)->anim.localPosX;
-            stk2.d[1] = *(f32*)(cam + 0x10) - (obj)->anim.localPosY;
-            stk2.d[2] = *(f32*)(cam + 0x14) - (obj)->anim.localPosZ;
+            stk2.d[0] = cam->x - (obj)->anim.localPosX;
+            stk2.d[1] = cam->y - (obj)->anim.localPosY;
+            stk2.d[2] = cam->z - (obj)->anim.localPosZ;
             dist = sqrtf(stk2.d[2] * stk2.d[2] + (stk2.d[0] * stk2.d[0] + stk2.d[1] * stk2.d[1]));
             if (dist > 50.0f)
             {
@@ -105,9 +105,9 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 stk2.b[0] = -20.0f * stk2.d[0];
                 stk2.b[1] = -20.0f * stk2.d[1];
                 stk2.b[2] = -20.0f * stk2.d[2];
-                stk2.b[0] = stk2.b[0] + *(f32*)(cam + 0xc);
-                stk2.b[1] = stk2.b[1] + *(f32*)(cam + 0x10);
-                stk2.b[2] = stk2.b[2] + *(f32*)(cam + 0x14);
+                stk2.b[0] = stk2.b[0] + cam->x;
+                stk2.b[1] = stk2.b[1] + cam->y;
+                stk2.b[2] = stk2.b[2] + cam->z;
                 voxmaps_worldToGrid(stk2.a, stk2.g1);
                 voxmaps_worldToGrid(stk2.b, stk2.g2);
                 if (voxmaps_traceLine((VoxPos*)stk2.g1, (VoxPos*)stk2.g2, (VoxPos*)stk2.out, NULL, 0) == 0)

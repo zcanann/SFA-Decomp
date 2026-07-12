@@ -249,7 +249,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     DoorF4Placement* def;
     DoorF4State* sub;
     int** walk;
-    f32* vs;
+    CameraViewSlot* vs;
     u8 ev;
     f32 ang[1];
     f32 dist;
@@ -488,7 +488,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
             case 1:
                 vs = Camera_GetCurrentViewSlot();
-                if (sub->planeD + (sub->cosYaw * vs[3] + sub->sinYaw * vs[5]) < lbl_803E3648)
+                if (sub->planeD + (sub->cosYaw * vs->x + sub->sinYaw * vs->z) < lbl_803E3648)
                 {
                     if (def->gameBitC != -1)
                     {
@@ -553,7 +553,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 2:
                 vs = Camera_GetCurrentViewSlot();
-                if (sub->planeD + (sub->cosYaw * vs[3] + sub->sinYaw * vs[5]) < lbl_803E3648)
+                if (sub->planeD + (sub->cosYaw * vs->x + sub->sinYaw * vs->z) < lbl_803E3648)
                 {
                     if (def->gameBitC != -1)
                     {

@@ -288,7 +288,7 @@ f32* Camera_GetInverseViewMatrix(void)
     return gCameraInverseViewMatrix;
 }
 
-void* Camera_GetCurrentViewSlot(void)
+CameraViewSlot* Camera_GetCurrentViewSlot(void)
 {
     return &gCameraShakeSlots[gCameraCurrentViewIndex];
 }

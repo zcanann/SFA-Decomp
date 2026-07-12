@@ -7,6 +7,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
@@ -391,7 +392,6 @@ extern f32 lbl_803E6E3C;
 extern f32 lbl_803E6E40;
 
 extern int fn_802969F0(int player);
-extern f32 Camera_GetFovY(void);
 extern f32 lbl_803E6E38;
 
 extern f32 gWaterFlowScaleDivisor;
@@ -795,8 +795,6 @@ extern f32 gAndrossHandMoveAnimSpeeds[];
 
 extern void androssligh_updateBeam(GameObject* obj, int state);
 
-extern void* Camera_GetViewMatrix(void);
-extern void* Camera_GetInverseViewRotationMatrix(void);
 extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
@@ -854,7 +852,6 @@ extern f32 lbl_803E738C;
 extern f32 lbl_803E7390;
 extern f32 lbl_803E7394;
 extern f32 lbl_803E7398;
-extern int Camera_GetCurrentViewSlot(void);
 extern f32 interpolate(f32 a, f32 b, f32 c);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 brightness, int b, int c, int d, f32 e, int f);
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
@@ -1000,7 +997,6 @@ extern f32 gArwProximityWarningDistance;
 
 extern f32 lbl_803E71A8;
 
-extern void* Camera_GetInverseViewMatrix(void);
 extern f32 lbl_803E7104;
 extern f32 lbl_803E7108;
 extern f32 lbl_803E710C;
