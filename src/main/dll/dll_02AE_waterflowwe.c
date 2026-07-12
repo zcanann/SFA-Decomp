@@ -47,6 +47,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
     f32 angle;
 
     currentX = currentZ = lbl_803E72B0;
+    strength = currentX;
     objects = (GameObject**)ObjGroup_GetObjects(WATERFLOWWE_FOLIAGE_GROUP, &count);
     hasCurrent = 0;
     for (i = 0; i < count; i++)
