@@ -376,7 +376,9 @@ void fn_8013E0D0(int* obj, u8* st)
             t->cooldownA -= timeDelta;
             if (t->cooldownA < lbl_803E23DC)
             {
-                t->cooldownA = (f32)(s32)randomGetRange(0xc8, 0x258) * lbl_803E24A8;
+                f32 rv;
+                rv = (s32)randomGetRange(0xc8, 0x258);
+                t->cooldownA = rv * lbl_803E24A8;
                 TRICKY_BARK((int*)gobj, 0x29b, 0x1000);
             }
         }
