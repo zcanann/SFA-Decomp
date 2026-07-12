@@ -11,6 +11,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/model.h"
+#include "main/maketex.h"
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -113,7 +114,6 @@ extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
-extern int arrayIndexOf(int* arr, int count, int target);
 extern void fn_8007FE04(int* array, int* count, int value);
 extern f32 gPushableU16ScaleDenom;
 extern f32 lbl_803E3558;

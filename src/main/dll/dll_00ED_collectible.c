@@ -19,6 +19,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objprint_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
@@ -62,7 +63,6 @@ extern f32 lbl_803E3458;
 extern f32 gCollectibleLaunchSpeed;
 extern f32 gCollectibleLaunchAngle;
 extern f32 lbl_803E348C;
-extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8* playerGetFocusObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(u8 * player);

@@ -14,6 +14,7 @@
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/frame_timing.h"
+#include "main/maketex.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SNOWBIKE_OBJGROUP           0xa
@@ -125,7 +126,6 @@ extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32* v);
-extern int arrayIndexOf(s16* arr, int n, int value);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void OSReport(const char* msg, ...);
 extern s16 gSnowBikeHitObjectIdTable[];
@@ -552,7 +552,7 @@ void SnowBike_hitDetect(GameObject* obj)
     if (state->unk3D6 == 0)
     {
         if ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags & 8) != 0 &&
-            arrayIndexOf(gSnowBikeHitObjectIdTable, 10, ((GameObject*)other)->anim.seqId) == -1)
+            arrayIndexOf((int*)gSnowBikeHitObjectIdTable, 10, ((GameObject*)other)->anim.seqId) == -1)
         {
         }
         else

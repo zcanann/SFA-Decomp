@@ -18,6 +18,7 @@
  * (0x2B7), which installs it as its anim-event callback.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/maketex.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
@@ -82,7 +83,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
     {
         return;
     }
-    if (arrayIndexOf((int)state->allowedHitSources, state->allowedHitSourceCount, hit) == -1)
+    if (arrayIndexOf(state->allowedHitSources, state->allowedHitSourceCount, hit) == -1)
     {
         return;
     }

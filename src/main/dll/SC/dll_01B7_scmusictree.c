@@ -8,6 +8,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
+#include "main/objprint_api.h"
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
@@ -81,7 +82,6 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
@@ -224,8 +224,9 @@ void sc_musictree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
     SCMusicTreeState* state = obj->extra;
     int i;
     if (visible == 0) return;
-    fn_8003B608((int)((ScMusictreePlacement*)def)->colorR, (int)((ScMusictreePlacement*)def)->colorG,
-                (int)((ScMusictreePlacement*)def)->colorB);
+    ((void (*)(int, int, int))fn_8003B608)((int)((ScMusictreePlacement*)def)->colorR,
+                                            (int)((ScMusictreePlacement*)def)->colorG,
+                                            (int)((ScMusictreePlacement*)def)->colorB);
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, 1.0f);
     if ((state->flags & SCMUSICTREE_FLAG_SATELLITES) != 0)
     {

@@ -18,6 +18,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objprint_api.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
@@ -54,7 +55,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 getXZDistance(f32* a, f32* b);
 extern int getTrickyObject(void);
 extern float mathSinf(float x);
-extern void fn_8003B608(s16 a, s16 b, s16 c);
 
 #pragma scheduling off
 #pragma peephole off

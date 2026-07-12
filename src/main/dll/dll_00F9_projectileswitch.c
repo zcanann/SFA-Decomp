@@ -2,6 +2,7 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/objprint_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objtexture.h"
@@ -29,7 +30,6 @@
 
 
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
-extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern u8 lbl_80321008[];
 
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }

@@ -20,6 +20,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
+#include "main/maketex.h"
 #include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
@@ -113,7 +114,6 @@ extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
 extern void setMotionBlur(u8 enabled, f32 amount);
 extern void fn_8009A8C8();
-extern int arrayIndexOf(int* arr, int count, int target);
 extern void SnowBike_resetToRomListPosition();
 
 void fn_801EAE4C(short* obj, int stateRaw)

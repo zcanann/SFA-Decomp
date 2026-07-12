@@ -17,6 +17,7 @@
  * this DLL - the .text holds only the functions below.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/objprint_api.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/game_object.h"

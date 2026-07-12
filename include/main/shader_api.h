@@ -18,5 +18,6 @@ STATIC_ASSERT(offsetof(MapRomList, worldZ) == 0x28);
 
 void* fn_80059334(int x, int z);
 MapRomList* mapBlockFn_800592e4(void);
+void mapTextureOverrideSetValue(int type, u32 key, int value);
 
 #endif /* MAIN_SHADER_API_H_ */

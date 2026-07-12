@@ -55,7 +55,6 @@ extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DBC;
 extern f32 lbl_803E6DC0;
-extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 extern const f32 lbl_803E6DA8;
 extern void* memcpy(void* dst, const void* src, u32 n);
 
@@ -65,7 +64,6 @@ extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
 extern void logPrintf(void* fmt, ...);
 
-extern void mapTextureOverrideSetValue(int a, int b, int c);
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -96,7 +94,6 @@ extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 
 
-extern int arrayIndexOf(int array, int count, int value);
 
 
 
@@ -181,7 +178,6 @@ extern f32 lbl_803E73C0;
 
 #pragma dont_inline reset
 
-extern void fn_8003B608(int r, int g, int b);
 extern void vecRotateZXY(int obj, f32* vec);
 #pragma dont_inline on
 

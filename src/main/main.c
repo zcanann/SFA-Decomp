@@ -3,6 +3,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/main.h"
+#include "main/objprint_api.h"
 #include "main/objtexture.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -104,7 +105,6 @@ extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
 
 extern void objRenderFn_80041018(int* obj);
-extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* getTrickyObject(void);
 

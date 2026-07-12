@@ -59,6 +59,7 @@ void endObjSequence(int seq);
 void cameraFocusNpc(int param1, u8* obj);
 
 int randFn_80080100(int n);
+int arrayIndexOf(int* array, int count, int value);
 int fn_80080150(const f32* value);
 void fn_8008020C(s16 rx, s16 ry, s16 rz, f32 x, f32 y, f32 z, f32 w);
 
