@@ -11,6 +11,7 @@
  * vtable (projgfx_funcs) is otherwise all nop/unsupported callbacks.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
@@ -64,7 +65,6 @@ extern f32 lbl_803DFA6C;
 extern f32 lbl_803DFA70;
 extern f32 lbl_803DFA74;
 extern f32 lbl_803DFA78;
-extern void Sfx_PlayFromObject(void* obj, int id);
 
 void Effect3_func05_nop(void)
 {
@@ -328,7 +328,7 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.quadVertex3Pad06 = 0x200;
         break;
     case 0x200:
-        Sfx_PlayFromObject(sourceObj, SFXTRIG_blkscrp6);
+        Sfx_PlayFromObject((u32)sourceObj, SFXTRIG_blkscrp6);
         cfg.lifetimeFrames = 0x64;
         cfg.scale = lbl_803DFA04 * cfg.lifetimeFrames;
         cfg.behaviorFlags = 0xa100201;

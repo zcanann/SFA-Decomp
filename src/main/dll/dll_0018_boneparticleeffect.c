@@ -4,6 +4,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
@@ -47,7 +48,6 @@ extern const f32 lbl_803DF4BC;
 extern f32 lbl_803DF4C0;
 extern f32 lbl_803DF4C4;
 
-extern void Sfx_PlayFromObject(void* obj, int id);
 extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
@@ -145,7 +145,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 0);
         gBoneParticleEffectTimer = 0xf;
-        Sfx_PlayFromObject(obj, SFXTRIG_id_281);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_281);
     }
     model = Modgfx_GetActiveModel((void*)obj);
     if (gBoneParticleStageIndex > 6)
@@ -166,13 +166,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMax;
-        Sfx_PlayFromObject(obj, SFXTRIG_id_282);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_282);
     }
     else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMin;
-        Sfx_PlayFromObject(obj, SFXTRIG_id_282);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_282);
     }
     slot = 0;
     grp2 = gBoneParticleEffectBuffers;

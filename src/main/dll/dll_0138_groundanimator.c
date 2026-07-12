@@ -3,6 +3,7 @@
 #include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -72,7 +73,6 @@ extern const f32 lbl_803E3FC0;
 
 extern int fn_80060688(GameObject* block, int v);
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
-extern void Sfx_PlayFromObject(int* obj, int id);
 extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern u16 lbl_803DBDF0;
@@ -461,7 +461,7 @@ void groundanimator_update(int* obj)
                 }
                 mainSetBits(((GroundanimatorPlacement*)r20)->sunkGameBit, 1);
                 g->flags = g->flags | 2;
-                Sfx_PlayFromObject(obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
+                Sfx_PlayFromObject((u32)obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
             }
             off2[0] = 0;
             off2[1] = off2[0];
