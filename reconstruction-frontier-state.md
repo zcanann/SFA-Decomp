@@ -7544,3 +7544,31 @@ WINS (both pure decl-order via brute_match.py --strategy all, asm-free, fuzzy-co
 WELDED (brute_match: every perm identical fuzzy => decls don't map to movable saved-reg homes):
 render fn_80007F78 94.80 / modelRenderFn_80006744 95.98; voxmaps_resetLoadedMaps 96.92; dll_0015_curves curves_getCurves 96.96 (ndiff = pure #108 reg-perm, T=118 C=118, r3<->r6/r4 swaps only, source-uncontrollable); dll_000B_dll0b dll_0B_func04 94.30; newshadows fn_8006CB50/allocLotsOfTextures/fn_8006A028; walkgroupFindExitPointFn_800dc398 96.64; animobjd2 fn_8013E0D0 96.94; snowclaw_init.
 PATTERN: 92-97 band is decl-order-productive ONLY where the fn has many independent scalar/ptr decls that land in DISTINCT saved regs (drawGlow 35 slots, doPendingMapLoads 24 slots both hit). Small-decl or heavily-CSE'd fns are #108 reg-perm welded (T==C instr count). Two brute passes now agree drawGlow/shader are the only movable ones in this batch.
+
+## SESSION pragma-toggle wave #2 (peephole/scheduling/opt_common_subs) — 0 wins, veins confirmed dry
+
+Systematic re-triage of the 93-99.85% -O4,p near-miss frontier (82 fns, proto report decode) for the
+four per-fn pragma signatures. Excluded sibling-hot units (expgfx/minimap/textrender/babycloudrunner/
+snowclaw/shader/tricky/wcfloortile/trigger/landedarwing/modellight) and all *_dolphin.c. Findings:
+
+- **dont_inline**: 0 live instances (re-confirms the prior sweep's "wcfloortile was the only one").
+- **opt_common_subs recompute-vs-cache**: 0 instances across ALL 82 near-miss fns. Scanned for the
+  snowclaw signature (target `addi rD,rB,K` recompute vs current `mr rD,rSaved` cached). None. Vein dry.
+- **peephole off dot-merge**: exactly 1 instance — gameloop removeButtonObject 98.09% (T:`srwi r0,r3,3`
+  +`cmplwi r0,0` vs C fused `srwi. r0,r3,3`, the unrolled-2nd-loop trip>>3 guard). `#pragma peephole off`
+  DID unfuse the dot-merge BUT collaterally killed the disp-fold in the same fn's unrolled word-copy loop
+  (T uses `lwz 8(r4);stw 4(r4);...;addi r4,r4,32` displacement-folded; peephole-off emits
+  `addi r4,r4,4;lwz 4(r4);stw 0(r4)` x7). MEASURED net T=60 C=67 (was C=59) — NET-NEGATIVE, reverted.
+  LESSON: dot-merge and disp-fold are both peephole-pass; a whole-fn `peephole off` can't keep one and
+  drop the other. removeButtonObject dot-merge is WELDED (tradeoff-pinned).
+- **scheduling off**: lightmap.c has file-wide `#pragma scheduling off` (line 68, never reset) — the
+  sched-looking reorders in renderSceneGeometry persist DESPITE scheduling being off => value-numbering/
+  alloc ordering, welded, not scheduling. WarpstoneUI_getMenuItems already carries scheduling+peephole+
+  opt_lifetimes off; its residual mr-reorder + `li r23,0` vs `mr r23,r24` is #110 shared-zero welded.
+
+NON-PRAGMA near-misses flagged for the team (real divergences, need source not pragma):
+- **main.c fn_801FD6B4 99.36%**: target has an extra `frsp f0,f1` (double->single narrow) that current
+  lacks — a double-vs-float type divergence on a param/intermediate (T=251 C=250). f32-not-double fix.
+- **lightmap.c renderSceneGeometry ~97.6%**: target omits an initial for-loop guard (`li 0;cmpwi 256;bge`)
+  = loop-inversion the current source doesn't trigger; plus r9<->r7 reg-perm. Not a pragma.
+- **vecmath.c mtxRotateByVec3s 99.25%**: pure #82 FP-perm (f0<->f3/f1<->f4), T==C=226, welded.
