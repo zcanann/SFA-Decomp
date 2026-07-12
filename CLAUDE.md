@@ -4,8 +4,9 @@ Decompilation of Star Fox Adventures (GameCube): recover plausible original C th
 retail binary. Main lib compiled with MWCC GC/2.0; audio/MSL with 1.2.5n.
 
 ## Goal & rules
-- Recover the **plausible 2002 C** a Rare dev would have written. Inline `asm{}` is banned — the one
-  exception is paired-single `psq_l`/`psq_st` (MWCC has no intrinsic). A clean-C 90% beats an asm 100%.
+- Recover the **plausible 2002 C** a Rare dev would have written. Inline `asm{}` is banned outside
+  `src/dolphin/`. Inside SDK code, the only exception is paired-single `psq_l`/`psq_st` when MWCC has
+  no intrinsic and a known-good donor or original binary proves the sequence. A clean-C 90% beats an asm 100%.
 - Match % truth = `report.json` `fuzzy_match_percent`. Diff tools locate divergence; they don't certify it.
 - **Fresh eyes.** This file is deliberately tiny and is **not** a catalogue of techniques or solved
   cases — that omission is on purpose. If a fix isn't here, that means nothing: read the target asm and
