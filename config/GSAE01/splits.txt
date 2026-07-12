@@ -3444,7 +3444,7 @@ main/audio/snd3d_calc.c:
 	extab       start:0x80005A68 end:0x80005A80
 	extabindex  start:0x8000632C end:0x80006350
 	.text       start:0x802800C0 end:0x80280C30
-	.bss        start:0x803CC910 end:0x803CD760
+	.bss        start:0x803CC8C0 end:0x803CD760
 
 main/audio/snd3d.c:
 	extab       start:0x80005A80 end:0x80005A90
