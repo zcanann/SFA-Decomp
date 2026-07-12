@@ -68,6 +68,8 @@
 #define GFLEVELCON_ENVFX_B 0x21d
 #define GFLEVELCON_ENVFX_C 0x21e
 
+#pragma opt_strength_reduction on
+#pragma opt_loop_invariants off
 int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate)
 {
     GfLevelconHandleScriptEventsState* state = obj->extra;
@@ -170,6 +172,8 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
     }
     return 0;
 }
+#pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
 
 int gf_levelcon_getExtraSize(void)
 {
