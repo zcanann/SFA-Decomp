@@ -304,7 +304,7 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 
-u8 gRcpDistortSlots[0xA8];
+extern u8 gRcpDistortSlots[];
 
 #pragma peephole on
 void ShaderDef_free(int* def)
@@ -1402,10 +1402,14 @@ TevSwapEntry gRcpTevSwapTable[24] = {
     {2, 0, 0}, {0, 0, 1}, {0, 1, 0}, {1, 0, 0}, {1, 1, 2}, {1, 2, 1}, {2, 1, 1}, {1, 1, 0},
     {1, 0, 1}, {0, 1, 1}, {2, 2, 0}, {2, 0, 2}, {0, 2, 2}, {2, 2, 1}, {2, 1, 2}, {1, 2, 2},
 };
-u8 lbl_8030D028[48] = {
-    0x3F, 0x00, 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00,
-    0x3E, 0xCC, 0xCC, 0xCD, 0x3F, 0x80, 0x00, 0x00, 0x3E, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD,
-    0x3E, 0x4C, 0xCC, 0xCD, 0x3F, 0x80, 0x00, 0x00, 0x3E, 0xCC, 0xCC, 0xCD, 0x3F, 0x00, 0x00, 0x00,
+typedef struct RcpDistortConfig
+{
+    f32 radius;
+    f32 strength;
+} RcpDistortConfig;
+
+RcpDistortConfig lbl_8030D028[6] ALIGN_DECL(8) = {
+    {0.5f, 1.0f}, {0.5f, 0.5f}, {0.4f, 1.0f}, {0.3f, 0.8f}, {0.2f, 1.0f}, {0.4f, 0.5f},
 };
 extern u8 lbl_803779A0[];
 void fn_80053C40(u8* tex, u8* obj);
@@ -1553,6 +1557,7 @@ extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
 u8 gRcpWarpDistortDisplayList[0x6640];
+u8 gRcpDistortSlots[0xA8];
 extern F32Pair LastReadFinished_803DEB50;
 extern f32 lbl_803DEB54;
 extern f32 lbl_803DEB64;
@@ -1710,7 +1715,6 @@ typedef struct RcpDistortSlot
 extern f32 powfCoreHighPrecision(f32 base, f32 exp);
 extern f32 gRcpDistortScaleA;
 extern f32 gRcpDistortPowExp;
-extern u8 lbl_8030D028[];
 extern u8 gRcpDistortSlotIndex;
 extern void* gRcpDistortTexture;
 
@@ -1718,7 +1722,7 @@ void initFn_800534f8(void)
 {
     int i;
     RcpDistortSlot* slots;
-    u8* cfg;
+    f32* cfg;
     u32 pairIdx;
     RcpDistortSlot* slot;
     f32 strengthScale;
@@ -1734,17 +1738,18 @@ void initFn_800534f8(void)
         slots[i].group = 0;
     }
     gRcpDistortSlotIndex = i = 0;
-    cfg = lbl_8030D028; /* 6 pairs of {f32 radius, f32 strength} */
-    for (; i < 6; i++)
+    cfg = &lbl_8030D028[0].radius;
+    slots = (RcpDistortSlot*)gRcpDistortSlots;
+    radiusScale = gRcpDistortScaleA;
+    strengthScale = LastReadFinished_803DEB50.lo;
+    do
     {
-        radiusScale = gRcpDistortScaleA;
-        strengthScale = LastReadFinished_803DEB50.lo;
-        strength = *(f32*)(cfg + i * 8 + 4);
-        (slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c))->colR = 0xff;
+        strength = cfg[i * 2 + 1];
+        (slot = &slots[gRcpDistortSlotIndex])->colR = 0xff;
         slot->colG = 0xff;
         slot->colB = 0xff;
-        falloff = radiusScale / powfCoreHighPrecision(*(f32*)(cfg + i * 8), gRcpDistortPowExp);
-        slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
+        falloff = radiusScale / powfCoreHighPrecision(cfg[i * 2], gRcpDistortPowExp);
+        slot = &slots[gRcpDistortSlotIndex];
         pairIdx = i & 1;
         slot->params[pairIdx] = falloff;
         *(s8*)(&slot->scaleR + pairIdx) = strengthScale * strength;
@@ -1753,7 +1758,8 @@ void initFn_800534f8(void)
         {
             gRcpDistortSlotIndex = gRcpDistortSlotIndex + 1;
         }
-    }
+        i++;
+    } while (i < 6);
     /* mode = 0 for the three remaining slots; member form (stb 0x1b(base+idx))
      * diverges - target hoists base+0x1b and emits stbx. */
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
@@ -1763,8 +1769,8 @@ void initFn_800534f8(void)
 }
 
 extern void* getCurrentDataFile(int id);
-int* gRcpTexBankTable[3];
 int gRcpTexBankCount[3];
+int* gRcpTexBankTable[3];
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
 void* textureLoad(int texId, u8 flag);
