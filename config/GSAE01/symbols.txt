@@ -23273,6 +23273,7 @@ lbl_803E600C = .sdata2:0x803E600C; // type:object size:0x4 align:4 data:float
 lbl_803E6010 = .sdata2:0x803E6010; // type:object size:0x4 align:4 data:float
 lbl_803E6014 = .sdata2:0x803E6014; // type:object size:0x4 align:4 data:float
 lbl_803E6018 = .sdata2:0x803E6018; // type:object size:0x4 align:4 data:float
+lbl_803E601C = .sdata2:0x803E601C; // type:object size:0x4 align:4 data:float
 lbl_803E6020 = .sdata2:0x803E6020; // type:object size:0x3 align:8 data:string
 lbl_803E6024 = .sdata2:0x803E6024; // type:object size:0x4 align:4 data:float
 lbl_803E6028 = .sdata2:0x803E6028; // type:object size:0x3 align:8 data:string
