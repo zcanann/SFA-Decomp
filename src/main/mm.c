@@ -553,9 +553,9 @@ void mmFree(void* p)
 
 void* mmAllocateFromFBMemoryStore(int handle, int size)
 {
+    int sz = size;
     MmStore* found;
     int i;
-    int avail;
     found = NULL;
     i = 0;
     while (i < 0x20)
@@ -573,14 +573,14 @@ void* mmAllocateFromFBMemoryStore(int handle, int size)
     }
     if (found != NULL)
     {
-        avail = found->size - ((int)found->bufCur - (int)found->buf);
-        if (avail < size)
+        size = found->size - ((int)found->bufCur - (int)found->buf);
+        if (size < sz)
         {
             OSReport(sMmMemoryStoreMessageBlock);
             return 0;
         }
-        found->bufCur = (char*)found->bufCur + size;
-        return (void*)((int)found->bufCur - size);
+        found->bufCur = (char*)found->bufCur + sz;
+        return (void*)((int)found->bufCur - sz);
     }
     return 0;
 }
