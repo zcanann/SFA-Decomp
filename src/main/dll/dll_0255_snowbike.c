@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "main/vecmath.h"
 #include "main/dll/DR/DRpickup.h"
+#include "main/dll/DR/DRshackle.h"
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/frame_timing.h"
@@ -167,7 +168,6 @@ extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
 extern void Obj_SetModelSlotIndex(int obj, int slot);
-extern int drshackle_updateAttachedPosition(int obj, u8* state);
 extern void fn_801EBD60(int obj, u8* state);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
 extern void objApplyVelocity(int obj);
@@ -980,7 +980,7 @@ void SnowBike_update(GameObject* obj)
         fn_801EAE4C((int)obj, state);
         if (((SnowBikeFlags*)(state + 0x428))->b02)
         {
-            if (drshackle_updateAttachedPosition((int)obj, state) != 0)
+            if (drshackle_updateAttachedPosition(obj, (ShackleSwingState*)state) != 0)
             {
                 fn_801EBD60((int)obj, state);
                 fn_801EC7A0((int)obj, state);

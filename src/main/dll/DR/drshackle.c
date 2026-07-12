@@ -18,8 +18,11 @@
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/DR/DRcloudcage.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/frame_timing.h"
+#include "main/lightmap_api.h"
+#include "main/vecmath.h"
 
 STATIC_ASSERT(offsetof(ShackleSwingState, anchorX) == 0x0C);
 STATIC_ASSERT(offsetof(ShackleSwingState, collider) == 0x28);
@@ -62,9 +65,9 @@ extern f32 lbl_803E5B78; /* 2.0f */
 extern int fn_801EC870(int p1, int p2);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
-int drshackle_updateSwingBlend(GameObject* obj, int state)
+int drshackle_updateSwingBlend(GameObject* obj, ShackleSwingState* state)
 {
-    ShackleSwingState* s = (ShackleSwingState*)state;
+    ShackleSwingState* s = state;
     GameObject* o = (GameObject*)obj;
     int hitResult;
     int yawDelta;
@@ -131,7 +134,7 @@ int drshackle_updateSwingBlend(GameObject* obj, int state)
     }
 
     {
-        f32 ang = fn_801EA678(o, state);
+        f32 ang = fn_801EA678(o, (int)state);
         ang = -ang;
         if (s->lastPitch < ang || yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
@@ -145,9 +148,11 @@ int drshackle_updateSwingBlend(GameObject* obj, int state)
     return 1;
 }
 
-int drshackle_updateAttachedPosition(int obj, int state)
+int drshackle_updateAttachedPosition(GameObject* object, ShackleSwingState* swingState)
 {
-    ShackleSwingState* s = (ShackleSwingState*)state;
+    int obj = (int)object;
+    int state = (int)swingState;
+    ShackleSwingState* s = swingState;
     ShackleFlags* flags;
     int mapBlockIdx;
     int hitResult;
@@ -208,7 +213,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
             flags->positionAnchored = 1;
             return 0;
         }
-        return drshackle_updateSwingBlend((GameObject*)(obj), state) != 0;
+        return drshackle_updateSwingBlend((GameObject*)(obj), swingState) != 0;
     }
 
     hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,

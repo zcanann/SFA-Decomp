@@ -53,7 +53,7 @@ typedef struct ShackleSwingState
     f32 lastPitch; /* 0x49C */
 } ShackleSwingState;
 
-int drshackle_updateSwingBlend(GameObject* obj, int state);
-int drshackle_updateAttachedPosition(int obj, int state);
+int drshackle_updateSwingBlend(GameObject* obj, ShackleSwingState* state);
+int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state);
 
 #endif /* MAIN_DLL_DR_DRSHACKLE_H_ */

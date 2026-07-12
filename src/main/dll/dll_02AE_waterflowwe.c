@@ -17,9 +17,14 @@
  * (gWaterFlowIdlePhase / gWaterFlowFlowPhase) that select the weed's idle vs. flowing
  * animation move via ObjAnim_SetCurrentMove.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_02AE_waterflowwe.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim.h"
+#include "main/objlib.h"
+#include "main/vecmath.h"
 
 #define WATERFLOWWE_FOLIAGE_GROUP               0x14
 #define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50

@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct WaterFlowWeState
 {
