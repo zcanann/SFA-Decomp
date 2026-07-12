@@ -10,6 +10,7 @@
 #include "main/camera_interface.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/mm.h"
@@ -166,7 +167,6 @@ extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int modelLightStruct_getActiveState(int light);
 extern void ModelLightStruct_free(int light);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
-extern void Obj_FreeObject(int obj);
 
 extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
@@ -1664,7 +1664,7 @@ void enemy_free(GameObject* obj, int flag)
             ObjLink_DetachChild(obj, child);
             if (flag == 0 || (((GameObject*)child)->objectFlags & 0x10) == 0)
             {
-                Obj_FreeObject((int)child);
+                Obj_FreeObject((GameObject*)child);
             }
         }
     }

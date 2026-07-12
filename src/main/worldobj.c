@@ -2,6 +2,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
@@ -92,7 +93,6 @@ extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int 
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 extern int getAngle(float y, float x);
-extern void Obj_FreeObject(void* obj);
 extern void modelLightStruct_setEnabled(int light, int a, f32 b);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
@@ -310,7 +310,7 @@ void worldobj_update(GameObject* obj)
             obj->anim.alpha = tmp;
             if (obj->anim.alpha == 0)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
             }
         }
         else

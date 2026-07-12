@@ -20,6 +20,7 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/pushable.h"
 #include "main/dll/player_target.h"
@@ -59,7 +60,6 @@ extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
 
-extern void Obj_FreeObject(int* obj);
 extern int ObjList_ContainsObject(int obj);
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
 extern void* getTrickyObject(void);
@@ -272,7 +272,7 @@ void InvHit_update(int* obj)
             if (*(int**)(ownerHitSlot + 0x7c) == obj)
             {
                 hitState->flags = hitState->flags & ~1;
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
             }
             ownerHitSlot += 4;
         }

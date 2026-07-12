@@ -4,6 +4,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/backpack_state.h"
@@ -42,7 +43,6 @@ extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
 extern u8 gTumbleweedCollisionPointData[8];
 extern u8 gTumbleweedCollisionPoint[0xc];
-extern void Obj_FreeObject(int obj);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32* a, f32* b);
@@ -493,7 +493,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
         {
             if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject(obj);
             }
             else
             {
@@ -703,7 +703,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
     {
         if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
         else
         {

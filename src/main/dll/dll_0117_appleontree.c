@@ -6,6 +6,7 @@
 #include "main/dll/groundAnimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/dll/crackanim_state.h"
@@ -81,7 +82,6 @@ extern u32 ObjMsg_SendToObject();
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Obj_FreeObject(int obj);
 extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
@@ -144,7 +144,7 @@ static inline void appleontree_markFallen(GameObject* obj)
     int state = *(int*)&(obj)->extra;
     if (((obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject(obj);
     }
     else
     {
@@ -319,7 +319,7 @@ void fn_8017D854(GameObject* obj, int msg)
             state = *(int*)&obj->extra;
             if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject(obj);
             }
             else
             {
@@ -605,7 +605,7 @@ void AppleOnTree_update(int objArg)
                 val = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                 {
-                    Obj_FreeObject((int)obj);
+                    Obj_FreeObject((GameObject*)obj);
                 }
                 else
                 {
@@ -814,7 +814,7 @@ void AppleOnTree_update(int objArg)
                 placement = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                 {
-                    Obj_FreeObject((int)obj);
+                    Obj_FreeObject((GameObject*)obj);
                 }
                 else
                 {
@@ -833,7 +833,7 @@ void AppleOnTree_update(int objArg)
                 placement = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                 {
-                    Obj_FreeObject((int)obj);
+                    Obj_FreeObject((GameObject*)obj);
                 }
                 else
                 {
