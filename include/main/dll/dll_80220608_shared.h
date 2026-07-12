@@ -87,7 +87,6 @@ extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
 extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 extern const f32 lbl_803E6DA8;
-extern void skyFn_80088e54(int a, f32 b);
 extern void* memcpy(void* dst, const void* src, u32 n);
 
 #pragma dont_inline on

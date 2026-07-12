@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"

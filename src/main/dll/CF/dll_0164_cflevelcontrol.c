@@ -14,6 +14,7 @@
 #include "main/dll/alphaanim.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
@@ -66,7 +67,6 @@ extern void s16toFloat(void* p, int duration);
 extern void storeZeroToFloatParam(void* p);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjList_FindObjectById(int objectId);
-extern void skyFn_80088e54(int mode, f32 brightness);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
 extern void staffToggle(GameObject* obj, int a);

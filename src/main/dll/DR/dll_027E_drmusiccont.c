@@ -16,6 +16,7 @@
 #include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 

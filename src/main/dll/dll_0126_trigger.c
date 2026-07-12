@@ -97,7 +97,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
 extern void timeOfDayFn_80055038(void);
-extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);

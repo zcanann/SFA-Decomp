@@ -15,6 +15,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_024F_ktrexlevel.h"
 

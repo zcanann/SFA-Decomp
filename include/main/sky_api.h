@@ -7,6 +7,7 @@ void envFxActFn_800887f8(u8 value);
 void modelTextureFn_80089970(int slot);
 void objGetColor(int slot, u8* red, u8* green, u8* blue);
 void skyFn_80088c94(int flags, int mode);
+void skyFn_80088e54(int mode, f32 brightness);
 void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 void skyFn_80089710(int flags, u8 enabled, int startComplete);
 void skySetOverrideLightColor(u8 red, u8 green, u8 blue);

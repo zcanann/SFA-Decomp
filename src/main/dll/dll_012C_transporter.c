@@ -55,7 +55,6 @@
 extern f32 lbl_803E3E98;
 extern s16 lbl_803DCEB8;
 
-extern void skyFn_80088e54(int mode, f32 brightness);
 extern void objRenderFn_80041018(int obj);
 
 #pragma opt_loop_invariants off

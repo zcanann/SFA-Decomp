@@ -17,6 +17,7 @@
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/sky.h"
+#include "main/sky_api.h"
 #include "main/lightmap.h"
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"

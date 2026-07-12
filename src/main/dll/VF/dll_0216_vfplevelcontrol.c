@@ -17,6 +17,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/dll/VF/dll_0216_vfplevelcontrol.h"
 
 #define VFPLEVELCONTROL_OBJGROUP 9
@@ -54,7 +55,6 @@ extern f32 lbl_803E6060;
 extern int coordsToMapCell(f32 x, f32 z);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
-extern void skyFn_80088e54(int mode, f32 brightness);
 extern u32 ObjGroup_AddObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 

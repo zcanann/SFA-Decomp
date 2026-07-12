@@ -1161,7 +1161,6 @@ int DIMSnowHorn1_stateHandler00(GameObject* obj);
 extern f32 vec3f_distanceSquared(void* a, void* b);
 extern void loadUiDll(int id);
 extern void hudFn_8011f38c(int arg);
-extern void skyFn_80088e54(f32 a, int b);
 extern void Rcp_SetSpiritVisionEnabled(int on);
 extern void viewFinderSetZoomTo50(void);
 extern void __set_debug_bba(int a);

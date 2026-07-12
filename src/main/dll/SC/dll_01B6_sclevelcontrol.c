@@ -12,6 +12,7 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
+#include "main/sky_api.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/sfa_extern_decls.h"
@@ -62,7 +63,6 @@ extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 
 extern void gameTextShow(int a);
-extern void skyFn_80088e54(int mode, f32 brightness);
 extern void warpToMap(int idx, s8 transType);
 
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);

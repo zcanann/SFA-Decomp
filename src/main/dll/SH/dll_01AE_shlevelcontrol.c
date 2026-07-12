@@ -18,6 +18,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/dll/SP/SPshopkeeper.h"
@@ -96,7 +97,6 @@ extern void buttonDisable(int port, u32 mask);
 extern int playerHasSpell(GameObject* obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern void skyFn_80088e54(int mode, f32 brightness);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern void Music_Trigger(int id, int arg);

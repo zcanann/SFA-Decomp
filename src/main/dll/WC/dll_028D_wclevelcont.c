@@ -2,6 +2,7 @@
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
