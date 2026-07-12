@@ -1512,7 +1512,7 @@ void objFreeObjDef(u8* obj, int flag)
     void* curTex;
     void* tex;
     void* shadowRenderResource;
-    s8 modelCount;
+    int modelCount;
     int group;
     int type;
 
@@ -1630,7 +1630,7 @@ void objFreeObjDef(u8* obj, int flag)
         mm_free(((GameObject*)obj)->unkDC);
         *(int*)&((GameObject*)obj)->unkDC = 0;
     }
-    modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
+    modelCount = (s8)((ObjAnimComponent*)obj)->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++)
     {
         if ((int)((ObjAnimComponent*)obj)->banks[i] != 0)
