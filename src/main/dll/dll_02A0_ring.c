@@ -18,6 +18,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/dll_02A0_ring.h"
 
 #define RING_OBJ_ARW_GOLD   0x060b
@@ -265,7 +266,7 @@ void ring_update(GameObject* obj)
             if (arwarwing_isDead((int)arwing) == 0 && arwarwing_isExplodingOrWarping((int)arwing) == 0 &&
                 arwbombcoll_checkArwingCollision(obj, state, (int)arwing) != 0)
             {
-                Ring_onCollect(obj, state, (int)arwing);
+        Ring_onCollect(obj, state, arwing);
             }
         }
         obj->anim.rotX = (f32)(int)obj->anim.rotX + lbl_803E70B8 * timeDelta;

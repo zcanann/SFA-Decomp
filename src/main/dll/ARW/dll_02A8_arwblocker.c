@@ -10,6 +10,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/dll_02A8_arwblocker.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 
 /* placement sequenceMode: which object sequence the blocker fires on approach */
 #define ARWBLOCKER_SEQMODE_DEFAULT 0 /* fires sequence 0; never reports "armed" */

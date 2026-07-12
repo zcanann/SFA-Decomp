@@ -13,6 +13,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_02A1_arwlevelcon.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/headdisplay.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -109,7 +110,7 @@ void arwlevelcon_hitDetect(void)
 void arwlevelcon_update(GameObject* obj)
 {
     ARWLevelConState* state = obj->extra;
-    int arwing = getArwing();
+    GameObject* arwing = getArwing();
 
     if (state->skyConfigured == 0)
     {
@@ -153,8 +154,8 @@ void arwlevelcon_update(GameObject* obj)
     if (state->ringChoiceTriggered == 0)
     {
         int mapBlock = mapBlockFn_800592e4();
-        if (((GameObject*)arwing)->anim.localPosZ - *(f32*)(mapBlock + 0x28) > lbl_803E70E8 &&
-            arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0)
+        if (arwing->anim.localPosZ - *(f32*)(mapBlock + 0x28) > lbl_803E70E8 &&
+            arwarwing_isDead((int)arwing) == 0 && arwarwing_isExplodingOrWarping((int)arwing) == 0)
         {
             int requiredRings, collectedRings;
             arwingHudSetVisible(2);

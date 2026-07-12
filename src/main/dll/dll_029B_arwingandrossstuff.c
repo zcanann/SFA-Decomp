@@ -19,6 +19,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -125,14 +126,11 @@ void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visib
 
 void arwingandrossstuff_hitDetect(GameObject* obj)
 {
-    struct
-    {
-        f32 x, y, z;
-    } d, v, w;
+    Vec3f d, v, w;
     ObjAnimComponent* objAnim = &(obj)->anim;
     ArwProjectileState* state = (obj)->extra;
-    int arwing = getArwing();
-    ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
+    GameObject* arwing = getArwing();
+    ObjAnimComponent* arwingAnim = &arwing->anim;
 
     if (objAnim->seqId == ARW_SEQID_BOMB)
     {
@@ -166,9 +164,9 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
             arwarwing_setVelocity(arwing, (int)&w);
             doRumble(lbl_803E703C);
         }
-        if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == arwing)
+        if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)arwing)
         {
-            if (arwarwing_isBarrelRolling(arwing) != 0)
+            if (arwarwing_isBarrelRolling((int)arwing) != 0)
             {
                 PSVECNormalize(&objAnim->velocityX, &objAnim->velocityX);
                 d.x = objAnim->localPosX - arwingAnim->localPosX;
@@ -197,9 +195,9 @@ void arwingandrossstuff_update(GameObject* obj)
 {
     GameObject* object = obj;
     ArwProjectileState* state = object->extra;
-    int arwing = getArwing();
+    GameObject* arwing = getArwing();
 
-    if ((void*)arwing != NULL && (((GameObject*)arwing)->objectFlags & ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK) != 0)
+    if (arwing != NULL && (arwing->objectFlags & ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK) != 0)
     {
         Obj_FreeObject((GameObject*)object);
         return;

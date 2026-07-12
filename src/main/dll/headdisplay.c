@@ -22,6 +22,7 @@
  */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXTransform.h"
@@ -101,13 +102,6 @@ extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c
 extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
 extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-extern int* getArwing(void);
-extern int arwarwing_getHealth(int* arwing);
-extern int arwarwing_getMaxHealth(int* arwing);
-extern int arwarwing_getBombCount(int* arwing);
-extern int arwarwing_getCollectedRingCount(int* arwing);
-extern int arwarwing_getRequiredRingCount(int* arwing);
-extern int arwarwing_getScore(int* arwing);
 
 void drawFn_80125424(void)
 {
@@ -359,7 +353,7 @@ void pauseMenuCreateHeads(void)
 void drawArwingHud(void)
 {
     u8 bombSlot;
-    int* arwing;
+    GameObject* arwing;
     int fullPips;
     int maxHealth;
     int bombs;

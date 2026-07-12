@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/ARW/dll_02A7_arwproximit.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
 
@@ -146,7 +147,7 @@ void arwproximit_update(GameObject* obj)
         }
         if (timerCountDown((void*)&state->warningTimer) != 0 ||
             ((*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject != 0 &&
-             (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject == getArwing()))
+             (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()))
         {
             storeZeroToFloatParam((void*)&state->warningTimer);
             s16toFloat((void*)&state->despawnTimer, 0x14);

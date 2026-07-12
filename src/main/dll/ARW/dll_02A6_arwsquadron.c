@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/ARW/dll_02A6_arwsquadron.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
@@ -434,15 +435,15 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                     ObjHits_DisableObject((int)obj);
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
                 }
-                arwing = getArwing();
+                arwing = (int)getArwing();
                 if ((u32)arwing != 0)
-                    arwarwing_addScore(arwing, squad->deathScore);
+                    arwarwing_addScore((GameObject*)arwing, squad->deathScore);
             }
             else
             {
-                arwing = getArwing();
+                arwing = (int)getArwing();
                 if ((u32)arwing != 0)
-                    arwarwing_addScore(arwing, squad->hitScore);
+                    arwarwing_addScore((GameObject*)arwing, squad->hitScore);
             }
         }
         else

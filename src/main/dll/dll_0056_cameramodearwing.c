@@ -18,6 +18,7 @@
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_transform.h"
 #include "dolphin/mtx/mtx_legacy.h"
 
@@ -66,8 +67,6 @@ extern f32 gCamArwingRollScaleDefault;
 extern f32 gCamArwingXScaleDefault;
 extern f32 gCamArwingYScaleDefault;
 extern f32 lbl_803E1BDC;
-extern int arwarwing_isDead(int state);
-extern int arwarwing_isExplodingOrWarping(int state);
 extern int getAngle(float y, float x);
 
 #pragma scheduling off

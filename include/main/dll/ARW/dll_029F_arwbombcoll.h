@@ -56,7 +56,7 @@ void ARWBombColl_update(int obj);
 void arwbombcoll_setLifetime(GameObject* obj, int lifetime);
 
 void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state);
-void Ring_onCollect(GameObject* obj, RingState* state, int arwing);
+void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing);
 int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwing);
 
 #endif

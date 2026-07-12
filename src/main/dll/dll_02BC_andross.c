@@ -23,6 +23,7 @@
 #include "main/objlib.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/dll/dll_02BD_androsshand.h"
@@ -334,7 +335,7 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
     f32 dx, dy, dz, dist;
     int yaw;
     int result;
-    f32 vel[3];
+    Vec3f vel;
 
     result = 0;
     dx = state->cachedPosX - state->arwingObj->anim.localPosX;
@@ -348,9 +349,9 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
     ang = 3.1415927f * yaw / 32768.0f;
     state->velX = mag * mathSinf(ang);
     state->velY = mag * mathCosf(ang);
-    arwarwing_getVelocity((int)vel, (int)state->arwingObj);
-    state->velX -= vel[0] * gAndrossArwingVelDamp;
-    state->velY -= vel[1] * gAndrossArwingVelDamp;
+    arwarwing_getVelocity(&vel, state->arwingObj);
+    state->velX -= vel.x * gAndrossArwingVelDamp;
+    state->velY -= vel.y * gAndrossArwingVelDamp;
     state->velZ = zVel;
     return result;
 }
@@ -506,7 +507,7 @@ void andross_update(int obj)
         if (state->arwingObj != NULL)
         {
             state->savedPosZ = state->arwingObj->anim.localPosZ;
-            arwarwing_setFlightHalfWidth((int)state->arwingObj, gAndrossFlightHalfWidth);
+            arwarwing_setFlightHalfWidth(state->arwingObj, gAndrossFlightHalfWidth);
         }
         else
         {
@@ -1524,7 +1525,7 @@ void andross_update(int obj)
         fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
         velCalc3.z = fc * gAndrossArwingApproachVelocityScale;
         velArg3 = velCalc3;
-        arwarwing_setVelocity((int)state->arwingObj, (int)&velArg3);
+        arwarwing_setVelocity(state->arwingObj, (int)&velArg3);
         fval = (-300.0f > -(5.0f * timeDelta - state->camOffsetAccum))
                    ? -300.0f
                    : -(5.0f * timeDelta - state->camOffsetAccum);
@@ -1544,7 +1545,7 @@ void andross_update(int obj)
                 ObjAnim_SetCurrentMove(obj, 0x15, gAndrossZero, 0);
                 animState->animSpeed = gAndrossMoveAnimSpeeds[21];
             }
-            arwarwing_addHealth((int)state->arwingObj, 0xfffffffc);
+            arwarwing_addHealth(state->arwingObj, 0xfffffffc);
         }
         fval = (-300.0f > -(5.0f * timeDelta - state->camOffsetAccum))
                    ? -300.0f
@@ -1942,7 +1943,7 @@ void andross_update(int obj)
             fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
             velCalc2.z = fc * gAndrossArwingReturnVelocityScale;
             velArg2 = velCalc2;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&velArg2);
+            arwarwing_setVelocity(state->arwingObj, (int)&velArg2);
             fval = (-600.0f > -(15.0f * timeDelta - state->camOffsetAccum))
                        ? -600.0f
                        : -(15.0f * timeDelta - state->camOffsetAccum);
@@ -2067,7 +2068,7 @@ void andross_update(int obj)
             fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
             velCalc1.z = fc * gAndrossArwingPullVelocityScale;
             velArg1 = velCalc1;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&velArg1);
+            arwarwing_setVelocity(state->arwingObj, (int)&velArg1);
         }
         else
         {
@@ -2078,13 +2079,13 @@ void andross_update(int obj)
             state->camOffsetAccum = fval;
             state->arwingFlightActive = 0;
             state->arwingObj->anim.flags &= ~0x4000;
-            rotationDelta = (int)((f32)(s16)arwarwing_getRotY((int)state->arwingObj) + fc * gAndrossArwingRotationScale);
-            arwarwing_setRotY((int)state->arwingObj, rotationDelta);
+            rotationDelta = (int)((f32)(s16)arwarwing_getRotY(state->arwingObj) + fc * gAndrossArwingRotationScale);
+            arwarwing_setRotY(state->arwingObj, rotationDelta);
             thrustB.x = gAndrossZero;
             thrustB.y = gAndrossZero;
             thrustB.z = fc * gAndrossArwingThrustScale;
             thrustBArg = thrustB;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&thrustBArg);
+            arwarwing_setVelocity(state->arwingObj, (int)&thrustBArg);
         }
         if (boss->anim.currentMoveProgress >= 1.0f)
         {
@@ -2110,7 +2111,7 @@ void andross_update(int obj)
             fc = state->cachedPosZ - state->arwingObj->anim.localPosZ;
             velCalc0.z = fc * gAndrossArwingReleaseVelocityScale;
             velArg0 = velCalc0;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&velArg0);
+            arwarwing_setVelocity(state->arwingObj, (int)&velArg0);
         }
         else
         {
@@ -2121,13 +2122,13 @@ void andross_update(int obj)
             state->camOffsetAccum = fval;
             state->arwingFlightActive = 0;
             state->arwingObj->anim.flags &= ~0x4000;
-            rotationDelta = (int)((f32)(s16)arwarwing_getRotY((int)state->arwingObj) + fc * gAndrossArwingReleaseRotationScale);
-            arwarwing_setRotY((int)state->arwingObj, rotationDelta);
+            rotationDelta = (int)((f32)(s16)arwarwing_getRotY(state->arwingObj) + fc * gAndrossArwingReleaseRotationScale);
+            arwarwing_setRotY(state->arwingObj, rotationDelta);
             thrustA.x = gAndrossZero;
             thrustA.y = gAndrossZero;
             thrustA.z = fc * gAndrossArwingReleaseThrustScale;
             thrustAArg = thrustA;
-            arwarwing_setVelocity((int)state->arwingObj, (int)&thrustAArg);
+            arwarwing_setVelocity(state->arwingObj, (int)&thrustAArg);
             if (state->roarPlayed == 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_drak_pain1);
@@ -2183,7 +2184,7 @@ void andross_update(int obj)
     if (state->arwingObj->pendingParentObj == NULL)
     {
         velAdd = state->velocity;
-        arwarwing_addVelocity((int)state->arwingObj, (int)&velAdd);
+        arwarwing_addVelocity(state->arwingObj, &velAdd);
     }
 
     sval = state->targetRotX - (u16)boss->anim.rotX;

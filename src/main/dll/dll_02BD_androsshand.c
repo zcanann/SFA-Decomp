@@ -15,6 +15,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02BD_androsshand.h"
@@ -167,7 +168,7 @@ void AndrossHand_update(int obj)
                 swipeVel.y = 0.0f;
                 swipeVel.z = 0.0f;
                 vel = swipeVel;
-                arwarwing_setVelocity((int)state->arwingObj, (int)&vel);
+                arwarwing_setVelocity(state->arwingObj, (int)&vel);
                 doRumble(5.0f);
             }
         }
@@ -222,7 +223,7 @@ void AndrossHand_update(int obj)
                 grabVel.y = -10.0f;
                 grabVel.z = 0.0f;
                 vel = grabVel;
-                arwarwing_setVelocity((int)state->arwingObj, (int)&vel);
+                arwarwing_setVelocity(state->arwingObj, (int)&vel);
                 doRumble(5.0f);
             }
         }

@@ -30,6 +30,7 @@
 #include "main/dll/cmenu_item_table.h"
 #include "main/dll/hud_textures.h"
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
@@ -402,7 +403,6 @@ extern int airMeter;
 extern void cutsceneFadeInOut(int a);
 extern void Music_Trigger(int id, int arg);
 extern int objIsCurModelNotZero();
-extern void* getArwing(void);
 extern u8 cMenuState;
 extern u8 cMenuOpen;
 extern s8 gCMenuScriptedInput;
@@ -2616,7 +2616,7 @@ void pauseMenuFn_80129ee0(void)
     }
     if (player == 0)
     {
-        player = getArwing();
+        player = (void*)getArwing();
         if (player != 0)
         {
             isArwing = 1;
@@ -3897,7 +3897,7 @@ void GameUI_release(void)
 void GameUI_hudDraw(int a, int b, int c)
 {
     void* player = Obj_GetPlayerObject();
-    void* arwing = getArwing();
+    void* arwing = (void*)getArwing();
     u8* box;
 
     if (getScreenBlankFrameCount() != 0)

@@ -219,7 +219,6 @@ extern void setIsOvercast(int value);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int getArwing(void);
 extern void PSVECNormalize(void* src, void* dst);
 extern void C_VECHalfAngle(void* out, void* a, void* b);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
@@ -270,8 +269,6 @@ extern void skyFn_800895e0(int p1, int p2, int p3, int p4, int p5, int p6);
 extern void skyFn_800894a8(int p1, f32 p2, f32 p3, f32 p4);
 extern void setDrawLights(int value);
 extern int mapBlockFn_800592e4(void);
-extern int arwarwing_getRequiredRingCount(int arwing);
-extern int arwarwing_getCollectedRingCount(int arwing);
 
 extern f32 lbl_803E7154;
 
@@ -454,7 +451,6 @@ extern f32 gArwProximityWarningDistance;
 extern f32 lbl_803E71A8;
 
 
-extern void arwarwing_spawnLaserShot(GameObject* obj, int state, int a, int b, int c);
 extern f32 gArwingFireTimerReset;
 
 extern f32 lbl_803E6F34;
@@ -713,58 +709,6 @@ void Dummy29E_update(void);
 void Dummy29E_init(void);
 void Dummy29E_release(void);
 void Dummy29E_initialise(void);
-int getArwing(void);
-int arwarwing_getExtraSize(void);
-int arwarwing_getObjectTypeId(void);
-void arwarwing_free(GameObject* obj);
-void arwarwing_release(void);
-void arwarwing_initialise(void);
-void arwarwing_render(GameObject* obj, int p2, int p3, int p4, int p5);
-void arwarwing_hitDetect(GameObject* obj);
-void arwarwing_setFlightHalfWidth(int arwing, f32 width);
-int arwarwing_getRotY(int arwing);
-void arwarwing_setRotY(int arwing, int rotY);
-void arwarwing_getVelocity(int out, int arwing);
-void arwarwing_setVelocity(int arwing, int in);
-void arwarwing_addVelocity(int arwing, int in);
-void arwarwing_clearActiveBomb(int arwing);
-int arwarwing_getRequiredRingCount(int arwing);
-int arwarwing_getCollectedRingCount(int arwing);
-void arwarwing_addScore(int arwing, u8 amount);
-int arwarwing_getScore(int arwing);
-int arwarwing_getBombCount(int arwing);
-int arwarwing_getMaxHealth(int arwing);
-int arwarwing_getHealth(int arwing);
-int arwarwing_incrementPickup6DACount(int arwing);
-int arwarwing_incrementPickup6DBCount(int arwing);
-int arwarwing_incrementPickup6D9Count(int arwing);
-int arwarwing_incrementPickup6D8Count(int arwing);
-int arwarwing_incrementCollectedRingCount(int arwing);
-void arwarwing_addMaxHealth(int arwing, int p2);
-void arwarwing_addHealth(int arwing, int p2);
-void arwarwing_clampToFlightBounds(GameObject* obj, int state);
-void arwarwing_updateFlightPhysics(GameObject* obj, int state);
-void arwarwing_updateBombFire(GameObject* obj, int state);
-void arwarwing_emitDamageEffects(int obj, int state);
-void arwarwing_warpByCourse(GameObject* obj);
-void arwarwing_updateWeaponFire(GameObject* obj, int state);
-void arwarwing_update(GameObject* obj);
-void arwarwing_spawnLaserShot(GameObject* obj, int state, int side, int level, int linkEffect);
-void arwarwing_addBomb(int arwing);
-void arwarwing_upgradeLaserLevel(int arwing);
-int arwarwing_isExplodingOrWarping(int arwing);
-int arwarwing_isBarrelRolling(int arwing);
-int arwarwing_isDead(int arwing);
-void arwarwing_updateRollAndEngine(int obj, int state);
-void arwarwing_clearAimSnapshot(GameObject* obj);
-void arwarwing_initAttachments(GameObject* obj, int state);
-void arwarwing_spawnBomb(GameObject* obj, int state, int side);
-void arwarwing_resetFlightState(GameObject* obj);
-void arwarwing_updateThrusters(GameObject* obj, int state);
-void arwarwing_handlePathDamage(GameObject* obj, int state);
-void arwarwing_handleObjectDamage(GameObject* obj, int state);
-int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-void arwarwing_init(GameObject* obj);
 void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c);
 int Obj_UpdateRomCurveFollowVelocity(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag);
 int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag, int* p6);
@@ -775,7 +719,5 @@ void Obj_SmoothTurnAnglesTowardVelocity(GameObject* a, int b, int c, f32 d, f32 
 int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, int p3, int p4);
 int voxmaps_traceWorldLine(void* p1, void* p2);
 void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale);
-void arwarwing_readControls(GameObject* obj, int state);
-void arwarwing_updateBarrelRoll(GameObject* obj, int state);
 
 #endif

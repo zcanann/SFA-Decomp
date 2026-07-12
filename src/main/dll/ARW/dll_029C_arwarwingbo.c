@@ -10,6 +10,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -53,10 +54,10 @@ void arwarwingbo_update(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     ArwingBombState* state = ((GameObject*)obj)->extra;
-    int arwing = getArwing();
+    GameObject* arwing = getArwing();
     f32 zero;
 
-    if (((GameObject*)arwing)->objectFlags & ARWARWINGBO_OBJFLAG_PARENT_SLACK)
+    if (arwing->objectFlags & ARWARWINGBO_OBJFLAG_PARENT_SLACK)
     {
         arwarwing_clearActiveBomb(arwing);
         Obj_FreeObject((GameObject*)obj);

@@ -29,6 +29,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -105,7 +106,6 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void mainSetBits(int eventId, int value);
 extern int getTrickyObject(void);
 extern void gameTextFn_80125ba4(int id);
-extern int getArwing(void);
 extern void envFxFn_800887cc(void);
 extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);
@@ -792,7 +792,7 @@ void Trigger_hitDetect(GameObject* obj)
         }
         else
         {
-            triggerObj = getArwing();
+            triggerObj = (int)getArwing();
         }
         trickyObj = getTrickyObject();
         if ((void*)triggerObj != NULL || (void*)trickyObj != NULL)
