@@ -240,17 +240,6 @@ extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
 extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
 extern void dll_2E_func09(int p1, void* p2, void* p3, int p4);
-extern int gDll28BMoveBlendDataA[];
-extern int gDll28BMoveBlendDataB[];
-extern void* gDll28BSubstateHandlers[];
-extern void* gDll28BStateHandlers[];
-extern f32 lbl_803E6D18;
-extern f32 gDll28BCurveInitParam;
-
-typedef struct Blob16
-{
-    int a, b, c, d;
-} Blob16;
 extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 
 

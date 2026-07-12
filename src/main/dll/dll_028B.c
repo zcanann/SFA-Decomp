@@ -95,12 +95,12 @@ void dll_28B_update(GameObject* obj)
 void dll_28B_init(GameObject* obj)
 {
     int curveParam;
-    Blob16 blockA;
-    Blob16 blockB;
+    Dll28BMoveBlendData blockA;
+    Dll28BMoveBlendData blockB;
     Dll28BState* state = obj->extra;
 
-    blockA = *(Blob16*)gDll28BMoveBlendDataA;
-    blockB = *(Blob16*)gDll28BMoveBlendDataB;
+    blockA = gDll28BMoveBlendDataA;
+    blockB = gDll28BMoveBlendDataB;
     curveParam = 2;
     dll_2E_func05(obj, &state->moveLib, -0x2AAA, 0x638E, 8);
     dll_2E_func09((int)&state->moveLib, &blockB, &blockA, 8);

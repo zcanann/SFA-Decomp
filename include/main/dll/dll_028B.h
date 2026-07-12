@@ -19,12 +19,25 @@ typedef struct Dll28BState
     u8 padAC1[0xAC4 - 0xAC1];
 } Dll28BState;
 
+typedef struct Dll28BMoveBlendData
+{
+    int values[4];
+} Dll28BMoveBlendData;
+
 STATIC_ASSERT(sizeof(Dll28BState) == 0xAC4);
 STATIC_ASSERT(offsetof(Dll28BState, moveLib) == 0x35C);
 STATIC_ASSERT(offsetof(Dll28BState, eyeAnim) == 0x980);
 STATIC_ASSERT(offsetof(Dll28BState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
 STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
+STATIC_ASSERT(sizeof(Dll28BMoveBlendData) == 0x10);
+
+extern Dll28BMoveBlendData gDll28BMoveBlendDataA;
+extern Dll28BMoveBlendData gDll28BMoveBlendDataB;
+extern void* gDll28BSubstateHandlers[4];
+extern void* gDll28BStateHandlers[4];
+extern f32 lbl_803E6D18;
+extern f32 gDll28BCurveInitParam;
 
 extern f32 gWcEarthWalkerFarPlayerDistance;
 extern f32 gWcEarthWalkerNearPlayerDistance;
