@@ -8,6 +8,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
@@ -56,7 +57,6 @@ extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;
 extern f32 gDimCannonAnimAdvanceSpeedCur;
 
-extern void* objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern void playerAddRemoveMagic(void* player, int amount);
 
 extern u8 gDimCannonMaxCharge;

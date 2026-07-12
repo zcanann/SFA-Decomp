@@ -28,6 +28,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -517,7 +518,7 @@ void arwarwing_update(GameObject* obj)
     s16 wingRot;
     f32 timer;
     f32 throttle;
-    int vv;
+    s16* vv;
 
     if ((state->flags477 & ARWING_FLAG_ACTIVE) == 0)
     {
@@ -610,45 +611,41 @@ void arwarwing_update(GameObject* obj)
         arwarwing_updateWeaponFire(obj, state);
         arwarwing_updateBombFire(obj, state);
 
-        *(s16*)(state->wingVec[0] + 0) =
-            (s16)((f32)(-state->rotZCur) * state->wingFlexScale);
-        *(s16*)(state->wingVec[0] + 4) =
-            (s16)((f32)state->rotZCur * state->wingFlexScale);
-        *(s16*)(state->wingVec[1] + 0) =
-            (s16)((f32)(-state->rotZCur) * state->wingFlexScale);
-        *(s16*)(state->wingVec[1] + 4) =
-            (s16)((f32)state->rotZCur * state->wingFlexScale);
+        state->wingVec[0][0] = (s16)((f32)(-state->rotZCur) * state->wingFlexScale);
+        state->wingVec[0][2] = (s16)((f32)state->rotZCur * state->wingFlexScale);
+        state->wingVec[1][0] = (s16)((f32)(-state->rotZCur) * state->wingFlexScale);
+        state->wingVec[1][2] = (s16)((f32)state->rotZCur * state->wingFlexScale);
         wingRot = (s16)((f32)state->rotZCur * state->wingFlexScale);
-        *(s16*)(state->wingVec[2] + 4) = wingRot;
-        *(s16*)(state->wingVec[2] + 0) = wingRot;
+        state->wingVec[2][2] = wingRot;
+        state->wingVec[2][0] = wingRot;
         wingRot = (s16)((f32)state->rotZCur * state->wingFlexScale);
-        *(s16*)(state->wingVec[3] + 4) = wingRot;
-        *(s16*)(state->wingVec[3] + 0) = wingRot;
+        state->wingVec[3][2] = wingRot;
+        state->wingVec[3][0] = wingRot;
 
         wingRot = (s16)((f32)(-state->rotYCur) * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[0] + 0));
-        *(s16*)(state->wingVec[0] + 0) = wingRot;
+                        (f32)state->wingVec[0][0]);
+        state->wingVec[0][0] = wingRot;
         wingRot = (s16)((f32)state->rotYCur * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[0] + 4));
-        *(s16*)(state->wingVec[0] + 4) = wingRot;
+                        (f32)state->wingVec[0][2]);
+        state->wingVec[0][2] = wingRot;
         wingRot = (s16)((f32)(-state->rotYCur) * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[1] + 0));
-        *(s16*)(state->wingVec[1] + 0) = wingRot;
+                        (f32)state->wingVec[1][0]);
+        state->wingVec[1][0] = wingRot;
         wingRot = (s16)((f32)state->rotYCur * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[1] + 4));
-        *(s16*)(state->wingVec[1] + 4) = wingRot;
+                        (f32)state->wingVec[1][2]);
+        state->wingVec[1][2] = wingRot;
         wingRot = (s16)((f32)(-state->rotYCur) * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[2] + 0));
-        *(s16*)(state->wingVec[2] + 0) = wingRot;
+                        (f32)state->wingVec[2][0]);
+        state->wingVec[2][0] = wingRot;
         wingRot = (s16)((f32)(-state->rotYCur) * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[2] + 4));
-        *(s16*)(state->wingVec[2] + 4) = wingRot;
+                        (f32)state->wingVec[2][2]);
+        state->wingVec[2][2] = wingRot;
         wingRot = (s16)((f32)(-state->rotYCur) * state->wingFlexScale +
-                        (f32) * (s16*)(state->wingVec[3] + 0));
-        *(s16*)(state->wingVec[3] + 0) = wingRot;
+                        (f32)state->wingVec[3][0]);
+        state->wingVec[3][0] = wingRot;
         wingRot = (s16)((f32)(-state->rotYCur) * state->wingFlexScale +
-                        (f32) * (s16*)((vv = state->wingVec[3]) + 4));
-        *(s16*)(vv + 4) = wingRot;
+                        (f32)(vv = state->wingVec[3])[2]);
+        vv[2] = wingRot;
     }
 
     arwarwing_updateRollAndEngine((int)obj, state);
@@ -766,7 +763,7 @@ int arwarwing_isDead(GameObject* arwing)
 #pragma scheduling off
 void arwarwing_updateRollAndEngine(int obj, ArwingState* state)
 {
-    int vec;
+    s16* vec;
     f32 vol;
     f64 sum;
 
@@ -874,15 +871,15 @@ void arwarwing_updateRollAndEngine(int obj, ArwingState* state)
         }
     }
 
-    if ((u32)vec != 0)
+    if (vec != NULL)
     {
         s16 flex;
         state->wingFlexCur +=
             lbl_803E6EF8 * (state->wingFlexTarget - state->wingFlexCur);
         flex = (s16)state->wingFlexCur;
-        *(s16*)(vec + 0xa) = flex;
-        *(s16*)(vec + 0x8) = flex;
-        *(s16*)(vec + 0x6) = flex;
+        vec[5] = flex;
+        vec[4] = flex;
+        vec[3] = flex;
     }
 }
 #pragma scheduling reset

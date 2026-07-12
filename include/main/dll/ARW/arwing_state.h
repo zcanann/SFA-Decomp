@@ -137,7 +137,7 @@ typedef struct ArwingState {
     u8 maxBombCount;     /* 0x44d */
     u16 enginePitch;     /* fed to arwarwinggu_setTextureFrame */
     void *light;         /* 0x450 */
-    int wingVec[4];      /* 0x454: objModelGetVecFn slots 0-3 */
+    s16* wingVec[4];     /* 0x454: objModelGetVecFn slots 0-3 */
     f32 wingFlexScale;   /* 0x464 */
     u8 health;           /* 0x468 */
     u8 maxHealth;        /* 0x469 */

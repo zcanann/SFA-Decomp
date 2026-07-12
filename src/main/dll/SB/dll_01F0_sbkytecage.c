@@ -13,6 +13,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -76,7 +77,6 @@ enum
 
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
-extern int* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 
 int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -191,15 +191,15 @@ void SB_KyteCage_update(GameObject* obj)
     if ((obj)->anim.parent != NULL)
     {
         int kind = ((GameObject*)(obj)->anim.parent)->unkF4;
-        int* mvec = objModelGetVecFn_800395d8(obj, 0);
+        s16* mvec = objModelGetVecFn_800395d8(obj, 0);
         if (mvec != 0 && kind < 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
         {
-            *(s16*)((char*)mvec + 4) = ((GameObject*)(obj)->anim.parent)->anim.rotZ;
+            mvec[2] = ((GameObject*)(obj)->anim.parent)->anim.rotZ;
             ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
         }
         else if (mvec != 0 && kind >= 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
         {
-            *(s16*)((char*)mvec + 4) = 0;
+            mvec[2] = 0;
             ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
         }
     }

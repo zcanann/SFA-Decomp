@@ -3,6 +3,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -261,7 +262,6 @@ extern float mathCosf(float x);
 extern void storeZeroToFloatParam(int p);
 extern void s16toFloat(int p, int v);
 extern void fn_802BC788(GameObject*);
-extern s16* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 
 void fn_802BCA10(GameObject* obj, int sub, int state);
 

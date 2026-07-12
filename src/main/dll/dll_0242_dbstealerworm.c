@@ -1581,7 +1581,6 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     extern int* ObjGroup_GetObjects(int, int*);
 
     extern int Obj_GetPlayerObject(void);
-    extern s16* objModelGetVecFn_800395d8(GameObject*, int);
     extern f32 lbl_803E62B4;
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62CC;
@@ -1834,7 +1833,6 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int Obj_GetPlayerObject(void);
-    extern s16* objModelGetVecFn_800395d8(GameObject*, int);
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E62CC;
@@ -2190,7 +2188,6 @@ void dbstealerworm_update(u8* objp)
 int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 {
     extern int Obj_GetPlayerObject(void);
-    extern s16* objModelGetVecFn_800395d8(GameObject*, int);
     extern f32 lbl_803E62CC;
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62B4;

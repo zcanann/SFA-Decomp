@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/sky_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \

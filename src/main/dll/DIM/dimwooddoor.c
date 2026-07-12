@@ -11,6 +11,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
@@ -58,7 +59,6 @@ typedef struct DIMWoodDoorShardState
     u8 hitRadius;
 } DIMWoodDoorShardState;
 
-extern s16* objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
 extern int getAngle(float y, float x);

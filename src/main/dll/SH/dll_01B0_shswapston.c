@@ -12,6 +12,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/model_engine.h"
@@ -437,7 +438,6 @@ extern f32 lbl_803E54AC;
 
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(GameObject* obj, int target, void* state, int a, int b, int c);
-extern s16* objModelGetVecFn_800395d8(GameObject* obj, int index);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
 extern void objAnimFn_80038f38(GameObject* obj, int* animState);
 extern void characterDoEyeAnims(GameObject* obj, void* state);

@@ -437,7 +437,6 @@ extern f32 lbl_803E7F08;
 extern void* gPlayerPathObject;
 extern u8 gPlayerSubState;
 extern void objSetAnimField48to0(int* obj);
-extern s16* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern const f32 lbl_803E7EE0;
 extern f32 lbl_803E7EF0;
 extern void setTimeStop(int x);

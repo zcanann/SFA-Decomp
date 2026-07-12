@@ -9,6 +9,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/dll/DR/dll_026C_drcagewith.h"
 
 #define DRCAGEWITH_CHILD_OBJ 1143
@@ -167,10 +168,10 @@ void DR_CageWith_hitDetect(GameObject* obj)
         ((DrcagewithState*)state)->angularVel = ((DrcagewithState*)state)->angularVel + clamped;
         for (i = 0, div = lbl_803E6A0C; i < 9; i++)
         {
-            nearest = objModelGetVecFn_800395d8(obj, i);
-            if (nearest != NULL)
+            s16* jointVec = objModelGetVecFn_800395d8(obj, i);
+            if (jointVec != NULL)
             {
-                ((GameObject*)nearest)->anim.rotZ = ((DrcagewithState*)state)->angularVel / div;
+                jointVec[2] = ((DrcagewithState*)state)->angularVel / div;
             }
         }
         if (((DrcagewithState*)state)->spawnedObject != NULL)

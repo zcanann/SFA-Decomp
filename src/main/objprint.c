@@ -206,13 +206,13 @@ extern u8 lbl_803DCC0D;
 extern void objRenderModel(int* obj, int** table);
 extern void objRenderFn_80041018(int* obj);
 
-void* objModelGetVecFn_800395d8(GameObject* obj, int target)
+s16* objModelGetVecFn_800395d8(GameObject* obj, int target)
 {
     int vecOffset;
     int entries;
     int entryIdx;
     void* m;
-    void* result;
+    s16* result;
     int count;
     int i;
 
@@ -229,7 +229,7 @@ void* objModelGetVecFn_800395d8(GameObject* obj, int target)
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
                 (s32) * (u8*)(entries + entryIdx) == target)
             {
-                result = (char*)(obj)->anim.jointPoseData + vecOffset;
+                result = (s16*)((char*)(obj)->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
             vecOffset += 0x12;

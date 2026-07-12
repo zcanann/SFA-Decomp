@@ -30,7 +30,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern u32 mainGetBit(int eventId);
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
-extern int objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern int objUpdateOpacity(int sub);
 

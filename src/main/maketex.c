@@ -3,6 +3,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
@@ -133,7 +134,6 @@ extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
-extern int objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void AudioStream_CancelPrepared(void);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);

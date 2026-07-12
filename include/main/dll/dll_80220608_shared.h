@@ -265,7 +265,6 @@ extern int fn_80296A9C(GameObject* player, int p2);
 extern int objGetFirstChild(void);
 extern void staffSetGlow(int staff, int p2, int p3);
 
-extern int objModelGetVecFn_800395d8(GameObject* model, int idx);
 extern f32 fn_802945E0(f32 ratio);
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;

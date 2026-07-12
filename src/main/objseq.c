@@ -93,7 +93,6 @@ extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int fl
 extern void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq);
 extern void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq);
 extern void objModelClearVecFn_8003aa40(GameObject* obj);
-extern s16* objModelGetVecFn_800395d8(GameObject* obj, int index);
 extern long long OSGetTime(void);
 extern s16 gObjSeqBgCmds[];
 extern u8 objSeqXrotChanged[];

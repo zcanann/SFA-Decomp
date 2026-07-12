@@ -3,6 +3,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"
+#include "main/objprint_api.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
@@ -196,7 +197,6 @@ extern u32 objAnimFn_80038f38();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int arg5, int arg6);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern void freeAndNull(void* p);
 extern void trickyVoxAllocFn_8004b5d4(void* out);
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int pointCount, int arg7);
@@ -2628,7 +2628,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
     int i;
     int pathState;
     int pathPoint;
-    int pathInfo;
+    s16* pathInfo;
     int state;
 
     if (doRender != '\0')
@@ -2648,7 +2648,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
         ObjPath_GetPointWorldPosition(obj, 8, (float*)(pathState + 0x408), (u32*)(pathState + 0x40c),
                                       (float*)(pathState + 0x410), 0);
         pathInfo = objModelGetVecFn_800395d8(obj, 0);
-        *(s16*)(pathState + 0x414) = *(s16*)(pathInfo + 2);
+        *(s16*)(pathState + 0x414) = pathInfo[1];
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
             switch (((TrickyState*)state)->stateIndex)
