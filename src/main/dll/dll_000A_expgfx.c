@@ -1945,13 +1945,13 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     s16 angleB;
-    int alpha;
+    u32 texture;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
     f32 sinA, cosA;
     int slotIndex;
-    u32 texture;
+    int alpha;
     ExpgfxSourceObject* sourceObject;
     u32 renderFlags;
     u32 state;
