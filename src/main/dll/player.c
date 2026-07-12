@@ -4819,7 +4819,7 @@ static void playerFreeSpawnedObjects(void** p, int i, int hi)
 int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
 {
     PlayerState* inner = obj->extra;
-    int hi;
+    int h[1];
     f32 timer;
     struct
     {
@@ -4853,20 +4853,31 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
-        hi = 0x200000;
+        h[0] = 0x200000;
         pfx.mode = 0;
-        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         pfx.mode = 1;
-        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, hi + 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNo() != 0)
         {
-            int i;
+            int z[2];
+            void** p[1];
             inner->animState = -1;
-            hi = 0;
-            lbl_803DE42C = hi;
-            i = hi;
-            playerFreeSpawnedObjects(gPlayerSpawnedObjects, i, hi);
+            z[1] = 0;
+            lbl_803DE42C = z[1];
+            z[0] = z[1];
+            p[0] = gPlayerSpawnedObjects;
+            do
+            {
+                if (*p[0] != NULL)
+                {
+                    Obj_FreeObject((int)*p[0]);
+                    *p[0] = NULL;
+                }
+                p[0]++;
+                z[0]++;
+            } while (z[0] < 7);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
