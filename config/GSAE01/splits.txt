@@ -1673,6 +1673,7 @@ main/dll/MMP/dll_0180_mmpasteroidre.c:
 
 main/dll/MMP/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
+	.sdata2     start:0x803E4548 end:0x803E45B8
 
 main/dll/MMP/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
