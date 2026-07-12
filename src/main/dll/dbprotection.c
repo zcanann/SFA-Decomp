@@ -23,6 +23,7 @@
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
@@ -131,7 +132,6 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern int ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -862,7 +862,7 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     int player;
     int effectObj;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0)
     {
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);

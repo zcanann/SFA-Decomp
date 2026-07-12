@@ -15,6 +15,7 @@
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
@@ -129,7 +130,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void storeZeroToFloatParam(void* p);
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -425,7 +425,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     animUpdate->sequenceEventActive = 0;
-    player = Obj_GetPlayerObject();
+    player = (char*)Obj_GetPlayerObject();
     dx = ((GameObject*)player)->anim.localPosX - def->base.posX;
     dz = ((GameObject*)player)->anim.localPosZ - def->base.posZ;
     distSq = dx * dx + dz * dz;
@@ -440,7 +440,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     {
         BabyCloudRunnerState* sub2 = ((GameObject*)obj)->extra;
-        char* pp = Obj_GetPlayerObject();
+        char* pp = (char*)Obj_GetPlayerObject();
         BabyCloudRunnerPlacement* def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
         int found = 0;
         if (Vec_distance((f32*)(pp + 0x18), (f32*)((char*)((int)obj + 0x18))) < (f32)def2->innerRadius &&
@@ -535,7 +535,7 @@ void babycloudrunner_update(int* obj)
     f32 radius;
     def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (char*)Obj_GetPlayerObject();
     getTrickyObject();
     if (mainGetBit(def->runnerGameBit) != 0)
     {
@@ -683,7 +683,7 @@ void babycloudrunner_update(int* obj)
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 sub2 = ((GameObject*)obj)->extra;
                 {
-                    char* pp = Obj_GetPlayerObject();
+                    char* pp = (char*)Obj_GetPlayerObject();
                     def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
                     found = 0;
                     if (Vec_distance((f32*)(pp + 0x18), &((GameObject*)obj)->anim.worldPosX) < (f32)def2->innerRadius && sub2->runnerState == 3 &&

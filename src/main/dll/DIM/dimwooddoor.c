@@ -11,6 +11,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #define DIMWOODDOOR_OBJFLAG_PARENT_SLACK 0x1000
@@ -61,7 +62,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern s16* objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
-extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 
 extern s16 lbl_803DBF02;
@@ -177,7 +177,7 @@ void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 t
     s16 absPitch;
 
     config = *(DIMWoodDoorConfig**)&(obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     state = (obj)->extra;
     if (state->cooldown <= 0)
     {

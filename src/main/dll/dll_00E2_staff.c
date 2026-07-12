@@ -25,6 +25,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mm.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
@@ -158,7 +159,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern void* Obj_GetPlayerObject(void);
 
 typedef struct StaffSwipeSlot
 {
@@ -1007,7 +1007,7 @@ void superQuakeFn_8016d9fc(f32* pos)
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = lbl_803E3290;
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = lbl_803E3288;
     CameraShake_Start(lbl_803E32F8, lbl_803E32A8, lbl_803E32FC);
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     if (player != NULL && Obj_IsLoadingLocked() != 0)
     {
         QuakePartVec v;
