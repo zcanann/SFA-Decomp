@@ -75,8 +75,6 @@ extern void logPrintf(void* fmt, ...);
 extern f32 lbl_803E72E8;
 extern f32 lbl_803E72B0;
 
-extern int fn_80065640(void);
-extern void fn_80065574(int a, GameObject* b, int c);
 extern f32 lbl_803E6EA0;
 
 
@@ -184,7 +182,6 @@ extern void vecRotateZXY(int obj, f32* vec);
 
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
-extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
 
 
 extern ModgfxInterface** gModgfxInterface;

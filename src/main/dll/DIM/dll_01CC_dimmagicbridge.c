@@ -23,6 +23,7 @@
 #include "main/dll/DIM/dll_01CC_dimmagicbridge.h"
 #include "dolphin/os/OSCache.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
@@ -36,7 +37,6 @@ extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 
-extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern int EmissionController_IsLingering(GameObject* player);
 extern float mathSinf(float x);
 

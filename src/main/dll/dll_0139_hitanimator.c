@@ -20,6 +20,7 @@
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
+#include "main/track_dolphin_api.h"
 
 /* Map-block poly-group record (blk+0x50 table, 0x14 stride, returned by
  * mapBlockFn_800606ec) - layout matches MapTriGroup in track_dolphin.c.
@@ -47,8 +48,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern int fn_80065640(void);
-extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern void* mapBlockFn_800606ec(MapBlockData* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern void* Shader_getLayer(void* shader, int idx);

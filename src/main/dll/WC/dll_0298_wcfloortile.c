@@ -17,6 +17,7 @@
  * the floor tile and must not be moved or removed.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/track_dolphin_api.h"
 #include "dolphin/mtx.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/debug.h"

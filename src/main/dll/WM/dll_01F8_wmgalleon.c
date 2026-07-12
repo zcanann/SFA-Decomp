@@ -9,6 +9,7 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 #include "main/dll/dll1fbsetup_struct.h"
 #include "main/dll/wmgalleonsetup_struct.h"
 #include "main/dll/wmseqobjectsetup_struct.h"
@@ -90,7 +91,6 @@ extern f32 lbl_803E5CF4;
 
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
-extern void fn_80065574(int a, GameObject* obj, int b);
 extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
 
