@@ -7647,3 +7647,17 @@ few source-controllable-looking tags. All REGRESSED or NEUTRAL on true objdiff f
 LESSON REINFORCED: every source-controllable-LOOKING tag on this frontier trades ≥1 coloring/CSE instr for
 the one it fixes = net loss or neutral. The cheap-win frontier is genuinely mined out; next wins are deep
 per-fn struct/type recovery or new team-commit shifts only.
+
+## WIN Jul12 lightfoot_free brute decl-order 97.50->98.50 (83ba09f6b6)
+dll_01B5_lightfoot lightfoot_free: brute_match swap moved `void* child` from FIRST decl to LAST
+(order [1,2,3,0], after inner/count/i). +1.00% (biggest brute win this sweep). asm-clean, gate EXIT=0.
+SWEEP CONTEXT (Jul12 band-sweep, all COLD units, brute_match --strategy all): 17 near-miss fns run,
+16 WELDED (identity best, #108 GPR reg-perm cap), 1 win. Welded: render fn_80007F78/modelRenderFn_80006744,
+dll_0B_func04, errDisplayThreadMain, cMenuSetItems, skyFn_8008aee8, drawFn_80125424,
+ObjSeq_RebuildCurveStateToFrame/runBgCmds, renderSceneGeometry/updateVisibleGeometry, curves_getCurves,
+SaveGame_gplaySetObjGroupStatus, voxmaps_resetLoadedMaps, drlasercannon_aimAtTarget,
+drshackle_updateAttachedPosition, debugTextDrawToFrameBuffer, main fn_801FD6B4(now 99.36).
+FRONTIER NOTE: sub-100 band is thin+high — of 8380 fns only 395<100, 386 in 95-100, 6 in 90-95. brute
+decl-order cheap wins now near-exhausted for cold units; small/overlooked fns (lightfoot_free was sz=160,
+bottom of size-sort) still occasionally yield — don't skip the tail. tricky/textrender/expgfx/newshadows/
+shader/trigger/dll_0014_unk/animobjd2 were HOT (siblings live) — skipped.
