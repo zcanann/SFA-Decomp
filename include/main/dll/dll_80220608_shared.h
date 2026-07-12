@@ -289,10 +289,6 @@ extern int fn_80296A9C(GameObject* player, int p2);
 extern int objGetFirstChild(void);
 extern void staffSetGlow(int staff, int p2, int p3);
 
-extern f32 lbl_803E6BF0;
-extern f32 lbl_803E6BF4;
-extern f32 lbl_803E6BF8;
-
 extern int objModelGetVecFn_800395d8(GameObject* model, int idx);
 extern f32 fn_802945E0(f32 ratio);
 extern f32 lbl_803E6F80;
@@ -354,9 +350,6 @@ extern f32 fn_80291FF4(f32 x);
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
 
 extern int dll_2E_func0A(int a, void* out);
-extern f32 lbl_803E6BB8;
-extern f32 lbl_803E6BBC;
-extern f32 lbl_803E6BC0;
 
 extern void* playerGetFocusObject(void);
 extern void setAButtonIcon(int icon);
