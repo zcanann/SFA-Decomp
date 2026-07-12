@@ -3445,6 +3445,7 @@ main/audio/snd_core.c:
 	extab       start:0x80005A90 end:0x80005A98
 	extabindex  start:0x80006368 end:0x80006374
 	.text       start:0x80281160 end:0x80281338
+	.sdata2     start:0x803E78C8 end:0x803E78E0
 
 main/audio/inp_midi_set.c:
 	extab       start:0x80005A98 end:0x80005AA8

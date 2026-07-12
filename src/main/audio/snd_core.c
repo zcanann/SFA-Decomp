@@ -82,3 +82,7 @@ void inpSetGlobalMIDIDirtyFlag(u8 index, u8 group, u32 flags)
     entry = groupBase + offset;
     *(u32*)entry |= flags;
 }
+
+const float lbl_803E78C8 = 0.0f;
+const double lbl_803E78D0 = 0.5;
+const double lbl_803E78D8 = 3.0;
