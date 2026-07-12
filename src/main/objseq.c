@@ -4654,15 +4654,15 @@ void ObjSeq_onMapSetup(void)
     {
         flagsB = base + i;
         modes = (s16*)(base + 0x3a98) + i;
-        frames = (f32*)((int)base + (i << 2));
+        frames = (f32*)base + i;
         handles2 = (int*)(frames + 3321);
         marks2 = flagsB + 0x338c;
         for (; i < 0x55; i++)
         {
             frames = (f32*)(handles2 + 300);
             dists = (f32*)(handles2 + 215);
-            flagsA = marks2 + 0x7b8;
-            flagsB = marks2 + 0x810;
+            flagsA = marks2 + 0x810;
+            flagsB = marks2 + 0x7b8;
             actions = marks2 + 0x8c0;
             results = marks2 + 0x868;
             states = marks2 + 0x6b4;
