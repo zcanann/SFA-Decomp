@@ -976,6 +976,7 @@ main/dll/dll_003C_tumbleweedbush.c:
 
 main/dll/dll_003D_titlemenuitem.c:
 	.text       start:0x80131540 end:0x80132008
+	.bss        start:0x803A9DB8 end:0x803A9DD0
 
 main/dll/dll_003E_dummy3e.c:
 	.text       start:0x80132008 end:0x80132024
