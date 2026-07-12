@@ -15,7 +15,16 @@
  * behaviorFlags / seqId (CMBSRC_MAP_*, CMBSRC_BEHAVIOR_*, CMBSRC_SEQ_*)
  * defined in dll_02B1_cmbsrc.h.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/camera.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/sky_interface.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/objhits.h"
