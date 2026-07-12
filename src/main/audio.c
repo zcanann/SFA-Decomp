@@ -1,10 +1,43 @@
-#include "main/engine_shared.h"
+#include "main/audio.h"
+#include "main/audio/inp_midi.h"
+#include "main/audio/hw_samplemem.h"
+#include "main/audio/sfx.h"
+#include "main/audio/snd3d.h"
+#include "main/audio/snd_core.h"
+#include "main/audio/snd_groups_api.h"
+#include "main/audio/snd_reverb.h"
+#include "main/audio/snd_synth_api.h"
 #include "main/audio_internal.h"
+#include "main/attract_movie_api.h"
+#include "main/camera.h"
+#include "main/fileio.h"
+#include "main/frame_timing.h"
+#include "main/gametext.h"
+#include "main/gamebits.h"
+#include "main/gameloop_api.h"
+#include "main/mm.h"
+#include "main/object_api.h"
+#include "main/objseq_api.h"
+#include "main/pad.h"
+#include "main/pi_dolphin_api.h"
+#include "main/resource.h"
+#include "main/vecmath.h"
 #define SYNTH_INTERNAL_USE_PROJECT_TYPES
 #include "src/main/audio/synth_internal.h"
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/ai.h"
+#include "dolphin/ar.h"
+#include "dolphin/dvd.h"
+#include "dolphin/gx/GXLegacy.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSReport.h"
+#include "dolphin/os/OSRtc.h"
 
 /* gAudioPendingLoadFlags / gAudioCompletedLoadFlags: one bit per async
  * resource load, set when enqueued and cleared/mirrored when the load
@@ -3083,10 +3116,7 @@ char sMusicTrackNameLFVSwamp[] = "LFV_Swamp";
 char sMusicTrackNameSlowMotion[] = "Slow_Motion";
 char sMusicTrackNameAmbLavapits[] = "amb_lavapits";
 char sMusicTrackNameBackOfCloudrunner[] = "back_of_cloudrunner";
-extern char sMusicTrackNameBarren[];
-extern char sMusicTrackNameBarrels[];
 char sMusicTrackNameBlizzard[] = "blizzard";
-extern char sMusicTrackNameBloop[];
 char sMusicTrackNameCapeclawSeaside[] = "capeclaw_seaside";
 char sMusicTrackNameCaveTrade[] = "cave_trade";
 char sMusicTrackNameCclawCaves[] = "cclaw_caves";
@@ -3099,14 +3129,10 @@ char sMusicTrackNameCommunicator[] = "communicator";
 char sMusicTrackNameCrunDungeon[] = "crun_dungeon";
 char sMusicTrackNameDarkIceBoss1[] = "dark_ice_boss_1";
 char sMusicTrackNameDIMCavern[] = "DIM_Cavern";
-extern char sMusicTrackNameDIMDay[];
 char sMusicTrackNameDIMMines[] = "DIM_Mines";
 char sMusicTrackNameDIMSnow[] = "DIM_Snow";
 char sMusicTrackNameDIMCnBlt[] = "DIM_Cn_Blt";
 char sMusicTrackNameDownthewell[] = "downthewell";
-extern char sMusicTrackNameDrako1[];
-extern char sMusicTrackNameDrako2[];
-extern char sMusicTrackNameDrako3[];
 char sMusicTrackNameEwtChase[] = "ewt_chase";
 char sMusicTrackNameEwtLink[] = "ewt_link";
 char sMusicTrackNameEwtOutside[] = "ewt_outside";
@@ -3120,8 +3146,6 @@ char sMusicTrackNameIceWalkaround[] = "ice_walkaround";
 char sMusicTrackNameInsideGalleon[] = "inside_galleon";
 char sMusicTrackNameInsideWarlock[] = "inside_warlock";
 char sMusicTrackNameKpanomaly[] = "kpanomaly";
-extern char sMusicTrackNameKptext[];
-extern char sMusicTrackNameKpwin[];
 char sMusicTrackNameLVFTracking[] = "LVF_Tracking";
 char sMusicTrackNameMammothWalk[] = "mammoth_walk";
 char sMusicTrackNameMenuPage[] = "menu_page";
@@ -3137,7 +3161,6 @@ char sMusicTrackNamePU2Heroic[] = "PU2_Heroic";
 char sMusicTrackNamePU3Adventure[] = "PU3_Adventure";
 char sMusicTrackNameSeqSwaphol1[] = "seq_swaphol1";
 char sMusicTrackNameSforestday[] = "sforestday";
-extern char sMusicTrackNameSlope[];
 char sMusicTrackNameStarfoxArea6[] = "starfox_area_6";
 char sMusicTrackNameStarfoxMap[] = "starfox_map";
 char sMusicTrackNameStarfoxRwing1[] = "starfox_rwing_1";
@@ -3150,7 +3173,6 @@ char sMusicTrackNameTestOfMagic[] = "test_of_magic";
 char sMusicTrackNameTestOfSacrifice[] = "test_of_sacrifice";
 char sMusicTrackNameTestOfSkill[] = "test_of_skill";
 char sMusicTrackNameTestOfStrength[] = "test_of_strength";
-extern char sMusicTrackNameTrex2a[];
 char sMusicTrackNameTrexChase[] = "trex_chase";
 char sMusicTrackNameTrexHit[] = "trex_hit";
 char sMusicTrackNameTTHNight[] = "TTH_Night";
