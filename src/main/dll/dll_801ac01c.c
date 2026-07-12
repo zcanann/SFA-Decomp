@@ -11,6 +11,7 @@
  *     request bits, sets 0x4e5, enables object group 1, sets 0x379 or 0xcb.
  */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/game_ui_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"

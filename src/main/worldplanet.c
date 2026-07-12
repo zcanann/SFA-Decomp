@@ -46,7 +46,6 @@ extern u16 getNextTaskHintText(void);
 extern void setDrawLights(int v);
 extern void audioStopByMask(int mask);
 extern void Music_Trigger(int id, int arg);
-extern int mapUnload(int mapId, int flags);
 
 extern void envFxActFn_800887f8(u8 value);
 extern void worldplanet_updateMapLighting(int obj);
@@ -64,8 +63,6 @@ extern u8 gWorldPlanetTitleStringIds[8];
 extern u8 gWorldPlanetBriefingSpeakerModel[8];
 extern u8 gWorldPlanetLoadMapIndices[6];
 extern u8 gWorldPlanetWarpMapIndices[6];
-extern int loadMapAndParent(int mapId);
-extern int lockLevel(s32 val, int idx);
 
 extern void streamFn_8000a380(int a, int b, int c);
 extern void warpToMap(int idx, s8 transType);

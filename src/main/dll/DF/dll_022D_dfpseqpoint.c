@@ -48,7 +48,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 __declspec(section ".sdata2") f32 lbl_803E63B8 = 1.0f;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int mapGetDirIdx(int idx);
-extern int lockLevel(s32 val, int idx);
 extern void warpToMap(int idx, s8 transType);
 
 int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

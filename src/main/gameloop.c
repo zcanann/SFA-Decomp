@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/objprint_dolphin.h"
 #include "dolphin/pad.h"
 #include "dolphin/vi.h"
 #include "dolphin/dvd.h"

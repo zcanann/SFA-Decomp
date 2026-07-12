@@ -62,10 +62,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
-extern int loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int idx);
-extern int lockLevel(s32 val, int idx);
-extern int mapUnload(int mapId, int flags);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
 extern int getCurUiDll(void);

@@ -94,7 +94,6 @@ extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-tri
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern int mapGetDirIdx(int idx);
-extern int lockLevel(s32 val, int idx);
 extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);

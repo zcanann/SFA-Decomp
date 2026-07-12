@@ -75,9 +75,7 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int musicId);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                           int musicId);
-extern int loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int idx);
-extern int lockLevel(s32 val, int idx);
 extern void objSetSlot(u8* obj, s8 slot);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
