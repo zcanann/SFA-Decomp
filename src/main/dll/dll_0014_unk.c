@@ -2213,6 +2213,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     *(po) = -((f32)pl->normalX * (XA) + (f32)pl->normalZ * (ZA))
 
 #pragma opt_propagation off
+#pragma ppc_unroll_instructions_limit 60
 void walkgroupFindExitPointFn_800dc398(void)
 {
     ObjfsaPatch* patchBase[1];
@@ -2240,6 +2241,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 edge;
     u8 normalIdx;
     int pairId;
+    int zid;
     int checksum;
     int searchCount;
     ObjfsaWalkGroup* wg;
@@ -2302,40 +2304,41 @@ void walkgroupFindExitPointFn_800dc398(void)
         curveList = (int**)(*gRomCurveInterface)->getCurves(&curveCount);
         memset((char*)patchBase[0] + OBJFSA_ACTIVE_WALKGROUPS_OFFSET, 0, OBJFSA_WALKGROUP_COUNT);
         sp = patchBase[0];
+        zid = 0;
         for (pi = 8; pi != 0; pi--)
         {
-            sp[0].groupId = 0;
-            sp[1].groupId = 0;
-            sp[2].groupId = 0;
-            sp[3].groupId = 0;
-            sp[4].groupId = 0;
-            sp[5].groupId = 0;
-            sp[6].groupId = 0;
-            sp[7].groupId = 0;
-            sp[8].groupId = 0;
-            sp[9].groupId = 0;
-            sp[10].groupId = 0;
-            sp[11].groupId = 0;
-            sp[12].groupId = 0;
-            sp[13].groupId = 0;
-            sp[14].groupId = 0;
-            sp[15].groupId = 0;
-            sp[16].groupId = 0;
-            sp[17].groupId = 0;
-            sp[18].groupId = 0;
-            sp[19].groupId = 0;
-            sp[20].groupId = 0;
-            sp[21].groupId = 0;
-            sp[22].groupId = 0;
-            sp[23].groupId = 0;
-            sp[24].groupId = 0;
-            sp[25].groupId = 0;
-            sp[26].groupId = 0;
-            sp[27].groupId = 0;
-            sp[28].groupId = 0;
-            sp[29].groupId = 0;
-            sp[30].groupId = 0;
-            sp[31].groupId = 0;
+            sp[0].groupId = zid;
+            sp[1].groupId = zid;
+            sp[2].groupId = zid;
+            sp[3].groupId = zid;
+            sp[4].groupId = zid;
+            sp[5].groupId = zid;
+            sp[6].groupId = zid;
+            sp[7].groupId = zid;
+            sp[8].groupId = zid;
+            sp[9].groupId = zid;
+            sp[10].groupId = zid;
+            sp[11].groupId = zid;
+            sp[12].groupId = zid;
+            sp[13].groupId = zid;
+            sp[14].groupId = zid;
+            sp[15].groupId = zid;
+            sp[16].groupId = zid;
+            sp[17].groupId = zid;
+            sp[18].groupId = zid;
+            sp[19].groupId = zid;
+            sp[20].groupId = zid;
+            sp[21].groupId = zid;
+            sp[22].groupId = zid;
+            sp[23].groupId = zid;
+            sp[24].groupId = zid;
+            sp[25].groupId = zid;
+            sp[26].groupId = zid;
+            sp[27].groupId = zid;
+            sp[28].groupId = zid;
+            sp[29].groupId = zid;
+            sp[30].groupId = zid;
+            sp[31].groupId = zid;
             sp += 32;
         }
 
@@ -2534,6 +2537,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
     }
 }
+#pragma ppc_unroll_instructions_limit 80
 #pragma opt_propagation reset
 
 int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
