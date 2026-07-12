@@ -13,6 +13,7 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
@@ -25,7 +26,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern f32 lbl_803E59C0;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 int SB_ShipGunBroke_getExtraSize(void)
 {
@@ -59,7 +59,7 @@ void SB_ShipGunBroke_update(GameObject* obj)
     SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
     if ((u32)mainGetBit(placement->destroyedGameBit) != 0u)
     {
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_en_trpopn_c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_en_trpopn_c);
     }
 }
 

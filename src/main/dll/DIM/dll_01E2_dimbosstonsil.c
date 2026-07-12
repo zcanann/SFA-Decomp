@@ -9,6 +9,7 @@
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
@@ -30,7 +31,6 @@ extern void modelLightStruct_getSpecularColor(void* light, void* red, void* gree
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-extern void Sfx_PlayFromObject(void* obj, int sfxId);
 
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
@@ -156,7 +156,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
 
     if (lbl_803DDBA0 >= lbl_803DDB9C)
     {
-        Sfx_PlayFromObject(obj, DIMBOSSTONSIL_RUMBLE_SFX);
+        Sfx_PlayFromObject((u32)obj, DIMBOSSTONSIL_RUMBLE_SFX);
         lbl_803DDB9C += lbl_803E4CBC;
         doRumble(lbl_803E4CC0);
     }

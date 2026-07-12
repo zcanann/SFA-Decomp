@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/crfueltank.h"
 #include "main/gamebits.h"
@@ -12,7 +13,6 @@
 
 extern f32 lbl_803E6760;
 
-extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 
 extern int fn_80080150(void* timer);
 extern void storeZeroToFloatParam(void* timer);
@@ -58,7 +58,7 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
         if (hitObj->objType == 0x38c)
         {
             ObjHits_DisableObject(obj);
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);
+            Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);
             obj->fadeTimer = 0xfa;
             obj->triggered = 1;
             if (def->hitEvent != -1)

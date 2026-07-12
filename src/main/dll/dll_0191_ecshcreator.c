@@ -12,6 +12,7 @@
  * (object type 0x11) via Obj_SetupObject, then re-arms the countdown.
  */
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/obj_placement.h"
@@ -28,7 +29,6 @@
 
 extern f32 lbl_803E4FF8;
 
-extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 
 int ecsh_creator_getExtraSize(void)
@@ -70,7 +70,7 @@ void ecsh_creator_update(GameObject* obj)
         res = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
         (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 0, 0, 1, -1, 0);
         (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 1, 0, 1, -1, 0);
-        Sfx_PlayFromObject((s16*)obj, SFXTRIG_wp_hitpos_6);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_hitpos_6);
         Resource_Release(res);
         state->active = 1;
         obj->unkF8 = 1;

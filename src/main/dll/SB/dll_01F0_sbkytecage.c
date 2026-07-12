@@ -13,6 +13,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objseq.h"
@@ -77,7 +78,6 @@ extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
 extern int* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern void* ObjList_GetObjects(int* outA, int* outB);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -108,7 +108,7 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         animUpdate->hitVolumePair &= ~4;
         if (ObjAnim_AdvanceCurrentMove((int)obj, 0.004f, timeDelta, NULL) != 0)
         {
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_gdtur2_c);
         }
     }
 
@@ -205,7 +205,7 @@ void SB_KyteCage_update(GameObject* obj)
     }
     if (ObjAnim_AdvanceCurrentMove((int)obj, 0.004f, timeDelta, NULL) != 0)
     {
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_mv_gdtur2_c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_gdtur2_c);
     }
 }
 

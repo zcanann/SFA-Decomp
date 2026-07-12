@@ -12,6 +12,7 @@
 #include "main/render.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
@@ -55,7 +56,6 @@ extern f32 lbl_803E50D8;
 
 extern void skyFn_80088c94(int flags, int mode);
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
 extern void audioStopByMask(int mask);
 extern void ModelLightStruct_free(int light);
@@ -217,7 +217,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
             runtime->idleSfxTimer = idleSfxTimer;
             if (idleSfxTimer <= lbl_803E50DC)
             {
-                Sfx_PlayFromObject(obj, DBSH_SHRINE_IDLE_SFX);
+                Sfx_PlayFromObject((u32)obj, DBSH_SHRINE_IDLE_SFX);
                 runtime->idleSfxTimer = (f32)(int)randomGetRange(500, 1000);
             }
         }
