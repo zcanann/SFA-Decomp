@@ -56,7 +56,6 @@ extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
 extern void gunpowderbarrel_clearHeldState(int obj);
 extern f32 lbl_803E6CE0;
-extern void dll_2E_func06(GameObject* obj, int state, int flags);
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(GameObject* obj, int seq, int hitId, int p4, int p5);
 extern f32 lbl_803E6D38;
@@ -72,7 +71,6 @@ extern f32 lbl_803E6E18;
 extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 
-extern void dll_2E_func03(int obj, int p2);
 
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -332,7 +330,6 @@ extern void vecRotateZXY(int obj, f32* vec);
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
 extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
-extern void dll_2E_func05(GameObject* obj, int p2, int p3, int p4, int p5);
 extern void dll_2E_func09(int p1, void* p2, void* p3, int p4);
 extern int gDll28BMoveBlendDataA[];
 extern int gDll28BMoveBlendDataB[];
@@ -352,7 +349,6 @@ typedef struct Blob16
 {
     int a, b, c, d;
 } Blob16;
-extern int dll_2E_func07(GameObject* obj, int p2, int state, int p4, int p5);
 extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 
 extern f32 lbl_803E6C24;

@@ -60,7 +60,6 @@ extern int FUN_80114340();
 extern int FUN_801149b8();
 extern u32 FUN_801149bc();
 extern u32 FUN_80114b10();
-extern u32 dll_2E_func03();
 extern u32 FUN_801150ac();
 extern u32 FUN_80135814();
 extern u32 FUN_8020a498();
@@ -358,7 +357,6 @@ extern f32 lbl_803DC76C;
 extern f32 lbl_803E8338;
 extern void CameraShake_SetAllMagnitudes(f32 m);
 
-extern void dll_2E_func06();
 extern f32 lbl_803E83A8;
 extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
@@ -386,9 +384,7 @@ extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateStat
 extern int lbl_803E8230;
 extern int gDIMSnowHorn1PathCollisionData;
 extern f32 gDIMSnowHorn1Gravity;
-extern void dll_2E_func05(GameObject* obj, int q, int a, int b, int c);
 
-extern int dll_2E_func07(GameObject* obj, int p3, void* q, int a, int b);
 
 extern int dll_2E_func0A(int a, void* out);
 extern void dll_2E_func08(int q, int a, int b);

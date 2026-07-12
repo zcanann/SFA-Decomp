@@ -17,6 +17,7 @@
  * quartet, and the 0x3F0.. counters).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -469,7 +470,7 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         ObjPath_GetPointWorldPosition((int)obj, 0, &runtime->pathPoint0X, &runtime->pathPoint0Y, &runtime->pathPoint0Z,
                                       0);
         runtime->flagsC49.b5 = 1;
-        dll_2E_func06((GameObject*)obj, runtime->lookController, 0);
+        dll_2E_func06((GameObject*)obj, (MoveLibState*)runtime->lookController, 0);
         if (runtime->flagsC49.b1 != 0)
         {
             int** t = (int**)ObjGroup_GetObjects(55, &count);
@@ -521,7 +522,7 @@ void HighTop_init(GameObject* obj, u8* arg)
     (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base[0xe8], &lbl_803DC318, 8);
     (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], &local8);
     (*gPathControlInterface)->attachObject(obj, pathState);
-    dll_2E_func05(obj, runtime->lookController, -4551, 23665, 6);
+    dll_2E_func05(obj, (MoveLibState*)runtime->lookController, -4551, 23665, 6);
     dll_2E_func08((char*)runtime->lookController, 300, 120);
     dll_2E_func09((char*)runtime->lookController, &local2, &local1, 6);
     runtime->flags |= 2;
@@ -766,7 +767,7 @@ void HighTop_update(GameObject* obj)
     hightop_playMovementSfx(self, (int)state, (int)state);
     characterDoEyeAnims((GameObject*)(self), (void*)(state + 0x38c));
     objAnimFn_80038f38((GameObject*)(self), (void*)(state + 0x3bc));
-    dll_2E_func03(self, (void*)(state + 0x3ec));
+    dll_2E_func03((GameObject*)self, (MoveLibState*)(state + 0x3ec));
     if (ObjTrigger_IsSet(self) != 0)
     {
         s8 substate;

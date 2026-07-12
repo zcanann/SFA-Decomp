@@ -5,6 +5,7 @@
  * driven sequence-flag word (gDIMbossSequenceFlags).
  */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
+#include "main/dll/moveLib.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -59,9 +60,7 @@ extern void loadDataFiles(void);
 
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 
-extern u64 dll_2E_func07();
 extern u32 dll_2E_func09();
-extern u32 dll_2E_func05();
 extern void fn_801B9ECC(void);
 extern u32 dll_2E_func04();
 
@@ -76,8 +75,6 @@ extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                         u32 p4, u32 p5, f32 scale);
 
 extern void queueGlowRender(void* effect);
-extern void dll_2E_func06(GameObject *obj, void* animController, int p3);
-extern u32 dll_2E_func03();
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern u32 gDIMbossRenderMtx[];
@@ -212,7 +209,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
         return 0;
     }
 
-    dll_2E_func07((GameObject*)(obj), animUpdate, animScratch->animController, 1, 1);
+    dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)animScratch->animController, 1, 1);
     for (eventIndex = 0; eventIndex < (int)(u32)animUpdate->eventCount; eventIndex = eventIndex + 1)
     {
         switch (animUpdate->eventIds[eventIndex])
@@ -489,7 +486,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
 
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
-    dll_2E_func06((GameObject*)(obj), gDIMbossAnimController, 0);
+    dll_2E_func06((GameObject*)obj, (MoveLibState*)gDIMbossAnimController, 0);
 
     effect = runtime->topState->effect;
     if (effect != NULL && effect->glowType != 0 && effect->enabled != 0)
@@ -606,7 +603,7 @@ void DIMboss_update(DIMbossObject* obj)
                 }
                 DIM2icicle_updateCombatState(obj, NULL, runtime, runtime);
                 dll_2E_func04(gDIMbossAnimController, runtime->targetModel);
-                dll_2E_func03(obj, gDIMbossAnimController);
+                dll_2E_func03((GameObject*)obj, (MoveLibState*)gDIMbossAnimController);
                 DIM2icicle_updateDarkIceMinesWarpAndEffects(obj, runtime);
             }
         }
@@ -660,7 +657,7 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     lbl_803DDB84 = 0;
     gDIMbossSequenceFlags = 0;
     mainSetBits(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
-    dll_2E_func05((GameObject*)(obj), gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
+    dll_2E_func05((GameObject*)obj, (MoveLibState*)gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
     dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
     *animFlagsByte |= 8;

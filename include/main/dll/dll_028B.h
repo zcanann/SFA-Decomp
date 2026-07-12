@@ -3,15 +3,14 @@
 
 #include "global.h"
 #include "main/dll/curve_walker.h"
+#include "main/dll/moveLib.h"
 #include "main/game_object.h"
 
 typedef struct Dll28BState
 {
     int objectFlagsMirror;
     u8 pad4[0x35C - 0x4];
-    u8 moveLib[0x96D - 0x35C];
-    u8 flags96D;
-    u8 pad96E[0x980 - 0x96E];
+    MoveLibState moveLib;
     u8 eyeAnim[0x9B0 - 0x980];
     RomCurveWalker route;
     f32 playerDistance;
@@ -32,7 +31,7 @@ int dll_28B_getObjectTypeId(void);
 void dll_28B_free(int obj);
 void dll_28B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_28B_hitDetect_nop(void);
-void dll_28B_update(int obj);
+void dll_28B_update(GameObject* obj);
 void dll_28B_init(GameObject* obj);
 void dll_28B_release_nop(void);
 void dll_28B_initialise(void);

@@ -8,6 +8,7 @@
  * driven by the dll_2E_func* helpers.
  */
 #include "main/game_object.h"
+#include "main/dll/moveLib.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/CC/dll_0187_ccqueen.h"
@@ -19,9 +20,6 @@
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 
 extern u32 ObjHits_DisableObject();
-extern u32 dll_2E_func03();
-extern void dll_2E_func06(GameObject* obj, void* state, int flags);
-extern void dll_2E_func05(GameObject* obj, u8* sub, int a, int b, int c);
 extern void dll_2E_func08(u8* sub, int a, int b);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -39,7 +37,7 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     void* state = ((GameObject*)obj)->extra;
     ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
-    dll_2E_func06((GameObject*)(obj), state, 0);
+    dll_2E_func06((GameObject*)obj, (MoveLibState*)state, 0);
 }
 
 void ccqueen_update(int* obj)
@@ -66,7 +64,7 @@ void ccqueen_update(int* obj)
     else
     {
         ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
-        dll_2E_func03(obj, charState);
+        dll_2E_func03((GameObject*)obj, (MoveLibState*)charState);
         characterDoEyeAnims((GameObject*)obj, charState + 0x624);
     }
 }
@@ -80,7 +78,7 @@ void ccqueen_init(int* obj, u8* placement)
     buf2 = ccqueenEyeSetupA;
     buf1 = ccqueenEyeSetupB;
     ((GameObject*)obj)->anim.rotX = (s16)(placement[0x1a] << 8);
-    dll_2E_func05((GameObject*)(obj), charState, 0x71c7, 0x3555, 3);
+    dll_2E_func05((GameObject*)obj, (MoveLibState*)charState, 0x71c7, 0x3555, 3);
     dll_2E_func08(charState, 0x258, 0xf0);
     dll_2E_func09(charState, &buf1, &buf2, 3);
     charState[0x611] = (u8)(charState[0x611] | 0xa);

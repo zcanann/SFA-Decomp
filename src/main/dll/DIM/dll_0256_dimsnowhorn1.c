@@ -7,6 +7,7 @@
  * the full per-frame tick.
  */
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/dll/moveLib.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -1482,7 +1483,7 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
     case 2:
         break;
     }
-    dll_2E_func05(obj, (int)inner->lookController, -0x2000, 0x2aaa, 3);
+    dll_2E_func05(obj, (MoveLibState*)inner->lookController, -0x2000, 0x2aaa, 3);
     inner->unk96D |= 8;
     if (spawnFlag == 0)
     {

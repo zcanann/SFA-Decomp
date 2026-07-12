@@ -9,7 +9,7 @@
 #include "main/frustum.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
 
 typedef struct SHthorntailTailSwingEffectScratch
@@ -317,7 +317,7 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
     impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
     if (impactPending != 0)
     {
-        impactHandled = dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (char*)runtime, 0, 0);
+        impactHandled = dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)runtime, 0, 0);
         if (impactHandled != 0)
         {
             return 0;
@@ -355,7 +355,7 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
 
     runtime = obj->runtime;
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5448);
-    dll_2E_func06((GameObject*)(obj), runtime, 0);
+    dll_2E_func06((GameObject*)obj, (MoveLibState*)runtime, 0);
     pointIndex = 0;
     do
     {
@@ -521,7 +521,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         {
             runtime->movementControlFlags = runtime->movementControlFlags | 1;
         }
-        dll_2E_func03(obj, runtime);
+        dll_2E_func03((GameObject*)obj, (MoveLibState*)runtime);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) !=
             0)
         {
@@ -631,7 +631,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
         ->attachPathData(moveScratch, SHTHORNTAIL_PATH_CHANNEL, gSHthorntailPathHeaders, gSHthorntailPathData, outA);
     (*gSHthorntailPathControlInterface)->bindObject(obj, moveScratch);
     obj->animEventCallback = SHthorntail_updateLevelControlState;
-    dll_2E_func05((GameObject*)obj, runtime, 0xffffdc72, 0x2aaa, 3);
+    dll_2E_func05((GameObject*)obj, (MoveLibState*)runtime, 0xffffdc72, 0x2aaa, 3);
     dll_2E_func08((int)runtime, 400, 0x78);
     ObjGroup_AddObject((int)obj, THORNTAIL_OBJGROUP);
 }

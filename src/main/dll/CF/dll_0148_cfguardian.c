@@ -26,7 +26,7 @@
 #include "main/dll/player_status.h"
 #include "main/objseq.h"
 #include "main/object_descriptor.h"
-#include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
 
@@ -912,7 +912,7 @@ int cfguardian_updateMain(GameObject* obj)
         ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
         break;
     }
-    dll_2E_func03(obj, sub);
+    dll_2E_func03((GameObject*)obj, (MoveLibState*)sub);
     if (ObjTrigger_IsSet(obj) != 0)
     {
         buttonDisable(0, PAD_BUTTON_A);
@@ -1010,7 +1010,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
     {
-        if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (char*)sub, sel[0], sel[1]) != 0)
+        if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)sub, sel[0], sel[1]) != 0)
         {
             return 1;
         }
@@ -1057,7 +1057,7 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if ((s32)visible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4130);
-        dll_2E_func06((GameObject*)(obj), sub, 0);
+        dll_2E_func06((GameObject*)obj, (MoveLibState*)sub, 0);
     }
 }
 
@@ -1112,7 +1112,7 @@ void cfguardian_init(int* obj, u8* params)
         dll_2E_func0A(8, obj);
     }
     ObjHits_EnableObject(obj);
-    dll_2E_func05((GameObject*)(obj), (u8*)sub, -0x2000, 0x2800, 4);
+    dll_2E_func05((GameObject*)obj, (MoveLibState*)sub, -0x2000, 0x2800, 4);
     dll_2E_func08((u8*)sub, 0x12c, 0x64);
     dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
     objSeqInitFn_80080078(gCfGuardianSeqStreamTable, 0xf);

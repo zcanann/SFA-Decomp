@@ -42,56 +42,6 @@
 /* MoveLibState.phase (state+0x600): shared scripted-move / turn-arbitration
  * step. func03 (turn/lead-anim) walks 0/1/8; func07 (scripted move) walks the
  * 2/3/6/7 sub-phase chain. */
-enum MoveLibPhase
-{
-    MOVELIB_PHASE_IDLE = 0,   /* not moving/turning; default and reset target */
-    MOVELIB_PHASE_TURN = 1,   /* turning/lead-anim aiming toward target */
-    MOVELIB_PHASE_RUN = 2,    /* playing the scripted move step */
-    MOVELIB_PHASE_SETUP = 3,  /* one-shot arm of the move, falls to RUN */
-    MOVELIB_PHASE_DONE = 6,   /* move finished, transition to FINISH */
-    MOVELIB_PHASE_FINISH = 7, /* final anim then reset to IDLE */
-    MOVELIB_PHASE_HELD = 8    /* paused/held by mode bit */
-};
-
-typedef struct MoveLibState
-{
-    f32 animPhase;          /* 0x00: phase fed to ObjAnim_AdvanceCurrentMove */
-    f32 startOffsetX;       /* 0x04: path-relative start offset (blend source) */
-    f32 startOffsetY;       /* 0x08 */
-    f32 startOffsetZ;       /* 0x0c */
-    f32 targetX;            /* 0x10: current path / follow point (blend dest) */
-    f32 targetY;            /* 0x14 */
-    f32 targetZ;            /* 0x18 */
-    u8 animChannels[0x5a0]; /* 0x1c: anim channel table block */
-    s16 turnTable[15];      /* 0x5bc: turn-state table (count entries) */
-    s16 eventTable[15];     /* 0x5da: secondary table */
-    int setupFlag;          /* 0x5f8: anim setup/active latch (0x50/10/1/0) */
-    int turnState;          /* 0x5fc: objAnimFn_80115650 turning state */
-    u8 phase;               /* 0x600: movement phase */
-    u8 needsReinit;         /* 0x601: latch path-relative start on next refresh */
-    u8 pad602[2];
-    void* lastTarget; /* 0x604: previous locked target */
-    void* lockTarget; /* 0x608: forced lock target (0 = nearest group-8) */
-    s16 yawLimitA;    /* 0x60c: yaw-limit pair passed to objMathFn_8003a380 */
-    s16 yawLimitB;    /* 0x60e */
-    u8 pointCount;    /* 0x610: number of path/anim points */
-    u8 modeBits;      /* 0x611: behaviour mode bitset */
-    u8 pad612[2];
-    f32 lookAtMaxDistance; /* 0x614 */
-    int reattackDelayBase; /* 0x618 */
-    int reattackDelayMin;  /* 0x61c */
-    int reattackTimer;     /* 0x620 */
-} MoveLibState;
-
-STATIC_ASSERT(offsetof(MoveLibState, targetX) == 0x10);
-STATIC_ASSERT(offsetof(MoveLibState, turnTable) == 0x5bc);
-STATIC_ASSERT(offsetof(MoveLibState, eventTable) == 0x5da);
-STATIC_ASSERT(offsetof(MoveLibState, setupFlag) == 0x5f8);
-STATIC_ASSERT(offsetof(MoveLibState, phase) == 0x600);
-STATIC_ASSERT(offsetof(MoveLibState, pointCount) == 0x610);
-STATIC_ASSERT(offsetof(MoveLibState, lookAtMaxDistance) == 0x614);
-STATIC_ASSERT(offsetof(MoveLibState, reattackTimer) == 0x620);
-
 /* object group queried to find this object's target */
 #define MOVELIB_TARGET_OBJGROUP 8
 
@@ -383,13 +333,12 @@ int dll_2E_func0C(int idx, char* outArg)
 
 /* Initializes the movement-state block and primes the animation channel
  * tables. */
-void dll_2E_func05(GameObject* obj, void* st, s16 a, s16 b, int count)
+void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
 {
     extern void* seqFn_800394a0(void);
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
     extern void fn_8003AC14(GameObject * obj, void* types, int count);
     extern void fn_8003A9C0(char* p, int count, s16 a, s16 b);
-    MoveLibState* s = (MoveLibState*)st;
     f32 z;
 
     s->yawLimitA = a;
@@ -411,16 +360,15 @@ void dll_2E_func05(GameObject* obj, void* st, s16 a, s16 b, int count)
     fn_8003AC14(obj, seqFn_800394a0(), count);
     objFn_8003acfc(obj, seqFn_800394a0(), count, (char*)s->animChannels);
     fn_8003A9C0((char*)s->animChannels, s->pointCount, 0, 0);
-    dll_2E_func09((int)st, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData);
+    dll_2E_func09((int)s, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData);
 }
 
 /* Latches the path-relative start offset on first use and refreshes the
  * current path point position. */
-void dll_2E_func06(GameObject* obj, void* st, int point)
+void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
 {
     extern void* seqFn_800394a0(void);
     extern void fn_8003AC14(GameObject * obj, void* types, int count);
-    MoveLibState* s = (MoveLibState*)st;
     struct
     {
         s16 ang[3];
@@ -522,12 +470,11 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, 
 /* Object-sequence scripted-move step: phase 4 arms the move, phase 5 walks
  * the setup/playback sub-phases. */
 #pragma optimization_level 2
-int dll_2E_func07(GameObject* obj, ObjSeqState* seq, char* st, s16 a, s16 b)
+int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16 b)
 {
     extern void* seqFn_800394a0(void);
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
     extern int Obj_GetPlayerObject(void);
-    MoveLibState* s = (MoveLibState*)st;
     s16 pair[2];
     int mode;
     int player;
@@ -568,7 +515,7 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, char* st, s16 a, s16 b)
                 s->setupFlag = 0;
                 s->phase = MOVELIB_PHASE_RUN;
             case MOVELIB_PHASE_RUN:
-                if (objAnimFn_80115650(obj, player, &s->turnState, st, st, pair, &s->targetX) == 0)
+                if (objAnimFn_80115650(obj, player, &s->turnState, (char*)s, (char*)s, pair, &s->targetX) == 0)
                 {
                     s->phase = MOVELIB_PHASE_DONE;
                 }
@@ -694,7 +641,7 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
-void dll_2E_func03(void* obj, void* state)
+void dll_2E_func03(GameObject* obj, MoveLibState* s)
 {
     extern int fn_8003A8B4();
     extern int objMathFn_8003a380(u16 * obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw,
@@ -716,7 +663,6 @@ void dll_2E_func03(void* obj, void* state)
     float blendMax;
     float targetYaw;
     ProjNearSearch sv;
-    MoveLibState* s = (MoveLibState*)state;
 
     sv.range = lbl_803E1C8C;
     targetYaw = lbl_803E1CD0;

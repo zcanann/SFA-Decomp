@@ -32,6 +32,7 @@
  * from use, not confirmed.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/moveLib.h"
 #include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/render.h"
@@ -64,7 +65,7 @@ void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     if (visible != 0)
     {
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6CE0);
-        dll_2E_func06(obj, state, 0);
+        dll_2E_func06(obj, (MoveLibState*)state, 0);
     }
 }
 
@@ -119,7 +120,7 @@ void earthwalker_update(int obj)
     }
 
     prevAnim = ewState->animPhase;
-    dll_2E_func03(obj, state);
+    dll_2E_func03((GameObject*)obj, (MoveLibState*)state);
     if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 && ewState->animPhase == 1)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
@@ -530,7 +531,7 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
 
     ewState->flags &= ~1;
     characterDoEyeAnims((GameObject*)(obj), (int)ewState->eyeAnimState);
-    if (dll_2E_func07((GameObject*)(obj), (int)(u8*)animUpdate, state, 0, 0) != 0)
+    if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)state, 0, 0) != 0)
     {
         return 0;
     }
@@ -562,7 +563,7 @@ void earthwalker_init(GameObject* obj, int setup)
 
     local = gEarthWalkerMoveBlendData;
     ewObj->animEventCallback = earthwalker_SeqFn;
-    dll_2E_func05(obj, state, -8192, 12743, 2);
+    dll_2E_func05(obj, (MoveLibState*)state, -8192, 12743, 2);
     dll_2E_func09(state, 0, &local, 2);
     /* moveLib state+0x614: head look-at only engages while the target is
      * within this distance (live-verified in Dolphin - drop it below the

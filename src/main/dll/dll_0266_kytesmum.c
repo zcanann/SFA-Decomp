@@ -19,6 +19,7 @@
  * game bit.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/moveLib.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_0266_kytesmum.h"
@@ -211,7 +212,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     }
     {
         int move2 = runtime->moveSet->moves[2];
-        int result = !dll_2E_func07((GameObject*)(obj), (u8*)animUpdate, (char*)runtime, move2, move2);
+        int result = !dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)runtime, move2, move2);
         return !result;
     }
 }

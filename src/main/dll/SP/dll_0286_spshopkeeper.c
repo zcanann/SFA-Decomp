@@ -27,7 +27,7 @@
 #include "main/objanim.h"
 #include "main/objprint.h"
 #include "main/obj_placement.h"
-#include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/moveLib.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
@@ -154,7 +154,7 @@ void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
     if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E59D8);
-        dll_2E_func06(obj, (void*)(state + 0x35c), 0);
+        dll_2E_func06(obj, (MoveLibState*)(state + 0x35c), 0);
     }
     if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
     {
@@ -222,7 +222,7 @@ void ShopKeeper_update(GameObject* obj)
     }
     ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
     (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
-    dll_2E_func03(obj, (void*)(state + 0x35C));
+    dll_2E_func03(obj, (MoveLibState*)(state + 0x35C));
     characterDoEyeAnims(obj, state + 0x980);
     (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
 }
@@ -237,7 +237,7 @@ void ShopKeeper_init(GameObject* obj)
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
     ((ShopkeeperState*)state)->opacity = 0xFF;
     ((ShopkeeperState*)state)->textTimer = lbl_803E5A28;
-    dll_2E_func05(obj, (void*)(state + 0x35C), -0x1C71, 0x3555, 2);
+    dll_2E_func05(obj, (MoveLibState*)(state + 0x35C), -0x1C71, 0x3555, 2);
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
 
@@ -272,7 +272,7 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
         }
         return 0;
     }
-    if (dll_2E_func07(obj, seq, (char*)(state + 0x35C), 0, 0) != 0)
+    if (dll_2E_func07(obj, seq, (MoveLibState*)(state + 0x35C), 0, 0) != 0)
     {
         return 1;
     }
