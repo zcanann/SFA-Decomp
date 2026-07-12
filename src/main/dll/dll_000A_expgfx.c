@@ -3076,7 +3076,7 @@ void expgfx_initialise(void)
     ExpgfxRuntimeDataLayout* runtime;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
-    s16* poolSlotTypeIds;
+    s16* poolSlotTypeIds[1];
     u32* slotPoolBases;
     int poolIndex[1];
     int groupCount;
@@ -3084,37 +3084,37 @@ void expgfx_initialise(void)
     runtime = EXPGFX_RUNTIME_DATA;
     poolActiveMasks = runtime->poolActiveMasks;
     poolActiveCounts = runtime->poolActiveCounts;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+    poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
     for (groupCount = EXPGFX_POOL_GROUP_COUNT; groupCount != 0; groupCount--)
     {
         poolIndex[0] = 0;
         *poolActiveMasks = poolIndex[0];
         *poolActiveCounts = poolIndex[0];
-        *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
+        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[1] = poolIndex[0];
         poolActiveCounts[1] = poolIndex[0];
-        poolSlotTypeIds[1] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][1] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[2] = poolIndex[0];
         poolActiveCounts[2] = poolIndex[0];
-        poolSlotTypeIds[2] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][2] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[3] = poolIndex[0];
         poolActiveCounts[3] = poolIndex[0];
-        poolSlotTypeIds[3] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][3] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[4] = poolIndex[0];
         poolActiveCounts[4] = poolIndex[0];
-        poolSlotTypeIds[4] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][4] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[5] = poolIndex[0];
         poolActiveCounts[5] = poolIndex[0];
-        poolSlotTypeIds[5] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][5] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[6] = poolIndex[0];
         poolActiveCounts[6] = poolIndex[0];
-        poolSlotTypeIds[6] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][6] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks[7] = poolIndex[0];
         poolActiveCounts[7] = poolIndex[0];
-        poolSlotTypeIds[7] = EXPGFX_INVALID_SLOT_TYPE;
+        poolSlotTypeIds[0][7] = EXPGFX_INVALID_SLOT_TYPE;
         poolActiveMasks += 8;
         poolActiveCounts += 8;
-        poolSlotTypeIds += 8;
+        poolSlotTypeIds[0] += 8;
     }
 
     slotPoolBases = runtime->slotPoolBases;
