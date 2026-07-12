@@ -12,12 +12,18 @@
  * two more game bits. State: a f32 countdown at 0x4 and the
  * DrMusicContFlags cache at 0x8.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mapEventTypes.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/newclouds.h"
 #include "main/sky_api.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 

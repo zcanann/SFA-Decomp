@@ -80,7 +80,7 @@ void PointLight_free(GameObject* obj);
 void PointLight_render(GameObject* obj);
 void PointLight_hitDetect(void);
 void PointLight_update(GameObject* obj);
-void PointLight_init(GameObject* obj, int setup);
+void PointLight_init(GameObject* obj, PointLightSetup* setup);
 void PointLight_release(void);
 void PointLight_initialise(void);
 

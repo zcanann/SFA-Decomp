@@ -12,7 +12,10 @@
  * tile stops matching; the A/B hide/fade game bits force HIDDEN/FADE_OUT;
  * FADE_OUT -> FADE_IN re-snaps the position. Bit meanings inferred.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 #include "main/model.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_0291_wctile.h"
@@ -22,8 +25,6 @@
 #define WCTILE_RENDER_TYPE_BASE    0x400
 #define WCTILE_RENDER_TYPE_SHIFT   0xb
 #define WCTILE_CONTROLLER_GROUP    9
-#define WCTILE_MODEL_INDEX_OFFSET  0x19
-
 #define WCTILE_MODE_INIT_MOVE 0
 #define WCTILE_MODE_SOLID     1
 #define WCTILE_MODE_INACTIVE  2
@@ -50,7 +51,8 @@ int wctile_getExtraSize(void)
 int wctile_getObjectTypeId(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &obj->anim;
-    int modelIndex = *(s8*)(*(int*)&obj->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);
+    WCTileSetup* setup = (WCTileSetup*)obj->anim.placementData;
+    int modelIndex = setup->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount)

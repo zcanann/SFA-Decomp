@@ -15,7 +15,10 @@
  * point lights within a radius; pointlight_setEffectState is the entry point
  * it calls.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/model_light.h"
+#include "main/objlib.h"
 #include "main/sky_state.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
@@ -115,11 +118,11 @@ void PointLight_update(GameObject* obj)
     }
 }
 
-void PointLight_init(GameObject* obj, int setup)
+void PointLight_init(GameObject* obj, PointLightSetup* setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
-    PointLightSetup* setupData = (PointLightSetup*)setup;
+    PointLightSetup* setupData = setup;
     PointLightState* state = (obj)->extra;
 
     vec = *(PointLightVec*)lbl_802C25F8;
