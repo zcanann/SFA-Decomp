@@ -2807,8 +2807,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
             f32 fbd = b[1] * p[1];
             f32 fad = a[1] * p[1];
             b0 = b[0];
-            a0 = a[0];
             fb = (fbd + b0 * p[0] + b[2] * p[2] + p[3]) - y;
+            a0 = a[0];
             fa = (fad + a0 * p[0] + a[2] * p[2] + p[3]) - y;
         }
         if (fa != fb)
