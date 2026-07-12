@@ -119,7 +119,7 @@ void Scarab_update(GameObject* obj)
     u32 money3;
     int player;
     int state;
-    int best;
+    int best[1];
     int flag;
     int phaseState;
     s16 mode;
@@ -134,11 +134,11 @@ void Scarab_update(GameObject* obj)
     f32** p;
     u8 hits;
 
-    best = 0;
+    best[0] = 0;
     list = NULL;
     start = *(ScarabVec3*)lbl_802C2298;
     end = *(ScarabVec3*)lbl_802C22A4;
-    flag = best;
+    flag = best[0];
     state = *(int*)&obj->extra;
     player = Obj_GetPlayerObject();
     if ((((ScarabState*)state)->flags28 & 1) != 0)
@@ -321,7 +321,7 @@ void Scarab_update(GameObject* obj)
         {
             if (((ScarabState*)state)->fleeTimer == 0)
             {
-                best = 0;
+                best[0] = 0;
                 bestDist = lbl_803E3A28;
                 count = hitDetectFn_80065e50(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &list,
                                              1, 0);
@@ -336,15 +336,15 @@ void Scarab_update(GameObject* obj)
                         deltaY = (deltaY >= *(f32*)&lbl_803E39F8) ? deltaY : -deltaY;
                         if (deltaY < bestDist)
                         {
-                            best = i;
+                            best[0] = i;
                             bestDist = deltaY;
                         }
                     }
                 }
                 if (list != NULL)
                 {
-                    obj->anim.localPosY = *list[best];
-                    deltaY = list[best][2];
+                    obj->anim.localPosY = *list[best[0]];
+                    deltaY = list[best[0]][2];
                     deltaY = (deltaY >= lbl_803E39F8) ? deltaY : -deltaY;
                     if (deltaY < lbl_803DBDC4)
                     {
@@ -352,7 +352,7 @@ void Scarab_update(GameObject* obj)
                     }
                     else
                     {
-                        fn_801845FC((u8*)obj, list[best], 1, (f32*)bufs.hitBuf);
+                        fn_801845FC((u8*)obj, list[best[0]], 1, (f32*)bufs.hitBuf);
                     }
                 }
                 else
@@ -393,14 +393,14 @@ void Scarab_update(GameObject* obj)
                 if (flag != 0)
                 {
                     f32 k;
-                    ang = (u16)getAngle(list[best][1], list[best][3]);
+                    ang = (u16)getAngle(list[best[0]][1], list[best[0]][3]);
                     angleF = ang;
                     angleF = lbl_803DBDCC * angleF + lbl_803E3A2C;
                     obj->anim.rotX = angleF;
-                    obj->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best][1]) + obj->anim.localPosX;
-                    obj->anim.localPosZ = timeDelta * (k * list[best][3]) + obj->anim.localPosZ;
-                    obj->anim.velocityX = list[best][1];
-                    obj->anim.velocityZ = list[best][3];
+                    obj->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best[0]][1]) + obj->anim.localPosX;
+                    obj->anim.localPosZ = timeDelta * (k * list[best[0]][3]) + obj->anim.localPosZ;
+                    obj->anim.velocityX = list[best[0]][1];
+                    obj->anim.velocityZ = list[best[0]][3];
                 }
                 if (flag == 0)
                 {
@@ -446,14 +446,14 @@ void Scarab_update(GameObject* obj)
                     }
                     if (deltaY < bestDist)
                     {
-                        best = i;
+                        best[0] = i;
                         bestDist = deltaY;
                     }
                 }
                 if (list != NULL)
                 {
-                    obj->anim.localPosY = *list[best];
-                    fn_801845FC((u8*)obj, list[best], 1, (f32*)bufs.hitBuf);
+                    obj->anim.localPosY = *list[best[0]];
+                    fn_801845FC((u8*)obj, list[best[0]], 1, (f32*)bufs.hitBuf);
                 }
                 else
                 {
