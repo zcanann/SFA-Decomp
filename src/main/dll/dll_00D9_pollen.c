@@ -17,22 +17,27 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/audio/sfx.h"
+#include "main/camera.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
 #include "main/dll/genprops.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #define POLLEN_HIT_VOLUME_SLOT 0x16
 extern void Obj_FreeObject(int obj);
+extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* getTrickyObject(void);
 
 #define POLLEN_PARTFX_MOTE 0x4ba
 
