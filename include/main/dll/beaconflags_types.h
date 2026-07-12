@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_BEACONFLAGS_TYPES_H_
 #define MAIN_DLL_BEACONFLAGS_TYPES_H_
 
-#include "types.h"
+#include "main/game_object.h"
 
 typedef struct
 {
@@ -11,7 +11,7 @@ typedef struct
 
 typedef struct ShBeaconState
 {
-    int childObj; /* 0x00: spawned 0x55 flame object */
+    GameObject* childObj; /* 0x00: spawned 0x55 flame object */
     f32 seqTimer; /* 0x04 */
     f32 fadeTimer; /* 0x08 */
     f32 burstTimer; /* 0x0c */

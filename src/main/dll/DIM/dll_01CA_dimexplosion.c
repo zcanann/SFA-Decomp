@@ -23,6 +23,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "string.h"
@@ -125,7 +126,6 @@ extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
 extern void modelLightStruct_setEnabled(int h, int n, f32 v);
 extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void Obj_FreeObject(int obj);
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
@@ -601,7 +601,7 @@ void explosion_update(GameObject* obj)
         int d = ((ExplosionState*)state)->lifeFrames;
         if (e > d << 1)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
         else
         {

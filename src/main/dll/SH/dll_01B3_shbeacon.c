@@ -13,6 +13,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
@@ -49,7 +50,6 @@ typedef enum ShBeaconMode
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern void Obj_FreeObject(int obj);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 
@@ -87,10 +87,10 @@ void sh_beacon_free(GameObject* obj, int keepChild)
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if (keepChild == 0)
     {
-        void* p = *(void**)&((ShBeaconState*)extra)->childObj;
-        if (p != NULL && (((GameObject*)p)->objectFlags & SHBEACON_OBJFLAG_FREED) == 0)
+        GameObject* p = ((ShBeaconState*)extra)->childObj;
+        if (p != NULL && (p->objectFlags & SHBEACON_OBJFLAG_FREED) == 0)
         {
-            Obj_FreeObject((int)p);
+            Obj_FreeObject(p);
         }
     }
 }
@@ -123,7 +123,7 @@ void sh_beacon_update(GameObject* obj)
                 ((ObjPlacement*)setup)->color[0] = 2;
                 ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
                 ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
-                ((ShBeaconState*)state)->childObj = loadObjectAtObject((int)obj, setup);
+                ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, setup);
             }
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
@@ -252,7 +252,7 @@ void sh_beacon_init(GameObject* obj, int defData)
         ((ObjPlacement*)setup)->color[0] = 2;
         ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
         ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
-        ((ShBeaconState*)state)->childObj = loadObjectAtObject((int)obj, setup);
+        ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, setup);
     }
 
     (obj)->animEventCallback = sh_beacon_SeqFn;

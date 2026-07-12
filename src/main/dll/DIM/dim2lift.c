@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/dll/DIM/DIM2lift.h"
@@ -27,7 +28,6 @@
 /* child object id spawned by DIM2icicle_spawnBlueWhiteEffect (DIM2icicleBlueWhiteEffectPlacement cast) */
 #define DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT 656
 
-extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
 
 extern f32 lbl_803E4BD8;
@@ -242,7 +242,7 @@ int DIMbossAnim_finishDefeat(GameObject* obj, int p2)
         mainSetBits(((GroundBaddieState*)state)->gameBitA, 1);
         if ((obj)->anim.placementData == NULL)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return 0;
         }
     }

@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
@@ -45,7 +46,6 @@ extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
 
 extern void ModelLightStruct_free(void* light);
-extern void Obj_FreeObject(int obj);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -159,7 +159,7 @@ void DIM_BossGut2_free(int objArg)
     int obj = objArg;
     u32 handle;
     int state;
-    void* childObj;
+    GameObject* childObj;
 
     state = *(int*)&((GameObject*)obj)->extra;
     handle = ((Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData)->light;
@@ -171,7 +171,7 @@ void DIM_BossGut2_free(int objArg)
     childObj = ((GameObject*)obj)->childObjs[0];
     if (childObj != 0)
     {
-        Obj_FreeObject((int)childObj);
+        Obj_FreeObject(childObj);
         *(u32*)(obj + 200) = 0;
     }
     (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, state, 0);
