@@ -64,6 +64,9 @@ STATIC_ASSERT(offsetof(WCPressuresSetup, triggerHeight) == 0x1D);
 STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == 0x20);
 
 extern ObjectDescriptor gWCPressureSObjDescriptor;
+extern f32 lbl_803E6E00;
+extern char sWCPressuresActivateFormat[];
+extern f32 lbl_803E6E04;
 
 int wcpressures_getExtraSize(void);
 int wcpressures_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);

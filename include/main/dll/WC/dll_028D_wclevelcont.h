@@ -114,6 +114,9 @@ extern u8 lbl_8032B008[][8];
 extern u8 lbl_803AD298[][8];
 extern u8 lbl_803AD2D8[][8];
 extern f32 gWcPushBlockTileResetTime;
+extern f32 lbl_803E6DD0;
+extern f32 lbl_803E6DD4;
+extern f32 lbl_803E6DD8;
 
 void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol);
 void wclevelcont_getInitialTileXYB(s16 value, s16* outRow, s16* outCol);

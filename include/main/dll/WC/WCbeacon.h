@@ -36,6 +36,9 @@ STATIC_ASSERT(offsetof(WCBeaconSetup, solvedBit) == 0x1E);
 STATIC_ASSERT(offsetof(WCBeaconSetup, armBit) == 0x20);
 
 extern ObjectDescriptor gWCBeaconObjDescriptor;
+extern f32 lbl_803E6DE0;
+extern f32 lbl_803E6DE4;
+extern f32 lbl_803E6DE8;
 
 int wcbeacon_aButtonCallback(GameObject* obj);
 int wcbeacon_getExtraSize(void);

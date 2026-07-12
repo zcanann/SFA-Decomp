@@ -52,6 +52,8 @@ extern f32 gBouncyCrateFarDistance;
 extern f32 lbl_803E6D34;
 extern f32 gBouncyCrateGravity;
 extern f32 gBouncyCrateRestitution;
+extern f32 lbl_803E6D38;
+extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
 int WCBouncyCra_getExtraSize(void);
 int WCBouncyCra_getObjectTypeId(void);

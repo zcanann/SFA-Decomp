@@ -53,11 +53,6 @@ extern f32 lbl_803E6BB0;
 extern void cloudClearOverridePosition(int obj);
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(GameObject* obj, int seq, int hitId, int p4, int p5);
-extern f32 lbl_803E6D38;
-extern f32 lbl_803E6D54;
-extern f32 lbl_803E6DA0;
-extern f32 lbl_803E6DE0;
-extern f32 lbl_803E6E00;
 extern f32 lbl_803E6E10;
 extern f32 lbl_803E6E14;
 extern f32 lbl_803E6E18;
@@ -68,14 +63,10 @@ extern f32 lbl_803E6E24;
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 
-extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DBC;
 extern f32 lbl_803E6DC0;
-extern f32 lbl_803E6DD0;
-extern f32 lbl_803E6DD4;
-extern f32 lbl_803E6DD8;
 extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 extern const f32 lbl_803E6DA8;
 extern void* memcpy(void* dst, const void* src, u32 n);
@@ -84,12 +75,7 @@ extern void* memcpy(void* dst, const void* src, u32 n);
 #pragma dont_inline reset
 extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
-extern f32 lbl_803E6DE4;
-extern f32 lbl_803E6DE8;
-
 extern void logPrintf(void* fmt, ...);
-extern char sWCPressuresActivateFormat[];
-extern f32 lbl_803E6E04;
 
 extern int fn_8006070C(int block, int index);
 extern void mapTextureOverrideSetValue(int a, int b, int c);
@@ -314,9 +300,6 @@ extern int loadObjectAtObject(int obj);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
-
 
 extern f32 lbl_803E7040;
 extern f32 lbl_803E7048;
