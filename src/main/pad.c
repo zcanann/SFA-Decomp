@@ -2,15 +2,6 @@
 #include "main/pad.h"
 #include "dolphin/pad.h"
 
-#define PAD_MOTOR_STOP      0
-#define PAD_MOTOR_RUMBLE    1
-#define PAD_MOTOR_STOP_HARD 2
-
-#define PAD_ERR_NO_CONTROLLER -1
-#define PAD_ERR_TRANSFER      -3
-
-#define PAD_CHAN0_BIT 0x80000000
-
 /* Synthesized C-stick-as-direction bits OR'd into the extended button word. */
 #define PADBTN_CSTICK_UP    0x10000
 #define PADBTN_CSTICK_DOWN  0x20000

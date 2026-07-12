@@ -22,8 +22,6 @@
 #define SECONDS_PER_HOUR    3600
 #define SECONDS_PER_MINUTE  60
 
-#define PAD_TRIGGER_Z 0x10
-
 extern u8 saveFileSelect_debugCheatProgress;
 extern u8 saveFileSelect_saveCheatProgress;
 extern u8 saveFileSelect_cheatInputTimer;

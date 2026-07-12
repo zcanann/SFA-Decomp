@@ -26,6 +26,12 @@
 #include "dolphin/ai.h"
 #include "dolphin/ar.h"
 #include "dolphin/dvd.h"
+#include "dolphin/gx/GXLegacy.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSReport.h"
+#include "dolphin/os/OSRtc.h"
+#include "dolphin/pad.h"
 
 extern s32 gAttractMovieState;
 extern int sndFXKeyOff(u32 handle);
@@ -33,22 +39,8 @@ extern int sndFXCheck(u32 handle);
 extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
 extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
-extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
 extern u32 mainGetBit(u32 bit);
-extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
-extern void PSMTXCopy(f32 *src, f32 *dst);
-extern void PSMTXMultVec(f32 *matrix, f32 *in, f32 *out);
-extern void PSVECNormalize(f32 *in, f32 *out);
-extern void PSVECScale(f32 *in, f32 *out, f32 scale);
-extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
-extern void GXLoadPosMtxImm(f32 *matrix, s32 slot);
-extern void C_MTXOrtho(f32* matrix, f32 top, f32 bottom, f32 left, f32 right, f32 nearPlane, f32 farPlane);
-extern void C_MTXPerspective(f32* matrix, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane);
-extern void C_MTXLightPerspective(f32* matrix, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
-extern void GXSetProjection(f32* matrix, s32 projectionMode);
-extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);
-extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
 extern u8 pauseMenuGetState(void);
 extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
 extern void *memmove(void *dest, const void *src, u32 count);
@@ -60,8 +52,6 @@ extern f32 mathCosf(f32 x);
 extern void *Obj_GetPlayerObject(void);
 extern int Obj_IsLoadingLocked(void);
 extern int getCurSeqNo(void);
-extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
-extern f32 PSVECMag(f32 *v);
 extern f32 sqrtf(f32 x);
 extern void debugPrintf(char *message, ...);
 extern void setTimeStop(int frames);
@@ -79,13 +69,8 @@ extern u8 lbl_8033A540[];
 extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
 extern char* strcat(char* dst, const char* src);
-extern void PADControlMotor(s32 chan, u32 command);
-extern int PADInit(void);
-extern int PADRecalibrate(u32 mask);
-extern int PADReset(u32 mask);
 extern u8 lbl_803DCCA5;
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
-extern void DCStoreRange(void* addr, u32 nBytes);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern u8 pauseMenuState;
@@ -101,8 +86,6 @@ extern void *mapGetBlockAtPos(int x, int y, int z);
 extern void *fn_80059334(int a, int b);
 extern void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
 extern void sndOutputMode(int mode);
-extern u32 OSGetSoundMode(void);
-extern void OSSetSoundMode(int mode);
 extern int fn_800119FC(s16 *dest, s16 *start, s16 *out);
 extern void sndSetHooks(int *hooks);
 extern void sndInit(int a, int b, int c, int d, int e, int f);
