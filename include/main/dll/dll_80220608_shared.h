@@ -13,6 +13,7 @@
 #include "main/game_timer.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/pad.h"
 #include "main/object.h"
 #include "main/game_ui_interface.h"
 #include "main/gameplay_runtime.h"
@@ -93,7 +94,6 @@ typedef struct DrBarrelGrFlags
 
 extern void dll_2E_func03(int obj, int p2);
 extern void characterDoEyeAnims(GameObject* obj, int p2);
-extern void buttonDisable(int a, int b);
 extern ObjHitReactEntry gEarthWalkerHitReactEntries[];
 extern f32 gEarthWalkerMoveStartProgress;
 extern f32 gEarthWalkerAnimAdvanceRate;
@@ -435,7 +435,6 @@ extern f32 lbl_802C2608[];
 extern f32 lbl_803E7250;
 extern f32 lbl_803E7254;
 extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
-extern int getButtonsJustPressed(int controller);
 
 extern f32 lbl_802C2618[];
 extern f32 lbl_803E7270;
@@ -659,7 +658,6 @@ extern void setIsOvercast(int value);
 #pragma dont_inline reset
 
 extern int getArwing(void);
-extern void doRumble(f32 v);
 extern void PSVECNormalize(void* src, void* dst);
 extern void C_VECHalfAngle(void* out, void* a, void* b);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
@@ -1421,12 +1419,6 @@ extern f32 lbl_803E6EC8;
 extern f32 lbl_803E6ED4;
 extern f32 lbl_803E6ED8;
 extern void debugPrintSetColor(int r, int g, int b, int a);
-extern int padGetStickX(int controller);
-extern int padGetStickY(int controller);
-extern int padGetRTrigger(int controller);
-extern int padGetLTrigger(int controller);
-extern int getButtonsJustPressedIfNotBusy(int controller);
-extern int getButtonsHeld(int controller);
 extern f32 lbl_8032B4A8[];
 
 extern f32 lbl_803E6EF8;
