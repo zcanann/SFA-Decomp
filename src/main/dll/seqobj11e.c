@@ -310,7 +310,6 @@ void fn_80152514(int* obj, u8* state)
 /* fn_80152B90: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
 
-extern int* loadObjectAtObject(int* obj, u8* setup);
 extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);
 extern f32 lbl_803E2868;
 extern f32 lbl_803E286C;
@@ -373,7 +372,7 @@ void fn_80152B90(int* obj, u8* state)
                     ((ObjPlacement*)setup)->color[1] = 1;
                     ((ObjPlacement*)setup)->color[2] = 0xff;
                     ((ObjPlacement*)setup)->color[3] = 0xff;
-                    spawned = loadObjectAtObject(obj, setup);
+                    spawned = (int*)loadObjectAtObject((GameObject*)obj, (ObjPlacement*)setup);
                     if (spawned != 0)
                     {
                         *(int**)((char*)spawned + 0xc4) = obj;

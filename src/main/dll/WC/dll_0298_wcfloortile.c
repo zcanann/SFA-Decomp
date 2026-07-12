@@ -19,6 +19,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/debug.h"
+#include "main/object.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -368,7 +369,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
 void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
 {
     ArwingState* arwing = state;
-    if (*(void**)&arwing->activeBombObj != NULL)
+    if (arwing->activeBombObj != NULL)
         return;
     {
         f32 t = arwing->bombCooldown;
@@ -427,9 +428,9 @@ void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)
     ((ArwingBombSetup*)setup)->roll = (obj)->anim.rotZ >> 8;
     ((ArwingBombSetup*)setup)->head.color[0] = 1;
     ((ArwingBombSetup*)setup)->head.color[1] = 1;
-    arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
-    fn_8022ED74((GameObject*)(arwing->activeBombObj), *(u16*)&arwing->bombProjectileParam);
-    fn_8022ECE0((GameObject*)(arwing->activeBombObj), arwing->bombProjectileLifetime);
+    arwing->activeBombObj = loadObjectAtObject(obj, &setup->base);
+    fn_8022ED74(arwing->activeBombObj, *(u16*)&arwing->bombProjectileParam);
+    fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
     Sfx_PlayFromObject((int)obj, SFXTRIG_ar_badhit16);
 }
 
@@ -451,24 +452,24 @@ void arwarwing_updateThrusters(GameObject* obj, ArwingState* state)
     setMatrixFromObjectPos(mtx, &src);
 
     Matrix_TransformPoint(
-        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF0, (f32*)(state->thrusterL + 0xc),
-        (f32*)(state->thrusterL + 0x10), (f32*)(state->thrusterL + 0x14));
-    *(f32*)(state->thrusterL + 0x18) = *(f32*)(state->thrusterL + 0xc);
-    *(f32*)(state->thrusterL + 0x1c) = *(f32*)(state->thrusterL + 0x10);
-    *(f32*)(state->thrusterL + 0x20) = *(f32*)(state->thrusterL + 0x14);
-    *(s16*)(state->thrusterL + 4) = -slot->roll;
-    *(s16*)(state->thrusterL + 2) = -slot->pitch;
-    *(s16*)(state->thrusterL + 0) = 0x8000 - slot->yaw;
+        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF0, &state->thrusterL->anim.localPosX,
+        &state->thrusterL->anim.localPosY, &state->thrusterL->anim.localPosZ);
+    state->thrusterL->anim.worldPosX = state->thrusterL->anim.localPosX;
+    state->thrusterL->anim.worldPosY = state->thrusterL->anim.localPosY;
+    state->thrusterL->anim.worldPosZ = state->thrusterL->anim.localPosZ;
+    state->thrusterL->anim.rotZ = -slot->roll;
+    state->thrusterL->anim.rotY = -slot->pitch;
+    state->thrusterL->anim.rotX = 0x8000 - slot->yaw;
 
     Matrix_TransformPoint(
-        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF4, (f32*)(state->thrusterR + 0xc),
-        (f32*)(state->thrusterR + 0x10), (f32*)(state->thrusterR + 0x14));
-    *(f32*)(state->thrusterR + 0x18) = *(f32*)(state->thrusterR + 0xc);
-    *(f32*)(state->thrusterR + 0x1c) = *(f32*)(state->thrusterR + 0x10);
-    *(f32*)(state->thrusterR + 0x20) = *(f32*)(state->thrusterR + 0x14);
-    *(s16*)(state->thrusterR + 4) = -slot->roll;
-    *(s16*)(state->thrusterR + 2) = -slot->pitch;
-    *(s16*)(state->thrusterR + 0) = 0x8000 - slot->yaw;
+        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF4, &state->thrusterR->anim.localPosX,
+        &state->thrusterR->anim.localPosY, &state->thrusterR->anim.localPosZ);
+    state->thrusterR->anim.worldPosX = state->thrusterR->anim.localPosX;
+    state->thrusterR->anim.worldPosY = state->thrusterR->anim.localPosY;
+    state->thrusterR->anim.worldPosZ = state->thrusterR->anim.localPosZ;
+    state->thrusterR->anim.rotZ = -slot->roll;
+    state->thrusterR->anim.rotY = -slot->pitch;
+    state->thrusterR->anim.rotX = 0x8000 - slot->yaw;
 }
 
 /* the shared header leaves dont_inline stuck on; clamps must inline to match */

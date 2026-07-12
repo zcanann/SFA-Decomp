@@ -28,6 +28,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objprint_api.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
@@ -575,8 +576,8 @@ void arwarwing_update(GameObject* obj)
         objMove((int)obj, state->velX * timeDelta, state->velY * timeDelta,
                 state->velZ * timeDelta);
         arwarwing_clampToFlightBounds(obj, state);
-        ((GameObject*)state->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)state->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        state->thrusterL->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        state->thrusterR->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     else
     {
@@ -585,18 +586,18 @@ void arwarwing_update(GameObject* obj)
         {
             *(s16*)&state->inputFlags2 = 0;
             *(s16*)&state->inputFlags = 0;
-            ((GameObject*)state->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)state->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            state->thrusterL->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            state->thrusterR->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         else
         {
-            ((GameObject*)state->thrusterL)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            throttle = lbl_803E6FFC * timeDelta + (f32)(u32)((GameObject*)state->thrusterL)->anim.alpha;
+            state->thrusterL->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            throttle = lbl_803E6FFC * timeDelta + (f32)(u32)state->thrusterL->anim.alpha;
             if (throttle > lbl_803E7000)
                 throttle = lbl_803E7000;
-            ((GameObject*)state->thrusterL)->anim.alpha = throttle;
-            ((GameObject*)state->thrusterR)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)state->thrusterR)->anim.alpha = throttle;
+            state->thrusterL->anim.alpha = throttle;
+            state->thrusterR->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            state->thrusterR->anim.alpha = throttle;
         }
         state->velTargetX = -state->stickX * state->maxSpeedX;
         state->velTargetY = -state->stickY * state->maxSpeedY;
@@ -693,7 +694,7 @@ void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int
         setup->rotX = 0;
         setup->field04 = 1;
         setup->field05 = 1;
-        proj = ((int (*)(int, void*))loadObjectAtObject)((int)obj, setup);
+        proj = (int)loadObjectAtObject(obj, (ObjPlacement*)setup);
     }
     if ((void*)proj == NULL)
         return;
@@ -946,17 +947,17 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
         }
     }
 
-    if (*(void**)&state->thrusterL == 0 && *(void**)&state->thrusterR == 0)
+    if (state->thrusterL == NULL && state->thrusterR == NULL)
     {
         ArwArwingProjectileSetup* setup;
         setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
         setup->field04 = 1;
         setup->field05 = 1;
-        state->thrusterL = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+        state->thrusterL = loadObjectAtObject(obj, (ObjPlacement*)setup);
         setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
         setup->field04 = 1;
         setup->field05 = 1;
-        state->thrusterR = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+        state->thrusterR = loadObjectAtObject(obj, (ObjPlacement*)setup);
     }
 
     found = 0;
@@ -1276,10 +1277,10 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     arwarwing_updateThrusters(obj, state);
     if (state->bombObj != NULL)
         arwarwingbo_setActiveVisible(state->bombObj, 0, 0);
-    ((GameObject*)state->thrusterL)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)state->thrusterL)->anim.alpha = 0;
-    ((GameObject*)state->thrusterR)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)state->thrusterR)->anim.alpha = 0;
+    state->thrusterL->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    state->thrusterL->anim.alpha = 0;
+    state->thrusterR->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    state->thrusterR->anim.alpha = 0;
     obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
 
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -1328,7 +1329,7 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
                 setup->posZ = obj->anim.localPosZ;
                 setup->field04 = 1;
                 setup->field05 = 1;
-                loaded = ((int (*)(void*, int))loadObjectAtObject)(obj, (int)setup);
+                loaded = (int)loadObjectAtObject(obj, (ObjPlacement*)setup);
                 if ((void*)loaded != 0)
                     arwbombcoll_setLifetime((GameObject*)(loaded), 0x12c);
             }

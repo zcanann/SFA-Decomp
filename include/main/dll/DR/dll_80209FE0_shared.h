@@ -201,7 +201,6 @@ extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECScale(f32* in, f32* out, f32 scale);
 extern f32 PSVECMag(f32* v);
 extern int getAngle(f32 dx, f32 dz);
-extern int loadObjectAtObject(int obj, u8* setup);
 extern void drakormissile_startActiveLaunch(GameObject* obj);
 extern void timeOfDayFn_80055038(void);
 extern int objCreateLight(int a, int b);

@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/objfx.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -66,7 +67,7 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int fl
     ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
     ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
     ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
-    proj = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+    proj = loadObjectAtObject(obj, (ObjPlacement*)setup);
     if (proj == NULL)
         return;
     if ((u8)flag != 0)

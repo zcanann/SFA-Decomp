@@ -861,13 +861,13 @@ GameObject* Obj_SetupObject(ObjPlacement* data, int flags, int arg2, int arg3, v
     return obj;
 }
 
-void* loadObjectAtObject(u8* src, int arg1)
+GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
 {
-    void* obj;
+    GameObject* obj;
     int type;
     int objF30;
-    objF30 = (int)((ObjAnimComponent*)src)->parent;
-    type = ((ObjAnimComponent*)src)->mapEventSlot;
+    objF30 = (int)src->anim.parent;
+    type = src->anim.mapEventSlot;
     if (getLoadedFileFlags(0) & 0x100000)
     {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
@@ -875,11 +875,11 @@ void* loadObjectAtObject(u8* src, int arg1)
     }
     else
     {
-        obj = loadCharacter((s16*)arg1, 5, type, -1, (void*)objF30, 0);
+        obj = loadCharacter((s16*)setup, 5, type, -1, (void*)objF30, 0);
         if (obj != NULL)
         {
-            Obj_RegisterObject((GameObject*)obj, 5);
-            OSReport(sObjDebugStrings, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
+            Obj_RegisterObject(obj, 5);
+            OSReport(sObjDebugStrings, *(int*)&obj->anim.modelInstance + 0x91);
         }
     }
     return obj;

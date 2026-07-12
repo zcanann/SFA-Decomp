@@ -1,5 +1,6 @@
 /* DLL 0x243 - DBHoleControl1 [801FE118-801FEB30) */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -58,7 +59,6 @@ extern int lbl_803DDCE0;
 extern void Obj_RemoveFromUpdateList(int* obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* mapRomListFindItem(int, int, int, int, int);
-extern void loadObjectAtObject(int, int);
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerA0E();
@@ -146,7 +146,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ((GameObject*)newObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
             *(int*)&((GameObject*)newObj)->anim.localPosZ = -1;
             *(s16*)(newObj + 26) = 149;
-            loadObjectAtObject(obj, newObj);
+            loadObjectAtObject((GameObject*)obj, (ObjPlacement*)newObj);
             break;
         }
     }

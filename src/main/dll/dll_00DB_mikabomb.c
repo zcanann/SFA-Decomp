@@ -11,6 +11,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
@@ -29,7 +30,6 @@
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E31C0;
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern u32 lbl_803E31A0;
@@ -43,7 +43,6 @@ extern f32 gMikaBombGravityAccel;
 extern f32 gMikaBombMinFallVelocity;
 extern f32 lbl_803E31D4;
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-extern int loadObjectAtObject(int* obj, void* params);
 
 typedef struct MikabombState
 {
@@ -222,7 +221,7 @@ void MikaBomb_init(int* obj)
         alloc->color[1] = 1;
         alloc->color[2] = 0xff;
         alloc->color[3] = 0xff;
-        *state = loadObjectAtObject(obj, alloc);
+        *state = (int)loadObjectAtObject((GameObject*)obj, alloc);
         ((GameObject*)*state)->ownerObj = obj;
     }
     else

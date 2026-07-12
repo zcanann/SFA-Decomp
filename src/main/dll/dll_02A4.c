@@ -16,6 +16,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
+#include "main/object.h"
 #include "main/dll/ARW/dll_02A3.h"
 #include "main/dll/ARW/dll_02A4.h"
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
@@ -129,7 +130,7 @@ void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         newObj->rot18 = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+        newObj = (SquadronShipSetup*)loadObjectAtObject(obj, &newObj->head);
         dir.x = setup->velocityX / *(f32*)&lbl_803E7140;
         dir.y = setup->velocityY / *(f32*)&lbl_803E7140;
         dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
@@ -160,7 +161,7 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         newObj->rot18 = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+        newObj = (SquadronShipSetup*)loadObjectAtObject(obj, &newObj->head);
         dir.x = setup->velocityX / *(f32*)&lbl_803E7140;
         dir.y = setup->velocityY / *(f32*)&lbl_803E7140;
         dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;

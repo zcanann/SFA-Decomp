@@ -122,10 +122,10 @@ typedef struct ArwingState {
     u16 projLifetime;    /* 0x40e */
     f32 projSpeed;       /* 0x410 */
     f32 fireTimer;       /* 0x414 */
-    int thrusterL;       /* 0x418: def 0x6de exhaust objects */
-    int thrusterR;       /* 0x41c */
+    GameObject* thrusterL; /* 0x418: def 0x6de exhaust objects */
+    GameObject* thrusterR; /* 0x41c */
     u8 pad420[0x18];
-    int activeBombObj;
+    GameObject* activeBombObj;
     u8 bombVolleyMode;
     u8 bombSide;         /* 0x43d */
     u8 pad43E[2];

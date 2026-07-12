@@ -16,6 +16,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"
@@ -158,8 +159,6 @@ extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objSetMtxFn_800412d4(f32* mtx);
 extern void objRenderModel(int obj);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int loadObjectAtObject(int obj, int* setup);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void staffToggle(GameObject* obj, int a);
 extern void playerPutAwayStaff(GameObject* obj, int mode);
@@ -403,10 +402,10 @@ int sh_staff_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             else
             {
-                int* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
-                ((ObjPlacement*)newSetup)->color[0] = 2;
-                ((ObjPlacement*)newSetup)->color[3] = 0xff;
-                loadResult = loadObjectAtObject((int)obj, newSetup);
+                ObjPlacement* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
+                newSetup->color[0] = 2;
+                newSetup->color[3] = 0xff;
+                loadResult = (int)loadObjectAtObject(obj, newSetup);
             }
             state->slots[i] = loadResult;
             state->pending[i] = 0;
@@ -540,10 +539,10 @@ void sh_staff_update(GameObject* obj)
             }
             else
             {
-                int* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
-                ((ObjPlacement*)newSetup)->color[0] = 2;
-                ((ObjPlacement*)newSetup)->color[3] = 0xff;
-                loadResult = loadObjectAtObject((int)obj, newSetup);
+                ObjPlacement* newSetup = Obj_AllocObjectSetup(0x20, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
+                newSetup->color[0] = 2;
+                newSetup->color[3] = 0xff;
+                loadResult = (int)loadObjectAtObject(obj, newSetup);
             }
             state->slots[0] = loadResult;
             state->sfxTimer = gShStaffFizzSfxTimerInit;

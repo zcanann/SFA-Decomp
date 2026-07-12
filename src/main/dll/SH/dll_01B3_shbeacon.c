@@ -50,7 +50,6 @@ typedef enum ShBeaconMode
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-extern int loadObjectAtObject(int obj, int* setup);
 
 extern f32 lbl_803DDBF8;
 
@@ -122,7 +121,7 @@ void sh_beacon_update(GameObject* obj)
                 setup->color[0] = 2;
                 setup->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
                 setup->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
-                ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, (int*)setup);
+                ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, (ObjPlacement*)setup);
             }
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
@@ -251,7 +250,7 @@ void sh_beacon_init(GameObject* obj, int defData)
         setup->color[0] = 2;
         setup->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
         setup->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
-        ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, (int*)setup);
+        ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, (ObjPlacement*)setup);
     }
 
     (obj)->animEventCallback = sh_beacon_SeqFn;

@@ -281,7 +281,6 @@ extern f32 lbl_803E7044;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int loadObjectAtObject(int obj);
 
 #pragma dont_inline on
 #pragma dont_inline reset

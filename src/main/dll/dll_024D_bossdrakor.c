@@ -21,6 +21,7 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/render.h"
+#include "main/object.h"
 #include "main/obj_placement.h"
 #include "main/objprint.h"
 #include "main/game_object.h"
@@ -520,7 +521,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                     setup->color[3] = 0xff;
                     if ((void*)player != NULL)
                     {
-                        missile = loadObjectAtObject((int)obj, (u8*)setup);
+                        missile = (int)loadObjectAtObject(obj, setup);
                         if ((void*)missile != NULL)
                         {
                             prod = lbl_803DC188 * Vec_distance(&(obj)->anim.worldPosX,
@@ -570,7 +571,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                     ((BossdrakorPlacement*)setup)->airMeterMax = 0x3c;
                     ((BossdrakorPlacement*)setup)->unk1C = lbl_803DC194;
                     ((BossdrakorPlacement*)setup)->curveStartIndex = lbl_803DC190;
-                    loadObjectAtObject((int)obj, (u8*)setup);
+                    loadObjectAtObject(obj, setup);
                     Sfx_PlayFromObject((int)obj, SFXTRIG__UNK);
                 }
             }

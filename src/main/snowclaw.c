@@ -100,7 +100,6 @@ extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 extern int getAngle(float y, float x);
-extern void* loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
 extern void ObjLink_DetachChild(void* obj, int* child);
 
@@ -224,7 +223,7 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int un
 {
     int player;
     int obj2;
-    char* spawned;
+    GameObject* spawned;
 
     player = (int)Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() != 0)
@@ -259,11 +258,11 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int un
                       0x8000);
             break;
         }
-        spawned = loadObjectAtObject((int)obj, obj2);
+        spawned = loadObjectAtObject(obj, (ObjPlacement*)obj2);
         if (spawned != NULL)
         {
-            ((GameObject*)spawned)->unkF4 = (u8)unkF4Value;
-            ((GameObject*)spawned)->ownerObj = (void*)owner;
+            spawned->unkF4 = (u8)unkF4Value;
+            spawned->ownerObj = (void*)owner;
         }
     }
 }

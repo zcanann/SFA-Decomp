@@ -45,7 +45,6 @@
 #define FIREPIPE_OBJFLAG_RENDERED        0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void modelLightStruct_freeSlot(int p);
-extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
 
@@ -161,7 +160,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
             return (int)effectObj;
         }
     }
-    effectObj = (GameObject*)loadObjectAtObject(obj, spawnDef);
+    effectObj = loadObjectAtObject((GameObject*)obj, (ObjPlacement*)spawnDef);
     if (extra->effectCount != 8)
     {
         effectObj->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;

@@ -10,6 +10,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags);
 void Obj_UpdateModelBlendStates(void);
 void Obj_FreeObject(GameObject* obj);
 ObjPlacement* Obj_AllocObjectSetup(int size, int type);
+GameObject* loadObjectAtObject(GameObject* source, ObjPlacement* setup);
 GameObject* Obj_SetupObject(ObjPlacement* setup, int flags, int mapLayer, int objIndex, void* parent);
 
 int objGetFlagsE5_2(u8* obj);

@@ -4,6 +4,7 @@
 #include "main/dll/CF/CFcrystal.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
@@ -21,7 +22,6 @@ extern f32 lbl_803E3AE8;
 extern int gameBitDecrement(int bit);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
-extern int loadObjectAtObject(int* obj, void* setup);
 
 #pragma dont_inline on
 GameObject* FireFlyLantern_spawnFireFly(int* obj)
@@ -44,7 +44,7 @@ GameObject* FireFlyLantern_spawnFireFly(int* obj)
     setup->field1A = 0x514;
     setup->field1C = 40;
     setup->field18 = 30;
-    return (GameObject*)loadObjectAtObject(obj, setup);
+    return loadObjectAtObject((GameObject*)obj, (ObjPlacement*)setup);
 }
 #pragma dont_inline reset
 

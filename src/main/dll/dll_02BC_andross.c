@@ -21,6 +21,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/objlib.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
@@ -82,7 +83,7 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
             newObj->posZ = nearObj->anim.localPosZ;
             newObj->color[0] = 1;
             newObj->color[1] = 1;
-            state->effectHandle = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+            state->effectHandle = loadObjectAtObject(obj, newObj);
             if (state->effectHandle != NULL)
             {
                 state->effectHandle->anim.alpha = 0xff;
@@ -147,7 +148,7 @@ void fn_80239FCC(GameObject* obj, AndrossState* state)
         newObj->roll = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+        proj = (int)loadObjectAtObject(obj, &newObj->head);
         if ((u32)proj != 0)
         {
             ((GameObject*)proj)->anim.rootMotionScale = gAndrossRingProjectileScale;
@@ -177,7 +178,7 @@ void fn_8023A168(GameObject* obj, AndrossState* state)
         newObj->roll = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+        proj = (int)loadObjectAtObject(obj, &newObj->head);
         if ((void*)proj != NULL)
         {
             ((GameObject*)proj)->anim.rootMotionScale = 5.0f;
@@ -209,7 +210,7 @@ void fn_8023A268(GameObject* obj, AndrossState* state, int p3)
         newObj->roll = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        obj = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
+        obj = loadObjectAtObject(obj, &newObj->head);
         if (obj != NULL)
         {
             arwprojectile_setLifetime(obj, gAndrossAimedProjectileLifetime);
@@ -1713,7 +1714,7 @@ void andross_update(int obj)
                 childSetup->base.color[0] = 1;
                 childSetup->base.color[1] = 1;
                 childSetup->flags = -1;
-                state->spawnedObj = (GameObject*)((int (*)(int, int))loadObjectAtObject)(obj, (int)childSetup);
+                state->spawnedObj = loadObjectAtObject((GameObject*)obj, &childSetup->base);
                 if (state->spawnedObj != NULL)
                 {
                     state->spawnedObj->anim.alpha = 0xff;

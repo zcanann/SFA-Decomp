@@ -14,6 +14,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -440,7 +441,7 @@ void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
         setup->flag18 = 0;
         setup->head.color[0] = 1;
         setup->head.color[1] = 1;
-        obj = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+        obj = loadObjectAtObject(obj, &setup->head);
         if (obj != NULL)
         {
             arwprojectile_setLifetime(obj, lbl_803DC510);
