@@ -3,6 +3,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objlib.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 #include "main/effect_interfaces.h"
@@ -86,16 +87,11 @@ extern void warpstone_release(void);
 
 extern void warpstone_initialise(void);
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjTrigger_IsSet(int obj);
 extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z,
-                                          int useInputPosition);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 modelInitBones();
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_8003B228(GameObject* obj, int p2);
 extern void dll_2E_func08(int obj, int v1, int v2);
 extern float mathSinf(float x);
@@ -358,7 +354,8 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     pointIndex = 0;
     do
     {
-        ObjPath_GetPointWorldPosition(obj, pointIndex, &runtime->renderPathPoints[0].x, &runtime->renderPathPoints[0].y,
+        ObjPath_GetPointWorldPosition((GameObject*)obj, pointIndex, &runtime->renderPathPoints[0].x,
+                                      &runtime->renderPathPoints[0].y,
                                       &runtime->renderPathPoints[0].z, 0);
         runtime = (SHthorntailRuntime*)((int)runtime + sizeof(Vec));
         pointIndex = pointIndex + 1;
@@ -400,7 +397,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         {
             if ((obj->objectFlags & SHTHORNTAIL_OBJFLAG_RENDERED) != 0)
             {
-                ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
                 (*gPartfxInterface)
                     ->spawnObject(obj, SHTHORNTAIL_PARTFX_TAILSWING, effectScratch.particleParams, 0x200001, -1, NULL);

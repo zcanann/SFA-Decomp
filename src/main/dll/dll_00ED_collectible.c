@@ -33,6 +33,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/collectible_state.h"
 #include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_00ED_collectible.h"
@@ -43,9 +44,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
-extern void ObjGroup_RemoveObject();
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int gameBitIncrement(int bit);
@@ -57,8 +55,6 @@ extern f32 lbl_803E3460;
 extern f32 gCollectibleBounceDamping;
 extern f32 gCollectibleAirFriction;
 extern f32 gCollectibleGravity;
-extern u32 ObjMsg_SendToObject();
-extern int ObjTrigger_IsSet();
 extern f32 lbl_803E3458;
 extern f32 gCollectibleLaunchSpeed;
 extern f32 gCollectibleLaunchAngle;
@@ -70,8 +66,6 @@ extern f32 gCollectibleSpinDamping;
 extern f32 gCollectibleSpinRate;
 extern f32 gCollectibleRotRate;
 
-extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
-extern void ObjMsg_AllocQueue();
 extern u8 lbl_80320C58[];
 extern u32 lbl_803E3440;
 extern u8 lbl_803E3444;
@@ -759,7 +753,7 @@ void collectible_updateLooseMotion(int* obj)
 void collectible_free(GameObject *obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    ObjGroup_RemoveObject(obj, COLLECTIBLE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, COLLECTIBLE_OBJGROUP);
     return;
 }
 
@@ -879,7 +873,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             if (mainGetBit(GAMEBIT_SawBigHealth) == 0)
             {
-                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 mainSetBits(GAMEBIT_SawBigHealth, 1);
             }
             else
@@ -897,7 +891,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case COLLECTIBLE_ITEM_APPLE:
             if (mainGetBit(GAMEBIT_SawApple) == 0)
             {
-                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 mainSetBits(GAMEBIT_SawApple, 1);
             }
             else
@@ -909,7 +903,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case 0x6a6:
             if (mainGetBit(GAMEBIT_CollectedFlag09A8) == 0)
             {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject((void*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 mainSetBits(GAMEBIT_CollectedFlag09A8, 1);
             }
             else
@@ -919,11 +913,11 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
             state[0x37] |= 1;
             break;
         default:
-            if (ObjTrigger_IsSet(obj) != 0)
+            if (ObjTrigger_IsSet((int)obj) != 0)
             {
                 mainSetBits(GAMEBIT_EnableCMenu, 1);
                 ((CollectibleState*)state)->pickupMsgValue = attach[0xf];
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject((void*)player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)(state + 0x48));
                 state[0x37] |= 1;
                 if ((obj)->anim.modelState != NULL)
                 {
@@ -1001,7 +995,7 @@ void collectible_update(int obj)
             return;
         }
     }
-    while (ObjMsg_Pop(obj, &msg, &msgParam, NULL) != 0)
+    while (ObjMsg_Pop((void*)obj, (u32*)&msg, (u32*)&msgParam, NULL) != 0)
     {
         switch (msg)
         {
@@ -1054,7 +1048,8 @@ void collectible_update(int obj)
             if (state[0x3e] == 0)
             {
                 ((CollectibleState*)state)->pickupMsgValue = -1;
-                ObjMsg_SendToObject(Obj_GetPlayerObject(), COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject(Obj_GetPlayerObject(), COLLECTIBLE_MSG_IN_RANGE, (void*)obj,
+                                    (u32)(state + 0x48));
             }
         }
         else
