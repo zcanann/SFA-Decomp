@@ -276,3 +276,5 @@ u8 inpGetMidiLastNote(u8 channel, u8 key)
 
 u8 gInpMidiCtrlByKey[0x4300];
 u8 gInpMidiCtrl[0x2180];
+u8 gInpMidiLastNote[0x40];
+u8 lbl_803CD760[8][INP_MIDI_SLOT_COUNT];
