@@ -2098,9 +2098,11 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
     }
     if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
     {
-        resetObjects = ObjHitReact_GetResetObjects(&count);
+        ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
+        i = 0;
+        resetObjects = t;
         flag80 = masked & 0x80;
-        for (i = 0; i < count; i++, resetObjects++)
+        for (; i < count; i++, resetObjects++)
         {
             ObjAnimComponent* resetObj = *resetObjects;
             ObjHitsPriorityState* hitState;
