@@ -4628,6 +4628,7 @@ u8 doEdges;
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
 #pragma opt_dead_assignments off
+#pragma opt_dead_assignments on
 void trackIntersect(void)
 {
     s16 counts[0x47];
@@ -4856,6 +4857,7 @@ void trackIntersect(void)
     }
     lbl_803DCF44 = 1;
 }
+#pragma opt_dead_assignments reset
 #pragma opt_dead_assignments reset
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
