@@ -320,35 +320,6 @@ extern int arwarwing_getRequiredRingCount(int arwing);
 extern int arwarwing_getCollectedRingCount(int arwing);
 
 extern f32 lbl_803E7154;
-typedef struct ARWGeneratorState
-{
-    f32 spawnTimer;
-} ARWGeneratorState;
-
-typedef struct ARWGeneratorSetup
-{
-    u8 pad00[0x18];
-    u16 spawnInterval;
-    u16 projectileSpeed;
-    s8 velocityX;
-    s8 velocityY;
-    s8 velocityZ;
-    u8 pad1F[3];
-    u8 spreadX;
-    u8 spreadY;
-    u8 spreadZ;
-    u8 spawnMode;
-} ARWGeneratorSetup;
-
-STATIC_ASSERT(sizeof(ARWGeneratorState) == 0x4);
-STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnInterval) == 0x18);
-STATIC_ASSERT(offsetof(ARWGeneratorSetup, projectileSpeed) == 0x1A);
-STATIC_ASSERT(offsetof(ARWGeneratorSetup, velocityX) == 0x1C);
-STATIC_ASSERT(offsetof(ARWGeneratorSetup, spreadX) == 0x22);
-STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnMode) == 0x25);
-
-extern void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
-extern void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
 
 extern void fn_8006CB24(int obj);
 extern void Rcp_DisableDistortionFilter(void);
@@ -1050,14 +1021,6 @@ void SoftBody_init(GameObject* obj, int setup);
 void SoftBody_release(void);
 void SoftBody_initialise(void);
 void SoftBody_update(GameObject* obj);
-int arwgenerato_getExtraSize(void);
-int arwgenerato_getObjectTypeId(void);
-void arwgenerato_free(void);
-void arwgenerato_hitDetect(void);
-void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void arwgenerato_init(GameObject* obj, int setup);
-void arwgenerato_release(void);
-void arwgenerato_initialise(void);
 int ARWSpeedStr_getExtraSize(void);
 int ARWSpeedStr_getObjectTypeId(void);
 void ARWSpeedStr_free(void);
@@ -1120,7 +1083,6 @@ void arwarwing_hitDetect(GameObject* obj);
 void ARWArwingGu_update(GameObject* obj);
 void arwingandrossstuff_update(GameObject* obj);
 void arwlevelcon_update(GameObject* obj);
-void arwgenerato_update(GameObject* obj);
 int andross_getExtraSize(void);
 int andross_getObjectTypeId(void);
 void andross_free(int obj);
@@ -1238,8 +1200,6 @@ void fn_8023137C(GameObject* obj, f32* src);
 void fn_8022ED74(GameObject* obj, int v);
 void fn_80231028(GameObject* obj, int v);
 void fn_8023134C(GameObject* obj, int v);
-void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
-void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
 void arwarwinggu_applyTextureFrame(GameObject* obj);
 void fn_8022ECE0(GameObject* obj, f32 param);
 void arwarwing_spawnBomb(GameObject* obj, int state, int side);

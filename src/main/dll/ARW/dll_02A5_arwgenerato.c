@@ -7,7 +7,7 @@
  * live in a sibling flight-section TU.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
+#include "main/dll/ARW/dll_02A5_arwgenerato.h"
 
 int arwgenerato_getExtraSize(void)
 {
@@ -47,10 +47,10 @@ void arwgenerato_update(GameObject* obj)
             switch (mapData->spawnMode)
             {
             case 0:
-                fn_802317A8((int)obj, state, mapData);
+                fn_802317A8(obj, state, mapData);
                 break;
             case 1:
-                fn_802315EC((int)obj, state, mapData);
+                fn_802315EC(obj, state, mapData);
                 break;
             }
             state->spawnTimer = (f32)(u32)mapData->spawnInterval;
@@ -58,10 +58,10 @@ void arwgenerato_update(GameObject* obj)
     }
 }
 
-void arwgenerato_init(GameObject* obj, int setup)
+void arwgenerato_init(GameObject* obj, ARWGeneratorSetup* setup)
 {
     ARWGeneratorState* state = obj->extra;
-    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)setup;
+    ARWGeneratorSetup* mapData = setup;
 
     state->spawnTimer = (f32)(u32)mapData->spawnInterval;
 }

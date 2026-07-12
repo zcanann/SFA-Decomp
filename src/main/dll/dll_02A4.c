@@ -15,7 +15,7 @@
  * sibling projectile TU.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
+#include "main/dll/ARW/dll_02A5_arwgenerato.h"
 
 typedef struct Dll2A4State
 {
@@ -118,7 +118,7 @@ void dll_2A4_init(GameObject* obj)
     state->spinRateZ = randomGetRange(-SPIN_RATE_MAG, SPIN_RATE_MAG);
 }
 
-void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
+void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
     f32 dir[3];
@@ -127,20 +127,20 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     {
         newObj = (SquadronShipSetup*)Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_A);
         newObj->head.posX =
-            ((GameObject*)obj)->anim.localPosX +
+            obj->anim.localPosX +
             (f32)(int)randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
         newObj->head.posY =
-            ((GameObject*)obj)->anim.localPosY +
+            obj->anim.localPosY +
             (f32)(int)randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
         newObj->head.posZ =
-            ((GameObject*)obj)->anim.localPosZ +
+            obj->anim.localPosZ +
             (f32)(int)randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         newObj->rot1A = 0;
         newObj->rot19 = 0;
         newObj->rot18 = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
+        newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
         dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
         dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
         dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
@@ -149,7 +149,7 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     }
 }
 
-void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
+void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
     f32 dir[3];
@@ -158,20 +158,20 @@ void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
     {
         newObj = (SquadronShipSetup*)Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_B);
         newObj->head.posX =
-            ((GameObject*)obj)->anim.localPosX +
+            obj->anim.localPosX +
             (f32)(int)randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
         newObj->head.posY =
-            ((GameObject*)obj)->anim.localPosY +
+            obj->anim.localPosY +
             (f32)(int)randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
         newObj->head.posZ =
-            ((GameObject*)obj)->anim.localPosZ +
+            obj->anim.localPosZ +
             (f32)(int)randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         newObj->rot1A = 0;
         newObj->rot19 = 0;
         newObj->rot18 = 0;
         newObj->head.color[0] = 1;
         newObj->head.color[1] = 1;
-        newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
+        newObj = (SquadronShipSetup*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
         dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
         dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
         dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
