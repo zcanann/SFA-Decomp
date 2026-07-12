@@ -139,14 +139,14 @@ void cflevelcontrol_update(GameObject* obj)
 
     if (((u32)state[0xc] >> 3 & 1) != 0)
     {
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x47fae));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x47f83));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x47f8f));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x47fa2));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x29f2));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x29f3));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x29ef));
-        objCallOnloadCallback((int*)ObjList_FindObjectById(0x29ee));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x47fae));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x47f83));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x47f8f));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x47fa2));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x29f2));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x29f3));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x29ef));
+        objCallOnloadCallback((GameObject*)ObjList_FindObjectById(0x29ee));
         ((CfLevelControlFlags*)&state[0xc])->b3 = 0;
     }
 

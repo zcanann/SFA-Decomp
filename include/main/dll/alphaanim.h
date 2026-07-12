@@ -76,7 +76,7 @@ void seqObject_render(int param_1, int p1, int p2, int p3, int p4, s8 visible);
 void seqObject_update(int param_1);
 void seqObject_init(short* param_1, int param_2);
 u32 FUN_8017ca44(int obj, u32 unused, ObjAnimUpdateState* animUpdate);
-int SeqObject_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
+int SeqObject_SeqFn(GameObject* obj, int* anim, ObjAnimUpdateState* animUpdate);
 void seqObj2_free(int param_1);
 void seqObj2_update(int param_1);
 void seqObj2_init(short* param_1, int param_2);
@@ -89,11 +89,11 @@ void Lock_DoorLock_update(GameObject* obj);
 
 int SeqObject_getExtraSize(void);
 int SeqObject_getObjectTypeId(void);
-void objCallOnloadCallback(int* obj);
-void SeqObject_free(int x);
+void objCallOnloadCallback(GameObject* obj);
+void SeqObject_free(GameObject* obj);
 void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void SeqObject_update(int* obj);
-void SeqObject_init(int* obj, SeqObjectPlacement* params);
+void SeqObject_update(GameObject* obj);
+void SeqObject_init(GameObject* obj, SeqObjectPlacement* params);
 
 int SeqObj2_getExtraSize(void);
 int SeqObj2_getObjectTypeId(void);

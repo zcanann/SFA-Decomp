@@ -19,6 +19,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -30,8 +31,6 @@
 /* object group this object joins while active */
 #define FLAMMABLEVINE_OBJGROUP 0x31
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern void* getTrickyObject(void);
 
@@ -45,9 +44,9 @@ int FlammableVine_getObjectTypeId(void)
     return 0x0;
 }
 
-void FlammableVine_free(int obj)
+void FlammableVine_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, FLAMMABLEVINE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, FLAMMABLEVINE_OBJGROUP);
 }
 
 void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -212,16 +211,16 @@ checked_vine_use:
     }
 }
 
-void FlammableVine_init(GameObject* obj, int def)
+void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
 {
     FlammablevineState* state;
     f32 scale;
 
     state = (obj)->extra;
     ObjGroup_AddObject((int)obj, FLAMMABLEVINE_OBJGROUP);
-    (obj)->anim.rotX = (s16)(((FlammablevineObjectDef*)def)->rotXByte << 8);
+    (obj)->anim.rotX = (s16)(def->rotXByte << 8);
 
-    (obj)->anim.rootMotionScale = 5.0f * ((f32)((FlammablevineObjectDef*)def)->scaleParam / 32767.0f);
+    (obj)->anim.rootMotionScale = 5.0f * ((f32)def->scaleParam / 32767.0f);
     if ((obj)->anim.rootMotionScale <= 0.05f)
     {
         (obj)->anim.rootMotionScale = 0.05f;
@@ -232,7 +231,7 @@ void FlammableVine_init(GameObject* obj, int def)
     state->burnIntensity = 0.001f;
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, 0.0f);
 
-    if (((FlammablevineObjectDef*)def)->burnedBit != -1 && mainGetBit(((FlammablevineObjectDef*)def)->burnedBit) != 0)
+    if (def->burnedBit != -1 && mainGetBit(def->burnedBit) != 0)
     {
         Obj_RemoveFromUpdateList((int)obj);
         ObjHits_DisableObject((u32)obj);
@@ -240,7 +239,7 @@ void FlammableVine_init(GameObject* obj, int def)
         state->flags = state->flags | 2;
     }
 
-    state->setupParam = ((FlammablevineObjectDef*)def)->setupParam;
+    state->setupParam = def->setupParam;
     if (state->setupParam == 1)
     {
         ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)(int)obj);

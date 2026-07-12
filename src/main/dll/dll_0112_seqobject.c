@@ -17,6 +17,7 @@
 #include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
 #include "main/rcp_dolphin.h"
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
@@ -59,29 +60,26 @@ enum
 
 extern f32 lbl_803E37A0;
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjGroup_AddObject();
-
-void objCallOnloadCallback(int* obj)
+void objCallOnloadCallback(GameObject* obj)
 {
     if (obj != NULL)
     {
-        ((void (*)(int*, int*, int))((void**)*(*(int***)&((GameObject*)obj)->anim.dll))[1])(
-            obj, *(int**)&((GameObject*)obj)->anim.placementData, 0);
+        ((void (*)(GameObject*, int*, int))((void**)*(*(int***)&obj->anim.dll))[1])(
+            obj, *(int**)&obj->anim.placementData, 0);
     }
 }
 
-int SeqObject_SeqFn(int* obj, int* unused, ObjAnimUpdateState* animUpdate)
+int SeqObject_SeqFn(GameObject* obj, int* unused, ObjAnimUpdateState* animUpdate)
 {
     SeqObjectPlacement* def;
     SeqObjectState* state;
     int i;
-    if (((GameObject*)obj)->seqIndex == -1)
+    if (obj->seqIndex == -1)
     {
         return 0;
     }
-    def = *(SeqObjectPlacement**)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    def = *(SeqObjectPlacement**)&obj->anim.placementData;
+    state = obj->extra;
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -125,9 +123,9 @@ int SeqObject_getObjectTypeId(void)
     return 0;
 }
 
-void SeqObject_free(int obj)
+void SeqObject_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, SEQOBJECT_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, SEQOBJECT_OBJGROUP);
 }
 
 void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -137,14 +135,14 @@ void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E37A0);
 }
 
-void SeqObject_update(int* obj)
+void SeqObject_update(GameObject* obj)
 {
     SeqObjectState* state;
     SeqObjectPlacement* def;
     s32 bitValue;
 
-    state = ((GameObject*)obj)->extra;
-    def = *(SeqObjectPlacement**)&((GameObject*)obj)->anim.placementData;
+    state = obj->extra;
+    def = *(SeqObjectPlacement**)&obj->anim.placementData;
 
     if ((state->flags & SEQOBJECT_STATE_SEQUENCE_DONE) != 0)
     {
@@ -214,21 +212,21 @@ void SeqObject_update(int* obj)
     }
 }
 
-void SeqObject_init(int* obj, SeqObjectPlacement* params)
+void SeqObject_init(GameObject* obj, SeqObjectPlacement* params)
 {
     ObjAnimComponent* objAnim;
     SeqObjectState* state;
 
     objAnim = (ObjAnimComponent*)obj;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(params->initialYaw << 8);
-    ((GameObject*)obj)->animEventCallback = SeqObject_SeqFn;
+    state = obj->extra;
+    obj->anim.rotX = (s16)(params->initialYaw << 8);
+    obj->animEventCallback = SeqObject_SeqFn;
     *(u8*)&objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
-    ObjGroup_AddObject(obj, SEQOBJECT_OBJGROUP);
+    ObjGroup_AddObject((int)obj, SEQOBJECT_OBJGROUP);
     state->flags = 0;
     if (params->openGameBit != -1 && mainGetBit(params->openGameBit) != 0)
     {
@@ -239,5 +237,5 @@ void SeqObject_init(int* obj, SeqObjectPlacement* params)
         }
     }
     state->triggerBitState = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = (u16)(obj->objectFlags | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED);
 }

@@ -58,14 +58,4 @@ void FUN_80189e94(int param_1, int param_2);
 int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int FlammableVine_getExtraSize(void);
-int FlammableVine_getObjectTypeId(void);
-void FlammableVine_free(int obj);
-void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void FlammableVine_hitDetect(GameObject* obj);
-void FlammableVine_update(GameObject* obj);
-void FlammableVine_init(GameObject* obj, int def);
-void FlammableVine_release(void);
-void FlammableVine_initialise(void);
-
 #endif /* MAIN_DLL_CF_CFBABY_H_ */
