@@ -121,7 +121,30 @@ extern s16 lbl_803DDCAA;
 extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 gWmSunEnvfxTimer;
-extern f32 lbl_803E5F20;         /* 0.0f */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5F20 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E5F24 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F28 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E5F2C = 20.0f;
+__declspec(section ".sdata2") f32 gWmSunPi = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803E5F34 = 32767.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F38 = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F3C = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E5F40 = -0.1f;
+__declspec(section ".sdata2") f32 lbl_803E5F44 = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E5F48 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F4C = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F50 = 0.0005f;
+__declspec(section ".sdata2") f32 lbl_803E5F54 = 0.0002f;
+__declspec(section ".sdata2") f32 lbl_803E5F58 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E5F5C = 65535.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F60 = 0.001f;
+__declspec(section ".sdata2") f32 lbl_803E5F64 = -0.001f;
+__declspec(section ".sdata2") f32 lbl_803E5F68 = 0.01f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5F6C = 0.0f;
+#pragma explicit_zero_data off
 extern f32 lbl_803E5F78;         /* 0.00375f */
 extern f32 lbl_803E5F7C;         /* 50.0f */
 extern f32 lbl_803E5F80;         /* 0.8f */
@@ -132,23 +155,6 @@ extern WmSunVec3 gWmSunGlareSun; /* (0, 0, -1) */
 extern f32 gWmSunGlareIntensity; /* glare intensity */
 extern f32 gWmSunGlareDamping;   /* glare damping accumulator */
 extern f32 oneOverTimeDelta;
-extern f32 lbl_803E5F28; /* 0.5f */
-extern f32 lbl_803E5F2C; /* 20.0f */
-extern f32 gWmSunPi;     /* 3.1415927f */
-extern f32 lbl_803E5F34; /* 32767.0f */
-extern f32 lbl_803E5F38; /* 32768.0f */
-extern f32 lbl_803E5F3C; /* 0.1f */
-extern f32 lbl_803E5F40; /* -0.1f */
-extern f32 lbl_803E5F44; /* 0.2f */
-extern f32 lbl_803E5F48; /* 100.0f */
-extern f32 lbl_803E5F4C; /* 4.0f */
-extern f32 lbl_803E5F50; /* 0.0005f */
-extern f32 lbl_803E5F54; /* 0.0002f */
-extern f32 lbl_803E5F58; /* 0.05f */
-extern f32 lbl_803E5F5C; /* 65535.0f */
-extern f32 lbl_803E5F60; /* 0.001f */
-extern f32 lbl_803E5F64; /* -0.001f */
-extern f32 lbl_803E5F68; /* 0.01f */
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 
 int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)

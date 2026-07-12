@@ -68,7 +68,14 @@ typedef struct
 /* LightFoot Village map-event id (seeded from the palace spirit chain). */
 #define WMLEVELCONTROL_MAP_LIGHTFOOT 0xe
 
-extern f32 lbl_803E5E70;                          /* 0.0 */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5E70 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E5E74 = 1.0f;
+__declspec(section ".sdata2") f32 gWmLevelControlBlendDecayPerTick = 0.02f;
+__declspec(section ".sdata2") f32 gWmLevelControlLightIntensityBase = 32.0f;
+__declspec(section ".sdata2") f32 gWmLevelControlLightIntensityRange = 128.0f;
+__declspec(section ".sdata2") f32 gWmLevelControlOverrideLightIntensity = 100.0f;
 extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
 extern f32 gWmLevelControlSkyVecTable[];          /* sky light/color/fog vector table */
 extern u8 gWmLevelControlSkyColorFrom;            /* sky-color blend source triplet */
@@ -83,11 +90,6 @@ extern u8 gWmLevelControlBlendedLightIntensity;   /* blended light-intensity byt
 extern u8 gWmLevelControlBlendedFogColor;         /* blended fog-color out-triplet */
 extern u8 gWmLevelControlBlendedSkyColor;         /* blended sky-color out-triplet */
 extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-triplet */
-extern f32 lbl_803E5E74;                          /* 1.0 */
-extern f32 gWmLevelControlBlendDecayPerTick;      /* 0.02: blend decay per tick */
-extern f32 gWmLevelControlLightIntensityBase;     /* 32.0: light-intensity base */
-extern f32 gWmLevelControlLightIntensityRange;    /* 128.0: light-intensity blend range */
-extern f32 gWmLevelControlOverrideLightIntensity; /* 100.0: override light intensity */
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern int mapGetDirIdx(int idx);

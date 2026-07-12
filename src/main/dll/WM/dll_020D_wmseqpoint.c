@@ -20,6 +20,11 @@
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_020D_wmseqpoint.h"
 
+__declspec(section ".sdata2") f32 lbl_803E5F10 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5F14 = 0.0f;
+#pragma explicit_zero_data off
+
 /* state->triggerMode: how the trigger sequence is armed */
 enum
 {

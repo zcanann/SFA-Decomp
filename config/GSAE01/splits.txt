@@ -2029,6 +2029,7 @@ main/dll/dll_019C_dll19c.c:
 
 main/dll/dll_019D_dll19d.c:
 	.text       start:0x801CC998 end:0x801CCFA4
+	.sdata2     start:0x803E51B8 end:0x803E51C0
 	.sdata2     start:0x803E51C0 end:0x803E51C8
 
 main/dll/DIM/dll_019E_dim_tricky.c:
@@ -2356,11 +2357,13 @@ main/dll/dll_0206_lightsource.c:
 
 main/dll/WM/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
+	.sdata2     start:0x803E5E58 end:0x803E5E68
 	.sdata2     start:0x803E5E68 end:0x803E5E70
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.text       start:0x801F3F18 end:0x801F48C0
 	.data       start:0x80328BB0 end:0x80328C08
+	.sdata2     start:0x803E5E70 end:0x803E5E88
 	.sdata2     start:0x803E5E88 end:0x803E5E90
 
 main/dll/WM/dll_020A_wmgeneralscales.c:
@@ -2384,10 +2387,12 @@ main/dll/WM/dll_020C_wmspiritplace.c:
 main/dll/WM/dll_020D_wmseqpoint.c:
 	.text       start:0x801F654C end:0x801F6E8C
 	.data       start:0x80328CC8 end:0x80328D28
+	.sdata2     start:0x803E5F10 end:0x803E5F18
 	.sdata2     start:0x803E5F18 end:0x803E5F20
 
 main/dll/WM/dll_020E_wmsun.c:
 	.text       start:0x801F6E8C end:0x801F7C50
+	.sdata2     start:0x803E5F20 end:0x803E5F70
 	.sdata2     start:0x803E5F70 end:0x803E5F78
 
 main/dll/WM/dll_020F_wmspiritset.c:

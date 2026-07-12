@@ -20,9 +20,14 @@
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 
-extern f32 lbl_803E5E58; /* 440.0: chase range */
-extern f32 lbl_803E5E5C; /* 0.0 */
-extern f32 lbl_803E5E60; /* 0.01: chase speed factor */
+__declspec(section ".sdata2") f32 lbl_803E5E58 = 440.0f; /* chase range */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5E5C = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E5E60 = 0.01f; /* chase speed factor */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5E64 = 0.0f;
+#pragma explicit_zero_data off
 extern f32 Vec_xzDistance(f32* a, f32* b);
 
 int WM_Worm_getExtraSize(void)
