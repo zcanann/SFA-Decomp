@@ -1955,10 +1955,10 @@ extern char sModelAnimationBufferOverflowWarning[];
 #pragma opt_loop_invariants off
 int modelLoadAnimations(void* model, int id, void* animBase)
 {
-    u8* hdr = model;
+    int tabBase;
     u8* buf = animBase;
     int* tbl;
-    int tabBase;
+    u8* hdr = model;
     int sz;
     int hdrOff;
     int groupSlot;
