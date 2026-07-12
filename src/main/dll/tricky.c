@@ -28,6 +28,7 @@
 #include "main/mm.h"
 #include "main/dll/tricky.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"
 #include "main/lightmap.h"
@@ -161,7 +162,6 @@ extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
 extern u8 cMenuRingModelRenderFn[];
 extern u8 cMenuRingIconRenderFn[];
-extern u8 pauseMenuState;
 extern u8 lbl_803DD7B3;
 extern u8 lbl_803DD792;
 extern u8 gTrickyHudShowNearestInfo;

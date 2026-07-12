@@ -13,6 +13,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
+#include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
 
@@ -405,7 +406,6 @@ extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
 extern void skyBuildSunModelMatrix(f32* out);
 extern int depthReadRequestPoll(int x, int y, void* p);
-extern u8 pauseMenuGetState(void);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern void allocLotsOfTextures(void);

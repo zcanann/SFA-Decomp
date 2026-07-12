@@ -23,6 +23,8 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/pause_menu_api.h"
 #include "main/dll/cmenu_item_table.h"
 #include "main/dll/hud_textures.h"
 #include "main/game_object.h"
@@ -125,7 +127,6 @@ extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s
 /* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
 #define GAMEUI_TASK_HINT_COUNT 5
 extern TaskHintEntry gTaskHintTable[GAMEUI_TASK_HINT_COUNT];
-extern u8 pauseMenuState;
 extern s8 pauseMenuFrameCounter;
 extern s16 lbl_803DD75C;
 extern f32 lbl_803DD7BC;

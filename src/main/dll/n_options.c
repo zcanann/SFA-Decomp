@@ -19,6 +19,7 @@
 #include "dolphin/os.h"
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/attract_movie.h"
+#include "main/attract_movie_api.h"
 #include "string.h"
 #include "main/dll/FRONT/dll_3B.h"
 #include "dolphin/gx/GXCull.h"
@@ -41,7 +42,6 @@ extern TevColorS10Pair lbl_803E1D30; /* TEV color-S10 / k-color constants */
 extern u32 lbl_803E1D38;
 extern u32 lbl_803E1D3C;
 extern u32 lbl_803E1D40;
-extern s32 gAttractMovieState;
 extern s32 lbl_803DD660;               /* texture-set free queue active */
 extern AIDCallback lbl_803DD668;       /* AI DMA done callback */
 extern s32 lbl_803DD66C;               /* DMA callback phase */

@@ -12,6 +12,7 @@
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -53,7 +54,6 @@ extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
 extern int fn_8003B228(GameObject* obj, void* p2);
 extern int characterDoEyeAnims(GameObject* obj, void* p2);
-extern int cMenuGetSelectedItem(void);
 extern int getYButtonItem(s16* outTrigger);
 extern void* getTrickyObject(void);
 extern int playerHasSpell(GameObject* obj, int param);
@@ -267,7 +267,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
         break;
     case 1:
         (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-        if (cMenuGetSelectedItem() == -1)
+        if (cMenuGetSelectedItemInt() == -1)
         {
             if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
             {

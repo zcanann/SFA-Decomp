@@ -12,6 +12,7 @@
 #include "main/frame_timing.h"
 #include "main/fileio.h"
 #include "main/textrender.h"
+#include "main/dll/dll_0000_gameui_api.h"
 
 typedef struct
 {
@@ -351,7 +352,6 @@ extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, i
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int scale);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
-extern void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
 extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 extern u16 OSGetFontEncode(void);
 extern void OSLoadFont(void* buf, void* tmp);

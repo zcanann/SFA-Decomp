@@ -37,7 +37,6 @@ void FUN_801333a8(u32 param_1,u32 param_2,short *param_3,int param_4,int *param_
 void FUN_801334d0(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9);
-u16 getMinimapY(void);
 void FUN_801334f8(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9,u32 param_10,u32 param_11,u32 param_12,

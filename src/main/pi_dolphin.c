@@ -6443,7 +6443,6 @@ extern int lbl_803DCCA0;
 extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
 extern int lbl_803DB5C8;
-extern int gAttractMovieState;
 extern u16 gDepthReadPendingQueue[];
 extern u16 gDepthReadResults[];
 extern u16 gDepthReadPendingCount;

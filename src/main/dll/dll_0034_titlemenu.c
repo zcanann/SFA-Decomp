@@ -2,6 +2,7 @@
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/FRONT/dll_44.h"
 #include "main/dll/FRONT/picmenu.h"
+#include "main/attract_movie_api.h"
 #include "main/camera_interface.h"
 #include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
@@ -14,7 +15,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/textrender.h"
-extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void titleScreenShowCopyright(u8 arg);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
@@ -27,7 +27,6 @@ extern void printHeapStats(int mode);
 extern void OSReport(const char* msg, ...);
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern u8 gTitleMenuSelectionFade;
-extern s32 gAttractMovieState;
 extern u8 gTitleMenuSelection;
 extern u8 gAttractMoviePreparePending;
 extern void* gAttractMovieScratchBuffer;

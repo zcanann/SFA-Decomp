@@ -87,7 +87,7 @@ void warpstonelift_update(u8* obj)
         case WARPSTONELIFT_STATE_IDLE:
         case WARPSTONELIFT_STATE_OFFERING:
             getYButtonItem(&item);
-            if ((mainGetBit(WARPSTONELIFT_ITEM_BIT) != 0 && cMenuGetSelectedItem() != -1) ||
+            if ((mainGetBit(WARPSTONELIFT_ITEM_BIT) != 0 && cMenuGetSelectedItemInt() != -1) ||
                 item == WARPSTONELIFT_ITEM_BIT)
             {
                 Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);

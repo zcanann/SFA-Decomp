@@ -1187,7 +1187,7 @@ int hightop_stateHandler09(GameObject* obj, int stateArg)
     {
         s16 yItem;
         getYButtonItem(&yItem);
-        if ((mainGetBit(GAMEBIT_ITEM_CCGoldBar_Count) != 0 && cMenuGetSelectedItem() != -1) || yItem == 0xaf7)
+        if ((mainGetBit(GAMEBIT_ITEM_CCGoldBar_Count) != 0 && cMenuGetSelectedItemInt() != -1) || yItem == 0xaf7)
         {
             Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
         }

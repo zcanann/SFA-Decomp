@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0000_GAMEUI_H_
 
 #include "ghidra_import.h"
+#include "main/dll/dll_0000_gameui_api.h"
 
 /* Shared struct layouts for dll_0000_gameui (the in-game GameUI / HUD /
  * C-menu unit, DLL 0). Field offsets are recovered from the EN v1.0 asm. */
@@ -126,6 +127,5 @@ void CMenu_SetFadeCounter(s16 v);
 void pauseMenuDoSave(void);
 void perspectiveFn_80129db4(void);
 
-s16 cMenuGetSelectedItem(void);
 
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_H_ */

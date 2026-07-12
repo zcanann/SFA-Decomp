@@ -2,9 +2,9 @@
 #define MAIN_DLL_FRONT_N_OPTIONS_H_
 
 #include "ghidra_import.h"
+#include "main/attract_movie_api.h"
 
 void THPPlayerDrawCurrentFrame(void *yTexture,void *uTexture,void *vTexture,u32 width,u32 height);
-BOOL Movie_SetVolumeFade(int volume,int fadeFrames);
 void AttractMovieAudio_Mix(s16 *dst,s16 *src,u32 sampleCount);
 void AttractMovieAudio_DmaCallback(void);
 void FUN_80118108(void);

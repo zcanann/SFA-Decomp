@@ -11,6 +11,8 @@
 #include "main/audio/snd_core.h"
 #include "main/audio/snd_reverb.h"
 #include "main/audio/snd_synth_api.h"
+#include "main/attract_movie_api.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/camera.h"
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
@@ -21,10 +23,12 @@
 #include "main/gameloop_api.h"
 #include "main/lightmap_api.h"
 #include "main/model_engine.h"
+#include "main/minimap_api.h"
 #include "main/mm.h"
 #include "main/newclouds.h"
 #include "main/object_api.h"
 #include "main/pad.h"
+#include "main/pause_menu_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/resource.h"
 #include "main/render.h"
@@ -47,9 +51,6 @@
 #include "dolphin/os/OSRtc.h"
 #include "dolphin/pad.h"
 
-extern s32 gAttractMovieState;
-extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
-extern u8 pauseMenuGetState(void);
 extern int randomGetRange(int min, int max);
 extern int getCurSeqNo(void);
 extern f32 sqrtf(f32 x);
@@ -60,9 +61,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
-extern u8 pauseMenuState;
-extern int getMinimapY(void);
-extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 fastFloorf(f32 v);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);

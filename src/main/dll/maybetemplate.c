@@ -17,6 +17,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/dll/maybeTemplate.h"
+#include "main/pause_menu_api.h"
 #include "main/camera_interface.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
@@ -135,7 +136,6 @@ extern u8 lbl_803DD75B;
 extern u8 lbl_803DD792;
 extern u8 lbl_803DD840;
 extern f32 lbl_803DD844;
-extern u8 pauseMenuState;
 extern u8 cMenuEnabled;
 extern int airMeter;
 extern f32 hudElementOpacity;

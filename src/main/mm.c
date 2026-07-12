@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/gameplay.h"
+#include "main/attract_movie_api.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSArena.h"
 #include "dolphin/os/OSTime.h"
@@ -58,7 +59,6 @@ extern int gMmFreeDelay;
 extern int gMmOpCount;
 extern int gMmUseHeap3;
 extern int gMmUseHeaps1and2;
-extern int gAttractMovieState;
 extern void* gAttractMovieScratchBuffer;
 extern u8 gMmRegionCount;
 extern char sMmFreeInvalidLocationError[];

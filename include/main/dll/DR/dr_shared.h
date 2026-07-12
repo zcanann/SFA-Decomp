@@ -9,6 +9,7 @@
 #include "main/camera_interface.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/mapEventTypes.h"
 #include "main/render.h"
 #include "main/model_engine.h"
@@ -476,7 +477,6 @@ extern int gHighTopIdleSequenceIds[];
 extern f32 lbl_803E6AA4;
 extern s16 gHighTopProgressGameBitIds;
 extern void getYButtonItem(s16* out);
-extern int cMenuGetSelectedItem(void);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern void objModelClearVecFn_8003aa40(GameObject* obj);
 

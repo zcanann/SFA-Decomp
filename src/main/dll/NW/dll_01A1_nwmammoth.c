@@ -2,6 +2,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_01A1_nwmammoth.h"
 #include "main/screen_transition.h"
 #include "main/dll/dim2conveyor.h"
@@ -74,7 +75,6 @@ extern u32 ObjGroup_AddObject();
 extern int ObjTrigger_IsSetById(int obj, int triggerId);
 extern void fn_8003A168(GameObject* obj, void* p);
 extern void characterDoEyeAnims(GameObject* obj, void* p);
-extern int cMenuGetSelectedItem(void);
 extern void fn_801CDF94(GameObject* obj, void* state, int flag);
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
@@ -751,7 +751,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     {
         obj->hitboxFlags = (u8)(obj->hitboxFlags & ~NW_MAMMOTH_PATH_CONTROL_FLAG);
         if (((table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
-            (cMenuGetSelectedItem() != -1))
+            (cMenuGetSelectedItemInt() != -1))
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }

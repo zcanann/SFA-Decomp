@@ -129,7 +129,7 @@ checked_vine_use:
 
         if ((obj)->anim.seqId == 0x102)
         {
-            if (cMenuGetSelectedItem() == -1)
+            if (cMenuGetSelectedItemInt() == -1)
             {
                 (obj)->anim.modelInstance->hitVolumes[0].priority = 0;
             }

@@ -18,10 +18,10 @@
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/pausemenu.h"
+#include "main/pause_menu_api.h"
 
 extern u8 hudTextures[0x198];
 extern f32 hudElementOpacity;
-extern u8 pauseMenuState;
 extern u8 pauseMenuTextDrawFn[];
 extern u8 lbl_8031AE20[];
 extern u8 lbl_8031BB90[];

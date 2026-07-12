@@ -18,6 +18,7 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/cmenu_item_table.h"
+#include "main/pause_menu_api.h"
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "dolphin/gx/GXCull.h"
@@ -46,7 +47,6 @@ extern s16 yButtonItemTextureId;
 extern int gTrickyHudItemMask;
 extern int gTrickyHudActionMask;
 extern u32 lbl_803E1E14;
-extern u8 pauseMenuState;
 extern int hudTextures[];
 extern u8 lbl_803A9398[];
 extern s16 gTrickyHudIconTextureIds[];

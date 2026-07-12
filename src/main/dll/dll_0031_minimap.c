@@ -31,6 +31,9 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/minimap_api.h"
+#include "main/pause_menu_api.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 
@@ -126,7 +129,6 @@ extern float mathCosf(float x);
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
-extern void drawHudBox(s16 id, s16 x, s16 y, s16 w, int alpha, u8 p6);
 extern void gameTextSetCursor(int a, int b, int c);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);
@@ -136,7 +138,6 @@ extern s16 lbl_803DD7A2;
 extern s16 lbl_803DBA6E;
 extern u8 gMinimapAreaNameDelay;
 extern int lbl_803DD934;
-extern u8 pauseMenuState;
 extern u8 lbl_803DD75B;
 extern s16 gMinimapFadeAlpha;
 extern s16 gMinimapContentAlpha;
