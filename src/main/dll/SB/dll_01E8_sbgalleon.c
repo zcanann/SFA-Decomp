@@ -24,6 +24,7 @@
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/render.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -43,7 +44,6 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-extern u32 getLActions();
 extern void SB_Galleon_onSeqFree(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
@@ -575,7 +575,7 @@ void SB_Galleon_init(GameObject* obj)
     gSbGalleonSkyTexB = (int)textureLoadAsset(SBGALLEON_TEXTURE_SKY_B);
     state->unk84 = 100;
     (*gMapEventInterface)->setMapAct(obj->anim.mapEventSlot, 1);
-    getLActions(obj, obj, 0x58, 0, 0, 0);
+    getLActionsInt6(obj, obj, 0x58, 0, 0, 0);
     state->wanderTimerA = lbl_803E56CC;
     state->wanderTimerB = lbl_803E580C;
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;

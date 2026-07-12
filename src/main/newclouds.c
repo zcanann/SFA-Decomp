@@ -464,7 +464,6 @@ typedef struct WindSource
 #define NEWCLOUD_TEXTURE_STAR_A 0xc21 /* gNewCloudStarTextureA */
 #define NEWCLOUD_TEXTURE_STAR_B 0xc22 /* gNewCloudStarTextureB */
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
-extern s16 renderModeSetOrGet(int mode);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 
 #pragma dont_inline off

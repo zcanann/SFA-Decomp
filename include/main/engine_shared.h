@@ -15,6 +15,7 @@
 #include "main/newclouds.h"
 #include "main/pad.h"
 #include "main/resource.h"
+#include "main/render.h"
 #include "main/sky_interface.h"
 #include "main/voxmaps.h"
 
@@ -114,7 +115,6 @@ extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
 extern f32 lbl_803DE6E0;
 extern f32 lbl_803DE6E8;
-extern int gRenderMode;
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
 extern void ARQPostRequest(void* req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void*));
@@ -221,11 +221,6 @@ extern void sndSetAuxProcessingCallbacks(int a, void *cb, void *settings, int d,
 extern void sndVolume(int a, int b, int c);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
-int getLActions(int a, int b, u16 idx);
-void render_copyPackedU64Tail(u64 *dst, u32 packed);
-void render_copyPackedU64Head(u64 *dst, u32 packed);
-int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-int getEnvfxAct(int a, int b, u16 idx, int d);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v);
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta);
 void Obj_UpdateWorldTransform(s16 *obj);
@@ -252,7 +247,6 @@ void fileReadCb_80015954(void* result);
 void setFileInfo(void* fileInfo);
 int isSpace(u32 c);
 void fn_80009008(void);
-s16 renderModeSetOrGet(int mode);
 void MIDIWADLoadedCallback(int status, void* fileInfo);
 int musicInitMidiWad(void);
 void poolDataMLoadedCallback(int status, void* fileInfo);

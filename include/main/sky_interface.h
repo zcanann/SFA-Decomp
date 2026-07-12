@@ -3,7 +3,9 @@
 
 #include "global.h"
 
-typedef void (*SkyUpdateEnvfxActFn)(int sourceObj, int targetObj, void *entry, int flags);
+struct GameObject;
+
+typedef void (*SkyUpdateEnvfxActFn)(struct GameObject* sourceObj, struct GameObject* targetObj, void* entry, int flags);
 typedef void (*SkyLoadLightsFn)(void);
 typedef void (*SkyUpdateTimeOfDayFn)(void);
 typedef void (*SkyRenderFn)(int a, int b, int c, int d, int e);

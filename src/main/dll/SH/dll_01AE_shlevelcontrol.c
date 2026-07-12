@@ -12,6 +12,7 @@
  * teardown. init seeds the music latches and clears the bloop bits.
  */
 #include "main/game_ui_interface.h"
+#include "main/render.h"
 #include "main/dll/SC/SClantern.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/audio/sfx_ids.h"
@@ -96,8 +97,6 @@ extern int playerHasSpell(GameObject* obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern void skyFn_80088e54(int mode, f32 brightness);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
 extern void Music_Trigger(int id, int arg);
@@ -894,17 +893,17 @@ void SH_LevelControl_update(GameObject* obj)
             envFxActFn_800887f8(0);
             if ((obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
         }
     }
@@ -919,18 +918,18 @@ void SH_LevelControl_update(GameObject* obj)
                 if ((obj)->unkF4 == 2)
                 {
                     envFxActFn_800887f8(0);
-                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
-                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
-                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
+                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
+                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 }
                 else
                 {
                     envFxActFn_800887f8(0);
-                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
-                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
-                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
+                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
+                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 }
             }
         }
@@ -941,14 +940,14 @@ void SH_LevelControl_update(GameObject* obj)
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);
-                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 skyFn_80088e54(0, lbl_803E54B4);
             }
             else
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x1f);
-                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
         }
     }

@@ -19,6 +19,7 @@
  * 0x10 = PROMPT_SUPPRESSED.
  */
 #include "main/dll/CF/CFchuckobj.h"
+#include "main/render.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -54,7 +55,6 @@
 extern f32 lbl_803E3E98;
 extern s16 lbl_803DCEB8;
 
-extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void objRenderFn_80041018(int obj);
 
@@ -196,48 +196,48 @@ int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
             case 0x43f83:
             case 0x4977d:
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G0_A, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G0_B, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_ENV, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_SKY, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G0_A, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G0_B, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_ENV, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_SKY, 0);
                 setDrawCloudsAndLights(0);
                 skyFn_80088c94(1, 1);
                 skyFn_80088e54(0, lbl_803E3E98);
                 break;
             case 0x48506:
             case 0x4a533:
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G1_A, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G1_B, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_ENV, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_SKY, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G1_A, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G1_B, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_ENV, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_SKY, 0);
                 setDrawCloudsAndLights(1);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G1_C, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G1_D, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G1_C, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G1_D, 0);
                 skyFn_80088c94(1, 0);
                 skyFn_80088e54(0, lbl_803E3E98);
                 break;
             case 0x4b666:
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G2_A, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G2_B, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G2_A, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G2_B, 0);
                 break;
             case 0x4b667:
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G2_A, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G2_B, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G2_A, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G2_B, 0);
                 (*gMapEventInterface)->setObjGroupStatus(0x15, 2, 1);
-                getEnvfxActImmediately(0, 0, TRANSPORTER_ENVFX_G2_C, 0);
+                getEnvfxActImmediatelyVoid(0, 0, TRANSPORTER_ENVFX_G2_C, 0);
                 skyFn_80088e54(1, lbl_803E3E98);
                 break;
             case 0x4670d:
             case 0x4827e:
             case 0x49267:
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G3_A, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G3_B, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G3_A, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G3_B, 0);
                 timeOfDayFn_80055000();
                 mainSetBits(0xef6, 1);
                 break;
             case 0x4cb6a:
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G4_A, 0);
-                getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G4_B, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G4_A, 0);
+                getEnvfxActImmediatelyVoid(obj, obj, TRANSPORTER_ENVFX_G4_B, 0);
                 skyFn_80088c94(1, 1);
                 skyFn_80088e54(0, lbl_803E3E98);
             case 0x4cb84:

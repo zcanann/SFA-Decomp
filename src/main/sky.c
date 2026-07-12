@@ -1,4 +1,5 @@
 #include "main/sky_state.h"
+#include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
 #include "main/sky_interface.h"
@@ -170,7 +171,6 @@ extern f32 lbl_803DF194;
 extern void setDrawCloudsAndLights(int mode);
 extern void fn_8008C9F4(u8* cfg, u8 flags);
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
-extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
 extern void* Obj_AllocObjectSetup(int size, int objectId);
@@ -275,9 +275,9 @@ void envFxActFn_800887f8(u8 value)
     if (masked == 0)
     {
         player = Obj_GetPlayerObject();
-        getEnvfxAct(player, player, SKY_ENVFX_ID_A, 0);
-        getEnvfxAct(player, player, SKY_ENVFX_ID_B, 0);
-        getEnvfxAct(player, player, SKY_ENVFX_ID_C, 0);
+        getEnvfxActVoid(player, player, SKY_ENVFX_ID_A, 0);
+        getEnvfxActVoid(player, player, SKY_ENVFX_ID_B, 0);
+        getEnvfxActVoid(player, player, SKY_ENVFX_ID_C, 0);
     }
 }
 
@@ -329,7 +329,7 @@ void envFxFn_80088884(void)
         }
         else
         {
-            getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD130)[b], 0);
+            getEnvfxActVoid(0, 0, (u16)((s16*)lbl_803DD130)[b], 0);
         }
     }
     if ((u32)lbl_803DD13C != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_B) != 0)
@@ -340,7 +340,7 @@ void envFxFn_80088884(void)
         }
         else
         {
-            getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
+            getEnvfxActVoid(0, 0, (u16)((s16*)lbl_803DD13C)[b], 0);
         }
     }
     if ((u32)lbl_803DD138 != 0 && (gSkyEnvFxFlags & SKY_ENVFX_GROUP_C) != 0 &&
@@ -352,7 +352,7 @@ void envFxFn_80088884(void)
         }
         else
         {
-            getEnvfxAct(0, 0, (u16)((s16*)lbl_803DD138)[b], 0);
+            getEnvfxActVoid(0, 0, (u16)((s16*)lbl_803DD138)[b], 0);
         }
     }
     playerEnvFxFn_80088ad4(b);
@@ -1253,9 +1253,9 @@ void playerEnvFxFn_80088ad4(u8 idx)
     }
     if (((s16*)lbl_803DD134)[idx] <= 0 || ((s16*)lbl_803DD134)[alt] != ((s16*)lbl_803DD134)[idx])
     {
-        getEnvfxAct(player, player, 310, 0);
-        getEnvfxAct(player, player, 311, 0);
-        getEnvfxAct(player, player, 323, 0);
+        getEnvfxActVoid(player, player, 310, 0);
+        getEnvfxActVoid(player, player, 311, 0);
+        getEnvfxActVoid(player, player, 323, 0);
     }
     val = ((s16*)lbl_803DD134)[idx];
     if (val > 0)
@@ -1266,7 +1266,7 @@ void playerEnvFxFn_80088ad4(u8 idx)
         }
         else
         {
-            getEnvfxAct(player, player, (u16)val, 0);
+            getEnvfxActVoid(player, player, (u16)val, 0);
         }
     }
 }
@@ -1758,7 +1758,7 @@ void sky2_onMapSetup(void)
         *(f32*)((char*)*slot + 0x20) = b;
         if (lbl_803DB754 != 0)
         {
-            getEnvfxAct(NULL, NULL, 9, 0);
+            getEnvfxActVoid(NULL, NULL, 9, 0);
             lbl_803DB754 = 0;
         }
         slot++;
@@ -2165,7 +2165,7 @@ void sky2_update(int a, int b, u8* cfg)
         }
         else if ((flags58 & 0x20) != 0)
         {
-            getEnvfxAct(0, 0, 9, 0);
+            getEnvfxActVoid(0, 0, 9, 0);
         }
         else
         {

@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/render.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/dll/tricky_state.h"
@@ -527,7 +528,6 @@ void TitleScreen_update(u8* obj)
     extern void fn_80134870(u8 * obj, u8 * arr);
     extern int ObjModel_HasActiveBlendChannels(ObjModel * model);
     extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-    extern int getEnvfxAct(int a, int b, u16 idx, int d);
     extern void skyFn_80089710(int flags, int enabled, int startComplete);
     extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
     extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
@@ -830,7 +830,7 @@ void TitleScreen_update(u8* obj)
         }
         if (gTitleScreenSetupDone == 0)
         {
-            getEnvfxAct(0, 0, FRONT_ENVFX_TITLE, 0);
+            getEnvfxActInt(0, 0, FRONT_ENVFX_TITLE, 0);
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x4b, 0x64, 0x78, 0, 0);
             skyFn_800894a8(7, lbl_803E2318, lbl_803E2388, *(f32*)&lbl_803E2388);

@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -258,7 +259,6 @@ extern const f32 lbl_803E6DA8;
 typedef struct WcLevelControlState WcLevelControlState;
 extern void wcpushblock_updateLevelControlState(int obj, WcLevelControlState* state);
 extern void fn_802251B4(int obj, WcLevelControlState* state);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
 extern int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern void* memcpy(void* dst, const void* src, u32 n);
@@ -805,7 +805,6 @@ extern f32 lbl_803E70E8;
 extern void skyFn_80089710(int p1, u8 p2, int p3);
 extern void skyFn_800895e0(int p1, int p2, int p3, int p4, int p5, int p6);
 extern void skyFn_800894a8(int p1, f32 p2, f32 p3, f32 p4);
-extern void getEnvfxAct(int p1, int p2, int p3, int p4);
 extern void setDrawLights(int value);
 extern int AudioStream_IsPreparing(void);
 extern void AudioStream_StartPrepared(void);
@@ -1050,7 +1049,6 @@ typedef struct ObjXform
 
 extern int dll_2E_func07(GameObject* obj, int p2, int state, int p4, int p5);
 extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int gEarthWalkerMoveBlendData;
 extern f32 gEarthWalkerLookAtMaxDistance;
 
@@ -1472,7 +1470,6 @@ typedef struct DrMusicContFlags
 } DrMusicContFlags;
 
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);

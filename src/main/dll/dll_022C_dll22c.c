@@ -24,6 +24,7 @@
  * this family of DLLs shares.
  */
 #include "main/dll/dll22cstate_struct.h"
+#include "main/render.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
 #include "main/dll/dfptorchstate_struct.h"
@@ -80,7 +81,6 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 #define DLL22C_MODE_DESCEND    3 /* fall to posY-1228.0f, then -> HOLD */
 #define DLL22C_MODE_ASCEND     4 /* rise to posY+60.0f, then -> HOLD */
 
-extern int getLActions(int a, int b, u16 idx, int p4, int p5, int p6);
 
 int dll_22C_SeqFn(void)
 {
@@ -98,7 +98,7 @@ int dll_22C_getObjectTypeId(void)
 void dll_22C_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    getLActions(obj, obj, 0, 0, 0, 0);
+    getLActionsInt6(obj, obj, 0, 0, 0, 0);
 }
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

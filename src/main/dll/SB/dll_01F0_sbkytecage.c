@@ -11,6 +11,7 @@
  * detaches the attached Kyte child.
  */
 #include "main/dll/sbkytecagestate_struct.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -72,7 +73,6 @@ enum
     SB_KYTECAGE_SEQEV_LATCH_2 = 2
 };
 
-extern int getLActions();
 extern int ObjLink_DetachChild();
 extern int ObjLink_AttachChild();
 extern int* objModelGetVecFn_800395d8(GameObject* obj, int idx);
@@ -218,8 +218,8 @@ void SB_KyteCage_init(GameObject* obj, int* params)
     state->seqLatch = 0;
     if ((u32)mainGetBit(GAMEBIT_KYTE_CAGED) == 0u)
     {
-        getLActions(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
-        getLActions(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);
+        getLActionsInt6(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
+        getLActionsInt6(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);
     }
 }
 

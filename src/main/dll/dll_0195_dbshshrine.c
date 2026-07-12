@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/render.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
@@ -51,7 +52,6 @@ extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
 extern void skyFn_80088c94(int flags, int mode);
-extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
 extern void fn_801C8B68(DbshShrineObject* obj);
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
@@ -197,9 +197,9 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         if (obj->introDelay == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_A, 0);
-            getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_B, 0);
-            getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_C, 0);
+            getEnvfxActVoid(obj, player, DBSH_SHRINE_ENVFX_A, 0);
+            getEnvfxActVoid(obj, player, DBSH_SHRINE_ENVFX_B, 0);
+            getEnvfxActVoid(obj, player, DBSH_SHRINE_ENVFX_C, 0);
         }
     }
 

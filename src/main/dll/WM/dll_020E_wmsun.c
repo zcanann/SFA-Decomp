@@ -28,6 +28,7 @@
  * flicker table and scroll-fades a texture once bit 0x38F is set.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
@@ -549,8 +550,8 @@ void wmsun_update(GameObject* obj)
                     if (gWmSunEnvfxTimer <= 0)
                     {
                         gWmSunEnvfxTimer = 0;
-                        getEnvfxAct((int)obj, (int)obj, WMSUN_ENVFX_A, 0);
-                        getEnvfxAct((int)obj, (int)obj, WMSUN_ENVFX_B, 0);
+                        getEnvfxActVoid((int)obj, (int)obj, WMSUN_ENVFX_A, 0);
+                        getEnvfxActVoid((int)obj, (int)obj, WMSUN_ENVFX_B, 0);
                     }
                 }
                 if ((int)randomGetRange(0, 8) == 0)

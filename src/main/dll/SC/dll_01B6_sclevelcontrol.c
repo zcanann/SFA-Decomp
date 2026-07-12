@@ -6,6 +6,7 @@
  * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/sclevelcontrolstate_types.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
@@ -59,8 +60,6 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern int getSaveGameLoadStatus(void);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern void gameTextShow(int a);
 extern void skyFn_80088e54(int mode, f32 brightness);
@@ -211,30 +210,30 @@ void sc_levelcontrol_update(GameObject *obj)
         envFxActFn_800887f8(0);
         if ((obj)->unkF4 == 2)
         {
-            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
-            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
-            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
+            getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
+            getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
             if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
             {
-                getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
         else
         {
-            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
-            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
-            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
+            getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
+            getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
             if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
             {
-                getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
         (obj)->unkF4 = 0;

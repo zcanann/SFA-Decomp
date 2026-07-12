@@ -15,6 +15,7 @@
  * zones + texture-state swaps).
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -72,7 +73,7 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7460, lbl_803E7464, lbl_803E7468);
-            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
+            getEnvfxActVoid(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
             ((GfLevelconHandleScriptEventsState*)state)->promptTimer = lbl_803E746C;
@@ -81,7 +82,7 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, *(f32*)&lbl_803E7464);
-            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
+            getEnvfxActVoid(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
             gf_levelcon_findLinkedObjects(obj);
@@ -101,7 +102,7 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7480, lbl_803E747C, lbl_803E7464);
-            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_C, 0);
+            getEnvfxActVoid(obj, obj, GFLEVELCON_ENVFX_C, 0);
             break;
         case GFLEVELCON_SEQEV_LOAD_MAP:
             loadMapAndParent(0x29);
@@ -121,13 +122,13 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
-            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
+            getEnvfxActVoid(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
             skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
-            getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
+            getEnvfxActVoid(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         }
     }

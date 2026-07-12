@@ -1,5 +1,6 @@
 /* DLL 0x019B - torch / fire-effect objects [801CBA98-801CBD88) */
 #include "main/dll/torch1CD.h"
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
 #include "main/dll/torch1cd_state.h"
@@ -15,7 +16,6 @@
 #define DLL19B_ENVFX_A 0xc3
 #define DLL19B_ENVFX_B 0x14
 
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void* return0_8005669C(int);
 extern int lbl_803DB610;
 extern void* lbl_803DDBE0;

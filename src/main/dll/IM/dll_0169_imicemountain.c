@@ -14,6 +14,7 @@
  * of SCGameBitLatch records that mirror world state into game bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
@@ -55,10 +56,8 @@ extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
 extern f32 timeDelta;
 extern f32 lbl_803E46DC;
-extern void getLActions();
 extern void gameBitFn_800ea2e0(int idx);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(GameObject* obj, int* extra);
 extern void fn_801AC01C(GameObject* obj);
 extern void Music_Trigger(int id, int arg);
@@ -260,13 +259,13 @@ void imicemountain_updateEventState(int* obj)
         }
         if (((GameObject*)obj)->unkF4 == 0)
         {
-            getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
-            getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
-            getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_C, 0);
-            getLActions(obj, obj, 0x15b, 0, 0, 0);
-            getLActions(obj, obj, 0x15c, 0, 0, 0);
-            getLActions(obj, obj, 0x17c, 0, 0, 0);
-            getLActions(obj, obj, 0x17b, 0, 0, 0);
+            getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
+            getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
+            getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_C, 0);
+            getLActionsVoid6(obj, obj, 0x15b, 0, 0, 0);
+            getLActionsVoid6(obj, obj, 0x15c, 0, 0, 0);
+            getLActionsVoid6(obj, obj, 0x17c, 0, 0, 0);
+            getLActionsVoid6(obj, obj, 0x17b, 0, 0, 0);
             (*gCloudActionInterface)->func09Nop(1);
             ((GameObject*)obj)->unkF4 = 1;
         }
@@ -311,9 +310,9 @@ void IMIceMountain_update(int* obj)
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
-        getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
-        getEnvfxAct(obj, obj, IMICEMOUNTAIN_ENVFX_D, 0);
+        getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
+        getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
+        getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_D, 0);
         (*gCloudActionInterface)->func09Nop(1);
         ((GameObject*)obj)->unkF4 = 1;
     }

@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
@@ -53,7 +54,6 @@ extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 extern int ObjList_FindObjectById(int id);
 
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void setIsOvercast(int v);
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
@@ -356,7 +356,7 @@ void worldplanet_update(GameObject* obj)
         if ((state->flags & WORLDPLANET_STATE_FLAG_ENVFX_STARTED) == 0)
         {
             state->flags |= WORLDPLANET_STATE_FLAG_ENVFX_STARTED;
-            getEnvfxAct(0, 0, WORLDPLANET_ENVFX_OPEN_ID, 0);
+            getEnvfxActInt(0, 0, WORLDPLANET_ENVFX_OPEN_ID, 0);
             setIsOvercast(0);
             setDrawLights(0);
         }

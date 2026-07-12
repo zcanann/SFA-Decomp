@@ -7,6 +7,7 @@
  * SeqFn handles the few types with anim-event work.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
@@ -74,7 +75,6 @@ extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
 
 extern void Obj_FreeObject(int obj);
-extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern f32 sqrtf(f32);
@@ -337,12 +337,12 @@ void CFCrate_update(GameObject* obj)
         if (dist < lbl_803E3E20 && state->proximityLatch == 1)
         {
             state->proximityLatch = 0;
-            getLActions((int)obj, (int)obj, 0x5c, 0, 0, 0);
+            getLActionsVoid6((int)obj, (int)obj, 0x5c, 0, 0, 0);
         }
         else if ((dist > *(f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
         {
             state->proximityLatch = 1;
-            getLActions((int)obj, (int)obj, 0x5d, 0, 0, 0);
+            getLActionsVoid6((int)obj, (int)obj, 0x5d, 0, 0, 0);
         }
         break;
     }

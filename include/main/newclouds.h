@@ -3,7 +3,10 @@
 
 #include "ghidra_import.h"
 
-typedef void (*NewCloudsUpdateEnvfxActFn)(int sourceObj, int targetObj, void *entry, int flags);
+struct GameObject;
+
+typedef void (*NewCloudsUpdateEnvfxActFn)(struct GameObject* sourceObj, struct GameObject* targetObj, void* entry,
+                                          int flags);
 typedef void (*NewCloudsOnMapSetupFn)(void);
 typedef void (*NewCloudsKillSnowCloudFn)(int cloudId, int flag);
 typedef void (*NewCloudsRunFn)(void);

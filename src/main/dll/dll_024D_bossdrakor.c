@@ -19,6 +19,7 @@
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -95,9 +96,9 @@ void bossdrakor_update(int obj)
     curveArg = 0x29;
     if (((DrakorFlags*)((char*)state + 0x198))->b10)
     {
-        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_A, 0);
-        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_B, 0);
-        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_C, 0);
+        getEnvfxActImmediatelyInt(obj, obj, BOSSDRAKOR_ENVFX_A, 0);
+        getEnvfxActImmediatelyInt(obj, obj, BOSSDRAKOR_ENVFX_B, 0);
+        getEnvfxActImmediatelyInt(obj, obj, BOSSDRAKOR_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E6510);
         timeOfDayFn_80055038();
         if ((*gRomCurveInterface)->initCurve((void*)((char*)state + 0x28), (void*)obj, lbl_803E6560, &curveArg, 0xd) !=

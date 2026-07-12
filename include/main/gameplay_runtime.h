@@ -3,6 +3,7 @@
 
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
+#include "main/render.h"
 #include "global.h"
 
 /* MAPINFO.bin per-record map type (curMapType / getCurMapType(), shader.c). */
@@ -35,7 +36,6 @@ void warpToMap(int idx, s8 transType);
 void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 int unlockLevel(s32 val, int idx, int flag);
 void envFxActFn_800887f8(u8 value);
-void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
 void setMotionBlur(int mode, f32 amount);
 void streamFn_8000a380(int mask, int mode, int time);
 void storeZeroToFloatParam(void *timer);

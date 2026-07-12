@@ -7,6 +7,7 @@
  */
 
 #include "main/dll/cfmaincrystalstate_types.h"
+#include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -69,7 +70,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 lbl_803E4210;
 
 extern int* gCfMainCrystalObj;
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern void PSVECNormalize(f32* out, f32* in);
 extern f32 gCfMainCrystalPylonBeamY;
@@ -265,7 +265,7 @@ void fn_8019D9F0(int* obj)
             if (sub->charge == 0)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
-                getEnvfxAct(0, 0, CFMAINCRYSTAL_ENVFX, 0);
+                getEnvfxActInt(0, 0, CFMAINCRYSTAL_ENVFX, 0);
             }
             sub->charge += framesThisStep;
         }

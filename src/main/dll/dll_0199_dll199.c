@@ -1,5 +1,6 @@
 /* DLL 0x199 - NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
 #include "main/dll/dll197state_struct.h"
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll199state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -21,7 +22,6 @@
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5158;
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern ModgfxInterface** gModgfxInterface;
 
 /* Env-fx ids activated per anim seq event (getEnvfxAct 3rd arg):

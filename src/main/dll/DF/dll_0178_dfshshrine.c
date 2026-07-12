@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -140,7 +141,6 @@ extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern int randomGetRange(int lo, int hi);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
@@ -351,9 +351,9 @@ void DFSH_Shrine_update(int objArg)
         if (obj->unkF4 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct((int)obj, player, DFSH_SHRINE_ENVFX_A, 0);
-            getEnvfxAct((int)obj, player, DFSH_SHRINE_ENVFX_B, 0);
-            getEnvfxAct((int)obj, player, DFSH_SHRINE_ENVFX_C, 0);
+            getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_A, 0);
+            getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_B, 0);
+            getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_C, 0);
         }
     }
     fn_801C2914((int)obj);

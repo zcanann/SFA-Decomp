@@ -13,6 +13,7 @@
  * The 4-byte extra block holds a single f32 scratch value seeded at init.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_024F_ktrexlevel.h"
@@ -85,9 +86,9 @@ void KT_RexLevel_update(GameObject* obj)
     if ((obj)->unkF4 == 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxAct((int)obj, (int)obj, KTREXLEVEL_ENVFX_A, 0);
-        getEnvfxAct((int)obj, (int)obj, KTREXLEVEL_ENVFX_B, 0);
-        getEnvfxAct((int)obj, (int)obj, KTREXLEVEL_ENVFX_C, 0);
+        getEnvfxActVoid((int)obj, (int)obj, KTREXLEVEL_ENVFX_A, 0);
+        getEnvfxActVoid((int)obj, (int)obj, KTREXLEVEL_ENVFX_B, 0);
+        getEnvfxActVoid((int)obj, (int)obj, KTREXLEVEL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E67A4);
         mainSetBits(0x55e, 1);
         (obj)->unkF4 = 1;

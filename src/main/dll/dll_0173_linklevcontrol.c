@@ -17,6 +17,7 @@
  * matching the retail object.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/sky_interface.h"
@@ -58,7 +59,6 @@ extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 #pragma dont_inline on
 void link_levcontrol_updateAreaMusic(int* obj)
@@ -141,9 +141,9 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
     case AREA_CELL_45:
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_A, 0);
-        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_B, 0);
-        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_C, 0);
+        getEnvfxActInt(0, 0, LINKLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActInt(0, 0, LINKLEVCONTROL_ENVFX_B, 0);
+        getEnvfxActInt(0, 0, LINKLEVCONTROL_ENVFX_C, 0);
         Music_Trigger(MUSICTRIG_underwater, 1);
         break;
     case AREA_CELL_49:

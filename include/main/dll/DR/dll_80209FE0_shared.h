@@ -10,6 +10,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
+#include "main/render.h"
 #include "main/objhits.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
@@ -209,7 +210,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern u8* Obj_AllocObjectSetup(int size, int typeId);
 extern int loadObjectAtObject(int obj, u8* setup);
 extern void drakormissile_startActiveLaunch(GameObject* obj);
-extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
 extern void skyFn_80088e54(int p, f32 v);
 extern void timeOfDayFn_80055038(void);
 extern int objCreateLight(int a, int b);

@@ -32,6 +32,7 @@
  * from use, not confirmed.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
 #include "main/dll/baddie_state.h"
@@ -540,10 +541,10 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            getEnvfxActImmediately(obj, obj, 509, 0);
+            getEnvfxActImmediatelyVoid(obj, obj, 509, 0);
             break;
         case 2:
-            getEnvfxActImmediately(obj, obj, 512, 0);
+            getEnvfxActImmediatelyVoid(obj, obj, 512, 0);
             break;
         }
     }

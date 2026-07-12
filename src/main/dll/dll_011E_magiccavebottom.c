@@ -1,5 +1,6 @@
 /* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/objseq.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/player_80295318_shared.h"
@@ -7,7 +8,6 @@
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);
 extern void envFxActFn_800887f8(u8 value);
-extern void getEnvfxAct(int* obj, int* target, int id, int p);
 
 extern void warpToMap(int idx, s8 transType);
 
@@ -53,8 +53,8 @@ void MagicCaveBottom_update(int* obj)
     case MAGICCAVEBOTTOM_STATE_SETUP:
         mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
-        getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_A, 0);
-        getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_B, 0);
+        getEnvfxActVoid(obj, obj, MAGICCAVEBOTTOM_ENVFX_A, 0);
+        getEnvfxActVoid(obj, obj, MAGICCAVEBOTTOM_ENVFX_B, 0);
         *sub = MAGICCAVEBOTTOM_STATE_START_MUSIC;
         if (def[0x1b] != 0)
         {

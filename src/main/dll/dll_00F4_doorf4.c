@@ -16,6 +16,7 @@
  * leaves object group 14.
  */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -107,7 +108,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 sqrtf(f32 x);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 void DoorF4_hitDetect(void)
 {
@@ -316,11 +316,11 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 if (mainGetBit(GAMEBIT_CF_PowerOn) != 0)
                 {
-                    getEnvfxAct(0, 0, DOORF4_ENVFX_A, 0);
+                    getEnvfxActInt(0, 0, DOORF4_ENVFX_A, 0);
                 }
                 else
                 {
-                    getEnvfxAct(0, 0, DOORF4_ENVFX_B, 0);
+                    getEnvfxActInt(0, 0, DOORF4_ENVFX_B, 0);
                 }
             }
             sub->toggled = 1;
@@ -329,7 +329,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.seqId == 200 && sd <= lbl_803E3648)
             {
-                getEnvfxAct(0, 0, DOORF4_ENVFX_OFF, 0);
+                getEnvfxActInt(0, 0, DOORF4_ENVFX_OFF, 0);
             }
             sub->toggled = 0;
         }

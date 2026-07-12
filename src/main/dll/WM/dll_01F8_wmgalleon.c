@@ -1,5 +1,6 @@
 /* DLL 0x01F8 (wmgalleon) - WM galleon and object creator [0x801EFF7C-0x801F06D8). */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
+extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -86,7 +87,6 @@ extern f32 lbl_803E5CEC;
 extern f32 lbl_803E5CF0;
 extern f32 lbl_803E5CF4;
 
-extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);

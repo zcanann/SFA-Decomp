@@ -1,4 +1,5 @@
 #include "main/obj_placement.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -3894,19 +3895,19 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             case 0x2a:
                 if ((*gMapEventInterface)->getMapAct(0xb) == 7)
                 {
-                    getEnvfxActImmediately(obj, obj, 0x1fb, 0);
-                    getEnvfxActImmediately(obj, obj, 0x1ff, 0);
-                    getEnvfxActImmediately(obj, obj, 0x249, 0);
-                    getEnvfxActImmediately(obj, obj, 0x1fd, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x1fb, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x1ff, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x249, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x1fd, 0);
                 }
                 else
                 {
-                    getEnvfxActImmediately(obj, obj, 0x217, 0);
-                    getEnvfxActImmediately(obj, obj, 0x216, 0);
-                    getEnvfxActImmediately(obj, obj, 0x22e, 0);
-                    getEnvfxActImmediately(obj, obj, 0x218, 0);
-                    getEnvfxActImmediately(obj, obj, 0x84, 0);
-                    getEnvfxActImmediately(obj, obj, 0x8a, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x217, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x216, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x22e, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x218, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x84, 0);
+                    getEnvfxActImmediatelyVoid(obj, obj, 0x8a, 0);
                 }
                 ((void (*)(int, f32))skyFn_80088e54)(0, 0.0f);
                 break;

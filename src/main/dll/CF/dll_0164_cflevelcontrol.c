@@ -8,6 +8,7 @@
  * event (flood the fortress and lock the map).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/alphaanim.h"
@@ -65,7 +66,6 @@ extern void s16toFloat(void* p, int duration);
 extern void storeZeroToFloatParam(void* p);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjList_FindObjectById(int objectId);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
@@ -180,21 +180,21 @@ void cflevelcontrol_update(GameObject* obj)
 
     if (obj->unkF4 == 0)
     {
-        getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_A, 0);
+        getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_A, 0);
         if (mainGetBit(GAMEBIT_CFRelated0D73) == 0)
         {
-            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_D, 0);
+            getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
+            getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E43EC);
             mainSetBits(GAMEBIT_CFRelated0D73, 1);
         }
 
         if (mainGetBit(GAMEBIT_CFRelated0DCA) != 0)
         {
-            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_E, 0);
-            getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_F, 0);
+            getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_E, 0);
+            getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_F, 0);
             skyFn_80088e54(1, lbl_803E43EC);
             mainSetBits(GAMEBIT_CFRelated0DCA, 0);
             unlockLevel(0, 0, 1);
@@ -223,8 +223,8 @@ void cflevelcontrol_update(GameObject* obj)
     {
         (*gMapEventInterface)->restartPoint(&triggerPos, 0, getCurMapLayer(), 1);
         mainSetBits(GAMEBIT_CFRestartPointRelated0D3D, 0);
-        getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
-        getEnvfxActImmediately((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_B, 0);
+        getEnvfxActImmediatelyVoid((void*)obj, (void*)obj, CFLEVELCONTROL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E43E8);
     }
 

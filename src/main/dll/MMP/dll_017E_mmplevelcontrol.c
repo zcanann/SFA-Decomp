@@ -12,6 +12,8 @@
  */
 
 #include "main/game_object.h"
+extern int getEnvfxAct(int a, int b, u16 idx, int d);
+extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
@@ -44,8 +46,6 @@ extern int lbl_803DDB2C;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int setBit,
                                   int textId);
 

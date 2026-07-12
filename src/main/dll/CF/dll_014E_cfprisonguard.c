@@ -7,6 +7,7 @@
  */
 
 #include "main/dll/bit80_struct.h"
+#include "main/render.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -47,7 +48,6 @@ extern f32 lbl_803E4280;
 extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
-extern int getLActions();
 extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
 extern int ObjMsg_Pop();
@@ -197,7 +197,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (animUpdate->triggerCommand == 1)
     {
-        getLActions(obj, obj, 0x18, 0, 0, 0);
+        getLActionsInt6(obj, obj, 0x18, 0, 0, 0);
         animUpdate->triggerCommand = 0;
     }
     return 0;

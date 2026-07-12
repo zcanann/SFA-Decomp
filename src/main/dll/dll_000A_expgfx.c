@@ -138,7 +138,6 @@ extern void dll_0B_initialise(void);
 
 ExpgfxWGPipe GXWGFifo : (0xCC008000);
 
-extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
 extern ExpgfxBounds gExpgfxPoolBounds[];

@@ -19,6 +19,7 @@
  * latches the object's local position as the home position.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -135,7 +136,6 @@ extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern int ObjList_GetObjects(int* startIndex, int* objectCount);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
@@ -875,10 +875,10 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0)
     {
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
-        getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
+        getEnvfxActInt(effectObj, player, state[state[0xa4] + 0xa9], 0);
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
-        getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
-        getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
+        getEnvfxActInt(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
+        getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
         ((SBGalleonState*)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_A_DONE;
     }
@@ -886,10 +886,10 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0)
     {
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
-        getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
+        getEnvfxActInt(effectObj, player, state[state[0xa4] + 0xa9], 0);
         effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
-        getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
-        getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
+        getEnvfxActInt(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
+        getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);
         ((SBGalleonState*)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_B_DONE;
     }
@@ -900,9 +900,9 @@ void DBprotection_updateEnvfxGameBits(u8* state)
         {
             state[0xa4] = (u8)(state[0xa4] ^ 1);
         }
-        getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
-        getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
-        getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
+        getEnvfxActInt(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
+        getEnvfxActInt(player, player, state[state[0xa4] + 0xa9], 0);
+        getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_A_DONE, 0);
     }
 
@@ -912,9 +912,9 @@ void DBprotection_updateEnvfxGameBits(u8* state)
         {
             state[0xa4] = (u8)(state[0xa4] ^ 1);
         }
-        getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
-        getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
-        getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
+        getEnvfxActInt(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
+        getEnvfxActInt(player, player, state[state[0xa4] + 0xa9], 0);
+        getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_B_DONE, 0);
     }
 }

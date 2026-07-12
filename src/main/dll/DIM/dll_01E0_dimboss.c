@@ -5,6 +5,7 @@
  * driven sequence-flag word (gDIMbossSequenceFlags).
  */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
@@ -64,7 +65,6 @@ extern void fn_801B9ECC(void);
 extern u32 dll_2E_func04();
 
 
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern u32 ModelLightStruct_free();
 
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
@@ -581,8 +581,8 @@ void DIMboss_update(DIMbossObject* obj)
                 }
                 if (topState->steamFlags.bits.sfxPending != 0)
                 {
-                    getEnvfxAct(0, 0, DIMBOSS_ENVFX_A, 0);
-                    getEnvfxAct(0, 0, DIMBOSS_ENVFX_B, 0);
+                    getEnvfxActInt(0, 0, DIMBOSS_ENVFX_A, 0);
+                    getEnvfxActInt(0, 0, DIMBOSS_ENVFX_B, 0);
                     skyFn_80089710(7, 1, 0);
                     skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
                     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);

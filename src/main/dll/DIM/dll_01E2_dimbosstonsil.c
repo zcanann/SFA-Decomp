@@ -6,6 +6,7 @@
  * which health phase the tonsil starts in across attempts.
  */
 #include "main/mapEvent.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
@@ -28,7 +29,6 @@ extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue
 extern int randomGetRange(int lo, int hi);
 
 extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 
 extern void ObjGroup_RemoveObject(void* obj, int group);
@@ -130,7 +130,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
             skyFn_80089710(7, 1, 0);
             skyFn_800894a8(7, lbl_803E4CC4, *(f32*)&lbl_803E4CC4, lbl_803E4CB8);
             skyFn_800895e0(7, 0xff, 0xb4, 0xb4, 0x7f, 0x28);
-            getEnvfxAct(obj, obj, DIMBOSSTONSIL_STEAM_ENVFX, 0);
+            getEnvfxActVoid(obj, obj, DIMBOSSTONSIL_STEAM_ENVFX, 0);
             Music_Trigger(DIMBOSSTONSIL_STEAM_MUSIC, 1);
             break;
         case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_AREA:

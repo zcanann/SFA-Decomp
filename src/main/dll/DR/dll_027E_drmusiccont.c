@@ -13,6 +13,7 @@
  * DrMusicContFlags cache at 0x8.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -96,10 +97,10 @@ void drmusiccont_update(GameObject* obj)
     {
         if ((u32)mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
-            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_A, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_B, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_C, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, DRMUSICCONT_ENVFX_D, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_A, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_B, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_C, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6BD8);
             mainSetBits(GAMEBIT_DRArwingRelated0E7B, 1);
         }

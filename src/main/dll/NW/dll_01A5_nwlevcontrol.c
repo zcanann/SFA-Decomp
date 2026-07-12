@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -77,8 +78,6 @@ extern f32 lbl_803E5280;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 extern void gameTimerStop(void);
@@ -295,12 +294,12 @@ void nw_levcontrol_init(int* obj)
     if (getSaveGameLoadStatus() != 0)
     {
         envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediately(0, 0, NWLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActImmediatelyInt(0, 0, NWLEVCONTROL_ENVFX_A, 0);
     }
     else
     {
         envFxActFn_800887f8(0x1f);
-        getEnvfxAct(0, 0, NWLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActInt(0, 0, NWLEVCONTROL_ENVFX_A, 0);
     }
 
     (*gMapEventInterface)->setObjGroupStatus(7, 0, 0);

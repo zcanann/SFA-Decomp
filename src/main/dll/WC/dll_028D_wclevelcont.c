@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
@@ -267,10 +268,10 @@ void wclevelcont_update(GameObject* obj)
     {
         if ((u32)mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
         {
-            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_A, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_B, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_C, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, WCLEVELCONT_ENVFX_D, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_A, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_B, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_C, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_D, 0);
             skyFn_80088e54(0, lbl_803E6DA8);
             mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
         }

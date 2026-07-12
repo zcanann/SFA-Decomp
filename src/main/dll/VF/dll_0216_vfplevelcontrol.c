@@ -15,6 +15,7 @@
  *  - two music latches driven through SCGameBitLatch_Update.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/VF/dll_0216_vfplevelcontrol.h"
 
@@ -139,9 +140,9 @@ void VFP_LevelControl_update(GameObject* obj)
     {
         if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
-            getEnvfxActImmediately((int)obj, (int)obj, VFP_ENVFX_INTRO_0, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, VFP_ENVFX_INTRO_1, 0);
-            getEnvfxActImmediately((int)obj, (int)obj, VFP_ENVFX_INTRO_2, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_0, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_1, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_2, 0);
             skyFn_80088e54(1, lbl_803E6060);
             mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }

@@ -1,5 +1,6 @@
 /* DLL 0x0285 - SP shop objects [801E4288-801E42F8) */
 #include "main/dll/shipbattlestate_struct.h"
+#include "main/render.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
@@ -101,7 +102,6 @@ extern int gameBitIncrement(int bit);
 extern void staffToggle(GameObject* obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
@@ -343,8 +343,8 @@ void shop_update(GameObject* obj)
     if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && (obj)->unkF8 == 0)
     {
         envFxActFn_800887f8(0);
-        getEnvfxAct((int)obj, (int)obj, SPSHOP_ENVFX_A, 0);
-        getEnvfxAct((int)obj, (int)obj, SPSHOP_ENVFX_B, 0);
+        getEnvfxActInt((int)obj, (int)obj, SPSHOP_ENVFX_A, 0);
+        getEnvfxActInt((int)obj, (int)obj, SPSHOP_ENVFX_B, 0);
         (obj)->unkF8 = 1;
         return;
     }

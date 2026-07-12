@@ -13,6 +13,7 @@
  * opcodes that toggle the light and drive the model sway parameters.
  */
 #include "main/dll/dll_018C_mmshshrine.h"
+#include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
@@ -91,7 +92,6 @@ extern int fn_801C49B8(int obj);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void Music_Trigger(int id, int arg);
 extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void fn_801C4664(int obj);
 extern int randomGetRange(int lo, int hi);
@@ -299,9 +299,9 @@ void MMSH_Shrine_update(int objArg)
         if (obj->loadTriggerTimer == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct((int)obj, playerObj, MMSH_SHRINE_ENVFX_A, 0);
-            getEnvfxAct((int)obj, playerObj, MMSH_SHRINE_ENVFX_B, 0);
-            getEnvfxAct((int)obj, playerObj, MMSH_SHRINE_ENVFX_C, 0);
+            getEnvfxActInt((int)obj, playerObj, MMSH_SHRINE_ENVFX_A, 0);
+            getEnvfxActInt((int)obj, playerObj, MMSH_SHRINE_ENVFX_B, 0);
+            getEnvfxActInt((int)obj, playerObj, MMSH_SHRINE_ENVFX_C, 0);
             obj->prevPosX = obj->posX;
             obj->prevPosY = obj->posY;
             obj->prevPosZ = obj->posZ;

@@ -11,6 +11,7 @@
  * cached map-act at +0xC.
  */
 #include "main/sky_interface.h"
+#include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
@@ -36,8 +37,6 @@ extern void Music_Trigger(int id, int arg);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern void* getTrickyObject(void);
 
@@ -164,12 +163,12 @@ void cclevcontrol_init(int* obj)
     if (getSaveGameLoadStatus() != 0)
     {
         envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediately((void*)0, 0, CCLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActImmediatelyVoid((void*)0, 0, CCLEVCONTROL_ENVFX_A, 0);
     }
     else
     {
         envFxActFn_800887f8(0x1f);
-        getEnvfxAct(0, 0, CCLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActInt(0, 0, CCLEVCONTROL_ENVFX_A, 0);
     }
     *(f32*)state = 300.0f;
     state[2] = -1;

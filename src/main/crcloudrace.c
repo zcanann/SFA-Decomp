@@ -193,8 +193,8 @@ void crcloudrace_update(CrCloudRaceObject* obj)
         eventActive = mainGetBit(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
         if (eventActive != 0)
         {
-            getEnvfxActImmediately(obj, obj, CRCLOUDRACE_ENVFX_CLEAR_A, 0);
-            getEnvfxActImmediately(obj, obj, CRCLOUDRACE_ENVFX_CLEAR_B, 0);
+            getEnvfxActImmediately((GameObject*)obj, (GameObject*)obj, CRCLOUDRACE_ENVFX_CLEAR_A, 0);
+            getEnvfxActImmediately((GameObject*)obj, (GameObject*)obj, CRCLOUDRACE_ENVFX_CLEAR_B, 0);
             mainSetBits(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR, 0);
             unlockLevel(0, 0, 1);
         }

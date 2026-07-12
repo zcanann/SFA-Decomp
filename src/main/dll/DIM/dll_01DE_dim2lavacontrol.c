@@ -2,6 +2,7 @@
  * triggers env-fx transitions, drives music track changes based on player
  * carry state, and maintains the countdown-armed SCGameBitLatch triggers. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"
+#include "main/render.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
@@ -23,8 +24,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void Music_Trigger(int id, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -121,17 +120,17 @@ void dim2lavacontrol_update(int obj)
     {
         if (((GameObject*)obj)->unkF4 == 2)
         {
-            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
-            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
-            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
-            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
+            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
+            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
+            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
+            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
         }
         else
         {
-            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
-            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
-            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
-            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
+            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
+            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
+            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
+            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
         }
         ((GameObject*)obj)->unkF4 = 0;
     }

@@ -11,6 +11,7 @@
  * off trigger sequence 0 once, on the first update.
  */
 #include "main/dll/magiclightstate_struct.h"
+#include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -23,7 +24,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 /* seqId of the main proximity-triggered variant (subtype-selected L-actions) */
 #define MAGICLIGHT_SEQ_PROXIMITY 0x16b
 
-extern u32 getLActions();
 extern int randomGetRange(int lo, int hi);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -46,12 +46,12 @@ int MagicLight_SeqFn(int* obj)
     if (dist < state->triggerRadius && state->inRange == 0)
     {
         state->inRange = 1;
-        getLActions(obj, obj, (u16)state->enterAction, 0, 0, 0);
+        getLActionsInt6(obj, obj, (u16)state->enterAction, 0, 0, 0);
     }
     else if (dist > 10.0f + state->triggerRadius && state->inRange != 0)
     {
         state->inRange = 0;
-        getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
+        getLActionsInt6(obj, obj, (u16)state->leaveAction, 0, 0, 0);
     }
     return 0;
 }
@@ -77,7 +77,7 @@ void MagicLight_free(GameObject* obj)
     {
         if ((s8)state->inRange != 0)
         {
-            getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
+            getLActionsInt6(obj, obj, (u16)state->leaveAction, 0, 0, 0);
         }
         (*gExpgfxInterface)->freeSource2((u32)obj);
     }

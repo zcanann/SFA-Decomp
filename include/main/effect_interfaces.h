@@ -3,6 +3,8 @@
 
 #include "global.h"
 
+struct GameObject;
+
 typedef void (*EffectSpawnObjectFn)(void *obj, int effectId, void *params, int mode,
                                     int modelId, void *extraArg);
 typedef void (*EffectOnMapSetupFn)(void);
@@ -215,7 +217,7 @@ STATIC_ASSERT(offsetof(ModgfxInterface, spawnSequence) == 0x50);
 STATIC_ASSERT(offsetof(ModgfxInterface, addSequenceFlags) == 0x54);
 STATIC_ASSERT(offsetof(ModgfxInterface, getLastSpawnHandle) == 0x58);
 
-typedef void (*SkyEnvfxUpdateFn)(int a, int b, void *entry, int d, u16 idx);
+typedef void (*SkyEnvfxUpdateFn)(struct GameObject* source, struct GameObject* target, void* entry, int flags, u16 idx);
 typedef void (*SkyOnMapSetupFn)(void);
 typedef void (*SkyRunFn)(void);
 typedef void (*SkyApplyFogColorFn)(int slot);
@@ -241,7 +243,8 @@ STATIC_ASSERT(offsetof(Sky2Interface, applyTextColor) == 0x18);
 
 extern Sky2Interface **gSky2Interface;
 
-typedef void (*CloudActionUpdateFn)(int a, int b, void *entry, int d, u16 idx);
+typedef void (*CloudActionUpdateFn)(struct GameObject* source, struct GameObject* target, void* entry, int flags,
+                                    u16 idx);
 typedef void (*CloudActionOnMapSetupFn)(void);
 typedef void (*CloudActionScrollTextureFn)(void);
 typedef void (*CloudActionRenderFn)(int a, int b, int c, int d);

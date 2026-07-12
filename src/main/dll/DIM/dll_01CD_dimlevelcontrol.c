@@ -4,6 +4,7 @@
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and
  * initial level unlock. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/render.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
@@ -59,8 +60,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_DAY   0xc5
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
-extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
@@ -148,17 +147,17 @@ void dim_levelcontrol_update(GameObject *obj)
         {
             if ((obj)->unkF4 == 2)
             {
-                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
-                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediatelyInt(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActImmediatelyInt(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediatelyInt(0, 0, DIMLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediatelyInt(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
-                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActInt(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActInt(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActInt(0, 0, DIMLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActInt(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
             }
         }
         (obj)->unkF4 = 0;
@@ -285,4 +284,3 @@ void dim_levelcontrol_init(GameObject *obj)
     (obj)->objectFlags |= (DIMLEVELCONTROL_OBJFLAG_HIDDEN | DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     unlockLevel(0, 0, 1);
 }
-

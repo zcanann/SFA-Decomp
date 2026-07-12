@@ -11,6 +11,7 @@
  * 0x385/0x384) and primes the ambient env fx by save-load status.
  */
 #include "main/game_object.h"
+#include "main/render.h"
 #include "main/mapEvent.h"
 #include "main/object_descriptor.h"
 #include "main/objseq.h"
@@ -70,7 +71,6 @@ extern int getSaveGameLoadStatus(void);
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void fn_80138908(int* tricky, int mode);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 int linkb_levcontrol_getExtraSize(void)
 {
@@ -276,7 +276,7 @@ void linkb_levcontrol_init(int* obj)
         {
             envFxActFn_800887f8(0x1f);
         }
-        getEnvfxAct(0, 0, LINKBLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActInt(0, 0, LINKBLEVCONTROL_ENVFX_A, 0);
     }
     state->music = 0;
 }

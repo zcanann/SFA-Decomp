@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/render.h"
 #include "main/model_engine.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
@@ -191,7 +192,6 @@ extern f32 lbl_803E67A8;
 extern int lbl_803DDD40;
 extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
 extern int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6A2C;

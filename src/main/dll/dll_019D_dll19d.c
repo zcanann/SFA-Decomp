@@ -1,5 +1,6 @@
 /* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CC998–0x801CCFA4. */
 #include "main/dll/torch1CD.h"
+#include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -32,7 +33,6 @@ typedef struct Dll19DState
     u8 pad37[0x38 - 0x37];
 } Dll19DState;
 
-extern u32 getLActions();
 
 extern f32 lbl_803E51B8;
 
@@ -50,7 +50,7 @@ void dll_19D_free(GameObject *obj)
     register int state = *(int*)&((GameObject*)self)->extra;
     if ((((Dll19DState*)state)->flags & 2) == 0)
     {
-        getLActions(self, self, 1, 0, 0, 0);
+        getLActionsInt6(self, self, 1, 0, 0, 0);
         ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 0x2);
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
@@ -128,7 +128,7 @@ void dll_19D_update(GameObject* obj)
     {
         if ((((Dll19DState*)state)->flags & 2) == 0)
         {
-            getLActions(self, self, 1, 0, 0, 0);
+            getLActionsInt6(self, self, 1, 0, 0, 0);
             ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 2);
         }
         zero = lbl_803E51B8;
@@ -198,15 +198,15 @@ void dll_19D_init(GameObject* obj)
 
     if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 1)
     {
-        getLActions(self, self, 0x203, 0, 0, 0);
+        getLActionsInt6(self, self, 0x203, 0, 0, 0);
     }
     else if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 2)
     {
-        getLActions(self, self, 0x204, 0, 0, 0);
+        getLActionsInt6(self, self, 0x204, 0, 0, 0);
     }
     else
     {
-        getLActions(self, self, 0x201, 0, 0, 0);
+        getLActionsInt6(self, self, 0x201, 0, 0, 0);
     }
 }
 

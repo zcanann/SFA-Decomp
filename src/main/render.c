@@ -95,7 +95,7 @@ void render_copyPackedU64Head(u64* dst, u32 packed)
 }
 #pragma dont_inline reset
 
-int getEnvfxActImmediately(int a, int b, u16 idx, int d)
+int getEnvfxActImmediately(struct GameObject* a, struct GameObject* b, u16 idx, int d)
 {
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
@@ -125,7 +125,7 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d)
     return 0;
 }
 
-int getEnvfxAct(int a, int b, u16 idx, int d)
+int getEnvfxAct(struct GameObject* a, struct GameObject* b, u16 idx, int d)
 {
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);

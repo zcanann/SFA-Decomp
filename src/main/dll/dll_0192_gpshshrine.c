@@ -1,5 +1,6 @@
 /* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
+#include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -301,7 +302,6 @@ void gpsh_shrine_update(GameObject *obj)
     extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
     extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
     extern void fn_801C70F0(int obj);
-    extern int getEnvfxAct(int a, int b, u16 idx, int d);
     extern void* Obj_GetPlayerObject(void);
     int count;
     int data = *(int*)&(obj)->extra;
@@ -364,9 +364,9 @@ void gpsh_shrine_update(GameObject *obj)
             if ((obj)->unkF4 == 0)
             {
                 skyFn_80088c94(7, 1);
-                getEnvfxAct((int)obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
-                getEnvfxAct((int)obj, (int)player, GPSH_SHRINE_ENVFX_B, 0);
-                getEnvfxAct((int)obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
+                getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
+                getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_B, 0);
+                getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
             }
         }
         fn_801C70F0((int)obj);

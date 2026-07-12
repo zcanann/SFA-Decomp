@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/render.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
@@ -73,7 +74,6 @@ typedef struct ObjCurveKey
 
 extern void* ObjList_FindObjectById(int id);
 extern void** ObjList_GetObjects(void* unused, int* count);
-extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void ObjSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void* entries, int count);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
@@ -1467,21 +1467,21 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         break;
     case 48:
         mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
         break;
     case 49:
         mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B0, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B1, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B2, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B0, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B1, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_B2, 0);
         break;
     case 50:
         mainSetBits(GAMEBIT_ENV_isOutdoor, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
-        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A0, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A1, 0);
+        getEnvfxActVoid(Obj_GetPlayerObject(), Obj_GetPlayerObject(), OBJSEQ_ENVFX_A2, 0);
         envFxFn_800887cc();
         break;
     }
@@ -2623,7 +2623,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             switch ((*(s16*)(cmd + 2) >> 12) & 0xf)
             {
             case 2:
-                getEnvfxAct(activeObj, activeObj, *(s16*)(cmd + 2) & 0xfff, 0);
+                getEnvfxActVoid(activeObj, activeObj, *(s16*)(cmd + 2) & 0xfff, 0);
                 break;
             case 6:
                 warpToMap(*(s16*)(cmd + 2) & 0xfff, 0);
@@ -2675,7 +2675,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             }
             break;
         case 2:
-            getEnvfxAct(activeObj, activeObj, *(s16*)(cmd + 2) & 0xfff, 0);
+            getEnvfxActVoid(activeObj, activeObj, *(s16*)(cmd + 2) & 0xfff, 0);
             break;
         case 6:
             if (flag8 != 0)

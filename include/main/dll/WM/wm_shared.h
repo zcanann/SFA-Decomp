@@ -10,6 +10,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
+#include "main/render.h"
 
 extern u64 FUN_80006724();
 extern u64 FUN_80006728();
@@ -276,8 +277,6 @@ extern void lockLevel(int mapDir, int locked);
 extern void warpToMap(int mapId, int transition);
 extern void skyFn_80088c94(int skyId, int enabled);
 extern void setDrawCloudsAndLights(int enabled);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern void getEnvfxActImmediately(int obj, int target, int effectId, int flags);
 extern void Rcp_SetSpiritVisionEnabled(int enabled);
 extern void setAButtonIcon(int iconId);
 extern int getSkyColorFn_80088e08(int skyId);
