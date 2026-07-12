@@ -2600,11 +2600,11 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     }
 }
 
-u8 gIntersectSegmentTypeTable[0x424];
+u16 gIntersectSegmentTypeTable[0x212];
 
 int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int submode)
 {
-    u8* base = gIntersectSegmentTypeTable;
+    u8* base = (u8*)gIntersectSegmentTypeTable;
     TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
     TrackBlockDescriptor* end;
     u8* ptr;
@@ -4810,7 +4810,7 @@ void trackIntersect(void)
 
     for (i = 0; i < 40; i++)
     {
-        ((u16*)gIntersectSegmentTypeTable)[i] = 0xffff;
+        gIntersectSegmentTypeTable[i] = 0xffff;
     }
 
     prev = -1;
@@ -4826,11 +4826,11 @@ void trackIntersect(void)
         {
             u16 v = i;
             int ti = t * 2;
-            ((u16*)gIntersectSegmentTypeTable)[ti] = v;
+            gIntersectSegmentTypeTable[ti] = v;
             if (prev != -1)
             {
                 int pi = prev * 2;
-                ((u16*)gIntersectSegmentTypeTable)[pi + 1] = v;
+                gIntersectSegmentTypeTable[pi + 1] = v;
             }
             prev = t;
         }
@@ -4838,7 +4838,7 @@ void trackIntersect(void)
     if (prev != -1)
     {
         int pi = prev * 2;
-        ((u16*)gIntersectSegmentTypeTable)[pi + 1] = gIntersectLineCount;
+        gIntersectSegmentTypeTable[pi + 1] = gIntersectLineCount;
     }
     lbl_803DCF44 = 1;
 }
@@ -4909,8 +4909,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         if ((s8)seg != -1)
         {
             int idx = (s8)seg * 2;
-            start = ((u16*)gIntersectSegmentTypeTable)[idx];
-            end = ((u16*)gIntersectSegmentTypeTable)[idx + 1];
+            start = gIntersectSegmentTypeTable[idx];
+            end = gIntersectSegmentTypeTable[idx + 1];
         }
         else
         {
