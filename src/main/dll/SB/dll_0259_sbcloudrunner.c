@@ -22,6 +22,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/objhits.h"
@@ -154,8 +155,6 @@ extern f32 lbl_803E5C74;
 extern const f32 lbl_803E5CBC;
 extern const f32 lbl_803E5CC0;
 
-extern void ObjGroup_RemoveObject();
-extern void ObjGroup_AddObject();
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
 extern void objSetMtxFn_800412d4(u32 x);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
@@ -515,7 +514,7 @@ void SB_CloudRunner_free(GameObject* obj)
     }
     Resource_Release(*(void**)&state->resource);
     state->resource = 0;
-    ObjGroup_RemoveObject(obj, SBCLOUDRUNNER_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, SBCLOUDRUNNER_OBJGROUP);
 }
 
 void SB_CloudRunner_init(GameObject* obj)
@@ -531,7 +530,7 @@ void SB_CloudRunner_init(GameObject* obj)
     state->texture1 = textureLoadAsset(3085);
     *(void**)&state->resource = Resource_Acquire(121, 1);
     ObjHits_SetTargetMask((int)obj, 1);
-    ObjGroup_AddObject(obj, SBCLOUDRUNNER_OBJGROUP);
+    ObjGroup_AddObject((int)obj, SBCLOUDRUNNER_OBJGROUP);
 }
 
 void SB_CloudRunner_update(GameObject* obj)

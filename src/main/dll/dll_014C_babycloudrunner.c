@@ -16,6 +16,7 @@
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/obj_placement.h"
@@ -123,8 +124,6 @@ extern f32 lbl_803E4254;
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -150,7 +149,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(def->initialYaw << 8);
-    ObjGroup_AddObject(obj, BABYCLOUDRUNNER_OBJGROUP);
+    ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     sub = ((GameObject*)obj)->extra;
     sub->unkB0 = 0;
     sub->unkB4 = 0;
@@ -171,7 +170,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags22C = (u8)(sub->flags22C & ~1);
         Obj_RemoveFromUpdateList(obj);
-        ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
+        ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     }
     else
     {
@@ -190,7 +189,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
             }
             sub->curveSpeed = lbl_803E4258;
             sub->mutterSfxTable = &gBabyCloudRunnerMutterSfxTable;
-            ObjGroup_AddObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+            ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
         }
         ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
     }
@@ -347,8 +346,8 @@ int babycloudrunner_setScale(int* obj)
 
 void babycloudrunner_free(int* obj)
 {
-    ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
-    ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+    ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
 }
 
 /* Pick the burrow/surface move from the vertical speed, clamp the playback
@@ -540,8 +539,8 @@ void babycloudrunner_update(int* obj)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
         Obj_RemoveFromUpdateList(obj);
-        ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
-        ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
+        ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+        ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     }
     if (sub->runnerState == 2 && mainGetBit(0x66) != 0)
     {
@@ -562,8 +561,8 @@ void babycloudrunner_update(int* obj)
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             sub->flags22C &= ~1;
             Obj_RemoveFromUpdateList(obj);
-            ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
-            ObjGroup_RemoveObject(obj, BABYCLOUDRUNNER_OBJGROUP);
+            ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+            ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         else

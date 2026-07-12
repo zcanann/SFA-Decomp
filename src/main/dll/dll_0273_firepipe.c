@@ -30,6 +30,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -52,8 +53,6 @@ extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
 extern void ObjHits_EnableObject(FirePipeObject* obj);
 extern void ObjHits_DisableObject(FirePipeObject* obj);
 extern int ObjHits_GetPriorityHit(GameObject* obj, int a, int b, int c);
-extern void ObjGroup_RemoveObject();
-extern void ObjGroup_AddObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
 extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32* p);
@@ -450,7 +449,7 @@ void firepipe_free(FirePipeObject* obj)
     FirePipeExtra* extra;
 
     extra = obj->extra;
-    ObjGroup_RemoveObject(obj, FIREPIPE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, FIREPIPE_OBJGROUP);
     i = 0;
     iter = extra->effectObjs;
     while (i < (int)(u32)extra->effectCount)
@@ -617,7 +616,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         ((FirePipeBitFlags*)&extra->flags)->glowEnabled = flagValue;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
-        ObjGroup_AddObject(obj, FIREPIPE_OBJGROUP);
+        ObjGroup_AddObject((int)obj, FIREPIPE_OBJGROUP);
         ((FirePipeBitFlags*)&extra->flags)->childEmitEnabled = 0;
         extra->glowLight = 0;
     }
