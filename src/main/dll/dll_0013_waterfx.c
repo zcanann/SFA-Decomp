@@ -764,7 +764,9 @@ void fn_80095164(WaterParticle* s)
         f32 sc;
         f32 fade;
         f32 alpha;
-        ph = (ph + bandOfs) * life;
+        f32 phb;
+        phb = ph + bandOfs;
+        ph = phb * life;
         dd = ph - 0.5f;
         fade = -(lbl_803DF2F0 * (dd * dd) - 1.0f);
         lim = lbl_803DF2F4 + bandOfs;
