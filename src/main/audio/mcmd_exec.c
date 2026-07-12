@@ -232,6 +232,22 @@ static inline s16 varGetSigned(McmdVoiceState* state, u32 useExCtrl, u8 index)
     return (s16)varGet32(state, useExCtrl, index);
 }
 
+static inline u32 mcmdVarGet32Legacy(McmdVoiceState* state, u32 useExCtrl, u32 index)
+{
+    if (useExCtrl != 0)
+    {
+        return (u16)inpGetExCtrl(state, index);
+    }
+    index &= 0x1f;
+    if (index < 0x10)
+    {
+        return state->localRegs[index];
+    }
+    return SYNTH_GLOBAL_REG(index);
+}
+
+#define varGet32Legacy(state, useExCtrl, index) mcmdVarGet32Legacy((state), (useExCtrl), (index))
+
 /*
  * Write a synth register, routing high registers to the EX controller bank.
  */
@@ -362,13 +378,13 @@ static inline u32 macPostMessage(u32 vid, u32 mesg)
  */
 void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u32 value[1];
+    u32 value;
     u32 targetInstrument;
     u8 i;
     McmdVoiceState* voiceState;
     u32 targetVoice;
 
-    value[0] = varGet32(state, 0, (args->value >> 8) & 0xff);
+    value = varGet32Legacy(state, 0, (args->value >> 8) & 0xff);
 
     if (((args->flags >> 8) & 0xff) == 0)
     {
@@ -380,7 +396,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
                 if (((McmdVoiceState*)synthVoice)[i].macroBase != 0 &&
                     targetInstrument == ((McmdVoiceState*)synthVoice)[i].instrumentKey)
                 {
-                    macPostMessage(((McmdVoiceState*)synthVoice)[i].vidListNode->id, value[0]);
+                    macPostMessage(((McmdVoiceState*)synthVoice)[i].vidListNode->id, value);
                 }
             }
         }
@@ -388,13 +404,13 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         {
             if (synthMessageCallback != 0)
             {
-                synthMessageCallback(state->vidListNode->id, value[0]);
+                synthMessageCallback(state->vidListNode->id, value);
             }
         }
     }
     else
     {
-        macPostMessage(varGet32(state, 0, args->value), value[0]);
+        macPostMessage(varGet32Legacy(state, 0, args->value), value);
     }
 }
 
