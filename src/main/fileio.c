@@ -18,6 +18,8 @@
 #define DVD_STATE_WRONG_DISK  6
 #define DVD_STATE_RETRY       11
 
+DVDCommandBlock lbl_80339950;
+
 void dvdCheckError(void)
 {
     int msgId = 0xffff;

@@ -47,6 +47,7 @@ main/pad.c:
 main/fileio.c:
 	.text       start:0x80015624 end:0x80015BC8
 	.data       start:0x802C6E60 end:0x802C6E94
+	.bss        start:0x80339950 end:0x80339980
 
 main/gametext.c:
 	.text       start:0x80015BC8 end:0x800173E4
