@@ -9,11 +9,14 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
 #include "main/dll/WM/dll_0204_wmtorch.h"
 
 /* slot 1 of the acquired effect resource's vtable: attach the flame */

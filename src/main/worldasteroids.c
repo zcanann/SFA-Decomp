@@ -1,5 +1,6 @@
 #include "main/worldasteroids.h"
-#include "main/engine_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 
 extern f32 lbl_803E65D0;
 extern f32 lbl_803E65E0;

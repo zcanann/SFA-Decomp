@@ -7,7 +7,7 @@
  * DLL exists purely to keep the object id slot wired up.
  */
 #include "main/dll/dll_66.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00BA_projlightning6.h"
 

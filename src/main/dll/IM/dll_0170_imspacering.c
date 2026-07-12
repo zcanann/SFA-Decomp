@@ -9,7 +9,8 @@
  * the whole swarm tracks the spacecraft.
  */
 #include "main/game_object.h"
-#include "main/engine_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/dll/IM/dll_0170_imspacering.h"
 
 extern GameObject* lbl_803DDB48;

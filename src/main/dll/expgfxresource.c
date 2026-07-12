@@ -11,8 +11,9 @@
  * lowest-scoring entry and reloads. A texture whose refCount has reached
  * EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT is treated as busy and rejected.
  */
-#include "main/engine_shared.h"
 #include "main/expgfx_internal.h"
+#include "main/frame_timing.h"
+#include "main/object_api.h"
 #include "main/texture.h"
 
 void expgfx_updateResourceEntries(int unused)

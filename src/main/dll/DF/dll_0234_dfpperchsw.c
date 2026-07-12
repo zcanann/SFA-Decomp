@@ -5,7 +5,7 @@
  * statue1 descriptor (gDfpstatue1ObjDescriptor) as a sibling object.
  */
 #include "main/dll/crate2.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 
 int DFP_PerchWitch_getExtraSize(void)
 {

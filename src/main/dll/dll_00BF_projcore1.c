@@ -6,7 +6,7 @@
  * release/initialise lifecycle hooks are empty stubs.
  */
 #include "main/dll/dll_80.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00BF_projcore1.h"
 #include "main/dll/dll_00C0_projcore2.h"

@@ -7,7 +7,7 @@
  * kept so the object descriptor / DLL loader still resolves.
  */
 #include "main/dll/dll_72.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00B7_projship1.h"
 

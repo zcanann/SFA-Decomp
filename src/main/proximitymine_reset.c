@@ -1,7 +1,7 @@
 #include "main/proximitymine.h"
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
-#include "main/engine_shared.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 

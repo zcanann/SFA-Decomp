@@ -6,7 +6,7 @@
  * empty stubs.
  */
 #include "main/dll/dll_7D.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00BF_projcore1.h"
 

@@ -11,7 +11,7 @@
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/objhits.h"
-#include "main/engine_shared.h"
+#include "main/frame_timing.h"
 
 extern f32 lbl_803E31D8;
 extern f32 lbl_803E31DC;

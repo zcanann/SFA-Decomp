@@ -2,7 +2,7 @@
 
 #pragma exceptions on
 #include "main/audio/dsp_voice.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSCache.h"
 
 extern u8 lbl_803CC1E0[];
 extern u8* dspVoice;

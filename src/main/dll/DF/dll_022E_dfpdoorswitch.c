@@ -5,7 +5,7 @@
  * extra state.
  */
 #include "main/dll/anim.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 
 int doorswitch_getExtraSize(void)
 {

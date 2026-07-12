@@ -16,9 +16,14 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/object_api.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/resource.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
 
 #define SBMINIFIRE_PARTFX 0xa0
 

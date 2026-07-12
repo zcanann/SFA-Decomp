@@ -7,7 +7,7 @@
  * The slot is kept so the DLL id stays valid.
  */
 #include "main/dll/dll_66.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 
 /* descriptor/ptr table auto 0x80319410-0x80319430.
  * Union u64 member forces the retail 8-byte alignment (table follows an odd-length

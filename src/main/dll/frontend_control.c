@@ -14,8 +14,12 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll/FRONT/frontend_control.h"
-#include "main/engine_shared.h"
+#include "main/gametext.h"
+#include "main/pad.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "dolphin/pad.h"
 
 #define CHEAT_SEQUENCE_LEN  5
 #define CHEAT_INPUT_TIMEOUT 0xF

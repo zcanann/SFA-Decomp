@@ -12,7 +12,7 @@
  * returns 0.
  */
 #include "main/dll/dll_64.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 
 extern void projquakeshock_doUnsupported();
 extern void projquakeshock_release();

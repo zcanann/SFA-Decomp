@@ -8,7 +8,8 @@
  * was removed.
  */
 #include "main/dll/modgfx67.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
+#include "types.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

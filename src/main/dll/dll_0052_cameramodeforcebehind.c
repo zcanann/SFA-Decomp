@@ -11,9 +11,11 @@
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
+#include "main/frame_timing.h"
 #include "main/object_transform.h"
-#include "main/engine_shared.h"
 #include "main/dll/dll_0052_cameramodeforcebehind.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 extern f32 gCamForceBehindPi;                 /* binary-angle -> radians scale (numerator) */
 extern f32 gCamForceBehindBamsToRadDivisor;   /* binary-angle -> radians divisor (half-circle = 0x8000) */

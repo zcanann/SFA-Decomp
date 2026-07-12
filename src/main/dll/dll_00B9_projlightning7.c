@@ -9,7 +9,7 @@
  * (projdummy, projmagicstream, projroombeam, projlightning1..7).
  */
 #include "main/dll/dll_66.h"
-#include "main/engine_shared.h"
+#include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00B9_projlightning7.h"
 #include "main/dll/dll_00BA_projlightning6.h"
