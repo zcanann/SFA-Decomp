@@ -29,6 +29,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_0273_firepipe.h"
@@ -56,7 +57,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
-extern void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec);
 extern int objIsFrozen(FirePipeObject* obj);
 extern int fn_80080150(int timer);
 extern int timerCountDown(int timer);
@@ -305,7 +305,7 @@ void firepipe_updateState(FirePipeObject* obj)
     {
         if (((((GameObject*)obj)->objectFlags & FIREPIPE_OBJFLAG_RENDERED) != 0) || (obj->callback != NULL))
         {
-            fn_80098B18(obj, lbl_803E6B70 * mapData->scale, (u8)extra->effectType, 0, 0, 0);
+            fn_80098B18Legacy(obj, lbl_803E6B70 * mapData->scale, (u8)extra->effectType, 0, 0, 0);
         }
     }
 

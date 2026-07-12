@@ -4,6 +4,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/effect_interfaces.h"
@@ -37,7 +38,6 @@ extern const f32 lbl_803E2F88;
 extern const f32 lbl_803E2F98;
 extern const f32 lbl_803E2F9C;
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern const f32 lbl_803E2FC8;
 extern const f32 lbl_803E2FCC;
 extern const f32 lbl_803E2FD0;
@@ -607,11 +607,11 @@ void tumbleweed_updateEffects(GameObject *obj)
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
         if ((int)(u8)(++state->hitPulseCounter) % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
         {
-            fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 1, 0, 0, 0);
+            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 1, 0, 0, 0);
         }
         else
         {
-            fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 1, TUMBLEWEED_HIT_PULSE_ALT_STYLE, 0, 0);
+            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 1, TUMBLEWEED_HIT_PULSE_ALT_STYLE, 0, 0);
         }
         Sfx_KeepAliveLoopedObjectSound((int)obj, TUMBLEWEED_SFX_HIT_LOOP);
     }

@@ -63,7 +63,6 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int getTrickyObject(void);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -238,7 +237,7 @@ void KaldaChompSpit_update(int obj)
         {
             if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
             {
-                fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
+                fn_80098B18Legacy(obj, lbl_803E30E0, 1, 0, 0, 0);
             }
             else
             {

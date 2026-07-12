@@ -16,6 +16,8 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#define OBJFX_FN_80098B18_BYTE_ARGS_LEGACY
+#include "main/objfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
@@ -115,7 +117,6 @@ typedef struct LightSourceFlagByte
 void lightsource_update(GameObject* obj)
 {
 
-    extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32* vec);
     LightSourceState* b;
     LightGlow* t;
     s16 sum;

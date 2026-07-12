@@ -15,6 +15,7 @@
  * hits off).
  */
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
@@ -32,7 +33,6 @@
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Obj_RemoveFromUpdateList(int obj);
-extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern void* getTrickyObject(void);
 
 int FlammableVine_getExtraSize(void)
@@ -206,7 +206,8 @@ checked_vine_use:
         {
             pulseStyle = 0;
         }
-        fn_80098B18((int)obj, 0.65f * (state->burnIntensity * (obj)->anim.rootMotionScale), 3, 0, pulseStyle, 0);
+        fn_80098B18Legacy((int)obj, 0.65f * (state->burnIntensity * (obj)->anim.rootMotionScale), 3, 0, pulseStyle,
+                          0);
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
     }
 }

@@ -10,6 +10,7 @@
  * fades alpha back to 0. It only renders while active.
  */
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0157_spiritdoorspirit.h"
@@ -20,7 +21,6 @@ extern f32 lbl_803DBE78;
 
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 int spiritdoorspirit_getExtraSize(void)
 {
@@ -78,7 +78,7 @@ void spiritdoorspirit_update(int* obj)
     }
     else
     {
-        fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
+        fn_80098B18Legacy((int)obj, lbl_803DBE78, 5, 0, 0, 0);
         state->active = active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active == 0)
         {

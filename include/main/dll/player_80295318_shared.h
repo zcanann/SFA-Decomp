@@ -762,7 +762,6 @@ extern int lbl_803DC708;
 extern int lbl_803DC70C;
 extern int lbl_803DC720;
 extern int lbl_803DC724;
-extern void fn_80098B18(f32 a, int obj, int b, int c, int d, void* out);
 extern f32 lbl_803E81C4;
 extern f32 lbl_803E8210;
 extern f32 lbl_803E81C8;

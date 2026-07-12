@@ -14,6 +14,7 @@
 #include "main/dll/imanimspacecraftstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/gamebits.h"
@@ -67,7 +68,6 @@ extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-extern void fn_80098B18(int obj, f32 scale, int type, int count, int mode, int vec);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
@@ -231,7 +231,7 @@ void DIMLogFire_update(GameObject* obj)
         vec.x = lbl_803E4828;
         vec.y = lbl_803E482C;
         vec.z = lbl_803E4828;
-        fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
+        fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:

@@ -289,7 +289,6 @@ extern f32 lbl_803E7388;
 extern f32 lbl_803E7390;
 extern f32 lbl_803E7394;
 extern f32 lbl_803E7398;
-extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
 extern void lightSetField4D(void* light, int v);
 extern f32 lbl_803E73A8;
 extern f32 lbl_803E73AC;

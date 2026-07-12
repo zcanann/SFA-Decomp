@@ -1,5 +1,6 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
@@ -15,7 +16,6 @@ extern void ModelLightStruct_free(void* effect);
 
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
-extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int h, int v);
 extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
@@ -154,7 +154,7 @@ void CampFire_update(int obj)
     params[0] = 0.0f;
     params[1] = 10.0f;
     params[2] = 0.0f;
-    fn_80098B18(obj, 1.4f * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
+    fn_80098B18Legacy(obj, 1.4f * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
     {
         u8* light = state->light;
         if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)

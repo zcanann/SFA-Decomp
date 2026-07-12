@@ -13,6 +13,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -49,7 +50,6 @@ typedef enum ShBeaconMode
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern int loadObjectAtObject(int obj, int* setup);
 
 extern f32 lbl_803DDBF8;
@@ -63,7 +63,7 @@ int sh_beacon_SeqFn(GameObject* obj)
         ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer - 20.0f;
         if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
-            fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 0, 2, 0, 0);
+            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 0, 2, 0, 0);
         }
     }
     return 0;
@@ -135,7 +135,7 @@ void sh_beacon_update(GameObject* obj)
             ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer - 20.0f;
             if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
             {
-                fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 0, 2, 0, 0);
+                fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 0, 2, 0, 0);
             }
         }
         break;
@@ -161,7 +161,7 @@ void sh_beacon_update(GameObject* obj)
             if (((ShBeaconState*)state)->burstTimer > 2.0f)
             {
                 ((ShBeaconState*)state)->burstTimer = ((ShBeaconState*)state)->burstTimer - 2.0f;
-                fn_80098B18((int)obj, (obj)->anim.rootMotionScale, 2, mode, 0, 0);
+                fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 2, mode, 0, 0);
             }
         }
         break;
@@ -204,7 +204,7 @@ void sh_beacon_update(GameObject* obj)
         ((ShBeaconState*)state)->fadeTimer = ((ShBeaconState*)state)->fadeTimer - timeDelta;
         if (((obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
-            fn_80098B18((int)obj, 0.6f * (obj)->anim.rootMotionScale, 3, 0, 0, 0);
+            fn_80098B18Legacy((int)obj, 0.6f * (obj)->anim.rootMotionScale, 3, 0, 0, 0);
         }
         if ((((ShBeaconState*)state)->fadeTimer <= 0.0f) && (((ShBeaconState*)state)->mode == SH_BEACON_MODE_IGNITING))
         {

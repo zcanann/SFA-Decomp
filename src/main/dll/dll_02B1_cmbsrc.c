@@ -389,7 +389,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
                 }
             }
             vec[2] = *(f32*)&lbl_803E7360;
-            fn_80098B18((int)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode, vec);
+            fn_80098B18Legacy((int)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode, vec);
             break;
         }
     }

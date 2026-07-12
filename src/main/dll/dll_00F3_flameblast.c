@@ -10,6 +10,7 @@
  * Tricky is gone or its free flag (state.freeRequested) is set.
  */
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
@@ -42,7 +43,6 @@ typedef struct FlameblastPlacement
 
 #define FLAMEBLAST_OBJFLAG_RENDERED 0x800
 
-extern void fn_80098B18(int obj, f32 f, int a, int b, int c, int d);
 extern int fn_80138F90(void);
 
 int fn_8017805C(GameObject* obj, FlameblastState* state);
@@ -109,7 +109,7 @@ void flameblast_render(GameObject* obj)
     color[0] = 0.0f;
     color[1] = 1.0f;
     color[2] = 0.0f;
-    fn_80098B18((int)obj, scale, 2, 0, 0, (int)color);
+    fn_80098B18Legacy((int)obj, scale, 2, 0, 0, (int)color);
 }
 
 void flameblast_update(GameObject* obj)

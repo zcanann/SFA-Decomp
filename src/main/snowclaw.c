@@ -126,7 +126,6 @@ extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int timerCountDown(void* timer);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
-extern void fn_80098B18(void* obj, f32 scale, int type, int mode, int arg5, f32* vec);
 extern u32 gSnowClawPulseTable[8];
 extern s32 lbl_8032A340[];
 extern int lbl_803DC220;
@@ -690,7 +689,8 @@ void snowclaw_update(GameObject* obj)
             pulseVec[0] = lbl_803E66F0;
             pulseVec[1] = lbl_803DC21C;
             pulseVec[2] = lbl_803E66F0;
-            fn_80098B18(obj, lbl_803DC218, (u8)pulseTypes[pulseIndex], (u8)pulseModes[pulseIndex], 0, pulseVec);
+            fn_80098B18Legacy(obj, lbl_803DC218, (u8)pulseTypes[pulseIndex], (u8)pulseModes[pulseIndex], 0,
+                              pulseVec);
         }
     }
 }
