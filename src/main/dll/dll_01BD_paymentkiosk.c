@@ -26,7 +26,6 @@
 extern int Obj_GetPlayerObject(void);
 extern int playerGetMoney(int player);
 extern void playerAddMoney(int obj, int amount);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
 extern void objRenderFn_80041018(int obj);
 

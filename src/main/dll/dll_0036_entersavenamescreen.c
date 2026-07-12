@@ -14,9 +14,6 @@
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int a);
-extern void gameTextShowStr(void* str, int id, int x, int y);
 extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
 
@@ -75,7 +72,7 @@ void EnterSaveNameScreen_render(void)
     for (i = 0; i < gEnterSaveNameLength; i++)
     {
         buf[0] = (&gEnterSaveNameBuffer)[i];
-        gameTextShowStr(buf, i + 0x2a, 0, 0);
+        gameTextShowStr((char*)buf, i + 0x2a, 0, 0);
     }
 
     gEnterSaveNameColorAnimTime = gEnterSaveNameColorAnimTime + timeDelta;

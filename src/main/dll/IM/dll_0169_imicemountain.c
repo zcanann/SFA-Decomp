@@ -61,7 +61,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(GameObject* obj, int* extra);
 extern void fn_801AC01C(GameObject* obj);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 

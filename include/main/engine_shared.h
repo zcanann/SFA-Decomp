@@ -10,6 +10,7 @@
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
+#include "main/gametext.h"
 #include "main/newclouds.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
@@ -44,79 +45,6 @@ typedef struct PadStatusLite {
     u8 analogB;
     s8 error;
 } PadStatusLite;
-typedef struct {
-    u16 textSeqId;
-    u16 dirId;
-    u16 objSeqId;
-} TaskTextEntry;
-typedef struct {
-    u16 id;
-    u8 pad[0xa];
-} GlyphEntry;
-typedef struct {
-    int glyphs;
-    GlyphEntry* entries;
-    int glyphCount;
-    int count;
-    u8 pad[0xc];
-    int mode;
-} GameTextFont;
-typedef struct {
-    u16 identifier;
-    u16 count;
-    u8 slotHint;
-    u8 alignH;
-    u8 alignV;
-    u8 language;
-    char **strings;
-} GameTextDef;
-typedef struct {
-    u8 pad0[8];
-    u16 f08;
-    u16 f0a;
-    f32 f0c;
-    u8 f10;
-    u8 f11;
-    u8 f12;
-    u8 pad13;
-    s16 f14;
-    s16 f16;
-    s16 f18;
-    s16 f1a;
-    u8 pad1c[4];
-} TextSlot;
-typedef struct {
-    char* name;
-    u8 sizeIdx;
-    u8 pad5[3];
-} LanguageName;
-typedef struct {
-    u8 pad0[0xa];
-    u16 lineHeight;
-    u8 padc[4];
-} FontSizeEntry;
-typedef struct {
-    u32 key;
-    u8 pad4[4];
-    s8 f8;
-    s8 f9;
-    u8 padA[2];
-    u8 fC;
-    u8 padD;
-    u8 lang;
-    u8 padF;
-} MeasGlyph;
-typedef struct {
-    u32 key;
-    u32 val;
-} SpecialGlyph;
-typedef struct {
-    int active;
-    int charIndex;
-    int f8;
-    int fC;
-    int f10;
-} TextDisplayState;
 
 extern s32 gAttractMovieState;
 extern f32 lbl_803DE5F0;
@@ -204,16 +132,12 @@ extern u8 gDvdCoverOpenErrorActive;
 extern int gDvdLastDriveStatus;
 extern u8 lbl_80339950[];
 extern void stopRumble2(void);
-extern void gameTextShow(int a);
 extern int DVDGetDriveStatus(void);
 extern int DVDCheckDisk(void);
 extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
 extern void setTimeStop(int frames);
 extern void cutsceneFadeInOut(int mode);
 extern int getLoadedFileFlags(int slot);
-extern int gameTextGetCharset(void);
-extern void gameTextSetCharset(int a, int b);
-extern void gameTextSetColor(int r, int g, int b, int a);
 extern f32 gCameraViewRotationMatrix[16];
 extern f32 gCameraInverseViewRotationMatrix[16];
 extern f32 gCameraViewMatrix[16];
@@ -308,10 +232,8 @@ extern u32 lbl_803398D0[];
 extern u32 gPadButtonsJustPressed[];
 extern u8 gPadStatuses[];
 extern s32 gModelEngineUiDllResourceIds[];
-extern u8 gTextBoxes[];
 extern void* gFileInfo;
 extern volatile int gDvdReadCallbackResult;
-extern void* gCurTextBox;
 extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
 extern f32 lbl_803DE6E0;
@@ -323,7 +245,6 @@ extern void ARQPostRequest(void* req, u32 owner, u32 type, u32 prio, u32 src, u3
 extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
 extern char* strcat(char* dst, const char* src);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void PADControlMotor(s32 chan, u32 command);
 extern int PADInit(void);
 extern int PADRecalibrate(u32 mask);
@@ -331,13 +252,9 @@ extern int PADReset(u32 mask);
 extern u32 PADRead(struct PadStatusLite *status);
 extern void PADClamp(struct PadStatusLite *status);
 extern u8 lbl_803DCCA5;
-extern void* gameTextDrawFunc;
 extern char* lbl_803DC9C4;
 extern char* gameStrcpy(char* dst, char* src);
-extern void gameTextFn_8001658c(int a, int b, int c);
-extern TaskTextEntry gTaskTextTable[];
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
-extern void gameTextRenderStrs(char* str, int arg2);
 extern u32 mmSetFreeDelay(u32 delay);
 extern u8 testAndSet_onlyUseHeap3(int arg);
 extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
@@ -358,7 +275,6 @@ extern void waitNextFrame(void);
 extern void mmFreeTick(int arg);
 extern void padUpdate(void);
 extern void dvdCheckError(void);
-extern void gameTextRun(void);
 extern f32 lbl_803DE5D4;
 extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
 extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
@@ -393,31 +309,18 @@ extern int getTableFileEntry(int fileId, int index, int *out);
 extern void sndOutputMode(int mode);
 extern u32 OSGetSoundMode(void);
 extern void OSSetSoundMode(int mode);
-extern u8 gUtf8CharClassTable[];
-extern int gUtf8ClassOffsetTable[];
-extern int getControlCharLen(u32 c);
 extern int fn_800119FC(s16 *dest, s16 *start, s16 *out);
-extern GameTextFont* gameTextFonts;
-extern GameTextDef *gameTextGet(int id);
-extern void gameTextDrawBox(GameTextDef *def, int a, TextSlot *slot);
 extern u8 lbl_803DC9A4;
 extern u8 lbl_803DC9A5;
 extern u8 lbl_803DC9A6;
 extern u8 lbl_803DC9A7;
 extern int lbl_803DC9C0;
-extern char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH);
-extern void textRenderStr(char *str, TextSlot *slot, f32 x, f32 y, f32 lineH, int flag);
-extern int gameTextCharset;
-extern int curLanguage;
-extern LanguageName sLanguageNameTable[];
-extern FontSizeEntry lbl_802C8680[];
 extern u16 lbl_803DC9AA;
 extern u16 lbl_803DC9A8;
 extern void *lbl_803DB378;
 extern f32 lbl_803DE704;
 extern f32 lbl_803DE708;
 extern void *mmAllocateFromFBMemoryStore(void *store);
-extern SpecialGlyph lbl_802C86F0[];
 extern int lbl_803DC984;
 extern f32 lbl_803DC9A0;
 extern u8 lbl_803DC990;
@@ -510,19 +413,10 @@ u32 getButtonsJustPressed(int port);
 u32 getNewInputs(int port);
 u32 getButtonsHeld(int port);
 int initControllers(void);
-void* gameTextGetBox(int box);
-void* gameTextGetCurBox(void);
 void fn_80009008(void);
 s16 renderModeSetOrGet(int mode);
-void gameTextFn_80016c18(int a, int b);
-void gameTextFreePhrase(int* p);
-void gameTextFn_80016810(int a, int b, int c);
-int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId);
-void gameTextShowTimeStr(char* str);
-void gameTextShowStr(char *text, int box, int arg2, int arg3);
 void MIDIWADLoadedCallback(int status, void* fileInfo);
 int musicInitMidiWad(void);
-void gameTextAppendStr(char* str, int arg2);
 void poolDataMLoadedCallback(int status, void* fileInfo);
 void poolDataSLoadedCallback(int status, void* fileInfo);
 void projectDataMLoadedCallback(int status, void* fileInfo);
@@ -537,17 +431,12 @@ void streamsLoadedCallback(int status, void* fileInfo);
 void fn_80008F38(void* addr, u32 dest, u32 size);
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
-void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
-void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 void* loadFileByPath(char* path, int* outSize);
 void gameTimerRun(void);
 void audioSetSoundMode(int mode, u8 forceFlag);
 int utf8GetNextChar(u8* str, int* outLen);
 char *gameStrcpy(char *dst, char *src);
-void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
-void gameTextRenderStrs(char *str, int boxIdx);
-void textDisplayFn_800168dc(int textId, TextDisplayState *state);
 void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*));
 void audioLoadTriggerData(void);
 int audioInit(void);

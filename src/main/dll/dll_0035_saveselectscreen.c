@@ -67,7 +67,6 @@ typedef struct SaveSelectPanel
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
 
 extern void gameTextLoadDir(int dirId);
-extern void* gameTextGet(int textId);
 
 extern s8 gSaveSelectPanelIndex;
 extern u8 lbl_803DB424;
@@ -109,9 +108,6 @@ extern int saveSelect_getInfo(void* outPtr);
 
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextAppendStr(char* str, int arg2);
-extern void gameTextShow(int a);
 extern void titleScreenShowCopyright(u8 arg);
 extern u8 gSaveSelectInfoTextIds;
 extern u16 gSaveSelectSlotTextIds[4];
@@ -501,7 +497,7 @@ void SaveSelectScreen_render(int param)
     {
     case SAVE_SELECT_PANEL_OPEN_FILE:
         ((void (*)(int, u8))saveSelect_drawText)(param, alpha);
-        gameTextSetColor(0xff, 0xff, 0xff, alpha);
+        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
         slotCount = 0;
         p = (char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24;
         while (slotCount < 3 && *(void**)(p + 0xc) != NULL)
@@ -526,11 +522,11 @@ void SaveSelectScreen_render(int param)
         }
         break;
     case SAVE_SELECT_PANEL_CONFIRM_ERASE:
-        gameTextSetColor(0xff, 0xff, 0xff, alpha);
+        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
         gameTextShow(0x324);
         break;
     case SAVE_SELECT_PANEL_CHOOSE_SLOT:
-        gameTextSetColor(0xff, 0xff, 0xff, alpha);
+        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
         ((void (**)(void))gTitleMenuLinkInterface->vtable)[5]();
         if (lbl_803DB424 != 0)
         {
@@ -540,29 +536,29 @@ void SaveSelectScreen_render(int param)
             for (i = 0; i < 3; i++)
             {
                 sprintf(arr[i], &sFrontendPercentFormat, saveFileSelect_saveSlots[i].completionPercent);
-                gameTextSetColor(0xff, 0xff, 0xff, alpha);
+                gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
                 gameTextAppendStr(arr[i], ptrs[i]);
             }
         }
         break;
     }
-    gameTextSetColor(0xff, 0xff, 0xff, alpha);
+    gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
     if (panel->textIdA != 0xffff)
     {
         if (alpha < 0x7f)
         {
-            gameTextSetColor(0xff, 0xff, 0xff, (u8)(0xff - (alpha << 1)));
+            gameTextSetColorU8(0xff, 0xff, 0xff, (u8)(0xff - (alpha << 1)));
             gameTextShow(0x331);
         }
         else
         {
-            gameTextSetColor(0xff, 0xff, 0xff, (u8)((alpha - 0x7f) << 1));
+            gameTextSetColorU8(0xff, 0xff, 0xff, (u8)((alpha - 0x7f) << 1));
             gameTextShow(panel->textIdA);
         }
     }
     if (panel->textIdB != 0xffff)
     {
-        gameTextSetColor(0xff, 0xff, 0xff, alpha);
+        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
         gameTextShow(panel->textIdB);
     }
     ((void (**)(int))gTitleMenuLinkInterface->vtable)[12](progress);

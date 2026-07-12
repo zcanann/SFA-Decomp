@@ -102,8 +102,6 @@ extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c,
 extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
 extern void Obj_FreeObject(int* obj);
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-extern void* gameTextGetBox(int box);
-extern void gameTextFreePhrase(u8* phrase);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern int* getArwing(void);
@@ -113,8 +111,6 @@ extern int arwarwing_getBombCount(int* arwing);
 extern int arwarwing_getCollectedRingCount(int* arwing);
 extern int arwarwing_getRequiredRingCount(int* arwing);
 extern int arwarwing_getScore(int* arwing);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 
 void drawFn_80125424(void)
 {
@@ -318,7 +314,7 @@ void gameTextFn_80125ba4(int idx)
                         lbl_803DD8C8 = 0;
                         lbl_803DD8CA = boxId;
                         lbl_803DD8CC = (f32)(s16)boxId;
-                        gameTextFreePhrase(lbl_803A9440);
+                        gameTextFreePhrase((int*)lbl_803A9440);
                         lbl_803DD7A9 = 0;
                     }
                 }
@@ -453,7 +449,7 @@ void drawArwingHud(void)
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC, arwingHudAlpha, 0x100);
             sprintf((char*)buf, &sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
-        gameTextSetColor(0xff, 0xff, 0xff, arwingHudAlpha);
+        gameTextSetColorU8(0xff, 0xff, 0xff, arwingHudAlpha);
         gameTextShowStr((char*)buf, 0x93, 0x23a, 0x41);
         drawFn_80125424();
     }

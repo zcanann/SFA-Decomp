@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/gametext_internal.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 /* In-string formatting control codes (Unicode PUA). */
@@ -754,7 +755,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     {
         return;
     }
-    def = gameTextGet(textId);
+    def = (GameTextDef*)gameTextGet(textId);
     special = 0;
     if ((u8*)def >= lbl_803399C0 && (u8*)def < lbl_803399C0 + 0x60)
     {
@@ -850,7 +851,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
 
 void gameTextFn_8001658c(int a, int b, int c)
 {
-    GameTextDef* def = gameTextGet(a);
+    GameTextDef* def = (GameTextDef*)gameTextGet(a);
     TextSlot* slot;
     u8 save7 = lbl_803DC9A7;
     u8 save6 = lbl_803DC9A6;
