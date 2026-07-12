@@ -19,6 +19,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/scarab.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/curve_walker.h"
@@ -79,7 +80,6 @@ extern f32 lbl_803E2E90;
 extern f32 lbl_803E2E94;
 
 extern u64 ObjGroup_RemoveObject();
-extern void Obj_FreeObject(int* obj);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
 extern void characterDoEyeAnims(GameObject* obj, u8* a);
@@ -162,7 +162,7 @@ int fn_8016043C(GameObject* obj, GroundBaddieState* state)
         ObjMsg_SendToObject((int)Obj_GetPlayerObject(), 0xe0000, (int)obj, 0);
         if ((obj)->anim.placementData == NULL)
         {
-            Obj_FreeObject((int*)obj);
+            Obj_FreeObject(obj);
             return 0;
         }
         return 4;
@@ -584,7 +584,7 @@ void dll_CB_free(int* obj)
         int* sub = ((GameObject*)obj)->childObjs[0];
         if (sub != NULL)
         {
-            Obj_FreeObject(sub);
+            Obj_FreeObject((GameObject*)sub);
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }

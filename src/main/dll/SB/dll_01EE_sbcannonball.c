@@ -8,6 +8,7 @@
  * freeing itself. TU: 0x801E341C-0x801E34C0.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -36,7 +37,6 @@ typedef struct SBCannonBallState
 } SBCannonBallState;
 
 extern void ModelLightStruct_free(void* effect);
-extern void Obj_FreeObject(int* obj);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
 extern u8* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(u8* p, int v);
@@ -83,7 +83,7 @@ void SB_CannonBall_hitDetect(GameObject* obj)
         state->impactCooldown = t - timeDelta;
         if (state->impactCooldown <= zero)
         {
-            Obj_FreeObject((int*)obj);
+            Obj_FreeObject(obj);
         }
         return;
     }
@@ -170,7 +170,7 @@ void SB_CannonBall_update(GameObject* obj)
     obj->unkF4 = obj->unkF4 - framesThisStep;
     if (obj->unkF4 < 0)
     {
-        Obj_FreeObject((int*)obj);
+        Obj_FreeObject(obj);
     }
     if (state->lifetimeFrames > SB_CANNONBALL_HITBOX_ENABLE_DELAY)
     {

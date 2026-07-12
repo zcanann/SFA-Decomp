@@ -16,6 +16,7 @@
  * interface (vtable slot 2), and frees the spawned child.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
@@ -30,7 +31,6 @@ extern int* gTitleMenuControlInterfaceCopy;
 
 extern u8 lbl_803DB411;
 
-extern void Obj_FreeObject(u8* obj);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 
@@ -45,7 +45,7 @@ int MMSH_Scales_getObjectTypeId(void)
 
 void MMSH_Scales_free(int obj, int keepChild)
 {
-    void* child;
+    GameObject* child;
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
     (*(void (**)(int, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, 0xffff, 0, 0, 0);
     child = ((GameObject*)obj)->childObjs[0];
@@ -107,7 +107,7 @@ void MMSH_Scales_update(int objArg)
                 (*gObjectTriggerInterface)->endSequence(groupTag);
             }
             ((GameObject*)objArg)->seqIndex = -1;
-            Obj_FreeObject((void*)objArg);
+            Obj_FreeObject((GameObject*)objArg);
         }
     }
 }

@@ -14,6 +14,7 @@
 #include "main/dll/xyzanimator.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
 #include "main/dll/genprops.h"
@@ -139,7 +140,6 @@ extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
 extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
 extern int objCreateLight(int* obj, int arg);
-extern void Obj_FreeObject(int* obj);
 
 /* fireball light tint per colorIndex; lives in the staff TU's data (0x80320978) */
 extern u32 lbl_80320978[];
@@ -503,7 +503,7 @@ void Fireball_update(int* obj)
         ((FireballState*)state)->fadeoutTimer -= timeDelta;
         if (((FireballState*)state)->fadeoutTimer <= lbl_803E3330)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         }
     }
     else
@@ -554,7 +554,7 @@ void Fireball_update(int* obj)
         }
         if ((((GameObject*)obj)->unkF4 -= framesThisStep) < 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         }
     }
 #undef hitState

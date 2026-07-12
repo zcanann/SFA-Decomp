@@ -18,6 +18,7 @@
 #include "main/dll/dll_00F4_doorf4.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/dll/sidekickball_state.h"
@@ -55,7 +56,6 @@ extern const f32 lbl_803E3698;
 extern u32 mainGetBit(int eventId);
 extern f32 timeDelta;
 extern void* getTrickyObject(void);
-extern void Obj_FreeObject(u8* obj);
 extern void OSReport(const char* msg, ...);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8002A5DC(int obj);
@@ -277,7 +277,7 @@ void SidekickBall_update(u8* self)
          otherStatusMask = otherStatusZeroWord >> 5, (otherStatusMask & 0x1000) != 0) ||
         mainGetBit(GAMEBIT_NoBallsAllowed) != 0)
     {
-        Obj_FreeObject(self);
+        Obj_FreeObject((GameObject*)self);
         return;
     }
 
@@ -320,7 +320,7 @@ void SidekickBall_update(u8* self)
         state->fadeTimer = state->fadeTimer + timeDelta;
         if (state->fadeTimer >= *(f32*)&gSidekickBallFadeDuration)
         {
-            Obj_FreeObject(self);
+            Obj_FreeObject((GameObject*)self);
             return;
         }
         {

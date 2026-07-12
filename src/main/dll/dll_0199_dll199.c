@@ -4,6 +4,7 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll199state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objseq.h"
 #include "main/dll/dimmagicbridge.h"
 #include "main/mapEventTypes.h"
@@ -33,8 +34,7 @@ extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
 extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
-extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
-extern void Obj_FreeObject(char* obj);
+extern GameObject* ObjGroup_FindNearestObject(int group, GameObject* from, f32* distInOut);
 extern f32 Vec_distance(f32* a, f32* b);
 extern u8 framesThisStep;
 extern f32 lbl_803E515C;
@@ -218,7 +218,7 @@ void dll_199_update(int obj)
     short* state;
     char* player;
     int queue;
-    char* found;
+    GameObject* found;
     f32 dist;
     int flags;
     int msg;
@@ -296,10 +296,10 @@ void dll_199_update(int obj)
     }
     else
     {
-        found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, player, &dist);
+        found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, (GameObject*)player, &dist);
         if ((found != 0) && (dist < lbl_803E5160) && (dist > lbl_803E5164))
         {
-            dz = ((GameObject*)found)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
+            dz = found->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             if (dz <= lbl_803E5168)
             {
                 if (dz < lbl_803E5168)
@@ -391,7 +391,7 @@ void dll_199_update(int obj)
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, 0xffffffff);
             dist = lbl_803E5174;
-            found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, (char*)obj, &dist);
+            found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, (GameObject*)obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -414,7 +414,7 @@ void dll_199_update(int obj)
             break;
         case 3:
             dist = lbl_803E5174;
-            found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, (char*)obj, &dist);
+            found = ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, (GameObject*)obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
