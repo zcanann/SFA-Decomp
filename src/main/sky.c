@@ -3054,6 +3054,7 @@ void skyFn_8008aee8(void)
     f32 angle;
     f32 blend;
     f32 v;
+    f32 ang0;
     FogColor fogColor;
 
     fogColor = *(FogColor*)&lbl_803E8458;
@@ -3176,7 +3177,8 @@ void skyFn_8008aee8(void)
         sinProd = widthF * frac / lbl_803DF0D8;
         sinProd *= lbl_803DF0DC;
         sinProd *= mathCosf(gSkyPi * (f32)-cam->worldRoll / lbl_803DF0E4);
-        angle = widthF * lbl_803DF068 - lbl_803DF0E8 - lbl_803DF0DC * (widthF * cam->worldPitch) / lbl_803DF0E4 + sinProd;
+        ang0 = widthF * lbl_803DF068 - lbl_803DF0E8 - lbl_803DF0DC * (widthF * cam->worldPitch) / lbl_803DF0E4;
+        angle = ang0 + sinProd;
         angle *= lbl_803DF0EC;
         (*gSky2Interface)->applyTextColor(0);
         GXSetFog(GX_FOG_NONE, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
