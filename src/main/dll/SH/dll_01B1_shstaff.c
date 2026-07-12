@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
+#include "main/objlib.h"
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"
@@ -149,11 +150,6 @@ extern void sc_levelcontrol_initialise(void);
 extern void sc_musictree_initialise(void);
 extern void sc_totempole_initialise(void);
 
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern int ObjTrigger_IsSet();
-extern u32 ObjPath_GetPointLocalMtx();
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objSetMtxFn_800412d4(f32* mtx);
@@ -162,8 +158,6 @@ extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5,
 extern f32 getXZDistance(f32* a, f32* b);
 extern void staffToggle(GameObject* obj, int a);
 extern void playerPutAwayStaff(GameObject* obj, int mode);
-extern int ObjTrigger_IsSet(int obj);
-
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
 void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -218,8 +212,8 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         {
             objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, (double)lbl_803E54D0);
         }
-        ObjPath_GetPointWorldPosition((int)obj, 0, &x0, &y0, &z0, 0);
-        ObjPath_GetPointWorldPosition((int)obj, 1, &x1, &y1, &z1, 0);
+        ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
+        ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);
         dx = x1 - x0;
         dy = y1 - y0;
         dz = z1 - z0;
