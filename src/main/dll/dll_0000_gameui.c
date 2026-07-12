@@ -3675,7 +3675,7 @@ void pauseMenuAnimateCarousel(void)
         {
             sel = lbl_803E2194;
         }
-        sel = sel * lbl_803DD784;
+        sel = lbl_803DD784 * sel;
         *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * lbl_803E2190;
         *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
         ObjAnim_AdvanceCurrentMove((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
