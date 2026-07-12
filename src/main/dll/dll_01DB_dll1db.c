@@ -27,6 +27,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
@@ -86,8 +87,6 @@ extern f32 lbl_803E4B1C;
 extern f32 lbl_803E4B20;
 extern f32 lbl_803E4B24;
 
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int dll_1DB_getExtraSize(void)

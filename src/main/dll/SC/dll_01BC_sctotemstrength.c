@@ -8,6 +8,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
 #include "main/model_engine.h"
@@ -25,9 +26,6 @@
 /* LightFoot Village map-event id (tug-of-war runs while its mode == 6). */
 #define SCTOTEMSTRENGTH_MAP_LIGHTFOOT 0xe
 
-extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern u32 Sfx_KeepAliveLoopedObjectSound();
 
 extern void setAButtonIcon(int x);
 
@@ -199,7 +197,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         }
         animUpdate->hitVolumePair = -1;
         animUpdate->sequenceEventActive = 0;
-        Sfx_KeepAliveLoopedObjectSound(obj, PLATFORM1_LOOP_SFX_ID);
+        Sfx_KeepAliveLoopedObjectSound((u32)obj, PLATFORM1_LOOP_SFX_ID);
         for (i = 0; i < framesThisStep; i++)
         {
             if ((u32)st->linkedObject == 0)

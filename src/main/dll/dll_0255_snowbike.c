@@ -2,6 +2,7 @@
 #include "main/dll/path_control_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/BW/BWalphaanim.h"
@@ -124,9 +125,6 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* 
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32* v);
 extern int arrayIndexOf(s16* arr, int n, int value);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_SetObjectSfxVolume(int obj, int sfx, u8 vol, f32 v);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void OSReport(const char* msg, ...);
@@ -168,7 +166,6 @@ extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
 extern void Obj_SetModelSlotIndex(int obj, int slot);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int drshackle_updateAttachedPosition(int obj, u8* state);
 extern void fn_801EBD60(int obj, u8* state);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);

@@ -78,7 +78,6 @@ extern f32 lbl_803E5628;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
                                   f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 extern int ObjHits_GetPriorityHitWithPosition();

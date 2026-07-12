@@ -18,6 +18,7 @@
  * adds map time and sets the placement game bit, and re-evaluates chase state.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -59,9 +60,6 @@ typedef struct HagabonPlacement
 #define HAGABON_FLAG_FADE_IN         0x08
 #define HAGABON_FLAG_FADE_OUT        0x10
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopFromObject(int obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
 extern f32 lbl_803E2608;

@@ -1,5 +1,6 @@
 /* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017F4F4) */
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/dll/dll_00FD.h"
@@ -16,11 +17,9 @@ extern f32 lbl_803E3850;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern s16 getAngle(f32 dx, f32 dz);
 
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E3854;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;
