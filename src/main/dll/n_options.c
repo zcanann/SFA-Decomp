@@ -20,6 +20,7 @@
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/attract_movie_api.h"
+#include "main/model.h"
 #include "string.h"
 #include "main/dll/FRONT/dll_3B.h"
 #include "dolphin/gx/GXCull.h"
@@ -73,7 +74,6 @@ extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare 
 extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
 extern void GXSetNumTevStages(u8 nStages);
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
-extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
 u16 gAttractMovieVolumeScale[128] = {
@@ -494,7 +494,7 @@ BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx
 
     if (modelPtr != NULL)
     {
-        renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
+        renderOp = (u8*)ObjModel_GetRenderOp((ModelFileHeader*)*modelPtr, renderOpIdx);
     }
     else
     {

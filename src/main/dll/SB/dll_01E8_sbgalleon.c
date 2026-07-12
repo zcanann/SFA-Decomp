@@ -31,6 +31,7 @@
 #define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
     ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/object_api.h"
+#include "main/model.h"
 #include "main/render.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -71,7 +72,6 @@ extern void fn_80089510(int idx, int r, int g, int b);
 extern void fn_80089578(int idx, int r, int g, int b);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-extern int ObjModel_GetRenderOp(int model, int idx);
 extern f32 gSbGalleonSkyLightVecs[12];
 extern u8 lbl_803DC078[4];
 extern u8 gSbGalleonSkyColorBEnd[4];
@@ -286,9 +286,9 @@ typedef struct
 
 void fn_801E1588(int obj, int state)
 {
-    int* model;
+    ObjModel* model;
     int i;
-    int rop;
+    ModelRenderOp* rop;
     SkyVec3 a;
     SkyVec3 b;
     SkyVec3 c;
@@ -368,16 +368,16 @@ void fn_801E1588(int obj, int state)
     {
         skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
     }
-    model = (int*)Obj_GetActiveModel((GameObject*)obj);
+    model = Obj_GetActiveModel((GameObject*)obj);
     i = 0;
     {
         f32 scale = lbl_803E57F4;
-        for (; i < *(u8*)(*model + 0xf8); i++)
+        for (; i < model->file->renderOpCount; i++)
         {
-            rop = ObjModel_GetRenderOp(*model, i);
-            if (*(u8*)(rop + 0x29) == 1)
+            rop = ObjModel_GetRenderOp(model->file, i);
+            if (rop->layerCount == 1)
             {
-                *(u8*)(rop + 0xc) = scale * lbl_803DDC28;
+                rop->alpha = scale * lbl_803DDC28;
             }
         }
     }

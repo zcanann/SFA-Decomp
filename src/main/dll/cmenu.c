@@ -17,6 +17,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/object_api.h"
 #include "main/dll/cmenu_item_table.h"
 #include "main/pause_menu_api.h"
@@ -92,7 +93,6 @@ extern f64 lbl_803E2030;
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int getTrickyObject(void);
-extern int ObjModel_GetRenderOp(int model, int p);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
@@ -323,7 +323,7 @@ int cMenuRingModelRenderFn(int obj, int block, int idx)
     int renderOp;
     u8 cfg[4];
     *(u32*)cfg = lbl_803E1E14;
-    renderOp = ObjModel_GetRenderOp(*(int*)block, idx);
+    renderOp = (int)ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx);
     resetLotsOfRenderVars();
     cfg[3] = *(u8*)(obj + 0x37);
     gxFn_80051fb8(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
@@ -395,7 +395,7 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
     void* tex;
     u8 cfg[4];
     *(u32*)cfg = lbl_803E1E10;
-    slotIdx = *(u8*)(ObjModel_GetRenderOp(*(int*)block, idx) + 0x29) - 1;
+    slotIdx = ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx)->layerCount - 1;
     resetLotsOfRenderVars();
     if (slotIdx >= 0 && slotIdx <= 6 && (tex = gCMenuRingIconTextures[slotIdx]) != 0)
     {

@@ -7,6 +7,7 @@
 #include "main/dll/dll_B3.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/model.h"
 
 /* Single render op of the lock icon model (ObjModel_GetRenderOp slot). */
 typedef struct CamcontrolLockIconRenderOp
@@ -19,7 +20,6 @@ typedef struct CamcontrolLockIconRenderOp
 
 #define LOCK_ICON_DIM_ALPHA_SCALE 0x60
 
-extern CamcontrolLockIconRenderOp* ObjModel_GetRenderOp(int model, int idx);
 extern void fn_80051D5C(void* tex, void* arg2, int arg3, GXColor* color);
 
 int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
@@ -30,7 +30,7 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
     f32 dist;
     int alphaVal;
 
-    renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
+    renderOp = (CamcontrolLockIconRenderOp*)ObjModel_GetRenderOp((ModelFileHeader*)*modelPtr, renderOpIdx);
     dist = CAMCONTROL_CAMERA->targetDistance;
     if (dist <= gCamcontrolNormalizedMin)
     {

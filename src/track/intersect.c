@@ -20,19 +20,6 @@
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-/* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
- * only the fields evidenced in this TU are typed. */
-typedef struct ModelRenderOp
-{
-    u8 pad00[0xc];
-    u8 alpha; /* 0x0c */
-    u8 pad0D[0x34 - 0xd];
-    s32 layer0TexId; /* 0x34 */
-    u8 pad38[4];
-    u32 flags; /* 0x3c */
-    u8 pad40[4];
-} ModelRenderOp; /* size 0x44 */
-
 typedef struct
 {
     f32 m[6];
@@ -991,7 +978,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern f32 lbl_8030EAA0[3][3];
-    extern int ObjModel_GetRenderOp(void* model, int slot);
     extern int* Shader_getLayer(void* op, int slot);
 
     extern void selectTexture(void* tex, int slot);
@@ -1015,11 +1001,11 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     void (*pcb)(void*, void**, int);
 
     model = obj_b[0];
-    renderOp = (void*)ObjModel_GetRenderOp(model, slot);
+    renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
     handle1 = *Shader_getLayer(renderOp, 0);
     selectTexture(textureIdxToPtr(handle1), 0);
     selectReflectionTexture(1);
-    tex2 = textureIdxToPtr(((ModelRenderOp*)renderOp)->layer0TexId);
+    tex2 = textureIdxToPtr(((ModelRenderOp*)renderOp)->layer0TextureId);
     wrapBit = (((Texture*)tex2)->maxLod - ((Texture*)tex2)->minLod > 0) ? 1 : 0;
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60, ((Texture*)tex2)->width, ((Texture*)tex2)->height,
                  ((Texture*)tex2)->format, GX_REPEAT, GX_REPEAT, wrapBit);
@@ -1953,7 +1939,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern f32 lbl_8030EA58[3][3];
-    extern int ObjModel_GetRenderOp(void* model, int slot);
     extern void* getTextureFn_8006c744(void);
     extern void selectReflectionTexture(int);
     extern void fn_8006C6A4(int);
@@ -1972,7 +1957,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     GXColor fogColor;
 
     model = obj_b[0];
-    renderOp = (void*)ObjModel_GetRenderOp(model, slot);
+    renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
     tex = getTextureFn_8006c744();
     selectReflectionTexture(0);
     selectTexture(tex, 1);
@@ -2350,7 +2335,6 @@ int modelCb_80073d04(u8* obj, int* objB)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern int ObjModel_GetRenderOp(int model, int slot);
     extern int* Shader_getLayer(int op, int slot);
     extern int textureIdxToPtr(int idx);
     extern void selectTexture(int tex, int slot);
@@ -2364,7 +2348,7 @@ int modelCb_80073d04(u8* obj, int* objB)
 
     colorB = lbl_803DEEB4;
     model = objB[0];
-    tex = textureIdxToPtr(*Shader_getLayer(ObjModel_GetRenderOp(model, 0), 0));
+    tex = textureIdxToPtr(*Shader_getLayer((int)ObjModel_GetRenderOp((ModelFileHeader*)model, 0), 0));
     texMtx[0][0] = lbl_803DEF34;
     texMtx[0][1] = lbl_803DEEDC;
     texMtx[0][2] = lbl_803DEEDC;
@@ -2445,7 +2429,6 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern int ObjModel_GetRenderOp(int model, int slot);
     extern int* Shader_getLayer(int op, int slot);
     extern int textureIdxToPtr(int idx);
     extern void selectTexture(int tex, int slot);
@@ -2456,7 +2439,7 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
     int tex;
     f32 tx;
 
-    op = ObjModel_GetRenderOp(objB[0], slot);
+    op = (int)ObjModel_GetRenderOp((ModelFileHeader*)objB[0], slot);
     tex = textureIdxToPtr(*Shader_getLayer(op, 0));
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     lbl_803DD010 = mainGetBit(0x2ba);
@@ -2525,7 +2508,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern int ObjModel_GetRenderOp(void* model, int slot);
     extern int* Shader_getLayer(void* op, int slot);
     extern void* textureIdxToPtr(int idx);
     extern void selectTexture(void* tex, int slot);
@@ -2548,7 +2530,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     *(IndMtxInit*)indMtx = *(IndMtxInit*)lbl_802C1F68;
 
     model = obj_b[0];
-    renderOp = (void*)ObjModel_GetRenderOp(model, slot);
+    renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
     tex = textureIdxToPtr(*Shader_getLayer(renderOp, 0));
 
     PSMTXScale(mtx_60, lbl_803DB6B4, lbl_803DB6B4, lbl_803DEEDC);

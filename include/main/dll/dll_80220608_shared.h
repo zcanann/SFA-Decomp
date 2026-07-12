@@ -162,7 +162,6 @@ extern const f32 lbl_803E75F0;
 extern const f32 lbl_803E75F4;
 extern const f32 lbl_803E75F8;
 
-extern int ObjModel_GetRenderOp(int model, int idx);
 
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
                                     int k);

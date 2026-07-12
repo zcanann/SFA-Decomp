@@ -11,6 +11,7 @@
  * fixed alpha-compare / cull state used for HUD icons.
  */
 #include "main/dll/dll_B2.h"
+#include "main/model.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
@@ -32,7 +33,6 @@ typedef struct CamcontrolIconColor
     u8 a;
 } CamcontrolIconColor;
 
-extern void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
 extern void fn_80051D5C(void* tex, void* a, u32 b, CamcontrolIconColor* color);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
@@ -56,7 +56,7 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
     CamcontrolIconRenderOp* renderOp;
     CamcontrolIconColor color; /* r/g/b intentionally left unset: callee reads only alpha for this op */
 
-    renderOp = ObjModel_GetRenderOp(*objPtr, renderOpIdx);
+    renderOp = (CamcontrolIconRenderOp*)ObjModel_GetRenderOp((ModelFileHeader*)*objPtr, renderOpIdx);
     resetLotsOfRenderVars();
     if (renderOp->variantId == ICON_VARIANT_PRESS_A)
     {

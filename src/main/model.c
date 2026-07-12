@@ -1,7 +1,6 @@
 #include "main/asset_load.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
-#include "main/dll/objmodel_types.h"
 #include "main/model.h"
 #include "main/model_engine.h"
 #include "main/game_object.h"
@@ -48,11 +47,11 @@ void* modelFileGetDisplayList(u8* modelFile, int displayListIndex)
 
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out)
 {
-    ObjModelInstanceLite* model;
+    ObjModel* model;
     u32 jointCount;
     u8* jointMtx;
 
-    model = (ObjModelInstanceLite*)modelBytes;
+    model = (ObjModel*)modelBytes;
     jointCount = model->file->jointCount;
     if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1))
     {
@@ -75,9 +74,9 @@ s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex)
     return (s16*)(modelFile->vertices + vertexIndex * 6);
 }
 
-void* ObjModel_GetRenderOp(u8* model, int renderOpIndex)
+ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* model, int renderOpIndex)
 {
-    return ((ModelFileHeader*)model)->renderOps + renderOpIndex * 0x44;
+    return &model->renderOps[renderOpIndex];
 }
 
 u16 modelFileHeaderGetCullDistance(u8* modelFile)
@@ -153,10 +152,10 @@ void ObjModel_ToggleMatrixBuffer(u8* model)
 
 ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex)
 {
-    ObjModelInstanceLite* model;
+    ObjModel* model;
     u32 jointCount;
 
-    model = (ObjModelInstanceLite*)modelBytes;
+    model = (ObjModel*)modelBytes;
     jointCount = model->file->jointCount;
     if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1))
     {
@@ -166,9 +165,9 @@ ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex)
     return (ObjModelJointMatrix*)(model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40);
 }
 
-void* ObjModel_GetRenderOpTextureRefs(u8* model, int renderOpIndex)
+ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex)
 {
-    return ((ObjModel*)model)->textureRefs + renderOpIndex * 0xc;
+    return &model->textureRefs[renderOpIndex];
 }
 
 int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
@@ -411,7 +410,7 @@ void ObjModel_RelocateModelData(u8* m)
     }
     if (*(u32*)&((ModelFileHeader*)m)->renderOps)
     {
-        ((ModelFileHeader*)m)->renderOps = m + *(u32*)&((ModelFileHeader*)m)->renderOps;
+        ((ModelFileHeader*)m)->renderOps = (ModelRenderOp*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
     }
     for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++)
     {
@@ -586,7 +585,7 @@ void ObjModel_LoadRenderOpTextures(u8* model, int arg)
     ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
     for (i = 0; i < (*(u8**)model)[0xf8]; i++)
     {
-        shaderInit(((ModelFileHeader*)hdr)->renderOps + i * 0x44, ((ObjModel*)model)->textureRefs + i * 0xc, arg,
+        shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], (u8*)&((ObjModel*)model)->textureRefs[i], arg,
                    ((ModelFileHeader*)hdr)->shaderFlags);
     }
 }
@@ -1130,7 +1129,7 @@ void ObjModel_Release(u8* model)
         z[0] = 0;
         for (z[1] = z[0]; z[0] < (*(u8**)model)[0xf8]; z[1] += 0xc, z[0]++)
         {
-            ShaderDef_free((int*)(((ObjModel*)model)->textureRefs + z[1]));
+            ShaderDef_free((int*)&((ObjModel*)model)->textureRefs[z[0]]);
         }
     }
     header = *(u8**)model;
@@ -1936,7 +1935,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     o2 = 0;
     for (; k < (int)((ModelFileHeader*)p)->renderOpCount; k++)
     {
-        *(u8*)(((ObjModel*)out2)->textureRefs + o2 + 8) = 0;
+        ((ModelRenderOpTextureRefs*)((u8*)((ObjModel*)out2)->textureRefs + o2))->unk08 = 0;
         o2 += 0xc;
     }
     if (b & 0x8000)

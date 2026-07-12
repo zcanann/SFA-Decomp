@@ -108,7 +108,6 @@ extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
 
 extern void objRenderFn_80041018(int obj);
-extern int ObjModel_GetRenderOp(int model, int idx);
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
 extern int getAngle(float y, float x);
@@ -161,8 +160,8 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
         objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
     }
     {
-        int renderOp = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel((GameObject*)obj), 0);
-        *(u8*)(renderOp + 0x43) = 0x7F;
+        ModelRenderOp* renderOp = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);
+        renderOp->alphaOverride = 0x7F;
     }
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
     for (i = 0; i < 10; i++)

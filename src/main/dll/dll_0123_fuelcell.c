@@ -42,7 +42,6 @@ extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_PlayFromObject(int* obj, int soundId);
 extern f32 getXZDistance(void* a, void* b);
-extern int ObjModel_GetRenderOp(int model, int idx);
 typedef struct
 {
     u16 msg; // 0x0
@@ -152,8 +151,8 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
             objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, 0, 0);
         }
         {
-            int op = ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel((GameObject*)obj), 0);
-            *(u8*)(op + 0x43) = 0x7f;
+            ModelRenderOp* op = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);
+            op->alphaOverride = 0x7f;
         }
         ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 

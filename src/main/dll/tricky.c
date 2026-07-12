@@ -21,6 +21,7 @@
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/gamebits.h"
@@ -281,7 +282,6 @@ extern void C_MTXPerspective(f32* m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void PSMTXCopy(f32* src, f32* dst);
-extern void* ObjModel_GetRenderOp(int op, int x);
 extern void* Shader_getLayer(char* base, int idx);
 extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
@@ -1213,7 +1213,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
 
     chanCol = *(GXColor*)&lbl_803E1E30;
     indmtx = *(_IndMtx*)lbl_802C21AC;
-    op = ObjModel_GetRenderOp(*p2, p3);
+    op = ObjModel_GetRenderOp((ModelFileHeader*)*p2, p3);
     layer = Shader_getLayer(op, 0);
     tex0 = textureIdxToPtr(*(int*)layer);
 

@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objprint_api.h"
 #include "main/sky_api.h"
 
@@ -13821,15 +13822,15 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             if ((void*)gPlayerHeldObject == NULL)
             {
                 int i;
-                int m = *(int*)Obj_GetActiveModel((GameObject*)obj);
-                for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
+                ModelFileHeader* m = Obj_GetActiveModel((GameObject*)obj)->file;
+                for (i = 0; i < m->renderOpCount; i++)
                 {
-                    int op = ObjModel_GetRenderOp(m, i);
-                    if (*(u8*)((char*)op + 0x41) == 2)
+                    ModelRenderOp* op = ObjModel_GetRenderOp(m, i);
+                    if (op->mode == 2)
                     {
-                        Shader_getLayer(op, 1);
-                        gPlayerHeldObject = op;
-                        *(u32*)((char*)op + 0x3c) |= 0x100000LL;
+                        Shader_getLayer((int)op, 1);
+                        gPlayerHeldObject = (int)op;
+                        op->flags |= 0x100000LL;
                         break;
                     }
                 }

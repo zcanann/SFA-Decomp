@@ -4,6 +4,43 @@
 #include "global.h"
 #include "main/texture.h"
 
+typedef struct ModelRenderOp
+{
+    u8 pad00[0x0C];
+    u8 alpha;
+    u8 pad0D[0x24 - 0x0D];
+    s32 textureId;
+    u8 unk28;
+    u8 layerCount;
+    u8 pad2A[0x34 - 0x2A];
+    s32 layer0TextureId;
+    u8 pad38[4];
+    u32 flags;
+    u8 pad40;
+    u8 mode;
+    u8 pad42;
+    s8 alphaOverride;
+} ModelRenderOp;
+
+STATIC_ASSERT(sizeof(ModelRenderOp) == 0x44);
+STATIC_ASSERT(offsetof(ModelRenderOp, textureId) == 0x24);
+STATIC_ASSERT(offsetof(ModelRenderOp, layerCount) == 0x29);
+STATIC_ASSERT(offsetof(ModelRenderOp, layer0TextureId) == 0x34);
+STATIC_ASSERT(offsetof(ModelRenderOp, flags) == 0x3C);
+STATIC_ASSERT(offsetof(ModelRenderOp, mode) == 0x41);
+STATIC_ASSERT(offsetof(ModelRenderOp, alphaOverride) == 0x43);
+
+typedef struct ModelRenderOpTextureRefs
+{
+    void* texture0;
+    u8 pad04[4];
+    u8 unk08;
+    u8 pad09[3];
+} ModelRenderOpTextureRefs;
+
+STATIC_ASSERT(sizeof(ModelRenderOpTextureRefs) == 0x0C);
+STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, unk08) == 0x08);
+
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
  * fields are patched to pointers by ObjModel_RelocateModelData /
@@ -27,7 +64,7 @@ typedef struct ModelFileHeader {
     u8 *normals;  /* 3 or 9 bytes each, normalCount */
     u8 *colors;   /* GX_VA_CLR0 array, stride 2 */
     u8 *texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
-    u8 *renderOps; /* 0x44 each, renderOpCount */
+    ModelRenderOp *renderOps;
     u8 *jointData;
     u8 *jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
     u8 unk44[0x10];
@@ -166,7 +203,7 @@ typedef struct ObjModel {
     struct ObjModelBlendChannel *blendChannels; /* 3 channels */
     void *animStateA;  /* ObjAnimState */
     void *animStateB;  /* ObjAnimState, only with load flag 0x80 */
-    u8 *textureRefs;   /* 0xc each, renderOpCount */
+    ModelRenderOpTextureRefs *textureRefs;
     void *renderCallback;
     void *postRenderCallback;
     s32 *vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
@@ -185,6 +222,11 @@ s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex);
 s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex);
 void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback);
 Texture* ObjModel_GetTexture(ModelFileHeader* modelFile, int textureIndex);
+ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* modelFile, int renderOpIndex);
+ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex);
+
+#define ObjModel_GetRenderOpLegacy(model, renderOpIndex) \
+    (((ModelRenderOp* (*)(int, int))ObjModel_GetRenderOp)((model), (renderOpIndex)))
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);

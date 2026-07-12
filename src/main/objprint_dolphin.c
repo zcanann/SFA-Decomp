@@ -1869,7 +1869,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
         gObjCachedModel = (u32)m;
     }
-    shaderSetGxFlags((u8*)obj, m, ((ModelFileHeader*)m)->renderOps);
+    shaderSetGxFlags((u8*)obj, m, (u8*)((ModelFileHeader*)m)->renderOps);
     bs.pos += 4;
     ModelHeader_setupPosTexFmt(m, (void*)((ModelFileHeader*)m)->renderOps, &bs, p4);
     bs.pos += 4;
@@ -1914,7 +1914,6 @@ extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, i
 extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
 extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
 typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
-extern int* ObjModel_GetRenderOp(u8* am0, int idx);
 extern void GXSetTevColor(int id, u32* color);
 
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
@@ -2134,7 +2133,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             w |= p[1] << 8;
             w |= p[2] << 16;
             bs.pos = pos + 6;
-            op = ObjModel_GetRenderOp(m, (w >> (pos & 7)) & 0x3f);
+            op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)m, (w >> (pos & 7)) & 0x3f);
         }
         break;
         case 2:
@@ -2173,7 +2172,6 @@ u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x
 extern void modelInitBoneMtxs(int* am, f32* out);
 extern void model_multMtxs(int* am, f32* wm);
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
-extern u32* ObjModel_GetRenderOpTextureRefs(int* am, int idx);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 
 #pragma opt_dead_assignments off
@@ -2542,7 +2540,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 if (lbl_803DCC20 == 0)
                 {
                     idx = objRenderFn_8003edf4((u8*)obj, m, am, &bs);
-                    op = ObjModel_GetRenderOp(m, idx);
+                    op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)m, idx);
                 }
                 else
                 {
@@ -2555,9 +2553,9 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                     w |= p[2] << 16;
                     bs.pos = pos + 6;
                     idx = (w >> (pos & 7)) & 0x3f;
-                    op = ObjModel_GetRenderOp(m, idx);
+                    op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)m, idx);
                 }
-                refs = ObjModel_GetRenderOpTextureRefs(am, idx);
+                refs = (u32*)ObjModel_GetRenderOpTextureRefs((ObjModel*)am, idx);
             }
             break;
         case 2:
@@ -2846,8 +2844,8 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     {
         return idx;
     }
-    op = ObjModel_GetRenderOp((u8*)*am, idx);
-    refs = ObjModel_GetRenderOpTextureRefs(am, idx);
+    op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)*am, idx);
+    refs = (u32*)ObjModel_GetRenderOpTextureRefs((ObjModel*)am, idx);
     resetLotsOfRenderVars();
     envtex = 0;
     if ((refs[0] != 0 || refs[1] != 0) && ((ObjModelRenderOp*)op)->envTextureId != 0)

@@ -2,7 +2,7 @@
 #include "main/shader_api.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/objmodel_types.h"
+#include "main/model.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
@@ -202,7 +202,6 @@ extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8* buf);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
-void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
 u16 modelFileHeaderGetCullDistance(u8* modelFile);
 void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
@@ -245,12 +244,12 @@ void fn_8002B85C(void)
 void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
 {
     ObjAnimComponent* objAnim;
-    ObjModelFileHeaderLite* modelFile;
+    ModelFileHeader* modelFile;
     int renderOpIndex;
-    ObjModelInstanceLite* model;
+    ObjModel* model;
 
     objAnim = (ObjAnimComponent*)obj;
-    model = (ObjModelInstanceLite*)objAnim->banks[objAnim->bankIndex];
+    model = (ObjModel*)objAnim->banks[objAnim->bankIndex];
     if (model != NULL)
     {
         modelFile = model->file;
@@ -258,7 +257,7 @@ void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
         {
             for (renderOpIndex = 0; renderOpIndex < modelFile->renderOpCount; renderOpIndex++)
             {
-                ((ObjModelRenderOpLite*)ObjModel_GetRenderOp((u8*)modelFile, renderOpIndex))->alpha = alpha;
+                ObjModel_GetRenderOp(modelFile, renderOpIndex)->alphaOverride = alpha;
             }
         }
     }
@@ -2114,8 +2113,8 @@ void Obj_UpdateModelBlendStates(void)
                 m = (u8*)objAnim->banks[j];
                 if (m != 0)
                 {
-                    ((ObjModelInstanceLite*)m)->bufferFlags &= ~8;
-                    if (*(u8*)(*(u8**)m + 0xf9) != 0)
+                    ((ObjModel*)m)->bufferFlags &= ~8;
+                    if (((ObjModel*)m)->file->morphTargetCount != 0)
                     {
                         ObjModel_AdvanceBlendChannels(m, timeDelta);
                     }
@@ -2135,8 +2134,8 @@ void Obj_UpdateModelBlendStates(void)
                         m = (u8*)childAnim->banks[k];
                         if (m != 0)
                         {
-                            ((ObjModelInstanceLite*)m)->bufferFlags &= ~8;
-                            if (*(u8*)(*(u8**)m + 0xf9) != 0)
+                            ((ObjModel*)m)->bufferFlags &= ~8;
+                            if (((ObjModel*)m)->file->morphTargetCount != 0)
                             {
                                 c0 = ((GameObject*)child)->pendingParentObj;
                                 if (c0 != 0)

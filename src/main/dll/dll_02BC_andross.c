@@ -49,14 +49,6 @@
 
 #define ANDROSS_MAP_SHRINE 0xb /* Krazoa shrine map warped to on fight completion */
 
-typedef struct AndrossRenderOp
-{
-    u8 unk00[0x43];
-    s8 alpha;
-} AndrossRenderOp;
-
-STATIC_ASSERT(sizeof(AndrossRenderOp) == 0x44);
-
 typedef struct AndrossChildSetup
 {
     ObjPlacement base;
@@ -400,7 +392,7 @@ int andross_SeqFn(GameObject* obj)
     f32 fade;
     f32 alpha;
     int model;
-    AndrossRenderOp* op;
+    ModelRenderOp* op;
 
     state->fadeAlpha = gAndrossZero;
     fade = state->fadeAlpha;
@@ -409,8 +401,8 @@ int andross_SeqFn(GameObject* obj)
     alpha = 255.0f * fade;
     for (; i < ((ModelFileHeader*)model)->renderOpCount; i++)
     {
-        op = (AndrossRenderOp*)ObjModel_GetRenderOp(model, i);
-        op->alpha = alpha;
+        op = ObjModel_GetRenderOp((ModelFileHeader*)model, i);
+        op->alphaOverride = alpha;
     }
     return 0;
 }
@@ -451,7 +443,7 @@ void andross_update(int obj)
     GameObject** spawnSlot;
     AndrossState* signalState;
     ModelFileHeader* model = NULL;
-    AndrossRenderOp* renderOp;
+    ModelRenderOp* renderOp;
     AndrossChildSetup* childSetup;
     int rotationDelta;
     u32 val;
@@ -1601,8 +1593,8 @@ void andross_update(int obj)
             alpha = 255.0f * fade;
             for (; index < model->renderOpCount; index++)
             {
-                renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
-                renderOp->alpha = alpha;
+                renderOp = ObjModel_GetRenderOpLegacy((int)model, index);
+                renderOp->alphaOverride = alpha;
             }
         }
         if ((state->fightPhase == 5) && (state->actionToggle == 0))
@@ -1902,8 +1894,8 @@ void andross_update(int obj)
             alpha = 255.0f * fade;
             for (; index < model->renderOpCount; index++)
             {
-                renderOp = (AndrossRenderOp*)ObjModel_GetRenderOp((int)model, index);
-                renderOp->alpha = alpha;
+                renderOp = ObjModel_GetRenderOpLegacy((int)model, index);
+                renderOp->alphaOverride = alpha;
             }
         }
         break;
@@ -2339,7 +2331,7 @@ void andross_init(int obj, ObjPlacement* setup)
     model = *(int*)i;
     for (i = 0, val = i; i < *(u8*)(model + 0xf8); i++)
     {
-        *(u8*)(ObjModel_GetRenderOp(model, i) + 0x43) = val;
+        ObjModel_GetRenderOp((ModelFileHeader*)model, i)->alphaOverride = val;
     }
     mainSetBits(0xd, 0);
     unlockLevel(0, 0, 1);

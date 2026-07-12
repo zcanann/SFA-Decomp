@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
 #include "main/curve_eval.h"
@@ -542,7 +543,6 @@ void fn_8003B228(GameObject* obj, int state)
     *(u8*)(state + 0x1e) = 1;
 }
 
-extern void* ObjModel_GetJointMatrix(int* model, int joint);
 extern int lbl_803DCC48;
 
 void modelInitMtxs(int def, int model)
@@ -560,7 +560,7 @@ void modelInitMtxs(int def, int model)
     count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
     if (count >= 2 && count <= 0x64)
     {
-        mtx = (int)ObjModel_GetJointMatrix((int*)model, 0);
+        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
         DCFlushRange((void*)mtx, count << 6);
         rem = (u8)(count << 1);
         cache += 0x2700;
@@ -680,7 +680,7 @@ void objPosFn_80039510(GameObject* obj, int key, int out)
         i = i + ((ObjDef*)table)->modelCount + 1;
     }
     model = (int)Obj_GetActiveModel(obj);
-    model = (int)ObjModel_GetJointMatrix((int*)model, joint);
+    model = (int)ObjModel_GetJointMatrix((u8*)model, joint);
     *(f32*)((char*)out + 0) = *(f32*)((char*)model + 0xc);
     *(f32*)((char*)out + 4) = *(f32*)((char*)model + 0x1c);
     *(f32*)((char*)out + 8) = *(f32*)((char*)model + 0x2c);
@@ -1462,7 +1462,7 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
                 char* t;
                 int joint;
                 joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
-                jm = ObjModel_GetJointMatrix((int*)model, joint);
+                jm = ObjModel_GetJointMatrix((u8*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
                 *(volatile f32*)vp = *(f32*)(t + off + 0x18);
                 va[1] = *(f32*)(t + off + 0x1c);
@@ -1666,9 +1666,9 @@ void modelCalcVtxGroupMtxs(int def, int model)
         f32 wi;
 
         grp = (u8*)(*(int*)(def + 0x54) + off);
-        out = ObjModel_GetJointMatrix((int*)model, i + *(u8*)(def + 0xf3));
-        m1 = ObjModel_GetJointMatrix((int*)model, grp[0]);
-        m2 = ObjModel_GetJointMatrix((int*)model, grp[1]);
+        out = (f32*)ObjModel_GetJointMatrix((u8*)model, i + *(u8*)(def + 0xf3));
+        m1 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[0]);
+        m2 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[1]);
 
         w = (f32)grp[2] / 4.0f;
         wi = 1.0f - w;
@@ -1875,7 +1875,6 @@ typedef struct IndTexMtx23
 
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    extern u8* ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern u32* Shader_getLayer(u8 * shader, int idx);
     extern void selectTexture(u8 * tex, int mapId);
@@ -1896,7 +1895,6 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
     extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
     extern void GXLoadTexMtxImm(f32 * m, int id, int type);
-    extern void** ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 
@@ -1958,7 +1956,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     kc = *(ObjPrintGXColor*)&lbl_803DE9FC;
     mtxA = lbl_802C1B40;
     mtxB = lbl_802C1B58;
-    rop = ObjModel_GetRenderOp(*model, ropIdx);
+    rop = (u8*)ObjModel_GetRenderOp((ModelFileHeader*)*model, ropIdx);
     if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
     {
         if ((lbl_803DCC44 & 3) != 0)
@@ -1996,7 +1994,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, GX_PTTEXMTX1, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTTEXMTX1);
-    selectTexture(*ObjModel_GetRenderOpTextureRefs(model, ropIdx), 1);
+    selectTexture(ObjModel_GetRenderOpTextureRefs((ObjModel*)model, ropIdx)->texture0, 1);
     GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR0A0);
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -2119,7 +2117,6 @@ static inline int shaderProjDisabled(int p)
 
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
-    extern u8* ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern u32* Shader_getLayer(u8 * shader, int idx);
     extern void selectTexture(u8 * tex, int mapId);
@@ -2141,7 +2138,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
     extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
     extern void GXLoadTexMtxImm(f32 * m, int id, int type);
-    extern void** ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 
@@ -2198,7 +2194,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     s10 = lbl_803DE9F4;
     mtxA = lbl_802C1B10;
     mtxB = lbl_802C1B28;
-    rop = ObjModel_GetRenderOp(*model, ropIdx);
+    rop = (u8*)ObjModel_GetRenderOp((ModelFileHeader*)*model, ropIdx);
     if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
     {
         lbl_803DCC3E = 0;
@@ -2268,7 +2264,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, GX_PTTEXMTX1, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTTEXMTX1);
-    selectTexture(*ObjModel_GetRenderOpTextureRefs(model, ropIdx), 1);
+    selectTexture(ObjModel_GetRenderOpTextureRefs((ObjModel*)model, ropIdx)->texture0, 1);
     GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR0A0);
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);

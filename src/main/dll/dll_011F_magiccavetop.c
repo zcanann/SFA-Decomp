@@ -5,6 +5,7 @@
 #include "main/objfx.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
+#include "main/model.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/player_objects.h"
 #include "main/gamebits.h"
@@ -66,7 +67,6 @@ typedef struct MagiccavetopState
     f32 timer;
 } MagiccavetopState;
 
-extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
 
 extern void staffSetGlow(void* a, int b, int c);
 
@@ -343,20 +343,20 @@ void MagicCaveTop_update(int* obj)
 void MagicCaveTop_init(int* obj, s8* def)
 {
     MagiccavetopState* state = ((GameObject*)obj)->extra;
-    int* refs;
+    ModelRenderOpTextureRefs* refs;
     ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | (MAGICCAVETOP_OBJFLAG_HIDDEN | MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED));
     if (mainGetBit(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
     {
         state->fadeTimer = 100.0f;
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)((MagiccavetopObjectDef*)def)->rotByte << 8);
-    refs = ObjModel_GetRenderOpTextureRefs((int)Obj_GetActiveModel((GameObject*)obj), 0);
+    refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel((GameObject*)obj), 0);
     if (((MagiccavetopObjectDef*)def)->swapGameBit > 0)
     {
         if (mainGetBit(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
         {
             state->flags = (u8)(state->flags | 0x0c);
-            *(u8*)((char*)refs + 8) = 23;
+            refs->unk08 = 23;
         }
         else
         {
