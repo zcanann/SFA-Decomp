@@ -329,7 +329,7 @@ void Obj_SpawnHitLightAndFade(int obj, f32* pos)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, void** light)
+int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, ModelLight** light)
 {
     int spawned;
     int i;
@@ -349,7 +349,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
         }
         if (*light != 0)
         {
-            modelLightStruct_freeSlot((int)light);
+            modelLightStruct_freeSlot(light);
         }
         return 0;
     }
@@ -382,7 +382,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
 
     if (*light == 0)
     {
-        *light = (void*)modelLightStruct_createPointLight(obj, 0x80, 0x80, 0xff, 0);
+        *light = modelLightStruct_createPointLight((void*)obj, 0x80, 0x80, 0xff, 0);
         if (*light != 0)
         {
             modelLightStruct_setPosition(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);

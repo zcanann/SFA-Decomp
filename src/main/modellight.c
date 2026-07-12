@@ -202,7 +202,7 @@ ModelLightStruct* objCreateLight(void* owner, u8 addToList)
 }
 
 #pragma opt_loop_invariants off
-void modelLightStruct_freeSlot(void** lightSlot)
+void modelLightStruct_freeSlot(ModelLightStruct** lightSlot)
 {
     int i;
     int count;
@@ -269,7 +269,7 @@ void ModelLightStruct_free(ModelLightStruct* light)
     mm_free(light);
 }
 
-void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag)
+ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 green, u8 blue, u8 setFlag)
 {
     u8* light;
     ModelLightStruct* newLight;
@@ -280,7 +280,7 @@ void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
     }
     else
     {
-        newLight = objAllocLight((void*)unused);
+        newLight = objAllocLight(owner);
         if (newLight == NULL)
         {
             light = NULL;
@@ -315,7 +315,7 @@ void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
         }
     }
 
-    return light;
+    return (ModelLightStruct*)light;
 }
 
 #pragma opt_common_subs off

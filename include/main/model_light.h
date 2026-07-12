@@ -99,6 +99,8 @@ enum ModelLightKind
 };
 
 ModelLightStruct* objCreateLight(void* owner, u8 addToList);
+ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 green, u8 blue, u8 setFlag);
+void modelLightStruct_freeSlot(ModelLightStruct** lightSlot);
 void objSetEventName(ModelLightStruct* light, int name);
 void ModelLightStruct_free(ModelLightStruct* light);
 

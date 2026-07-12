@@ -30,7 +30,7 @@ typedef struct TimerSetup
 typedef struct TimerState
 {
     f32 countdownTimer;   /* 0x00 */
-    void* lightSlot;      /* 0x04: effect-mode point-light slot pointer */
+    ModelLight* lightSlot; /* 0x04: effect-mode point-light slot pointer */
     f32 lightScale;       /* 0x08 */
     u8 mode;              /* 0x0C: TIMER_MODE_* */
     TimerFlags flags;     /* 0x0D */
@@ -74,7 +74,7 @@ void timer_free(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, TIMER_OBJGROUP);
     if (state->lightSlot != NULL)
     {
-        modelLightStruct_freeSlot((int)&state->lightSlot);
+        modelLightStruct_freeSlot(&state->lightSlot);
     }
     gameTimerStop();
 }
@@ -121,7 +121,7 @@ void timer_addDuration(GameObject* obj, int duration)
 void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     TimerState* state = (obj)->extra;
-    void* light = state->lightSlot;
+    ModelLight* light = state->lightSlot;
     if (light != NULL && *(u8*)((char*)light + LIGHT_FIELD_2F8_OFFSET) != 0 &&
         *(u8*)((char*)light + LIGHT_FIELD_4C_OFFSET) != 0)
     {
@@ -200,7 +200,7 @@ void timer_update(GameObject* obj)
                 gameTimerStop();
                 break;
             case TIMER_MODE_EFFECT:
-                modelLightStruct_freeSlot((int)&state->lightSlot);
+                modelLightStruct_freeSlot(&state->lightSlot);
                 break;
             }
             flags->manual = 0;
@@ -222,7 +222,7 @@ void timer_update(GameObject* obj)
                 timerSetToCountUp();
                 break;
             case TIMER_MODE_EFFECT:
-                state->lightSlot = (void*)modelLightStruct_createPointLight((int)obj, 255, 0, 0, 0);
+                state->lightSlot = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
                 if (state->lightSlot != NULL)
                 {
                     modelLightStruct_setupGlow(state->lightSlot, 0, 255, 0, 0, 100, lbl_803DC418);
@@ -234,7 +234,7 @@ void timer_update(GameObject* obj)
     tail:
         if (state->mode == TIMER_MODE_EFFECT && fn_80080150((int)state) != 0)
         {
-            void* light = state->lightSlot;
+            ModelLight* light = state->lightSlot;
             f32 glowAlpha; /* embedded-assign pins lbl_803DC41C to glowAlpha's reg */
             int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer * (glowAlpha = lbl_803DC41C));
             ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
