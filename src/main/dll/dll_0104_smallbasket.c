@@ -29,6 +29,7 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
@@ -136,7 +137,6 @@ extern void* gSmallBasketResource;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, double scale);
-extern void* Obj_GetPlayerObject(void);
 
 extern void ObjGroup_AddObject(u32 obj, int group);
 
@@ -630,7 +630,7 @@ void objThrowFn_80182504(GameObject* obj)
     int extra;
     short* player;
     extra = *(int*)&obj->extra;
-    player = Obj_GetPlayerObject();
+    player = (short*)Obj_GetPlayerObject();
     ((CfperchState*)extra)->carryAttached = 0;
     ((CfperchState*)extra)->carryState = 0;
     ((CfperchState*)extra)->throwState = 1;

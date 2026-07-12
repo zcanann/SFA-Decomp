@@ -29,6 +29,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/sky_state.h"
@@ -90,7 +91,6 @@ extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
 extern int mainGetBit(int eventId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int Obj_GetPlayerObject(void);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
 extern void timeOfDayFn_80055038(void);
@@ -293,28 +293,28 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     case 7:
                         break;
                     case 8:
-                        t = Obj_GetPlayerObject();
+                        t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
                             fn_80295918(t, 1, lbl_803E40D8);
                         }
                         break;
                     case 9:
-                        t = Obj_GetPlayerObject();
+                        t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
                             fn_80295918(t, 10, lbl_803E40D8);
                         }
                         break;
                     case 10:
-                        t = Obj_GetPlayerObject();
+                        t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
                             fn_80295918(t, 0xb, lbl_803E40D8);
                         }
                         break;
                     case 0xb:
-                        t = Obj_GetPlayerObject();
+                        t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
                             fn_80295918(t, 1, lbl_803E40FC);
@@ -475,7 +475,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0x10:
-                    Obj_SetActiveModelIndex(Obj_GetPlayerObject(), p[2]);
+                    Obj_SetActiveModelIndex((int)Obj_GetPlayerObject(), p[2]);
                     break;
                 case 0x12:
                     op = (u16)((p[2] << 8) | p[3]);
@@ -586,7 +586,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     mainSetBits(GAMEBIT_TrickyTalk, (p[2] << 8) | p[3]);
                     break;
                 case 0x1f:
-                    t = Obj_GetPlayerObject();
+                    t = (int)Obj_GetPlayerObject();
                     angleDiff = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t;
                     if (angleDiff > 0x8000)
                     {
@@ -694,22 +694,22 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         {
                         case 0:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             break;
                         case 1:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             envFxFn_800887cc();
                             break;
                         case 2:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
-                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
+                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
                             break;
                         }
                         break;
@@ -733,7 +733,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     **(f32**)(seqArg + 0xb8) = lbl_803E4100 * (f32)(s32)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
-                    t = Obj_GetPlayerObject();
+                    t = (int)Obj_GetPlayerObject();
                     if ((void*)t != NULL)
                     {
                         (*gGameUIInterface)->showNpcDialogue((p[2] << 8) | p[3], 0x14, 0x8c, 1);
@@ -780,7 +780,7 @@ void Trigger_hitDetect(GameObject* obj)
     dist[0] = lbl_803E4104;
     if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
     {
-        triggerObj = Obj_GetPlayerObject();
+        triggerObj = (int)Obj_GetPlayerObject();
         if ((void*)triggerObj != NULL)
         {
             inside = playerGetFocusObject();

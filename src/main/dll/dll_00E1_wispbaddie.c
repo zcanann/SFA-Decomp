@@ -8,6 +8,7 @@
 #include "main/dll/baddie_setmove.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
@@ -61,7 +62,6 @@ extern f32 lbl_803E26F8;
 extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
-extern void* Obj_GetPlayerObject(void);
 
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern float mathSinf(float x);

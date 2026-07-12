@@ -8,6 +8,7 @@
 #include "main/frustum.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
 #include "main/dll/dll_00C4_tricky.h"
@@ -187,7 +188,6 @@ extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern int Obj_GetActiveModel(int obj);
-extern int Obj_GetPlayerObject(void);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern void Obj_FreeObject(int obj);
@@ -620,7 +620,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         if (((((TrickyState*)state)->stateFlags & 0x10) == 0) &&
             (bitVal = mainGetBit(GAMEBIT_ITEM_TrickyBall_Usable), bitVal != 0))
         {
-            ref = Obj_GetPlayerObject();
+            ref = (int)Obj_GetPlayerObject();
             ref = fn_80296240((GameObject*)(ref));
             if ((ref != 0) && (bitVal = mainGetBit(GAMEBIT_NoBallsAllowed), bitVal == 0))
             {
@@ -1703,7 +1703,7 @@ void Tricky_init(GameObject* obj)
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[7]);
     trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[8]);
     ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getTrickyEnergy();
-    ((TrickyState*)state)->playerObj = Obj_GetPlayerObject();
+    ((TrickyState*)state)->playerObj = (int)Obj_GetPlayerObject();
     ((TrickyState*)state)->stateIndex = 0;
     ((TrickyState*)state)->commandRequestBits = 0;
     ((TrickyState*)state)->previousPathPoint = NULL;
@@ -2049,7 +2049,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
     u32 hitEffects;
     u16 impactSfx;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     colors = *(FrozenFxColors*)gTrickyFrozenFxColors;
     result = 2;
     if ((((TrickyState*)state)->flags2DC & 0x1800) == 0)
