@@ -18,6 +18,7 @@
  */
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/model.h"
+#include "main/camera.h"
 #include "dolphin/gx/GXEnum.h"
 
 extern volatile f32 gCloudActionGlareQuadSize;
@@ -36,7 +37,6 @@ extern void __begin_critical_region(void);
 
 extern void __end_critical_region(void);
 
-extern void* Camera_GetCurrentViewSlot(void);
 extern void fn_8008DAE8(int obj);
 extern u8* Obj_GetActiveModel(int obj);
 extern void fn_800412B8(int a, int b, int c);
@@ -125,7 +125,7 @@ void renderClouds(int a, int b, int c, int d)
     int savedClipH;
     f32 pos[3];
     f32 mtx[12];
-    u8* view;
+    CameraViewSlot* view;
     ObjModel* model;
     void* viewMtx;
     f32 cloudT;
@@ -141,13 +141,13 @@ void renderClouds(int a, int b, int c, int d)
         model = (ObjModel*)Obj_GetActiveModel((int)gCloudOverrideObject);
         model->bufferFlags &= ~8;
         ((u8*)gCloudOverrideObject)[0x37] = 0xff;
-        v = *(f32*)(view + 0xc);
+        v = view->x;
         gCloudOverrideObject->anim.worldPosX = v;
         gCloudOverrideObject->anim.localPosX = v;
-        v = *(f32*)(view + 0x10);
+        v = view->y;
         gCloudOverrideObject->anim.worldPosY = v;
         gCloudOverrideObject->anim.localPosY = v;
-        v = *(f32*)(view + 0x14);
+        v = view->z;
         gCloudOverrideObject->anim.worldPosZ = v;
         gCloudOverrideObject->anim.localPosZ = v;
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
@@ -174,9 +174,9 @@ void renderClouds(int a, int b, int c, int d)
         else
         {
             fn_8008DAE8((int)lbl_8039AB28.upperCloudObj);
-            lbl_8039AB28.upperCloudObj->anim.localPosX = *(f32*)(view + 0xc);
-            lbl_8039AB28.upperCloudObj->anim.localPosY = *(f32*)(view + 0x10);
-            lbl_8039AB28.upperCloudObj->anim.localPosZ = *(f32*)(view + 0x14);
+            lbl_8039AB28.upperCloudObj->anim.localPosX = view->x;
+            lbl_8039AB28.upperCloudObj->anim.localPosY = view->y;
+            lbl_8039AB28.upperCloudObj->anim.localPosZ = view->z;
         }
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, (int)lbl_8039AB28.upperCloudObj, 1);
@@ -191,13 +191,13 @@ void renderClouds(int a, int b, int c, int d)
         model = (ObjModel*)Obj_GetActiveModel((int)lbl_8039AB28.mainCloudObj);
         model->bufferFlags &= ~8;
         ((u8*)lbl_8039AB28.mainCloudObj)[0x37] = 0xff;
-        v = *(f32*)(view + 0xc);
+        v = view->x;
         lbl_8039AB28.mainCloudObj->anim.worldPosX = v;
         lbl_8039AB28.mainCloudObj->anim.localPosX = v;
-        v = lbl_803DF2C4 + *(f32*)(view + 0x10);
+        v = lbl_803DF2C4 + view->y;
         lbl_8039AB28.mainCloudObj->anim.worldPosY = v;
         lbl_8039AB28.mainCloudObj->anim.localPosY = v;
-        v = *(f32*)(view + 0x14);
+        v = view->z;
         lbl_8039AB28.mainCloudObj->anim.worldPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.localPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.rotY = 0;
@@ -281,9 +281,9 @@ void renderClouds(int a, int b, int c, int d)
         else
         {
             fn_8008DAE8((int)lbl_8039AB28.lowerCloudObj);
-            lbl_8039AB28.lowerCloudObj->anim.localPosX = *(f32*)(view + 0xc);
-            lbl_8039AB28.lowerCloudObj->anim.localPosY = *(f32*)(view + 0x10);
-            lbl_8039AB28.lowerCloudObj->anim.localPosZ = *(f32*)(view + 0x14);
+            lbl_8039AB28.lowerCloudObj->anim.localPosX = view->x;
+            lbl_8039AB28.lowerCloudObj->anim.localPosY = view->y;
+            lbl_8039AB28.lowerCloudObj->anim.localPosZ = view->z;
         }
         objRender(a, b, c, d, (int)lbl_8039AB28.lowerCloudObj, 1);
     }

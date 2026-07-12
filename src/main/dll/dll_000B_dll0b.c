@@ -26,6 +26,7 @@
 #include "main/texture.h"
 #include "main/mm.h"
 #include "main/vecmath.h"
+#include "main/camera.h"
 #include "main/dll/dll_000B_dll0b.h"
 #include "main/objlib.h"
 #include "dolphin/gx/GXEnum.h"
@@ -609,7 +610,6 @@ void dll_0B_onMapSetup(void)
     }
 }
 
-extern void* Camera_GetCurrentViewSlot(void);
 
 void dll_0B_func08(void* param)
 {
@@ -1031,7 +1031,6 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 #pragma opt_propagation reset
 
 extern s16 renderModeSetOrGet(int mode);
-extern f32* Camera_GetViewMatrix(void);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void selectTexture(u8* tex, int mapId);
@@ -1059,7 +1058,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     f32 mtxA[12];
     int** p;
     int slot;
-    void* view;
+    CameraViewSlot* view;
     void* buf2;
     void* buf1;
     u8 aligned;
@@ -1220,8 +1219,8 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                dirX = *(f32*)((char*)view + 0x44) - *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
-                dirZ = *(f32*)&((GameObject*)view)->anim.placementData -
+                dirX = view->worldX - *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
+                dirZ = view->worldZ -
                        *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
                 dscale = sqrtf(dirX * dirX + dirZ * dirZ);
                 if (dscale != lbl_803DF430)

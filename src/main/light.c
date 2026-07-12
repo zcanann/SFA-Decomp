@@ -10,6 +10,7 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/camera.h"
 
 #define LIGHT_OBJFLAG_HIDDEN             0x4000
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -41,7 +42,6 @@ extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
-extern int Camera_GetCurrentViewSlot(void);
 extern void PSVECSubtract(void* a, void* b, void* ab);
 extern void PSVECNormalize(void* in, void* out);
 extern void PSVECScale(void* in, void* out, f32 scale);
@@ -506,7 +506,7 @@ void VFP_DoorSwitch_init(int obj, int data)
 void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
 {
     VfpDoorSwitchState* state = obj->extra;
-    int camView = Camera_GetCurrentViewSlot();
+    CameraViewSlot* camView = Camera_GetCurrentViewSlot();
 
     if (state->activated == 0)
     {
@@ -526,7 +526,7 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
             if (obj->anim.currentMoveProgress >= lbl_803E611C)
             {
                 f32 vec[3];
-                PSVECSubtract((void*)(camView + 0xC), &obj->anim.localPosX, vec);
+                PSVECSubtract(&camView->x, &obj->anim.localPosX, vec);
                 PSVECNormalize(vec, vec);
                 PSVECScale(vec, vec, lbl_803E6120);
                 PSVECAdd(&obj->anim.localPosX, vec, &obj->anim.localPosX);

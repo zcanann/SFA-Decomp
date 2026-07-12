@@ -19,6 +19,7 @@
  * point-sprite render state is built in waterfx_setupSplashDropPointRender.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/camera.h"
 #include "dolphin/os/OSCache.h"
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
@@ -385,7 +386,8 @@ void waterfx_func05(int obj, int renderParam)
                 dp.f8 = e->f14;
                 dp.fc = 0;
                 dp.fa = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                ((void (*)(int, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
+                    obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
                 drawFn_8005cf8c(&((WaterVtx*)gWaterfxRippleVtx)[i * 4], (char*)gWaterfxRippleVtxDesc + o32, 2);
             }
@@ -447,7 +449,8 @@ void waterfx_func05(int obj, int renderParam)
                 dp.f8 = g->f16;
                 dp.fc = 0;
                 dp.fa = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                ((void (*)(int, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
+                    obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
                 drawFn_8005cf8c((char*)gWaterfxWakeVtx + o64, (char*)gWaterfxWakeVtxDesc + o32, 2);
             }

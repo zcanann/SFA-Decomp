@@ -38,6 +38,7 @@
 #include "main/objtexture.h"
 #include "main/mm.h"
 #include "main/gamebit_ids.h"
+#include "main/camera.h"
 
 #define WM_SUN_GLARE_COUNT 20
 
@@ -149,7 +150,6 @@ extern f32 lbl_803E5F60; /* 0.001f */
 extern f32 lbl_803E5F64; /* -0.001f */
 extern f32 lbl_803E5F68; /* 0.01f */
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16* ang, WmSunVec3* vec);
 
 int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)
@@ -168,7 +168,7 @@ void wmsun_updateGlare(GameObject* obj)
     WmSunVec3 dir;
     WmSunVec3 sun;
     WmSunGlare g;
-    int cam;
+    CameraViewSlot* cam;
     f32 dx, dy, dz, len;
     f32 dot, prod, denom;
     f32 hy, hz, cosang, hlen;
@@ -186,13 +186,13 @@ void wmsun_updateGlare(GameObject* obj)
     g.ang[1] = 0;
     g.ang[0] = obj->anim.rotX;
     cam = Camera_GetCurrentViewSlot();
-    if ((void*)cam != NULL)
+    if (cam != NULL)
     {
-        g.ang[0] = 0x8000 - *(s16*)cam;
+        g.ang[0] = 0x8000 - cam->yaw;
         vecRotateZXY(g.ang, &sun);
-        dx = obj->anim.localPosX - *(f32*)(cam + 0xc);
-        dy = obj->anim.localPosY - *(f32*)(cam + 0x10);
-        dz = obj->anim.localPosZ - *(f32*)(cam + 0x14);
+        dx = obj->anim.localPosX - cam->x;
+        dy = obj->anim.localPosY - cam->y;
+        dz = obj->anim.localPosZ - cam->z;
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (*(f32*)&lbl_803E5F20 != len)
         {
@@ -218,8 +218,8 @@ void wmsun_updateGlare(GameObject* obj)
         hy = *(f32*)&lbl_803E5F20;
         if (cosang > hy)
         {
-            dot = obj->anim.localPosX - *(f32*)(cam + 0xc);
-            hz = obj->anim.localPosZ - *(f32*)(cam + 0x14);
+            dot = obj->anim.localPosX - cam->x;
+            hz = obj->anim.localPosZ - cam->z;
             hlen = sqrtf(hz * hz + (dot * dot + hy));
             if (*(f32*)&lbl_803E5F20 != hlen)
             {

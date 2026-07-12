@@ -654,7 +654,6 @@ extern _PlaneDirPack sPlayerFrustumPlaneDirs;
 extern _ScalePack sPlayerFrustumPlaneScales;
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
-extern f32* Camera_GetInverseViewRotationMatrix(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
 extern void PSVECScale(f32* in, _Vec3* out, f32 s);

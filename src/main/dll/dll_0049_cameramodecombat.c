@@ -1,5 +1,6 @@
 /* DLL 0x0049 (cameramodecombat) — Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
@@ -14,7 +15,6 @@ extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
-extern u32 Camera_GetCurrentViewSlot();
 
 
 
@@ -154,7 +154,7 @@ void CameraModeCombat_update(short* cam)
     f32 dz;
     f32 n[3];
     u8 trace[116];
-    int view = Camera_GetCurrentViewSlot();
+    CameraViewSlot* view = Camera_GetCurrentViewSlot();
     GameObject* tgt;
     ObjHitVolumeRuntimeTransform* hitVolumes;
     GameObject* focus;
@@ -418,9 +418,9 @@ void CameraModeCombat_update(short* cam)
                             camcontrol_traceMove(&prevX, &((CameraObject*)cam)->anim.worldPosX,
                                                  &((CameraObject*)cam)->anim.worldPosX, trace, 3, 1, 1, lbl_803E18CC);
                             t = lbl_803E18F8 * dz + focus->anim.worldPosZ;
-                            fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + focus->anim.worldPosX);
-                            dy = *(f32*)(view + 0x10) - py;
-                            fa = *(f32*)(view + 0x14) - t;
+                            fb = view->x - (lbl_803E18F8 * dx + focus->anim.worldPosX);
+                            dy = view->y - py;
+                            fa = view->z - t;
                             t = sqrtf(fb * fb + fa * fa);
                             ang = getAngle(dy, t) & 0xffff;
                             binAngleDelta = ang - ((int)cam[1] & 0xffffU);
@@ -548,4 +548,3 @@ void CameraModeCombat_release(void)
 void CameraModeCombat_initialise(void)
 {
 }
-

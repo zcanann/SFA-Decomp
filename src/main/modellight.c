@@ -93,7 +93,6 @@ extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int l
 extern void GXSetNumChans(u8 nChans);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* out);
-extern f32* Camera_GetInverseViewMatrix(void);
 extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
 extern f32 PSVECMag(f32* v);
