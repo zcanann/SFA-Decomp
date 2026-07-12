@@ -315,9 +315,9 @@ void pollenfragment_update(int obj)
         Obj_FreeObject(obj);
         return;
     }
-    if (fn_80080150((f32*)(extra + 0x20)) != 0)
+    if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
     {
-        if (timerCountDown((f32*)(extra + 0x20)) != 0)
+        if (timerCountDown(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
         {
             Obj_FreeObject(obj);
         }
