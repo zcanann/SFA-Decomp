@@ -46,6 +46,11 @@ extern s16 gWcTempleDiaGameBitsB[4];
 extern f32 gWcTempleDiaTargetSpeedTableA[3];
 extern f32 gWcTempleDiaTargetSpeedTableB[3];
 extern f32 gWcTempleDiaSpeedLerpRate;
+extern f32 lbl_803E6E58;
+extern f32 lbl_803E6E5C;
+extern f32 lbl_803E6E60;
+extern f32 lbl_803E6E64;
+extern f32 lbl_803E6E68;
 
 void wctempledia_syncPartVisibility(GameObject* obj, u8 mask);
 int wctempledia_getExtraSize(void);

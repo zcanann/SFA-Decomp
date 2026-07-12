@@ -98,13 +98,8 @@ extern f32 lbl_803E6E04;
 
 extern int fn_8006070C(int block, int index);
 extern void mapTextureOverrideSetValue(int a, int b, int c);
-extern f32 lbl_803E6E58;
 #pragma dont_inline on
 #pragma dont_inline reset
-extern f32 lbl_803E6E5C;
-extern f32 lbl_803E6E60;
-extern f32 lbl_803E6E64;
-extern f32 lbl_803E6E68;
 
 #pragma dont_inline on
 #pragma dont_inline reset
