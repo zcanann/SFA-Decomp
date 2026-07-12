@@ -1,8 +1,8 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
 #include "main/vecmath.h"
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
@@ -14,11 +14,6 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/model.h"
 
 #define FUELCELL_OBJGROUP 0x4f
-extern void* ObjGroup_GetObjects();
-extern u64 ObjGroup_RemoveObject();
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 
@@ -38,9 +33,9 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
-extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
-extern void Sfx_PlayFromObject(int* obj, int soundId);
+extern void Sfx_AddLoopedObjectSound(GameObject* obj, int soundId);
+extern void Sfx_RemoveLoopedObjectSound(GameObject* obj, int soundId);
+extern void Sfx_PlayFromObject(GameObject* obj, int soundId);
 extern f32 getXZDistance(void* a, void* b);
 typedef struct
 {
@@ -88,9 +83,9 @@ void fuelcell_modelMtxFn(u8* model)
 
 int FuelCell_getExtraSize(void) { return 0x60; }
 
-void FuelCell_free(int* obj)
+void FuelCell_free(GameObject* obj)
 {
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     u8 i;
 
     for (i = 0; i < 10; i++)
@@ -104,7 +99,7 @@ void FuelCell_free(int* obj)
 
     if (((u32)state[0x5c] >> 7) & 1)
     {
-        ObjGroup_RemoveObject(obj, FUELCELL_OBJGROUP);
+        ObjGroup_RemoveObject((int)obj, FUELCELL_OBJGROUP);
     }
 }
 
@@ -178,7 +173,7 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                 int* target;
                 if ((int)randomGetRange(0, 9) == 0 && !state->unkBit5)
                 {
-                    list = ObjGroup_GetObjects(FUELCELL_OBJGROUP, &objCount);
+                    list = (int**)ObjGroup_GetObjects(FUELCELL_OBJGROUP, &objCount);
                     for (j = 0; j < objCount; j++)
                     {
                         int ofs = (int)(u16)j * 4;
@@ -244,12 +239,10 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 }
 #pragma opt_loop_invariants reset
 
-void FuelCell_update(int* obj)
+void FuelCell_update(GameObject* obj)
 {
-    extern u32 ObjGroup_AddObject();
-
-    FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;
-    FuelcellState* state = ((GameObject*)obj)->extra;
+    FuelcellSetup* setup = *(FuelcellSetup**)&obj->anim.placementData;
+    FuelcellState* state = obj->extra;
     GameObject* player;
     int msgId;
     int msgParam;
@@ -257,7 +250,7 @@ void FuelCell_update(int* obj)
     player = Obj_GetPlayerObject();
     if (state->grabbed)
     {
-        while (ObjMsg_Pop(obj, &msgId, &msgParam, 0) != 0)
+        while (ObjMsg_Pop(obj, (u32*)&msgId, (u32*)&msgParam, 0) != 0)
         {
             if (msgId == FUELCELL_MSG_RELEASE)
             {
@@ -281,7 +274,7 @@ void FuelCell_update(int* obj)
                 {
                     Sfx_AddLoopedObjectSound(obj, SFXTRIG_pk_fuelcell_fizz);
                     state->lit = 1;
-                    ObjGroup_AddObject(obj, FUELCELL_OBJGROUP);
+                    ObjGroup_AddObject((int)obj, FUELCELL_OBJGROUP);
                 }
                 else if (state->resetPos)
                 {
@@ -298,7 +291,7 @@ void FuelCell_update(int* obj)
                                      &player->anim.worldPosX) < 81.0f)
                 {
                     state->msg = 0xcbe;
-                    ObjMsg_SendToObject(player, FUELCELL_MSG_IN_RANGE, obj, state);
+                    ObjMsg_SendToObject(player, FUELCELL_MSG_IN_RANGE, obj, (u32)state);
                     state->grabbed = 1;
                     mainSetBits(FUELCELL_GAMEBIT_CARRIED, 1);
                     Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
@@ -309,14 +302,14 @@ void FuelCell_update(int* obj)
         {
             state->lit = 0;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_pk_fuelcell_fizz);
-            ObjGroup_RemoveObject(obj, FUELCELL_OBJGROUP);
+            ObjGroup_RemoveObject((int)obj, FUELCELL_OBJGROUP);
         }
     }
 }
 
-void FuelCell_init(int* obj)
+void FuelCell_init(GameObject* obj)
 {
-    ((GameObject*)obj)->animEventCallback = FuelCell_SeqFn;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((GameObject*)obj), fuelcell_modelMtxFn);
+    obj->animEventCallback = FuelCell_SeqFn;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }

@@ -16,6 +16,7 @@
  *   list), any other id is appended to the deferred-message queue.
  */
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/VF/vf_shared.h"
 
@@ -53,9 +54,6 @@ extern s8 lbl_803DDB08;  /* deferred-message queue count */
 extern s8 lbl_803DDB09;  /* registered-target list count */
 extern int lbl_803DDB0C; /* cached rom-curve handle */
 
-extern int ObjMsg_Pop();
-extern void ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue();
 
 CPTargetEntry lbl_803AC7D8[20]; /* registered-target list */
 int lbl_803AC878[0x22];         /* deferred-message queue storage */
@@ -93,7 +91,7 @@ void CloudPrisonControl_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4108);
 }
 
-void CloudPrisonControl_init(int obj)
+void CloudPrisonControl_init(GameObject* obj)
 {
     ObjMsg_AllocQueue(obj, 0xa);
 }
@@ -118,7 +116,7 @@ void CloudPrisonControl_update(GameObject* obj)
         lbl_803DBE08 = 0;
     }
     lbl_803DDB08 = 0;
-    while (ObjMsg_Pop(obj, msg, &target, &data) != 0)
+    while (ObjMsg_Pop(obj, (u32*)msg, (u32*)&target, (u32*)&data) != 0)
     {
         msgId = msg[0];
         switch (msgId)
@@ -145,7 +143,7 @@ void CloudPrisonControl_update(GameObject* obj)
                     lbl_803AC7D8[lbl_803DDB09].flags = 0;
                     lbl_803AC7D8[lbl_803DDB09++].value = data;
                 }
-                ObjMsg_SendToObject(target, CPMSG_ACK, obj, 0);
+                ObjMsg_SendToObject((void*)target, CPMSG_ACK, obj, 0);
             }
             break;
         case CPMSG_IGNORED_5:

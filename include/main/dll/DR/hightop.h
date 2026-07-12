@@ -36,7 +36,7 @@ void CloudPrisonControl_free(void);
 void CloudPrisonControl_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void CloudPrisonControl_hitDetect(void);
 void CloudPrisonControl_update(GameObject* obj);
-void CloudPrisonControl_init(int obj);
+void CloudPrisonControl_init(GameObject* obj);
 void CloudPrisonControl_release(void);
 void CloudPrisonControl_initialise(void);
 

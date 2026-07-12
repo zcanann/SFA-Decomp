@@ -123,8 +123,6 @@ extern f32 lbl_803E4254;
 
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void storeZeroToFloatParam(void* p);
@@ -458,7 +456,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     if (inRange == 0 && sub->runnerState == 2)
     {
         f32 radius = (f32)def->outerRadius;
-        if ((void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &radius) != NULL)
+        if ((void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, (int)obj, &radius) != NULL)
         {
             inRange = 1;
         }
@@ -615,7 +613,7 @@ void babycloudrunner_update(int* obj)
                 }
                 if (sub->runnerState == 2)
                 {
-                    near = (int*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, 0);
+                    near = (int*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, (int)obj, 0);
                     if (near != NULL &&
                         Vec_distance(&((GameObject*)near)->anim.worldPosX, (f32*)((char*)sub + 0x18)) < gBabyCloudRunnerTargetNearDist)
                     {
@@ -663,7 +661,8 @@ void babycloudrunner_update(int* obj)
                     }
                     (*gGameUIInterface)->runAirMeter((int)sub->countdownTimer);
                 }
-                if (inRange == 0 && (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &radius) != NULL)
+                if (inRange == 0 &&
+                    (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, (int)obj, &radius) != NULL)
                 {
                     inRange = 1;
                 }
