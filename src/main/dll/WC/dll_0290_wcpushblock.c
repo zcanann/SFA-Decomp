@@ -26,6 +26,7 @@
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
 #include "main/dll/WC/dll_0290_wcpushblock.h"
+#include "string.h"
 #include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/objfx.h"

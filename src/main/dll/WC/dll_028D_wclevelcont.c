@@ -1,4 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_0290_wcpushblock.h"
+#include "string.h"
 #include "main/lightmap_api.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/render.h"

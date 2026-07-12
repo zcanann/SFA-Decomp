@@ -76,7 +76,12 @@ extern f32 gWcPushBlockPi;
 extern f32 gWcPushBlockAngleScale;
 extern f32 lbl_803E6D54;
 extern f32 lbl_803E6DA0;
+extern const f32 lbl_803E6DA8;
 extern f32 lbl_803E6DB0;
+extern f32 lbl_803E6DB4;
+extern f32 lbl_803E6DB8;
+extern f32 lbl_803E6DBC;
+extern f32 lbl_803E6DC0;
 
 int wcpushblock_getExtraSize(void);
 int wcpushblock_getObjectTypeId(GameObject* obj);

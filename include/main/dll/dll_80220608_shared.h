@@ -47,12 +47,6 @@
 
 /* Pattern wrappers. */
 
-extern f32 lbl_803E6DB4;
-extern f32 lbl_803E6DB8;
-extern f32 lbl_803E6DBC;
-extern f32 lbl_803E6DC0;
-extern const f32 lbl_803E6DA8;
-extern void* memcpy(void* dst, const void* src, u32 n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
