@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model_light.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
@@ -455,7 +456,6 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject* obj, DIMbossRunt
     gDIMbossSequenceFlags &= DIMBOSS_SEQUENCE_FLAGS_PERSIST_AFTER_EFFECT_UPDATE;
 }
 
-extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int sel);
 extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
 extern int* gTitleMenuControlInterfaceCopy;
@@ -565,7 +565,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         {
             if (((BaddieState*)playerObj)->targetObj == NULL)
             {
-                player = Obj_GetPlayerObject();
+                player = (int)Obj_GetPlayerObject();
                 if (fn_80295A04(player, 1) != 0)
                 {
                     ((void (*)(int, int, int, int, int, int, int, int, int)) *

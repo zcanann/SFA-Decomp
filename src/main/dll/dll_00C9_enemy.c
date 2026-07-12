@@ -10,6 +10,7 @@
 #include "main/camera_interface.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model.h"
 #include "main/mm.h"
 #include "main/objseq.h"
@@ -192,7 +193,6 @@ extern f32 lbl_803DBC68;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
 extern f32 enemySightRange;
-extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 
 void objAnimFn_8014a9f0(short* obj, int state)
@@ -667,7 +667,7 @@ void fn_8014C5C0(int* obj)
 void fn_8014C63C(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
+    ((EnemyState*)state)->trackedObj = (u8*)Obj_GetPlayerObject();
 }
 
 u8 fn_8014C4D8(int* obj)
@@ -1074,7 +1074,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 4:
-            obj = Obj_GetPlayerObject();
+            obj = (int*)Obj_GetPlayerObject();
             if (obj != NULL)
             {
                 ((TrickyState*)sub)->flags2DC &= ~0x200000LL;
@@ -1130,7 +1130,7 @@ void fn_8014B878(int* arg1, int* sub)
     int* target;
     int* camTarget;
 
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     tricky = getTrickyObject();
     target = *(int**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
@@ -1716,11 +1716,11 @@ void enemy_update(int obj)
     }
     if (((EnemyState*)state)->trackedObj == NULL)
     {
-        ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
+        ((EnemyState*)state)->trackedObj = (u8*)Obj_GetPlayerObject();
     }
     else if ((((GameObject*)((EnemyState*)state)->trackedObj)->objectFlags & ENEMY_OBJFLAG_FREED) != 0)
     {
-        ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
+        ((EnemyState*)state)->trackedObj = (u8*)Obj_GetPlayerObject();
     }
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
     baddieInstantiateWeapon((GameObject*)(obj), state);
@@ -1758,7 +1758,7 @@ void enemy_update(int obj)
             {
                 return;
             }
-            player = Obj_GetPlayerObject();
+            player = (u8*)Obj_GetPlayerObject();
             if (((EnemyPlacement*)setup)->gameBit != -1)
             {
                 if (mainGetBit(((EnemyPlacement*)setup)->gameBit) != 0)
@@ -1795,7 +1795,7 @@ void enemy_update(int obj)
             {
                 return;
             }
-            player = Obj_GetPlayerObject();
+            player = (u8*)Obj_GetPlayerObject();
             if (player != NULL)
             {
                 if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) >
@@ -1829,7 +1829,7 @@ void enemy_update(int obj)
             {
                 if ((((EnemyState*)state)->controlFlags & 0x800) == 0)
                 {
-                    player = Obj_GetPlayerObject();
+                    player = (u8*)Obj_GetPlayerObject();
                     if (player != NULL)
                     {
                         if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) >

@@ -23,6 +23,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
@@ -110,7 +111,6 @@ extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E4338;
 extern f32 gGunpowderBarrelPi;
 extern f32 gGunpowderBarrelHalfAngleUnit;
@@ -660,7 +660,7 @@ void gunpowderbarrel_update(GameObject *obj)
     GunpowderBarrelState* state = (obj)->extra;
     u8* player;
     GunpowderbarrelPlacement* def;
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     def = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
 
     if (state->impactSoundCooldown <= lbl_803E4334)
@@ -1132,7 +1132,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     char* player;
     char* near;
     f32 radius = lbl_803E42E0;
-    player = Obj_GetPlayerObject();
+    player = (char*)Obj_GetPlayerObject();
     near = (char*)ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (u32)obj, &radius);
     if (near == NULL)
     {
