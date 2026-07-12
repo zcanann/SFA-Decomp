@@ -2900,7 +2900,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
                     f32 d = floor(fn_802925C4(p[1], sqrtf(px + pz)));
-                    b[1] = b[1] + y / d;
+                    d = y / d;
+                    b[1] = b[1] + d;
                 }
                 break;
             }
