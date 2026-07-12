@@ -5,6 +5,7 @@
  * activation bit, and disables itself. Sibling of vfpspellplace (VFP).
  */
 #include "main/dll/CF/laser.h"
+#include "main/objprint_dolphin.h"
 #include "main/gameplay_runtime.h"
 
 int DFPSpPl_getExtraSize(void)
@@ -45,7 +46,7 @@ void DFPSpPl_update(LaserObject* obj)
     {
         obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
     }
-    objRenderFn_80041018((int)obj);
+    objRenderFn_80041018((GameObject*)obj);
     if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0)
     {
         mode = (u8)(*gMapEventInterface)->getMapAct((int)obj->mapEventSlot);

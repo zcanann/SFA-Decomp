@@ -14,6 +14,7 @@
  * the object's configured level, or clears it.
  */
 #include "main/dll/dll_02B8_mcupgradema.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_00E2_staff.h"
 #include "main/dll/player_objects.h"
@@ -46,7 +47,7 @@ void mcupgradema_update(GameObject* obj)
     }
     else
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
 }
 

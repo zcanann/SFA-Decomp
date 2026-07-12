@@ -18,6 +18,7 @@
  *   0x4 = pick the trigger sequence id randomly in [triggerIdMin..Max]
  */
 #include "main/dll/dll_0117_appleontree.h"
+#include "main/objprint_dolphin.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
@@ -72,7 +73,6 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 extern f32 lbl_803E3848; /* render distance constant */
 extern f32 lbl_803E384C; /* initial max-distance for the nearest-object search */
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objRenderFn_80041018(int* obj);
 
 int dll_FC_getExtraSize_ret_8(void)
 {
@@ -101,7 +101,7 @@ void dll_FC_hitDetect(int* obj)
         return;
     if (objAnim->hitVolumeTransforms == NULL)
         return;
-    objRenderFn_80041018(obj);
+    objRenderFn_80041018((GameObject*)obj);
 }
 
 void dll_FC_update(GameObject* obj)

@@ -249,7 +249,6 @@ extern f32 lbl_803E5EE8;
 extern f32 lbl_803E5EEC;
 extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EF0;
-extern void objRenderFn_80041018(int obj);
 extern void skyFn_80088c94(int skyId, int enabled);
 extern void Rcp_SetSpiritVisionEnabled(int enabled);
 extern int getSkyColorFn_80088e08(int skyId);

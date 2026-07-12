@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
@@ -205,7 +206,6 @@ extern u8 lbl_803DCC0B;
 extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
 extern void objRenderModel(int* obj, int** table);
-extern void objRenderFn_80041018(int* obj);
 
 s16* objModelGetVecFn_800395d8(GameObject* obj, int target)
 {
@@ -273,7 +273,7 @@ void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
         objRenderModel((int*)obj, table);
         if (obj->anim.hitVolumeTransforms != NULL)
         {
-            objRenderFn_80041018((int*)obj);
+            objRenderFn_80041018((GameObject*)obj);
         }
     }
 }
@@ -760,7 +760,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             (*(void (*)(int))objRenderModel)(obj);
             if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
-                objRenderFn_80041018((int*)obj);
+                objRenderFn_80041018((GameObject*)obj);
             }
         }
     }
@@ -778,7 +778,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
                 (*(void (*)(int))objRenderModel)(obj);
                 if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
-                    objRenderFn_80041018((int*)obj);
+                    objRenderFn_80041018((GameObject*)obj);
                 }
             }
             break;

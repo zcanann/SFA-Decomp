@@ -1,5 +1,6 @@
 /* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017F4F4) */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/objlib.h"
@@ -12,7 +13,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DLL00FD_OBJFLAG_HIDDEN 0x4000
-extern void objRenderFn_80041018(void);
 extern f32 lbl_803E3850;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -89,7 +89,7 @@ void dll_FD_hitDetect(GameObject *obj)
     if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
         (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
     {
-        objRenderFn_80041018();
+        ((void (*)(void))objRenderFn_80041018)();
     }
     return;
 }

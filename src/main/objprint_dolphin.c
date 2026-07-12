@@ -569,7 +569,7 @@ void objRenderFuzz(int* obj)
     }
 }
 
-void objRenderFn_80041018(int* obj)
+void objRenderFn_80041018(GameObject* obj)
 {
     ObjDefHitVolume* p;
     ObjHitVolumeRuntimeTransform* q;
@@ -595,8 +595,8 @@ void objRenderFn_80041018(int* obj)
             {
                 mtx = NULL;
             }
-            objMtxFn_80041104(NULL, &q->centerX, &p->posX, base->flags & 0x10, obj, 0);
-            objMtxFn_80041104((f32*)mtx, &q->jointX, &p->jointOffsetX, base->flags & 0x10, obj, 1);
+            objMtxFn_80041104(NULL, &q->centerX, &p->posX, base->flags & 0x10, (int*)obj, 0);
+            objMtxFn_80041104((f32*)mtx, &q->jointX, &p->jointOffsetX, base->flags & 0x10, (int*)obj, 1);
             p++;
             q++;
         }

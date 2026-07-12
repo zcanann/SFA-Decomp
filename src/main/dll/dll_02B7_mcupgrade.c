@@ -13,6 +13,7 @@
  * lives in DLL 0x2B8.
  */
 #include "main/dll/dll_02B6_cnthitobjec.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/tricky.h"
@@ -42,7 +43,7 @@ void mcupgrade_update(GameObject* obj)
     }
     else
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
 }
 

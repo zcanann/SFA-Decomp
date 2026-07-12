@@ -1,6 +1,7 @@
 /* DLL 0x0120 (trickyguardspot) — Tricky guard spot object. */
 
 #include "main/dll/dll_0120_trickyguardspot.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -68,7 +69,7 @@ void TrickyGuardSpot_update(TrickyGuardSpotObject* obj)
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
-            objRenderFn_80041018((int)obj);
+            objRenderFn_80041018((GameObject*)obj);
         }
     }
     else if (tricky != NULL)

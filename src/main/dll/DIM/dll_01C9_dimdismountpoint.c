@@ -5,6 +5,7 @@
  * the player is on.
  */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -71,7 +72,7 @@ void DIMDismountPoint_render(GameObject *obj, int p1, int p2, int p3, int p4, s8
     {
         if ((obj)->unkF8 != 0)
         {
-            objRenderFn_80041018((int)obj);
+            objRenderFn_80041018((GameObject*)obj);
         }
     }
     else
@@ -116,7 +117,7 @@ void DIMDismountPoint_update(int* obj)
     if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0 &&
         ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
 }
 

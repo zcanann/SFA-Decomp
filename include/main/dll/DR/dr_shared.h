@@ -265,7 +265,6 @@ extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A7C;
 extern f32 lbl_803E6A80;
 extern f32 lbl_803E6A84;
-extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E69E4;
 extern f32 lbl_803E6A18;
 extern f32 lbl_803E6A1C;

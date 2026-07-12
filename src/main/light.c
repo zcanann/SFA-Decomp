@@ -1055,7 +1055,6 @@ void dll_224_initialise_nop(void)
 
 void dll_224_hitDetect(void* obj)
 {
-    extern void objRenderFn_80041018(int* obj);
     if (*(void**)((char*)obj + 0x74) != NULL)
     {
         objRenderFn_80041018(obj);

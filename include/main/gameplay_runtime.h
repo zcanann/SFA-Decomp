@@ -29,7 +29,6 @@ typedef struct MapInfoRecord
     s16 unk1e; /* +0x1e */
 } MapInfoRecord;
 
-void objRenderFn_80041018(int obj);
 void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

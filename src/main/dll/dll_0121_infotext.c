@@ -1,7 +1,7 @@
 /* DLL 0x0121 — infotext. TU: 0x8018B9F0–0x8018BB00. */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
-extern void objRenderFn_80041018(int obj);
 
 #define INFOTEXT_OBJFLAG_HIDDEN 0x4000
 #define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -31,7 +31,7 @@ void infotext_update(int obj)
     }
     if ((((ObjAnimComponent*)objReg)->modelInstance->flags & 1) != 0)
     {
-        objRenderFn_80041018((int)objReg);
+        objRenderFn_80041018((GameObject*)objReg);
     }
 }
 

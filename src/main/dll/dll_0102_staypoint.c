@@ -19,6 +19,7 @@
  * range (0x80321568..0x803216B8) owns them in retail.
  */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
@@ -86,7 +87,7 @@ void StayPoint_update(int obj)
             if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
                 ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
             {
-                objRenderFn_80041018(obj);
+                objRenderFn_80041018((GameObject*)obj);
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAYPOINT_HITBOX_IN_RANGE) != 0)
             {

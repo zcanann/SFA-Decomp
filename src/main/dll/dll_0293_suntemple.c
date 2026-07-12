@@ -27,6 +27,7 @@
  * hitDetect helper.
  */
 #include "main/dll/dll_0293_suntemple.h"
+#include "main/objprint_dolphin.h"
 #include "main/game_timer.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
@@ -122,7 +123,7 @@ void suntemple_hitDetect(GameObject* obj)
     GameObject* gameObj = obj;
     if ((gameObj->anim.modelInstance->flags & 1) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
 }
 

@@ -15,6 +15,7 @@
  * resetHitboxMode interaction bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
@@ -104,7 +105,6 @@ extern f32 timeDelta;
 extern void fn_801F4C28(int, int);
 extern void forceAButtonIcon(int icon);
 
-extern void objRenderFn_80041018(int obj);
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
 
@@ -438,7 +438,7 @@ void shopitem_update(GameObject* obj)
         }
         if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) == 0)
         {
-            objRenderFn_80041018((int)obj);
+            objRenderFn_80041018((GameObject*)obj);
         }
     }
 }

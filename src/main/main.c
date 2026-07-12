@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
@@ -104,7 +105,6 @@ extern f32 lbl_803E6198;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
 
-extern void objRenderFn_80041018(int* obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 void VFP_lavapool_free_nop(void)
@@ -272,7 +272,7 @@ void VFP_flamepoint_update(GameObject* obj)
                          (int*)(*(int*)*(int*)((u8*)tricky + 0x68) + 0x28))(tricky, (int)obj, 1, 4);
                     }
                     *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                    objRenderFn_80041018((void*)obj);
+                    objRenderFn_80041018((GameObject*)obj);
                 }
             }
         }
@@ -433,7 +433,7 @@ void VFP_SpellPlace_update(int obj)
     {
         spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
     }
-    objRenderFn_80041018((void*)obj);
+    objRenderFn_80041018((GameObject*)obj);
     if (spellPlace->statusFlags & LASER_OBJECT_STATUS_ACTIVE)
     {
         mode = (*gMapEventInterface)->getMapAct((int)spellPlace->mapEventSlot);

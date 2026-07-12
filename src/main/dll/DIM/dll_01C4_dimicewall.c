@@ -4,6 +4,7 @@
  * while intact, allows Tricky to push through it.
  */
 #include "main/dll/dimicewallstate_struct.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -28,7 +29,6 @@ typedef struct DimicewallPlacement
 
 
 
-extern void objRenderFn_80041018(int* obj);
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
 
@@ -98,7 +98,7 @@ void dimicewall_update(int* obj)
                     (*(void (**)(int*, int*, int, int))(**(int**)((char*)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
                 }
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                objRenderFn_80041018(obj);
+                objRenderFn_80041018((GameObject*)obj);
             }
         }
     }

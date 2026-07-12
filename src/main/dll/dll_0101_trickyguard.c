@@ -20,6 +20,7 @@
  * in dll_00FE_magicplant.h).
  */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
@@ -61,7 +62,7 @@ void TrickyGuard_update(int* obj)
     }
     ((GameObject*)obj)->anim.resetHitboxFlags =
         (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-    objRenderFn_80041018((int)obj);
+    objRenderFn_80041018((GameObject*)obj);
 }
 
 void TrickyGuard_init(s16* obj, u8* placement)

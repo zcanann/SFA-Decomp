@@ -1,5 +1,6 @@
 /* DLL 0x01AB — bombplantingspot (Sauria bomb planting spot / trigger). TU: 0x801D3FF4–0x801D4198. */
 #include "main/objseq.h"
+#include "main/objprint_dolphin.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/dll/SH/SHrocketmushroom.h"
@@ -8,7 +9,6 @@
 
 #define BOMBPLANTINGSPOT_OBJFLAG_HIDDEN 0x4000
 
-extern void objRenderFn_80041018(int* obj);
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
 #define BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER 0x196
@@ -54,7 +54,7 @@ void BombPlantingSpot_update(GameObject* obj)
     if (mainGetBit(mapData->plantedGameBit) == 0)
     {
         *(u8*)&obj->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
-        objRenderFn_80041018((int*)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
     else
     {

@@ -242,7 +242,7 @@ void WM_spiritplace_hitDetect(GameObject* obj)
 {
     if (obj->anim.hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
 }
 

@@ -6,6 +6,7 @@
  * altar back to its idle state.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/maketex.h"
 #include "main/obj_placement.h"
@@ -60,7 +61,7 @@ void DR_Chimmey_update(DRChimmeyObject* obj)
                         tricky, (int)obj, 1, 4);
                 }
                 obj->renderFlags &= ~8;
-                objRenderFn_80041018((int)obj);
+                objRenderFn_80041018((GameObject*)obj);
             }
         }
     }

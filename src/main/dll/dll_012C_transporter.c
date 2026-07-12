@@ -55,7 +55,6 @@
 extern f32 lbl_803E3E98;
 extern s16 lbl_803DCEB8;
 
-extern void objRenderFn_80041018(int obj);
 
 #pragma opt_loop_invariants off
 int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -281,7 +280,7 @@ void Transporter_hitDetect(int obj)
         state->flags = (u8)((u32)state->flags | WARPPAD_FLAG_INTERACTIVE);
         if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
-            objRenderFn_80041018(self);
+            objRenderFn_80041018((GameObject*)self);
         }
         return;
     }
@@ -311,7 +310,7 @@ void Transporter_hitDetect(int obj)
         }
         if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
-            objRenderFn_80041018(self);
+            objRenderFn_80041018((GameObject*)self);
         }
         return;
     }

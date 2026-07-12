@@ -15,6 +15,7 @@
  * layout STATIC_ASSERTs below).
  */
 #include "main/dll/groundanimator_state.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -62,7 +63,6 @@ STATIC_ASSERT(sizeof(WallanimatorState) == 8);
 #define WALLANIMATOR_PARTFX_DUST   0xcb
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objRenderFn_80041018(int obj);
 
 u8 wallanimator_modelMtxFn(int* obj)
 {
@@ -195,7 +195,7 @@ void wallanimator_update(GameObject* obj)
                 (*(void (**)(int, int, int, int))(**(int**)(tricky + TRICKY_IFACE_OFFSET) + TRICKY_IFACE_NOTIFY_SLOT))(
                     tricky, (int)obj, 1, 1);
             }
-            objRenderFn_80041018((int)obj);
+            objRenderFn_80041018((GameObject*)obj);
         }
     }
     else

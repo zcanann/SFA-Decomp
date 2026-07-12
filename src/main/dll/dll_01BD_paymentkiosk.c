@@ -12,6 +12,7 @@
  * sequence, seq id 0x476).
  */
 #include "main/dll/DB/DBrockfall.h"
+#include "main/objprint_dolphin.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/player_api.h"
@@ -26,7 +27,6 @@
 #define PAYMENTKIOSK_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 
-extern void objRenderFn_80041018(int obj);
 
 typedef struct KioskTextPair
 {
@@ -185,7 +185,7 @@ void PaymentKiosk_update(GameObject* obj)
     st->promptState = 0;
     if (((obj)->anim.modelInstance->flags & 1) != 0 && (obj)->anim.hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018((GameObject*)obj);
     }
 }
 

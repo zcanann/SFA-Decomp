@@ -16,6 +16,7 @@
  * unlock sequence.
  */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/dll/doorlockstate_struct.h"
@@ -48,7 +49,6 @@ typedef struct DoorlockPlacement
 extern f32 lbl_803E3798;
 
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objRenderFn_80041018(int obj);
 
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -94,7 +94,7 @@ void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    objRenderFn_80041018((int)obj);
+    objRenderFn_80041018((GameObject*)obj);
     return;
 
 render_basic:
@@ -214,7 +214,7 @@ void Lock_DoorLock_update(GameObject* obj)
         if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
             (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
         {
-            objRenderFn_80041018((int)obj);
+            objRenderFn_80041018((GameObject*)obj);
         }
     }
 }
