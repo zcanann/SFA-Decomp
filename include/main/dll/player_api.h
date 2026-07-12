@@ -4,6 +4,9 @@
 #include "main/game_object.h"
 
 int objFn_802962b4(GameObject* obj);
+u8 fn_80296414(GameObject* player, GameObject* otherObj, u8* outDirection);
+int fn_802969F0(GameObject* player);
+void fn_80296A9C(GameObject* player, int delta);
 int playerGetMoney(void* player);
 void playerAddMoney(GameObject* obj, int amount);
 

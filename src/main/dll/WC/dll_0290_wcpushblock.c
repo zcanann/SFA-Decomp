@@ -25,6 +25,7 @@
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
 #include "main/dll/WC/dll_0290_wcpushblock.h"
+#include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
@@ -274,7 +275,7 @@ void wcpushblock_update(GameObject* obj)
             obj->anim.velocityX = zero;
             obj->anim.velocityZ = zero;
         }
-        if (fn_80296414((GameObject*)player, (int)obj, (int)&state->pushDir) != 0)
+        if (fn_80296414((GameObject*)player, obj, &state->pushDir) != 0)
         {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
             {

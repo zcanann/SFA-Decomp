@@ -365,9 +365,9 @@ void playerInitFuncPtrsEntry(int obj)
     playerInitFuncPtrs(obj);
 }
 
-int fn_802969F0(int obj)
+int fn_802969F0(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = obj->extra;
     if (((ByteFlags*)((char*)inner + 0x3f1))->b01)
     {
         return inner->surfaceType;
@@ -555,11 +555,11 @@ void objSetAnimStateFlags(GameObject* obj, int flag, int set)
     }
 }
 
-u8 fn_80296414(GameObject* obj, int otherObj, u8* out)
+u8 fn_80296414(GameObject* obj, GameObject* otherObj, u8* out)
 {
     PlayerState* inner = obj->extra;
     *out = inner->surfaceDir;
-    return inner->baddie.controlMode == 0x1c && *(u32*)&((PlayerState*)inner)->contactObject == (u32)otherObj;
+    return inner->baddie.controlMode == 0x1c && *(u32*)&inner->contactObject == (u32)otherObj;
 }
 
 int fn_80295C88(int obj)

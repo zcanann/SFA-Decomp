@@ -18,6 +18,7 @@
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/tricky.h"
 #include "main/dll/mcupgrade_state.h"
+#include "main/dll/player_api.h"
 #include "main/game_object.h"
 
 void mcupgrade_update(GameObject* obj)
@@ -57,7 +58,7 @@ int mcupgradema_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             hudFn_8011f38c(1);
             break;
         case MCUPGRADEMA_EVENT_SHOW_DIALOGUE:
-            fn_80296A9C((GameObject*)(Obj_GetPlayerObject()), 0x19);
+            fn_80296A9C(Obj_GetPlayerObject(), 0x19);
             (*gGameUIInterface)->showNpcDialogue(0x468, 0x14, 0x8c, 0);
             break;
         case MCUPGRADEMA_EVENT_HIDE_HUD:

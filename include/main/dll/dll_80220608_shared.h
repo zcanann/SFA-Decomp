@@ -50,7 +50,6 @@ struct AndrossState;
 /* Pattern wrappers. */
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern u8 fn_80296414(GameObject* player, int obj, int dir);
 
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
@@ -84,7 +83,6 @@ extern f32 lbl_803E6EA0;
 
 
 
-extern int fn_802969F0(int player);
 
 extern int getAngle(f32 dx, f32 dz);
 
@@ -242,7 +240,6 @@ extern f32 lbl_803E6EF8;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int fn_80296A9C(GameObject* player, int p2);
 extern int objGetFirstChild(void);
 extern void staffSetGlow(int staff, int p2, int p3);
 

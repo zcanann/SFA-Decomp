@@ -13,6 +13,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
+#include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
@@ -160,7 +161,7 @@ void wcapertures_update(GameObject* obj)
         break;
     case WCAPERTURES_MODE_ARMED:
         if ((*gCameraInterface)->getMode() == WCAPERTURES_CAMERA_MODE &&
-            fn_802969F0((int)player) == WCAPERTURES_PLAYER_STATE)
+            fn_802969F0(player) == WCAPERTURES_PLAYER_STATE)
         {
             state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
             if (Camera_GetFovY() <= lbl_803E6E38 && (obj->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))
