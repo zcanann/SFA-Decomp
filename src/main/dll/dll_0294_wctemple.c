@@ -6,32 +6,13 @@
  * object's X rotation.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0294_wctemple.h"
 #include "main/game_object.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
 #define WCTEMPLE_SEQUENCE_SLOT_CLOSED 0
 #define WCTEMPLE_SEQUENCE_SLOT_OPEN   1
 #define WCTEMPLE_SEQUENCE_INVALID_ARG -1
-
-typedef struct WCTempleSetup
-{
-    ObjPlacement base;
-    s8 type;
-    u8 pad19[0x24 - 0x19];
-} WCTempleSetup;
-
-typedef struct WCTempleState
-{
-    f32 timer;
-    u8 triggerSlot;
-    u8 pad05[3];
-} WCTempleState;
-
-STATIC_ASSERT(sizeof(WCTempleState) == WCTEMPLE_EXTRA_SIZE);
-STATIC_ASSERT(sizeof(WCTempleSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTempleState, timer) == 0x00);
-STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == 0x04);
-STATIC_ASSERT(offsetof(WCTempleSetup, type) == 0x18);
 
 int wctemple_getExtraSize(void) { return WCTEMPLE_EXTRA_SIZE; }
 
@@ -83,10 +64,9 @@ void wctemple_update(GameObject *obj)
     }
 }
 
-void wctemple_init(GameObject *obj, int setup)
+void wctemple_init(GameObject *obj, WCTempleSetup* setup)
 {
-    WCTempleSetup* setupData = (WCTempleSetup*)setup;
-    int angle = setupData->type;
+    int angle = setup->type;
 
     (obj)->anim.rotX = (s16)(angle << 8);
 }

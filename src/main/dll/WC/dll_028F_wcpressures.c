@@ -14,6 +14,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_0293_suntemple.h"
+#include "main/dll/dll_0294_wctemple.h"
 #include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 
@@ -371,20 +372,20 @@ ObjectDescriptor gSunTempleObjDescriptor = {0x00000000,
                                    (ObjectDescriptorCallback)suntemple_free,
                                    (ObjectDescriptorCallback)suntemple_getObjectTypeId,
                                    suntemple_getExtraSize};
-u32 gWCTempleObjDescriptor[14] = {0x00000000,
+ObjectDescriptor gWCTempleObjDescriptor = {0x00000000,
                                   0x00000000,
                                   0x00000000,
                                   0x00090000,
-                                  (u32)wctemple_initialise,
-                                  (u32)wctemple_release,
+                                  (ObjectDescriptorCallback)wctemple_initialise,
+                                  (ObjectDescriptorCallback)wctemple_release,
                                   0x00000000,
-                                  (u32)wctemple_init,
-                                  (u32)wctemple_update,
-                                  (u32)wctemple_hitDetect,
-                                  (u32)wctemple_render,
-                                  (u32)wctemple_free,
-                                  (u32)wctemple_getObjectTypeId,
-                                  (u32)wctemple_getExtraSize};
+                                  (ObjectDescriptorCallback)wctemple_init,
+                                  (ObjectDescriptorCallback)wctemple_update,
+                                  (ObjectDescriptorCallback)wctemple_hitDetect,
+                                  (ObjectDescriptorCallback)wctemple_render,
+                                  (ObjectDescriptorCallback)wctemple_free,
+                                  (ObjectDescriptorCallback)wctemple_getObjectTypeId,
+                                  wctemple_getExtraSize};
 ObjectDescriptor dll_299 = {
     0,
     0,
