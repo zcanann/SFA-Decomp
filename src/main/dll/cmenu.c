@@ -25,6 +25,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/VF/vf_shared.h"
 #include "dolphin/gx/GXTransform.h"
+#include "dolphin/gx/GXStruct.h"
 #include "main/dll/cmenu.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
@@ -65,7 +66,6 @@ extern s16 lbl_803DD79A;
 extern s16 lbl_803DD79C;
 extern s16 lbl_803DD79E;
 extern u16 lbl_803DBA30;
-extern int gRenderModeObj;
 extern int lbl_803DD7E0;
 extern u8 gCMenuCurSection;
 extern u8 lbl_803DD8B7;
@@ -100,17 +100,6 @@ extern void hudDrawTimedElement(int obj, void* p);
 extern int getHudHiddenFrameCount(void);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void gxColorFn_80052764(void* p);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_ApplyFullViewport(void);
-extern int Camera_IsViewYOffsetEnabled(void);
-extern void Camera_DisableViewYOffset(void);
-extern void Camera_EnableViewYOffset(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32 fovY);
 extern int Obj_GetActiveModel(int obj);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern float mathCosf(float x);
@@ -469,7 +458,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2020);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
     Camera_DisableViewYOffset();
     {
         f32 small = lbl_803E1E3C;
@@ -478,8 +467,8 @@ void hudDrawCMenu(int p1, int p2, int p3)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32) * (u16*)(gRenderModeObj + 4),
-                  (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
+    GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32)gRenderModeObj->fbWidth,
+                  (f32)(u32)gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
     zero = 0;
     i = zero;
     do

@@ -24,6 +24,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXTransform.h"
+#include "dolphin/gx/GXStruct.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/gx/GXTransform.h"
 #include "main/audio.h"
@@ -54,7 +55,6 @@ extern s16 gHeadDisplayFadeAlpha;
 extern u16 lbl_803DD77C;
 extern int lbl_803DD7E0;
 extern f32 lbl_803DBAA4;
-extern u8* gRenderModeObj;
 extern u8 gHeadDisplayEntryTable[];
 extern int gHeadDisplayModelObjs[];
 extern f32 lbl_8031BFA8[];
@@ -94,10 +94,6 @@ extern f32 lbl_803E2068;
 extern void doNothing_8000CF54(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
-extern void Camera_SetFovY(f32 fovY);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int Obj_GetActiveModel(int obj);
 extern float fsin16Approx(int angle);
@@ -202,15 +198,15 @@ void drawFn_80125424(void)
         lbl_803DBAA4 = Camera_GetFovY();
         Camera_SetFovY(lbl_803E2044);
         Camera_SetCurrentViewIndex(1);
-        lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+        lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
         Camera_DisableViewYOffset();
         camPos = lbl_803E1E3C;
         Camera_SetCurrentViewPosition(camPos, camPos, camPos);
         Camera_SetCurrentViewRotation(0x8000, 0, 0);
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
-        GXSetViewport(lbl_803E2048, ypos - lbl_803E2024, (f32)(u32) * (u16*)(gRenderModeObj + 4),
-                      (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
+        GXSetViewport(lbl_803E2048, ypos - lbl_803E2024, (f32)(u32)gRenderModeObj->fbWidth,
+                      (f32)(u32)gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
         if (*(u8**)&gHeadDisplayModelObjs[type] != NULL)
         {
             ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[type], lbl_8031BFA8[type], timeDelta, NULL);

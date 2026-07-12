@@ -28,17 +28,11 @@ extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
 extern void Obj_UpdateWorldTransform(s16* obj);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_UpdateViewMatrices(void);
-extern s16 Camera_GetViewportYOffset(void);
-extern void Camera_SetFovY(f32 fovY);
 extern void loadMapForCameraPos(f32 x, f32 y, f32 z);
 extern void OSReport(const char* msg, ...);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECMag(f32* v);
-extern f32 Camera_GetFovY(void);
-extern void Camera_SetViewportYOffset(s16 yOffset);
 
 void camcontrol_applyState(CamcontrolCameraState* camera)
 {

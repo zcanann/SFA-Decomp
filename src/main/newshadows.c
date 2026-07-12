@@ -2,6 +2,7 @@
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXManage.h"
+#include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
@@ -188,7 +189,6 @@ extern f32 FinishQueue_803DED68;
 extern f32 FinishQueue_803DED6C;
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
-extern int gRenderModeObj;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 
@@ -273,25 +273,12 @@ extern float floor(float);
 extern void fn_80069EB8();
 extern int getHudHiddenFrameCount(void);
 extern void fn_80060BB0(void);
-extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32* a, f32* b);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
-extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX,
-                                      f32* outRadiusY, f32* outRadiusZ);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
 extern int* Obj_GetActiveModel(int* obj);
-extern void Camera_ApplyFullViewport(void);
-extern void Camera_DisableViewYOffset(void);
-extern void Camera_EnableViewYOffset(void);
-extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32 fovY);
-extern void Camera_SetAspectRatio(f32 aspectRatio);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_UpdateProjection(int a, int b);
 extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern u8 fn_800626C8(int* obj, int frames);
@@ -2797,7 +2784,7 @@ void renderShadows(void)
                         PSMTXConcat((f32*)(castSlot + 0x30), vm, (f32*)(castSlot + 0x30));
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, GX_TF_Z8, GX_FALSE);
-                        GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
+                        GXSetCopyFilter(0, gRenderModeObj->sample_pattern, 0, gRenderModeObj->vfilter);
                         GXCopyTex((void*)(*(int*)((char*)obj[0x64 / 4] + 4) + 0x60), GX_TRUE);
                         setDisplayCopyFilter();
                         *(int*)(castSlot + 0x60) = *(int*)((char*)obj[0x64 / 4] + 4);
@@ -2860,7 +2847,7 @@ void renderShadows(void)
     if ((u8)texIdx > 1)
     {
         gxSetZMode_(1, GX_LEQUAL, 1);
-        GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
+        GXSetCopyFilter(0, gRenderModeObj->sample_pattern, 0, gRenderModeObj->vfilter);
         GXSetTexCopySrc(0, 0, 0x100, 0x100);
         GXSetTexCopyDst(0x100, 0x100, GX_CTF_R8, GX_FALSE);
         GXCopyTex((void*)(*(int*)(B + 0x3a14) + 0x60), GX_TRUE);
@@ -2882,21 +2869,21 @@ void renderShadows(void)
             Camera_SetAspectRatio(gNewShadowAspectWide);
         else
             Camera_SetAspectRatio(gNewShadowAspectNarrow);
-        Camera_UpdateProjection(0, 0);
+        ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
     }
     else if (isWidescreen() != 0)
     {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
         Camera_SetAspectRatio(Ydchuff_803DED80);
-        Camera_UpdateProjection(0, 0);
+        ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
     }
     else
     {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
         Camera_SetAspectRatio(lbl_803DB670);
-        Camera_UpdateProjection(0, 0);
+        ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
     }
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();

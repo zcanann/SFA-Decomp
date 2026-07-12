@@ -28,6 +28,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/objlib.h"
@@ -77,12 +78,6 @@ extern f32 lbl_803DBAA4;
 extern u8 lbl_803DD75B;
 extern u8 lbl_803DD77F;
 extern s32 lbl_803DD7E0;
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_ApplyFullViewport(void);
-extern void Camera_EnableViewYOffset(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_SetFovY(f32 fovY);
 extern void setTimeStop(int v);
 extern void gameTextFreePhrase(void* arg);
 extern u16 curGameText;
@@ -116,12 +111,6 @@ extern s32 Obj_AllocObjectSetup(s32 size, void* type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern void padFn_80014b18(int value);
-extern void* gRenderModeObj;
-extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern int Camera_IsViewYOffsetEnabled(void);
-extern void Camera_DisableViewYOffset(void);
-extern f32 Camera_GetFovY(void);
 
 extern f32 lbl_803E1E3C; /*  0.0f */
 extern f32 lbl_803E1E68; /*  1.0f */
@@ -379,7 +368,6 @@ extern int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 extern void textureAnimFn_80053f2c(void* tex, int* a, int* b);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
-extern void Camera_ApplyCurrentViewport(int a);
 
 extern int lbl_803DD828;
 extern int lbl_803DD82C;
@@ -841,14 +829,14 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(fov);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
     Camera_DisableViewYOffset();
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     {
-        u16* obj = gRenderModeObj;
+        u16* obj = (u16*)gRenderModeObj;
         GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }
@@ -1028,7 +1016,7 @@ void perspectiveFn_80129db4(void)
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
     {
-        u16* obj = gRenderModeObj;
+        u16* obj = (u16*)gRenderModeObj;
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
                       lbl_803E1E68);
     }
@@ -3431,14 +3419,14 @@ void pauseMenuDoSave(void)
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2044);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
     Camera_DisableViewYOffset();
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     {
-        u16* obj = gRenderModeObj;
+        u16* obj = (u16*)gRenderModeObj;
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
                       lbl_803E1E68);
     }
@@ -3996,7 +3984,7 @@ void GameUI_hudDraw(int a, int b, int c)
         {
             ((void (*)(int, int, int))timeListDraw)(a, b, c);
         }
-        Camera_ApplyCurrentViewport(a);
+        Camera_ApplyCurrentViewport((void*)a);
     }
 
     hudDrawAirMeter();

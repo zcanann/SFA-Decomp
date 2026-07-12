@@ -340,7 +340,6 @@ extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
 extern void* ObjGroup_GetObjects();
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void vecRotateZXY(void* xf, f32* out);
 extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
@@ -401,7 +400,6 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* 
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
 extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
-extern void Camera_RebuildProjectionMatrix(void);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_80079804(void);
 extern void gxTextureFn_800794e0(void);
@@ -409,8 +407,6 @@ extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
 extern void skyBuildSunModelMatrix(f32* out);
-extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
-extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
 extern u8 pauseMenuGetState(void);
 extern void* fn_8008912C(void);
@@ -3497,7 +3493,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
 void renderGlows(void)
 {
     f32 px, py, pz;
-    int sx, sy, sz;
+    s32 sx, sy, sz;
     u8 amb[3];
     GlowGXColor fogCol;
     f32 sunMtx[12];

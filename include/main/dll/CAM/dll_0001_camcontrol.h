@@ -59,16 +59,6 @@ typedef struct CamcontrolQueuedActionParam {
 STATIC_ASSERT(sizeof(CamcontrolQueuedActionParam) == 0x08);
 STATIC_ASSERT(offsetof(CamcontrolQueuedActionParam, noBlendFlag) == 0x04);
 
-typedef struct CameraViewSlot {
-  s16 yaw;
-  s16 pitch;
-  s16 roll;
-  u8 pad06[0xC - 0x6];
-  f32 x;
-  f32 y;
-  f32 z;
-} CameraViewSlot;
-
 typedef struct CamcontrolCameraState {
   s16 yaw;
   s16 pitch;

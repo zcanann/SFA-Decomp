@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
@@ -43,7 +44,6 @@ typedef struct
     f32 hi;
 } F32Pair;
 
-extern int Camera_GetCurrentViewSlot(void);
 extern u32 renderFlags;
 /* Global renderFlags bits (decoded by the accessor fns below: shouldDrawShadows,
  * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad). */
@@ -54,7 +54,6 @@ extern u32 renderFlags;
 #define RENDERFLAG_DRAW_DISTANCE   0x10000
 #define RENDERFLAG_OVERCAST        0x40000
 
-extern f32 Camera_GetFovY(void);
 extern f32 encoderType_803DEBF8;
 extern f32 displayOffsetH_803DEBFC;
 extern f32 playerMapOffsetX;
@@ -194,7 +193,6 @@ u32 FUN_8005d06c(void)
 
 extern u32 lbl_8037E0C0[];
 extern s32 lbl_803DCE30;
-extern int Camera_GetViewMatrix(void);
 extern void PSMTXMultVec(int m, f32* in, f32* out);
 #pragma dont_inline on
 void renderShadowType3(u8* obj, u32 b, s32 offset)
@@ -218,7 +216,7 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
         stk[1] = ((GameObject*)obj)->anim.worldPosY;
         stk[2] = ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ;
     }
-    PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
+    PSMTXMultVec((int)Camera_GetViewMatrix(), stk, stk);
     t = (s32) - stk[2] + offset;
     v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
@@ -408,10 +406,6 @@ void renderObjects(s8* arg0)
 
 extern s8 curMapType;
 extern int lbl_803DCEA8;
-extern void Camera_UpdateProjection(int a, int b);
-extern void Camera_EnableViewYOffset(void);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_RebuildProjectionMatrix(void);
 extern void playerVecFn_8005a9b0(void);
 extern void updateLights(void);
 extern void screenFn_8000e944(int v);
@@ -423,14 +417,14 @@ void sceneRender(void)
     {
         renderFlags &= ~1LL;
     }
-    Camera_UpdateProjection(0, 0);
+    ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
     updateVisibleGeometry();
     playerVecFn_8005a9b0();
     Camera_EnableViewYOffset();
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     updateLights();
-    lbl_803DCEA8 = Camera_GetCurrentViewSlot();
+    lbl_803DCEA8 = (int)Camera_GetCurrentViewSlot();
     sceneDraw();
     screenFn_8000e944(0);
     renderFlags &= ~2LL;
@@ -610,7 +604,6 @@ void* mapGetBlockAtPos(int x, int y, int layer)
 extern f32 shdwChanged_803DEC18;
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
-extern void Camera_SetAspectRatio(f32 aspectRatio);
 
 int setWidescreen(u8 v)
 {
@@ -706,7 +699,6 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 #pragma dont_inline reset
 
 extern void fn_8000F8F8(void);
-extern void Camera_ApplyFullViewport(void);
 extern int mapBlockRender_setShader(int p1, int* obj, int* state);
 extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 
@@ -874,7 +866,6 @@ extern void setupToRenderMapBlock(int* block, void* posMtx);
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
 extern f32 shdwChangeMode_803DEC10;
-extern f32* Camera_GetInverseViewMatrix(void);
 extern void mapDebugRender(void* p);
 extern void fn_80062894(void);
 extern void fn_80062808(void);
@@ -892,7 +883,6 @@ extern void lightningRenderActive(void);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
-extern u8 CameraShake_IsActive(void);
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
@@ -968,7 +958,7 @@ void sceneDraw(void)
     gxTextureFn_80052efc();
     perspectiveFn_80129db4();
     GXPixModeSync();
-    Camera_UpdateProjection(0, 0);
+    ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     t = 0;
@@ -1384,7 +1374,6 @@ void lightmap_sortTransparentDrawQueue(void)
 
 extern int ObjList_PartitionForRender(int* count);
 extern int objUpdateOpacity(u8 * obj);
-extern void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, int* a, int* b, f32* depth, f32* out);
 extern void shadowCreate(u8 * obj);
 extern void shadowRenderFn_8006b558(u8 * obj);
 extern void renderShadows(int a, int b, int c);
@@ -1412,7 +1401,7 @@ void getVisibleObjects(s8* opacity)
     s16 t;
     int sortDepth;
     int count;
-    int a, b;
+    f32 a, b;
     f32 depth;
 
     maybeHudFn_8006c91c();

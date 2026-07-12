@@ -188,8 +188,6 @@ extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
 extern int getHudHiddenFrameCount(void);
-extern int Camera_GetProjectionMatrix(void);
-extern void Camera_ApplyFullViewport(void);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void fn_8000F83C(void);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -1696,7 +1694,8 @@ foundFirst:
                             srcVel[2] = slot->sourcePosW.value;
                             if (attached != NULL)
                             {
-                                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY.value, srcVel, *(attached + 0x35));
+                                ((void (*)(f32*, f32*, u8))Obj_RotateLocalOffsetByYaw)(
+                                    &slot->sourcePosY.value, srcVel, *(attached + 0x35));
                             }
                         }
                     }

@@ -72,7 +72,6 @@ extern f32 lbl_803E66B8;
 extern void ModelLightStruct_free(int model);
 extern void objRenderModelAndHitVolumes(f32 e);
 extern int randomGetRange(int lo, int hi);
-extern void Camera_ApplyCurrentViewport(int cam);
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern void vecRotateZXY(void* in, void* out);
@@ -677,7 +676,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         {
             GXSetScissor(0x1e0, 0x32, 0x82, 0x96);
             ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
-            Camera_ApplyCurrentViewport(p2);
+            Camera_ApplyCurrentViewport((void*)p2);
         }
         break;
     case 0x740:

@@ -1,6 +1,7 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
 #include "dolphin/gx/GXEnum.h"
+#include "dolphin/gx/GXStruct.h"
 
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
@@ -822,12 +823,12 @@ f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
     return sqrtf(dz + (dx + dy));
 }
 
-void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll)
+void Camera_SetCurrentViewRotation(int yaw, int pitch, int roll)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
 
-    slot->pitch = pitch;
     slot->yaw = yaw;
+    slot->pitch = pitch;
     slot->roll = roll;
 }
 
@@ -853,8 +854,8 @@ void Camera_UpdateViewMatrices(void)
     transform.x = -(slot->x - playerMapOffsetX);
     transform.y = -slot->y;
     transform.z = -(slot->z - playerMapOffsetZ);
-    transform.pitch = slot->pitch + 0x8000;
-    transform.yaw = slot->yaw;
+    transform.pitch = slot->yaw + 0x8000;
+    transform.yaw = slot->pitch;
     transform.roll = slot->roll;
     transform.scale = lbl_803DE5F0;
     if (pauseMenuGetState() == 0)
@@ -874,8 +875,8 @@ void Camera_UpdateViewMatrices(void)
     transform.x = slot->x - playerMapOffsetX;
     transform.y = slot->y;
     transform.z = slot->z - playerMapOffsetZ;
-    transform.pitch = -(slot->pitch + 0x8000);
-    transform.yaw = -slot->yaw;
+    transform.pitch = -(slot->yaw + 0x8000);
+    transform.yaw = -slot->pitch;
     transform.roll = -slot->roll;
     transform.scale = lbl_803DE5F0;
     if (pauseMenuGetState() == 0)
@@ -900,9 +901,9 @@ void Camera_UpdateViewMatrices(void)
 
 void Camera_ApplyFullViewport(void)
 {
-    CameraRenderMode* renderMode = gRenderModeObj;
+    GXRenderModeObj* renderMode = gRenderModeObj;
 
-    if (renderMode->useViewportJitter != 0)
+    if (renderMode->field_rendering != 0)
     {
         GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth, renderMode->xfbHeight, lbl_803DE60C,
                             lbl_803DE5F0, lbl_803DCCBC);
@@ -916,9 +917,9 @@ void Camera_ApplyFullViewport(void)
 
 void fn_8000F83C(void)
 {
-    CameraRenderMode* renderMode = gRenderModeObj;
+    GXRenderModeObj* renderMode = gRenderModeObj;
 
-    if (renderMode->useViewportJitter != 0)
+    if (renderMode->field_rendering != 0)
     {
         GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth, renderMode->xfbHeight, lbl_803DE640,
                             lbl_803DE5F0, lbl_803DCCBC);
@@ -932,9 +933,9 @@ void fn_8000F83C(void)
 
 void fn_8000F8F8(void)
 {
-    CameraRenderMode* renderMode = gRenderModeObj;
+    GXRenderModeObj* renderMode = gRenderModeObj;
 
-    if (renderMode->useViewportJitter != 0)
+    if (renderMode->field_rendering != 0)
     {
         GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth, renderMode->xfbHeight, lbl_803DE644,
                             lbl_803DE5F0, lbl_803DCCBC);
@@ -948,9 +949,9 @@ void fn_8000F8F8(void)
 
 void fn_8000F9B4(void)
 {
-    CameraRenderMode* renderMode = gRenderModeObj;
+    GXRenderModeObj* renderMode = gRenderModeObj;
 
-    if (renderMode->useViewportJitter != 0)
+    if (renderMode->field_rendering != 0)
     {
         GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, renderMode->fbWidth, renderMode->xfbHeight, lbl_803DE648,
                             lbl_803DE5F0, lbl_803DCCBC);
@@ -964,12 +965,12 @@ void fn_8000F9B4(void)
 
 u16 fn_8000FA70(void)
 {
-    return gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
+    return gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
 }
 
 u16 fn_8000FA90(void)
 {
-    return gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
+    return gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
 }
 
 u8 Camera_IsViewYOffsetEnabled(void)
@@ -1088,8 +1089,8 @@ void Camera_InitState(void)
         slot = (CameraViewSlot*)(base + (u8)i * 96);
         slot = (CameraViewSlot*)((u8*)slot + 4416);
         slot->roll = 0;
-        slot->yaw = 0;
-        slot->pitch = 0x7FF8;
+        slot->pitch = 0;
+        slot->yaw = 0x7FF8;
         slot->x = gCameraDefaultPosition;
         slot->y = gCameraDefaultPosition;
         slot->z = gCameraDefaultPosition;

@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
+#include "main/camera.h"
 #include "main/effect_interfaces.h"
 #include "main/newclouds.h"
 #include "main/sky_interface.h"
@@ -217,43 +218,6 @@ typedef struct Curve {
     CurveCoeffFn coeffFn;
 } Curve;
 #endif /* MAIN_CURVE_TYPES_DEFINED */
-typedef struct CameraRenderMode {
-    u32 viTVMode;
-    u16 fbWidth;
-    u16 efbHeight;
-    u16 xfbHeight;
-    u8 pad0A[0x0E];
-    u8 useViewportJitter;
-} CameraRenderMode;
-typedef struct CameraViewSlot {
-    s16 pitch;
-    s16 yaw;
-    s16 roll;
-    u8 pad06[6];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad18[0x14];
-    f32 shakeMagnitude;
-    f32 shakeMagnitudeTarget;
-    f32 shakeDuration;
-    f32 shakeTimer;
-    f32 shakeFalloff;
-    u8 pad40[0x1C];
-    s8 shakeFlipTimer;
-    s8 shakeActive;
-    u8 pad5E[2];
-} CameraViewSlot;
-typedef struct CameraMatrixTransform {
-    s16 pitch;
-    s16 yaw;
-    s16 roll;
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CameraMatrixTransform;
 typedef struct CurveHeapNode {
     u16 priority;
     u16 value;
@@ -607,7 +571,6 @@ extern f32 lbl_803DE59C;
 extern f32 lbl_803DE5A0;
 extern f32 gSfxPanCenter;
 extern f32 gSfxPanScale;
-extern void *Camera_GetCurrentViewSlot(void);
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 extern void setMatrixFromObjectPos(f32 *matrix, void *obj);
@@ -741,12 +704,9 @@ extern f32 lbl_803DE678;
 extern f32 lbl_803DE694;
 extern f32 lbl_803DE698;
 extern f32 lbl_803DB26C;
-extern CameraViewSlot gCameraShakeSlots[];
 extern f32 fabsf(f32 x);
 extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
-extern u8 lbl_80338090[];
-extern f32 gCameraDefaultModelMatrix[16];
 extern f32 lbl_803967C0[12];
 extern f32 lbl_803967F0[12];
 extern f32 lbl_80396820[12];
@@ -754,7 +714,6 @@ extern f32 lbl_80396850[12];
 extern s16 gCameraViewportScreenParams[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern CameraRenderMode* gRenderModeObj;
 extern u32 lbl_803DCCBC;
 extern s16 lbl_803DC88A;
 void Camera_ApplyCurrentViewport(void* viewportArg);
@@ -1076,51 +1035,14 @@ void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
 void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
 void Sfx_InitObjectChannels(void);
-f32* Camera_GetViewRotationMatrix(void);
-f32* Camera_GetInverseViewRotationMatrix(void);
-f32* Camera_GetViewMatrix(void);
-f32* Camera_GetInverseViewMatrix(void);
-void* Camera_GetCurrentViewSlot(void);
-u8 CameraShake_IsActive(void);
-void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-void CameraShake_SetAllMagnitudes(f32 magnitude);
-void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 void* fn_8000E814(void);
-void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix);
-void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ);
 void screenFn_8000e944(void* viewportArg);
-void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ);
-void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
-void Camera_ProjectWorldSphere( f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
 void viewportEffectFn_8000e380(void);
-void Camera_UpdateProjection(void* viewportArg);
-void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWidth);
-void Camera_SetCurrentViewIndex(int index);
-f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
-void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-void Camera_UpdateViewMatrices(void);
-void Camera_ApplyFullViewport(void);
 void fn_8000F83C(void);
 void fn_8000F8F8(void);
 void fn_8000F9B4(void);
 u16 fn_8000FA70(void);
 u16 fn_8000FA90(void);
-u8 Camera_IsViewYOffsetEnabled(void);
-void Camera_DisableViewYOffset(void);
-void Camera_EnableViewYOffset(void);
-s16 Camera_GetViewportYOffset(void);
-void Camera_SetViewportYOffset(s16 yOffset);
-f32* Camera_GetProjectionMatrix(void);
-void Camera_RebuildProjectionMatrix(void);
-f32 Camera_GetFarPlane(void);
-void Camera_SetFarPlane(f32 farPlane, int transitionFrames);
-f32 Camera_GetNearPlane(void);
-f32 Camera_GetAspectRatio(void);
-void Camera_SetAspectRatio(f32 aspectRatio);
-f32 Camera_GetFovY(void);
-void Camera_SetFovY(f32 fovY);
-void Camera_InitState(void);
 f32 Curve_EvalLinear(f32 t, f32* values);
 f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent);
 f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent);

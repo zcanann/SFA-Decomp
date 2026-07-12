@@ -3844,7 +3844,6 @@ int GXFlush_(u8 visible, int unused)
 
 extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
-extern GXRenderModeObj* gRenderModeObj;
 extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
 #pragma peephole on
 void setDisplayCopyFilter(void)
@@ -4722,7 +4721,6 @@ typedef struct
 
 struct piIndMtx;
 extern struct piIndMtx lbl_802C1D50;
-extern void* Camera_GetInverseViewMatrix(void);
 extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
 extern void fn_8006C510(void* out);
 extern f32 lbl_803DEB1C;
@@ -4929,7 +4927,7 @@ void renderHeavyFog(int* fogColorPtr)
     f32(*iv)[4];
     f32 k;
     im = lbl_802C1D68;
-    iv = Camera_GetInverseViewMatrix();
+    iv = (f32(*)[4])Camera_GetInverseViewMatrix();
     mcc[0][0] = lbl_803DEACC;
     mcc[0][1] = lbl_803DEACC;
     mcc[0][2] = lbl_803DEAC4 / lbl_803DCD3C;
@@ -5681,10 +5679,10 @@ void fn_8005011C(int objInst)
     GXSetTevDirect(lbl_803DCD90 + 1);
     GXSetTevDirect(lbl_803DCD90 + 2);
     GXSetTevDirect(lbl_803DCD90 + 3);
-    PSMTXConcat((f32(*)[4])(objInst + 0x30), Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32(*)[4])(objInst + 0x30), (f32(*)[4])Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
-    PSMTXConcat((f32(*)[4])objInst, Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32(*)[4])objInst, (f32(*)[4])Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
     GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80 + 3);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
@@ -5887,7 +5885,6 @@ extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32
 extern int fn_8006C754(void);
 extern int fn_8006C74C(void);
 extern void* Obj_GetPlayerObject(void);
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;

@@ -444,8 +444,6 @@ extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void objRotateFn_8003bce8(f32* m, s16* a, s16* b, s16* c);
-extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
-extern void Camera_NdcToScreen(f32 a, f32 b, f32 c, int* x, int* y, int* z);
 extern int depthReadRequestPoll(int x, int y, int* obj);
 extern void objShadowFn_8006c5f0(int* obj, int* a, f32* b, int* c, int* d);
 extern void hudDrawColored(int a, int b, int c, u32* col, int d, int e);
@@ -678,9 +676,9 @@ void objRenderModel(int* obj)
     f32 px;
     f32 py;
     f32 pz;
-    int sx;
-    int sy;
-    int sz;
+    s32 sx;
+    s32 sy;
+    s32 sz;
     u32 col;
     int* model = Obj_GetActiveModel(obj);
     if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
@@ -1761,7 +1759,6 @@ extern void modelRenderInstrsState_init(MtxBitStream* bs, u8* data, int len, int
 extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern ObjModelRenderCb ObjModel_GetRenderCallback(int* am);
-extern void Camera_RebuildProjectionMatrix(void);
 extern void _gxSetFogParams(void);
 extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
@@ -2184,7 +2181,6 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     }
 }
 
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA4C;
 extern f32 lbl_803DEA50;
