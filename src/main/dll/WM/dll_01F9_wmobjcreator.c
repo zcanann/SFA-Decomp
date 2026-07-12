@@ -98,8 +98,6 @@ extern f32 lbl_803E5CD0;       /* -30.0: westward drift base velocity */
 extern f32 lbl_803E5CD4;       /* 0.1: burst velocity scale */
 extern const f32 lbl_803E5CD8; /* 0.0 */
 extern const f32 lbl_803E5CDC; /* 200.0 */
-extern void* ObjGroup_GetObjects();
-
 int WM_ObjCreator_getExtraSize(void)
 {
     return 0x8;
@@ -163,7 +161,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 {
                     state = (WmObjCreatorState*)0;
                 }
-                objs = ObjGroup_GetObjects(3, &count);
+                objs = (int*)ObjGroup_GetObjects(3, &count);
                 k = 0;
                 while (k < count && (s8)(int)state)
                 {

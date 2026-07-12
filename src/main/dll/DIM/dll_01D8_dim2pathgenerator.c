@@ -116,8 +116,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define OBJ_GROUP_SNOWBALL_POOL     47
 
 
-extern int** ObjGroup_GetObjects(int group, int* countOut);
-
 static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -206,7 +204,7 @@ void DIM2PathGenerator_update(int* obj)
     toggle = ((Dim2PathGeneratorState*)extra)->flags & 1;
     ((Dim2PathGeneratorState*)extra)->spawnTimer = ((Dim2PathGeneratorState*)extra)->spawnPeriod;
     ((Dim2PathGeneratorState*)extra)->flags &= ~1;
-    objs = ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
+    objs = (int**)ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
     for (i = 0; i < count; i++)
     {
         if (((Dim2PathGeneratorState*)extra)->spawnTypes[toggle] == ((GameObject*)objs[i])->anim.seqId)
@@ -219,8 +217,8 @@ void DIM2PathGenerator_update(int* obj)
             ((Dim2SpawnSetup*)p)->posZ = ((Dim2PathGeneratorState*)extra)->originZ;
             ((Dim2SpawnSetup*)p)->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
             (*(void (**)(int*, int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], p, 1);
-            ObjGroup_RemoveObject(objs[i], OBJ_GROUP_SNOWBALL_POOL);
-            o2 = ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
+            ObjGroup_RemoveObject((int)objs[i], OBJ_GROUP_SNOWBALL_POOL);
+            o2 = (int**)ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
             for (j = 0; j < count; j++)
             {
             }

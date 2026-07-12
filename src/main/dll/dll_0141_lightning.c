@@ -10,7 +10,6 @@
 #include "main/objfx.h"
 
 
-extern u32* ObjGroup_GetObjects(int group, int* countOut);
 #define objfx_spawnDirectionalBurstDouble(obj, idx, radius, kind, mode, chance, scale, origin, flags)             \
     ((void (*)(u8*, int, double, int, int, int, f32, int, int))objfx_spawnDirectionalBurst)(                     \
         (u8*)(obj), (idx), (radius), (kind), (mode), (chance), (scale), (origin), (flags))
@@ -32,7 +31,7 @@ void lightning_free(u8* obj, int p2)
 {
     u8* state = ((GameObject*)obj)->extra;
     void* handle;
-    ObjGroup_RemoveObject(obj, MMP_LIGHTNING_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, MMP_LIGHTNING_OBJGROUP);
     handle = *(void**)state;
     if (handle != NULL)
     {
@@ -209,7 +208,7 @@ void lightning_init(u8* obj, u8* data)
     f32 defaultScale;
 
     state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
+    ObjGroup_AddObject((int)obj, MMP_LIGHTNING_OBJGROUP);
     state->modeBits.mode = data[0x21];
     defaultScale = 1.0f;
     state->hitRadius = defaultScale;

@@ -25,6 +25,9 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
+#include "main/obj_group.h"
+#include "main/obj_link.h"
+#include "main/obj_path.h"
 
 typedef struct
 {
@@ -54,14 +57,6 @@ typedef struct
     u8 pad_22[2];
 } SnowHornEntry;
 
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern u64 ObjLink_DetachChild();
-extern u32 ObjLink_AttachChild();
-extern u32 ObjPath_GetPointWorldPositionArray();
-extern u32 ObjPath_GetPointLocalPosition();
-extern u32 ObjPath_GetPointModelMtx();
-extern u32 ObjPath_GetPointWorldPosition();
 extern u32 objAnimFn_80038f38();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E83E8;

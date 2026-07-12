@@ -134,9 +134,9 @@ int DR_CloudRunner_func14(GameObject* obj)
     return 1;
 }
 
-void DR_CloudRunner_modelMtxFn(GameObject* obj, int a, int b, int c)
+void DR_CloudRunner_modelMtxFn(GameObject* obj, f32* x, f32* y, f32* z)
 {
-    ObjPath_GetPointWorldPosition(obj, 2, a, b, c, 0);
+    ObjPath_GetPointWorldPosition(obj, 2, x, y, z, 0);
 }
 
 int DR_CloudRunner_stateHandler07(GameObject* obj)
@@ -155,8 +155,8 @@ void DR_CloudRunner_free(GameObject* obj)
 {
     DRCloudRunnerState* inner = (DRCloudRunnerState*)(obj)->extra;
     mainSetBits(0x7aa, inner->altMoveEnabled);
-    ObjGroup_RemoveObject(obj, DRCLOUDRUNNER_OBJGROUP);
-    ObjGroup_RemoveObject(obj, ARWARWING_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DRCLOUDRUNNER_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, ARWARWING_OBJGROUP);
     (*gGameUIInterface)->airMeterSetShutdown();
 }
 
@@ -302,8 +302,8 @@ void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         if (vis == -1)
         {
             objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E83A8);
-            ObjPath_GetPointWorldPosition(obj, 3, (char*)(int)((char*)inner + 0xae8),
-                                          (char*)(int)((char*)inner + 0xaec), (char*)(int)((char*)inner + 0xaf0), 0);
+            ObjPath_GetPointWorldPosition(obj, 3, (f32*)((char*)inner + 0xae8), (f32*)((char*)inner + 0xaec),
+                                          (f32*)((char*)inner + 0xaf0), 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {
@@ -411,7 +411,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
     int savedSlot;
     (obj)->anim.rotX = (s16)((s8) * (s8*)((char*)def + 0x18) << 8);
     (obj)->animEventCallback = DR_CloudRunner_SeqFn;
-    ObjGroup_AddObject(obj, DRCLOUDRUNNER_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DRCLOUDRUNNER_OBJGROUP);
     inner = *(int*)&(obj)->extra;
     ((DRCloudRunnerState*)inner)->spawnVariant = *(u8*)((char*)def + 0x19);
     ((DRCloudRunnerState*)inner)->unkBAE = 5;
@@ -436,7 +436,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
     fn_802BF0C8((int)obj, inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x4c4), -0x11c7, 0x1555, 1);
     dll_2E_func08(inner + 0x4c4, 0x12c, 0x78);
-    ObjGroup_AddObject(obj, ARWARWING_OBJGROUP);
+    ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
     ((ByteFlags*)((char*)inner + 0xbc0))->b01 = 0;
 }
 

@@ -62,7 +62,7 @@ void DR_CloudRunner_func18(int obj, f32* a, int* b);
 int DR_CloudRunner_func11(GameObject* obj);
 void DR_CloudRunner_setGroundMarkerMatrix(GameObject* obj);
 int DR_CloudRunner_func14(GameObject* obj);
-void DR_CloudRunner_modelMtxFn(GameObject* obj, int a, int b, int c);
+void DR_CloudRunner_modelMtxFn(GameObject* obj, f32* x, f32* y, f32* z);
 int DR_CloudRunner_stateHandler07(GameObject* obj);
 void DR_CloudRunner_free(GameObject* obj);
 void DR_CloudRunner_initialise(void);

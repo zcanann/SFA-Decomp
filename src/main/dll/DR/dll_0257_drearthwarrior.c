@@ -433,14 +433,16 @@ void DR_EarthWarrior_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 
     if (vis == -1)
     {
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E8338);
-        ObjPath_GetPointWorldPosition(obj, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c, (char*)inner + 0x1440, 0);
-        ObjPath_GetPointWorldPositionArray(obj, 3, 4, (char*)inner + 0xb18);
+        ObjPath_GetPointWorldPosition(obj, 0xb, (f32*)((char*)inner + 0x1438), (f32*)((char*)inner + 0x143c),
+                                      (f32*)((char*)inner + 0x1440), 0);
+        ObjPath_GetPointWorldPositionArray(obj, 3, 4, (f32*)((char*)inner + 0xb18));
     }
     else if (vis != 0)
     {
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E8338);
-        ObjPath_GetPointWorldPosition(obj, 0xb, (char*)inner + 0x1438, (char*)inner + 0x143c, (char*)inner + 0x1440, 0);
-        ObjPath_GetPointWorldPositionArray(obj, 3, 4, (char*)inner + 0xb18);
+        ObjPath_GetPointWorldPosition(obj, 0xb, (f32*)((char*)inner + 0x1438), (f32*)((char*)inner + 0x143c),
+                                      (f32*)((char*)inner + 0x1440), 0);
+        ObjPath_GetPointWorldPositionArray(obj, 3, 4, (f32*)((char*)inner + 0xb18));
         dll_2E_func06(obj, (MoveLibState*)((char*)inner + 0x3ec), 0);
     }
 }
@@ -452,7 +454,7 @@ void DR_EarthWarrior_free(GameObject* obj)
     {
         ObjModelChain_Free((ObjModelChain*)inner->sub.modelChain);
     }
-    ObjGroup_RemoveObject(obj, DREARTHWARRIOR_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DREARTHWARRIOR_OBJGROUP);
     if (((ByteFlags*)&inner->sub.flags994)->b02)
     {
         (*gGameUIInterface)->airMeterSetShutdown();
@@ -1265,7 +1267,7 @@ void DR_EarthWarrior_update(GameObject* obj)
     {
         ObjPlacement* setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
         GameObject* newObj = Obj_SetupObject(setup, 4, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
-        ObjLink_AttachChild(obj, (int)newObj, 2);
+        ObjLink_AttachChild((int)obj, (int)newObj, 2);
         inner->helperObj = newObj;
     }
     inner->sub.unk986 = 5;
@@ -1374,7 +1376,7 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     r1 = lbl_802C2CB4;
     (obj)->anim.rotX = (s16)(((DREarthWarriorPlacement*)def)->spawnYaw << 8);
     (obj)->animEventCallback = DR_EarthWarrior_SeqFn;
-    ObjGroup_AddObject(obj, DREARTHWARRIOR_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DREARTHWARRIOR_OBJGROUP);
     ((DREarthWarriorState*)inner)->unk14E8 = ((DREarthWarriorPlacement*)def)->unk19;
     ((DREarthWarriorState*)inner)->unk14DE = 5;
     ((DREarthWarriorState*)inner)->unk14F4 = -1;
