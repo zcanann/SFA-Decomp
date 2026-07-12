@@ -60,14 +60,20 @@ int gWarpStoneUiSelectedIndices[0x6];
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_lifetimes off
 int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
 {
-    int slot;
-    u8* idp;
     u8* lastDst;
+    u8* idp;
+    u8* sp;
+    u8* dp;
     int yoff;
+    int slot;
     int entry;
+    int tmp;
 
+    sp = src;
+    dp = dst;
     lastDst = NULL;
     entry = 0;
     slot = 0;
@@ -80,27 +86,28 @@ int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
         }
         idp += 4;
     }
-    entry = (count - entry) * 0x2a / 2 + 0x52;
+    tmp = (count - entry) * 0x2a / 2 + 0x52;
     slot = 0;
-    yoff = entry;
+    entry = slot;
     idp = ids;
-    for (entry = 0; entry < count; entry++)
+    yoff = tmp;
+    for (; entry < count; entry++)
     {
         if ((u32)mainGetBit(*(s16*)idp) != 0)
         {
-            memcpy(dst, src, 0x3c);
-            lastDst = dst;
-            *(s16*)(dst + 6) = yoff;
-            *(s8*)(dst + 0x1a) = (s8)(slot - 1);
-            *(s8*)(dst + 0x1b) = (s8)(slot + 1);
+            memcpy(dp, sp, 0x3c);
+            lastDst = dp;
+            *(s16*)(dp + 6) = yoff;
+            *(s8*)(dp + 0x1a) = (s8)(slot - 1);
+            *(s8*)(dp + 0x1b) = (s8)(slot + 1);
             *out = entry;
             out++;
-            dst += 0x3c;
+            dp += 0x3c;
             yoff += 0x2a;
             slot++;
         }
         idp += 4;
-        src += 0x3c;
+        sp += 0x3c;
     }
     if (lastDst != NULL)
     {
@@ -108,6 +115,7 @@ int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
     }
     return slot;
 }
+#pragma opt_lifetimes reset
 #pragma peephole reset
 #pragma scheduling reset
 
