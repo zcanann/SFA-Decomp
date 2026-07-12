@@ -7661,3 +7661,39 @@ FRONTIER NOTE: sub-100 band is thin+high — of 8380 fns only 395<100, 386 in 95
 decl-order cheap wins now near-exhausted for cold units; small/overlooked fns (lightfoot_free was sz=160,
 bottom of size-sort) still occasionally yield — don't skip the tail. tricky/textrender/expgfx/newshadows/
 shader/trigger/dll_0014_unk/animobjd2 were HOT (siblings live) — skipped.
+
+## Jul12 (Opus fuzzy-specialist) — cold C>T near-miss sweep: 0 wins, weld class extended
+Targeted the cold (non-Jack/non-sibling) near-miss band via a C>T instruction-count scan (proto decode
++ ndiff): hunted the residual small levers (in-place-consume remat, #53 store-narrow, base-homing,
+#130 re-derive, u32*-cast). Every C>T candidate resolved to a documented weld:
+- **sky fn_80089A60 99.04% (clrlwi store-narrow)**: C emits `clrlwi r4,r31,24; stb r4,192(r3)` for the
+  c2 store at 0xc0; target `stb r31` direct. The THREE reaching defs of c2 (`mr r31,r9`/`lwz r31,340(r1)`/
+  `li r31,255`) are BYTE-IDENTICAL between T and C — the clrlwi elision is a pure downstream codegen
+  decision on identical IR, no source spelling reaches it. CONFIRMED store-narrow codegen-pinned weld.
+- **animobjd2 fn_8013E0D0 96.94% (delta+8)**: dominated by a t(st)/gobj(obj) saved-reg SWAP (T homes t
+  in r31/gobj r29; C reversed) across 180 regions. decl-order swap (t before gobj) REGRESSED to 206
+  regions — current order is closer. Deep #108 coloring weld; the srawi (`&= ~0x400LL` on s32 @0x54) and
+  li -1/255 sign deltas are real but swamped by the reg-perm. (This fn already carries opt_common_subs off.)
+- **pollenfragment_update 99.37% (delta+1, #130 re-derive)**: target re-derives `addi r3,r31,32`
+  (extra+0x20 = &deathTimer) at 3 sites; C CSEs into r29. All 3 compute the IDENTICAL address (deathTimer@
+  0x20), so no source spelling breaks the value-number unification. `#pragma opt_common_subs off` DID drop
+  the extra+0x20 CSE but collaterally killed the beneficial def-ptr(@0x1c) CSE → 99.37->98.82 REGRESSION,
+  reverted. Selective-CSE weld (pragma too blunt: one function, all-or-nothing).
+- **seqobj11d fn_8015165C 99.026% (delta+1, base-CSE)**: fn_8014D08C args read SeqEntry(stride16) anim@8/
+  speed@0/mask@4; target shares base `p28+idx*16`(r7) for anim(8(r7))+mask(4(r7)), indexed for speed
+  (lfsx). C broke the base-CSE because `.mask` used typed `((SeqEntry*)p28)[idx].mask` (distinct IR from
+  the raw `(p28+idx*16)[8]` anim). Respelling mask raw `(u8)*(u32*)(p28+idx*16+4)` MATCHED instr count
+  (C 214->213, addi gone) but fuzzy stayed EXACTLY 99.02631 — the shared base then forced speed to
+  `lfs 0(r7)` (displacement) vs target's `lfsx` (indexed), a byte-for-byte wash. Reverted. Addressing-mode
+  selection (displacement-once-base-exists) is not source-controllable here.
+- **mmFreeTick 98.12%**: T homes the sp-walk ptr in r5 + keeps `li r3,0`/`addi r3,r3,7` accumulator in r3;
+  C uses r3 for the ptr. T has MORE instrs (229 vs 227) — can't force target's less-optimal alloc. #108.
+- **Camera_UpdateProjection 98.09% / padUpdate 98.86% / waterfx_drawFn/func05 / snowCloudUpdateFlakes**:
+  pure T==C reg-perm, welded.
+- **sky2_run 99.40% / boneParticleEffect_update 99.26%**: r0-detour (`addi r0,r3,0; mr r26,r0` vs T
+  `addi r28,r3,0` direct) — documented instruction-selection-pinned weld.
+- **RomCurve_goNextPoint 99.55% / voxmaps_updateRoutePath 99.09%**: #110 shared-const/zero (`mr r5,r4`
+  vs `li r5,1`; spurious `li r0,0`), welded.
+LESSON reaffirmed: the cold near-miss band is coloring(#108)/CSE-selectivity/r0-detour/#110 saturated.
+The base-CSE respell (fn_8015165C) is a NEW near-miss mechanism worth noting: fixing a broken base-CSE
+can be a wash when the shared base then flips a sibling access from indexed(lfsx) to displacement(lfs).
