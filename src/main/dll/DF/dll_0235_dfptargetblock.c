@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/dll/fruit.h"
 #include "main/mapEvent.h"
+#include "main/model.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
@@ -64,7 +65,6 @@ extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjHits_GetPriorityHit(GameObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
-extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
                                   f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
@@ -352,12 +352,12 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
     u8 bitVal;
     int i;
     DfpTargetBlockState* state;
-    int model;
+    ModelFileHeader* model;
     double fconv;
     DfpTargetBlockPoint point;
 
     state = (DfpTargetBlockState*)obj->state;
-    model = *ZBomb_GetActiveModel(obj);
+    model = (ModelFileHeader*)*ZBomb_GetActiveModel(obj);
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTARGETBLOCK_OBJFLAG_HIDDEN;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
@@ -368,7 +368,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
     else
     {
         fconv = (double)gTargetBlockMinVertexYSeed;
-        for (i = 0; i < (int)(u32) * (u16*)(model + 0xe4); i = i + 1)
+        for (i = 0; i < (int)(u32)model->vertexCount; i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
             if ((double)point.y < fconv)
@@ -376,7 +376,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
                 fconv = (double)point.y;
             }
         }
-        for (i = 0; i < (int)(u32) * (u16*)(model + 0xe4); i = i + 1)
+        for (i = 0; i < (int)(u32)model->vertexCount; i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
             if ((double)point.y == fconv)

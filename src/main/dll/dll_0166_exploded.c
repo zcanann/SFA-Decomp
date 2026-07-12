@@ -2,9 +2,13 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 #include "main/dll/IM/IMicicle.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/model.h"
+#include "main/object_transform.h"
 #include "main/objseq.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
@@ -23,9 +27,7 @@ extern f32 lbl_803E4404;
 extern f32 gExplodedGroundFriction;
 extern f32 gExplodedBounceRestitution;
 extern f32 gExplodedGravity;
-extern void Model_GetVertexPosition(int model, int i, f32* out);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
 
 void exploded_free(void)
@@ -146,7 +148,7 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, 
     if (computeModelCenter == 0)
     {
         register int i;
-        register int mesh;
+        register ModelFileHeader* mesh;
         f32 v[6];
         f32 z;
         f32 k;
@@ -159,8 +161,8 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, 
         v[4] = z;
         v[5] = z;
 
-        mesh = *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + data->objectTypeTag * 4));
-        for (i = 0; i < *(u16*)((char*)mesh + 0xe4); i++)
+        mesh = (ModelFileHeader*)*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + data->objectTypeTag * 4));
+        for (i = 0; i < mesh->vertexCount; i++)
         {
             Model_GetVertexPosition(mesh, i, v);
             v[3] = v[0] + v[3];
@@ -168,9 +170,9 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, 
             v[5] = v[2] + v[5];
         }
 
-        state->localCenterX = v[3] * ((k = lbl_803E43F4) / (f32)(u32) * (u16*)((char*)mesh + 0xe4));
-        state->localCenterY = v[4] * (k / (f32)(u32) * (u16*)((char*)mesh + 0xe4));
-        state->localCenterZ = v[5] * (k / (f32)(u32) * (u16*)((char*)mesh + 0xe4));
+        state->localCenterX = v[3] * ((k = lbl_803E43F4) / (f32)(u32)mesh->vertexCount);
+        state->localCenterY = v[4] * (k / (f32)(u32)mesh->vertexCount);
+        state->localCenterZ = v[5] * (k / (f32)(u32)mesh->vertexCount);
     }
 
     state->initialLocalCenterX = state->localCenterX;
@@ -252,7 +254,7 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
     f32 worldBefore[3];
 
     stopped = lbl_803E43F0;
-    Obj_TransformLocalPointByWorldMatrix(obj, state, worldBefore, 0);
+    Obj_TransformLocalPointByWorldMatrix((u8*)obj, &state->localCenterX, worldBefore, 0);
     obj->velocityX = timeDelta * state->accelerationX + obj->velocityX;
     obj->velocityY = timeDelta * state->accelerationY + obj->velocityY;
     obj->velocityZ = timeDelta * state->accelerationZ + obj->velocityZ;
@@ -309,7 +311,7 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
     obj->angleX = (s16)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
     obj->angleY = (s16)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
     obj->angleZ = (s16)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
-    Obj_TransformLocalPointByWorldMatrix(obj, state, worldAfter, 0);
+    Obj_TransformLocalPointByWorldMatrix((u8*)obj, &state->localCenterX, worldAfter, 0);
     worldAfter[0] = worldBefore[0] - worldAfter[0];
     worldAfter[1] = worldBefore[1] - worldAfter[1];
     worldAfter[2] = worldBefore[2] - worldAfter[2];

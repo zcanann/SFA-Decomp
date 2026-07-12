@@ -79,7 +79,6 @@ extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern void Vec_normalize(f32* dst, f32* src);
-extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);

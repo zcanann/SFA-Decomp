@@ -21,6 +21,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "track/intersect_api.h"
 #include "main/dll/dll_015F_attractor.h"
 #include "main/dll/dll_015D_slidingdoor.h"
@@ -132,7 +133,6 @@ extern void Obj_FreeObject(int obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void Model_GetVertexPosition(int model, int i, f32* out);
 extern void vecRotateZXY(s16* rot, f32* vec);
 
 void explodable_render(void)
@@ -342,7 +342,7 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
     int objType;
     u8 entMode;
     int vertexIdx;
-    int model;
+    ModelFileHeader* model;
     GasVentTableEntry* e;
     f32 zero;
     struct
@@ -371,20 +371,20 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
                 c->centroidX = zero;
                 c->centroidY = zero;
                 c->centroidZ = zero;
-                model = *(int*)(*(int*)(*(int*)&(obj)->anim.banks + i14));
+                model = (ModelFileHeader*)*(int*)(*(int*)(*(int*)&(obj)->anim.banks + i14));
                 s.acc[0] = zero;
                 s.acc[1] = zero;
                 s.acc[2] = zero;
-                for (vertexIdx = 0; vertexIdx < *(u16*)(model + 0xe4); vertexIdx++)
+                for (vertexIdx = 0; vertexIdx < model->vertexCount; vertexIdx++)
                 {
                     Model_GetVertexPosition(model, vertexIdx, s.v);
                     s.acc[0] = s.v[0] + s.acc[0];
                     s.acc[1] = s.v[1] + s.acc[1];
                     s.acc[2] = s.v[2] + s.acc[2];
                 }
-                c->centroidX = s.acc[0] * ((zero = lbl_803E436C) / (f32)(u32) * (u16*)(model + 0xe4));
-                c->centroidY = s.acc[1] * (zero / (f32)(u32) * (u16*)(model + 0xe4));
-                c->centroidZ = s.acc[2] * (zero / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidX = s.acc[0] * ((zero = lbl_803E436C) / (f32)(u32)model->vertexCount);
+                c->centroidY = s.acc[1] * (zero / (f32)(u32)model->vertexCount);
+                c->centroidZ = s.acc[2] * (zero / (f32)(u32)model->vertexCount);
             }
             c->offX = c->centroidX;
             c->offY = c->centroidY;

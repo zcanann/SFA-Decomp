@@ -9,6 +9,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/model.h"
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -109,7 +110,6 @@ extern f64 lbl_803E3538;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
 extern int arrayIndexOf(int* arr, int count, int target);
@@ -656,7 +656,7 @@ void pushable_init(s16* obj, char* def)
 {
     extern int fn_80174A80();
     PushableState* state;
-    int* model;
+    ModelFileHeader* model;
     int* entry;
     int i;
     f32* mtx;
@@ -678,7 +678,7 @@ void pushable_init(s16* obj, char* def)
     state = ((GameObject*)obj)->extra;
     state->pointCount = 0;
     entry = Transporter_GetActiveModel(obj);
-    model = (int*)*entry;
+    model = (ModelFileHeader*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
     state->scale = (f32) * &((PushableObjectDef*)def)->scaleRaw / gPushableU16ScaleDenom;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -693,7 +693,7 @@ void pushable_init(s16* obj, char* def)
     ObjHits_EnableObject((u32)obj);
     {
         f32 minY = lbl_803E3540;
-        for (i = 0; i < *(u16*)((char*)model + 0xe4); i++)
+        for (i = 0; i < model->vertexCount; i++)
         {
             Model_GetVertexPosition(model, i, vtx);
             if (vtx[1] < minY)
@@ -701,7 +701,7 @@ void pushable_init(s16* obj, char* def)
                 minY = vtx[1];
             }
         }
-        for (i = 0; i < *(u16*)((char*)model + 0xe4); i++)
+        for (i = 0; i < model->vertexCount; i++)
         {
             Model_GetVertexPosition(model, i, vtx);
             if (vtx[1] == minY)
