@@ -243,6 +243,7 @@ void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
     arwing->camPos[2] = lbl_803E6ECC;
 }
 
+#pragma dont_inline on
 void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
 {
     ArwingState* arwing = state;
@@ -376,6 +377,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     arwing->bobYPhase = (arwing->bobYRate * timeDelta + (f32)(u32)arwing->bobYPhase);
     arwarwing_clampToFlightBounds(obj, state);
 }
+#pragma dont_inline off
 
 void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
 {
