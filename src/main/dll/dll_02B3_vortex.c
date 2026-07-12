@@ -207,9 +207,10 @@ void Vortex_hitDetect(void)
 
 void Vortex_init(int obj, int initData)
 {
+    GameObject* o = (GameObject*)obj;
     f32(*base)[3] = gVortexScaleParams;
     VortexSetup* setup = (VortexSetup*)initData;
-    VortexState* state = ((GameObject*)obj)->extra;
+    VortexState* state = o->extra;
     u8 i;
 
     state->flags.active = 0;
@@ -217,7 +218,7 @@ void Vortex_init(int obj, int initData)
     {
         state->flags.active = mainGetBit(setup->activeGameBit);
     }
-    if (((GameObject*)obj)->anim.seqId == 0x835)
+    if (o->anim.seqId == 0x835)
     {
         for (i = 0; i < 2; i++)
         {
@@ -226,7 +227,7 @@ void Vortex_init(int obj, int initData)
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x838)
+    else if (o->anim.seqId == 0x838)
     {
         for (i = 0; i < 2; i++)
         {
@@ -235,7 +236,7 @@ void Vortex_init(int obj, int initData)
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x83d)
+    else if (o->anim.seqId == 0x83d)
     {
         for (i = 0; i < 3; i++)
         {
@@ -260,14 +261,14 @@ void Vortex_init(int obj, int initData)
             }
         }
     }
-    ((GameObject*)obj)->objectFlags |= VORTEX_OBJFLAG_HITDETECT_DISABLED;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
+    o->objectFlags |= VORTEX_OBJFLAG_HITDETECT_DISABLED;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)o), postRenderSetAlphaBlendState);
     if (state->flags.active != 0)
         state->alpha = lbl_803E73E0;
     else
         state->alpha = lbl_803E73D0;
     state->particleTimer = randomGetRange(0, 0x14);
-    *(f32*)(obj + 0x40) = *(f32*)(obj + 0x40) * lbl_803E7404;
+    *(f32*)((int)o + 0x40) = *(f32*)((int)o + 0x40) * lbl_803E7404;
 }
 
 void Vortex_update(GameObject* obj)
