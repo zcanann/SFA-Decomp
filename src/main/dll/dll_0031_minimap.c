@@ -185,8 +185,6 @@ extern f32 gMinimapF74;
 #pragma scheduling off
 #pragma peephole off
 extern GameObject* lbl_803DBBC8[2];
-extern int Obj_AllocObjectSetup(int a, int b);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 gMinimapFNeg15;
 extern f32 gMinimapFNeg9_8;
 extern f32 gMinimapFNeg40;

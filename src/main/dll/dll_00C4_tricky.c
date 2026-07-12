@@ -191,8 +191,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern int Obj_GetActiveModel(int obj);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
-extern int Obj_AllocObjectSetup();
-extern int Obj_SetupObject(int setup, int b, int c, int d, int e);
 extern u32 ObjPath_GetPointWorldPositionArray();
 extern u32 ObjPath_GetPointWorldPosition();
 extern u32 objAnimFn_80038f38();
@@ -451,12 +449,12 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
                 for (k = 0, p = (u8*)state; k < 7; p += 4, k = k + 1)
                 {
-                    setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                    setup = (int)Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8*)(setup + 4) = 2;
                     *(u8*)(setup + 5) = 1;
                     *(s16*)(setup + 0x1a) = k;
-                    *(int*)(p + 0x700) = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                                         *(int*)&((GameObject*)obj)->anim.parent);
+                    *(int*)(p + 0x700) = (int)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                                              ((GameObject*)obj)->anim.parent);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
                 Sfx_AddLoopedObjectSound(obj, SFXTRIG_trpopn_c);
@@ -470,14 +468,14 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 mapBlockFn_80059c2c(blockFlags);
                 if (blockFlags[0xd] != 0)
                 {
-                    setup = Obj_AllocObjectSetup(0x20, 0x244);
+                    setup = (int)Obj_AllocObjectSetup(0x20, 0x244);
                 }
                 else
                 {
-                    setup = Obj_AllocObjectSetup(0x20, 0x254);
+                    setup = (int)Obj_AllocObjectSetup(0x20, 0x254);
                 }
                 *(int*)&((TrickyState*)state)->spawnedChild =
-                    Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+                    (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
                 ObjLink_AttachChild(obj, *(int*)&((TrickyState*)state)->spawnedChild, 3);
             }
             break;
@@ -693,7 +691,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     bitVal = 0xffffffff;
                 }
                 ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
-                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)&((GameObject*)objVal)->anim.parent);
+                spawnedObj = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, ((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7b0) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->childB, *(u8*)(state + 0x7bc) >> 4 & 3);
             }
@@ -770,7 +768,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     bitVal = 0xffffffff;
                 }
                 ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
-                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)&((GameObject*)objVal)->anim.parent);
+                spawnedObj = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, ((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7a8) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->childA, *(u8*)(state + 0x7bc) >> 6 & 3);
             }
@@ -878,7 +876,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
         int setup_;                                                                                                    \
         s8 used_[4];                                                                                                   \
         int slot_;                                                                                                     \
-        setup_ = Obj_AllocObjectSetup(0x20, 0x17b);                                                                    \
+        setup_ = (int)Obj_AllocObjectSetup(0x20, 0x17b);                                                               \
         used_[0] = -1;                                                                                                 \
         used_[1] = -1;                                                                                                 \
         used_[2] = -1;                                                                                                 \
@@ -915,7 +913,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
             slot_ = -1;                                                                                                \
         }                                                                                                              \
         ((TrickySlotBits*)((state) + 0x7bc))->slotC = slot_;                                                           \
-        *(int*)((state) + 0x7b8) = Obj_SetupObject(setup_, 4, -1, -1, *(int*)((obj) + 0x30));                          \
+        *(int*)((state) + 0x7b8) = (int)Obj_SetupObject((ObjPlacement*)setup_, 4, -1, -1, *(void**)((obj) + 0x30));    \
         ObjLink_AttachChild((obj), *(int*)((state) + 0x7b8), ((TrickySlotBits*)((state) + 0x7bc))->slotC);             \
         z = lbl_803E23DC;                                                                                              \
         *(f32*)((state) + 0x7c0) = z;                                                                                  \
@@ -963,14 +961,14 @@ void Tricky_update(int obj)
         mapBlockFn_80059c2c(blockFlags);
         if (blockFlags[0xd] != 0)
         {
-            setup = Obj_AllocObjectSetup(0x20, 0x244);
+            setup = (int)Obj_AllocObjectSetup(0x20, 0x244);
         }
         else
         {
-            setup = Obj_AllocObjectSetup(0x20, 0x254);
+            setup = (int)Obj_AllocObjectSetup(0x20, 0x254);
         }
         *(int*)&((TrickyState*)state)->spawnedChild =
-            Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+            (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
         ObjLink_AttachChild(obj, *(int*)&((TrickyState*)state)->spawnedChild, 3);
     }
     if ((((TrickyState*)state)->stateFlags & 0x40000000) != 0)
@@ -1301,14 +1299,14 @@ void Tricky_update(int obj)
                 if (Obj_IsLoadingLocked())
                 {
                     ((TrickyState*)state)->commandPhase = 5;
-                    setup = Obj_AllocObjectSetup(0x18, 0x112);
+                    setup = (int)Obj_AllocObjectSetup(0x18, 0x112);
                     *(u8*)(setup + 7) = 0xff;
                     *(u8*)(setup + 4) = 2;
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.worldPosX;
                     ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.worldPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.worldPosZ;
                     *(int*)&((TrickyState*)state)->followObj =
-                        Obj_SetupObject(setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+                        (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, ((GameObject*)obj)->anim.parent);
                     target = (u32) & ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
                     if (*(u32*)&((TrickyState*)state)->targetPosPtr != target)
                     {
@@ -1923,7 +1921,7 @@ int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAlt
         {
             index = 3;
         }
-        setup = Obj_AllocObjectSetup(0x30, *(u16*)((int)commandSpawnIds + index * 2));
+        setup = (int)Obj_AllocObjectSetup(0x30, *(u16*)((int)commandSpawnIds + index * 2));
     }
     else if (mode == 2)
     {
@@ -1932,20 +1930,20 @@ int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAlt
         {
             index = 1;
         }
-        setup = Obj_AllocObjectSetup(0x30, *(u16*)((int)&rewardSpawnIds0 + index * 2));
+        setup = (int)Obj_AllocObjectSetup(0x30, *(u16*)((int)&rewardSpawnIds0 + index * 2));
     }
     else if (mode == 3)
     {
         switch (spawnBits)
         {
         case 1:
-            setup = Obj_AllocObjectSetup(0x30, 0x2cd);
+            setup = (int)Obj_AllocObjectSetup(0x30, 0x2cd);
             break;
         case 3:
-            setup = Obj_AllocObjectSetup(0x30, 0xb);
+            setup = (int)Obj_AllocObjectSetup(0x30, 0xb);
             break;
         case 4:
-            setup = Obj_AllocObjectSetup(0x30, 0x2cd);
+            setup = (int)Obj_AllocObjectSetup(0x30, 0x2cd);
             break;
         case 5:
             savedX = (obj)->anim.worldPosX;
@@ -1991,7 +1989,7 @@ int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAlt
         {
             return 0;
         }
-        setup = Obj_AllocObjectSetup(0x30, ((u16*)((u8*)&rewardTail.pair - 2))[index]);
+        setup = (int)Obj_AllocObjectSetup(0x30, ((u16*)((u8*)&rewardTail.pair - 2))[index]);
     }
     *(u8*)(setup + 0x1a) = 0x14;
     *(s16*)(setup + 0x2c) = -1;
@@ -2012,7 +2010,7 @@ int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAlt
     ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)parentSetup)->color[2];
     ((ObjPlacement*)setup)->color[1] = ((ObjPlacement*)parentSetup)->color[1];
     ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)parentSetup)->color[3];
-    nearest = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+    nearest = (int)Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
     gTrickyNearestObject = nearest;
     if ((((GameObject*)nearest)->anim.seqId == 0x3cd) || (((GameObject*)nearest)->anim.seqId == 0xb))
     {
@@ -2339,9 +2337,9 @@ void baddieInstantiateWeapon(GameObject* obj, int state)
         {
             if (*(s16*)(state + 0x2b6) > 0)
             {
-                setup = Obj_AllocObjectSetup(0x20, *(s16*)(state + 0x2b6));
+                setup = (int)Obj_AllocObjectSetup(0x20, *(s16*)(state + 0x2b6));
                 *(u8*)(setup + 5) = *(u8*)(setup + 5) | (((BaddieInstantiateWeaponPlacement*)parentSetup)->unk5 & 0x18);
-                child = (void*)Obj_SetupObject(setup, 4, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+                child = Obj_SetupObject((ObjPlacement*)setup, 4, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
                 ObjLink_AttachChild(obj, child, 0);
                 *(s16*)&((TrickyState*)state)->currentTime = *(s16*)(state + 0x2b6);
             }
@@ -2825,8 +2823,8 @@ void trickyFn_801451d8(GameObject* obj, int state)
     }
     if (gTrickyHelperObject == 0)
     {
-        int setup = Obj_AllocObjectSetup(0x18, 0x25);
-        gTrickyHelperObject = Obj_SetupObject(setup, 4, -1, -1, *(int*)&obj->anim.parent);
+        int setup = (int)Obj_AllocObjectSetup(0x18, 0x25);
+        gTrickyHelperObject = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, obj->anim.parent);
     }
     ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = 1;
 }

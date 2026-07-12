@@ -1590,8 +1590,6 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 #undef base
 }
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 
 extern void Sfx_StopObjectChannel(void* obj, int ch);
 extern const f32 gModgfxColorClampMax;
@@ -1750,11 +1748,11 @@ void dll_0B_func05(void)
                                 tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
                                 tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
                             }
-                            o = Obj_AllocObjectSetup(0x20, DLL0B_CHILD_OBJ);
+                            o = (int*)Obj_AllocObjectSetup(0x20, DLL0B_CHILD_OBJ);
                             ((GameObject*)o)->anim.rootMotionScale = tmpl.x;
                             ((GameObject*)o)->anim.localPosX = tmpl.y;
                             *(f32*)&((ObjDef*)o)->jointData = tmpl.z;
-                            *(int*)eff = (int)Obj_SetupObject(o, 5, -1, -1, 0);
+                            *(int*)eff = (int)Obj_SetupObject((ObjPlacement*)o, 5, -1, -1, NULL);
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
                     }

@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/baddie/dll_003B_menu.h"
 #include "main/objseq_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/pause_menu_api.h"
@@ -106,12 +107,9 @@ extern f32 lbl_803DD8CC;
 extern f32 timeDelta;
 extern void* gameTextGet(int textId);
 extern void* lbl_803A9410[6];
-extern void* lbl_8031BF90[6];
 extern s16 lbl_803DD784;
 extern s16 lbl_803DD786;
 extern s16 lbl_803DD78C;
-extern s32 Obj_AllocObjectSetup(s32 size, void* type);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 
 extern f32 lbl_803E1E3C; /*  0.0f */
@@ -859,7 +857,7 @@ void pauseMenuInit(void)
     {
         if (i < 4 && lbl_803A9410[i] == NULL)
         {
-            lbl_803A9410[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
+            lbl_803A9410[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, NULL);
             ((f32*)lbl_803A9410[i])[3] = 0.0f;
             ((f32*)lbl_803A9410[i])[4] = -5.0f;
             ((f32*)lbl_803A9410[i])[5] = -5.0f;

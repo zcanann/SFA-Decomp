@@ -19,6 +19,7 @@
  * input-override state round it out.
  */
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/dll/baddie/dll_003B_menu.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/gamebits.h"
@@ -157,7 +158,6 @@ extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
 extern char* lbl_803DD860[2];
 extern char* volatile lbl_803DD868[2];
-extern int lbl_8031BF90[];
 extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
@@ -265,8 +265,6 @@ extern char sTrickyDebugXCoordFormat[];
 extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern char* Obj_SetupObject(char* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(char* obj);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern int fn_8011E0D8();
@@ -315,7 +313,7 @@ void gameUiLoadResources(void)
         int val;
         char** arrC;
         u32 limit;
-        int* ids;
+        u32* ids;
         char* p;
         u32* cnt;
         char* volatile* slots;
@@ -331,14 +329,14 @@ void gameUiLoadResources(void)
         fc = lbl_803E1E44;
         for (; i < 3; i++)
         {
-            *arrA = Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_MODEL), 4, -1, -1, 0);
+            *arrA = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_MODEL), 4, -1, -1, NULL);
             ((GameObject*)(*arrA))->anim.localPosX = fa;
             ((GameObject*)(*arrA))->anim.localPosY = fb;
             ((GameObject*)(*arrA))->anim.localPosZ = fc;
             ((GameObject*)(*arrA))->anim.rotX = val;
             *(s8*)(*arrA + 0xad) = i;
             ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), cMenuRingModelRenderFn);
-            *arrB = Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_ICON), 4, -1, -1, 0);
+            *arrB = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_ICON), 4, -1, -1, NULL);
             ((GameObject*)(*arrB))->anim.localPosX = fa;
             ((GameObject*)(*arrB))->anim.localPosY = fb;
             ((GameObject*)(*arrB))->anim.localPosZ = fc;
@@ -350,25 +348,25 @@ void gameUiLoadResources(void)
         }
 
         slots = lbl_803DD868;
-        slots[0] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, 0);
+        slots[0] = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
         ((GameObject*)slots[0])->anim.localPosX = lbl_803E1E3C;
         ((GameObject*)slots[0])->anim.localPosY = lbl_803E1E48;
         ((GameObject*)slots[0])->anim.localPosZ = lbl_803E1E4C;
         ((GameObject*)slots[0])->anim.rotX = 0x7447;
         *(f32*)(slots[0] + 0x8) = lbl_803E1E50;
 
-        slots[1] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, 0);
+        slots[1] = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
         ((GameObject*)slots[1])->anim.localPosX = lbl_803E1E3C;
         ((GameObject*)slots[1])->anim.localPosY = lbl_803E1E54;
         ((GameObject*)slots[1])->anim.localPosZ = lbl_803E1E4C;
         ((GameObject*)slots[1])->anim.rotX = 0x7447;
         *(f32*)(slots[1] + 0x8) = lbl_803E1E58;
 
-        p = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, 0);
+        p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, NULL);
         lbl_803DD860[0] = p;
         ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
 
-        lbl_803DD860[1] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, 0);
+        lbl_803DD860[1] = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
         ObjModel_SetRenderCallback(*(void**)*(int*)(lbl_803DD860[1] + 0x7c), fn_8011E0D8);
 
         i = 4;
@@ -379,7 +377,7 @@ void gameUiLoadResources(void)
         limit = 0x90000000;
         for (; i < 6; i++)
         {
-            *arrC = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *ids), 4, -1, -1, 0);
+            *arrC = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, *ids), 4, -1, -1, NULL);
             ((GameObject*)(*arrC))->anim.localPosX = ga;
             ((GameObject*)(*arrC))->anim.localPosY = gb;
             ((GameObject*)(*arrC))->anim.localPosZ = gb;
@@ -394,9 +392,9 @@ void gameUiLoadResources(void)
             arrC++;
         }
 
-        p = Obj_AllocObjectSetup(0x24, 0x14b);
+        p = (char*)Obj_AllocObjectSetup(0x24, 0x14b);
         *(s16*)(p + 0x1c) = 1;
-        lbl_803DD85C = Obj_SetupObject(p, 4, -1, -1, 0);
+        lbl_803DD85C = (char*)Obj_SetupObject((ObjPlacement*)p, 4, -1, -1, NULL);
         gameUiResourcesLoaded = 1;
     }
 }

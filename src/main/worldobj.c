@@ -86,8 +86,6 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void objfx_spawnMaskedHitEffect(void* obj, f32 scale, int a, int b, int c, void* params);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
 extern float mathCosf(float x);
@@ -222,7 +220,7 @@ void worldobj_init(GameObject* obj, int arg)
             sub = *(int*)&(obj)->anim.placementData;
             if (Obj_IsLoadingLocked() != 0)
             {
-                int o2 = Obj_AllocObjectSetup(0x20, WORLDOBJ_CHILD_OBJ_DEBRIS);
+                int o2 = (int)Obj_AllocObjectSetup(0x20, WORLDOBJ_CHILD_OBJ_DEBRIS);
                 *(u8*)(o2 + 4) = *(u8*)(sub + 4);
                 *(u8*)(o2 + 6) = *(u8*)(sub + 6);
                 *(u8*)(o2 + 5) = *(u8*)(sub + 5);
@@ -230,7 +228,7 @@ void worldobj_init(GameObject* obj, int arg)
                 *(f32*)(o2 + 8) = (obj)->anim.localPosX;
                 *(f32*)(o2 + 0xc) = (obj)->anim.localPosY;
                 *(f32*)(o2 + 0x10) = (obj)->anim.localPosZ;
-                Obj_SetupObject(o2, 5, (obj)->anim.mapEventSlot, -1, 0);
+                Obj_SetupObject((ObjPlacement*)o2, 5, (obj)->anim.mapEventSlot, -1, NULL);
             }
         }
         break;

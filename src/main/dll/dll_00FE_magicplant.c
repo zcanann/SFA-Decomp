@@ -94,8 +94,6 @@ extern u8 framesThisStep;
 extern s16 gMagicPlantGemDefIds[4];
 
 extern void Obj_StartModelFadeIn(int obj, int frames);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
@@ -211,7 +209,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
     state = (obj)->extra;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(sizeof(MagicPlantChildSetup), objectId);
+        setup = (MagicPlantChildSetup*)Obj_AllocObjectSetup(sizeof(MagicPlantChildSetup), objectId);
         setup->field1A = 0x14;
         setup->field2C = -1;
         setup->field1C = -1;
@@ -223,7 +221,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
         setup->mapByte6 = mapData[0x06];
         setup->mapByte5 = mapData[0x05];
         setup->yawByte = (u8)(mapData[0x07] - 0xf);
-        childObj = (GameObject*)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+        childObj = Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
         if (childObj != 0)
         {
             ObjLink_AttachChild((int)obj, (int)childObj, 0);

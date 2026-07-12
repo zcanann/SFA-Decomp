@@ -80,8 +80,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 Vec_distance(f32* a, f32* b);
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 
 void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
@@ -223,8 +221,8 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             s8 idx = ((Dll16CState*)extra)->subObjIndex;
             if (idx > 0)
             {
-                *(int*)&((GameObject*)obj)->childObjs[0] = Obj_SetupObject(
-                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+                *(int*)&((GameObject*)obj)->childObjs[0] = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, ((GameObject*)obj)->anim.parent);
                 ((GameObject*)obj)->childCount = 1;
             }
             ((Dll16CState*)extra)->subObjIndexApplied = ((Dll16CState*)extra)->subObjIndex;
@@ -326,8 +324,8 @@ void dll_16C_update(int* obj)
             s8 idx = extra->subObjIndex;
             if (idx > 0)
             {
-                *(int*)&((GameObject*)obj)->childObjs[0] = Obj_SetupObject(
-                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
+                *(int*)&((GameObject*)obj)->childObjs[0] = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, ((GameObject*)obj)->anim.parent);
                 ((GameObject*)obj)->childCount = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;

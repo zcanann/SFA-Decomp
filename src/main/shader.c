@@ -1987,7 +1987,6 @@ extern int objShouldUnload(char* obj);
 extern int SaveGame_findTransientMapBit(int mapId, int bit);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
-extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
 
 #pragma opt_propagation off
 void mapLoadUnloadObjects(int flag)
@@ -2164,7 +2163,7 @@ void mapLoadUnloadObjects(int flag)
                                 *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
                                 *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
                             }
-                            Obj_SetupObject(objStart, 1, list[i], bit, 0);
+                            Obj_SetupObject((ObjPlacement*)objStart, 1, list[i], bit, NULL);
                         }
                         bit++;
                         mask <<= 1;
@@ -2255,7 +2254,7 @@ void mapLoadUnloadObjects(int flag)
                                 *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
                                 *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
                             }
-                            Obj_SetupObject(cur, 1, mid2, bit, obj2);
+                            Obj_SetupObject((ObjPlacement*)cur, 1, mid2, bit, (void*)obj2);
                         }
                         bit++;
                         cur += *(u8*)(cur + 2) * 4;

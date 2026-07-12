@@ -31,8 +31,6 @@ extern int* gTitleMenuControlInterfaceCopy;
 
 extern u8 lbl_803DB411;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 
 int MMSH_Scales_getExtraSize(void)
 {
@@ -138,14 +136,14 @@ void MMSH_Scales_init(int* obj, s16* def)
     }
     if (Obj_IsLoadingLocked() == 0)
         return;
-    setup = Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ);
+    setup = (MmshScalesSpawnSetup*)Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ);
     setup->posX = ((GameObject*)obj)->anim.localPosX;
     setup->posY = ((GameObject*)obj)->anim.localPosY;
     setup->posZ = ((GameObject*)obj)->anim.localPosZ;
     setup->color[0] = 32;
     setup->color[1] = 4;
     setup->color[3] = 0xff;
-    ((GameObject*)obj)->childObjs[0] = Obj_SetupObject((u8*)setup, 5, -1, -1, 0);
+    ((GameObject*)obj)->childObjs[0] = Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
     *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) *= 2.0f;
 }
 

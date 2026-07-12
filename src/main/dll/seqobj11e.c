@@ -308,7 +308,6 @@ void fn_80152514(int* obj, u8* state)
 /* fn_80152B90: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
 
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* loadObjectAtObject(int* obj, u8* setup);
 extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);
 extern f32 lbl_803E2868;
@@ -364,7 +363,7 @@ void fn_80152B90(int* obj, u8* state)
                     u8* setup;
                     int* spawned;
 
-                    setup = Obj_AllocObjectSetup(0x24, SEQOBJ11E_GCROBOT_DROP_OBJ);
+                    setup = (u8*)Obj_AllocObjectSetup(0x24, SEQOBJ11E_GCROBOT_DROP_OBJ);
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                     ((ObjPlacement*)setup)->posY = lbl_803E2878 + ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -410,7 +409,6 @@ void fn_80152B90(int* obj, u8* state)
 
 int gcRobotLight_init(GameObject* obj, int childId)
 {
-    extern u8* Obj_SetupObject(u8 * obj, int a, int b, int c, int d);
     int sub;
     u8* setup;
 
@@ -418,7 +416,7 @@ int gcRobotLight_init(GameObject* obj, int childId)
     Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() == 0)
         return 0;
-    setup = Obj_AllocObjectSetup(36, childId);
+    setup = (u8*)Obj_AllocObjectSetup(36, childId);
     *(s16*)(setup + 0) = childId;
     ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
     ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
@@ -429,7 +427,7 @@ int gcRobotLight_init(GameObject* obj, int childId)
     ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
     ((Seq11EChildSetup*)setup)->unk19 = 0;
     ((Seq11EChildSetup*)setup)->unk20 = 149;
-    return (int)Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+    return (int)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
 }
 
 /* scheduling stays off; only peephole flips on for the next two handlers */

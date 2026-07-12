@@ -50,7 +50,6 @@ typedef enum ShBeaconMode
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 
 extern f32 lbl_803DDBF8;
@@ -100,7 +99,7 @@ void sh_beacon_update(GameObject* obj)
     u8* state;
     int def;
     int tricky;
-    int* setup;
+    ObjPlacement* setup;
     int mode;
     int state2;
 
@@ -117,13 +116,13 @@ void sh_beacon_update(GameObject* obj)
             if (Obj_IsLoadingLocked() != 0)
             {
                 setup = Obj_AllocObjectSetup(0x20, SHBEACON_CHILD_OBJ_FLAME);
-                ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-                ((ObjPlacement*)setup)->color[0] = 2;
-                ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
-                ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
-                ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, setup);
+                setup->posX = (obj)->anim.localPosX;
+                setup->posY = (obj)->anim.localPosY;
+                setup->posZ = (obj)->anim.localPosZ;
+                setup->color[0] = 2;
+                setup->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
+                setup->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
+                ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, (int*)setup);
             }
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
@@ -228,7 +227,7 @@ void sh_beacon_update(GameObject* obj)
 void sh_beacon_init(GameObject* obj, int defData)
 {
     int state;
-    int* setup;
+    ObjPlacement* setup;
 
     state = *(int*)&(obj)->extra;
     (obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
@@ -246,13 +245,13 @@ void sh_beacon_init(GameObject* obj, int defData)
     if (((ShBeaconState*)state)->mode != SH_BEACON_MODE_UNLIT && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x20, SHBEACON_CHILD_OBJ_FLAME);
-        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-        ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
-        ((ObjPlacement*)setup)->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
-        ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, setup);
+        setup->posX = (obj)->anim.localPosX;
+        setup->posY = (obj)->anim.localPosY;
+        setup->posZ = (obj)->anim.localPosZ;
+        setup->color[0] = 2;
+        setup->color[1] = *(u8*)(*(int*)&(obj)->anim.placementData + 5);
+        setup->color[3] = *(u8*)(*(int*)&(obj)->anim.placementData + 7);
+        ((ShBeaconState*)state)->childObj = (GameObject*)loadObjectAtObject((int)obj, (int*)setup);
     }
 
     (obj)->animEventCallback = sh_beacon_SeqFn;

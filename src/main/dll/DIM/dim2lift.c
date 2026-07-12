@@ -32,8 +32,6 @@ extern u32 ObjMsg_SendToObject();
 
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void** gPlayerInterface;
 extern f32 lbl_803E4C00;
 extern int lbl_80325AA0[6];
@@ -159,7 +157,7 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
     DIM2icicleBlueWhiteEffectPlacement* setup;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(36, DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT);
+        setup = (DIM2icicleBlueWhiteEffectPlacement*)Obj_AllocObjectSetup(36, DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT);
         setup->base.posX = source->x;
         setup->base.posY = source->y;
         setup->base.posZ = source->z;
@@ -169,7 +167,7 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
         setup->base.color[3] = 255;
         setup->gameBit = -1;
         setup->gameBit2 = -1;
-        spawnedObj = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, 0);
+        spawnedObj = Obj_SetupObject(&setup->base, 5, -1, -1, NULL);
         if (spawnedObj != NULL)
         {
             spawnedObj->anim.velocityX = velocity[0];

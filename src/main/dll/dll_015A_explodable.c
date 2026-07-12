@@ -131,8 +131,6 @@ extern void exploded_initialise(void);
 extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16* rot, f32* vec);
 
 void explodable_render(void)
@@ -330,7 +328,7 @@ int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, i
     s->scale = (s8)(int)(lbl_803E435C * (obj->anim.rootMotionScale / *(f32*)(*(int*)&obj->anim.modelInstance + 4)));
     s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
-    return Obj_SetupObject((int)s, 5, obj->anim.mapEventSlot, -1, 0);
+    return (int)Obj_SetupObject((ObjPlacement*)s, 5, obj->anim.mapEventSlot, -1, NULL);
 }
 
 void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int state)

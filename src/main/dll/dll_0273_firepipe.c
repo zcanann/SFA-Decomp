@@ -51,7 +51,6 @@ extern void ObjHits_EnableObject(FirePipeObject* obj);
 extern void ObjHits_DisableObject(FirePipeObject* obj);
 extern int ObjHits_GetPriorityHit(GameObject* obj, int a, int b, int c);
 extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);

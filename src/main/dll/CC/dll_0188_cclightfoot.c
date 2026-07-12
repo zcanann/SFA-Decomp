@@ -35,8 +35,6 @@
 
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 /* Per-object Lightfoot state block (obj->extra, cclightfoot_getExtraSize = 0x18). */
 typedef struct CcLightfootState
@@ -400,8 +398,8 @@ void cclightfoot_update(int obj)
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                state->childObj = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
-                                                               *(int*)&((GameObject*)obj)->anim.parent);
+                state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
+                                                  ((GameObject*)obj)->anim.parent);
                 ObjLink_AttachChild(obj, (int)state->childObj, 0);
             }
             state->playerObj = (int)Obj_GetPlayerObject();

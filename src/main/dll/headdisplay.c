@@ -33,6 +33,7 @@
 #include "main/gametext.h"
 #include "main/frame_timing.h"
 #include "main/dll/headdisplay.h"
+#include "main/dll/baddie/dll_003B_menu.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX  0x152
@@ -78,7 +79,6 @@ extern f32 lbl_803DD8CC;
 extern u16 lbl_803DD8D0;
 extern u16 curGameText;
 extern u8 lbl_803A9440[];
-extern int lbl_8031BF90[];
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;
 extern u8 arwingHudVisible;
@@ -101,8 +101,6 @@ extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c
 extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
 extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern int* getArwing(void);
 extern int arwarwing_getHealth(int* arwing);
 extern int arwarwing_getMaxHealth(int* arwing);
@@ -341,7 +339,7 @@ void pauseMenuCreateHeads(void)
         {
             if (*(void**)&gHeadDisplayModelObjs[i] == NULL)
             {
-                gHeadDisplayModelObjs[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, 0);
+                gHeadDisplayModelObjs[i] = (int)Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, NULL);
                 f = lbl_803E1E3C;
                 ((GameObject*)gHeadDisplayModelObjs[i])->anim.localPosX = f;
                 ((GameObject*)gHeadDisplayModelObjs[i])->anim.localPosY = f;

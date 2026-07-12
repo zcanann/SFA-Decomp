@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 
+extern u32 lbl_8031BF90[6];
+
 void textureFreeFn_8012fcec(void);
 void FUN_8012fdac(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,

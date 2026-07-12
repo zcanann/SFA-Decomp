@@ -59,8 +59,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
 extern int fn_80295A04(int obj, int sel);
@@ -241,7 +239,7 @@ void dll_19_func19(u8* cam, u8* ctx)
         {
             ObjPlacement* setup = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
             *(int*)&((GameObject*)cam)->childObjs[0] = (int)Obj_SetupObject(
-                setup, 4, -1, -1, *(int*)&((GameObject*)cam)->anim.parent);
+                setup, 4, -1, -1, ((GameObject*)cam)->anim.parent);
             *(u16*)(*(int*)&((GameObject*)cam)->childObjs[0] + 0xb0) = ((GameObject*)cam)->objectFlags & 7;
         }
         ctx[1033] = ctx[1031];
@@ -791,7 +789,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
     setup->color[2] = state[6];
     setup->color[1] = state[5];
     setup->color[3] = state[7];
-    gDll19NearestObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(int*)&source->anim.parent);
+    gDll19NearestObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, source->anim.parent);
     return (int)gDll19NearestObj;
 }
 

@@ -89,8 +89,6 @@ extern int gSnowClawDropBombAngle;
 extern void storeZeroToFloatParam(void* p);
 extern void objSeqInitFn_80080078(void* table, int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern int objUpdateOpacity(int sub);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
@@ -232,7 +230,7 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int un
     player = (int)Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj2 = Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
+        obj2 = (int)Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
         *(s16*)(obj2 + 0x0) = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
         ((ObjPlacement*)obj2)->color[0] = 2;
         ((ObjPlacement*)obj2)->color[2] = 0xff;
@@ -620,8 +618,8 @@ void snowclaw_update(GameObject* obj)
         if (*(s8*)&((SnowclawState*)inner)->dropIndex > 0 && Obj_IsLoadingLocked() != 0)
         {
             *(int*)&obj->childObjs[0] =
-                Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
-                                obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
+                                     obj->anim.mapEventSlot, -1, obj->anim.parent);
             obj->childCount = 1;
         }
         *(u8*)&((SnowclawState*)inner)->dropIndexApplied = ((SnowclawState*)inner)->dropIndex;
@@ -819,8 +817,8 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         if (*(s8*)&((SnowclawState*)inner)->dropIndex > 0 && Obj_IsLoadingLocked() != 0)
         {
             *(int*)&obj->childObjs[0] =
-                Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
-                                obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
+                                     obj->anim.mapEventSlot, -1, obj->anim.parent);
             obj->childCount = 1;
         }
         ((SnowclawState*)inner)->dropIndexApplied = *(s8*)&((SnowclawState*)inner)->dropIndex;

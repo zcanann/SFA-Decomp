@@ -176,8 +176,6 @@ extern s16 gIceBaddieAttackMovesAlt[];
 extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern int* gPlayerInterface;
 extern f32 lbl_803E2D70;
 extern f32 lbl_803E2D74;
@@ -1244,27 +1242,27 @@ void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
 #pragma peephole off
 void iceBaddie_spawnIceBall(int* obj, int* state)
 {
-    void* alloc;
-    int* new_obj;
+    IceBallSetup* alloc;
+    GameObject* new_obj;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        alloc = Obj_AllocObjectSetup(36, ICEBADDIE_CHILD_OBJ_ICEBALL);
-        ((IceBallSetup*)alloc)->head.posX = ((GroundBaddieState*)state)->baddie.posX;
-        ((IceBallSetup*)alloc)->head.posY = ((GroundBaddieState*)state)->baddie.posY;
-        ((IceBallSetup*)alloc)->head.posZ = ((GroundBaddieState*)state)->baddie.posZ;
-        ((IceBallSetup*)alloc)->head.color[0] = 1;
-        ((IceBallSetup*)alloc)->head.color[1] = 1;
-        ((IceBallSetup*)alloc)->head.color[2] = 255;
-        ((IceBallSetup*)alloc)->head.color[3] = 255;
-        ((IceBallSetup*)alloc)->gameBit = -1;
-        ((IceBallSetup*)alloc)->gameBit2 = -1;
-        new_obj = Obj_SetupObject(alloc, 5, -1, -1, NULL);
+        alloc = (IceBallSetup*)Obj_AllocObjectSetup(36, ICEBADDIE_CHILD_OBJ_ICEBALL);
+        alloc->head.posX = ((GroundBaddieState*)state)->baddie.posX;
+        alloc->head.posY = ((GroundBaddieState*)state)->baddie.posY;
+        alloc->head.posZ = ((GroundBaddieState*)state)->baddie.posZ;
+        alloc->head.color[0] = 1;
+        alloc->head.color[1] = 1;
+        alloc->head.color[2] = 255;
+        alloc->head.color[3] = 255;
+        alloc->gameBit = -1;
+        alloc->gameBit2 = -1;
+        new_obj = Obj_SetupObject(&alloc->head, 5, -1, -1, NULL);
         if (new_obj != NULL)
         {
-            ((GameObject*)new_obj)->anim.velocityX = ((GroundBaddieState*)state)->baddie.velX;
-            ((GameObject*)new_obj)->anim.velocityY = ((GroundBaddieState*)state)->baddie.velY;
-            ((GameObject*)new_obj)->anim.velocityZ = ((GroundBaddieState*)state)->baddie.velZ;
-            *(int**)&((GameObject*)new_obj)->ownerObj = obj;
+            new_obj->anim.velocityX = ((GroundBaddieState*)state)->baddie.velX;
+            new_obj->anim.velocityY = ((GroundBaddieState*)state)->baddie.velY;
+            new_obj->anim.velocityZ = ((GroundBaddieState*)state)->baddie.velZ;
+            *(int**)&new_obj->ownerObj = obj;
         }
     }
 }

@@ -7,9 +7,7 @@
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-extern int Obj_AllocObjectSetup(int size, int objectId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void cmbsrc_setExternalActive(int obj, int active);
 extern void objSetSlot(int obj, int slot);
 extern int* gTitleMenuControlInterfaceCopy;
@@ -131,8 +129,8 @@ void sc_cloudrunnera_update(int obj)
         {
         case 0:
             {
-                int setup;
-                int newObj;
+                ScCloudrunneraSetup* setup;
+                GameObject* newObj;
                 if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
                 {
                     break;
@@ -141,25 +139,25 @@ void sc_cloudrunnera_update(int obj)
                 {
                     break;
                 }
-                setup = Obj_AllocObjectSetup(0x30, SCCLOUDRUNNERA_CHILD_OBJ);
-                ((ScCloudrunneraSetup*)setup)->unk1B = 0x9;
-                ((ScCloudrunneraSetup*)setup)->unk1C = 0;
-                ((ScCloudrunneraSetup*)setup)->unk1D = 0;
-                ((ScCloudrunneraSetup*)setup)->unk20 = lbl_803E55E0;
-                ((ScCloudrunneraSetup*)setup)->unk26 = 0xff;
-                ((ScCloudrunneraSetup*)setup)->unk27 = 0xff;
-                ((ScCloudrunneraSetup*)setup)->unk28 = 0xff;
-                ((ScCloudrunneraSetup*)setup)->unk24 = -1;
-                ((ScCloudrunneraSetup*)setup)->unk04 = 2;
-                ((ScCloudrunneraSetup*)setup)->unk05 = 1;
-                ((ScCloudrunneraSetup*)setup)->unk06 = 0xff;
-                ((ScCloudrunneraSetup*)setup)->unk07 = 0xff;
-                ((ScCloudrunneraSetup*)setup)->unk29 = 1;
-                ((ScCloudrunneraSetup*)setup)->unk2A = 0;
-                newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                         *(int*)&((GameObject*)obj)->anim.parent);
-                ((GameObject*)newObj)->anim.flags = (s16)(((GameObject*)newObj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                ObjLink_AttachChild(obj, newObj, 0);
+                setup = (ScCloudrunneraSetup*)Obj_AllocObjectSetup(0x30, SCCLOUDRUNNERA_CHILD_OBJ);
+                setup->unk1B = 0x9;
+                setup->unk1C = 0;
+                setup->unk1D = 0;
+                setup->unk20 = lbl_803E55E0;
+                setup->unk26 = 0xff;
+                setup->unk27 = 0xff;
+                setup->unk28 = 0xff;
+                setup->unk24 = -1;
+                setup->unk04 = 2;
+                setup->unk05 = 1;
+                setup->unk06 = 0xff;
+                setup->unk07 = 0xff;
+                setup->unk29 = 1;
+                setup->unk2A = 0;
+                newObj = Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                         ((GameObject*)obj)->anim.parent);
+                newObj->anim.flags = (s16)(newObj->anim.flags | OBJANIM_FLAG_HIDDEN);
+                ObjLink_AttachChild(obj, (int)newObj, 0);
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c);
                 break;
             }

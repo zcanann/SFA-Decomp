@@ -209,8 +209,6 @@ int landed_arwing_getExtraSize(void)
 }
 
 extern f32 timeDelta;
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void objRenderModelAndHitVolumes(f32);
 void landed_arwing_free(GameObject* obj)
 {
@@ -588,7 +586,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingState* state)
     int i;
     LandedArwingState* otherState;
     int def;
-    int setup;
+    ObjPlacement* setup;
     int other;
     f32 range;
     f32 yOffset;
@@ -622,11 +620,11 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingState* state)
                     while (i < ((LandedArwingUpdateHitReactionPlacement*)def)->spawnCount)
                     {
                         setup = Obj_AllocObjectSetup(0x24, LANDEDARWING_CHILD_OBJ_DEBRIS);
-                        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-                        ((ObjPlacement*)setup)->posY = yOffset + (obj)->anim.localPosY;
-                        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-                        ((ObjPlacement*)setup)->color[0] = 1;
-                        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+                        setup->posX = (obj)->anim.localPosX;
+                        setup->posY = yOffset + (obj)->anim.localPosY;
+                        setup->posZ = (obj)->anim.localPosZ;
+                        setup->color[0] = 1;
+                        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
                         i++;
                     }
                 }
