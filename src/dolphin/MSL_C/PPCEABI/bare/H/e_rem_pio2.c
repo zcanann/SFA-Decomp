@@ -67,7 +67,7 @@ float fastCastS16ToFloat(s16* p);
 float trigReduceQuadrant(u16* p, float x);
 
 float fsin16Precise(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
 
@@ -89,7 +89,7 @@ float fsin16Precise(int angle) {
 }
 
 float fn_80293D0C(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float cast = fastCastS16ToFloat(&reduced);
     double y = lbl_803E7CD0 * cast;
     double y2 = y * y;
@@ -133,7 +133,7 @@ float fn_80293D0C(int angle) {
 }
 
 float fcos16Approx(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
 
@@ -153,7 +153,7 @@ float fcos16Approx(int angle) {
 }
 
 float fsin16(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
 
@@ -173,7 +173,7 @@ float fsin16(int angle) {
 }
 
 float fcos16Precise(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
 
@@ -195,7 +195,7 @@ float fcos16Precise(int angle) {
 }
 
 float fn_80293AC4(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float cast = fastCastS16ToFloat(&reduced);
     double y = lbl_803E7CD0 * cast;
     double y2 = y * y;
