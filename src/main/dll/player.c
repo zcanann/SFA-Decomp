@@ -12377,9 +12377,9 @@ void objLoadPlayerFromSave(int obj)
 #pragma opt_strength_reduction off
 int fn_802AB1D0(GameObject* obj)
 {
-    int cur;
-    int objs;
-    int best;
+    GameObject* cur;
+    u32* objs;
+    GameObject* best;
     int count;
     int i;
     f32 dist;
@@ -12397,25 +12397,24 @@ int fn_802AB1D0(GameObject* obj)
     {
         return (int)held;
     }
-    best = 0;
-    objs = (int)ObjGroup_GetObjects(8, &count);
+    best = NULL;
+    objs = ObjGroup_GetObjects(8, &count);
     i = 0;
     bestDist = lbl_803E7EA4;
     for (; i < count;)
     {
-        cur = ((int*)objs)[i++];
-        if ((((GameObject*)cur)->anim.classId == 0x1c || ((GameObject*)cur)->anim.classId == 0x2a) &&
-            ((GameObject*)cur)->anim.alpha == 0xff)
+        cur = (GameObject*)objs[i++];
+        if ((cur->anim.classId == 0x1c || cur->anim.classId == 0x2a) && cur->anim.alpha == 0xff)
         {
-            f32 dx = ((GameObject*)cur)->anim.worldPosX - obj->anim.worldPosX;
-            f32 dy = ((GameObject*)cur)->anim.worldPosY - obj->anim.worldPosY;
-            f32 dz = ((GameObject*)cur)->anim.worldPosZ - obj->anim.worldPosZ;
+            f32 dx = cur->anim.worldPosX - obj->anim.worldPosX;
+            f32 dy = cur->anim.worldPosY - obj->anim.worldPosY;
+            f32 dz = cur->anim.worldPosZ - obj->anim.worldPosZ;
             dist = dx * dx + dy * dy + dz * dz;
             if (dist < lbl_803E80E8)
             {
                 if (dist <= lbl_803E7EA4)
                 {
-                    scale = (f32)((ObjAnimComponent*)cur)->modelInstance->group8RegistrationCount;
+                    scale = (f32)cur->anim.modelInstance->group8RegistrationCount;
                     if (scale <= lbl_803E7EA4)
                     {
                         scale = lbl_803E7EE0;
@@ -12434,7 +12433,7 @@ int fn_802AB1D0(GameObject* obj)
             }
         }
     }
-    return best;
+    return (int)best;
 }
 #pragma opt_strength_reduction reset
 

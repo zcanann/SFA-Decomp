@@ -19,6 +19,7 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_transform.h"
+#include "main/obj_query.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_004D_cameramodenpcspeak.h"
 
@@ -55,7 +56,6 @@ extern f32 lbl_803DB9C4;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int getFocusedNpc(void);
-extern u32 Obj_GetYawDeltaToObject();
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
@@ -87,7 +87,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
     int mode = 0;
     int spd;
     int d1, d2;
-    void* npc;
+    GameObject* npc;
     f32 vc, vb, va;
     u8 traceWork[CAMCONTROL_TRACE_WORK_SIZE];
 
@@ -232,7 +232,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
         }
     }
 
-    if (mode != 6 && mode != 7 && (npc = (void*)getFocusedNpc()) != NULL)
+    if (mode != 6 && mode != 7 && (npc = (GameObject*)getFocusedNpc()) != NULL)
     {
         GameObject* tgt = target;
         s16 sd;
@@ -246,7 +246,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
         {
             sd = (s16)(sd + 0xffff);
         }
-        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject((int)tgt, npc, 0);
+        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject(tgt, npc, 0);
         if (dd > 0x8000)
         {
             dd -= 0xffff;

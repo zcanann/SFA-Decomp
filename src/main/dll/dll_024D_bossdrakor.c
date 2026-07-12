@@ -151,7 +151,7 @@ void bossdrakor_update(int obj)
         player = (int)Obj_GetPlayerObject();
         if ((void*)player != NULL)
         {
-            step = Obj_GetYawDeltaToObject((GameObject*)obj, player, 0);
+            step = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)player, 0);
             ((GameObject*)obj)->anim.rotX +=
                 (s16)(((s16)step < -0x200) ? -0x200 : (((s16)step > 0x200) ? 0x200 : (s16)step));
             step = ((GameObject*)obj)->anim.rotY;

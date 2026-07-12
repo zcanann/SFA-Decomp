@@ -15,6 +15,7 @@
 #include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_query.h"
 #include "main/model_engine.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
@@ -438,7 +439,6 @@ extern f32 lbl_803E54AC;
 
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(GameObject* obj, int target, void* state, int a, int b, int c);
-extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
 extern void objAnimFn_80038f38(GameObject* obj, int* animState);
 extern void characterDoEyeAnims(GameObject* obj, void* state);
 
@@ -514,7 +514,7 @@ void warpstone_update(int obj)
     if (advanceResult != 0)
     {
         ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 0;
-        yawDelta = Obj_GetYawDeltaToObject(obj, target, 0);
+        yawDelta = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, 0);
         yawDelta = yawDelta - lbl_803DDBF0;
         {
             int mag = yawDelta - 0x8000;

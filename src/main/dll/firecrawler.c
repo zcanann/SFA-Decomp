@@ -29,6 +29,7 @@
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
+#include "main/obj_query.h"
 #include "main/model.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
@@ -79,7 +80,6 @@ typedef struct FirepipeSetup
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
-extern int Obj_GetYawDeltaToObject();
 extern f32 lbl_803E2CC0;
 extern f32 lbl_803E2CC4;
 extern f32 lbl_803E2CC8;
@@ -1352,7 +1352,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
     {
         u32 ang;
         f32 diff;
-        void* other;
+        GameObject* other;
 
         *(s16*)obj = *(s16*)obj + ((FCVars*)state)->turnDelta;
         posA[0] = ((GameObject*)obj)->anim.localPosX;
@@ -1387,10 +1387,10 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         if (fn_80295C88(Obj_GetPlayerObject()) != 0)
         {
             range = lbl_803E2B48;
-            other = (void*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &range);
+            other = (GameObject*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &range);
             if (other != NULL)
             {
-                s16 yaw = Obj_GetYawDeltaToObject(obj, other, &range);
+                s16 yaw = Obj_GetYawDeltaToObject((GameObject*)obj, other, &range);
                 int t;
                 if (yaw < -300)
                 {

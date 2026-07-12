@@ -7,6 +7,7 @@
  */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/obj_query.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
@@ -29,7 +30,6 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 
 extern f32 lbl_803E43D8; /* render scale */
 extern f32 lbl_803E43DC; /* 255.0f - full alpha */
-extern int Obj_GetYawDeltaToObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int cfmagicwall_getExtraSize(void)
@@ -60,7 +60,7 @@ void cfmagicwall_hitDetect(void)
 void cfmagicwall_update(GameObject* obj)
 {
     int placement = *(int*)&(obj)->anim.placementData;
-    int player = (int)Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     u8 alpha = 0xff;
 
     if (mainGetBit(((CfMagicWallMapData*)placement)->visibleEvent) != 0)
@@ -80,7 +80,7 @@ void cfmagicwall_update(GameObject* obj)
             f32 range;
             f32 fadeDistance;
             range = (f32)(s32)((CfMagicWallMapData*)placement)->fadeRange;
-            playerDistance = Vec_distance((void*)&(obj)->anim.worldPosX, (void*)(player + 0x18));
+            playerDistance = Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX);
             fadeDistance = Camera_DistanceToCurrentViewPosition((obj)->anim.localPosX, (obj)->anim.localPosY,
                                                                 (obj)->anim.localPosZ);
 

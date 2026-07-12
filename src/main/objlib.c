@@ -2014,14 +2014,14 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
     }
 }
 
-int Obj_GetYawDeltaToObject(GameObject* obj, int target, float* distOut)
+int Obj_GetYawDeltaToObject(GameObject* obj, GameObject* target, float* distOut)
 {
     int yawDelta;
     float dx;
     float dz;
 
-    dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX;
-    dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ;
+    dx = obj->anim.localPosX - target->anim.localPosX;
+    dz = obj->anim.localPosZ - target->anim.localPosZ;
     yawDelta = (s16)getAngle(dx, dz);
     if (distOut != (float*)0x0)
     {

@@ -123,7 +123,6 @@ extern f32 lbl_803E4254;
 
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
-extern int Obj_GetYawDeltaToObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void storeZeroToFloatParam(void* p);
 extern u32 mainGetBit(int eventId);
@@ -219,7 +218,7 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
 {
     int shifted;
     fn_8003ADC4((GameObject*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject(obj, target, 0);
+    shifted = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, 0);
     ((GameObject*)obj)->anim.rotX += (shifted >>= 3);
     if (playMove == 0)
         return;
@@ -487,7 +486,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 0:
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
-        yaw = Obj_GetYawDeltaToObject((int)obj, player, 0);
+        yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)player, 0);
         fn_8003ADC4((GameObject*)(obj), (int*)player, sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         if (inRange != 0)
@@ -501,7 +500,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         break;
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
-        yaw = Obj_GetYawDeltaToObject((int)obj, getTrickyObject(), 0);
+        yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)getTrickyObject(), 0);
         fn_8003ADC4((GameObject*)(obj), getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;

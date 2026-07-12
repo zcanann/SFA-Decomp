@@ -515,7 +515,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
     f32 limit;
     f32 absH;
     f32 absV;
-    int nearest;
+    GameObject* nearest;
     int yawDelta;
     int c;
     int angle;
@@ -621,8 +621,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
         (s16)(((DrakorHoverpadUpdateMainState*)p)->anglePhase + framesThisStep * 0x320);
     if (g->f10 != 0)
     {
-        nearest = ObjGroup_FindNearestObject(BOSSDRAKOR_OBJGROUP, (int)obj, 0);
-        if ((u32)nearest != 0)
+        nearest = (GameObject*)ObjGroup_FindNearestObject(BOSSDRAKOR_OBJGROUP, (int)obj, 0);
+        if (nearest != NULL)
         {
             yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
             if (yawDelta < -0x200)

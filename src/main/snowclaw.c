@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_query.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
@@ -117,7 +118,6 @@ extern f32 lbl_803DC224;
 extern f32 lbl_803E66E4;
 extern f32 lbl_803E66E8;
 extern f32 lbl_803E66F8;
-extern int Obj_GetYawDeltaToObject(void* obj, int other, int flags);
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
@@ -322,7 +322,7 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
         }
         else
         {
-            turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, (int)Obj_GetPlayerObject(), 0) >> 31;
+            turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
             if (turnSign == 0)
             {
                 ((SnowclawState*)inner)->unk30 = lbl_803E66F4;
@@ -652,7 +652,7 @@ void snowclaw_update(GameObject* obj)
     {
         choice = randomGetRange(0, 1);
         ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
-        turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, (int)Obj_GetPlayerObject(), 0) >> 31;
+        turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
         if (turnSign == 0 || obj->anim.seqId == 0x389)
         {
             ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(

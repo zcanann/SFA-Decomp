@@ -847,7 +847,7 @@ void fn_80202EF0(GameObject* obj, int baddie)
 
 #pragma opt_common_subs off
 #pragma dont_inline on
-int fn_80202C78(GameObject* obj, int otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
+int fn_80202C78(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
 {
     extern f32 lbl_803E6370;
     extern f32 lbl_803E634C;
@@ -863,7 +863,7 @@ int fn_80202C78(GameObject* obj, int otherObj, f32 yawOffset, f32 speed, f32 unu
     f32 cur;
     f32 prod;
 
-    yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (int)otherObj, &yawF);
+    yaw = Obj_GetYawDeltaToObject(obj, otherObj, &yawF);
     zero = lbl_803E62A8;
     if (zero == range)
     {
@@ -899,13 +899,13 @@ int fn_80202C78(GameObject* obj, int otherObj, f32 yawOffset, f32 speed, f32 unu
 #pragma opt_common_subs reset
 
 #pragma dont_inline on
-int fn_80202DA4(u8* obj, u8* otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
+int fn_80202DA4(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
 {
     extern f32 lbl_803E6378;
     extern f32 lbl_803E634C;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E6374;
-    BaddieState* state = ((GameObject*)obj)->extra;
+    BaddieState* state = obj->extra;
     f32 yawF;
     int yaw;
     f32 dy;
@@ -918,7 +918,7 @@ int fn_80202DA4(u8* obj, u8* otherObj, f32 yawOffset, f32 speed, f32 unused, f32
     {
         return 0;
     }
-    yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (int)otherObj, &yawF);
+    yaw = Obj_GetYawDeltaToObject(obj, otherObj, &yawF);
     zero = lbl_803E62A8;
     if (zero == range)
     {
@@ -926,9 +926,9 @@ int fn_80202DA4(u8* obj, u8* otherObj, f32 yawOffset, f32 speed, f32 unused, f32
     }
     if (yawF < yawOffset)
     {
-        dy = (((GameObject*)obj)->anim.localPosY - ((GameObject*)otherObj)->anim.localPosY >= zero)
-                 ? ((GameObject*)obj)->anim.localPosY - ((GameObject*)otherObj)->anim.localPosY
-                 : -(((GameObject*)obj)->anim.localPosY - ((GameObject*)otherObj)->anim.localPosY);
+        dy = (obj->anim.localPosY - otherObj->anim.localPosY >= zero)
+                 ? obj->anim.localPosY - otherObj->anim.localPosY
+                 : -(obj->anim.localPosY - otherObj->anim.localPosY);
         if (dy < lbl_803E6378)
         {
             return 1;
@@ -1554,7 +1554,7 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
             sub->linkedObj = 0;
             sub->msgSlotIndex = -1;
         }
-        (obj)->anim.rotX += Obj_GetYawDeltaToObject(obj, *(int*)&((BaddieState*)baddie)->targetObj, 0);
+        obj->anim.rotX += Obj_GetYawDeltaToObject(obj, ((BaddieState*)baddie)->targetObj, 0);
         ((BaddieState*)baddie)->stateTag = 0x11;
         if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
         {
@@ -1588,7 +1588,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     int found;
     int q;
     int* objs;
-    int player;
+    GameObject* player;
     int d;
     int flag;
     int zero;
@@ -1616,11 +1616,11 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
         ObjGroup_GetObjects(c30, &cnt1);
         if (cnt1 == 0)
         {
-            player = (int)Obj_GetPlayerObject();
+            player = Obj_GetPlayerObject();
             q = (int)sub->msgStack;
             msg0[0] = 0xf;
             msg0[1] = 1;
-            msg0[2] = player;
+            msg0[2] = (int)player;
             if (Stack_IsFull((RingBufferQueue*)q) == 0)
             {
                 Stack_Push((RingBufferQueue*)q, msg0);
@@ -1761,12 +1761,12 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
         }
     }
     frac = blob->aggression / lbl_803E62C4;
-    fn_80202C78(obj, *(int*)&((BaddieState*)baddie)->targetObj, lbl_803E62B4, frac, lbl_803E62CC, t);
+    fn_80202C78(obj, ((BaddieState*)baddie)->targetObj, lbl_803E62B4, frac, lbl_803E62CC, t);
     if (((u32)sub->flags44 >> 5 & 1) != 0)
     {
         fn_80202A2C(obj, lbl_8032971C, lbl_8032972C, 4, frac);
     }
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     d = Obj_GetYawDeltaToObject(obj, player, &yawf);
     flag = 0;
     if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
@@ -1786,8 +1786,8 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
                 vec[0] = zero;
             }
         }
-        player = (int)Obj_GetPlayerObject();
-        *(int*)&((BaddieState*)baddie)->targetObj = player;
+        player = Obj_GetPlayerObject();
+        ((BaddieState*)baddie)->targetObj = player;
         {
             RingBufferQueue* qH;
             int tHb;
@@ -1845,7 +1845,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     int tmpA;
     int tmp2B;
     int tmp2A;
-    int player;
+    GameObject* player;
     int flag;
     int d;
     int zero;
@@ -1920,7 +1920,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
         frac = blob->aggression / lbl_803E6324;
     }
     ((BaddieState*)baddie)->stateTag = 0x1f;
-    if (fn_80202DA4((u8*)obj, *(u8**)&((BaddieState*)baddie)->targetObj, lbl_803E6330, frac, lbl_803E62CC, t) != 0)
+    if (fn_80202DA4(obj, ((BaddieState*)baddie)->targetObj, lbl_803E6330, frac, lbl_803E62CC, t) != 0)
     {
         sub->msgAdvance = 1;
     }
@@ -1930,7 +1930,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     }
     else if (*(void**)&sub->linkedObj == NULL)
     {
-        player = (int)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         d = Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
         if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
@@ -1950,8 +1950,8 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
                     vec[0] = zero;
                 }
             }
-            player = (int)Obj_GetPlayerObject();
-            *(int*)&((BaddieState*)baddie)->targetObj = player;
+            player = Obj_GetPlayerObject();
+            ((BaddieState*)baddie)->targetObj = player;
             tmp2A = sub->objGroup;
             tmp2B = sub->msgMode;
             ptr = (int*)sub->msgStack;
@@ -2195,7 +2195,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     int tmpA;
     int tmp2B;
     int tmp2A;
-    int player;
+    GameObject* player;
     int flag;
     int d;
     int zero;
@@ -2255,7 +2255,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
         frac = blob->aggression / lbl_803E6324;
     }
     ((BaddieState*)baddie)->stateTag = 0x1f;
-    if (fn_80202C78(obj, *(int*)&((BaddieState*)baddie)->targetObj, lbl_803E62B4, frac, lbl_803E62CC,
+    if (fn_80202C78(obj, ((BaddieState*)baddie)->targetObj, lbl_803E62B4, frac, lbl_803E62CC,
                     t) != 0)
     {
         sub->msgAdvance = 1;
@@ -2266,7 +2266,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     }
     else if (*(void**)&sub->linkedObj == NULL)
     {
-        player = (int)Obj_GetPlayerObject();
+        player = Obj_GetPlayerObject();
         d = Obj_GetYawDeltaToObject(obj, player, &yawf);
         flag = 0;
         if (((s16)d >= 0 ? (s16)d : -(s16)d) < 0x1c71 && yawf < lbl_803E62D0)
@@ -2286,8 +2286,8 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
                     vec[0] = zero;
                 }
             }
-            player = (int)Obj_GetPlayerObject();
-            *(int*)&((BaddieState*)baddie)->targetObj = player;
+            player = Obj_GetPlayerObject();
+            ((BaddieState*)baddie)->targetObj = player;
             tmp2A = sub->objGroup;
             tmp2B = sub->msgMode;
             ptr = (int*)sub->msgStack;
@@ -2512,7 +2512,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
                 }
                 else
                 {
-                    fn_80202C78(obj, best, lbl_803E630C, frac, lbl_803E62CC, t);
+                    fn_80202C78(obj, (GameObject*)best, lbl_803E630C, frac, lbl_803E62CC, t);
                 }
             }
         }
@@ -2558,7 +2558,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
         return 0;
     }
     frac = blob->aggression / lbl_803E62C4;
-    fn_80202C78(obj, *(int*)&((BaddieState*)baddie)->targetObj, lbl_803E62C8, frac, lbl_803E62CC, t);
+    fn_80202C78(obj, ((BaddieState*)baddie)->targetObj, lbl_803E62C8, frac, lbl_803E62CC, t);
     if (((u32)sub->flags44 >> 5 & 1) != 0)
     {
         fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
