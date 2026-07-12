@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_028C_wcbouncycra.h"
 #include "main/game_object.h"
 
 #define WCBLOCK_GRID_OBJECT_OFFSET 0x268

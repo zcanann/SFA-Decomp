@@ -165,35 +165,11 @@ extern f32 lbl_803E6D34;
 extern f32 gBouncyCrateGravity;
 extern f32 gBouncyCrateRestitution;
 
-typedef struct
-{
-    u8 phase : 3;
-    u8 sfxActive : 1;
-    u8 pad : 4;
-} PushBlockFlags;
-
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
-extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, GameObject* player);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);
 extern int gameBitIncrement(int id);
-extern f32 gWcPushBlockControllerSearchRange;
-extern f32 lbl_803E6D5C;
-extern f32 lbl_803E6D60;
-extern f32 lbl_803E6D64;
-extern f32 lbl_803E6D68;
-extern f32 lbl_803E6D6C;
-extern f32 lbl_803E6D70;
-extern f32 gWcPushBlockSlideSfxMaxVolume;
-extern f32 lbl_803E6D78;
-extern f32 gWcPushBlockMaxSlideSpeed;
-extern f32 gWcPushBlockSlideAccel;
-extern f32 gWcPushBlockMinSlideSpeed;
-extern f32 gWcPushBlockBobAngleSpeed;
-extern f32 gWcPushBlockBobAmplitude;
-extern f32 gWcPushBlockPi;
-extern f32 gWcPushBlockAngleScale;
 
 extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
@@ -1537,7 +1513,6 @@ void fn_8023A268(int p1, int p2, int p3);
 void fn_80239FCC(int p1, int p2);
 int fn_8023A6A4(struct AndrossState* state, f32 a, f32 b, f32 c);
 void fn_8023A3E4(GameObject* obj, struct AndrossState* state);
-int wcblock_isPlayerAwayFromStoredCell(int obj, int state, GameObject* player);
 void arwarwing_resetFlightState(GameObject* obj);
 void arwarwingbo_update(int obj);
 void arwarwing_updateThrusters(GameObject* obj, int state);
