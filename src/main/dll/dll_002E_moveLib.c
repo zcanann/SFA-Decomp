@@ -634,6 +634,8 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
+#pragma opt_common_subs on
+#pragma opt_propagation off
 void dll_2E_func03(GameObject* obj, MoveLibState* s)
 {
     extern int fn_8003A8B4();
@@ -828,6 +830,8 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
         }
     }
 }
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
 
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning, PostControl* control,
                        float* turnSpeed, s16* moves)
