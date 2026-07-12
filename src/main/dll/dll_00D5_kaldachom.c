@@ -14,6 +14,7 @@
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00D5_kaldachom.h"
 #include "main/dll/cf_doorlight.h"
@@ -47,8 +48,6 @@
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern u32 Obj_SetModelColorFadeRecursive();
-extern u8 Obj_IsLoadingLocked();
-extern u32 Obj_GetPlayerObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
@@ -255,7 +254,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
 
     control = ((CampfireState*)stateWithBaddieData)->control;
     st.p = *(KaldaCombatParams*)gKaldachomCombatParams;
-    playerObj = Obj_GetPlayerObject();
+    playerObj = (int)Obj_GetPlayerObject();
     if (((GroundBaddieState*)state)->baddie.targetObj != NULL)
     {
         int target = *(int*)&((GroundBaddieState*)state)->baddie.targetObj;
@@ -459,7 +458,7 @@ void kaldachom_update(GameObject* obj)
                     Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy111);
                     ((KaldaChomControl*)texture)->pullupSfxTimer = (f32)(int)randomGetRange(300, 600);
                 }
-                player = Obj_GetPlayerObject();
+                player = (u32)Obj_GetPlayerObject();
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 if (((CampfireState*)state)->controlMode != 6)
                 {
@@ -485,7 +484,7 @@ void kaldachom_update(GameObject* obj)
                     mathSinf((gKaldachomPi * (f32)(s32)((KaldaChomControl*)ref)->textureScrollAngle) / lbl_803E30B8);
                 scrollPhase = lbl_803E3078 + scrollPhase;
                 ((ObjTextureRuntimeSlot*)texture)->textureId = (int)(lbl_803E30B0 * scrollPhase);
-                player = Obj_GetPlayerObject();
+                player = (u32)Obj_GetPlayerObject();
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 kaldachom_handleAnimEvents(obj, state, state);
                 (*(void (**)(void*, int, double, int))(*(int*)gBaddieControlInterface + 0x2c))(
@@ -530,7 +529,7 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     ((CampfireState*)state)->targetObj = player;
     ((GroundBaddieState*)state)->baddie.physicsActive = 0;
     ObjHits_DisableObject((int)obj);

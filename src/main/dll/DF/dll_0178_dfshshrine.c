@@ -10,6 +10,7 @@
 #include "main/gamebit_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/DF/DFlantern.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -152,7 +153,6 @@ extern void fn_8014C5C0(void* obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern void* objCreateLight(int* obj, int v);
-extern u8* Obj_GetPlayerObject(void);
 
 void fn_801C2914(int obj)
 {
@@ -168,7 +168,7 @@ void fn_801C2914(int obj)
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
     {
         ((GameObject*)obj)->anim.rotX = 0;
@@ -233,7 +233,7 @@ int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     objLocal = obj;
     state = (DFlanternShrineState*)((GameObject*)objLocal)->extra;
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -332,7 +332,6 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void DFSH_Shrine_update(int objArg)
 {
 
-    extern int Obj_GetPlayerObject(void);
     u16* base[1];
     DfshShrineState* state;
     int player;
@@ -343,7 +342,7 @@ void DFSH_Shrine_update(int objArg)
 
     base[0] = gDfShShrineRewardTable;
     state = obj->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if (obj->unkF4 != 0)
     {
         obj->unkF4 = obj->unkF4 - 1;

@@ -2,6 +2,7 @@
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
@@ -79,7 +80,6 @@ typedef struct SnowClawBombSetup
 } SnowClawBombSetup;
 
 extern void Obj_FreeObject(int obj);
-extern int Obj_GetPlayerObject(void);
 extern int playerGetFocusObject(int obj);
 extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern void s16toFloat(void* p, int duration);
@@ -90,7 +90,6 @@ extern void storeZeroToFloatParam(void* p);
 extern void objSeqInitFn_80080078(void* table, int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern int objUpdateOpacity(int sub);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
@@ -230,7 +229,7 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int un
     int obj2;
     char* spawned;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() != 0)
     {
         obj2 = Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
@@ -329,7 +328,7 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
         }
         else
         {
-            turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
+            turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, (int)Obj_GetPlayerObject(), 0) >> 31;
             if (turnSign == 0)
             {
                 ((SnowclawState*)inner)->unk30 = lbl_803E66F4;
@@ -527,7 +526,7 @@ void snowclaw_hitDetect(GameObject* obj)
                 ((SnowclawState*)inner)->velY = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
                 ((SnowclawState*)inner)->velZ =
                     lbl_803E6728 * mathCosf(gSnowClawPi * (f32)obj->anim.rotX / lbl_803E6730);
-                player = (int*)playerGetFocusObject(Obj_GetPlayerObject());
+                player = (int*)playerGetFocusObject((int)Obj_GetPlayerObject());
                 if (player != 0)
                 {
                     int* sub3 = ((GameObject*)player)->extra;
@@ -654,7 +653,7 @@ void snowclaw_update(GameObject* obj)
     {
         choice = randomGetRange(0, 1);
         ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
-        turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
+        turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, (int)Obj_GetPlayerObject(), 0) >> 31;
         if (turnSign == 0 || obj->anim.seqId == 0x389)
         {
             ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(

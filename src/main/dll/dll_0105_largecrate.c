@@ -24,6 +24,7 @@
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/dll/largecrate_state.h"
@@ -46,12 +47,10 @@
 #define LARGECRATE_ROB_WAVE_ID_65D7     0x65d7
 #define GAMEBIT_SFX_MUTE                0xa71
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(float y, float x);
-extern int Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
@@ -157,7 +156,7 @@ void largecrate_updateConveyorSlide(GameObject* obj, int def)
     f32 limit;
 
     state31 = *(int*)&(obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((*(u16*)(*(int*)&(obj)->anim.parent + 0xb0) & LARGECRATE_OBJFLAG_PARENT_SLACK) != 0)
     {
         (obj)->anim.localPosX = ((LargeCrateState*)def)->homeX;
@@ -458,7 +457,7 @@ void largecrate_update(GameObject* obj)
     animSpeed = lbl_803E39AC;
     (*gSkyInterface)->getClockTime(&animSpeed);
     state = *(int*)&(obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((obj)->anim.parent != NULL)
     {
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;

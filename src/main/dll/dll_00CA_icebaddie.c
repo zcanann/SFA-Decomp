@@ -29,6 +29,7 @@
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"
 #include "main/dll/chukchukstate_struct.h"
@@ -166,7 +167,6 @@ extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
 extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];
-extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FDA0[];
 extern u8 lbl_8031FE18[];
@@ -175,7 +175,6 @@ extern s16 gIceBaddieAttackMovesAlt[];
 extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
 
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern int* gPlayerInterface;
@@ -371,7 +370,7 @@ int iceBaddie_updateLandingState(GameObject* obj, int state)
     }
     if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 1) == 0)
     {
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         if (((GameObject*)player)->anim.seqId == 0)
             goto playGroundLandSound;
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
@@ -478,7 +477,7 @@ int iceBaddie_updateDropState(GameObject* obj, int state)
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         Obj_GetPlayerObject();
-        player = Obj_GetPlayerObject();
+        player = (int)Obj_GetPlayerObject();
         if (((GameObject*)player)->anim.seqId == 0)
             goto playGroundDropSound;
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
