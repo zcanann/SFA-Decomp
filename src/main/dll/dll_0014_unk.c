@@ -3033,7 +3033,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     int pos;
     int m;
     int j;
-    int best;
+    int best[2];
     int off;
     f32 curDist;
     char visited[ROMCURVE_MAX_CURVES];
@@ -3143,20 +3143,21 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     }
     if (found > 0)
     {
-        best = 0;
-        for (j = 0; j < found; j++)
+        best[0] = 0;
+        best[1] = best[0];
+        for (; best[1] < found; best[1]++)
         {
-            if (*distRead < bestDists[best])
+            if (*distRead < bestDists[best[0]])
             {
-                best = j;
+                best[0] = best[1];
             }
             distRead++;
         }
         if (outLink != NULL)
         {
-            *outLink = resultLinks[best];
+            *outLink = resultLinks[best[0]];
         }
-        return resultIds[best];
+        return resultIds[best[0]];
     }
     return -1;
 }
@@ -3181,7 +3182,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     int pos;
     int m;
     int j;
-    int best;
+    int best[2];
     int off;
     f32 curDist;
     f32 zd;
@@ -3313,16 +3314,17 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
             }
         }
         *outCurveId = curve->id;
-        best = 0;
-        for (j = best; j < found; j++)
+        best[0] = 0;
+        best[1] = best[0];
+        for (; best[1] < found; best[1]++)
         {
-            if (*distRead < bestDists[best])
+            if (*distRead < bestDists[best[0]])
             {
-                best = j;
+                best[0] = best[1];
             }
             distRead++;
         }
-        return results[best];
+        return results[best[0]];
     }
     return -1;
 }
