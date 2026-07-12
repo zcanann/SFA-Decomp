@@ -3,6 +3,17 @@
 #include "dolphin/gx/GXEnum.h"
 #include "dolphin/gx/GXStruct.h"
 
+typedef struct ObjMatrixBuildTransform {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjMatrixBuildTransform;
+
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
 u8 lbl_80338090[0x100];

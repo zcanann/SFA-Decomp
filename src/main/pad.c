@@ -1,4 +1,6 @@
 #include "main/engine_shared.h"
+#include "main/pad.h"
+#include "dolphin/pad.h"
 
 #define PAD_MOTOR_STOP      0
 #define PAD_MOTOR_RUMBLE    1
@@ -25,7 +27,7 @@ typedef struct PadStateBlock
     u32 buttons[4];          // 0x10
     u32 released[4];         // 0x20
     u32 pressed[4];          // 0x30
-    PadStatusLite status[8]; // 0x40
+    PADStatus status[8]; // 0x40
 } PadStateBlock;
 
 u32 gPadStateBlock[4];
@@ -117,7 +119,7 @@ void padGetAnalogInput(int port, u8* x, u8* y)
 
 u8 padGetCY(int port)
 {
-    PadStatusLite* statuses;
+    PADStatus* statuses;
 
     if (port > 0)
     {
@@ -127,13 +129,13 @@ u8 padGetCY(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)gPadStatuses;
+    statuses = (PADStatus*)gPadStatuses;
     return statuses[gPadStatusToggle * 4 + port].substickY;
 }
 
 u8 padGetCX(int port)
 {
-    PadStatusLite* statuses;
+    PADStatus* statuses;
 
     if (port > 0)
     {
@@ -143,13 +145,13 @@ u8 padGetCX(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)gPadStatuses;
+    statuses = (PADStatus*)gPadStatuses;
     return statuses[gPadStatusToggle * 4 + port].substickX;
 }
 
 u8 padGetStickY(int port)
 {
-    PadStatusLite* statuses;
+    PADStatus* statuses;
 
     if (port > 0)
     {
@@ -159,13 +161,13 @@ u8 padGetStickY(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)gPadStatuses;
+    statuses = (PADStatus*)gPadStatuses;
     return statuses[gPadStatusToggle * 4 + port].stickY;
 }
 
 u8 padGetStickX(int port)
 {
-    PadStatusLite* statuses;
+    PADStatus* statuses;
 
     if (port > 0)
     {
@@ -175,31 +177,31 @@ u8 padGetStickX(int port)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)gPadStatuses;
+    statuses = (PADStatus*)gPadStatuses;
     return statuses[gPadStatusToggle * 4 + port].stickX;
 }
 
 u8 padGetLTrigger(int port)
 {
-    PadStatusLite* statuses;
+    PADStatus* statuses;
 
     if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)gPadStatuses;
+    statuses = (PADStatus*)gPadStatuses;
     return statuses[gPadStatusToggle * 4 + port].triggerLeft;
 }
 
 u8 padGetRTrigger(int port)
 {
-    PadStatusLite* statuses;
+    PADStatus* statuses;
 
     if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
-    statuses = (PadStatusLite*)gPadStatuses;
+    statuses = (PADStatus*)gPadStatuses;
     return statuses[gPadStatusToggle * 4 + port].triggerRight;
 }
 
@@ -298,7 +300,7 @@ int initControllers(void)
     u16* triggers;
     u16* triggersReleased;
     u16* triggersPressed;
-    PadStatusLite* statuses;
+    PADStatus* statuses;
     s32 i;
 
     base[0] = (PadStateBlock*)gPadStateBlock;
@@ -343,8 +345,8 @@ int initControllers(void)
         *triggers = 0;
         *triggersReleased = 0;
         *triggersPressed = 0;
-        memset(statuses, 0, sizeof(PadStatusLite));
-        memset((i + 4) * 0xc + 0x40 + (u8*)base[0], 0, sizeof(PadStatusLite));
+        memset(statuses, 0, sizeof(PADStatus));
+        memset((i + 4) * 0xc + 0x40 + (u8*)base[0], 0, sizeof(PADStatus));
 
         prevStickY++;
         prevStickX++;
@@ -374,10 +376,10 @@ int initControllers(void)
 void padUpdate(void)
 {
     u32* padStateBlock;
-    PadStatusLite* readPad;
-    PadStatusLite* rp;
-    PadStatusLite* statuses;
-    PadStatusLite* prevPad;
+    PADStatus* readPad;
+    PADStatus* rp;
+    PADStatus* statuses;
+    PADStatus* prevPad;
     s8* prevStickY;
     s8* prevStickX;
     s8* repeatY;
@@ -402,10 +404,10 @@ void padUpdate(void)
 
     padStateBlock = gPadStateBlock;
     toggle = gPadStatusToggle;
-    prevPad = (PadStatusLite*)((u8*)padStateBlock + toggle * 0x30 + 0x40);
+    prevPad = (PADStatus*)((u8*)padStateBlock + toggle * 0x30 + 0x40);
     other = toggle ^ 1;
     gPadStatusToggle = other;
-    readPad = (PadStatusLite*)((u8*)padStateBlock + other * 0x30 + 0x40);
+    readPad = (PADStatus*)((u8*)padStateBlock + other * 0x30 + 0x40);
     if (PADRead(readPad) == PAD_ERR_TRANSFER)
     {
         return;
@@ -445,12 +447,12 @@ void padUpdate(void)
     triggers = &gPadTriggers;
     triggersReleased = &gPadTriggersReleased;
     triggersPressed = &gPadTriggersPressed;
-    statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
+    statuses = (PADStatus*)((u8*)padStateBlock + 0x40);
     buttonMask = gPadButtonMask;
 
     for (; i < 4; i++)
     {
-        if (rp->error == PAD_ERR_NO_CONTROLLER)
+        if (rp->err == PAD_ERR_NO_CONTROLLER)
         {
             *prevStickY = 0;
             *prevStickX = 0;
@@ -466,19 +468,19 @@ void padUpdate(void)
             *triggers = 0;
             *triggersReleased = 0;
             *triggersPressed = 0;
-            memset(statuses, 0, sizeof(PadStatusLite));
-            memset((i + 4) * 0xc + 0x40 + (u8*)padStateBlock, 0, sizeof(PadStatusLite));
+            memset(statuses, 0, sizeof(PADStatus));
+            memset((i + 4) * 0xc + 0x40 + (u8*)padStateBlock, 0, sizeof(PADStatus));
             gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
-            rp->error = PAD_ERR_NO_CONTROLLER;
+            rp->err = PAD_ERR_NO_CONTROLLER;
         }
-        else if ((u8)(rp->error + 3) <= 1 || lbl_803DCCA5 == 0)
+        else if ((u8)(rp->err + 3) <= 1 || lbl_803DCCA5 == 0)
         {
-            memcpy(rp, prevPad, sizeof(PadStatusLite));
+            memcpy(rp, prevPad, sizeof(PADStatus));
             useprev = 1;
         }
         else
         {
-            *curBtn = rp->buttons;
+            *curBtn = rp->button;
             if (rp->substickY < -40)
             {
                 *curBtn |= (u64)PADBTN_CSTICK_DOWN;

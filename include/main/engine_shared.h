@@ -16,36 +16,6 @@
 #include "main/sky_interface.h"
 #include "main/voxmaps.h"
 
-typedef struct ObjMatrixBuildTransform {
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ObjMatrixBuildTransform;
-typedef struct EnvfxActEntry {
-    u8 pad0[0x2a];
-    u16 field_2a;
-    u8 pad1[0x30];
-    u8 kind;
-    u8 pad2[3];
-} EnvfxActEntry;
-typedef struct PadStatusLite {
-    u16 buttons;
-    s8 stickX;
-    s8 stickY;
-    s8 substickX;
-    s8 substickY;
-    u8 triggerLeft;
-    u8 triggerRight;
-    u8 analogA;
-    u8 analogB;
-    s8 error;
-} PadStatusLite;
-
 extern s32 gAttractMovieState;
 extern f32 lbl_803DE5F0;
 extern f32 gCameraShakeMagnitudeDecay;
@@ -249,8 +219,6 @@ extern void PADControlMotor(s32 chan, u32 command);
 extern int PADInit(void);
 extern int PADRecalibrate(u32 mask);
 extern int PADReset(u32 mask);
-extern u32 PADRead(struct PadStatusLite *status);
-extern void PADClamp(struct PadStatusLite *status);
 extern u8 lbl_803DCCA5;
 extern char* lbl_803DC9C4;
 extern char* gameStrcpy(char* dst, char* src);

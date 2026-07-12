@@ -3,6 +3,14 @@
 #include "main/pi_dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
+typedef struct EnvfxActEntry {
+    u8 pad0[0x2a];
+    u16 field_2a;
+    u8 pad1[0x30];
+    u8 kind;
+    u8 pad2[3];
+} EnvfxActEntry;
+
 extern f32 lbl_803DE544;
 
 int getLActions(int a, int b, u16 idx)
