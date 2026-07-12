@@ -22,7 +22,7 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
-#include "main/dll/player_80295318_shared.h"
+#include "main/gameplay_runtime.h"
 
 typedef struct TrickyguardPlacement
 {
@@ -38,8 +38,6 @@ typedef struct TrickyguardPlacement
 #define TRICKY_VTBL_GUARD   0x0A
 
 #define TRICKYGUARD_OBJECT_FLAG 0x4000
-
-extern void objRenderFn_80041018(int* obj);
 
 void TrickyGuard_update(int* obj)
 {
@@ -62,7 +60,7 @@ void TrickyGuard_update(int* obj)
     }
     ((GameObject*)obj)->anim.resetHitboxFlags =
         (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-    objRenderFn_80041018(obj);
+    objRenderFn_80041018((int)obj);
 }
 
 void TrickyGuard_init(s16* obj, u8* placement)
