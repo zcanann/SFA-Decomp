@@ -21,6 +21,7 @@
 #include "main/pad.h"
 #include "main/sky_api.h"
 #include "main/frame_timing.h"
+#include "main/objlib.h"
 
 #define DIMBOSSTONSIL_OBJGROUP 3
 #define DIMBOSSTONSIL_PARTFX   0x4bd
@@ -30,7 +31,6 @@
 extern void Music_Trigger(int id, int arg);
 
 
-extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
@@ -42,7 +42,6 @@ extern f32 lbl_803E4CC4;
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void* p);
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
 extern void* objCreateLight(int arg, u8 addToList);
@@ -241,7 +240,7 @@ void DIMbosstonsil_free(GameObject* obj)
     DIMbosstonsilState* state;
 
     state = (obj)->extra;
-    ObjGroup_RemoveObject(obj, DIMBOSSTONSIL_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DIMBOSSTONSIL_OBJGROUP);
     (*(void (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x40))(obj, state, 1);
     if (gDIMbosstonsilLight != NULL)
     {
