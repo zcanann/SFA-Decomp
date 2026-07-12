@@ -39,7 +39,7 @@ void drearthcal_hitDetect(void)
 
 #pragma scheduling off
 #pragma peephole off
-void drearthcal_update(int obj)
+void drearthcal_update(GameObject* obj)
 {
     GameObject* player;
     int i;
@@ -54,53 +54,53 @@ void drearthcal_update(int obj)
     searchDist = lbl_803E6C08;
     if (playerGetFocusObject() != NULL)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
-        if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
+        obj->anim.resetHitboxFlags &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x15);
         }
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-        if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
-            for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        if (0 < *(s8*)(*(int*)((int)obj + 0x58) + 0x10f))
+            for (i = 0; i < *(s8*)(*(int*)((int)obj + 0x58) + 0x10f); i++)
             {
                 {
-                    int elem = ((int*)*(int*)(obj + 0x58))[i + 0x40];
+                    int elem = ((int*)*(int*)((int)obj + 0x58))[i + 0x40];
                     if ((GameObject*)elem == player)
                     {
-                        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+                        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                     }
                 }
             }
-        if ((u32)ObjGroup_FindNearestObject(DREARTHCAL_MOUNT_OBJGROUP, obj, &searchDist) == 0)
+        if ((u32)ObjGroup_FindNearestObject(DREARTHCAL_MOUNT_OBJGROUP, (int)obj, &searchDist) == 0)
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x14);
         }
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
         }
     }
-    if ((((GameObject*)obj)->objectFlags & DREARTHCAL_OBJFLAG_RENDERED) != 0)
+    if ((obj->objectFlags & DREARTHCAL_OBJFLAG_RENDERED) != 0)
     {
         part.vec[0] = lbl_803E6C0C;
         part.vec[1] = lbl_803E6C10;
         part.vec[2] = lbl_803E6C0C;
-        objfx_spawnArcedBurstLegacy(obj, 5, lbl_803E6C14, 2, 2, 0xf, lbl_803E6C18, *(f32*)&lbl_803E6C18,
+        objfx_spawnArcedBurstLegacy((int)obj, 5, lbl_803E6C14, 2, 2, 0xf, lbl_803E6C18, *(f32*)&lbl_803E6C18,
                                    lbl_803E6C1C, &part,
                               0);
     }
