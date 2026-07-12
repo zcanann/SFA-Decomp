@@ -1,6 +1,8 @@
 #include "main/audio/hw_volume.h"
 #include "main/audio/dsp_voice.h"
 
+#pragma exceptions on
+
 extern u8* dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];

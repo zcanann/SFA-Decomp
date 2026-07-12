@@ -4,6 +4,8 @@
 #include "main/audio/snd_synth_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
+#pragma exceptions on
+
 #ifndef SYNTH_VOICE_STRIDE
 #define SYNTH_VOICE_STRIDE 0x404
 #endif

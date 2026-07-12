@@ -2,6 +2,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_jobs.h"
 
+#pragma exceptions on
+
 typedef struct VoiceListNode
 {
     u8 prev;

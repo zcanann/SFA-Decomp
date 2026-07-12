@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
+#pragma exceptions on
+
 typedef struct
 {
     u16 macroId;   // 0x0

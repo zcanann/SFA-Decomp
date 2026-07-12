@@ -1,5 +1,7 @@
 #include "main/audio/voice_manage.h"
 
+#pragma exceptions on
+
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
 extern u8 lbl_803BD150[];

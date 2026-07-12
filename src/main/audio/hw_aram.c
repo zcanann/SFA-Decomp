@@ -1,5 +1,7 @@
 #include "main/audio/hw_aram.h"
 
+#pragma exceptions on
+
 extern u32 lbl_803BD150[];
 extern f32 lbl_803E78E8;
 extern asm u32 __cvt_fp2unsigned(register f64 d);

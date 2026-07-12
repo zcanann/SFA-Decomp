@@ -10,6 +10,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_voice_params.h"
 
+#pragma exceptions on
+
 typedef struct SynthDelayedNode
 {
     struct SynthDelayedNode* next;
