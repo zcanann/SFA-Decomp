@@ -135,7 +135,6 @@ extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern void* getTrickyObject(void);
-extern int timerCountDown(void* p);
 extern void fn_8014C66C(int* a, void* b);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
 int CFPrisonGuard_getExtraSize(void);

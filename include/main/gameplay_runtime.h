@@ -43,7 +43,6 @@ void setMotionBlur(int mode, f32 amount);
 void streamFn_8000a380(int mask, int mode, int time);
 void storeZeroToFloatParam(void *timer);
 void s16toFloat(void *timer, int duration);
-int timerCountDown(void *timer);
 void *getTrickyObject(void);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

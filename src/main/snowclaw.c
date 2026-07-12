@@ -38,7 +38,7 @@ typedef struct SnowclawState
     f32 unk30;
     u8 pad34[0x94 - 0x34];
     s32 pendingMoveId;
-    u8 pad98[0x9C - 0x98];
+    f32 attackTimer;
     s32 attackDelay;
     u8 mountAlpha; /* 0xA0: opacity byte (default 0xff) written to obj+0x37 while mounted */
     u8 hitFlag;
@@ -121,7 +121,6 @@ extern int Obj_GetYawDeltaToObject(void* obj, int other, int flags);
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern int timerCountDown(void* timer);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
 extern u32 gSnowClawPulseTable[8];
@@ -210,8 +209,8 @@ void snowclaw_init(int* obj, u8* init)
     ((SnowclawState*)inner)->tickCounter = 0;
     ((SnowclawState*)inner)->attackDelay = 0x64;
     ((SnowclawState*)inner)->unk30 = lbl_803E66EC;
-    storeZeroToFloatParam((char*)inner + 0x98);
-    s16toFloat((char*)((int)inner + 0x98), (s16) * (int*)(table + 0x3c));
+    storeZeroToFloatParam(&((SnowclawState*)inner)->attackTimer);
+    s16toFloat(&((SnowclawState*)inner)->attackTimer, (s16) * (int*)(table + 0x3c));
     objSeqInitFn_80080078((u8*)(int)gSnowClawMoveTable, 6);
     gSnowClawDropBombAngle = 0x96;
     ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 0;
@@ -644,7 +643,7 @@ void snowclaw_update(GameObject* obj)
     sub = *(int**)inner;
     if (sub != 0 && *(s8*)&((SnowclawState*)inner)->health != 0 &&
         obj->anim.currentMove == *(u16*)&((SnowclawState*)inner)->moveIdBase &&
-        fn_801EC9F4((GameObject*)sub) != 0 && timerCountDown(inner + 0x98) != 0)
+        fn_801EC9F4((GameObject*)sub) != 0 && timerCountDown(&((SnowclawState*)inner)->attackTimer) != 0)
     {
         choice = randomGetRange(0, 1);
         ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
@@ -661,7 +660,8 @@ void snowclaw_update(GameObject* obj)
                 obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 5, lbl_803E66F0, 0);
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 0);
         }
-        s16toFloat(inner + 0x98, (s16)lbl_8032A340[fn_801EC9BC((GameObject*)(*(int*)inner)) - 1]);
+        s16toFloat(&((SnowclawState*)inner)->attackTimer,
+                   (s16)lbl_8032A340[fn_801EC9BC((GameObject*)(*(int*)inner)) - 1]);
     }
 
     sub = *(int**)inner;

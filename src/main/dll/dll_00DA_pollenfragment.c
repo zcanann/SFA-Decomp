@@ -86,7 +86,6 @@ extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void s16toFloat(void* timer, int duration);
 extern void storeZeroToFloatParam(void* timer);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int timerCountDown(int timer);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
 extern f32 PSVECMag(void* v);
@@ -318,13 +317,13 @@ void pollenfragment_update(int obj)
     }
     if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
     {
-        if (timerCountDown((int)(extra + 0x20)) != 0)
+        if (timerCountDown(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
         {
             Obj_FreeObject(obj);
         }
         return;
     }
-    if (timerCountDown((int)extra + 0x24) != 0)
+    if (timerCountDown(&((PollenFragmentExtra*)extra)->lifetimeTimer) != 0)
     {
         s16toFloat(extra + 0x20, 0x78);
     }

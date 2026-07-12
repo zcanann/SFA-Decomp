@@ -59,7 +59,6 @@ extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern int objIsFrozen(FirePipeObject* obj);
-extern int timerCountDown(int timer);
 extern int modelLightStruct_createPointLight(FirePipeObject* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
@@ -368,7 +367,7 @@ void firepipe_updateState(FirePipeObject* obj)
         }
     }
 
-    if (timerCountDown((int)extra + 0x24) != 0)
+    if (timerCountDown(&extra->cycleTimer) != 0)
     {
         if (mapData->cycleTime != 0)
         {
@@ -378,7 +377,7 @@ void firepipe_updateState(FirePipeObject* obj)
     }
 
 sound_update:
-    if ((flags->emitting != 0) && (timerCountDown((int)&extra->emitTimer) != 0))
+    if ((flags->emitting != 0) && (timerCountDown(&extra->emitTimer) != 0))
     {
         FirePipeExtra* ex3;
         FirePipeMapData* md3;

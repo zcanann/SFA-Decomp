@@ -1,5 +1,6 @@
 /* DLL 0x00E4 (flamethrowerspe) - Flame thrower special effect [0x80170004-0x801702D4). */
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/maketex.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/objhits.h"
@@ -105,7 +106,6 @@ void flamethrowerspe_hitDetect(void)
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
-    extern int timerCountDown(f32 * p);
     extern void s16toFloat(f32 * p, s16 val);
     extern u32 ObjHits_EnableObject();
     extern u64 ObjHits_DisableObject();

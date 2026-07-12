@@ -1144,7 +1144,7 @@ int hightop_stateHandler09(GameObject* obj, int stateArg)
         state->idleSeqIndex = 0;
         state->flagsC49.b6 = 0;
         *(u32*)stateArg |= 0x1000000;
-        storeZeroToFloatParam((char*)state + 0xc2c);
+        storeZeroToFloatParam(&state->transitionTimer);
         ObjHits_EnableObject((int)obj);
         if ((obj)->anim.currentMove != 2)
         {
@@ -1234,7 +1234,7 @@ int hightop_stateHandler09(GameObject* obj, int stateArg)
     }
     if (fn_80080150(&state->transitionTimer) != 0)
     {
-        if (timerCountDown((char*)state + 0xc2c) != 0)
+        if (timerCountDown(&state->transitionTimer) != 0)
         {
             *(s8*)&state->substate = -1;
             (*gObjectTriggerInterface)->runSequence(gHighTopIdleSequenceIds[state->idleSeqIndex], (void*)obj, -1);
@@ -1256,7 +1256,7 @@ int hightop_stateHandler09(GameObject* obj, int stateArg)
                 }
                 state->idleSeqIndex = idx;
                 state->flags |= 1;
-                s16toFloat((char*)state + 0xc2c, 0x14);
+                s16toFloat(&state->transitionTimer, 0x14);
             }
         }
     }

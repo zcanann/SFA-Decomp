@@ -42,7 +42,6 @@ extern void queueGlowRender(void* effect);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int timerCountDown(f32* p);
 extern int objUpdateOpacity(char* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);

@@ -347,7 +347,7 @@ void wmwallcrawler_update(int obj)
         {
             if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0)
             {
-                if (timerCountDown(st + 0x28a) != 0)
+                if (timerCountDown((f32*)&((WmwallcrawlerState*)st)->explodeTimer) != 0)
                 {
                     for (k = 0; k < 0x1e; k++)
                     {
@@ -356,7 +356,7 @@ void wmwallcrawler_update(int obj)
                     s16toFloat(st + 0x28c, 100);
                     return;
                 }
-                if (timerCountDown(st + 0x28c) != 0)
+                if (timerCountDown((f32*)&((WmwallcrawlerState*)st)->despawnTimer) != 0)
                 {
                     ((GameObject*)ob)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                     if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
@@ -397,7 +397,7 @@ void wmwallcrawler_update(int obj)
             {
                 if (fn_80080150((const f32*)(st + 0x288)) != 0)
                 {
-                    timerCountDown(st + 0x288);
+                    timerCountDown((f32*)&((WmwallcrawlerState*)st)->attackTimer);
                 }
                 else
                 {

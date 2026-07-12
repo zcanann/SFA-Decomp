@@ -96,7 +96,6 @@ extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
 extern void storeZeroToFloatParam(f32* p);
-extern int timerCountDown(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);

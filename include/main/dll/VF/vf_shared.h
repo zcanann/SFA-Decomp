@@ -93,7 +93,6 @@ extern void modelLightStruct_freeSlot(void* state);
 extern int modelLightStruct_createPointLight(int obj, int red, int green, int blue, int alpha);
 extern void storeZeroToFloatParam(void* timer);
 extern void s16toFloat(void* timer, int duration);
-extern int timerCountDown(void* timer);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int mode, int count);
 extern void firefly_animEventCallback(void);
 extern void fn_801F4C28(int obj, void* state);

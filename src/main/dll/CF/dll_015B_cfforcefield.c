@@ -75,7 +75,6 @@ extern int lbl_803DBE98;   /* collapse rotY rate */
 extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 extern void s16toFloat(f32* p, s16 val);
-extern int timerCountDown(f32* p);
 extern void storeZeroToFloatParam(f32* p);
 
 int cfforcefield_getExtraSize(void)
