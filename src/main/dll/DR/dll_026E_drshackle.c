@@ -188,7 +188,7 @@ void drshackle_update(GameObject* obj)
     int count;
     int sub;
     int j;
-    int* list;
+    u32* list;
     if (((DrshacklePlacement*)placement)->pathObjGroupBase != 0 && *(void**)state == 0)
     {
         list = ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);

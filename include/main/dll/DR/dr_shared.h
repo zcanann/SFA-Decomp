@@ -2,6 +2,7 @@
 #define DR_SHARED_H
 
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/camera.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -104,7 +105,6 @@ extern void* gKTRexRuntime;
 extern void ktrex_initialiseStateHandlerTables(void);
 extern int ktrex_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int trackId, int restart);
 extern void storeZeroToFloatParam(void* timer);
@@ -125,7 +125,6 @@ extern int hightop_stateHandler04();
 extern int hightop_stateHandler07();
 extern int hightop_stateHandler09();
 extern int hightop_stateHandler10();
-extern void ObjGroup_AddObject(int obj, int group);
 extern int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern char sDrCreatorTimeFormat[];
 extern const f32 lbl_803E69A8;
@@ -221,7 +220,6 @@ extern f32 lbl_803E6950;
 extern f32 lbl_803E6954;
 extern f32 lbl_803E6958;
 extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E6B68;
 extern f32 lbl_803E6B6C;
 extern f32 lbl_803E6964;
@@ -277,7 +275,6 @@ extern f32 lbl_803E6A1C;
 extern f32 lbl_803E695C;
 extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
-extern int ObjGroup_FindNearestObject(int group, int obj, void* out);
 extern f32 lbl_803E6B5C;
 extern f32 lbl_803E6B60;
 extern f32 lbl_803E6B64;
