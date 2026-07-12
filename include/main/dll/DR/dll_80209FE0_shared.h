@@ -211,7 +211,6 @@ extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int
 extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 v);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setSpecularTargetColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_startColorFade(int light, int a, int b);

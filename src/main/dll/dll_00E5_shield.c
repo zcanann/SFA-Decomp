@@ -22,6 +22,7 @@
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
@@ -38,7 +39,6 @@ extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 
@@ -266,7 +266,7 @@ void staffFn_80170380(int* obj, int cmd)
                 modelLightStruct_setDiffuseColor(*(int**)state, 0, 255, 255, 255);
                 modelLightStruct_setSpecularColor(*(int*)state, 0, 255, 255, 255);
                 modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E33BC, lbl_803E33C0);
-                lightSetField4D(*(int*)state, 1);
+                lightSetField4D((ModelLightStruct*)*(int*)state, 1);
                 modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E33AC);
                 modelLightStruct_startColorFade(*(int*)state, 0, 0);
                 modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);
@@ -350,7 +350,7 @@ void staffFn_80170380(int* obj, int cmd)
             modelLightStruct_setDiffuseColor(*(int**)state, 0, 255, 255, 255);
             modelLightStruct_setSpecularColor(*(int*)state, 0, 255, 255, 255);
             modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E33BC, lbl_803E33C0);
-            lightSetField4D(*(int*)state, 1);
+            lightSetField4D((ModelLightStruct*)*(int*)state, 1);
             modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E33AC);
             modelLightStruct_startColorFade(*(int*)state, 0, 0);
             modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);

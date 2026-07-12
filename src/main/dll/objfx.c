@@ -20,6 +20,7 @@
 #include "main/dll/objfx_api.h"
 #include "main/obj_placement.h"
 #include "main/objfx.h"
+#include "main/modellight_api.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
 

@@ -14,6 +14,7 @@
 #include "main/dll/xyzanimator.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
@@ -39,7 +40,6 @@ extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -593,7 +593,7 @@ void Fireball_init(int* obj)
                 u8* base1;
                 u8* base2;
                 modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
-                lightSetField4D(*(int*)state, 0);
+                lightSetField4D((ModelLightStruct*)*(int*)state, 0);
                 modelLightStruct_setPosition(*(int*)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
                 lightSetFieldBC_8001db14(*(int*)state, 1);
                 c = ((FireballState*)state)->colorIndex * 3;

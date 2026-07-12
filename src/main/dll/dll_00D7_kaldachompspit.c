@@ -16,6 +16,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -57,7 +58,6 @@ extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, in
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
@@ -309,7 +309,7 @@ void KaldaChompSpit_init(GameObject* obj)
             int nearDist = (int)(lbl_803E310C * (obj)->anim.rootMotionScale);
             modelLightStruct_setDistanceAttenuation(*extra, nearDist, (f32)(nearDist + 0x28));
         }
-        lightSetField4D(*extra, 1);
+        lightSetField4D((ModelLightStruct*)*extra, 1);
         modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
         modelLightStruct_startColorFade(*extra, 1, 3);
     }

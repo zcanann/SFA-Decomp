@@ -27,6 +27,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/gamebits.h"
@@ -168,7 +169,6 @@ extern void modelLightStruct_setPosition();
 extern void modelLightStruct_setDiffuseColor();
 extern void modelLightStruct_setSpecularColor();
 extern void modelLightStruct_setDistanceAttenuation();
-extern void lightSetField4D();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
 extern void modelLightStruct_setAffectsAabbLightSelection();

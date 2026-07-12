@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -83,7 +84,6 @@ void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
     extern void modelLightStruct_setSpecularColor(int, int, int, int, int);
     extern void modelLightStruct_setupGlow(int, int, int, int, int, int, f32);
     extern void modelLightStruct_setDistanceAttenuation(int, f32, f32);
-    extern void lightSetField4D(int, int);
     extern void modelLightStruct_setEnabled(int, int, f32);
     extern void modelLightStruct_setDiffuseTargetColor(int, int, int, int, int);
     extern void modelLightStruct_setSpecularTargetColor(int, int, int, int, int);
@@ -120,7 +120,7 @@ void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
     }
 
     modelLightStruct_setDistanceAttenuation(lightSlot[0], lbl_803E4C2C, lbl_803E4C30);
-    lightSetField4D(lightSlot[0], 1);
+    lightSetField4D((ModelLightStruct*)lightSlot[0], 1);
     modelLightStruct_setEnabled(lightSlot[0], 1, lbl_803E4BD8);
     modelLightStruct_setDiffuseTargetColor(lightSlot[0], 64, 0, 0, 64);
     modelLightStruct_setSpecularTargetColor(lightSlot[0], 64, 0, 0, 64);

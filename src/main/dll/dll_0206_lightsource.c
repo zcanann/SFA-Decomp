@@ -16,6 +16,7 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #define OBJFX_FN_80098B18_BYTE_ARGS_LEGACY
 #include "main/objfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
@@ -65,7 +66,6 @@ extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void modelLightStruct_setEnabled(void*, int, f32);
 extern void modelLightStruct_startColorFade(void*, int, int);
 extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
-extern void lightSetField4D(void*, int);
 extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
 extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
 extern u8 gLightSourceColorTable[];

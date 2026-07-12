@@ -14,6 +14,7 @@
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/model_light.h"
+#include "main/modellight_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objlib.h"
@@ -73,7 +74,6 @@ extern f32 gDimBossSpitGravity;
 extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
-extern void lightSetField4D(ModelLightStruct* p, u8 v);
 extern void postRenderSetAlphaBlendState(void);
 extern f32 lbl_803E4D70;
 extern f32 lbl_803E4D74;

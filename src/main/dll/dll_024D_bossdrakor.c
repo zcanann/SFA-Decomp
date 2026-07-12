@@ -23,6 +23,7 @@
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -128,7 +129,7 @@ void bossdrakor_update(int obj)
             modelLightStruct_setSpecularColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0xff, 0xff);
             modelLightStruct_setupGlow(((BossDrakorState*)state)->lightObj, 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
             modelLightStruct_setDistanceAttenuation(((BossDrakorState*)state)->lightObj, lbl_803E6544, lbl_803E6540);
-            lightSetField4D(((BossDrakorState*)state)->lightObj, 0);
+            lightSetField4D((ModelLightStruct*)((BossDrakorState*)state)->lightObj, 0);
             modelLightStruct_setEnabled(*(void**)&((BossDrakorState*)state)->lightObj, 1, lbl_803E6520);
             modelLightStruct_setDiffuseTargetColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0x80, 0x40);
             modelLightStruct_setSpecularTargetColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0x80, 0x40);
