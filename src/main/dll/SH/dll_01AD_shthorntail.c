@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 #include "main/effect_interfaces.h"
@@ -101,7 +102,6 @@ extern void fn_8003B228(GameObject* obj, int p2);
 extern void dll_2E_func08(int obj, int v1, int v2);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int Obj_GetPlayerObject();
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
@@ -113,7 +113,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
     int triggerIsSet;
 
     runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
-    playerObj = Obj_GetPlayerObject();
+    playerObj = (int)Obj_GetPlayerObject();
     {
         int cmp = (double)getXZDistance(objectId + 0x18, playerObj + 0x18) < (double)SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
         closeToPlayer = cmp;

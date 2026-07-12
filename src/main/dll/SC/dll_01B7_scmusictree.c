@@ -6,6 +6,7 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
@@ -78,10 +79,8 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void* Obj_GetPlayerObject(void);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);

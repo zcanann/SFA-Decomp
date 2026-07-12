@@ -3,6 +3,7 @@
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/objseq.h"
@@ -87,7 +88,6 @@ extern f32 lbl_803E5CEC;
 extern f32 lbl_803E5CF0;
 extern f32 lbl_803E5CF4;
 
-extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80065574(int a, GameObject* obj, int b);
@@ -221,7 +221,7 @@ void WM_Galleon_update(int* obj)
         return;
     }
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     state = (WMGalleonState*)OBJ_PTR(obj, 0xb8);
 
     if (mainGetBit(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) != 0)

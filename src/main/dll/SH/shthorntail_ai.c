@@ -17,6 +17,7 @@
 #include "main/frustum.h"
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
+#include "main/object_api.h"
 
 #define SHTHORNTAIL_OBJ_TYPE                0x4d7
 #define SHTHORNTAIL_OBJ_GROUP               3
@@ -39,7 +40,6 @@ extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 extern f32 getXZDistance(Vec* a, Vec* b);
 extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);
 extern void OSReport(const char* msg, ...);
@@ -144,7 +144,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
 
     if (config->leashRadiusByte != '\0')
     {
-        value = Obj_GetPlayerObject();
+        value = (int)Obj_GetPlayerObject();
         dist = getXZDistance(&object->pos, (Vec*)(value + PLAYER_POS_OFFSET));
         if (dist < SHTHORNTAIL_CLOSE_ATTACK_DISTANCE)
         {

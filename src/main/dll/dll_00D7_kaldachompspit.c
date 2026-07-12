@@ -16,6 +16,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -65,7 +66,6 @@ extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int getTrickyObject(void);
-extern int Obj_GetPlayerObject(void);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 int KaldaChompMe_getExtraSize(void);
 int KaldaChompMe_getObjectTypeId(void);
@@ -223,7 +223,7 @@ void KaldaChompSpit_update(int obj)
                 return;
             }
             if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
-                 Obj_GetPlayerObject()) ||
+                 (int)Obj_GetPlayerObject()) ||
                 (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == getTrickyObject()))
             {
                 kaldachompspit_burst((GameObject*)(obj));

@@ -11,6 +11,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -28,8 +29,6 @@
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E31C0;
-extern void* Obj_GetPlayerObject(void);
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);

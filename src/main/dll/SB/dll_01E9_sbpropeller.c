@@ -18,6 +18,7 @@
 #include "main/objlib.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/object_render.h"
+#include "main/object_api.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
@@ -42,7 +43,6 @@ extern f32 timeDelta;
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
-extern void* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;

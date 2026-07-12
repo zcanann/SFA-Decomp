@@ -25,6 +25,7 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/mm.h"
@@ -75,7 +76,6 @@ extern int gSwarmBaddieLastCurvePoint;
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
-extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 
