@@ -17,34 +17,11 @@
  * the floor tile and must not be moved or removed.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-
-typedef struct WcFloorTileState
-{
-    f32 shakeTime;
-    s16 shakeMag;
-    u8 phase; /* 0x6 */
-    u8 flags; /* 0x7: 1|2 done, 4 armed */
-} WcFloorTileState;
-
-typedef enum WcFloorTilePhase
-{
-    WCFLOORTILE_PHASE_IDLE = 0,    /* armed-watch: waits for a triggering hit entry */
-    WCFLOORTILE_PHASE_FALLING = 1, /* shaking, accelerating down, fading alpha out */
-    WCFLOORTILE_PHASE_FALLEN = 2,  /* alpha 0, collision disabled */
-    WCFLOORTILE_PHASE_RESTORE = 3, /* snapped back to Y, fading alpha in, collision on */
-} WcFloorTilePhase;
-
-typedef struct WcFloorTileSetup
-{
-    ObjPlacement base;
-    u8 pad18[0x1A - 0x18];
-    s16 eventId;
-    u8 pad1C[0x24 - 0x1C];
-} WcFloorTileSetup;
 
 /* Spawn-setup buffer for an Arwing bomb: ObjPlacement head (pos/color) plus
  * the class-specific yaw/pitch/roll bytes the parent seeds at +0x18. */
@@ -55,16 +32,6 @@ typedef struct ArwingBombSetup
     u8 pitch;          /* 0x19 */
     u8 yaw;            /* 0x1a */
 } ArwingBombSetup;
-
-STATIC_ASSERT(sizeof(WcFloorTileState) == 0x8);
-STATIC_ASSERT(offsetof(WcFloorTileState, shakeTime) == 0x00);
-STATIC_ASSERT(offsetof(WcFloorTileState, shakeMag) == 0x04);
-STATIC_ASSERT(offsetof(WcFloorTileState, phase) == 0x06);
-STATIC_ASSERT(offsetof(WcFloorTileState, flags) == 0x07);
-
-STATIC_ASSERT(sizeof(WcFloorTileSetup) == 0x24);
-STATIC_ASSERT(offsetof(WcFloorTileSetup, base.posY) == 0x0C);
-STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
 
 #define WCFLOORTILE_CHILD_OBJ_BOMB 0x605
 
