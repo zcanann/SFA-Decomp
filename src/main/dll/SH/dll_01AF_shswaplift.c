@@ -9,6 +9,7 @@
  * disables its hit volume.
  */
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
@@ -27,8 +28,6 @@ extern f32 lbl_803E54C8;
 extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
 
 extern u16 getYButtonItem(s16* out);
-extern int ObjTrigger_IsSetById(int obj, int id);
-extern int ObjTrigger_IsSet(int obj);
 
 int warpstonelift_getExtraSize(void)
 {
@@ -54,9 +53,9 @@ void warpstonelift_hitDetect(void)
 {
 }
 
-void warpstonelift_update(u8* obj)
+void warpstonelift_update(GameObject* obj)
 {
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     int off;
     char* list;
     int found = 0;
@@ -64,14 +63,14 @@ void warpstonelift_update(u8* obj)
     int i;
     s16 item;
 
-    list = *(char**)(obj + 0x58);
-    count = *(s8*)(list + 0x10F);
+    list = (char*)obj->anim.proximityList;
+    count = *(s8*)(list + offsetof(ObjProximityList, count));
     if (count > 0)
     {
         off = 0;
         for (i = 0; i < count; i++)
         {
-            char* other = *(char**)(list + off + 0x100);
+            char* other = *(char**)(list + off + offsetof(ObjProximityList, objects));
             if (((GameObject*)other)->anim.classId == 1)
             {
                 found = 1;
@@ -81,7 +80,7 @@ void warpstonelift_update(u8* obj)
     }
     if (found)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         switch (*state)
         {
         case WARPSTONELIFT_STATE_IDLE:
@@ -90,18 +89,18 @@ void warpstonelift_update(u8* obj)
             if ((mainGetBit(WARPSTONELIFT_ITEM_BIT) != 0 && cMenuGetSelectedItemInt() != -1) ||
                 item == WARPSTONELIFT_ITEM_BIT)
             {
-                Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
+                Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
             }
             else
             {
-                Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
+                Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
             }
             if (ObjTrigger_IsSetById((int)obj, WARPSTONELIFT_ITEM_BIT) != 0)
             {
                 mainSetBits(GAMEBIT_ITEM_RockCandyRelated0886, 1);
                 mainSetBits(GAMEBIT_ITEM_RockCandy_Used, 1);
                 *state = WARPSTONELIFT_STATE_SWAPPED;
-                Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
+                Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 3);
             }
             else if (ObjTrigger_IsSet((int)obj) != 0)
             {
@@ -118,7 +117,7 @@ void warpstonelift_update(u8* obj)
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
 }
 

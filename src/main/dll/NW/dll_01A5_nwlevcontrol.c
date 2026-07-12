@@ -14,6 +14,7 @@
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/mapEvent.h"
 #include "main/model_engine.h"
 #include "main/dll/flybaddie1D7.h"
@@ -79,7 +80,6 @@ extern f32 lbl_803E5280;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
-extern int ObjTrigger_IsSetById();
 extern void gameTimerStop(void);
 extern void envFxActFn_800887f8(u8 value);
 

@@ -1,13 +1,13 @@
 /* DLL 0x01AB — bombplantingspot (Sauria bomb planting spot / trigger). TU: 0x801D3FF4–0x801D4198. */
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/gamebits.h"
 #include "main/gameloop_api.h"
 
 #define BOMBPLANTINGSPOT_OBJFLAG_HIDDEN 0x4000
 
-extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(int* obj);
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
@@ -15,36 +15,36 @@ extern void objRenderFn_80041018(int* obj);
 #define BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG 0x08
 #define BOMBPLANTINGSPOT_READY_FLAG 0x10
 
-void BombPlantingSpot_update(void* obj)
+void BombPlantingSpot_update(GameObject* obj)
 {
-    BombPlantingSpotMapData* mapData = *(BombPlantingSpotMapData**)&((GameObject*)obj)->anim.placementData;
+    BombPlantingSpotMapData* mapData = (BombPlantingSpotMapData*)obj->anim.placementData;
     s32 trigBit;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
+    obj->anim.rotX = (s16)(mapData->yawByte << 8);
 
     trigBit = mapData->requiredGameBit;
     if (trigBit != -1 && mainGetBit(trigBit) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
+        *(u8*)&obj->anim.resetHitboxMode |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         return;
     }
 
     if (mainGetBit(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= BOMBPLANTINGSPOT_READY_FLAG;
+        *(u8*)&obj->anim.resetHitboxMode |= BOMBPLANTINGSPOT_READY_FLAG;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_READY_FLAG;
+        *(u8*)&obj->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_READY_FLAG;
     }
 
-    if (ObjTrigger_IsSetById(obj, BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) != 0)
+    if (ObjTrigger_IsSetById((int)obj, BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) != 0)
     {
         gameBitDecrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
         mainSetBits(mapData->plantedGameBit, 1);
         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
     }
-    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 &&
+    else if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 &&
         mainGetBit(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
@@ -53,12 +53,12 @@ void BombPlantingSpot_update(void* obj)
 
     if (mainGetBit(mapData->plantedGameBit) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
-        objRenderFn_80041018(obj);
+        *(u8*)&obj->anim.resetHitboxMode &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
+        objRenderFn_80041018((int*)obj);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
+        *(u8*)&obj->anim.resetHitboxMode |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
     }
 }
 
