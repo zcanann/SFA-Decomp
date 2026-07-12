@@ -11,8 +11,11 @@
  * free); lbl_803DDD94 is a once-per-frame "an instance updated" flag,
  * cleared by hitDetect and set by the first update.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object.h"
 #include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A3.h"
 #include "main/game_object.h"
 

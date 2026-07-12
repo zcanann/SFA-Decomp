@@ -7,11 +7,15 @@
  * collision with a flash + cooldown, and on reaching zero health flips to
  * the defeated state, signalling andross and the lightning object.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
+#include "main/game_ui_interface.h"
+#include "main/gameplay_runtime.h"
+#include "main/frame_timing.h"
+#include "main/objhits.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 

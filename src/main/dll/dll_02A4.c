@@ -14,7 +14,10 @@
  * loads it and hands it a direction vector and launch speed via the
  * sibling projectile TU.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/object.h"
 #include "main/dll/ARW/dll_02A3.h"

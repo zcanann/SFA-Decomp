@@ -11,10 +11,13 @@
  * This DLL has no initialise/release entry points (none exist in the retail
  * symbol table); it is a sub-object whose lifetime is driven externally.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "dolphin/mtx.h"
+#include "main/camera.h"
+#include "main/frame_timing.h"
+#include "main/mm.h"
 #include "main/object_api.h"
 #include "main/newclouds.h"
+#include "main/shader_api.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
 
