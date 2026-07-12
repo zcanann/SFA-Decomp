@@ -379,7 +379,7 @@ void mmFreeDeferred(void* p)
 
 void mmFreeTick(int arg)
 {
-    MmGlobal* g = (MmGlobal*)gMmStoreArray;
+    MmGlobal* g[1];
     int i;
     DeferredFree* d;
     int k;
@@ -387,11 +387,12 @@ void mmFreeTick(int arg)
     HeapItem* item;
     s16 next;
 
+    g[0] = (MmGlobal*)gMmStoreArray;
     gMmTickCount++;
     gMmOpCount++;
 
     i = 0;
-    d = g->deferred;
+    d = g[0]->deferred;
     for (; i < gMmDeferredFreeCount;)
     {
         d->delay--;
@@ -399,11 +400,11 @@ void mmFreeTick(int arg)
         {
             mmFree(d->ptr);
             {
-                char* a = (char*)g + *(volatile s16*)&gMmDeferredFreeCount * 8;
+                char* a = (char*)g[0] + *(volatile s16*)&gMmDeferredFreeCount * 8;
                 d->ptr = ((DeferredFree*)(a + 0x78))->ptr;
             }
             {
-                char* b = (char*)g + *(volatile s16*)&gMmDeferredFreeCount * 8;
+                char* b = (char*)g[0] + *(volatile s16*)&gMmDeferredFreeCount * 8;
                 d->delay = ((DeferredFree*)(b + 0x78))->delay;
             }
             gMmDeferredFreeCount--;
@@ -416,7 +417,7 @@ void mmFreeTick(int arg)
     }
 
     {
-        MmStore** sp = (MmStore**)gMmStoreArray;
+        MmStore** sp = (MmStore**)g[0];
         for (k = 0; k < 0x20; k += 8, sp += 8)
         {
             if (sp[0] != NULL)
@@ -462,7 +463,7 @@ void mmFreeTick(int arg)
 
     if (gMmRegionCount > 1)
     {
-        base = (HeapItem*)g->regions[1].start;
+        base = (HeapItem*)g[0]->regions[1].start;
         item = base;
         do
         {
@@ -477,7 +478,7 @@ void mmFreeTick(int arg)
             }
         } while (next != -1);
 
-        base = (HeapItem*)g->regions[2].start;
+        base = (HeapItem*)g[0]->regions[2].start;
         item = base;
         do
         {
@@ -492,7 +493,7 @@ void mmFreeTick(int arg)
             }
         } while (next != -1);
 
-        base = (HeapItem*)g->regions[3].start;
+        base = (HeapItem*)g[0]->regions[3].start;
         item = base;
         do
         {
@@ -510,10 +511,11 @@ void mmFreeTick(int arg)
 
     if (gMmStatsPrintCounter++ % 500 == 0)
     {
-        OSReport(sMemStatsFormat, 0, g->regions[0].size, gMmRegion1Used, g->regions[1].size, gMmRegion2Used,
-                 g->regions[2].size, gMmRegion3Used, g->regions[3].size, g->regions[0].slotCount,
-                 g->regions[0].numSlots, g->regions[1].slotCount, g->regions[1].numSlots, g->regions[2].slotCount,
-                 g->regions[2].numSlots, g->regions[3].slotCount, g->regions[3].numSlots);
+        OSReport(sMemStatsFormat, 0, g[0]->regions[0].size, gMmRegion1Used, g[0]->regions[1].size, gMmRegion2Used,
+                 g[0]->regions[2].size, gMmRegion3Used, g[0]->regions[3].size, g[0]->regions[0].slotCount,
+                 g[0]->regions[0].numSlots, g[0]->regions[1].slotCount, g[0]->regions[1].numSlots,
+                 g[0]->regions[2].slotCount, g[0]->regions[2].numSlots, g[0]->regions[3].slotCount,
+                 g[0]->regions[3].numSlots);
     }
 }
 
