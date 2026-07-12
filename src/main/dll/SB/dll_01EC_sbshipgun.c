@@ -20,6 +20,7 @@
  */
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/object_api.h"
+#include "main/objlib.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
@@ -38,7 +39,7 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
    and damage state the update() machine drives. */
 typedef struct SBShipGunState
 {
-    u32 cloudRunner; /* 0x00: cached CloudRunner object (target) */
+    GameObject* cloudRunner; /* 0x00: cached CloudRunner object (target) */
     s16 yawAngle;    /* 0x04: aim yaw (binary angle) */
     s16 pitchAngle;  /* 0x06: aim pitch/elevation (binary angle) */
     s16 fireTimer;   /* 0x08: frames until the next cannonball */
@@ -65,9 +66,6 @@ extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5888;
-extern int ObjList_GetObjects(int* outIndex, int* outCount);
-
-
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern const f32 lbl_803E588C;
 extern f32 lbl_803E5890;
@@ -162,6 +160,8 @@ void SB_ShipGun_update(GameObject* obj)
     char phase;
     float boost;
     GameObject* player;
+    GameObject** objects;
+    GameObject* cloudRunner;
     int galleon;
     int* state;
     int galleonStage;
@@ -209,13 +209,13 @@ void SB_ShipGun_update(GameObject* obj)
         {
             /* find and cache the CloudRunner object (galleon reused as the
                object-list base here, before it holds the parent Galleon). */
-            galleon = ObjList_GetObjects(&listStart, &listCount);
+            objects = ObjList_GetObjects(&listStart, &listCount);
             for (i = listStart; i < listCount; i = i + 1)
             {
-                hit = *(int*)(galleon + i * 4);
-                if (((GameObject*)hit)->anim.seqId == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
+                cloudRunner = objects[i];
+                if (cloudRunner->anim.seqId == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
                 {
-                    ((SBShipGunState*)state)->cloudRunner = hit;
+                    ((SBShipGunState*)state)->cloudRunner = cloudRunner;
                     i = listCount;
                 }
             }

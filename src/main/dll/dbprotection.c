@@ -24,6 +24,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objlib.h"
 
 #define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
 #include "main/frame_timing.h"
@@ -134,7 +135,6 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-extern int ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
@@ -148,7 +148,7 @@ void fn_801DFA28(u8* obj)
     int spawnData;
     u8* state;
     u8* tricky;
-    int objArray;
+    GameObject** objects;
     int sfxObj;
     u8* otherObj;
     s8 c;
@@ -196,10 +196,10 @@ void fn_801DFA28(u8* obj)
     }
     if (*(void**)&((SBGalleonState*)state)->targetObj == NULL)
     {
-        objArray = ObjList_GetObjects(&objIndex, &objCount);
+        objects = ObjList_GetObjects(&objIndex, &objCount);
         for (t = objIndex; t < objCount; t++)
         {
-            otherObj = *(u8**)(objArray + t * 4);
+            otherObj = (u8*)objects[t];
             if (((GameObject*)otherObj)->anim.seqId == DBPROTECTION_TRICKY_TARGET_SEQID)
             {
                 ((SBGalleonState*)state)->targetObj = otherObj;

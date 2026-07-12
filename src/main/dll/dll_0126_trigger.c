@@ -32,6 +32,7 @@
 #include "main/game_object.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
+#include "main/objlib.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/sky_state.h"
@@ -90,7 +91,6 @@ extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (h
 extern u8 framesThisStep;
 
 extern int getLActions();
-extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
 extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
 extern int mainGetBit(int eventId);
@@ -99,7 +99,6 @@ extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
 extern void timeOfDayFn_80055038(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern int ObjList_GetObjects(int* first, int* count);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
 extern int getTrickyObject(void);
@@ -228,6 +227,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     int count;
     int first;
     int id;
+    GameObject** objects;
 
     while (i < 8)
     {
@@ -443,10 +443,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     break;
                 case 0xc:
                     id = (u16)((p[2] << 8) | p[3]);
-                    t = ObjList_GetObjects(&first, &count);
+                    objects = ObjList_GetObjects(&first, &count);
                     for (; first < count; first++)
                     {
-                        t2 = *(int*)(t + first * 4);
+                        t2 = (int)objects[first];
                         tbl = *(int**)(t2 + 0x4c);
                         if (tbl == NULL)
                         {
@@ -804,7 +804,7 @@ void Trigger_hitDetect(GameObject* obj)
                 targetKind = ((TriggerPlacement*)def)->target;
                 if (targetKind > 2)
                 {
-                    target = ObjGroup_FindNearestObject(targetKind - 1, (int)obj, (int)dist);
+                    target = ObjGroup_FindNearestObject(targetKind - 1, (int)obj, dist);
                     if ((void*)target == NULL)
                     {
                         ok = 0;
