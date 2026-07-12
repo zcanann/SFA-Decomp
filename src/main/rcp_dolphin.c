@@ -8,6 +8,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/mapEvent.h"
+#include "main/modellight_api.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
 #include "main/camera.h"
@@ -1636,8 +1637,6 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
 
 extern void* fn_80089A58(void);
 extern void* fn_80089A50(void);
-extern void modelLightStruct_setSpecularAttenuation(void* light, f32 a, f32 b);
-extern void modelLightStruct_setAngularAttenuation(void* light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setSpecularColor(void* light, int r, int g, int b, int a);
 extern void modelLightStruct_loadChannelLight(int idx, void* light, int model);
 extern f32 lbl_803DEB70;
@@ -1647,8 +1646,8 @@ extern f32 lbl_803DEB74;
 #pragma opt_common_subs off
 int textureFn_80052bb4(int model, f32* params)
 {
-    void* la;
-    void* lb;
+    ModelLightStruct* la;
+    ModelLightStruct* lb;
     la = fn_80089A58();
     lb = fn_80089A50();
     if (la == NULL || lb == NULL)

@@ -12,5 +12,7 @@ void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct* light, u8 e
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_getSpecularColor(ModelLightStruct* light, u8* red, u8* green, u8* blue, u8* alpha);
 void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha);
+void modelLightStruct_setAngularAttenuation(ModelLightStruct* light, f32 a0, f32 a1, f32 a2);
+void modelLightStruct_setSpecularAttenuation(ModelLightStruct* light, f32 scale, f32 brightness);
 
 #endif /* MAIN_MODELLIGHT_API_H_ */
