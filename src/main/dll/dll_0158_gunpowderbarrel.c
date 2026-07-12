@@ -211,6 +211,7 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
 
 /* When hit (or touched while resting on a damage source) blow the barrel up,
  * optionally re-saving its position at the owning generator first. */
+#pragma opt_propagation off
 void gunpowderbarrel_triggerExplosion(GameObject *obj)
 {
     u8* sub;
@@ -235,18 +236,20 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         if (((GpbConfigFlags*)&((GunpowderBarrelState*)sub)->configFlags)->returnHome)
         {
             int** objs;
-            int* best = 0;
+            int* def[1];
+            int* best;
             int i;
-            int* def = *(int**)&(obj)->anim.placementData;
             int** p;
-            if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
+            def[0] = *(int**)&(obj)->anim.placementData;
+            best = 0;
+            if (((GunpowderbarrelPlacement*)def[0])->generatorLinkId != 0)
             {
                 objs = (int**)ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
                 i = 0;
                 p = objs;
                 for (; i < count; i++)
                 {
-                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
+                    if (((GunpowderbarrelPlacement*)def[0])->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
                     {
                         best = objs[i];
                         break;
@@ -317,6 +320,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         }
     }
 }
+#pragma opt_propagation reset
 
 /* Gravity, velocity clamps, ground probe + landing sfx, contact handling. */
 void gunpowderbarrel_updatePhysics(int* obj)
