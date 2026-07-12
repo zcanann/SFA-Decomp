@@ -14,7 +14,11 @@
  * Left/Right nudge the selected field, echoing the value through the debug
  * text helper logPrintf.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/pad.h"
 #include "main/debug.h"
 #include "main/sky_state.h"
 #include "main/game_object.h"
@@ -51,9 +55,8 @@ struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
     "RED\n\000\000Mode: SPECULAR COLOUR GREEN\n\000\000\000\000Mode: SPECULAR COLOUR BLUE\n",
 };
 
-void directionallight_debugEdit(GameObject* obj, int statePtr)
+void directionallight_debugEdit(GameObject* obj, DirectionalLightState* state)
 {
-    DirectionalLightState* state = (DirectionalLightState*)statePtr;
     u8* desc = (u8*)&gDirectionalLightObjDescriptor;
     u16 buttons = getButtonsJustPressed(0);
 
@@ -247,14 +250,14 @@ void directionallight_update(GameObject* obj)
         }
     }
 
-    directionallight_debugEdit(obj, (int)state);
+    directionallight_debugEdit(obj, state);
 }
 
-void directionallight_init(GameObject* obj, int setup)
+void directionallight_init(GameObject* obj, DirectionalLightSetup* setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
-    DirectionalLightSetup* setupData = (DirectionalLightSetup*)setup;
+    DirectionalLightSetup* setupData = setup;
     DirectionalLightState* state = (obj)->extra;
 
     vec = *(PointLightVec*)lbl_802C2608;

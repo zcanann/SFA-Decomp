@@ -11,8 +11,14 @@
  * id. Some init bookkeeping (the sortedOffsets sort, partFlags/partAlpha
  * arrays) appears only partly wired; behavior is inferred.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim_update.h"
+#include "main/objhits.h"
+#include "main/objtexture.h"
 #include "main/model.h"
 #include "main/game_object.h"
 #include "main/object_api.h"

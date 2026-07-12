@@ -81,14 +81,14 @@ extern f32 lbl_803E7250;
 extern f32 lbl_803E7254;
 extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
 
-void directionallight_debugEdit(GameObject* obj, int statePtr);
+void directionallight_debugEdit(GameObject* obj, DirectionalLightState* state);
 int directionallight_getExtraSize(void);
 int directionallight_getObjectTypeId(void);
 void directionallight_free(GameObject* obj);
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
 void directionallight_hitDetect(void);
 void directionallight_update(GameObject* obj);
-void directionallight_init(GameObject* obj, int setup);
+void directionallight_init(GameObject* obj, DirectionalLightSetup* setup);
 void directionallight_release(void);
 void directionallight_initialise(void);
 
