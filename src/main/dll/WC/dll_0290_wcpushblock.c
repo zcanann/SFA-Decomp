@@ -533,7 +533,7 @@ void wcpushblock_update(GameObject* obj)
         }
         if (objAnim->alpha == 0)
         {
-            if (wcblock_isPlayerAwayFromStoredCell((int)obj, (int)state, Obj_GetPlayerObject()) != 0)
+            if (wcblock_isPlayerAwayFromStoredCell(obj, (WCBlockState*)state, Obj_GetPlayerObject()) != 0)
             {
                 if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
                 {
