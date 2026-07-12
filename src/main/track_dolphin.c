@@ -2009,7 +2009,7 @@ int objShadowFn_80062498(int* obj, int param2)
     int drawScratch;
     u32* vtx;
     int alphaOut = 0;
-    int alpha;
+    u32 alpha;
     u32 handle;
     f32 vec[3];
     f32 base[3];
@@ -2369,6 +2369,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     return 0;
 }
 
+#pragma peephole on
 #pragma optimization_level 2
 #pragma opt_propagation off
 void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
@@ -3125,15 +3126,22 @@ static inline void GXTexCoord2s16(const s16 x, const s16 y)
     GXWGFifo.s16 = y;
 }
 
-#pragma peephole on
 #pragma optimization_level 2
+typedef struct TrackGXColor
+{
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} TrackGXColor;
+
 void objDrawFn_80061654(int obj, int placementObj)
 {
     s16* shadowVerts;
-    u8 alpha;
+    int alpha;
     void* viewMtx;
-    int kColor;
-    int kColorCopy;
+    TrackGXColor kColor;
+    TrackGXColor kColorCopy;
     f32 mtx[16];
     f32 outMtx[16];
 
@@ -3144,8 +3152,8 @@ void objDrawFn_80061654(int obj, int placementObj)
     }
     if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
     {
-        alpha = objShadowFn_80062378((GameObject*)obj, 0x96);
-        *((u8*)&kColor + 3) = alpha;
+        alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
+        kColor.a = alpha;
         if (alpha != 0)
         {
             viewMtx = Camera_GetViewMatrix();
