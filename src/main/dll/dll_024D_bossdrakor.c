@@ -79,12 +79,13 @@ void bossdrakor_update(int obj)
     s16 shakeX;
     s16 shakeY;
     int* tbl;
+    int* tblRes;
     f32 shake;
     f32 shakeScaleZ;
     f32 t;
+    f32 spd;
     s16 d;
     int step;
-    s16 curRot;
     s16* vec;
     s8 buf[0x1c];
     f32 hz;
@@ -142,17 +143,8 @@ void bossdrakor_update(int obj)
         if ((void*)player != NULL)
         {
             step = Obj_GetYawDeltaToObject(obj, player, 0);
-            curRot = ((GameObject*)obj)->anim.rotX;
-            step = (s16)step;
-            if (step < -0x200)
-            {
-                step = -0x200;
-            }
-            else if (step > 0x200)
-            {
-                step = 0x200;
-            }
-            ((GameObject*)obj)->anim.rotX = curRot + (s16)step;
+            ((GameObject*)obj)->anim.rotX +=
+                (s16)(((s16)step < -0x200) ? -0x200 : (((s16)step > 0x200) ? 0x200 : (s16)step));
             step = ((GameObject*)obj)->anim.rotY;
             if (step != 0)
             {
@@ -191,7 +183,7 @@ void bossdrakor_update(int obj)
         bossdrakor_handleActionEvent(obj, state, moveResult);
     }
     adv = ObjAnim_AdvanceCurrentMove(
-        obj, lbl_803E6570 + PSVECMag(&((GameObject*)obj)->anim.velocityX) / ((BossDrakorState*)state)->moveSpeed,
+        obj, (spd = PSVECMag(&((GameObject*)obj)->anim.velocityX) / ((BossDrakorState*)state)->moveSpeed) + lbl_803E6570,
         timeDelta, (ObjAnimEventList*)buf);
     if (adv != 0)
     {
@@ -299,10 +291,11 @@ void bossdrakor_update(int obj)
         ((BossDrakorState*)state)->shakeAmount = t;
         shakeScaleZ = ((BossDrakorState*)state)->shakeScaleZ;
         shake = ((BossDrakorState*)state)->shakeAmount;
-        tbl = seqFn_800394a0();
+        tblRes = seqFn_800394a0();
         shakeX = (s16)(gBossDrakorDegToAngle * shake);
         shakeY = (s16)(gBossDrakorDegToAngle * (shake * shakeScaleZ));
         i = 0;
+        tbl = tblRes;
         do
         {
             uvec = (s16*)objModelGetVecFn_800395d8((GameObject*)(obj), tbl[0]);
