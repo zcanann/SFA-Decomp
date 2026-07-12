@@ -72,6 +72,7 @@ void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
     state->wavePhaseB = phase;
 }
 
+#pragma dont_inline on
 int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &obj->anim;
@@ -123,6 +124,7 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
+#pragma dont_inline off
 
 int wctemplebri_getExtraSize(void)
 {
@@ -170,6 +172,7 @@ void wctemplebri_initialise(void)
 {
 }
 
+#pragma dont_inline on
 void wctemplebri_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &obj->anim;
@@ -230,6 +233,7 @@ void wctemplebri_update(GameObject* obj)
         }
     }
 }
+#pragma dont_inline off
 
 void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
 {
