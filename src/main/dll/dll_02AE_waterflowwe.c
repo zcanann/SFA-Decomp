@@ -27,6 +27,7 @@
 #define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
 #define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
 
+#pragma opt_dead_assignments off
 void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 {
     GameObject* object = obj;
@@ -134,6 +135,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
         *vz = zero;
     }
 }
+#pragma opt_dead_assignments reset
 
 int waterflowwe_getExtraSize(void)
 {
