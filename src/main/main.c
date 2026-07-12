@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
@@ -105,7 +106,6 @@ extern f32 lbl_803E61B4;
 
 extern void objRenderFn_80041018(int* obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void* getTrickyObject(void);
 
 void VFP_lavapool_free_nop(void)
 {

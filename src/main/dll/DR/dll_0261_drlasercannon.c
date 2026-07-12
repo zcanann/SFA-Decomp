@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/player_objects.h"
 #include "main/dll/player_api.h"
@@ -296,7 +297,7 @@ void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char
 #pragma dont_inline on
 int drlasercannon_getTrackedTarget(int obj, int* arg)
 {
-    int* tricky = getTrickyObject();
+    int* tricky = (int*)getTrickyObject();
     GameObject* player;
     GameObject* target;
     int cooldown;
@@ -425,7 +426,7 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_ar_awghitobj16);
         if (state->health <= 0)
         {
-            tricky = getTrickyObject();
+            tricky = (int*)getTrickyObject();
             Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_4b6);
             spawnExplosionLegacy((int)obj, lbl_803E68F8, 0, 1, 1, 1, 0, 1, 0);
             state->flags.b0 = 1;

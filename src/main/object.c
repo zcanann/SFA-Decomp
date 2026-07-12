@@ -610,10 +610,10 @@ void Obj_SetActiveModelIndex(GameObject* obj, int idx)
     objAnim->bankIndex = idx;
 }
 
-void* getTrickyObject(void)
+GameObject* getTrickyObject(void)
 {
     int count;
-    void** objs = (void**)ObjGroup_GetObjects(1, &count);
+    GameObject** objs = (GameObject**)ObjGroup_GetObjects(1, &count);
     if (count != 0)
     {
         return objs[0];

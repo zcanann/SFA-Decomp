@@ -1,5 +1,6 @@
 /* DLL 0x01A9 — bombplant / enemymushroom group. TU: 0x801D286C–0x801D2C54. */
 #include "main/audio/sfx_ids.h"
+#include "main/object.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -32,12 +33,9 @@
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 #define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
 extern f32 lbl_803E5370;
-extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 
 extern f32 gBombPlantExplosionScale;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E536C;
 extern f32 gBombPlantSporeOffsetScale;
 extern f32 gBombPlantGrowRateMin;
@@ -132,7 +130,7 @@ void bombplant_throwSpore(int* obj, int* p2)
         f32 mtx[16];
         f32 tz, ty, tx;
 
-        spore = Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
+        spore = (BombplantSporeSpawn*)Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
         bd.rotX = ((GameObject*)obj)->anim.rotX;
         bd.rotY = ((GameObject*)obj)->anim.rotY;
         bd.rotZ = ((GameObject*)obj)->anim.rotZ;
@@ -152,7 +150,7 @@ void bombplant_throwSpore(int* obj, int* p2)
         spore->color[0] = 2;
         spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);
         spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
-        Obj_SetupObject((int*)spore, 5, -1, -1, 0);
+        Obj_SetupObject((ObjPlacement*)spore, 5, -1, -1, NULL);
     }
 }
 #pragma opt_common_subs reset

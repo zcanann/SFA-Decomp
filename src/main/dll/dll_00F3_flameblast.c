@@ -54,7 +54,7 @@ void objSetAnimSpeedTo1(GameObject* obj)
 
 int fn_8017805C(GameObject* obj, FlameblastState* state)
 {
-    s16* tricky = getTrickyObject();
+    s16* tricky = (s16*)getTrickyObject();
     f32* origin;
     f32 reach = 0.4f;
     VecRotateZXYArg vec;

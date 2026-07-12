@@ -15,6 +15,7 @@
  * given speed under gravity at a target offset (used cross-TU by duster).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/xyzanimator.h"
@@ -41,7 +42,6 @@ extern f32 lbl_803E3128;
 extern f32 lbl_803E312C;
 
 
-extern void* getTrickyObject(void);
 
 int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
 {

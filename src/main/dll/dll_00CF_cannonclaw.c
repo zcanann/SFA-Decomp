@@ -8,6 +8,7 @@
  * bodies and object descriptors live in their own TUs (dll_00D0/dll_00D1).
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"

@@ -12,6 +12,7 @@
  * setScale is the trigger-volume callback that cuts/harvests.
  */
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/object.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -53,7 +54,6 @@
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern f32 getXZDistance(f32* a, f32* b);
-extern int getTrickyObject(void);
 extern float mathSinf(float x);
 
 #pragma scheduling off
@@ -241,7 +241,7 @@ void MoonSeedPlantingSpot_update(int obj)
         break;
     case MSPLANTING_PHASE_GROWN:
     {
-        int tricky = getTrickyObject();
+        int tricky = (int)getTrickyObject();
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (((MoonSeedPlantingSpotState*)ex)->flags & MSPLANTING_FLAG_VISIBLE)
         {
@@ -289,7 +289,7 @@ void MoonSeedPlantingSpot_update(int obj)
     }
     case MSPLANTING_PHASE_CUT:
     {
-        int tricky = getTrickyObject();
+        int tricky = (int)getTrickyObject();
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
         if (getXZDistance(&((GameObject*)tricky)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)

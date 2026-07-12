@@ -62,7 +62,6 @@ extern f32 lbl_803E35F4;
 
 extern int ObjList_ContainsObject(int obj);
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
-extern void* getTrickyObject(void);
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 
 void InvHit_hitDetect(void)

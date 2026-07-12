@@ -191,7 +191,6 @@ extern f32 lbl_803DBC68;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
 extern f32 enemySightRange;
-extern void* getTrickyObject(void);
 
 void objAnimFn_8014a9f0(short* obj, int state)
 {
@@ -1062,7 +1061,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            obj = getTrickyObject();
+            obj = (int*)getTrickyObject();
             if (obj != NULL)
             {
                 (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(obj, 1,
@@ -1129,7 +1128,7 @@ void fn_8014B878(int* arg1, int* sub)
     int* camTarget;
 
     player = (int*)Obj_GetPlayerObject();
-    tricky = getTrickyObject();
+    tricky = (int*)getTrickyObject();
     target = *(int**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
         (target != player || (((GameObject*)player)->objectFlags & ENEMY_OBJFLAG_PARENT_SLACK) == 0))
@@ -1687,7 +1686,7 @@ void enemy_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    tricky = getTrickyObject();
+    tricky = (u8*)getTrickyObject();
     if (getCurUiDll() == 4)
     {
         return;

@@ -20,6 +20,7 @@
  * in dll_00FE_magicplant.h).
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
@@ -49,7 +50,7 @@ void TrickyGuard_update(int* obj)
         if ((u32)mainGetBit(placement->armingGameBit) == 0)
             return;
     }
-    tricky = getTrickyObject();
+    tricky = (int*)getTrickyObject();
     if (tricky == NULL)
         return;
     if ((u8)((int (*)(int*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0)

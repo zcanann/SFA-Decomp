@@ -2,6 +2,7 @@
 #include "main/shader_api.h"
 #include "main/debug.h"
 #include "math.h"
+#include "main/object.h"
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/expgfx_internal.h"

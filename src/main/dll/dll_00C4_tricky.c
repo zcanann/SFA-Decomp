@@ -184,7 +184,6 @@ extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-extern void* getTrickyObject(void);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();

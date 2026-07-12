@@ -15,6 +15,7 @@
  * hits off).
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
@@ -32,7 +33,6 @@
 #define FLAMMABLEVINE_OBJGROUP 0x31
 
 extern void Obj_RemoveFromUpdateList(int obj);
-extern void* getTrickyObject(void);
 
 int FlammableVine_getExtraSize(void)
 {

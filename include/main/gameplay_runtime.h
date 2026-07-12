@@ -42,6 +42,5 @@ int unlockLevel(s32 val, int idx, int flag);
 void envFxActFn_800887f8(u8 value);
 void setMotionBlur(int mode, f32 amount);
 void streamFn_8000a380(int mask, int mode, int time);
-void *getTrickyObject(void);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

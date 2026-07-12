@@ -4,6 +4,7 @@
  * dispatches a vtable call (slot 14 of Tricky's object type at offset
  * 0x68+0x38) to link the companion. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/object.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
@@ -80,7 +81,7 @@ void dim_tricky_hitDetect(void)
 void dim_tricky_update(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    int* trickyObj = getTrickyObject();
+    int* trickyObj = (int*)getTrickyObject();
     if (trickyObj == NULL) return;
     switch (*(u8*)state)
     {

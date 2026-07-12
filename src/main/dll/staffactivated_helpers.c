@@ -15,6 +15,7 @@
  * cfPrisonGuard_getPullRateMode: clamps the setup size param to [0,2].
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -56,9 +57,6 @@ extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern s16 lbl_803DBDE0[4];
-extern int getTrickyObject(void);
-extern int Obj_AllocObjectSetup(int size, int objectId);
-extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
 
 void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state)
@@ -154,7 +152,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
 
     setup = (StaffActivatedSetup*)obj->anim.placementData;
     player = (int)Obj_GetPlayerObject();
-    tricky = getTrickyObject();
+    tricky = (u32)getTrickyObject();
     state = obj->extra;
 
     if ((*gMapEventInterface)->shouldNotSaveTime(setup->base.mapId) != 0 && Obj_IsLoadingLocked() != 0)
@@ -168,14 +166,15 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
         i = 0;
         while (i < setup->debrisCount)
         {
-            spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[setup->debrisObjectSet]);
+            spawnedSetup = (int)Obj_AllocObjectSetup(0x24, lbl_803DBDE0[setup->debrisObjectSet]);
             spawnedPlacement = (ObjPlacement*)spawnedSetup;
             spawnedPlacement->posX = state->targetX;
             spawnedPlacement->posY = obj->anim.localPosY;
             spawnedPlacement->posZ = state->targetZ;
             *(s16*)((StaffActivatedSetup*)spawnedPlacement)->pad1A = 0x190;
 
-            spawnedObj = Obj_SetupObject(spawnedSetup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+            spawnedObj = (int)Obj_SetupObject((ObjPlacement*)spawnedSetup, 5, obj->anim.mapEventSlot, -1,
+                                              *(void**)&obj->anim.parent);
             ((GameObject*)spawnedObj)->anim.velocityX = obj->anim.localPosX - *(f32*)(player + 0xc);
             ((GameObject*)spawnedObj)->anim.velocityZ = obj->anim.localPosZ - *(f32*)(player + 0x14);
 

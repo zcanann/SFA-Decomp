@@ -5,6 +5,7 @@
  * that douses the flame when depleted.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
@@ -168,7 +169,6 @@ void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
 
 void DIMLogFire_update(GameObject* obj)
 {
-    extern int getTrickyObject(void);
     int flickerFlagA;
     int flickerFlagB;
     int rand;

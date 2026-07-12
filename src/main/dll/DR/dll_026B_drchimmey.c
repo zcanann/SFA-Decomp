@@ -6,6 +6,7 @@
  * altar back to its idle state.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/object.h"
 #include "main/maketex.h"
 #include "main/obj_placement.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
@@ -50,7 +51,7 @@ void DR_Chimmey_update(DRChimmeyObject* obj)
         }
         else
         {
-            int* tricky = getTrickyObject();
+            int* tricky = (int*)getTrickyObject();
             if (tricky != 0)
             {
                 if ((obj->renderFlags & 4) != 0)

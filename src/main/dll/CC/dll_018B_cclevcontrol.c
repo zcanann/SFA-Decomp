@@ -11,6 +11,7 @@
  * cached map-act at +0xC.
  */
 #include "main/sky_interface.h"
+#include "main/object.h"
 #include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -38,7 +39,6 @@ extern void Music_Trigger(int id, int arg);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 
-extern void* getTrickyObject(void);
 
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -125,7 +125,7 @@ void cclevcontrol_update(GameObject* obj)
     {
         (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 0x1d, 1);
     }
-    tricky = getTrickyObject();
+    tricky = (int*)getTrickyObject();
     if (state[1] & 1)
     {
         if (mainGetBit(0x22d) != 0 || mainGetBit(0x22e) == 0 ||

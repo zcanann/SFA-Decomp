@@ -3990,7 +3990,7 @@ void GameUI_hudDraw(int a, int b, int c)
 void GameUI_update(void)
 {
     u8* player = (u8*)Obj_GetPlayerObject();
-    u8* tricky = getTrickyObject();
+    u8* tricky = (u8*)getTrickyObject();
     u8 sectionTarget;
     s16 cx;
     s16 angDelta;

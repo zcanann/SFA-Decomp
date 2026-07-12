@@ -188,7 +188,6 @@ extern f32 gDrakorHoverpadMtx[];
 extern void** gBaddieControlInterface;
 extern void fn_8003B950(f32* mtx);
 extern s16 gHighTopLookYawOffset;
-extern int* getTrickyObject(void);
 extern f32 lbl_803E69F0;
 extern f32 gHighTopGroundMarkerMtx[];
 extern void Obj_RemoveFromUpdateList(int obj);

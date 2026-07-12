@@ -6,6 +6,7 @@
  * combat-state driver that runs the AI and controls Tricky interaction.
  */
 #include "main/dll/DIM/DIM2lift.h"
+#include "main/object.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
@@ -41,7 +42,6 @@ static inline int* DIM2Icicle_GetActiveModel(void* obj)
 
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
-extern void* getTrickyObject(void);
 extern u32* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
 extern f32 timeDelta;

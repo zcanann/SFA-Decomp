@@ -15,6 +15,7 @@
  * drive a linked Tricky object via its vtable when not pressed.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"

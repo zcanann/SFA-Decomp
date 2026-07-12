@@ -15,6 +15,7 @@
  *    sequence once.
  */
 #include "main/dll/dll_80136a40.h"
+#include "main/object.h"
 #include "main/dll/WC/WCbeacon.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"

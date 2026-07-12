@@ -11,6 +11,7 @@
  * 0x385/0x384) and primes the ambient env fx by save-load status.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/render.h"
 #include "main/mapEvent.h"
 #include "main/object_descriptor.h"
@@ -86,7 +87,7 @@ void linkb_levcontrol_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    tricky = getTrickyObject();
+    tricky = (int*)getTrickyObject();
     cur = (*gMapEventInterface)->getTrickyEnergy();
     if ((*gSkyInterface)->getSunPosition(0) != 0)
     {

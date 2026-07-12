@@ -10,6 +10,7 @@
  * (gQueenEarthWalkerMoveTable/E24 tables); the flags byte tracks the per-frame mode.
  */
 #include "main/dll/SH/SHrocketmushroom.h"
+#include "main/object.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
@@ -56,7 +57,6 @@ extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
 extern int fn_8003B228(GameObject* obj, void* p2);
 extern int characterDoEyeAnims(GameObject* obj, void* p2);
 extern int getYButtonItem(s16* outTrigger);
-extern void* getTrickyObject(void);
 extern int playerHasSpell(GameObject* obj, int param);
 
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};

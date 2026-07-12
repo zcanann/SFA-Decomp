@@ -4,6 +4,7 @@
  * while intact, allows Tricky to push through it.
  */
 #include "main/dll/dimicewallstate_struct.h"
+#include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
@@ -27,7 +28,6 @@ typedef struct DimicewallPlacement
 
 
 
-extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
@@ -90,7 +90,7 @@ void dimicewall_update(int* obj)
         }
         else
         {
-            int* tricky = getTrickyObject();
+            int* tricky = (int*)getTrickyObject();
             if (tricky != NULL)
             {
                 if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)

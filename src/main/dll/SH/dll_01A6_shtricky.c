@@ -8,6 +8,7 @@
  * for the completion bit to flip the result bits back.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
@@ -33,7 +34,7 @@ void sh_tricky_update(int* obj)
     int* tricky;
 
     state = ((GameObject*)obj)->extra;
-    tricky = getTrickyObject();
+    tricky = (int*)getTrickyObject();
     if (tricky == NULL)
     {
         return;

@@ -17,6 +17,7 @@
  * game bits 0x2AA-0x2AF are set.
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/object.h"
 #include "main/maketex.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
@@ -111,7 +112,6 @@ enum
     WMWALLCRAWLER_MODE_DIE = 6      /* death anim, then free/hide */
 };
 
-extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern int randFn_80080100(int n);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -453,7 +453,7 @@ void wmwallcrawler_update(int obj)
                     }
                     if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TRICKY_FLEE) != 0 &&
                         ((WmwallcrawlerState*)st)->mode != WMWALLCRAWLER_MODE_FLEE &&
-                        (tricky = getTrickyObject()) != 0 &&
+                        (tricky = (u32)getTrickyObject()) != 0 &&
                         Vec_distance((void*)(ob + 0x18), (void*)(tricky + 0x18)) < lbl_803E5FD4 &&
                         (**(u8(**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x44))(tricky) != 0)
                     {

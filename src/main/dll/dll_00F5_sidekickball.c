@@ -55,7 +55,6 @@ extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
 extern u32 mainGetBit(int eventId);
 extern f32 timeDelta;
-extern void* getTrickyObject(void);
 extern void OSReport(const char* msg, ...);
 extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
@@ -267,7 +266,7 @@ void SidekickBall_update(u8* self)
     state->onPathPoint = 0;
 
     player = (u8*)Obj_GetPlayerObject();
-    other = getTrickyObject();
+    other = (u8*)getTrickyObject();
     if (player == NULL || (((GameObject*)player)->objectFlags & SIDEKICKBALL_OBJFLAG_PARENT_SLACK) != 0 ||
         other == NULL ||
         (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),

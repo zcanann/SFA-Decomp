@@ -63,7 +63,6 @@ extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int getTrickyObject(void);
 int KaldaChompMe_getExtraSize(void);
 int KaldaChompMe_getObjectTypeId(void);
 void KaldaChompMe_free(void);
@@ -221,7 +220,8 @@ void KaldaChompSpit_update(int obj)
             }
             if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
                  (int)Obj_GetPlayerObject()) ||
-                (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == getTrickyObject()))
+                (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                 (u32)getTrickyObject()))
             {
                 kaldachompspit_burst((GameObject*)(obj));
                 return;

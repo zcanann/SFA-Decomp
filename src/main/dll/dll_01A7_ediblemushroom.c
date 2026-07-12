@@ -1,6 +1,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/dll/objfsa.h"
@@ -596,7 +597,7 @@ void EdibleMushroom_update(u8* self)
     state = (u8*)*(int*)&((GameObject*)self)->extra;
     other = (u8*)*(int*)&((GameObject*)self)->anim.placementData;
     player = Obj_GetPlayerObject();
-    enemy = getTrickyObject();
+    enemy = (u8*)getTrickyObject();
 
     if (objIsFrozen(self) != 0)
         goto end;

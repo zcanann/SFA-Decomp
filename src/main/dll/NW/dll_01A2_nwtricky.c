@@ -10,6 +10,7 @@
  * energy via game bit 0x4e3 against the map-event Tricky-energy gauge.
  */
 #include "main/gameplay_runtime.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -71,7 +72,7 @@ void NW_tricky_update(int* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    tricky = getTrickyObject();
+    tricky = (int*)getTrickyObject();
     player = (int*)Obj_GetPlayerObject();
     ids = *(NwTrickyIds*)lbl_802C23E8;
 

@@ -5,6 +5,7 @@
  * offset 0x68). Also contains fn_801B6D40 (generic byte-damage helper shared by
  * this DLL group). */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/object.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
@@ -114,7 +115,7 @@ void dimtruthhornice_update(int* obj)
         }
         else
         {
-            int* tricky = getTrickyObject();
+            int* tricky = (int*)getTrickyObject();
             if (tricky != NULL)
             {
                 if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)

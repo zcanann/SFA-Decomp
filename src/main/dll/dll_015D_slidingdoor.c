@@ -15,6 +15,7 @@
  * placement's startup sequence (data[0x1e], -1 = none).
  */
 #include "main/dll/drexplodable_types.h"
+#include "main/object.h"
 #include "main/obj_placement.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
@@ -29,7 +30,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_015D_slidingdoor.h"
 
-extern void* getTrickyObject(void);
 
 int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

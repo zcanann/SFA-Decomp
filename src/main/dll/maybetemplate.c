@@ -16,6 +16,7 @@
  *       of gTrickyHudItemMask for the Tricky-HUD variant.
  */
 #include "main/audio/sfx.h"
+#include "main/object.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/pause_menu_api.h"
 #include "main/camera_interface.h"

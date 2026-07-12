@@ -16,6 +16,7 @@
  * computes the highlight fade (lbl_803DD8D4).
  */
 #include "main/camera_interface.h"
+#include "main/object.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/object_api.h"
@@ -92,7 +93,6 @@ extern f64 lbl_803E2030;
 
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern int getTrickyObject(void);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
@@ -341,7 +341,7 @@ void drawTrickyHudOverlay(int obj)
     int tricky;
     int iconIndex;
     player = (int)Obj_GetPlayerObject();
-    tricky = getTrickyObject();
+    tricky = (int)getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
     hudDrawTimedElement(obj, lbl_803A9398);
     if ((void*)tricky != 0)

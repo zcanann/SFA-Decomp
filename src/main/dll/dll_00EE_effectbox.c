@@ -11,6 +11,7 @@
  * box: it only runs while the bit's value differs from gameBitValue.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
@@ -33,7 +34,6 @@ extern f32 lbl_803E3510;
 extern f32 lbl_803E3514;
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-extern void* getTrickyObject(void);
 extern void fn_8002B758(void);
 extern void fn_8002B860(int obj);
 extern void fn_80295918(int obj, int sel, f32 fval);

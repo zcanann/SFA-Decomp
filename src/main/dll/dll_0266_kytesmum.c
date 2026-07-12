@@ -19,6 +19,7 @@
  * game bit.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/debug.h"
 #include "main/dll/moveLib.h"
@@ -274,7 +275,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
 int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
 {
     GameObject* player = Obj_GetPlayerObject();
-    int* tricky = getTrickyObject();
+    int* tricky = (int*)getTrickyObject();
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
     if (objGetAnimState80A(player) == 0x40)
     {

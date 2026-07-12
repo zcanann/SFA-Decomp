@@ -46,7 +46,6 @@ extern void Music_Trigger(int id, int arg);
 extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
-extern u32 getTrickyObject();
 
 #define Obj_GetActiveModelLegacy ((int (*)())Obj_GetActiveModel)
 
@@ -587,7 +586,7 @@ void DIMboss_update(DIMbossObject* obj)
             {
                 if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) != 0)
                 {
-                    targetModel = getTrickyObject();
+                    targetModel = (u32)getTrickyObject();
                     runtime->targetModel = targetModel;
                 }
                 else

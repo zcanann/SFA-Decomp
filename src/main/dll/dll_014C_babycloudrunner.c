@@ -5,6 +5,7 @@
  * definitions here are collapsed to forward prototypes.
  */
 #include "main/dll/cfguardian_state.h"
+#include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/dll/wormspitbyte_struct.h"
@@ -128,7 +129,6 @@ extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-extern void* getTrickyObject(void);
 extern void fn_8014C66C(int* a, void* b);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
 int CFPrisonGuard_getExtraSize(void);
@@ -499,7 +499,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)getTrickyObject(), 0);
-        fn_8003ADC4((GameObject*)(obj), getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)(obj), (int*)getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;
     }

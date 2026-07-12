@@ -20,7 +20,6 @@ extern const f32 lbl_803E3AEC;
 extern f32 lbl_803E3AE8;
 
 extern int gameBitDecrement(int bit);
-extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 
 #pragma dont_inline on

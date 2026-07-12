@@ -18,6 +18,7 @@
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"

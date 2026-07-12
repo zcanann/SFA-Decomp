@@ -15,6 +15,7 @@
  * layout STATIC_ASSERTs below).
  */
 #include "main/dll/groundanimator_state.h"
+#include "main/object.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
@@ -62,7 +63,6 @@ STATIC_ASSERT(sizeof(WallanimatorState) == 8);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objRenderFn_80041018(int obj);
-extern int getTrickyObject(void);
 
 u8 wallanimator_modelMtxFn(int* obj)
 {
@@ -181,7 +181,7 @@ void wallanimator_update(GameObject* obj)
         return;
     }
 
-    tricky = getTrickyObject();
+    tricky = (int)getTrickyObject();
     if ((void*)tricky != NULL)
     {
         nearestDistance[0] = 35.0f;

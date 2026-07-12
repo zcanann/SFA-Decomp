@@ -1,5 +1,6 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
 #include "main/dll/mmp_moonrock.h"
+#include "main/object.h"
 #include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/game_object.h"
@@ -72,7 +73,6 @@ extern const f32 lbl_803E3FC0;
 
 extern int fn_80060688(GameObject* block, int v);
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
-extern void* getTrickyObject(void);
 extern void objRenderFn_80041018(int* obj);
 extern u16 lbl_803DBDF0;
 

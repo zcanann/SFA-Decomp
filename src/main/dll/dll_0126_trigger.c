@@ -25,6 +25,7 @@
  * any sfx the trigger started.
  */
 #include "main/dll/DR/hightop.h"
+#include "main/object.h"
 #include "main/dll/player_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -100,7 +101,6 @@ extern void timeOfDayFn_80055038(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
-extern int getTrickyObject(void);
 extern void gameTextFn_80125ba4(int id);
 extern void envFxFn_800887cc(void);
 extern int return1_800202BC(void);
@@ -644,7 +644,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0x26:
-                    t = getTrickyObject();
+                    t = (int)getTrickyObject();
                     if ((void*)t != NULL)
                     {
                         switch (p[2])
@@ -794,7 +794,7 @@ void Trigger_hitDetect(GameObject* obj)
         {
             triggerObj = (int)getArwing();
         }
-        trickyObj = getTrickyObject();
+        trickyObj = (int)getTrickyObject();
         if ((void*)triggerObj != NULL || (void*)trickyObj != NULL)
         {
             if ((*state & TRIGGER_SFLAG_DISABLED) != 0)

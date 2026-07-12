@@ -1,4 +1,5 @@
 #include "main/obj_placement.h"
+#include "main/object.h"
 #include "main/debug.h"
 #include "main/render.h"
 #include "main/game_object.h"

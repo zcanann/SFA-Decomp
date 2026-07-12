@@ -21,6 +21,7 @@
  * main/dll/DR/gunpowderbarrel_state.h.
  */
 #include "main/dll/tricky_api.h"
+#include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/maketex.h"
@@ -71,7 +72,6 @@ typedef struct GunpowderbarrelPlacement
 extern u32* gCarryableInterface;
 extern f32 lbl_803E42DC;
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 e);
-extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
@@ -297,7 +297,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         {
             ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
         }
-        tricky = getTrickyObject();
+        tricky = (u8*)getTrickyObject();
         if (tricky != 0)
         {
             trickyImpress(tricky);

@@ -487,7 +487,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             tw2 = tumbleweedbush_findNearestActive(&state->spawnPosX);
             if (tw2 != NULL)
             {
-                int* tk = getTrickyObject();
+                int* tk = (int*)getTrickyObject();
                 /* Tricky DLL interface +0x28: bark at the bush */
                 (*(void (**)(int*, int*, int, int))((char*)*((GameObject*)tk)->anim.dll + 0x28))(tk, obj, 1, 1);
             }
