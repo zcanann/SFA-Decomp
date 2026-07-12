@@ -28,8 +28,6 @@
 #define MODEL_LIGHT_KIND_POINT 2
 
 extern void Music_Trigger(int id, int arg);
-extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
-extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 
 
 extern void ObjGroup_RemoveObject(void* obj, int group);
@@ -89,8 +87,8 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
 
     if (gDIMbosstonsilLight != NULL)
     {
-        modelLightStruct_getSpecularColor(gDIMbosstonsilLight, &red, &green, &blue, &alpha);
-        modelLightStruct_setGlowColor(gDIMbosstonsilLight, red, green, blue, 0xc0);
+        modelLightStruct_getSpecularColor((ModelLightStruct*)gDIMbosstonsilLight, &red, &green, &blue, &alpha);
+        modelLightStruct_setGlowColor((ModelLightStruct*)gDIMbosstonsilLight, red, green, blue, 0xc0);
         if (gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
         {
             lightValue = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;
@@ -335,8 +333,8 @@ void DIMbosstonsil_update(GameObject* obj)
     if (gDIMbosstonsilLight == 0)
         return;
 
-    modelLightStruct_getSpecularColor(gDIMbosstonsilLight, &red, &green, &blue, &alpha);
-    modelLightStruct_setGlowColor(gDIMbosstonsilLight, red, green, blue, 0xc0);
+    modelLightStruct_getSpecularColor((ModelLightStruct*)gDIMbosstonsilLight, &red, &green, &blue, &alpha);
+    modelLightStruct_setGlowColor((ModelLightStruct*)gDIMbosstonsilLight, red, green, blue, 0xc0);
 
     if (gDIMbosstonsilLight->active == 0)
         return;

@@ -118,7 +118,6 @@ void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, 
 void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* light, int red, int green, int blue, int alpha);
 void modelLightStruct_getDiffuseColor(ModelLightStruct *light, u8 *red, u8 *green, u8 *blue, u8 *alpha);
 void modelLightStruct_setDiffuseColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
-void modelLightStruct_getSpecularColor(ModelLightStruct *light, u8 *red, u8 *green, u8 *blue, u8 *alpha);
 void modelLightStruct_setSpecularColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct *light, f32 scale, f32 brightness);
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *light, f32 cutoff, int spotFunction);
@@ -136,7 +135,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct *light, f32 nearZ);
 void modelLightStruct_setProjectionFarZ(ModelLightStruct *light, f32 farZ);
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *light, f32 fovY, f32 aspect);
 void modelLightStruct_setupOrthoProjection(ModelLightStruct *light, f32 top, f32 bottom, f32 left, f32 right, f32 scaleS, f32 scaleT);
-void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale);
 
 #endif /* MAIN_MODEL_LIGHT_H_ */
