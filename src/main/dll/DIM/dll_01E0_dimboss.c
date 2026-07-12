@@ -31,6 +31,7 @@
 #include "main/sky_api.h"
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
+#include "main/objlib.h"
 
 #define DIMBOSS_OBJGROUP 3
 
@@ -46,7 +47,6 @@ extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
 extern u32 getTrickyObject();
-extern u64 ObjGroup_RemoveObject();
 
 #define Obj_GetActiveModelLegacy ((int (*)())Obj_GetActiveModel)
 
@@ -450,7 +450,7 @@ void DIMboss_free(DIMbossObject* obj)
     mainSetBits(GAMEBIT_DIM_TriggerLostInBlizzard, 0);
     obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
     Camera_DisableViewYOffset();
-    ObjGroup_RemoveObject(obj, DIMBOSS_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DIMBOSS_OBJGROUP);
     childObject = obj->childObject;
     if (childObject != NULL)
     {
