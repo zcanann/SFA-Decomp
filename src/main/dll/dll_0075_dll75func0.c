@@ -12,10 +12,30 @@
 #include "main/dll/dll_0077_dll77func0.h"
 #include "main/dll/dll_0078_dll78func0.h"
 
-extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
-extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
-extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
-extern f32 lbl_803E0C30, lbl_803E0C34, lbl_803E0C38, lbl_803E0C3C;
+__declspec(section ".sdata2") f32 lbl_803E0BE8 = 81.0f;
+__declspec(section ".sdata2") f32 lbl_803E0BEC = 82.0f;
+__declspec(section ".sdata2") f32 lbl_803E0BF0 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0BF4 = 101.0f;
+__declspec(section ".sdata2") f32 lbl_803E0BF8 = 102.0f;
+__declspec(section ".sdata2") f32 lbl_803E0BFC = 103.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C00 = 104.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C04 = 105.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C08 = 106.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C0C = 107.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C10 = 111.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C14 = 112.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C18 = 125.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C1C = 126.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C20 = 133.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C24 = 134.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C28 = 157.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C2C = 158.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C30 = 999.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0C34 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0C38 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0C3C = 1.0f;
 
 s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 
