@@ -2930,20 +2930,21 @@ void gameTextLoadGraphicsFn_8001a918(void)
         if (lbl_803DC968)
         {
             int c = *(int*)glyph;
-            u16* p = gGameTextSjisGlyphTable;
+            u16* p[1];
             int i;
             u32 val;
             int hi;
             u8 lo;
+            p[0] = gGameTextSjisGlyphTable;
             i = 0xfe;
             while (i--)
             {
-                if (p[0] == c)
+                if (p[0][0] == c)
                 {
-                    val = p[1];
+                    val = p[0][1];
                     goto found;
                 }
-                p++;
+                p[0]++;
             }
             val = 0;
         found:
