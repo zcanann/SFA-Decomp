@@ -273,11 +273,18 @@ OSMessage PopReadedBuffer(void)
 
 void THPRead_Reader(void)
 {
-    char* base = gPicMenuReadThreadArea;
-    int i = 0;
+    int i;
+    AttractMoviePlayer* mp[1];
     AttractMovieReadBuffer* req;
-    u32 readOff = ((AttractMoviePlayer*)&lbl_803A5D60)->initOffset;
-    u32 readSize = ((AttractMoviePlayer*)&lbl_803A5D60)->initReadSize;
+    u32 readOff;
+    u32 readSize;
+    char* base;
+
+    base = gPicMenuReadThreadArea;
+    i = 0;
+    mp[0] = (AttractMoviePlayer*)&lbl_803A5D60;
+    readOff = mp[0]->initOffset;
+    readSize = mp[0]->initReadSize;
 
     while (1)
     {
@@ -287,12 +294,12 @@ void THPRead_Reader(void)
         OSReceiveMessage((OSMessageQueue*)(base + 0x13C8), &msgVal, OS_MESSAGE_BLOCK);
         req = (AttractMovieReadBuffer*)msgVal;
 
-        res = DVDReadPrio(&((AttractMoviePlayer*)&lbl_803A5D60)->fileInfo, req->ptr, readSize, readOff, 2);
+        res = DVDReadPrio(&mp[0]->fileInfo, req->ptr, readSize, readOff, 2);
         if (res != (s32)readSize)
         {
             if (res == -1)
             {
-                ((AttractMoviePlayer*)&lbl_803A5D60)->dvdError = -1;
+                mp[0]->dvdError = -1;
             }
             if (i == 0)
             {
@@ -308,14 +315,14 @@ void THPRead_Reader(void)
         readSize = *(u32*)req->ptr;
 
         {
-            u32 cols = ((AttractMoviePlayer*)&lbl_803A5D60)->header.mNumFrames;
-            u32 bOff = ((AttractMoviePlayer*)&lbl_803A5D60)->initReadFrame;
+            u32 cols = mp[0]->header.mNumFrames;
+            u32 bOff = mp[0]->initReadFrame;
             u32 pos = (i + bOff) % cols;
             if (pos == cols - 1)
             {
-                if (((AttractMoviePlayer*)&lbl_803A5D60)->playFlags & 1)
+                if (mp[0]->playFlags & 1)
                 {
-                    readOff = ((AttractMoviePlayer*)&lbl_803A5D60)->header.mMovieDataOffsets;
+                    readOff = mp[0]->header.mMovieDataOffsets;
                 }
                 else
                 {
