@@ -273,7 +273,7 @@ void DR_LaserCannon_free(GameObject* obj)
     if ((void*)state->firepipeObject != NULL)
     {
         firepipe_clearLinkedUpdateFlag(state->firepipeObject);
-        ObjLink_DetachChild((int)obj, state->firepipeObject);
+        ObjLink_DetachChild(obj, state->firepipeObject);
     }
     if (state->warningObject != NULL)
     {

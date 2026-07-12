@@ -3,7 +3,9 @@
 
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_link.h"
 #include "main/obj_path.h"
+#include "main/obj_trigger.h"
 #include "main/camera.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -113,7 +115,6 @@ extern GameUIInterface** gGameUIInterface;
 extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int DR_CageControl_SeqFn(GameObject* obj);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
-extern void ObjLink_DetachChild(int obj, int child);
 extern void* objCreateLight(int v1, int v2);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
@@ -278,7 +279,6 @@ extern f32 lbl_803E6B64;
 extern int gKytesMumQuestBits[];
 extern int gKytesMumTriggerIds[];
 extern int gKytesMumQuestIdleSfxTable[];
-extern int ObjTrigger_IsSet(int obj);
 extern int objGetAnimState80A(GameObject* obj);
 extern f32 gKytesMumFleeDistance;
 extern f32 lbl_803E698C;
@@ -374,7 +374,6 @@ extern f32 lbl_803E692C;
 extern f32 lbl_803DC2A8;
 extern s16 lbl_803DC2AC;
 extern f32 lbl_803DDD68;
-extern void ObjLink_AttachChild(int obj, int child, int v);
 extern void firepipe_setLinkedUpdateFlag(int handle);
 extern void objfx_spawnFrameTimedHitPulse(int obj, f32 a, int b, int c, f32 d);
 extern int gKTRexMsgTemplate[];
@@ -418,7 +417,6 @@ extern int gHighTopIdleSequenceIds[];
 extern f32 lbl_803E6AA4;
 extern s16 gHighTopProgressGameBitIds;
 extern void getYButtonItem(s16* out);
-extern int ObjTrigger_IsSetById(int obj, int id);
 extern void objModelClearVecFn_8003aa40(GameObject* obj);
 
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
