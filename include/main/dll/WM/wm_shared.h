@@ -249,7 +249,6 @@ extern f32 FLOAT_803e6d74;
 extern f32 FLOAT_803e6d78;
 extern f32 FLOAT_803e6d7c;
 extern f32 FLOAT_803e6d80;
-extern int getAngle(f32 dx, f32 dy);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void gameBitIncrement(int eventId);
 extern void fn_801F4D54(int obj, int state);

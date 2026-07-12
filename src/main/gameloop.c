@@ -635,7 +635,6 @@ char sMainFinishedInitMessage[15] = "finished init\n";
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
-extern void* gModgfxInterface;
 extern void* gPlayerShadowInterface;
 extern void* gScreensInterface;
 extern void* gTitleMenuLinkInterface;

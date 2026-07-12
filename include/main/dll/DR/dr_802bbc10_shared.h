@@ -173,7 +173,6 @@ extern f32 lbl_803E82FC;
 extern f32 lbl_803E8300;
 extern f32 lbl_803E8308;
 extern f32 lbl_803E830C;
-extern int getAngle(f32 deltaX, f32 deltaZ);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E83FC;
 int dim2prisonmammoth_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);

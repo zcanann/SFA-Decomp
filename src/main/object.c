@@ -148,7 +148,6 @@ extern s16* gObjSeqToObjIdTable;
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
 extern void* gTitleMenuControlInterface;
-extern void* gModgfxInterface;
 extern u8* gObjFileRefCount;
 extern u8* gObjFileBufferTable;
 extern u32 gObjUpdateFlags;
@@ -1946,7 +1945,7 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     if ((updateFlags & 2) == 0)
     {
-        ((ModgfxInterface*)*(void**)gModgfxInterface)->updateActiveEffects(0, 0, 0);
+        (*gModgfxInterface)->updateActiveEffects(0, 0, 0);
         (*gExpgfxInterface)->updateFrameState(0, framesThisStep, 0, 0);
     }
     if (timeStop == 0)

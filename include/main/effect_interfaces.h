@@ -319,5 +319,6 @@ STATIC_ASSERT(offsetof(WaterfxInterface, onMapSetup) == 0x1C);
 STATIC_ASSERT(offsetof(WaterfxInterface, setRippleScale) == 0x20);
 
 extern WaterfxInterface **gWaterfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 
 #endif /* MAIN_EFFECT_INTERFACES_H_ */
