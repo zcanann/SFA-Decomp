@@ -1079,8 +1079,11 @@ state_selected:
             f32 baseZ;
             ((GameObject*)obj)->anim.localPosX = (arc->landX - baseX) * (arc->time / arc->duration) + baseX;
             k = arc->time;
-            ((GameObject*)obj)->anim.localPosY =
-                gTrickyFollowArcCoefficient * k * k + (arc->riseCoeff * k + arc->baseY);
+            {
+                f32 ck;
+                ck = gTrickyFollowArcCoefficient * k;
+                ((GameObject*)obj)->anim.localPosY = ck * k + (arc->riseCoeff * k + arc->baseY);
+            }
             baseZ = arc->baseZ;
             ((GameObject*)obj)->anim.localPosZ = (arc->landZ - baseZ) * (arc->time / arc->duration) + baseZ;
             v = arc->duration;
@@ -1097,7 +1100,9 @@ state_selected:
                 }
                 else if (k >= v - lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->arcMoveProgress = ((lbl_803E24B4 - v) + k) / lbl_803E24B4;
+                    f32 adj;
+                    adj = lbl_803E24B4 - v;
+                    ((TrickyState*)state)->arcMoveProgress = (adj + k) / lbl_803E24B4;
                 }
                 else
                 {
