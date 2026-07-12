@@ -1282,6 +1282,8 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
 #pragma fp_contract reset
 #pragma opt_common_subs reset
 
+#pragma opt_dead_assignments on
+#pragma opt_loop_invariants off
 int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
 {
 
@@ -1359,6 +1361,8 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     state->animSpeedB = (v < -limit) ? -limit : (v > limit) ? limit : v;
     return 0;
 }
+#pragma opt_dead_assignments reset
+#pragma opt_loop_invariants reset
 
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 {
