@@ -236,22 +236,22 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         if (((GpbConfigFlags*)&((GunpowderBarrelState*)sub)->configFlags)->returnHome)
         {
             int** objs;
-            int* def[1];
             int* best;
-            int i;
+            int* def;
+            int i[1];
             int** p;
-            def[0] = *(int**)&(obj)->anim.placementData;
+            def = *(int**)&(obj)->anim.placementData;
             best = 0;
-            if (((GunpowderbarrelPlacement*)def[0])->generatorLinkId != 0)
+            if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
                 objs = (int**)ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
-                i = 0;
+                i[0] = 0;
                 p = objs;
-                for (; i < count; i++)
+                for (; i[0] < count; i[0]++)
                 {
-                    if (((GunpowderbarrelPlacement*)def[0])->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
+                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
                     {
-                        best = objs[i];
+                        best = objs[i[0]];
                         break;
                     }
                     p++;
