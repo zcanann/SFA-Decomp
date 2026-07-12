@@ -2,6 +2,10 @@
 #define MAIN_DLL_WM_WM_SHARED_H_
 
 #include "main/game_object.h"
+#include "main/obj_group.h"
+#include "main/obj_link.h"
+#include "main/obj_message.h"
+#include "main/obj_path.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
@@ -49,14 +53,6 @@ extern u32 FUN_80017ae8();
 extern int FUN_80017af8();
 extern int FUN_8002fc3c();
 extern u32 FUN_800305f8();
-extern int ObjGroup_FindNearestObject();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
-extern u32 ObjLink_DetachChild();
-extern u32 ObjPath_GetPointLocalPosition();
 extern int FUN_80039520();
 extern u32 FUN_8003b818();
 extern u32 FUN_800400b0();

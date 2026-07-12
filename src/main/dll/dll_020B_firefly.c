@@ -210,7 +210,7 @@ void FireFlyFn_801f4f88(GameObject* obj)
                     if (mainGetBit(FIREFLY_FIRST_TOUCH_BIT) == 0)
                     {
                         state->messageParam = -1;
-                        ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
+                        ObjMsg_SendToObject((void*)player, FIREFLY_MESSAGE_TALK, obj, (u32)&state->messageParam);
                         mainSetBits(FIREFLY_FIRST_TOUCH_BIT, 1);
                     }
                     else
@@ -245,7 +245,7 @@ void firefly_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     def = (FireFlyMapData*)((GameObject*)obj)->anim.placement;
-    while (ObjMsg_Pop(obj, msg, 0, 0) != 0)
+    while (ObjMsg_Pop((void*)obj, (u32*)msg, NULL, NULL) != 0)
     {
         switch (msg[0])
         {
