@@ -10,7 +10,7 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/dll/DR/dll_0253_ktlazerlight.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
@@ -27,11 +27,10 @@ int ktlazerlight_getObjectTypeId(void)
 
 void ktlazerlight_free(GameObject* obj)
 {
-    void* extra = obj->extra;
-    void* light = *(void**)((char*)extra + 0x4);
-    if (light != 0)
+    KtlazerlightState* state = obj->extra;
+    if (state->light != NULL)
     {
-        ModelLightStruct_free(light);
+        ModelLightStruct_free(state->light);
     }
 }
 
@@ -45,12 +44,12 @@ void ktlazerlight_hitDetect(void)
 
 void ktlazerlight_update(GameObject* obj)
 {
-    int placement = *(int*)&obj->anim.placementData;
-    char* extra = obj->extra;
+    KtlazerlightPlacement* placement = (KtlazerlightPlacement*)obj->anim.placementData;
+    KtlazerlightState* state = obj->extra;
     s16 intensity;
-    void* light = *(void**)(extra + 0x4);
-    intensity = mainGetBit(((KtlazerlightPlacement*)placement)->onIntensityBit);
-    if (intensity >= 1 || mainGetBit(((KtlazerlightPlacement*)placement)->onStayLitBit) != 0)
+    ModelLightStruct* light = state->light;
+    intensity = mainGetBit(placement->onIntensityBit);
+    if (intensity >= 1 || mainGetBit(placement->onStayLitBit) != 0)
     {
         if (intensity == 0)
         {
@@ -60,7 +59,7 @@ void ktlazerlight_update(GameObject* obj)
         {
             modelLightStruct_setEnabled(light, 1, lbl_803E68C0);
             modelLightStruct_setDiffuseColor(light, 0x64, 0x6e, 0xff, 0xff);
-            modelLightStruct_setDistanceAttenuation(*(void**)(extra + 0x4), (f32)(intensity * 0x1a),
+            modelLightStruct_setDistanceAttenuation(state->light, (f32)(intensity * 0x1a),
                                                     (f32)(intensity * 0x1a + 0x14));
         }
     }
@@ -73,17 +72,15 @@ void ktlazerlight_update(GameObject* obj)
     }
 }
 
-void ktlazerlight_init(GameObject* obj, char* placement)
+void ktlazerlight_init(GameObject* obj, KtlazerlightPlacement* placement)
 {
-    char* extra = obj->extra;
-    *(void**)(extra + 0x4) = objCreateLight(0, 1);
-    if (*(void**)(extra + 0x4) != 0)
+    KtlazerlightState* state = obj->extra;
+    state->light = objCreateLight(NULL, 1);
+    if (state->light != NULL)
     {
-        modelLightStruct_setLightKind(*(void**)(extra + 0x4), MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setPosition(*(void**)(extra + 0x4), ((KtlazerlightPlacement*)placement)->posX,
-                                     ((KtlazerlightPlacement*)placement)->posY,
-                                     ((KtlazerlightPlacement*)placement)->posZ);
-        modelLightStruct_setAffectsAabbLightSelection(*(void**)(extra + 0x4), 1);
+        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
+        modelLightStruct_setPosition(state->light, placement->posX, placement->posY, placement->posZ);
+        modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
     }
 }
 

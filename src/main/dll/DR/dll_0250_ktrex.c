@@ -1,4 +1,5 @@
 #include "main/dll/objfsa_romcurve.h"
+#include "main/model_light.h"
 #include "main/audio.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/DR/dr_shared.h"
@@ -112,7 +113,7 @@ typedef struct KTRexArenaState
     f32 vecX;
     f32 vecY;
     f32 vecZ;
-    void* light;                            /* 0x178 */
+    ModelLightStruct* light;                /* 0x178 */
     void* lightning[KTREX_LIGHTNING_COUNT]; /* 0x17c: active lightning-strike effect objects */
 } KTRexArenaState;
 

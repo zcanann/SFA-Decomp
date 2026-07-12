@@ -2,7 +2,15 @@
 #define MAIN_DLL_DR_DLL_0253_KTLAZERLIGHT_H_
 
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "global.h"
+
+typedef struct KtlazerlightState
+{
+    u8 pad00[4];
+    ModelLightStruct* light; /* 0x04 */
+    u8 pad08[0x14 - 0x08];
+} KtlazerlightState;
 
 typedef struct KtlazerlightPlacement
 {
@@ -20,6 +28,8 @@ STATIC_ASSERT(offsetof(KtlazerlightPlacement, posX) == 0x8);
 STATIC_ASSERT(offsetof(KtlazerlightPlacement, onIntensityBit) == 0x1A);
 STATIC_ASSERT(offsetof(KtlazerlightPlacement, onStayLitBit) == 0x1C);
 STATIC_ASSERT(sizeof(KtlazerlightPlacement) == 0x20);
+STATIC_ASSERT(offsetof(KtlazerlightState, light) == 0x04);
+STATIC_ASSERT(sizeof(KtlazerlightState) == 0x14);
 
 int ktlazerlight_getExtraSize(void);
 int ktlazerlight_getObjectTypeId(void);
@@ -27,7 +37,7 @@ void ktlazerlight_free(GameObject* obj);
 void ktlazerlight_render(void);
 void ktlazerlight_hitDetect(void);
 void ktlazerlight_update(GameObject* obj);
-void ktlazerlight_init(GameObject* obj, char* placement);
+void ktlazerlight_init(GameObject* obj, KtlazerlightPlacement* placement);
 void ktlazerlight_release(void);
 void ktlazerlight_initialise(void);
 

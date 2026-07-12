@@ -15,7 +15,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
 
@@ -43,7 +43,7 @@
  */
 typedef struct DrakorMissileState
 {
-    void* light;                                          /* 0x00 */
+    ModelLightStruct* light;                              /* 0x00 */
     u8 state;                                             /* 0x04 */
     u8 flags;                                             /* 0x05 */
     u8 pad06[2];                                          /* 0x06 */
@@ -96,13 +96,13 @@ void drakormissile_release(void)
 #pragma opt_common_subs off
 void drakormissile_startActiveLaunch(GameObject* obj)
 {
-    void* light;
+    ModelLightStruct* light;
     DrakorMissileState* state = (obj)->extra;
 
     ObjHits_EnableObject((int)obj);
     state->state = DRAKORMISSILE_STATE_HOMING;
     (obj)->anim.rotZ = 0;
-    light = objCreateLight((int)obj, 1);
+    light = objCreateLight(obj, 1);
     if (light != NULL)
     {
         modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
@@ -131,7 +131,7 @@ void drakormissile_startActiveLaunch(GameObject* obj)
 #pragma opt_common_subs off
 void drakormissile_startStraightLaunch(GameObject* obj, int from, int target, f32 speed)
 {
-    void* light;
+    ModelLightStruct* light;
     f32 dir[3];
     f32 hitDir[3];
     f32 endPos[3];
@@ -189,7 +189,7 @@ void drakormissile_startStraightLaunch(GameObject* obj, int from, int target, f3
         ModelLightStruct_free(state->light);
         state->light = NULL;
     }
-    light = objCreateLight((int)obj, 1);
+    light = objCreateLight(obj, 1);
     if (light != NULL)
     {
         modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
@@ -377,7 +377,7 @@ void drakormissile_modelMtxFn(GameObject* obj)
 void drakormissile_free(GameObject* obj)
 {
     DrakorMissileState* state = (obj)->extra;
-    void* light = state->light;
+    ModelLightStruct* light = state->light;
     if (light != NULL)
     {
         ModelLightStruct_free(light);
