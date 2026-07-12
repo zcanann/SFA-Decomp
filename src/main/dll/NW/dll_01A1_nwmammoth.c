@@ -5,6 +5,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/objlib.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_01A1_nwmammoth.h"
 #include "main/screen_transition.h"
@@ -32,8 +33,6 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
-extern u32 ObjGroup_FindNearestObject();
-extern int ObjTrigger_IsSet();
 extern u32 objAudioFn_8006ef38();
 
 extern f32 lbl_803E520C;
@@ -69,8 +68,6 @@ extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern f32 getXZDistance(void* a, void* b);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
-extern u32 ObjGroup_AddObject();
-extern int ObjTrigger_IsSetById(int obj, int triggerId);
 extern void fn_8003A168(GameObject* obj, void* p);
 extern void characterDoEyeAnims(GameObject* obj, void* p);
 extern void fn_801CDF94(GameObject* obj, void* state, int flag);
@@ -392,7 +389,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
     GameObject* tw;
-    int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
+    int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, (int)obj, 0);
     switch (state->stateIndex)
     {
     case 9:
@@ -420,7 +417,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
-        if (ObjTrigger_IsSet(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, -1);
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
@@ -884,7 +881,7 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
                     &pathParam);
         (*gPathControlInterface)->attachObject(obj, path);
     }
-    ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
+    ObjGroup_AddObject((int)obj, NW_MAMMOTH_GROUP_ID);
 }
 
 u8 gNwMammothPathSetupDataB[] = {

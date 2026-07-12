@@ -16,6 +16,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/mapEvent.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
@@ -50,7 +51,6 @@ extern f32 gQueenEarthWalkerTrickyFeedDistance;
 extern f32 gQueenEarthWalkerAttackTimerMin;
 extern f32 gQueenEarthWalkerAttackTimerMax;
 
-extern int ObjTrigger_IsSetById();
 extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
 extern int fn_8003B228(GameObject* obj, void* p2);
@@ -58,8 +58,6 @@ extern int characterDoEyeAnims(GameObject* obj, void* p2);
 extern int getYButtonItem(s16* outTrigger);
 extern void* getTrickyObject(void);
 extern int playerHasSpell(GameObject* obj, int param);
-extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
-extern int ObjTrigger_IsSet(void* obj);
 
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
 f32 gQueenEarthWalkerMoveSpeedTable[5] = {0.005f, 0.005f, 0.005f, 0.01f, 0.005f};
@@ -165,7 +163,7 @@ void sh_queenearthwalker_update(GameObject* obj)
         switch (action)
         {
         case 1:
-            target = ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, obj, NULL);
+            target = (void*)ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, (int)obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x1324);
             (*gObjectTriggerInterface)->runSequence(1, target, 0x10);
             ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
@@ -198,7 +196,7 @@ void sh_queenearthwalker_update(GameObject* obj)
             ((QueenEarthWalkerState*)state)->stateIndex = 3;
             break;
         case 8:
-            target = ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, obj, NULL);
+            target = (void*)ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, (int)obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x6a4);
             (*gObjectTriggerInterface)->runSequence(7, target, 8);
             ((QueenEarthWalkerState*)state)->stateIndex = 4;
@@ -233,7 +231,7 @@ void sh_queenearthwalker_update(GameObject* obj)
     if ((stateFlags & QEW_FLAG_ACTIVE) == 0)
     {
         ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_TARGETING;
-        if (ObjTrigger_IsSet(obj) != 0 && *(u8*)(*(int*)((u8*)obj + 0x78) + 0x4) != 4)
+        if (ObjTrigger_IsSet((int)obj) != 0 && *(u8*)(*(int*)((u8*)obj + 0x78) + 0x4) != 4)
         {
             eventIndex = randomGetRange(1, *((QueenEarthWalkerState*)state)->eventTable);
             ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
@@ -285,7 +283,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
             }
         }
         Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
-        if (ObjTrigger_IsSetById(obj, 0x66d) != 0)
+        if (ObjTrigger_IsSetById((int)obj, 0x66d) != 0)
         {
             ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_ACTIVE;
             total = mainGetBit(GAMEBIT_ITEM_WhiteShroom_Count);
