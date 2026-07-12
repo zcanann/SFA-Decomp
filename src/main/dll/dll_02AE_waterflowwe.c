@@ -18,67 +18,14 @@
  * animation move via ObjAnim_SetCurrentMove.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02AE_waterflowwe.h"
 #include "main/game_object.h"
-
-typedef struct WaterFlowWeState
-{
-    f32 currentX;
-    f32 currentZ;
-} WaterFlowWeState;
-
-typedef struct WaterFlowWeSetup
-{
-    ObjPlacement base;
-    u8 rotZ;
-    u8 rotY;
-    u8 rotX;
-    u8 scale;
-    u8 pad1C[3];
-    u8 phaseDriverDisabled;
-} WaterFlowWeSetup;
-
-typedef struct FoliageCurrentSetup
-{
-    ObjPlacement base;
-    u8 pad18;
-    u8 currentRadius;
-    u8 currentFlags;
-} FoliageCurrentSetup;
-
-typedef struct ObjectCurrentSourceSetup
-{
-    ObjPlacement base;
-    u8 pad18[0x29 - 0x18];
-    u8 radiusCells;
-    u8 pad2A[0x32 - 0x2A];
-    u8 strengthTenths;
-} ObjectCurrentSourceSetup;
-
-STATIC_ASSERT(sizeof(WaterFlowWeState) == 0x8);
-STATIC_ASSERT(offsetof(WaterFlowWeSetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(WaterFlowWeSetup, scale) == 0x1b);
-STATIC_ASSERT(offsetof(WaterFlowWeSetup, phaseDriverDisabled) == 0x1f);
-STATIC_ASSERT(sizeof(WaterFlowWeSetup) == 0x20);
-STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentRadius) == 0x19);
-STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
-STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
-STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 
 #define WATERFLOWWE_FOLIAGE_GROUP               0x14
 #define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
 #define WATERFLOWWE_OBJECT_FLAGS_INIT           0x2000
 #define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
 #define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
-
-extern const f32 gWaterFlowBandMax;
-extern const f32 gWaterFlowBandMin;
-extern const f32 gWaterFlowRadiusPerCell;
-extern const f32 gWaterFlowStrengthScale;
-extern const f32 gWaterFlowPi;
-extern const f32 gWaterFlowAngleFullScale;
-extern const f32 gWaterFlowFilterCoeff;
-extern const f32 gWaterFlowDecayCoeff;
-extern const f32 gWaterFlowMaxMagnitude;
 
 void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 {
@@ -197,10 +144,10 @@ int waterflowwe_getObjectTypeId(void)
     return 0;
 }
 
-void waterflowwe_init(GameObject* obj, u8* setup)
+void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup)
 {
     GameObject* object = obj;
-    WaterFlowWeSetup* setupData = (WaterFlowWeSetup*)setup;
+    WaterFlowWeSetup* setupData = setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
@@ -218,9 +165,9 @@ void waterflowwe_init(GameObject* obj, u8* setup)
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72B0, 0);
 }
 
-void waterflowwe_free(int obj)
+void waterflowwe_free(GameObject* obj)
 {
-    if ((u32)obj == gWaterFlowPhaseDriver)
+    if (obj == gWaterFlowPhaseDriver)
     {
         gWaterFlowPhaseDriver = 0;
     }
@@ -246,11 +193,11 @@ void waterflowwe_update(GameObject* obj)
 
     waterflowwe_calcCurrentVector(obj, &vx, &vz);
     object->anim.rotX = (s16)(getAngle(vx, vz) + 0x4000);
-    if ((u32)gWaterFlowPhaseDriver == 0 && setup->phaseDriverDisabled == 0)
+    if (gWaterFlowPhaseDriver == NULL && setup->phaseDriverDisabled == 0)
     {
-        gWaterFlowPhaseDriver = (int)obj;
+        gWaterFlowPhaseDriver = obj;
     }
-    if ((u32)obj == gWaterFlowPhaseDriver)
+    if (obj == gWaterFlowPhaseDriver)
     {
         f32 phase;
 

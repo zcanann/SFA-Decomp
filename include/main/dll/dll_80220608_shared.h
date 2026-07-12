@@ -143,9 +143,6 @@ extern f32 lbl_803E6E94;
 extern f32 lbl_803E6E98;
 extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
-extern int gWaterFlowPhaseDriver;
-extern f32 gWaterFlowIdlePhase;
-extern f32 gWaterFlowFlowPhase;
 extern f32 lbl_803E72B0;
 
 extern int fn_80065640(void);
@@ -170,11 +167,7 @@ extern f32 lbl_803E6E40;
 extern int fn_802969F0(int player);
 extern f32 lbl_803E6E38;
 
-extern f32 gWaterFlowScaleDivisor;
-extern void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 gWaterFlowIdlePhaseRate;
-extern f32 gWaterFlowFlowPhaseRate;
 
 int suntemple_interactCallback(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 
@@ -869,15 +862,6 @@ void wcapertures_initialise(void);
 int wcapertures_interactCallback(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 void wcapertures_init(GameObject* obj, int initData);
 void wcapertures_update(GameObject* obj);
-int waterflowwe_getExtraSize(void);
-int waterflowwe_getObjectTypeId(void);
-void waterflowwe_init(GameObject* obj, u8* setup);
-void waterflowwe_free(int obj);
-void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void waterflowwe_hitDetect(void);
-void waterflowwe_update(GameObject* obj);
-void waterflowwe_release(void);
-void waterflowwe_initialise(void);
 int suntemple_getExtraSize(void);
 int suntemple_getObjectTypeId(void);
 void suntemple_free(void);
