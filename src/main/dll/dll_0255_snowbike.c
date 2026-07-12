@@ -11,6 +11,7 @@
 #include "main/dll/DR/DRpickup.h"
 #include "main/mm.h"
 #include "main/pad.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SNOWBIKE_OBJGROUP           0xa
@@ -181,7 +182,6 @@ extern float powfBitEstimate(float x, float y);
 extern void setAButtonIcon(int x);
 extern void setBButtonIcon(int icon);
 extern int getAngle(float y, float x);
-extern f32 timeDelta;
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
 extern f32 gSnowBikeBamToDeg;

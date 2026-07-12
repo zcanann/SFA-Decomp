@@ -19,11 +19,11 @@
 #include "main/dll/grimble_state.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-extern f32 timeDelta;
 extern void** gBaddieControlInterface;
 extern void** gPlayerInterface;
 extern f32 lbl_803E2EB8;

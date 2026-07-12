@@ -32,6 +32,7 @@
 #include "main/gamebits.h"
 #include "main/dll/tricky.h"
 #include "main/lightmap.h"
+#include "main/frame_timing.h"
 #include "main/model.h"
 #include "main/model_engine.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -125,7 +126,6 @@ extern f32 lbl_803E257C;
 extern f32 lbl_803E25CC;
 extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
-extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E2598;
 

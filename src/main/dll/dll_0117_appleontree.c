@@ -12,6 +12,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/dll/dll_00FC_babycloudrunner.h"
 #include "main/sfa_extern_decls.h"
@@ -52,7 +53,6 @@ typedef struct AppleontreeObjectDef
 extern f32 lbl_803E37C8;
 extern f32 gAppleOnTreePickupXZRange;
 extern f32 gAppleOnTreePickupRange;
-extern f32 timeDelta;
 extern f32 lbl_803E37D4;
 extern f32 lbl_803E37D8;
 extern f32 lbl_803E37DC;

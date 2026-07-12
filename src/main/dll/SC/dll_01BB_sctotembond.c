@@ -30,6 +30,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/frame_timing.h"
 
 /*
  * Placement record written for each spawned villager/"orb" object
@@ -72,7 +73,6 @@ STATIC_ASSERT(sizeof(TotemBondOrbPlacement) == 0x38);
 #define SC_TOTEMBOND_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMBOND_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 timeDelta;
 extern u16 gTotemBondRingGameBits[];
 extern u16 gTotemBondOrbGameBits[];
 extern f32 gTotemBondOrbSpawnRadius;

@@ -12,6 +12,7 @@
 #include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
 #include "main/gameloop_api.h"
+#include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -42,7 +43,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E3AA0;
 extern f32 lbl_803E3AA4;

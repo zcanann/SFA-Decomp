@@ -24,6 +24,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_025B_msplantings.h"
+#include "main/frame_timing.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -47,7 +48,6 @@
 #define MSPLANTING_HIT_CUT 0x1A
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
 extern f32 getXZDistance(f32* a, f32* b);
