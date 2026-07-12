@@ -489,3 +489,10 @@ void voiceConfigureParamRamp(McmdVoiceState* svoice, McmdCommandArgs* cstep, u8 
 
     MAC_CFLAGS(svoice) |= MAC_FLAG64(0x2000, 0);
 }
+
+__declspec(section ".sdata2") f32 lbl_803E77F0 = 4096.0f;
+__declspec(section ".sdata2") f32 lbl_803E77F4 = 1.1920928955078125e-7f;
+__declspec(section ".sdata2") f32 lbl_803E77F8 = 0.0078125f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E77FC = 0.0f;
+#pragma explicit_zero_data reset
