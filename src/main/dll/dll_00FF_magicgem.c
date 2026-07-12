@@ -5,6 +5,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
@@ -54,7 +55,6 @@ extern const f32 gMagicGemBounceRestitutionY;
 extern const f32 gMagicGemBounceRestitutionXZ;
 extern const f32 gMagicGemPickupYRange;
 extern const f32 gMagicGemPickupRadiusBase;
-extern void Obj_FreeObject(int obj);
 extern void objMove(int obj, f32 a, f32 b, f32 c);
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
@@ -220,7 +220,7 @@ void MagicDust_update(GameObject* obj)
             {
                 if (state->burstTimer <= lbl_803E34C4)
                 {
-                    Obj_FreeObject((int)obj);
+                    Obj_FreeObject(obj);
                 }
                 goto LAB_80173f80;
             }

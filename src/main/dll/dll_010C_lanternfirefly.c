@@ -8,6 +8,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/curve.h"
 #include "main/dll/CF/windlift.h"
@@ -64,7 +65,6 @@ extern f32 lbl_803E3AE0;
 extern f32 lbl_803DBDD8;
 
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void Obj_FreeObject(int obj);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern void ModelLightStruct_free(void* p);
@@ -306,7 +306,7 @@ void LanternFireFly_update(GameObject* obj)
         if ((state->timer -= framesThisStep) < 0)
         {
             gameBitDecrement(0x698);
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return;
         }
         else

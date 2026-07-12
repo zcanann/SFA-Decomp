@@ -10,6 +10,7 @@
  * Tricky is gone or its free flag (state.freeRequested) is set.
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/vecrotatezxy.h"
@@ -41,7 +42,6 @@ typedef struct FlameblastPlacement
 
 #define FLAMEBLAST_OBJFLAG_RENDERED 0x800
 
-extern void Obj_FreeObject(int obj);
 extern void fn_80098B18(int obj, f32 f, int a, int b, int c, int d);
 extern int fn_80138F90(void);
 
@@ -61,7 +61,7 @@ int fn_8017805C(GameObject* obj, FlameblastState* state)
 
     if (state->freeRequested != 0 || tricky == NULL)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject(obj);
         return 0;
     }
     obj->anim.velocityX = 0.0f;

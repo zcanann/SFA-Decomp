@@ -15,6 +15,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/landedArwing.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/objlib.h"
@@ -55,7 +56,6 @@ extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
 
-extern void Obj_FreeObject(int obj);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void fn_80165B3C(GameObject* obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int state);
@@ -150,7 +150,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     if (lbl_803E2FF4 == ((GameObject*)obj)->anim.currentMoveProgress)
     {
         ObjMsg_SendToObjects(0, 3, (void*)obj, 0xe0000, obj);
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
         return 0;
     }
     else
