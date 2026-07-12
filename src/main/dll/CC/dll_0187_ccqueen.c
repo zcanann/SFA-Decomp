@@ -24,8 +24,8 @@ extern void dll_2E_func08(u8* sub, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(GameObject* obj, void* p);
 
-static const Vec3s ccqueenEyeSetupA = {{0x1e, 0, 0}};
-static const Vec3s ccqueenEyeSetupB = {{0x19, 0x19, 0x19}};
+static const Vec3s ccqueenEyeSetupA = {0x1e, 0, 0};
+static const Vec3s ccqueenEyeSetupB = {0x19, 0x19, 0x19};
 
 int ccqueen_getExtraSize(void)
 {

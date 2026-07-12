@@ -2,6 +2,7 @@
 #define MAIN_OBJANIM_INTERNAL_H_
 
 #include "global.h"
+#include "main/vec_types.h"
 #include "ghidra_import.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
@@ -321,9 +322,14 @@ typedef struct ObjModelState {
 } ObjModelState;
 
 typedef struct ObjAnimComponent {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
+  union {
+    struct {
+      s16 rotX;
+      s16 rotY;
+      s16 rotZ;
+    };
+    Vec3s rotation;
+  };
   s16 flags;
   f32 rootMotionScale;
   f32 localPosX;
@@ -332,9 +338,14 @@ typedef struct ObjAnimComponent {
   f32 worldPosX;
   f32 worldPosY;
   f32 worldPosZ;
-  f32 velocityX;
-  f32 velocityY;
-  f32 velocityZ;
+  union {
+    struct {
+      f32 velocityX;
+      f32 velocityY;
+      f32 velocityZ;
+    };
+    Vec3f velocity;
+  };
   void *parent;
   u8 pad34;
   s8 transformMatrixIndex;

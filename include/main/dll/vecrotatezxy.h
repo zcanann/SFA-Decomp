@@ -2,6 +2,7 @@
 #define MAIN_DLL_VECROTATEZXY_H_
 
 #include "types.h"
+#include "main/vec_types.h"
 
 /*
  * vecRotateZXY interface. The input block is a ZXY-Euler rotation (dir -
@@ -13,7 +14,10 @@
  */
 typedef struct VecRotateZXYArg
 {
-    s16 dir[3];
+    union {
+        Vec3s rotation;
+        s16 dir[3];
+    };
     s16 pad;
     f32 pos[4];
 } VecRotateZXYArg;

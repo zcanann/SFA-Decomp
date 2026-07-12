@@ -82,13 +82,6 @@ extern LargeCrateVariantRemap gLargeCrateVariantBRemap;
 
 typedef struct
 {
-    f32 x;
-    f32 y;
-    f32 z;
-} Vec3f;
-
-typedef struct
-{
     s16 rotZ;
     s16 rotX;
     s16 rotY;
