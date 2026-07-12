@@ -89,10 +89,6 @@ extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
 extern int getHudHiddenFrameCount(void);
-extern void padGetAnalogInput(int pad, s8* x, s8* y);
-extern void padClearAnalogInputY(int port);
-extern void padClearAnalogInputX(int port);
-extern void buttonDisable(int port, u32 mask);
 #define PAD_BUTTON_A     0x100
 #define PAD_BUTTON_B     0x200
 #define PAD_BUTTON_START 0x1000
@@ -101,7 +97,6 @@ extern void buttonDisable(int port, u32 mask);
 extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
 extern void fn_8001BE2C(int mode); /* mode 3: (re)load the three subtitle textures */
 extern void* memcpy(void* dst, const void* src, int size);
-extern void padFn_80014b18(int value);
 
 typedef struct LinkMenuItemDB
 {
@@ -554,7 +549,7 @@ u32 Link_update(void)
         return -1;
     }
 
-    padGetAnalogInput(0, &horizontalInput, &verticalInput);
+    padGetAnalogInputS8(0, &horizontalInput, &verticalInput);
     if (linkIsRotated != 0)
     {
         s8 oldHorizontal = horizontalInput;

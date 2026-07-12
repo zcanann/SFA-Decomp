@@ -102,7 +102,6 @@ void dll_1FF_hitDetect_nop(void)
 void dll_1FF_update(int obj)
 {
 
-    extern void buttonDisable(int port, u32 mask);
     extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
     extern const f32 lbl_803E5D84;
     extern const f32 lbl_803E5D88;

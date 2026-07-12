@@ -40,7 +40,6 @@
 /* count of shared title-menu-item textures (and their asset-id table) */
 #define TITLE_MENU_ITEM_TEXTURE_COUNT 6
 
-extern u8 padGetStickX(int port);
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;

@@ -35,7 +35,6 @@ extern s8 lbl_803DD8E8;  /* armed flag (ignore input for one frame after build) 
 extern f32 lbl_803DD8EC; /* scroll timer */
 extern f32 lbl_803E21D8; /* scroll timer wrap period */
 
-extern void padGetAnalogInput(int pad, s8* y, s8* x);
 
 s32 Menu_func0B(void)
 {
@@ -69,7 +68,7 @@ int Menu_func08(int* sel)
     {
         lbl_803DD8EC = timer - lbl_803E21D8;
     }
-    padGetAnalogInput(0, &yInput, &xInput);
+    padGetAnalogInputS8(0, &yInput, &xInput);
     if (xInput < 0)
     {
         *sel = *sel + 1;

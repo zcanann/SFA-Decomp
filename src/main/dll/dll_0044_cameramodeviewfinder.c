@@ -50,9 +50,6 @@
 #define VIEWFINDER_MODE_FADE_BACK   4
 #define VIEWFINDER_MODE_IDLE        5
 
-extern u8 padGetCY(int port);
-extern s8 padGetStickX(int port);
-extern s8 padGetStickY(int port);
 extern u32 getAngle();
 extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
@@ -61,7 +58,6 @@ extern f32 interpolate(f32 a, f32 t, f32 exp);
 
 extern void viewFinderSetZoom(f32 fov);
 
-extern void buttonDisable(int port, u32 mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern void logPrintf(char* fmt, ...);
 extern char sCam5BYDebugFormat;
@@ -109,8 +105,8 @@ void firstPersonDoControls(s16* obj)
     f32 zoom2;
 
     camObj = (short*)((GameObject*)obj)->anim.targetObj;
-    stickX = padGetStickX(0);
-    stickY = padGetStickY(0);
+    stickX = padGetStickXS8(0);
+    stickY = padGetStickYS8(0);
     t = (lbl_803E17E0 - ((CameraObject*)obj)->fov) / lbl_803E17E4;
     zoom = (t < lbl_803E17C4) ? lbl_803E17C4 : ((t > lbl_803E17E8) ? lbl_803E17E8 : t);
     spin = stickX * -(lbl_803E17F0 * zoom - lbl_803E17EC);

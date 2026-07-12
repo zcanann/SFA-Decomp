@@ -50,7 +50,6 @@ extern u32 getButtonsJustPressed(int port);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern int playerHasKrazoaSpirit();
-extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
 extern void loadUiDll(int index);
 extern void ObjLink_DetachChild(int obj, int child);
 extern void Obj_FreeObject(int obj);
@@ -157,7 +156,7 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
     s8 vertical;
 
     Obj_GetPlayerObject();
-    padGetAnalogInput(0, &horizontal, &vertical);
+    padGetAnalogInputS8(0, &horizontal, &vertical);
 
     switch (option)
     {

@@ -56,8 +56,6 @@ typedef struct CarryableUpdateHeldState
 } CarryableUpdateHeldState;
 
 extern void playerSetHeldObject(void* player, int held);
-extern u32 buttonGetDisabled(int port);
-extern void buttonDisable(int port, u32 mask);
 extern int isTrickyNear(void* player);
 
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);

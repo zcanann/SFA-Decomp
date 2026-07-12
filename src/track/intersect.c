@@ -6373,7 +6373,6 @@ void showMemCardError(u8 err)
     extern u8 gSaveCardRetry;
     extern int lbl_803DB708;
     extern void checkReset(void);
-    extern void padUpdate(void);
     extern void mmFreeTick(int arg);
     extern void waitNextFrame(void);
     extern int getReflectionTexture1(void);
@@ -6383,8 +6382,6 @@ void showMemCardError(u8 err)
     extern void gameTextShowStr(int str, int x, int y, int yPos);
     extern void gameTextRun(void);
     extern int GXFlush_(u8 visible, int unused);
-    extern char padGetStickY(int port);
-    extern char padGetCY(int port);
 
     extern void setGameState(int state);
     extern f32 fn_80293AC4(int v);
@@ -6458,7 +6455,7 @@ void showMemCardError(u8 err)
         }
         gameTextRun();
         GXFlush_(1, 0);
-        if (padGetStickY(0) < 0 || padGetCY(0) < 0)
+        if (padGetStickYS8(0) < 0 || padGetCYS8(0) < 0)
         {
             if (held == 0)
             {
@@ -6466,7 +6463,7 @@ void showMemCardError(u8 err)
                 held = 1;
             }
         }
-        else if (padGetStickY(0) > 0 || padGetCY(0) > 0)
+        else if (padGetStickYS8(0) > 0 || padGetCYS8(0) > 0)
         {
             if (held == 0)
             {
@@ -6759,7 +6756,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
 void cardShowLoadingMsg(u8 kind)
 {
     extern void gameTextSetWindow(int);
-    extern void padUpdate(void);
     extern void mmFreeTick(int arg);
     extern void waitNextFrame(void);
     extern int getButtonObjects(int**);

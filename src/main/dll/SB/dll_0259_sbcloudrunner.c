@@ -164,8 +164,6 @@ extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
-extern u8 padGetStickX(int port);
-extern u8 padGetStickY(int port);
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 

@@ -610,16 +610,13 @@ extern void initLoadingScreenTextures(void);
 
 extern void Camera_InitState(void);
 
-extern void initControllers(void);
 extern int mmSetFreeDelay(int v);
-extern void padUpdate(void);
 extern u8 audioInit(void);
 
 extern u8 initLoadFiles(void);
 
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
-extern u32 getButtonsHeld(int port);
 extern void viFn_8004a56c(int arg);
 
 extern void mapInitFn_8006fccc(void);
@@ -1087,7 +1084,6 @@ extern void gameTextShowStr(int str, int a, int b, int c);
 extern int saveGameGetStatus(void);
 extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int a, int b, int c);
-extern void buttonDisable(int port, u32 mask);
 extern void cardSetStatusNeedInit(void);
 extern void cardDeleteFn_8007d99c(void);
 extern int lbl_803DCACC;
@@ -1174,7 +1170,6 @@ void cardShowMessage(void)
     }
 }
 
-extern void stopRumble2(void);
 
 void cutsceneEnterExit(int entering, int affectSounds)
 {
@@ -1234,8 +1229,6 @@ void removeButtonObject(u32 h)
 #pragma peephole reset
 
 extern void* gameTextGetBox(int box);
-extern u8 padGetStickX(int port);
-extern u8 padGetCX(int port);
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern int lbl_803DB428;
 extern int lbl_803DB42C;
@@ -1362,7 +1355,6 @@ void askProgressiveScanMode(void)
 }
 #pragma optimization_level reset
 
-extern u32 getNewInputs(int pad);
 extern void AISetStreamVolLeft(int vol);
 extern void AISetStreamVolRight(int vol);
 extern void audioStopAll(void);

@@ -75,7 +75,6 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 
 
-extern void stopRumble(void);
 
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,

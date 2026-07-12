@@ -55,7 +55,6 @@ extern f32 sqrtf(f32 x);
 extern f32 timeDelta;
 extern void* getTrickyObject(void);
 extern void Obj_FreeObject(u8* obj);
-extern u32 buttonGetDisabled(int port);
 extern void OSReport(const char* msg, ...);
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8002A5DC(int obj);

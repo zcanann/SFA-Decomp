@@ -12,6 +12,7 @@
 #include "main/frame_timing.h"
 #include "main/gametext.h"
 #include "main/newclouds.h"
+#include "main/pad.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/voxmaps.h"
@@ -101,7 +102,6 @@ extern u8 gDvdErrorPauseActive;
 extern u8 gDvdCoverOpenErrorActive;
 extern int gDvdLastDriveStatus;
 extern u8 lbl_80339950[];
-extern void stopRumble2(void);
 extern int DVDGetDriveStatus(void);
 extern int DVDCheckDisk(void);
 extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
@@ -175,32 +175,10 @@ extern int curUiDll;
 extern int gModelEnginePrevUiDll;
 extern f32 gModelEngineTimerDuration;
 extern f32 gModelEngineTimerValue;
-extern f32 gRumbleTimer;
-extern u8 joypadDisabled;
-extern u8 rumbleEnabled;
-extern u32 gPadResetMask;
-extern u8 gPadStickRepeatDelay;
 extern s32 gModelEngineHudNumber;
 extern s32 lbl_803DB28C;
 extern char lbl_803DB290;
 extern char gModelEngineTextBuf[];
-extern u32 gPadButtonMask[];
-extern u8 gPadAnalogY;
-extern u8 gPadAnalogX;
-extern u8 gPadRepeatY;
-extern u8 gPadRepeatX;
-extern u8 gPadPrevStickY;
-extern u8 gPadPrevStickX;
-extern u16 gPadPrevTriggers;
-extern u16 gPadTriggers;
-extern u16 gPadTriggersReleased;
-extern u16 gPadTriggersPressed;
-extern u8 gPadStatusToggle;
-extern u32 gPadStateBlock[];
-extern u32 gPadButtonsHeld[];
-extern u32 lbl_803398D0[];
-extern u32 gPadButtonsJustPressed[];
-extern u8 gPadStatuses[];
 extern s32 gModelEngineUiDllResourceIds[];
 extern void* gFileInfo;
 extern volatile int gDvdReadCallbackResult;
@@ -241,7 +219,6 @@ extern int DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, voi
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void mmFreeTick(int arg);
-extern void padUpdate(void);
 extern void dvdCheckError(void);
 extern f32 lbl_803DE5D4;
 extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
@@ -355,32 +332,9 @@ int uiDll_runFrameStartAndLoadNext(void);
 void set_uiDllIdx_803dc8f0(int idx);
 void* getDLL16(void);
 void initGameTimer(void);
-void setJoypadDisabled(void);
-void padFn_80014b18(int value);
-u32 buttonGetDisabled(int port);
-void buttonDisable(int port, u32 mask);
-void padClearAnalogInputY(int port);
-void padClearAnalogInputX(int port);
-void stopRumble(void);
-void doRumble(f32 duration);
-void setRumbleEnabled(u8 enabled);
 void fileReadCb_80015954(void* result);
 void setFileInfo(void* fileInfo);
 int isSpace(u32 c);
-void padGetAnalogInput(int port, u8* x, u8* y);
-u8 padGetCY(int port);
-u8 padGetCX(int port);
-u8 padGetStickY(int port);
-u8 padGetStickX(int port);
-u8 padGetLTrigger(int port);
-u8 padGetRTrigger(int port);
-u16 getPadFn_80014d9c(int port);
-u16 getButtons_80014dd8(int port);
-u32 getButtonsJustPressedIfNotBusy(int port);
-u32 getButtonsJustPressed(int port);
-u32 getNewInputs(int port);
-u32 getButtonsHeld(int port);
-int initControllers(void);
 void fn_80009008(void);
 s16 renderModeSetOrGet(int mode);
 void MIDIWADLoadedCallback(int status, void* fileInfo);

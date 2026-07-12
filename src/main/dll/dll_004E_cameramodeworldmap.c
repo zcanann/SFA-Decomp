@@ -42,10 +42,7 @@ extern f32 gCamWorldMapDistanceMax;
 extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
 
-extern u32 getButtonsHeld(int port);
 
-extern u8 padGetCX(int port);
-extern u8 padGetCY(int port);
 extern void fn_8012DDB8(int mode);
 extern f32 lbl_80319DF8[];
 extern f32 lbl_803E1A2C;

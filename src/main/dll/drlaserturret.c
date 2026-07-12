@@ -31,8 +31,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 extern void gameTimerInit(s8 flags, int minutes);
-extern void buttonDisable(int port, u32 mask);
-extern int padGetAnalogInput(int, char*, char*);
 extern int ObjTrigger_IsSet(void*);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern void hudFn_8011f38c(u8 x);
@@ -287,7 +285,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     state = obj->state;
     if (dispatch == DR_LASERTURRET_PROMPT_COUNT)
     {
-        padGetAnalogInput(0, &stickHi, &stickLo);
+    padGetAnalogInputChar(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0)
         {
             state->countValue--;
@@ -323,7 +321,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     }
     else if (dispatch == DR_LASERTURRET_PROMPT_DIGIT_COUNT)
     {
-        padGetAnalogInput(0, &stickHi, &stickLo);
+        padGetAnalogInputChar(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0)
         {
             state->digitCount--;

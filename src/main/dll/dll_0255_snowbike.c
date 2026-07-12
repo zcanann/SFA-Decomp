@@ -122,7 +122,6 @@ extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32* v);
-extern void doRumble(f32 duration);
 extern int arrayIndexOf(s16* arr, int n, int value);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -182,9 +181,6 @@ extern void PSVECAdd(f32* a, f32* b, f32* dst);
 extern float powfBitEstimate(float x, float y);
 extern void setAButtonIcon(int x);
 extern void setBButtonIcon(int icon);
-extern char padGetStickX(int pad);
-extern char padGetStickY(int pad);
-extern u32 getButtonsHeld(int port);
 extern int getAngle(float y, float x);
 extern f32 timeDelta;
 extern f32 lbl_803E5B6C;
@@ -1054,8 +1050,8 @@ void SnowBike_update(GameObject* obj)
         {
             setAButtonIcon(0x10);
             setBButtonIcon(0x11);
-            ((SnowBikeState*)state)->stickX = padGetStickX(0);
-            ((SnowBikeState*)state)->stickY = (f32)padGetStickY(0);
+            ((SnowBikeState*)state)->stickX = padGetStickXS8(0);
+            ((SnowBikeState*)state)->stickY = (f32)padGetStickYS8(0);
             ((SnowBikeState*)state)->buttonsHeld = getButtonsHeld(0);
             ((SnowBikeState*)state)->buttonsJustPressed = getButtonsJustPressed(0);
             ((SnowBikeState*)state)->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);

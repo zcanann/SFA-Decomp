@@ -45,8 +45,6 @@ extern void Music_Trigger(int id, int arg);
 extern int mapUnload(int mapId, int flags);
 
 extern void envFxActFn_800887f8(u8 value);
-extern int padGetStickX(int controller);
-extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -198,8 +196,8 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
     s8 resX;
     s8 resY;
 
-    stickX = padGetStickX(0);
-    stickY = padGetStickY(0);
+    stickX = padGetStickXInt(0);
+    stickY = padGetStickYInt(0);
     resX = 0;
     resY = 0;
     if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0)

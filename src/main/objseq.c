@@ -306,7 +306,6 @@ extern int lbl_803DB724;
 extern f32 lbl_803DD074;
 extern f32 RecvDataLeng;
 extern f32 SendMailData;
-extern void setJoypadDisabled(void);
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;

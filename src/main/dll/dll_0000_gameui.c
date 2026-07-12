@@ -100,7 +100,6 @@ extern u8 gPauseMenuTextCharset;
 extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
 extern f32 timeDelta;
-extern void setJoypadDisabled(void);
 extern void* gameTextGet(int textId);
 extern void* lbl_803A9410[6];
 extern void* lbl_8031BF90[6];
@@ -110,7 +109,6 @@ extern s16 lbl_803DD78C;
 extern s32 Obj_AllocObjectSetup(s32 size, void* type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
-extern void padFn_80014b18(int value);
 
 extern f32 lbl_803E1E3C; /*  0.0f */
 extern f32 lbl_803E1E68; /*  1.0f */
@@ -129,7 +127,6 @@ extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s
 extern TaskHintEntry gTaskHintTable[GAMEUI_TASK_HINT_COUNT];
 extern u8 pauseMenuState;
 extern s8 pauseMenuFrameCounter;
-extern void padGetAnalogInput(int port, u8* x, u8* y);
 extern s16 lbl_803DD75C;
 extern f32 lbl_803DD7BC;
 extern f32 lbl_803DD7C0;
@@ -218,7 +215,6 @@ s16 lbl_803A8B48[0x98];
 extern GridEntry lbl_8031BD90[];
 extern void cMenuRotateFn_80124d80(void);
 extern void cMenuPlayTrickyCommandSfx(u8* player);
-extern s8 padGetCY(int chan);
 extern u8 lbl_803A87F0[];
 extern u8 cMenuEnabled;
 extern s8 shouldCloseCMenu;
@@ -407,10 +403,7 @@ extern int airMeter;
 
 extern void cutsceneFadeInOut(int a);
 extern void Music_Trigger(int id, int arg);
-extern void buttonDisable(int port, u32 mask);
-extern u32 getButtonsHeld(int port);
 extern int objIsCurModelNotZero();
-extern s8 padGetCX(s32 chan);
 extern void* getArwing(void);
 extern u8 cMenuState;
 extern u8 cMenuOpen;
@@ -1140,7 +1133,7 @@ void pauseMenuDrawText(void)
 int pauseMenuGridFn_8012b4c4(void)
 {
     int ret = 0;
-    s8 cx = padGetCX(0);
+    s8 cx = padGetCXS8(0);
     s8 dir;
     int mag = cx;
 
@@ -1977,7 +1970,7 @@ void cMenuRun(void)
             }
             else
             {
-                cy = padGetCY(0);
+                cy = padGetCYS8(0);
             }
             if ((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c)
             {
@@ -4017,7 +4010,7 @@ void GameUI_update(void)
     }
     else
     {
-        cx = padGetCX(0);
+        cx = padGetCXS8(0);
         buttonDisable(0, 0xf0000);
         gCMenuButtons &= 0xfff0fff7;
         lbl_803DD898 &= 0xfff0fff7;
@@ -4095,16 +4088,16 @@ void GameUI_update(void)
         if (allowCStickTarget != 0)
         {
             int cxa, cya;
-            if ((s8)padGetCX(0) < 0)
-                cxa = -padGetCX(0);
+            if ((s8)padGetCXS8(0) < 0)
+                cxa = -padGetCXS8(0);
             else
-                cxa = padGetCX(0);
+                cxa = padGetCXS8(0);
             if (cxa <= 5)
             {
-                if ((s8)padGetCY(0) < 0)
-                    cya = -padGetCY(0);
+                if ((s8)padGetCYS8(0) < 0)
+                    cya = -padGetCYS8(0);
                 else
-                    cya = padGetCY(0);
+                    cya = padGetCYS8(0);
                 if (cya <= 5)
                     goto skipTarget;
             }

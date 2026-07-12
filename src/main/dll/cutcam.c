@@ -41,7 +41,6 @@
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern u16 getPadFn_80014d9c(int controller);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
 extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,

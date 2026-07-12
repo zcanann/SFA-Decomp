@@ -33,9 +33,6 @@ extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
 
 extern void set_uiDllIdx_803dc8f0(int idx);
-extern void buttonDisable(int port, u32 mask);
-extern void padClearAnalogInputX(int port);
-extern s8 padGetStickX(int port);
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
 
@@ -118,7 +115,7 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
     int buttons;
     u8 moved;
 
-    stickX = padGetStickX(0);
+    stickX = padGetStickXS8(0);
     padClearAnalogInputX(0);
     if (stickX != 0)
     {

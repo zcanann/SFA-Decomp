@@ -61,10 +61,6 @@ extern f32 lbl_803E1D18;
 
 #pragma dont_inline on
 
-extern void buttonDisable(int port, u32 mask);
-extern void padClearAnalogInputY(int port);
-extern void padClearAnalogInputX(int port);
-extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
 extern void setDrawLights(int v);
 extern void setIsOvercast(int v);
 extern void memCardFn_8007dd04(u8 retry);
@@ -418,7 +414,7 @@ int TitleMenu_run(void)
         (gTitleMenuReadyForInput != 0))
     {
         buttons = getButtonsJustPressed(0);
-        padGetAnalogInput(0, &dpad, &face);
+        padGetAnalogInputS8(0, &dpad, &face);
         buttonDisable(0, buttons);
         padClearAnalogInputX(0);
         padClearAnalogInputY(0);
@@ -463,7 +459,7 @@ int TitleMenu_run(void)
     else if ((gTitleMenuReadyForInput != 0) && (gAttractMoviePlaybackEnabled == 0))
     {
         buttons = getButtonsJustPressed(0);
-        padGetAnalogInput(0, &dpad, &face);
+        padGetAnalogInputS8(0, &dpad, &face);
         if ((buttons != 0) || ((dpad != 0 || (face != 0))))
         {
             gAttractMovieReplayCountdown = 2;
