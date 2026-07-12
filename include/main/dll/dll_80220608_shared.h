@@ -243,22 +243,10 @@ extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
 
 
-extern f32 lbl_803E738C;
-
-extern f32 lbl_803E7360;
 extern f32 lbl_803E7364;
 extern f32 lbl_803E7368;
 extern f32 lbl_803E736C;
 extern f32 lbl_803E7370;
-extern f32 lbl_803E7374;
-extern f32 lbl_803E7384;
-extern f32 lbl_803E7378;
-extern f32 lbl_803E737C;
-extern f32 lbl_803E7380;
-extern f32 lbl_803E7388;
-extern f32 lbl_803E7390;
-extern f32 lbl_803E7394;
-extern f32 lbl_803E7398;
 extern f32 lbl_803E73A8;
 extern f32 lbl_803E73AC;
 extern f32 lbl_803E73B0;

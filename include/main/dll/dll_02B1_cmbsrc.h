@@ -143,6 +143,17 @@ extern u8 gCmbsrcColorCycleIndexTable[8];
 extern u8 gCmbsrcColorSoundIdTable[];
 extern u8 gCmbsrcColorRgbTable[];
 extern f32 gCmbsrcColorRadiusScaleTable[];
+extern f32 lbl_803E7360;
+extern f32 lbl_803E7374;
+extern f32 lbl_803E7378;
+extern f32 lbl_803E737C;
+extern f32 lbl_803E7380;
+extern f32 lbl_803E7384;
+extern f32 lbl_803E7388;
+extern f32 lbl_803E738C;
+extern f32 lbl_803E7390;
+extern f32 lbl_803E7394;
+extern f32 lbl_803E7398;
 
 int cmbsrc_getExtraSize(void);
 int cmbsrc_getObjectTypeId(void);
