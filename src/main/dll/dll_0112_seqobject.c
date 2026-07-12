@@ -14,6 +14,7 @@
 #include "main/dll/alphaanim.h"
 #include "main/dll/seqobjectstate_struct.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/rcp_dolphin.h"
@@ -60,7 +61,6 @@ extern f32 lbl_803E37A0;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 void objCallOnloadCallback(int* obj)
 {
@@ -134,7 +134,7 @@ void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37A0);
+        objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E37A0);
 }
 
 void SeqObject_update(int* obj)

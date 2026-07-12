@@ -26,6 +26,7 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
@@ -60,7 +61,6 @@ typedef struct HagabonPlacement
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
 extern f32 lbl_803E2608;
@@ -303,7 +303,7 @@ void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (obj->unkF4)
         {
         case 0:
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E2650);
+            objRenderModelAndHitVolumes(obj, lbl_803E2650);
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
                 objParticleFn_80099d84((int)obj, lbl_803E2650, 3,

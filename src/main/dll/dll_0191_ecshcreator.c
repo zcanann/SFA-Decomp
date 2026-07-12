@@ -12,6 +12,7 @@
  * (object type 0x11) via Obj_SetupObject, then re-arms the countdown.
  */
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
@@ -29,7 +30,6 @@ extern f32 lbl_803E4FF8;
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int ecsh_creator_getExtraSize(void)
 {
@@ -48,7 +48,7 @@ void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4FF8);
+        objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E4FF8);
 }
 
 void ecsh_creator_hitDetect(void)

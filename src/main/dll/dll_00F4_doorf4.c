@@ -19,6 +19,7 @@
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
@@ -101,7 +102,6 @@ extern int ObjMsg_Pop();
 extern void ObjMsg_SendToNearbyObjects();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void* Obj_GetPlayerObject(void);
@@ -133,7 +133,7 @@ void DoorF4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3680);
+        objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E3680);
 }
 
 void DoorF4_free(int obj)

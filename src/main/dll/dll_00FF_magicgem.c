@@ -5,6 +5,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/os/OSReport.h"
@@ -19,7 +20,6 @@ extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
 extern void ObjLink_DetachChild(int obj, int child);
 extern f32 lbl_803E34B0;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
@@ -76,7 +76,7 @@ int MagicDust_getExtraSize(void)
 
 void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E34B0);
+    objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E34B0);
 }
 
 static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int player)
