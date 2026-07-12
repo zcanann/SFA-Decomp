@@ -49,3 +49,5 @@ int* eptr;
 	__HI(x) = hx;
 	return x;
 }
+
+__declspec(section ".sdata2") const double lbl_803E7948 = 1.8014398509481984e+16;

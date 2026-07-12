@@ -3774,6 +3774,7 @@ dolphin/MSL_C/PPCEABI/bare/H/s_copysign.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c:
 	.text       start:0x80291970 end:0x802919FC
+	.sdata2     start:0x803E7948 end:0x803E7950
 
 dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
 	.text       start:0x802919FC end:0x80291BC0
