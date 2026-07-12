@@ -10,5 +10,7 @@
  * consumers include this instead of hand-writing a local extern.
  */
 void* trickyGetQueuedPathParticlePos(GameObject* obj);
+GameObject* fn_80138F84(GameObject* tricky);
+int trickyFn_80138f14(GameObject* tricky);
 
 #endif

@@ -44,7 +44,7 @@ typedef struct TrickyImpressState
     u8 pad0[0x14 - 0x0];
     f32 unk14;
     u8 pad18[0x24 - 0x18];
-    u32 unk24;
+    GameObject* stayPoint;
     u8 pad28[0x54 - 0x28];
     u32 flags54;
     u8 pad58[0x408 - 0x58];
@@ -240,9 +240,9 @@ f32 fn_80138F78(u8* obj)
 {
     return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14;
 }
-u32 fn_80138F84(u8* obj)
+GameObject* fn_80138F84(GameObject* obj)
 {
-    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk24;
+    return ((TrickyImpressState*)obj->extra)->stayPoint;
 }
 s16 fn_80138F90(u8* obj)
 {
@@ -375,9 +375,9 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 #pragma optimization_level reset
 /* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(GAMEBIT_Tricky_Usable); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
-int trickyFn_80138f14(u8* obj)
+int trickyFn_80138f14(GameObject* obj)
 {
-    u8* b = ((GameObject*)obj)->extra;
+    u8* b = obj->extra;
     if ((u32)mainGetBit(GAMEBIT_Tricky_Usable) != 0u)
     {
         ((TrickyImpressState*)b)->flags54 |= 0x10000LL;

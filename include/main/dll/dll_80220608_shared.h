@@ -56,8 +56,6 @@ extern void* memcpy(void* dst, const void* src, u32 n);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-extern int fn_80138F84(int tricky);
-extern int trickyFn_80138f14(int tricky);
 extern void logPrintf(void* fmt, ...);
 
 #pragma dont_inline on

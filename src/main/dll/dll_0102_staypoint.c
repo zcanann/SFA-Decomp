@@ -23,6 +23,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_80136a40.h"
 
 typedef struct StayPointSetup
 {
@@ -42,12 +43,11 @@ typedef struct StayPointSetup
 extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
 
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern int fn_80138F84(int tricky); /* current stay-point object for Tricky */
 
 void StayPoint_update(int obj)
 {
     StayPointSetup* setup;
-    void* tricky;
+    GameObject* tricky;
     int isCurrentStayPoint;
 
     setup = *(StayPointSetup**)&((GameObject*)obj)->anim.placementData;
@@ -56,7 +56,7 @@ void StayPoint_update(int obj)
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     if (tricky != NULL)
     {
-        isCurrentStayPoint = (obj - fn_80138F84((int)tricky) == 0);
+        isCurrentStayPoint = (obj - (int)fn_80138F84(tricky) == 0);
         if (isCurrentStayPoint == 0 && setup->activeGameBit != -1)
         {
             mainSetBits(setup->activeGameBit, 0);

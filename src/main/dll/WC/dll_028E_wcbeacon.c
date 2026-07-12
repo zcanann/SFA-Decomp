@@ -15,6 +15,7 @@
  *    sequence once.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/dll/WC/WCbeacon.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -94,8 +95,8 @@ void wcbeacon_update(GameObject* obj)
         GameObject* tricky = getTrickyObject();
         if ((u32)mainGetBit(setup->armBit) == 0)
         {
-            u32 owner = fn_80138F84((int)tricky);
-            if (owner != (u32)obj || trickyFn_80138f14((int)tricky) != 0)
+            GameObject* owner = fn_80138F84(tricky);
+            if (owner != obj || trickyFn_80138f14(tricky) != 0)
             {
                 (*gObjectTriggerInterface)
                     ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, obj, WCBEACON_TRIGGER_NO_ARG);
