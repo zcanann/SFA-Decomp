@@ -7536,3 +7536,11 @@ extra `lwz 28(r31)` reload: NET-NEUTRAL 98.82->98.82. Attempted the snowclaw `ta
 where the SINGLE CSE collateral has a CLEAN pre-existing local to reuse (snowclaw's `table`); a
 heavily-reused field collateral (def, 13 sites) over-caches and regresses. RomCurve_goNextPoint /
 Checkpoint_func06 mr-copy candidates are coloring-welded (#110/#108), not opt_common_subs cases.
+
+## Jul12 92-97 band brute_match decl-order sweep (Opus, 2 wins)
+WINS (both pure decl-order via brute_match.py --strategy all, asm-free, fuzzy-confirmed):
+- dll_000A_expgfx drawGlow 96.67->96.74 (swap texture<->alpha decls, commit 3aa980ccbe). sibling's expgfx_resetAllPools 95.94 preserved (isolated fn).
+- shader doPendingMapLoads 94.75->94.79 (swap col<->cellCursor decls, commit f6aa263ef6). unit has #pragma opt_unroll_loops off already.
+WELDED (brute_match: every perm identical fuzzy => decls don't map to movable saved-reg homes):
+render fn_80007F78 94.80 / modelRenderFn_80006744 95.98; voxmaps_resetLoadedMaps 96.92; dll_0015_curves curves_getCurves 96.96 (ndiff = pure #108 reg-perm, T=118 C=118, r3<->r6/r4 swaps only, source-uncontrollable); dll_000B_dll0b dll_0B_func04 94.30; newshadows fn_8006CB50/allocLotsOfTextures/fn_8006A028; walkgroupFindExitPointFn_800dc398 96.64; animobjd2 fn_8013E0D0 96.94; snowclaw_init.
+PATTERN: 92-97 band is decl-order-productive ONLY where the fn has many independent scalar/ptr decls that land in DISTINCT saved regs (drawGlow 35 slots, doPendingMapLoads 24 slots both hit). Small-decl or heavily-CSE'd fns are #108 reg-perm welded (T==C instr count). Two brute passes now agree drawGlow/shader are the only movable ones in this batch.
