@@ -973,6 +973,8 @@ extern char lbl_803822C8[];
 extern void* gLoadedRomListPages[];
 
 #pragma opt_common_subs off
+#pragma opt_common_subs on
+#pragma opt_dead_assignments off
 void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 {
     int* seg = (int*)(lbl_803822C8 + mapId * 0x8c);
@@ -1083,6 +1085,8 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
         obj += *(u8*)(obj + 2) * 4;
     }
 }
+#pragma opt_common_subs reset
+#pragma opt_dead_assignments reset
 #pragma opt_common_subs reset
 
 extern void GXLoadTexMtxImm(f32* mtx, int id, int type);
