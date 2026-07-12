@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/model_engine.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 

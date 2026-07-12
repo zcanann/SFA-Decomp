@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/model_engine.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objhits.h"
@@ -208,7 +209,6 @@ extern void** gBaddieControlInterface;
 extern void* ObjPath_GetPointModelMtx(int obj, int idx);
 extern void mtx44_mult(f32* dst, f32* a, f32* b);
 extern void fn_8003B950(f32* mtx);
-extern void Stack_Free(void* p);
 extern s16 gHighTopLookYawOffset;
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int* getTrickyObject(void);
@@ -314,8 +314,6 @@ extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A7C;
 extern f32 lbl_803E6A80;
 extern f32 lbl_803E6A84;
-extern int Stack_IsEmpty(int stack);
-extern void Stack_Pop(int stack, int* out);
 extern int fn_80080150(void* timer);
 extern void s16toFloat(void* timer, int v);
 extern int timerCountDown(void* timer);
@@ -408,7 +406,6 @@ extern f32 lbl_803E681C;
 extern f32 lbl_803E684C;
 extern f32 lbl_803E6850;
 extern f32 lbl_803E67F0;
-extern int allocModelStruct_800139e8(int a, int b);
 extern int mapBlockFn_800592e4(void);
 extern void streamFn_8000a380(int a, int b, int c);
 extern f32 lbl_802C2560[];
@@ -454,11 +451,7 @@ extern int gKTRexContactEffectCooldown;
 extern f32 lbl_803E6820;
 extern s16 gKTRexEffectSpawnWork[];
 extern void ObjMsg_SendToObject(int target, int msg, int sender, int arg);
-extern int Stack_IsFull(int stack);
-extern void Stack_Push(int stack, int* val);
 extern int RandomTimer_UpdateRangeTrigger(void* timer, f32 lo, f32 hi);
-extern int Stack_IsFull(int stack);
-extern void Stack_Push(int stack, int* val);
 extern f32 lbl_803E67C4;
 extern f32 lbl_803E67C8;
 extern f32 lbl_803E67CC;

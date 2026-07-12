@@ -2,6 +2,7 @@
 #define MAIN_DLL_SHOPKEEPERSTATE_STRUCT_H_
 
 #include "types.h"
+#include "main/model_engine.h"
 
 typedef struct ShopkeeperState
 {
@@ -14,7 +15,7 @@ typedef struct ShopkeeperState
     u8 unk96D; /* 0x96d */
     u8 pad96E[0x980 - 0x96E];
     u8 eyeAnimBlock[0x9B0 - 0x980]; /* 0x980: characterDoEyeAnims block (address-used) */
-    void* msgStack; /* 0x9b0: Stack_Free'd on free */
+    RingBufferQueue* msgStack; /* 0x9b0: queued state messages */
     int vendorObj; /* 0x9b4: nearest group-9 shop manager */
     f32 unk9B8; /* 0x9b8 */
     u8 pad9BC[8];

@@ -11,82 +11,8 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/newclouds.h"
+#include "main/resource.h"
 #include "main/sky_interface.h"
-
-#define MODEL_DECODE_NIBBLE(nibExpr)                                           \
-    {                                                                          \
-        u8 nib = (nibExpr);                                                    \
-        int base = lbl_802C18C0[idx];                                          \
-        int delta = 0;                                                         \
-        if (nib & 1) {                                                         \
-            delta = base >> 2;                                                 \
-        }                                                                      \
-        if (nib & 2) {                                                         \
-            delta += base >> 1;                                                \
-        }                                                                      \
-        if (nib & 4) {                                                         \
-            delta += base;                                                     \
-        }                                                                      \
-        if (nib & 8) {                                                         \
-            delta = -delta;                                                    \
-        }                                                                      \
-        acc += delta;                                                          \
-        idx += lbl_802C1A24[nib];                                              \
-        if (idx < 0) {                                                         \
-            idx = 0;                                                           \
-        } else if (idx > 0x58) {                                               \
-            idx = 0x58;                                                        \
-        }                                                                      \
-        {                                                                      \
-            u32 packed = (u32)(acc & 0xffff);                                 \
-            int curBit = state->bit;                                           \
-            int bo = curBit >> 3;                                              \
-            packed <<= ((8 - (curBit & 7)) + sh16);                            \
-            ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
-            ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
-            ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
-            state->bit += bitWidth;                                            \
-            state->bit += gap;                                                 \
-        }                                                                      \
-    }
-
-/* Same as MODEL_DECODE_NIBBLE but the final (odd-count) nibble does not
-   advance the bit cursor by the inter-instruction gap. */
-#define MODEL_DECODE_NIBBLE_TAIL(nibExpr)                                      \
-    {                                                                          \
-        u8 nib = (nibExpr);                                                    \
-        int base = lbl_802C18C0[idx];                                          \
-        int delta = 0;                                                         \
-        if (nib & 1) {                                                         \
-            delta = base >> 2;                                                 \
-        }                                                                      \
-        if (nib & 2) {                                                         \
-            delta += base >> 1;                                                \
-        }                                                                      \
-        if (nib & 4) {                                                         \
-            delta += base;                                                     \
-        }                                                                      \
-        if (nib & 8) {                                                         \
-            delta = -delta;                                                    \
-        }                                                                      \
-        acc += delta;                                                          \
-        idx += lbl_802C1A24[nib];                                              \
-        if (idx < 0) {                                                         \
-            idx = 0;                                                           \
-        } else if (idx > 0x58) {                                               \
-            idx = 0x58;                                                        \
-        }                                                                      \
-        {                                                                      \
-            u32 packed = (u32)(acc & 0xffff);                                 \
-            int curBit = state->bit;                                           \
-            int bo = curBit >> 3;                                              \
-            packed <<= ((8 - (curBit & 7)) + sh16);                            \
-            ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
-            ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
-            ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
-            state->bit += bitWidth;                                            \
-        }                                                                      \
-    }
 
 typedef struct ObjMatrixBuildTransform {
     s16 rotX;
@@ -105,47 +31,6 @@ typedef struct EnvfxActEntry {
     u8 kind;
     u8 pad2[3];
 } EnvfxActEntry;
-typedef struct ModelRenderInstrsState {
-    void* instrs;
-    s32 byteCount;
-    s32 bitCount;
-    s32 fieldC;
-    s32 bit;
-} ModelRenderInstrsState;
-typedef struct RingBufferQueue {
-    s16 count;
-    s16 capacity;
-    s16 elemSize;
-    s16 unused;
-    s16 writeIndex;
-    s16 readIndex;
-    void* data;
-} RingBufferQueue;
-typedef struct ObjLinkedList {
-    s16 count;
-    s16 nextOffset;
-    int head;
-} ObjLinkedList;
-typedef struct ModelList {
-    s16* entries;
-    s16* end;
-    s16* capacityEnd;
-    u8 dataSize;
-    u8 strideShorts;
-    u8 pad0E[6];
-} ModelList;
-typedef struct ResourceDescriptor {
-    u8 pad00[0x10];
-    void (*acquire)(struct ResourceDescriptor* descriptor);
-    void (*release)(void);
-    u8 data[0];
-} ResourceDescriptor;
-typedef struct UiDllVTable {
-    void* field0;
-    int (*frameStart)(void);
-    void (*frameEnd)(void);
-    void (*draw)(void);
-} UiDllVTable;
 typedef struct PadStatusLite {
     u16 buttons;
     s8 stickX;
@@ -387,8 +272,6 @@ extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 extern void getTabEntry(void* dst, int kind, int offset, int size);
-s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state);
-void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
 extern void sndSeqVolume(int voice, int a, int handle, int b);
@@ -489,12 +372,10 @@ extern int Sfx_ResolveObjectSfxId(int *outChannel, u16 *sfxId);
 extern int memcmp(const void* lhs, const void* rhs, u32 size);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
-extern ResourceDescriptor* gResourceDescriptors[];
 extern void* gResourceLoadedHandles[];
 extern u16 gResourceRefCounts[];
 extern u8 gModelEngineTimerState;
 extern s8 gModelEngineTimerFlags;
-extern UiDllVTable** gModelEngineCurUiDllRes;
 extern int gModelEnginePendingUiDll;
 extern int curUiDll;
 extern int gModelEnginePrevUiDll;
@@ -689,8 +570,6 @@ void render_copyPackedU64Tail(u64 *dst, u32 packed);
 void render_copyPackedU64Head(u64 *dst, u32 packed);
 int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 int getEnvfxAct(int a, int b, u16 idx, int d);
-u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth);
-int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v);
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta);
 void Obj_UpdateWorldTransform(s16 *obj);
@@ -713,49 +592,18 @@ void fn_8000F8F8(void);
 void fn_8000F9B4(void);
 u16 fn_8000FA70(void);
 u16 fn_8000FA90(void);
-s16 Queue_GetCount(RingBufferQueue* queue);
-BOOL Queue_IsEmpty(RingBufferQueue* queue);
-void Queue_Peek(RingBufferQueue* queue, void* dst);
-void Queue_Pop(RingBufferQueue* queue, void* dst);
-void Queue_Push(RingBufferQueue* queue, void* src);
-void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize);
-BOOL Stack_IsEmpty(RingBufferQueue* stack);
-BOOL Stack_IsFull(RingBufferQueue* stack);
-void Stack_Pop(RingBufferQueue* stack, void* dst);
-void Stack_Push(RingBufferQueue* stack, void* src);
-void Stack_Free(RingBufferQueue* stack);
-RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize);
-void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, int bitCount, int fieldC);
-void objList_remove(ObjLinkedList* list, int item);
-void objListAdd(ObjLinkedList* list, int prev, int item);
-void fn_80013B6C(ObjLinkedList* list, s16 nextOffset);
-BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex);
-BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader);
-void model_adjustModelList(ModelList* list, int index);
-void modelInitModelList(ModelList* list, s16 index, void* header);
-ModelList* allocModelStruct(int capacity, int dataSize);
-BOOL Resource_Release(void* handleSlot);
-void* Resource_Acquire(u32 id, int unused);
-void Resource_ResetRefCounts(void);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
 void fn_8001404C(s32 value);
 u32 gameTimerIsRunning(void);
 void hudNumberFn_80014060(void);
 void set_hudNumber_803db278(s32 value);
-u32 isGameTimerDisabled(void);
-void gameTimerStop(void);
 f32 fn_8001461C(void);
 f32 fn_80014668(void);
-void timerSetToCountUp(void);
-void gameTimerInit(s8 flags, int minutes);
 void curUiDllDraw(int a, int b, int c, int d);
 void uiDll_runFrameEndAndLoadNext(void);
 int uiDll_runFrameStartAndLoadNext(void);
 void set_uiDllIdx_803dc8f0(int idx);
-int getUiDllFn_80014930(void);
-int getCurUiDll(void);
 void* getDLL16(void);
-void loadUiDll(int index);
 void initGameTimer(void);
 void setJoypadDisabled(void);
 void padFn_80014b18(int value);

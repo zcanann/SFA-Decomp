@@ -30,9 +30,6 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-extern int Stack_IsFull(void* stack);
-extern int Stack_Push(void* stack, void* value);
-
 extern void gameTimerInit(s8 flags, int minutes);
 extern void buttonDisable(int port, u32 mask);
 extern int padGetAnalogInput(int, char*, char*);

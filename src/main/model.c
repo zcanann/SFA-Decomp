@@ -1,6 +1,7 @@
 #include "main/asset_load.h"
 #include "main/dll/objmodel_types.h"
 #include "main/model.h"
+#include "main/model_engine.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
 #include "main/gameplay_runtime.h"
@@ -634,35 +635,24 @@ void ObjModel_InitRenderBuffers(void)
     setGQR6_2(7, 4, 7, 4);
 }
 
-typedef struct
-{
-    s16* start;
-    s16* end;
-    u8 _8[4];
-    u8 size;
-    u8 stride;
-    u8 _e[2];
-    s16* iter;
-} ModelStream;
-
-extern ModelStream* gModelList;
+extern ModelList* gModelList;
 
 void modelFn_800292e0(void)
 {
     u8 buf[8];
-    gModelList->iter = gModelList->start;
+    gModelList->iter = gModelList->entries;
     while (gModelList->iter != gModelList->end)
     {
         s16* iter = gModelList->iter;
         if (*iter == -1)
         {
-            memset(buf, 0, gModelList->size);
+            memset(buf, 0, gModelList->dataSize);
         }
         else
         {
-            memcpy(buf, iter + 1, gModelList->size);
+            memcpy(buf, iter + 1, gModelList->dataSize);
         }
-        gModelList->iter += gModelList->stride;
+        gModelList->iter += gModelList->strideShorts;
     }
 }
 
@@ -1070,8 +1060,6 @@ void* ObjModel_LoadAnimData(u8* p, int b, int c)
 }
 
 extern int modelLoad_calcSizes(void* model, int arg, int* out, int flag);
-extern int ModelList_getHeader(void* list, int index, void* out);
-extern void modelInitModelList(void* list, s16 index, void* out);
 extern s16* gModelResourceBuffer;
 
 void* ObjModel_Load(int id, int loadFlag, int* outSize)
@@ -1119,10 +1107,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     return header;
 }
 
-extern void model_adjustModelList(void* list, int index);
-extern void model_findIdxInModelList(void* list, void* header, int* outIndex);
-extern void* gModelAnimCacheList;
-extern void* allocModelStruct(int size, int align);
+extern ModelList* gModelAnimCacheList;
 extern int* lbl_803DCB5C;
 
 void ObjModel_InitResourceCaches(void)
@@ -2783,22 +2768,11 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 }
 #pragma peephole reset
 
-typedef struct
-{
-    int f0, f4, f8, fc, f10;
-} MRIState;
-
-extern void modelRenderInstrsState_init(MRIState* state, u8* data, int bits, int bits2);
-extern u8* modelRenderFn_80006744(u8* p, int count, MRIState* state, int stride);
-/* defined in render.c as (..., int gap, u8 bitWidth) returning int; the
-   retail caller here passes/receives through int/u8* -- keep that view */
-extern u8* fn_80006B1C(MRIState* src, MRIState* dst, int count, int gap, int bitWidth);
-
 #pragma peephole off
 void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
 {
-    MRIState dstState;
-    MRIState srcState;
+    ModelRenderInstrsState dstState;
+    ModelRenderInstrsState srcState;
     u8* dstBits;
     u8* srcBits;
     int vertBits;
@@ -2827,11 +2801,11 @@ void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
         {
             if (t < 0)
             {
-                srcBits = fn_80006B1C(&srcState, &dstState, dst[7], vertBits, t);
+                srcBits = (u8*)fn_80006B1C(&srcState, &dstState, dst[7], vertBits, t);
             }
             else
             {
-                srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits);
+                srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits, t);
             }
         }
     }

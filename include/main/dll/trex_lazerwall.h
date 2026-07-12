@@ -2,11 +2,12 @@
 #define MAIN_DLL_TREX_LAZERWALL_H_
 
 #include "global.h"
+#include "main/model_engine.h"
 
 typedef struct TREXLazerwallUpdateTimedChallengeState
 {
     u8 pad0[0x9B0 - 0x0];
-    s32 stack;    /* 0x9B0: challenge node stack handle */
+    RingBufferQueue* stack; /* 0x9B0: challenge node stack */
     s32 timerObj; /* 0x9B4: timer object */
     u8 pad9B8[0x9BC - 0x9B8];
     f32 nodeTargetY; /* 0x9BC: target Y of the current curve node */

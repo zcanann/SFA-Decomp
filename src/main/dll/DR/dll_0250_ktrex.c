@@ -60,7 +60,7 @@ typedef struct KtrexState
  */
 typedef struct KTRexArenaState
 {
-    int stack; /* allocModelStruct stack handle */
+    RingBufferQueue* stack;
     f32 stateTimer;
     f32 laneLerpT; /* 0x8: interpolation t along the lane path: pos = A + t*(B-A) */
     int lastPhase;

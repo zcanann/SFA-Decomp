@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/engine_shared.h"
+#include "main/model_engine.h"
 
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
@@ -532,7 +533,7 @@ void set_hudNumber_803db278(s32 value)
     gModelEngineHudNumber = value;
 }
 
-u32 isGameTimerDisabled(void)
+int isGameTimerDisabled(void)
 {
     return gModelEngineTimerState & MODELENGINE_TIMER_DISABLED;
 }

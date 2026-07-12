@@ -2,6 +2,7 @@
 #define MAIN_DLL_DBSTEALERWORMCONTROL_STRUCT_H_
 
 #include "types.h"
+#include "main/model_engine.h"
 
 /* DbStealerwormControl.flags14: per-frame effect-request bits, consumed and
  * cleared each tick by the fx dispatcher (fn_80203000). */
@@ -23,7 +24,7 @@ typedef struct DbStealerwormControl
     s16 msgSlotIndex; /* queued message-config slot index (-1 = none); pushed as the type-7 frame payload */
     u8 unk1E[2];
     int routeCursor; /* cursor into the cfg route list (12-byte entries) */
-    int msgStack; /* Stack_* handle; 3-word messages */
+    RingBufferQueue* msgStack; /* queued 3-word messages */
     int msgCode; /* current message word 0: code dispatched to the player interface (frame[0]) */
     int msgMode; /* current message word 1: target-acquisition mode 0/1 (frame[1]) */
     int objGroup; /* current message word 2: ObjGroup id for FindNearest/Contains (frame[2]) */

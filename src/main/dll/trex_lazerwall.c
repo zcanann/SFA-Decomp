@@ -51,10 +51,6 @@ extern f32 lbl_803E59DC;
 extern const f32 lbl_803E59E0; /* curve-node Y bias */
 extern u32 lbl_803E59D0;       /* head of the rom-curve search pair (first type id) */
 
-extern int Stack_IsEmpty(int stack);
-extern int Stack_IsFull(int stack);
-extern int Stack_Pop(int stack, int* out);
-extern int Stack_Push(int stack, int* in);
 
 extern void hudFn_8011f38c(u8 x);
 
@@ -62,7 +58,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 {
     int state;
     int playerObj;
-    int stackHandle;
+    RingBufferQueue* stackHandle;
     int node;
     u32 head[2];
     int pushKindA;
