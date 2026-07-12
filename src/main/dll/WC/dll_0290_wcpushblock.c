@@ -25,6 +25,7 @@
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
 #include "main/dll/WC/dll_0290_wcpushblock.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"

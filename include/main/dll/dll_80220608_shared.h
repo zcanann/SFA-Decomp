@@ -74,8 +74,6 @@ extern f32 lbl_803E6E24;
 
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
-                                f32 mulX, f32 mulY, f32 mulZ);
 
 extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
@@ -168,8 +166,6 @@ extern f32 lbl_803E70D8;
 extern int arrayIndexOf(int array, int count, int value);
 
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
-extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
-                                f32 mulX, f32 mulY, f32 mulZ);
 
 
 

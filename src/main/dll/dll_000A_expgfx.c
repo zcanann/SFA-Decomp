@@ -3210,7 +3210,6 @@ ObjectDescriptor14 expgfx_funcs = {
 
 /* Switch jumptables for neighbouring objfx/itempickup particle fx code whose
  * .data was emitted in this unit's address range. */
-extern void objfx_spawnBoxBurst();
 extern void fn_80098B18();
 extern void itemPickupDoParticleFx();
 extern void objParticleFn_80099d84();

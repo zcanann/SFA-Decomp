@@ -18,6 +18,8 @@ void objfx_spawnArcedBurst(void* obj, f32 scale, int kind, int mode, int idx, in
 void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 angleBase, f32 angleLow,
                            f32 angleHigh, void* origin, int flags);
 #endif
+void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 scaleX, f32 scaleY,
+                         f32 scaleZ, void* origin, int flags);
 void projectileParticleFxFn_80099660(void* obj, int mode);
 #if defined(OBJFX_SPAWN_EXPLOSION_POINTER_LEGACY)
 void spawnExplosion(int* source, f32 scale, int kind, int flag4, int flag8, int flag10, int doShake, int flag20,
