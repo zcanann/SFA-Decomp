@@ -396,12 +396,6 @@ extern f32 lbl_803E6BC0;
 
 extern void* playerGetFocusObject(void);
 extern void setAButtonIcon(int icon);
-extern f32 lbl_803E6C08;
-extern f32 lbl_803E6C0C;
-extern f32 lbl_803E6C10;
-extern f32 lbl_803E6C14;
-extern f32 lbl_803E6C18;
-extern f32 lbl_803E6C1C;
 
 
 

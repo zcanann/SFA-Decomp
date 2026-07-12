@@ -15,6 +15,12 @@ typedef struct DREarthCalSetup
 STATIC_ASSERT(offsetof(DREarthCalSetup, yaw) == 0x18);
 
 extern ObjectDescriptor12 gDrEarthCalObjDescriptor;
+extern f32 lbl_803E6C08;
+extern f32 lbl_803E6C0C;
+extern f32 lbl_803E6C10;
+extern f32 lbl_803E6C14;
+extern f32 lbl_803E6C18;
+extern f32 lbl_803E6C1C;
 
 int drearthcal_setScale(void);
 int drearthcal_getExtraSize(void);
