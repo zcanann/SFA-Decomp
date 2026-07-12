@@ -20,6 +20,7 @@
  * list with the interface; release frees the textures and warps home.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/model_engine.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "ghidra_import.h"
 #include "main/sfa_extern_decls.h"
@@ -62,7 +63,6 @@ extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written a
 extern u32 gWeirdMenuWidgetLayout[];       /* widget layout descriptor */
 extern void saveGame_save();
 extern u32 gameTextGet(int textId);
-extern void loadUiDll(int index);
 extern void textureFree(u32);
 extern void warpToMap(int idx, s8 transType);
 extern void buttonDisable(int port, u32 mask);

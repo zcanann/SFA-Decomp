@@ -1,5 +1,6 @@
 /* DLL 0x0034 — title menu [8011611C-801166C8) */
 #include "main/dll/FRONT/dll_39.h"
+#include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/FRONT/dll_44.h"
 #include "main/dll/FRONT/picmenu.h"

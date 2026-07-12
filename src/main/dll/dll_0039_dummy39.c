@@ -8,6 +8,7 @@
  * frees the cached texture handle (lbl_803DD72C).
  */
 #include "types.h"
+#include "main/model_engine.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"

@@ -55,7 +55,6 @@ extern u32 getButtonsJustPressed(int port);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern int playerHasKrazoaSpirit();
-extern void loadUiDll(int index);
 extern void ObjLink_DetachChild(int obj, int child);
 extern int randFn_80080100(int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);

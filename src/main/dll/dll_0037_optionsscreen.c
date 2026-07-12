@@ -13,6 +13,7 @@
  * Exit (panel 3, item 0) starts the transition out and reloads UI DLL 4.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/model_engine.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_4E.h"

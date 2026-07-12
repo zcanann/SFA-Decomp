@@ -1,4 +1,5 @@
 #include "main/obj_placement.h"
+#include "main/model_engine.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/debug.h"

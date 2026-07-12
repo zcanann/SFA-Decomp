@@ -17,6 +17,7 @@
  * for each.
  */
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
+#include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "dolphin/os.h"
 #include "dolphin/gx/GXTexture.h"

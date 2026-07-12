@@ -21,6 +21,7 @@
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
+#include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "main/mm.h"
 #include "main/dll/gameplay.h"
@@ -184,7 +185,6 @@ extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);
-extern void loadUiDll(int index);
 extern void playerAddHealth(u8* player, int v);
 
 void loadMapForCurrentSaveGame(void);
