@@ -21,6 +21,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/objlib.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
@@ -78,7 +79,6 @@ typedef struct ObjCurveKey
     s16 frame;
 } ObjCurveKey;
 
-extern void** ObjList_GetObjects(void* unused, int* count);
 extern void ObjSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void* entries, int count);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
@@ -136,10 +136,6 @@ extern f32 lbl_803DEFC8;
 extern f32 lbl_803DEFF0;
 extern f32 lbl_803DF024;
 extern f32 lbl_803DF028;
-extern void* ObjGroup_GetObjects();
-extern void ObjMsg_SendToNearbyObjects(int, f32, int, void*, int, void*);
-extern void ObjMsg_SendToObjects(int, int, void*, int, void*);
-extern void ObjMsg_SendToObject(void*, int, void*, int);
 extern void Music_Trigger(int id, int restart);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -650,10 +646,10 @@ void ObjSeq_runBgCmds(void)
     u8* matched[0x28];
     s16 keepBuf[0x5a];
     int objectCount;
-    void* unused;
+    int unused;
 
     base = lbl_80396918;
-    objects = ObjList_GetObjects(&unused, &objectCount);
+    objects = (void**)ObjList_GetObjects(&unused, &objectCount);
     if (lbl_803DD060 != lbl_803DD062)
     {
         lbl_803DD062 = lbl_803DD060;
@@ -945,10 +941,10 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 switch ((s8)gObjSeqMsgSendModes[arg10])
                 {
                 case 1:
-                    ObjMsg_SendToObjects(0, 2, obj, gObjSeqMsgIds[arg10], obj);
+                    ObjMsg_SendToObjects(0, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
                     break;
                 case 2:
-                    ObjMsg_SendToNearbyObjects(0, gObjSeqMsgNearbyRadius, 2, obj, gObjSeqMsgIds[arg10], obj);
+                    ObjMsg_SendToNearbyObjects(0, gObjSeqMsgNearbyRadius, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
                     break;
                 default:
                     ObjMsg_SendToObject(sourceObj, gObjSeqMsgIds[arg10], obj, 0);
@@ -1101,7 +1097,7 @@ void ObjSeq_updateCamera(void)
     CamFloats fblock;
     CamMode mode47;
     CamMode mode48;
-    void* groupObjs;
+    int groupObjCount;
     u8* obj;
     u8* model;
     u8* camObj;
@@ -1254,7 +1250,8 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x57:
                     (*gCameraInterface)->setMode(OBJSEQ_CAMMODE_TITLE, 0, 3, 0, NULL, 0, 0);
-                    (*gCameraInterface)->setFocus(*(void**)ObjGroup_GetObjects(OBJSEQ_TARGET_OBJGROUP, &groupObjs), 0);
+                    (*gCameraInterface)
+                        ->setFocus(*(void**)(void*)ObjGroup_GetObjects(OBJSEQ_TARGET_OBJGROUP, &groupObjCount), 0);
                     break;
                 default:
                     if (gObjSeqCamModeArgB == 0)
@@ -4264,7 +4261,7 @@ gotFlags:
 int ObjSeq_resolveTargetObject(u8* obj)
 {
     int objectCount;
-    void* unused;
+    int unused;
     void** objects;
     u8* seqObj;
     u8* model;
@@ -4282,7 +4279,7 @@ int ObjSeq_resolveTargetObject(u8* obj)
     f32 dz;
     f32 distSq;
 
-    objects = ObjList_GetObjects(&unused, &objectCount);
+    objects = (void**)ObjList_GetObjects(&unused, &objectCount);
     seqObj = ((GameObject*)obj)->extra;
     model = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->anim.classId == 0x11)
@@ -4388,7 +4385,7 @@ int ObjSeq_resolveTargetObject(u8* obj)
 void* ObjSeq_FindTargetObject(u8* obj)
 {
     int objectCount;
-    void* unused;
+    int unused;
     void** objects;
     int targetId;
     int objectType;
@@ -4407,7 +4404,7 @@ void* ObjSeq_FindTargetObject(u8* obj)
         return ObjList_FindObjectById(targetId);
     }
 
-    objects = ObjList_GetObjects(&unused, &objectCount);
+    objects = (void**)ObjList_GetObjects(&unused, &objectCount);
     objectType = *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x1c) - 4;
     if (objectType == 0x1f || objectType == 0)
     {
