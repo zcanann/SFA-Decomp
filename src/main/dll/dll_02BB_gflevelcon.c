@@ -20,6 +20,7 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02BB_gflevelcon.h"
+#include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0

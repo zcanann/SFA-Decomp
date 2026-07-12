@@ -311,25 +311,12 @@ extern f32 lbl_803E7124;
 extern f32 lbl_803E7138;
 extern const f32 lbl_803E713C;
 
-extern f32 lbl_802C25F8[];
-extern f32 lbl_803E7230;
-extern f32 lbl_803E7234;
-extern f32 lbl_803E7240;
 extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
 extern void Obj_SetActiveModelIndex(int obj, int index);
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_802C2608[];
-extern f32 lbl_803E7250;
-extern f32 lbl_803E7254;
-extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
-
-extern f32 lbl_802C2618[];
-extern f32 lbl_803E7270;
-extern f32 lbl_803E7274;
-extern f32 lbl_803E7260;
 extern void textureFree(void* tex);
 extern void* textureLoadAsset(int id);
 
@@ -1277,44 +1264,6 @@ void dll_2A3_init(GameObject* obj);
 void dll_2A4_render(int obj, int p2, int p3, int p4, int p5);
 void dll_2A4_update(int obj);
 void dll_2A4_init(GameObject* obj);
-int PointLight_getExtraSize(void);
-int PointLight_getObjectTypeId(void);
-void pointlight_setEffectState(GameObject* obj, int enabled);
-void PointLight_free(GameObject* obj);
-void PointLight_render(GameObject* obj);
-void PointLight_hitDetect(void);
-void PointLight_update(GameObject* obj);
-void PointLight_init(GameObject* obj, int setup);
-void PointLight_release(void);
-void PointLight_initialise(void);
-int directionallight_getExtraSize(void);
-int directionallight_getObjectTypeId(void);
-void directionallight_free(GameObject* obj);
-void directionallight_hitDetect(void);
-void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void directionallight_debugEdit(GameObject* obj, int state);
-void directionallight_init(GameObject* obj, int setup);
-void directionallight_update(GameObject* obj);
-void directionallight_release(void);
-void directionallight_initialise(void);
-int ProjectedLight_getExtraSize(void);
-int ProjectedLight_getObjectTypeId(void);
-void ProjectedLight_free(GameObject* obj);
-void ProjectedLight_hitDetect(void);
-void ProjectedLight_render(void);
-void ProjectedLight_update(GameObject* obj);
-void ProjectedLight_init(GameObject* obj, int setup);
-void ProjectedLight_release(void);
-void ProjectedLight_initialise(void);
-int ControlLight_getExtraSize(void);
-int ControlLight_getObjectTypeId(void);
-void ControlLight_free(void);
-void ControlLight_hitDetect(void);
-void ControlLight_render(void);
-void ControlLight_init(GameObject* obj, int setup);
-void ControlLight_update(GameObject* obj);
-void ControlLight_release(void);
-void ControlLight_initialise(void);
 int brokenpipe_getExtraSize(void);
 void brokenpipe_init(GameObject* obj, int setup);
 void brokenpipe_update(GameObject* obj);

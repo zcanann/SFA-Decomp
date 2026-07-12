@@ -12,6 +12,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/LGT/dll_02AC_lgtcontrollight.h"
+#include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 
 #define CONTROLLIGHT_MODE_DIRECT      0
 #define CONTROLLIGHT_MODE_INVERTED    1

@@ -2,8 +2,10 @@
 #define MAIN_DLL_LGT_DLL_02A9_LGTPOINTLIGHT_H_
 
 #include "main/game_object.h"
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/LGT/lgt_types.h"
+#include "main/obj_placement.h"
+
+extern f32 lbl_802C25F8[];
 
 typedef struct PointLightState
 {

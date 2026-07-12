@@ -2,8 +2,11 @@
 #define MAIN_DLL_LGT_DLL_02AB_LGTPROJECTEDLIGHT_H_
 
 #include "main/game_object.h"
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/LGT/lgt_types.h"
+#include "main/obj_placement.h"
+
+extern f32 lbl_802C2618[];
+extern f32 lbl_803E7260;
 
 typedef struct ProjectedLightSetup
 {

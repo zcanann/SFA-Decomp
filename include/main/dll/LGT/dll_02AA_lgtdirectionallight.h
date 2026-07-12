@@ -2,8 +2,8 @@
 #define MAIN_DLL_LGT_DLL_02AA_LGTDIRECTIONALLIGHT_H_
 
 #include "main/game_object.h"
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/LGT/lgt_types.h"
+#include "main/obj_placement.h"
 
 typedef struct DirectionalLightSetup
 {
@@ -75,6 +75,11 @@ struct DirectionalLightObjDescriptorLayout
     void (*callbacks[10])(void);
     char debugStrings[0xE0];
 };
+
+extern f32 lbl_802C2608[];
+extern f32 lbl_803E7250;
+extern f32 lbl_803E7254;
+extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
 
 void directionallight_debugEdit(GameObject* obj, int statePtr);
 int directionallight_getExtraSize(void);
