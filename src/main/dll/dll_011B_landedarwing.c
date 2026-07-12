@@ -98,7 +98,6 @@ extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
-extern int unlockLevel(s32 val, int idx, int flag);
 
 typedef struct LandedArwingFxPoint
 {

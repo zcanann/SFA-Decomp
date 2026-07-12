@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/player_api.h"
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/objseq_api.h"

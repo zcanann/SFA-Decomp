@@ -15,6 +15,7 @@
  * zones + texture-state swaps).
  */
 #include "main/effect_interfaces.h"
+#include "main/objprint_dolphin.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 #include "main/objanim_update.h"

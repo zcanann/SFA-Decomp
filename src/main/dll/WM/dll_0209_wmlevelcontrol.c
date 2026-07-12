@@ -13,6 +13,7 @@
  * decaying 0.02/tick after) is up.
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
+#include "main/objprint_dolphin.h"
 #include "main/objseq_api.h"
 #include "main/game_object.h"
 #include "main/sky_api.h"
@@ -93,7 +94,6 @@ extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-tri
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern int mapGetDirIdx(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
 extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);

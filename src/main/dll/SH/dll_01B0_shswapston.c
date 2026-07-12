@@ -10,6 +10,7 @@
  * issued through the map-event interface.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/objprint_dolphin.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"
@@ -62,7 +63,6 @@ extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int loadMapAndParent(int mapId);
-extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern int mapUnload(int mapId, int flags);

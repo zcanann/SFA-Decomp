@@ -4,6 +4,7 @@
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and
  * initial level unlock. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/objprint_dolphin.h"
 #include "main/render.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -67,7 +68,6 @@ extern f32 lbl_803E4A24;
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 id);
-extern int unlockLevel(s32 val, int idx, int flag);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 

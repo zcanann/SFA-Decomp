@@ -1,4 +1,5 @@
 #include "main/dll/objfsa_romcurve.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"

@@ -1,4 +1,5 @@
 #include "main/crcloudrace.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/player_api.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gameplay_runtime.h"

@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
@@ -133,7 +134,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int idx);
-extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern float mathSinf(float x);

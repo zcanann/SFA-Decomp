@@ -29,7 +29,6 @@
 #define PAD_BUTTON_B 0x200
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E6618;
-extern int unlockLevel(s32 val, int idx, int flag);
 /* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
  * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),
  * [3] Dragon Rock, [4] DarkIce Mines. */

@@ -25,6 +25,7 @@
  * any sfx the trigger started.
  */
 #include "main/dll/DR/hightop.h"
+#include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/dll/player_api.h"
 #include "main/camera_interface.h"

@@ -5,6 +5,7 @@
  * driven sequence-flag word (gDIMbossSequenceFlags).
  */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/moveLib.h"
 #include "main/render.h"
 #include "main/game_object.h"

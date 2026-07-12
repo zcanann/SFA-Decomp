@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/objseq.h"
@@ -60,7 +61,6 @@ extern void Music_Trigger(int id, int arg);
 extern void audioStopByMask(int mask);
 extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);
-extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);

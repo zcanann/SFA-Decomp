@@ -21,6 +21,7 @@
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
+#include "main/objprint_dolphin.h"
 #include "main/mm.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/player_status.h"
@@ -179,7 +180,6 @@ extern SaveGameDefaultPosition gSaveGameDefaultPosition;
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
-extern int unlockLevel(s32 val, int idx, int flag);
 extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
