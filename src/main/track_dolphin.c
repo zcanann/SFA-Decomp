@@ -3424,34 +3424,32 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
     if (handle != 0xFFFFFFFF)
     {
-        int k;
-        int off;
+        int z[2];
         GXBegin(GX_TRIANGLES, GX_VTXFMT0, *(int*)(((MapBlockData*)blockData)->allocHandle + 4) & 0xffff);
-        k = 0;
-        off = k;
-        for (; k < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); off += 6)
+        z[0] = 0;
+        z[1] = z[0];
+        for (; z[0] < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); z[1] += 6)
         {
-            s16* ep = (s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off);
+            s16* ep = (s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + z[1]);
             s16 e2 = ep[2];
             s16 e1 = ep[1];
             s16 e0 = ep[0];
             GXWGFifo.s16 = e0;
             GXWGFifo.s16 = e1;
             GXWGFifo.s16 = e2;
-            k++;
+            z[0]++;
         }
     }
     else
     {
         int i;
-        int vi;
-        int off;
+        int w[2];
         GXBegin(GX_TRIANGLES, GX_VTXFMT2, (slot * 3) & 0xffff);
-        vi = 0;
-        off = vi;
+        w[0] = 0;
+        w[1] = w[0];
         for (i = 0; i < slot; i++)
         {
-            f32* v0 = (f32*)((char*)cache + off);
+            f32* v0 = (f32*)((char*)cache + w[1]);
             f32 a0 = v0[0];
             f32 a1 = v0[1];
             f32 a2 = v0[2];
@@ -3459,7 +3457,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
             GXWGFifo.f32 = a1;
             GXWGFifo.f32 = a2;
             {
-                f32* v1 = (f32*)((char*)cache + (vi + 1) * 0xc);
+                f32* v1 = (f32*)((char*)cache + (w[0] + 1) * 0xc);
                 f32 b2 = v1[2];
                 f32 b1 = v1[1];
                 f32 b0 = v1[0];
@@ -3468,7 +3466,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
                 GXWGFifo.f32 = b2;
             }
             {
-                f32* v2 = (f32*)((char*)cache + (vi + 2) * 0xc);
+                f32* v2 = (f32*)((char*)cache + (w[0] + 2) * 0xc);
                 f32 c2 = v2[2];
                 f32 c1 = v2[1];
                 f32 c0 = v2[0];
@@ -3476,8 +3474,8 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
                 GXWGFifo.f32 = c1;
                 GXWGFifo.f32 = c2;
             }
-            vi += 3;
-            off += 0x24;
+            w[0] += 3;
+            w[1] += 0x24;
         }
     }
     if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
