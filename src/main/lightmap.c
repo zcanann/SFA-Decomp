@@ -1201,6 +1201,7 @@ typedef union
     } u;
 } F64Cvt;
 
+#pragma opt_propagation off
 void renderSceneGeometry(int* p1, s8* order)
 {
     u8 map[256];
@@ -1326,6 +1327,7 @@ void renderSceneGeometry(int* p1, s8* order)
     }
     while (layer >= 0);
 }
+#pragma opt_propagation reset
 
 typedef struct
 {
