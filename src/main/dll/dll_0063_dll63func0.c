@@ -18,9 +18,22 @@
 #define DLL63_EFFECT_ID 0x40
 
 extern u8 lbl_80312BD8[];
-extern f32 lbl_803E08C8, lbl_803E08CC, lbl_803E08D0, lbl_803E08D4, lbl_803E08D8, lbl_803E08DC;
-extern f32 lbl_803E08E0, lbl_803E08E4, lbl_803E08E8, lbl_803E08EC, lbl_803E08F0, lbl_803E08F4;
-extern f32 lbl_803E08F8, lbl_803E08FC;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E08C8 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E08CC = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E08D0 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E08D4 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E08D8 = 0.725f;
+__declspec(section ".sdata2") f32 lbl_803E08DC = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803E08E0 = 0.35f;
+__declspec(section ".sdata2") f32 lbl_803E08E4 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E08E8 = 70.0f;
+__declspec(section ".sdata2") f32 lbl_803E08EC = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E08F0 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E08F4 = -0.7f;
+__declspec(section ".sdata2") f32 lbl_803E08F8 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E08FC = 0.1f;
+#pragma explicit_zero_data off
 
 #pragma inline_max_size(4000)
 static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, u32 flags)

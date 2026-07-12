@@ -18,9 +18,25 @@ STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 #define DLL7B_EFFECT_ID 0x8e
 
 extern u8 gDll7BEffectResourceData[];
-extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
-extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
-extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0D38 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D3C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D40 = 0.7f;
+__declspec(section ".sdata2") f32 lbl_803E0D44 = 16767.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D48 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D4C = 75.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D50 = 999.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D54 = 111.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D58 = 112.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D5C = 70.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D60 = 150.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D64 = 90.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D68 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0D6C = -0.3f;
+__declspec(section ".sdata2") f32 lbl_803E0D70 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E0D74 = 0.3f;
+__declspec(section ".sdata2") f32 lbl_803E0D78 = 5.0f;
+#pragma explicit_zero_data off
 
 void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

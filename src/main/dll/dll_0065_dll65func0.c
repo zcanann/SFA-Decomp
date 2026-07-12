@@ -16,18 +16,20 @@ enum
 };
 
 extern u8 lbl_80312E58[];
-extern f32 lbl_803E0930;
-extern f32 lbl_803E0934;
-extern f32 lbl_803E0938;
-extern f32 lbl_803E093C;
-extern f32 lbl_803E0940;
-extern f32 lbl_803E0944;
-extern f32 lbl_803E0948;
-extern f32 lbl_803E094C;
-extern f32 lbl_803E0950;
-extern f32 lbl_803E0954;
-extern f32 lbl_803E0958;
-extern f32 lbl_803E095C;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0930 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E0934 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0938 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E093C = 0.225f;
+__declspec(section ".sdata2") f32 lbl_803E0940 = 0.62f;
+__declspec(section ".sdata2") f32 lbl_803E0944 = 0.55f;
+__declspec(section ".sdata2") f32 lbl_803E0948 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E094C = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E0950 = 70.0f;
+__declspec(section ".sdata2") f32 lbl_803E0954 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E0958 = -0.7f;
+__declspec(section ".sdata2") f32 lbl_803E095C = 0.1f;
+#pragma explicit_zero_data off
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
