@@ -4,7 +4,9 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
+#include "main/obj_message.h"
 #include "main/obj_path.h"
+#include "main/obj_query.h"
 #include "main/obj_trigger.h"
 #include "main/camera.h"
 #include "main/object_api.h"
@@ -248,7 +250,6 @@ extern f32 gKytesMumNearestSearchDist;
 extern f32 lbl_803E69A0;
 extern char sKytesMumYawDiffMessage[];
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 v);
-extern s16 Obj_GetYawDeltaToObject(int obj, int target, int p3);
 extern f32 lbl_803E6A4C;
 extern f32 lbl_803E6A50;
 extern f32 gDrakorHoverpadPi;
@@ -380,7 +381,6 @@ extern int gKTRexMsgTemplate[];
 extern int gKTRexContactEffectCooldown;
 extern f32 lbl_803E6820;
 extern s16 gKTRexEffectSpawnWork[];
-extern void ObjMsg_SendToObject(int target, int msg, int sender, int arg);
 extern int RandomTimer_UpdateRangeTrigger(void* timer, f32 lo, f32 hi);
 extern CameraInterface** gCameraInterface;
 extern f32 lbl_803E67D8;

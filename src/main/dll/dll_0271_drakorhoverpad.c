@@ -624,7 +624,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
         nearest = ObjGroup_FindNearestObject(BOSSDRAKOR_OBJGROUP, (int)obj, 0);
         if ((u32)nearest != 0)
         {
-            yawDelta = Obj_GetYawDeltaToObject((int)obj, nearest, 0);
+            yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
             if (yawDelta < -0x200)
             {
                 yawDelta = -0x200;

@@ -1322,7 +1322,7 @@ void ktrex_updateContactEffects(GameObject* obj, void* runtime)
     {
         ((KTRexRuntime*)runtime)->hitCountdown = 0;
     }
-    ObjMsg_SendToObject(hitA, KTREX_ADVANCE_MSG, (int)obj, 0);
+    ObjMsg_SendToObject((void*)hitA, KTREX_ADVANCE_MSG, obj, 0);
 }
 
 int ktrex_stateHandlerA02(int obj, int runtime)
