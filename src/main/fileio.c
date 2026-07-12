@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/loaded_file_flags.h"
 
 // DVDGetDriveStatus() drive-status codes
 #define DVD_STATE_FATAL_ERROR -1

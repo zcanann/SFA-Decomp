@@ -17,6 +17,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/camera.h"
 #include "main/fileio.h"
+#include "main/loaded_file_flags.h"
 #include "main/gameloop_api.h"
 #include "main/gametext.h"
 #include "main/lightmap.h"
@@ -43,9 +44,7 @@ extern int Obj_GetActiveModel();
 extern u32 Obj_BuildWorldTransformMatrix();
 extern u32 getTrickyObject();
 extern u64 ObjGroup_RemoveObject();
-extern u64 clearLoadedFileFlags_blocks1();
 
-extern u32 getLoadedFileFlags();
 
 
 
@@ -79,7 +78,6 @@ extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
 extern void queueGlowRender(void* effect);
 extern void dll_2E_func06(GameObject *obj, void* animController, int p3);
 extern u32 dll_2E_func03();
-extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern u32 gDIMbossRenderMtx[];

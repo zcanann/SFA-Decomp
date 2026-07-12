@@ -46,7 +46,6 @@ extern void Music_Trigger(int id, int arg);
 extern int mapUnload(int mapId, int flags);
 
 extern void envFxActFn_800887f8(u8 value);
-extern int getLoadedFileFlags(int file);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);

@@ -211,7 +211,6 @@ void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 
 int alignUp2(int x);
 
-extern int getLoadedFileFlags(int);
 
 void* getCache(void);
 

@@ -1487,7 +1487,6 @@ u32 mapLoadDataFile(int mapId, int fileId)
 
 extern void mmFreeTick(int arg);
 
-extern u8 gDvdErrorPauseActive;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;

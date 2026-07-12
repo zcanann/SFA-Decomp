@@ -30,6 +30,7 @@
 #include "main/mm.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
+#include "main/fileio.h"
 #include "main/textrender.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -122,7 +123,6 @@ extern int mmSetFreeDelay(int v);
 extern void Music_Trigger(int id, int arg);
 extern void trySaveGame(int slot);
 extern int gplayNewGame(char* name, int slot);
-extern char* loadFileByPath(char* path, int a, int b);
 extern void* memcpy(void* dst, void* src, int n);
 extern void saveSetOverrideHealth(int arg);
 extern TitleMenuControl* gMapEventInterface;
@@ -631,7 +631,7 @@ int SaveSelectScreen_run(void)
                 if (lbl_803DD6C4 > 1)
                 {
                     sprintf(buf, sSaveGameBinPathFormat, lbl_803DD6C4);
-                    data = loadFileByPath(buf, 0, 0);
+                    data = loadFileByPathLegacy3(buf, 0, 0);
                     if (data != NULL)
                     {
                         memcpy(lbl_803DD498, data, 0x6ec);

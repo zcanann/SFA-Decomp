@@ -10,6 +10,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/savedata_struct.h"
 #include "main/frame_timing.h"
+#include "main/fileio.h"
 #include "main/textrender.h"
 
 typedef struct
@@ -105,7 +106,7 @@ typedef struct
 {
     u8 pad00[0x3c];
     void* loadHandle;
-    void* dvdFileInfo;
+    int loadedSize;
     int state;
     u8 dirId;
     u8 languageId;
@@ -344,8 +345,6 @@ extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
 int mmCreateMemoryStore(int size);
 extern void* memcpy(void* dst, const void* src, int n);
-extern void setFileInfo(void* fileInfo);
-extern void* loadFileByPathAsync(char* path, void* fileInfo, int flags, void* callback);
 extern void DVDCancelAsync(void* fileInfo, void* callback);
 extern void textDisplayFn_800168dc(int a, int b);
 extern void gameTextFn_8001658c(int a, int b, int c);
@@ -2140,7 +2139,7 @@ void gameTextRun(void)
                         sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
                 setFileInfo(freeSlot);
                 freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
-                                                           &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+                                                           &freeSlot->loadedSize, 1, (void (*)(void*))gameTextOpenCallback_8001b3d0);
                 setFileInfo(NULL);
                 pending[0x24] = GAMETEXT_INVALID_DIR;
                 pending[0x25] = GAMETEXT_INVALID_LANGUAGE;
@@ -2158,7 +2157,7 @@ void gameTextRun(void)
         {
             mm_free(slot->loadHandle);
             slot->loadHandle = NULL;
-            slot->dvdFileInfo = NULL;
+            slot->loadedSize = 0;
             slot->active = 0;
         }
         slot++;
@@ -2414,7 +2413,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
                 mm_free(slot->loadHandle);
                 mmSetFreeDelay(2);
                 slot->loadHandle = NULL;
-                slot->dvdFileInfo = NULL;
+                slot->loadedSize = 0;
                 slot->active = 0;
             }
         }
@@ -2442,7 +2441,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
             *(char**)(languageTable + languageTableOffset));
     setFileInfo(freeSlot);
     freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
-                                               &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+                                               &freeSlot->loadedSize, 1, (void (*)(void*))gameTextOpenCallback_8001b3d0);
     setFileInfo(NULL);
     testAndSet_onlyUseHeap3(oldHeap);
 }
@@ -2495,7 +2494,7 @@ void gameTextLoadForCurMap(int sourceId)
                 }
                 mmSetFreeDelay(2);
                 slot->loadHandle = NULL;
-                slot->dvdFileInfo = NULL;
+                slot->loadedSize = 0;
                 slot->active = 0;
             }
         }
@@ -2530,7 +2529,7 @@ void gameTextLoadForCurMap(int sourceId)
                 sMapDirectoryNameTable[slotDir], sLanguageNameTable[slotLang][0]);
         setFileInfo(freeSlot);
         freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
-                                                   &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+                                                   &freeSlot->loadedSize, 1, (void (*)(void*))gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
         *dirPtr = GAMETEXT_INVALID_DIR;
         *langPtr = GAMETEXT_INVALID_LANGUAGE;

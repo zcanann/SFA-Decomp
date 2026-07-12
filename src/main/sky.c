@@ -7,11 +7,13 @@
 #include "main/game_object.h"
 #include "main/curve_eval.h"
 #include "main/frame_timing.h"
+#include "main/fileio.h"
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/sky.h"
 #include "main/object_descriptor.h"
+#include "main/loaded_file_flags.h"
 
 /* gSkyEnvFxFlags: per-group env-FX trigger enables + update state */
 #define SKY_ENVFX_GROUP_C        0x01 /* lbl_803DD138 group (GameBit 0x3ab) */
@@ -125,7 +127,6 @@ extern s8 gSky2DrawMode;
 extern u8* gSky2State;
 extern u8* lbl_803DD19C;
 extern u8 gSkySunPositionPrev;
-extern u8 gDvdErrorPauseActive;
 extern f32 gSkySunDirection[];
 extern f32 gSkyMoonDirection[];
 extern f32 lbl_803DF14C;
@@ -205,11 +206,9 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(void);
-extern void dvdCheckError(void);
 extern void mmFreeTick(int);
 extern void gameTextRun(void);
 extern void GXFlush_(int, int);
-extern int getLoadedFileFlags(int);
 extern void* objCreateLight(int, int);
 extern void modelLightStruct_setLightKind(void*, int);
 extern void modelLightStruct_setSpecularColor(void*, int, int, int, int);

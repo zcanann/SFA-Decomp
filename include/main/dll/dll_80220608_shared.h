@@ -15,6 +15,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objfx.h"
+#include "main/loaded_file_flags.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
@@ -1362,8 +1363,6 @@ extern int lbl_803DC50C;
 extern int lbl_803DC510;
 
 extern void mapUnload(int a, int b);
-extern void setLoadedFileFlags_blocks1(void);
-extern void clearLoadedFileFlags_blocks1(void);
 extern void registerNewScore(int a, int b, int c, int d);
 extern u8 gArwingCourseMapIds[8];
 typedef struct

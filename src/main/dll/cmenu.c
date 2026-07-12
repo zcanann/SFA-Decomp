@@ -91,7 +91,6 @@ extern f64 lbl_803E2030;
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int getTrickyObject(void);
-extern int getLoadedFileFlags(int flags);
 extern int ObjModel_GetRenderOp(int model, int p);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);

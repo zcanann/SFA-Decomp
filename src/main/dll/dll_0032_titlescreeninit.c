@@ -23,6 +23,7 @@
 #include "main/dll/tricky.h"
 #include "main/dll/dll_B4.h"
 #include "main/gameplay_runtime.h"
+#include "main/fileio.h"
 
 typedef struct LoadingScreenTexture
 {
@@ -56,7 +57,6 @@ typedef struct LoadingScreenTexture
 #define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
 
 extern int gTitleScreenInitLoadingTextures[];
-extern u8 gDvdErrorPauseActive;
 extern u8 lbl_803DC968;
 extern u8 gTitleScreenInitDvdErrorLatched;
 extern u32 gTitleScreenInitLoadingFrameCounter;

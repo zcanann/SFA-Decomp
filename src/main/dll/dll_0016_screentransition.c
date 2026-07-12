@@ -3,6 +3,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_0016_screentransition.h"
 #include "main/frame_timing.h"
+#include "main/fileio.h"
 
 extern u8 gScreenTransitionDone;
 u8 screenTransition_func07(void)
@@ -101,7 +102,6 @@ typedef struct
     u8 a;
 } HudColor;
 
-extern u8 gDvdErrorPauseActive;
 extern f32 gScreenTransitionHoldDuration;
 extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);

@@ -6,6 +6,7 @@
 #include "main/model.h"
 #include "main/object_transform.h"
 #include "main/objprint_dolphin.h"
+#include "main/fileio.h"
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
@@ -263,7 +264,7 @@ void setLoadedFileFlags_blocks1(void)
     OSRestoreInterrupts(s);
 }
 
-u32 getLoadedFileFlags(void)
+int getLoadedFileFlags(int slot)
 {
     int s = OSDisableInterrupts();
     u32 v = lbl_803DCC80;
@@ -3140,7 +3141,7 @@ void defragMemory(int mode)
     int done = 0;
     int pass = 0;
     texFlagFn_80023cbc(2);
-    if ((int)getLoadedFileFlags() != 0)
+    if (getLoadedFileFlags(0) != 0)
     {
         return;
     }
@@ -3884,11 +3885,9 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(int);
-extern void dvdCheckError(void);
 extern void mmFreeTick(int arg);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
-extern u8 gDvdErrorPauseActive;
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
 #define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
@@ -4376,7 +4375,7 @@ u32 loadTableFiles(void)
 {
     u8* base = lbl_80345E10;
     int s = OSDisableInterrupts();
-    int flags = getLoadedFileFlags();
+    int flags = getLoadedFileFlags(0);
     lbl_803DCC80;
     if ((gObjTableFileRequestFlags & 0x4) && !(flags & 0x4) && *(s32*)(base + 0x191e4) == -1)
     {

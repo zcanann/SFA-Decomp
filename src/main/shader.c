@@ -19,6 +19,7 @@
 #include "main/dll/savegame.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_dolphin.h"
+#include "main/fileio.h"
 #include "dolphin/os/OSCache.h"
 extern void* ObjGroup_GetObjects();
 extern u32 mapLoadDataFile(int mapId, int fileId);
@@ -869,13 +870,11 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(void);
-extern void dvdCheckError(void);
 extern void mmFreeTick(int arg);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 extern char lbl_8037E0C0[];
-extern u8 gDvdErrorPauseActive;
 extern int lbl_803DB620;
 
 typedef struct ShaderRomListSlot
@@ -1991,7 +1990,6 @@ int objUpdateOpacity(char* obj)
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern int objShouldUnload(char* obj);
 extern void Obj_FreeObject(char* obj);
-extern int getLoadedFileFlags(int file);
 extern int SaveGame_findTransientMapBit(int mapId, int bit);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);

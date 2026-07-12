@@ -2,6 +2,7 @@
 #define MAIN_OBJPRINT_DOLPHIN_H_
 
 #include "ghidra_import.h"
+#include "main/loaded_file_flags.h"
 
 void FUN_8003d6f8(int param_1);
 void FUN_8003d97c(u16 *param_1,int param_2);
@@ -73,7 +74,6 @@ void FUN_80042c18(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
 u8 * FUN_80042f88(int param_1);
 void FUN_80043030(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
-void clearLoadedFileFlags_blocks1(void);
 
 
 /* extern-cleanup: defining-file public prototypes */
@@ -91,6 +91,5 @@ int lockLevel(s32 val, int idx);
 int mapUnload(int mapId, int flags);
 int unlockLevel(s32 val, int idx, int flag);
 void defragMemory(int mode);
-void setLoadedFileFlags_blocks1(void);
 
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

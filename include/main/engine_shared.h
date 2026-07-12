@@ -9,6 +9,7 @@
 #include "main/camera.h"
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
+#include "main/fileio.h"
 #include "main/frame_timing.h"
 #include "main/gametext.h"
 #include "main/model_engine.h"
@@ -88,16 +89,11 @@ extern char sCurvesSetupMoveNetworkCurveTooFewControlPoints[];
 extern char sCurvesSetupMoveNetworkCurveBadControlPointCount[];
 extern char sCurvesMoveTooFewControlPoints[];
 extern char sCurvesMoveBadControlPointCount[];
-extern u8 gDvdErrorPauseActive;
-extern u8 gDvdCoverOpenErrorActive;
-extern int gDvdLastDriveStatus;
-extern u8 lbl_80339950[];
 extern int DVDGetDriveStatus(void);
 extern int DVDCheckDisk(void);
 extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
 extern void setTimeStop(int frames);
 extern void cutsceneFadeInOut(int mode);
-extern int getLoadedFileFlags(int slot);
 extern f32 fabsf(f32 x);
 extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
@@ -109,8 +105,6 @@ extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
 extern void* gResourceLoadedHandles[];
 extern u16 gResourceRefCounts[];
-extern void* gFileInfo;
-extern volatile int gDvdReadCallbackResult;
 extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
 extern f32 lbl_803DE6E0;
@@ -131,7 +125,6 @@ extern char* gameStrcpy(char* dst, char* src);
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
 extern u32 mmSetFreeDelay(u32 delay);
 extern u8 testAndSet_onlyUseHeap3(int arg);
-extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
 extern void fn_80008F38(void *addr, u32 dest, u32 size);
 extern f32 lbl_803DE6B0;
 extern int lbl_803DC9AC;
@@ -139,7 +132,6 @@ extern int lbl_803DC9B0;
 extern int lbl_803DC9B4;
 extern int lbl_803DC9B8;
 extern int lbl_803DC9BC;
-extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern int DVDOpen(char* path, void* fileInfo);
 extern void DVDSetAutoInvalidation(int autoInval);
 extern void DCStoreRange(void* addr, u32 nBytes);
@@ -147,7 +139,6 @@ extern int DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, voi
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void mmFreeTick(int arg);
-extern void dvdCheckError(void);
 extern f32 lbl_803DE5D4;
 extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
 extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
@@ -243,8 +234,6 @@ void fn_8000F9B4(void);
 u16 fn_8000FA70(void);
 u16 fn_8000FA90(void);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
-void fileReadCb_80015954(void* result);
-void setFileInfo(void* fileInfo);
 int isSpace(u32 c);
 void fn_80009008(void);
 void MIDIWADLoadedCallback(int status, void* fileInfo);
@@ -264,11 +253,9 @@ void fn_80008F38(void* addr, u32 dest, u32 size);
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-void* loadFileByPath(char* path, int* outSize);
 void audioSetSoundMode(int mode, u8 forceFlag);
 int utf8GetNextChar(u8* str, int* outLen);
 char *gameStrcpy(char *dst, char *src);
-void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*));
 void audioLoadTriggerData(void);
 int audioInit(void);
 

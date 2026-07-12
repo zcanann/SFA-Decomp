@@ -5,6 +5,7 @@
 #include "main/mapEvent.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
+#include "main/loaded_file_flags.h"
 #include "main/pi_dolphin.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
@@ -377,7 +378,6 @@ void* getLoadedTexture(int key)
     return NULL;
 }
 
-extern int getLoadedFileFlags(int);
 extern void loadTextureFile(void** out, int asset);
 #pragma dont_inline on
 void* textureLoadAsset(int asset)

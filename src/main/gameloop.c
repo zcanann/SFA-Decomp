@@ -30,6 +30,7 @@
 #include "main/lightmap.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/fileio.h"
 #include "main/textrender.h"
 extern u64 camcontrol_setAButtonIconForTarget();
 extern u64 runLoadingScreens();
@@ -616,7 +617,6 @@ extern u8 audioInit(void);
 
 extern u8 initLoadFiles(void);
 
-extern void dvdCheckError(void);
 extern void gameTextRun(void);
 extern void viFn_8004a56c(int arg);
 
@@ -1360,10 +1360,7 @@ extern void AISetStreamPlayState(int state);
 extern void audioReset(void);
 extern u8 gAudioStreamPlaying;
 extern u8 gAudioStreamDvdState;
-extern u8 gDvdErrorPauseActive;
-extern int gDvdLastDriveStatus;
 extern u8 lbl_803DCCA6;
-extern u8 gDvdCoverOpenErrorActive;
 extern u8 gGameLoopResetComboDebounce;
 extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;

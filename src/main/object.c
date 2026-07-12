@@ -189,7 +189,6 @@ extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
-extern int getLoadedFileFlags(int);
 extern void objList_remove(void* list, void* item);
 extern f32 sqrtf(f32 x);
 extern void mtx44Transpose(f32* src, f32* dst);
