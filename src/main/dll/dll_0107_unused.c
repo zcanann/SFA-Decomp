@@ -9,6 +9,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
@@ -37,7 +38,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
-extern int Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 
 /* .sdata2 constant pool */
@@ -90,7 +90,7 @@ void fn_80185868(GameObject* obj, f32 arg)
     sub->spitTimer = 0;
     if (arg < sub->radius)
     {
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
+        ObjMsg_SendToObject((int)Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, sub->radius, -5, 10);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
@@ -225,7 +225,7 @@ void dll_107_update(GameObject* obj)
     spd = lbl_803E3A5C;
     (*gSkyInterface)->getClockTime(&spd);
     state = (obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     sub = *(int*)&((GameObject*)player)->extra;
     dist = Vec_distance((void*)&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX);
     if (state->liftTimer <= 0)

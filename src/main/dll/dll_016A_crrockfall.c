@@ -17,6 +17,7 @@
 #include "main/dll/crrockfallplacement_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -52,7 +53,6 @@ extern f32 lbl_803E4714;
 extern f32 lbl_803E4718;
 extern f32 lbl_803E471C;
 extern f32 gRockfallGravity;
-extern void* Obj_GetPlayerObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -223,7 +223,7 @@ void crrockfall_update(int* obj)
                 frac = lbl_803E46E8;
             }
             height = (*(f32*)&lbl_803E4708) - frac;
-            player = Obj_GetPlayerObject();
+            player = (int*)Obj_GetPlayerObject();
             if (player != NULL)
             {
                 dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
@@ -258,7 +258,7 @@ void crrockfall_update(int* obj)
         case zcEn3_ROCKFALL_MODE_ARMED:
         {
             int inRange;
-            int* player = Obj_GetPlayerObject();
+            int* player = (int*)Obj_GetPlayerObject();
             if (player == NULL)
             {
                 inRange = 0;

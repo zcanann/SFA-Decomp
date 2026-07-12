@@ -1,8 +1,8 @@
 /* DLL 0x011F (magiccavetop) — Magic Cave top area objects [0x8018AFC8-0x8018B7B0). */
 #include "main/objseq.h"
-extern void* Obj_GetPlayerObject(void);
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/player_objects.h"
 #include "main/gamebits.h"
@@ -131,7 +131,7 @@ void MagicCaveTop_update(int* obj)
     f32 dist;
     f32 originXZ;
 
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     sub = ((GameObject*)obj)->extra;
     def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
     gb = 0;

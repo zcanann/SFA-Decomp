@@ -3,6 +3,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
@@ -37,7 +38,6 @@ extern const f32 lbl_803E44B0;
 extern const f32 lbl_803E44B4;
 extern f32 gRollingBarrelCurveInitData;
 
-extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
@@ -72,7 +72,7 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
     (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                               (s32)(lbl_803E446C * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
     {
         dist = Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
