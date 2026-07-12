@@ -114,7 +114,6 @@ void modelLightStruct_setLightKind(ModelLightStruct *light, int lightKind);
 void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *light, int objectLightMaskIndex);
 void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far);
 void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* light, int red, int green, int blue, int alpha);
-void modelLightStruct_getDiffuseColor(ModelLightStruct *light, u8 *red, u8 *green, u8 *blue, u8 *alpha);
 void modelLightStruct_setDiffuseColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setSpecularColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *light, f32 cutoff, int spotFunction);

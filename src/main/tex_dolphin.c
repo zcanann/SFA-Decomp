@@ -20,8 +20,8 @@ extern const f32 gTexIndMtxScale;
 extern f32 FBSet_803DEC28;
 extern const f32 lbl_803DEC2C;
 extern int lbl_803DEBB0;
-extern int gTexDimmedLightList;
-extern int gTexBlockLightList;
+extern ModelLightStruct* gTexDimmedLightList[2];
+extern ModelLightStruct* gTexBlockLightList[2];
 extern int lbl_803DCE30;
 extern int* lbl_803DCE34;
 extern int lbl_803DCE68;
@@ -388,7 +388,7 @@ typedef struct BitStreamReader
 
 void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
 {
-    int* lightPtr;
+    ModelLightStruct** lightPtr;
     f32 posZ;
     f32 posY;
     f32 posX;
@@ -410,13 +410,13 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
         f32 ax1 = (f32)(b->maxX >> 3) + fldX;
         f32 az1 = (f32)(b->maxZ >> 3) + fldZ;
         modelLightStruct_selectBrightestAabbLights(ax0 + fx, (f32)(b->minY >> 3) + fldY, az0 + fz, ax1 + fx,
-                                                   (f32)(b->maxY >> 3) + fldY, az1 + fz, (u8*)&gTexDimmedLightList, 2,
+                                                   (f32)(b->maxY >> 3) + fldY, az1 + fz, (u8*)gTexDimmedLightList, 2,
                                                    &lightCount);
     }
     resetLotsOfRenderVars();
     fn_8004CE0C(i);
     i = 0;
-    lightPtr = &gTexDimmedLightList;
+    lightPtr = gTexDimmedLightList;
     {
         u8* pColorA = &colorA;
         u8* pColorB = &colorB;
@@ -425,7 +425,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
         f32* pPosY = &posY;
         for (; i < lightCount; lightPtr = lightPtr + 1, i = i + 1)
         {
-            modelLightStruct_getDiffuseColor((void*)*lightPtr, &colorR, pColorG, pColorB, pColorA);
+            modelLightStruct_getDiffuseColor(*lightPtr, &colorR, pColorG, pColorB, pColorA);
             colorR = ((int)colorR >> 1) + ((int)colorR >> 2);
             colorG = ((int)colorG >> 1) + ((int)colorG >> 2);
             colorB = ((int)colorB >> 1) + ((int)colorB >> 2);
@@ -646,7 +646,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                     {
                         modelLightStruct_selectBrightestAabbLights(
                             minX + playerMapOffsetX, minY, minZ + playerMapOffsetZ, maxX + playerMapOffsetX, maxY,
-                            maxZ + playerMapOffsetZ, (u8*)&gTexBlockLightList, 2, &count);
+                            maxZ + playerMapOffsetZ, (u8*)gTexBlockLightList, 2, &count);
                     }
                     if ((shader != NULL) &&
                         (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
@@ -669,19 +669,19 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                         }
                         else
                         {
-                            modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &lightColor[0], &lightColor[1],
+                            modelLightStruct_getDiffuseColor(gTexBlockLightList[0], &lightColor[0], &lightColor[1],
                                                              &lightColor[2], &lightColor[3]);
-                            modelLightStruct_getPosition((void*)gTexBlockLightList, &lightPos[0], &lightPos[1],
+                            modelLightStruct_getPosition(gTexBlockLightList[0], &lightPos[0], &lightPos[1],
                                                          &lightPos[2]);
-                            modelLightStruct_getRadius((void*)gTexBlockLightList);
+                            modelLightStruct_getRadius(gTexBlockLightList[0]);
                             fn_8004F6D8(lightColor, &lightPos[0], chanColor);
                             for (i = 1; i < count; i = i + 1)
                             {
-                                modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0],
+                                modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0],
                                                                  &lightColor[1], &lightColor[2], &lightColor[3]);
-                                modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0],
+                                modelLightStruct_getPosition(gTexBlockLightList[i], &lightPos[0],
                                                              &lightPos[1], &lightPos[2]);
-                                modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
+                                modelLightStruct_getRadius(gTexBlockLightList[i]);
                                 fn_8004F380(lightColor, &lightPos[0]);
                             }
                             if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
@@ -698,11 +698,11 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                     {
                         for (i = 0; i < count; i = i + 1)
                         {
-                            modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &lightColor[0],
+                            modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0],
                                                              &lightColor[1], &lightColor[2], &lightColor[3]);
-                            modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &lightPos[0], &lightPos[1],
+                            modelLightStruct_getPosition(gTexBlockLightList[i], &lightPos[0], &lightPos[1],
                                                          &lightPos[2]);
-                            modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
+                            modelLightStruct_getRadius(gTexBlockLightList[i]);
                             fn_8004FA30(lightColor, &lightPos[0]);
                         }
                     }
