@@ -12,5 +12,6 @@
 void* trickyGetQueuedPathParticlePos(GameObject* obj);
 GameObject* fn_80138F84(GameObject* tricky);
 int trickyFn_80138f14(GameObject* tricky);
+void trickyImpress(GameObject* obj);
 
 #endif

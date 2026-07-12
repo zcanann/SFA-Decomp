@@ -1,6 +1,7 @@
 /* DLL 0x01A9 — bombplant / enemymushroom group. TU: 0x801D286C–0x801D2C54. */
 #include "main/audio/sfx_ids.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -33,7 +34,6 @@
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 #define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
 extern f32 lbl_803E5370;
-extern void trickyImpress(u8* obj);
 
 extern f32 gBombPlantExplosionScale;
 extern f32 lbl_803E536C;
@@ -75,7 +75,7 @@ void bombplant_explode(int* obj, int unused, int* p3)
     int i;
     if (trickyObj != NULL)
     {
-        trickyImpress(trickyObj);
+        trickyImpress((GameObject*)trickyObj);
     }
     Sfx_PlayFromObject(obj, SFXTRIG_bombplant_woompf);
     {

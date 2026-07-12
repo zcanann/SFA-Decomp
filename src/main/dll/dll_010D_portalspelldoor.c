@@ -4,6 +4,7 @@
  */
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/dll/windlift107state_struct.h"
@@ -89,7 +90,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int playerHasSpell(GameObject* obj, int spell);
 extern int objGetAnimState80A(GameObject* player);
 extern void playerCancelSpell(int player, int v);
-extern void trickyImpress(int tricky);
 
 int PortalSpellDoor_getExtraSize(void)
 {
@@ -165,7 +165,7 @@ void PortalSpellDoor_update(GameObject* obj)
             tricky = (int)getTrickyObject();
             if ((void*)tricky != NULL)
             {
-                trickyImpress(tricky);
+                trickyImpress((GameObject*)tricky);
             }
             ((PortalFlags*)&state->flags0C)->open = 1;
             state->openTimer = -1;

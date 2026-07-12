@@ -10,6 +10,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
@@ -207,7 +208,6 @@ extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int gameBitIncrement(int bit);
 extern void objAnimFreeChildren(int a, int b, GameObject** c);
-extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
@@ -1779,7 +1779,7 @@ void tricky_handleDefeat(GameObject* obj, int state)
         tricky = (void*)getTrickyObject();
         if (tricky != NULL)
         {
-            trickyImpress((int)tricky);
+            trickyImpress((GameObject*)tricky);
         }
         /* Skip the death gamebits when the baddie is sequence-driven so
          * scripted/cutscene deaths don't count. */

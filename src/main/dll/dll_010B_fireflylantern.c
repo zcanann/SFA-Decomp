@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
@@ -20,7 +21,6 @@ extern const f32 lbl_803E3AEC;
 extern f32 lbl_803E3AE8;
 
 extern int gameBitDecrement(int bit);
-extern void trickyImpress(u8* obj);
 
 #pragma dont_inline on
 GameObject* FireFlyLantern_spawnFireFly(int* obj)
@@ -103,7 +103,7 @@ void FireFlyLantern_free(int obj)
     void* tricky = getTrickyObject();
     if (tricky != NULL)
     {
-        trickyImpress(tricky);
+        trickyImpress((GameObject*)tricky);
     }
     ObjGroup_RemoveObject(obj, FIREFLYLANTERN_OBJGROUP);
 }

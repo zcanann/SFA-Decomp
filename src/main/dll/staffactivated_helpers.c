@@ -16,6 +16,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -57,7 +58,6 @@ extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern s16 lbl_803DBDE0[4];
-extern void trickyImpress(int obj);
 
 void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state)
 {
@@ -160,7 +160,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
         (*gMapEventInterface)->addTime(setup->base.mapId, lbl_803E3BD8 * setup->timedEventSeconds);
         if (tricky != 0)
         {
-            trickyImpress(tricky);
+            trickyImpress((GameObject*)tricky);
         }
 
         i = 0;

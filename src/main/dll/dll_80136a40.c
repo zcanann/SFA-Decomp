@@ -500,7 +500,7 @@ void logPrintf(char* fmt, ...)
 
 /* Set bit 0x80000000 of obj->_b8->_54
  * and store lbl_803E2408 into obj->_b8->_808. */
-void trickyImpress(u8* obj)
+void trickyImpress(GameObject* obj)
 {
     u8* b = ((GameObject*)obj)->extra;
     ((TrickyImpressState*)b)->flags54 |= 0x80000000;

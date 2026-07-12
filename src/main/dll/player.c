@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/object.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/debug.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -12499,7 +12500,7 @@ void playerSetDisguised(GameObject* obj, int mode)
         tricky = getTrickyObject();
         if (tricky != NULL)
         {
-            trickyImpress(tricky);
+            trickyImpress((GameObject*)tricky);
         }
         mainSetBits(GAMEBIT_PlayerIsDisguised, 1);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_lrope_powerup);
@@ -16945,7 +16946,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
             void* t = getTrickyObject();
             if (t != NULL)
             {
-                trickyImpress(t);
+                trickyImpress((GameObject*)t);
             }
             ObjAnim_SetCurrentMove((int)obj, 0x7f, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EB4;
@@ -17493,7 +17494,7 @@ int playerStateSuperQuake(GameObject* obj, int state, f32 fv)
             void* tricky = getTrickyObject();
             if (tricky != NULL)
             {
-                trickyImpress(tricky);
+                trickyImpress((GameObject*)tricky);
             }
             Sfx_PlayFromObject((int)obj, SFXTRIG_staff_boulder_move1);
             superQuakeFn_8016d9fc((char*)obj + 0xc);

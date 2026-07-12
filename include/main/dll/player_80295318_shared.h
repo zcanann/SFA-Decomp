@@ -691,7 +691,6 @@ extern f32 lbl_803E80E8;
 extern f32 lbl_803E7EFC;
 extern f32 lbl_803E8070;
 extern f32 lbl_803E7F30;
-extern void trickyImpress(void* trickyObj);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern f32 lbl_803E800C;
 extern f32 lbl_803E8138;
