@@ -103,7 +103,6 @@ typedef struct SmallBasketThrowSetup
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern int getAngle(float y, float x);

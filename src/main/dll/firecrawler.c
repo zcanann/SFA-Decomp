@@ -85,7 +85,6 @@ extern f32 lbl_803E2CC8;
 extern f32 lbl_803E2CCC;
 extern f32 lbl_803E2CD0;
 extern f32 lbl_803E2CD4;
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
 extern void firepipe_setLinkedUpdateFlag(int* obj);

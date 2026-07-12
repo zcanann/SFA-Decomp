@@ -59,7 +59,6 @@ extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
 extern void Obj_FreeObject(u8* obj);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];

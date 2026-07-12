@@ -193,7 +193,6 @@ extern u64 ObjLink_AttachChild();
 extern void Obj_FreeObject(int obj);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup, int b, int c, int d, int e);
-extern u8 Obj_IsLoadingLocked(void);
 extern u32 ObjPath_GetPointWorldPositionArray();
 extern u32 ObjPath_GetPointWorldPosition();
 extern u32 objAnimFn_80038f38();

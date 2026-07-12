@@ -37,7 +37,6 @@ extern void trickyImpress(u8* obj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
 extern f32 gBombPlantExplosionScale;
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E536C;

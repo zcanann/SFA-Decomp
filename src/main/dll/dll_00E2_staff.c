@@ -203,7 +203,6 @@ extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, v
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 
 void MikaBombShadow_update(int* obj);

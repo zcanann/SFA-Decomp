@@ -44,7 +44,6 @@ extern int DBprotection_getCameraState(u32 g);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u32 getSbGalleon(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);

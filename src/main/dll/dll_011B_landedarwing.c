@@ -208,7 +208,6 @@ int landed_arwing_getExtraSize(void)
 }
 
 extern f32 timeDelta;
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void objRenderModelAndHitVolumes(f32);

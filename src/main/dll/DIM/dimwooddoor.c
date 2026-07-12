@@ -58,7 +58,6 @@ typedef struct DIMWoodDoorShardState
     u8 hitRadius;
 } DIMWoodDoorShardState;
 
-extern u8 Obj_IsLoadingLocked(void);
 extern s16* objModelGetVecFn_800395d8(GameObject* obj, int target);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);

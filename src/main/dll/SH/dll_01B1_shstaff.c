@@ -159,7 +159,6 @@ extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objSetMtxFn_800412d4(f32* mtx);
 extern void objRenderModel(int obj);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 extern f32 getXZDistance(f32* a, f32* b);
