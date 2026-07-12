@@ -3,6 +3,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/objhits.h"
@@ -42,7 +43,6 @@ extern int getAngle(float y, float x);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void Obj_FreeObject(int obj);
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -278,7 +278,7 @@ void RollingBarrel_update(GameObject* obj)
         state->timer += timeDelta;
         if (state->timer >= lbl_803E44B4)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return;
         }
         break;

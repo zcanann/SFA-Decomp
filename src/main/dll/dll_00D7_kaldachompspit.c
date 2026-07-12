@@ -16,6 +16,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
@@ -45,7 +46,6 @@ extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
 extern void queueGlowRender(void* light);
-extern int Obj_FreeObject(int obj);
 extern int getAngle(float y, float x);
 extern void ModelLightStruct_free(void* p);
 extern void* objCreateLight(int arg, u8 addToList);
@@ -180,7 +180,7 @@ void KaldaChompSpit_update(int obj)
     if (((GameObject*)obj)->unkF4 < 0)
     {
         Sfx_StopObjectChannel(obj, 0x7f);
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
     }
     else if (objAnim->alpha != 0)
     {

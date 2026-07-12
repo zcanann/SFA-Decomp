@@ -10,9 +10,9 @@
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
 
+#include "main/object.h"
 extern LfxEmitterConfig lbl_803AC7B0;
 
-extern void Obj_FreeObject(int obj);
 
 /* reports whether the emitter's config record has been loaded yet */
 int lfxemitter_func0B(LfxEmitterObject* obj)
@@ -128,7 +128,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
             state->lifeTimer -= framesThisStep;
             if (state->lifeTimer <= 0)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject((GameObject*)obj);
                 return;
             }
         }

@@ -1,5 +1,6 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/objlib.h"
@@ -10,7 +11,6 @@ extern int Obj_AllocObjectSetup(int size, int objectId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void cmbsrc_setExternalActive(int obj, int active);
-extern void Obj_FreeObject(int obj);
 extern void objSetSlot(int obj, int slot);
 extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
@@ -177,7 +177,7 @@ void sc_cloudrunnera_update(int obj)
                 if ((u32)innerSlot != 0)
                 {
                     ObjLink_DetachChild((GameObject*)obj, innerSlot);
-                    Obj_FreeObject(innerSlot);
+                    Obj_FreeObject((GameObject*)innerSlot);
                 }
                 break;
             }

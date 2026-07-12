@@ -26,6 +26,7 @@
 #include "main/frustum.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
@@ -91,7 +92,6 @@ extern void fn_80179678(GameObject* slot, int obj);
 extern void fn_8017962C(int slot);
 extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-extern void Obj_FreeObject(int obj);
 
 void fn_8013F100(GameObject* obj, register int state)
 {
@@ -441,7 +441,7 @@ void fn_8013F100(GameObject* obj, register int state)
     if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_RESET_FLAG_10000) != 0) &&
         ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, lbl_803E2500) == 0)
     {
-        Obj_FreeObject(*(int*)&((TrickyState*)state)->followObj);
+        Obj_FreeObject((GameObject*)((TrickyState*)state)->followObj);
     }
     else
     {

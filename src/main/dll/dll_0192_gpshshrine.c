@@ -4,6 +4,7 @@
 #include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -101,7 +102,6 @@ extern void* ObjGroup_GetObjects();
 
 
 
-extern int Obj_FreeObject(int obj);
 extern f32 lbl_803E503C;
 extern f32 lbl_803E5040;
 
@@ -462,7 +462,7 @@ void gpsh_shrine_update(GameObject *obj)
                     objs = ObjGroup_GetObjects(GPSHSHRINE_SPAWNED_OBJGROUP, &count);
                     for (; count != 0; count--)
                     {
-                        Obj_FreeObject(objs[count - 1]);
+                        Obj_FreeObject((GameObject*)objs[count - 1]);
                     }
                     ((GpshShrineState*)data)->timer = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
