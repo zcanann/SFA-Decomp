@@ -63,7 +63,7 @@ void timer_clearManualFlags(GameObject* obj);
 void timer_forceStart(GameObject* obj);
 void timer_addDuration(GameObject* obj, int duration);
 void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-void timer_init(GameObject* obj, int setup);
+void timer_init(GameObject* obj, TimerSetup* setup);
 void timer_update(GameObject* obj);
 
 #endif

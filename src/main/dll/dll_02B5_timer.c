@@ -11,7 +11,14 @@
  * expiredGameBit and raises state->flags.expired. timer_addDuration extends a
  * running timer.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/game_timer.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/objlib.h"
+#include "main/objtexture.h"
 #include "main/maketex.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_ids.h"
@@ -102,10 +109,10 @@ void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     }
 }
 
-void timer_init(GameObject* obj, int setup)
+void timer_init(GameObject* obj, TimerSetup* setup)
 {
     TimerState* state = (obj)->extra;
-    TimerSetup* setupData = (TimerSetup*)setup;
+    TimerSetup* setupData = setup;
 
     storeZeroToFloatParam((void*)state);
     state->mode = setupData->mode;
