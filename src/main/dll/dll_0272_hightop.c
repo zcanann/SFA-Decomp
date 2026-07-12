@@ -444,7 +444,7 @@ void HighTop_renderGroundMarker(GameObject* obj, f32 scale)
     f32* mtx;
     f32 lx, ly, lz;
     MatrixTransform pos;
-    mtx = ObjPath_GetPointModelMtx((int)obj, 2);
+    mtx = (f32*)ObjPath_GetPointModelMtx(obj, 2);
     ObjPath_GetPointLocalPosition(obj, 2, &lx, &ly, &lz);
     pos.x = lx;
     pos.y = ly;
@@ -467,10 +467,10 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         int** list;
         int i;
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
-        ObjPath_GetPointWorldPosition((int)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
                                       0);
-        ObjPath_GetPointWorldPositionArray((int)obj, 3, 4, runtime->pathPointWorldPositions);
-        ObjPath_GetPointWorldPosition((int)obj, 0, &runtime->pathPoint0X, &runtime->pathPoint0Y, &runtime->pathPoint0Z,
+        ObjPath_GetPointWorldPositionArray((GameObject*)obj, 3, 4, runtime->pathPointWorldPositions);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &runtime->pathPoint0X, &runtime->pathPoint0Y, &runtime->pathPoint0Z,
                                       0);
         runtime->flagsC49.b5 = 1;
         dll_2E_func06((GameObject*)obj, (MoveLibState*)runtime->lookController, 0);

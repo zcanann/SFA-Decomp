@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/camera.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -143,8 +144,6 @@ extern f32 lbl_803E68E8;
 extern f32 lbl_803E68EC;
 extern f32 lbl_803E6A38;
 extern f32 lbl_803E6A74;
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
-extern void ObjPath_GetPointWorldPositionArray(int obj, int idx, int count, f32* out);
 extern int lbl_8032AB48[];
 extern s16 lbl_8032A730[];
 extern u8 lbl_803DC968;
@@ -184,13 +183,11 @@ extern void* gKTRexResource;
 extern int gKTrexFloorSwitchCurveFindResult;
 extern f32 gDrakorHoverpadMtx[];
 extern void** gBaddieControlInterface;
-extern void* ObjPath_GetPointModelMtx(int obj, int idx);
 extern void fn_8003B950(f32* mtx);
 extern s16 gHighTopLookYawOffset;
 extern int* getTrickyObject(void);
 extern f32 lbl_803E69F0;
 extern f32 gHighTopGroundMarkerMtx[];
-extern void ObjPath_GetPointLocalPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern f32 lbl_803E68C0;
 extern void modelLightStruct_setEnabled(void* light, int v, f32 f);

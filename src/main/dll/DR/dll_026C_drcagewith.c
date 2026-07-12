@@ -76,7 +76,7 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
         if (((DrcagewithState*)state)->spawnedObject != 0)
         {
-            ObjPath_GetPointWorldPosition((int)obj, 0, &((DrcagewithState*)state)->spawnedObject->anim.localPosX,
+            ObjPath_GetPointWorldPosition(obj, 0, &((DrcagewithState*)state)->spawnedObject->anim.localPosX,
                                           &((DrcagewithState*)state)->spawnedObject->anim.localPosY,
                                           &((DrcagewithState*)state)->spawnedObject->anim.localPosZ, 0);
             objRenderModelAndHitVolumes(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5, (double)lbl_803E69F0);
@@ -86,7 +86,7 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
                 ((GameObject*)linkedObj)->anim.rotY = ((DrcagewithState*)state)->spawnedObject->anim.rotY;
                 ((GameObject*)linkedObj)->anim.rotZ = ((DrcagewithState*)state)->spawnedObject->anim.rotZ;
                 ObjPath_GetPointWorldPosition(
-                    (int)((DrcagewithState*)state)->spawnedObject, 0, &((GameObject*)linkedObj)->anim.localPosX,
+                    ((DrcagewithState*)state)->spawnedObject, 0, &((GameObject*)linkedObj)->anim.localPosX,
                     &((GameObject*)linkedObj)->anim.localPosY, &((GameObject*)linkedObj)->anim.localPosZ, 0);
                 objRenderModelAndHitVolumes(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
             }

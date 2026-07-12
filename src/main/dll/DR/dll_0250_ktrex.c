@@ -368,7 +368,7 @@ void ktrex_hitDetect(GameObject* obj)
     f32 z, y, x;
     if (((KTRexArenaState*)gKTRexState)->light != 0)
     {
-        ObjPath_GetPointWorldPosition((int)obj, 5, &x, &y, &z, 0);
+        ObjPath_GetPointWorldPosition(obj, 5, &x, &y, &z, 0);
         modelLightStruct_setPosition(((KTRexArenaState*)gKTRexState)->light, x, y, z);
         modelLightStruct_updateGlowAlpha(((KTRexArenaState*)gKTRexState)->light);
     }
@@ -588,15 +588,15 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
         fn_8003B5E0(200, 0, 0, (int)((KTRexRuntime*)gKTRexRuntime)->bobPhase);
     }
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6818);
-    ObjPath_GetPointWorldPosition((int)obj, 1, (f32*)((char*)gKTRexState + 0x130), (f32*)((char*)gKTRexState + 0x134),
+    ObjPath_GetPointWorldPosition(obj, 1, (f32*)((char*)gKTRexState + 0x130), (f32*)((char*)gKTRexState + 0x134),
                                   (f32*)((char*)gKTRexState + 0x138), 0);
-    ObjPath_GetPointWorldPosition((int)obj, 2, (f32*)((char*)gKTRexState + 0x148), (f32*)((char*)gKTRexState + 0x14c),
+    ObjPath_GetPointWorldPosition(obj, 2, (f32*)((char*)gKTRexState + 0x148), (f32*)((char*)gKTRexState + 0x14c),
                                   (f32*)((char*)gKTRexState + 0x150), 0);
-    ObjPath_GetPointWorldPosition((int)obj, 3, (f32*)((char*)gKTRexState + 0x160), (f32*)((char*)gKTRexState + 0x164),
+    ObjPath_GetPointWorldPosition(obj, 3, (f32*)((char*)gKTRexState + 0x160), (f32*)((char*)gKTRexState + 0x164),
                                   (f32*)((char*)gKTRexState + 0x168), 0);
-    ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)((char*)gKTRexState + 0x118), (f32*)((char*)gKTRexState + 0x11c),
+    ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)gKTRexState + 0x118), (f32*)((char*)gKTRexState + 0x11c),
                                   (f32*)((char*)gKTRexState + 0x120), 0);
-    memcpy(m, ObjPath_GetPointModelMtx((int)obj, 4), 48);
+    memcpy(m, (void*)ObjPath_GetPointModelMtx(obj, 4), 48);
     ((KTRexArenaState*)gKTRexState)->vecX = lbl_803E67B4 * (f32)(int)randomGetRange(-50, 50);
     ((KTRexArenaState*)gKTRexState)->vecY = lbl_803E67B4 * (f32)(int)randomGetRange(60, 120);
     ((KTRexArenaState*)gKTRexState)->vecZ = lbl_803E6848 * (f32)(int)randomGetRange(100, 150);

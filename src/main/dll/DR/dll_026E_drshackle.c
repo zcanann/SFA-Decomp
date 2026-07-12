@@ -110,9 +110,9 @@ int drshackle_setScale(GameObject* obj, int a, int b, int c, int d, int e, int f
         mag = PSVECMag(jointPos);
         obj->anim.rotZ = (s16)(lbl_803DC2F0 + getAngle(jointPos[0], jointPos[2]));
         obj->anim.rotY = (s16)(lbl_803DDD70 + getAngle(mag, savedY));
-        objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(a, b));
+        objSetMtxFn_800412d4((void*)ObjPath_GetPointModelMtx((GameObject*)a, b));
     }
-    ObjPath_GetPointWorldPosition(a, b, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
+    ObjPath_GetPointWorldPosition((GameObject*)a, b, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                   0);
     objRenderModelAndHitVolumes((void*)obj, c, d, e, f, (double)lbl_803E6A2C);
 

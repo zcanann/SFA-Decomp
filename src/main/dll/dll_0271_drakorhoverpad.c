@@ -1060,7 +1060,7 @@ void drakorhoverpad_renderGroundMarker(GameObject* obj, f32 scale)
 {
     f32* mtx;
     MatrixTransform pos;
-    mtx = ObjPath_GetPointModelMtx((int)obj, 0);
+    mtx = (f32*)ObjPath_GetPointModelMtx(obj, 0);
     pos.x = lbl_803E6A3C;
     pos.y = lbl_803E6A40;
     pos.z = lbl_803E6A3C;
