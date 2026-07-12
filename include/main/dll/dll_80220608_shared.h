@@ -175,8 +175,6 @@ extern void objfx_spawnDirectionalBurst(int obj, int a, int b, int c, f32 e, f32
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
                                   f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
-extern int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB,
-                                                     u32 sfxId, float* cooldown);
 
 
 extern f32 lbl_803E7078;
@@ -306,7 +304,6 @@ extern f32 lbl_803E7394;
 extern f32 lbl_803E7398;
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
 extern void lightSetField4D(void* light, int v);
-extern void ObjHits_SyncObjectPositionIfDirty(u32 obj);
 extern f32 lbl_803E73A8;
 extern f32 lbl_803E73AC;
 extern f32 lbl_803E73B0;

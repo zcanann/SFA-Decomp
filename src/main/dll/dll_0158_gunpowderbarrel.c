@@ -677,7 +677,7 @@ void gunpowderbarrel_update(GameObject *obj)
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 8, -2, 0x19);
             ObjHits_EnableObject((int)obj);
-            ObjHits_SyncObjectPositionIfDirty((int)obj);
+            ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
             gunpowderbarrel_updatePhysics((int*)obj);
             gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
         }
@@ -867,7 +867,7 @@ void gunpowderbarrel_update(GameObject *obj)
             state->heldByCarryInterface = 0;
             if (fn_802966B4(player) != 0) /* controlMode 6: set down in place */
             {
-                ObjHits_SyncObjectPositionIfDirty((int)obj);
+                ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
             }
             else if (fn_8029669C(player) != 0) /* controlMode 7: launch at target */
             {
@@ -876,7 +876,7 @@ void gunpowderbarrel_update(GameObject *obj)
             }
             else if (lbl_803E42C0 == Player_GetLiftVelocityY((int)player)) /* no lift: gentle toss */
             {
-                ObjHits_SyncObjectPositionIfDirty((int)obj);
+                ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
                 gunpowderbarrel_launchAtTarget(obj, 0);
             }
             else if (state->fuseFrames == 0)
@@ -990,7 +990,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         ObjHits_SetFlags((ObjAnimComponent*)o, OBJHITS_PRIORITY_STATE_IMMOVABLE | 0x80);
         ObjHits_ClearSourceMask((ObjAnimComponent*)o, 1);
         ObjHits_EnableObject(o);
-        ObjHits_SyncObjectPositionIfDirty(o);
+        ObjHits_SyncObjectPositionIfDirty((GameObject*)o);
     }
     else
     {

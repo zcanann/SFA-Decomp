@@ -2,6 +2,9 @@
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/sky_api.h"
+
+#define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
+    ((void (*)(u32))ObjHits_SyncObjectPositionIfDirty)((u32)(obj))
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -340,12 +343,12 @@ int playerStatusIsPositive(GameObject* obj)
 
 void fn_80298924(int obj)
 {
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
 }
 
 void objUpdateHitboxPos(int obj)
 {
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
 }
 
 void fn_802A49A8(GameObject* obj)
@@ -399,7 +402,7 @@ int playerState41(GameObject* obj, int state, f32 fv)
         staffFn_80170380(gPlayerStaffObject, 2);
         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-        ObjHits_SyncObjectPositionIfDirty(obj);
+        ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 0;
@@ -621,7 +624,7 @@ void playerAddRemoveMagic(GameObject* obj, int amount)
 void fn_802994A4(GameObject* obj)
 {
     *(s16*)((char*)*(int*)&obj->extra + 0x80a) = -1;
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
 }
 
 int objFn_802962b4(GameObject* obj)
@@ -694,7 +697,7 @@ void fn_802985AC(GameObject* obj)
     inner->buttonHoldTimer = lbl_803E7EA4;
     ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 0;
     inner->animState = -1;
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
 }
 
 int playerState17(int p1, int state)
@@ -1703,7 +1706,7 @@ int playerStateMoving(int obj, int state)
                     staffFn_80170380(gPlayerStaffObject, 2);
                     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
                     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-                    ObjHits_SyncObjectPositionIfDirty(obj);
+                    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
                     leave = 1;
                 }
                 else
@@ -2445,7 +2448,7 @@ int playerStateOnLadder(int obj, int state)
                             staffFn_80170380(gPlayerStaffObject, 2);
                             ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
                             *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-                            ObjHits_SyncObjectPositionIfDirty(obj);
+                            ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
                             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
                             ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
@@ -6088,7 +6091,7 @@ void fn_8029DAE0(GameObject* obj, int* p2)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
     }
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
 }
 
 typedef struct
@@ -6560,7 +6563,7 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
             staffFn_80170380(gPlayerStaffObject, 2);
             ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
             *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-            ObjHits_SyncObjectPositionIfDirty(obj);
+            ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
@@ -9431,7 +9434,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
     staffFn_80170380(gPlayerStaffObject, 2);
     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
     inner->waterDepth = lbl_803E7EA4;
     inner->waterSurfaceY = lbl_803E80D0;
     inner->idleDelayTimer = lbl_803E7FA4;
@@ -9839,7 +9842,7 @@ void fn_8029FFD0(GameObject* obj, int p2)
             inner->curAnimId = 0x42;
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-        ObjHits_SyncObjectPositionIfDirty(obj);
+        ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
     }
     obj->anim.activeMove = -1;
 }
@@ -13031,7 +13034,7 @@ void fn_80296D20(int obj, void* arg)
             staffFn_80170380(gPlayerStaffObject, 2);
             ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
             *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-            ObjHits_SyncObjectPositionIfDirty(obj);
+            ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
@@ -15514,7 +15517,7 @@ void fn_802AED2C(GameObject* obj, int state, int p3)
     staffFn_80170380(gPlayerStaffObject, 2);
     ((ByteFlags*)((char*)state + 0x3f0))->b02 = 0;
     *(u32*)&((PlayerState*)state)->flags360 |= PLAYER_FLAG_TELEPORTED;
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
     ((ByteFlags*)((char*)state + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)state + 0x3f0))->b04 = 0;
     ((PlayerState*)state)->staffHoldFrames = 0;
@@ -15950,7 +15953,7 @@ void fn_802A514C(GameObject* obj, int state)
         staffFn_80170380(gPlayerStaffObject, 2);
         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-        ObjHits_SyncObjectPositionIfDirty(obj);
+        ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
     }
     gPlayerSubState = 1;
 }
@@ -16068,7 +16071,7 @@ int fn_802ADC08(GameObject* obj, int inner, int p3)
         staffFn_80170380(gPlayerStaffObject, 2);
         ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-        ObjHits_SyncObjectPositionIfDirty(obj);
+        ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 0;
@@ -16522,7 +16525,7 @@ int playerStateSlideDownLadder(GameObject* obj, int state, f32 fv)
                     staffFn_80170380(gPlayerStaffObject, 2);
                     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
                     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-                    ObjHits_SyncObjectPositionIfDirty(obj);
+                    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
                     ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
                     ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
@@ -17587,7 +17590,7 @@ void fn_802AE9C8(GameObject* obj, int inner, int state)
     staffFn_80170380(gPlayerStaffObject, 2);
     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
     if (((ByteFlags*)((char*)inner + 0x3f0))->b40)
     {
         ((PlayerState*)inner)->yaw += -0x8000;

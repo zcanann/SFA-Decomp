@@ -146,13 +146,13 @@ void ecsh_cup_update(short* obj)
             ((GameObject*)obj)->anim.localPosZ = state->velZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ECSHCUP_HIT_VOLUME_SLOT, 1, 0);
-            ObjHits_SyncObjectPositionIfDirty((int)obj);
+            ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
         }
         else
         {
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
-            ObjHits_SyncObjectPositionIfDirty((int)obj);
+            ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
         }
         m = mode;
         if (m == 6)
@@ -302,7 +302,7 @@ void ecsh_cup_init(int obj, int def)
     }
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
 }
 
 void ecsh_cup_initialise(void)

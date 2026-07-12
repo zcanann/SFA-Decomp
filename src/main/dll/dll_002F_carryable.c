@@ -210,7 +210,7 @@ int Carryable_updateHeld(u8* obj)
         {
             u8* hit;
             int cnt, i, j;
-            ObjHits_SyncObjectPositionIfDirty(obj);
+            ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
             {

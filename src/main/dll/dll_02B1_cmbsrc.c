@@ -640,7 +640,7 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
         }
         if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_SYNC_HIT_POSITION)
         {
-            ObjHits_SyncObjectPositionIfDirty((u32)cmbsrc);
+            ObjHits_SyncObjectPositionIfDirty((GameObject*)cmbsrc);
             state->hitFlags.disabled = 0;
         }
         else

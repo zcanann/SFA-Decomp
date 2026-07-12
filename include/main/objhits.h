@@ -308,7 +308,7 @@ void ObjHits_SetSourceMask(ObjAnimComponent* obj, u8 sourceMask);
 void ObjHits_ClearFlags(ObjAnimComponent* obj, int flags);
 void ObjHits_SetFlags(ObjAnimComponent* obj, int flags);
 void ObjHits_MarkObjectPositionDirty(ObjAnimComponent* obj);
-void ObjHits_SyncObjectPositionIfDirty();
+void ObjHits_SyncObjectPositionIfDirty(GameObject* obj);
 void ObjHits_DisableObject();
 void ObjHits_EnableObject();
 int ObjHits_IsObjectEnabled(ObjAnimComponent* obj);

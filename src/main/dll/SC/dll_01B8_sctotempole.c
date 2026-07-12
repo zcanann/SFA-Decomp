@@ -7,6 +7,7 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/SC/sc_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"

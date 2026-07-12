@@ -11,6 +11,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 
 #define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
 

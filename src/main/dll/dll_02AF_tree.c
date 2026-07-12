@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
+#include "main/objhits.h"
 
 #define TREE_AMBIENT_EFFECT_OBJECT_ID    0x210
 #define TREE_OBJECT_FLAGS_INIT           0x2000

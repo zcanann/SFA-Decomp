@@ -19,6 +19,7 @@
 #include "main/dll/WM/wm_shared.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/path_control_interface.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
@@ -823,7 +824,7 @@ void wmwallcrawler_init(GameObject* obj, int spawn)
     }
     (obj)->animEventCallback = wmwallcrawler_animEventCallback;
     ObjHits_EnableObject((u32)obj);
-    ObjHits_SyncObjectPositionIfDirty((u32)obj);
+    ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
 }
 
 void wmwallcrawler_release(void)

@@ -146,7 +146,7 @@ void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
     obj->anim.velocityY = b;
     obj->anim.velocityZ = c;
     ObjHits_EnableObject(objId = (int)obj);
-    ObjHits_SyncObjectPositionIfDirty(objId);
+    ObjHits_SyncObjectPositionIfDirty((GameObject*)objId);
     state->hittableLatch = 1;
     state->launchX = obj->anim.localPosX;
     state->launchY = obj->anim.localPosY;

@@ -434,14 +434,12 @@ void ObjHits_MarkObjectPositionDirty(ObjAnimComponent* obj)
     hitState->flags |= OBJHITS_PRIORITY_STATE_POSITION_DIRTY;
 }
 
-void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
+void ObjHits_SyncObjectPositionIfDirty(GameObject* obj)
 {
-    ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
     s16 flags;
 
-    obj = (ObjAnimComponent*)objPtr;
-    hitState = (ObjHitsPriorityState*)obj->hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState == 0)
     {
         return;
@@ -452,12 +450,12 @@ void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
         return;
     }
     hitState->flags = (s16)(flags & ~OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
-    hitState->localPosX = obj->localPosX;
-    hitState->localPosY = obj->localPosY;
-    hitState->localPosZ = obj->localPosZ;
-    hitState->worldPosX = obj->worldPosX;
-    hitState->worldPosY = obj->worldPosY;
-    hitState->worldPosZ = obj->worldPosZ;
+    hitState->localPosX = obj->anim.localPosX;
+    hitState->localPosY = obj->anim.localPosY;
+    hitState->localPosZ = obj->anim.localPosZ;
+    hitState->worldPosX = obj->anim.worldPosX;
+    hitState->worldPosY = obj->anim.worldPosY;
+    hitState->worldPosZ = obj->anim.worldPosZ;
     return;
 }
 

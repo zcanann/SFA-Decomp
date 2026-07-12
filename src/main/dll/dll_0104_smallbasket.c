@@ -836,7 +836,7 @@ void SmallBasket_update(GameObject* obj)
                 state->hiddenTimer = 0;
                 state->disableTimer = 0;
                 ObjHits_EnableObject(obj);
-                ObjHits_SyncObjectPositionIfDirty((int)obj);
+                ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             }

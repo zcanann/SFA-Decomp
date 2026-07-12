@@ -850,7 +850,7 @@ int hightop_stateHandler07(GameObject* obj, int stateArg)
         (obj)->anim.velocityX = zero;
         (obj)->anim.velocityY = zero;
         (obj)->anim.velocityZ = zero;
-        ObjHits_SyncObjectPositionIfDirty((int)obj);
+        ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
         (*gGameUIInterface)->airMeterSetShutdown();
         rt->flagsC49.b7 = 0;
         rt->flagsC49.b1 = 0;
