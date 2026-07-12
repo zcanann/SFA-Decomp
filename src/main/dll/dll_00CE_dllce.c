@@ -51,7 +51,6 @@
 #define DLLCE_HIT_VOLUME_SLOT 10
 extern void ObjHits_RegisterActiveHitVolumeObject();
 extern void ObjHits_EnableObject();
-extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();
 
 int fn_8015E3A0(GameObject* obj, int state)
@@ -1005,7 +1004,7 @@ void dll_CE_initialise(void)
 void dll_CE_free(int* obj)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, DLLCE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DLLCE_OBJGROUP);
     {
         int* sub = ((GameObject*)obj)->childObjs[0];
         if (sub != NULL)

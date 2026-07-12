@@ -36,7 +36,6 @@ STATIC_ASSERT(offsetof(IMMultiSeqPlacement, polarityMask) == 0x30);
 #define IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern f32 lbl_803E37A8;
-extern void ObjGroup_AddObject();
 
 /* IMMultiSeq_SeqFn: end-of-sequence predicate. With a valid trigger id,
    peek at the next step's active game bit; if its polarity has flipped
@@ -173,7 +172,7 @@ void IMMultiSeq_init(int* obj, IMMultiSeqPlacement* params)
     {
         objAnim->bankIndex = 0;
     }
-    ObjGroup_AddObject(obj, IMMULTISEQ_OBJGROUP);
+    ObjGroup_AddObject((int)obj, IMMULTISEQ_OBJGROUP);
     i = 0;
     while (i < 4)
     {

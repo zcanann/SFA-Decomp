@@ -302,7 +302,6 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
 {
 
-    extern void ObjGroup_RemoveObject(int, int);
     extern int gameBitIncrement(int bit);
 
     extern int lbl_80329634[];
@@ -513,7 +512,6 @@ void dbstealerworm_release(void)
 
 void dbstealerworm_init(int* obj, u8* def, int flag)
 {
-    extern u32 ObjGroup_AddObject();
     extern u32 ObjHits_EnableObject();
     u8* sub;
     int* p40c;
@@ -528,7 +526,7 @@ void dbstealerworm_init(int* obj, u8* def, int flag)
     }
     ((void (*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(
         obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
-    ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DBSTEALERWORM_OBJGROUP);
     ((GameObject*)obj)->animEventCallback = NULL;
     p40c = *(int**)&((GroundBaddieState*)sub)->control;
     memset(p40c, 0, sizeof(DbStealerwormControl));
@@ -555,10 +553,9 @@ void dbstealerworm_init(int* obj, u8* def, int flag)
 
 void dbstealerworm_free(int* obj)
 {
-    extern u64 ObjGroup_RemoveObject();
     u8* sub = ((GameObject*)obj)->extra;
     int* p40c = *(int**)&((GroundBaddieState*)sub)->control;
-    ObjGroup_RemoveObject(obj, DBSTEALERWORM_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DBSTEALERWORM_OBJGROUP);
     Stack_Free(((DbStealerwormControl*)p40c)->msgStack);
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
@@ -2102,7 +2099,7 @@ void dbstealerworm_update(u8* objp)
             {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void**)*gBaddieControlInterface)[22])(
                     obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
-                ObjGroup_AddObject(obj, DBSTEALERWORM_OBJGROUP);
+                ObjGroup_AddObject((int)obj, DBSTEALERWORM_OBJGROUP);
                 ((GroundBaddieState*)blob)->targetState = 0;
                 ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
                 ((GroundBaddieState*)blob)->baddie.moveDone = 0;

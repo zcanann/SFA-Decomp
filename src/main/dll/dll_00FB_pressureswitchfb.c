@@ -64,7 +64,6 @@
 #define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
 extern int ObjGroup_FindNearestObject();
-extern void ObjGroup_AddObject();
 extern int fn_80295C5C(GameObject* player);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
@@ -523,7 +522,7 @@ void PressureSwitchFB_init(u8* obj, u8* params)
             }
         }
     }
-    ObjGroup_AddObject(obj, PRESSURESWITCHFB_REMOVE_GROUP_ID);
+    ObjGroup_AddObject((int)obj, PRESSURESWITCHFB_REMOVE_GROUP_ID);
     ((CfGuardianState*)sub)->unk4 = 0;
     ((CfGuardianState*)sub)->unk8 = 0;
     ((CfGuardianState*)sub)->unkC = 0;

@@ -115,7 +115,6 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
-    extern u64 ObjGroup_RemoveObject();
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);
     extern int* ObjGroup_GetObjects(int, int*);
@@ -175,7 +174,6 @@ int dbholecontrol1_getObjectTypeId(void)
 
 void dbholecontrol1_free(int obj)
 {
-    extern u64 ObjGroup_RemoveObject();
     ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP);
 }
 
@@ -208,9 +206,8 @@ void dbholecontrol1_update(int* obj)
 
 void dbholecontrol1_init(int* obj, u8* params)
 {
-    extern u32 ObjGroup_AddObject();
     DbHoleControl1State* state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, DBHOLECONTROL1_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DBHOLECONTROL1_OBJGROUP);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
     state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;

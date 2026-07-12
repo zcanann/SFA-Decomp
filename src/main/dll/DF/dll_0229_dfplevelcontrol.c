@@ -196,7 +196,6 @@ int DFP_LevelControl_getObjectTypeId(void)
 
 void DFP_LevelControl_free(int obj)
 {
-    extern u64 ObjGroup_RemoveObject();
     ObjGroup_RemoveObject(obj, DFPLEVELCONTROL_OBJGROUP);
 }
 
