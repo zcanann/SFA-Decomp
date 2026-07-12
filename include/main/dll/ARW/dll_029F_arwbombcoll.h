@@ -43,6 +43,9 @@ extern f32 gArwBombCollActivateDistanceZ;
 extern f32 gArwBombCollAlphaFadeRate;
 extern f32 gArwBombCollSpinRate;
 extern f32 lbl_803E708C;
+extern f32 gArwBombCollHitToleranceY;
+extern f32 gArwBombCollHitRadiusSq;
+extern f32 gArwBombCollPlaneHitRadius;
 
 int ARWBombColl_getExtraSize(void);
 int ARWBombColl_getObjectTypeId(void);

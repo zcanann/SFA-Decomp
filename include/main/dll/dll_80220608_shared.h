@@ -356,9 +356,6 @@ typedef struct Vec12
 #pragma dont_inline reset
 
 extern f32 lbl_803E70A0;
-extern f32 gArwBombCollHitToleranceY;
-extern f32 gArwBombCollHitRadiusSq;
-extern f32 gArwBombCollPlaneHitRadius;
 
 extern f32 lbl_803E6ECC;
 
