@@ -377,6 +377,7 @@ main/dll/dll_0063_dll63func0.c:
 
 main/dll/dll_0064_dll64func0.c:
 	.text       start:0x800EE8FC end:0x800EEC34
+	.sdata2     start:0x803E0908 end:0x803E0928
 	.sdata2     start:0x803E0928 end:0x803E0930
 
 main/dll/dll_0065_dll65func0.c:

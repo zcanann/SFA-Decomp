@@ -21,14 +21,16 @@
 
 
 extern u8 lbl_80312D18[];
-extern f32 lbl_803E0908;
-extern f32 lbl_803E090C;
-extern f32 lbl_803E0910;
-extern f32 lbl_803E0914;
-extern f32 lbl_803E0918;
-extern f32 lbl_803E091C;
-extern f32 lbl_803E0920;
-extern f32 lbl_803E0924;
+__declspec(section ".sdata2") f32 lbl_803E0908 = 0.75f;
+__declspec(section ".sdata2") f32 lbl_803E090C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0910 = 0.45f;
+__declspec(section ".sdata2") f32 lbl_803E0914 = 0.6f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0918 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E091C = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0920 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E0924 = 0.1f;
 
 void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
