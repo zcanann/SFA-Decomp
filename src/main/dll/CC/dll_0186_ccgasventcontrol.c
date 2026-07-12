@@ -65,23 +65,27 @@ STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 lbl_803E4620;
 
 extern int* ObjGroup_GetObjects(int group, int* count);
-extern f32 lbl_803E4618;
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-extern f32 gCcGasVentAirMeterMax;
-extern f32 gCcGasVentFogRiseMax;
-extern f32 lbl_803E462C;
-extern f32 lbl_803E4630;
-extern f32 lbl_803E4634;
-extern f32 lbl_803E4638;
-extern f32 lbl_803E463C;
-extern f32 lbl_803E4640;
 extern f32 getXZDistance(f32* a, f32* b);
 
-extern f32 lbl_803E461C;
+
+__declspec(section ".sdata2") f32 lbl_803E4618 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E461C = 127.0f;
+__declspec(section ".sdata2") f32 lbl_803E4620 = 1.0f;
+__declspec(section ".sdata2") f32 gCcGasVentAirMeterMax = 6000.0f;
+__declspec(section ".sdata2") f32 gCcGasVentFogRiseMax = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E462C = 16.0f;
+__declspec(section ".sdata2") f32 lbl_803E4630 = 15.0f;
+__declspec(section ".sdata2") f32 lbl_803E4634 = 800.0f;
+__declspec(section ".sdata2") f32 lbl_803E4638 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E463C = 0.0005f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4640 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E4644 = 0.0f;
+#pragma explicit_zero_data off
 
 int CCGasVentControl_SeqFn(GameObject* obj)
 {
