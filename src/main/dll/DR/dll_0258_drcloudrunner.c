@@ -1194,11 +1194,11 @@ void fn_802BF4D8(GameObject* obj)
     pos[0] = ((GameObject*)newObj)->anim.localPosX + pos[0];
     pos[1] = ((GameObject*)newObj)->anim.localPosY + pos[1];
     pos[2] = ((GameObject*)newObj)->anim.localPosZ + pos[2];
-    voxmaps_worldToGrid((void*)&(obj)->anim.worldPosX, gC);
-    voxmaps_worldToGrid(pos, gB);
-    if (voxmaps_traceLine(gC, gB, tr, 0, 0) == 0)
+    voxmaps_worldToGrid((void*)&(obj)->anim.worldPosX, (s16*)gC);
+    voxmaps_worldToGrid(pos, (s16*)gB);
+    if (voxmaps_traceLine((VoxPos*)gC, (VoxPos*)gB, (VoxPos*)tr, NULL, 0) == 0)
     {
-        voxmaps_gridToWorld(pos, tr);
+        voxmaps_gridToWorld(pos, (s16*)tr);
         diff[0] = pos[0] - ((GameObject*)newObj)->anim.localPosX;
         diff[1] = pos[1] - ((GameObject*)newObj)->anim.localPosY;
         diff[2] = pos[2] - ((GameObject*)newObj)->anim.localPosZ;

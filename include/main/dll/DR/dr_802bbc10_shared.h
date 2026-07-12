@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/voxmaps.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
@@ -180,9 +181,6 @@ extern u8 Obj_IsLoadingLocked();
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
 extern void vecRotateZXY(void* a, void* b);
-extern void voxmaps_worldToGrid(void* src, void* grid);
-extern int voxmaps_traceLine(void* a, void* b, void* c, int d, int e);
-extern void voxmaps_gridToWorld(void* grid, void* out);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;

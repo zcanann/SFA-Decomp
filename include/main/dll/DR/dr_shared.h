@@ -17,6 +17,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/voxmaps.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -272,9 +273,6 @@ extern f32 lbl_803E6A30;
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern f32 sqrtf(f32 v);
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* start, void* end, void* hit, int d, int e);
-extern void voxmaps_gridToWorld(void* world, void* grid);
 extern int voxmaps_traceWorldLine(void* p1, void* p2);
 extern f32 lbl_803E6960;
 extern void objMove(int obj, f32 x, f32 y, f32 z);

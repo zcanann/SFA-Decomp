@@ -14,6 +14,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
+#include "main/voxmaps.h"
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
@@ -32,7 +33,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern u8 gDfpTorchSequenceState;
 extern int gDfpTorchEffectParams[];
 extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern void objUpdateOpacity(int);
 
 int DFP_Torch_getExtraSize(void)
@@ -55,7 +55,6 @@ void DFP_Torch_free(int obj)
 void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 
-    extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
     DfpTorchState* state = (obj)->extra;
     char* cam;
     f32 dist;
@@ -111,7 +110,7 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 stk2.b[2] = stk2.b[2] + *(f32*)(cam + 0x14);
                 voxmaps_worldToGrid(stk2.a, stk2.g1);
                 voxmaps_worldToGrid(stk2.b, stk2.g2);
-                if (voxmaps_traceLine(stk2.g1, stk2.g2, stk2.out, 0, 0) == 0)
+                if (voxmaps_traceLine((VoxPos*)stk2.g1, (VoxPos*)stk2.g2, (VoxPos*)stk2.out, NULL, 0) == 0)
                 {
                     state->visibleLatch = 0;
                     (*gExpgfxInterface)->freeSource((u32)obj);

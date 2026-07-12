@@ -168,7 +168,7 @@ void drakormissile_startStraightLaunch(GameObject* obj, int from, int target, f3
     endPos[2] = (obj)->anim.localPosZ + endPos[2];
     voxmaps_worldToGrid((f32*)((char*)obj + 0xc), startGrid);
     voxmaps_worldToGrid(endPos, endGrid);
-    if (voxmaps_traceLine(startGrid, endGrid, hitGrid, 0, 0) == 0)
+    if (voxmaps_traceLine((VoxPos*)startGrid, (VoxPos*)endGrid, (VoxPos*)hitGrid, NULL, 0) == 0)
     {
         voxmaps_gridToWorld(endPos, hitGrid);
         *(f32*)&hitDir[0] = endPos[0] - (obj)->anim.localPosX;

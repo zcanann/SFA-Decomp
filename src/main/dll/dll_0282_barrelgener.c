@@ -494,9 +494,9 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, int targetPos, int outPos
     *(f32*)(outPos + 0) = pos[0];
     *(f32*)(outPos + 4) = pos[1];
     *(f32*)(outPos + 8) = pos[2];
-    voxmaps_worldToGrid((void*)targetPos, gridA);
-    voxmaps_worldToGrid(pos, gridB);
-    return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
+    voxmaps_worldToGrid((void*)targetPos, (s16*)gridA);
+    voxmaps_worldToGrid(pos, (s16*)gridB);
+    return voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) != 0;
 }
 #pragma opt_loop_invariants reset
 
@@ -506,9 +506,9 @@ int voxmaps_traceWorldLine(void* startPos, void* endPos)
     int grid2[2];
     int out[2];
 
-    voxmaps_worldToGrid(startPos, grid1);
-    voxmaps_worldToGrid(endPos, grid2);
-    return voxmaps_traceLine(grid1, grid2, out, 0, 0);
+    voxmaps_worldToGrid(startPos, (s16*)grid1);
+    voxmaps_worldToGrid(endPos, (s16*)grid2);
+    return voxmaps_traceLine((VoxPos*)grid1, (VoxPos*)grid2, (VoxPos*)out, NULL, 0);
 }
 
 void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
@@ -524,9 +524,9 @@ void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
     PSVECNormalize(dir, dir);
     PSVECScale(dir, scaled, scale);
     PSVECAdd((int)scaled, (int)origin, (int)endPos);
-    voxmaps_worldToGrid(origin, gridA);
-    voxmaps_worldToGrid(endPos, gridB);
-    if (voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) == 0)
-        voxmaps_gridToWorld(endPos, gridOut);
+    voxmaps_worldToGrid(origin, (s16*)gridA);
+    voxmaps_worldToGrid(endPos, (s16*)gridB);
+    if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) == 0)
+        voxmaps_gridToWorld(endPos, (s16*)gridOut);
     *(SunVec3*)out = *(SunVec3*)endPos;
 }

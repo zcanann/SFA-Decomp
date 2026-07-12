@@ -21,6 +21,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
+#include "main/voxmaps.h"
 
 typedef struct ResourceParamBlob
 {
@@ -71,8 +72,6 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void objUpdateOpacity(int obj);
 extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(f32* in, s16* out);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();
 extern void nwsh_levcon_free();
@@ -302,7 +301,7 @@ void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
         voxmaps_worldToGrid((void*)objTrace, startGrid);
         voxmaps_worldToGrid((void*)cameraTrace, endGrid);
-        if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0)
+        if (voxmaps_traceLine((VoxPos*)startGrid, (VoxPos*)endGrid, (VoxPos*)traceOut, NULL, 0) == 0)
         {
             state->visibleToCamera = 0;
             (*gExpgfxInterface)->freeSource((int)obj);

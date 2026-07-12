@@ -19,6 +19,7 @@
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
+#include "main/voxmaps.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/dll/path_control_interface.h"
@@ -1540,8 +1541,6 @@ extern f32 lbl_803E6C14;
 extern f32 lbl_803E6C18;
 extern f32 lbl_803E6C1C;
 
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 extern f32 lbl_803E6C58;
 
 extern void mm_free_(void* ptr);
@@ -1561,7 +1560,6 @@ extern f32 gBarrelGenTurnRateClampMin;
 extern f32 gBarrelGenTurnRateClampMax;
 extern f32 lbl_803E6C98;
 
-extern void voxmaps_gridToWorld(void* grid, void* out);
 
 extern f32 lbl_803E70A0;
 extern f32 lbl_803E70B4;

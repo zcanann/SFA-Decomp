@@ -127,9 +127,9 @@ void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
             midB[0] = facx2 + *(f32*)(camera + 0xc);
             midB[1] = facy2 + *(f32*)(camera + 0x10);
             midB[2] = facz2 + *(f32*)(camera + 0x14);
-            voxmaps_worldToGrid(midA, gridA);
-            voxmaps_worldToGrid(midB, gridB);
-            if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0)
+            voxmaps_worldToGrid(midA, (s16*)gridA);
+            voxmaps_worldToGrid(midB, (s16*)gridB);
+            if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)traceOut, NULL, 0) == 0)
             {
                 state->losVisible = 0;
                 (*gExpgfxInterface)->freeSource((int)obj);

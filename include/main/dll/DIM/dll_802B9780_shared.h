@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/voxmaps.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/newclouds.h"
@@ -419,9 +420,6 @@ extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
 
-extern void voxmaps_worldToGrid(void* src, void* grid);
-extern int voxmaps_traceLine(void* a, void* b, void* c, int d, int e);
-extern void voxmaps_gridToWorld(void* grid, void* out);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
 

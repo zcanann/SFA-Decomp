@@ -27,6 +27,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/curve_eval.h"
+#include "main/voxmaps.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
@@ -118,8 +119,6 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
                               int p10);
 extern f32 sqrtf(f32 x);
 extern u32 countLeadingZeros();
-extern void voxmaps_worldToGrid(f32* in, s16* out);
-extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
 extern f32 vec3f_distanceSquared(f32* posA, f32* posB);
@@ -261,7 +260,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                     curvePos[1] = lbl_803E0640 + curve->y;
                     curvePos[2] = curve->z;
                     voxmaps_worldToGrid(curvePos, curveGrid);
-                    traceResult = voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0);
+                    traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
                         (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0, bboxHit, obj, bboxMode, -1, 0,
                                             0) == 0))
@@ -276,7 +275,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                     curvePos[1] = lbl_803E0640 + curve->y;
                     curvePos[2] = curve->z;
                     voxmaps_worldToGrid(curvePos, curveGrid);
-                    traceResult = voxmaps_traceLine(curveGrid, objGrid, NULL, &traceHit, 0);
+                    traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
                         (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0, bboxHit, obj, bboxMode, -1, 0,
                                             0) == 0))

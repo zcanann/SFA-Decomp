@@ -2,7 +2,8 @@
 #define MAIN_VOXMAPS_H_
 
 #include "ghidra_import.h"
-#include "main/curve.h"
+
+struct CurveHeapNode;
 
 typedef struct VoxMapSlotOrigin {
     u16 gridX;
@@ -87,7 +88,7 @@ typedef struct RouteNode {
 
 typedef struct RouteState {
     RouteNode* nodes;
-    CurveHeapNode* queue;
+    struct CurveHeapNode* queue;
     f32* pathPoints;
     s16 tgtX;
     s16 tgtZ;
