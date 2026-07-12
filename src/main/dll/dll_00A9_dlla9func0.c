@@ -28,18 +28,20 @@ typedef struct
 #define DLLA9_EFFECT_ID 0x586
 
 extern u8 lbl_80319028[];
-extern f32 lbl_803E15D0;
-extern f32 lbl_803E15D4;
-extern f32 lbl_803E15D8;
-extern f32 lbl_803E15DC;
-extern f32 lbl_803E15E0;
-extern f32 lbl_803E15E4;
-extern f32 lbl_803E15E8;
-extern f32 lbl_803E15EC;
-extern f32 lbl_803E15F0;
-extern f32 lbl_803E15F4;
-extern f32 lbl_803E15F8;
-extern f32 lbl_803E15FC;
+__declspec(section ".sdata2") f32 lbl_803E15D0 = -2.0f;
+__declspec(section ".sdata2") f32 lbl_803E15D4 = 2.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E15D8 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E15DC = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803E15E0 = 0.006f;
+__declspec(section ".sdata2") f32 lbl_803E15E4 = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E15E8 = 0.028f;
+__declspec(section ".sdata2") f32 lbl_803E15EC = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803E15F0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E15F4 = 130.0f;
+__declspec(section ".sdata2") f32 lbl_803E15F8 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E15FC = 0.01f;
 
 void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5, u8* extraArgs)
 {

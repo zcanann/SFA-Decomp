@@ -633,9 +633,11 @@ main/dll/dll_00A7_dlla7func0.c:
 
 main/dll/dll_00A8_dlla8func0.c:
 	.text       start:0x800FFB44 end:0x800FFF04
+	.sdata2     start:0x803E1598 end:0x803E15D0
 
 main/dll/dll_00A9_dlla9func0.c:
 	.text       start:0x800FFF04 end:0x801002C0
+	.sdata2     start:0x803E15D0 end:0x803E1600
 
 main/dll/dll_00AA_dllaafunc0.c:
 	.text       start:0x801002C0 end:0x80100550
