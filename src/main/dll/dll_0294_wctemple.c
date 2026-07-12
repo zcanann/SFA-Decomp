@@ -5,9 +5,11 @@
  * the hitbox interaction flag. The 'type' field from placement sets the
  * object's X rotation.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_0294_wctemple.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/objseq.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
 #define WCTEMPLE_SEQUENCE_SLOT_CLOSED 0

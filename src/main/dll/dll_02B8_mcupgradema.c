@@ -13,7 +13,6 @@
  * sequence event it forces the staff glow to a fixed level, restores it to
  * the object's configured level, or clears it.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_00E2_staff.h"
@@ -22,6 +21,11 @@
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
 #include "main/dll/mcstaffeffe_state.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
 
 /* obj is a word, not a pointer: the shared-header prototype fixes the
    original signature as int, and the integral param pools low in the saved

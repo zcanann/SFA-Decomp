@@ -10,8 +10,8 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_801c0bf8.h"
 
 /* .sdata2 shared constants. */

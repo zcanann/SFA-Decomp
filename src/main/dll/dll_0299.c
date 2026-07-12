@@ -8,9 +8,13 @@
  * On free it releases the exp/mod-gfx sources and the acquired resource.
  * Render/hitDetect/release/initialise are stubs.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_0299.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx.h"
+#include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/resource.h"
+#include "main/vecmath.h"
 
 #define DLL0299_OBJFLAG_HITDETECT_DISABLED 0x2000
 

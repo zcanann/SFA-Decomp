@@ -6,8 +6,9 @@
  * re-arming the timer. The two spawn helpers (fn_802317A8 / fn_802315EC)
  * live in a sibling flight-section TU.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 
 int arwgenerato_getExtraSize(void)
 {
