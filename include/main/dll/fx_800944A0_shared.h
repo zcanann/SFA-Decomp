@@ -318,7 +318,6 @@ extern void modelLightStruct_setSpecularColor(void* light, int r, int g, int b, 
 extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
 extern void modelLightStruct_setEnabled(void* light, int b, f32 a);
 extern void modelLightStruct_startColorFade(void* light, int a, int b);
-extern void modelLightStruct_setAffectsAabbLightSelection(void* light, int v);
 
 /* forward declarations for graduated FX functions */
 void cloudaction_func08_nop(void);

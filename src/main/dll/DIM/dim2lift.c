@@ -88,7 +88,6 @@ void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
     extern void modelLightStruct_setDiffuseTargetColor(int, int, int, int, int);
     extern void modelLightStruct_setSpecularTargetColor(int, int, int, int, int);
     extern void modelLightStruct_startColorFade(int, int, int);
-    extern void modelLightStruct_setAffectsAabbLightSelection(int, int);
     extern f32 lbl_803E4C28;
     extern f32 lbl_803E4C2C;
     extern f32 lbl_803E4C30;
@@ -124,7 +123,7 @@ void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
     modelLightStruct_setDiffuseTargetColor(lightSlot[0], 64, 0, 0, 64);
     modelLightStruct_setSpecularTargetColor(lightSlot[0], 64, 0, 0, 64);
     modelLightStruct_startColorFade(lightSlot[0], 2, 40);
-    modelLightStruct_setAffectsAabbLightSelection(lightSlot[0], 1);
+    modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)lightSlot[0], 1);
     modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)lightSlot[0], lbl_803E4BBC);
 }
 

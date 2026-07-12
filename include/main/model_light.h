@@ -127,7 +127,6 @@ void modelLightStruct_setPosition(ModelLightStruct *light, f32 x, f32 y, f32 z);
 void modelLightStruct_setDirection(ModelLightStruct *light, f32 x, f32 y, f32 z);
 int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
 void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
-void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *light, u8 enabled);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);
 f32 *modelLightStruct_getProjectionTexMtx(ModelLightStruct *light);
 void *modelLightStruct_getProjectionTexture(ModelLightStruct *light);

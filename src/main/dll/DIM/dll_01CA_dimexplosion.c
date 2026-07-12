@@ -23,6 +23,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
@@ -120,7 +121,6 @@ extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int h, int v);
 extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
 extern void modelLightStruct_setEnabled(int h, int n, f32 v);
 extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
@@ -759,7 +759,7 @@ void explosion_init(GameObject* obj, int def)
             modelLightStruct_setLightKind(((ExplosionState*)state)->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setPosition(((ExplosionState*)state)->light, obj->anim.worldPosX, obj->anim.worldPosY,
                                          obj->anim.worldPosZ);
-            modelLightStruct_setAffectsAabbLightSelection(((ExplosionState*)state)->light, 1);
+            modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)((ExplosionState*)state)->light, 1);
             modelLightStruct_setEnabled(((ExplosionState*)state)->light, 1, lbl_803E4960);
             modelLightStruct_setDistanceAttenuation(((ExplosionState*)state)->light, (f32)(lbl_803E49CC * scale),
                                                     (f32)(lbl_803E4958 * scale));

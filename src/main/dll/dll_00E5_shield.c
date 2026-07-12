@@ -121,7 +121,6 @@ extern s16 lbl_803DBD80[4];
 extern s16 lbl_803DBD88[4];
 extern f32 lbl_803E33D8;
 extern f32 lbl_803E33DC;
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern f32 lbl_803E33B0;
 extern f32 lbl_803E33B4;
 extern f32 lbl_803E33B8;
@@ -269,7 +268,7 @@ void staffFn_80170380(int* obj, int cmd)
                 lightSetField4D((ModelLightStruct*)*(int*)state, 1);
                 modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E33AC);
                 modelLightStruct_startColorFade(*(int*)state, 0, 0);
-                modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);
+                modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)*(int*)state, 1);
             }
             {
                 f32 fade = lbl_803E33AC;
@@ -353,7 +352,7 @@ void staffFn_80170380(int* obj, int cmd)
             lightSetField4D((ModelLightStruct*)*(int*)state, 1);
             modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E33AC);
             modelLightStruct_startColorFade(*(int*)state, 0, 0);
-            modelLightStruct_setAffectsAabbLightSelection(*(int*)state, 1);
+            modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)*(int*)state, 1);
         }
         if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
         {

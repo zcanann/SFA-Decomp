@@ -171,7 +171,6 @@ extern void modelLightStruct_setSpecularColor();
 extern void modelLightStruct_setDistanceAttenuation();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
-extern void modelLightStruct_setAffectsAabbLightSelection();
 extern void sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
 extern float powfBitEstimate(float x, float y);
 extern f32 lbl_803E2C74;

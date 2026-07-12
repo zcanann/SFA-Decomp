@@ -214,7 +214,6 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setSpecularTargetColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern void objAnimFn_80038f38(GameObject* obj, int p);

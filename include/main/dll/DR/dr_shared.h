@@ -116,7 +116,6 @@ extern void ObjLink_DetachChild(int obj, int child);
 extern void* objCreateLight(int v1, int v2);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int v);
 extern void buttonDisable(int index, u32 flags);
 extern void* gHighTopStateHandlers[];
 extern void* gHighTopDefaultStateHandler;

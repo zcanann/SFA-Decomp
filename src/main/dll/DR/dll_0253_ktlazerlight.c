@@ -10,6 +10,7 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/dll/DR/dll_0253_ktlazerlight.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
