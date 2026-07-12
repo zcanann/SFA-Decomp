@@ -182,6 +182,30 @@ typedef struct SwitchFlags
     u8 rest : 4;
 } SwitchFlags;
 
+static inline int pfb_scanTrackedSlots(int slots2, u8 j2, int found, int zid)
+{
+    u32 otherObj;
+    int base2;
+    for (; j2 < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; j2++)
+    {
+        otherObj = *(u32*)(slots2 + j2 * 4 + 4);
+        if (otherObj != 0)
+        {
+            base2 = slots2 + j2 * 8;
+            if ((*(f32*)(base2 + 0x2c) == ((GameObject*)otherObj)->anim.localPosX) &&
+                (*(f32*)(base2 + 0x30) == ((GameObject*)otherObj)->anim.localPosZ))
+            {
+                found = 1;
+            }
+            else
+            {
+                *(int*)(slots2 + j2 * 4 + 4) = zid;
+            }
+        }
+    }
+    return found;
+}
+
 void PressureSwitchFB_update(int obj)
 {
     int found;
@@ -279,24 +303,7 @@ void PressureSwitchFB_update(int obj)
             }
         }
         slots2 = *(volatile int*)&((GameObject*)obj)->extra;
-        found = 0;
-        for (j2 = 0; j2 < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; j2++)
-        {
-            otherObj = *(u32*)(slots2 + j2 * 4 + 4);
-            if (otherObj != 0)
-            {
-                base2 = slots2 + j2 * 8;
-                if ((*(f32*)(base2 + 0x2c) == ((GameObject*)otherObj)->anim.localPosX) &&
-                    (*(f32*)(base2 + 0x30) == ((GameObject*)otherObj)->anim.localPosZ))
-                {
-                    found = 1;
-                }
-                else
-                {
-                    *(int*)(slots2 + j2 * 4 + 4) = 0;
-                }
-            }
-        }
+        found = pfb_scanTrackedSlots(slots2, 0, 0, 0);
         if (found & 0xff)
         {
             *state = 5;
