@@ -8,6 +8,12 @@ extern u8 gAudioStreamPlaying;
 extern s32 gAudioStreamCurrentId;
 extern u32 gAudioStreamPlayAddrCallbackResult;
 extern u8 gAudioStreamPlayAddrCallbackDone;
+extern f32 lbl_803DE5D4;
+extern f32 lbl_803DE568;
+extern f32 lbl_803DE550;
+extern f32 lbl_803DE554;
+extern f32 lbl_803DE558;
+extern f32 lbl_803DE55C;
 
 void audioReset(void);
 int audioIsResetting(void);

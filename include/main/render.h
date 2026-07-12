@@ -11,6 +11,8 @@ typedef void (*LActionsVoid6Fn)(int source, int target, int index, int arg3, int
 typedef int (*LActionsInt6Fn)(int source, int target, u16 index, int arg3, int arg4, int arg5);
 
 extern int gRenderMode;
+extern int lbl_802C18C0[];
+extern int lbl_802C1A24[];
 
 int getLActions(int source, int target, u16 index);
 void render_copyPackedU64Tail(u64* dst, u32 packed);

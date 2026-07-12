@@ -39,6 +39,7 @@ extern CameraViewSlot gCameraShakeSlots[];
 extern GXRenderModeObj* gRenderModeObj;
 extern f32 gCameraDefaultModelMatrix[16];
 extern f32 lbl_80338090[64];
+extern f32 lbl_803DE5F0;
 extern f32 gCameraShakeMagnitudeDecay;
 extern f32 gCameraPi;
 extern f32 lbl_803DE5FC;

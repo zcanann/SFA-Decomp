@@ -10,6 +10,7 @@ typedef int (*PadGetAnalogInputIntFn)(int port, s8* x, s8* y);
 typedef int (*PadGetAnalogInputCharFn)(int port, char* x, char* y);
 
 extern f32 gRumbleTimer;
+extern f32 lbl_803DE6E8;
 extern u8 joypadDisabled;
 extern u8 rumbleEnabled;
 extern u32 gPadResetMask;
