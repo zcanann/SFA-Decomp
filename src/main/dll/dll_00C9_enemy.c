@@ -37,6 +37,7 @@
 #include "main/frame_timing.h"
 #include "main/model.h"
 #include "main/model_engine.h"
+#include "main/modellight_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
@@ -164,7 +165,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int objCreateLight(int a, int b);
 extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-extern int modelLightStruct_getActiveState(int light);
 extern void ModelLightStruct_free(int light);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
@@ -1599,7 +1599,7 @@ void enemy_hitDetect(GameObject* obj)
     ObjHitsPriorityState* childHitState;
 
     if (*(void**)&((EnemyState*)state)->modelLight != NULL &&
-        modelLightStruct_getActiveState(((EnemyState*)state)->modelLight) == 0)
+        modelLightStruct_getActiveState((ModelLightStruct*)((EnemyState*)state)->modelLight) == 0)
     {
         ModelLightStruct_free(((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;

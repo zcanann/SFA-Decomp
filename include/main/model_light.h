@@ -110,7 +110,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light);
 void modelLightStruct_updateColorFade(ModelLightStruct *light);
 void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames);
 void modelLightStruct_setEnabled(ModelLightStruct* light, int enabled, f32 duration);
-int modelLightStruct_getActiveState(ModelLightStruct *light);
 void modelLightStruct_setLightKind(ModelLightStruct *light, int lightKind);
 void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *light, int objectLightMaskIndex);
 void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far);

@@ -222,8 +222,6 @@ void drakormissile_update(int obj)
     int expired;
     int nearHit;
     int rem;
-    extern int modelLightStruct_getActiveState(void* light);
-
     moving = 0;
     switch (state->state)
     {
@@ -395,7 +393,6 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
     int i;
     DrakorMissileState* state = (obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    extern int modelLightStruct_getActiveState(void* light);
     if (visible != 0 && state->state != DRAKORMISSILE_STATE_FADEOUT)
     {
         f32 savedScale;

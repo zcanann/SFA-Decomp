@@ -78,7 +78,6 @@ extern f32 lbl_803E66B8;
 
 extern void ModelLightStruct_free(int model);
 extern void objRenderModelAndHitVolumes(f32 e);
-extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern void vecRotateZXY(void* in, void* out);
 extern int objCreateLight(int obj, int arg);
@@ -344,7 +343,7 @@ void worldobj_update(GameObject* obj)
             objfx_spawnFlaggedTrailBurst(obj, lbl_803E6668 * state->scale, 2, 0xdf, 8, vec);
             obj->anim.rotX = lbl_803E668C * timeDelta + (f32)obj->anim.rotX;
             obj->anim.rotY = lbl_803E6690 * timeDelta + (f32)obj->anim.rotY;
-            if (*(void**)&state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
+            if (*(void**)&state->light != NULL && modelLightStruct_getActiveState((ModelLightStruct*)state->light) != 0)
             {
                 modelLightStruct_updateGlowAlpha(state->light);
             }
@@ -696,7 +695,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         }
         break;
     case 0x80f:
-        if (*(void**)&state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
+        if (*(void**)&state->light != NULL && modelLightStruct_getActiveState((ModelLightStruct*)state->light) != 0)
         {
             queueGlowRender(state->light);
         }

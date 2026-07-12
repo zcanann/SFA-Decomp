@@ -240,7 +240,6 @@ extern f32 lbl_803E67B4;
 extern f32 lbl_803E67C0;
 extern f32 lbl_803E67C4;
 extern f32 lbl_803E67E8;
-extern int modelLightStruct_getActiveState(void);
 extern void queueGlowRender(void* p);
 extern f32 lbl_803E6A30;
 extern void PSVECSubtract(f32* a, f32* b, f32* out);

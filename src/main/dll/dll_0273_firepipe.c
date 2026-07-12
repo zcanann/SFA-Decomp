@@ -37,6 +37,7 @@
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
+#include "main/modellight_api.h"
 
 #define FIREPIPE_OBJGROUP 0x4a
 
@@ -65,7 +66,6 @@ extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern int modelLightStruct_getActiveState(int light);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void Sfx_PlayFromObjectLimited(FirePipeObject* obj, int sfxId, int limit);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject* obj, int sfxId, int limit);
@@ -362,7 +362,7 @@ void firepipe_updateState(FirePipeObject* obj)
         else if (extra->glowLight != 0)
         {
             modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B98);
-            if (modelLightStruct_getActiveState(extra->glowLight) == 0)
+            if (modelLightStruct_getActiveState((ModelLightStruct*)extra->glowLight) == 0)
             {
                 modelLightStruct_freeSlot((int)&extra->glowLight);
             }
