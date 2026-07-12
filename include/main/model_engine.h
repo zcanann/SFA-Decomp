@@ -2,6 +2,7 @@
 #define MAIN_MODEL_ENGINE_H_
 
 #include "global.h"
+#include "main/game_timer.h"
 
 typedef struct ModelRenderInstrsState {
     void* instrs;
@@ -109,13 +110,8 @@ ModelList* allocModelStruct(int capacity, int dataSize);
 
 int getCurUiDll(void);
 int getUiDllFn_80014930(void);
-int isGameTimerDisabled(void);
-void gameTimerStop(void);
-void timerSetToCountUp(void);
-void gameTimerInit(s8 flags, int minutes);
 void loadUiDll(int index);
 void fn_8001404C(s32 value);
-u32 gameTimerIsRunning(void);
 void hudNumberFn_80014060(void);
 void set_hudNumber_803db278(s32 value);
 f32 fn_8001461C(void);

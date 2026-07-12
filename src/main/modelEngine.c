@@ -524,7 +524,7 @@ void fn_8001404C(s32 value)
     lbl_803DB28C = value;
 }
 
-u32 gameTimerIsRunning(void)
+u8 gameTimerIsRunning(void)
 {
     return gModelEngineTimerState & MODELENGINE_TIMER_RUNNING;
 }

@@ -9,6 +9,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
+#include "main/game_timer.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -68,7 +69,6 @@ extern f32 lbl_803E6E14;
 extern f32 lbl_803E6E18;
 extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
-extern int isGameTimerDisabled(void);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
 extern void objRenderFn_80041018(int obj);
@@ -248,8 +248,6 @@ extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
 extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
-extern void gameTimerStop(void);
-extern u8 gameTimerIsRunning(void);
 extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern const f32 lbl_803E6DA8;
@@ -322,8 +320,6 @@ STATIC_ASSERT(offsetof(WcLevelControlState, thorntailMusicId) == 0x16);
 STATIC_ASSERT(offsetof(WcLevelControlState, ambientMusicId) == 0x18);
 STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1A);
 
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
 extern f32 gWcPushBlockTileResetTime;
 
 extern int getTrickyObject(void);
@@ -467,10 +463,7 @@ typedef struct TimerFlags
 extern f32 lbl_803E7408;
 extern f32 lbl_803E7418;
 extern f32 lbl_803E7424;
-extern void gameTimerStop(void);
 extern int fn_80080150(int state);
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
 
 extern int timerCountDown(void* timer);
 extern f32 lbl_803DC418;
