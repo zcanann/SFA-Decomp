@@ -84,7 +84,6 @@ extern void* Obj_AllocObjectSetup(int size, int objectId);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern int getCurMapLayer(void);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
-extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
 extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode);
 extern void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq);
@@ -819,7 +818,8 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
         case 4:
             if ((u8)skipSpawns == 0)
             {
-                return0xFFFF_80008B6C(cmdObj, 0, 0, 1, -1, (u8)cmdParam, 0);
+                ((int (*)(int, int, int, int, int, int, int))return0xFFFF_80008B6C)(cmdObj, 0, 0, 1, -1,
+                                                                                   (u8)cmdParam, 0);
             }
             break;
         case 5:

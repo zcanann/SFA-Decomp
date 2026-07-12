@@ -58,6 +58,7 @@ u8 padGetRTrigger(int port);
 u16 getPadFn_80014d9c(int port);
 u16 getButtons_80014dd8(int port);
 int initControllers(void);
+void doNothing_endOfFrame(void);
 
 /* Preserve signed and int return views used by compiler-sensitive callers. */
 #define padGetStickXS8(port) (((PadGetAxisS8Fn)padGetStickX)(port))

@@ -18,6 +18,7 @@ void render_copyPackedU64Head(u64* dst, u32 packed);
 int getEnvfxActImmediately(struct GameObject* source, struct GameObject* target, u16 index, int flags);
 int getEnvfxAct(struct GameObject* source, struct GameObject* target, u16 index, int flags);
 s16 renderModeSetOrGet(int mode);
+int return0xFFFF_80008B6C(void);
 
 #define getEnvfxActVoid(source, target, index, flags) \
     (((EnvfxActVoidFn)getEnvfxAct)((void*)(source), (void*)(target), (index), (flags)))

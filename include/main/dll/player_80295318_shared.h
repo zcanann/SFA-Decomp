@@ -562,8 +562,6 @@ extern f32 lbl_803E80C4;
 extern f32 lbl_803E80F4;
 extern f32 lbl_803E80F8;
 extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
-extern int Angle_AddWrappedS16(int angle, int xform);
-extern int Angle_SubWrappedS16(int angle, int xform);
 extern f32 lbl_803E80BC;
 extern int getYButtonItem(s16* out);
 extern s16 gPlayerSelectedItem;

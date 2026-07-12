@@ -400,7 +400,6 @@ extern s8 curMapType;
 extern int lbl_803DCEA8;
 extern void playerVecFn_8005a9b0(void);
 extern void updateLights(void);
-extern void screenFn_8000e944(int v);
 
 void sceneRender(void)
 {
@@ -418,7 +417,7 @@ void sceneRender(void)
     updateLights();
     lbl_803DCEA8 = (int)Camera_GetCurrentViewSlot();
     sceneDraw();
-    screenFn_8000e944(0);
+    screenFn_8000e944(NULL);
     renderFlags &= ~2LL;
 }
 

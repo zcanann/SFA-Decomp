@@ -91,7 +91,6 @@ extern f32 lbl_803E1F9C;
 extern f32 lbl_803E2060;
 extern f32 lbl_803E2064;
 extern f32 lbl_803E2068;
-extern void doNothing_8000CF54(int a);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
@@ -140,7 +139,7 @@ void drawFn_80125424(void)
                 if (*(int*)(gHeadDisplayEntryTable + gHeadDisplayEntryIdx * HEADREC_STRIDE) != -1)
                 {
                     AudioStream_StopCurrent();
-                    doNothing_8000CF54(0);
+                    ((void (*)(int))doNothing_8000CF54)(0);
                 }
             }
             gHeadDisplayPanelHeight = gHeadDisplayPanelHeight - framesThisStep * 10;

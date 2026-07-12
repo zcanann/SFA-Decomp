@@ -114,8 +114,6 @@ extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXMultVecSR(f32* m, f32* in, f32* out);
-extern int fn_8000FA70(void);
-extern int fn_8000FA90(void);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* m, int p3);
 extern int textureLoadAsset(int id);

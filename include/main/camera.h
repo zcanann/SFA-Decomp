@@ -142,6 +142,15 @@ f32 Camera_GetFovY(void);
 void Camera_SetFovY(f32 fovY);
 void Camera_InitState(void);
 f32* fn_8000E814(void);
+s32 Angle_AddWrappedS16(s32 angle, s16* delta);
+s32 Angle_SubWrappedS16(s32 angle, s16* delta);
+void screenFn_8000e944(void* viewportArg);
+void viewportEffectFn_8000e380(void);
+void fn_8000F83C(void);
+void fn_8000F8F8(void);
+void fn_8000F9B4(void);
+u16 fn_8000FA70(void);
+u16 fn_8000FA90(void);
 
 
 #endif /* MAIN_CAMERA_H_ */

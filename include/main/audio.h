@@ -36,5 +36,30 @@ void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamF
 s32 Music_GetActivePriority(void);
 void Music_Trigger(int id, int arg);
 void Music_PlayTrackByIndex(int index);
+void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* vector);
+f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
+int return0x64_8000A378(void);
+void doNothing_8000CF54(void);
+void audioFn_8000b694(u32 value);
+int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
+void fn_80009008(void);
+void MIDIWADLoadedCallback(int status, void* fileInfo);
+int musicInitMidiWad(void);
+void poolDataMLoadedCallback(int status, void* fileInfo);
+void poolDataSLoadedCallback(int status, void* fileInfo);
+void projectDataMLoadedCallback(int status, void* fileInfo);
+void projectDataSLoadedCallback(int status, void* fileInfo);
+void sampleBufferMLoadedCallback(int status, void* fileInfo);
+void sampleBufferSLoadedCallback(int status, void* fileInfo);
+void sampleDirectoryMLoadedCallback(int status, void* fileInfo);
+void sampleDirectorySLoadedCallback(int status, void* fileInfo);
+void sfxTriggersLoadedCallback(int status, void* fileInfo);
+void musicTriggersLoadedCallback(int status, void* fileInfo);
+void streamsLoadedCallback(int status, void* fileInfo);
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 callback, u32 callbackArg1, u32 callbackArg2,
+                          u32 callbackArg3);
+void audioSetSoundMode(int mode, u8 forceFlag);
+void audioLoadTriggerData(void);
+int audioInit(void);
 
 #endif /* MAIN_AUDIO_H_ */

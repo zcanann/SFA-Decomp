@@ -4661,12 +4661,12 @@ void fn_80296EB4(GameObject* obj, int newParent)
         ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalVectorToWorld)(
             obj->anim.velocityX, lbl_803E7EA4, obj->anim.velocityZ, &s.wv[0], &s.wv[1],
             &s.wv[2], oldParent);
-        a0 = Angle_AddWrappedS16(obj->anim.rotX, oldParent);
-        a1 = Angle_AddWrappedS16(inner->targetYaw, oldParent);
-        a2 = Angle_AddWrappedS16(inner->yaw, oldParent);
-        a3 = Angle_AddWrappedS16(inner->prevTargetYaw, oldParent);
-        a4 = Angle_AddWrappedS16(inner->prevYaw, oldParent);
-        a5 = Angle_AddWrappedS16(inner->lastInputHeading, oldParent);
+        a0 = Angle_AddWrappedS16(obj->anim.rotX, (s16*)oldParent);
+        a1 = Angle_AddWrappedS16(inner->targetYaw, (s16*)oldParent);
+        a2 = Angle_AddWrappedS16(inner->yaw, (s16*)oldParent);
+        a3 = Angle_AddWrappedS16(inner->prevTargetYaw, (s16*)oldParent);
+        a4 = Angle_AddWrappedS16(inner->prevYaw, (s16*)oldParent);
+        a5 = Angle_AddWrappedS16(inner->lastInputHeading, (s16*)oldParent);
         ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
             *(f32*)((char*)inner + 0x118), *(f32*)((char*)inner + 0x11c), *(f32*)((char*)inner + 0x120), &s.wp0[0],
             &s.wp0[1], &s.wp0[2], oldParent);
@@ -4701,12 +4701,12 @@ void fn_80296EB4(GameObject* obj, int newParent)
                                        &obj->anim.previousLocalPosZ, newParent);
         Obj_TransformWorldVectorToLocal(s.wv[0], lbl_803E7EA4, s.wv[2], &obj->anim.velocityX, &s.wv[1],
                                         &obj->anim.velocityZ, newParent);
-        obj->anim.rotX = Angle_SubWrappedS16(a0, newParent);
-        inner->targetYaw = Angle_SubWrappedS16(a1, newParent);
-        inner->yaw = Angle_SubWrappedS16(a2, newParent);
-        inner->prevTargetYaw = Angle_SubWrappedS16(a3, newParent);
-        inner->prevYaw = Angle_SubWrappedS16(a4, newParent);
-        inner->lastInputHeading = Angle_SubWrappedS16(a5, newParent);
+        obj->anim.rotX = Angle_SubWrappedS16(a0, (s16*)newParent);
+        inner->targetYaw = Angle_SubWrappedS16(a1, (s16*)newParent);
+        inner->yaw = Angle_SubWrappedS16(a2, (s16*)newParent);
+        inner->prevTargetYaw = Angle_SubWrappedS16(a3, (s16*)newParent);
+        inner->prevYaw = Angle_SubWrappedS16(a4, (s16*)newParent);
+        inner->lastInputHeading = Angle_SubWrappedS16(a5, (s16*)newParent);
         Obj_TransformWorldPointToLocal(s.wp0[0], s.wp0[1], s.wp0[2], (f32*)((char*)inner + 0x118),
                                        (f32*)((char*)inner + 0x11c), (f32*)((char*)inner + 0x120), newParent);
     }

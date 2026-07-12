@@ -184,46 +184,9 @@ extern void sndSetAuxProcessingCallbacks(int a, void *cb, void *settings, int d,
 extern void sndVolume(int a, int b, int c);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
-void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v);
-f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta);
-s32 Angle_AddWrappedS16(s32 angle, s16 *delta);
-s32 Angle_SubWrappedS16(s32 angle, s16 *delta);
-int return0xFFFF_80008B6C(void);
-int return0x64_8000A378(void);
-void doNothing_8000CF54(void);
-void doNothing_endOfFrame(void);
-void audioFn_8000b694(u32 value);
-void screenFn_8000e944(void* viewportArg);
-void viewportEffectFn_8000e380(void);
-void fn_8000F83C(void);
-void fn_8000F8F8(void);
-void fn_8000F9B4(void);
-u16 fn_8000FA70(void);
-u16 fn_8000FA90(void);
-int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
-int isSpace(u32 c);
-void fn_80009008(void);
-void MIDIWADLoadedCallback(int status, void* fileInfo);
-int musicInitMidiWad(void);
-void poolDataMLoadedCallback(int status, void* fileInfo);
-void poolDataSLoadedCallback(int status, void* fileInfo);
-void projectDataMLoadedCallback(int status, void* fileInfo);
-void projectDataSLoadedCallback(int status, void* fileInfo);
-void sampleBufferMLoadedCallback(int status, void* fileInfo);
-void sampleBufferSLoadedCallback(int status, void* fileInfo);
-void sampleDirectoryMLoadedCallback(int status, void* fileInfo);
-void sampleDirectorySLoadedCallback(int status, void* fileInfo);
-void sfxTriggersLoadedCallback(int status, void* fileInfo);
-void musicTriggersLoadedCallback(int status, void* fileInfo);
-void streamsLoadedCallback(int status, void* fileInfo);
 void fn_80008F38(void* addr, u32 dest, u32 size);
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-void audioSetSoundMode(int mode, u8 forceFlag);
-int utf8GetNextChar(u8* str, int* outLen);
 char *gameStrcpy(char *dst, char *src);
-void audioLoadTriggerData(void);
-int audioInit(void);
 
 #endif

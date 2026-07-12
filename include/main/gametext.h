@@ -28,6 +28,8 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
 void gameTextRenderStrs(char* str, int boxIdx);
 void textDisplayFn_800168dc(int textId, TextDisplayState* state);
 void gameTextFn_8001658c(int a, int b, int c);
+int isSpace(u32 c);
+int utf8GetNextChar(u8* str, int* outLen);
 
 /* Preserve the byte-argument call view used by a few exact-match callers. */
 #define gameTextSetColorU8(r, g, b, a) (((GameTextSetColorU8Fn)gameTextSetColor)((r), (g), (b), (a)))
