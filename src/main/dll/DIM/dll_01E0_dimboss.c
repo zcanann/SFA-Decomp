@@ -42,7 +42,6 @@ extern void Music_Trigger(int id, int arg);
 extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
-extern u32 Obj_BuildWorldTransformMatrix();
 extern u32 getTrickyObject();
 extern u64 ObjGroup_RemoveObject();
 
@@ -571,7 +570,7 @@ void DIMboss_update(DIMbossObject* obj)
                     topState->stompDustDelay--;
                     if (topState->stompDustDelay == 0)
                     {
-                        Obj_BuildWorldTransformMatrix(obj, gDIMbossRenderMtx, 0);
+                        Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)gDIMbossRenderMtx, 0);
                         targetModel = Obj_GetActiveModelLegacy(obj);
                         ObjModel_EnableDefaultRenderCallback
                             (obj, targetModel, gDIMbossRenderMtx, 1,

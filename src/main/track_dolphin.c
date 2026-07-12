@@ -7,6 +7,7 @@
 #include "main/frustum.h"
 #include "main/asset_load.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mm.h"
 #include "main/model_light.h"
 #include "main/model.h"
@@ -373,7 +374,6 @@ extern f32 fn_802925C4(f32 x, f32 y);
 extern float fn_802943F4(float x);
 extern float floor(float x);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* out, int flag);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetNumTexGens(u8 nTexGens);
@@ -3148,7 +3148,7 @@ void objDrawFn_80061654(int obj, int placementObj)
         if (alpha != 0)
         {
             viewMtx = Camera_GetViewMatrix();
-            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
             mtx[0] = lbl_803DEC68;
             mtx[1] = lbl_803DEC58;
             mtx[2] = lbl_803DEC58;
@@ -3342,7 +3342,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         memcpy((char*)((int)obj + 0x18), (char*)blockData + 0x20, 0xc);
         memcpy((char*)((int)obj + 0xc), (char*)((int)blockData + 0x20), 0xc);
     }
-    Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
     GXLoadPosMtxImm(outMtx, GX_PNMTX0);

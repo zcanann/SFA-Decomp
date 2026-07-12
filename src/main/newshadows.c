@@ -274,7 +274,6 @@ extern void fn_80069EB8();
 extern int getHudHiddenFrameCount(void);
 extern void fn_80060BB0(void);
 extern void fn_8004C234(f32* a, f32* b);
-extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
@@ -2480,7 +2479,7 @@ void shadowRenderFn_8006b558(int* obj)
     f32 mtx[12];
     f32 vA, vB, vC, vD, vE, vF;
     f32 sc, objScale, saved, nx, ny, m;
-    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
     Camera_ProjectWorldSphere(((GameObject*)obj)->anim.localPosX - playerMapOffsetX, ((GameObject*)obj)->anim.localPosY,
                               ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ,
                               lbl_803DED0C *

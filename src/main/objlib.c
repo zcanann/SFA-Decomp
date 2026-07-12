@@ -26,7 +26,6 @@ extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void OSReport(const char* msg, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
-extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 
@@ -1980,7 +1979,7 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
         {
             if (jointIndex == OBJPATH_ROOT_JOINT_INDEX)
             {
-                Obj_BuildWorldTransformMatrix((void*)obj, rootMtx, 0);
+                Obj_BuildWorldTransformMatrix((GameObject*)obj, rootMtx, 0);
                 jointMtx = rootMtx;
             }
             else

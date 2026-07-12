@@ -194,7 +194,7 @@ void arwarwing_hitDetect(GameObject* obj)
 
     if (((obj)->objectFlags & ARWARWING_OBJFLAG_PARENT_SLACK) != 0 && state->aimSnapshotValid != 0)
     {
-        Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
+        Obj_BuildWorldTransformMatrix(obj, mtx, 0);
         PSMTXMultVec(mtx, &state->aimOffsetX, pos);
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;

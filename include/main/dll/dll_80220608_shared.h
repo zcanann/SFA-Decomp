@@ -238,7 +238,6 @@ extern f32 lbl_803E6F00;
 extern f32 lbl_803E6F5C;
 extern f32 lbl_803E6FF4;
 extern f32 lbl_803E6FF8;
-extern void Obj_BuildWorldTransformMatrix(int obj, void* mtx, int p3);
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
 

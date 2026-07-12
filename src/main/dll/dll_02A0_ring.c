@@ -296,7 +296,7 @@ void ring_update(GameObject* obj)
                     }
                     if (lbl_803E70C0 != state->pullTimer)
                     {
-                        Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
+                        Obj_BuildWorldTransformMatrix(obj, mtx, 0);
                         for (ang = -0x7fff; ang < 0x7fff; ang += lbl_8032B720[state->mode].f8)
                         {
                             dir[0] =

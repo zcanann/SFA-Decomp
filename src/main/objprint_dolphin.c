@@ -440,7 +440,6 @@ extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 extern void PSMTXMultVec(f32* m, f32* src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
-extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void objRotateFn_8003bce8(f32* m, s16* a, s16* b, s16* c);
 extern int depthReadRequestPoll(int x, int y, int* obj);
 extern void objShadowFn_8006c5f0(int* obj, int* a, f32* b, int* c, int* d);
@@ -798,7 +797,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         blk.z = ent->pos[2];
         if (j == -1)
         {
-            Obj_BuildWorldTransformMatrix(parent, wm, 0);
+            Obj_BuildWorldTransformMatrix((GameObject*)parent, wm, 0);
             mtx = wm;
         }
         else
@@ -1299,7 +1298,7 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     int i;
     int off;
     f32* vm = Camera_GetViewMatrix();
-    Obj_BuildWorldTransformMatrix((int*)obj, wm, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     PSMTXConcat(vm, wm, cm);
     GXLoadPosMtxImm(cm, gObjGxPosMtxIdTable[0]);
     GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
@@ -1765,7 +1764,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     }
     else
     {
-        Obj_BuildWorldTransformMatrix(obj, wm, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     }
     PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
     if (!(*(u16*)((char*)am + 0x18) & 8))
@@ -1943,7 +1942,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     }
     else
     {
-        Obj_BuildWorldTransformMatrix(obj, wm, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     }
     if (!(*(u16*)((char*)am + 0x18) & 8))
     {
@@ -2228,7 +2227,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     else
     {
-        Obj_BuildWorldTransformMatrix(obj, wm, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     }
     gObjShadowNear = 0;
     if (((ObjAnimComponent*)obj)->modelInstance->flags & 0x400)
@@ -3003,7 +3002,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     if (((ObjModelRenderOp*)op)->flags & 0x100)
     {
         f32* vm = Camera_GetViewMatrix();
-        Obj_BuildWorldTransformMatrix((int*)obj, wm, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
         PSMTXConcat(vm, wm, t1);
         PSMTXConcat((f32*)lbl_803967F0, t1, t2);
         GXLoadTexMtxImm(t2, 0x24, 0);

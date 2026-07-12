@@ -8,6 +8,7 @@
  * field re-arms if the collapse bit is cleared again.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
@@ -71,7 +72,6 @@ extern f32 lbl_803DBE90;   /* ring radius scale */
 extern int lbl_803DBE94;   /* burst position jitter, +/- units */
 extern int lbl_803DBE98;   /* collapse rotY rate */
 extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
-extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 extern int fn_80080150(f32* p);
 extern void s16toFloat(f32* p, s16 val);
@@ -144,7 +144,7 @@ void cfforcefield_update(u8* obj)
             }
 
             {
-                Obj_BuildWorldTransformMatrix(obj, (f32*)mtx, 0);
+                Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)mtx, 0);
                 ((GameObject*)obj)->anim.rotZ = (s16)(512.0f * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
 
                 angle = -0x7fff;

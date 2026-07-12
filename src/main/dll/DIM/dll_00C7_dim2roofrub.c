@@ -192,7 +192,6 @@ extern void Shield_update(int* obj);
 extern void objSetSlot(int* obj, int slot);
 extern f32 lbl_803E3270;
 
-extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
@@ -777,7 +776,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
     {
         int* prm;
         s16* cam;
-        Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, mWorld, 0);
         prm = *(int**)&((GameObject*)obj)->anim.placementData;
         PSMTXTrans(mTransPlayer, -(((Dim2roofrubPlacement*)prm)->posX - playerMapOffsetX),
                    -((Dim2roofrubPlacement*)prm)->posY, -(((Dim2roofrubPlacement*)prm)->posZ - playerMapOffsetZ));
@@ -785,7 +784,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
         cam = (s16*)(*gCameraInterface)->getCamera();
         ((GameObject*)cam)->anim.rotY += 0x8000;
         ((GameObject*)cam)->anim.rootMotionScale = lbl_803E3270;
-        Obj_BuildWorldTransformMatrix((int*)cam, mCam, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)cam, mCam, 0);
         ((GameObject*)cam)->anim.rotY += 0x8000;
         ((GameObject*)cam)->anim.rootMotionScale = lbl_803E325C;
         PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);

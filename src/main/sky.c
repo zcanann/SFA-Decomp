@@ -186,7 +186,6 @@ extern void modelLightStruct_setDiffuseColor(void* model, int red, int green, in
 extern void lightSetColor(int index, int red, int green, int blue);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
-extern void Obj_BuildWorldTransformMatrix(void* obj, f32 mtx[3][4], int flags);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern f32 PSVECMag(f32* vec);
@@ -474,7 +473,7 @@ void skyBuildSunModelMatrix(f32 mtx[3][4])
 
     scale = EXIInputFlag / *(f32*)(gSkySunObject + 8);
     PSMTXScale(scaleMtx, scale, scale, scale);
-    Obj_BuildWorldTransformMatrix(gSkySunObject, mtx, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)gSkySunObject, (f32*)mtx, 0);
     PSMTXConcat(mtx, scaleMtx, mtx);
 }
 

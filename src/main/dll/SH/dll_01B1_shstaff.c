@@ -153,7 +153,6 @@ extern int ObjTrigger_IsSet();
 extern u32 ObjPath_GetPointLocalMtx();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objSetMtxFn_800412d4(f32* mtx);
@@ -200,7 +199,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
     {
         if (state->phase == SHSTAFF_PHASE_CARRY_ATTACH)
         {
-            Obj_BuildWorldTransformMatrix((int)obj, mtxB, 0);
+            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtxB, 0);
             PSMTXInverse((int)ObjPath_GetPointModelMtx((void*)player, 0), mtxA);
             PSMTXConcat(mtxA, mtxB, state->carryMtx);
             state->phase = SHSTAFF_PHASE_CARRY_RENDER;

@@ -254,7 +254,6 @@ extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern f32 lbl_803E3228;
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 lbl_803E322C;
-extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
@@ -872,7 +871,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         int* prm;
         s16* cam;
-        Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, mWorld, 0);
         prm = *(int**)&((GameObject*)obj)->anim.placementData;
         PSMTXTrans(mTransPlayer, -(((AnimatedobjPlacement*)prm)->posX - playerMapOffsetX),
                    -((AnimatedobjPlacement*)prm)->posY,
@@ -881,7 +880,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         cam = (s16*)(*gCameraInterface)->getCamera();
         ((GameObject*)cam)->anim.rotY += 0x8000;
         ((GameObject*)cam)->anim.rootMotionScale = lbl_803E3228;
-        Obj_BuildWorldTransformMatrix((int*)cam, mCam, 0);
+        Obj_BuildWorldTransformMatrix((GameObject*)cam, mCam, 0);
         ((GameObject*)cam)->anim.rotY += 0x8000;
         ((GameObject*)cam)->anim.rootMotionScale = lbl_803E322C;
         PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);

@@ -173,7 +173,6 @@ extern int gObjFileCount;
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
-extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
@@ -452,7 +451,7 @@ void Obj_StartModelFadeIn(u8* obj, int frames)
             }
             ((GameObject*)obj)->colorFadeFrames = frames;
             ((GameObject*)obj)->colorFadeFlags = (u8)(((GameObject*)obj)->colorFadeFlags | OBJ_COLOR_FADE_FLAG_FROZEN);
-            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
             ((void (*)(u8*, u8*, f32*, int, f32))ObjModel_EnableDefaultRenderCallback)(
                 obj, (u8*)objAnim->banks[objAnim->bankIndex], mtx, 1,
                 ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale);
@@ -655,7 +654,7 @@ ObjListObject* ObjList_FindObjectById(u32 objectId)
 void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 {
     f32 mtx[16];
-    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
     PSMTXMultVecSR(mtx, src, dst);
 }
 
@@ -668,7 +667,7 @@ void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag)
         savedZ = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803DE890;
     }
-    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
     PSMTXMultVec(mtx, src, dst);
     if (flag)
     {
@@ -1098,35 +1097,35 @@ int ObjList_PartitionForRender(int* out)
 }
 
 #pragma dont_inline on
-void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
+void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
 {
     f32 savedZ;
     f32 parentMtx[16];
-    void* parent;
+    GameObject* parent;
 
-    if (((GameObject*)obj)->anim.parent == NULL)
+    if (obj->anim.parent == NULL)
     {
-        ((GameObject*)obj)->anim.localPosX -= playerMapOffsetX;
-        ((GameObject*)obj)->anim.localPosZ -= playerMapOffsetZ;
+        obj->anim.localPosX -= playerMapOffsetX;
+        obj->anim.localPosZ -= playerMapOffsetZ;
     }
     if ((u8)flags != 0)
     {
-        savedZ = ((GameObject*)obj)->anim.rootMotionScale;
-        if ((((GameObject*)obj)->objectFlags & 0x8) == 0)
+        savedZ = obj->anim.rootMotionScale;
+        if ((obj->objectFlags & 0x8) == 0)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803DE890;
+            obj->anim.rootMotionScale = lbl_803DE890;
         }
     }
     setMatrixFromObjectTransposed(obj, mtx);
     if ((u8)flags != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = savedZ;
+        obj->anim.rootMotionScale = savedZ;
     }
-    parent = ((GameObject*)obj)->anim.parent;
+    parent = obj->anim.parent;
     if (parent == NULL)
     {
-        ((GameObject*)obj)->anim.localPosX += playerMapOffsetX;
-        ((GameObject*)obj)->anim.localPosZ += playerMapOffsetZ;
+        obj->anim.localPosX += playerMapOffsetX;
+        obj->anim.localPosZ += playerMapOffsetZ;
     }
     else
     {
