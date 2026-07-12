@@ -36,3 +36,10 @@ void SH_EmptyTumbleW_init(s16* obj, ShEmptyTumblewPlacement* def)
                                (int)(lbl_803E5548 * scale));
     ((GameObject*)obj)->objectFlags |= SHEMPTYTUMBLEW_OBJFLAG_HIDDEN;
 }
+
+__declspec(section ".sdata2") f32 lbl_803E5540 = 15.0f;
+__declspec(section ".sdata2") f32 lbl_803E5544 = -5.0f;
+__declspec(section ".sdata2") f32 lbl_803E5548 = 100.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E554C = 0.0f;
+#pragma explicit_zero_data reset
