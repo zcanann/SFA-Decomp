@@ -270,6 +270,7 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
 }
 #pragma opt_common_subs reset
 
+#pragma dont_inline on
 void wclevelcont_update(GameObject* obj)
 {
     WcLevelControlState* state = obj->extra;
@@ -310,6 +311,7 @@ void wclevelcont_update(GameObject* obj)
         mainSetBits(0x7f1, 1);
     }
 }
+#pragma dont_inline off
 
 int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
