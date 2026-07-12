@@ -136,9 +136,6 @@ extern f32 lbl_803E62E8;
 extern f32 lbl_803E62EC;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern u32 ObjGroup_ContainsObject();
-extern int ObjGroup_FindNearestObjectForObject();
-extern int Obj_GetYawDeltaToObject();
 extern void DFP_LevelControl_free(void);
 extern void DFP_LevelControl_getExtraSize(void);
 extern void DFP_LevelControl_getObjectTypeId(void);
@@ -866,7 +863,7 @@ int fn_80202C78(GameObject* obj, int otherObj, f32 yawOffset, f32 speed, f32 unu
     f32 cur;
     f32 prod;
 
-    yaw = Obj_GetYawDeltaToObject(obj, otherObj, &yawF);
+    yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (int)otherObj, &yawF);
     zero = lbl_803E62A8;
     if (zero == range)
     {
@@ -921,7 +918,7 @@ int fn_80202DA4(u8* obj, u8* otherObj, f32 yawOffset, f32 speed, f32 unused, f32
     {
         return 0;
     }
-    yaw = Obj_GetYawDeltaToObject(obj, otherObj, &yawF);
+    yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (int)otherObj, &yawF);
     zero = lbl_803E62A8;
     if (zero == range)
     {
@@ -995,7 +992,6 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 {
     extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objParticleFn_80099d84(int, f32, int, f32, int);
-    extern void ObjPath_GetPointWorldPosition(int, int, char*, char*, char*, int);
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62C8;
     GroundBaddieState* state;
@@ -1030,7 +1026,7 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
             path = *(char**)&sub->linkedObj;
             if (path != NULL && *(void**)(path + 0x50) != NULL)
             {
-                ObjPath_GetPointWorldPosition((int)obj, 3, path + 0xc, path + 0x10, path + 0x14, 0);
+                ObjPath_GetPointWorldPosition(obj, 3, (f32*)(path + 0xc), (f32*)(path + 0x10), (f32*)(path + 0x14), 0);
                 ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->linkedObj, p2, p3, p4, p5,
                                                                                       lbl_803E62C8);
             }
@@ -1173,7 +1169,7 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
         if (*(int*)(sub->routeCursor + 4) != 0)
         {
             *(int*)&((BaddieState*)baddie)->targetObj =
-                ObjGroup_FindNearestObjectForObject(*(int*)(sub->routeCursor + 4), obj, &range);
+                ObjGroup_FindNearestObjectForObject(*(int*)(sub->routeCursor + 4), (int)obj, &range);
         }
         if (*(void**)&((BaddieState*)baddie)->targetObj != NULL)
         {
@@ -1194,7 +1190,7 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
             p = &lbl_803296FC[3];
             for (; p--, --i >= 0;)
             {
-                nearest = ObjGroup_FindNearestObjectForObject(*p, obj, &range);
+                nearest = ObjGroup_FindNearestObjectForObject(*p, (int)obj, &range);
                 if (nearest != 0)
                 {
                     found = nearest;
@@ -1322,7 +1318,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     for (; i < n; i++)
     {
         stk.range = rangeInit;
-        nearest = ObjGroup_FindNearestObjectForObject(*objCursor, obj, &stk.range);
+        nearest = ObjGroup_FindNearestObjectForObject(*objCursor, (int)obj, &stk.range);
         if (nearest != 0)
         {
             if (stk.range == lbl_803E62A8)
@@ -1367,7 +1363,6 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 {
 
-    extern int ObjGroup_ContainsObject(int, int);
     extern u8 lbl_80329514[];
     extern f32 lbl_803E62AC;
     GroundBaddieState* state = (obj)->extra;
@@ -1412,7 +1407,7 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
             if (sub->objGroup != 0)
             {
                 *(int*)&((BaddieState*)baddie)->targetObj =
-                    ObjGroup_FindNearestObjectForObject(sub->objGroup, obj, &range);
+                    ObjGroup_FindNearestObjectForObject(sub->objGroup, (int)obj, &range);
             }
             break;
         case 1:
@@ -1439,7 +1434,7 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
                 if (ObjGroup_ContainsObject(*(int*)&((BaddieState*)baddie)->targetObj, sub->objGroup) == 0)
                 {
                     *(int*)&((BaddieState*)baddie)->targetObj =
-                        ObjGroup_FindNearestObjectForObject(sub->objGroup, obj, 0);
+                        ObjGroup_FindNearestObjectForObject(sub->objGroup, (int)obj, 0);
                     if (*(void**)&((BaddieState*)baddie)->targetObj == NULL)
                     {
                         sub->msgAdvance = 1;
@@ -1470,7 +1465,6 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
 {
-    extern s16 Obj_GetYawDeltaToObject(int, int, f32*);
     extern f32 lbl_803E6310;
     extern f32 lbl_803E6314;
     extern f32 lbl_803E6318;
@@ -1556,7 +1550,7 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
             sub->linkedObj = 0;
             sub->msgSlotIndex = -1;
         }
-        (obj)->anim.rotX += Obj_GetYawDeltaToObject((int)obj, *(int*)&((BaddieState*)baddie)->targetObj, 0);
+        (obj)->anim.rotX += Obj_GetYawDeltaToObject(obj, *(int*)&((BaddieState*)baddie)->targetObj, 0);
         ((BaddieState*)baddie)->stateTag = 0x11;
         if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
         {
@@ -1574,8 +1568,6 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
 
 int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 {
-    extern int ObjGroup_ContainsObject(int, int);
-    extern int* ObjGroup_GetObjects(int, int*);
 
     extern f32 lbl_803E62B4;
     extern f32 lbl_803E62C4;
@@ -1635,7 +1627,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     }
     q = *(int*)&((BaddieState*)baddie)->targetObj;
     found = 0;
-    objs = ObjGroup_GetObjects(DBSTEALERWORM_OBJGROUP, &cnt2);
+    objs = (int*)ObjGroup_GetObjects(DBSTEALERWORM_OBJGROUP, &cnt2);
     for (i = 0; i < cnt2; i++)
     {
         if (((GameObject*)*objs)->anim.seqId == 0x539)
@@ -2374,7 +2366,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 {
-    extern int* ObjGroup_GetObjects(int, int*);
     extern f32 Vec_xzDistance(int, int);
     extern f32 vec3f_distanceSquared(int, int);
 
@@ -2472,7 +2463,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     player = (int)Obj_GetPlayerObject();
     best = 0;
     bestD = lbl_803E62A8;
-    objs = ObjGroup_GetObjects(c30, &cnt);
+    objs = (int*)ObjGroup_GetObjects(c30, &cnt);
     for (i = 0; i < cnt; i++)
     {
         o = *objs;
