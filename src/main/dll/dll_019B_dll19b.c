@@ -195,6 +195,9 @@ typedef struct Dll19BState
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
+#pragma opt_strength_reduction on
+#pragma opt_common_subs off
+#pragma opt_dead_assignments off
 void dll_19B_update(GameObject* obj)
 {
     extern void* gTitleMenuControlInterface;
@@ -414,6 +417,9 @@ void dll_19B_update(GameObject* obj)
         }
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_common_subs reset
+#pragma opt_dead_assignments reset
 
 void dll_19B_release(void)
 {
