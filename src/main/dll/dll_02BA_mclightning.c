@@ -11,6 +11,8 @@
 
 #define MCLIGHTNING_OBJGROUP 0x48
 
+__declspec(section ".sdata2") f32 lbl_803E7440 = 0.01f;
+
 int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     McLightningState* state = obj->extra;
