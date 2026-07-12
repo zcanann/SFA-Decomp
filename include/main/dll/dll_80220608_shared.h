@@ -242,7 +242,6 @@ extern f32 lbl_803E7078;
 extern f32 lbl_803E7150;
 
 extern f32 lbl_803E7218;
-extern f32 lbl_803E7100;
 extern f32 lbl_803E71E4;
 extern f32 lbl_803E704C;
 
@@ -557,9 +556,6 @@ extern f32 gArwProximityWarningDistance;
 
 extern f32 lbl_803E71A8;
 
-extern f32 lbl_803E7104;
-extern f32 lbl_803E7108;
-extern f32 lbl_803E710C;
 
 extern void arwarwing_spawnLaserShot(GameObject* obj, int state, int a, int b, int c);
 extern f32 gArwingFireTimerReset;
@@ -967,14 +963,6 @@ void SoftBody_init(GameObject* obj, int setup);
 void SoftBody_release(void);
 void SoftBody_initialise(void);
 void SoftBody_update(GameObject* obj);
-int ARWSpeedStr_getExtraSize(void);
-int ARWSpeedStr_getObjectTypeId(void);
-void ARWSpeedStr_free(void);
-void ARWSpeedStr_hitDetect(void);
-void ARWSpeedStr_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void ARWSpeedStr_init(GameObject* obj, int setup);
-void ARWSpeedStr_release(void);
-void ARWSpeedStr_initialise(void);
 int arwarwingbo_getExtraSize(void);
 int arwarwingbo_getObjectTypeId(void);
 void arwarwingbo_free(int obj);
@@ -1112,7 +1100,6 @@ void arwarwing_updateBombFire(GameObject* obj, int state);
 void arwarwing_emitDamageEffects(int obj, int state);
 void arwarwing_warpByCourse(GameObject* obj);
 void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable);
-void ARWSpeedStr_update(GameObject* obj);
 void arwarwing_updateWeaponFire(GameObject* obj, int state);
 void arwarwing_update(GameObject* obj);
 void arwarwing_spawnLaserShot(GameObject* obj, int state, int side, int level, int linkEffect);
@@ -1134,10 +1121,8 @@ void arwarwing_updateRollAndEngine(int obj, int state);
 void arwarwinggu_setTextureFrame(GameObject* obj, int p2);
 void arwarwing_clearAimSnapshot(GameObject* obj);
 void arwarwing_initAttachments(GameObject* obj, int state);
-void fn_80231058(GameObject* obj, int src);
 void fn_8023137C(GameObject* obj, f32* src);
 void fn_8022ED74(GameObject* obj, int v);
-void fn_80231028(GameObject* obj, int v);
 void fn_8023134C(GameObject* obj, int v);
 void arwarwinggu_applyTextureFrame(GameObject* obj);
 void fn_8022ECE0(GameObject* obj, f32 param);

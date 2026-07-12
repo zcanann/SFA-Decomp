@@ -15,6 +15,7 @@
  * sibling projectile TU.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
 
 typedef struct Dll2A4State

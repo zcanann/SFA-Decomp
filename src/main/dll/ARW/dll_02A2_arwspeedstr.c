@@ -8,38 +8,8 @@
  * freeing itself when the timer runs out.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/game_object.h"
-
-typedef struct ARWSpeedStrState
-{
-    f32 speed;
-    f32 lifeTimer;
-    f32 alpha;
-    f32 spreadX;
-    f32 spreadY;
-    f32 viewZ;
-    u8 flags;
-    u8 pad19[3];
-} ARWSpeedStrState;
-
-typedef struct ARWSpeedStrVelocity
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} ARWSpeedStrVelocity;
-
-STATIC_ASSERT(sizeof(ARWSpeedStrState) == 0x1c);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, speed) == 0x00);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer) == 0x04);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, alpha) == 0x08);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX) == 0x0c);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY) == 0x10);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x) == 0x00);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y) == 0x04);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z) == 0x08);
 
 int ARWSpeedStr_getExtraSize(void)
 {
