@@ -10,7 +10,7 @@ typedef void (*ObjContactCallback)(int objA, int objB);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 extern char sObjMsgOverflowInObjectWarning[];
 
-u32 ObjGroup_ContainsObject(u32 obj, int group);
+int ObjGroup_ContainsObject(u32 obj, int group);
 int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistance);
 int ObjGroup_FindNearestObjectForObject(int group, int obj, float* maxDistance);
 int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance);

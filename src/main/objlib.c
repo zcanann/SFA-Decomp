@@ -968,7 +968,7 @@ void ObjHits_InitWorkBuffers(void)
 }
 #pragma peephole reset
 
-u32 ObjGroup_ContainsObject(u32 obj, int group)
+int ObjGroup_ContainsObject(u32 obj, int group)
 {
     u32* entry;
     u32 index;
