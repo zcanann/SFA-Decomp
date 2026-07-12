@@ -1413,9 +1413,7 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
         {
             int z[2];
             void** p[1];
-            z[0] = 0;
-            lbl_803DE42C = z[0];
-            z[1] = z[0];
+            z[1] = z[0] = lbl_803DE42C = 0;
             p[0] = gPlayerSpawnedObjects;
             do
             {
@@ -4873,9 +4871,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
             int z[2];
             void** p[1];
             inner->animState = -1;
-            z[1] = 0;
-            lbl_803DE42C = z[1];
-            z[0] = z[1];
+            z[0] = lbl_803DE42C = z[1] = 0;
             p[0] = gPlayerSpawnedObjects;
             do
             {
