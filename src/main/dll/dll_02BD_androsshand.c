@@ -90,7 +90,7 @@ void AndrossHand_update(int obj)
         ((GameObject*)obj)->anim.rotX = state->androssObj->anim.rotX;
         if (state->sideFlag != 0)
         {
-            fScale = fScale * -1.0f;
+            fScale *= -1.0f;
         }
         prevVel = state->zSpringVelocity;
         state->zSpringVelocity = prevVel + ((-state->zSpringOffset / lbl_803DC4FC - prevVel) / lbl_803DC500);
