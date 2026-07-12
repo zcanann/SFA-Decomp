@@ -23,6 +23,8 @@ STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == 0x19);
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == 0x1E);
 
 extern ObjectDescriptor gWCTrexStatuObjDescriptor;
+extern f32 lbl_803E6E10;
+extern f32 lbl_803E6E14;
 
 int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int wctrexstatu_getExtraSize(void);

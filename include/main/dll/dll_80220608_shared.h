@@ -53,13 +53,6 @@ extern f32 lbl_803E6BB0;
 extern void cloudClearOverridePosition(int obj);
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(GameObject* obj, int seq, int hitId, int p4, int p5);
-extern f32 lbl_803E6E10;
-extern f32 lbl_803E6E14;
-extern f32 lbl_803E6E18;
-extern f32 lbl_803E6E20;
-extern f32 lbl_803E6E24;
-
-
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 

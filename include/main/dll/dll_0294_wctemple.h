@@ -27,6 +27,8 @@ STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == 0x04);
 STATIC_ASSERT(offsetof(WCTempleSetup, type) == 0x18);
 
 extern ObjectDescriptor gWCTempleObjDescriptor;
+extern f32 lbl_803E6E20;
+extern f32 lbl_803E6E24;
 
 int wctemple_getExtraSize(void);
 int wctemple_getObjectTypeId(void);
