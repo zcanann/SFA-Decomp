@@ -3,6 +3,7 @@
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/dll/pushable.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_00EF_pushable.h"
@@ -80,7 +81,6 @@ typedef struct
 /* object group this object joins while active */
 #define PUSHABLE_OBJGROUP 5
 
-extern int ObjMsg_Pop(void* obj, int* outMessage, int* outSender, int* outParam);
 
 extern f32 lbl_803E3528;
 extern f32 lbl_803E3588;
@@ -94,9 +94,6 @@ extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
 extern f32 gPushablePi;
 extern f32 gPushableYawHalfCircle;
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int gPushableSavedMapIdCount;
 extern int gPushableSavedMapIds[];
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
@@ -451,7 +448,7 @@ void pushable_handleMsgs(GameObject* obj)
 
     state = obj->extra;
     msgParam = 0;
-    while (ObjMsg_Pop(obj, &msg, &msgSender, &msgParam) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msg, (u32*)&msgSender, (u32*)&msgParam) != 0)
     {
         switch (msg)
         {
@@ -544,7 +541,7 @@ void pushable_free(int* obj)
         gPushableSavedMapIdCount = savedIdx + 1;
         gPushableSavedMapIds[savedIdx] = val;
     }
-    ObjGroup_RemoveObject(obj, PUSHABLE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, PUSHABLE_OBJGROUP);
 }
 
 int pushable_getExtraSize(void)
@@ -670,7 +667,7 @@ void pushable_init(s16* obj, char* def)
     }
     *obj = ((PushableObjectDef*)def)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
-    ObjGroup_AddObject(obj, PUSHABLE_OBJGROUP);
+    ObjGroup_AddObject((int)obj, PUSHABLE_OBJGROUP);
     objSetSlot(obj, 0x5a);
     ((GameObject*)obj)->animEventCallback = pushable_SeqFn;
     state = ((GameObject*)obj)->extra;
