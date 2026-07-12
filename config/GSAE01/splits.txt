@@ -3277,6 +3277,7 @@ main/audio/synth_voice.c:
 	extab       start:0x80005698 end:0x800056F8
 	extabindex  start:0x80005D74 end:0x80005E04
 	.text       start:0x8026FC8C end:0x8027186C
+	.sdata2     start:0x803E77C0 end:0x803E77D0
 
 main/audio/synth_delay.c:
 	extab       start:0x800056F8 end:0x80005718
