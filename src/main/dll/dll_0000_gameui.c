@@ -1235,7 +1235,7 @@ void pauseMenuFn_8012b77c(void)
         }
         for (i = 1; i < 4; i++)
         {
-            ObjAnim_SetCurrentMove((int)lbl_803A9410[i], i == (s8)lbl_803DD781, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)lbl_803A9410[i], i == (s8)lbl_803DD781, lbl_803E1E3C, 0);
         }
     }
 
