@@ -4661,9 +4661,14 @@ void trackIntersect(void)
         int gz, gx, base;
         for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10)
         {
-            f32 fz0 = scale * gz;
-            u8* p = idx + base;
-            for (gx = 0; gx < 0x10; gx++, p++)
+            f32 fz0;
+            int bi;
+            u8* p;
+            gx = 0;
+            bi = base;
+            fz0 = scale * gz;
+            p = idx + base;
+            for (; gx < 0x10; bi++, p++, gx++)
             {
                 if ((s8)*p >= 0)
                 {
