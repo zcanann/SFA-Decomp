@@ -156,6 +156,7 @@ static inline float exp2_kernel(float x, float* table)
 #define float_bits(value) (*(u32*)&(value))
 
 #pragma optimization_level 2
+#pragma opt_propagation off
 float powf(float x, float y)
 {
     float* table;
@@ -205,6 +206,7 @@ float powf(float x, float y)
 
     return 0.0f;
 }
+#pragma opt_propagation reset
 
 /* player head-move table + spawned-object list; owned here by link order */
 
