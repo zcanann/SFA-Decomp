@@ -5,6 +5,7 @@
 
 int gameBitDecrement(int bit);
 int gameBitIncrement(int bit);
+int getGameState(void);
 int getHudHiddenFrameCount(void);
 void checkReset(void);
 void cutsceneFadeInOut(int mode);

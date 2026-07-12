@@ -19,6 +19,7 @@
 #include "main/gametext.h"
 #include "main/gamebits.h"
 #include "main/gameloop_api.h"
+#include "main/lightmap_api.h"
 #include "main/model_engine.h"
 #include "main/mm.h"
 #include "main/newclouds.h"
@@ -27,6 +28,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/resource.h"
 #include "main/render.h"
+#include "main/shader_api.h"
 #include "main/sky_interface.h"
 #include "main/table_file.h"
 #include "main/voxmaps.h"
@@ -47,7 +49,6 @@
 
 extern s32 gAttractMovieState;
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
-extern s32 getGameState(void);
 extern u8 pauseMenuGetState(void);
 extern int randomGetRange(int min, int max);
 extern int getCurSeqNo(void);
@@ -59,16 +60,11 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
-extern u8 lbl_803DCCA5;
 extern u8 pauseMenuState;
 extern int getMinimapY(void);
 extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 fastFloorf(f32 v);
-extern void *mapGetBlockAtPos(int x, int y, int z);
-extern void *fn_80059334(int a, int b);
-extern void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
-extern int fn_800119FC(s16 *dest, s16 *start, s16 *out);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
 

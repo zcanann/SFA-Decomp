@@ -154,6 +154,8 @@ int voxmaps_processRouteQueue(RouteState* state, int count);
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state);
 int fn_80011EB0(RouteState* state, int count);
 void loadVoxMaps(int handle, int* outCount, int* outSize);
+void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
+int fn_800119FC(s16* dest, s16* start, s16* out);
 
 /* Some exact-match callers use 8/12-byte int scratch arrays around the
  * three-s16 grid payload. Preserve that compiler-sensitive call view without

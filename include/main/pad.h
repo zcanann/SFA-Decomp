@@ -32,6 +32,7 @@ extern u32 gPadButtonsHeld[];
 extern u32 lbl_803398D0[];
 extern u32 gPadButtonsJustPressed[];
 extern u8 gPadStatuses[];
+extern u8 lbl_803DCCA5;
 
 u32 getButtonsJustPressedIfNotBusy(int port);
 u32 getButtonsJustPressed(int port);
