@@ -1444,9 +1444,9 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
        looking slotCount>0 / slotCount>8 guards are load-bearing. */
     u8 stk[0x64];
     int mtxBuf;
-    int outFlags;
-    u8* hdr;
     int slotEvent;
+    u8* hdr;
+    int outFlags;
     int ctrlFlags;
     int slotCount;
     int j;
