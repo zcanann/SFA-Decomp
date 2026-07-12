@@ -14,6 +14,8 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
+#include "main/dll/dll_02B7_mcupgrade.h"
+#include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/tricky.h"
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
@@ -43,7 +45,7 @@ void mcupgrade_init(GameObject* obj)
     obj->animEventCallback = mcupgrade_SeqFn;
 }
 
-int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int mcupgradema_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
 

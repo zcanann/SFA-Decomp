@@ -9,25 +9,21 @@
  * the player's staff glow from sequence events.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/game_object.h"
 #include "main/dll/mcstaffeffe_state.h"
 
-void mcstaffeffe_render(int obj)
+void mcstaffeffe_render(McStaffEffectObject* staffEffect)
 {
-    McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
-
-    fn_80098B18(obj, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, NULL);
+    fn_80098B18((int)staffEffect, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, NULL);
 }
 
 void mcstaffeffe_update(void)
 {
 }
 
-void mcstaffeffe_init(int obj, int setup)
+void mcstaffeffe_init(McStaffEffectObject* staffEffect, McStaffEffectSetup* placement)
 {
-    McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
-    McStaffEffectSetup* placement = (McStaffEffectSetup*)setup;
-
     ((GameObject*)staffEffect)->animEventCallback = mcstaffeffe_SeqFn;
     switch (placement->effectProfile)
     {

@@ -14,6 +14,8 @@
  * the object's configured level, or clears it.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02B8_mcupgradema.h"
+#include "main/dll/dll_02B9_mcstaffeffe.h"
 /* mcupgrade_state.h: only McUpgradeMaSetup + MCUPGRADE_OBJ_FLAG_COLLECTED used here. */
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
@@ -47,9 +49,8 @@ void mcupgradema_init(GameObject* obj)
     obj->animEventCallback = mcupgradema_SeqFn;
 }
 
-int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int mcstaffeffe_SeqFn(McStaffEffectObject* staffEffect, int unused, ObjAnimUpdateState* animUpdate)
 {
-    McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
     int staff;
     int i;
 

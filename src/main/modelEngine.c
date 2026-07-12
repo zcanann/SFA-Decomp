@@ -6,6 +6,9 @@
 #include "main/dll/dll_02B2_dustmotesou.h"
 #include "main/dll/dll_02B4_cntcounter.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
+#include "main/dll/dll_02B7_mcupgrade.h"
+#include "main/dll/dll_02B8_mcupgradema.h"
+#include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
@@ -117,8 +120,7 @@ extern ResourceDescriptor gLINKLevControlObjDescriptor, gLampObjDescriptor, gLan
 extern ResourceDescriptor gLavaBall1BEObjDescriptor, gLavaBall1BFObjDescriptor, gLevelNameObjDescriptor,
     gLightFootObjDescriptor, gLightSourceObjDescriptor, gLightningObjDescriptor, gMAGICMakerObjDescriptor,
     gMCLightningObjDescriptor;
-extern ResourceDescriptor gMCStaffEffeObjDescriptor, gMCUpgradeMaObjDescriptor, gMCUpgradeObjDescriptor,
-    gMMP_BridgeObjDescriptor, gMMP_asteroid_reObjDescriptor, gMMP_gyserventObjDescriptor,
+extern ResourceDescriptor gMMP_BridgeObjDescriptor, gMMP_asteroid_reObjDescriptor, gMMP_gyserventObjDescriptor,
     gMMP_levelcontrolObjDescriptor, gMMP_moonrockObjDescriptor;
 extern ResourceDescriptor gMMP_trenchFXObjDescriptor, gMMSH_ScalesObjDescriptor, gMMSH_ShrineObjDescriptor,
     gMMSH_WaterSpikeObjDescriptor, gMagicCaveBottomObjDescriptor, gMagicCaveTopObjDescriptor, gMagicGemObjDescriptor,
@@ -1568,9 +1570,9 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gCNTcounterObjDescriptor,
     &gTimerObjDescriptor,
     (ResourceDescriptor*)&gCNThitObjecObjDescriptor,
-    &gMCUpgradeObjDescriptor,
-    &gMCUpgradeMaObjDescriptor,
-    &gMCStaffEffeObjDescriptor,
+    (ResourceDescriptor*)&gMCUpgradeObjDescriptor,
+    (ResourceDescriptor*)&gMCUpgradeMaObjDescriptor,
+    (ResourceDescriptor*)&gMCStaffEffeObjDescriptor,
     &gMCLightningObjDescriptor,
     &gGF_LevelConObjDescriptor,
     &gAndrossObjDescriptor,
