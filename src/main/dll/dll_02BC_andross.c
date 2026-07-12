@@ -24,6 +24,7 @@
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/dll/dll_02BD_androsshand.h"
+#include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/model.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"

@@ -678,29 +678,6 @@ extern f32 lbl_803E6FF0;
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
 
-extern f32 lbl_803E707C;
-extern f32 gArwBombCollActivateDistanceZ;
-extern f32 gArwBombCollAlphaFadeRate;
-extern f32 gArwBombCollSpinRate;
-extern f32 lbl_803E708C;
-
-typedef struct
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-} ArwBombFlags;
-
-typedef struct ARWBombCollState
-{
-    f32 lifetime;
-    ArwBombFlags flags;
-    u8 pad05[3];
-} ARWBombCollState;
-
-STATIC_ASSERT(sizeof(ArwBombFlags) == 0x1);
-STATIC_ASSERT(sizeof(ARWBombCollState) == 0x8);
-STATIC_ASSERT(offsetof(ARWBombCollState, flags) == 0x04);
-
 extern int lbl_803E7160;
 extern f32 lbl_803E716C;
 extern f32 lbl_803E7170;
@@ -1089,14 +1066,6 @@ void SoftBody_init(GameObject* obj, int setup);
 void SoftBody_release(void);
 void SoftBody_initialise(void);
 void SoftBody_update(GameObject* obj);
-int ARWBombColl_getExtraSize(void);
-int ARWBombColl_getObjectTypeId(void);
-void ARWBombColl_free(void);
-void ARWBombColl_hitDetect(void);
-void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void ARWBombColl_init(GameObject* obj, int setup);
-void ARWBombColl_release(void);
-void ARWBombColl_initialise(void);
 int arwgenerato_getExtraSize(void);
 int arwgenerato_getObjectTypeId(void);
 void arwgenerato_free(void);
@@ -1279,12 +1248,10 @@ void arwarwing_updateRollAndEngine(int obj, int state);
 void arwarwinggu_setTextureFrame(GameObject* obj, int p2);
 void arwarwing_clearAimSnapshot(GameObject* obj);
 void arwarwing_initAttachments(GameObject* obj, int state);
-void ARWBombColl_update(int obj);
 void ARWSquadron_init(int obj, int setup);
 void fn_80231058(GameObject* obj, int src);
 void fn_8023137C(GameObject* obj, f32* src);
 void fn_8022ED74(GameObject* obj, int v);
-void arwbombcoll_setLifetime(GameObject* obj, int v);
 void fn_80231028(GameObject* obj, int v);
 void fn_8023134C(GameObject* obj, int v);
 void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);

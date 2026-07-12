@@ -17,22 +17,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-typedef struct ArwbombcollHandleArwingHitPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 eventId;
-} ArwbombcollHandleArwingHitPlacement;
-
-typedef struct ARWBombCollSetup
-{
-    ObjPlacement base;
-    s8 rotX;
-    u8 pad19[0x24 - 0x19];
-} ARWBombCollSetup;
-
-STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
-STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
-
 #define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
 
 int ARWBombColl_getExtraSize(void)
