@@ -190,7 +190,6 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 #define OBJSEQ_CAMMODE_ARWING       0x56 /* dll_0056_cameramodearwing */
 #define OBJSEQ_CAMMODE_TITLE        0x57 /* dll_0057_cameramodetitle */
 
-extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
 extern void logPrintf(char* fmt, ...);

@@ -2,6 +2,7 @@
 #define MAIN_ENGINE_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/asset_load.h"
 #include "main/audio.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/sfx.h"
@@ -19,6 +20,7 @@
 #include "main/resource.h"
 #include "main/render.h"
 #include "main/sky_interface.h"
+#include "main/table_file.h"
 #include "main/voxmaps.h"
 
 extern s32 gAttractMovieState;
@@ -60,7 +62,6 @@ extern u8 pauseMenuGetState(void);
 extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
 extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
-extern void getTabEntry(void* dst, int kind, int offset, int size);
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
 extern void sndSeqVolume(int voice, int a, int handle, int b);
@@ -89,8 +90,6 @@ extern int Sfx_ResolveObjectSfxId(int *outChannel, u16 *sfxId);
 extern int memcmp(const void* lhs, const void* rhs, u32 size);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
-extern void* gResourceLoadedHandles[];
-extern u16 gResourceRefCounts[];
 extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
 extern f32 lbl_803DE6E0;
@@ -146,13 +145,11 @@ extern f32 lbl_803DE568;
 extern void sndSeqStop(int handle);
 extern void sndSeqMute(int handle, int a, int b);
 extern void sndSeqContinue(int handle);
-extern void loadAssetFileById(void **out, int id);
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 fastFloorf(f32 v);
 extern void *mapGetBlockAtPos(int x, int y, int z);
 extern void *fn_80059334(int a, int b);
 extern void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
-extern int getTableFileEntry(int fileId, int index, int *out);
 extern void sndOutputMode(int mode);
 extern u32 OSGetSoundMode(void);
 extern void OSSetSoundMode(int mode);

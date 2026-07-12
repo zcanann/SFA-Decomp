@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/loaded_file_flags.h"
+#include "main/table_file.h"
 
 void FUN_8003d6f8(int param_1);
 void FUN_8003d97c(u16 *param_1,int param_2);
@@ -85,7 +86,6 @@ void objRenderChild(int* child, int* parent, u8 isShadow);
 /* extern-cleanup: defining-file public prototypes */
 void* getCurrentDataFile(int id);
 
-int getTableFileEntry(int fileId, int index, int* out);
 int loadMapAndParent(int mapId);
 int lockLevel(s32 val, int idx);
 int mapUnload(int mapId, int flags);

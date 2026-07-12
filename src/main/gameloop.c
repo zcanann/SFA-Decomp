@@ -268,12 +268,12 @@ void mapReload(void)
 }
 
 #pragma dont_inline on
-void* loadAssetFileById(int id, int arg)
+void loadAssetFileById(void* out, int fileId)
 {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 0;
-    gGameLoopAssetReq.resourceId = arg;
-    gGameLoopAssetReq.dest = id;
+    gGameLoopAssetReq.resourceId = fileId;
+    gGameLoopAssetReq.dest = (int)out;
     loadAsset(&gGameLoopAssetReq);
 }
 
@@ -801,7 +801,7 @@ void init(void)
     initFn_800534f8();
     titleScreenDrawFn_80093db4();
     testAndSet_onlyUseHeap3(0);
-    loadAssetFileById((int)&gGameBitTable, MLDF_FILEID_BITTABLE_BIN);
+    loadAssetFileById(&gGameBitTable, MLDF_FILEID_BITTABLE_BIN);
     gGameBitCount = (s16)(getDataFileSize(MLDF_FILEID_BITTABLE_BIN) >> 1);
     gGameBitSaveData = (*gMapEventInterface)->getLast();
     lbl_803DCA3F = 1;

@@ -230,7 +230,6 @@ void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 void ObjModel_SetRenderCallback(u8* model, void* callback);
 int roundUpTo32(int x);
-void* loadAssetFileById(int id, int arg);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
 void setMatrixFromObjectTransposed(void* obj, f32* out);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
@@ -2377,14 +2376,14 @@ void Obj_InitObjectSystem(void)
     gObjDeferredFreeList = mmAlloc(0x640, 0xe, 0);
     lbl_803DCB90 = mmAlloc(0x60, 0xe, 0);
     lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
-    loadAssetFileById((int)&gObjSeqToObjIdTable, MLDF_FILEID_OBJINDEX_BIN);
+    loadAssetFileById(&gObjSeqToObjIdTable, MLDF_FILEID_OBJINDEX_BIN);
     gObjSeqToObjIdMax = (getDataFileSize(MLDF_FILEID_OBJINDEX_BIN) >> 1) - 1;
     for (p = gObjSeqToObjIdTable + gObjSeqToObjIdMax; *p == 0;)
     {
         p--;
         gObjSeqToObjIdMax--;
     }
-    loadAssetFileById((int)&gObjFileOffsetTable, MLDF_FILEID_OBJECTS_TAB);
+    loadAssetFileById(&gObjFileOffsetTable, MLDF_FILEID_OBJECTS_TAB);
     gObjFileCount = 0;
     for (q = gObjFileOffsetTable; *q != -1;)
     {
@@ -2398,8 +2397,8 @@ void Obj_InitObjectSystem(void)
     {
         gObjFileRefCount[i] = 0;
     }
-    loadAssetFileById((int)&gObjTablesBinData, MLDF_FILEID_TABLES_BIN);
-    loadAssetFileById((int)&gObjTablesBinIndex, MLDF_FILEID_TABLES_TAB);
+    loadAssetFileById(&gObjTablesBinData, MLDF_FILEID_TABLES_BIN);
+    loadAssetFileById(&gObjTablesBinIndex, MLDF_FILEID_TABLES_TAB);
     gObjTablesBinCount = 0;
     for (q = gObjTablesBinIndex; *q != -1;)
     {

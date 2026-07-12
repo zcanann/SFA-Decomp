@@ -10,6 +10,7 @@
  */
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/game_object.h"
+#include "main/asset_load.h"
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
 #include "main/mm.h"
@@ -22,7 +23,6 @@ extern f32 gImSpaceThrusterWeightMax;
 extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23,
     gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
 extern f32 lbl_803E478C, lbl_803E4790, gImSpaceThrusterAlphaToWeightScale, lbl_803E4798;
-extern void getTabEntry(void* dst, int fileId, int offset, int size);
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 

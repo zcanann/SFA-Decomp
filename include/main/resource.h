@@ -11,6 +11,8 @@ typedef struct ResourceDescriptor {
 } ResourceDescriptor;
 
 extern ResourceDescriptor* gResourceDescriptors[];
+extern void* gResourceLoadedHandles[];
+extern u16 gResourceRefCounts[];
 
 BOOL Resource_Release(void *handleSlot);
 void *Resource_Acquire(u32 id, int unused);

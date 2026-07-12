@@ -432,7 +432,6 @@ void ObjModel_RelocateModelData(u8* m)
     }
 }
 
-extern int getTableFileEntry(int fileId, int index, int* out);
 /* defined in pi_dolphin.c with 5 params; the retail caller here emits a
    6th arg (the model id) -- keep the caller-side arity */
 extern void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);

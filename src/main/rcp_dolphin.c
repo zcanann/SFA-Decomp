@@ -1759,7 +1759,6 @@ void initFn_800534f8(void)
 }
 
 extern void* getCurrentDataFile(int id);
-extern void loadAssetFileById(void* out, int id);
 int* gRcpTexBankTable[3];
 int gRcpTexBankCount[3];
 extern u16* gRcpTexIdRemap;

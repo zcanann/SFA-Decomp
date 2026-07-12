@@ -1228,7 +1228,6 @@ void unloadMap(void)
 }
 
 extern int gShaderMapRomBuffers[];
-extern void loadAssetFileById(void* out, int id);
 extern void* memset(void* p, int v, int n);
 
 void initMaps(void)

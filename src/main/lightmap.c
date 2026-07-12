@@ -1591,7 +1591,6 @@ void objDrawFn_8005da48(int* obj)
     }
 }
 
-extern void loadAssetFileById(void** out, int id);
 extern void* gMapBlockIds;
 extern void* gMapBlockRefCounts;
 extern void* lbl_803DCE78;

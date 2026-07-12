@@ -5,6 +5,7 @@
 
 void *getTabEntry(void *dst, int fileId, int offset, int size);
 int fileLoadToBufferOffset(int fileId, void *dst, int offset, int size);
+void loadAssetFileById(void* out, int fileId);
 
 
 /* extern-cleanup: consolidated prototypes */

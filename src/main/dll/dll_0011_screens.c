@@ -34,7 +34,6 @@ extern s16 lbl_803119E0[];
 extern void* gameTextGet(int textId);
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
-extern void loadAssetFileById(void** out, int id);
 
 void hintTextFn_800ea174(u8* out)
 {
