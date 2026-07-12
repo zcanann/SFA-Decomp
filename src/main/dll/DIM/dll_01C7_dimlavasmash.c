@@ -12,6 +12,7 @@
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/map_block.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
@@ -27,7 +28,6 @@ extern f32 lbl_803E48F8;
 
 extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);
-extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
 
 void dimlavasmash_free(void)
@@ -105,7 +105,7 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
     }
     for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)map + 0xa2); i++)
     {
-        block = (int*)fn_8006070C(map, i);
+        block = (int*)fn_8006070C((MapBlockData*)map, i);
         if (surfaceType == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))
         {
             if (disable != 0)

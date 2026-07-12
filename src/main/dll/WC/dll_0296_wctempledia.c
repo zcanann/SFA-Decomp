@@ -24,27 +24,27 @@ void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
 {
     int bit;
     int part;
-    int block;
+    MapBlockData* block;
     int slot;
 
-    block = (int)mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
-    if ((void*)block != NULL)
+    block = mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
+    if (block != NULL)
     {
         for (part = 1; part < WCTEMPLE_DIA_STAGE_COUNT + 1; part++)
         {
-            for (slot = 0, bit = mask & (1 << (part - 1)); slot < *(u8*)(block + 0xa2); slot++)
+            for (slot = 0, bit = mask & (1 << (part - 1)); slot < block->layerCount; slot++)
             {
-                int entry = fn_8006070C(block, slot);
-                if (*(u8*)(entry + 0x29) == part)
+                MapShader* entry = fn_8006070C(block, slot);
+                if (*((u8*)entry + 0x29) == part)
                 {
                     bit = mask & (1 << (part - 1));
                     if (bit != 0)
                     {
-                        mapTextureOverrideSetValue(part, *(int*)(entry + 0x24), WCTEMPLE_DIA_VISIBLE_OVERRIDE);
+                        mapTextureOverrideSetValue(part, *(int*)((u8*)entry + 0x24), WCTEMPLE_DIA_VISIBLE_OVERRIDE);
                     }
                     else
                     {
-                        mapTextureOverrideSetValue(part, *(int*)(entry + 0x24), 0);
+                        mapTextureOverrideSetValue(part, *(int*)((u8*)entry + 0x24), 0);
                     }
                 }
             }

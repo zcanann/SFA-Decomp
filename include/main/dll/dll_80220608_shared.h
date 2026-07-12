@@ -68,7 +68,6 @@ extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
 extern void logPrintf(void* fmt, ...);
 
-extern int fn_8006070C(int block, int index);
 extern void mapTextureOverrideSetValue(int a, int b, int c);
 #pragma dont_inline on
 #pragma dont_inline reset

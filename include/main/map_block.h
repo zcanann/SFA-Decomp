@@ -9,6 +9,19 @@
  * track_dolphin.c; unobserved ranges are padded (positional unkNN
  * names, true size unverified - do not take sizeof).
  */
+typedef struct MapShader
+{
+    u8 pad0[0x3C];
+    u32 flags;
+    u8 pad40;
+    u8 layerCount;
+    u8 pad42[2];
+} MapShader;
+
+STATIC_ASSERT(sizeof(MapShader) == 0x44);
+STATIC_ASSERT(offsetof(MapShader, flags) == 0x3C);
+STATIC_ASSERT(offsetof(MapShader, layerCount) == 0x41);
+
 typedef struct MapBlockData {
     u8 pad0[0x4 - 0x0];
     u16 flags4; /* 0x04: block-state bits; bit 8 = block loaded, bit 1 toggled per tick */
@@ -25,7 +38,7 @@ typedef struct MapBlockData {
     s32 vertices; /* 0x58: base of the VertexS16 array (stride 6), walked by index*6 */
     void* vertexColors; /* 0x5C: RGBA4444 (stride 2) */
     void* vertexTexCoords; /* 0x60: vec2s (stride 4) */
-    void* shaders; /* 0x64: MapShader[] (stride 0x44), count = layerCount @0xA2 */
+    MapShader* shaders; /* 0x64: count = layerCount @0xA2 */
     void* displayLists; /* 0x68: MapBlockBoundsRec[] (stride 0x1C), count = edgeCount @0xA1 */
     u8 pad6C[0x70 - 0x6C];
     void* hits; /* 0x70: from HITS.bin; 0 in file, populated by MapBlock_initHits */
@@ -46,5 +59,7 @@ typedef struct MapBlockData {
     u8 layerCount; /* 0xA2: shader layers (fn_8006070C index bound) */
     u8 padA3;
 } MapBlockData;
+
+MapShader* fn_8006070C(MapBlockData* block, int index);
 
 #endif

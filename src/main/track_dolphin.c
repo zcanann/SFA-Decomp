@@ -705,9 +705,9 @@ void* fn_800606FC(int* obj, int idx)
 {
     return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c;
 }
-void* fn_8006070C(int* obj, int idx)
+MapShader* fn_8006070C(MapBlockData* obj, int idx)
 {
-    return (char*)((int**)obj)[0x64 / 4] + idx * 0x44;
+    return obj->shaders + idx;
 }
 
 #pragma dont_inline on

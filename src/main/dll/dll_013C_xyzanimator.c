@@ -60,7 +60,6 @@ extern const f32 lbl_803E4018;
 extern int return0_80060B90(void* blk);
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
-extern void* fn_8006070C(int* obj, int idx);
 extern void* Shader_getLayer(char* base, int idx);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
@@ -222,7 +221,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     for (; edgeIndex < (int)(u32)((MapBlockData*)block)->edgeCount; edgeIndex++)
     {
         vertexOffset[0] = (int)fn_800606FC((int*)block, edgeIndex);
-        shader = fn_8006070C((int*)block, *(u8*)(vertexOffset[0] + 0x13));
+        shader = fn_8006070C((MapBlockData*)block, *(u8*)(vertexOffset[0] + 0x13));
         shader = Shader_getLayer(shader, 0);
         if ((int)*(u8*)((int)shader + 5) == def->blockLayer)
         {

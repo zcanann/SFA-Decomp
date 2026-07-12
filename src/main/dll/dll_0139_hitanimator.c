@@ -47,7 +47,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern void* fn_8006070C(MapBlockData* block, int idx);
 extern int fn_80065640(void);
 extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern void* mapBlockFn_800606ec(MapBlockData* block, int idx);
@@ -91,7 +90,7 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
     {
         for (i = 0; i < block->layerCount; i++)
         {
-            HitAnimatorShader* shader = fn_8006070C(block, i);
+            HitAnimatorShader* shader = (HitAnimatorShader*)fn_8006070C(block, i);
             u8* layer = Shader_getLayer(shader, 0);
             if (desc->blockEffectId == layer[5])
             {

@@ -17,7 +17,6 @@ extern int lbl_803DDB18;
 
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
-extern u8* fn_8006070C(void* block, int idx);
 extern void objSetSlot(int* obj, int slot);
 
 /* Flags every trigger/volume in the map block under the object that
@@ -47,7 +46,7 @@ int fn_801A27B8(GameObject* obj, int id)
         }
         for (j = 0; j < block->layerCount; j++)
         {
-            u8* g = fn_8006070C(block, j);
+            u8* g = (u8*)fn_8006070C(block, j);
             u8* p;
             int k;
             k = 0;
