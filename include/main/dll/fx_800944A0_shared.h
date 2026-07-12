@@ -8,6 +8,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/dll/objfx_api.h"
 #include "main/mm.h"
 #include "main/cloud_action_runtime.h"
@@ -199,7 +200,6 @@ extern u8 gWaterfxPendingImpactPositionValid;
 extern f32 gWaterfxPendingImpactPosition[];
 extern f32 PSVECSquareDistance(f32* a, f32* b);
 extern void* memset(void* dst, int c, int n);
-extern void Obj_FreeObject(int obj);
 extern void textureFree(int tex);
 extern int textureLoadAsset(int id);
 extern char sWaterfxDllAllocFailed[];
@@ -299,8 +299,6 @@ extern int lbl_802C20EC[];
 extern int lbl_802C2104[];
 extern f32 gExpgfxFrameTimerA;
 extern f32 gWaterfxRippleGrowSpeed;
-extern u8* Obj_AllocObjectSetup(int size, int id);
-extern void* Obj_SetupObject(void* obj, int a, int b, int c, int d);
 extern f32 lbl_803DF3AC;
 extern f32 lbl_803DF3B0;
 extern const f32 lbl_803DF358;

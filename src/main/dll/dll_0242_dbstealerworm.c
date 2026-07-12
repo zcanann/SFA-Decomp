@@ -345,7 +345,7 @@ int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
         gameBitIncrement(((DbstealerwormPlacement*)data)->incrementGameBit);
         if ((((DbstealerwormPlacement*)data)->eventConfigId + 0x10000) == 0xffff)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return 0;
         }
         while (Stack_IsEmpty(sub_40c->msgStack) == 0)
@@ -559,7 +559,7 @@ void dbstealerworm_free(int* obj)
     Stack_Free(((DbStealerwormControl*)p40c)->msgStack);
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
-        Obj_FreeObject(*(int*)&((GameObject*)obj)->childObjs[0]);
+        Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
         *(int*)&((GameObject*)obj)->childObjs[0] = 0;
     }
     ((void (*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
@@ -816,22 +816,22 @@ void fn_80202EF0(GameObject* obj, int baddie)
     extern f32 lbl_803E62B4;
     extern f32 lbl_803E62B8;
     extern f32 lbl_803E6380;
-    u8* setup;
-    u8* newObj;
+    ObjPlacement* setup;
+    GameObject* newObj;
     f32 dur;
     f32 t;
 
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x24, DBSTEALERWORM_CHILD_OBJ_PROJECTILE);
-        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = lbl_803E637C + (obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-        setup[4] = 1;
-        setup[5] = 1;
-        setup[6] = 0xff;
-        setup[7] = 0xff;
-        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, 0);
+        setup->posX = (obj)->anim.localPosX;
+        setup->posY = lbl_803E637C + (obj)->anim.localPosY;
+        setup->posZ = (obj)->anim.localPosZ;
+        setup->color[0] = 1;
+        setup->color[1] = 1;
+        setup->color[2] = 0xff;
+        setup->color[3] = 0xff;
+        newObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, NULL);
         if (newObj != NULL)
         {
             t = ((BaddieState*)baddie)->targetDistance / lbl_803E62B4;
@@ -1394,7 +1394,7 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
         {
             if (((DbstealerwormPlacement*)data)->eventConfigId == 0xFFFFFFFF)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject(obj);
                 return 0;
             }
             entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->cfgTableIndex * 8];

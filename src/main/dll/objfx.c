@@ -1236,33 +1236,33 @@ void fn_8009A8C8(u8* obj, f32 thresh)
 void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
                              u8 flag20, u8 f1cinit)
 {
-    u8* obj;
+    ExplosionSetup* obj;
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj = Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
+        obj = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
         ((ObjPlacement*)obj)->color[0] = 2;
         ((ObjPlacement*)obj)->color[1] = 1;
         ((GameObject*)obj)->anim.rootMotionScale = vx;
         ((GameObject*)obj)->anim.localPosX = vy;
         ((GameObject*)obj)->anim.localPosY = vz;
         ((ExplosionSetup*)obj)->unk19 = a;
-        *(s16*)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
-        *(s16*)(obj + 0x1c) = f1cinit;
+        *(s16*)((char*)obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
+        *(s16*)((char*)obj + 0x1c) = f1cinit;
         if (flag4 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 4;
+            *(s16*)((char*)obj + 0x1c) |= 4;
         }
         if (flag8 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 8;
+            *(s16*)((char*)obj + 0x1c) |= 8;
         }
         if (flag10 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 0x10;
+            *(s16*)((char*)obj + 0x1c) |= 0x10;
         }
         if (flag20 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 0x20;
+            *(s16*)((char*)obj + 0x1c) |= 0x20;
         }
         if (doShake != 0)
         {
@@ -1280,39 +1280,39 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
                 }
             }
         }
-        Obj_SetupObject(obj, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, 0);
+        Obj_SetupObject(&obj->head, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, NULL);
     }
 }
 
 void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20, u8 f1cinit)
 {
-    u8* obj;
+    ExplosionSetup* obj;
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj = Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
+        obj = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
         ((ObjPlacement*)obj)->color[0] = 2;
         ((ObjPlacement*)obj)->color[1] = 1;
         ((GameObject*)obj)->anim.rootMotionScale = ((ObjAnimComponent*)src)->worldPosX;
         ((GameObject*)obj)->anim.localPosX = ((ObjAnimComponent*)src)->worldPosY;
         ((GameObject*)obj)->anim.localPosY = ((ObjAnimComponent*)src)->worldPosZ;
         ((ExplosionSetup*)obj)->unk19 = a;
-        *(s16*)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
-        *(s16*)(obj + 0x1c) = f1cinit;
+        *(s16*)((char*)obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
+        *(s16*)((char*)obj + 0x1c) = f1cinit;
         if (flag4 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 4;
+            *(s16*)((char*)obj + 0x1c) |= 4;
         }
         if (flag8 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 8;
+            *(s16*)((char*)obj + 0x1c) |= 8;
         }
         if (flag10 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 0x10;
+            *(s16*)((char*)obj + 0x1c) |= 0x10;
         }
         if (flag20 != 0)
         {
-            *(s16*)(obj + 0x1c) |= 0x20;
+            *(s16*)((char*)obj + 0x1c) |= 0x20;
         }
         if (doShake != 0)
         {
@@ -1330,7 +1330,7 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
                 }
             }
         }
-        Obj_SetupObject(obj, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, 0);
+        Obj_SetupObject(&obj->head, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, NULL);
     }
 }
 

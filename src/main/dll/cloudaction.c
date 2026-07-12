@@ -89,19 +89,19 @@ void cloudaction_free(void)
 {
     if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
+        Obj_FreeObject(lbl_8039AB28.mainCloudObj);
         lbl_8039AB28.mainCloudObj = NULL;
     }
     lbl_8039AB28.mainCloudAssetId = 0;
     if (lbl_8039AB28.upperCloudObj != NULL)
     {
-        Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
+        Obj_FreeObject(lbl_8039AB28.upperCloudObj);
         lbl_8039AB28.upperCloudObj = NULL;
     }
     lbl_8039AB28.upperCloudAssetId = 0;
     if (lbl_8039AB28.lowerCloudObj != NULL)
     {
-        Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
+        Obj_FreeObject(lbl_8039AB28.lowerCloudObj);
         lbl_8039AB28.lowerCloudObj = NULL;
     }
     lbl_8039AB28.lowerCloudAssetId = 0;
@@ -350,7 +350,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
             {
                 if (lbl_8039AB28.mainCloudObj != NULL)
                 {
-                    Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
+                    Obj_FreeObject(lbl_8039AB28.mainCloudObj);
                 }
                 lbl_8039AB28.mainCloudObj =
                     (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
@@ -362,7 +362,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         if (lbl_8039AB28.mainCloudObj != NULL)
         {
-            Obj_FreeObject((int)lbl_8039AB28.mainCloudObj);
+            Obj_FreeObject(lbl_8039AB28.mainCloudObj);
             lbl_8039AB28.mainCloudObj = NULL;
         }
         lbl_8039AB28.mainCloudAssetId = 0;
@@ -375,7 +375,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
             {
                 if (lbl_8039AB28.upperCloudObj != NULL)
                 {
-                    Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
+                    Obj_FreeObject(lbl_8039AB28.upperCloudObj);
                 }
                 lbl_8039AB28.upperCloudObj =
                     (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
@@ -387,7 +387,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         if (lbl_8039AB28.upperCloudObj != NULL)
         {
-            Obj_FreeObject((int)lbl_8039AB28.upperCloudObj);
+            Obj_FreeObject(lbl_8039AB28.upperCloudObj);
             lbl_8039AB28.upperCloudObj = NULL;
         }
         lbl_8039AB28.upperCloudAssetId = 0;
@@ -400,7 +400,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
             {
                 if (lbl_8039AB28.lowerCloudObj != NULL)
                 {
-                    Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
+                    Obj_FreeObject(lbl_8039AB28.lowerCloudObj);
                 }
                 lbl_8039AB28.lowerCloudObj =
                     (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
@@ -412,7 +412,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         if (lbl_8039AB28.lowerCloudObj != NULL)
         {
-            Obj_FreeObject((int)lbl_8039AB28.lowerCloudObj);
+            Obj_FreeObject(lbl_8039AB28.lowerCloudObj);
             lbl_8039AB28.lowerCloudObj = NULL;
         }
         lbl_8039AB28.lowerCloudAssetId = 0;

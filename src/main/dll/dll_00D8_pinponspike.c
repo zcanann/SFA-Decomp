@@ -117,7 +117,7 @@ void pinponspike_update(int obj)
         ((GameObject*)obj)->unkF4 = (int)((f32)((GameObject*)obj)->unkF4 - timeDelta);
         if (((GameObject*)obj)->unkF4 <= 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
             return;
         }
     }
@@ -165,7 +165,7 @@ void pinponspike_update(int obj)
         }
         else if (((GameObject*)obj)->anim.localPosY < lbl_803E312C)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         }
     }
 }
