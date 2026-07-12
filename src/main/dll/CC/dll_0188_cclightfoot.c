@@ -54,6 +54,7 @@ typedef struct CcLightfootState
 STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/DIM/DIMsnowball.h"
 #include "main/dll/player_target.h"
@@ -178,7 +179,6 @@ extern u8 gCcLightfootHitCooldown[8];
 extern int getAngle(float y, float x);
 extern f32 enemy_getHealthFraction(register int obj);
 extern void fn_8014C66C(int obj, int target);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_FreeObject(int o);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int ObjList_FindObjectById(int id);

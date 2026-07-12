@@ -35,11 +35,11 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern f32 timeDelta;
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/gamebits.h"
 

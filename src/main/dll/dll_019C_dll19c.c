@@ -2,6 +2,7 @@
 #include "main/dll/dll19cstate_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/resource.h"
@@ -21,7 +22,6 @@ typedef struct Dll19CPlacement
     u8 pad1A[0x20 - 0x1A];
 } Dll19CPlacement;
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 

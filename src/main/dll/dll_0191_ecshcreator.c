@@ -12,6 +12,7 @@
  * (object type 0x11) via Obj_SetupObject, then re-arms the countdown.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
@@ -29,7 +30,6 @@ extern f32 lbl_803E4FF8;
 
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
-extern u8 Obj_IsLoadingLocked(void);
 
 int ecsh_creator_getExtraSize(void)
 {

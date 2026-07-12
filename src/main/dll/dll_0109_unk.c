@@ -15,6 +15,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objlib.h"
@@ -55,7 +56,6 @@ typedef struct Dll109MapData
 
 STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
 
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 

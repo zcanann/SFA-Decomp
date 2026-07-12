@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
@@ -79,7 +80,6 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);

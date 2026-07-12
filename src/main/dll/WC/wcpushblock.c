@@ -19,6 +19,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 
@@ -136,7 +137,6 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void vecRotateZXY(void* angles, void* out);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer, int linkId,

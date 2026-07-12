@@ -16,6 +16,7 @@
  * interface (vtable slot 2), and frees the spawned child.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/gameplay_runtime.h"
@@ -30,7 +31,6 @@ extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;
 
 extern void Obj_FreeObject(u8* obj);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 

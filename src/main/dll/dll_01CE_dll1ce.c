@@ -18,6 +18,7 @@
 #include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objseq.h"
@@ -101,7 +102,6 @@ extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
 extern void dimmagicbridge_update(GameObject*);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 int dimmagicbridge_getExtraSize(void);

@@ -12,6 +12,7 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/dll_01E4_magicmaker.h"
 
 #define MAGICMAKER_SPAWN_GAMEBIT       0x26b /* set-by-others trigger; cleared each spawn attempt */
@@ -24,7 +25,6 @@ extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern u8 Obj_IsLoadingLocked(void);
 extern void mainSetBits(int eventId, int value);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern void* Obj_AllocObjectSetup(int size, int b);

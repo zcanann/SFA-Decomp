@@ -14,6 +14,7 @@
  */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
@@ -30,7 +31,6 @@ extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47C0; /* render scale */
 extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 

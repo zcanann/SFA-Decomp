@@ -21,6 +21,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/model.h"
 #include "track/intersect_api.h"
 #include "main/dll/dll_015F_attractor.h"
@@ -130,7 +131,6 @@ extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
 extern void Obj_FreeObject(int obj);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16* rot, f32* vec);

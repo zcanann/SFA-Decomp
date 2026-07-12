@@ -8,6 +8,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/resource.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
@@ -60,7 +61,6 @@ STATIC_ASSERT(sizeof(DfshObjCreatorSetup) == 0x38);
 
 extern f32 lbl_803E4EB8;
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 

@@ -19,6 +19,7 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
@@ -79,7 +80,6 @@ extern void Obj_FreeObject(int*);
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 Vec_distance(f32* a, f32* b);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern int* ObjGroup_GetObjects(int group, int* countOut);

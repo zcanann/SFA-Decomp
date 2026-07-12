@@ -13,6 +13,7 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
@@ -36,7 +37,6 @@ extern f32 lbl_803E5E9C; /* 800.0 */
 extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
 extern f32 lbl_803E5EA4; /* 1.0: render scale */
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);

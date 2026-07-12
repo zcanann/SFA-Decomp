@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -307,7 +308,6 @@ void fn_80152514(int* obj, u8* state)
 /* fn_80152B90: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* loadObjectAtObject(int* obj, u8* setup);
 extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);

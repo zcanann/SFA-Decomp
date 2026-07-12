@@ -14,6 +14,7 @@
  */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -27,7 +28,6 @@
 #define VFP_OBJCREATOR_FALLING_OBJECT_ID    0x263
 #define VFP_OBJCREATOR_PROJECTILE_OBJECT_ID 0x549
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16* angles, f32* vec);

@@ -13,6 +13,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -49,7 +50,6 @@ STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int obj, int* setup);
 

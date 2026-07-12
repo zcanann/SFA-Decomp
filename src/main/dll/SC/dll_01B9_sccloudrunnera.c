@@ -1,11 +1,11 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);

@@ -3,6 +3,7 @@
  */
 #include "main/dll/CF/CFcrystal.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
@@ -20,7 +21,6 @@ extern f32 lbl_803E3AE8;
 extern int gameBitDecrement(int bit);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int loadObjectAtObject(int* obj, void* setup);
 
