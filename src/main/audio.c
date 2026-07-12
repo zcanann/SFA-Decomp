@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/audio_internal.h"
 #include "main/game_object.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"

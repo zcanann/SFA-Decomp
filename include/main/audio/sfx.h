@@ -9,6 +9,7 @@ void Sfx_ClearLoopedObjectSounds(void);
 void Sfx_UpdateLoopedObjectSounds(void);
 void Sfx_SetObjectSoundsPaused(s32 paused);
 void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
@@ -21,6 +22,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
+void Sfx_InitObjectChannels(void);
 
 
 /* extern-cleanup: consolidated prototypes */

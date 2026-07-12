@@ -2,19 +2,17 @@
 #define MAIN_ENGINE_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/audio.h"
 #include "main/audio/inp_midi.h"
+#include "main/audio/sfx.h"
 #include "main/audio/snd_core.h"
 #include "main/camera.h"
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/newclouds.h"
 #include "main/sky_interface.h"
 
-#define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
-#define SFX_OBJECT_CHANNEL_COUNT 56
-#define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
-#define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2
-#define SFX_LOOPED_OBJECT_STOP_FLAG 0x40
 #define MODEL_DECODE_NIBBLE(nibExpr)                                           \
     {                                                                          \
         u8 nib = (nibExpr);                                                    \
@@ -90,31 +88,6 @@
         }                                                                      \
     }
 
-typedef struct SfxLoopedObjectSoundTable {
-    u8 flags[0x80];
-    u16 ids[0x80];
-    u32 objects[0x80];
-} SfxLoopedObjectSoundTable;
-typedef struct SfxObjectChannel {
-    u32 handle;
-    u8 hasPosition;
-    u8 tracksObjectPosition;
-    u8 paused;
-    u8 volume;
-    s16 field08;
-    u8 pad0a[0x02];
-    f32 x;
-    f32 y;
-    f32 z;
-    u32 object;
-    u16 channelMask;
-    u16 sfxId;
-    f32 nearDistance;
-    f32 farDistance;
-    u8 globalCtrlDisabled;
-    u8 pad29[0x07];
-    u64 age;
-} SfxObjectChannel;
 typedef struct ObjMatrixBuildTransform {
     s16 rotX;
     s16 rotY;
@@ -139,63 +112,6 @@ typedef struct ModelRenderInstrsState {
     s32 fieldC;
     s32 bit;
 } ModelRenderInstrsState;
-typedef struct MusicSeqStartParams {
-    u32 flags;
-    u8 pad4[8];
-    u16 field_c;
-    u16 field_e;
-    u8 field_10;
-    u8 pad11[0xf];
-} MusicSeqStartParams;
-typedef struct MusicChannel {
-    u32 field_0;
-    u32 seqHandle;
-    void *bankData;
-    int status;
-    u8 voiceId;
-    u8 pad11;
-    u16 field_12;
-    u8 pad14[0xc];
-    f32 field_20;
-} MusicChannel;
-typedef struct MusicTrigParam {
-    u8 pad0[2];
-    u16 field_2;
-    u8 pad4[2];
-    u16 field_6;
-    u8 pad8[4];
-    u8 field_c;
-} MusicTrigParam;
-typedef struct MusicBank {
-    u8 pad0[2];
-    u8 field_2;
-} MusicBank;
-typedef struct SfxTriggerFull {
-    u16 id;
-    u8 volBase;
-    u8 volRand;
-    u8 pitchBase;
-    u8 pitchRand;
-    u16 nearDistanceRaw;
-    u16 farDistanceRaw;
-    u16 sfxIds[6];
-    u8 weights[6];
-    u16 selectRange;
-    u8 e_tableIdx : 4;
-    u8 e_bit3 : 1;
-    u8 e_pad : 2;
-    u8 e_bit0 : 1;
-    u8 f_count : 4;
-    u8 f_curIdx : 4;
-} SfxTriggerFull;
-typedef struct SfxTrigger {
-    u16 id;
-    u8 pad[0x1e];
-} SfxTrigger;
-typedef struct SfxTriggerCacheEntry {
-    u16 key;
-    u16 index;
-} SfxTriggerCacheEntry;
 typedef struct RingBufferQueue {
     s16 count;
     s16 capacity;
@@ -461,31 +377,7 @@ typedef struct {
     int f10;
 } TextDisplayState;
 
-extern u32 gAudioResetting;
-extern u32 gAudioManagedChannelMask;
-extern u32 gAudioActiveChannelMask;
-extern u8 gAudioInitStarted;
 extern s32 gAttractMovieState;
-extern u8 gAudioStreamDefaultVolume;
-extern u8 gAudioStreamVolumeLeft;
-extern u8 gAudioStreamVolumeRight;
-extern u8 gAudioStreamDvdState;
-extern u8 gAudioStreamPlaying;
-extern u32 gAudioStreamMusicFadeFlagA;
-extern u32 gAudioStreamMusicFadeFlagB;
-extern void (*gAudioStreamPreparedCallback)(void);
-extern s32 gAudioStreamCurrentId;
-extern s32 gAudioStreamStartWhenPrepared;
-extern s32 gAudioStreamPreparingId;
-extern s32 gAudioStreamPreparedId;
-extern u32 gAudioStreamPlayAddrCallbackResult;
-extern u8 gAudioStreamPlayAddrCallbackDone;
-extern f32 gAudioStreamEndPos;
-extern f32 gAudioStreamPos;
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 lbl_803DE5D0;
-extern f32 gAudioStreamFramesPerSecond;
 extern f32 lbl_803DE5F0;
 extern f32 gCameraShakeMagnitudeDecay;
 extern f32 gCameraPi;
@@ -497,29 +389,13 @@ extern f32 lbl_803DE610;
 extern f32 gCameraDepth24BitMax;
 extern f32 lbl_803DE624;
 extern s8 gObjTransformMatrixSlot;
-extern u8 gAudioStreamDvdBlockCurrent[];
-extern u8 gAudioStreamDvdBlockPrepared[];
-extern char sDvdCancelStreamWarning[];
 extern f32 gObjInverseYawTransformMatrices[][16];
 extern f32 gObjYawTransformMatrices[][16];
-extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
-extern u16 gSfxLoopedObjectSoundCount;
-extern SfxObjectChannel gSfxObjectChannels[];
-extern u8 gSfxGlobalCtrlLevel;
-extern u32 gSfxObjectChannelMatchCount;
-extern u64 gSfxObjectChannelAge;
 extern void AIReset(void);
 extern int sndFXKeyOff(u32 handle);
 extern int sndFXCheck(u32 handle);
 extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
 extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
-extern void Music_Update(void);
-extern void Sfx_UpdateObjectSounds(void);
-extern void Sfx_StopAllObjectSounds(void);
-extern void AudioStream_UpdateFadeTimer(void);
-extern void AudioStream_StopCurrent(void);
-extern void AudioStream_CancelPrepared(void);
-extern void streamFn_8000a380(int mask, int mode, int time);
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void AISetStreamPlayState(u32 state);
 extern void AISetStreamVolLeft(u8 volume);
@@ -528,23 +404,6 @@ extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
 extern u32 mainGetBit(u32 bit);
-extern void AudioStream_CancelCallback(s32 result);
-extern void fn_8000D0B4(void);
-extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
-extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
-extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
-extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
-extern void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
-extern f32 lbl_803DE570;
-extern f32 lbl_803DE574;
-extern f32 lbl_803DE578;
-extern f32 lbl_803DE598;
-extern f32 lbl_803DE59C;
-extern f32 lbl_803DE5A0;
-extern f32 gSfxPanCenter;
-extern f32 gSfxPanScale;
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 extern void setMatrixFromObjectPos(f32 *matrix, void *obj);
@@ -576,31 +435,17 @@ s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state);
 void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
-extern MusicSeqStartParams gMusicSeqStartParamsDefault;
-extern f32 lbl_803DE560;
-extern int sndSeqPlayEx(int a, int b, void *bank, MusicSeqStartParams *params, int e);
 extern void sndSeqVolume(int voice, int a, int handle, int b);
 extern int synthResolveHandle(int handle);
 extern int randomGetRange(int min, int max);
-extern u8 gSfxTriggerExtraTable;
-extern void *gSfxTriggersData;
-extern int gSfxTriggersCount;
-extern SfxTriggerCacheEntry gSfxTriggerLookupCache[];
 extern int sndFXStartEx(s16 a, int b, int c, int d);
-extern f32 lbl_803DE590;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern f32 gAudioPi;
-extern f32 gAudioAngleToRadDivisor;
 extern void *Obj_GetPlayerObject(void);
 extern int Obj_IsLoadingLocked(void);
 extern int getCurSeqNo(void);
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
-extern f32 lbl_803DE5B4;
-extern f32 lbl_803DE5B8;
-extern double lbl_803DE5C0;
-extern double lbl_803DE5C8;
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE658;
 extern f32 lbl_803DE674;
@@ -631,8 +476,6 @@ extern int getLoadedFileFlags(int slot);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int a, int b);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void Sfx_SetObjectSoundsPaused(s32 paused);
-extern s32 gMusicActivePriority;
 extern f32 gCameraViewRotationMatrix[16];
 extern f32 gCameraInverseViewRotationMatrix[16];
 extern f32 gCameraViewMatrix[16];
@@ -766,9 +609,6 @@ extern volatile u32 gAudioCompletedLoadFlags;
 extern char sMidiWadLoadedCallbackLoadError[];
 extern void gameTextRenderStrs(char* str, int arg2);
 extern u8 gMidiWadLoadStarted;
-extern MusicChannel gMusicChannels[];
-extern int gMusicChannelCounterA;
-extern int gMusicChannelCounterB;
 extern int gMidiWadLoadedSize;
 extern void *gMidiWadFileData;
 extern void *gMidiWadPayloadStart;
@@ -795,7 +635,6 @@ extern StreamEntry* gStreamsData;
 extern int gStreamsCount;
 extern int gVoxMapsSlotTimers[];
 extern u32 gVoxMapsTransformObj;
-extern void Music_Trigger(int id, int arg);
 extern f32 lbl_803DE6B0;
 extern int lbl_803DC9AC;
 extern int lbl_803DC9B0;
@@ -949,37 +788,8 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 int getEnvfxAct(int a, int b, u16 idx, int d);
 u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth);
 int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth);
-void audioStopByMask(int mask);
-void audioReset(void);
-int audioIsResetting(void);
-void audioStopAll(void);
-void audioUpdate(void);
-u32 audioFlagFn_8000a188(u32 mask);
-void audioFree(void *ptr);
-void *_audioAlloc(u32 size);
-void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTrigParam *trigger);
-int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f32 *outF6, f32 *outF7, f32 *outF8, int *outI9, int *outI10, int *outI11);
-SfxTrigger *Sfx_FindTrigger(u16 id);
-SfxObjectChannel *Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v);
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta);
-void AudioStream_StopAll(void);
-u32 AudioStream_GetMusicFadeFlagA(void);
-u32 AudioStream_GetMusicFadeFlagB(void);
-u32 AudioStream_GetCurrentId(void);
-u8 AudioStream_IsPreparing(void);
-void AudioStream_SetVolume(u8 volume);
-void AudioStream_StartPrepared(void);
-void AudioStream_SetDefaultVolume(u8 volume);
-void AudioStream_Init(void);
-void AudioStream_PrepareCallback(void);
-void AudioStream_PlayAddrCallback(u32 result);
-void Sfx_ClearLoopedObjectSounds(void);
-void Sfx_UpdateLoopedObjectSounds(void);
-void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
-void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
-void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 void Obj_UpdateWorldTransform(s16 *obj);
 s32 Angle_AddWrappedS16(s32 angle, s16 *delta);
 s32 Angle_SubWrappedS16(s32 angle, s16 *delta);
@@ -991,17 +801,7 @@ int return0xFFFF_80008B6C(void);
 int return0x64_8000A378(void);
 void doNothing_8000CF54(void);
 void doNothing_endOfFrame(void);
-s32 Music_GetActivePriority(void);
-s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 void audioFn_8000b694(u32 value);
-void Sfx_StopObjectChannel(u32 obj, u32 channel);
-void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
-void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
-void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel);
-void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId);
-void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
-void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
-void Sfx_InitObjectChannels(void);
 void* fn_8000E814(void);
 void screenFn_8000e944(void* viewportArg);
 void viewportEffectFn_8000e380(void);
@@ -1093,7 +893,6 @@ void gameTextFn_80016810(int a, int b, int c);
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId);
 void gameTextShowTimeStr(char* str);
 void gameTextShowStr(char *text, int box, int arg2, int arg3);
-void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 void MIDIWADLoadedCallback(int status, void* fileInfo);
 int musicInitMidiWad(void);
 void gameTextAppendStr(char* str, int arg2);
@@ -1118,9 +917,7 @@ void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, i
 void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 void* loadFileByPath(char* path, int* outSize);
-int AudioStream_Play(int id, void (*preparedCallback)(void));
 void gameTimerRun(void);
-void Music_PlayTrackByIndex(int index);
 void voxmaps_resetLoadedMaps(void);
 void voxmaps_initialise(void);
 int *voxmaps_updateActiveMap(VoxPos *obj);
