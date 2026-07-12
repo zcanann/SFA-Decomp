@@ -323,11 +323,6 @@ extern int loadObjectAtObject(int obj);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int gGfLevelConProjectilePitch;
-extern int gGfLevelConRingProjectilePitch;
-extern s16 gGfLevelConProjectileYaw;
-extern s16 gGfLevelConRingProjectilePitchSource;
-
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
 
