@@ -16,6 +16,7 @@
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
@@ -81,8 +82,6 @@ extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOff
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
 extern int isGameTimerDisabled(void);
 extern void AudioStream_CancelPrepared(void);
-extern void* Obj_AllocObjectSetup(int size, int objectId);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern int getCurMapLayer(void);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
@@ -4006,7 +4005,7 @@ checked:
     {
         if (flags & (1 << idx))
         {
-            setup = Obj_AllocObjectSetup(0x28, 6);
+            setup = (u8*)Obj_AllocObjectSetup(0x28, 6);
             objId = *(u16*)(walk2 + 6);
             if (objId == 0x1f || objId == 0)
             {
@@ -4111,7 +4110,7 @@ checked:
             {
                 *(s16*)setup = objSeqObjs;
             }
-            newObj = Obj_SetupObject(setup, 5, -1, -1, parent);
+            newObj = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, parent);
             ((GameObject*)newObj)->seqIndex = -2;
             seq = ((GameObject*)newObj)->extra;
             ((ObjSeqState*)seq)->heading = heading;

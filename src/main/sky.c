@@ -6,6 +6,7 @@
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/curve_eval.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
@@ -176,8 +177,6 @@ extern void fn_8008C9F4(u8* cfg, u8 flags);
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
-extern void* Obj_AllocObjectSetup(int size, int objectId);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern void* Obj_GetActiveModel(void* obj);
 extern void ObjModel_SetRenderCallback(void* model, void* callback);
 extern int moonFxCb_80074110(int obj, int* model, int param);
@@ -363,7 +362,7 @@ void loadSunAndMoon(void)
 
     if (gSkyObjectsInitialized == 0)
     {
-        gSkySunObject = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_SUN), 4, -1, -1, NULL);
+        gSkySunObject = (u8*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_SUN), 4, -1, -1, NULL);
         moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_MOON), 4, -1, -1, NULL);
         gSkyMoonObject = moonObj;
         gSkyObjectsInitialized = 1;
