@@ -27,6 +27,7 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
 #include "main/objprint_dolphin.h"
@@ -91,12 +92,6 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateDamageTexturePlacement;
 
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern int ObjTrigger_IsSet(int obj);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern int loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
@@ -162,7 +157,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         i = 0;
         while (i < 5)
         {
-            ObjPath_GetPointWorldPosition((int)obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y,
+            ObjPath_GetPointWorldPosition(obj, gLandedArwingPathFxTable[i].pathPoint, &scratch.x, &scratch.y,
                                           &scratch.z, 0);
             scratch.x -= (obj)->anim.localPosX;
             scratch.y -= (obj)->anim.localPosY;
@@ -176,7 +171,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
 
     if (state->path6Fx != lbl_803E3B98)
     {
-        ObjPath_GetPointWorldPosition((int)obj, 6, &scratch.x, &scratch.y, &scratch.z, 0);
+        ObjPath_GetPointWorldPosition(obj, 6, &scratch.x, &scratch.y, &scratch.z, 0);
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
@@ -185,7 +180,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
 
     if (state->path8Fx != lbl_803E3B98)
     {
-        ObjPath_GetPointWorldPosition((int)obj, 8, &scratch.x, &scratch.y, &scratch.z, 0);
+        ObjPath_GetPointWorldPosition(obj, 8, &scratch.x, &scratch.y, &scratch.z, 0);
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
@@ -194,7 +189,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
 
     if (state->path7Fx != lbl_803E3B98)
     {
-        ObjPath_GetPointWorldPosition((int)obj, 7, &scratch.x, &scratch.y, &scratch.z, 0);
+        ObjPath_GetPointWorldPosition(obj, 7, &scratch.x, &scratch.y, &scratch.z, 0);
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
@@ -216,7 +211,7 @@ void landed_arwing_free(GameObject* obj)
     if (state->childObject != NULL)
     {
         Obj_FreeObject(state->childObject);
-        ObjLink_DetachChild((int)obj, (int)state->childObject);
+        ObjLink_DetachChild(obj, (int)state->childObject);
     }
 }
 
