@@ -18,6 +18,7 @@
  * directly by the wisp baddie DLL.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -67,7 +68,6 @@ extern void playerAddMoney(u8* player, int amount);
 extern void hudFn_8011f38c(u8 x);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-extern f32 sqrtf(f32 x);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];

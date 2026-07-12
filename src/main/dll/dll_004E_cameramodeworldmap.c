@@ -18,6 +18,7 @@
  * gates entry to each mode.
  */
 #include "main/mm.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/CAM/camworldmap_state.h"
 #include "main/game_object.h"
 #include "main/screen_transition.h"
@@ -26,7 +27,6 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/VF/vf_shared.h"
 
-extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 

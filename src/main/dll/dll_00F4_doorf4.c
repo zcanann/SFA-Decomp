@@ -107,7 +107,6 @@ extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* ObjList_GetObjects(int* outA, int* outB);
-extern f32 sqrtf(f32 x);
 
 void DoorF4_hitDetect(void)
 {

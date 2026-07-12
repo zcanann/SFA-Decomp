@@ -24,6 +24,7 @@
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
  */
 #include "main/camera_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -175,7 +176,6 @@ extern void modelLightStruct_startColorFade();
 extern void modelLightStruct_setAffectsAabbLightSelection();
 extern void sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
 extern float powfBitEstimate(float x, float y);
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
 extern f32 lbl_803E2C34;

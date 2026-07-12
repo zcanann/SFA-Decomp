@@ -1,4 +1,5 @@
 #include "main/camera_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -147,7 +148,6 @@ extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
 extern void AudioStream_StartPrepared(void);
 extern void showMemCardError();
 extern void cardGetMessage();

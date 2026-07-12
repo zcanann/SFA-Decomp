@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
 #include "main/frame_timing.h"
@@ -25,7 +26,6 @@ extern f32 lbl_803DE7F4;
 
 extern float powfBitEstimate(float x, float y);
 extern float fcos16(int angle);
-extern f32 sqrtf(f32 x);
 extern int rand(void);
 extern f32 fsin16(int angle);
 extern float mathSinf(float x);

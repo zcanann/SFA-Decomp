@@ -4,6 +4,7 @@
  * per-setup lifetime window, and emits two trail particles per frame while
  * fully opaque. */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -44,7 +45,6 @@ typedef struct DimbossicesmashPlacement
     s16 homingTargetZ;  /* homing target Z */
 } DimbossicesmashPlacement;
 
-extern f32 sqrtf(f32);
 extern void Obj_FreeObject(u8* obj);
 extern u8 lbl_803DDB00;
 extern u8 lbl_80322368[0xC];

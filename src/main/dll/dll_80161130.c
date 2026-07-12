@@ -10,6 +10,7 @@
  * vtable[5] based on the signed planar distance to the current target.
  */
 #include "main/dll/chukchukstate_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -46,7 +47,6 @@ extern f32 lbl_803E2EEC;
 
 extern void Obj_FreeObject(int* obj);
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32);
 
 void ChukChuk_free(void);
 

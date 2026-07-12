@@ -16,6 +16,7 @@
  * external area_* callbacks.
  */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/sidekickball_state.h"
@@ -51,7 +52,6 @@ extern const f32 lbl_803E3690;
 extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
 extern u32 mainGetBit(int eventId);
-extern f32 sqrtf(f32 x);
 extern f32 timeDelta;
 extern void* getTrickyObject(void);
 extern void Obj_FreeObject(u8* obj);

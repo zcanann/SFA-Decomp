@@ -20,6 +20,7 @@
  * range (0x80321568..0x803216B8) owns them in retail.
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/objfsa.h"
@@ -75,7 +76,6 @@ typedef enum CurveFishMode
 #define CURVEFISH_MAX_YAW_TURN 0x180
 
 extern f32 getXZDistance(f32* a, f32* b);
-extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
 

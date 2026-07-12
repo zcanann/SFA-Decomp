@@ -1,4 +1,5 @@
 #include "main/dll/objpathtransform_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/objmodel_types.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
@@ -190,7 +191,6 @@ extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void objList_remove(void* list, void* item);
-extern f32 sqrtf(f32 x);
 extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);

@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objtexture.h"
@@ -91,7 +92,6 @@ extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void objfx_spawnMaskedHitEffect(void* obj, f32 scale, int a, int b, int c, void* params);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
 extern float mathCosf(float x);
-extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern int getAngle(float y, float x);
 extern void Obj_FreeObject(void* obj);

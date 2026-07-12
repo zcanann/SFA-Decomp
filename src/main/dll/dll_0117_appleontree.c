@@ -1,5 +1,6 @@
 /* DLL 0x0117 - appleontree / groundAnimator group. TU: 0x8017D818-0x8017E1A0. */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/appleontreestate_struct.h"
 #include "main/dll/groundAnimator.h"
@@ -82,7 +83,6 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Obj_FreeObject(int obj);
-extern f32 sqrtf(f32);
 extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);

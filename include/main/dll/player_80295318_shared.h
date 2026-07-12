@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/player_state.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -531,7 +532,6 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 Camera_GetFovY(void);
 extern f32 Camera_GetAspectRatio(void);
 extern int getScreenResolution(void);
-extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern const f32 lbl_803E7EE0;
@@ -730,7 +730,6 @@ extern int gPlayerStateHandlers[];
 extern int gPlayerDefaultStateHandler;
 extern void fn_802B0EA4(GameObject* obj, int state, int sub);
 extern s8 playerCheckIfClimbingOntoWall(int obj, int state, int sub, void* out, f32 fv, u32 n);
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E80E8;
 extern f32 lbl_803E7EFC;
 extern f32 lbl_803E8070;

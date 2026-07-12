@@ -15,6 +15,7 @@
  *   explosion_initialise   - precompute the expf falloff scales
  */
 #include "main/dll/explosiondebris_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/fbtextbl_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/explosionpartfxsource_struct.h"
@@ -107,7 +108,6 @@ extern void textureFree(int tex);
 extern int Obj_GetActiveModel(void* obj);
 extern void ModelLightStruct_free(void*);
 extern f32 expf(f32 x);
-extern f32 sqrtf(f32 x);
 extern void GXSetCurrentMtx(u32 id);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);

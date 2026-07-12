@@ -1,5 +1,6 @@
 /* DLL 0xE1 - wisp baddie / swarmbaddie / hagabon objects [8014F620-8014F9E8) */
 #include "main/dll/rom_curve_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"
@@ -63,7 +64,6 @@ extern int gWispBaddieLastSegmentEnd;
 extern void* Obj_GetPlayerObject(void);
 
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);

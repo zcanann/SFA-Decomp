@@ -1,4 +1,6 @@
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
@@ -60,7 +62,6 @@ extern f32 lbl_803DEC0C;
 extern FrustumPlane gViewFrustumPlanes[];
 extern f32 fn_80293AC4(int v);
 extern f32 fn_80293D0C(int v);
-extern f32 sqrtf(f32 v);
 extern f32 fn_80292248(f32 v);
 extern float floor(float x);
 extern float fn_802943F4(float x);
@@ -141,7 +142,6 @@ void updateVisibleGeometry(void)
 
 extern s16* lbl_803822A0[];
 extern f32 gMapBlockWorldSize;
-extern float fastFloorf(float x);
 extern int gMapBlockOriginX;
 extern int gMapBlockOriginZ;
 

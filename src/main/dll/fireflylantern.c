@@ -16,6 +16,7 @@
  * (callers: dll_00C9_enemy, duster.)
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx.h"
@@ -41,7 +42,6 @@ extern void PSVECCrossProduct(float*, float*, float*);
 extern void PSVECNormalize(float*, float*);
 extern int getAngle(float y, float x);
 extern void objMove(short* obj, f32 x, f32 y, f32 z);
-extern f32 sqrtf(f32);
 extern u32 lbl_803DBCD0;
 extern f32 timeDelta;
 extern f32 lbl_803E2990;

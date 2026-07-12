@@ -1,4 +1,6 @@
 #include "main/map_block.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frustum.h"
 #include "main/asset_load.h"
 #include "main/game_object.h"
@@ -347,7 +349,6 @@ extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECSquareMag(f32* v);
-extern f32 sqrtf(f32 x);
 extern void* textureLoad(int texId, u8 flag);
 extern int textureAlloc512(void);
 extern u32 textureFn_8006c5c4(void);
@@ -414,7 +415,6 @@ extern u16* fn_80028354(int hdr, int tri);
 extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
 extern u8* mapGetBlockAtPos(int x, int z, int layer);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
-extern float fastFloorf(float x);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern u8* mapGetBlockIdx(int layer);

@@ -56,7 +56,6 @@ extern const f32 gMagicGemPickupYRange;
 extern const f32 gMagicGemPickupRadiusBase;
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
-extern f32 sqrtf(f32 x);
 extern void objMove(int obj, f32 a, f32 b, f32 c);
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 

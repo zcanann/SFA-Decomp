@@ -22,6 +22,7 @@
  * offsets into its per-baddie scratch region (0x29c..0x340).
  */
 #include "main/dll/baddie_state.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
@@ -71,7 +72,6 @@ extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
 extern f32 lbl_803E298C;
 
-extern f32 sqrtf(f32 x);
 extern void fn_8014CF7C(int obj, int state, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int state, int c, f32 a, f32 b, int d);

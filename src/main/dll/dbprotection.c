@@ -140,7 +140,6 @@ extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 
-extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);

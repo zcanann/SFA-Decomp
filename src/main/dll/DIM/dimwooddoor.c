@@ -63,7 +63,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
 extern int Obj_GetPlayerObject(void);
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 value);
 
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

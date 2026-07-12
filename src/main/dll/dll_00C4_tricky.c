@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"
 #include "main/obj_placement.h"
@@ -297,7 +298,6 @@ extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filt
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
 extern f32 lbl_803E2418;
-extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;

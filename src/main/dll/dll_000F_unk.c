@@ -57,7 +57,6 @@ extern const f32 lbl_803E05BC;
 extern const f32 lbl_803E05C0;
 extern const f32 lbl_803E05C4;
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 

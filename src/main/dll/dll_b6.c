@@ -17,6 +17,7 @@
  * object's speed, used to damp camera follow.
  */
 #include "main/dll/dll_B6.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
@@ -32,7 +33,6 @@ extern f32 lbl_803E1658; /* 1/5 move-average weight */
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(GameObject* player);
 extern f32 PSVECMag(void* vec);
-extern float sqrtf(float x);
 
 static inline int camcontrol_isTargetCandidate(GameObject* obj, ObjHitVolumeRuntimeBounds* data)
 {

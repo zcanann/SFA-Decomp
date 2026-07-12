@@ -14,6 +14,7 @@
  * callbacks referenced from the sibling camera-mode DLLs.
  */
 #include "main/mm.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_object.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camera_mode_54_state.h"
@@ -32,7 +33,6 @@
 #define DLL54_ORIGIN_SEQID 0x4dc
 
 extern CameraMode54State* gCameraModeNpcSpeakState;
-extern f32 sqrtf(f32 x);
 
 #pragma scheduling off
 #pragma peephole off

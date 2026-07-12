@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/obj_placement.h"
@@ -187,7 +188,6 @@ extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern u8 framesThisStep;
 extern int cfguardian_updateMain();
 extern void dll_2E_func06(GameObject* a, int* b, int c);
-extern f32 sqrtf(f32 x);
 extern void normalize(f32* x, f32* y, f32* z);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);

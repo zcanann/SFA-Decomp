@@ -12,6 +12,7 @@
  * bit3 = disabled/no-update, bit4 = affected by gravity+ground snap.
  */
 #include "main/dll/xyzanimator.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/genprops.h"
@@ -38,7 +39,6 @@ extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 
 typedef struct FireballPlacement

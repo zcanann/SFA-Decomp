@@ -20,6 +20,7 @@
  * descriptor tables and shared lbl_ data live here.
  */
 #include "main/dll/xyzanimator.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -1354,7 +1355,6 @@ void staff_update(int* obj)
     }
 }
 
-extern float fastFloorf(float x);
 extern f32 gStaffPi;
 extern f32 gStaffAngleUnitScale;
 extern f32 lbl_803E32A4;

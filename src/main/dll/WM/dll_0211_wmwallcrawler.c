@@ -17,6 +17,7 @@
  * game bits 0x2AA-0x2AF are set.
  */
 #include "main/dll/WM/wm_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/obj_placement.h"
@@ -112,7 +113,6 @@ extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern int fn_80080150(void* timer);
 extern int randFn_80080100(int n);
-extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 gWallCrawlerSpeedCap;
 extern u8 gWallCrawlerHitCount;

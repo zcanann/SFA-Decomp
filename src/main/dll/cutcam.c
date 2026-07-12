@@ -51,7 +51,6 @@ extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 
 extern u8 gCutCamBboxBlocked; /* last bbox-hit result */

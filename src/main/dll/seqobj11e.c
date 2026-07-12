@@ -22,6 +22,7 @@
  * (state-table), 0x613 (curve-follower update), 0x642 (firefly).
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
@@ -311,7 +312,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* loadObjectAtObject(int* obj, u8* setup);
 extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E2868;
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2878;

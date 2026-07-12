@@ -18,6 +18,7 @@
  * +0x601 (needs-reinit), +0x610 (point count), +0x611 (mode bits).
  */
 #include "main/camera_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/curve_eval.h"
 #include "main/object_descriptor.h"
@@ -133,7 +134,6 @@ extern void n_rareware_initialise(void);
 
 extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
-extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(s16* angles, f32* vec);
 extern int getAngle(float y, float x);
 extern float mathCosf(float x);

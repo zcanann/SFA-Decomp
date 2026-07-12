@@ -13,6 +13,7 @@
  * emitting the 0x1f7 sparkle particle on a randomized cooldown.
  */
 #include "main/dll/dll197state_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -71,7 +72,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void objUpdateOpacity(int obj);
-extern f32 sqrtf(f32 x);
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();
 extern void nwsh_levcon_free();

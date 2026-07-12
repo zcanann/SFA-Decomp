@@ -3,6 +3,7 @@
  * beetles. TU = 0x801843C0..0x80185868.
  */
 #include "main/dll/CF/CFguardian.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
@@ -61,7 +62,6 @@ extern u32 lbl_802C2298[3];
 extern u32 lbl_802C22A4[3];
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(void* obj);
-extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -602,7 +602,6 @@ typedef struct GuardianAngleParams
 void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
 {
     extern int getAngle(f32, f32);
-    extern f32 sqrtf(f32);
     extern void vecRotateZXY(void*, f32*);
     f32* velCache = ((GameObject*)obj)->extra;
     GuardianAngleParams rotParams;

@@ -18,6 +18,7 @@
  * placement def and random spread; explodable_spawnFragmentObject spawns the fragment object.
  */
 #include "main/dll/dll_015A_explodable.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "track/intersect_api.h"
@@ -133,7 +134,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void Model_GetVertexPosition(int model, int i, f32* out);
 extern void vecRotateZXY(s16* rot, f32* vec);
-extern f32 sqrtf(f32 x);
 
 void explodable_render(void)
 {

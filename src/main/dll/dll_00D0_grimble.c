@@ -19,6 +19,7 @@
  * sibling object whose handlers live in another TU).
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -62,7 +63,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern int getAngle(float y, float x);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-extern f32 sqrtf(f32);
 void TumbleWeedBush_free(void);
 void TumbleWeedBush_hitDetect(void);
 void TumbleWeedBush_release(void);

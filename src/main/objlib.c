@@ -1,4 +1,5 @@
 #include "main/dll/objpathtransform_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mm.h"
@@ -16,7 +17,6 @@
 typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern float sqrtf(float x);
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);

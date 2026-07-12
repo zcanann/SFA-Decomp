@@ -54,7 +54,6 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX
 extern u32 fn_8003B5E0();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 objParticleFn_80099d84();
-extern f32 sqrtf(f32);
 
 extern void fn_802961FC(int a, u8 type);
 

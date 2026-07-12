@@ -1,5 +1,6 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
 #include "main/dll/mmp_moonrock.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/game_object.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -66,7 +67,6 @@ extern const f32 lbl_803E3FB0;
 extern const f32 lbl_803E3FB4;
 extern const f32 lbl_803E3FBC;
 extern void fn_801A80F0(GameObject* e, int arg);
-extern float fastFloorf(float x);
 extern const f32 lbl_803E3FC0;
 
 extern int fn_80060688(GameObject* block, int v);

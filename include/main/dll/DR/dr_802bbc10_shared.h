@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/voxmaps.h"
 #include "main/audio/sfx.h"
@@ -177,7 +178,6 @@ extern u8 Obj_IsLoadingLocked();
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
 extern void vecRotateZXY(void* a, void* b);
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
 extern f32 lbl_803E82EC;

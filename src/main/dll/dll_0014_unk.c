@@ -23,6 +23,7 @@
  * it owns no game objects of its own.
  */
 #include "main/dll/objfsa_romcurve.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -117,7 +118,6 @@ extern const f32 gRomCurveFindDistInit;
 extern void OSReport(const char* msg, ...);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-extern f32 sqrtf(f32 x);
 extern u32 countLeadingZeros();
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);

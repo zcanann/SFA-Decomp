@@ -28,6 +28,7 @@
  * flicker table and scroll-fades a texture once bit 0x38F is set.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/wm_shared.h"
@@ -148,7 +149,6 @@ extern f32 lbl_803E5F60; /* 0.001f */
 extern f32 lbl_803E5F64; /* -0.001f */
 extern f32 lbl_803E5F68; /* 0.01f */
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16* ang, WmSunVec3* vec);

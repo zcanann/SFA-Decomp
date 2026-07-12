@@ -2,6 +2,7 @@
 #define SFA_DLL_FX_800944A0_SHARED_H
 
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/mm.h"
@@ -260,7 +261,6 @@ extern f32 lbl_803DF31C;
 extern f32 lbl_803DF2EC;
 extern f32 lbl_803DF2FC;
 extern f32 lbl_803DF320;
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803DF2E8;
 extern f32 lbl_803DF338;
 extern f32 lbl_803DF33C;

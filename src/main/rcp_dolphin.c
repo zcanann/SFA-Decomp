@@ -1,4 +1,6 @@
 #include "main/asset_load.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/texture.h"
@@ -1543,7 +1545,6 @@ void fn_80053C40(u8* tex, u8* obj)
 
 extern void GXSetMisc(int token, u32 val);
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
-extern f32 sqrtf(f32 x);
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
 u8 gRcpWarpDistortDisplayList[0x6640];
@@ -1879,7 +1880,6 @@ void loadNextMap(void)
     }
 }
 
-extern float fastFloorf(float x);
 extern f32 gMapBlockWorldSize;
 #define MAP_BLOCK_LAYER_COUNT 5
 extern u8* gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];

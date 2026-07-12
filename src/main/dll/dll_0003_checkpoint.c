@@ -23,6 +23,7 @@
  * an object onto the route and select the active checkpoint segment.
  */
 #include "main/checkpoint_route.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/curve.h"
 #include "main/gameplay_runtime.h"
 
@@ -33,7 +34,6 @@ extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern f32 sqrtf(f32);
 extern f32 gCheckpointPi;
 extern f32 gCheckpointAngleToRadians;
 extern f32 gCheckpointWidthScale;

@@ -10,6 +10,8 @@ f32 powf(f32 x, f32 y);
 float __fabsf(float x);
 float mathCosf(float x);
 float mathSinf(float x);
+float sqrtf(float x);
+float fabsf(float x);
 float powfBitEstimate(float x, float y);
 u32 countLeadingZeros(void);
 

@@ -18,6 +18,7 @@
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
 #include "main/dll/path_control_interface.h"
@@ -46,7 +47,6 @@ extern f32 timeDelta;
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern f32 sqrtf(f32 x);
 extern void playerAddHealth(void* player, int amount);
 extern int gameBitIncrement(int bit);
 extern void saveGame_unsaveObjectPos(int* obj);

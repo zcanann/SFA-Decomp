@@ -24,6 +24,7 @@
  * a held basket.
  */
 #include "main/dll/dll_0104_smallbasket.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -104,7 +105,6 @@ typedef struct SmallBasketThrowSetup
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
-extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 extern void vecRotateZXY(void* in, void* out);
 extern f32 gSmallBasketHitVelocity[];

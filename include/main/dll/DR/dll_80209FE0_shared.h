@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -230,7 +231,6 @@ extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern void objAnimFn_80038f38(GameObject* obj, int p);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, void* x, void* y, void* z, int p);
-extern f32 sqrtf(f32 x);
 extern int* seqFn_800394a0(void);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int gBossDrakorMoveSpeedTable[];

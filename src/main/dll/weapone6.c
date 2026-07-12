@@ -22,6 +22,7 @@
  * do not renumber or "un-nest" case 5.
  */
 #include "main/audio/sfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frustum.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
@@ -85,7 +86,6 @@ extern int trickyFn_8013b368(int obj, f32 speed, int state);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
-extern f32 sqrtf(f32);
 extern int fn_80179650(int slot);
 extern void fn_80179678(GameObject* slot, int obj);
 extern void fn_8017962C(int slot);

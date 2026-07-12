@@ -1,4 +1,5 @@
 #include "main/sky_state.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
@@ -216,7 +217,6 @@ extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
 extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);

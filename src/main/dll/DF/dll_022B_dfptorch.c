@@ -4,6 +4,7 @@
  * sfx effects while lit, and latches its lit-state gamebit.
  */
 #include "main/dll/dfptorchstate_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
@@ -32,7 +33,6 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 extern ModgfxInterface** gModgfxInterface;
 extern u8 gDfpTorchSequenceState;
 extern int gDfpTorchEffectParams[];
-extern f32 sqrtf(f32 x);
 extern void objUpdateOpacity(int);
 
 int DFP_Torch_getExtraSize(void)

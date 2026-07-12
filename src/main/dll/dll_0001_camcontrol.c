@@ -22,6 +22,7 @@
  * camera/target flag bits are named in dll_0001_camcontrol.h.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "dolphin/os.h"
@@ -98,7 +99,6 @@ extern void CameraModeTestStrength_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 extern f32 enemy_getHealthFraction(register int obj); /* target reticle distance for the enemy objType group */
-extern f32 sqrtf(f32 x);
 u8 gCamcontrolStateStorage[0x148];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
 extern f32 gCamcontrolSavedFocusWorldZ;

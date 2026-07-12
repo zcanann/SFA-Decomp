@@ -19,6 +19,7 @@
  * here only so the descriptor tables can take their addresses.
  */
 #include "main/objanim.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
@@ -570,7 +571,6 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
     extern void* Obj_GetPlayerObject(void);
-    extern f32 sqrtf(f32);
     extern f32 timeDelta;
     extern f32 lbl_803E2DEC;
     extern f32 lbl_803E2E00;
@@ -625,7 +625,6 @@ void fn_8015ED1C(int obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
     extern void* Obj_GetPlayerObject(void);
-    extern f32 sqrtf(f32);
     extern u8 lbl_8031FEA8[];
     extern u8 lbl_8031FF20[];
     extern u8 lbl_803AC580[];

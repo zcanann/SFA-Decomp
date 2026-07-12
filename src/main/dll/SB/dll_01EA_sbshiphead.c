@@ -9,6 +9,7 @@
  * vtable (slots 0x20/0x28/0x2c) and through DBprotection_getCameraState.
  */
 #include "main/obj_placement.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/sbshipheadstate_struct.h"
@@ -50,7 +51,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern u8 gSbShipHeadHasFiredFireball;
 extern int gSbShipHeadPrevGalleonPhase;
-extern f32 sqrtf(f32);
 extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 u32 getSbGalleon(void);
 

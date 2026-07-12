@@ -1,4 +1,5 @@
 #include "main/camera_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
@@ -12,7 +13,6 @@
 extern CameraModeStaticState* lbl_803DD558;
 extern f32 lbl_803E1878;
 extern void* ObjGroup_GetObjects();
-extern f32 sqrtf(f32 x);
 
 #pragma dont_inline on
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)

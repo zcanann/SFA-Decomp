@@ -1320,7 +1320,6 @@ void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
 #pragma opt_loop_invariants off
 void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
-    extern f32 sqrtf(f32);
     s16 ang[2];
     s16* found[1];
     void* m[1];
@@ -1430,7 +1429,6 @@ void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
 #pragma opt_common_subs off
 void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
 {
-    extern f32 sqrtf(f32);
     f32 va[3];
     f32 vb[3];
     int k;
@@ -1706,7 +1704,6 @@ typedef struct ObjPrintFlipFlag
 #pragma opt_loop_invariants off
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
 {
-    extern f32 sqrtf(f32);
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
     extern int lbl_803DB460;

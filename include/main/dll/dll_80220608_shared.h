@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_80220608_SHARED_H
 
 #include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -213,7 +214,6 @@ extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);
@@ -986,7 +986,6 @@ extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject
                                               u32* outHitVolume, float* outHitPosX, float* outHitPosY,
                                               float* outHitPosZ);
 extern int Obj_GetPlayerObject(void);
-extern f32 sqrtf(f32 x);
 extern f32 gTreeEffectColors[];
 extern const f32 lbl_803E730C;
 extern const f32 lbl_803E7310;

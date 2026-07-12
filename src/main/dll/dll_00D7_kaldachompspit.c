@@ -13,6 +13,7 @@
  * pollenfragment) plus the PollenFragmentConfig tables.
  */
 #include "main/effect_interfaces.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/xyzanimator.h"
@@ -45,7 +46,6 @@ extern f32 lbl_803E310C;
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
 extern void ModelLightStruct_free(void* p);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int value);

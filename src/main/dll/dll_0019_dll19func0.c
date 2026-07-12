@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objhits.h"
 #include "main/mm.h"
 #include "main/objseq.h"
@@ -9,7 +10,6 @@
 #define DLL19_TARGET_OBJGROUP 4
 #define DLL19_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 

@@ -1,5 +1,6 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
@@ -53,7 +54,6 @@ extern const f32 lbl_803E2FB0;
 extern const f32 lbl_803E2FB8;
 extern const f32 lbl_803E2FBC;
 extern const f32 lbl_803E2FC0;
-extern f32 sqrtf(f32 x);
 
 void tumbleweed_updateRollingMotion(GameObject* obj, int state)
 {

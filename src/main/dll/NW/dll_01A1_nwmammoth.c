@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -53,7 +54,6 @@ extern u8 lbl_803DBF9C[4];
 extern u8 lbl_803DBFA0[4];
 extern u8 lbl_803DBFA4[4];
 extern int getAngle(float y, float x);
-extern f32 sqrtf(f32 x);
 extern f32 gNwMammothSfxInterval;
 extern f32 gNwMammothTumbleweedDistSqThreshold;
 extern f32 gNwMammothCaptureDist;

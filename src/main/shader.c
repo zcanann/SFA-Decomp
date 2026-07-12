@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
@@ -39,7 +40,6 @@ extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern const f32 gMapBlockWorldSize;
-extern float fastFloorf(float x);
 extern void OSReport(const char* msg, ...);
 
 int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)

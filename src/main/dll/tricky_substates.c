@@ -99,7 +99,6 @@ extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 gTrickySubstateSfxIdPairB;
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
 extern f32 getXZDistance(f32* a, f32* b);
-extern float sqrtf(float x);
 extern u32 gTrickySubstateSfxIdPairA;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;

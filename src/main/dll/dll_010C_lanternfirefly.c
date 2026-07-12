@@ -66,7 +66,6 @@ extern f32 lbl_803DBDD8;
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
-extern f32 sqrtf(f32 x);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -77,7 +76,6 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern f32 sqrtf(f32 value);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int LanternFireFly_getExtraSize(void)

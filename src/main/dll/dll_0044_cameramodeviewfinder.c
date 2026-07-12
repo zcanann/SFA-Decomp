@@ -51,7 +51,6 @@
 #define VIEWFINDER_MODE_IDLE        5
 
 extern u32 getAngle();
-extern f32 sqrtf(f32 x);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);

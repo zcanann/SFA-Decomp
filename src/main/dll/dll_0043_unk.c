@@ -16,6 +16,7 @@
  * All path geometry lives in the singleton gCamcontrolPathState.
  */
 #include "main/camera_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/camlockon.h"
@@ -39,7 +40,6 @@
 extern int objFn_802962b4(GameObject* obj);
 extern int objFn_80296700(int obj);
 extern void memset(void* ptr, int value, int size);
-extern f32 sqrtf(f32 value);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 lbl_803E1740;

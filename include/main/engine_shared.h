@@ -41,6 +41,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/ai.h"
 #include "dolphin/ar.h"
 #include "dolphin/dvd.h"
@@ -52,16 +53,13 @@
 #include "dolphin/pad.h"
 
 extern int getCurSeqNo(void);
-extern f32 sqrtf(f32 x);
 extern void debugPrintf(char *message, ...);
-extern f32 fabsf(f32 x);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32 fastFloorf(f32 v);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
 

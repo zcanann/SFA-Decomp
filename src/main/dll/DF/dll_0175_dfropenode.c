@@ -4,6 +4,7 @@
  * rope/cradle model and plays creak sfx.
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/objlib.h"
 #include "main/dll/DF/DFcradle.h"
@@ -18,7 +19,6 @@
 
 #define DFROPENODE_OBJGROUP 0x17
 
-extern f32 sqrtf(f32 x);
 extern f64 gRopeNodeS32ToDoubleBias;
 extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;

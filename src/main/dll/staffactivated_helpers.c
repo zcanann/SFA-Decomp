@@ -15,6 +15,7 @@
  * cfPrisonGuard_getPullRateMode: clamps the setup size param to [0,2].
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
@@ -60,7 +61,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
-extern f32 sqrtf(f32 value);
 extern void vecRotateZXY(void* rotation, void* vec);
 extern u16 getAngle(f32 x, f32 z);
 

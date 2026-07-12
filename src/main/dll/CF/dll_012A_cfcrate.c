@@ -7,6 +7,7 @@
  * SeqFn handles the few types with anim-event work.
  */
 #include "main/dll_000A_expgfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
@@ -75,9 +76,7 @@ extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
 
 extern void Obj_FreeObject(int obj);
-extern float sqrtf(float x);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern f32 sqrtf(f32);
 
 int CFCrate_getExtraSize(void)
 {

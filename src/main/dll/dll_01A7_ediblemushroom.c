@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
@@ -52,7 +53,6 @@ extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(u8* obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
-extern f32 sqrtf(f32 x);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjMsg_AllocQueue();
 extern f32 Vec_distance(int a, int b);

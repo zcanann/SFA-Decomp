@@ -7,6 +7,7 @@
  * lbl_803E2xxx externs are this DLL's .sdata2 float constants.
  */
 #include "main/dll/baddie/trickyfollow.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
@@ -76,7 +77,6 @@ extern char lbl_8031D2E8[];
 
 extern f32 getXZDistance(f32* a, f32* b);
 extern void vecRotateZXY(void* params, void* outVec);
-extern f32 sqrtf(f32 x);
 extern int isInWalkGroupOrPatch(f32* pos);
 extern void ObjHits_SyncObjectPosition(u8* obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);

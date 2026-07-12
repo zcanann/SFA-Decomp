@@ -21,6 +21,7 @@
  * by sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
@@ -59,7 +60,6 @@ extern u8 gTumbleweedBushHitCooldownState;
 extern void* Obj_GetPlayerObject(void);
 
 extern int Sfx_PlayFromObject(int* obj, int sfx);
-extern float sqrtf(float x);
 extern f32 lbl_803E2F44;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);

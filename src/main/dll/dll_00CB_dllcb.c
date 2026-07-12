@@ -16,6 +16,7 @@
  * their own DLL TUs.
  */
 #include "main/dll/chukchukstate_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/scarab.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
@@ -82,7 +83,6 @@ extern void* memcpy(void* dst, const void* src, int n);
 extern int Obj_GetPlayerObject(void);
 extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
 extern void characterDoEyeAnims(GameObject* obj, u8* a);
-extern f32 sqrtf(f32);
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
 extern int getAngle(float y, float x);
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);

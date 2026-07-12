@@ -1,5 +1,6 @@
 /* DLL 0x255 - SnowBike [801EC7A0-801ECEC4) */
 #include "main/dll/path_control_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
@@ -89,7 +90,6 @@ typedef struct SnowBikeSetTypeState
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int lbl_803DC0BC;
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF8;

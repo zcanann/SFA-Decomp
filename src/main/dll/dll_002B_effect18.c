@@ -1,6 +1,7 @@
 /* DLL 0x2B (Effect18): particle-effect spawner for effect IDs 0x708-0x724,
  * building PartFxSpawn requests dispatched through gExpgfxInterface->spawnEffect. */
 #include "main/dll/partfxspawn_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
@@ -16,7 +17,6 @@ extern f32 gEffect18SineValueA;
 extern f32 gEffect18Progress0;
 extern f32 gEffect18Progress1;
 extern float mathSinf(float x);
-extern f32 sqrtf(f32);
 
 int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     void* extraArgs)

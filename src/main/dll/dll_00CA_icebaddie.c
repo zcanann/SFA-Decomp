@@ -168,7 +168,6 @@ extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 sqrtf(f32 value);
 extern u8 lbl_8031FDA0[];
 extern u8 lbl_8031FE18[];
 extern s16 gIceBaddieAttackMoves[];

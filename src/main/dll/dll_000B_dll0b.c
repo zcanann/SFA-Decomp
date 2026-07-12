@@ -14,6 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/bonespawndata_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -609,7 +610,6 @@ void dll_0B_onMapSetup(void)
 }
 
 extern void* Camera_GetCurrentViewSlot(void);
-extern f32 sqrtf(f32 x);
 
 void dll_0B_func08(void* param)
 {
