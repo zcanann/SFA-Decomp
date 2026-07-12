@@ -3,6 +3,7 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
@@ -478,7 +479,7 @@ void VFP_DoorSwitch_update(GameObject* obj)
     Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_10d);
     Sfx_PlayFromObject((int)obj, SFXTRIG_gate_stops);
-    Obj_SetActiveModelIndex((int)obj, 1);
+    Obj_SetActiveModelIndex(obj, 1);
     state->activated = 1;
 }
 

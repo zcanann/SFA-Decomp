@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
@@ -231,7 +232,6 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
 extern void playerSetDisguised(void* obj, int idx);
 extern void playerPullOutStaff(GameObject* obj, int idx);
 extern void playerPutAwayStaff(GameObject* obj, int idx);
-extern void Obj_SetActiveModelIndex(u8* obj, int idx);
 extern void playerLock(GameObject* player, int mode);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern void gameTimerInit(s8 flags, int minutes);
@@ -1413,7 +1413,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         }
         else
         {
-            Obj_SetActiveModelIndex(sourceObj, cmdArg);
+            Obj_SetActiveModelIndex((GameObject*)sourceObj, cmdArg);
         }
         break;
     case 24:
@@ -1552,7 +1552,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        Obj_SetActiveModelIndex(sourceObj, cmdArg);
+        Obj_SetActiveModelIndex((GameObject*)sourceObj, cmdArg);
         break;
     case 27:
         (*gMapEventInterface)->setObjGroupStatus(sourceAnim->mapEventSlot, cmdArg, 1);

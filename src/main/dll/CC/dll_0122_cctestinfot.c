@@ -7,6 +7,7 @@
  * table for a hold time bounded by lbl_803E3C88 / lbl_803E3C8C.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
@@ -72,7 +73,6 @@ extern void CFCrate_initialise(void);
 extern void FxEmit_initialise(void);
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 int CCTestInfot_getExtraSize(void)
 {
@@ -98,7 +98,7 @@ void CCTestInfot_update(int* obj)
         }
     }
     objSetHintTextIdx((GameObject*)obj, state->disguised);
-    Obj_SetActiveModelIndex(obj, state->disguised);
+    Obj_SetActiveModelIndex((GameObject*)obj, state->disguised);
     if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
     {
         state->holdTimer = lbl_803E3C88;

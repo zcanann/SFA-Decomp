@@ -10,6 +10,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
@@ -76,7 +77,6 @@ extern f32 lbl_803E3E38;
 extern f32 lbl_803E3E3C;
 extern f32 lbl_803E3E40;
 
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 
 int CFCrate_getExtraSize(void)
 {
@@ -415,7 +415,7 @@ void CFCrate_init(GameObject* obj, int aux)
         {
             objAnim->bankIndex = 0;
         }
-        Obj_SetActiveModelIndex((int)obj, objAnim->bankIndex);
+        Obj_SetActiveModelIndex(obj, objAnim->bankIndex);
         break;
     case 0x6fc:
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;

@@ -25,6 +25,7 @@
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
 #include "main/object.h"
+#include "main/object_api.h"
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -600,11 +601,11 @@ void* ObjList_GetObjects(int* outA, int* outB)
     return gObjList;
 }
 
-void Obj_SetActiveModelIndex(u8* obj, int idx)
+void Obj_SetActiveModelIndex(GameObject* obj, int idx)
 {
     ObjAnimComponent* objAnim;
 
-    objAnim = (ObjAnimComponent*)obj;
+    objAnim = &obj->anim;
     if (idx == objAnim->bankIndex)
     {
         return;

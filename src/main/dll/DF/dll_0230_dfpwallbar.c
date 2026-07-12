@@ -4,6 +4,7 @@
  * driven by the shared baddie state machine.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/baddie/chuka.h"
 #include "main/gamebits.h"
@@ -107,7 +108,7 @@ void chuka_update(GameObject* obj)
     case 0:
         if (objAnim->bankIndex != 0)
         {
-            Obj_SetActiveModelIndex((int)obj, 0);
+            Obj_SetActiveModelIndex(obj, 0);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
@@ -118,7 +119,7 @@ void chuka_update(GameObject* obj)
     case 1:
         if (objAnim->bankIndex != 1)
         {
-            Obj_SetActiveModelIndex((int)obj, 1);
+            Obj_SetActiveModelIndex(obj, 1);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
@@ -133,7 +134,7 @@ void chuka_update(GameObject* obj)
     case 2:
         if (objAnim->bankIndex != 2)
         {
-            Obj_SetActiveModelIndex((int)obj, 2);
+            Obj_SetActiveModelIndex(obj, 2);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
@@ -148,7 +149,7 @@ void chuka_update(GameObject* obj)
     case 3:
         if (objAnim->bankIndex != 2)
         {
-            Obj_SetActiveModelIndex((int)obj, 2);
+            Obj_SetActiveModelIndex(obj, 2);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
@@ -163,7 +164,7 @@ void chuka_update(GameObject* obj)
     case 4:
         if (objAnim->bankIndex != 1)
         {
-            Obj_SetActiveModelIndex((int)obj, 1);
+            Obj_SetActiveModelIndex(obj, 1);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)
@@ -178,7 +179,7 @@ void chuka_update(GameObject* obj)
     default:
         if (objAnim->bankIndex != 0)
         {
-            Obj_SetActiveModelIndex((int)obj, 0);
+            Obj_SetActiveModelIndex(obj, 0);
         }
         height = ((ChukaPlacement*)data)->barHeight;
         if (height != 0)

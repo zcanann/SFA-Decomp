@@ -158,8 +158,6 @@ extern f32 lbl_803E6E38;
 
 extern int getAngle(f32 dx, f32 dz);
 
-extern void Obj_SetActiveModelIndex(int obj, int index);
-
 #pragma dont_inline on
 #pragma dont_inline reset
 

@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
@@ -12247,7 +12248,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->heldObj = 0;
     ((PlayerState*)inner)->playerStatus = (int)(*gMapEventInterface)->getCurCharacterState();
     *(u16*)&((PlayerState*)inner)->characterId = (*gMapEventInterface)->getCurChar();
-    Obj_SetActiveModelIndex(obj, ((PlayerState*)inner)->characterId);
+    Obj_SetActiveModelIndex((GameObject*)obj, ((PlayerState*)inner)->characterId);
     me = (int)(*gMapEventInterface)->getCurCharPos();
     ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)me + 0xc) << 8);
     ((PlayerState*)inner)->targetYaw = ((GameObject*)obj)->anim.rotX;
@@ -12499,7 +12500,7 @@ void playerSetDisguised(GameObject* obj, int mode)
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_lrope_powerup);
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x801, NULL, 0x50, NULL);
         oldModel = Obj_GetActiveModel((int)obj);
-        Obj_SetActiveModelIndex((int)obj, 2);
+        Obj_SetActiveModelIndex(obj, 2);
         newModel = Obj_GetActiveModel((int)obj);
         memcpy((void*)*(int*)((char*)newModel + 0x2c), (void*)*(int*)((char*)oldModel + 0x2c), 0x68);
         memcpy((void*)*(int*)((char*)newModel + 0x30), (void*)*(int*)((char*)oldModel + 0x30), 0x68);
@@ -12515,7 +12516,7 @@ void playerSetDisguised(GameObject* obj, int mode)
         ((ByteFlags*)((char*)inner + 0x3f4))->b80 = 0;
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x801, NULL, 0x50, NULL);
         oldModel = Obj_GetActiveModel((int)obj);
-        Obj_SetActiveModelIndex((int)obj, 1);
+        Obj_SetActiveModelIndex(obj, 1);
         newModel = Obj_GetActiveModel((int)obj);
         memcpy((void*)*(int*)((char*)newModel + 0x2c), (void*)*(int*)((char*)oldModel + 0x2c), 0x68);
         memcpy((void*)*(int*)((char*)newModel + 0x30), (void*)*(int*)((char*)oldModel + 0x30), 0x68);

@@ -85,7 +85,6 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objfx_spawnMaskedHitEffect(void* obj, f32 scale, int a, int b, int c, void* params);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
 extern float mathCosf(float x);
@@ -213,7 +212,7 @@ void worldobj_init(GameObject* obj, int arg)
         break;
     case 0x5e2:
         idx = setup->variant;
-        Obj_SetActiveModelIndex((int)obj, idx);
+        Obj_SetActiveModelIndex(obj, idx);
         (obj)->anim.alpha = gWorldObjVariantAlphaTable[idx];
         for (i = 0; i < 0xb; i++)
         {
@@ -520,11 +519,11 @@ void worldobj_update(GameObject* obj)
             objA = ObjList_FindObjectById(0x4300c);
             if ((void*)objA != NULL && (((GameObject*)objA)->anim.flags & OBJANIM_FLAG_HIDDEN))
             {
-                Obj_SetActiveModelIndex(gWorldObjEffectTargetObj, 1);
+        Obj_SetActiveModelIndex((GameObject*)gWorldObjEffectTargetObj, 1);
             }
             else
             {
-                Obj_SetActiveModelIndex(gWorldObjEffectTargetObj, 0);
+        Obj_SetActiveModelIndex((GameObject*)gWorldObjEffectTargetObj, 0);
             }
         }
         else if (*(void**)&state->light != NULL)

@@ -50,7 +50,6 @@ extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, 
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void vecRotateZXY(void* params, f32* vec);
-extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
 
 int ProximityMine_getExtraSize(void)
 {
@@ -387,7 +386,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
     case PROXIMITYMINE_SPAWN_TIMED:
         s16toFloat(&state->resetTimer, def->parameter);
         state->mode = PROXIMITYMINE_MODE_ARMED;
-        Obj_SetActiveModelIndex(obj, 1);
+        Obj_SetActiveModelIndex((GameObject*)obj, 1);
         obj->height *= gProximityMineHeightScale;
         break;
     case PROXIMITYMINE_SPAWN_LAUNCHED:

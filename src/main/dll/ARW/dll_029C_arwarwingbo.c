@@ -12,6 +12,7 @@
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -135,7 +136,7 @@ void arwarwingbo_setActiveVisible(GameObject* obj, u8 active, u8 visible)
     ArwingBombState* state = (obj)->extra;
     if (active != 0)
     {
-        Obj_SetActiveModelIndex((int)obj, visible != 0 ? 1 : 0);
+        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
         state->control.active = 1;
         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     }

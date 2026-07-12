@@ -110,7 +110,6 @@ extern f32 lbl_803E3414;
 extern f32 lbl_803E3418;
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 extern void* gDllF7Resource5B;
 extern void* gDllF7Resource5A;
@@ -184,7 +183,7 @@ void dll_F7_update(int* obj)
         if ((state->hitsRemaining -= hitVolume) > 0)
         {
             Sfx_PlayAtPositionFromObject(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
-            Obj_SetActiveModelIndex(obj, 2 - state->hitsRemaining);
+            Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
             state->bounceOffset = lbl_803E3404;
             state->bounceVelocity = lbl_803E3408;
             blk.x += playerMapOffsetX;

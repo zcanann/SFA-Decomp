@@ -23,6 +23,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
@@ -117,7 +118,6 @@ extern void PSMTXMultVecSR(f32* m, f32* in, f32* out);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* m, int p3);
 extern int textureLoadAsset(int id);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int h, int v);
@@ -673,7 +673,7 @@ void explosion_init(GameObject* obj, int def)
                                                         obj->anim.localPosY, obj->anim.localPosZ);
     obj->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
     ((ExplosionState*)state)->modelKind = *(s16*)((char*)def + 0x1c) & 3;
-    Obj_SetActiveModelIndex((int)obj, ((ExplosionState*)state)->modelKind);
+    Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
     if (*(s16*)((char*)def + 0x1c) & 4)
     {
         ((ExplosionState*)state)->driftYSpeed = lbl_803E49A4;

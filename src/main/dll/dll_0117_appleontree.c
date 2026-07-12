@@ -6,6 +6,7 @@
 #include "main/dll/groundAnimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
@@ -85,7 +86,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
 void dll_FC_free_nop(void);
 int dll_FC_getExtraSize_ret_8(void);
@@ -725,7 +725,7 @@ void AppleOnTree_update(int objArg)
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
-                Obj_SetActiveModelIndex((int)obj, 1);
+                Obj_SetActiveModelIndex((GameObject*)obj, 1);
                 ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_LANDED;
             }
             else
@@ -742,7 +742,7 @@ void AppleOnTree_update(int objArg)
                 *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * *(float*)(val + 0x24);
-                Obj_SetActiveModelIndex((int)obj, 1);
+                Obj_SetActiveModelIndex((GameObject*)obj, 1);
             }
             state = ObjHits_GetPriorityHit((GameObject*)obj, 0x0, 0x0, 0x0);
             if ((state != 0) ||
@@ -897,7 +897,7 @@ void AppleOnTree_init(int obj, int def)
 
         ((GameObject*)obj)->anim.rotX = randomGetRange(-0x8000, 0x7fff);
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;
-        Obj_SetActiveModelIndex(obj, 0);
+        Obj_SetActiveModelIndex((GameObject*)obj, 0);
 
         eventBit = ((AppleontreeObjectDef*)def)->gameBit;
         if ((eventBit != -1) && (mainGetBit(eventBit) != 0))
@@ -928,7 +928,7 @@ void AppleOnTree_init(int obj, int def)
                 texture->textureId = 0;
                 ((CrackAnimState*)reread)->fallScale = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-                Obj_SetActiveModelIndex(obj, 1);
+                Obj_SetActiveModelIndex((GameObject*)obj, 1);
                 ((CrackAnimState*)state)->stage = 3;
             }
         }

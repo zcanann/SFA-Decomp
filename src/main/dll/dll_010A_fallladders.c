@@ -22,6 +22,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -62,7 +63,6 @@ typedef struct FallLaddersState
     s16 delay;
 } FallLaddersState;
 
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 int Fall_Ladders_SeqFn(void)
 {
@@ -160,7 +160,7 @@ void Fall_Ladders_init(int* obj, FallLaddersObjectDef* def)
     ((GameObject*)obj)->objectFlags |= (FALLLADDERS_OBJFLAG_HIDDEN | FALLLADDERS_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->animEventCallback = Fall_Ladders_SeqFn;
     ((GameObject*)obj)->anim.localPosY = def->base.posY + state->restYOffset;
-    Obj_SetActiveModelIndex(obj, def->modelIndex);
+    Obj_SetActiveModelIndex((GameObject*)obj, def->modelIndex);
     state->motionState = 0;
     if (mainGetBit(state->upperGameBit) == 0)
     {

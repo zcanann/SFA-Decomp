@@ -3,6 +3,7 @@
  * TU = 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*).
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/lightmap_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
@@ -17,7 +18,6 @@ extern int lbl_803DDB18;
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern u8* fn_8006070C(void* block, int idx);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objSetSlot(int* obj, int slot);
 
 /* Flags every trigger/volume in the map block under the object that
@@ -166,13 +166,13 @@ void blasted_update(GameObject* obj)
                     }
                     mainSetBits(setup->completedGameBit, 1);
                     fn_801A27B8(obj, setup->triggerId);
-                    Obj_SetActiveModelIndex((int)obj, 2);
+                    Obj_SetActiveModelIndex(obj, 2);
                     state->triggerFired = 1;
                 }
                 else
                 {
                     state->damageStep++;
-                    Obj_SetActiveModelIndex((int)obj, state->damageStep);
+                    Obj_SetActiveModelIndex(obj, state->damageStep);
                 }
             }
         }
@@ -200,7 +200,7 @@ void blasted_init(GameObject* obj, int placement)
         ((BlastedState*)state)->gameBitLatchState = progress;
         if (progress != 0)
         {
-            Obj_SetActiveModelIndex((int)obj, (int)((BlastedState*)state)->gameBitLatchState);
+            Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->gameBitLatchState);
         }
     }
     mainSetBits(BLASTED_GAMEBIT_DAMAGE_BASE, 1);

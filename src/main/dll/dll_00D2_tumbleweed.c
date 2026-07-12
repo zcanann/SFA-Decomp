@@ -4,6 +4,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
@@ -43,7 +44,6 @@ extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
 extern u8 gTumbleweedCollisionPointData[8];
 extern u8 gTumbleweedCollisionPoint[0xc];
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32* a, f32* b);
 extern int gameBitIncrement(int bit);
@@ -381,7 +381,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                         ((BackpackState*)aux)->phase = 3;
                         ((BackpackState*)aux)->growRate = lbl_803E2FB0;
                         ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4;
-                        Obj_SetActiveModelIndex((int)obj, 1);
+                        Obj_SetActiveModelIndex(obj, 1);
                     }
                     else
                     {

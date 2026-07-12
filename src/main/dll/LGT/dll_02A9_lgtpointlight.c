@@ -18,6 +18,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/sky_state.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 
 #define POINTLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
@@ -167,11 +168,11 @@ void PointLight_init(GameObject* obj, int setup)
 
         if (setupData->spotMode != 0)
         {
-            Obj_SetActiveModelIndex((int)obj, 1);
+            Obj_SetActiveModelIndex(obj, 1);
         }
         else
         {
-            Obj_SetActiveModelIndex((int)obj, 0);
+            Obj_SetActiveModelIndex(obj, 0);
         }
 
         if (setupData->glowEnabled != 0)

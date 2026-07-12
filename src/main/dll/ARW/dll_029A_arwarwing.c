@@ -28,6 +28,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebit_ids.h"
@@ -708,7 +709,7 @@ void arwarwing_spawnLaserShot(GameObject* obj, int state, int side, int level, i
     else
     {
         Sfx_PlayFromObject(proj, SFXTRIG_ar_deflect16);
-        Obj_SetActiveModelIndex(proj, 1);
+        Obj_SetActiveModelIndex((GameObject*)proj, 1);
     }
     if ((u8)linkEffect != 0)
         arwprojectile_createLinkedEffect((GameObject*)(proj), 1);

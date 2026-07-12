@@ -6,6 +6,7 @@
  * rearms the cooldown from the placement.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
@@ -14,7 +15,6 @@
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
 
 extern f32 lbl_803E5D90; /* 1.0: render scale */
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 int WM_LaserTarget_getExtraSize(void)
 {
@@ -57,13 +57,13 @@ void WM_LaserTarget_update(int* obj)
     {
         if (mainGetBit(((WmLaserTargetPlacement*)def)->toggleGameBit) != 0)
         {
-            Obj_SetActiveModelIndex(obj, 0);
+            Obj_SetActiveModelIndex((GameObject*)obj, 0);
             mainSetBits(((WmLaserTargetPlacement*)def)->toggleGameBit, 0);
             mainSetBits(((WmLaserTargetPlacement*)def)->pairedGameBit, 0);
         }
         else
         {
-            Obj_SetActiveModelIndex(obj, 1);
+            Obj_SetActiveModelIndex((GameObject*)obj, 1);
             mainSetBits(((WmLaserTargetPlacement*)def)->toggleGameBit, 1);
             mainSetBits(((WmLaserTargetPlacement*)def)->pairedGameBit, 1);
         }

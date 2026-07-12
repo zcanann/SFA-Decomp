@@ -13,6 +13,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_029D_arwarwinggu.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 
 /* object def numbers (== seqId) of the Arwing's attached models */
 enum
@@ -32,7 +33,7 @@ void arwarwinggu_setActiveVisible(GameObject* obj, u8 active, u8 visible)
 
     if (active != 0)
     {
-        Obj_SetActiveModelIndex((int)obj, visible != 0 ? 1 : 0);
+        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0xff;
         state->visibleTimer = lbl_803E7058;

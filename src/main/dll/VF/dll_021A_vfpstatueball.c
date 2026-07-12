@@ -14,6 +14,7 @@
  */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_021A_vfpstatueball.h"
@@ -167,7 +168,7 @@ void VFP_statueball_init(int* obj, u8* init)
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)setup->modelScale;
     }
-    Obj_SetActiveModelIndex((int)obj, setup->variant);
+    Obj_SetActiveModelIndex((GameObject*)obj, setup->variant);
     state->active = mainGetBit(state->gameBit);
 }
 

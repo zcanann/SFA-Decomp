@@ -11,6 +11,7 @@
  * compares the Arwing's current and previous Z against the pickup's Z.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/headdisplay.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -285,7 +286,7 @@ active:
         {
             arwarwing_addScore((GameObject*)arw, 0xf);
             flags->b40 = 1;
-            Obj_SetActiveModelIndex(obj, 1);
+            Obj_SetActiveModelIndex((GameObject*)obj, 1);
             spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
         }
         if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&

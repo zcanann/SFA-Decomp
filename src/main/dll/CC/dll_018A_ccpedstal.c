@@ -7,6 +7,7 @@
  * to the gameBit on the following frame.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
@@ -23,7 +24,6 @@ enum
     PEDSTAL_DEF_GATE_B = 0x45f1c
 };
 
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int gameBitDecrement(int bit);
 extern int gameBitIncrement(int bit);
 
@@ -42,12 +42,12 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
     if (mainGetBit(state->gameBit) != 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        Obj_SetActiveModelIndex((int)obj, 1);
+        Obj_SetActiveModelIndex(obj, 1);
     }
     else
     {
         int doMark;
-        Obj_SetActiveModelIndex((int)obj, 0);
+        Obj_SetActiveModelIndex(obj, 0);
         if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
         {
             *(u8*)&(obj)->anim.resetHitboxMode =
@@ -92,12 +92,12 @@ void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
     if (mainGetBit(state->gameBit) != 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        Obj_SetActiveModelIndex((int)obj, 0);
+        Obj_SetActiveModelIndex(obj, 0);
     }
     else
     {
         int doMark;
-        Obj_SetActiveModelIndex((int)obj, 1);
+        Obj_SetActiveModelIndex(obj, 1);
         if (ObjTrigger_IsSet(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);

@@ -15,6 +15,7 @@
  */
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_0210_wmplanets.h"
 
@@ -111,7 +112,7 @@ void WM_Planets_init(int* obj, u8* init)
     inner->baseX = ((GameObject*)obj)->anim.localPosX;
     inner->baseY = ((GameObject*)obj)->anim.localPosY;
     inner->baseZ = ((GameObject*)obj)->anim.localPosZ;
-    Obj_SetActiveModelIndex((int)obj, ((WmPlanetsMapData*)init)->modelIndex);
+    Obj_SetActiveModelIndex((GameObject*)obj, ((WmPlanetsMapData*)init)->modelIndex);
     ((GameObject*)obj)->anim.localPosZ = ((WmPlanetsMapData*)init)->base.posZ + inner->orbitRadius;
 }
 

@@ -719,7 +719,6 @@ extern f32 lbl_803E7F30;
 extern void* getTrickyObject(void);
 extern void trickyImpress(void* trickyObj);
 extern int Obj_GetActiveModel(int obj);
-extern int Obj_SetActiveModelIndex(int obj, int idx);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern f32 lbl_803E800C;
 extern f32 lbl_803E8138;

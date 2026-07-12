@@ -11,6 +11,7 @@
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
@@ -50,7 +51,6 @@ extern f32 lbl_803E41D0;
 extern int ObjMsg_Pop();
 extern int ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern int Obj_SetActiveModelIndex(int* obj, int idx);
 
 int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -185,12 +185,12 @@ void CFPowerBase_init(int* obj, u8* params)
     case GAMEBIT_CFBASE_2:
         sub->litBit = 0x52;
         sub->typeIndex = 1;
-        Obj_SetActiveModelIndex(obj, 2);
+        Obj_SetActiveModelIndex((GameObject*)obj, 2);
         break;
     case GAMEBIT_CFBASE_3:
         sub->litBit = 0x53;
         sub->typeIndex = 2;
-        Obj_SetActiveModelIndex(obj, 1);
+        Obj_SetActiveModelIndex((GameObject*)obj, 1);
         break;
     }
     ((GameObject*)obj)->animEventCallback = CFPowerBase_SeqFn;

@@ -17,6 +17,7 @@
  * (RingTable); the optional glow is a ModelLightStruct.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/dll_02A0_ring.h"
@@ -131,7 +132,7 @@ void ring_init(GameObject* obj, RingPlacement* setup)
         state->route == RING_ROUTE_MOVING_SHOT_B)
     {
         f->bit80 = 0;
-        Obj_SetActiveModelIndex((int)obj, RING_MODEL_ALT);
+        Obj_SetActiveModelIndex(obj, RING_MODEL_ALT);
     }
     else
     {
@@ -228,7 +229,7 @@ void ring_update(GameObject* obj)
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase;
-                Obj_SetActiveModelIndex((int)obj, RING_MODEL_DEFAULT);
+                Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
                 ObjHits_DisableObject((int)obj);
                 state->flags.bit80 = 1;
                 if (state->light != NULL)
@@ -246,7 +247,7 @@ void ring_update(GameObject* obj)
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase;
-                Obj_SetActiveModelIndex((int)obj, RING_MODEL_DEFAULT);
+                Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
                 ObjHits_DisableObject((int)obj);
                 state->flags.bit80 = 1;
                 if (state->light != NULL)

@@ -11,6 +11,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
@@ -95,7 +96,6 @@ extern int ObjGroup_AddObject();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern int Obj_SetActiveModelIndex(int* obj, int idx);
 
 /* fn_8019C784: per-rider wind lift physics - track the rider while
  * above the lift and in range, send the lift/drop messages on state
@@ -380,10 +380,10 @@ void WindLift_update(int* obj)
         if (ticks < 0x3c && mainGetBit(sub->seqId) == 0)
         {
             ((GameObject*)obj)->anim.rotX -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
-            Obj_SetActiveModelIndex(obj, 0);
+            Obj_SetActiveModelIndex((GameObject*)obj, 0);
             return;
         }
-        Obj_SetActiveModelIndex(obj, 1);
+        Obj_SetActiveModelIndex((GameObject*)obj, 1);
         gb2 = mainGetBit(sub->delay);
         {
             int rotStep = framesThisStep * 0xb6;

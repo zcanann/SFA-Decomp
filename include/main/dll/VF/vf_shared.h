@@ -292,7 +292,6 @@ extern f32 lbl_803E5F90;
 extern f32 lbl_803E5F24;
 extern f32 lbl_803E6088;
 extern f32 lbl_803E5FB4;
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void timeOfDayFn_80055038(void);
 extern f32 lbl_803E60F8;
 extern f32 lbl_803E5FA0;
