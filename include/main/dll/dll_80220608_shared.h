@@ -147,7 +147,6 @@ extern int mapBlockFn_800592e4(void);
 
 extern f32 lbl_803E7154;
 
-extern void fn_8006CB24(int obj);
 extern const f32 lbl_803E75B0;
 
 #pragma dont_inline on
@@ -167,7 +166,6 @@ extern const f32 lbl_803E75F0;
 extern const f32 lbl_803E75F4;
 extern const f32 lbl_803E75F8;
 
-extern void fn_8006CB50(void);
 extern int ObjModel_GetRenderOp(int model, int idx);
 
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,

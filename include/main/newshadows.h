@@ -54,6 +54,8 @@ void initFn_8006d020(void);
 f32 fn_8006C670(void);
 void drawReflectionTexture(void);
 void maybeHudFn_8006c91c(void);
+void fn_8006CB24(void);
+void fn_8006CB50(void);
 
 int getReflectionTexture1(void);
 void getReflectionTexture2(int* out);

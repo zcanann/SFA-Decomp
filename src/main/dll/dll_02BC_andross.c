@@ -20,6 +20,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/tricky.h"
+#include "main/newshadows.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -423,7 +424,7 @@ int andross_getObjectTypeId(void)
 }
 void andross_free(int obj)
 {
-    fn_8006CB24(obj);
+    fn_8006CB24();
     Rcp_DisableDistortionFilter();
 }
 void andross_render(int obj, int p2, int p3, int p4, int p5)
