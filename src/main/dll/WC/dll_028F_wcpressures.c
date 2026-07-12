@@ -13,6 +13,7 @@
  * object and clears solvedBit.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -383,20 +384,22 @@ u32 gWCTempleObjDescriptor[14] = {0x00000000,
                                   (u32)wctemple_free,
                                   (u32)wctemple_getObjectTypeId,
                                   (u32)wctemple_getExtraSize};
-u32 dll_299[14] = {0x00000000,
-                   0x00000000,
-                   0x00000000,
-                   0x00090000,
-                   (u32)dll_299_initialise_nop,
-                   (u32)dll_299_release_nop,
-                   0x00000000,
-                   (u32)dll_299_init,
-                   (u32)dll_299_update,
-                   (u32)dll_299_hitDetect_nop,
-                   (u32)dll_299_render_nop,
-                   (u32)dll_299_free,
-                   (u32)dll_299_getObjectTypeId,
-                   (u32)dll_299_getExtraSize_ret_2};
+ObjectDescriptor dll_299 = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (ObjectDescriptorCallback)dll_299_initialise_nop,
+    (ObjectDescriptorCallback)dll_299_release_nop,
+    NULL,
+    (ObjectDescriptorCallback)dll_299_init,
+    (ObjectDescriptorCallback)dll_299_update,
+    (ObjectDescriptorCallback)dll_299_hitDetect_nop,
+    (ObjectDescriptorCallback)dll_299_render_nop,
+    (ObjectDescriptorCallback)dll_299_free,
+    (ObjectDescriptorCallback)dll_299_getObjectTypeId,
+    dll_299_getExtraSize_ret_2,
+};
 u32 gWCApertureSObjDescriptor[14] = {0x00000000,
                                      0x00000000,
                                      0x00000000,

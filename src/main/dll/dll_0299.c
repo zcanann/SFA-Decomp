@@ -9,18 +9,8 @@
  * Render/hitDetect/release/initialise are stubs.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0299.h"
 #include "main/game_object.h"
-
-typedef struct
-{
-    void* pad;
-    void (*slot1)(int, int, int, int, int, int);
-} Dll299Vtable;
-
-typedef struct
-{
-    s16 id;
-} Dll299State;
 
 #define DLL0299_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -43,7 +33,7 @@ int dll_299_getObjectTypeId(void)
     return 0x0;
 }
 
-void dll_299_free(int obj)
+void dll_299_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
@@ -59,20 +49,20 @@ void dll_299_hitDetect_nop(void)
 {
 }
 
-void dll_299_update(int obj)
+void dll_299_update(GameObject* obj)
 {
     if (randomGetRange(0, 2) == 0)
     {
-        (*(Dll299Vtable**)lbl_803DDD80)->slot1(obj, 1, 0, 4, -1, 0);
+        (*(Dll299Vtable**)lbl_803DDD80)->slot1((int)obj, 1, 0, 4, -1, 0);
     }
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
 }
 
-void dll_299_init(GameObject* obj, int setup)
+void dll_299_init(GameObject* obj, Dll299Setup* setup)
 {
-    ((Dll299State*)obj->extra)->id = *(s16*)(setup + 0x1e);
+    ((Dll299State*)obj->extra)->id = setup->id;
     obj->objectFlags |= DLL0299_OBJFLAG_HITDETECT_DISABLED;
     lbl_803DDD80 = Resource_Acquire(DLL0299_RESOURCE_ID, 1);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);

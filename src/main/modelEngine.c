@@ -2,6 +2,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_0282_barrelgener.h"
+#include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
 #include "main/dll/dll_02B4_cntcounter.h"
@@ -35,7 +37,7 @@
 extern ResourceDescriptor Carryable_funcs, boneParticleEffect_funcs, dll_19, dll_197, dll_199, dll_19A, dll_19B,
     dll_19C;
 extern ResourceDescriptor dll_19D, dll_19E, dll_1CE, dll_1CF, dll_1D6, dll_1DA, dll_1DB, dll_1FB;
-extern ResourceDescriptor dll_1FF, dll_200, dll_219, dll_21B, dll_224, dll_28B, dll_299, dll_2A3;
+extern ResourceDescriptor dll_1FF, dll_200, dll_219, dll_21B, dll_224, dll_28B, dll_2A3;
 extern ResourceDescriptor dll_2A4, dll_2E, dll_54, dll_CB, dll_CE, dll_D3, dll_F7, expgfx_funcs;
 extern ResourceDescriptor gARWArwingBoObjDescriptor, gARWArwingGuObjDescriptor, gARWArwingObjDescriptor,
     gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor, gARWLevelConObjDescriptor,
@@ -46,7 +48,7 @@ extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor, 
 extern ResourceDescriptor gAnimatedObjDescriptor, gAppleOnTreeObjDescriptor, gAreaFXEmitObjDescriptor,
     gAreaObjDescriptor, gArwingAndrossStuffObjDescriptor, gAttractorObjDescriptor, gBabyCloudRunnerObjDescriptor,
     gBaddieInterestPObjDescriptor;
-extern ResourceDescriptor gBaddieObjDescriptor, gBarrelGenerObjDescriptor, gBarrelPadObjDescriptor,
+extern ResourceDescriptor gBaddieObjDescriptor, gBarrelPadObjDescriptor,
     gBlastedObjDescriptor, gBombPlantObjDescriptor, gBombPlantSporeObjDescriptor, gBombPlantingSpotObjDescriptor,
     gBossDrakorObjDescriptor;
 extern ResourceDescriptor gCCSharpclawPadObjDescriptor, gCCTestInfotObjDescriptor, gCCgasventControlObjDescriptor,
@@ -1517,7 +1519,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &lbl_803DC390,
     &gDrCloudPerObjDescriptor,
     &gDrEarthCalObjDescriptor,
-    &gBarrelGenerObjDescriptor,
+    (ResourceDescriptor*)&gBarrelGenerObjDescriptor,
     &gDrBarrelGrObjDescriptor,
     &gShopItemObjDescriptor,
     &gShopObjDescriptor,
@@ -1540,7 +1542,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gWCTempleDiaObjDescriptor,
     &gWCTempleBriObjDescriptor,
     &gWCFloorTileObjDescriptor,
-    &dll_299,
+    (ResourceDescriptor*)&dll_299,
     &gARWArwingObjDescriptor,
     &gArwingAndrossStuffObjDescriptor,
     &gARWArwingBoObjDescriptor,

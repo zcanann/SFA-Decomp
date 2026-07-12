@@ -17,6 +17,7 @@
  * voxmaps_trace* world-line wrappers).
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -41,11 +42,11 @@ int barrelgener_getLinkId(GameObject* obj)
     return setup->linkId;
 }
 
-void barrelgener_queueObjectRelease(GameObject* obj, int queuedObj, int releaseFrame)
+void barrelgener_queueObjectRelease(GameObject* obj, GameObject* queuedObj, int releaseFrame)
 {
     BarrelGeneratorState* state = (obj)->extra;
 
-    state->queuedObject = (GameObject*)queuedObj;
+    state->queuedObject = queuedObj;
     state->releaseAnimPlaying = 0;
     storeZeroToFloatParam(&state->releaseTimer);
     s16toFloat(&state->releaseTimer, (s16)(releaseFrame - lbl_803DC398));
@@ -61,16 +62,16 @@ int barrelgener_getObjectTypeId(void)
     return 0;
 }
 
-void barrelgener_free(int obj)
+void barrelgener_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, BARRELGENER_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, BARRELGENER_OBJGROUP);
 }
 
-void barrelgener_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void barrelgener_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6C20);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6C20);
     }
 }
 

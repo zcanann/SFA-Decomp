@@ -23,6 +23,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_api.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
@@ -66,7 +67,6 @@ typedef struct GunpowderbarrelPlacement
 extern u32* gCarryableInterface;
 extern f32 lbl_803E42DC;
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 e);
-extern int barrelgener_getLinkId();
 extern void saveGame_saveObjectPos(int* obj);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void* getTrickyObject(void);
@@ -100,7 +100,6 @@ extern int timerCountDown(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);
-extern void barrelgener_queueObjectRelease(GameObject *gen, int obj, int code);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern u32 playerGetStateFlag310(u8 * player);
 extern void setAButtonIcon(int x);
@@ -823,7 +822,7 @@ void gunpowderbarrel_update(GameObject *obj)
                 s16toFloat(&state->respawnTimer, 0x3c);
                 storeZeroToFloatParam(&state->releaseTimer);
                 s16toFloat(&state->releaseTimer, 0x5a);
-                barrelgener_queueObjectRelease((GameObject*)(gen), (int)obj, 0x46);
+                barrelgener_queueObjectRelease((GameObject*)gen, obj, 0x46);
                 ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
                 ObjHits_DisableObject((int)obj);
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

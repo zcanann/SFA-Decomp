@@ -425,7 +425,6 @@ extern f32 lbl_803E6C30;
 extern f32 lbl_803E6C34;
 
 extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDD80;
 
 typedef struct Vec12
 {
@@ -758,16 +757,6 @@ void drearthcal_hitDetect(void);
 void drearthcal_init(GameObject* obj, int setup);
 void drearthcal_release(void);
 void drearthcal_initialise(void);
-int barrelgener_getLinkId(GameObject* obj);
-void barrelgener_queueObjectRelease(GameObject* obj, int queuedObj, int releaseFrame);
-int barrelgener_getExtraSize(void);
-int barrelgener_getObjectTypeId(void);
-void barrelgener_free(int obj);
-void barrelgener_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void barrelgener_hitDetect(void);
-void barrelgener_init(GameObject* obj);
-void barrelgener_release(void);
-void barrelgener_initialise(void);
 int wcbeacon_aButtonCallback(GameObject* obj);
 int wcbeacon_getExtraSize(void);
 int wcbeacon_getObjectTypeId(GameObject* obj);
@@ -843,12 +832,6 @@ void wctemple_update(GameObject* obj);
 void wctemple_init(GameObject* obj, int setup);
 void wctemple_release(void);
 void wctemple_initialise(void);
-int dll_299_getExtraSize_ret_2(void);
-int dll_299_getObjectTypeId(void);
-void dll_299_render_nop(void);
-void dll_299_hitDetect_nop(void);
-void dll_299_release_nop(void);
-void dll_299_initialise_nop(void);
 int Dummy29E_getExtraSize(void);
 int Dummy29E_getObjectTypeId(void);
 void Dummy29E_free(void);
@@ -941,10 +924,6 @@ void AndrossHand_init(int obj, u8* setup);
 void androssligh_update(GameObject* obj);
 void androssligh_updateBeam(GameObject* obj, int beam);
 void AndrossBrain_update(GameObject* obj);
-void barrelgener_update(GameObject* obj);
-void dll_299_free(int obj);
-void dll_299_update(int obj);
-void dll_299_init(GameObject* obj, int setup);
 void arwarwing_setFlightHalfWidth(int arwing, f32 width);
 int arwarwing_getRotY(int arwing);
 void arwarwing_setRotY(int arwing, int rotY);
