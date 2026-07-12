@@ -4663,16 +4663,14 @@ void trackIntersect(void)
         for (gz = 0, base = 0; gz < 0x10; base += 0x10, gz++)
         {
             f32 fz0;
-            u8* p;
             gx = 0;
             bi = base;
             fz0 = scale * gz;
-            p = idx + base;
-            for (; gx < 0x10; bi++, p++, gx++)
+            for (; gx < 0x10; bi++, gx++)
             {
-                if ((s8)*p >= 0)
+                if ((s8)idx[bi] >= 0)
                 {
-                    MapBlockData* blk = mapGetBlock((s8)*p);
+                    MapBlockData* blk = mapGetBlock((s8)idx[bi]);
                     int tn, toff;
                     f32 fx0;
                     tn = 0;
@@ -4723,7 +4721,7 @@ void trackIntersect(void)
         }
     }
 
-    for (i = 0, off = 0; i < gIntersectLineCount; off += 0x10, i++)
+    for (i = 0, off = i; i < gIntersectLineCount; off += 0x10, i++)
     {
         IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + off);
         int idx = rec->pt[0] * 2;
@@ -4770,7 +4768,7 @@ void trackIntersect(void)
     if (lbl_803DCF40 != 0)
     {
         int done;
-        for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 2)
+        for (i = 0, off = i; i < gIntersectLineCount; i++, off += 2)
         {
             *(s16*)(lbl_803DCF40 + off) = i;
         }
@@ -4778,7 +4776,7 @@ void trackIntersect(void)
         while (done == 0)
         {
             done = 1;
-            for (j = 0, off = 0; j < gIntersectLineCount - 1; off += 2, j++)
+            for (j = 0, off = j; j < gIntersectLineCount - 1; off += 2, j++)
             {
                 u8* base = (u8*)lbl_803DCF34;
                 s16* p = (s16*)(lbl_803DCF40 + off);
@@ -4801,7 +4799,7 @@ void trackIntersect(void)
         counts[i - 1] += counts[i];
     }
 
-    for (i = 0, off = 0; i < gIntersectLineCount; off += 0x10, i++)
+    for (i = 0, off = i; i < gIntersectLineCount; off += 0x10, i++)
     {
         int tt = ((s8) * (u8*)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
         s16 c = counts[tt]++;
@@ -4818,7 +4816,7 @@ void trackIntersect(void)
     }
 
     prev = -1;
-    for (i = 0, off = 0; i < gIntersectLineCount; off += 2, i++)
+    for (i = 0, off = i; i < gIntersectLineCount; off += 2, i++)
     {
         t = (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + off) * 0x10 + 3) & 0x3f);
         if (t >= 0x14)
