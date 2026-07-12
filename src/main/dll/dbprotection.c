@@ -184,12 +184,7 @@ void fn_801DFA28(u8* obj)
     f32 speedTarget;
     f32 zero;
     f32 mtx[17];
-    struct
-    {
-        s16 rot[3];
-        f32 scale;
-        f32 vec[3];
-    } objPos;
+    MatrixTransform objPos;
     int objIndex;
     int objCount;
     f32 camShake;
@@ -737,13 +732,13 @@ void fn_801DFA28(u8* obj)
             dv = -0x3C;
         }
         ((GameObject*)obj)->anim.rotZ = dv * timeDelta + (f32) * (s16*)(int)(obj + 0x4);
-        objPos.vec[0] = lbl_803E56CC;
-        objPos.vec[1] = lbl_803E56CC;
-        objPos.vec[2] = lbl_803E56CC;
+        objPos.x = lbl_803E56CC;
+        objPos.y = lbl_803E56CC;
+        objPos.z = lbl_803E56CC;
         objPos.scale = lbl_803E57A4;
-        objPos.rot[0] = ((GameObject*)obj)->anim.rotX;
-        objPos.rot[1] = *(s16*)(int)(obj + 0x2);
-        objPos.rot[2] = *(s16*)(int)(obj + 0x4);
+        objPos.rotX = ((GameObject*)obj)->anim.rotX;
+        objPos.rotY = *(s16*)(int)(obj + 0x2);
+        objPos.rotZ = *(s16*)(int)(obj + 0x4);
         setMatrixFromObjectPos(mtx, &objPos);
         Matrix_TransformPoint(mtx, lbl_803E56CC, *(f32*)&lbl_803E56CC, -((SBGalleonState*)state)->speed * timeDelta,
                               (f32*)(state + 0x0), (f32*)(state + 0x4), (f32*)(state + 0x8));

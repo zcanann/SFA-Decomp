@@ -44,7 +44,7 @@ void ktfallingrocks_hitDetect(void)
 void ktfallingrocks_update(GameObject* obj)
 {
     int placement = *(int*)&(obj)->anim.placementData;
-    ObjPosParams params;
+    MatrixTransform params;
     char* player;
     int i;
     if (mainGetBit(((KtfallingrocksPlacement*)placement)->triggerBit) == 0)

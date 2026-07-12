@@ -118,18 +118,6 @@ typedef struct DRCloudCageStateFlags
 } DRCloudCageStateFlags;
 STATIC_ASSERT(sizeof(DRCloudCageStateFlags) == 1);
 
-typedef struct DRCloudCageObjPos
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} DRCloudCageObjPos;
-STATIC_ASSERT(sizeof(DRCloudCageObjPos) == 0x18);
-
 /*
  * DRCloudCageState - file-local overlay of the DR_CloudRunner cage object's
  * extra block (obj+0xB8). Only the scalar fields this DLL reads/writes are
@@ -182,7 +170,7 @@ void fn_801E9C00(GameObject* obj, int state)
     f32 startY;
     f32 startX;
     f32** hits;
-    DRCloudCageObjPos transform;
+    MatrixTransform transform;
     f32 matrix[16];
     DRCloudCagePoints localPoints;
     u8* p;

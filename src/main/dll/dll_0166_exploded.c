@@ -27,7 +27,6 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
-extern void vecRotateYXZ(int, int);
 
 void exploded_free(void)
 {
@@ -184,7 +183,7 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, 
         tv[0] = state->localCenterX;
         tv[1] = state->localCenterY;
         tv[2] = state->localCenterZ;
-        vecRotateYXZ((int)obj, (int)tv);
+        vecRotateYXZ((s16*)obj, tv);
         tv[0] = tv[0] * obj->modelScale;
         tv[1] = tv[1] * obj->modelScale;
         tv[2] = tv[2] * obj->modelScale;

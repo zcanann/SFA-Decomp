@@ -826,17 +826,7 @@ void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ)
 {
     extern void setMatrixFromObjectPos(void* matrix, void* packedTransform);
     extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, u32 outX, u32 outY, u32 outZ);
-    struct
-    {
-        s16 rotX;
-        s16 rotY;
-        s16 rotZ;
-        s16 pad;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } transform;
+    MatrixTransform transform;
     f32 matrix[16];
 
     transform.x = *(f32*)(packed + 6);
@@ -968,17 +958,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
 void DIMSnowHorn1_func22(GameObject* obj, f32 scale)
 {
     void* pathMtx;
-    struct
-    {
-        s16 rotX;
-        s16 rotY;
-        s16 rotZ;
-        s16 pad;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } transform;
+    MatrixTransform transform;
     f32 x;
     f32 y;
     f32 z;
@@ -992,8 +972,8 @@ void DIMSnowHorn1_func22(GameObject* obj, f32 scale)
     transform.rotY = 0;
     transform.rotZ = 0;
     transform.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
-    setMatrixFromObjectPos((f32*)gDIMSnowHorn1ModelMtx, (s16*)&transform);
-    mtx44_mult(gDIMSnowHorn1ModelMtx, pathMtx, gDIMSnowHorn1ModelMtx);
+    setMatrixFromObjectPos((f32*)gDIMSnowHorn1ModelMtx, &transform);
+    mtx44_mult(gDIMSnowHorn1ModelMtx, (f32*)pathMtx, gDIMSnowHorn1ModelMtx);
     fn_8003B950(gDIMSnowHorn1ModelMtx);
 }
 
@@ -1224,11 +1204,7 @@ static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
 void DIMSnowHorn1_update(GameObject* obj)
 {
     f32 nearDist;
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 matrix[16];
     u8* base = (u8*)(int)gDIMSnowHorn1ConfigTable;
     int player = (int)Obj_GetPlayerObject();
@@ -1414,14 +1390,14 @@ void DIMSnowHorn1_update(GameObject* obj)
         break;
     }
     characterDoEyeAnims(obj, data + 0x980);
-    v.mat[1] = (obj)->anim.localPosX;
-    v.mat[2] = (obj)->anim.localPosY;
-    v.mat[3] = (obj)->anim.localPosZ;
-    v.angles[0] = (obj)->anim.rotX;
-    v.angles[1] = (obj)->anim.rotY;
-    v.angles[2] = (obj)->anim.rotZ;
-    v.mat[0] = lbl_803E8258;
-    setMatrixFromObjectPos(matrix, v.angles);
+    v.x = (obj)->anim.localPosX;
+    v.y = (obj)->anim.localPosY;
+    v.z = (obj)->anim.localPosZ;
+    v.rotX = (obj)->anim.rotX;
+    v.rotY = (obj)->anim.rotY;
+    v.rotZ = (obj)->anim.rotZ;
+    v.scale = lbl_803E8258;
+    setMatrixFromObjectPos(matrix, &v);
     Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E82AC, lbl_803E82B0, &(obj)->anim.modelState->overrideWorldPosX,
                           &(obj)->anim.modelState->overrideWorldPosY, &(obj)->anim.modelState->overrideWorldPosZ);
 }

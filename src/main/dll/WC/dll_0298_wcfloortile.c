@@ -478,15 +478,15 @@ void arwarwing_updateThrusters(GameObject* obj, int state)
 
     int slot;
     f32 mtx[16];
-    ArwProjPosSrc src;
+    MatrixTransform src;
 
     slot = Camera_GetCurrentViewSlot();
-    src.pos[0] = obj->anim.localPosX;
-    src.pos[1] = obj->anim.localPosY;
-    src.pos[2] = obj->anim.localPosZ;
-    src.rot[0] = obj->anim.rotX;
-    src.rot[1] = obj->anim.rotY;
-    src.rot[2] = 0;
+    src.x = obj->anim.localPosX;
+    src.y = obj->anim.localPosY;
+    src.z = obj->anim.localPosZ;
+    src.rotX = obj->anim.rotX;
+    src.rotY = obj->anim.rotY;
+    src.rotZ = 0;
     src.scale = lbl_803E6ED0;
     setMatrixFromObjectPos(mtx, &src);
 

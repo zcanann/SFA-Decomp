@@ -594,19 +594,19 @@ void arwsquadron_followLeader(int objArg, int stateArg)
     ObjAnimComponent* leaderAnim = &leaderObj->anim;
     ArwSquadronState* leaderState = (ArwSquadronState*)leaderObj->extra;
     ArwSquadronSetup* setup = (ArwSquadronSetup*)objAnim->placementData;
-    ArwProjPosSrc src;
+    MatrixTransform src;
     f32 mtx[16];
     f32 out[3];
 
     *(s16*)&state->swayPhaseX = state->swaySpeedX * timeDelta + state->swayPhaseX;
     *(s16*)&state->swayPhaseY = state->swaySpeedY * timeDelta + state->swayPhaseY;
-    src.pos[0] = leaderAnim->localPosX;
-    src.pos[1] = leaderAnim->localPosY;
-    src.pos[2] = leaderAnim->localPosZ;
+    src.x = leaderAnim->localPosX;
+    src.y = leaderAnim->localPosY;
+    src.z = leaderAnim->localPosZ;
     src.scale = lbl_803E7188;
-    src.rot[0] = leaderAnim->rotX;
-    src.rot[1] = leaderAnim->rotY;
-    src.rot[2] = leaderAnim->rotZ;
+    src.rotX = leaderAnim->rotX;
+    src.rotY = leaderAnim->rotY;
+    src.rotZ = leaderAnim->rotZ;
     out[0] = 15.0f * mathSinf(gArwingSquadronPi * state->swayPhaseX / gArwingSquadronSwayPhaseToAngleDiv) +
              5.0f * setup->leaderOffsetX;
     out[1] = 15.0f * mathSinf(gArwingSquadronPi * state->swayPhaseY / gArwingSquadronSwayPhaseToAngleDiv) +

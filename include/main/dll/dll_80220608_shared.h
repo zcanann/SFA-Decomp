@@ -23,6 +23,7 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/voxmaps.h"
+#include "main/vecmath.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/dll/path_control_interface.h"
@@ -758,17 +759,8 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E70EC;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
-extern void setMatrixFromObjectPos(void* mtx, void* src);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void gameTextFn_80125ba4(int id);
 extern void pauseMenuCreateHeads(void);
-
-typedef struct ArwProjPosSrc
-{
-    s16 rot[3];
-    f32 scale;
-    f32 pos[3];
-} ArwProjPosSrc;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1041,13 +1033,6 @@ typedef struct Blob16
 {
     int a, b, c, d;
 } Blob16;
-typedef struct ObjXform
-{
-    s16 rx, ry, rz;
-    f32 scale;
-    f32 x, y, z;
-} ObjXform;
-
 extern int dll_2E_func07(GameObject* obj, int p2, int state, int p4, int p5);
 extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 extern int gEarthWalkerMoveBlendData;

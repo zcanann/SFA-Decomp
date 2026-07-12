@@ -66,7 +66,6 @@ extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
 extern int getAngle(float y, float x);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
 extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
@@ -132,7 +131,7 @@ void SPScarab_update(int obj)
     if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, gSpScarabCollisionRadius, 0, (int)&hit_buf[0], obj, 8, -1, 0xff,
                            0xa) != 0)
     {
-        Vec3_ReflectAgainstNormal((int)&hit_buf[7], obj + 0x24, (int)outV);
+        Vec3_ReflectAgainstNormal((f32*)&hit_buf[7], (f32*)(obj + 0x24), outV);
         ((GameObject*)obj)->anim.velocityX = outV[0];
         ((GameObject*)obj)->anim.velocityZ = outV[2];
         angle = (s16)getAngle(-((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);

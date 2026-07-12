@@ -39,8 +39,6 @@ extern f32 lbl_803E40E0; /* 1.0f */
 extern f32 lbl_803E40E4; /* 100.0f - reach multiplier */
 extern f32 lbl_803E40E8; /* 145.0f - near-radius multiplier */
 
-extern void mtxRotateByVec3s(f32* mtx, void* transform);
-extern void mtx44Transpose(void* m, void* out);
 extern void OSReport(const char* msg, ...);
 extern void objInterpretSeq(void* obj, int arg2, s8 legCode, int distanceSquared);
 
@@ -50,17 +48,7 @@ extern void objInterpretSeq(void* obj, int arg2, s8 legCode, int distanceSquared
 void objFn_80198fa4(s16* obj, void* placement)
 {
     MmpGyserventState* state;
-    struct
-    {
-        s16 rotX;
-        s16 rotY;
-        s16 rotZ;
-        s16 pad;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } xf;
+    MatrixTransform xf;
     union
     {
         f32 m[16];
@@ -101,7 +89,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     xf.y = -((GameObject*)obj)->anim.worldPosY;
     xf.z = -((GameObject*)obj)->anim.worldPosZ;
     mtxRotateByVec3s(rotMtx, &xf);
-    mtx44Transpose(rotMtx, (char*)state + 0x38);
+    mtx44Transpose(rotMtx, (f32*)((char*)state + 0x38));
 
     state->reach = lbl_803E40E4 * *(f32*)(obj + 4);
     state->nearRadiusSq = (lbl_803E40E8 * *(f32*)(obj + 4)) * (lbl_803E40E8 * *(f32*)(obj + 4));

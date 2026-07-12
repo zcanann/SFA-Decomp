@@ -1024,7 +1024,7 @@ void drakorhoverpad_func17(GameObject* obj, int sel, int* out)
 
 void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
 {
-    ObjPosParams pos;
+    MatrixTransform pos;
     f32 mtx[16];
     int* src = Obj_GetPlayerObject();
     if (src == NULL)
@@ -1034,9 +1034,9 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
     pos.x = ((GameObject*)src)->anim.localPosX;
     pos.y = ((GameObject*)src)->anim.localPosY;
     pos.z = ((GameObject*)src)->anim.localPosZ;
-    pos.rx = *(s16*)src;
-    pos.ry = ((GameObject*)src)->anim.rotY;
-    pos.rz = ((GameObject*)src)->anim.rotZ;
+    pos.rotX = *(s16*)src;
+    pos.rotY = ((GameObject*)src)->anim.rotY;
+    pos.rotZ = ((GameObject*)src)->anim.rotZ;
     pos.scale = lbl_803E6A48;
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6A3C, lbl_803DC300, lbl_803DC304, ox, oy, oz);
@@ -1056,14 +1056,14 @@ void drakorhoverpad_resetPendingMotion(GameObject* obj)
 void drakorhoverpad_renderGroundMarker(GameObject* obj, f32 scale)
 {
     f32* mtx;
-    ObjPosParams pos;
+    MatrixTransform pos;
     mtx = ObjPath_GetPointModelMtx((int)obj, 0);
     pos.x = lbl_803E6A3C;
     pos.y = lbl_803E6A40;
     pos.z = lbl_803E6A3C;
-    pos.rx = 0;
-    pos.ry = 0;
-    pos.rz = 0;
+    pos.rotX = 0;
+    pos.rotY = 0;
+    pos.rotZ = 0;
     pos.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(gDrakorHoverpadMtx, &pos);
     mtx44_mult(gDrakorHoverpadMtx, mtx, gDrakorHoverpadMtx);

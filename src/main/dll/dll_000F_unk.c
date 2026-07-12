@@ -155,7 +155,7 @@ void player_applyVelocityStep(int* obj, int* ctx, f32 t)
 {
     int flags;
     int b;
-    struct PartDesc desc;
+    MatrixTransform desc;
     f32 mtx[16];
     f32 outY;
     f32 outX;
@@ -173,13 +173,13 @@ void player_applyVelocityStep(int* obj, int* ctx, f32 t)
     b = *(s8*)((char*)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0)
     {
-        desc.ang[0] = ((GameObject*)obj)->anim.rotX;
-        desc.ang[1] = ((GameObject*)obj)->anim.rotY;
-        desc.ang[2] = 0;
-        desc.sc[0] = lbl_803E0588;
-        desc.sc[1] = lbl_803E0570;
-        desc.sc[2] = lbl_803E0570;
-        desc.sc[3] = lbl_803E0570;
+        desc.rotX = ((GameObject*)obj)->anim.rotX;
+        desc.rotY = ((GameObject*)obj)->anim.rotY;
+        desc.rotZ = 0;
+        desc.scale = lbl_803E0588;
+        desc.x = lbl_803E0570;
+        desc.y = lbl_803E0570;
+        desc.z = lbl_803E0570;
         setMatrixFromObjectPos(mtx, &desc);
         if ((ctx[0] & 0x10000) != 0)
         {
@@ -885,16 +885,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 {
     extern void player_applyVelocityStep(char* pos, char* state, f32 dt);
     extern void fn_800D8414(char* pos, char* state);
-    struct
-    {
-        s16 rotX;
-        s16 rotY;
-        s16 rotZ;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } localTransform;
+    MatrixTransform localTransform;
     f32 matrix[16];
     int keepPathControls;
     int attachment;

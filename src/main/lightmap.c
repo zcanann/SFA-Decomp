@@ -33,13 +33,6 @@ extern f32 lbl_803DF89C;
 
 typedef struct
 {
-    s16 rx, ry, rz, pad;
-    f32 d4;
-    f32 x, y, z;
-} PosRot;
-
-typedef struct
-{
     f32 lo;
     f32 hi;
 } F32Pair;
@@ -86,7 +79,7 @@ void updateVisibleGeometry(void)
     f32 ratio, ratio2;
     u16 fov;
     f32 ox, oy, oz;
-    PosRot st;
+    MatrixTransform st;
     f32 m[17];
 
     cam = (u8*)Camera_GetCurrentViewSlot();
@@ -105,10 +98,10 @@ void updateVisibleGeometry(void)
     st.x = lbl_803DEBCC;
     st.y = lbl_803DEBCC;
     st.z = lbl_803DEBCC;
-    st.d4 = lbl_803DEBDC;
-    st.rx = 0x8000 - *(s16*)(cam + 0x50);
-    st.ry = -*(s16*)(cam + 0x52);
-    st.rz = *(s16*)(cam + 0x54);
+    st.scale = lbl_803DEBDC;
+    st.rotX = 0x8000 - *(s16*)(cam + 0x50);
+    st.rotY = -*(s16*)(cam + 0x52);
+    st.rotZ = *(s16*)(cam + 0x54);
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, lbl_803DEBCC, *(f32*)&lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
     gViewFrustumPlanes[0].normalX = ox;

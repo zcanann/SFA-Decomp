@@ -204,11 +204,7 @@ void fn_80154584(GameObject* obj, int state)
 void fn_80154328(int obj, int state)
 {
     f32 mtx[17];
-    struct
-    {
-        s16 in[6];
-        f32 pos[3];
-    } stk;
+    MatrixTransform stk;
     f32 tx;
     f32 ox;
     f32 tz;
@@ -217,14 +213,14 @@ void fn_80154328(int obj, int state)
     if (*(f32*)(state + 0x330) <= lbl_803E2990)
     {
         *(f32*)(state + 0x330) = (f32)(s32)randomGetRange(30, 60);
-        stk.pos[0] = ((GameObject*)obj)->anim.localPosX;
-        stk.pos[1] = lbl_803E2990;
-        stk.pos[2] = ((GameObject*)obj)->anim.localPosZ;
-        stk.in[0] = ((GameObject*)obj)->anim.rotX;
-        stk.in[1] = 0;
-        stk.in[2] = 0;
-        *(f32*)(stk.in + 4) = lbl_803E2994;
-        setMatrixFromObjectPos(mtx, stk.in);
+        stk.x = ((GameObject*)obj)->anim.localPosX;
+        stk.y = lbl_803E2990;
+        stk.z = ((GameObject*)obj)->anim.localPosZ;
+        stk.rotX = ((GameObject*)obj)->anim.rotX;
+        stk.rotY = 0;
+        stk.rotZ = 0;
+        stk.scale = lbl_803E2994;
+        setMatrixFromObjectPos(mtx, &stk);
         tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
@@ -233,7 +229,7 @@ void fn_80154328(int obj, int state)
         if (sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                   ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) > lbl_803E29A4)
         {
-            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(obj, stk.pos[0], stk.pos[1], stk.pos[2],
+            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(obj, stk.x, stk.y, stk.z,
                                                                               SFXstaff_proj_putaway);
         }
     }

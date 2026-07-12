@@ -23,6 +23,7 @@
 #include "main/dll/player_target.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
+#include "main/vecmath.h"
 #include "main/dll/path_control_interface.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
@@ -530,10 +531,6 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 Camera_GetFovY(void);
 extern f32 Camera_GetAspectRatio(void);
 extern int getScreenResolution(void);
-extern int fn_8000E814(void);
-extern void Matrix_TransformVector(int m, f32* src, f32* dst);
-extern void setMatrixFromObjectPos(f32* matrix, s16* objpos);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -591,7 +588,6 @@ extern void objRenderFn_800413d4(int obj);
 extern void fuzzRenderFn_800412dc(int obj);
 extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
-extern int Camera_GetCurrentViewSlot(void);
 extern void arwprojectile_placeForward(GameObject* obj, f32 dist);
 extern void arwprojectile_setLifetime(GameObject* obj, int frames);
 extern void arwprojectile_createLinkedEffect(GameObject* obj, int a);
@@ -773,8 +769,6 @@ extern f32 lbl_803E818C;
 extern f32 lbl_803E8190;
 extern f32 lbl_803E8194;
 extern f32 lbl_803E8140;
-extern void setMatrixFromObjectPos(f32* matrix, s16* objpos);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E8148;
 extern f32 lbl_803E814C;
 extern f32 lbl_803DE440;
@@ -833,8 +827,6 @@ extern f32 lbl_803E7ED0;
 extern void PSMTXMultVec(f32* m, f32* src, f32* dst);
 extern int getScreenResolution(void);
 extern f32 Camera_GetAspectRatio(void);
-extern int fn_8000E814(void);
-extern void Matrix_TransformVector(int m, f32* src, f32* dst);
 extern f32 lbl_803E80D4;
 extern f32 lbl_803E80D8;
 extern f32 lbl_803E80AC;

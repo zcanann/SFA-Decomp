@@ -76,7 +76,7 @@ void dll_28B_update(int obj)
 {
     f32 oz, oy, ox;
     f32 dt;
-    ObjXform xform;
+    MatrixTransform xform;
     f32 mtx[16];
     int state = *(int*)&((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
@@ -99,9 +99,9 @@ void dll_28B_update(int obj)
     xform.x = ((GameObject*)obj)->anim.localPosX;
     xform.y = ((GameObject*)obj)->anim.localPosY;
     xform.z = ((GameObject*)obj)->anim.localPosZ;
-    xform.rx = ((GameObject*)obj)->anim.rotX;
-    xform.ry = ((GameObject*)obj)->anim.rotY;
-    xform.rz = ((GameObject*)obj)->anim.rotZ;
+    xform.rotX = ((GameObject*)obj)->anim.rotX;
+    xform.rotY = ((GameObject*)obj)->anim.rotY;
+    xform.rotZ = ((GameObject*)obj)->anim.rotZ;
     xform.scale = lbl_803E6D18;
     setMatrixFromObjectPos(mtx, &xform);
     Matrix_TransformPoint(mtx, gWcEarthWalkerIdleTimerThreshold, gWcEarthWalkerIdleTimerThreshold,

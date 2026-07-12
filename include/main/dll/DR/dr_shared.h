@@ -20,22 +20,11 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/voxmaps.h"
+#include "main/vecmath.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
-
-typedef struct
-{
-    s16 rx;
-    s16 ry;
-    s16 rz;
-    s16 pad;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ObjPosParams;
 
 typedef struct
 {
@@ -146,8 +135,6 @@ extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c,
 extern f32 lbl_803E689C;
 extern f32 lbl_803E68A0;
 extern f32 lbl_803E68A4;
-extern void setMatrixFromObjectPos(f32* mtx, void* desc);
-extern void Matrix_TransformPoint(f32* mtx, double x, double y, double z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E6B38;
 extern f32 lbl_803E6B3C;
 extern f32 lbl_803E6A48;
@@ -208,7 +195,6 @@ extern int gKTrexFloorSwitchCurveFindResult;
 extern f32 gDrakorHoverpadMtx[];
 extern void** gBaddieControlInterface;
 extern void* ObjPath_GetPointModelMtx(int obj, int idx);
-extern void mtx44_mult(f32* dst, f32* a, f32* b);
 extern void fn_8003B950(f32* mtx);
 extern s16 gHighTopLookYawOffset;
 extern f32 Vec_xzDistance(f32* a, f32* b);

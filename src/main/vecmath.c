@@ -2,6 +2,7 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
 #include "main/frame_timing.h"
+#include "main/vecmath.h"
 
 typedef f32 Mtx[3][4];
 
@@ -34,9 +35,6 @@ extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern f32 __kernel_sin(f32);
 extern f32 __kernel_cos(f32, f32);
 
-extern void mtxRotateByVec3s(f32* mtx, void* transform);
-extern void mtx44Transpose(f32* src, f32* dst);
-extern void setMatrixFromObjectPos(f32* m, u8* p);
 
 #pragma scheduling off
 #pragma peephole off
@@ -72,11 +70,11 @@ int atan2_8002178c(float y, float x)
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
 
-void mtx44ScaleRow1(u8* p, f32 s)
+void mtx44ScaleRow1(f32* p, f32 s)
 {
-    *(f32*)(p + 0x10) *= s;
-    *(f32*)(p + 0x14) *= s;
-    *(f32*)(p + 0x18) *= s;
+    p[4] *= s;
+    p[5] *= s;
+    p[6] *= s;
 }
 
 int cos16(u16 angle)
@@ -305,7 +303,7 @@ f32 Vec3_Normalize(f32* v)
 #pragma fp_contract off
 #pragma opt_lifetimes off
 #pragma opt_dead_assignments off
-void mtxRotateByVec3s(f32* mtx, void* transform)
+void mtxRotateByVec3s(f32* mtx, const void* transform)
 {
     f32 cx;
     f32 sx;
@@ -462,7 +460,7 @@ void mtx44_mult(f32* a, f32* b, f32* out)
 }
 
 #pragma opt_strength_reduction off
-void mtx44_multSafe(int a, int b, f32* out)
+void mtx44_multSafe(f32* a, f32* b, f32* out)
 {
     f32 tmp[16];
     int o3, o2, o1;
@@ -488,9 +486,9 @@ void mtx44_multSafe(int a, int b, f32* out)
         {
             tp[t] = zero;
             tp[t] += ((f32*)a)[row] * ((f32*)b)[j];
-            tp[t] += *(f32*)(a + o1) * *(f32*)(b + (j + 4) * 4);
-            tp[t] += *(f32*)(a + o2) * *(f32*)(b + (j + 8) * 4);
-            tp[t] += *(f32*)(a + o3) * *(f32*)(b + (j + 12) * 4);
+            tp[t] += *(f32*)((int)a + o1) * *(f32*)((int)b + (j + 4) * 4);
+            tp[t] += *(f32*)((int)a + o2) * *(f32*)((int)b + (j + 8) * 4);
+            tp[t] += *(f32*)((int)a + o3) * *(f32*)((int)b + (j + 12) * 4);
             t++;
         }
         row += 4;
@@ -547,7 +545,7 @@ void vecRotateYXZ(s16* a, f32* v)
     v[2] = z;
 }
 
-void setMatrixFromObjectPos(f32* m, u8* p)
+void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform)
 {
     f32 scale;
     f32 zero;
@@ -558,10 +556,10 @@ void setMatrixFromObjectPos(f32* m, u8* p)
     f32 s2;
     f32 c2;
 
-    angleToVec2((u16) * (s16*)(p + 0x0), &s0, &c0);
-    angleToVec2((u16) * (s16*)(p + 0x2), &s1, &c1);
-    angleToVec2((u16) * (s16*)(p + 0x4), &s2, &c2);
-    scale = *(f32*)(p + 0x8);
+    angleToVec2((u16)transform->rotX, &s0, &c0);
+    angleToVec2((u16)transform->rotY, &s1, &c1);
+    angleToVec2((u16)transform->rotZ, &s2, &c2);
+    scale = transform->scale;
     m[0] = scale * (s2 * (s1 * s0) + c2 * c0);
     m[1] = scale * (s2 * c1);
     m[2] = scale * (s2 * (s1 * c0) - c2 * s0);
@@ -575,9 +573,9 @@ void setMatrixFromObjectPos(f32* m, u8* p)
     m[9] = -s1 * scale;
     m[10] = scale * (c1 * c0);
     m[11] = zero;
-    m[12] = *(f32*)(p + 0xc);
-    m[13] = *(f32*)(p + 0x10);
-    m[14] = *(f32*)(p + 0x14);
+    m[12] = transform->x;
+    m[13] = transform->y;
+    m[14] = transform->z;
     m[15] = lbl_803DE7C4;
 }
 

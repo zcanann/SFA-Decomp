@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
+#include "main/vecmath.h"
 
 #define CHECKPOINT4_DLL_ID 0x00E8
 #define CHECKPOINT4_CLASS_ID 0x0005
@@ -16,17 +17,6 @@
 #define CHECKPOINT4_RANDOM_HEADING_COUNT 4
 #define CHECKPOINT4_RANDOM_HEADING_MAX 0xF0
 #define CHECKPOINT4_OBJECT_FLAGS_ENABLED 0xA000
-
-typedef struct Checkpoint4MatrixBuildTransform {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  u16 pad06;
-  f32 scale;
-  f32 x;
-  f32 y;
-  f32 z;
-} Checkpoint4MatrixBuildTransform;
 
 typedef struct Checkpoint4Placement {
   u8 pad00[0x28];
@@ -75,8 +65,6 @@ STATIC_ASSERT(offsetof(Checkpoint4Object, checkpointIndex) == 0xF4);
 
 extern ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor;
 
-void setMatrixFromObjectPos(f32 *matrix, void *obj);
-void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 
 void checkpoint4_setScale(void);
 int checkpoint4_getExtraSize(void);

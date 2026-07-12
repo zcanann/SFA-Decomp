@@ -137,11 +137,7 @@ int dim2prisonmammoth_stateHandler00(int* obj)
 
 int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 matrix[16];
     int inner;
 
@@ -150,14 +146,14 @@ int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
     inner = *(int*)&((GameObject*)obj)->extra;
     (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, inner, 2);
 
-    v.mat[1] = ((GameObject*)obj)->anim.localPosX;
-    v.mat[2] = ((GameObject*)obj)->anim.localPosY;
-    v.mat[3] = ((GameObject*)obj)->anim.localPosZ;
-    v.angles[0] = ((GameObject*)obj)->anim.rotX;
-    v.angles[1] = ((GameObject*)obj)->anim.rotY;
-    v.angles[2] = ((GameObject*)obj)->anim.rotZ;
-    v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
-    setMatrixFromObjectPos(matrix, v.angles);
+    v.x = ((GameObject*)obj)->anim.localPosX;
+    v.y = ((GameObject*)obj)->anim.localPosY;
+    v.z = ((GameObject*)obj)->anim.localPosZ;
+    v.rotX = ((GameObject*)obj)->anim.rotX;
+    v.rotY = ((GameObject*)obj)->anim.rotY;
+    v.rotZ = ((GameObject*)obj)->anim.rotZ;
+    v.scale = ((GameObject*)obj)->anim.rootMotionScale;
+    setMatrixFromObjectPos(matrix, &v);
 
     Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
@@ -193,11 +189,7 @@ void dim2prisonmammoth_hitDetect(void)
 
 void dim2prisonmammoth_update(int obj)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 matrix[16];
     int inner = *(int*)&((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
@@ -215,14 +207,14 @@ void dim2prisonmammoth_update(int obj)
         }
     }
     characterDoEyeAnims((GameObject*)(obj), inner + 0x35c);
-    v.mat[1] = ((GameObject*)obj)->anim.localPosX;
-    v.mat[2] = ((GameObject*)obj)->anim.localPosY;
-    v.mat[3] = ((GameObject*)obj)->anim.localPosZ;
-    v.angles[0] = ((GameObject*)obj)->anim.rotX;
-    v.angles[1] = ((GameObject*)obj)->anim.rotY;
-    v.angles[2] = ((GameObject*)obj)->anim.rotZ;
-    v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
-    setMatrixFromObjectPos(matrix, v.angles);
+    v.x = ((GameObject*)obj)->anim.localPosX;
+    v.y = ((GameObject*)obj)->anim.localPosY;
+    v.z = ((GameObject*)obj)->anim.localPosZ;
+    v.rotX = ((GameObject*)obj)->anim.rotX;
+    v.rotY = ((GameObject*)obj)->anim.rotY;
+    v.rotZ = ((GameObject*)obj)->anim.rotZ;
+    v.scale = ((GameObject*)obj)->anim.rootMotionScale;
+    setMatrixFromObjectPos(matrix, &v);
     Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);

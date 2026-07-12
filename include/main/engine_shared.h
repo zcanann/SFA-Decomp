@@ -22,6 +22,7 @@
 #include "main/sky_interface.h"
 #include "main/table_file.h"
 #include "main/voxmaps.h"
+#include "main/vecmath.h"
 
 extern s32 gAttractMovieState;
 extern f32 lbl_803DE5F0;
@@ -38,13 +39,6 @@ extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
 extern u32 mainGetBit(u32 bit);
-extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
-extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
-extern void setMatrixFromObjectPos(f32 *matrix, void *obj);
-extern void mtx44ScaleRow1(f32 *matrix, f32 scale);
-extern void mtx44_multSafe(f32 *dst, f32 *src, f32 *out);
-extern void mtxRotateByVec3s(f32 *matrix, void *transform);
-extern void mtx44Transpose(f32 *src, f32 *dst);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
 extern void PSMTXCopy(f32 *src, f32 *dst);
 extern void PSMTXMultVec(f32 *matrix, f32 *in, f32 *out);
@@ -60,7 +54,6 @@ extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlan
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
 extern u8 pauseMenuGetState(void);
 extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
-extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
@@ -200,7 +193,6 @@ int return0x64_8000A378(void);
 void doNothing_8000CF54(void);
 void doNothing_endOfFrame(void);
 void audioFn_8000b694(u32 value);
-void* fn_8000E814(void);
 void screenFn_8000e944(void* viewportArg);
 void viewportEffectFn_8000e380(void);
 void fn_8000F83C(void);

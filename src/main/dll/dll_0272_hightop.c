@@ -292,15 +292,15 @@ int hightop_stateHandler06(GameObject* obj, u8* state)
 void HighTop_func0F(int obj, f32* ox, f32* oy, f32* oz)
 {
     int* player;
-    ObjPosParams pos;
+    MatrixTransform pos;
     f32 mtx[16];
     player = Obj_GetPlayerObject();
     pos.x = ((GameObject*)player)->anim.localPosX;
     pos.y = ((GameObject*)player)->anim.localPosY;
     pos.z = ((GameObject*)player)->anim.localPosZ;
-    pos.rx = ((GameObject*)player)->anim.rotX;
-    pos.ry = ((GameObject*)player)->anim.rotY;
-    pos.rz = ((GameObject*)player)->anim.rotZ;
+    pos.rotX = ((GameObject*)player)->anim.rotX;
+    pos.rotY = ((GameObject*)player)->anim.rotY;
+    pos.rotZ = ((GameObject*)player)->anim.rotZ;
     pos.scale = lbl_803E6AB8;
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6AA8, lbl_803E6B38, lbl_803E6B3C, ox, oy, oz);
@@ -438,15 +438,15 @@ void HighTop_renderGroundMarker(GameObject* obj, f32 scale)
 {
     f32* mtx;
     f32 lx, ly, lz;
-    ObjPosParams pos;
+    MatrixTransform pos;
     mtx = ObjPath_GetPointModelMtx((int)obj, 2);
     ObjPath_GetPointLocalPosition(obj, 2, &lx, &ly, &lz);
     pos.x = lx;
     pos.y = ly;
     pos.z = lz;
-    pos.rx = -0x8000;
-    pos.ry = 0;
-    pos.rz = 0;
+    pos.rotX = -0x8000;
+    pos.rotY = 0;
+    pos.rotZ = 0;
     pos.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(gHighTopGroundMarkerMtx, &pos);
     mtx44_mult(gHighTopGroundMarkerMtx, mtx, gHighTopGroundMarkerMtx);

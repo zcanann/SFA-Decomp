@@ -611,12 +611,7 @@ void objRenderFn_80041018(int* obj)
 void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
 {
     f32 m[16];
-    struct
-    {
-        s16 rot[3];
-        f32 scale;
-        f32 pos[3];
-    } blk;
+    MatrixTransform blk;
     f32 v[3];
     f32 res[3];
     v[0] = in[0];
@@ -648,20 +643,20 @@ void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
     }
     else
     {
-        blk.pos[0] = ((GameObject*)obj)->anim.worldPosX;
-        blk.pos[1] = ((GameObject*)obj)->anim.worldPosY;
-        blk.pos[2] = ((GameObject*)obj)->anim.worldPosZ;
+        blk.x = ((GameObject*)obj)->anim.worldPosX;
+        blk.y = ((GameObject*)obj)->anim.worldPosY;
+        blk.z = ((GameObject*)obj)->anim.worldPosZ;
         if (flag != 0)
         {
-            blk.rot[0] = 0;
-            blk.rot[1] = 0;
-            blk.rot[2] = 0;
+            blk.rotX = 0;
+            blk.rotY = 0;
+            blk.rotZ = 0;
         }
         else
         {
-            blk.rot[0] = ((s16*)obj)[0];
-            blk.rot[1] = ((s16*)obj)[1];
-            blk.rot[2] = ((s16*)obj)[2];
+            blk.rotX = ((s16*)obj)[0];
+            blk.rotY = ((s16*)obj)[1];
+            blk.rotZ = ((s16*)obj)[2];
         }
         blk.scale = lbl_803DEA1C;
         setMatrixFromObjectPos(m, &blk);
@@ -782,12 +777,7 @@ typedef struct
 void objRenderChild(int* child, int* parent, u8 isShadow)
 {
     f32 res[3];
-    struct
-    {
-        s16 rot[3];
-        f32 scale;
-        f32 pos[3];
-    } blk;
+    MatrixTransform blk;
     f32 wm[16];
     f32 m2[16];
     f32 dx, dz;
@@ -807,9 +797,9 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         off = (((GameObject*)child)->objectFlags & 7) * 0x18;
         ent = (ChildEnt*)(tbl + off);
         j = ent->joints[OBJPRINT_ACTIVE_BANK_INDEX(parent)];
-        blk.pos[0] = *(f32*)(off + (char*)tbl);
-        blk.pos[1] = ent->pos[1];
-        blk.pos[2] = ent->pos[2];
+        blk.x = *(f32*)(off + (char*)tbl);
+        blk.y = ent->pos[1];
+        blk.z = ent->pos[2];
         if (j == -1)
         {
             Obj_BuildWorldTransformMatrix(parent, wm, 0);
@@ -826,10 +816,10 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         blk.scale = ((GameObject*)child)->anim.rootMotionScale;
         dx = ((GameObject*)child)->anim.localPosX - ((GameObject*)cam)->anim.localPosX;
         dz = ((GameObject*)child)->anim.localPosZ - ((GameObject*)cam)->anim.localPosZ;
-        blk.rot[0] = getAngle(dx, dz) + 0x8000;
-        blk.rot[1] = getAngle(((GameObject*)child)->anim.localPosY - ((GameObject*)cam)->anim.localPosY,
+        blk.rotX = getAngle(dx, dz) + 0x8000;
+        blk.rotY = getAngle(((GameObject*)child)->anim.localPosY - ((GameObject*)cam)->anim.localPosY,
                               sqrtf(dx * dx + dz * dz));
-        blk.rot[2] = ((s16*)cam)[2];
+        blk.rotZ = ((s16*)cam)[2];
         setMatrixFromObjectTransposed(&blk, m2);
         res[0] = m2[3];
         res[1] = m2[7];
@@ -844,9 +834,9 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         ChildEnt* pr;
         blk.scale = lbl_803DEA1C;
         pr = (ChildEnt*)(*(u8**)(*(int*)&((GameObject*)parent)->anim.modelInstance + 0x2c) + off);
-        blk.rot[0] = pr->rot[0];
-        blk.rot[1] = pr->rot[1];
-        blk.rot[2] = pr->rot[2];
+        blk.rotX = pr->rot[0];
+        blk.rotY = pr->rot[1];
+        blk.rotZ = pr->rot[2];
         setMatrixFromObjectTransposed(&blk, m2);
         PSMTXConcat(mtx, m2, m2);
     }
@@ -1305,12 +1295,7 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     f32 wm[16];
     f32 cm[16];
     f32 sm[12];
-    struct
-    {
-        s16 rot[3];
-        f32 scale;
-        f32 pos[3];
-    } blk;
+    MatrixTransform blk;
     int* mdl = p2;
     u8* data = (u8*)mdl[22];
     s16* uvs;
@@ -1382,14 +1367,14 @@ void objRenderFn_8003d980(u8* obj, int* p2)
         int m = r * 3;
         int j = m << 1;
         s16* pv;
-        blk.pos[0] = fs * (f32)(verts[m] >> 8) + ((GameObject*)obj)->anim.localPosX;
+        blk.x = fs * (f32)(verts[m] >> 8) + ((GameObject*)obj)->anim.localPosX;
         pv = (s16*)((char*)verts + j);
-        blk.pos[1] = fs * (f32)(pv[1] >> 8) + ((GameObject*)obj)->anim.localPosY;
-        blk.pos[2] = fs * (f32)(pv[2] >> 8) + ((GameObject*)obj)->anim.localPosZ;
+        blk.y = fs * (f32)(pv[1] >> 8) + ((GameObject*)obj)->anim.localPosY;
+        blk.z = fs * (f32)(pv[2] >> 8) + ((GameObject*)obj)->anim.localPosZ;
         blk.scale = lbl_803DEA1C;
-        blk.rot[0] = 0;
-        blk.rot[2] = 0;
-        blk.rot[1] = 0;
+        blk.rotX = 0;
+        blk.rotZ = 0;
+        blk.rotY = 0;
         (*gPartfxInterface)->spawnObject(obj, 0x7fd, &blk, 0x200001, -1, NULL);
     }
 }

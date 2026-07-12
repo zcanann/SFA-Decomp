@@ -39,15 +39,6 @@ typedef struct PushableObjectDef
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
 
-typedef struct Dll138PoseCopy
-{
-    s16 rot[3];
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} Dll138PoseCopy;
-
 typedef struct Dll138HitInfo
 {
     u8 pad0[0x1c];
@@ -216,7 +207,7 @@ void fn_80174BFC(GameObject* obj, int ext)
     f32 savedX;
     f32 savedY;
     f32 savedZ;
-    Dll138PoseCopy pose;
+    MatrixTransform pose;
     f32 mtx[16];
     f32 points[21];
     Dll138HitInfo hit;
@@ -244,14 +235,14 @@ void fn_80174BFC(GameObject* obj, int ext)
         i = 0;
         for (; i < ((PushableState*)ext)->pointCount; i++)
         {
-            pose.rot[0] = obj->anim.rotX;
-            pose.rot[1] = obj->anim.rotY;
-            pose.rot[2] = obj->anim.rotZ;
+            pose.rotX = obj->anim.rotX;
+            pose.rotY = obj->anim.rotY;
+            pose.rotZ = obj->anim.rotZ;
             pose.scale = scale;
             pose.x = obj->anim.localPosX;
             pose.y = obj->anim.localPosY;
             pose.z = obj->anim.localPosZ;
-            setMatrixFromObjectPos(mtx, (short*)&pose);
+            setMatrixFromObjectPos(mtx, &pose);
             Matrix_TransformPoint(mtx, velBase[i * 3], velBase[i * 3 + 1], velBase[i * 3 + 2], &points[i * 3],
                                   &points[i * 3 + 1], &points[i * 3 + 2]);
             if ((1 << i & 0xf) != 0)
@@ -883,12 +874,7 @@ void pushable_hitDetect(GameObject* obj)
     f32 wpos[12];
     f32 mtx[16];
     int sweep[6];
-    struct
-    {
-        s16 dir[3];
-        s16 pad;
-        f32 pos[4];
-    } vec;
+    MatrixTransform vec;
     f32 hp4[4];
     PushableBox16 box;
     int list;
@@ -925,13 +911,13 @@ void pushable_hitDetect(GameObject* obj)
         }
         if (lbl_803E3528 != state->pushAmountX || lbl_803E3528 != state->pushAmountZ)
         {
-            vec.dir[0] = state->yaw;
-            vec.dir[1] = 0;
-            vec.dir[2] = 0;
-            vec.pos[0] = lbl_803E3588;
-            vec.pos[1] = 0.0f;
-            vec.pos[2] = 0.0f;
-            vec.pos[3] = 0.0f;
+            vec.rotX = state->yaw;
+            vec.rotY = 0;
+            vec.rotZ = 0;
+            vec.scale = lbl_803E3588;
+            vec.x = 0.0f;
+            vec.y = 0.0f;
+            vec.z = 0.0f;
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
                                   &tmpY, (f32*)((char*)obj + 0x2c));
@@ -1105,12 +1091,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     f32 mtx[16];
     f32 wpos[12];
     f32 deltas[12];
-    struct
-    {
-        s16 dir[3];
-        s16 pad;
-        f32 pos[4];
-    } vec;
+    MatrixTransform vec;
     int sweep[6];
     f32 start[3];
     f32 end[3];
@@ -1245,13 +1226,13 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             state->pushAmountZ = dz;
         }
         state->yaw = *tgt;
-        vec.dir[0] = *tgt;
-        vec.dir[1] = 0;
-        vec.dir[2] = 0;
-        vec.pos[0] = lbl_803E3588;
-        vec.pos[1] = lbl_803E3528;
-        vec.pos[2] = lbl_803E3528;
-        vec.pos[3] = lbl_803E3528;
+        vec.rotX = *tgt;
+        vec.rotY = 0;
+        vec.rotZ = 0;
+        vec.scale = lbl_803E3588;
+        vec.x = lbl_803E3528;
+        vec.y = lbl_803E3528;
+        vec.z = lbl_803E3528;
         setMatrixFromObjectPos(mtx, &vec);
         Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
                               &tmpY, (f32*)((char*)obj + 0x2c));

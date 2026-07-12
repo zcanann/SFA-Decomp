@@ -367,8 +367,6 @@ extern int shouldDrawShadows(void);
 extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern void fn_80296EB4(u8* p1, u8* p2);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern float fn_802943F4(float x);
 extern float floor(float x);

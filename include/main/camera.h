@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/object_transform.h"
+#include "main/vecmath.h"
 
 typedef struct _GXRenderModeObj GXRenderModeObj;
 typedef struct GameObject GameObject;
@@ -34,21 +35,10 @@ typedef struct CameraViewSlot {
     u8 pad5E[2];
 } CameraViewSlot;
 
-typedef struct CameraMatrixTransform {
-    s16 pitch;
-    s16 yaw;
-    s16 roll;
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CameraMatrixTransform;
-
 extern CameraViewSlot gCameraShakeSlots[];
 extern GXRenderModeObj* gRenderModeObj;
 extern f32 gCameraDefaultModelMatrix[16];
-extern u8 lbl_80338090[];
+extern f32 lbl_80338090[64];
 extern f32 gCameraShakeMagnitudeDecay;
 extern f32 gCameraPi;
 extern f32 lbl_803DE5FC;
@@ -151,6 +141,7 @@ void Camera_SetAspectRatio(f32 aspectRatio);
 f32 Camera_GetFovY(void);
 void Camera_SetFovY(f32 fovY);
 void Camera_InitState(void);
+f32* fn_8000E814(void);
 
 
 #endif /* MAIN_CAMERA_H_ */

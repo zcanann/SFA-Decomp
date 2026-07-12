@@ -3,12 +3,6 @@
 
 #include "types.h"
 
-struct PartDesc
-{
-    s16 ang[3];
-    f32 sc[4];
-};
-
 typedef struct PlayerMoveBuf
 {
     f32 a;

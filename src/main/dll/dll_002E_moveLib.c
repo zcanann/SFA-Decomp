@@ -197,7 +197,6 @@ f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int 
 
 int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
 {
-    extern void vecRotateYXZ(int, int);
     extern f32 fn_80114224(int, int, int, int, int);
     extern f32 lbl_803E1CA0;
     int ret = 0;
@@ -215,11 +214,11 @@ int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
         *(f32*)(state + 0x24) = va;
         *(f32*)(state + 0x28) = vb;
         *(f32*)(state + 0x2c) = vb;
-        vecRotateYXZ((int)obj, state + 0x18);
+        vecRotateYXZ((s16*)obj, (f32*)(state + 0x18));
         angles[2] = 0;
         angles[1] = (s16)(s8) * (u8*)(def + 0x2d);
         angles[0] = (s16)(s8) * (u8*)(def + 0x2c);
-        vecRotateYXZ((int)angles, state + 0x24);
+        vecRotateYXZ(angles, (f32*)(state + 0x24));
         *(f32*)phaseOut = lbl_803E1C90;
         *(f32*)(state + 0x34) = fn_80114224(state, state + 0x18, state + 0xc, state + 0x24, 10);
     }

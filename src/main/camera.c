@@ -3,17 +3,6 @@
 #include "dolphin/gx/GXEnum.h"
 #include "dolphin/gx/GXStruct.h"
 
-typedef struct ObjMatrixBuildTransform {
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ObjMatrixBuildTransform;
-
 extern f32 lbl_803967C0[12];
 extern f32 lbl_803967F0[12];
 extern f32 lbl_80396820[12];
@@ -21,7 +10,7 @@ extern f32 lbl_80396850[12];
 
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
-u8 lbl_80338090[0x100];
+f32 lbl_80338090[64];
 f32 gCameraDefaultModelMatrix[16];
 CameraViewSlot gCameraShakeSlots[0x480 / sizeof(CameraViewSlot)];
 f32 gCameraViewRotationMatrix[16];
@@ -199,7 +188,7 @@ void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex)
 {
     ObjTransformMatrixPool* base;
     GameObject* ancestors[4];
-    ObjMatrixBuildTransform inverseTransform;
+    MatrixTransform inverseTransform;
     f32* inverseYawMatrix;
     s32 matrixIndex;
     f32* yawMatrix;
@@ -227,11 +216,11 @@ void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex)
 
         if (hasParent == 0)
         {
-            setMatrixFromObjectPos(yawMatrix, obj);
+            setMatrixFromObjectPos(yawMatrix, (MatrixTransform*)&obj->anim);
         }
         else
         {
-            setMatrixFromObjectPos(base->scratch, obj);
+            setMatrixFromObjectPos(base->scratch, (MatrixTransform*)&obj->anim);
             mtx44_multSafe(yawMatrix, base->scratch, yawMatrix);
         }
 
@@ -363,7 +352,7 @@ void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
     }
 }
 
-void* fn_8000E814(void)
+f32* fn_8000E814(void)
 {
     return lbl_80338090;
 }
@@ -383,7 +372,7 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
 
     transform->x -= playerMapOffsetX;
     transform->z -= playerMapOffsetZ;
-    setMatrixFromObjectPos(modelMatrix, transform);
+    setMatrixFromObjectPos(modelMatrix, (MatrixTransform*)transform);
     if (lbl_803DE5F0 != scale)
     {
         mtx44ScaleRow1(modelMatrix, scale);
@@ -860,7 +849,7 @@ void Camera_UpdateViewMatrices(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
     CameraViewSlot* slot;
-    CameraMatrixTransform transform;
+    MatrixTransform transform;
     f32 rotationMatrix[16];
 
     slot = (CameraViewSlot*)(base + gCameraCurrentViewIndex * 96);
@@ -868,9 +857,9 @@ void Camera_UpdateViewMatrices(void)
     transform.x = -(slot->x - playerMapOffsetX);
     transform.y = -slot->y;
     transform.z = -(slot->z - playerMapOffsetZ);
-    transform.pitch = slot->yaw + 0x8000;
-    transform.yaw = slot->pitch;
-    transform.roll = slot->roll;
+    transform.rotX = slot->yaw + 0x8000;
+    transform.rotY = slot->pitch;
+    transform.rotZ = slot->roll;
     transform.scale = lbl_803DE5F0;
     if (pauseMenuGetState() == 0)
     {
@@ -889,9 +878,9 @@ void Camera_UpdateViewMatrices(void)
     transform.x = slot->x - playerMapOffsetX;
     transform.y = slot->y;
     transform.z = slot->z - playerMapOffsetZ;
-    transform.pitch = -(slot->yaw + 0x8000);
-    transform.yaw = -slot->pitch;
-    transform.roll = -slot->roll;
+    transform.rotX = -(slot->yaw + 0x8000);
+    transform.rotY = -slot->pitch;
+    transform.rotZ = -slot->roll;
     transform.scale = lbl_803DE5F0;
     if (pauseMenuGetState() == 0)
     {

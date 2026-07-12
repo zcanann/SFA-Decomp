@@ -1048,14 +1048,6 @@ extern const f32 gModgfxOffsetRangeMin;
 extern const f32 lbl_803DF458;
 extern const f32 lbl_803DF45C;
 
-typedef struct
-{
-    s16 ang[3];
-    s16 pad;
-    f32 scale;
-    f32 pos[3];
-} EffXform;
-
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
     u8 ar;
@@ -1063,7 +1055,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     u8 ab;
     f32 pos[3];
     f32 rot[3];
-    EffXform xf;
+    MatrixTransform xf;
     f32 mtxB[16];
     f32 mtxA[12];
     int** p;
@@ -1125,12 +1117,12 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         aligned = 0;
         buf1 = ((PartfxEffectState*)p[slot])->vertexBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
         buf2 = ((PartfxEffectState*)p[slot])->colorBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
-        xf.pos[0] = lbl_803DF430;
-        xf.pos[1] = lbl_803DF430;
-        xf.pos[2] = lbl_803DF430;
+        xf.x = lbl_803DF430;
+        xf.y = lbl_803DF430;
+        xf.z = lbl_803DF430;
         xf.scale = lbl_803DF434;
-        xf.ang[2] = 0;
-        xf.ang[1] = 0;
+        xf.rotZ = 0;
+        xf.rotY = 0;
         pos[0] = ((PartfxEffectState*)p[slot])->drawPosX;
         pos[1] = ((PartfxEffectState*)p[slot])->drawPosY;
         pos[2] = ((PartfxEffectState*)p[slot])->drawPosZ;
@@ -1147,10 +1139,10 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             {
                 if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
                 {
-                    xf.ang[0] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
-                    xf.ang[1] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-                    xf.ang[2] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
-                    vecRotateZXY(&xf.ang[0], &pos[0]);
+                    xf.rotX = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+                    xf.rotY = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
+                    xf.rotZ = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+                    vecRotateZXY(&xf.rotX, &pos[0]);
                 }
             }
         }
@@ -1186,9 +1178,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             rot[2] = -playerMapOffsetZ;
         }
-        xf.pos[0] = rot[0] + pos[0];
-        xf.pos[1] = rot[1] + pos[1];
-        xf.pos[2] = rot[2] + pos[2];
+        xf.x = rot[0] + pos[0];
+        xf.y = rot[1] + pos[1];
+        xf.z = rot[2] + pos[2];
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x400000)
         {
             dscale = lbl_803DF458 * ((PartfxEffectState*)p[slot])->renderScale;
@@ -1200,30 +1192,30 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x80000)
         {
-            xf.ang[2] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
-            xf.ang[1] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-            xf.ang[0] = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+            xf.rotZ = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+            xf.rotY = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
+            xf.rotX = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
         }
         else if (aligned && ((PartfxEffectState*)p[slot])->sourceObject != NULL)
         {
-            xf.ang[2] = ((PartfxEffectState*)p[slot])->rotOffsetZ +
+            xf.rotZ = ((PartfxEffectState*)p[slot])->rotOffsetZ +
                         *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
-            xf.ang[1] = ((PartfxEffectState*)p[slot])->rotOffsetY +
+            xf.rotY = ((PartfxEffectState*)p[slot])->rotOffsetY +
                         *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-            xf.ang[0] =
+            xf.rotX =
                 ((PartfxEffectState*)p[slot])->rotOffsetX + *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
         }
         else if (aligned)
         {
-            xf.ang[2] = ((PartfxEffectState*)p[slot])->rotOffsetZ + ((PartfxEffectState*)p[slot])->sourceRotZ;
-            xf.ang[1] = ((PartfxEffectState*)p[slot])->rotOffsetY + ((PartfxEffectState*)p[slot])->sourceRotY;
-            xf.ang[0] = ((PartfxEffectState*)p[slot])->rotOffsetX + ((PartfxEffectState*)p[slot])->sourceRotX;
+            xf.rotZ = ((PartfxEffectState*)p[slot])->rotOffsetZ + ((PartfxEffectState*)p[slot])->sourceRotZ;
+            xf.rotY = ((PartfxEffectState*)p[slot])->rotOffsetY + ((PartfxEffectState*)p[slot])->sourceRotY;
+            xf.rotX = ((PartfxEffectState*)p[slot])->rotOffsetX + ((PartfxEffectState*)p[slot])->sourceRotX;
         }
         else
         {
-            xf.ang[2] = ((PartfxEffectState*)p[slot])->rotOffsetZ;
-            xf.ang[1] = ((PartfxEffectState*)p[slot])->rotOffsetY;
-            xf.ang[0] = ((PartfxEffectState*)p[slot])->rotOffsetX;
+            xf.rotZ = ((PartfxEffectState*)p[slot])->rotOffsetZ;
+            xf.rotY = ((PartfxEffectState*)p[slot])->rotOffsetY;
+            xf.rotX = ((PartfxEffectState*)p[slot])->rotOffsetX;
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x1000)
         {
@@ -1239,12 +1231,12 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                     dirZ = dirZ / dscale;
                 }
                 dscale = (u16)getAngle(dirX, dirZ);
-                xf.ang[0] += (s16)dscale;
+                xf.rotX += (s16)dscale;
             }
         }
-        xf.pos[0] = xf.pos[0] - playerMapOffsetX;
-        xf.pos[2] = xf.pos[2] - playerMapOffsetZ;
-        setMatrixFromObjectPos(mtxB, &xf.ang[0]);
+        xf.x = xf.x - playerMapOffsetX;
+        xf.z = xf.z - playerMapOffsetZ;
+        setMatrixFromObjectPos(mtxB, &xf);
         mtx44Transpose(mtxB, mtxA);
         PSMTXConcat((f32*)Camera_GetViewMatrix(), mtxA, mtxA);
         GXLoadPosMtxImm(mtxA, GX_PNMTX0);

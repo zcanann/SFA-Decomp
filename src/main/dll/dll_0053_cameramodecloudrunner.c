@@ -56,7 +56,7 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
     f32 rx, ry, rs;
-    CloudRunnerObjectPos mxin;
+    MatrixTransform mxin;
     f32 matrix[16];
 
     Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
@@ -68,9 +68,9 @@ void CameraModeCloudRunner_update(u8* obj)
             mxin.x = *(f32*)(curve + 24);
             mxin.y = *(f32*)(curve + 28);
             mxin.z = *(f32*)(curve + 32);
-            mxin.angles[0] = *(s16*)(curve + 0);
-            mxin.angles[1] = *(s16*)(curve + 2);
-            mxin.angles[2] = *(s16*)(curve + 4);
+            mxin.rotX = *(s16*)(curve + 0);
+            mxin.rotY = *(s16*)(curve + 2);
+            mxin.rotZ = *(s16*)(curve + 4);
             mxin.scale = 1.0f;
             setMatrixFromObjectPos(matrix, &mxin);
             Matrix_TransformPoint(matrix, 0.0f, 65.0f, -10.0f, &baseX, &baseY, &baseZ);

@@ -377,25 +377,21 @@ int DR_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
 
 void DR_CloudRunner_func15(int obj, f32* a, f32* b, f32* c)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 matrix[16];
     void* src = Obj_GetPlayerObject();
     if (src == NULL)
     {
         src = (void*)obj;
     }
-    v.mat[1] = ((GameObject*)src)->anim.localPosX;
-    v.mat[2] = ((GameObject*)src)->anim.localPosY;
-    v.mat[3] = ((GameObject*)src)->anim.localPosZ;
-    v.angles[0] = ((GameObject*)src)->anim.rotX;
-    v.angles[1] = ((GameObject*)src)->anim.rotY;
-    v.angles[2] = ((GameObject*)src)->anim.rotZ;
-    v.mat[0] = lbl_803E83A8;
-    setMatrixFromObjectPos(matrix, v.angles);
+    v.x = ((GameObject*)src)->anim.localPosX;
+    v.y = ((GameObject*)src)->anim.localPosY;
+    v.z = ((GameObject*)src)->anim.localPosZ;
+    v.rotX = ((GameObject*)src)->anim.rotX;
+    v.rotY = ((GameObject*)src)->anim.rotY;
+    v.rotZ = ((GameObject*)src)->anim.rotZ;
+    v.scale = lbl_803E83A8;
+    setMatrixFromObjectPos(matrix, &v);
     Matrix_TransformPoint(matrix, lbl_803E83A4, lbl_803DC78C, lbl_803DC790, a, b, c);
 }
 
@@ -574,7 +570,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
             vecN.z = -((GameObject*)obj)->anim.velocityZ;
             dot = vecD.z * vecN.z + (vecD.x * vecN.x + vecD.y * vecN.y);
             adot = dot >= lbl_803E83A4 ? dot : -dot;
-            Vec3_Normalize(&vecN);
+            Vec3_Normalize(&vecN.x);
             vecN.x = vecN.x * (lbl_803E83CC * adot + lbl_803E83C4 * ((lbl_803E83D0 * adot) / lbl_803E83C0));
             vecN.y = vecN.y * (lbl_803E83CC * adot + lbl_803E83C4 * ((lbl_803E83D0 * adot) / lbl_803E83C0));
             vecN.z = vecN.z * (lbl_803E83CC * adot + lbl_803E83C4 * ((lbl_803E83D0 * adot) / lbl_803E83C0));
@@ -714,7 +710,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         vecE.z = ((GameObject*)obj)->anim.previousLocalPosZ - inner->lastPosZ;
         dist = sqrtf(vecE.z * vecE.z + (vecE.x * vecE.x + vecE.y * vecE.y));
         t = (dist < lbl_803E83A4) ? lbl_803E83A4 : ((dist > lbl_803E83DC) ? lbl_803E83DC : dist);
-        Vec3_Normalize(&vecE);
+        Vec3_Normalize(&vecE.x);
         {
             f32 scale = ((t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0))) / f;
             vecE.x = vecE.x * scale;

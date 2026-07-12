@@ -507,22 +507,18 @@ void DR_EarthWarrior_func17(GameObject* obj, int param)
 
 void DR_EarthWarrior_func22(GameObject* obj, f32 scale)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 lp0, lp1, lp2;
     int mtx = ObjPath_GetPointModelMtx(obj, 2);
     ObjPath_GetPointLocalPosition(obj, 2, &lp0, &lp1, &lp2);
-    v.mat[1] = lp0;
-    v.mat[2] = lp1;
-    v.mat[3] = lp2;
-    v.angles[0] = 0;
-    v.angles[1] = 0;
-    v.angles[2] = 0;
-    v.mat[0] = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
-    setMatrixFromObjectPos(gEarthWarriorMatrix, v.angles);
+    v.x = lp0;
+    v.y = lp1;
+    v.z = lp2;
+    v.rotX = 0;
+    v.rotY = 0;
+    v.rotZ = 0;
+    v.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
+    setMatrixFromObjectPos(gEarthWarriorMatrix, &v);
     mtx44_mult(gEarthWarriorMatrix, (void*)mtx, gEarthWarriorMatrix);
     fn_8003B950((int)gEarthWarriorMatrix);
 }

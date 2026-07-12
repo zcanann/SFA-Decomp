@@ -893,7 +893,7 @@ int ktrex_stateHandlerB02(GameObject* obj, int runtime)
     u16 dir;
     f32 tmpY;
     int lane;
-    ObjPosParams pos;
+    MatrixTransform pos;
     f32 mtx[16];
 
     dir = ((KTRexArenaState*)gKTRexState)->timerFA & 1;
@@ -926,9 +926,9 @@ int ktrex_stateHandlerB02(GameObject* obj, int runtime)
     }
     ((KTRexRuntime*)runtime)->unk34C |= 1;
     (*(void (**)(int, int, f32, int))((char*)*gPlayerInterface + 0x20))((int)obj, runtime, timeDelta, 3);
-    pos.rx = ((KTRexArenaState*)gKTRexState)->homeYaw;
-    pos.ry = 0;
-    pos.rz = 0;
+    pos.rotX = ((KTRexArenaState*)gKTRexState)->homeYaw;
+    pos.rotY = 0;
+    pos.rotZ = 0;
     pos.scale = lbl_803E6818;
     pos.x = lbl_803E67B8;
     pos.y = lbl_803E67B8;

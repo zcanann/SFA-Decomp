@@ -15,6 +15,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/object_transform.h"
+#include "main/camera.h"
 
 /* the player object's own group (joined at init, left on free) */
 #define PLAYER_OBJGROUP 0x25
@@ -1116,14 +1117,10 @@ void staffShootFireball(GameObject* obj, int state, f32 unused)
     int slot;
     int setup;
     f32 vec[3];
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 mtx[16];
 
-    slot = Camera_GetCurrentViewSlot();
+    slot = (int)Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked())
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_hitpos_6_20a);
@@ -1168,18 +1165,18 @@ void staffShootFireball(GameObject* obj, int state, f32 unused)
             dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
             dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
             dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;
-            v.mat[1] = 0.0f;
-            v.mat[2] = 0.0f;
-            v.mat[3] = 0.0f;
-            v.mat[0] = 1.0f;
-            v.angles[0] = inner->targetYaw;
-            v.angles[1] = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
-            v.angles[2] = 0;
+            v.x = 0.0f;
+            v.y = 0.0f;
+            v.z = 0.0f;
+            v.scale = 1.0f;
+            v.rotX = inner->targetYaw;
+            v.rotY = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+            v.rotZ = 0;
             if (obj->anim.parent != NULL)
             {
-                v.angles[0] = v.angles[0] + *(s16*)(*(int*)&obj->anim.parent);
+                v.rotX = v.rotX + *(s16*)(*(int*)&obj->anim.parent);
             }
-            setMatrixFromObjectPos(mtx, v.angles);
+            setMatrixFromObjectPos(mtx, &v);
             Matrix_TransformPoint(mtx, 0.0f, 0.0f, -10.0f, &fb->anim.velocityX, &fb->anim.velocityY,
                                   &fb->anim.velocityZ);
             fb->anim.worldPosX = fb->anim.localPosX;
@@ -6968,7 +6965,7 @@ static inline u32 playerLoadPendingHitBits(char* p)
 void playerUpdate(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
-    int cam = Camera_GetCurrentViewSlot();
+    int cam = (int)Camera_GetCurrentViewSlot();
     if (((PlayerState*)inner)->cutsceneTimer >= 6.0f)
     {
         if (((PlayerState*)inner)->cutsceneTimer > 0.0f)
@@ -10666,11 +10663,7 @@ void playerDoControls(GameObject* obj, int state, f32 fv)
 
 void fn_802B1BF8(EmitObj* a, int b, int state)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     f32 mtx[16];
     f32 oy;
     f32 f31v;
@@ -10686,14 +10679,14 @@ void fn_802B1BF8(EmitObj* a, int b, int state)
             f31v = f31v + ((PlayerState*)b)->waterCurrentVelA;
             f30v = f30v + ((PlayerState*)b)->waterCurrentVelB;
         }
-        v.angles[0] = ((PlayerState*)b)->yaw;
-        v.angles[1] = 0;
-        v.angles[2] = 0;
-        v.mat[0] = lbl_803E7EE0;
-        v.mat[1] = lbl_803E7EA4;
-        v.mat[2] = lbl_803E7EA4;
-        v.mat[3] = lbl_803E7EA4;
-        setMatrixFromObjectPos(mtx, v.angles);
+        v.rotX = ((PlayerState*)b)->yaw;
+        v.rotY = 0;
+        v.rotZ = 0;
+        v.scale = lbl_803E7EE0;
+        v.x = lbl_803E7EA4;
+        v.y = lbl_803E7EA4;
+        v.z = lbl_803E7EA4;
+        setMatrixFromObjectPos(mtx, &v);
         Matrix_TransformPoint(mtx, f30v, lbl_803E7EA4, -f31v, &a->x, &oy, &a->z);
         a->x = a->x + ((PlayerState*)b)->pushVelX;
         a->z = a->z + ((PlayerState*)b)->pushVelZ;
@@ -13967,16 +13960,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     int r;
     int ok;
     IntPair2 camp;
-    struct
-    {
-        s16 a;
-        s16 b;
-        s16 c;
-        f32 d;
-        f32 e;
-        f32 f;
-        f32 g;
-    } pos;
+    MatrixTransform pos;
     u8 buf[52];
     f32 mtx[16];
     f32 dummy;
@@ -14002,14 +13986,14 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             f32 a;
             a = ((PlayerState*)state)->baddie.animSpeedB;
             b = ((PlayerState*)state)->baddie.animSpeedA;
-            pos.a = ((PlayerState*)inner)->yaw;
-            pos.b = 0;
-            pos.c = 0;
-            pos.d = lbl_803E7EE0;
-            pos.e = lbl_803E7EA4;
-            pos.f = lbl_803E7EA4;
-            pos.g = lbl_803E7EA4;
-            setMatrixFromObjectPos(mtx, &pos.a);
+            pos.rotX = ((PlayerState*)inner)->yaw;
+            pos.rotY = 0;
+            pos.rotZ = 0;
+            pos.scale = lbl_803E7EE0;
+            pos.x = lbl_803E7EA4;
+            pos.y = lbl_803E7EA4;
+            pos.z = lbl_803E7EA4;
+            setMatrixFromObjectPos(mtx, &pos);
             Matrix_TransformPoint(mtx, a, lbl_803E7EA4, -b, (f32*)((char*)inner + 0x4c8), &dummy,
                                   (f32*)((char*)inner + 0x4cc));
             ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
@@ -15255,7 +15239,7 @@ void fn_802AA014(GameObject* obj)
     ObjPlacement* setup;
 
     inner = obj->extra;
-    slot = Camera_GetCurrentViewSlot();
+    slot = (int)Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked())
     {
         f32 v[3];
@@ -16322,11 +16306,7 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
     f32 t[3];
     f32 waterX;
     f32 waterZ;
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
     struct
     {
         u8 pad[6];
@@ -16424,14 +16404,14 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
     }
     if (playEffect != 0)
     {
-        v.mat[1] = obj->anim.localPosX;
-        v.mat[2] = lbl_803E7EA4;
-        v.mat[3] = obj->anim.localPosZ;
-        v.angles[0] = ((PlayerState*)inner)->targetYaw;
-        v.angles[1] = 0;
-        v.angles[2] = 0;
-        v.mat[0] = lbl_803E7EE0;
-        setMatrixFromObjectPos(mtx, v.angles);
+        v.x = obj->anim.localPosX;
+        v.y = lbl_803E7EA4;
+        v.z = obj->anim.localPosZ;
+        v.rotX = ((PlayerState*)inner)->targetYaw;
+        v.rotY = 0;
+        v.rotZ = 0;
+        v.scale = lbl_803E7EE0;
+        setMatrixFromObjectPos(mtx, &v);
         Matrix_TransformPoint(mtx, t[0], lbl_803E7EA4, t[2], &t[0], &t[1], &t[2]);
         ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
             t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], 0, lbl_803E7EA4, 5);
@@ -16443,13 +16423,13 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
                 t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
         }
     }
-    ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
-    loopCount = (((PlayerState*)inner)->waterSurfaceY - v.mat[2] > lbl_803E7F10) ? 1 : 0;
+    ObjPath_GetPointWorldPosition(obj, 0x13, &v.x, &v.y, &v.z, 0);
+    loopCount = (((PlayerState*)inner)->waterSurfaceY - v.y > lbl_803E7F10) ? 1 : 0;
     for (i = 0; i < loopCount; i++)
     {
-        pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
-        pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / 50.0f;
-        pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
+        pfx.x = v.x + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
+        pfx.y = v.y + (f32)randomGetRange(-0x64, 0x64) / 50.0f;
+        pfx.z = v.z + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
         pfx.scale = ((PlayerState*)inner)->waterSurfaceY - pfx.y;
         if (pfx.scale > 0.0f)
         {

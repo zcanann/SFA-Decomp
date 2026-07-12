@@ -86,10 +86,8 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     int i;
     f32 yy;
     Checkpoint4State* state;
-    Checkpoint4MatrixBuildTransform transform;
+    MatrixTransform transform;
     f32 matrix[16];
-    extern void Matrix_TransformPoint(f32 * matrix, f32 x, f32 y, f32 z, f32 * outX, f32 * outY, f32 * outZ);
-
     state = checkpoint->state;
     radius = (f32)(int)placement->radius;
     if ((f32)(int)placement->radius < *(f32*)&lbl_803E3424)

@@ -54,13 +54,6 @@ typedef struct BaddieAfterUpdateBonesCbState
 
 typedef struct
 {
-    s16 rx, ry, rz, pad;
-    f32 scale;
-    f32 x, y, z;
-} TrickyPosRot;
-
-typedef struct
-{
     f32 dx, dy, dz;
     u8 pad0[2];
     s16 dAngle;
@@ -219,7 +212,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     f32 phase;
     f32 outY;
     TrickyMoveResult res;
-    TrickyPosRot rec;
+    MatrixTransform rec;
     f32 mtx[16];
 
     memcpy((void*)(state + 0x2c4), (void*)(state + 0x2b8), 0xc);
@@ -586,9 +579,9 @@ void objAnimFn_8014a9f0(short* obj, int state)
         {
             ((GameObject*)obj)->anim.rotX += res.dAngle;
         }
-        rec.rx = ((GameObject*)obj)->anim.rotX;
-        rec.ry = ((GameObject*)obj)->anim.rotY;
-        rec.rz = ((GameObject*)obj)->anim.rotZ;
+        rec.rotX = ((GameObject*)obj)->anim.rotX;
+        rec.rotY = ((GameObject*)obj)->anim.rotY;
+        rec.rotZ = ((GameObject*)obj)->anim.rotZ;
         rec.scale = lbl_803E256C;
         zero = lbl_803E2574;
         rec.x = zero;

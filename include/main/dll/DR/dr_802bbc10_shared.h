@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/vecmath.h"
 #include "main/voxmaps.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -117,13 +118,10 @@ extern int lbl_8033527C[];
 extern void* gDIMSnowHorn1Texture;
 extern f32 lbl_803E8410;
 extern int* gPlayerInterface;
-extern void setMatrixFromObjectPos(f32* out, void* vec);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E82C0;
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
-extern void mtx44_mult(void* lhs, void* rhs, void* out);
 extern f32 gEarthWarriorMatrix[];
 extern void dll_2E_func05(GameObject* obj, int q, int a, int b, int c);
 extern int dll_2E_func07(GameObject* obj, int p3, void* q, int a, int b);
@@ -165,7 +163,6 @@ extern f32 lbl_803E83EC;
 extern f32 lbl_803E83F0;
 extern int gDRCloudRunnerVecTable[];
 extern s16 gDRCloudRunnerRollAngleLimits;
-extern f32 Vec3_Normalize(void* v);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void fn_802B0EA4(GameObject* obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);

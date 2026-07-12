@@ -29,6 +29,7 @@
 #include "main/objlib.h"
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
+#include "main/vecmath.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -44,7 +45,6 @@
 
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
-extern void mtx44_mult(f32* a, f32* b, f32* out);
 extern void fn_8003B950(void* mtx);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* hits, int hitCount);
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
@@ -394,7 +394,6 @@ void dll_D3_free(int obj)
     (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
 
-extern void Vec3_Normalize(f32* v);
 extern void Vec3_Cross(f32* a, f32* b, f32* out);
 
 typedef struct StaffBits

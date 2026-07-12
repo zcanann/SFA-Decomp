@@ -285,36 +285,32 @@ typedef struct DRcradleSnowBikeFlags
 
 void fn_801EC7A0(int obj, int state)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
+    MatrixTransform v;
 
-    v.mat[1] = lbl_803E5AE8;
-    v.mat[2] = lbl_803E5AE8;
-    v.mat[3] = lbl_803E5AE8;
-    v.mat[0] = lbl_803E5AEC;
+    v.x = lbl_803E5AE8;
+    v.y = lbl_803E5AE8;
+    v.z = lbl_803E5AE8;
+    v.scale = lbl_803E5AEC;
 
-    v.angles[0] = ((SnowBikeState*)state)->yaw;
-    v.angles[1] = 0;
-    v.angles[2] = 0;
-    setMatrixFromObjectPos((void*)(state + 0x6c), v.angles);
+    v.rotX = ((SnowBikeState*)state)->yaw;
+    v.rotY = 0;
+    v.rotZ = 0;
+    setMatrixFromObjectPos((f32*)(state + 0x6c), &v);
 
-    v.angles[0] = -((SnowBikeState*)state)->yaw;
-    v.angles[1] = 0;
-    v.angles[2] = 0;
-    mtxRotateByVec3s((void*)(state + 0xac), v.angles);
+    v.rotX = -((SnowBikeState*)state)->yaw;
+    v.rotY = 0;
+    v.rotZ = 0;
+    mtxRotateByVec3s((f32*)(state + 0xac), &v);
 
-    v.angles[0] = ((SnowBikeState*)state)->yawCurrent;
-    v.angles[1] = 0;
-    v.angles[2] = 0;
-    setMatrixFromObjectPos((void*)(state + 0xec), v.angles);
+    v.rotX = ((SnowBikeState*)state)->yawCurrent;
+    v.rotY = 0;
+    v.rotZ = 0;
+    setMatrixFromObjectPos((f32*)(state + 0xec), &v);
 
-    v.angles[0] = -((SnowBikeState*)state)->yawCurrent;
-    v.angles[1] = 0;
-    v.angles[2] = 0;
-    mtxRotateByVec3s((void*)(state + 0x12c), v.angles);
+    v.rotX = -((SnowBikeState*)state)->yawCurrent;
+    v.rotY = 0;
+    v.rotZ = 0;
+    mtxRotateByVec3s((f32*)(state + 0x12c), &v);
 }
 
 #pragma dont_inline on

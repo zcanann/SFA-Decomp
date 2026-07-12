@@ -1,18 +1,7 @@
 #ifndef MAIN_DLL_DLL_0053_CAMERAMODECLOUDRUNNER_H_
 #define MAIN_DLL_DLL_0053_CAMERAMODECLOUDRUNNER_H_
 
-#include "global.h"
-
-/* object-placement transform fed to setMatrixFromObjectPos() (24 bytes) */
-typedef struct CloudRunnerObjectPos
-{
-    s16 angles[3];
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} CloudRunnerObjectPos;
+#include "main/vecmath.h"
 
 void CameraModeCloudRunner_copyToCurrent(void);
 void CameraModeCloudRunner_free(void);

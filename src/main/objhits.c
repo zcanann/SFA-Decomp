@@ -937,20 +937,10 @@ void ObjHits_TickPriorityHitCooldowns(void)
 
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
 {
-    typedef struct HitboxTransform
-    {
-        short x;
-        short y;
-        short z;
-        float scale;
-        float radiusX;
-        float radiusY;
-        float radiusZ;
-    } HitboxTransform;
     ObjHitboxTransformState* transformState;
     int matrixBase;
     int matrixFloatOffset;
-    HitboxTransform xform;
+    MatrixTransform xform;
 
     transformState = hitbox->transformState;
     if (transformState != 0)
@@ -961,49 +951,49 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
         }
         matrixFloatOffset = transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
         matrixBase = (int)((float*)transformState->matrices + matrixFloatOffset);
-        xform.x = -hitbox->rotationX;
+        xform.rotX = -hitbox->rotationX;
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0)
         {
-            xform.y = 0;
+            xform.rotY = 0;
         }
         else
         {
-            xform.y = -hitbox->rotationY;
+            xform.rotY = -hitbox->rotationY;
         }
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0)
         {
-            xform.z = 0;
+            xform.rotZ = 0;
         }
         else
         {
-            xform.z = -hitbox->rotationZ;
+            xform.rotZ = -hitbox->rotationZ;
         }
         xform.scale = gObjHitsScalarOne;
-        xform.radiusX = -hitbox->radiusX;
-        xform.radiusY = -hitbox->radiusY;
-        xform.radiusZ = -hitbox->radiusZ;
+        xform.x = -hitbox->radiusX;
+        xform.y = -hitbox->radiusY;
+        xform.z = -hitbox->radiusZ;
         mtxRotateByVec3s((float*)matrixBase, &xform);
-        xform.x = hitbox->rotationX;
+        xform.rotX = hitbox->rotationX;
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0)
         {
-            xform.y = 0;
+            xform.rotY = 0;
         }
         else
         {
-            xform.y = hitbox->rotationY;
+            xform.rotY = hitbox->rotationY;
         }
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0)
         {
-            xform.z = 0;
+            xform.rotZ = 0;
         }
         else
         {
-            xform.z = hitbox->rotationZ;
+            xform.rotZ = hitbox->rotationZ;
         }
         xform.scale = gObjHitsScalarOne;
-        xform.radiusX = hitbox->radiusX;
-        xform.radiusY = hitbox->radiusY;
-        xform.radiusZ = hitbox->radiusZ;
+        xform.x = hitbox->radiusX;
+        xform.y = hitbox->radiusY;
+        xform.z = hitbox->radiusZ;
         matrixFloatOffset = (transformState->activeMatrixIndex + 2) * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
         setMatrixFromObjectPos((float*)transformState->matrices + matrixFloatOffset, &xform);
         if (transformState->resetFrames != 0)

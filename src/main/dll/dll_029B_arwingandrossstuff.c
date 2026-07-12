@@ -122,15 +122,15 @@ void arwprojectile_placeForward(GameObject* obj, f32 dist)
 {
     ArwProjectileState* state = obj->extra;
     f32 mtx[16];
-    ArwProjPosSrc src;
+    MatrixTransform src;
 
     state->deflectSpeedScale = dist;
-    src.pos[0] = lbl_803E7008;
-    src.pos[1] = lbl_803E7008;
-    src.pos[2] = lbl_803E7008;
-    src.rot[0] = obj->anim.rotX;
-    src.rot[1] = obj->anim.rotY;
-    src.rot[2] = 0;
+    src.x = lbl_803E7008;
+    src.y = lbl_803E7008;
+    src.z = lbl_803E7008;
+    src.rotX = obj->anim.rotX;
+    src.rotY = obj->anim.rotY;
+    src.rotZ = 0;
     src.scale = lbl_803E701C;
     setMatrixFromObjectPos(mtx, &src);
     Matrix_TransformPoint(mtx, lbl_803E7008, *(f32*)&lbl_803E7008, state->deflectSpeedScale, &obj->anim.velocityX,
@@ -383,15 +383,15 @@ void fn_8022ECE0(GameObject* obj, f32 lifetime)
 {
     ArwProjectileState* state = obj->extra;
     f32 mtx[16];
-    ArwProjPosSrc src;
+    MatrixTransform src;
 
     state->lifetime = lifetime;
-    src.pos[0] = lbl_803E7044;
-    src.pos[1] = lbl_803E7044;
-    src.pos[2] = lbl_803E7044;
-    src.rot[0] = obj->anim.rotX;
-    src.rot[1] = obj->anim.rotY;
-    src.rot[2] = 0;
+    src.x = lbl_803E7044;
+    src.y = lbl_803E7044;
+    src.z = lbl_803E7044;
+    src.rotX = obj->anim.rotX;
+    src.rotY = obj->anim.rotY;
+    src.rotZ = 0;
     src.scale = lbl_803E704C;
     setMatrixFromObjectPos(mtx, &src);
     Matrix_TransformPoint(mtx, *(f32*)&lbl_803E7044, lbl_803E7044, state->lifetime, &obj->anim.velocityX,

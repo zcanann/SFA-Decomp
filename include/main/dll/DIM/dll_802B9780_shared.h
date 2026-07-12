@@ -6,6 +6,7 @@
 #include "main/voxmaps.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/vecmath.h"
 #include "main/newclouds.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
@@ -16,10 +17,9 @@ extern f32 lbl_803E829C;
 extern f32 lbl_803E82A0;
 
 extern void ObjPath_GetPointLocalPosition(GameObject* obj, int point, f32* out_x, f32* out_y, f32* out_z);
-extern void mtx44_mult(void* lhs, void* rhs, void* out);
 extern void fn_8003B950(void* matrix);
 
-extern u8 gDIMSnowHorn1ModelMtx[];
+extern f32 gDIMSnowHorn1ModelMtx[16];
 
 /*
  * Build a transform from a packed rotation/translation record and sample

@@ -2401,7 +2401,6 @@ void dll_07_func06(void)
 
 extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
-extern void mtx44_mult(f32* a, f32* b, f32* out);
 extern void mtx44Transpose(f32* src, f32* dst);
 
 extern int gNewCloudFlashRotAngle;
