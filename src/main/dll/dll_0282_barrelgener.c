@@ -16,8 +16,22 @@
  * Obj_SmoothTurnAnglesTowardVelocity, the lightning-spawn helper, and the
  * voxmaps_trace* world-line wrappers).
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
+#include "main/audio/sfx.h"
+#include "main/curve.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mm.h"
+#include "main/model_light.h"
+#include "main/objanim.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
+#include "main/vecmath.h"
+#include "main/voxmaps.h"
+#include "main/shader_api.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/barrelgener_state.h"
