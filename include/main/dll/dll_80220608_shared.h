@@ -141,8 +141,6 @@ extern f32 lbl_803E704C;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-/* Arwing family (untouched: arwarwinggu, arwlevelcon, arwsquadron). */
-extern f32 lbl_803E7058;
 extern f32 lbl_803E7188;
 extern void arwingHudSetVisible(int mode);
 
@@ -170,8 +168,6 @@ extern f32 lbl_803E6F00;
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
 
-extern f32 lbl_803E705C;
-extern f32 lbl_803E7060;
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
 extern void textureAnimFn_80053f2c(int p1, int p2, int p3);

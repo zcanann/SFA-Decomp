@@ -23,6 +23,9 @@ STATIC_ASSERT(offsetof(ArwingGuTextureState, textureFrame) == 0x04);
 STATIC_ASSERT(sizeof(ArwingGuState) == 8);
 
 extern ObjectDescriptor gARWArwingGuObjDescriptor;
+extern f32 lbl_803E7058;
+extern f32 lbl_803E705C;
+extern f32 lbl_803E7060;
 
 void arwarwinggu_setActiveVisible(GameObject* obj, u8 active, u8 visible);
 void arwarwinggu_setTextureFrame(GameObject* obj, int textureFrame);
