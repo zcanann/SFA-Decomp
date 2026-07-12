@@ -47,7 +47,6 @@ extern void setDrawLights(int v);
 extern void audioStopByMask(int mask);
 extern void Music_Trigger(int id, int arg);
 
-extern void envFxActFn_800887f8(u8 value);
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 

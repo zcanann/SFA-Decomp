@@ -2,6 +2,7 @@
 #define MAIN_SKY_H_
 
 #include "global.h"
+#include "main/sky_api.h"
 
 typedef struct SkyBlendStateFlags
 {
@@ -95,7 +96,6 @@ typedef struct SkyTimeBlend
 int getEnvFxBit2BA(void);
 void setGameBit2BA(int value);
 void envFxFn_800887cc(void);
-void envFxActFn_800887f8(u8 value);
 void fn_80088870(int a, int b, int c, int d);
 void envFxFn_80088884(void);
 void loadSunAndMoon(void);

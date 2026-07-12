@@ -1,5 +1,6 @@
 /* DLL 0x0285 - SP shop objects [801E4288-801E42F8) */
 #include "main/dll/shipbattlestate_struct.h"
+#include "main/sky_api.h"
 #include "main/render.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
@@ -101,7 +102,6 @@ extern void playerAddHealth(int obj, int amount);
 extern int gameBitIncrement(int bit);
 extern void staffToggle(GameObject* obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
-extern void envFxActFn_800887f8(u8 value);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);

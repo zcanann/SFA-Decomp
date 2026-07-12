@@ -1,5 +1,6 @@
 /* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/objseq.h"
+#include "main/sky_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objlib.h"
 #include "main/render.h"
@@ -8,7 +9,6 @@
 #include "main/dll/tricky_api.h"
 #include "main/audio/music_trigger_ids.h"
 extern void objRenderFn_80041018(int obj);
-extern void envFxActFn_800887f8(u8 value);
 
 
 #define MAGICCAVEBOTTOM_GAMEBIT_ACTIVE 0xefb /* bottom-area loaded/active latch */

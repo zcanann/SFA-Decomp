@@ -61,7 +61,6 @@ extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 extern int mapGetDirIdx(int idx);
 extern int getSaveGameLoadStatus(void);
 extern void skyFn_80088c94(int flags, int mode);
-extern void envFxActFn_800887f8(u8 value);
 
 extern void gameTextShow(int a);
 

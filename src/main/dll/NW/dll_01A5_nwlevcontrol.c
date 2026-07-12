@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/sky_api.h"
 #include "main/object_api.h"
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -81,7 +82,6 @@ extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
 extern void gameTimerStop(void);
-extern void envFxActFn_800887f8(u8 value);
 
 void nw_levcontrol_update(int objArg)
 {

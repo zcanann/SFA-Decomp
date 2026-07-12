@@ -11,6 +11,7 @@
  * 0x385/0x384) and primes the ambient env fx by save-load status.
  */
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/render.h"

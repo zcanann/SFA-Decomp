@@ -89,7 +89,6 @@ extern void sh_staff_getExtraSize(void);
 extern void sh_staff_free(void);
 extern void sh_staff_render(GameObject*);
 extern void sh_staff_update(GameObject*);
-extern void envFxActFn_800887f8(u8 value);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
