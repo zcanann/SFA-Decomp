@@ -11,6 +11,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"
@@ -90,10 +91,6 @@ extern void CFMainCrystal_init(void);
 extern void CFMainCrystal_release(void);
 extern void CFMainCrystal_initialise(void);
 
-extern void* ObjGroup_GetObjects();
-extern int ObjGroup_RemoveObject();
-extern int ObjGroup_AddObject();
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 
@@ -323,7 +320,7 @@ void WindLift_free(int* obj)
     {
         Music_Trigger(MUSICTRIG_DIM_Cavern, 0);
     }
-    ObjGroup_RemoveObject(obj, CFWINDLIFT_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, CFWINDLIFT_OBJGROUP);
 }
 
 void WindLift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -424,7 +421,7 @@ void WindLift_update(int* obj)
                 sub->slots[0].phaseFlags &= ~0xf1;
             }
         }
-        objs = ObjGroup_GetObjects(CFGUARDIAN_OBJGROUP, &count);
+        objs = (int**)ObjGroup_GetObjects(CFGUARDIAN_OBJGROUP, &count);
         count = count + 1;
         if (count > 0xe)
         {
@@ -552,7 +549,7 @@ void WindLift_init(int* obj, u8* def)
             p->slots[i].oscCounter = 0;
         }
     }
-    ObjGroup_AddObject(obj, CFWINDLIFT_OBJGROUP);
+    ObjGroup_AddObject((int)obj, CFWINDLIFT_OBJGROUP);
 }
 
 void WindLift_release(void)

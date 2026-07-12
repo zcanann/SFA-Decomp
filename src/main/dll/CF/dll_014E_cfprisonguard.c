@@ -10,6 +10,7 @@
 #include "main/render.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
@@ -50,8 +51,6 @@ extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
 extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
-extern int ObjMsg_Pop();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern int objGetAnimState80A(GameObject* obj);
@@ -192,7 +191,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     sub->capturedLatch = gb50;
     animUpdate->sequenceEventActive = 0;
-    while (ObjMsg_Pop(obj, &msgA, &msgB, &payload) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&payload) != 0)
     {
     }
     if (animUpdate->triggerCommand == 1)

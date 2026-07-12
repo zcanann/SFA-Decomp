@@ -11,6 +11,7 @@
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
@@ -48,9 +49,6 @@ enum
 
 extern f32 lbl_803E41D0;
 
-extern int ObjMsg_Pop();
-extern int ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 
 int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -61,7 +59,7 @@ int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     int msgFlag = 0;
     int i;
 
-    while (ObjMsg_Pop(obj, &msgType, &msgArg, &msgFlag) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msgType, (u32*)&msgArg, (u32*)&msgFlag) != 0)
     {
         switch (msgType)
         {
@@ -133,31 +131,28 @@ void CFPowerBase_hitDetect(void)
 /* CFPowerBase_update: track its gamebit's lit state, fire the queued
  * state-change trigger, and when the base is powered and its UI
  * condition clears, mark it done and notify. */
-void CFPowerBase_update(int* obj)
+void CFPowerBase_update(GameObject* obj)
 {
-    CfPowerBaseState* sub = ((GameObject*)obj)->extra;
+    CfPowerBaseState* sub = obj->extra;
     if (mainGetBit(sub->litBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (obj->unkF4 != 0)
     {
         (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
         (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
-        ((GameObject*)obj)->unkF4 = 0;
+        obj->unkF4 = 0;
     }
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0)
         {
-            ((GameObject*)obj)->anim.resetHitboxFlags =
-                (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+            obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
             mainSetBits(sub->litBit, 0);
             mainSetBits(0x973, 0);
             (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
@@ -168,12 +163,12 @@ void CFPowerBase_update(int* obj)
 /* CFPowerBase_init: seed header and the sub's type from spawn params,
  * map the type id (0x54..0x56) to a model and gamebit, then gate the
  * active/lit state bits on those gamebits. */
-void CFPowerBase_init(int* obj, u8* params)
+void CFPowerBase_init(GameObject* obj, u8* params)
 {
-    CfPowerBaseState* sub = ((GameObject*)obj)->extra;
+    CfPowerBaseState* sub = obj->extra;
     CfPowerBaseMapData* mapData = (CfPowerBaseMapData*)params;
     s16 type;
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+    obj->anim.rotX = (s16)(mapData->rotXByte << 8);
     sub->typeBit = mapData->typeBit;
     type = sub->typeBit;
     switch (type)
@@ -185,31 +180,28 @@ void CFPowerBase_init(int* obj, u8* params)
     case GAMEBIT_CFBASE_2:
         sub->litBit = 0x52;
         sub->typeIndex = 1;
-        Obj_SetActiveModelIndex((GameObject*)obj, 2);
+        Obj_SetActiveModelIndex(obj, 2);
         break;
     case GAMEBIT_CFBASE_3:
         sub->litBit = 0x53;
         sub->typeIndex = 2;
-        Obj_SetActiveModelIndex((GameObject*)obj, 1);
+        Obj_SetActiveModelIndex(obj, 1);
         break;
     }
-    ((GameObject*)obj)->animEventCallback = CFPowerBase_SeqFn;
+    obj->animEventCallback = CFPowerBase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
     if (mainGetBit(sub->litBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     if (mainGetBit(sub->typeBit) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags =
-            (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-        ((GameObject*)obj)->unkF4 = 1;
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+        obj->unkF4 = 1;
     }
 }
 

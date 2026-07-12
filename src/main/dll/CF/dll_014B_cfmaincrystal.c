@@ -10,6 +10,7 @@
 #include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/camera.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -62,10 +63,6 @@ typedef struct
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
-extern int ObjMsg_Pop();
-extern void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param);
-extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern f32 lbl_803E4210;
@@ -103,7 +100,7 @@ void fn_8019D9F0(int* obj)
     int payload = 0;
     Obj_GetPlayerObject();
     Camera_EnableViewYOffset();
-    while (ObjMsg_Pop(obj, &msgType, &msgSrc, &payload) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msgType, (u32*)&msgSrc, (u32*)&payload) != 0)
     {
         switch (msgType)
         {
@@ -370,7 +367,7 @@ void CFMainCrystal_update(int* obj)
         break;
     case 1:
         payload = 0;
-        while (ObjMsg_Pop(obj, &msgType, &srcObjId, &payload) != 0)
+        while (ObjMsg_Pop(obj, (u32*)&msgType, (u32*)&srcObjId, (u32*)&payload) != 0)
         {
             switch (msgType)
             {
