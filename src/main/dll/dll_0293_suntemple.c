@@ -27,39 +27,9 @@
  * hitDetect helper.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0293_suntemple.h"
 #include "main/game_object.h"
-
-typedef struct SunTempleSetup
-{
-    ObjPlacement base;
-    u8 rotXByte;
-    u8 rotYByte;
-    u8 rotZByte;
-    u8 flags;
-    s16 activationGameBit;
-    s16 readyEventId;
-    s8 triggerSlot;
-    s8 bankIndex;
-    s16 gateGameBit;
-    s16 preemptSequenceId;
-} SunTempleSetup;
-
-typedef struct SunTempleState
-{
-    u8 activationLatched;
-    u8 mapEventMode;
-} SunTempleState;
-
-STATIC_ASSERT(offsetof(SunTempleSetup, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(SunTempleSetup, flags) == 0x1B);
-STATIC_ASSERT(offsetof(SunTempleSetup, activationGameBit) == 0x1C);
-STATIC_ASSERT(offsetof(SunTempleSetup, readyEventId) == 0x1E);
-STATIC_ASSERT(offsetof(SunTempleSetup, triggerSlot) == 0x20);
-STATIC_ASSERT(offsetof(SunTempleSetup, bankIndex) == 0x21);
-STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
-STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
-STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
-STATIC_ASSERT(sizeof(SunTempleState) == 2);
+#include "main/shader.h"
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
@@ -86,7 +56,7 @@ int suntemple_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* 
     GameObject* gameObj = obj;
     SunTempleSetup* cfg = (SunTempleSetup*)gameObj->anim.placementData;
     int i;
-    Vec3f restartPos = *(Vec3f*)lbl_802C25D8;
+    Vec3f restartPos = lbl_802C25D8;
 
     gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -275,10 +245,10 @@ void suntemple_update(GameObject* obj)
     gameObj->unkF4 = 1;
 }
 
-void suntemple_init(u8* obj, u8* setup)
+void suntemple_init(GameObject* obj, SunTempleSetup* setup)
 {
-    GameObject* gameObj = (GameObject*)obj;
-    SunTempleSetup* cfg = (SunTempleSetup*)setup;
+    GameObject* gameObj = obj;
+    SunTempleSetup* cfg = setup;
     SunTempleState* state;
 
     gameObj->anim.rotX = (s16)(cfg->rotXByte << 8);
@@ -299,7 +269,7 @@ void suntemple_init(u8* obj, u8* setup)
     }
     if (state->activationLatched != 0)
     {
-        ObjTextureRuntimeSlot* texture = objFindTexture((GameObject*)(obj), 0, 0);
+        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
             texture->textureId = SUNTEMPLE_TEXTURE_LATCHED;

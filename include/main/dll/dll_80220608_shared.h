@@ -170,11 +170,6 @@ extern f32 lbl_803E6E38;
 
 extern int getAngle(f32 dx, f32 dz);
 
-int suntemple_interactCallback(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
-
-extern f32 lbl_802C25D8[];
-extern int getCurMapLayer(void);
-
 extern void getAmbientColor(int id, u8* r, u8* g, u8* b);
 extern void Obj_SetActiveModelIndex(int obj, int index);
 
@@ -773,16 +768,6 @@ void wcapertures_initialise(void);
 int wcapertures_interactCallback(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 void wcapertures_init(GameObject* obj, int initData);
 void wcapertures_update(GameObject* obj);
-int suntemple_getExtraSize(void);
-int suntemple_getObjectTypeId(void);
-void suntemple_free(void);
-void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void suntemple_hitDetect(GameObject* obj);
-int suntemple_interactCallback(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
-void suntemple_init(u8* obj, u8* setup);
-void suntemple_update(GameObject* obj);
-void suntemple_release(void);
-void suntemple_initialise(void);
 int wctemple_getExtraSize(void);
 int wctemple_getObjectTypeId(void);
 void wctemple_free(void);

@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
@@ -163,7 +164,7 @@ extern ResourceDescriptor gSidekickBallObjDescriptor, gSideloadObjDescriptor, gS
 extern ResourceDescriptor gSoftBodyObjDescriptor, gSpellStoneObjDescriptor, gSpiritDoorLockObjDescriptor,
     gSpiritDoorSpiritObjDescriptor, gSpiritPrizeObjDescriptor, gStaffActivatedObjDescriptor, gStaffObjDescriptor,
     gStaticCameraObjDescriptor;
-extern ResourceDescriptor gStayPointObjDescriptor, gSunTempleObjDescriptor, gSwarmBaddieObjDescriptor,
+extern ResourceDescriptor gStayPointObjDescriptor, gSwarmBaddieObjDescriptor,
     gTexFrameAnimatorObjDescriptor, gTexscroll2ObjDescriptor, gTexscrollObjDescriptor, gTextBlockObjDescriptor,
     gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTransporterObjDescriptor, gTreasureChestObjDescriptor,
@@ -1539,7 +1540,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gWCPushBlockObjDescriptor,
     &gWCTileObjDescriptor,
     &gWCTrexStatuObjDescriptor,
-    &gSunTempleObjDescriptor,
+    (ResourceDescriptor*)&gSunTempleObjDescriptor,
     &gWCTempleObjDescriptor,
     &gWCApertureSObjDescriptor,
     &gWCTempleDiaObjDescriptor,

@@ -13,6 +13,7 @@
  * object and clears solvedBit.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 
@@ -356,20 +357,20 @@ u32 gWCTrexStatuObjDescriptor[14] = {0x00000000,
                                      (u32)wctrexstatu_free,
                                      (u32)wctrexstatu_getObjectTypeId,
                                      (u32)wctrexstatu_getExtraSize};
-u32 gSunTempleObjDescriptor[14] = {0x00000000,
+ObjectDescriptor gSunTempleObjDescriptor = {0x00000000,
                                    0x00000000,
                                    0x00000000,
                                    0x00090000,
-                                   (u32)suntemple_initialise,
-                                   (u32)suntemple_release,
+                                   (ObjectDescriptorCallback)suntemple_initialise,
+                                   (ObjectDescriptorCallback)suntemple_release,
                                    0x00000000,
-                                   (u32)suntemple_init,
-                                   (u32)suntemple_update,
-                                   (u32)suntemple_hitDetect,
-                                   (u32)suntemple_render,
-                                   (u32)suntemple_free,
-                                   (u32)suntemple_getObjectTypeId,
-                                   (u32)suntemple_getExtraSize};
+                                   (ObjectDescriptorCallback)suntemple_init,
+                                   (ObjectDescriptorCallback)suntemple_update,
+                                   (ObjectDescriptorCallback)suntemple_hitDetect,
+                                   (ObjectDescriptorCallback)suntemple_render,
+                                   (ObjectDescriptorCallback)suntemple_free,
+                                   (ObjectDescriptorCallback)suntemple_getObjectTypeId,
+                                   suntemple_getExtraSize};
 u32 gWCTempleObjDescriptor[14] = {0x00000000,
                                   0x00000000,
                                   0x00000000,
