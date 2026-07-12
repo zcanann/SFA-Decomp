@@ -1152,8 +1152,15 @@ foundFirst:
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0)
                         {
-                            slot->velocityX = slot->velocityX * (gExpgfxSlotMotionStep - slot->velocityX);
-                            slot->velocityZ = slot->velocityZ * (gExpgfxSlotMotionStep - slot->velocityZ);
+                            {
+                                f32 v;
+                                f32 st;
+                                v = slot->velocityX;
+                                st = gExpgfxSlotMotionStep;
+                                slot->velocityX = v * (st - v);
+                                v = slot->velocityZ;
+                                slot->velocityZ = v * (st - v);
+                            }
                             *(u16*)&slot->scaleCurrent = ((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
