@@ -49,6 +49,11 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx.h"
 
+#define Sfx_PlayFromObjectLegacy(obj, sfxId) \
+    ((void (*)(int, int))Sfx_PlayFromObject)((obj), (sfxId))
+#define Sfx_StopFromObjectLegacy(obj, sfxId) \
+    ((void (*)(int, int))Sfx_StopFromObject)((obj), (sfxId))
+
 #define SBGALLEON_OBJGROUP 3
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
@@ -150,9 +155,6 @@ enum SbGalleonCameraState
 #define SBGALLEON_MAP_PALACE       0xb /* map-event/dir id this boss locks */
 #define SBGALLEON_SKY_LIGHT_SLOT   7   /* sky override light slot fn_801E1588 drives */
 
-#pragma opt_common_subs on
-#pragma opt_loop_invariants off
-#pragma opt_strength_reduction off
 int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
@@ -211,10 +213,10 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case SBGALLEON_SEQEV_SFX_ON:
-            Sfx_PlayFromObject(obj, SBGALLEON_SFX_SPLASH);
+            Sfx_PlayFromObjectLegacy(obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_SFX_OFF:
-            Sfx_StopFromObject(obj, SBGALLEON_SFX_SPLASH);
+            Sfx_StopFromObjectLegacy(obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8:
             if (state->damagePhase == 8)
@@ -233,7 +235,7 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->skyFlag = 0;
             break;
         case SBGALLEON_SEQEV_SPLASH_SFX:
-            Sfx_PlayFromObject(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
+            Sfx_PlayFromObjectLegacy(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
             break;
         case SBGALLEON_SEQEV_MUSIC:
             state->musicIdB = SBGALLEON_MUSIC_INTRO;
@@ -280,10 +282,6 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     return 0;
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-
 typedef struct
 {
     f32 x, y, z;

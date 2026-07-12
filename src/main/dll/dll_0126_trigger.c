@@ -51,6 +51,9 @@
 #include "main/dll/mmp_gyservent.h"
 #include "main/audio/sfx.h"
 
+#define Sfx_StopFromObjectLegacy(obj, sfxId) \
+    ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
+
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
 #define TARGET_OBJGROUP                 0xf  /* player-target group; nearest object gets the trigger's sequence */
@@ -128,15 +131,15 @@ void Trigger_initialise(void)
 
 void Trigger_free(GameObject* obj)
 {
-    u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
     u8 i;
+    u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
     i = 0;
 
     while (i < 8)
     {
         if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
         {
-            Sfx_StopFromObject((u32)obj, (u16)((entry[2] << 8) | entry[3]));
+            Sfx_StopFromObjectLegacy(obj, (u16)((entry[2] << 8) | entry[3]));
         }
         i++;
         entry += 4;

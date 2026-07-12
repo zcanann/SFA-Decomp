@@ -2011,7 +2011,7 @@ int objShadowFn_80062498(int* obj, int param2)
     int drawScratch;
     u32* vtx;
     int alphaOut = 0;
-    u32 alpha;
+    int alpha;
     u32 handle;
     f32 vec[3];
     f32 base[3];

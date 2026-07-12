@@ -14,7 +14,11 @@
  * DRSHACKLE_*_OFFSET macros. Several `lbl_803E5Bxx` are plain float
  * constants (see the inline value comments).
  */
+#define drshackle_updateSwingBlend drshackle_updateSwingBlend_owner_signature
+#define drshackle_updateAttachedPosition drshackle_updateAttachedPosition_owner_signature
 #include "main/dll/DR/DRshackle.h"
+#undef drshackle_updateSwingBlend
+#undef drshackle_updateAttachedPosition
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
@@ -65,9 +69,9 @@ extern f32 lbl_803E5B78; /* 2.0f */
 extern int fn_801EC870(int p1, int p2);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
-int drshackle_updateSwingBlend(GameObject* obj, ShackleSwingState* state)
+int drshackle_updateSwingBlend(GameObject* obj, int state)
 {
-    ShackleSwingState* s = state;
+    ShackleSwingState* s = (ShackleSwingState*)state;
     GameObject* o = (GameObject*)obj;
     int hitResult;
     int yawDelta;
@@ -134,7 +138,7 @@ int drshackle_updateSwingBlend(GameObject* obj, ShackleSwingState* state)
     }
 
     {
-        f32 ang = fn_801EA678(o, (int)state);
+        f32 ang = fn_801EA678(o, state);
         ang = -ang;
         if (s->lastPitch < ang || yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
@@ -148,11 +152,9 @@ int drshackle_updateSwingBlend(GameObject* obj, ShackleSwingState* state)
     return 1;
 }
 
-int drshackle_updateAttachedPosition(GameObject* object, ShackleSwingState* swingState)
+int drshackle_updateAttachedPosition(int obj, int state)
 {
-    int obj = (int)object;
-    int state = (int)swingState;
-    ShackleSwingState* s = swingState;
+    ShackleSwingState* s = (ShackleSwingState*)state;
     ShackleFlags* flags;
     int mapBlockIdx;
     int hitResult;
@@ -213,7 +215,7 @@ int drshackle_updateAttachedPosition(GameObject* object, ShackleSwingState* swin
             flags->positionAnchored = 1;
             return 0;
         }
-        return drshackle_updateSwingBlend((GameObject*)(obj), swingState) != 0;
+        return drshackle_updateSwingBlend((GameObject*)(obj), state) != 0;
     }
 
     hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
