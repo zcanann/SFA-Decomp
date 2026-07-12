@@ -61,7 +61,7 @@ void DR_CageWith_free(GameObject* obj, int arg)
             ((GameObject*)child)->unkF4 = 0;
         }
         ((DrcagewithState*)state)->spawnedObject->unkF4 = 0;
-        Obj_FreeObject((int)((DrcagewithState*)state)->spawnedObject);
+        Obj_FreeObject(((DrcagewithState*)state)->spawnedObject);
     }
     ObjGroup_RemoveObject((int)obj, DRCAGEWITH_OBJGROUP);
 }
@@ -100,7 +100,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
     BitFlags8* bf31;
     f32 maxDist;
     int i;
-    int spawned;
+    ObjPlacement* spawned;
     int* nearest;
     f32 angVel;
     f32 clamped;
@@ -129,13 +129,13 @@ void DR_CageWith_hitDetect(GameObject* obj)
         if (Obj_IsLoadingLocked())
         {
             spawned = Obj_AllocObjectSetup(32, DRCAGEWITH_CHILD_OBJ);
-            *(u8*)(spawned + 4) = 2;
-            *(u8*)(spawned + 5) = 1;
-            *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)placement)->flags & 0x18));
+            spawned->color[0] = 2;
+            spawned->color[1] = 1;
+            spawned->color[1] = (u8)(spawned->color[1] | (((DrcagewithPlacement*)placement)->flags & 0x18));
             ((GameObject*)spawned)->anim.rootMotionScale = (obj)->anim.localPosX;
             ((GameObject*)spawned)->anim.localPosX = (obj)->anim.localPosY;
             ((GameObject*)spawned)->anim.localPosY = (obj)->anim.localPosZ;
-            spawned = Obj_SetupObject(spawned, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+            spawned = (ObjPlacement*)Obj_SetupObject(spawned, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
             ((GameObject*)spawned)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ((GameObject*)spawned)->unkF4 = 1;
             ((DrcagewithState*)state)->spawnedObject = (GameObject*)spawned;

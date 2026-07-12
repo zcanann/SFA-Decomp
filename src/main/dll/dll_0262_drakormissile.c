@@ -275,7 +275,7 @@ void drakormissile_update(int obj)
         state->fadeTime = life;
         if (life > gDrakorMissileFadeOutDuration)
         {
-            Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
             return;
         }
         break;
@@ -367,7 +367,7 @@ void drakormissile_modelMtxFn(GameObject* obj)
     state->flags |= 1;
     if (state->state == DRAKORMISSILE_STATE_FADEOUT)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject((GameObject*)obj);
     }
 }
 

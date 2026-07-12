@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
@@ -105,7 +106,6 @@ extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int trackId, int restart);
-extern void Obj_FreeObject(int obj);
 extern void storeZeroToFloatParam(void* timer);
 extern GameUIInterface** gGameUIInterface;
 extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
@@ -334,8 +334,6 @@ extern f32 lbl_803E68F8;
 extern f32 lbl_803E6B40;
 extern u8 lbl_803DC308;
 extern void objSoundFn_800392f0(int obj, int a, void* b, int c);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 lbl_803DC324;
 extern s16 lbl_803DC314;
 extern u8 lbl_8032AAB0[];

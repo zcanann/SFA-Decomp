@@ -93,7 +93,7 @@ typedef struct DrLaserCannonState
     f32 reloadTimer;
     DrLaserCannonAim aim;
     u8 pad176[DR_LASERCANNON_STATE_WARNING_OBJECT - 0x176];
-    int warningObject;
+    GameObject* warningObject;
     int firepipeObject;
     int activeFrames;
     int hitExcludeType;
@@ -275,7 +275,7 @@ void DR_LaserCannon_free(GameObject* obj)
         firepipe_clearLinkedUpdateFlag(state->firepipeObject);
         ObjLink_DetachChild((int)obj, state->firepipeObject);
     }
-    if ((void*)state->warningObject != NULL)
+    if (state->warningObject != NULL)
     {
         Obj_FreeObject(state->warningObject);
     }
@@ -364,17 +364,17 @@ void DR_LaserCannon_init(GameObject* obj, char* arg)
     (obj)->anim.velocityZ = fz;
     if (mainGetBit(setup->destroyedGameBit) == 0)
     {
-        state->warningObject = ((int (*)(void*, f32))fn_801702D4)(obj, lbl_803E6938);
-        if ((void*)state->warningObject != NULL)
+        state->warningObject = (GameObject*)((int (*)(void*, f32))fn_801702D4)(obj, lbl_803E6938);
+        if (state->warningObject != NULL)
         {
-            staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_ACTIVE_MODE);
+            staffFn_80170380((int)state->warningObject, DR_LASERCANNON_WARNING_ACTIVE_MODE);
         }
         state->flags.b6 = 1;
     }
     else
     {
         state->flags.b6 = 0;
-        state->warningObject = 0;
+        state->warningObject = NULL;
     }
     storeZeroToFloatParam(&state->reloadTimer);
     s16toFloat(&state->reloadTimer, (s16)(setup->reloadFrames * 4 + 1));
@@ -410,9 +410,9 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
     if (state->flags.b6 != 0)
     {
         if (hit != 0 && ((GameObject*)hitObject)->anim.seqId != state->hitExcludeType &&
-            (void*)state->warningObject != NULL)
+            state->warningObject != NULL)
         {
-            staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
+            staffFn_80170380((int)state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
         }
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) && (void*)state->lastHitObject != (void*)hitObject &&
@@ -487,20 +487,20 @@ void DR_LaserCannon_update(GameObject* obj)
     {
         return;
     }
-    if ((void*)state->warningObject != NULL)
+    if (state->warningObject != NULL)
     {
-        ((GameObject*)state->warningObject)->anim.localPosX = (obj)->anim.localPosX;
-        ((GameObject*)state->warningObject)->anim.localPosY = (obj)->anim.localPosY - lbl_803E68FC;
-        ((GameObject*)state->warningObject)->anim.localPosZ = (obj)->anim.localPosZ;
+        state->warningObject->anim.localPosX = (obj)->anim.localPosX;
+        state->warningObject->anim.localPosY = (obj)->anim.localPosY - lbl_803E68FC;
+        state->warningObject->anim.localPosZ = (obj)->anim.localPosZ;
     }
     if (state->flags.b6 != 0)
     {
         if (mainGetBit(setup->warningOffGameBit) != 0)
         {
             state->flags.b6 = 0;
-            if ((void*)state->warningObject != NULL)
+            if (state->warningObject != NULL)
             {
-                staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
+                staffFn_80170380((int)state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
             }
         }
     }
@@ -508,9 +508,9 @@ void DR_LaserCannon_update(GameObject* obj)
     {
         ((void (*)(void*, f32, int, int, f32))objfx_spawnFrameTimedHitPulse)(obj, lbl_803E6900, 1,
                                                                              (u8)(5 - state->health), lbl_803E6904);
-        if ((void*)state->warningObject != NULL)
+        if (state->warningObject != NULL)
         {
-            staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
+            staffFn_80170380((int)state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);
         }
         state->activeFrames += 1;
         if (state->health == 0)
@@ -560,17 +560,19 @@ void DR_LaserCannon_update(GameObject* obj)
                         }
                         else
                         {
-                            int o = Obj_AllocObjectSetup(DR_LASERCANNON_SETUP_SIZE, DR_LASERCANNON_BEAM_OBJECT_TYPE);
-                            ((DrLaserCannonBeamSetup*)o)->objectType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
-                            ((DrLaserCannonBeamSetup*)o)->field02 = 8;
-                            ((DrLaserCannonBeamSetup*)o)->field04 = 1;
-                            ((DrLaserCannonBeamSetup*)o)->field06 = 0xff;
-                            ((DrLaserCannonBeamSetup*)o)->field05 = 1;
-                            ((DrLaserCannonBeamSetup*)o)->field07 = 0xff;
-                            ((DrLaserCannonBeamSetup*)o)->spawnX = ((DrLaserCannonState*)spawned)->muzzleX;
-                            ((DrLaserCannonBeamSetup*)o)->spawnY = ((DrLaserCannonState*)spawned)->muzzleY;
-                            ((DrLaserCannonBeamSetup*)o)->spawnZ = ((DrLaserCannonState*)spawned)->muzzleZ;
-                            spawned = Obj_SetupObject(o, 5, (obj)->anim.mapEventSlot, -1, 0);
+                            DrLaserCannonBeamSetup* o =
+                                (DrLaserCannonBeamSetup*)Obj_AllocObjectSetup(DR_LASERCANNON_SETUP_SIZE,
+                                                                              DR_LASERCANNON_BEAM_OBJECT_TYPE);
+                            o->objectType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
+                            o->field02 = 8;
+                            o->field04 = 1;
+                            o->field06 = 0xff;
+                            o->field05 = 1;
+                            o->field07 = 0xff;
+                            o->spawnX = ((DrLaserCannonState*)spawned)->muzzleX;
+                            o->spawnY = ((DrLaserCannonState*)spawned)->muzzleY;
+                            o->spawnZ = ((DrLaserCannonState*)spawned)->muzzleZ;
+                            spawned = (int)Obj_SetupObject((ObjPlacement*)o, 5, (obj)->anim.mapEventSlot, -1, NULL);
                         }
                         if ((void*)spawned != NULL)
                         {

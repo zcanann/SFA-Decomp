@@ -18,8 +18,8 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     int i;
     int placement = *(int*)&(obj)->anim.placementData;
     char* runtime;
-    int setup;
-    int projectile;
+    DrcreatorSetup* setup;
+    GameObject* projectile;
     logPrintf(sDrCreatorTimeFormat, *(s16*)(placement + 0x1a), *(s16*)((u8*)animUpdate + 0x58));
     if (Obj_IsLoadingLocked() == 0)
     {
@@ -35,20 +35,20 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             runtime = (obj)->extra;
             if (mainGetBit(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
             {
-                setup = Obj_AllocObjectSetup(36, DRCREATOR_CHILD_OBJ_PROJECTILE);
-                ((DrcreatorSetup*)setup)->base.posX = (obj)->anim.localPosX;
-                ((DrcreatorSetup*)setup)->base.posY = (obj)->anim.localPosY;
-                ((DrcreatorSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
-                ((DrcreatorSetup*)setup)->base.color[0] = 1;
-                ((DrcreatorSetup*)setup)->base.color[1] = 1;
-                ((DrcreatorSetup*)setup)->base.color[2] = 255;
-                ((DrcreatorSetup*)setup)->base.color[3] = 255;
-                ((DrcreatorSetup*)setup)->unk19 = 2;
-                projectile = Obj_SetupObject(setup, 5, -1, -1, 0);
-                if ((void*)projectile != NULL)
+                setup = (DrcreatorSetup*)Obj_AllocObjectSetup(36, DRCREATOR_CHILD_OBJ_PROJECTILE);
+                setup->base.posX = (obj)->anim.localPosX;
+                setup->base.posY = (obj)->anim.localPosY;
+                setup->base.posZ = (obj)->anim.localPosZ;
+                setup->base.color[0] = 1;
+                setup->base.color[1] = 1;
+                setup->base.color[2] = 255;
+                setup->base.color[3] = 255;
+                setup->unk19 = 2;
+                projectile = Obj_SetupObject(&setup->base, 5, -1, -1, NULL);
+                if (projectile != NULL)
                 {
                     ((DrcreatorState*)projectile)->unk2 = 0;
-                    ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
+                    projectile->anim.rotX = randomGetRange(0, 65535);
                     ((DrcreatorState*)projectile)->velocityX =
                         lbl_803E69A8 *
                         (f32)(int)randomGetRange(-((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
@@ -93,8 +93,8 @@ void DR_Creator_update(GameObject* obj)
 {
     int placement = *(int*)&(obj)->anim.placementData;
     char* runtime = (obj)->extra;
-    int setup;
-    char* projectile;
+    DrcreatorSetup* setup;
+    GameObject* projectile;
     if (Obj_IsLoadingLocked() != 0)
     {
         switch (((DrcreatorPlacement*)placement)->behaviorMode)
@@ -113,27 +113,27 @@ void DR_Creator_update(GameObject* obj)
                 ((DrcreatorState*)runtime)->spawnTimer -= framesThisStep;
                 if (((DrcreatorState*)runtime)->spawnTimer <= 0)
                 {
-                    setup = Obj_AllocObjectSetup(36, DRCREATOR_CHILD_OBJ_PROJECTILE);
-                    ((DrcreatorSetup*)setup)->base.posX = (obj)->anim.localPosX;
-                    ((DrcreatorSetup*)setup)->base.posY = (obj)->anim.localPosY;
-                    ((DrcreatorSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
-                    ((DrcreatorSetup*)setup)->base.color[0] = 1;
-                    ((DrcreatorSetup*)setup)->base.color[1] = 1;
-                    ((DrcreatorSetup*)setup)->base.color[2] = 255;
-                    ((DrcreatorSetup*)setup)->base.color[3] = 250;
+                    setup = (DrcreatorSetup*)Obj_AllocObjectSetup(36, DRCREATOR_CHILD_OBJ_PROJECTILE);
+                    setup->base.posX = (obj)->anim.localPosX;
+                    setup->base.posY = (obj)->anim.localPosY;
+                    setup->base.posZ = (obj)->anim.localPosZ;
+                    setup->base.color[0] = 1;
+                    setup->base.color[1] = 1;
+                    setup->base.color[2] = 255;
+                    setup->base.color[3] = 250;
                     if ((obj)->anim.mapEventSlot == 2)
                     {
-                        ((DrcreatorSetup*)setup)->unk19 = 4;
+                        setup->unk19 = 4;
                     }
                     else
                     {
-                        ((DrcreatorSetup*)setup)->unk19 = 1;
+                        setup->unk19 = 1;
                     }
-                    projectile = (char*)Obj_SetupObject(setup, 5, -1, -1, 0);
+                    projectile = Obj_SetupObject(&setup->base, 5, -1, -1, NULL);
                     if (projectile != NULL)
                     {
                         ((DrcreatorState*)projectile)->unk2 = 0;
-                        ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
+                        projectile->anim.rotX = randomGetRange(0, 65535);
                         ((DrcreatorState*)projectile)->velocityX =
                             lbl_803E69B8 *
                             (lbl_803E69BC * ((f32) * (int*)runtime *
