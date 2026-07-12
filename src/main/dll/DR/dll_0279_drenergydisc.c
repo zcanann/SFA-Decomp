@@ -9,8 +9,12 @@
  * animation move lbl_803E6BB0. init seeds the spawn rotation from the
  * placement and primes the activated/texture state from the active bit.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/objanim.h"
+#include "main/objtexture.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -46,9 +50,9 @@ void DR_EnergyDisc_update(GameObject* obj)
 {
     ObjTextureRuntimeSlot* texture;
     DrEnergyDiscState* state = (obj)->extra;
-    int setup = *(int*)&(obj)->anim.placementData;
+    DrenergydiscPlacement* setup = (DrenergydiscPlacement*)obj->anim.placementData;
 
-    if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
+    if ((u32)mainGetBit(setup->activeGameBit) != 0)
     {
         if (state->activated == 0)
         {
@@ -73,25 +77,25 @@ void DR_EnergyDisc_update(GameObject* obj)
         }
     }
 
-    if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->moveGameBit) != 0)
+    if ((u32)mainGetBit(setup->moveGameBit) != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6BB0, 0);
     }
 }
 
-void DR_EnergyDisc_init(u8* obj, u8* setup)
+void DR_EnergyDisc_init(GameObject* obj, DrenergydiscPlacement* setup)
 {
     ObjTextureRuntimeSlot* texture;
-    DrEnergyDiscState* state = ((GameObject*)obj)->extra;
+    DrEnergyDiscState* state = obj->extra;
     s16 spawnRotX;
 
-    spawnRotX = (s16)((s8)setup[0x18] << 8);
-    ((GameObject*)obj)->anim.rotX = spawnRotX;
-    if ((u32)mainGetBit(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
+    spawnRotX = (s16)(setup->rotXByte << 8);
+    obj->anim.rotX = spawnRotX;
+    if ((u32)mainGetBit(setup->activeGameBit) != 0)
     {
         state->activated = 1;
         Sfx_PlayFromObject((int)obj, SFXTRIG_id_30c);
-        texture = objFindTexture((GameObject*)(obj), 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
             texture->textureId = 0x100;
@@ -100,14 +104,14 @@ void DR_EnergyDisc_init(u8* obj, u8* setup)
     else
     {
         state->activated = 0;
-        texture = objFindTexture((GameObject*)(obj), 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL)
         {
             texture->textureId = 0;
         }
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags |
-                                            (DRENERGYDISC_OBJFLAG_HIDDEN | DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags =
+        (u16)(obj->objectFlags | (DRENERGYDISC_OBJFLAG_HIDDEN | DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void DR_EnergyDisc_release(void)

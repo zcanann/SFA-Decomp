@@ -9,8 +9,10 @@
  * last-seen bit is cached so the sweep only runs on a transition; lastBit
  * starts at CONTROLLIGHT_LAST_BIT_INVALID to force the first update.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
+#include "main/vecmath.h"
 #include "main/dll/LGT/dll_02AC_lgtcontrollight.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 

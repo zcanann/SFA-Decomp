@@ -7,8 +7,13 @@
  * animEventCallback (ARWBlocker_SeqFn) reports whether the blocker
  * is currently "armed" (mode 1 and not yet locked) to the sequence system.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/objhits.h"
+#include "main/objseq.h"
+#include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A8_arwblocker.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 

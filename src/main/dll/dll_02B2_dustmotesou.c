@@ -20,8 +20,9 @@
  * spawning when non-(-1) and clear.
  */
 #define OBJFX_HIT_DETECT_SCALE_FOURTH_LEGACY
-#include "main/dll/dll_80220608_shared.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
+#include "main/gamebits.h"
 #include "main/objfx.h"
 
 #define objfx_spawnMaskedHitEffectSharedOrder(obj, type, mode, scale, mask, origin)                               \

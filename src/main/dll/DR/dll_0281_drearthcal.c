@@ -1,9 +1,11 @@
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/player_api.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
+#include "main/object_api.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
 
 #define DREARTHCAL_OBJFLAG_RENDERED 0x800
 
