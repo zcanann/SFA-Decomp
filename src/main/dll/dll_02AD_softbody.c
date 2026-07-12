@@ -13,9 +13,12 @@
  * scale (also scaling the hit sphere); the object has no per-instance
  * extra state (getExtraSize returns 0).
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02AD_softbody.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
 

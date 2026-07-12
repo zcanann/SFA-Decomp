@@ -10,10 +10,15 @@
  * lightningCreate handle at offset 0 and the active/free bit flags at
  * offset 4.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/moveLib.h"
-#include "main/newclouds.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/mm.h"
+#include "main/newclouds.h"
+#include "main/object_api.h"
+#include "main/obj_placement.h"
+#include "main/vecmath.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -33,7 +38,7 @@ int DR_LightBea_getObjectTypeId(void)
 
 void DR_LightBea_free(GameObject* obj)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&obj->extra;
+    DrLightBeaState* state = obj->extra;
     LightningEffect* buffer = state->handle;
 
     if (buffer != NULL)
@@ -45,8 +50,8 @@ void DR_LightBea_free(GameObject* obj)
 
 void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
-    int setup = *(int*)&(obj)->anim.placementData;
+    DrLightBeaState* state = obj->extra;
+    DrlightbeaPlacement* setup = (DrlightbeaPlacement*)obj->anim.placementData;
     GameObject* player;
     f32 targetXform[6];
     f32 sourcePos[3];
@@ -57,7 +62,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
         state->handle->start[0] = (obj)->anim.localPosX;
         state->handle->start[1] = (obj)->anim.localPosY;
         state->handle->start[2] = (obj)->anim.localPosZ;
-        if (((DrlightbeaPlacement*)setup)->targetId == 0)
+        if (setup->targetId == 0)
         {
             player = Obj_GetPlayerObject();
             state->handle->end[0] = player->anim.localPosX;
@@ -71,7 +76,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             mm_free(state->handle);
             state->handle = NULL;
             state->flags.bit80 = 0;
-            if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
+            if ((u32)setup->base.mapId == 0xffffffff)
             {
                 state->flags.bit40 = 1;
             }
@@ -84,15 +89,14 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             mm_free(state->handle);
             state->handle = NULL;
         }
-        state->flags.bit80 = mainGetBit(((DrlightbeaPlacement*)setup)->gameBit);
+        state->flags.bit80 = mainGetBit(setup->gameBit);
         if (state->flags.bit80)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_id_30f);
             sourcePos[0] = (obj)->anim.localPosX;
             sourcePos[1] = (obj)->anim.localPosY;
             sourcePos[2] = (obj)->anim.localPosZ;
-            if (((DrlightbeaPlacement*)setup)->targetId != 0 &&
-                dll_2E_func0A(((DrlightbeaPlacement*)setup)->targetId, targetXform) != 0)
+            if (setup->targetId != 0 && dll_2E_func0A(setup->targetId, targetXform) != 0)
             {
                 targetPos[0] = targetXform[3];
                 targetPos[1] = targetXform[4];
@@ -117,7 +121,7 @@ void DR_LightBea_hitDetect(void)
 
 void DR_LightBea_update(GameObject* obj)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
+    DrLightBeaState* state = obj->extra;
     if (state->flags.bit40)
     {
         Obj_FreeObject(obj);
@@ -126,7 +130,7 @@ void DR_LightBea_update(GameObject* obj)
 
 void DR_LightBea_init(GameObject* obj)
 {
-    DrLightBeaState* state = *(DrLightBeaState**)&obj->extra;
+    DrLightBeaState* state = obj->extra;
     state->flags.bit80 = 0;
     state->handle = NULL;
     state->flags.bit40 = 0;

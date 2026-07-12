@@ -8,12 +8,19 @@
  * detaches its expgfx source on free; arwarwing keeps a back-pointer that is
  * cleared via arwarwing_clearActiveBomb when the bomb goes away.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/audio/sfx.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
+#include "main/pad.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 

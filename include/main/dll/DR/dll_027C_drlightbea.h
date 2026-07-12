@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "global.h"
 #include "main/lightningeffect.h"
+#include "main/obj_placement.h"
 
 typedef struct DrLightBeaFlags
 {
@@ -14,7 +15,8 @@ typedef struct DrLightBeaFlags
 
 typedef struct DrlightbeaPlacement
 {
-    u8 pad0[0x19 - 0x0];
+    ObjPlacement base;
+    u8 pad18;
     s8 targetId; /* 0x19: placed-object target id, or 0 to use the player */
     u8 pad1A[0x20 - 0x1A];
     s16 gameBit; /* 0x20: enables the beam while set */
