@@ -2795,6 +2795,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
     if ((u8)type == 3)
     {
         f32 fa, fb, scale;
+        f32 b0, a0;
         b[0] = c[0];
         b[1] = c[1];
         b[2] = c[2];
@@ -2805,14 +2806,16 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
         {
             f32 fbd = b[1] * p[1];
             f32 fad = a[1] * p[1];
-            fb = (fbd + b[0] * p[0] + b[2] * p[2] + p[3]) - y;
-            fa = (fad + a[0] * p[0] + a[2] * p[2] + p[3]) - y;
+            b0 = b[0];
+            a0 = a[0];
+            fb = (fbd + b0 * p[0] + b[2] * p[2] + p[3]) - y;
+            fa = (fad + a0 * p[0] + a[2] * p[2] + p[3]) - y;
         }
         if (fa != fb)
             scale = fa / (fa - fb);
         else
             scale = __AR_Callback;
-        d0[0] = b[0] - a[0];
+        d0[0] = b0 - a0;
         d0[1] = b[1] - a[1];
         d0[2] = b[2] - a[2];
         b[0] = d0[0] * scale;
