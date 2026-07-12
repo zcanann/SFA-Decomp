@@ -122,8 +122,6 @@ extern f32 lbl_803E6E90;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
-extern int ObjModel_GetBaseVertexCoords(int model, int idx);
 extern f32 lbl_803E6E70;
 extern f32 lbl_803E6E74;
 extern f32 lbl_803E6E78;

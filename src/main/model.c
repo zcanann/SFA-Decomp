@@ -70,9 +70,9 @@ void* ObjModel_GetTexture(u8* model, int textureIndex)
     return textureIdxToPtr(((ModelFileHeader*)model)->textureIds[textureIndex]);
 }
 
-void* ObjModel_GetBaseVertexCoords(u8* model, int vertexIndex)
+s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex)
 {
-    return ((ModelFileHeader*)model)->vertices + vertexIndex * 6;
+    return (s16*)(modelFile->vertices + vertexIndex * 6);
 }
 
 void* ObjModel_GetRenderOp(u8* model, int renderOpIndex)
@@ -106,10 +106,11 @@ void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int en
     }
 }
 
-void* ObjModel_GetCurrentVertexCoords(u8* model, int vertexIndex)
+s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex)
 {
-    model += (((((ObjModel*)model)->bufferFlags >> 1) & 1) * 4);
-    return ((ObjModel*)model)->vtxBuf0 + vertexIndex * 6;
+    u8* modelBytes = (u8*)model;
+    modelBytes += ((((model->bufferFlags >> 1) & 1) * 4));
+    return (s16*)(((ObjModel*)modelBytes)->vtxBuf0 + vertexIndex * 6);
 }
 
 void* ObjModel_GetPostRenderCallback(u8* model)

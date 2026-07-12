@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/model_light.h"
+#include "main/model.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
 #include "main/object_transform.h"
@@ -411,7 +412,6 @@ extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern void allocLotsOfTextures(void);
 extern u8* fn_80028364(int hdr, int i);
 extern u16* fn_80028354(int hdr, int tri);
-extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
@@ -4045,7 +4045,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
             vout = (u8*)cur;
             for (; j < 3; j++)
             {
-                s16* v = ObjModel_GetBaseVertexCoords(hdr, *tw);
+                s16* v = ObjModel_GetBaseVertexCoords((ModelFileHeader*)hdr, *tw);
                 f32 fx, fy, fz;
                 if (*(u16*)(hdr + 2) & 0x800)
                 {

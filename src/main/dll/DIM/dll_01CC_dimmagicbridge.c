@@ -12,6 +12,7 @@
  * The per-object extra block is DimMagicBridgeState (getExtraSize == 0x68).
  */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/model.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIM2flameburst.h"
@@ -35,10 +36,8 @@ extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 
 extern int Obj_GetActiveModel(int obj);
-extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int matchVal, GameObject* obj, int flag);
 extern int EmissionController_IsLingering(GameObject* player);
-extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 extern float mathSinf(float x);
 
 #pragma scheduling off
@@ -48,18 +47,18 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
 {
     int i;
     int cnt;
-    int mdl;
-    int model;
+    ModelFileHeader* mdl;
+    ObjModel* model;
     f32 amp;
     DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
-    model = Obj_GetActiveModel((int)obj);
-    mdl = *(int*)model;
+    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    mdl = model->file;
     i = 0;
     amp = lbl_803E4A00;
-    for (; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
+    for (; cnt = mdl->vertexCount, i < cnt; i++)
     {
-        s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
-        s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
+        s16* vc = ObjModel_GetCurrentVertexCoords(model, i);
+        s16* vb = ObjModel_GetBaseVertexCoords(mdl, i);
         int wavePos = (u16)(int)(amp * ((f32)(int)vc[2] / state->minVertexY));
         wavePos = wavePos + state->wavePhase;
         if (*vb > 0)
@@ -207,27 +206,27 @@ void dimmagicbridge_init(u8* obj, u8* params)
     DimMagicBridgeState* state;
     int i;
     s32 minY;
-    int model;
-    int modelData;
+    ObjModel* model;
+    ModelFileHeader* modelData;
     f32* pair;
     int j;
     int sorted;
     f32 first, second;
-    int vtx;
+    s16* vtx;
     s16 vertexY;
 
     ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8);
     ((GameObject*)obj)->animEventCallback = dimmagicbridge_SeqFn;
     state = ((GameObject*)obj)->extra;
     minY = 0;
-    model = Obj_GetActiveModel((int)obj);
-    modelData = *(int*)model;
+    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    modelData = model->file;
 
     i = 0;
-    while (i < *(u16*)(modelData + 0xe4))
+    while (i < modelData->vertexCount)
     {
         vtx = ObjModel_GetCurrentVertexCoords(model, i);
-        vertexY = *(s16*)(vtx + 4);
+        vertexY = vtx[2];
         if (vertexY < minY)
         {
             minY = vertexY;

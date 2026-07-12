@@ -180,6 +180,9 @@ typedef struct ObjModel {
     u8 unk61[3];
 } ObjModel;
 
+s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex);
+s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex);
+
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);

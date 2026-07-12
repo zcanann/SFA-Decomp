@@ -123,8 +123,8 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &obj->anim;
     WCTempleBriSetup* setup = (WCTempleBriSetup*)obj->anim.placementData;
-    int model;
-    int modelBase;
+    ObjModel* model;
+    ModelFileHeader* modelBase;
     int i;
     f32 waveScale;
     WCTempleBriState* state = obj->extra;
@@ -153,14 +153,14 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
             objAnim->alpha = a;
         }
     }
-    model = Obj_GetActiveModel((int)obj);
-    modelBase = *(int*)model;
+    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    modelBase = model->file;
     i = 0;
     waveScale = *(f32*)&lbl_803E6E70;
-    for (; i < *(u16*)(modelBase + 0xe4); i++)
+    for (; i < modelBase->vertexCount; i++)
     {
-        s16* curr = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
-        s16* base = (s16*)ObjModel_GetBaseVertexCoords(modelBase, i);
+        s16* curr = ObjModel_GetCurrentVertexCoords(model, i);
+        s16* base = ObjModel_GetBaseVertexCoords(modelBase, i);
         int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
         int idx = wave + state->wavePhaseA;
         if (base[0] > 0)
@@ -220,8 +220,8 @@ void wctemplebri_initialise(void)
 void wctemplebri_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &obj->anim;
-    int model;
-    int modelBase;
+    ObjModel* model;
+    ModelFileHeader* modelBase;
     int i;
     f32 waveScale;
     WCTempleBriState* state;
@@ -230,14 +230,14 @@ void wctemplebri_update(GameObject* obj)
     Obj_GetPlayerObject();
     state = obj->extra;
     wctemplebri_updateModelWarp(obj, (int)state);
-    model = Obj_GetActiveModel((int)obj);
-    modelBase = *(int*)model;
+    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    modelBase = model->file;
     i = 0;
     waveScale = *(f32*)&lbl_803E6E70;
-    for (; i < *(u16*)(modelBase + 0xe4); i++)
+    for (; i < modelBase->vertexCount; i++)
     {
-        s16* curr = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
-        s16* base = (s16*)ObjModel_GetBaseVertexCoords(modelBase, i);
+        s16* curr = ObjModel_GetCurrentVertexCoords(model, i);
+        s16* base = ObjModel_GetBaseVertexCoords(modelBase, i);
         int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
         int idx = wave + state->wavePhaseA;
         if (base[0] > 0)
@@ -283,10 +283,10 @@ void wctemplebri_init(GameObject* obj, int initData)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCTempleBriState* state;
     WCTempleBriSetup* setup = (WCTempleBriSetup*)initData;
-    int model;
+    ObjModel* model;
     int i;
     int maxY;
-    int modelData;
+    ModelFileHeader* modelData;
     int k;
     int done;
 
@@ -297,11 +297,11 @@ void wctemplebri_init(GameObject* obj, int initData)
     obj->animEventCallback = wctemplebri_SeqFn;
     state = obj->extra;
     maxY = 0;
-    model = Obj_GetActiveModel((int)obj);
-    modelData = *(int*)(model + 0);
-    for (i = 0; i < *(u16*)(modelData + 0xe4); i++)
+    model = (ObjModel*)Obj_GetActiveModel((int)obj);
+    modelData = model->file;
+    for (i = 0; i < modelData->vertexCount; i++)
     {
-        int y = ((s16*)ObjModel_GetCurrentVertexCoords(model, i))[2];
+        int y = ObjModel_GetCurrentVertexCoords(model, i)[2];
         if (y < maxY)
             maxY = y;
     }
@@ -343,5 +343,5 @@ void wctemplebri_init(GameObject* obj, int initData)
         objAnim->alpha = 0;
     }
     obj->objectFlags |= (WCTEMPLEBRI_OBJFLAG_HIDDEN | WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED);
-    ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
+    ObjModel_SetPostRenderCallback((int)model, postRenderSetAlphaBlendState);
 }
