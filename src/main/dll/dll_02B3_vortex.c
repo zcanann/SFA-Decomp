@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
+#include "main/dll/dll_02B3_vortex.h"
+#include "main/gameloop_api.h"
 
 #define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -18,15 +19,15 @@ int Vortex_getObjectTypeId(void)
     return 0;
 }
 
-void Vortex_free(int obj)
+void Vortex_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    VortexState* state = ((GameObject*)obj)->extra;
-    VortexSetup* setup = (VortexSetup*)((GameObject*)obj)->anim.placementData;
+    VortexState* state = obj->extra;
+    VortexSetup* setup = (VortexSetup*)obj->anim.placementData;
     f32 objScale;
     ObjTextureRuntimeSlot* texture;
     int model;
@@ -58,7 +59,7 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
 
-    if (((GameObject*)obj)->anim.seqId == 0x835 || ((GameObject*)obj)->anim.seqId == 0x838)
+    if (obj->anim.seqId == 0x835 || obj->anim.seqId == 0x838)
     {
         texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
@@ -95,67 +96,67 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             state->particleTimer = lbl_803E73D8;
             particleArgs[2] = ((f32)setup->radiusParam / gVortexRadiusParamScale) *
-                              (((GameObject*)obj)->anim.rootMotionScale * state->alpha);
+                              (obj->anim.rootMotionScale * state->alpha);
             particleArgs[4] = lbl_803E73D0;
             (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_A, particleArgs, 2, -1, NULL);
         }
 
-        model = Obj_GetActiveModel(obj);
-        objScale = ((GameObject*)obj)->anim.rootMotionScale;
-        objAlpha = ((GameObject*)obj)->anim.alpha;
-        objRotY = ((GameObject*)obj)->anim.rotX;
-        objZ = ((GameObject*)obj)->anim.localPosY;
+        model = Obj_GetActiveModel((int)obj);
+        objScale = obj->anim.rootMotionScale;
+        objAlpha = obj->anim.alpha;
+        objRotY = obj->anim.rotX;
+        objZ = obj->anim.localPosY;
         for (i = 0; i < 2; i++)
         {
-            ((GameObject*)obj)->anim.rotZ = gVortexRotZTable[i];
-            ((GameObject*)obj)->anim.rotX = state->angles[i];
+            obj->anim.rotZ = gVortexRotZTable[i];
+            obj->anim.rotX = state->angles[i];
             state->angles[i] = state->angles[i] + dt * gVortexAngleSpeed835[i];
-            ((GameObject*)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / gVortexRadiusParamScale) *
-                                                       (state->alpha * (state->radiusScale[i] * objScale));
-            *(u8*)(obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
+            obj->anim.rootMotionScale = ((f32)setup->radiusParam / gVortexRadiusParamScale) *
+                                        (state->alpha * (state->radiusScale[i] * objScale));
+            *((u8*)obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E73E0);
         }
-        ((GameObject*)obj)->anim.rootMotionScale = objScale;
-        ((GameObject*)obj)->anim.alpha = objAlpha;
-        ((GameObject*)obj)->anim.rotX = objRotY;
-        ((GameObject*)obj)->anim.localPosY = objZ;
+        obj->anim.rootMotionScale = objScale;
+        obj->anim.alpha = objAlpha;
+        obj->anim.rotX = objRotY;
+        obj->anim.localPosY = objZ;
     }
-    else if (((GameObject*)obj)->anim.seqId == 0x83d)
+    else if (obj->anim.seqId == 0x83d)
     {
         texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
         {
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
+        obj->anim.rotX = (s16)(obj->anim.rotX + (int)(lbl_803E73D4 * dt));
         if (texture->offsetS >= 10000)
         {
             texture->offsetS -= 10000;
         }
 
-        model = Obj_GetActiveModel(obj);
-        objScale = ((GameObject*)obj)->anim.rootMotionScale;
-        objAlpha = ((GameObject*)obj)->anim.alpha;
-        objRotY = ((GameObject*)obj)->anim.rotX;
-        objZ = ((GameObject*)obj)->anim.localPosY;
+        model = Obj_GetActiveModel((int)obj);
+        objScale = obj->anim.rootMotionScale;
+        objAlpha = obj->anim.alpha;
+        objRotY = obj->anim.rotX;
+        objZ = obj->anim.localPosY;
         for (i = 0; i < 3; i++)
         {
-            ((GameObject*)obj)->anim.rotX = state->angles[i];
+            obj->anim.rotX = state->angles[i];
             state->angles[i] = state->angles[i] + dt * gVortexAngleSpeed83D[i];
-            ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
-            *(u8*)(obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
+            obj->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
+            *((u8*)obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             {
                 f32 radius = lbl_803E73E8 * state->radiusScale[i];
-                ((GameObject*)obj)->anim.localPosY = objZ - radius * state->alpha;
+                obj->anim.localPosY = objZ - radius * state->alpha;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E73E0);
         }
-        ((GameObject*)obj)->anim.rootMotionScale = objScale;
-        ((GameObject*)obj)->anim.alpha = objAlpha;
-        ((GameObject*)obj)->anim.rotX = objRotY;
-        ((GameObject*)obj)->anim.localPosY = objZ;
+        obj->anim.rootMotionScale = objScale;
+        obj->anim.alpha = objAlpha;
+        obj->anim.rotX = objRotY;
+        obj->anim.localPosY = objZ;
     }
     else
     {
@@ -164,40 +165,40 @@ void Vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             texture->offsetS = (s16)(texture->offsetS + (int)(lbl_803E73E4 * dt));
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (int)(lbl_803E73D4 * dt));
+        obj->anim.rotX = (s16)(obj->anim.rotX + (int)(lbl_803E73D4 * dt));
         if (texture->offsetS >= 10000)
         {
             texture->offsetS -= 10000;
         }
 
-        particleArgs[2] = ((GameObject*)obj)->anim.rootMotionScale * state->alpha;
+        particleArgs[2] = obj->anim.rootMotionScale * state->alpha;
         if (hudHidden == 0)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_B, particleArgs, 2, -1, NULL);
         }
 
-        model = Obj_GetActiveModel(obj);
-        objScale = ((GameObject*)obj)->anim.rootMotionScale;
-        objAlpha = ((GameObject*)obj)->anim.alpha;
-        objRotY = ((GameObject*)obj)->anim.rotX;
-        objZ = ((GameObject*)obj)->anim.localPosY;
+        model = Obj_GetActiveModel((int)obj);
+        objScale = obj->anim.rootMotionScale;
+        objAlpha = obj->anim.alpha;
+        objRotY = obj->anim.rotX;
+        objZ = obj->anim.localPosY;
         for (i = 0; i < 3; i++)
         {
-            ((GameObject*)obj)->anim.rotX = state->angles[i];
+            obj->anim.rotX = state->angles[i];
             state->angles[i] = state->angles[i] + dt * gVortexAngleSpeedDefault[i];
-            ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
-            *(u8*)(obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
+            obj->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
+            *((u8*)obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             {
                 f32 radius = lbl_803E73EC * state->radiusScale[i];
-                ((GameObject*)obj)->anim.localPosY = radius * state->alpha + objZ;
+                obj->anim.localPosY = radius * state->alpha + objZ;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E73E0);
         }
-        ((GameObject*)obj)->anim.rootMotionScale = objScale;
-        ((GameObject*)obj)->anim.alpha = objAlpha;
-        ((GameObject*)obj)->anim.rotX = objRotY;
-        ((GameObject*)obj)->anim.localPosY = objZ;
+        obj->anim.rootMotionScale = objScale;
+        obj->anim.alpha = objAlpha;
+        obj->anim.rotX = objRotY;
+        obj->anim.localPosY = objZ;
     }
 }
 

@@ -355,131 +355,6 @@ extern f32 lbl_803E7420;
 
 extern void set_hudNumber_803db278(int n);
 
-typedef struct VortexFlags
-{
-    u8 active : 1;
-    u8 pad : 7;
-} VortexFlags;
-
-typedef struct VortexState
-{
-    f32 alpha;
-    f32 particleTimer;
-    f32 alphaScale[3];
-    f32 radiusScale[3];
-    s16 angles[3];
-    VortexFlags flags;
-    u8 pad27;
-} VortexState;
-
-typedef struct VortexSetup
-{
-    ObjPlacement base;
-    u8 pad18[2];
-    s16 radiusParam;
-    s16 reverseTextureScroll;
-    s16 invertGameBit;
-    s16 activeGameBit;
-    u8 pad22[0x24 - 0x22];
-} VortexSetup;
-
-STATIC_ASSERT(sizeof(VortexState) == 0x28);
-STATIC_ASSERT(offsetof(VortexState, alphaScale) == 0x08);
-STATIC_ASSERT(offsetof(VortexState, radiusScale) == 0x14);
-STATIC_ASSERT(offsetof(VortexState, angles) == 0x20);
-STATIC_ASSERT(offsetof(VortexState, flags) == 0x26);
-STATIC_ASSERT(sizeof(VortexSetup) == 0x24);
-STATIC_ASSERT(offsetof(VortexSetup, radiusParam) == 0x1a);
-STATIC_ASSERT(offsetof(VortexSetup, reverseTextureScroll) == 0x1c);
-STATIC_ASSERT(offsetof(VortexSetup, invertGameBit) == 0x1e);
-STATIC_ASSERT(offsetof(VortexSetup, activeGameBit) == 0x20);
-
-extern f32 lbl_803E73E0;
-extern const f32 lbl_803E73D0;
-extern f32 lbl_803E73D4;
-extern f32 lbl_803E73D8;
-extern const f32 gVortexRadiusParamScale;
-extern f32 lbl_803E73E4;
-extern const f32 lbl_803E73E8;
-extern const f32 lbl_803E73EC;
-extern double lbl_803E73F0;
-extern double lbl_803E73F8;
-extern f32 gVortexAlphaFadeSpeed;
-
-extern s16 gVortexAngleSpeed83D[4];
-extern s16 gVortexAngleSpeedDefault[4];
-extern s16 gVortexAngleSpeed835[2];
-extern s16 gVortexRotZTable[2];
-extern f32 gVortexScaleParams[4][3];
-extern f32 gVortexRadiusScaleInit[2];
-extern f32 gVortexAlphaScaleInit835[2];
-extern f32 gVortexAlphaScaleInit838[2];
-extern f32 lbl_803E7404;
-extern int getHudHiddenFrameCount(void);
-
-extern f32 lbl_803E70B0;
-
-typedef struct RingFlags
-{
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 bit20 : 1;
-    u8 bit10 : 1;
-    u8 pad : 4;
-} RingFlags;
-
-typedef struct RingState
-{
-    u8 mode;
-    u8 route;
-    u16 linkId;
-    f32 pullHeight;
-    f32 origX;
-    f32 origY;
-    f32 arwingYOffset;
-    RingFlags flags;
-    u8 phase;
-    u8 pad16[2];
-    f32 pullTimer;
-    u8 pad1C[4];
-    void* light;
-} RingState;
-
-STATIC_ASSERT(sizeof(RingFlags) == 0x1);
-STATIC_ASSERT(sizeof(RingState) == 0x24);
-STATIC_ASSERT(offsetof(RingState, route) == 0x01);
-STATIC_ASSERT(offsetof(RingState, linkId) == 0x02);
-STATIC_ASSERT(offsetof(RingState, pullHeight) == 0x04);
-STATIC_ASSERT(offsetof(RingState, origX) == 0x08);
-STATIC_ASSERT(offsetof(RingState, origY) == 0x0C);
-STATIC_ASSERT(offsetof(RingState, arwingYOffset) == 0x10);
-STATIC_ASSERT(offsetof(RingState, flags) == 0x14);
-STATIC_ASSERT(offsetof(RingState, phase) == 0x15);
-STATIC_ASSERT(offsetof(RingState, pullTimer) == 0x18);
-STATIC_ASSERT(offsetof(RingState, light) == 0x20);
-
-/*
- * Placement/setup record the map loader hands to ring_init/ring_update.
- * Embeds the common ObjPlacement head, then the ring's class-specific
- * fields (setup+0x18..+0x20) read in ring_init and ring_update.
- */
-typedef struct RingPlacement
-{
-    ObjPlacement base; /* 0x00: common placement head */
-    s8 modeFlag;       /* 0x18 */
-    u8 route;          /* 0x19 */
-    s16 linkId;        /* 0x1A */
-    s16 pullHeight;    /* 0x1C */
-    u8 pad1E[2];       /* 0x1E */
-    s16 activateBit;   /* 0x20 */
-} RingPlacement;
-
-STATIC_ASSERT(offsetof(RingPlacement, modeFlag) == 0x18);
-STATIC_ASSERT(offsetof(RingPlacement, route) == 0x19);
-STATIC_ASSERT(offsetof(RingPlacement, linkId) == 0x1A);
-STATIC_ASSERT(offsetof(RingPlacement, pullHeight) == 0x1C);
-STATIC_ASSERT(offsetof(RingPlacement, activateBit) == 0x20);
-
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 
@@ -1215,24 +1090,6 @@ extern f32 gBarrelGenTurnRateClampMax;
 extern f32 lbl_803E6C98;
 
 
-extern f32 lbl_803E70B4;
-extern f32 lbl_803E70B8;
-extern f32 lbl_803E70BC;
-extern f32 lbl_803E70C0;
-extern f32 lbl_803E70C8;
-extern f32 lbl_803E70CC;
-
-typedef struct
-{
-    /* 0x0 */ int f0;
-    /* 0x4 */ int f4;
-    /* 0x8 */ int f8;
-    /* 0xc */ int fc;
-    /* 0x10 */ int f10;
-    /* 0x14 */ f32 f14;
-} RingTable;
-extern RingTable lbl_8032B720[];
-
 extern f32 lbl_803E6EC8;
 extern f32 lbl_803E6ED4;
 extern f32 lbl_803E6ED8;
@@ -1506,22 +1363,6 @@ void CntCounter_init(GameObject* obj);
 void CntCounter_update(GameObject* obj);
 void CntCounter_release(void);
 void CntCounter_initialise(void);
-int Vortex_getExtraSize(void);
-int Vortex_getObjectTypeId(void);
-void Vortex_free(int obj);
-void Vortex_hitDetect(void);
-void Vortex_init(int obj, int initData);
-void Vortex_update(GameObject* obj);
-void Vortex_release(void);
-void Vortex_initialise(void);
-int ring_getExtraSize(void);
-int ring_getObjectTypeId(void);
-void ring_free(GameObject* obj);
-void ring_hitDetect(void);
-void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-void ring_release(void);
-void ring_initialise(void);
-void ring_init(GameObject* obj, int setup);
 int cnthitobjec_getExtraSize(void);
 int cnthitobjec_getObjectTypeId(void);
 void cnthitobjec_free(void);
@@ -1758,9 +1599,6 @@ int arwarwing_incrementPickup6D8Count(int arwing);
 int arwarwing_incrementCollectedRingCount(int arwing);
 void arwarwing_addMaxHealth(int arwing, int p2);
 void arwarwing_addHealth(int arwing, int p2);
-void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state);
-void Ring_onCollect(GameObject* obj, RingState* state, int arwing);
-int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwing);
 void arwarwing_clampToFlightBounds(GameObject* obj, int state);
 void arwarwing_updateFlightPhysics(GameObject* obj, int state);
 void arwarwing_updateBombFire(GameObject* obj, int state);
@@ -1849,7 +1687,6 @@ void Obj_SmoothTurnAnglesTowardVelocity(GameObject* a, int b, int c, f32 d, f32 
 int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, int p3, int p4);
 int voxmaps_traceWorldLine(void* p1, void* p2);
 void voxmaps_traceScaledVectorEnd(f32* p1, void* p2, f32* p3, f32 scale);
-void ring_update(int obj);
 void arwarwing_readControls(GameObject* obj, int state);
 void arwarwing_updateBarrelRoll(GameObject* obj, int state);
 
