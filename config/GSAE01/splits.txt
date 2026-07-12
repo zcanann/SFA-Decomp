@@ -2224,6 +2224,7 @@ main/dll/SB/dll_01F2_sbcagekyte.c:
 
 main/dll/SB/dll_01F1_sbseqdoor.c:
 	.text       start:0x801E5060 end:0x801E519C
+	.sdata2     start:0x803E5920 end:0x803E5928
 
 main/dll/SB/dll_01F3_sbminifire.c:
 	.text       start:0x801E519C end:0x801E55B8

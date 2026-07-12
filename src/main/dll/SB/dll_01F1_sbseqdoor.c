@@ -103,3 +103,8 @@ void SB_SeqDoor_release(void)
 void SB_SeqDoor_initialise(void)
 {
 }
+
+__declspec(section ".sdata2") f32 lbl_803E5920 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5924 = 0.0f;
+#pragma explicit_zero_data reset
