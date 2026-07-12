@@ -920,7 +920,7 @@ void Tricky_update(int obj)
     void (**handlerBase)(int obj, int state);
     int state;
     int found;
-    int cursor;
+    u8* cursor;
     int cmd;
     int st;
     TrickyState* stState;
@@ -966,8 +966,8 @@ void Tricky_update(int obj)
     }
     if ((((TrickyState*)state)->stateFlags & 0x40000000) != 0)
     {
-        cursor = *(int*)state;
-        if (*(u8*)cursor == *(u8*)(cursor + 1))
+        cursor = *(u8**)state;
+        if (*cursor == *(cursor + 1))
         {
             TRICKY_VOICE(obj, st, 0x364, 0x500);
         }
@@ -980,8 +980,8 @@ void Tricky_update(int obj)
     flagsByte = ((TrickyState*)state)->unk358;
     trickyDebugPrint(base + 0x894, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8, flagsByte & 0x10,
                      flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
-    cursor = *(int*)state;
-    trickyDebugPrint(base + 0x8b4, *(u8*)cursor, *(u8*)(cursor + 1));
+    cursor = *(u8**)state;
+    trickyDebugPrint(base + 0x8b4, *cursor, *(cursor + 1));
     if ((((TrickyState*)state)->stateFlags & 0x200) != 0)
     {
         ObjHits_EnableObject(obj);
@@ -1043,7 +1043,7 @@ void Tricky_update(int obj)
                     ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
                 ((TrickyState*)state)->stateFlags =
                     ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
-                cursor = state;
+                cursor = (u8*)state;
                 do
                 {
                     objSetAnimSpeedTo1(*(int*)(cursor + 0x700));
@@ -1066,7 +1066,7 @@ void Tricky_update(int obj)
     {
         cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&cmdQuery, 5);
     }
-    cursor = state;
+    cursor = (u8*)state;
     count = ((TrickyState*)state)->commandCount;
     for (i = 0; i < count; i++)
     {
@@ -1189,7 +1189,7 @@ void Tricky_update(int obj)
                 played = 0;
                 if (((TrickyState*)state)->commandPhase == 3)
                 {
-                    cursor = state;
+                    cursor = (u8*)state;
                     count = ((TrickyState*)state)->commandCount;
                     for (i = 0; i < count; i++)
                     {
@@ -1401,11 +1401,12 @@ void Tricky_update(int obj)
     {
         ((GameObject*)obj)->anim.localPosX += timeDelta * (((TrickyState*)state)->dirX * ((TrickyState*)state)->speed);
         ((GameObject*)obj)->anim.localPosZ += timeDelta * (((TrickyState*)state)->dirZ * ((TrickyState*)state)->speed);
-        ObjAnim_SampleRootCurvePhase(((TrickyState*)state)->speed, (ObjAnimComponent*)obj, (float*)(state + 0x34));
+        ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
+            obj, ((TrickyState*)state)->speed, (float*)(state + 0x34));
     }
     if (((TrickyState*)state)->moveProgress == lbl_803E23DC)
     {
-        ObjAnim_SetMoveProgress(((TrickyState*)state)->arcMoveProgress, (ObjAnimComponent*)obj);
+        ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, ((TrickyState*)state)->arcMoveProgress);
     }
     if (ObjAnim_AdvanceCurrentMove((int)obj, ((TrickyState*)state)->moveProgress, timeDelta,
                                                                     (void*)(state + 0x80c)) != 0)
@@ -1434,21 +1435,21 @@ void Tricky_update(int obj)
             {
                 if ((step >= 0 ? step : -step) > (diff >= 0 ? diff : -diff))
                 {
-                    *(s16*)obj = *(s16*)(int)(GameObject*)obj + diff;
+                    ((GameObject*)obj)->anim.rotX += diff;
                 }
                 else
                 {
-                    *(s16*)obj = *(s16*)(int)(GameObject*)obj + step;
+                    ((GameObject*)obj)->anim.rotX += step;
                 }
             }
             else
             {
-                *(s16*)obj = *(s16*)(int)(GameObject*)obj + step;
+                ((GameObject*)obj)->anim.rotX += step;
             }
         }
         else
         {
-            *(s16*)obj = *(s16*)(int)(GameObject*)obj + diff;
+            ((GameObject*)obj)->anim.rotX += diff;
         }
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_BACKSTEP) != 0)
@@ -1494,7 +1495,7 @@ void Tricky_update(int obj)
     objAnimFn_80038f38((GameObject*)(obj), state + 0x3a8);
     st = *(int*)&((GameObject*)obj)->extra;
     stState = (TrickyState*)st;
-    cursor = (int)stState->targetPosPtr;
+    cursor = (u8*)stState->targetPosPtr;
     stState->previousPathPoint = (f32*)cursor;
     if (stState->previousPathPoint != NULL)
     {
@@ -1504,7 +1505,7 @@ void Tricky_update(int obj)
     }
     ((TrickyState*)state)->prevSpeed = ((TrickyState*)state)->speed;
     i = ((TrickyState*)state)->commandCount - 1;
-    cursor = state + i * 8;
+    cursor = (u8*)state + i * 8;
     for (; i >= 0; i--)
     {
         *(u8*)(cursor + 0x74e) -= 1;
@@ -1597,7 +1598,7 @@ void Tricky_update(int obj)
     }
     if (talking != 0)
     {
-        cursor = state + 0x80c;
+        cursor = (u8*)state + 0x80c;
         sfx2 = 0;
         for (i = 0, count = *(s8*)(cursor + 0x1b); i < count; i++)
         {
