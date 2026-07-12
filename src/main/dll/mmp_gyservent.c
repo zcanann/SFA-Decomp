@@ -18,8 +18,10 @@
  * distance against nearRadiusSq.
  */
 #include "main/game_object.h"
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/os/OSReport.h"
+#include "main/dll/dll_0126_trigger.h"
 #include "main/dll/mmp_gyservent.h"
+#include "main/vecmath.h"
 
 /* placement instance id (+0x14) of the one vent that emits a debug OSReport */
 #define MMP_GYSERVENT_DEBUG_INSTANCE_ID 0x46a31
@@ -39,13 +41,7 @@ extern f32 lbl_803E40E0; /* 1.0f */
 extern f32 lbl_803E40E4; /* 100.0f - reach multiplier */
 extern f32 lbl_803E40E8; /* 145.0f - near-radius multiplier */
 
-extern void OSReport(const char* msg, ...);
-extern void objInterpretSeq(void* obj, int arg2, s8 legCode, int distanceSquared);
-
-/* obj is the GameObject, but typed s16* so the rotX/rotY/rotZ word writes
- * (obj[0..2]) and the f32 scale at obj+4 land at the exact offsets; it is cast
- * to GameObject* where needed. */
-void objFn_80198fa4(s16* obj, void* placement)
+void objFn_80198fa4(GameObject* obj, MmpGyserventPlacement* placement)
 {
     MmpGyserventState* state;
     MatrixTransform xf;
@@ -60,15 +56,15 @@ void objFn_80198fa4(s16* obj, void* placement)
     f32 posMtx[16];
 #define rotMtx rotU.m
 
-    state = (MmpGyserventState*)((GameObject*)obj)->extra;
-    obj[0] = (s16)((*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTX) & 0x3f) << 10);
-    obj[1] = (s16)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTY) << 8);
-    *(f32*)(obj + 4) = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-                       (((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC);
+    state = obj->extra;
+    obj->anim.rotX = (s16)((placement->rotX & 0x3f) << 10);
+    obj->anim.rotY = (s16)(placement->rotY << 8);
+    obj->anim.rootMotionScale =
+        obj->anim.modelInstance->rootMotionScaleBase * ((float)(u32)placement->reachScale * lbl_803E40DC);
 
-    xf.rotX = obj[0];
-    xf.rotY = obj[1];
-    xf.rotZ = obj[2];
+    xf.rotX = obj->anim.rotX;
+    xf.rotY = obj->anim.rotY;
+    xf.rotZ = obj->anim.rotZ;
     xf.scale = lbl_803E40E0;
     xf.x = lbl_803E40D8;
     xf.y = lbl_803E40D8;
@@ -78,22 +74,22 @@ void objFn_80198fa4(s16* obj, void* placement)
     state->planeNormalX = outY;
     state->planeNormalY = outZ;
     state->planeNormalZ = outX;
-    state->planeOffset = -(((GameObject*)obj)->anim.worldPosZ * outX +
-                           (((GameObject*)obj)->anim.worldPosX * outY + ((GameObject*)obj)->anim.worldPosY * outZ));
+    state->planeOffset =
+        -(obj->anim.worldPosZ * outX + (obj->anim.worldPosX * outY + obj->anim.worldPosY * outZ));
 
-    xf.rotX = (s16)(-obj[0]);
-    xf.rotY = (s16)(-obj[1]);
+    xf.rotX = (s16)-obj->anim.rotX;
+    xf.rotY = (s16)-obj->anim.rotY;
     xf.rotZ = 0;
     xf.scale = lbl_803E40E0;
-    xf.x = -((GameObject*)obj)->anim.worldPosX;
-    xf.y = -((GameObject*)obj)->anim.worldPosY;
-    xf.z = -((GameObject*)obj)->anim.worldPosZ;
+    xf.x = -obj->anim.worldPosX;
+    xf.y = -obj->anim.worldPosY;
+    xf.z = -obj->anim.worldPosZ;
     mtxRotateByVec3s(rotMtx, &xf);
     mtx44Transpose(rotMtx, (f32*)((char*)state + 0x38));
 
-    state->reach = lbl_803E40E4 * *(f32*)(obj + 4);
-    state->nearRadiusSq = (lbl_803E40E8 * *(f32*)(obj + 4)) * (lbl_803E40E8 * *(f32*)(obj + 4));
-    if (*(int*)((char*)placement + MMP_GYSERVENT_PLACE_INSTANCE) == MMP_GYSERVENT_DEBUG_INSTANCE_ID)
+    state->reach = lbl_803E40E4 * obj->anim.rootMotionScale;
+    state->nearRadiusSq = (lbl_803E40E8 * obj->anim.rootMotionScale) * (lbl_803E40E8 * obj->anim.rootMotionScale);
+    if (placement->base.mapId == MMP_GYSERVENT_DEBUG_INSTANCE_ID)
     {
         OSReport(lbl_8032253C);
     }
@@ -113,7 +109,7 @@ void objSeqMoveFn_80199188(GameObject* obj, int arg2)
     MmpGyserventState* state;
 
     state = (obj)->extra;
-    speed = (float)(s32)(*(u8*)(*(int*)&(obj)->anim.placementData + MMP_GYSERVENT_PLACE_SPEED) * 2);
+    speed = (float)(s32)(((MmpGyserventPlacement*)obj->anim.placementData)->speed * 2);
     t = state->reachAX - (obj)->anim.worldPosX;
     dyA = state->reachAY - (obj)->anim.worldPosY;
     distSqA = state->reachAZ - (obj)->anim.worldPosZ;
@@ -152,7 +148,7 @@ void objSeqMoveFn_80199188(GameObject* obj, int arg2)
     }
     leg = nearEnd ? -1 : -2;
 end:
-    objInterpretSeq(obj, arg2, leg, distSqB);
+    objInterpretSeq((int)obj, arg2, leg, distSqB);
 }
 
 void objSeqFn_801992ec(GameObject* obj, int arg2)
@@ -182,5 +178,5 @@ void objSeqFn_801992ec(GameObject* obj, int arg2)
     {
         cat = (d0 < state->nearRadiusSq) ? -1 : -2;
     }
-    objInterpretSeq(obj, arg2, cat, d1);
+    objInterpretSeq((int)obj, arg2, cat, d1);
 }

@@ -17,7 +17,10 @@
  * mcupgrade_SeqFn lives here but belongs to the sibling mcupgrade DLL
  * (0x2B7), which installs it as its anim-event callback.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/game_ui_interface.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
 #include "main/maketex.h"
 #include "main/object_api.h"
 #include "main/objfx.h"

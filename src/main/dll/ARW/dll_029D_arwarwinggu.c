@@ -10,12 +10,13 @@
  * arwarwinggu_setActiveVisible shows/hides a gun and selects its model
  * index; the arwarwing TU calls it when a shot is fired.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/ARW/dll_029D_arwarwinggu.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/objtexture.h"
 
 /* object def numbers (== seqId) of the Arwing's attached models */
 enum

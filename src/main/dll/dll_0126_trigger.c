@@ -45,6 +45,7 @@
 #include "main/dll/dll_0126_trigger.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/dll/headdisplay.h"
+#include "main/dll/mmp_gyservent.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
@@ -89,7 +90,6 @@ extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (h
 extern u8 framesThisStep;
 
 extern int getLActions();
-extern int objFn_80198fa4();
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
 extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
@@ -107,10 +107,8 @@ extern void gameTextFn_80125ba4(int id);
 extern void envFxFn_800887cc(void);
 extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
-extern void objSeqFn_801992ec(GameObject* obj, int target);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
-extern void objSeqMoveFn_80199188(GameObject* obj, int target);
 
 void Trigger_render(void)
 {
@@ -165,7 +163,7 @@ void Trigger_init(u8* obj, u8* params)
         break;
     case 0x4c:
         ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
-        objFn_80198fa4(obj, params);
+        objFn_80198fa4((GameObject*)obj, (MmpGyserventPlacement*)params);
         break;
     case 0x230:
         ((TriggerState*)state)->rangeSq = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);

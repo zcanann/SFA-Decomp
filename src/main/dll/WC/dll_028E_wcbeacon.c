@@ -14,10 +14,17 @@
  *  - ACTIVE: emits the active particle fx and fires the final trigger
  *    sequence once.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/WC/WCbeacon.h"
+#include "main/audio/sfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/game_timer.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/mapEventTypes.h"
+#include "main/objseq.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 

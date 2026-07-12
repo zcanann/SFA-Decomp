@@ -3,6 +3,18 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
+
+typedef struct MmpGyserventPlacement
+{
+    ObjPlacement base;
+    u8 pad18[0x3A - 0x18];
+    u8 reachScale;
+    u8 speed;
+    u8 pad3C;
+    u8 rotX;
+    u8 rotY;
+} MmpGyserventPlacement;
 
 typedef struct MmpGyserventState
 {
@@ -29,7 +41,7 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reachAX) == 0x1C);
 STATIC_ASSERT(offsetof(MmpGyserventState, reachBX) == 0x28);
 STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
-void objFn_80198fa4(s16* obj, void* placement);
+void objFn_80198fa4(GameObject* obj, MmpGyserventPlacement* placement);
 void objSeqMoveFn_80199188(GameObject* obj, int arg2);
 void objSeqFn_801992ec(GameObject* obj, int arg2);
 
