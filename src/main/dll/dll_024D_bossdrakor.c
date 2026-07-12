@@ -771,6 +771,9 @@ void bossdrakor_hitDetect(GameObject* obj)
     ((BossDrakorState*)inner)->hurtSfxCooldown -= timeDelta;
 }
 
+#pragma opt_common_subs on
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
 int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int inner = *(int*)&(obj)->extra;
@@ -828,6 +831,9 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     }
     return 0;
 }
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
+#pragma opt_loop_invariants reset
 
 void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init)
 {
