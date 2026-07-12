@@ -4723,7 +4723,7 @@ void trackIntersect(void)
         }
     }
 
-    for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 0x10)
+    for (i = 0, off = 0; i < gIntersectLineCount; off += 0x10, i++)
     {
         IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + off);
         int idx = rec->pt[0] * 2;
@@ -4778,14 +4778,15 @@ void trackIntersect(void)
         while (done == 0)
         {
             done = 1;
-            for (j = 0, off = 0; j < gIntersectLineCount - 1; j++, off += 2)
+            for (j = 0, off = 0; j < gIntersectLineCount - 1; off += 2, j++)
             {
+                u8* base = (u8*)lbl_803DCF34;
                 s16* p = (s16*)(lbl_803DCF40 + off);
                 s16 a = p[0];
                 s16 b;
-                int ta = (s8) * (u8*)(lbl_803DCF34 + a * 0x10 + 3) & 0x3f;
+                int ta = (s8)base[a * 0x10 + 3] & 0x3f;
                 b = p[1];
-                if (ta < ((s8) * (u8*)(lbl_803DCF34 + b * 0x10 + 3) & 0x3f))
+                if (ta < ((s8)base[b * 0x10 + 3] & 0x3f))
                 {
                     p[0] = b;
                     *(s16*)(lbl_803DCF40 + off + 2) = a;
@@ -4800,7 +4801,7 @@ void trackIntersect(void)
         counts[i - 1] += counts[i];
     }
 
-    for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 0x10)
+    for (i = 0, off = 0; i < gIntersectLineCount; off += 0x10, i++)
     {
         int tt = ((s8) * (u8*)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
         s16 c = counts[tt]++;
@@ -4817,7 +4818,7 @@ void trackIntersect(void)
     }
 
     prev = -1;
-    for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 2)
+    for (i = 0, off = 0; i < gIntersectLineCount; off += 2, i++)
     {
         t = (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + off) * 0x10 + 3) & 0x3f);
         if (t >= 0x14)
