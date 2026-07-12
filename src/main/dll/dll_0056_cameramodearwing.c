@@ -67,7 +67,6 @@ extern f32 gCamArwingRollScaleDefault;
 extern f32 gCamArwingXScaleDefault;
 extern f32 gCamArwingYScaleDefault;
 extern f32 lbl_803E1BDC;
-extern int getAngle(float y, float x);
 
 #pragma scheduling off
 #pragma peephole off

@@ -40,7 +40,6 @@ extern f32 lbl_803E3124;
 extern f32 lbl_803E3128;
 extern f32 lbl_803E312C;
 
-extern int getAngle(float y, float x);
 
 extern void* getTrickyObject(void);
 

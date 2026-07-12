@@ -142,7 +142,6 @@ extern void ObjMsg_SendToObject(void*, int, void*, int);
 extern void Music_Trigger(int id, int restart);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern s16 getAngle(f32 x, f32 z);
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
 extern f32 lbl_803DF008;

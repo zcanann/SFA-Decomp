@@ -40,7 +40,6 @@ extern void PSVECSubtract(float*, float*, float*);
 extern f32 PSVECDotProduct(float*, float*);
 extern void PSVECCrossProduct(float*, float*, float*);
 extern void PSVECNormalize(float*, float*);
-extern int getAngle(float y, float x);
 extern u32 lbl_803DBCD0;
 extern f32 timeDelta;
 extern f32 lbl_803E2990;

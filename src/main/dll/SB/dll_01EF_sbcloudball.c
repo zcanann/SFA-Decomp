@@ -18,7 +18,6 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-extern int getAngle(float y, float x);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 #include "main/game_object.h"
 #include "main/modellight_api.h"

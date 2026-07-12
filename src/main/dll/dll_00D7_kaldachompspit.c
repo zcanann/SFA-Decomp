@@ -48,7 +48,6 @@ extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
 extern void queueGlowRender(void* light);
-extern int getAngle(float y, float x);
 extern void ModelLightStruct_free(void* p);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int value);

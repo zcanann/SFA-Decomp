@@ -17,7 +17,6 @@ extern f32 lbl_803E3850;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
-extern s16 getAngle(f32 dx, f32 dz);
 
 
 extern f32 lbl_803E3854;
@@ -224,7 +223,7 @@ void magicPlantDropGem(int obj, void* setup, void* stateArg)
     int player;
     u8* childObj;
     f32 launchSpeed;
-    s16 angle;
+    int angle;
 
     state = (MagicPlantBridgeState*)stateArg;
     player = (int)Obj_GetPlayerObject();

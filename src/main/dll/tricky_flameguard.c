@@ -132,7 +132,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern void objSetAnimSpeedTo1(int* obj);
 extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
-extern int getAngle(float y, float x);
 extern void* ObjGroup_GetObjects(int group, int* count);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);

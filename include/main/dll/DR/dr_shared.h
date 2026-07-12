@@ -190,7 +190,6 @@ extern void* ObjPath_GetPointModelMtx(int obj, int idx);
 extern void fn_8003B950(f32* mtx);
 extern s16 gHighTopLookYawOffset;
 extern int* getTrickyObject(void);
-extern s16 getAngle(f32 dx, f32 dz);
 extern f32 lbl_803E69F0;
 extern f32 gHighTopGroundMarkerMtx[];
 extern void ObjPath_GetPointLocalPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z);

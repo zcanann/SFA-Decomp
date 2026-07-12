@@ -148,7 +148,6 @@ extern s32 CARDUnmount(s32 chan);
 extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
 extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern int getAngle(float y, float x);
 extern void AudioStream_StartPrepared(void);
 extern void showMemCardError();
 extern void cardGetMessage();

@@ -40,7 +40,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
-extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);

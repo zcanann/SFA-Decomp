@@ -47,7 +47,6 @@ extern f32 lbl_803E1928;
 extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
-extern int getAngle(float y, float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern float powfBitEstimate(float x, float y);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);

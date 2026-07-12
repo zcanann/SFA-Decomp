@@ -82,7 +82,6 @@ extern const f32 lbl_803E06B8;
 extern const f32 lbl_803E06BC;
 extern const f32 lbl_803E06C0;
 
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj, s8 p7, int p8, int p9,
                               int p10);
 extern void fn_80063368(short* obj);
@@ -192,7 +191,6 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
     f32 sum3;
     RomCurvePoint** hitOut;
     f32 heights[5];
-    extern int getAngle(f32 deltaX, f32 deltaZ);
 
     object = obj;
     if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
@@ -366,7 +364,6 @@ void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
     s16 pointIndex;
     s16 i;
     int angle;
-    extern int getAngle(f32 deltaX, f32 deltaZ);
 
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
     collision->surfaceNormalY = collision->segmentHitPlanes[0][1];
@@ -482,7 +479,7 @@ void fn_800E5CBC(short* obj, int state)
     CurvesCollisionState* collision;
     f32 normalZ;
     short pitch;
-    short angle;
+    int angle;
     f32 dy;
     f32 dx;
     f32 dz;

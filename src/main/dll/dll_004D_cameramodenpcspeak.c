@@ -52,7 +52,6 @@ extern int lbl_803DB9BC;
 extern f32 lbl_803DD580;
 extern f32 lbl_803DB9C4;
 
-extern s16 getAngle(f32 dx, f32 dz);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int getFocusedNpc(void);

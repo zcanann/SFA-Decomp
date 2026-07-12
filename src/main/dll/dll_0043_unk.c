@@ -124,7 +124,6 @@ void CameraModeStaffAnim_copyToCurrent(void)
 #pragma dont_inline on
 void camclimb_update(CameraObject* cam)
 {
-    extern int getAngle(float y, float x);
     extern int camcontrol_samplePathState();
     u8 needsReset;
     u32 angle;
@@ -235,7 +234,6 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
 #pragma peephole off
 void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
 {
-    extern int getAngle(float y, float x);
     GameObject* target;
     int view;
     f32 sinFacing;

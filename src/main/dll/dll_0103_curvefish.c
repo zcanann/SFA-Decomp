@@ -76,7 +76,6 @@ typedef enum CurveFishMode
 #define CURVEFISH_MAX_YAW_TURN 0x180
 
 extern f32 getXZDistance(f32* a, f32* b);
-extern s16 getAngle(f32 dx, f32 dz);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
 
 /* ROM curve query key for the fish path curves; first entry of this TU's
@@ -261,7 +260,7 @@ void CurveFish_update(int obj)
             ((GameObject*)obj)->anim.localPosY += dy * state->speed;
             ((GameObject*)obj)->anim.localPosZ += dz * state->speed;
 
-            targetYaw = getAngle(dx, dz);
+            targetYaw = (s16)getAngle(dx, dz);
             yawDelta = targetYaw - ((u16)(((GameObject*)obj)->anim.rotX));
             if (yawDelta > 0x8000)
             {

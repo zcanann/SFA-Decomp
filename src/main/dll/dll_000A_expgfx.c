@@ -188,7 +188,6 @@ extern const f32 gExpgfxU16ToUnitScale;
 extern int getHudHiddenFrameCount(void);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void fn_8000F83C(void);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void selectTexture(int handle, int slot);

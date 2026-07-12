@@ -58,7 +58,6 @@ extern const f32 lbl_803E05B8;
 extern const f32 lbl_803E05BC;
 extern const f32 lbl_803E05C0;
 extern const f32 lbl_803E05C4;
-extern int getAngle(float y, float x);
 
 #pragma opt_common_subs off
 void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)

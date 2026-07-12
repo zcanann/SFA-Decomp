@@ -157,7 +157,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(void* obj, int group);
 extern int ObjMsg_Pop(void* obj, int* msg, int* a, int* b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern int getAngle(float y, float x);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
 

@@ -105,7 +105,6 @@ typedef struct SmallBasketThrowSetup
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
-extern int getAngle(float y, float x);
 extern f32 gSmallBasketHitVelocity[];
 extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;

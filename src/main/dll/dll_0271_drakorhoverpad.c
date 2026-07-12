@@ -549,7 +549,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
     curve = &((DrakorHoverpadState*)p)->curve;
     if (g->f08 != 0)
     {
-        angle = getAngle(sqrtf(curve->tangentX * curve->tangentX + curve->tangentZ * curve->tangentZ), curve->tangentY);
+        angle = (s16)getAngle(sqrtf(curve->tangentX * curve->tangentX + curve->tangentZ * curve->tangentZ),
+                              curve->tangentY);
         phase = gDrakorHoverpadPi * (f32)angle / gDrakorHoverpadAngleScale;
         wobbleY = lbl_803E6A8C * mathCosf(phase);
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));

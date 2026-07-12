@@ -49,7 +49,6 @@
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern int getAngle(float y, float x);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 extern int* lbl_803DDAC8;

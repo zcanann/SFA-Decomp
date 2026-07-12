@@ -206,7 +206,6 @@ extern f32 gMinimapTwo;
 extern f32 gMinimapF24576;
 extern f32 gMinimapFNeg24576;
 extern f32 powfCoreFast(f32 base, f32 exp);
-extern int getAngle(float y, float x);
 extern u8 gMinimapZoomSfxActive;
 extern u8 gMinimapRadarInited;
 extern s8 gMinimapSavedViewMode;

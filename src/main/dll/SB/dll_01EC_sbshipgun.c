@@ -67,7 +67,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
 
-extern int getAngle(float y, float x);
 
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern const f32 lbl_803E588C;

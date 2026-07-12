@@ -63,7 +63,6 @@ extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
 extern u32 lbl_802C2298[3];
 extern u32 lbl_802C22A4[3];
-extern s16 getAngle(f32 dx, f32 dz);
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);
@@ -597,7 +596,6 @@ typedef struct GuardianAngleParams
 
 void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
 {
-    extern int getAngle(f32, f32);
     f32* velCache = ((GameObject*)obj)->extra;
     GuardianAngleParams rotParams;
     f32 buf[3];

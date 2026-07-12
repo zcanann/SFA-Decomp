@@ -30,7 +30,6 @@
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
-extern int getAngle(float y, float x);
 
 void CameraModeCloudRunner_copyToCurrent(void)
 {

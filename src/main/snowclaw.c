@@ -99,7 +99,6 @@ extern f32 lbl_803E66F0;
 extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
-extern int getAngle(float y, float x);
 extern f32 lbl_803E66E0;
 extern void ObjLink_DetachChild(void* obj, int* child);
 

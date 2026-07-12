@@ -52,7 +52,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void queueGlowRender(void* light);
-extern int getAngle(float y, float x);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setLightKind(int light, int v);

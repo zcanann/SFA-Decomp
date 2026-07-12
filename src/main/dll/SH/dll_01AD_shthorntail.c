@@ -94,7 +94,6 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z,
                                           int useInputPosition);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 modelInitBones();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_8003B228(GameObject* obj, int p2);

@@ -44,7 +44,6 @@ extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern int getAngle(float y, float x);
 
 typedef struct FireballPlacement
 {

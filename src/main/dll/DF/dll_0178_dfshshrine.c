@@ -136,7 +136,6 @@ extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
-extern int getAngle(float y, float x);
 extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);

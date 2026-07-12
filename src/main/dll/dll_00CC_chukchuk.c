@@ -130,7 +130,6 @@ void ChukChuk_update(short* obj)
 {
     extern void objParticleFn_80099d84(f32, short*, int, f32, int);
     extern int Obj_GetPlayerObject(void);
-    extern int getAngle(float y, float x);
 
     ChukChukState* v;
     u16 di;

@@ -27,7 +27,6 @@ extern f32 lbl_803E18B8;
 extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
-extern int getAngle(float y, float x);
 
 extern f32 lbl_803E18BC;
 

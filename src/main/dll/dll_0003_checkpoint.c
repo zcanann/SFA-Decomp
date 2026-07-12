@@ -407,7 +407,6 @@ STATIC_ASSERT(offsetof(CheckpointNavState, branchFlag) == 0x30);
  * clamping t to [0,1]; crossing a segment end hands off to the next checkpoint. */
 s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s32 p3, u8 flag)
 {
-    extern u16 getAngle(f32 a, f32 b);
     f32 v1[4];
     f32 v2[4];
     f32 v3[4];
@@ -477,12 +476,12 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
         x = Curve_EvalHermiteValuesFirst(v1, t, &outX);
         y = Curve_EvalHermiteValuesFirst(v2, t, &outY);
         z = Curve_EvalHermiteValuesFirst(v3, t, &outZ);
-        ang1 = getAngle(outX, outZ) + 0x8000;
+        ang1 = (u16)getAngle(outX, outZ) + 0x8000;
         if (flag != 0)
         {
             f32 xd;
             f32 zd;
-            ang2 = getAngle(sqrtf(outX * outX + outZ * outZ), outY) - 0x4000;
+            ang2 = (u16)getAngle(sqrtf(outX * outX + outZ * outZ), outY) - 0x4000;
             xd = x - out->posX;
             zd = z - out->posZ;
             seg = sqrtf(xd * xd + zd * zd);
@@ -561,7 +560,6 @@ extern f32 lbl_803E0518; /* used by Checkpoint_func07/06 */
  * cursor forward or back and returning the segment heading. */
 int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 {
-    extern int getAngle(f32 dx, f32 dz);
     s32 slotC;
     s32 slot8;
     CheckpointRouteEntry* cp;

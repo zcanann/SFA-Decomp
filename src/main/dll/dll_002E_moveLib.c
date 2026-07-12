@@ -86,7 +86,6 @@ extern void n_rareware_initialise(void);
 
 extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
-extern int getAngle(float y, float x);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern void normalize(f32* x, f32* y, f32* z);

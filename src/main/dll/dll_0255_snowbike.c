@@ -177,7 +177,6 @@ extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* dst);
 extern float powfBitEstimate(float x, float y);
 extern void setBButtonIcon(int icon);
-extern int getAngle(float y, float x);
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
 extern f32 gSnowBikeBamToDeg;

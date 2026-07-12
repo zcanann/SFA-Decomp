@@ -294,7 +294,6 @@ extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filt
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
 extern f32 lbl_803E2418;
-extern int getAngle(float y, float x);
 extern int gTrickyFrozenFxColors[];
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;

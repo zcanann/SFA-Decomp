@@ -158,7 +158,6 @@ extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
-extern int getAngle(float y, float x);
 extern int ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void ObjGroup_RemoveObject(u32 obj, int group);

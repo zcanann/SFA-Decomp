@@ -110,7 +110,6 @@ extern void forceAButtonIcon(int icon);
 extern void objRenderFn_80041018(int obj);
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
-extern int getAngle(float y, float x);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E5A30 = 1.0f;

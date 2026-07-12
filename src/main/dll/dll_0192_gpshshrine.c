@@ -82,7 +82,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
 extern void objSetAnimStateFlags(int* player, int a, int b);
-extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;

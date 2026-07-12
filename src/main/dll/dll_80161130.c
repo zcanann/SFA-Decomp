@@ -46,7 +46,6 @@ extern f32 lbl_803E2EF8;
 extern f32 lbl_803E2EFC;
 extern f32 lbl_803E2EEC;
 
-extern int getAngle(float y, float x);
 
 void ChukChuk_free(void);
 

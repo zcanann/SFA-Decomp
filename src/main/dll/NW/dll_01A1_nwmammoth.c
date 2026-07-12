@@ -54,7 +54,6 @@ extern u8 lbl_803DBF98[4];
 extern u8 lbl_803DBF9C[4];
 extern u8 lbl_803DBFA0[4];
 extern u8 lbl_803DBFA4[4];
-extern int getAngle(float y, float x);
 extern f32 gNwMammothSfxInterval;
 extern f32 gNwMammothTumbleweedDistSqThreshold;
 extern f32 gNwMammothCaptureDist;

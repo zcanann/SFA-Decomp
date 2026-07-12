@@ -149,7 +149,6 @@ extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
 extern u8 gSnowwormSeqIndexReset[4];
 extern u8 gSnowwormSeqIndexMax[4];
 extern u8 lbl_803DBD30[4];
-extern int getAngle(float y, float x);
 extern f32 timeDelta;
 extern f32 lbl_803E2B2C;
 extern f32 lbl_803E2B28;

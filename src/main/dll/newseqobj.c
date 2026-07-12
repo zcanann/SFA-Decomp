@@ -48,7 +48,6 @@ extern u32 fn_8014FFB4(GameObject* p1, void* p2, int p3);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void sidekickToy_updateCurveTargetLatch(GameObject* obj);
 
-extern int getAngle(float y, float x);
 
 extern f32 lbl_803E2740; /* 0.0f */
 extern f32 lbl_803E274C;

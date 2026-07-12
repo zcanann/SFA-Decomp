@@ -65,7 +65,6 @@ extern u8 gWorldPlanetTitleStringIds[8];
 extern u8 gWorldPlanetBriefingSpeakerModel[8];
 extern u8 gWorldPlanetLoadMapIndices[6];
 extern u8 gWorldPlanetWarpMapIndices[6];
-extern int getAngle(float y, float x);
 extern int loadMapAndParent(int mapId);
 extern int lockLevel(s32 val, int idx);
 

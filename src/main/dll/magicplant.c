@@ -90,7 +90,6 @@ extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 PSVECMag(f32* v);
-extern s16 getAngle(float y, float x);
 
 void mikaladon_init(GameObject* obj, int state)
 {

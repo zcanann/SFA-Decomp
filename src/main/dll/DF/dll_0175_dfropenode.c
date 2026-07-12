@@ -232,7 +232,6 @@ void dfropenode_getPlaneEquation(int* obj, f32* out)
 
 int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
 {
-    extern int getAngle(float y, float x);
     DFropenodeExtra* extra;
     DFropenodeObject* endObj;
     DFropenodeObject* baseObj;
@@ -502,7 +501,6 @@ void dfropenode_hitDetect(void)
 
 void dfropenode_update(DFropenodeObject* obj)
 {
-    extern int getAngle(float y, float x);
     extern DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused,
                                  s32 count, f32 tickScale);
 

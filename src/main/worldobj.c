@@ -90,7 +90,6 @@ extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, in
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
 extern float mathCosf(float x);
 extern float mathSinf(float x);
-extern int getAngle(float y, float x);
 extern void modelLightStruct_setEnabled(int light, int a, f32 b);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);

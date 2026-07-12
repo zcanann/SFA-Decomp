@@ -39,7 +39,6 @@ extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
 extern f32 getXZDistance(Vec* a, Vec* b);
 extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);
 extern void OSReport(const char* msg, ...);
@@ -162,7 +161,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
         dist = getXZDistance(&object->pos, &config->homePos);
         if (dist > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte))
         {
-            value = getAngle(object->modelPos.x - config->homePos.x, object->modelPos.z - config->homePos.z);
+            value = (s16)getAngle(object->modelPos.x - config->homePos.x, object->modelPos.z - config->homePos.z);
             angleDelta = value - (u16)object->facingAngle;
             if (0x8000 < angleDelta)
             {

@@ -19,7 +19,6 @@
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
@@ -2022,7 +2021,7 @@ int Obj_GetYawDeltaToObject(u16* obj, int target, float* distOut)
 
     dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX;
     dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ;
-    yawDelta = getAngle(dx, dz);
+    yawDelta = (s16)getAngle(dx, dz);
     if (distOut != (float*)0x0)
     {
         *distOut = sqrtf(dx * dx + dz * dz);

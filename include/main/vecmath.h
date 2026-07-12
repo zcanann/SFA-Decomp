@@ -34,6 +34,7 @@ void mtx44_multSafe(f32* lhs, f32* rhs, f32* out);
 void setMatrixFromObjectPos(f32 *mtx, const MatrixTransform *transform);
 int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
 int randomGetRange(int min, int max);
+int getAngle(f32 deltaX, f32 deltaZ);
 
 void vecRotateYXZ(s16* angles, f32* vector);
 void vecRotateZXY(s16* rotation, f32* vector);

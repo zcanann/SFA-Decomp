@@ -141,7 +141,6 @@ extern const f32 lbl_803E2B40;
 extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
 
-extern int getAngle(float y, float x);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
 extern int objBboxFn_800640cc();

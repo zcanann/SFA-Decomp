@@ -86,7 +86,6 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern f32 getXZDistance(f32* a, f32* b);
-extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern void* fn_8004B118(void* search);
@@ -428,7 +427,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
     if (((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
          (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ)) > lbl_803E23EC)
     {
-        yaw = getAngle(-((TrickyState*)state)->dirX, -((TrickyState*)state)->dirZ);
+        yaw = (s16)getAngle(-((TrickyState*)state)->dirX, -((TrickyState*)state)->dirZ);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
         ((TrickyState*)state)->dirX = -mathSinf((lbl_803E2454 * (f32)(int)*(s16*)obj) / lbl_803E2458);
         ((TrickyState*)state)->dirZ = -mathCosf((lbl_803E2454 * (f32)(int)*(s16*)obj) / lbl_803E2458);

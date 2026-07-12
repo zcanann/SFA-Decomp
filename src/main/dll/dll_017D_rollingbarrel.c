@@ -41,7 +41,6 @@ extern const f32 lbl_803E44B0;
 extern const f32 lbl_803E44B4;
 extern f32 gRollingBarrelCurveInitData;
 
-extern int getAngle(float y, float x);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);

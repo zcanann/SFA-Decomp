@@ -156,7 +156,6 @@ void DR_LaserCannon_release(void)
 
 int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCannonAim* out, int maxRate, f32* eyePos)
 {
-    extern int getAngle(float y, float x);
     s16 negClampS;
     s16* vec;
     f32 d[3];

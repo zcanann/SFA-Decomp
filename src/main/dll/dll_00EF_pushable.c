@@ -89,7 +89,6 @@ extern f32 lbl_803E3564;
 extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
-extern int getAngle(float y, float x);
 
 extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;

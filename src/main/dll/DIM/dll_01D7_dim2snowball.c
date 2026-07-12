@@ -76,7 +76,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern f32 lbl_803E4AA0;
 
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
-extern int getAngle(float y, float x);
 extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
 extern f32 lbl_803E4AA4;

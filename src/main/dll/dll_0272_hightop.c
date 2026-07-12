@@ -417,7 +417,7 @@ void HighTop_getLookTargetYaw(GameObject* obj, int mode, int* out)
     case 2:
         if (dll_2E_func0A(0x11, buf) != 0)
         {
-            yaw = getAngle(buf[3] - obj->anim.localPosX, buf[5] - obj->anim.localPosZ);
+            yaw = (s16)getAngle(buf[3] - obj->anim.localPosX, buf[5] - obj->anim.localPosZ);
             *out = yaw + gHighTopLookYawOffset;
             runtime = obj->extra;
             runtime->lookTargetX = buf[3];

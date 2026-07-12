@@ -46,7 +46,6 @@
 #include "main/frame_timing.h"
 #include "main/curve.h"
 extern void logPrintf(void* fmt, ...);
-extern int getAngle(f32 dx, f32 dz);
 extern int* gPlayerInterface;
 
 /* Preserve the effective compiler state of the imported header. */

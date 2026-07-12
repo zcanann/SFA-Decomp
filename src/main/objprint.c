@@ -884,7 +884,6 @@ void fn_8003A230(GameObject* obj, void* state, f32 val)
     }
 }
 
-extern int getAngle(float y, float x);
 extern f32 gObjPrintDegToAngle;
 
 void fn_8003B0D0(GameObject* obj, int target, int state, int maxAngle)

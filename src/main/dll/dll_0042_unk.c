@@ -423,7 +423,6 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
 
 void firstperson_updatePitch(f32 targetY, f32 dist, CameraObject* camera)
 {
-    extern u32 getAngle();
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     int pitchDelta;
 

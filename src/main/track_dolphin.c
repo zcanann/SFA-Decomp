@@ -1754,8 +1754,8 @@ void fn_80069EB8(int param)
 void fn_80061094(f32* vec, f32* out, f32 scale)
 {
     AngleXf xf;
-    f64 ax;
-    f64 az;
+    f32 ax;
+    f32 az;
     int i;
     int rotY;
 
@@ -1764,8 +1764,8 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
     xf.tz = 0.0f;
     xf.scale = 1.0f;
     xf.rotZ = 0;
-    ax = __fabs(vec[0]);
-    az = __fabs(vec[2]);
+    ax = __fabsf(vec[0]);
+    az = __fabsf(vec[2]);
     if (ax > az)
     {
         rotY = (u16)getAngle(ax, vec[1]);
@@ -1779,7 +1779,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
     {
         xf.rotY = 0x2000;
     }
-    xf.rotX = getAngle(vec[0], vec[2]);
+    xf.rotX = (s16)getAngle(vec[0], vec[2]);
     for (i = 0; i < 8; i++)
     {
         out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];

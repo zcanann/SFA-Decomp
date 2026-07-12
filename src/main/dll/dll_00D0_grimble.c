@@ -61,7 +61,6 @@ extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern int getAngle(float y, float x);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 void TumbleWeedBush_free(void);
 void TumbleWeedBush_hitDetect(void);

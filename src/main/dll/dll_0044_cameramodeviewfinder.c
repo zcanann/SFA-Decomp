@@ -50,7 +50,6 @@
 #define VIEWFINDER_MODE_FADE_BACK   4
 #define VIEWFINDER_MODE_IDLE        5
 
-extern u32 getAngle();
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
@@ -433,7 +432,7 @@ void CameraModeViewfinder_update(s16* obj)
         else
         {
             hitY = ((GameObject*)obj)->anim.worldPosY - (((GameObject*)camObj)->anim.worldPosY + lbl_803E17C0);
-            angleDiff = (getAngle() & 0xffff) - (obj[1] & 0xffffU);
+            angleDiff = (getAngle(hitY, hitDist) & 0xffff) - (obj[1] & 0xffffU);
             if (angleDiff > 0x8000)
             {
                 angleDiff = angleDiff - 0xffff;

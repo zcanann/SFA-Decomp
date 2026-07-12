@@ -61,7 +61,6 @@ typedef struct DIMWoodDoorShardState
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
-extern int getAngle(float y, float x);
 
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

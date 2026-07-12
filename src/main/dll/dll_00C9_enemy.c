@@ -133,7 +133,6 @@ extern f32 lbl_803E2598;
 extern void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg);
 extern u8 baddieTargetFn_8014a150(GameObject* obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
-extern int getAngle(float y, float x);
 extern u32 gEnemySelfAngleFlagClearMask[];
 extern u32 gEnemyTargetAngleFlagClearMask[];
 extern f32 lbl_803E25B8;
