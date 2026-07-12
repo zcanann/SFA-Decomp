@@ -379,7 +379,7 @@ void worldplanet_update(GameObject* obj)
         prevPlanet = state->selectedPlanet;
         {
             u8 ok;
-            u32 z[2];
+            int z[2];
             int* ids;
             u8* hints;
             z[0] = 0;
