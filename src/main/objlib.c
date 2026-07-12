@@ -32,9 +32,7 @@ extern void fn_80054F74(int obj, float* pos);
 
 extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);
-extern float mathSinf(float x);
 extern float fn_802943F4(float x);
-extern float mathCosf(float x);
 extern int playerIsDisguised(int obj);
 extern int objGetAnimState80A(GameObject* obj);
 

@@ -78,7 +78,6 @@ extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, in
 extern void* Obj_GetPlayerObject(void);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern float mathSinf(float x);
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
 {

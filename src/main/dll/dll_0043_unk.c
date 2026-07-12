@@ -40,8 +40,6 @@
 extern int objFn_802962b4(GameObject* obj);
 extern int objFn_80296700(int obj);
 extern void memset(void* ptr, int value, int size);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
 extern f32 gCamStaffAnimCurveMin;

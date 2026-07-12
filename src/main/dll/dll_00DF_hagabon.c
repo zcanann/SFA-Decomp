@@ -93,7 +93,6 @@ extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern float mathSinf(float x);
 extern int getAngle(float y, float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);

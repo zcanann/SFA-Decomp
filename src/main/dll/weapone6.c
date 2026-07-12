@@ -91,8 +91,6 @@ extern void fn_80179678(GameObject* slot, int obj);
 extern void fn_8017962C(int slot);
 extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void Obj_FreeObject(int obj);
 
 void fn_8013F100(GameObject* obj, register int state)

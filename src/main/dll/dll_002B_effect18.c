@@ -16,7 +16,6 @@ extern f32 gEffect18SineValueB;
 extern f32 gEffect18SineValueA;
 extern f32 gEffect18Progress0;
 extern f32 gEffect18Progress1;
-extern float mathSinf(float x);
 
 int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     void* extraArgs)

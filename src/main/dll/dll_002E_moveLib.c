@@ -136,7 +136,6 @@ extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
 extern void vecRotateZXY(s16* angles, f32* vec);
 extern int getAngle(float y, float x);
-extern float mathCosf(float x);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern s16* objModelGetVecFn_800395d8(GameObject* obj, int idx);
