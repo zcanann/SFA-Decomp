@@ -528,6 +528,7 @@ void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 void arwarwing_update(GameObject* obj)
 {
     ArwingState* state = obj->extra;
@@ -680,6 +681,7 @@ void arwarwing_update(GameObject* obj)
     arwarwing_handleObjectDamage(obj, state);
     arwarwing_emitDamageEffects((int)obj, state);
 }
+#pragma dont_inline off
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -1279,6 +1281,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -1439,6 +1442,7 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
+#pragma dont_inline off
 #pragma scheduling reset
 #pragma peephole reset
 
