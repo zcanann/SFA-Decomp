@@ -21,6 +21,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -102,7 +103,6 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void vecRotateZXY(void* angles, void* outVec);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,

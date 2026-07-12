@@ -6,6 +6,7 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/objfx.h"
@@ -78,7 +79,6 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);

@@ -29,6 +29,7 @@
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"
@@ -167,7 +168,6 @@ extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
 extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FDA0[];
 extern u8 lbl_8031FE18[];
 extern s16 gIceBaddieAttackMoves[];
