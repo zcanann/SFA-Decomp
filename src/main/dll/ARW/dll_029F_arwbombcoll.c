@@ -208,14 +208,14 @@ int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwi
 #pragma opt_common_subs off
 void ARWBombColl_update(int obj)
 {
-    int arw;
+    GameObject* arw;
     ObjAnimComponent* objAnim;
     ArwBombFlags* flags;
     ARWBombCollState* state;
-    int arwingCheck;
+    GameObject* arwingCheck;
     f32 minLifetime;
 
-    arw = (int)getArwing();
+    arw = getArwing();
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
     flags = &state->flags;
@@ -233,7 +233,7 @@ void ARWBombColl_update(int obj)
         }
     }
 
-    if ((u32)arw != 0 && arwarwing_isExplodingOrWarping(arw) != 0)
+    if (arw != NULL && arwarwing_isExplodingOrWarping(arw) != 0)
     {
         flags->b80 = 0;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -243,9 +243,9 @@ void ARWBombColl_update(int obj)
 
     if (flags->b80 == 0)
     {
-        arwingCheck = (int)getArwing();
-        if ((((u32)arwingCheck != 0)
-                 ? (((GameObject*)obj)->anim.localPosZ - ((GameObject*)arwingCheck)->anim.localPosZ <
+        arwingCheck = getArwing();
+        if (((arwingCheck != NULL)
+                 ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
                     gArwBombCollActivateDistanceZ)
                  : 0) != 0)
         {
@@ -273,7 +273,7 @@ active:
         if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
             (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
         {
-            arwarwing_addScore((GameObject*)arw, 0x19);
+            arwarwing_addScore(arw, 0x19);
             flags->b80 = 1;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
@@ -285,7 +285,7 @@ active:
         if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit, 0, 0) != 0 && (u32)hit != 0 &&
             (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == 0x605))
         {
-            arwarwing_addScore((GameObject*)arw, 0xf);
+            arwarwing_addScore(arw, 0xf);
             flags->b40 = 1;
             Obj_SetActiveModelIndex((GameObject*)obj, 1);
             spawnExplosionLegacy(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
@@ -298,7 +298,7 @@ active:
             spawnExplosionLegacy(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
         }
     }
-    if ((u32)arw != 0 && flags->b80 != 0)
+    if (arw != NULL && flags->b80 != 0)
     {
         switch (((GameObject*)obj)->anim.seqId)
         {
@@ -314,19 +314,19 @@ active:
             break;
         case 0x6d8:
             Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6D8Count((GameObject*)arw);
+            arwarwing_incrementPickup6D8Count(arw);
             break;
         case 0x6d9:
             Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6D9Count((GameObject*)arw);
+            arwarwing_incrementPickup6D9Count(arw);
             break;
         case 0x6db:
             Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6DBCount((GameObject*)arw);
+            arwarwing_incrementPickup6DBCount(arw);
             break;
         case 0x6da:
             Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6DACount((GameObject*)arw);
+            arwarwing_incrementPickup6DACount(arw);
             break;
         }
     }

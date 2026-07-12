@@ -721,18 +721,18 @@ void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int
 #pragma scheduling reset
 #pragma peephole reset
 
-void arwarwing_addBomb(int arwing)
+void arwarwing_addBomb(GameObject* arwing)
 {
-    ArwingState* state = ((GameObject*)arwing)->extra;
+    ArwingState* state = arwing->extra;
     if (state->bombCount < state->maxBombCount)
     {
         (state->bombCount)++;
     }
 }
 
-void arwarwing_upgradeLaserLevel(int arwing)
+void arwarwing_upgradeLaserLevel(GameObject* arwing)
 {
-    ArwingState* state = ((GameObject*)arwing)->extra;
+    ArwingState* state = arwing->extra;
     if ((s8)state->laserLevel < 2)
     {
         (state->laserLevel)++;
@@ -740,10 +740,10 @@ void arwarwing_upgradeLaserLevel(int arwing)
 }
 
 #pragma scheduling off
-int arwarwing_isExplodingOrWarping(int arwing)
+int arwarwing_isExplodingOrWarping(GameObject* arwing)
 {
     int result = 0;
-    u32 v = (*(ArwingState**)&((GameObject*)arwing)->extra)->mode;
+    u32 v = (*(ArwingState**)&arwing->extra)->mode;
     if (v == ARWING_MODE_EXPLODE || v == ARWING_MODE_WARPOUT)
     {
         result = 1;
@@ -752,14 +752,14 @@ int arwarwing_isExplodingOrWarping(int arwing)
 }
 #pragma scheduling reset
 
-int arwarwing_isBarrelRolling(int arwing)
+int arwarwing_isBarrelRolling(GameObject* arwing)
 {
-    return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_BARRELROLL;
+    return (*(ArwingState**)&arwing->extra)->mode == ARWING_MODE_BARRELROLL;
 }
 
-int arwarwing_isDead(int arwing)
+int arwarwing_isDead(GameObject* arwing)
 {
-    return (*(ArwingState**)&((GameObject*)arwing)->extra)->mode == ARWING_MODE_DEAD;
+    return (*(ArwingState**)&arwing->extra)->mode == ARWING_MODE_DEAD;
 }
 
 #pragma peephole off

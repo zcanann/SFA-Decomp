@@ -264,7 +264,7 @@ void ring_update(GameObject* obj)
         }
         if (state->flags.bit80 != 0)
         {
-            if (arwarwing_isDead((int)arwing) == 0 && arwarwing_isExplodingOrWarping((int)arwing) == 0 &&
+            if (arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0 &&
                 arwbombcoll_checkArwingCollision(obj, state, (int)arwing) != 0)
             {
         Ring_onCollect(obj, state, arwing);

@@ -157,7 +157,7 @@ void arwlevelcon_update(GameObject* obj)
     {
         int mapBlock = mapBlockFn_800592e4();
         if (arwing->anim.localPosZ - *(f32*)(mapBlock + 0x28) > lbl_803E70E8 &&
-            arwarwing_isDead((int)arwing) == 0 && arwarwing_isExplodingOrWarping((int)arwing) == 0)
+            arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0)
         {
             int requiredRings, collectedRings;
             arwingHudSetVisible(2);

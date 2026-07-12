@@ -184,7 +184,7 @@ void CameraModeArwing_update(u8* obj)
     pitch0 = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputPitch *
         ((CameraArwingWork*)gCamArwingWork)->pitchScale);
 
-    if (arwarwing_isDead((int)state) != 0)
+    if (arwarwing_isDead((GameObject*)state) != 0)
     {
         f32 va, vb, vc, vd;
         int step;
@@ -220,7 +220,7 @@ void CameraModeArwing_update(u8* obj)
         step = (s32)((f32)angleDelta * timeDelta);
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
     }
-    else if (arwarwing_isExplodingOrWarping((int)state) != 0)
+    else if (arwarwing_isExplodingOrWarping((GameObject*)state) != 0)
     {
         f32 nv = ((CameraArwingWork*)gCamArwingWork)->rollRate * gCamArwingRollDecay;
         ((CameraArwingWork*)gCamArwingWork)->rollRate = nv;

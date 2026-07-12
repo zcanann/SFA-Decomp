@@ -168,7 +168,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
         }
         if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)arwing)
         {
-            if (arwarwing_isBarrelRolling((int)arwing) != 0)
+            if (arwarwing_isBarrelRolling(arwing) != 0)
             {
                 PSVECNormalize(&objAnim->velocityX, &objAnim->velocityX);
                 d.x = objAnim->localPosX - arwingAnim->localPosX;
