@@ -383,6 +383,9 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
 }
 
+#pragma opt_strength_reduction on
+#pragma opt_common_subs off
+#pragma opt_propagation off
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b);
@@ -615,6 +618,9 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
 
 void NW_mammoth_free(GameObject* obj)
 {
