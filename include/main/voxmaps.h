@@ -116,6 +116,10 @@ typedef struct RouteNav {
     u8 budget;
 } RouteNav;
 
+typedef void (*VoxmapsWorldToIntGridFn)(f32* world, int* grid);
+typedef int (*VoxmapsTraceIntGridFn)(int* start, int* end, int* coordOut, u8* occOut, int skipFirst);
+typedef u8 (*VoxmapsTraceIntGridU8Fn)(int* start, int* end, int* coordOut, u8* occOut, int skipFirst);
+
 extern int gVoxMapsSlotTimers[];
 extern u32 gVoxMapsTransformObj;
 extern VoxMaps gVoxMaps;
@@ -150,6 +154,18 @@ int voxmaps_processRouteQueue(RouteState* state, int count);
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state);
 int fn_80011EB0(RouteState* state, int count);
 void loadVoxMaps(int handle, int* outCount, int* outSize);
+
+/* Some exact-match callers use 8/12-byte int scratch arrays around the
+ * three-s16 grid payload. Preserve that compiler-sensitive call view without
+ * redeclaring the canonical symbols in each TU. */
+#define voxmaps_worldToIntGrid(world, grid) \
+    (((VoxmapsWorldToIntGridFn)voxmaps_worldToGrid)((f32*)(world), (int*)(grid)))
+#define voxmaps_traceIntGrid(start, end, coordOut, occOut, skipFirst) \
+    (((VoxmapsTraceIntGridFn)voxmaps_traceLine)((int*)(start), (int*)(end), (int*)(coordOut), (u8*)(occOut), \
+                                                (skipFirst)))
+#define voxmaps_traceIntGridU8(start, end, coordOut, occOut, skipFirst) \
+    (((VoxmapsTraceIntGridU8Fn)voxmaps_traceLine)((int*)(start), (int*)(end), (int*)(coordOut), (u8*)(occOut), \
+                                                  (skipFirst)))
 
 
 #endif /* MAIN_VOXMAPS_H_ */

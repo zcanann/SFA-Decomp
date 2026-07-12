@@ -24,6 +24,7 @@
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/voxmaps.h"
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -89,8 +90,6 @@ extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
-extern void voxmaps_worldToGrid(f32* pos, int* grid);
-extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
 extern f32 PSVECMag(f32* v);
 extern s16 getAngle(float y, float x);
 
@@ -264,17 +263,17 @@ void fn_80153248(GameObject* obj, int state)
         worldPos[0] = (obj)->anim.localPosX;
         worldPos[1] = (obj)->anim.localPosY;
         worldPos[2] = (obj)->anim.localPosZ;
-        voxmaps_worldToGrid(worldPos, gridA);
+        voxmaps_worldToIntGrid(worldPos, gridA);
         worldPos[0] = curve->posX;
         worldPos[1] = curve->posY;
         worldPos[2] = curve->posZ;
-        voxmaps_worldToGrid(worldPos, gridB);
+        voxmaps_worldToIntGrid(worldPos, gridB);
         /* BUG: precedence - `!` binds before `&`, so this is (controlFlags == 0) & 0x01000000,
          * which is always false; the line-of-sight abort below can never fire. The author
          * almost certainly meant !(controlFlags & 0x01000000). */
         if (!((BaddieState*)state)->controlFlags & 0x01000000)
         {
-            if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0)
+            if (voxmaps_traceIntGrid(gridB, gridA, NULL, &hitOut, 0) == 0)
             {
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 *(f32*)(state + 0x324) = lbl_803E28B0;
@@ -445,15 +444,15 @@ void fn_8015383C(GameObject* obj, int state)
         worldPos[0] = (obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + (obj)->anim.localPosY;
         worldPos[2] = (obj)->anim.localPosZ;
-        voxmaps_worldToGrid(worldPos, gridA);
+        voxmaps_worldToIntGrid(worldPos, gridA);
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
             worldPos[0] = ((GameObject*)trackedObj)->anim.localPosX;
             worldPos[1] = lbl_803E2908 + ((GameObject*)trackedObj)->anim.localPosY;
             worldPos[2] = ((GameObject*)trackedObj)->anim.localPosZ;
         }
-        voxmaps_worldToGrid(worldPos, gridB);
-        hit = voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) & 0xff;
+        voxmaps_worldToIntGrid(worldPos, gridB);
+        hit = voxmaps_traceIntGrid(gridB, gridA, NULL, &hitOut, 0) & 0xff;
         if (hit != 0)
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;

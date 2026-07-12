@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
+#include "main/voxmaps.h"
 
 #define DLLB6_OBJFLAG_RENDERED 0x800
 #define DLLB6_OBJFLAG_FREED    0x40
@@ -30,10 +31,6 @@ extern f32 lbl_803E1658; /* 1/5 move-average weight */
 
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(GameObject* player);
-/* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match
-   (canonical engine_shared.h uses s16/VoxPos pointers and u8 - do not narrow these here) */
-extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern u8 voxmaps_traceLine(int* from, int* to, int* out, u8* occOut, int e);
 extern f32 PSVECMag(void* vec);
 extern float sqrtf(float x);
 
@@ -178,9 +175,9 @@ CamcontrolTargetObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraS
             worldTo[0] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointX;
             worldTo[1] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointY;
             worldTo[2] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointZ;
-            voxmaps_worldToGrid(worldFrom, gridFrom);
-            voxmaps_worldToGrid(worldTo, gridTo);
-            if (voxmaps_traceLine(gridFrom, gridTo, traceOut, occOut, 0) == 0 && occOut[0] != 1)
+            voxmaps_worldToIntGrid(worldFrom, gridFrom);
+            voxmaps_worldToIntGrid(worldTo, gridTo);
+            if (voxmaps_traceIntGridU8(gridFrom, gridTo, traceOut, occOut, 0) == 0 && occOut[0] != 1)
             {
                 return NULL;
             }
