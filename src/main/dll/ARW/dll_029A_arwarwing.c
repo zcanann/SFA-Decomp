@@ -945,15 +945,15 @@ void arwarwing_initAttachments(GameObject* obj, int state)
 
     if (*(void**)&((ArwingState*)state)->thrusterL == 0 && *(void**)&((ArwingState*)state)->thrusterR == 0)
     {
-        int setup;
-        setup = Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
-        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
-        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-        ((ArwingState*)state)->thrusterL = ((int (*)(int, int))loadObjectAtObject)((int)obj, setup);
-        setup = Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
-        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
-        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-        ((ArwingState*)state)->thrusterR = ((int (*)(int, int))loadObjectAtObject)((int)obj, setup);
+        ArwArwingProjectileSetup* setup;
+        setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
+        setup->field04 = 1;
+        setup->field05 = 1;
+        ((ArwingState*)state)->thrusterL = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+        setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_THRUSTER);
+        setup->field04 = 1;
+        setup->field05 = 1;
+        ((ArwingState*)state)->thrusterR = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
     }
 
     found = 0;
@@ -1196,7 +1196,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, int state)
     int hitVol;
     int hitObj;
 
-    if (objGetFlagsE5_2((int)obj) != 0)
+    if (objGetFlagsE5_2((u8*)obj) != 0)
         return;
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, (u32*)&hitVol) != 0 && hitVol != 0)
     {
@@ -1317,14 +1317,15 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         case 0xa:
             if (Obj_IsLoadingLocked())
             {
-                int setup = Obj_AllocObjectSetup(0x24, ARWARWING_CHILD_OBJ_BOMB);
+                ArwArwingProjectileSetup* setup =
+                    (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x24, ARWARWING_CHILD_OBJ_BOMB);
                 int loaded;
-                ((ArwArwingProjectileSetup*)setup)->posX = obj->anim.localPosX;
-                ((ArwArwingProjectileSetup*)setup)->posY = obj->anim.localPosY;
-                ((ArwArwingProjectileSetup*)setup)->posZ = obj->anim.localPosZ;
-                ((ArwArwingProjectileSetup*)setup)->field04 = 1;
-                ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-                loaded = ((int (*)(void*, int))loadObjectAtObject)(obj, setup);
+                setup->posX = obj->anim.localPosX;
+                setup->posY = obj->anim.localPosY;
+                setup->posZ = obj->anim.localPosZ;
+                setup->field04 = 1;
+                setup->field05 = 1;
+                loaded = ((int (*)(void*, int))loadObjectAtObject)(obj, (int)setup);
                 if ((void*)loaded != 0)
                     arwbombcoll_setLifetime((GameObject*)(loaded), 0x12c);
             }

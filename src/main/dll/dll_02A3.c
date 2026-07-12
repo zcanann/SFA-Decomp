@@ -66,7 +66,7 @@ void dll_2A3_update(int obj)
         if (state->lifetime <= lifetimeFloor)
         {
             state->lifetime = lifetimeFloor;
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
             return;
         }
     }

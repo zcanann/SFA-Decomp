@@ -2,10 +2,11 @@
 #define MAIN_DLL_DFPOBJCREATORSTATE_STRUCT_H_
 
 #include "types.h"
+#include "main/game_object.h"
 
 typedef struct DfpObjCreatorState
 {
-    int spawnedObj;
+    GameObject* spawnedObj;
     u8 unk04[8];
     s16 gameBit; /* 0x0C: spawn gate */
     s16 spawnPeriod; /* 0x0E */

@@ -86,14 +86,14 @@ void arwarwingbo_update(int obj)
     if (((GameObject*)arwing)->objectFlags & ARWARWINGBO_OBJFLAG_PARENT_SLACK)
     {
         arwarwing_clearActiveBomb(arwing);
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
         return;
     }
     if (state->explosionTimer > (zero = lbl_803E7044))
     {
         state->explosionTimer -= timeDelta;
         if (state->explosionTimer <= zero)
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         return;
     }
     if (state->control.fuseTimer > zero)

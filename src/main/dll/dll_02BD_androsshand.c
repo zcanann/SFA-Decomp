@@ -431,7 +431,7 @@ void androsshand_spawnShot(int obj, int hand, int p3)
     f32 pt[3];
     f32 dx, dz, dist;
     int yaw;
-    int setup;
+    AndrossHandShotSetup* setup;
 
     if (Obj_IsLoadingLocked())
     {
@@ -441,16 +441,16 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz) + 0x8000;
         gAndrossHandShotPitch = (u16)getAngle(pt[1] - ((GameObject*)state->arwingObj)->anim.localPosY, dist) >> 8;
-        setup = Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_SHOT);
-        ((AndrossHandShotSetup*)setup)->head.posX = pt[0];
-        ((AndrossHandShotSetup*)setup)->head.posY = pt[1];
-        ((AndrossHandShotSetup*)setup)->head.posZ = pt[2];
-        ((AndrossHandShotSetup*)setup)->yaw = (((GameObject*)obj)->anim.rotX + yaw) >> 8;
-        ((AndrossHandShotSetup*)setup)->pitch = gAndrossHandShotPitch;
-        ((AndrossHandShotSetup*)setup)->flag18 = 0;
-        ((AndrossHandShotSetup*)setup)->head.color[0] = 1;
-        ((AndrossHandShotSetup*)setup)->head.color[1] = 1;
-        obj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
+        setup = (AndrossHandShotSetup*)Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_SHOT);
+        setup->head.posX = pt[0];
+        setup->head.posY = pt[1];
+        setup->head.posZ = pt[2];
+        setup->yaw = (((GameObject*)obj)->anim.rotX + yaw) >> 8;
+        setup->pitch = gAndrossHandShotPitch;
+        setup->flag18 = 0;
+        setup->head.color[0] = 1;
+        setup->head.color[1] = 1;
+        obj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)setup);
         if ((void*)obj != NULL)
         {
             arwprojectile_setLifetime((GameObject*)(obj), lbl_803DC510);

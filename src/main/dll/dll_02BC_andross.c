@@ -111,7 +111,7 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
 {
     f32 maxDist;
     GameObject* nearObj;
-    int newObj;
+    ObjPlacement* newObj;
 
     maxDist = 10000.0f;
     if (Obj_IsLoadingLocked())
@@ -120,12 +120,12 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
         if (nearObj != NULL)
         {
             newObj = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_MARKER_ATTACH);
-            ((ObjPlacement*)newObj)->posX = nearObj->anim.localPosX;
-            ((ObjPlacement*)newObj)->posY = nearObj->anim.localPosY;
-            ((ObjPlacement*)newObj)->posZ = nearObj->anim.localPosZ;
-            ((ObjPlacement*)newObj)->color[0] = 1;
-            ((ObjPlacement*)newObj)->color[1] = 1;
-            state->effectHandle = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, newObj);
+            newObj->posX = nearObj->anim.localPosX;
+            newObj->posY = nearObj->anim.localPosY;
+            newObj->posZ = nearObj->anim.localPosZ;
+            newObj->color[0] = 1;
+            newObj->color[1] = 1;
+            state->effectHandle = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)newObj);
             if (state->effectHandle != NULL)
             {
                 state->effectHandle->anim.alpha = 0xff;
@@ -169,7 +169,7 @@ void fn_80239FCC(int obj, int state)
 {
     f32 ang;
     int rndDur;
-    int newObj;
+    GfProjectileSetup* newObj;
     int proj;
     int yaw;
     s16 rndYaw;
@@ -180,17 +180,17 @@ void fn_80239FCC(int obj, int state)
         gGfLevelConRingProjectilePitch = gGfLevelConRingProjectilePitchSource;
         rndYaw = randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);
-        newObj = Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_RING);
+        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_RING);
         ang = 3.1415927f * (f32)(int)rndYaw / 32768.0f;
-        ((ObjPlacement*)newObj)->posX = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
-        ((ObjPlacement*)newObj)->posY = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
-        ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8) - 500.0f;
-        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yaw) >> 8;
-        ((GfProjectileSetup*)newObj)->pitch = gGfLevelConRingProjectilePitch;
-        ((GfProjectileSetup*)newObj)->roll = 0;
-        ((ObjPlacement*)newObj)->color[0] = 1;
-        ((ObjPlacement*)newObj)->color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
+        newObj->head.posX = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
+        newObj->head.posY = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
+        newObj->head.posZ = *(f32*)(state + 0xc8) - 500.0f;
+        newObj->yawHi = (*(s16*)obj + yaw) >> 8;
+        newObj->pitch = gGfLevelConRingProjectilePitch;
+        newObj->roll = 0;
+        newObj->head.color[0] = 1;
+        newObj->head.color[1] = 1;
+        proj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
         if ((u32)proj != 0)
         {
             ((GameObject*)proj)->anim.rootMotionScale = gAndrossRingProjectileScale;
@@ -205,22 +205,22 @@ void fn_8023A168(int obj, int state)
     int proj;
     int yawRnd;
     int pitchRnd;
-    int newObj;
+    GfProjectileSetup* newObj;
 
     if (Obj_IsLoadingLocked())
     {
         yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
-        newObj = Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD);
-        ((ObjPlacement*)newObj)->posX = *(f32*)(state + 0xc0);
-        ((ObjPlacement*)newObj)->posY = *(f32*)(state + 0xc4);
-        ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8);
-        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yawRnd) >> 8;
-        ((GfProjectileSetup*)newObj)->pitch = pitchRnd;
-        ((GfProjectileSetup*)newObj)->roll = 0;
-        ((ObjPlacement*)newObj)->color[0] = 1;
-        ((ObjPlacement*)newObj)->color[1] = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
+        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD);
+        newObj->head.posX = *(f32*)(state + 0xc0);
+        newObj->head.posY = *(f32*)(state + 0xc4);
+        newObj->head.posZ = *(f32*)(state + 0xc8);
+        newObj->yawHi = (*(s16*)obj + yawRnd) >> 8;
+        newObj->pitch = pitchRnd;
+        newObj->roll = 0;
+        newObj->head.color[0] = 1;
+        newObj->head.color[1] = 1;
+        proj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
         if ((void*)proj != NULL)
         {
             ((GameObject*)proj)->anim.rootMotionScale = 5.0f;
@@ -234,7 +234,7 @@ void fn_8023A268(int obj, int state, int p3)
 {
     f32 dx, dz, dist;
     int yaw;
-    int newObj;
+    GfProjectileSetup* newObj;
 
     if (Obj_IsLoadingLocked())
     {
@@ -243,16 +243,16 @@ void fn_8023A268(int obj, int state, int p3)
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz);
         gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(state + 0xc4) - *(f32*)(*(int*)state + 0x10), dist) >> 8;
-        newObj = Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_AIMED);
-        ((ObjPlacement*)newObj)->posX = *(f32*)(state + 0xc0);
-        ((ObjPlacement*)newObj)->posY = *(f32*)(state + 0xc4);
-        ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8);
-        ((GfProjectileSetup*)newObj)->yawHi = (*(s16*)obj + yaw) >> 8;
-        ((GfProjectileSetup*)newObj)->pitch = gGfLevelConProjectilePitch;
-        ((GfProjectileSetup*)newObj)->roll = 0;
-        ((ObjPlacement*)newObj)->color[0] = 1;
-        ((ObjPlacement*)newObj)->color[1] = 1;
-        obj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
+        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_AIMED);
+        newObj->head.posX = *(f32*)(state + 0xc0);
+        newObj->head.posY = *(f32*)(state + 0xc4);
+        newObj->head.posZ = *(f32*)(state + 0xc8);
+        newObj->yawHi = (*(s16*)obj + yaw) >> 8;
+        newObj->pitch = gGfLevelConProjectilePitch;
+        newObj->roll = 0;
+        newObj->head.color[0] = 1;
+        newObj->head.color[1] = 1;
+        obj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)newObj);
         if ((void*)obj != NULL)
         {
             arwprojectile_setLifetime((GameObject*)(obj), gAndrossAimedProjectileLifetime);
@@ -2257,7 +2257,7 @@ void andross_update(int obj)
         state->spawnedObjLifetime -= framesThisStep;
         if (state->spawnedObjLifetime < 0)
         {
-            Obj_FreeObject((int)state->spawnedObj);
+            Obj_FreeObject(state->spawnedObj);
             state->spawnedObjLifetime = 0;
             state->spawnedObj = NULL;
         }

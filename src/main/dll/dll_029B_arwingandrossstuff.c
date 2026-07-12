@@ -253,7 +253,7 @@ void arwingandrossstuff_update(GameObject* obj)
 
     if ((void*)arwing != NULL && (((GameObject*)arwing)->objectFlags & ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK) != 0)
     {
-        Obj_FreeObject((int)object);
+        Obj_FreeObject((GameObject*)object);
         return;
     }
     {
@@ -264,7 +264,7 @@ void arwingandrossstuff_update(GameObject* obj)
             state->despawnTimer = dt - timeDelta;
             if (state->despawnTimer <= zero)
             {
-                Obj_FreeObject((int)object);
+                Obj_FreeObject((GameObject*)object);
             }
             return;
         }
@@ -280,7 +280,7 @@ void arwingandrossstuff_update(GameObject* obj)
             if (state->lifetime <= zero)
             {
                 state->lifetime = zero;
-                Obj_FreeObject((int)object);
+                Obj_FreeObject((GameObject*)object);
                 return;
             }
         }

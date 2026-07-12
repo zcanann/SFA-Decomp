@@ -109,12 +109,11 @@ void tree_spawnAmbientEffect(GameObject* obj, int state, s8 index)
     TreeState* ts = (TreeState*)state;
     TreeAmbientEffectSetup* effectSetup;
     int idx;
-    int newObj;
 
     if (Obj_IsLoadingLocked())
     {
-        newObj = Obj_AllocObjectSetup(TREE_AMBIENT_EFFECT_SETUP_SIZE, TREE_AMBIENT_EFFECT_OBJECT_ID);
-        effectSetup = (TreeAmbientEffectSetup*)newObj;
+        effectSetup = (TreeAmbientEffectSetup*)Obj_AllocObjectSetup(TREE_AMBIENT_EFFECT_SETUP_SIZE,
+                                                                    TREE_AMBIENT_EFFECT_OBJECT_ID);
         effectSetup->base.color[0] = setup->base.color[0];
         effectSetup->base.color[2] = setup->base.color[2];
         effectSetup->base.color[1] = setup->base.color[1];
@@ -134,7 +133,7 @@ void tree_spawnAmbientEffect(GameObject* obj, int state, s8 index)
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
         ts->ambientEffectHandles[idx] =
-            Obj_SetupObject(newObj, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+            (int)Obj_SetupObject(&effectSetup->base, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
     }
 }
 

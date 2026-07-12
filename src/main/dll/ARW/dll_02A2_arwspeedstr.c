@@ -88,7 +88,7 @@ void ARWSpeedStr_update(GameObject* obj)
             if (state->lifeTimer <= zero)
             {
                 state->lifeTimer = zero;
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject(obj);
                 return;
             }
         }

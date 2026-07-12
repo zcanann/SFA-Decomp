@@ -171,12 +171,12 @@ void ARWSquadron_hitDetect(void)
 void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, u8 flag)
 {
     f32 pz, py, px;
-    int proj;
-    int setup;
+    GameObject* proj;
+    ArwSquadronProjectileSetup* setup;
     if (Obj_IsLoadingLocked() == 0)
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
-    setup = Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);
+    setup = (ArwSquadronProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);
     ((ArwSquadronProjectileSetup*)setup)->posX = px;
     ((ArwSquadronProjectileSetup*)setup)->posY = py;
     ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
@@ -185,14 +185,14 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, u8 fla
     ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
     ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
     ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
-    proj = ((int (*)(int, int))loadObjectAtObject)((int)obj, setup);
-    if ((u32)proj == 0)
+    proj = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+    if (proj == NULL)
         return;
     if (flag != 0)
-        arwprojectile_createLinkedEffect((GameObject*)(proj), 1);
-    arwprojectile_setLifetime((GameObject*)(proj), 0x4b);
-    arwprojectile_placeForward((GameObject*)(proj), lbl_803E71A8);
-    Sfx_PlayFromObjectLimited(proj, SFXTRIG_wp_blaserhit16, 4);
+        arwprojectile_createLinkedEffect(proj, 1);
+    arwprojectile_setLifetime(proj, 0x4b);
+    arwprojectile_placeForward(proj, lbl_803E71A8);
+    Sfx_PlayFromObjectLimited((int)proj, SFXTRIG_wp_blaserhit16, 4);
 }
 #pragma optimization_level reset
 

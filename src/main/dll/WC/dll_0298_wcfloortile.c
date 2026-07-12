@@ -446,7 +446,7 @@ void arwarwing_spawnBomb(GameObject* obj, int state, int side)
 {
     ArwingState* arwing = (ArwingState*)state;
     f32 pz, py, px;
-    int setup;
+    ArwingBombSetup* setup;
     u8 cnt;
     if (Obj_IsLoadingLocked() == 0)
         return;
@@ -458,7 +458,7 @@ void arwarwing_spawnBomb(GameObject* obj, int state, int side)
         ObjPath_GetPointWorldPosition(obj, 5, &px, &py, &pz, 0);
     else
         ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
-    setup = Obj_AllocObjectSetup(0x20, WCFLOORTILE_CHILD_OBJ_BOMB);
+    setup = (ArwingBombSetup*)Obj_AllocObjectSetup(0x20, WCFLOORTILE_CHILD_OBJ_BOMB);
     ((ArwingBombSetup*)setup)->head.posX = px;
     ((ArwingBombSetup*)setup)->head.posY = py;
     ((ArwingBombSetup*)setup)->head.posZ = pz;
@@ -467,7 +467,7 @@ void arwarwing_spawnBomb(GameObject* obj, int state, int side)
     ((ArwingBombSetup*)setup)->roll = (obj)->anim.rotZ >> 8;
     ((ArwingBombSetup*)setup)->head.color[0] = 1;
     ((ArwingBombSetup*)setup)->head.color[1] = 1;
-    arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)((int)obj, setup);
+    arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
     fn_8022ED74((GameObject*)(arwing->activeBombObj), *(u16*)&arwing->bombProjectileParam);
     fn_8022ECE0((GameObject*)(arwing->activeBombObj), arwing->bombProjectileLifetime);
     Sfx_PlayFromObject((int)obj, SFXTRIG_ar_badhit16);

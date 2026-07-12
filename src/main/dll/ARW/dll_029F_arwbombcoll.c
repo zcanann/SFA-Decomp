@@ -237,7 +237,7 @@ void ARWBombColl_update(int obj)
             state->lifetime = lt - timeDelta;
             if (state->lifetime <= minLifetime)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
                 return;
             }
         }

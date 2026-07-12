@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/mm.h"
@@ -41,7 +42,6 @@ struct AndrossState;
 /* Pattern wrappers. */
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -967,8 +967,6 @@ extern f32 lbl_803E73C0;
 #pragma dont_inline reset
 
 extern void fn_8003B608(int r, int g, int b);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern const f32 lbl_803E72F8;
 extern const f32 lbl_803E7308;
 extern void vecRotateZXY(int obj, f32* vec);
@@ -1321,7 +1319,6 @@ extern f32 lbl_803E6F38;
 extern f32 lbl_803E6F3C;
 extern f32 lbl_803E6F40;
 
-extern int objGetFlagsE5_2(int obj);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);
 extern int loadMapAndParent(int mapId);

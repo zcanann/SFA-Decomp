@@ -118,7 +118,7 @@ void DR_LightBea_update(GameObject* obj)
     DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     if (state->flags.bit40)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject(obj);
     }
 }
 

@@ -88,10 +88,10 @@ void DFP_ObjCreator_free(GameObject* obj, int flag)
     DfpObjCreatorState* state = obj->extra;
     if (flag == 0)
     {
-        if (*(void**)&state->spawnedObj != NULL)
+        if (state->spawnedObj != NULL)
         {
             Obj_FreeObject(state->spawnedObj);
-            state->spawnedObj = 0;
+            state->spawnedObj = NULL;
         }
     }
 }
@@ -109,12 +109,10 @@ void DFP_ObjCreator_hitDetect(void)
 void DFP_ObjCreator_update(GameObject* obj)
 {
 
-    extern void* Obj_AllocObjectSetup(int size, int id);
-    extern u8* Obj_SetupObject(u8*, int, int, int, int);
     int data = *(int*)&obj->anim.placementData;
     DfpObjCreatorState* state = obj->extra;
-    u8* setup;
-    u8* newObj;
+    DfpobjcreatorSetup* setup;
+    GameObject* newObj;
 
     if (Obj_IsLoadingLocked() != 0)
     {
@@ -125,19 +123,19 @@ void DFP_ObjCreator_update(GameObject* obj)
             if (state->spawnTimer <= 0 && mainGetBit(state->gameBit) != 0)
             {
                 state->spawnTimer = state->spawnPeriod;
-                setup = Obj_AllocObjectSetup(0x24, DFPOBJCREATOR_CHILD_OBJ);
-                ((DfpobjcreatorSetup*)setup)->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
-                ((DfpobjcreatorSetup*)setup)->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
-                ((DfpobjcreatorSetup*)setup)->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
-                ((DfpobjcreatorSetup*)setup)->base.color[0] = ((DfpobjcreatorPlacement*)data)->colorR;
-                ((DfpobjcreatorSetup*)setup)->base.color[1] = ((DfpobjcreatorPlacement*)data)->colorG;
-                ((DfpobjcreatorSetup*)setup)->base.color[2] = ((DfpobjcreatorPlacement*)data)->colorB;
-                ((DfpobjcreatorSetup*)setup)->base.color[3] = ((DfpobjcreatorPlacement*)data)->colorA;
-                ((DfpobjcreatorSetup*)setup)->gameBit = -1;
-                ((DfpobjcreatorSetup*)setup)->gameBit2 = -1;
-                ((DfpobjcreatorSetup*)setup)->objDefId = 0xdc;
-                newObj = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
-                ((GameObject*)newObj)->unkF4 = *(s8*)(data + 0x1e);
+                setup = (DfpobjcreatorSetup*)Obj_AllocObjectSetup(0x24, DFPOBJCREATOR_CHILD_OBJ);
+                setup->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
+                setup->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
+                setup->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
+                setup->base.color[0] = ((DfpobjcreatorPlacement*)data)->colorR;
+                setup->base.color[1] = ((DfpobjcreatorPlacement*)data)->colorG;
+                setup->base.color[2] = ((DfpobjcreatorPlacement*)data)->colorB;
+                setup->base.color[3] = ((DfpobjcreatorPlacement*)data)->colorA;
+                setup->gameBit = -1;
+                setup->gameBit2 = -1;
+                setup->objDefId = 0xdc;
+                newObj = Obj_SetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                newObj->unkF4 = *(s8*)(data + 0x1e);
             }
             break;
         }
