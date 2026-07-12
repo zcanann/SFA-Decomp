@@ -10,6 +10,82 @@
 
 extern ObjectDescriptor gARWArwingObjDescriptor;
 
+typedef struct Arw339Flags
+{
+    u8 scoreFlag : 1;
+} Arw339Flags;
+
+typedef struct ArwInitCfg
+{
+    int a;
+    int b;
+    u16 c;
+} ArwInitCfg;
+
+extern GameObject* gArwing;
+extern f32 lbl_803E6F08;
+extern f32 lbl_803E6F0C;
+extern f32 lbl_803E6F10;
+extern f32 lbl_803E6F14;
+extern f32 lbl_803E6F18;
+extern f32 lbl_803E6F1C;
+extern f32 lbl_803E6F20;
+extern f32 lbl_803E6F28;
+extern f32 lbl_803E6F2C;
+extern f32 lbl_803E6F30;
+extern f32 lbl_803E6F34;
+extern f32 lbl_803E6F38;
+extern f32 lbl_803E6F3C;
+extern double lbl_803E6F48;
+extern double lbl_803E6F50;
+extern f32 lbl_803E6F58;
+extern f32 lbl_803E6F5C;
+extern f32 lbl_803E6F60;
+extern f32 lbl_803E6F64;
+extern f32 lbl_803E6F68;
+extern f32 lbl_803E6F6C;
+extern f32 lbl_803E6F70;
+extern f32 lbl_803E6F74;
+extern f32 lbl_803E6F78;
+extern f32 lbl_803E6F7C;
+extern f32 lbl_803E6F88;
+extern f32 lbl_803E6F8C;
+extern f32 lbl_803E6F90;
+extern f32 lbl_803E6F94;
+extern f32 lbl_803E6F98;
+extern f32 lbl_803E6F9C;
+extern f32 lbl_803E6FA0;
+extern f32 lbl_803E6FA4;
+extern f32 lbl_803E6FA8;
+extern f32 lbl_803E6FAC;
+extern f32 lbl_803E6FB0;
+extern f32 lbl_803E6FB4;
+extern f32 lbl_803E6FB8;
+extern f32 lbl_803E6FBC;
+extern f32 gArwingEscortSearchRadius;
+extern f32 lbl_803E6FC4;
+extern f32 lbl_803E6FC8;
+extern f32 lbl_803E6FCC;
+extern f32 lbl_803E6FD0;
+extern f32 lbl_803E6FD4;
+extern f32 lbl_803E6FD8;
+extern f32 lbl_803E6FDC;
+extern f32 lbl_803E6FE0;
+extern f32 lbl_803E6FE4;
+extern f32 lbl_803E6FE8;
+extern f32 lbl_803E6FEC;
+extern f32 lbl_803E6FF0;
+extern f32 lbl_803E6FF4;
+extern f32 lbl_803E6FF8;
+extern f32 lbl_803E6FFC;
+extern f32 lbl_803E7000;
+extern f32 gArwingFireTimerReset;
+extern f32 gArwingExplodeModeTime;
+extern u8 gArwingCourseMapIds[8];
+extern ArwInitCfg gArwingInitConfig;
+extern int gArwingPathSetupData[];
+extern int sArwingPathName[];
+
 GameObject* getArwing(void);
 int arwarwing_getExtraSize(void);
 int arwarwing_getObjectTypeId(void);

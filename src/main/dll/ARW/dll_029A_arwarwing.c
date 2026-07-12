@@ -127,7 +127,7 @@ enum
 
 GameObject* getArwing(void)
 {
-    return (GameObject*)gArwing;
+    return gArwing;
 }
 
 int arwarwing_getExtraSize(void)
@@ -146,7 +146,7 @@ void arwarwing_free(GameObject* obj)
     ArwingState* state = (obj)->extra;
 
     ObjGroup_RemoveObject((int)obj, ARWARWING_OBJGROUP);
-    gArwing = 0;
+    gArwing = NULL;
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
@@ -1445,7 +1445,7 @@ void arwarwing_init(GameObject* obj)
     (*gPathControlInterface)->setup(pathBlock, 3, gArwingPathSetupData, sArwingPathName, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
-    gArwing = (int)obj;
+    gArwing = obj;
     ObjHits_SetTargetMask((int)obj, 1);
     ((ArwingState*)state)->fullLoadout = 1;
     switch ((obj)->anim.mapEventSlot - 0x26)

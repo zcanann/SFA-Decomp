@@ -174,8 +174,7 @@ extern f32 lbl_803E704C;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-/* Arwing family (untouched: arwarwing, arwarwinggu, arwingandrossstuff, arwlevelcon, arwsquadron). */
-extern int gArwing;
+/* Arwing family (untouched: arwarwinggu, arwlevelcon, arwsquadron). */
 extern f32 lbl_803E7058;
 extern f32 lbl_803E70E0;
 extern f32 lbl_803E7188;
@@ -205,9 +204,6 @@ extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EE8;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
-extern f32 lbl_803E6F5C;
-extern f32 lbl_803E6FF4;
-extern f32 lbl_803E6FF8;
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
 
@@ -343,15 +339,6 @@ extern f32 lbl_803E6ECC;
 
 extern void PSVECSubtract(void* a, void* b, void* ab);
 
-extern f32 lbl_803E6F08;
-extern f32 lbl_803E6F0C;
-extern f32 lbl_803E6F10;
-extern f32 lbl_803E6F14;
-extern f32 lbl_803E6F18;
-extern f32 lbl_803E6F1C;
-extern f32 lbl_803E6F20;
-
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -362,15 +349,7 @@ extern f32 lbl_803E6F20;
 extern f32 lbl_803E71A8;
 
 
-extern f32 gArwingFireTimerReset;
-
-extern f32 lbl_803E6F34;
-extern f32 gArwingExplodeModeTime;
-extern f32 lbl_803E6F28;
-extern f32 lbl_803E6F6C;
 extern f32 lbl_803E6EF8;
-extern f32 lbl_803E6FFC;
-extern f32 lbl_803E7000;
 
 #pragma dont_inline on
 
@@ -389,48 +368,8 @@ extern f32 lbl_803E6BF8;
 
 extern int objModelGetVecFn_800395d8(GameObject* model, int idx);
 extern f32 fn_802945E0(f32 ratio);
-extern double lbl_803E6F48;
-extern double lbl_803E6F50;
-extern f32 lbl_803E6F58;
-extern f32 lbl_803E6F60;
-extern f32 lbl_803E6F64;
-extern f32 lbl_803E6F68;
-extern f32 lbl_803E6F38;
-
-extern f32 lbl_803E6F2C;
-extern f32 lbl_803E6F70;
-extern f32 lbl_803E6F74;
-extern f32 lbl_803E6F78;
-extern f32 lbl_803E6F7C;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
-extern f32 lbl_803E6F88;
-extern f32 lbl_803E6F8C;
-extern f32 lbl_803E6F90;
-extern f32 lbl_803E6F94;
-extern f32 lbl_803E6F98;
-extern f32 lbl_803E6F9C;
-extern f32 lbl_803E6FA0;
-extern f32 lbl_803E6FA4;
-extern f32 lbl_803E6FA8;
-extern f32 lbl_803E6FAC;
-extern f32 lbl_803E6FB0;
-extern f32 lbl_803E6FB4;
-extern f32 lbl_803E6FB8;
-extern f32 lbl_803E6FBC;
-extern f32 gArwingEscortSearchRadius;
-extern f32 lbl_803E6FC4;
-extern f32 lbl_803E6FC8;
-extern f32 lbl_803E6FCC;
-extern f32 lbl_803E6FD0;
-extern f32 lbl_803E6FD4;
-extern f32 lbl_803E6FD8;
-extern f32 lbl_803E6FDC;
-extern f32 lbl_803E6FE0;
-extern f32 lbl_803E6FE4;
-extern f32 lbl_803E6FE8;
-extern f32 lbl_803E6FEC;
-extern f32 lbl_803E6FF0;
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
 
@@ -468,28 +407,11 @@ extern f32 lbl_803E7048;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E6F30;
-extern f32 lbl_803E6F3C;
 extern f32 lbl_803E6F40;
 
 
 
 extern void registerNewScore(int a, int b, int c, int d);
-extern u8 gArwingCourseMapIds[8];
-typedef struct
-{
-    u8 scoreFlag : 1;
-} Arw339Flags;
-
-typedef struct
-{
-    int a;
-    int b;
-    u16 c;
-} ArwInitCfg;
-extern ArwInitCfg gArwingInitConfig;
-extern int gArwingPathSetupData[];
-extern int sArwingPathName[];
 
 extern f32 PSVECMag(f32* v);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
