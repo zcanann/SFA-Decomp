@@ -9,6 +9,7 @@
  */
 #include "main/dll/xyzanimator.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/genprops.h"
 #include "main/frame_timing.h"
 
@@ -20,7 +21,6 @@ extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Obj_FreeObject(int* obj);
 
 int GCbaddieShield_getExtraSize(void)
 {
@@ -61,7 +61,7 @@ void GCbaddieShield_update(int* obj)
     state[0] = state[0] - timeDelta;
     if (state[0] <= lbl_803E31FC)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
         return;
     }
     ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)(lbl_803E3200 * timeDelta));

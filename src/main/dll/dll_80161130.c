@@ -13,6 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/scarab.h"
@@ -45,7 +46,6 @@ extern f32 lbl_803E2EF8;
 extern f32 lbl_803E2EFC;
 extern f32 lbl_803E2EEC;
 
-extern void Obj_FreeObject(int* obj);
 extern int getAngle(float y, float x);
 
 void ChukChuk_free(void);
@@ -134,7 +134,7 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
     {
         if (((GameObject*)obj)->anim.placementData == NULL)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
             return 0;
         }
         return 6;

@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/dll/curve_walker.h"
@@ -78,7 +79,6 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
 /* fn_80152514: main update: child-zap timer, curve follow, heading steps,
  * landing sfx, light-pulse fx, child spark spawn. */
 
-extern void Obj_FreeObject(int* obj);
 
 extern u8 lbl_803DBCA8;
 extern int fn_801A0174(int* obj);
@@ -126,7 +126,7 @@ void fn_80152514(int* obj, u8* state)
         int* child = ((GameObject*)obj)->childObjs[0];
         if (child != 0)
         {
-            Obj_FreeObject(child);
+            Obj_FreeObject((GameObject*)child);
             ObjLink_DetachChild(obj, ((GameObject*)obj)->childObjs[0]);
             *(int*)&((GameObject*)obj)->childObjs[0] = 0;
         }

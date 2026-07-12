@@ -1,6 +1,7 @@
 /* DLL 0x10E - DeathSeq [8018BC48-8018BC50) */
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/camera.h"
@@ -23,7 +24,6 @@ extern void playerSetIsDead(GameObject* player, int v);
 
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);
-extern void Obj_FreeObject(int* obj);
 extern void showDeathMenu(void);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void Camera_SetFovY(f32 fovY);
@@ -112,7 +112,7 @@ void DeathSeq_update(int* obj)
                 }
                 cutsceneFadeInOut(0);
                 setPendingMapLoad(0);
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
             }
         }
         else

@@ -1,6 +1,7 @@
 /* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_api.h"
@@ -49,7 +50,6 @@ extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, 
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void vecRotateZXY(void* params, f32* vec);
-extern void Obj_FreeObject(void* obj);
 extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
 
 int ProximityMine_getExtraSize(void)
@@ -259,7 +259,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             Sfx_StopObjectChannel((u32)obj, 0x40);
             if (timerCountDown(&state->renderTimer) != 0)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
                 return;
             }
             break;
