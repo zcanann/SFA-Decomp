@@ -351,7 +351,6 @@ void fn_80174BFC(GameObject* obj, int ext)
 
 u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 {
-    extern int Obj_GetPlayerObject();
     u32 bitVal;
     int player;
     PushableState* state;
@@ -423,7 +422,7 @@ u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
         {
             mainSetBits(0x103, 1);
             *(u8*)((int)obj + 0xaf) = *(u8*)((int)obj + 0xaf) & ~8;
-            player = Obj_GetPlayerObject();
+            player = (int)Obj_GetPlayerObject();
             dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
             dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             len = sqrtf(dx * dx + dz * dz);
