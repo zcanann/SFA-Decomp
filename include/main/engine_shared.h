@@ -13,6 +13,7 @@
 #include "main/frame_timing.h"
 #include "main/gametext.h"
 #include "main/model_engine.h"
+#include "main/mm.h"
 #include "main/newclouds.h"
 #include "main/pad.h"
 #include "main/resource.h"
@@ -59,8 +60,6 @@ extern u8 pauseMenuGetState(void);
 extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
 extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
-extern void mm_free(void *ptr);
-extern void *mmAlloc(u32 size, u32 tag, void *name);
 extern void getTabEntry(void* dst, int kind, int offset, int size);
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
@@ -123,8 +122,6 @@ extern u8 lbl_803DCCA5;
 extern char* lbl_803DC9C4;
 extern char* gameStrcpy(char* dst, char* src);
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
-extern u32 mmSetFreeDelay(u32 delay);
-extern u8 testAndSet_onlyUseHeap3(int arg);
 extern void fn_80008F38(void *addr, u32 dest, u32 size);
 extern f32 lbl_803DE6B0;
 extern int lbl_803DC9AC;
@@ -138,7 +135,6 @@ extern void DCStoreRange(void* addr, u32 nBytes);
 extern int DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, void (*cb)(void*), int prio);
 extern void checkReset(void);
 extern void waitNextFrame(void);
-extern void mmFreeTick(int arg);
 extern f32 lbl_803DE5D4;
 extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
 extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
@@ -184,7 +180,6 @@ extern u16 lbl_803DC9A8;
 extern void *lbl_803DB378;
 extern f32 lbl_803DE704;
 extern f32 lbl_803DE708;
-extern void *mmAllocateFromFBMemoryStore(void *store);
 extern int lbl_803DC984;
 extern f32 lbl_803DC9A0;
 extern u8 lbl_803DC990;

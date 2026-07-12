@@ -29,8 +29,7 @@ void CameraModePerv_copyToCurrent(void)
 
 void CameraModePerv_free(void)
 {
-    extern void mm_free(u32);
-    mm_free((u32)lbl_803DD5C8);
+    mm_free((void*)lbl_803DD5C8);
     lbl_803DD5C8 = NULL;
 }
 

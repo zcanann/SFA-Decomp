@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/mm.h"
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
 #include "main/effect_interfaces.h"
@@ -194,8 +195,6 @@ extern void* memset(void* dst, int c, int n);
 extern void Obj_FreeObject(int obj);
 extern void textureFree(int tex);
 extern int textureLoadAsset(int id);
-extern void mm_free(void* p);
-extern void* mmAlloc(int size, int kind, int flags);
 extern void debugPrintf(char* fmt, ...);
 extern char sWaterfxDllAllocFailed[];
 extern int gExpgfxRuntimeData[];

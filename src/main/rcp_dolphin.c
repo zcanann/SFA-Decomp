@@ -2193,7 +2193,6 @@ void gxTextureFn_80052efc(void)
 
 extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
-extern int mmSetFreeDelay(int v);
 extern void defragMemory(int mode);
 extern char sRcpTexRestructStrings[];
 

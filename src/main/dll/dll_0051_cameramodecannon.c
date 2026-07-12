@@ -27,8 +27,7 @@ void CameraModeCannon_copyToCurrent(void)
 
 void CameraModeCannon_free(void)
 {
-    extern void mm_free(u32);
-    mm_free((u32)lbl_803DD5A0);
+    mm_free((void*)lbl_803DD5A0);
     lbl_803DD5A0 = NULL;
 }
 

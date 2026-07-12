@@ -119,7 +119,6 @@ extern f32 lbl_803E1D6C;
 extern f32 gSaveSelectPositionScale;
 extern f32 lbl_803E1D74;
 extern u8 framesThisStep;
-extern int mmSetFreeDelay(int v);
 extern void Music_Trigger(int id, int arg);
 extern void trySaveGame(int slot);
 extern int gplayNewGame(char* name, int slot);

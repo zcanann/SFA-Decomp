@@ -23,7 +23,6 @@ extern void titleScreenTextDrawFunc(void);
 
 static char sNRarewareReportTag[] = "n_rareware\n";
 
-extern int mmSetFreeDelay(int v);
 extern void printHeapStats(int mode);
 extern void OSReport(const char* msg, ...);
 extern TitleMenuControl* gTitleMenuLinkInterface;

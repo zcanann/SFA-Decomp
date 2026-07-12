@@ -1485,7 +1485,6 @@ u32 mapLoadDataFile(int mapId, int fileId)
     return result;
 }
 
-extern void mmFreeTick(int arg);
 
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
@@ -6455,7 +6454,6 @@ extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
 extern int stackCreate(int n, int stride);
-extern int testAndSet_onlyUseHeap3(int v);
 extern void dvdReadCb_80041d30();
 extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;

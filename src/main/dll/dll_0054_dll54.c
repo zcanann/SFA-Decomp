@@ -42,8 +42,7 @@ void dll_54_func06_nop(void)
 
 void dll_54_func05(void)
 {
-    extern void mm_free(u32);
-    mm_free((u32)gCameraModeNpcSpeakState);
+    mm_free((void*)gCameraModeNpcSpeakState);
     gCameraModeNpcSpeakState = NULL;
 }
 

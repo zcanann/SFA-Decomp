@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
+#include "main/mm.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
 #include "main/render.h"
@@ -285,7 +286,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 Vec_distance(void* a, void* b);
 extern int ObjList_FindObjectById(int objectId);
 extern f32 lbl_803E5F10;
-extern void mm_free(void* p);
 extern void Music_Trigger(int id, int a);
 extern void timeOfDayFn_80055000(void);
 extern int lbl_803DC148;

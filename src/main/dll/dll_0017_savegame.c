@@ -21,6 +21,7 @@
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
+#include "main/mm.h"
 #include "main/dll/gameplay.h"
 #include "main/dll/player_status.h"
 #include "main/mapEventTypes.h"
@@ -178,7 +179,6 @@ extern SaveGameDefaultPosition gSaveGameDefaultPosition;
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
-extern void mm_free(u32);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
@@ -186,7 +186,6 @@ extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);
 extern void loadUiDll(int index);
 extern void playerAddHealth(u8* player, int v);
-extern void* mmAlloc(int size, int type, int flag);
 
 void loadMapForCurrentSaveGame(void);
 void saveGame_saveObjectPos(int* obj);
@@ -770,7 +769,7 @@ void clearSaveGameLoadingFlag(void)
 void SaveGame_release(void)
 {
     if (pRestartPoint != 0)
-        mm_free(pRestartPoint);
+        mm_free((void*)pRestartPoint);
 }
 
 void SaveGame_initialise(void)
@@ -819,7 +818,7 @@ void SaveGame_gplayClearRestartPoint(void)
 {
     if (pRestartPoint != 0)
     {
-        mm_free(pRestartPoint);
+        mm_free((void*)pRestartPoint);
         pRestartPoint = 0;
     }
 }
@@ -1192,7 +1191,7 @@ void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte)
             memcpy(lbl_803DD498, base, SAVEGAME_ACTIVE_SIZE);
             if (pRestartPoint != 0)
             {
-                mm_free(pRestartPoint);
+                mm_free((void*)pRestartPoint);
                 pRestartPoint = 0;
             }
         }

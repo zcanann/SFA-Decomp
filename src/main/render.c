@@ -15,7 +15,7 @@ extern f32 lbl_803DE544;
 
 int getLActions(int a, int b, u16 idx)
 {
-    void* buf = mmAlloc(0x28, -1, NULL);
+    void* buf = mmAlloc(0x28, -1, 0);
     getTabEntry(buf, MLDF_FILEID_LACTIONS_BIN, idx * 0x28, 0x28);
     mm_free(buf);
     return 0;

@@ -19,6 +19,7 @@
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/pad.h"
 #include "main/texture.h"
+#include "main/mm.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -55,8 +56,6 @@ extern void* gameTextGetPhrase(int textId, int phraseIndex);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 extern void gameTextAppendStr(char* str, int arg2);
-extern void mm_free(void);
-extern void* mmAlloc(int size, int type, int flag);
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)
 {
@@ -309,7 +308,7 @@ void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 
 void TitleMenuItem_free(void)
 {
-    mm_free();
+    mmFreeLegacyNoArg();
 }
 
 void TitleMenuItem_initialise(void)

@@ -146,7 +146,7 @@ void voxmaps_freeRouteWork(void** p)
 
 void voxmaps_allocRouteWork(void** p)
 {
-    p[0] = mmAlloc(0xe88, 0x10, NULL);
+    p[0] = mmAlloc(0xe88, 0x10, 0);
     p[1] = (u8*)p[0] + 0xaf0;
     p[2] = (u8*)p[1] + 0x320;
 }
@@ -259,7 +259,7 @@ void voxmaps_initialise(void)
         i++;
     }
     gVoxMapsMaxMapIndex = i - 1;
-    gVoxMapsScratchBuffer = mmAlloc(640, 16, NULL);
+    gVoxMapsScratchBuffer = mmAlloc(640, 16, 0);
 
     for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
@@ -593,7 +593,7 @@ void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
         OSReport(msg + 0x13c);
         return NULL;
     }
-    hdr = mmAlloc(size, 16, NULL);
+    hdr = mmAlloc(size, 16, 0);
     if (hdr == NULL)
     {
         OSReport(msg + 0x174);

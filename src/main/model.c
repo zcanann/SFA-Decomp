@@ -195,7 +195,6 @@ void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
     chain->enabled = enabled;
 }
 
-extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);

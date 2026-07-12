@@ -56,7 +56,6 @@ extern f32 lbl_803E4004;
 extern f32 lbl_803E4008;
 extern const f32 lbl_803E4018;
 
-extern int mmAlloc(int size, int pool, int tag);
 extern int return0_80060B90(void* blk);
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
@@ -355,7 +354,7 @@ void XyzAnimator_update(GameObject* obj)
         }
         t = ((XyzAnimatorState*)state)->vertexCount * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
         t = t + ((XyzAnimatorState*)state)->unk8 * 0xc;
-        alloc = mmAlloc(t, 5, 0);
+        alloc = (int)mmAlloc(t, 5, 0);
         ((XyzAnimatorState*)state)->dataBuffer = alloc;
         stride = ((XyzAnimatorState*)state)->rowCount * 2;
         alloc = alloc + ((XyzAnimatorState*)state)->vertexCount * 6;

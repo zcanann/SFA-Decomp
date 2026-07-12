@@ -134,7 +134,6 @@ int dll_19_func1B(GameObject *obj)
 
 void dll_19_func12(int* obj, int* state, u8 flag)
 {
-    extern void mm_free(u32);
     Sfx_StopObjectChannel(obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
     {
@@ -153,7 +152,7 @@ void dll_19_func12(int* obj, int* state, u8 flag)
     voxmaps_freeRouteWork((char*)state + 900);
     if (*(u32*)&((GroundBaddieState*)state)->path != 0)
     {
-        mm_free(*(u32*)&((GroundBaddieState*)state)->path);
+        mm_free((void*)*(u32*)&((GroundBaddieState*)state)->path);
         *(int*)&((GroundBaddieState*)state)->path = 0;
     }
 }

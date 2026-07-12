@@ -870,7 +870,6 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(void);
-extern void mmFreeTick(int arg);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
 extern int saveGame_restoreObjectPosToRomList(void* object);

@@ -19,6 +19,7 @@
 #include "main/game_object.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
+#include "main/mm.h"
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0015_curves.h"
@@ -30,9 +31,7 @@ extern u32 lbl_803DD4AC;
 extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
-extern void mm_free(u32);
 extern void* gameTextGet(int textId);
-extern void* mmAlloc(int size, int type, int flag);
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
 extern void loadAssetFileById(void** out, int id);
@@ -199,7 +198,7 @@ void screens_run(void)
 {
     if (lbl_803DD4A0 != 0)
     {
-        mm_free(lbl_803DD4A0);
+        mm_free((void*)lbl_803DD4A0);
         lbl_803DD4A0 = 0;
         lbl_803DD4A4 = 0;
         lbl_803DD4AC = (u32)-1;
@@ -210,7 +209,7 @@ void screens_remove(void)
 {
     if (lbl_803DD4A0 != 0)
     {
-        mm_free(lbl_803DD4A0);
+        mm_free((void*)lbl_803DD4A0);
         lbl_803DD4A0 = 0;
         lbl_803DD4AC = (u32)-1;
         lbl_803DD4A4 = 0;
@@ -239,12 +238,12 @@ void screens_show(int id)
         if (size != (int)lbl_803DD4A4)
         {
             if (lbl_803DD4A0 != 0)
-                mm_free(lbl_803DD4A0);
+                mm_free((void*)lbl_803DD4A0);
             lbl_803DD4A0 = (u32)mmAlloc(size, 2, 0);
         }
         lbl_803DD4A4 = size;
         getTabEntry((void*)lbl_803DD4A0, MLDF_FILEID_SCREENS_BIN, offset, size);
-        mm_free((u32)asset);
+        mm_free(asset);
         lbl_803DD4AC = id;
     }
     lbl_803DD4A8 = 1;

@@ -112,7 +112,7 @@ void audioFree(void* ptr)
 
 void* _audioAlloc(u32 size)
 {
-    return mmAlloc(size, 0xb, NULL);
+    return mmAlloc(size, 0xb, 0);
 }
 
 void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger)
@@ -1754,10 +1754,10 @@ int musicInitMidiWad(void)
         gMusicChannelCounterA = 1;
         gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
-        saved = testAndSet_onlyUseHeap3(0);
+        saved = testAndSetOnlyUseHeap3_u8(0);
         gMidiWadFileData =
             loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, (void (*)(void*))MIDIWADLoadedCallback);
-        testAndSet_onlyUseHeap3(saved);
+        testAndSetOnlyUseHeap3_u8(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
     {
@@ -2105,7 +2105,7 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
     {
         size = (size | 0x1f) + 1;
     }
-    buf = mmAlloc(size, 0, NULL);
+    buf = mmAlloc(size, 0, 0);
     *outBuf = buf;
     entry->fn = (void (*)(int, int, int))cb;
     entry->a = cbArg1;

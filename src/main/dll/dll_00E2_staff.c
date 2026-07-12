@@ -23,6 +23,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/mm.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
@@ -749,7 +750,6 @@ void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2)
     *(void**)((char*)slots + 0x48) = slot;
 }
 
-extern void mm_free(void* p);
 
 void GCbaddieShield_update(int* obj);
 
@@ -795,7 +795,6 @@ void MikaBombShadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-extern int mmAlloc(int size, int a, int b);
 extern f32 lbl_803E3328;
 typedef struct StaffQuakeSpellState
 {

@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/mm.h"
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/objanim.h"
@@ -36,7 +37,6 @@ struct AndrossState;
 extern u8 framesThisStep;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern void mm_free(void* ptr);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);

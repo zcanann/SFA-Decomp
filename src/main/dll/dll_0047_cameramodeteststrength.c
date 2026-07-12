@@ -169,8 +169,7 @@ void CameraModeTestStrength_copyToCurrent(void)
 
 void CameraModeTestStrength_free(void)
 {
-    extern void mm_free(u32);
-    mm_free((u32)lbl_803DD560);
+    mm_free((void*)lbl_803DD560);
     lbl_803DD560 = 0;
 }
 

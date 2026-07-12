@@ -11,6 +11,7 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/model.h"
+#include "main/mm.h"
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_00C9_enemy.h"
@@ -173,7 +174,6 @@ extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int lig
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int modelLightStruct_getActiveState(int light);
 extern void ModelLightStruct_free(int light);
-extern void mm_free(int p);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 extern void Obj_FreeObject(int obj);
 
@@ -1650,7 +1650,7 @@ void enemy_free(GameObject* obj, int flag)
     }
     if (*(void**)state != NULL)
     {
-        mm_free(*(int*)state);
+        mm_free((void*)*(int*)state);
         *(int*)state = 0;
     }
     switch ((obj)->anim.seqId)
@@ -2090,7 +2090,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         state[0x2ef] = 2;
         if (*(void**)state == NULL)
         {
-            *(int*)state = mmAlloc(264, 26, 0);
+            *(int*)state = (int)mmAlloc(264, 26, 0);
         }
         if (*(void**)state != NULL)
         {

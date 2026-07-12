@@ -7,6 +7,7 @@
 #include "main/object_transform.h"
 #include "main/objprint_dolphin.h"
 #include "main/fileio.h"
+#include "main/mm.h"
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
@@ -889,8 +890,6 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
 }
 
 extern s32 lbl_803DCC48;
-extern char* getCache(void);
-extern void cacheQueueWait(int);
 extern void GXLoadPosMtxImm(f32* m, int id);
 u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
 
@@ -918,10 +917,10 @@ typedef struct
 #pragma dont_inline on
 void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
 {
-    char* cache = getCache();
+    char* cache = (char*)getCache();
     if (lbl_803DCC48 == 1)
     {
-        char* c2 = getCache();
+        char* c2 = (char*)getCache();
         char* src;
         char* dst;
         int i;
@@ -1182,7 +1181,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
     u8* tbl[1];
     char* cache;
     tbl[0] = gObjGxPosMtxIdTable;
-    cache = getCache();
+    cache = (char*)getCache();
     if (lbl_803DCC48 == 1)
     {
         if (skip == 0)
@@ -1191,7 +1190,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
         }
         else
         {
-            char* c2 = getCache();
+            char* c2 = (char*)getCache();
             char* dst;
             int i;
             int total = hdr[0xf3] + hdr[0xf4];
@@ -3128,11 +3127,8 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
 #pragma opt_propagation reset
 
 u8 lbl_80345E10[0x160];
-extern void mm_free(void* p);
 extern s16 lbl_803DCC78;
-extern void* mmAlloc(int size, int type, int flag);
 extern void* memcpy(void*, void*, int);
-extern int mmSetFreeDelay(int v);
 
 #pragma optimization_level 2
 void defragMemory(int mode)
@@ -3885,7 +3881,6 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(int);
-extern void mmFreeTick(int arg);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);

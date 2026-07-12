@@ -12,6 +12,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/model_engine.h"
+#include "main/mm.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
 #include "main/player_control_interface.h"
@@ -184,9 +185,7 @@ void addButtonObject(void* obj)
     gGameLoopButtonObjects[i] = (int)obj;
 }
 
-int mmSetFreeDelay(int v);
 
-int testAndSet_onlyUseHeap3(int v);
 
 void cutsceneExit(void)
 {
@@ -321,7 +320,6 @@ int gameBitDecrement(int bit)
 extern void waitNextFrame(void);
 extern int GXFlush_(u8 visible, int unused);
 
-void mmFreeTick(int arg);
 
 extern void* lbl_803DCAFC;
 
@@ -612,7 +610,6 @@ extern void initLoadingScreenTextures(void);
 
 extern void Camera_InitState(void);
 
-extern int mmSetFreeDelay(int v);
 extern u8 audioInit(void);
 
 extern u8 initLoadFiles(void);

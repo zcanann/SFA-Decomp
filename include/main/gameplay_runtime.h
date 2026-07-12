@@ -3,6 +3,7 @@
 
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
+#include "main/mm.h"
 #include "main/render.h"
 #include "global.h"
 
@@ -42,7 +43,6 @@ void storeZeroToFloatParam(void *timer);
 void s16toFloat(void *timer, int duration);
 int timerCountDown(void *timer);
 int randomGetRange(int min, int max);
-void mm_free(void *ptr);
 void *Obj_GetPlayerObject(void);
 void *getTrickyObject(void);
 

@@ -21,5 +21,14 @@ void mmInit(void);
 int mmSetFreeDelay(int v);
 int testAndSet_onlyUseHeap3(int v);
 void mmFreeTick(int arg);
+int mmCreateMemoryStore(int size);
+void* mmAllocateFromFBMemoryStore(int handle, int size);
+
+/* Compatibility views for compiler-sensitive callers recovered with legacy types. */
+#define mmAllocTagged(size, tag, name) \
+    ((void* (*)(u32, u32, void*))mmAlloc)((size), (tag), (name))
+#define testAndSetOnlyUseHeap3_u8(value) \
+    ((u8 (*)(int))testAndSet_onlyUseHeap3)(value)
+#define mmFreeLegacyNoArg() ((void (*)(void))mm_free)()
 
 #endif /* MAIN_MM_H_ */

@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/texture.h"
+#include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXStruct.h"
@@ -256,7 +257,6 @@ extern u32 FUN_8028680c();
 extern u32 FUN_80286858();
 extern u32 FUN_802947f8();
 extern u32 SQRT();
-extern void mm_free(u32);
 extern void GXLoadTexObj(void* obj, int id);
 extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
 extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
@@ -267,7 +267,6 @@ extern void GXCopyTex(void* dest, GXBool clear);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
 extern void GXInvalidateTexAll(void);
 extern float __fabsf(float);
-extern int testAndSet_onlyUseHeap3(int v);
 extern float fn_802943F4(float x);
 extern float floor(float);
 extern void fn_80069EB8();
@@ -1510,7 +1509,7 @@ f32 fn_8006C670(void)
 
 void fn_8006CB24(void)
 {
-    mm_free(lbl_803DCFBC);
+    mm_free((void*)lbl_803DCFBC);
     lbl_803DCFBC = 0;
 }
 

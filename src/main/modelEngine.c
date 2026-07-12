@@ -243,7 +243,7 @@ char gModelEngineTextBuf[0x10];
 
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
 {
-    RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, NULL);
+    RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, 0);
     queue->data = (u8*)queue + sizeof(RingBufferQueue);
     queue->count = 0;
     queue->capacity = capacity;
@@ -438,7 +438,7 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     ModelList* list;
 
     entryBytes = dataSize + 2;
-    list = mmAlloc(capacity * entryBytes + sizeof(ModelList), 0x1a, NULL);
+    list = mmAlloc(capacity * entryBytes + sizeof(ModelList), 0x1a, 0);
     list->entries = (s16*)((u8*)list + sizeof(ModelList));
     list->dataSize = dataSize;
     list->strideShorts = (u32)entryBytes >> 1;

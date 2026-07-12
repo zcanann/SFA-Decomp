@@ -206,7 +206,6 @@ extern void padUpdate(void);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(void);
-extern void mmFreeTick(int);
 extern void gameTextRun(void);
 extern void GXFlush_(int, int);
 extern void* objCreateLight(int, int);

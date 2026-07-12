@@ -10,6 +10,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/model.h"
+#include "main/mm.h"
 #include "main/render.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
@@ -637,7 +638,6 @@ extern f32 lbl_803DC674;
 extern f32 lbl_803DC678;
 extern int coordsToMapCell(f32 x, f32 z);
 extern int randomGetRange(int lo, int hi);
-extern void mm_free(void* ptr);
 extern int getYButtonItem(s16* out);
 extern f32 lbl_803E8234;
 extern f32 lbl_803DC740[2];
@@ -809,7 +809,6 @@ extern f32 lbl_803E8218;
 extern f32 lbl_803E821C;
 extern f32 lbl_803E8220;
 extern f32 lbl_803E8224;
-extern void* mmAlloc(int size, int heap, int flags);
 extern void objSetSlot(int obj, int slot);
 extern int gPlayerModelChainConfig;
 extern int lbl_803DC6A4;

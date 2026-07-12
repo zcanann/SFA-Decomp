@@ -88,10 +88,7 @@ extern int gMmNextAllocId;
 extern int lbl_803DCC7C;
 extern char sMmFreeMemoryUsageCorruptedError[];
 
-extern void* mmAlloc(int size, int type, int flag);
 extern void LCQueueWait();
-extern void mmFree(void* p);
-extern void mmFreeDeferred(void* p);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void heapFree(int region, int slotIdx);
 extern void OSReport(const char* msg, ...);
@@ -552,7 +549,7 @@ void mmFree(void* p)
     OSReport(sMmAllocFreeMessageBlock, p);
 }
 
-int mmAllocateFromFBMemoryStore(int handle, int size)
+void* mmAllocateFromFBMemoryStore(int handle, int size)
 {
     MmStore* found;
     int i;
@@ -581,7 +578,7 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
             return 0;
         }
         found->bufCur = (char*)found->bufCur + size;
-        return (int)found->bufCur - size;
+        return (void*)((int)found->bufCur - size);
     }
     return 0;
 }

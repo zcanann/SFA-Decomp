@@ -12,6 +12,7 @@
 #include "main/mapEventTypes.h"
 #include "main/render.h"
 #include "main/model_engine.h"
+#include "main/mm.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objhits.h"
@@ -113,7 +114,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int trackId, int restart);
 extern void Obj_FreeObject(int obj);
-extern void mm_free(void* ptr);
 extern void storeZeroToFloatParam(void* timer);
 extern GameUIInterface** gGameUIInterface;
 extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);

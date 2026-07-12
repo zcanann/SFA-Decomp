@@ -563,7 +563,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     charLen = cursor + (lineCount + lineOff);
     if (outLineH != NULL)
     {
-        buffer = mmAllocateFromFBMemoryStore(lbl_803DB378);
+        buffer = mmAllocateFromFBMemoryStore((int)lbl_803DB378, charLen);
     }
     else
     {
