@@ -9,6 +9,7 @@
  */
 #include "main/dll/SC/SClantern.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/objlib.h"
 #include "main/frame_timing.h"
@@ -28,7 +29,6 @@ extern f32 lbl_803E5498;
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int objGetAnimStateFlags(int obj, int flag);
-extern u32 Obj_GetPlayerObject();
 
 u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
@@ -96,7 +96,7 @@ u32 playerFn_801d6d58(void)
     u32 playerObj;
 
     (*gMapEventInterface)->getCurChar();
-    playerObj = Obj_GetPlayerObject();
+    playerObj = (u32)Obj_GetPlayerObject();
     objGetAnimStateFlags(playerObj, 0xff);
     return 2;
 }

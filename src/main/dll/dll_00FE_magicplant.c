@@ -23,6 +23,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
@@ -90,9 +91,7 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 gMagicPlantGemDefIds[4];
 
-extern void* Obj_GetPlayerObject(void);
 extern void Obj_StartModelFadeIn(int obj, int frames);
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern int ObjHits_GetPriorityHitWithPosition();

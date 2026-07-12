@@ -21,6 +21,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00FE_magicplant.h"
@@ -95,7 +96,6 @@ extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 
-extern void* Obj_GetPlayerObject(void);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);

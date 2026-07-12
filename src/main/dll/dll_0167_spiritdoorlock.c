@@ -28,6 +28,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
@@ -56,9 +58,6 @@ extern f32 gSpiritDoorLockScaleDecay;
 extern f32 gSpiritDoorLockSpinDownRate;
 extern f32 gSpiritDoorLockOrbitOffsetY;
 extern const f32 gSpiritDoorLockOrbitMaxDist;
-extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
@@ -111,7 +110,7 @@ void SpiritDoorLock_update(GameObject* obj)
     state = (obj)->extra;
     placement = *(SpiritDoorLockMapData**)&(obj)->anim.placementData;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
 
     if (mainGetBit(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED) == 0)
     {

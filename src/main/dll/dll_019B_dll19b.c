@@ -3,6 +3,7 @@
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/torch1cd_state.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
@@ -23,7 +24,6 @@ extern f32 lbl_803E5188;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern ModgfxInterface** gModgfxInterface;
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -214,7 +214,7 @@ void dll_19B_update(int obj)
     int unk8;
 
     st = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     dist = lbl_803E518C;
     st2 = ((GameObject*)obj)->extra;
     unk16 = 0;

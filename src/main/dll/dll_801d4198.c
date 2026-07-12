@@ -12,6 +12,7 @@
  * a one-shot init guard that stops the looping SFX on channel 0x7f.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objanim_update.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/dll/dll_801d4198.h"
@@ -25,7 +26,6 @@
 
 extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthwalker.c */
 
-extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
 extern int fn_8003B228(GameObject* obj, void* p2);

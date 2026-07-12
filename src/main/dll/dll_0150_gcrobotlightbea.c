@@ -25,6 +25,7 @@
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
@@ -74,7 +75,6 @@ extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
 
 extern u32 ObjLink_DetachChild();
-extern void* Obj_GetPlayerObject(void);
 extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
 extern void modelLightStruct_freeSlot(int* p);
 extern void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag);

@@ -3,6 +3,7 @@
  * TU = 0x80186498..0x80186704.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
@@ -83,7 +84,6 @@ extern void FireFlyLantern_init(GameObject*);
 extern void dll_109_initialise_nop(void);
 extern void Fall_Ladders_initialise(void);
 
-extern int Obj_GetPlayerObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int playerHasSpell(GameObject* obj, int spell);
 extern int objGetAnimState80A(GameObject* player);
@@ -126,7 +126,7 @@ void PortalSpellDoor_update(GameObject* obj)
     int p4c;
     int timer;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     state = obj->extra;
     p4c = *(int*)&obj->anim.placementData;
     if (playerHasSpell((GameObject*)(player), 3) != 0)

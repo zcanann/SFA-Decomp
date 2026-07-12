@@ -18,6 +18,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
@@ -55,9 +56,7 @@ extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern s16 lbl_803DBDE0[4];
-extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
@@ -156,7 +155,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
     PrisonGuardRotationWork rotate;
 
     setup = (StaffActivatedSetup*)obj->anim.placementData;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     tricky = getTrickyObject();
     state = obj->extra;
 

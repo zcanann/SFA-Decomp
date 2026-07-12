@@ -18,6 +18,7 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
@@ -92,7 +93,6 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern int ObjTrigger_IsSet(int obj);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern void* Obj_GetPlayerObject(void);
 extern int loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);

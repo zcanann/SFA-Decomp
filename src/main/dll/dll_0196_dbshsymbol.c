@@ -15,6 +15,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dbshsymbol_types.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/cup1C3.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
@@ -40,7 +41,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 extern u8 gDbShSymbolScuffPlayed;
 
-extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
@@ -78,7 +78,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     int player;
 
     state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_blockscrape_lp);
     animUpdate->sequenceEventActive = 0;

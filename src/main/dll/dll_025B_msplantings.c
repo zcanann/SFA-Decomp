@@ -17,6 +17,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
@@ -48,7 +49,6 @@
 #define MSPLANTING_HIT_CUT 0x1A
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void* Obj_GetPlayerObject(void);
 
 extern f32 getXZDistance(f32* a, f32* b);
 extern int getTrickyObject(void);

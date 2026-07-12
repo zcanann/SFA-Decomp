@@ -17,6 +17,7 @@
 #include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
@@ -66,7 +67,6 @@ extern f32 lbl_803E513C;
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 
-extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
@@ -98,7 +98,7 @@ void dll_197_update(int obj)
 
     *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)gDll197ResourceParamTemplate;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
     {
