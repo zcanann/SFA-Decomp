@@ -268,6 +268,7 @@ u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     return idx;
 }
 
+#pragma dont_inline on
 void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 {
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -496,6 +497,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
     }
     cmbsrc_updateVisuals(cmbsrc, state);
 }
+#pragma dont_inline off
 
 void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
 {
