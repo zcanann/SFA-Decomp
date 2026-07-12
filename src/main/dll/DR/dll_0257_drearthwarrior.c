@@ -11,6 +11,11 @@
 #include "main/player_control_interface.h"
 #include "main/maketex.h"
 
+#define storeZeroToFloatParamLegacy(timer) \
+    ((void (*)(int))storeZeroToFloatParam)((timer))
+#define s16toFloatLegacy(timer, duration) \
+    ((void (*)(int, int))s16toFloat)((timer), (duration))
+
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -1425,8 +1430,8 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     }
     ((ByteFlags*)((char*)inner + 0x14ec))->b08 = 0;
     *(u8*)&((DREarthWarriorState*)inner)->unk14F4 = 2;
-    storeZeroToFloatParam(&((DREarthWarriorState*)inner)->airMeterTimer);
-    s16toFloat(&((DREarthWarriorState*)inner)->airMeterTimer, 0x1e);
+    storeZeroToFloatParamLegacy(inner + 0x14f0);
+    s16toFloatLegacy(inner + 0x14f0, 0x1e);
     ((ByteFlags*)((char*)inner + 0x14ec))->b02 = 0;
     ((DREarthWarriorState*)inner)->unk14F5 = 1;
     ((DREarthWarriorState*)inner)->helperObj = NULL;

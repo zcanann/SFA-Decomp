@@ -35,6 +35,11 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_024D_bossdrakor.h"
 
+#define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
+    ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
+#define ObjLink_AttachChildLegacy(parent, child, mode) \
+    ((u64 (*)())ObjLink_AttachChild)((parent), (child), (mode))
+
 #define BOSSDRAKOR_MAP_ARENA          0x1d /* map-event id set to act 3 on boss defeat */
 #define BOSSDRAKOR_OBJGROUP           0x45
 #define BOSSDRAKOR_PARTFX             0x7ad
@@ -772,9 +777,6 @@ void bossdrakor_hitDetect(GameObject* obj)
     ((BossDrakorState*)inner)->hurtSfxCooldown -= timeDelta;
 }
 
-#pragma opt_common_subs on
-#pragma opt_propagation off
-#pragma opt_loop_invariants off
 int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int inner = *(int*)&(obj)->extra;
@@ -797,7 +799,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
         switch (eventId)
         {
         case 6:
-            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (int)obj, 0);
+            target = ObjGroup_FindNearestObjectLegacy(DBHOLECONTROL1_OBJGROUP, obj, 0);
             if ((void*)target != NULL && (obj)->childCount != 0)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 2);
@@ -805,11 +807,11 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             }
             break;
         case 7:
-            target = ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (int)obj, 0);
+            target = ObjGroup_FindNearestObjectLegacy(DBHOLECONTROL1_OBJGROUP, obj, 0);
             if ((void*)target != NULL)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 0);
-                ObjLink_AttachChild((int)obj, target, 1);
+                ObjLink_AttachChildLegacy(obj, target, 1);
                 ((BossDrakorState*)inner)->textTimer = lbl_803E6514;
             }
             break;
@@ -832,10 +834,6 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     }
     return 0;
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-#pragma opt_loop_invariants reset
-
 void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init)
 {
     int inner = *(int*)&(obj)->extra;

@@ -18,6 +18,9 @@
  * are HoverpadFlags / Flags377.
  */
 #include "main/dll/DR/dr_shared.h"
+
+#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
+    ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -624,7 +627,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
         nearest = (GameObject*)ObjGroup_FindNearestObject(BOSSDRAKOR_OBJGROUP, (int)obj, 0);
         if (nearest != NULL)
         {
-            yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
+            yawDelta = Obj_GetYawDeltaToObjectLegacy((int)obj, nearest, 0);
             if (yawDelta < -0x200)
             {
                 yawDelta = -0x200;

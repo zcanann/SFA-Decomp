@@ -24,6 +24,13 @@
 #include "main/objfx.h"
 #include "main/dll/genprops.h"
 
+#define s16toFloatLegacy(timer, duration) \
+    ((void (*)(void*, int))s16toFloat)((timer), (duration))
+#define storeZeroToFloatParamLegacy(timer) \
+    ((void (*)(void*))storeZeroToFloatParam)((timer))
+#define timerCountDownLegacy(timer) \
+    ((int (*)(int))timerCountDown)((int)(timer))
+
 typedef struct
 {
     s16 unk00;         /* 0x00 */
@@ -129,8 +136,8 @@ void pollenfragment_init(GameObject* obj, int config)
     ((XyzAnimatorState*)state)->unk18 = 0;
     *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
     ((XyzAnimatorState*)state)->rowCount = 0;
-    s16toFloat(&((PollenFragmentExtra*)state)->lifetimeTimer, 0xe10);
-    storeZeroToFloatParam(&((PollenFragmentExtra*)state)->deathTimer);
+    s16toFloatLegacy(state + 9, 0xe10);
+    storeZeroToFloatParamLegacy(state + 8);
 }
 
 void pollenfragment_release(void)
@@ -279,7 +286,7 @@ void pollenfragment_hitDetect(GameObject* obj)
                 Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject((u32)obj);
-            s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
+            s16toFloatLegacy(extra + 0x20, 0x78);
         }
         if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0)
         {
@@ -290,7 +297,7 @@ void pollenfragment_hitDetect(GameObject* obj)
                 spawnExplosionLegacy((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
-            s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
+            s16toFloatLegacy(extra + 0x20, 0x78);
         }
     }
 }
@@ -317,15 +324,15 @@ void pollenfragment_update(int obj)
     }
     if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
     {
-        if (timerCountDown(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
+        if (timerCountDownLegacy(extra + 0x20) != 0)
         {
             Obj_FreeObject(obj);
         }
         return;
     }
-    if (timerCountDown(&((PollenFragmentExtra*)extra)->lifetimeTimer) != 0)
+    if (timerCountDownLegacy((int)extra + 0x24) != 0)
     {
-        s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
+        s16toFloatLegacy(extra + 0x20, 0x78);
     }
     if (*(void**)&((GameObject*)obj)->ownerObj != NULL)
     {
@@ -444,7 +451,7 @@ void pollenfragment_update(int obj)
             spawnExplosionLegacy(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
             Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
-        s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
+        s16toFloatLegacy(extra + 0x20, 0x78);
     }
 }
 #pragma opt_strength_reduction reset
