@@ -9,8 +9,14 @@
  * object's position. Re-split from a former multi-object TU. */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
-#include "main/engine_shared.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 typedef struct Dll1DAState
 {

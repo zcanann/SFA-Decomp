@@ -23,8 +23,13 @@
 #include "main/dll/levelnamestate_struct.h"
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
-#include "main/engine_shared.h"
+#include "main/gamebits.h"
+#include "main/frame_timing.h"
+#include "main/gametext.h"
+#include "main/gameplay_runtime.h"
+#include "main/vecmath.h"
 #include "main/dll/dll_00F8_levelname.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #define LEVELNAME_OBJFLAG_HITDETECT_DISABLED 0x2000
 

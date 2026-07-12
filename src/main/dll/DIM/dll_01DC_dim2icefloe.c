@@ -26,9 +26,13 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 extern int ObjList_FindObjectById(int id);
 #include "main/dll/DIM/DIM2projrock.h"
+#include "main/curve.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
-#include "main/engine_shared.h"
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 
 #define DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIM2ICEFLOE_OBJFLAG_FREED 0x40

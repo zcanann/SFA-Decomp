@@ -21,7 +21,8 @@
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/trickyfollow.h"
-#include "main/engine_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct TrickyGrowlState
