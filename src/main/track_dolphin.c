@@ -277,15 +277,15 @@ extern s16 lbl_803DCEFC;
 extern s8 lbl_803DCEEC;
 extern s8 lbl_803DCEED;
 extern s8 lbl_803DCEEE;
-extern int lbl_803DCF04;
-extern int lbl_803DCF08;
+extern void* lbl_803DCF04;
+extern void* lbl_803DCF08;
 extern int lbl_803DCF0C;
 extern int lbl_803DCF10;
 extern int lbl_803DCF14;
 extern int lbl_803DCF18;
 extern int lbl_803DCF1C;
 extern int lbl_803DCF20;
-extern int lbl_803DCF24;
+extern void* lbl_803DCF24[2];
 extern int lbl_803DCE80;
 extern int gMapBlockIndexCount;
 extern int gMapBlockIndexList;
@@ -1136,7 +1136,7 @@ int fn_80060688(GameObject* obj, int type)
  * write pointers to the buffer picked by this frame's flip index. */
 void fn_80062808(void)
 {
-    int bufPtr;
+    void* bufPtr;
     if ((s8)gShadowFlag == 0)
     {
         return;
@@ -1147,7 +1147,7 @@ void fn_80062808(void)
     lbl_803DCEEC = 1 - lbl_803DCEEC;
     lbl_803DCEED = 1 - lbl_803DCEED;
     lbl_803DCEEE = 1 - lbl_803DCEEE;
-    bufPtr = (&lbl_803DCF24)[lbl_803DCEEC];
+    bufPtr = lbl_803DCF24[lbl_803DCEEC];
     lbl_803DCF08 = bufPtr;
     lbl_803DCEF4 = 0;
     lbl_803DCF10 = lbl_803DCF20;
