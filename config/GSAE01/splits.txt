@@ -2827,6 +2827,7 @@ main/dll/LGT/dll_02AC_lgtcontrollight.c:
 
 main/dll/dll_02AD_softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
+	.sdata2     start:0x803E7288 end:0x803E72A0
 	.sdata2     start:0x803E72A0 end:0x803E72B0
 
 main/dll/dll_02AE_waterflowwe.c:
