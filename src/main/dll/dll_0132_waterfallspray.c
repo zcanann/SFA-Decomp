@@ -59,7 +59,7 @@ void WaterFallSpray_update(int* objParam)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(u8 * obj, int sfxId);
     WaterFallSprayState* state;
-    WaterFallSprayPlacement* data;
+    WaterFallSprayPlacement* data[1];
     u8* obj;
     GameObject* playerObj;
     WaterFallSprayPartfxArgs partfxArgs;
@@ -72,13 +72,13 @@ void WaterFallSpray_update(int* objParam)
 
     obj = (u8*)objParam;
     state = ((GameObject*)obj)->extra;
-    data = *(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData;
+    data[0] = *(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData;
     playerObj = (GameObject*)Obj_GetPlayerObject();
     if (playerObj != NULL)
     {
-        if (data->gameBit != -1)
+        if (data[0]->gameBit != -1)
         {
-            i = mainGetBit(data->gameBit);
+            i = mainGetBit(data[0]->gameBit);
         }
         else
         {
@@ -86,7 +86,7 @@ void WaterFallSpray_update(int* objParam)
         }
         if (i != 0)
         {
-            if ((data->flags & 0x10) == 0)
+            if ((data[0]->flags & 0x10) == 0)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdA & 0xffff);
                 Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdB & 0xffff);
@@ -99,33 +99,33 @@ void WaterFallSpray_update(int* objParam)
                 dy = ((GameObject*)obj)->anim.worldPosY - playerObj->anim.worldPosY;
                 dz = ((GameObject*)obj)->anim.worldPosZ - playerObj->anim.worldPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
-                if (((distance <= (f32)(s32)((u32)data->distance << 4)) || (data->distance == 0)) &&
+                if (((distance <= (f32)(s32)((u32)data[0]->distance << 4)) || (data[0]->distance == 0)) &&
                     ((((GameObject*)obj)->objectFlags & WATERFALLSPRAY_OBJFLAG_RENDERED) != 0))
                 {
-                    for (i = 0; i < data->count; i++)
+                    for (i = 0; i < data[0]->count; i++)
                     {
-                        partfxArgs.xOffset = (f32)(s32)randomGetRange(-data->randX, data->randX);
-                        partfxArgs.yOffset = (f32)(s32)randomGetRange(-data->randY, data->randY);
-                        partfxArgs.zOffset = (f32)(s32)randomGetRange(-data->randZ, data->randZ);
-                        if ((data->flags & 1) != 0)
+                        partfxArgs.xOffset = (f32)(s32)randomGetRange(-data[0]->randX, data[0]->randX);
+                        partfxArgs.yOffset = (f32)(s32)randomGetRange(-data[0]->randY, data[0]->randY);
+                        partfxArgs.zOffset = (f32)(s32)randomGetRange(-data[0]->randZ, data[0]->randZ);
+                        if ((data[0]->flags & 1) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x320, &partfxArgs);
                         }
-                        if ((data->flags & 2) != 0)
+                        if ((data[0]->flags & 2) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x321, &partfxArgs);
                         }
-                        if ((data->flags & 4) != 0)
+                        if ((data[0]->flags & 4) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x322, &partfxArgs);
                         }
-                        if ((data->flags & 8) != 0)
+                        if ((data[0]->flags & 8) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x351, &partfxArgs);
                         }
                     }
                 }
-                *(u32*)&((GameObject*)obj)->unkF4 = -data->count;
+                *(u32*)&((GameObject*)obj)->unkF4 = -data[0]->count;
             }
             else if (cooldown > 0)
             {
