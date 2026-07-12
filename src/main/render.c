@@ -1,6 +1,14 @@
-#include "main/engine_shared.h"
+#include "main/asset_load.h"
+#include "main/effect_interfaces.h"
+#include "main/mldf_fileid.h"
 #include "main/model_engine.h"
+#include "main/mm.h"
+#include "main/newclouds.h"
 #include "main/pi_dolphin.h"
+#include "main/render.h"
+#include "main/sky_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
 typedef struct EnvfxActEntry {
@@ -10,8 +18,6 @@ typedef struct EnvfxActEntry {
     u8 kind;
     u8 pad2[3];
 } EnvfxActEntry;
-
-extern f32 lbl_803DE544;
 
 int getLActions(int a, int b, u16 idx)
 {

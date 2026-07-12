@@ -11,6 +11,7 @@ typedef void (*LActionsVoid6Fn)(int source, int target, int index, int arg3, int
 typedef int (*LActionsInt6Fn)(int source, int target, u16 index, int arg3, int arg4, int arg5);
 
 extern int gRenderMode;
+extern f32 lbl_803DE544;
 extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
 
