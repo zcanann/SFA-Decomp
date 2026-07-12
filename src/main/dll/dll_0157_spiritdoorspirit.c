@@ -32,24 +32,24 @@ int spiritdoorspirit_getObjectTypeId(void)
 }
 
 #pragma scheduling off
-void spiritdoorspirit_free(int obj)
+void spiritdoorspirit_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, SPIRITDOORSPIRIT_OBJGROUP);
 }
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
 
-void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void spiritdoorspirit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    SpiritDoorSpiritState* state = ((GameObject*)obj)->extra;
+    SpiritDoorSpiritState* state = obj->extra;
     if (visible == 0 || state->active == 0)
     {
         return;
     }
 
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void spiritdoorspirit_hitDetect(void)
@@ -58,15 +58,16 @@ void spiritdoorspirit_hitDetect(void)
 
 void spiritdoorspirit_update(int* obj)
 {
-    SpiritDoorSpiritState* state;
+    u8* state;
     u8* def;
     u8 active;
 
     state = ((GameObject*)obj)->extra;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (state->active == 0)
+    if (((SpiritDoorSpiritState*)state)->active == 0)
     {
-        state->active = active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
+        ((SpiritDoorSpiritState*)state)->active =
+            active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active != 0)
         {
             ObjGroup_AddObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
@@ -79,7 +80,8 @@ void spiritdoorspirit_update(int* obj)
     else
     {
         fn_80098B18Legacy((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        state->active = active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
+        ((SpiritDoorSpiritState*)state)->active =
+            active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active == 0)
         {
             ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
@@ -91,11 +93,11 @@ void spiritdoorspirit_update(int* obj)
     }
 }
 
-void spiritdoorspirit_init(int* obj)
+void spiritdoorspirit_init(GameObject* obj)
 {
-    SpiritDoorSpiritState* state = ((GameObject*)obj)->extra;
+    SpiritDoorSpiritState* state = obj->extra;
     state->active = 0;
-    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
+    *(s8*)&obj->anim.alpha = 0;
 }
 
 #pragma peephole reset
