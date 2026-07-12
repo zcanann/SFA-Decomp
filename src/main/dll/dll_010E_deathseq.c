@@ -26,7 +26,6 @@ extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);
 extern void showDeathMenu(void);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
-extern void Camera_SetFovY(f32 fovY);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E3D18 = 50.0f;

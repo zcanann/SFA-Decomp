@@ -4,6 +4,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/curve.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
@@ -236,7 +237,6 @@ extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
-extern void Camera_EnableViewYOffset(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 extern int seqStreamFn_8008023c(int slot);

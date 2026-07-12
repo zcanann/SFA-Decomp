@@ -2,7 +2,6 @@
 #define MAIN_CAMERA_H_
 
 #include "global.h"
-#include "main/object_transform.h"
 #include "main/vecmath.h"
 
 typedef struct _GXRenderModeObj GXRenderModeObj;

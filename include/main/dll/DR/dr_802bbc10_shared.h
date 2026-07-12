@@ -102,7 +102,6 @@ extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
 extern f32 lbl_803DC76C;
 extern const f32 lbl_803E8338;
-extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 m);
 extern void playerAddHealth(int obj, int amt);
 extern void dll_2E_func06();

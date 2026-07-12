@@ -20,6 +20,7 @@
 #include "main/render.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -416,7 +417,6 @@ extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCullMode(int mode);
 extern void GXBegin(int type, int fmt, int n);
-extern void Camera_RebuildProjectionMatrix(void);
 extern f32 hudMatrix[];
 
 #define GX_PNMTX0    0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */

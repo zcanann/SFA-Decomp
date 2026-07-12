@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DLL_802B9780_SHARED_H_
 
 #include "main/game_object.h"
+#include "main/camera.h"
 #include "ghidra_import.h"
 #include "main/voxmaps.h"
 #include "main/objHitReact.h"
@@ -355,7 +356,6 @@ extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
 extern f32 lbl_803DC76C;
 extern f32 lbl_803E8338;
-extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 m);
 
 extern void dll_2E_func06();

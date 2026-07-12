@@ -2,6 +2,7 @@
 #define DR_SHARED_H
 
 #include "main/game_object.h"
+#include "main/camera.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "ghidra_import.h"
@@ -285,7 +286,6 @@ extern f32 lbl_803E6A98;
 extern f32 lbl_803E6A9C;
 extern f32 lbl_803DC2F8;
 extern s16 lbl_803DC2FC;
-extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 m);
 extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A7C;

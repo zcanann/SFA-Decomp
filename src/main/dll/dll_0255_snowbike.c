@@ -2,6 +2,7 @@
 #include "main/dll/path_control_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/camera.h"
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
@@ -125,7 +126,6 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* 
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32* v);
 extern int arrayIndexOf(s16* arr, int n, int value);
-extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void OSReport(const char* msg, ...);
 extern s16 gSnowBikeHitObjectIdTable[];

@@ -10,6 +10,7 @@
 #include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/camera.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
@@ -84,7 +85,6 @@ extern f32 gCfMainCrystalHumVolumeFull;
 extern f32 gCfMainCrystalHumVolumeBase;
 extern f32 lbl_803E4200;
 extern f32 gCfMainCrystalHumVolumeApproachRate;
-extern void Camera_EnableViewYOffset(void);
 
 /* fn_8019D9F0: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,

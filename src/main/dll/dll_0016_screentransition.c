@@ -2,6 +2,7 @@
 #include "main/screen_transition.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_0016_screentransition.h"
+#include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
 
@@ -217,7 +218,6 @@ void screenTransition_update(int p1, int p2, int p3)
 extern f32 gScreenTransitionAlphaMidpoint;
 extern f32 lbl_803E0544;
 extern f32 gScreenTransitionEdgeScale;
-extern void Camera_GetCurrentViewport(int* x1, int* y1, int* x2, int* y2);
 
 /*
  * SCREEN_TRANSITION_WHITE_WIPE renderer: draws an opaque colored band across the
@@ -237,10 +237,10 @@ extern void Camera_GetCurrentViewport(int* x1, int* y1, int* x2, int* y2);
 void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 {
     u32 height;
-    int vx;
-    int vy;
-    int vr;
-    int vb;
+    s32 vx;
+    s32 vy;
+    u32 vr;
+    s32 vb;
     int sx;
     int sy;
     int sw;

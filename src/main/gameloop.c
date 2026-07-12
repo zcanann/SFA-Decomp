@@ -5,6 +5,7 @@
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
@@ -608,7 +609,6 @@ extern void videoInit(void* rmode, int arg);
 
 extern void initLoadingScreenTextures(void);
 
-extern void Camera_InitState(void);
 
 extern u8 audioInit(void);
 
@@ -628,7 +628,6 @@ extern int getDataFileSize(int id);
 
 extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];
-extern void* gRenderModeObj;
 extern u8 gGameLoopProgressiveMode;
 u8 lbl_8033C3B8[0x3E8];
 u8 gGameLoopRenderModeCopy[0x40];
@@ -665,11 +664,11 @@ void init(void)
     PADInit();
     LCEnable();
     OSInitFastCast();
-    gRenderModeObj = GXNtsc480IntDf;
+    gRenderModeObj = (GXRenderModeObj*)GXNtsc480IntDf;
     gGameLoopProgressiveMode = OSGetProgressiveMode();
     if (OSGetResetCode() != 0 && gGameLoopProgressiveMode == 1)
     {
-        gRenderModeObj = GXNtsc480Prog;
+        gRenderModeObj = (GXRenderModeObj*)GXNtsc480Prog;
         OSSetProgressiveMode(1);
     }
     else
@@ -818,7 +817,7 @@ void init(void)
     }
     OSSetSaveRegion(NULL, NULL);
     memcpy(gGameLoopRenderModeCopy, gRenderModeObj, 0x3c);
-    gRenderModeObj = gGameLoopRenderModeCopy;
+    gRenderModeObj = (GXRenderModeObj*)gGameLoopRenderModeCopy;
     initViewport();
     tvInit();
     OSReport(sMainFinishedInitMessage);
@@ -830,7 +829,6 @@ extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
 extern void resetSomeGxFlags(void);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
-extern void Camera_ApplyCurrentViewport(void* viewportArg);
 extern int gGameLoopPlayerTrailTime;
 extern f32 lbl_803DE7B0;
 extern f32 lbl_803DE7B8;
@@ -1294,7 +1292,7 @@ void askProgressiveScanMode(void)
     VIWaitForRetrace();
     if ((u8)sel != 0)
     {
-        gRenderModeObj = GXNtsc480Prog;
+        gRenderModeObj = (GXRenderModeObj*)GXNtsc480Prog;
         OSSetProgressiveMode(1);
         GXSetCopyFilter(((u8*)gRenderModeObj)[0x19], (u8*)gRenderModeObj + 0x1a, 0, (u8*)gRenderModeObj + 0x32);
         VIConfigure(gRenderModeObj);
@@ -1304,7 +1302,7 @@ void askProgressiveScanMode(void)
     }
     else
     {
-        gRenderModeObj = GXNtsc480IntDf;
+        gRenderModeObj = (GXRenderModeObj*)GXNtsc480IntDf;
         OSSetProgressiveMode(0);
         GXSetCopyFilter(((u8*)gRenderModeObj)[0x19], (u8*)gRenderModeObj + 0x1a, 1, (u8*)gRenderModeObj + 0x32);
         VIConfigure(gRenderModeObj);

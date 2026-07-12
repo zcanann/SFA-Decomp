@@ -68,7 +68,6 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int 
 
 extern int getAngle(float y, float x);
 
-extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern const f32 lbl_803E588C;
 extern f32 lbl_803E5890;

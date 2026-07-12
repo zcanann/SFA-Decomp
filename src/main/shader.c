@@ -15,6 +15,7 @@
 #include "main/shader.h"
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
+#include "main/object_transform.h"
 #include "main/mm.h"
 #include "main/voxmaps.h"
 #include "main/dll/baddie/dll_003B_menu.h"
@@ -654,7 +655,6 @@ extern _PlaneDirPack sPlayerFrustumPlaneDirs;
 extern _ScalePack sPlayerFrustumPlaneScales;
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
 extern void PSVECScale(f32* in, _Vec3* out, f32 s);
 extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
@@ -1878,8 +1878,6 @@ extern f32 lbl_803DEBB8;
 extern f32 lbl_803DEBD4;
 extern f32 lbl_803DEBD8;
 extern f32 lbl_803DEBDC;
-extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX,
-                                      f32* outRadiusY, f32* outRadiusZ);
 
 int objUpdateOpacity(char* obj)
 {

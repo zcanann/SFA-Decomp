@@ -10,6 +10,7 @@
 #include "main/shader_api.h"
 #include "main/dll/player_state.h"
 #include "main/camera_interface.h"
+#include "main/camera.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -527,7 +528,6 @@ extern f32 lbl_803E7F44;
 extern const f32 lbl_803E7EE0;
 extern f32 lbl_803E8038;
 extern f32 lbl_803E7F34;
-extern f32 Camera_GetAspectRatio(void);
 extern int getScreenResolution(void);
 extern const f32 lbl_803E7EE0;
 extern f32 lbl_803E80DC;
@@ -804,7 +804,6 @@ extern f32 lbl_803E7ECC;
 extern f32 lbl_803E7ED0;
 extern void PSMTXMultVec(f32* m, f32* src, f32* dst);
 extern int getScreenResolution(void);
-extern f32 Camera_GetAspectRatio(void);
 extern f32 lbl_803E80D4;
 extern f32 lbl_803E80D8;
 extern f32 lbl_803E80AC;

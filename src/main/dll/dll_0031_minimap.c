@@ -119,7 +119,6 @@ MinimapMapEntry gMinimapCellTable[25] = {
 void Minimap_drawCompassBlip(void);
 void fn_8013351C(void);
 
-extern s16 Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

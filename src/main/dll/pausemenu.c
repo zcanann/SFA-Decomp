@@ -18,6 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/pausemenu.h"
+#include "main/camera.h"
 #include "main/pause_menu_api.h"
 
 extern u8 hudTextures[0x198];
@@ -121,11 +122,6 @@ extern void* Obj_GetActiveModel(u8* obj);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9);
-extern void Camera_SetCurrentViewIndex(int index);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_SetFovY(f32 fovY);
-extern void Camera_RebuildProjectionMatrix(void);
-extern void Camera_ApplyFullViewport(void);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1, s32* o2, s32* o3, s32* o4);
 extern void* gameTextGetBox(int box);

@@ -13,6 +13,7 @@
 #include "main/mm.h"
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
+#include "main/camera.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/resource.h"
@@ -249,7 +250,6 @@ extern void gxSetPeControl_ZCompLoc_(int zcomploc);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetCullMode(int mode);
 extern void GXSetTevKColor(int id, void* color);
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 v);
 extern const f32 lbl_803DF354;

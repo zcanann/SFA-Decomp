@@ -10,6 +10,7 @@
 #include "main/mapEvent.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
+#include "main/camera.h"
 #include "main/loaded_file_flags.h"
 #include "main/pi_dolphin.h"
 #include "main/screen_transition.h"
@@ -2062,7 +2063,6 @@ extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);
 extern void modelLightStruct_selectObjectLights(int model, int* lights, int max, int* count, int p5);
-extern void Camera_ApplyFullViewport(void);
 extern u32 gRcpDistortAmbColor;
 extern int gRcpDistortMatColor;
 extern u8 gRcpDistortGroup;
