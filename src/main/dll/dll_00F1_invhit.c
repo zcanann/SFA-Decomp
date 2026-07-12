@@ -17,10 +17,15 @@
  * InvHit_free releases the expgfx source for mode 4.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/pushable.h"
 #include "main/dll/player_target.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 typedef struct InvHitState
 {
@@ -205,12 +210,12 @@ void InvHit_update(int* obj)
     {
     case INVHIT_MODE_PROXIMITY_DAMAGE:
     {
-        char* victim = Obj_GetPlayerObject();
+        GameObject* victim = Obj_GetPlayerObject();
         while (victim != NULL)
         {
-            f32 dx = ((GameObject*)obj)->anim.localPosX - ((PushableState*)victim)->cullDistance;
-            f32 dy = ((GameObject*)obj)->anim.localPosY - ((PushableState*)victim)->scale;
-            f32 dz = ((GameObject*)obj)->anim.localPosZ - ((PushableState*)victim)->timer_0x14;
+            f32 dx = ((GameObject*)obj)->anim.localPosX - victim->anim.localPosX;
+            f32 dy = ((GameObject*)obj)->anim.localPosY - victim->anim.localPosY;
+            f32 dz = ((GameObject*)obj)->anim.localPosZ - victim->anim.localPosZ;
             f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
             if (dist < (f32)((GameObject*)obj)->unkF8)
             {
@@ -219,9 +224,9 @@ void InvHit_update(int* obj)
                 ((ObjHitsPriorityState*)victimHits)->flags = ((ObjHitsPriorityState*)victimHits)->flags & ~1;
                 (*(u8**)&((GameObject*)obj)->anim.hitReactState)[0x71] += 1;
             }
-            if (((GameObject*)victim)->anim.classId == 1)
+            if (victim->anim.classId == 1)
             {
-                victim = (char*)getTrickyObject();
+                victim = getTrickyObject();
             }
             else
             {
