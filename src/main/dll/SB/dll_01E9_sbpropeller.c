@@ -17,6 +17,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/objlib.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
+#include "main/object_render.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
@@ -51,7 +52,6 @@ extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
 extern u32 lbl_803DDC40;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 u32 sbGetPropeller(void)
 {
@@ -67,7 +67,7 @@ void SB_Propeller_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5810);
+        objRenderModelAndHitVolumes((GameObject*)obj, lbl_803E5810);
 }
 
 void SB_Propeller_hitDetect(GameObject* obj)

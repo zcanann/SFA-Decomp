@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/dll/ediblemushroom.h"
 #include "main/dll/bombplant_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -29,7 +30,6 @@
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 #define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
 extern f32 lbl_803E5370;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
@@ -70,7 +70,7 @@ void bombplant_hitDetect(void)
 {
 }
 
-void bombplant_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5370); }
+void bombplant_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E5370); }
 
 void bombplant_explode(int* obj, int unused, int* p3)
 {

@@ -1,10 +1,10 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -66,7 +66,7 @@ void sc_cloudrunnera_free(int* obj)
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E55E0);
+    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E55E0);
 }
 
 void sc_cloudrunnera_hitDetect(void)
@@ -240,4 +240,3 @@ void sc_cloudrunnera_release(void)
 void sc_cloudrunnera_initialise(void)
 {
 }
-
