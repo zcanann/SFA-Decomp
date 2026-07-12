@@ -445,6 +445,8 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 #pragma scheduling off
 #pragma opt_propagation off
 #pragma opt_common_subs off
+#pragma opt_strength_reduction on
+#pragma opt_lifetimes off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {
     char* strBase = lbl_8031D2E8;
@@ -702,6 +704,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         break;
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_lifetimes reset
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
