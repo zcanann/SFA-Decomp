@@ -98,7 +98,6 @@ void SPScarab_hitDetect(void)
 
 void SPScarab_update(int obj)
 {
-    extern int Obj_GetPlayerObject(void);
     int state;
     int placement;
     s16 angle;

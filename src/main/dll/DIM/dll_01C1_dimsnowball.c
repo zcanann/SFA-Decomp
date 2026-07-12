@@ -102,14 +102,13 @@ void dimsnowball_hitDetect(int* obj)
 
 void dimsnowball_update(GameObject* obj)
 {
-    extern int Obj_GetPlayerObject(void);
     s16 idx[4];
     f32 x[4];
     f32 y[4];
     f32 z[4];
     void* ap;
     int* state;
-    int player;
+    GameObject* player;
     int count;
     int last;
     u8 frames;
@@ -211,7 +210,7 @@ void dimsnowball_update(GameObject* obj)
     {
         sqrtf((obj)->anim.velocityZ * (obj)->anim.velocityZ +
               ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
-        if ((((GameObject*)player)->objectFlags & DIMSNOWBALL_OBJFLAG_PARENT_SLACK) == 0)
+        if ((player->objectFlags & DIMSNOWBALL_OBJFLAG_PARENT_SLACK) == 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_en_fireup_c_1fb);
         }

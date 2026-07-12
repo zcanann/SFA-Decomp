@@ -154,7 +154,6 @@ enum
 void SB_ShipGun_update(GameObject* obj)
 {
 
-    extern void* Obj_GetPlayerObject(void);
     extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                               int useInputPosition);
     char phase;

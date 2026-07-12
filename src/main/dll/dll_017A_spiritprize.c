@@ -189,7 +189,6 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void SpiritPrize_update(GameObject* obj)
 {
-    extern int Obj_GetPlayerObject(void);
     u8* params;
     SpiritPrizeState* state;
     int childObj;
@@ -264,13 +263,13 @@ void SpiritPrize_update(GameObject* obj)
     state->sfxTimer -= timeDelta;
     if (state->sfxTimer < lbl_803E4E9C)
     {
-        int player;
+        GameObject* player;
 
         player = Obj_GetPlayerObject();
         state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
         if ((obj)->anim.mapEventSlot == -1 &&
             ((void*)player == NULL ||
-             coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xb))
+             coordsToMapCell(player->anim.localPosX, player->anim.localPosZ) == 0xb))
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_pda);
         }

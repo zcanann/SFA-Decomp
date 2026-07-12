@@ -627,7 +627,6 @@ typedef struct DbEggIntPair
 void dbegg_update(GameObject* obj)
 {
     extern void dbegg_setupFromDef(GameObject * obj, int* state);
-    extern int Obj_GetPlayerObject(void);
     extern void dbegg_processMessages(GameObject*);
     extern void fn_801FE774(int, f32*);
 
@@ -664,13 +663,13 @@ void dbegg_update(GameObject* obj)
     extern const f32 lbl_803E6268;
     int data = *(int*)&(obj)->anim.placementData;
 #define hitState ((ObjHitsPriorityState*)(obj)->anim.hitReactState)
-    int player;
+    GameObject* player;
     DbEggState* egg;
     int placement;
     int pickupState;
     int i;
     int n;
-    int playerObj;
+    GameObject* playerObj;
     f32 v;
     f32 fx;
     f32 fz;
@@ -992,13 +991,13 @@ void dbegg_update(GameObject* obj)
         {
             if (mainGetBit(0x3c4) == 0)
             {
-                if (Vec_xzDistance((int)obj + 0x18, player + 0x18) < lbl_803E6264)
+                if (Vec_xzDistance((int)obj + 0x18, (int)player + 0x18) < lbl_803E6264)
                 {
                     if ((egg->flags119 & 1) == 0)
                     {
                         int placement;
                         int pickupState;
-                        int playerObj = Obj_GetPlayerObject();
+                        GameObject* playerObj = Obj_GetPlayerObject();
                         pickupState = *(int*)&(obj)->extra;
                         placement = *(int*)&(obj)->anim.placementData;
                         ObjGroup_RemoveObject((int)obj, DBEGG_OBJGROUP);
@@ -1014,7 +1013,7 @@ void dbegg_update(GameObject* obj)
                     }
                     else
                     {
-                        v = (obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+                        v = (obj)->anim.localPosY - player->anim.localPosY;
                         v = v >= lbl_803E61C8 ? v : -v;
                         if (v < lbl_803E6268)
                         {

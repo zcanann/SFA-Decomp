@@ -246,12 +246,11 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 
 void FuelCell_update(int* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     extern u32 ObjGroup_AddObject();
 
     FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;
     FuelcellState* state = ((GameObject*)obj)->extra;
-    int* player;
+    GameObject* player;
     int msgId;
     int msgParam;
 
@@ -292,11 +291,11 @@ void FuelCell_update(int* obj)
                     ((GameObject*)obj)->anim.alpha = 0xff;
                     state->resetPos = 0;
                 }
-                dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+                dy = ((GameObject*)obj)->anim.localPosY - player->anim.localPosY;
                 if (dy > -5.0f && dy < 40.0f
                     && mainGetBit(FUELCELL_GAMEBIT_CARRIED) == 0
                     && getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                                     &((GameObject*)player)->anim.worldPosX) < 81.0f)
+                                     &player->anim.worldPosX) < 81.0f)
                 {
                     state->msg = 0xcbe;
                     ObjMsg_SendToObject(player, FUELCELL_MSG_IN_RANGE, obj, state);
