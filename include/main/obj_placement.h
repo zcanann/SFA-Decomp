@@ -31,8 +31,17 @@
  * materialize member address temps).
  */
 typedef struct ObjPlacement {
-    u8 unk00[2];
-    s16 unk02;
+    union {
+        s16 objectId; /* object setup allocation: requested object type */
+        u8 unk00[2];
+    };
+    union {
+        s16 unk02;
+        struct {
+            u8 size; /* object setup allocation size */
+            u8 unk03;
+        };
+    };
     u8 color[4];
     f32 posX;
     f32 posY;

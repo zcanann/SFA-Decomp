@@ -8,6 +8,7 @@
 #include "main/camera_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/engine_8001746C_phantoms.h"
 #include "main/mapEvent.h"
 #include "main/object_transform.h"
@@ -182,7 +183,7 @@ extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
-extern void Obj_RegisterObject(u8* obj, int b);
+extern void Obj_RegisterObject(GameObject* obj, int b);
 extern void objLoadPlayerFromSave(u8* obj);
 extern void modelInitBones(f32 scale, void* model);
 extern int shadowInit(void* obj, int cursor, int arg);
@@ -711,17 +712,17 @@ void objWorldToLocalPos(f32* out, ObjLocalTransform* transform, f32* in)
 #undef rotMtx
 }
 
-void* Obj_AllocObjectSetup(int size, int type)
+ObjPlacement* Obj_AllocObjectSetup(int size, int type)
 {
-    u8* p = mmAlloc(size, 0xe, 0);
+    ObjPlacement* p = mmAlloc(size, 0xe, 0);
     memset(p, 0, size);
-    *(int*)(p + 0x14) = -1;
-    p[6] = 0x64;
-    p[7] = 0x96;
-    p[4] = 8;
-    p[5] = 4;
-    *(s16*)p = type;
-    p[2] = size;
+    p->mapId = -1;
+    p->color[2] = 0x64;
+    p->color[3] = 0x96;
+    p->color[0] = 8;
+    p->color[1] = 4;
+    p->objectId = type;
+    p->size = size;
     return p;
 }
 
@@ -855,19 +856,19 @@ void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int y
     }
 }
 
-void* Obj_SetupObject(int data, int flags, int arg2, int arg3, int parent)
+GameObject* Obj_SetupObject(ObjPlacement* data, int flags, int arg2, int arg3, void* parent)
 {
-    void* obj;
+    GameObject* obj;
     if (getLoadedFileFlags(0) & 0x100000)
     {
         OSReport(sObjSetupObjectLoadingLockedWarning, arg3);
         return NULL;
     }
-    obj = loadCharacter((s16*)data, flags, arg2, arg3, (void*)parent, 0);
+    obj = loadCharacter((s16*)data, flags, arg2, arg3, parent, 0);
     if (obj != NULL)
     {
         Obj_RegisterObject(obj, flags);
-        OSReport(sObjDebugStrings, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
+        OSReport(sObjDebugStrings, *(int*)&obj->anim.modelInstance + 0x91);
     }
     return obj;
 }
@@ -889,7 +890,7 @@ void* loadObjectAtObject(u8* src, int arg1)
         obj = loadCharacter((s16*)arg1, 5, type, -1, (void*)objF30, 0);
         if (obj != NULL)
         {
-            Obj_RegisterObject(obj, 5);
+            Obj_RegisterObject((GameObject*)obj, 5);
             OSReport(sObjDebugStrings, *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
         }
     }
@@ -2023,7 +2024,7 @@ void mapSetupPlayer(void)
                 obj = loadCharacter((s16*)&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0)
                 {
-                    Obj_RegisterObject(obj, 1);
+                    Obj_RegisterObject((GameObject*)obj, 1);
                     OSReport((char*)(base + 0x5c), *(int*)&((GameObject*)obj)->anim.modelInstance + 0x91);
                 }
             }
@@ -2174,7 +2175,7 @@ void Obj_UpdateModelBlendStates(void)
 }
 
 #pragma dont_inline on
-void Obj_RegisterObject(u8* obj, int flags)
+void Obj_RegisterObject(GameObject* obj, int flags)
 {
     ObjAnimComponent* object;
     ObjHitsPriorityState* hitState;
@@ -2183,7 +2184,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     int cur;
     int off;
 
-    object = (ObjAnimComponent*)obj;
+    object = &obj->anim;
     if (object->parent != NULL)
     {
         Obj_TransformLocalPointToWorld(object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
@@ -2201,7 +2202,7 @@ void Obj_RegisterObject(u8* obj, int flags)
     object->previousLocalPosX = object->localPosX;
     object->previousLocalPosY = object->localPosY;
     object->previousLocalPosZ = object->localPosZ;
-    Obj_RunInitCallback(obj, (int)object->placementData, 0);
+    Obj_RunInitCallback((u8*)obj, (int)object->placementData, 0);
     if (object->hitReactState != NULL)
     {
         ((ObjHitsPriorityState*)object->hitReactState)->localPosX = object->localPosX;
@@ -2233,9 +2234,9 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (flags & 1)
     {
-        ((GameObject*)obj)->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
-        ((u8**)gObjList)[gObjCount++] = obj;
-        if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
+        obj->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
+        ((GameObject**)gObjList)[gObjCount++] = obj;
+        if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
             prev = 0;
             cur = *(int*)((u8*)&gObjUpdateList + 4);
