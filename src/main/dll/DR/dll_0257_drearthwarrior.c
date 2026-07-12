@@ -1368,6 +1368,7 @@ void DR_EarthWarrior_update(GameObject* obj)
 }
 
 #pragma opt_propagation off
+#pragma opt_common_subs off
 void DR_EarthWarrior_init(GameObject* obj, int def)
 {
     register u8* base = gDREarthWarriorInitData;
@@ -1446,6 +1447,7 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);
 }
 #pragma opt_propagation reset
+#pragma opt_common_subs reset
 
 u8 gDREarthWarriorRowIndices[960] = {
     0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,   0,   0,
