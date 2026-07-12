@@ -15,6 +15,7 @@
  *    sequence once.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/WCbeacon.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -23,44 +24,6 @@
 
 #define WCBEACON_RENDER_TYPE_BASE  0x400
 #define WCBEACON_RENDER_TYPE_SHIFT 0xb
-
-#define WCBEACON_SETUP_TYPE_OFFSET        0x18
-#define WCBEACON_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCBEACON_SETUP_SOLVED_BIT_OFFSET  0x1e
-#define WCBEACON_SETUP_ARM_BIT_OFFSET     0x20
-
-#define WCBEACON_STATE_TIMER                0x0
-#define WCBEACON_STATE_PHASE                0x4
-#define WCBEACON_STATE_ACCEPTED_INTERACTION 0x5
-
-typedef struct WCBeaconSetup
-{
-    ObjPlacement base;
-    s8 type;
-    s8 modelIndex;
-    u8 pad1A[WCBEACON_SETUP_SOLVED_BIT_OFFSET - 0x1A];
-    s16 solvedBit;
-    s16 armBit;
-    u8 pad22[0x24 - 0x22];
-} WCBeaconSetup;
-
-typedef struct WCBeaconState
-{
-    f32 timer;
-    u8 phase;
-    u8 acceptedInteraction;
-    u8 pad06[WCBEACON_EXTRA_SIZE - 0x06];
-} WCBeaconState;
-
-STATIC_ASSERT(sizeof(WCBeaconState) == WCBEACON_EXTRA_SIZE);
-STATIC_ASSERT(sizeof(WCBeaconSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCBeaconState, timer) == WCBEACON_STATE_TIMER);
-STATIC_ASSERT(offsetof(WCBeaconState, phase) == WCBEACON_STATE_PHASE);
-STATIC_ASSERT(offsetof(WCBeaconState, acceptedInteraction) == WCBEACON_STATE_ACCEPTED_INTERACTION);
-STATIC_ASSERT(offsetof(WCBeaconSetup, type) == WCBEACON_SETUP_TYPE_OFFSET);
-STATIC_ASSERT(offsetof(WCBeaconSetup, modelIndex) == WCBEACON_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCBeaconSetup, solvedBit) == WCBEACON_SETUP_SOLVED_BIT_OFFSET);
-STATIC_ASSERT(offsetof(WCBeaconSetup, armBit) == WCBEACON_SETUP_ARM_BIT_OFFSET);
 
 #define WCBEACON_PHASE_IDLE               0
 #define WCBEACON_PHASE_WAITING_FOR_TRICKY 1
@@ -192,24 +155,23 @@ void wcbeacon_update(GameObject* obj)
     obj->unkF4 = 1;
 }
 
-void wcbeacon_init(u8* obj, u8* setup)
+void wcbeacon_init(GameObject* obj, WCBeaconSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCBeaconState* state = ((GameObject*)obj)->extra;
-    WCBeaconSetup* setupData = (WCBeaconSetup*)setup;
+    WCBeaconState* state = obj->extra;
     s16 objType;
 
-    (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    objType = (s16)(setupData->type << 8);
-    ((GameObject*)obj)->anim.rotX = objType;
-    objAnim->bankIndex = setupData->modelIndex;
+    (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
+    objType = (s16)(setup->type << 8);
+    obj->anim.rotX = objType;
+    objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
-    if ((u32)mainGetBit(setupData->armBit) != 0)
+    if ((u32)mainGetBit(setup->armBit) != 0)
     {
-        if ((u32)mainGetBit(setupData->solvedBit) != 0)
+        if ((u32)mainGetBit(setup->solvedBit) != 0)
         {
             state->phase = WCBEACON_PHASE_ACTIVE;
         }

@@ -23,6 +23,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_state.h"
+#include "main/dll/WC/WCbeacon.h"
 #include "main/gamebit_ids.h"
 #include "main/voxmaps.h"
 #include "main/frame_timing.h"
@@ -364,7 +365,6 @@ extern void fn_801FD4A8(GameObject*);
 extern void fn_801B0784(GameObject*);
 extern void drchimmey_countdownCallback(void);
 extern void fn_801DA9CC(GameObject*);
-extern void wcbeacon_aButtonCallback(GameObject*);
 extern void fn_8003A168(GameObject* obj, void* p);
 extern void fn_8003B228(GameObject* obj, void* p);
 
