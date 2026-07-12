@@ -296,7 +296,7 @@ void AndrossHand_update(int obj)
         }
         break;
     case ANDROSSHAND_STATE_DEAD:
-        andross_setPartSignal((GameObject*)(state->androssObj), state->sideFlag ? 4 : 2);
+        andross_setPartSignal((GameObject*)(state->androssObj), state->sideFlag ? (u8)4 : (u8)2);
         break;
     }
 
