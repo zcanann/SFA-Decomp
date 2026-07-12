@@ -5,7 +5,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 
-void dll_199_update(int obj);
+void dll_199_update(GameObject* obj);
 void dll_199_init(GameObject* obj, int def);
 int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void dll_199_release(void);

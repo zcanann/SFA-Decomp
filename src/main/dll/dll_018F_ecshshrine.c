@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/render.h"
 #include "main/dll/mmshrineanimobj_struct.h"
@@ -154,10 +155,6 @@ extern void audioStopByMask(int mask);
 extern int objGetAnimStateFlags(int* player, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(void* obj, int group);
-extern int ObjMsg_Pop(void* obj, int* msg, int* a, int* b);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -505,7 +502,7 @@ void ecsh_shrine_update(s16* obj)
         staffToggle(player, 0);
     }
     msgC = 0;
-    while (ObjMsg_Pop(obj, &msgA, &msgB, &msgC) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC) != 0)
     {
     }
     SCGameBitLatch_Update(sub + 0x34, 2, -1, -1, 0xb9d, 0xd);
@@ -916,7 +913,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     gv = mainGetBit(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
     ((EcshShrineState*)sub)->introTextLatch = gv;
     gEcShShrineActiveObject = obj;
-    ObjGroup_AddObject(obj, ECSHSHRINE_OBJGROUP);
+    ObjGroup_AddObject((int)obj, ECSHSHRINE_OBJGROUP);
     ((GameObject*)obj)->unkF4 = 1;
     if (*(void**)sub == NULL)
     {

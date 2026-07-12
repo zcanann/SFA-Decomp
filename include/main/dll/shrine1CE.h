@@ -4,10 +4,10 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 
-void dll_19B_update(int obj);
+void dll_19B_update(GameObject* obj);
 int dll_19E_getExtraSize(void);
 int dll_19E_getObjectTypeId(void);
-void dll_19B_init(u8* obj, u8* params);
+void dll_19B_init(GameObject* obj, u8* params);
 void dll_19B_release(void);
 void dll_19B_initialise(void);
 int dll_19C_getExtraSize(void);

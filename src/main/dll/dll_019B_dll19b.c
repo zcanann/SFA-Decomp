@@ -4,6 +4,7 @@
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/dll/torch1cd_state.h"
 #include "main/dll_000A_expgfx.h"
@@ -23,9 +24,6 @@ extern int lbl_803DB610;
 extern void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void playerCancelSpell(int obj, int a);
 char sShrineTimeFormat[] = "time %d\n";
@@ -197,13 +195,13 @@ typedef struct Dll19BState
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
-void dll_19B_update(int obj)
+void dll_19B_update(GameObject* obj)
 {
     extern void* gTitleMenuControlInterface;
 
     Dll19BState* st;
-    int player;
-    int near;
+    GameObject* player;
+    GameObject* near;
     Dll19BState* st2;
     int v;
     f32 dy;
@@ -212,12 +210,12 @@ void dll_19B_update(int obj)
     int msg;
     int unk8;
 
-    st = ((GameObject*)obj)->extra;
-    player = (int)Obj_GetPlayerObject();
+    st = obj->extra;
+    player = Obj_GetPlayerObject();
     dist = lbl_803E518C;
-    st2 = ((GameObject*)obj)->extra;
+    st2 = obj->extra;
     unk16 = 0;
-    while (ObjMsg_Pop(obj, &msg, &unk8, &unk16) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msg, (u32*)&unk8, (u32*)&unk16) != 0)
     {
         switch (msg)
         {
@@ -276,10 +274,10 @@ void dll_19B_update(int obj)
     }
     else
     {
-        near = ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, player, &dist);
+        near = (GameObject*)ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, (int)player, &dist);
         if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
         {
-            dy = ((GameObject*)near)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
+            dy = near->anim.localPosZ - player->anim.localPosZ;
             if (dy <= lbl_803E5198)
             {
                 if (dy < lbl_803E5198)
@@ -307,19 +305,19 @@ void dll_19B_update(int obj)
         switch (st->phase)
         {
         case DLL19B_PHASE_IDLE:
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st->activationDist)
+            if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < st->activationDist)
             {
                 st->phase = DLL19B_PHASE_WAIT_EVENT;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
                     void* handle = Resource_Acquire(0x83, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))((int)obj, 1, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 {
                     void* handle = Resource_Acquire(0x84, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))((int)obj, 0, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 mainSetBits(0x126, 0);
@@ -375,7 +373,7 @@ void dll_19B_update(int obj)
             }
             else
             {
-                playerCancelSpell(player, -1);
+                playerCancelSpell((int)player, -1);
                 mainSetBits(0x126, 0);
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
@@ -404,7 +402,8 @@ void dll_19B_update(int obj)
             mainSetBits(0x127, 1);
             {
                 void* handle = Resource_Acquire(0x6a, 1);
-                st->gfxHandle = (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                st->gfxHandle =
+                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))((int)obj, 2, 0, 0x402, -1, 0);
                 Resource_Release(handle);
             }
             mainSetBits(0x1d8, 0);
@@ -424,15 +423,15 @@ void dll_19B_initialise(void)
 {
 }
 
-void dll_19B_init(u8* obj, u8* params)
+void dll_19B_init(GameObject* obj, u8* params)
 {
     extern void* gTitleMenuControlInterface;
 
     register Dll19BState* sub;
     void* res;
 
-    sub = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = 0;
+    sub = obj->extra;
+    obj->anim.rotX = 0;
     sub->activationDist = 0xa;
     if (((Dll19BPlacement*)params)->activationDistPacked > 0)
     {
@@ -442,7 +441,7 @@ void dll_19B_init(u8* obj, u8* params)
     sub->pendingEvent = 0;
     sub->timer = 0;
     sub->unlockCount = 0;
-    ((GameObject*)obj)->animEventCallback = dll_19B_SeqFn;
+    obj->animEventCallback = dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     mainSetBits(0x1d2, 0);
@@ -462,11 +461,12 @@ void dll_19B_init(u8* obj, u8* params)
     sub->unk10 = 0xc8;
     sub->countdown = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
-    sub->gfxHandle = ((s16 (*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
+    sub->gfxHandle =
+        ((s16 (*)(GameObject*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
+    obj->anim.worldPosX = obj->anim.localPosX;
+    obj->anim.worldPosY = obj->anim.localPosY;
+    obj->anim.worldPosZ = obj->anim.localPosZ;
 }
 
 void dll_19C_init(GameObject* obj, u8* initData);
