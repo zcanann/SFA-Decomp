@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/lightmap_api.h"
@@ -48,11 +49,6 @@ typedef struct Dll19Placement
 #define DLL19_FLAG_OSC_RISING 0x20  /* oscillation phase 1 (initial rise) */
 #define DLL19_FLAG_OSC_ACTIVE 0x40  /* oscillation phase 2 (active/return) */
 
-extern u32 ObjGroup_FindNearestObject();
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
@@ -386,12 +382,12 @@ int dll_19_func17(GameObject *obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
     int extra;
 
     extra = 0;
-    while (ObjMsg_Pop(obj, &msgType, &msgData, &extra) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msgType, &msgData, (u32*)&extra) != 0)
     {
         switch (msgType)
         {
         case 4:
-            ObjMsg_SendToObject(msgData, 5, obj, 0);
+            ObjMsg_SendToObject((void*)msgData, 5, obj, 0);
             break;
         case 0xE0000:
             if (msgData == (int)((BaddieState*)state)->targetObj)
@@ -656,7 +652,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
             }
         }
         Sfx_StopObjectChannel((int*)obj, 16);
-        ObjMsg_SendToObject(hitId, DLL19_ADVANCE_MSG, obj, 0);
+        ObjMsg_SendToObject((void*)hitId, DLL19_ADVANCE_MSG, obj, 0);
     }
     return hit;
 }
@@ -740,7 +736,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                 }
             }
             nearDist = lbl_803E1C58;
-            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(DLL19_TARGET_OBJGROUP, obj, &nearDist);
+            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(DLL19_TARGET_OBJGROUP, (int)obj, &nearDist);
             source->anim.worldPosX = savedX;
             source->anim.worldPosY = savedY;
             source->anim.worldPosZ = savedZ;
@@ -809,7 +805,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     b1 = flags & 1;
     if (b1 == 0 && (flags & 0x20) == 0)
     {
-        ObjGroup_AddObject((u32)obj, DLL19_OBJGROUP);
+        ObjGroup_AddObject((int)obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
     (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))((int)obj, state, moveArg0, moveArg1);
