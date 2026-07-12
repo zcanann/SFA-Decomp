@@ -31,7 +31,7 @@
 
 #define GX_CULL_NONE 0
 
-void* gBoneParticleEffectBuffers[8];
+extern void* gBoneParticleEffectBuffers[];
 extern void* gBoneParticleTextureA;
 extern void* gBoneParticleTextureB;
 extern s16 gBoneParticleEffectTimer;

@@ -51,8 +51,8 @@ static inline DSError TRKPPCAccessSpecialReg(void* srcDestPtr, u32* instructionD
 DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read);
 
 extern u16 TRK_saved_exceptionID_803D82F8;
-u8 TRKvalue128_temp[0x14];
-Default_PPC gTRKSaveState;
+extern Default_PPC gTRKSaveState;
+extern u128 TRKvalue128_temp;
 
 // Instruction macros
 #define INSTR_NOP                                0x60000000

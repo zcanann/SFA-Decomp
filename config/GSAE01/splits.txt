@@ -86,7 +86,6 @@ main/model.c:
 main/object.c:
 	.text       start:0x8002A5D4 end:0x8002EB54
 	.data       start:0x802CABF8 end:0x802CAD50
-	.bss        start:0x803408A8 end:0x803408F8
 
 main/objanim.c:
 	.text       start:0x8002EB54 end:0x80030688
@@ -212,7 +211,6 @@ main/dll/dll_000D_playershadow.c:
 main/dll/dll_0018_boneparticleeffect.c:
 	.text       start:0x800A4338 end:0x800A4DF4
 	.data       start:0x8030FE38 end:0x80310560
-	.bss        start:0x8039C2C0 end:0x8039C2E0
 
 main/dll/dll_000E_partfx.c:
 	.text       start:0x800A4DF4 end:0x800AF688
@@ -3701,7 +3699,7 @@ dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
 	.text       start:0x8028B0D8 end:0x8028C970
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x803322F0 end:0x80332320
-	.bss        start:0x803D83A0 end:0x803D8878
+	.bss        start:0x803D83A0 end:0x803D87D0
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
 	.text       start:0x8028C970 end:0x8028C990
@@ -3743,7 +3741,6 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028D34C end:0x8028D368
-	.bss        start:0x803DAAB0 end:0x803DAAB8
 
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028D368 end:0x8028D4A8

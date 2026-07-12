@@ -129,7 +129,7 @@ extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
 extern s8 gObjPtrTableCount;
-int gObjPtrTable[20];
+extern int gObjPtrTable[];
 extern int gObjTablesBinCount;
 extern int* gObjTablesBinIndex;
 extern u8* gObjTablesBinData;
