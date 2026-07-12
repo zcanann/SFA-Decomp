@@ -20,14 +20,16 @@
 #define DLLA3_EFFECT_ID 0x5e0
 
 extern u8 lbl_80312F98[];
-extern f32 lbl_803E0968;
-extern f32 lbl_803E096C;
-extern f32 lbl_803E0970;
-extern f32 lbl_803E0974;
-extern f32 lbl_803E0978;
-extern f32 lbl_803E097C;
-extern f32 lbl_803E0980;
-extern f32 lbl_803E0984;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0968 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E096C = 0.95f;
+__declspec(section ".sdata2") f32 lbl_803E0970 = 0.4f;
+__declspec(section ".sdata2") f32 lbl_803E0974 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0978 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E097C = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E0980 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E0984 = 1.0f;
 
 void dll_A3_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
