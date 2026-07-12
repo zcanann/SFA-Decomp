@@ -53,7 +53,6 @@ extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, 
 extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 min, f32 max);
 extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularTargetColor(void* handle, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(void* handle, int from, int to);
 extern void modelLightStruct_setupGlow(void* handle, int slot, int r, int g, int b, int a, f32 radius);
 extern void DIMbosstonsil_updateHitReaction(void);
@@ -412,7 +411,7 @@ void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
         modelLightStruct_setEnabled(gDIMbosstonsilLight, 1, lbl_803E4C90);
         modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)gDIMbosstonsilLight, lbl_803E4CA0);
         modelLightStruct_setDiffuseTargetColor(gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
-        modelLightStruct_setSpecularTargetColor(gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
+        modelLightStruct_setSpecularTargetColor((ModelLightStruct*)gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
         modelLightStruct_startColorFade(gDIMbosstonsilLight, 2, 0x3c);
         modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)gDIMbosstonsilLight, 1);
         modelLightStruct_setupGlow(gDIMbosstonsilLight, 0, 0xff, 0, 0, 0x7f, lbl_803E4CA0);

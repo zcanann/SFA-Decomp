@@ -120,7 +120,6 @@ void modelLightStruct_getDiffuseColor(ModelLightStruct *light, u8 *red, u8 *gree
 void modelLightStruct_setDiffuseColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_getSpecularColor(ModelLightStruct *light, u8 *red, u8 *green, u8 *blue, u8 *alpha);
 void modelLightStruct_setSpecularColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
-void modelLightStruct_setSpecularTargetColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct *light, f32 scale, f32 brightness);
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *light, f32 cutoff, int spotFunction);
 void modelLightStruct_setPosition(ModelLightStruct *light, f32 x, f32 y, f32 z);
