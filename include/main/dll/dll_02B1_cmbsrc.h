@@ -3,7 +3,6 @@
 
 #include "global.h"
 #include "main/game_object.h"
-#include "main/model_light.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
@@ -57,6 +56,8 @@
 #define CMBSRC_PARTICLE_EFFECT_ID 0x07CB
 #define CMBSRC_DEFAULT_INACTIVE_FRAMES 0x0258
 
+struct ModelLightStruct;
+
 typedef struct CmbSrcMapData {
   ObjPlacement base;
   s8 rotZ;
@@ -83,7 +84,7 @@ typedef struct CmbSrcHitFlags {
 } CmbSrcHitFlags;
 
 typedef struct CmbSrcState {
-  ModelLight *light;
+  struct ModelLightStruct *light;
   f32 effectTimer;
   f32 pulseTimer;
   f32 particleTimer;

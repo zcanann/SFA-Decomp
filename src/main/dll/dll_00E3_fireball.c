@@ -21,6 +21,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #define FIREBALL_HIT_VOLUME_SLOT 14
@@ -115,7 +116,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern int* Obj_GetActiveModel(int obj);
 extern const f32 lbl_803E3330;
-extern int cmbsrc_getColorIndex(int* p);
 extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
 extern const f32 lbl_803E3354;
 extern const f32 lbl_803E3358;
@@ -369,7 +369,7 @@ void Fireball_hitDetect(int* obj)
         return;
     if (((GameObject*)target)->anim.seqId == FIREBALL_SEQID_CMBSRC_RECOLOR)
     {
-        int idx = cmbsrc_getColorIndex(target);
+        int idx = cmbsrc_getColorIndex((int)target);
         if ((s8)idx != -1)
         {
             ((FireballState*)state)->colorIndex = idx;

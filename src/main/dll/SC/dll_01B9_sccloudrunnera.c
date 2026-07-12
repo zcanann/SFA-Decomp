@@ -6,9 +6,9 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_02B1_cmbsrc.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void cmbsrc_setExternalActive(int obj, int active);
 extern void objSetSlot(int obj, int slot);
 extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
