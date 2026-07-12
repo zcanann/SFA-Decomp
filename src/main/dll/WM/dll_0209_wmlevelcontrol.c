@@ -15,6 +15,12 @@
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/objseq_api.h"
 #include "main/game_object.h"
+#include "main/sky_api.h"
+
+#define skyFn_800895e0Legacy(flags, red, green, blue, m1, m2)                                                     \
+    ((void (*)(int, int, int, int, int, int))skyFn_800895e0)((flags), (red), (green), (blue), (m1), (m2))
+#define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
+    ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
@@ -91,14 +97,11 @@ extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
 extern f32 fn_8008ED88(void);
-extern void skyFn_800895e0(int flags, int red, int green, int blue, int m1, int m2);
 extern void fn_80089510(int flags, int red, int green, int blue);
 extern void fn_80089578(int flags, int red, int green, int blue);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void Music_Trigger(int id, int arg);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -126,7 +129,7 @@ void fn_801F3F18(GameObject* obj)
     {
         skySetOverrideLightColorEnabled(0);
         skySetOverrideLightDirectionEnabled(0);
-        skyFn_80089710(7, 0, 1);
+        skyFn_80089710Legacy(7, 0, 1);
         return;
     }
 
@@ -134,12 +137,12 @@ void fn_801F3F18(GameObject* obj)
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
     if ((obj->unkF4 & 4) == 0)
     {
-        skyFn_80089710(1, 1, 0);
+        skyFn_80089710Legacy(1, 1, 0);
         obj->unkF4 |= 4;
     }
     else
     {
-        skyFn_80089710(1, 1, 1);
+        skyFn_80089710Legacy(1, 1, 1);
     }
 
     /* hold the blend at full while spirit-restore progress is running,
@@ -171,7 +174,7 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     (&gWmLevelControlBlendedLightColor)[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    skyFn_800895e0(1, *(volatile u8*)&gWmLevelControlBlendedLightColor,
+    skyFn_800895e0Legacy(1, *(volatile u8*)&gWmLevelControlBlendedLightColor,
                    ((volatile u8*)&gWmLevelControlBlendedLightColor)[1],
                    ((volatile u8*)&gWmLevelControlBlendedLightColor)[2], 0x40, 0x40);
 

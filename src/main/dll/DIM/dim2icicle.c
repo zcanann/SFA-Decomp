@@ -262,7 +262,6 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
 #define DIM2ICICLE_ENVFX_A 0xdb
 #define DIM2ICICLE_ENVFX_B 0xdc
 
-extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 
 extern int gDim2IcicleSequenceSfx[];
 extern f32 lbl_803E4BC4;

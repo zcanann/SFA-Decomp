@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/worldplanet_lighting.h"
+#include "main/sky_api.h"
 
 #define WORLDPLANET_LERP_BYTE(from, to, idx, t)                                                                        \
     ((u8)(s32)((t) * (f32)((s32)(&to)[idx] - (s32)(&from)[idx]) + (f32)(s32)(&from)[idx]))
@@ -20,11 +21,8 @@ extern f32 lbl_803E65FC;
 extern f32 lbl_803E6600;
 extern f32 gWorldPlanetLightingSkyDirX;
 extern f32 gWorldPlanetLightingSkyDirZ;
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
-extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 extern void fn_80089510(int flags, u8 red, u8 green, u8 blue);
 extern void fn_80089578(int flags, u8 red, u8 green, u8 blue);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 
 #pragma peephole on
 void worldplanet_updateMapLighting(void)

@@ -30,7 +30,6 @@ extern void Music_Trigger(int id, int arg);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 
-extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);

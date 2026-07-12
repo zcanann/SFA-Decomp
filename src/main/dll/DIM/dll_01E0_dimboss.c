@@ -58,7 +58,6 @@ extern void loadDataFiles(void);
 
 
 
-extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
 
 extern u32 dll_2E_func09();
 extern void fn_801B9ECC(void);

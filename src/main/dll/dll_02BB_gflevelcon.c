@@ -15,6 +15,7 @@
  * zones + texture-state swaps).
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/sky_api.h"
 #include "main/lightmap.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/dll_02C0_front.h"

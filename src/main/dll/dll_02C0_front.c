@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/sky_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/dll/ppcwgpipe_struct.h"
@@ -528,9 +529,6 @@ void TitleScreen_update(u8* obj)
     extern void fn_80134870(u8 * obj, u8 * arr);
     extern int ObjModel_HasActiveBlendChannels(ObjModel * model);
     extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-    extern void skyFn_80089710(int flags, int enabled, int startComplete);
-    extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-    extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 
     u8* state = ((GameObject*)obj)->extra;
     int objHandle = (int)obj;

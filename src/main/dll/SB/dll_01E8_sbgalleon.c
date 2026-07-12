@@ -24,6 +24,12 @@
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/sky_api.h"
+
+#define skyFn_800895e0Legacy(flags, red, green, blue, m1, m2)                                                     \
+    ((void (*)(int, int, int, int, int, int))skyFn_800895e0)((flags), (red), (green), (blue), (m1), (m2))
+#define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
+    ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/object_api.h"
 #include "main/render.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -60,14 +66,11 @@ extern f32 lbl_803E5790;
 extern void setDrawLights(int v);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
-extern void skyFn_80089710(int flags, int enabled, int startComplete);
 extern f32 fn_8008ED88(void);
-extern void skyFn_800895e0(int idx, int r, int g, int b, int a, int b2);
 extern void fn_80089510(int idx, int r, int g, int b);
 extern void fn_80089578(int idx, int r, int g, int b);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern f32 gSbGalleonSkyLightVecs[12];
 extern u8 lbl_803DC078[4];
@@ -297,7 +300,7 @@ void fn_801E1588(int obj, int state)
     setDrawLights(0);
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
-    skyFn_80089710(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
+    skyFn_80089710Legacy(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
     if (fn_8008ED88() > *(f32*)&lbl_803E56CC)
     {
         lbl_803DDC24 = lbl_803E57A4;
@@ -323,7 +326,7 @@ void fn_801E1588(int obj, int state)
         int v2 = gSbGalleonSkyColorAStart[2];
         gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
     }
-    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorA[0],
+    skyFn_800895e0Legacy(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorA[0],
                    *(volatile u8*)&gSbGalleonSkyColorA[1], *(volatile u8*)&gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
