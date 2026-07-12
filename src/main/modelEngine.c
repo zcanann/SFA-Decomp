@@ -2,6 +2,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_02AF_tree.h"
+#include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
 #include "main/gametext.h"
 #include "main/gameloop_api.h"
@@ -38,9 +40,8 @@ extern ResourceDescriptor gAnimatedObjDescriptor, gAppleOnTreeObjDescriptor, gAr
 extern ResourceDescriptor gBaddieObjDescriptor, gBarrelGenerObjDescriptor, gBarrelPadObjDescriptor,
     gBlastedObjDescriptor, gBombPlantObjDescriptor, gBombPlantSporeObjDescriptor, gBombPlantingSpotObjDescriptor,
     gBossDrakorObjDescriptor;
-extern ResourceDescriptor gBrokenPipeObjDescriptor, gCCSharpclawPadObjDescriptor, gCCTestInfotObjDescriptor,
-    gCCgasventControlObjDescriptor, gCCgasventObjDescriptor, gCClevcontrolObjDescriptor, gCClightfootObjDescriptor,
-    gCCpedstalObjDescriptor;
+extern ResourceDescriptor gCCSharpclawPadObjDescriptor, gCCTestInfotObjDescriptor, gCCgasventControlObjDescriptor,
+    gCCgasventObjDescriptor, gCClevcontrolObjDescriptor, gCClightfootObjDescriptor, gCCpedstalObjDescriptor;
 extern ResourceDescriptor gCCqueenObjDescriptor, gCCriverflowObjDescriptor, gCFCrateObjDescriptor,
     gCFForceFieldObjDescriptor, gCFGuardianObjDescriptor, gCFLevelControlObjDescriptor, gCFMagicWallObjDescriptor,
     gCFMainCrystalObjDescriptor;
@@ -158,8 +159,7 @@ extern ResourceDescriptor gStayPointObjDescriptor, gSunTempleObjDescriptor, gSwa
     gTexFrameAnimatorObjDescriptor, gTexscroll2ObjDescriptor, gTexscrollObjDescriptor, gTextBlockObjDescriptor,
     gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTransporterObjDescriptor, gTreasureChestObjDescriptor,
-    gTreeBirdObjDescriptor, gTreeObjDescriptor, gTrickyCurveObjDescriptor, gTrickyGuardObjDescriptor,
-    gTrickyGuardSpotObjDescriptor;
+    gTreeBirdObjDescriptor, gTrickyCurveObjDescriptor, gTrickyGuardObjDescriptor, gTrickyGuardSpotObjDescriptor;
 extern ResourceDescriptor gTrickyObjDescriptor, gTrickyWarpObjDescriptor, gTriggerObjDescriptor,
     gTumbleWeedBushObjDescriptor, gTumbleweedObjDescriptor, gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor,
     gVFP_Block1ObjDescriptor;
@@ -1559,8 +1559,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gControlLightObjDescriptor,
     &gSoftBodyObjDescriptor,
     &gWaterFlowWeObjDescriptor,
-    &gTreeObjDescriptor,
-    &gBrokenPipeObjDescriptor,
+    (ResourceDescriptor*)&gTreeObjDescriptor,
+    (ResourceDescriptor*)&gBrokenPipeObjDescriptor,
     &gCmbSrcObjDescriptor,
     &gDustMoteSouObjDescriptor,
     &gVortexObjDescriptor,

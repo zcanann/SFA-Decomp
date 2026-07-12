@@ -410,20 +410,8 @@ extern f32 lbl_803E73C0;
 #pragma dont_inline reset
 
 extern void fn_8003B608(int r, int g, int b);
-extern const f32 lbl_803E72F8;
-extern const f32 lbl_803E7308;
 extern void vecRotateZXY(int obj, f32* vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
-extern f32 gTreeEffectColors[];
-extern const f32 lbl_803E730C;
-extern const f32 lbl_803E7310;
-extern const f32 lbl_803E7314;
-extern const f32 lbl_803E7318;
-extern const f32 lbl_803E731C;
-extern const f32 lbl_803E7320;
-extern const f32 lbl_803E7324;
-extern const f32 gTreeScaleByteNormalizer;
-extern const f32 lbl_803E732C;
 
 #pragma dont_inline on
 
@@ -989,18 +977,12 @@ void gf_levelcon_free(void);
 void gf_levelcon_update(GameObject* obj);
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void gf_levelcon_init(int obj);
-int tree_getExtraSize(void);
 int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int mclightning_getExtraSize(void);
 void mclightning_free(GameObject* obj);
 void mclightning_update(GameObject* obj);
 void mclightning_init(GameObject* obj, u8* setup);
 void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-void tree_spawnAmbientEffect(GameObject* obj, int p2, s8 index);
-void tree_updateAmbientEffects(GameObject* obj, int p2);
-void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void tree_init(GameObject* obj, u8* setup);
-void tree_update(GameObject* obj);
 void gf_levelcon_findLinkedObjects(int obj);
 void barrelgener_update(GameObject* obj);
 void dll_299_free(int obj);

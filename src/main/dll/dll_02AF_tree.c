@@ -18,11 +18,10 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
+#include "main/dll/dll_02AF_tree.h"
 #include "main/game_object.h"
 
-#define TREE_AMBIENT_EFFECT_COUNT        3
 #define TREE_AMBIENT_EFFECT_OBJECT_ID    0x210
-#define TREE_AMBIENT_EFFECT_SETUP_SIZE   0x28
 #define TREE_OBJECT_FLAGS_INIT           0x2000
 #define TREE_RESET_HITBOX_FLAG           INTERACT_FLAG_DISABLED /* 0x08 */
 #define TREE_FLAG_BURST_MODE_MASK        0x0f
@@ -33,81 +32,15 @@
 #define TREE_FLAG_AMBIENT_EFFECTS          0x80
 #define TREE_FLAG_DISABLE_PLAYER_PROXIMITY 0x100
 
-typedef struct TreeSetup
-{
-    ObjPlacement base;
-    u8 rotZ;
-    u8 rotY;
-    u8 rotX;
-    u8 scale;
-    u8 flagsLo;
-    u8 proximityRadiusHalf;
-    u8 flagsHi;
-    u8 pad1F;
-    u8 colorR;
-    u8 colorG;
-    u8 colorB;
-} TreeSetup;
-
-typedef struct TreeAmbientEffectSetup
-{
-    ObjPlacement base;
-    int sourceObject;
-    u16 animFrame;
-    s16 unk1E;    /* always 0 at spawn */
-    u8 colorA[3]; /* opaque setup channels consumed by the ambient-effect DLL */
-    u8 colorB[2]; /* opaque setup channels consumed by the ambient-effect DLL */
-    s8 verticalDrift;
-    s16 modelId;
-} TreeAmbientEffectSetup;
-
-typedef struct TreeState
-{
-    int ambientEffectHandles[TREE_AMBIENT_EFFECT_COUNT];
-    f32 ambientEffectPos[TREE_AMBIENT_EFFECT_COUNT][3];
-    f32 ambientSpawnTimers[TREE_AMBIENT_EFFECT_COUNT];
-    f32 playerBurstCooldown;
-    f32 ambientBurstTimer;
-    f32 swayTimer;
-    f32 scale;
-    f32 hitCooldownTimer;
-    f32 hitEffectCooldown;
-    u16 proximityRadius;
-    u16 lastPlayerDistance;
-    u16 flags;
-    u16 effectProfileIndex;
-} TreeState;
-
-STATIC_ASSERT(offsetof(TreeSetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(TreeSetup, scale) == 0x1b);
-STATIC_ASSERT(offsetof(TreeSetup, flagsLo) == 0x1c);
-STATIC_ASSERT(offsetof(TreeSetup, proximityRadiusHalf) == 0x1d);
-STATIC_ASSERT(offsetof(TreeSetup, flagsHi) == 0x1e);
-STATIC_ASSERT(offsetof(TreeSetup, colorR) == 0x20);
-STATIC_ASSERT(offsetof(TreeSetup, colorB) == 0x22);
-STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, sourceObject) == 0x18);
-STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, animFrame) == 0x1c);
-STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, colorA) == 0x20);
-STATIC_ASSERT(sizeof(TreeAmbientEffectSetup) == TREE_AMBIENT_EFFECT_SETUP_SIZE);
-STATIC_ASSERT(offsetof(TreeState, ambientEffectPos) == 0xc);
-STATIC_ASSERT(offsetof(TreeState, ambientSpawnTimers) == 0x30);
-STATIC_ASSERT(offsetof(TreeState, playerBurstCooldown) == 0x3c);
-STATIC_ASSERT(offsetof(TreeState, scale) == 0x48);
-STATIC_ASSERT(offsetof(TreeState, hitEffectCooldown) == 0x50);
-STATIC_ASSERT(offsetof(TreeState, proximityRadius) == 0x54);
-STATIC_ASSERT(offsetof(TreeState, lastPlayerDistance) == 0x56);
-STATIC_ASSERT(offsetof(TreeState, flags) == 0x58);
-STATIC_ASSERT(sizeof(TreeState) == 0x5c);
-
 int tree_getExtraSize(void)
 {
     return sizeof(TreeState);
 }
 
-void tree_spawnAmbientEffect(GameObject* obj, int state, s8 index)
+void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
 {
     TreeSetup* setup = (TreeSetup*)(obj)->anim.placementData;
-    TreeState* ts = (TreeState*)state;
+    TreeState* ts = state;
     TreeAmbientEffectSetup* effectSetup;
     int idx;
 
@@ -138,36 +71,36 @@ void tree_spawnAmbientEffect(GameObject* obj, int state, s8 index)
     }
 }
 
-void tree_updateAmbientEffects(GameObject* obj, int state)
+void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
 {
     int i;
     TreeState* ts;
 
     if ((obj)->unkF8 != 0)
     {
-        ts = (TreeState*)state;
+        ts = state;
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
         {
-            if ((void*)((TreeState*)state)->ambientEffectHandles[i] == NULL)
+            if ((void*)state->ambientEffectHandles[i] == NULL)
             {
-                ((TreeState*)state)->ambientSpawnTimers[i] -= timeDelta;
-                if (((TreeState*)state)->ambientSpawnTimers[i] <= lbl_803E72F8)
+                state->ambientSpawnTimers[i] -= timeDelta;
+                if (state->ambientSpawnTimers[i] <= lbl_803E72F8)
                 {
-                    ((TreeState*)state)->ambientSpawnTimers[i] = randomGetRange(0x3c, 0x12c);
+                    state->ambientSpawnTimers[i] = randomGetRange(0x3c, 0x12c);
                     tree_spawnAmbientEffect(obj, state, i);
                 }
             }
             else
             {
-                if ((*(int (**)(int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) + 0x28))(
-                        ((TreeState*)state)->ambientEffectHandles[i]) > 3)
+                if ((*(int (**)(int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) + 0x28))(
+                        state->ambientEffectHandles[i]) > 3)
                 {
-                    ((TreeState*)state)->ambientEffectHandles[i] = 0;
+                    state->ambientEffectHandles[i] = 0;
                 }
                 else
                 {
-                    (*(void (**)(int, int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) +
-                                            0x24))(((TreeState*)state)->ambientEffectHandles[i],
+                    (*(void (**)(int, int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) +
+                                            0x24))(state->ambientEffectHandles[i],
                                                    (int)&ts->ambientEffectPos[i][0]);
                 }
             }
@@ -198,9 +131,9 @@ void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void tree_init(GameObject* obj, u8* setup)
+void tree_init(GameObject* obj, TreeSetup* setup)
 {
-    TreeSetup* setupData = (TreeSetup*)setup;
+    TreeSetup* setupData = setup;
     TreeState* state = obj->extra;
     ObjAnimEventList animOut;
 
@@ -312,7 +245,7 @@ void tree_update(GameObject* obj)
         }
         if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
         {
-            tree_updateAmbientEffects(obj, (int)state);
+            tree_updateAmbientEffects(obj, state);
         }
         if (state->flags & TREE_FLAG_HIT_ENABLED)
         {
@@ -422,20 +355,36 @@ f32 gTreeEffectColors[] = {
 };
 
 /* descriptor/ptr table auto 0x8032bc90-0x8032bd00 */
-u32 gTreeObjDescriptor[14] = {
-    0x00000000,     0x00000000,       0x00000000, 0x00090000,       0x00000000, 0x00000000, 0x00000000,
-    (u32)tree_init, (u32)tree_update, 0x00000000, (u32)tree_render, 0x00000000, 0x00000000, (u32)tree_getExtraSize};
-u32 gBrokenPipeObjDescriptor[14] = {0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00090000,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    (u32)brokenpipe_init,
-                                    (u32)brokenpipe_update,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    (u32)brokenpipe_getExtraSize};
+ObjectDescriptor gTreeObjDescriptor = {
+    0,
+    0,
+    0,
+    0x00090000,
+    NULL,
+    NULL,
+    NULL,
+    (ObjectDescriptorCallback)tree_init,
+    (ObjectDescriptorCallback)tree_update,
+    NULL,
+    (ObjectDescriptorCallback)tree_render,
+    NULL,
+    NULL,
+    tree_getExtraSize,
+};
+
+ObjectDescriptor gBrokenPipeObjDescriptor = {
+    0,
+    0,
+    0,
+    0x00090000,
+    NULL,
+    NULL,
+    NULL,
+    (ObjectDescriptorCallback)brokenpipe_init,
+    (ObjectDescriptorCallback)brokenpipe_update,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    brokenpipe_getExtraSize,
+};

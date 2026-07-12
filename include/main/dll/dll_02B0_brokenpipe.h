@@ -3,6 +3,8 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 typedef struct BrokenPipeSetup
 {
@@ -27,6 +29,7 @@ STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
 extern f32 lbl_803E7340;
+extern ObjectDescriptor gBrokenPipeObjDescriptor;
 
 int brokenpipe_getExtraSize(void);
 void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup);
