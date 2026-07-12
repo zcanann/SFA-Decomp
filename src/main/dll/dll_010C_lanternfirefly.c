@@ -43,7 +43,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-extern u8 framesThisStep;
 extern f32 lbl_803E3AA0;
 extern f32 lbl_803E3AA4;
 extern f32 lbl_803E3AA8;

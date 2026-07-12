@@ -19,6 +19,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT   0xa
@@ -34,7 +35,6 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-extern f32 timeDelta;
 extern f32 lbl_803E30E0;
 extern f32 lbl_803E30F0;
 extern f32 lbl_803E30F4;

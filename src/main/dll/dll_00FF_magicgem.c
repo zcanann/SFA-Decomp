@@ -28,7 +28,6 @@ extern void playerAddRemoveMagic(int obj, int amount);
 
 extern f32 getXZDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(int obj);
-extern u8 framesThisStep;
 extern char sMagicGemCollectedMessage[];
 
 extern int Obj_GetActiveModel(int obj);

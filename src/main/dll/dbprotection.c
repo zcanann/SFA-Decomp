@@ -61,7 +61,6 @@
 #define DBPROT_CLOUD_SET_A(flag)                  (*gCloudActionInterface)->func10Nop((flag))
 #define DBPROT_CLOUD_SET_B(flag)                  (*gCloudActionInterface)->func11Nop((flag))
 
-extern u8 framesThisStep;
 extern s8 lbl_803DDC2C;
 extern f32 lbl_803E56CC;
 extern f32 gDBprotPi;

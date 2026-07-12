@@ -14,6 +14,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/gamebits.h"
+#include "main/frame_timing.h"
 
 typedef struct DfpTargetBlockPartfxArgs
 {
@@ -37,7 +38,6 @@ typedef struct DfpTargetBlockPartfxArgs
 extern const f32 lbl_803E6488;
 extern const f32 lbl_803E648C;
 extern const f32 lbl_803E6490;
-extern f32 timeDelta;
 extern f32 gTargetBlockHomeX;
 extern f32 gTargetBlockHomeZ;
 extern const f32 lbl_803E6494;

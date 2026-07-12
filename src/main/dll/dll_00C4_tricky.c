@@ -23,6 +23,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/gamebit_ids.h"
 #include "main/voxmaps.h"
+#include "main/frame_timing.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -239,7 +240,6 @@ extern int gTrickyNearestObject;
 extern u32 lbl_803DBC40;
 extern u32 lbl_803DBC48;
 extern f32 lbl_803DC074;
-extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u16 lbl_803E23C0;
 extern f32 lbl_803E23DC;
