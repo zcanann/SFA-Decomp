@@ -7,7 +7,9 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/object.h"
+#include "main/object_api.h"
 
 typedef struct DfpobjcreatorObjectDef
 {
@@ -15,27 +17,23 @@ typedef struct DfpobjcreatorObjectDef
     s16 gameBit;
     u8 pad1A[0x1C - 0x1A];
     s16 spawnPeriod;
-    u8 pad1E[0x24 - 0x1E];
+    s8 rotXByte;
+    s8 unk1F;
+    u8 unk20;
+    u8 pad21[0x24 - 0x21];
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } DfpobjcreatorObjectDef;
 
 typedef struct DfpobjcreatorPlacement
 {
-    u8 pad0[0x4 - 0x0];
-    u8 colorR; /* 0x4 -> spawn setup base.color[0] */
-    u8 colorG; /* 0x5 -> spawn setup base.color[1] */
-    u8 colorB; /* 0x6 -> spawn setup base.color[2] */
-    u8 colorA; /* 0x7 -> spawn setup base.color[3] */
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    s32 mapId; /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
+    ObjPlacement base;
     u8 pad18[0x19 - 0x18];
     u8 unk19;
     s16 behaviorMode; /* 0x1A switch selector (case 7 spawns the periodic object) */
     s16 spawnPeriod;  /* 0x1C */
-    s16 unk1E;
+    s8 spawnedObjUnkF4;
+    u8 pad1F;
     s16 unk20;
     u8 pad22[0x24 - 0x22];
     s16 unk24;
@@ -70,9 +68,6 @@ STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 /* Object periodically spawned by DFP_ObjCreator (case 7) from the placement
  * template; the spawner's whole purpose. */
 #define DFPOBJCREATOR_CHILD_OBJ 0x71b
-
-extern int dbstealerworm_stateHandlerA02();
-int dbstealerworm_stateHandlerA02(GameObject* obj, int p2);
 
 int DFP_ObjCreator_getExtraSize(void)
 {
@@ -109,14 +104,14 @@ void DFP_ObjCreator_hitDetect(void)
 void DFP_ObjCreator_update(GameObject* obj)
 {
 
-    int data = *(int*)&obj->anim.placementData;
+    DfpobjcreatorPlacement* data = (DfpobjcreatorPlacement*)obj->anim.placementData;
     DfpObjCreatorState* state = obj->extra;
     DfpobjcreatorSetup* setup;
     GameObject* newObj;
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        switch (((DfpobjcreatorPlacement*)data)->behaviorMode)
+        switch (data->behaviorMode)
         {
         case 7:
             state->spawnTimer -= (s16)timeDelta;
@@ -124,33 +119,33 @@ void DFP_ObjCreator_update(GameObject* obj)
             {
                 state->spawnTimer = state->spawnPeriod;
                 setup = (DfpobjcreatorSetup*)Obj_AllocObjectSetup(0x24, DFPOBJCREATOR_CHILD_OBJ);
-                setup->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
-                setup->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
-                setup->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
-                setup->base.color[0] = ((DfpobjcreatorPlacement*)data)->colorR;
-                setup->base.color[1] = ((DfpobjcreatorPlacement*)data)->colorG;
-                setup->base.color[2] = ((DfpobjcreatorPlacement*)data)->colorB;
-                setup->base.color[3] = ((DfpobjcreatorPlacement*)data)->colorA;
+                setup->base.posX = data->base.posX;
+                setup->base.posY = data->base.posY;
+                setup->base.posZ = data->base.posZ;
+                setup->base.color[0] = data->base.color[0];
+                setup->base.color[1] = data->base.color[1];
+                setup->base.color[2] = data->base.color[2];
+                setup->base.color[3] = data->base.color[3];
                 setup->gameBit = -1;
                 setup->gameBit2 = -1;
                 setup->objDefId = 0xdc;
                 newObj = Obj_SetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-                newObj->unkF4 = *(s8*)(data + 0x1e);
+                newObj->unkF4 = data->spawnedObjUnkF4;
             }
             break;
         }
     }
 }
 
-void DFP_ObjCreator_init(GameObject* obj, s8* def)
+void DFP_ObjCreator_init(GameObject* obj, DfpobjcreatorObjectDef* def)
 {
     DfpObjCreatorState* state = obj->extra;
-    obj->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    state->gameBit = ((DfpobjcreatorObjectDef*)def)->gameBit;
-    state->spawnPeriod = ((DfpobjcreatorObjectDef*)def)->spawnPeriod;
+    obj->anim.rotX = (s16)((s32)def->rotXByte << 8);
+    state->gameBit = def->gameBit;
+    state->spawnPeriod = def->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;
-    state->unk12 = (s16)(s32)def[0x1F];
-    state->unk14 = (s16)((s32)(u8)def[0x20] << 1);
+    state->unk12 = (s16)(s32)def->unk1F;
+    state->unk14 = (s16)((s32)def->unk20 << 1);
     state->unk16 = 100;
 }
 

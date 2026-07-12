@@ -2,6 +2,7 @@
 #define MAIN_DLL_WC_DLL_028C_WCBOUNCYCRA_H
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct WCBlockGridInterface
 {
@@ -61,7 +62,7 @@ void WCBouncyCra_free(void);
 void WCBouncyCra_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void WCBouncyCra_hitDetect(void);
 void WCBouncyCra_update(GameObject* obj);
-void WCBouncyCra_init(GameObject* obj, int setup);
+void WCBouncyCra_init(GameObject* obj, ObjPlacement* setup);
 void WCBouncyCra_release(void);
 void WCBouncyCra_initialise(void);
 

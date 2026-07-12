@@ -1,6 +1,8 @@
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 
 #define WCBLOCK_VARIANT_A          1
 
@@ -99,11 +101,11 @@ void WCBouncyCra_update(GameObject* obj)
     }
 }
 
-void WCBouncyCra_init(GameObject* obj, int setup)
+void WCBouncyCra_init(GameObject* obj, ObjPlacement* setup)
 {
     WCBouncyCrateState* state = obj->extra;
 
-    state->homeY = ((ObjPlacement*)setup)->posY;
+    state->homeY = setup->posY;
     state->cooldown = WBOUNCY_RESET_COOLDOWN;
 }
 
