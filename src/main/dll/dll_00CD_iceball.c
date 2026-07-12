@@ -33,9 +33,9 @@
 
 #define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
 
-extern f32 lbl_803E2E54;
-extern f32 lbl_803E2E58;
-extern f32 lbl_803E2E50;
+__declspec(section ".sdata2") f32 lbl_803E2E50 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E54 = 0.07f;
+__declspec(section ".sdata2") f32 lbl_803E2E58 = 0.97f;
 
 extern int getTrickyObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
