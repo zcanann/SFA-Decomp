@@ -3,6 +3,7 @@
 
 #include "main/dll/cntcounter_state.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 typedef struct CntCounterSetup
@@ -21,6 +22,8 @@ STATIC_ASSERT(offsetof(CntCounterSetup, initialCount) == 0x1A);
 STATIC_ASSERT(offsetof(CntCounterSetup, doneGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CntCounterSetup, decrementGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CntCounterSetup) == 0x24);
+
+extern ObjectDescriptor gCNTcounterObjDescriptor;
 
 int CntCounter_getExtraSize(void);
 int CntCounter_getObjectTypeId(void);

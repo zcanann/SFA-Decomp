@@ -4,6 +4,8 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
+#include "main/dll/dll_02B4_cntcounter.h"
+#include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
@@ -48,8 +50,7 @@ extern ResourceDescriptor gCCqueenObjDescriptor, gCCriverflowObjDescriptor, gCFC
     gCFForceFieldObjDescriptor, gCFGuardianObjDescriptor, gCFLevelControlObjDescriptor, gCFMagicWallObjDescriptor,
     gCFMainCrystalObjDescriptor;
 extern ResourceDescriptor gCFPerchObjDescriptor, gCFPowerBaseObjDescriptor, gCFPrisonCageObjDescriptor,
-    gCFPrisonGuardObjDescriptor, gCFPrisonUncleObjDescriptor, gCF_DoorLightObjDescriptor, gCNTcounterObjDescriptor,
-    gCNThitObjecObjDescriptor;
+    gCFPrisonGuardObjDescriptor, gCFPrisonUncleObjDescriptor, gCF_DoorLightObjDescriptor;
 extern ResourceDescriptor gCRrockfallObjDescriptor, gCampFireObjDescriptor, gCannonClawObjDescriptor,
     gCflightwallObjDescriptor, gCheckpoint4ObjDescriptor, gChukChukObjDescriptor, gChukaObjDescriptor,
     gCloudPrisonControlObjDescriptor;
@@ -1564,9 +1565,9 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gCmbSrcObjDescriptor,
     (ResourceDescriptor*)&gDustMoteSouObjDescriptor,
     &gVortexObjDescriptor,
-    &gCNTcounterObjDescriptor,
+    (ResourceDescriptor*)&gCNTcounterObjDescriptor,
     &gTimerObjDescriptor,
-    &gCNThitObjecObjDescriptor,
+    (ResourceDescriptor*)&gCNThitObjecObjDescriptor,
     &gMCUpgradeObjDescriptor,
     &gMCUpgradeMaObjDescriptor,
     &gMCStaffEffeObjDescriptor,

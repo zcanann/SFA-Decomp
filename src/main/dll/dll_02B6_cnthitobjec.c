@@ -23,10 +23,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-int cnthitobjec_SeqFn(int obj, int unused, int animEvent)
+int cnthitobjec_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
 {
     int i;
-    CntHitObjectAnimEvent* event = (CntHitObjectAnimEvent*)animEvent;
     for (i = 0; i < event->explosionCount; i++)
     {
         spawnExplosion(obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);
@@ -81,7 +80,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
     {
         return;
     }
-    if (arrayIndexOf(state->allowedHitSources, state->allowedHitSourceCount, hit) == -1)
+    if (arrayIndexOf((int)state->allowedHitSources, state->allowedHitSourceCount, hit) == -1)
     {
         return;
     }
@@ -150,16 +149,16 @@ void cnthitobjec_update(GameObject* obj)
     }
 }
 
-void cnthitobjec_init(GameObject* obj, int setup)
+void cnthitobjec_init(GameObject* obj, CntHitObjectSetup* setup)
 {
     CntHitObjectState* state = (obj)->extra;
-    CntHitObjectSetup* setupData = (CntHitObjectSetup*)setup;
+    CntHitObjectSetup* setupData = setup;
 
     state->remainingHealth = 0;
     setupData->hitSourceProfile = (s8)((u32)setupData->hitSourceProfile % CNTHIT_PROFILE_COUNT);
     state->allowedHitSources = lbl_8032BEF8[setupData->hitSourceProfile];
     state->allowedHitSourceCount = (&lbl_803DC42C)[setupData->hitSourceProfile];
-    if ((void*)state->allowedHitSources == &lbl_803DC428)
+    if (state->allowedHitSources == &lbl_803DC428)
     {
         ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 8);
     }

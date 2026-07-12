@@ -21,7 +21,7 @@ typedef struct CntHitObjectFlags {
 
 typedef struct CntHitObjectState {
     int remainingHealth;
-    int allowedHitSources;
+    int* allowedHitSources;
     u8 allowedHitSourceCount;
     CntHitObjectFlags flags;
     u8 padA[0xC - 0xA];
