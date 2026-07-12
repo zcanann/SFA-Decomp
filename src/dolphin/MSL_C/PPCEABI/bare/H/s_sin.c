@@ -28,12 +28,12 @@ extern double lbl_803E7DF8;
 extern double lbl_803E7E00;
 extern double lbl_803E7E08;
 extern double lbl_803E7E10;
-extern float lbl_803E7E18;
-extern float lbl_803E7E1C;
-extern float lbl_803E7E20;
-extern float lbl_803E7E24;
-extern float lbl_803E7E28;
-extern float lbl_803E7E2C;
+extern const float lbl_803E7E18;
+extern const float lbl_803E7E1C;
+extern const float lbl_803E7E20;
+extern const float lbl_803E7E24;
+extern const float lbl_803E7E28;
+extern const float lbl_803E7E2C;
 
 float fastCastS16ToFloat(s16* p);
 float trigReduceQuadrant(u16* p, float x);
@@ -145,3 +145,10 @@ float fn_802945E0(float x) {
     tail = fastCastS16ToFloat(&exponent);
     return mantissa + tail;
 }
+
+const float lbl_803E7E18 = -1.0f;
+const float lbl_803E7E1C = 0.0f;
+const float lbl_803E7E20 = 0.785224974155426f;
+const float lbl_803E7E24 = 0.16370797157287598f;
+const float lbl_803E7E28 = 0.03238091617822647f;
+const float lbl_803E7E2C = 0.018663575872778893f;

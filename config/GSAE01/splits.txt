@@ -3816,6 +3816,7 @@ dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294204 end:0x80294640
+	.sdata2     start:0x803E7E18 end:0x803E7E30
 
 dolphin/base/PPCArch_weak.c:
 	.text       start:0x80294640 end:0x8029465C
