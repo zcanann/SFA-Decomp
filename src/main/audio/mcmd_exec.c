@@ -362,13 +362,13 @@ static inline u32 macPostMessage(u32 vid, u32 mesg)
  */
 void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u32 value;
+    u32 value[1];
     u32 targetInstrument;
     u8 i;
     McmdVoiceState* voiceState;
     u32 targetVoice;
 
-    value = varGet32(state, 0, (args->value >> 8) & 0xff);
+    value[0] = varGet32(state, 0, (args->value >> 8) & 0xff);
 
     if (((args->flags >> 8) & 0xff) == 0)
     {
@@ -380,7 +380,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
                 if (((McmdVoiceState*)synthVoice)[i].macroBase != 0 &&
                     targetInstrument == ((McmdVoiceState*)synthVoice)[i].instrumentKey)
                 {
-                    macPostMessage(((McmdVoiceState*)synthVoice)[i].vidListNode->id, value);
+                    macPostMessage(((McmdVoiceState*)synthVoice)[i].vidListNode->id, value[0]);
                 }
             }
         }
@@ -388,13 +388,13 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         {
             if (synthMessageCallback != 0)
             {
-                synthMessageCallback(state->vidListNode->id, value);
+                synthMessageCallback(state->vidListNode->id, value[0]);
             }
         }
     }
     else
     {
-        macPostMessage(varGet32(state, 0, args->value), value);
+        macPostMessage(varGet32(state, 0, args->value), value[0]);
     }
 }
 
