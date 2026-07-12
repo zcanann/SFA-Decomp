@@ -30,6 +30,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_011B_landedarwing.h"
+#include "main/dll/ARW/dll_029D_arwarwinggu.h"
 
 /* group owned by another DLL, queried here */
 #define STAFFACTIVATED_OBJ_GROUP 0x41 /* DLL 0x11C staffactivated */
@@ -101,8 +102,6 @@ extern int mapUnload(int mapId, int flags);
 extern void setLoadedFileFlags_blocks1(void);
 extern void warpToMap(int idx, s8 transType);
 extern int unlockLevel(s32 val, int idx, int flag);
-extern void arwarwinggu_setTextureFrame(GameObject* obj, int arg);
-extern void arwarwinggu_applyTextureFrame(GameObject* obj);
 extern int playerGetFocusObject(int obj);
 
 typedef struct LandedArwingFxPoint

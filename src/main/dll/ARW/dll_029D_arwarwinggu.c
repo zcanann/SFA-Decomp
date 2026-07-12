@@ -11,24 +11,8 @@
  * index; the arwarwing TU calls it when a shot is fired.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/ARW/dll_029D_arwarwinggu.h"
 #include "main/game_object.h"
-
-typedef struct ArwingGuTextureState
-{
-    u8 textureAnim[4];
-    int textureFrame;
-} ArwingGuTextureState;
-
-typedef union ArwingGuState
-{
-    ArwingGuTextureState texture;
-    f32 visibleTimer;
-    u8 fadeIn;
-} ArwingGuState;
-
-STATIC_ASSERT(sizeof(ArwingGuTextureState) == 0x8);
-STATIC_ASSERT(offsetof(ArwingGuTextureState, textureFrame) == 0x04);
-STATIC_ASSERT(sizeof(ArwingGuState) == 0x8);
 
 /* object def numbers (== seqId) of the Arwing's attached models */
 enum
