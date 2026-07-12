@@ -1735,8 +1735,12 @@ void fn_80069EB8(int param)
         scaled = (blk + param) * 0xff;
         for (; j < 0x40; j++)
         {
-            int idx = (j & 7) + ((j >> 3) << 5) + hi + mid;
-            u32 s = scaled;
+            int idx;
+            u32 s;
+            idx = (j & 7) + ((j >> 3) << 5);
+            idx += mid;
+            idx += hi;
+            s = scaled;
             if (s > 0x3fc0)
             {
                 s = 0x3fc0;
