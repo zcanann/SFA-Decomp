@@ -7,6 +7,7 @@
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 #include "main/model.h"
+#include "main/model_engine.h"
 #include "main/texture.h"
 #include "main/dll/player_state.h"
 #include "main/sky_interface.h"
@@ -6764,7 +6765,6 @@ void cardShowLoadingMsg(u8 kind)
     extern f32 lbl_803DEF9C;
 
     extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
-    extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
     extern int getReflectionTexture1(void);
     extern void hudDrawColored(int, int, int, void*, int, int);

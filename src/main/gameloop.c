@@ -11,6 +11,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/mapEventTypes.h"
+#include "main/model_engine.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
 #include "main/player_control_interface.h"
@@ -620,7 +621,6 @@ extern void gameTextRun(void);
 extern void viFn_8004a56c(int arg);
 
 extern void mapInitFn_8006fccc(void);
-extern void initGameTimer(void);
 
 extern void _initCardAndDsp(void);
 extern void playerInitFuncPtrsEntry(void);
@@ -830,13 +830,10 @@ void init(void)
 
 void Obj_UpdateAllObjects(u8 flags);
 
-extern void uiDll_runFrameStartAndLoadNext(void);
 extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
-extern void uiDll_runFrameEndAndLoadNext(void);
 extern void resetSomeGxFlags(void);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
-extern void curUiDllDraw(int a, int b, int c, int d);
 extern void Camera_ApplyCurrentViewport(void* viewportArg);
 extern int gGameLoopPlayerTrailTime;
 extern f32 lbl_803DE7B0;

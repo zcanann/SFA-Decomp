@@ -32,7 +32,6 @@ extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
 
-extern void set_uiDllIdx_803dc8f0(int idx);
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
 

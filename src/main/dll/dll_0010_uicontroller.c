@@ -8,21 +8,18 @@
  * release/initialise are the DLL load/unload hooks (no-ops here).
  */
 #include "main/game_ui_interface.h"
+#include "main/model_engine.h"
 #include "main/dll/dll_0010_uicontroller.h"
-
-extern u8 gameTimerIsRunning(void* context, int arg1, int arg2);
-extern void hudNumberFn_80014060(void* p);
-extern void gameTimerRun(void* p);
 
 #pragma scheduling off
 #pragma peephole off
 void UIController_render(void* context, int arg1, int arg2)
 {
-    if (gameTimerIsRunning(context, arg1, arg2) != 0)
+    if (gameTimerIsRunningContext(context, arg1, arg2) != 0)
     {
-        gameTimerRun(context);
+        gameTimerRunContext(context);
     }
-    hudNumberFn_80014060(context);
+    hudNumberRunContext(context);
     (*gGameUIInterface)->render(context, arg1, arg2);
 }
 

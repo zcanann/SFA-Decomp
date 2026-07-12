@@ -30,7 +30,6 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-extern void gameTimerInit(s8 flags, int minutes);
 extern int ObjTrigger_IsSet(void*);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern void hudFn_8011f38c(u8 x);

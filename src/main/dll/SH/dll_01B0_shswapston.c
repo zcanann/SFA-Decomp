@@ -11,6 +11,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/model_engine.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
@@ -73,7 +74,6 @@ extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 v);
 extern void warpToMap(int idx, s8 transType);
-extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
 
 int warpstone_getExtraSize(void)
@@ -368,7 +368,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
         case 0x10:
             if (getCurUiDll() == 0x10)
             {
-                int dll16 = getDLL16();
+                int dll16 = getDLL16Int();
                 (*(void (**)(int))(*(int*)dll16 + 0x10))(animUpdate->eventIds[i] - 0xd);
             }
             mainSetBits(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE, 1);

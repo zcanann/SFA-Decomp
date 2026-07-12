@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
+#include "main/model_engine.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
@@ -31,7 +32,6 @@ extern u32 Sfx_KeepAliveLoopedObjectSound();
 extern void setAButtonIcon(int x);
 
 extern int isGameTimerDisabled(void);
-extern f32 fn_8001461C(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(u8 x);

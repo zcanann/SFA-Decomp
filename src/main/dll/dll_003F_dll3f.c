@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
+#include "main/model_engine.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_02C0_front.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
@@ -30,8 +31,6 @@ extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 extern int ObjGroup_FindNearestObject();
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
 
 #pragma scheduling off
 #pragma peephole off
@@ -49,9 +48,9 @@ void dll_3F_updateTimerReadout(void* obj)
     start = 0;
     elapsed = 0;
     total = 0;
-    if (gameTimerIsRunning())
+    if (gameTimerIsRunningU8())
     {
-        gameTimerRun(obj);
+        gameTimerRunContext(obj);
     }
     player = Obj_GetPlayerObject();
     nearest = (void*)ObjGroup_FindNearestObject(9, player, &maxDist);

@@ -11,6 +11,7 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gametext.h"
+#include "main/model_engine.h"
 #include "main/newclouds.h"
 #include "main/pad.h"
 #include "main/resource.h"
@@ -107,18 +108,6 @@ extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
 extern void* gResourceLoadedHandles[];
 extern u16 gResourceRefCounts[];
-extern u8 gModelEngineTimerState;
-extern s8 gModelEngineTimerFlags;
-extern int gModelEnginePendingUiDll;
-extern int curUiDll;
-extern int gModelEnginePrevUiDll;
-extern f32 gModelEngineTimerDuration;
-extern f32 gModelEngineTimerValue;
-extern s32 gModelEngineHudNumber;
-extern s32 lbl_803DB28C;
-extern char lbl_803DB290;
-extern char gModelEngineTextBuf[];
-extern s32 gModelEngineUiDllResourceIds[];
 extern void* gFileInfo;
 extern volatile int gDvdReadCallbackResult;
 extern f32 lbl_803DE6B8;
@@ -259,18 +248,6 @@ void fn_8000F9B4(void);
 u16 fn_8000FA70(void);
 u16 fn_8000FA90(void);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
-void fn_8001404C(s32 value);
-u32 gameTimerIsRunning(void);
-void hudNumberFn_80014060(void);
-void set_hudNumber_803db278(s32 value);
-f32 fn_8001461C(void);
-f32 fn_80014668(void);
-void curUiDllDraw(int a, int b, int c, int d);
-void uiDll_runFrameEndAndLoadNext(void);
-int uiDll_runFrameStartAndLoadNext(void);
-void set_uiDllIdx_803dc8f0(int idx);
-void* getDLL16(void);
-void initGameTimer(void);
 void fileReadCb_80015954(void* result);
 void setFileInfo(void* fileInfo);
 int isSpace(u32 c);
@@ -294,7 +271,6 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 void* loadFileByPath(char* path, int* outSize);
-void gameTimerRun(void);
 void audioSetSoundMode(int mode, u8 forceFlag);
 int utf8GetNextChar(u8* str, int* outLen);
 char *gameStrcpy(char *dst, char *src);

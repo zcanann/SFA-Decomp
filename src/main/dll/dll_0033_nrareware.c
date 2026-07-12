@@ -3,13 +3,13 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/model_engine.h"
 extern int gNrarewareFrameCounter;
 extern f32 gNrarewareStage3Timer;
 extern f32 gNrarewareStage1Timer;
 extern u8 gNrarewareTransitionStarted;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
-extern void fn_8001404C(int value);
 extern void OSReport(const char* msg, ...);
 extern u8 gNrarewareTimeoutFlag;
 
