@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/pad.h"
@@ -30,7 +31,6 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-extern int ObjTrigger_IsSet(void*);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern void hudFn_8011f38c(u8 x);
 extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
@@ -243,7 +243,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         state->bobAmplitude = rngf;
     }
     state->bobPhase = sum;
-    if (ObjTrigger_IsSet(obj) != 0)
+    if (ObjTrigger_IsSet((int)obj) != 0)
     {
         rng = randomGetRange(0, 2);
         (*gObjectTriggerInterface)->runSequence(rng, obj, -1);

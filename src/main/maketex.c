@@ -1145,7 +1145,7 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
         ((ObjSeqTurnState*)state)->vecX = 0.0f;
         ((ObjSeqTurnState*)state)->vecY = 0.0f;
         ((ObjSeqTurnState*)state)->vecZ = 0.0f;
-        yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
+        yawd = Obj_GetYawDeltaToObject((GameObject*)obj, player, (float*)0);
         if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < yawThreshold)
         {
             turn = 0;
@@ -1227,7 +1227,7 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
         if (modelVec != NULL)
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
-            yawd = Obj_GetYawDeltaToObject((u16*)obj, player, (float*)0);
+            yawd = Obj_GetYawDeltaToObject((GameObject*)obj, player, (float*)0);
             yaw = (f32)(s16)yawd;
             {
                 f32 cur = (f32)modelVec[1];

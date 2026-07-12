@@ -293,7 +293,7 @@ void dll_107_update(GameObject* obj)
                 (obj)->unkF8 == 0)
             {
                 buttonDisable(0, PAD_BUTTON_A);
-                Obj_GetYawDeltaToObject((u16*)obj, (int)player, (f32*)yawBuf);
+                Obj_GetYawDeltaToObject(obj, (int)player, (f32*)yawBuf);
                 state->yawLow = -32768;
                 state->yawHigh = 0;
                 on = 1;

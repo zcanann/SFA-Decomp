@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
@@ -98,14 +99,14 @@ void lightfoot_free(GameObject* obj, int flag)
     int inner = *(int*)&(obj)->extra;
     int count;
     int i;
-    ObjGroup_RemoveObject(obj, LIGHTFOOT_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, LIGHTFOOT_OBJGROUP);
     count = (obj)->childCount;
     for (i = 0; i < count; i++)
     {
         child = (obj)->childObjs[0];
         if (child != NULL)
         {
-            ObjLink_DetachChild(obj, child);
+            ObjLink_DetachChild(obj, (int)child);
             if (flag == 0)
             {
                 Obj_FreeObject(child);

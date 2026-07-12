@@ -89,20 +89,6 @@ typedef struct
 } EmitCtrlTbl;
 
 /* external symbol declarations */
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern u32 ObjMsg_AllocQueue();
-extern int Obj_IsObjectAlive();
-extern u64 ObjLink_DetachChild();
-extern u64 ObjLink_AttachChild();
-extern u32 ObjPath_GetPointWorldPositionArray();
-extern u32 ObjPath_GetPointModelMtx();
-extern u64 ObjPath_GetPointWorldPosition();
-extern int Obj_GetYawDeltaToObject();
 extern u32 playerEyeAnimFn_80038988();
 extern void fn_8005D108();
 extern u32 objAudioFn_8006ef38();

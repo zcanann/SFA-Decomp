@@ -15,6 +15,7 @@
 #include "main/objfx.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/objlib.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/player_state.h"
 #include "main/dll/player.h"
@@ -569,7 +570,7 @@ u8 fn_80296414(GameObject* obj, GameObject* otherObj, u8* out)
 int fn_80295C88(int obj)
 {
     f32 dist = lbl_803E7EDC;
-    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &dist);
+    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (int)obj, &dist);
 }
 
 void fn_8029697C(GameObject* obj, s16* out1, s16* out2)
@@ -3106,7 +3107,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (*(void**)&gPlayerStaffObject != NULL)
     {
-        ObjPath_GetPointWorldPosition(obj, 4, &((GameObject*)gPlayerStaffObject)->anim.localPosX,
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 4, &((GameObject*)gPlayerStaffObject)->anim.localPosX,
                                       &((GameObject*)gPlayerStaffObject)->anim.localPosY,
                                       &((GameObject*)gPlayerStaffObject)->anim.localPosZ, 0);
     }
@@ -3232,7 +3233,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     npos[2] = pv->jointZ;
                 }
             }
-            ObjPath_GetPointWorldPosition(obj, 5, (int)&px, (int)&py, (int)&pz, 0);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, 5, &px, &py, &pz, 0);
             dx = ((GameObject*)obj)->anim.worldPosX - npos[0];
             dy = (((PlayerState*)inner)->pathBearingEyeY + ((GameObject*)obj)->anim.worldPosY) - npos[1];
             dz = ((GameObject*)obj)->anim.worldPosZ - npos[2];
@@ -3731,7 +3732,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 int t;
                 nearArg = 400.0f;
-                t = ObjGroup_FindNearestObject(6, obj, &nearArg);
+                t = ObjGroup_FindNearestObject(6, (int)obj, &nearArg);
                 if ((u32)t != 0)
                 {
                     objHitDetectFn_80062e84(obj, t, 1);
@@ -3834,7 +3835,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             case 1:
                 if (*(u32*)&((PlayerState*)inner)->interactObject != 0)
                 {
-                    ObjMsg_SendToObject(((PlayerState*)inner)->interactObject, 0x7000b, obj, 0);
+            ObjMsg_SendToObject((void*)((PlayerState*)inner)->interactObject, 0x7000b, (void*)obj, 0);
                     ((PlayerState*)inner)->interactObject = 0;
                 }
                 break;
@@ -4450,7 +4451,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 continue;
             }
             nearDist = lbl_803E808C;
-            t8 = ObjGroup_FindNearestObject(0x23, obj, &nearDist);
+            t8 = ObjGroup_FindNearestObject(0x23, (int)obj, &nearDist);
             ok2 = 1;
             if ((u32)t8 != 0)
             {
@@ -4499,7 +4500,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             }
             else
             {
-                ObjPath_GetPointWorldPosition(obj, 0xb, &pfx.x, &pfx.y, &pfx.z, 0);
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &pfx.x, &pfx.y, &pfx.z, 0);
                 ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(obj, 0, 8, 1, -1, pfx.x,
                                                                                               pfx.y, pfx.z);
             }
@@ -6699,7 +6700,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             s8 hv;
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E7ED8);
-            ObjPath_GetPointWorldPosition(obj, 0xb, &v[3], &v[4], &v[5], 0);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &v[3], &v[4], &v[5], 0);
             if (((PlayerState*)inner)->surfaceType == 0x1a)
             {
                 hv = 0x14;
@@ -6799,7 +6800,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
             Sfx_PlayFromObject((int)obj, SFXTRIG_foot_crawl2);
             Sfx_PlayFromObject((int)obj, SFXTRIG_watery_bubble);
-            ObjPath_GetPointWorldPosition(obj, 0xb, &v[3], &v[4], &v[5], 0);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &v[3], &v[4], &v[5], 0);
             if (ps->surfaceType == 0x1a)
             {
                 hv = 0x14;
@@ -7046,7 +7047,7 @@ void playerUpdate(GameObject* obj)
             {
                 gPlayerEggObject = (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1, -1,
                                                         obj->anim.parent);
-                ObjLink_AttachChild(obj, gPlayerEggObject, 3);
+                ObjLink_AttachChild((int)obj, gPlayerEggObject, 3);
             }
             if ((u32)gPlayerEggObject != 0)
             {
@@ -7063,7 +7064,7 @@ void playerUpdate(GameObject* obj)
             }
             if ((u32)gPlayerStaffObject != 0)
             {
-                ObjPath_GetPointWorldPosition(obj, 4, (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosX),
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 4, (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosX),
                                               (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosY),
                                               (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosZ), 0);
             }
@@ -8621,7 +8622,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
     int param = 0;
     int msg;
 
-    while (ObjMsg_Pop(obj, &msg, &p, &param) != 0)
+    while (ObjMsg_Pop((void*)obj, (u32*)&msg, (u32*)&p, (u32*)&param) != 0)
     {
         switch (msg)
         {
@@ -8775,7 +8776,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             {
                 if (mainGetBit(bit) != 0)
                 {
-                    ObjMsg_SendToObject(p, 0x7000b, obj, 0);
+                    ObjMsg_SendToObject((void*)p, 0x7000b, (void*)obj, 0);
                     break;
                 }
                 else
@@ -9411,7 +9412,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
     inner->unk8C4 = 2;
     if (gPlayerChildObject != NULL)
     {
-        found = (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &dist);
+        found = (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, (int)obj, &dist);
         if (found != NULL)
         {
             (*(void (*)(void*))(*(int*)((char*)*(int*)*(int*)((char*)found + 0x68) + 0x24)))(found);
@@ -9735,7 +9736,7 @@ int playerState31(GameObject* obj, int p2)
     f32 sinv;
     f32 fz;
     dist = lbl_803E7F5C;
-    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, obj, &dist);
+    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, (int)obj, &dist);
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
     inner->buttonHoldTimer = fz;
@@ -10311,7 +10312,7 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, int inner)
         {
             setup = Obj_AllocObjectSetup(0x20, *(s16*)((char*)animState + 0x28));
             child = Obj_SetupObject(setup, 4, obj->anim.mapEventSlot, -1, obj->anim.parent);
-            ObjLink_AttachChild(obj, (int)child, 0);
+            ObjLink_AttachChild((int)obj, (int)child, 0);
             *(s16*)((char*)animState + 0x26) = *(s16*)((char*)animState + 0x28);
         }
     }
@@ -10443,7 +10444,7 @@ void fn_802B4DE0(GameObject* obj)
     if (gPlayerPathObject != NULL)
     {
         Obj_FreeObject((GameObject*)gPlayerPathObject);
-        ObjLink_DetachChild(obj, gPlayerPathObject);
+        ObjLink_DetachChild(obj, (int)gPlayerPathObject);
         gPlayerPathObject = NULL;
     }
     if ((u32)gPlayerStaffObject != 0)
@@ -10457,8 +10458,8 @@ void fn_802B4DE0(GameObject* obj)
             mm_free((void*)e);
         off += 0xb0;
     }
-    ObjGroup_RemoveObject(obj, 0);
-    ObjGroup_RemoveObject(obj, PLAYER_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, 0);
+    ObjGroup_RemoveObject((int)obj, PLAYER_OBJGROUP);
     ObjModelChain_Free((ObjModelChain*)gPlayerModelChain);
 }
 
@@ -10777,7 +10778,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             break;
         case SURFACE_CONVEYOR:
             queryParams[0] = lbl_803E8150;
-            found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_OBJGROUP, obj, queryParams);
+            found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_OBJGROUP, (int)obj, queryParams);
             if (found != 0)
             {
                 (*(void (*)(f32, int, int, f32*, f32*))(*(int*)(*(int*)(*(int*)((char*)found + 0x68)) + 0x20)))(
@@ -10788,7 +10789,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             if ((*(s16*)&((PlayerState*)state)->hitIntervalTimer -= dt) <= 0)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
-                ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
                 ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
                     (int)obj, 0, 0x14, 2, 0xffffffff, pos[0], pos[1], pos[2]);
             }
@@ -10803,7 +10804,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
                 if (0x78 < ((PlayerState*)state)->periodicHitTimer)
                 {
                     ((PlayerState*)state)->periodicHitTimer -= 0x78;
-                    ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                    ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
                     ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
                         (int)obj, 0, 0x16, 2, 0xffffffff, pos[0], pos[1], pos[2]);
                 }
@@ -10946,7 +10947,7 @@ void playerStaffInit(GameObject* obj, int state)
     {
         child = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x69), 4, -1, -1, obj->anim.parent);
         gPlayerPathObject = child;
-        ObjLink_AttachChild(obj, (int)child, 2);
+        ObjLink_AttachChild((int)obj, (int)child, 2);
     }
     if (gPlayerPathObject != NULL)
     {
@@ -12243,10 +12244,10 @@ void objLoadPlayerFromSave(int obj)
     u8* pathState;
 
     lbl_803DE459 = 0;
-    ObjGroup_AddObject(obj, 0);
-    ObjGroup_AddObject(obj, PLAYER_OBJGROUP);
+    ObjGroup_AddObject((int)obj, 0);
+    ObjGroup_AddObject((int)obj, PLAYER_OBJGROUP);
     objSetSlot(obj, 0x3c);
-    ObjMsg_AllocQueue(obj, 0x14);
+    ObjMsg_AllocQueue((void*)obj, 0x14);
     ((GameObject*)obj)->animEventCallback = (void*)player_SeqFn;
     *(int*)&((GameObject*)obj)->anim.placementData = 0;
     ((PlayerState*)inner)->heldObj = 0;
@@ -12807,7 +12808,7 @@ void fn_802B066C(GameObject* obj, int state)
     ((PlayerState*)state)->knockbackHitTimer = ((PlayerState*)state)->knockbackHitTimer - timeDelta;
     if (((PlayerState*)state)->knockbackHitTimer <= zero)
     {
-        ObjPath_GetPointWorldPosition(obj, 0xb, &posWork[3], &posWork[4], &posWork[5], 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &posWork[3], &posWork[4], &posWork[5], 0);
         ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, posWork[3], posWork[4], posWork[5]);
         ((PlayerState*)state)->knockbackHitTimer = lbl_803E8050;
     }
@@ -12920,7 +12921,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
             else
             {
                 f32 dist = lbl_803E8150;
-                *(int*)&((PlayerState*)inner2)->baddie.targetObj = ObjGroup_FindNearestObject(3, obj, &dist);
+                *(int*)&((PlayerState*)inner2)->baddie.targetObj = ObjGroup_FindNearestObject(3, (int)obj, &dist);
             }
         }
         else
@@ -13813,7 +13814,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             fn_802AAF80((GameObject*)obj, inner, a, b, c);
         }
         ((void (*)(int, int, int, int))ObjPath_GetPointWorldPositionArray)(obj, 6, 2, inner + 0x3c4);
-        ObjPath_GetPointWorldPosition(obj, 0xb, (f32*)((char*)inner + 0x768), (f32*)((char*)inner + 0x76c),
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, (f32*)((char*)inner + 0x768), (f32*)((char*)inner + 0x76c),
                                       (f32*)((char*)inner + 0x770), 0);
         if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) != 0)
         {
@@ -13843,8 +13844,8 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             in2 = *(int*)&((GameObject*)obj)->extra;
             if (*(void**)((char*)in2 + 0x7f8) != NULL && *(int*)((char*)*(int*)((char*)in2 + 0x7f8) + 0xf8) == 1)
             {
-                ObjPath_GetPointWorldPosition(obj, 8, &px, &py, &pz, 0);
-                ObjPath_GetPointWorldPosition(obj, 9, &qx, &qy, &qz, 0);
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 8, &px, &py, &pz, 0);
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 9, &qx, &qy, &qz, 0);
                 px = lbl_803E7E98 * (px + qx);
                 py = lbl_803E7E98 * (py + qy);
                 pz = lbl_803E7E98 * (pz + qz);
@@ -15055,7 +15056,7 @@ void fn_802ABFBC(GameObject* obj, int state, PlayerState* inner)
     sub = inner->cameraTargetObject;
     if (sub != NULL && sub->anim.modelInstance->unk58 != 0)
     {
-        ObjPath_GetPointWorldPosition(obj, 5, &x1, &y1, &z1, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 5, &x1, &y1, &z1, 0);
         if (objModelGetVecFn_800395d8((GameObject*)sub, 0) != 0)
         {
             objPosFn_80039510((GameObject*)sub, 0, pos);
@@ -15332,7 +15333,7 @@ void playerUpdatePathEffectCountdown(GameObject* obj, int inner)
             buf.x = lbl_803E7EA4;
             buf.y = lbl_803E7ECC;
             buf.z = lbl_803E7ED0;
-            ObjPath_GetPointWorldPosition(obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x7e5, &buf, 0x200001, -1, outvec);
         }
         ((PlayerState*)inner)->stepDustCount -= 1;
@@ -15466,15 +15467,15 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
         setup->color[1] = 1;
         setup->color[2] = 0xff;
         setup->color[3] = 0xff;
-        ObjPath_GetPointWorldPosition((int)gPlayerPathObject, 0, &x0, &y0, &z0, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)gPlayerPathObject, 0, &x0, &y0, &z0, 0);
         setup->posX = x0 + yoff;
         setup->posY = y0 + yoff;
         setup->posZ = z0 + yoff;
         setup = (ObjPlacement*)Obj_SetupObject(setup, 5, -1, -1, NULL);
         if (setup != NULL)
         {
-            ObjPath_GetPointWorldPosition((int)gPlayerPathObject, 0, &x0, &y0, &z0, 0);
-            ObjPath_GetPointWorldPosition((int)gPlayerPathObject, 1, &x1, &y1, &z1, 0);
+            ObjPath_GetPointWorldPosition((GameObject*)gPlayerPathObject, 0, &x0, &y0, &z0, 0);
+            ObjPath_GetPointWorldPosition((GameObject*)gPlayerPathObject, 1, &x1, &y1, &z1, 0);
             dx = x0 - x1;
             dy = y0 - y1;
             dz = z0 - z1;
@@ -16425,7 +16426,7 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
                 t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
         }
     }
-    ObjPath_GetPointWorldPosition(obj, 0x13, &v.x, &v.y, &v.z, 0);
+    ObjPath_GetPointWorldPosition((GameObject*)obj, 0x13, &v.x, &v.y, &v.z, 0);
     loopCount = (((PlayerState*)inner)->waterSurfaceY - v.y > lbl_803E7F10) ? 1 : 0;
     for (i = 0; i < loopCount; i++)
     {

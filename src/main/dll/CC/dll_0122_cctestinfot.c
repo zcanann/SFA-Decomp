@@ -8,6 +8,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
@@ -71,7 +72,6 @@ extern void dll_127_initialise_nop(void);
 extern void CampFire_init(void);
 extern void CFCrate_initialise(void);
 extern void FxEmit_initialise(void);
-extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 
 int CCTestInfot_getExtraSize(void)

@@ -9,6 +9,7 @@
  */
 #include "main/game_object.h"
 #include "main/objfx.h"
+#include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
@@ -18,7 +19,6 @@
 
 #define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
 
-extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int playerIsDisguised(int obj);
 

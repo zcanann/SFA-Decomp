@@ -2014,7 +2014,7 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
     }
 }
 
-int Obj_GetYawDeltaToObject(u16* obj, int target, float* distOut)
+int Obj_GetYawDeltaToObject(GameObject* obj, int target, float* distOut)
 {
     int yawDelta;
     float dx;
@@ -2027,7 +2027,7 @@ int Obj_GetYawDeltaToObject(u16* obj, int target, float* distOut)
     {
         *distOut = sqrtf(dx * dx + dz * dz);
     }
-    yawDelta = (int)(short)yawDelta - (u32)(u16) * (s16*)obj;
+    yawDelta = (int)(short)yawDelta - (u32)(u16)*(s16*)obj;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta + -0xffff;

@@ -26,6 +26,7 @@
 #include "main/dll/CF/warp_pad.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 
@@ -57,7 +58,6 @@ extern f32 gWarpPadPulseStage3Time;
 extern f32 lbl_803E3ECC;
 extern f32 gWarpPadPulseEndTime;
 extern f32 gWarpPadTriggerDist;
-extern int ObjTrigger_IsSet(int obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
