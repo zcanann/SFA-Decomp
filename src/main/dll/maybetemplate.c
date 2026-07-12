@@ -831,7 +831,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     int bm0;
     u8* base;
     int icon;
-    int yOff;
+    int z[2];
     int i;
     void* player;
     int k;
@@ -921,14 +921,14 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         }
         GXSetScissor(0, 0, 0x280, 0x1E0);
         hudDrawCMenu(unk1, unk2, unk3);
-        i = 0;
-        yOff = i;
+        z[0] = 0;
+        z[1] = z[0];
         do
         {
-            if (gCMenuItemIcons[i] > 1)
+            if (gCMenuItemIcons[z[0]] > 1)
             {
                 alpha = fade;
-                rowFade = gCMenuScrollTimer + yOff;
+                rowFade = gCMenuScrollTimer + z[1];
                 if (rowFade < gCMenuRowFadeInThreshold)
                 {
                     alpha = fade + (rowFade - gCMenuRowFadeInThreshold) * 8;
@@ -947,15 +947,15 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 }
                 a16 = alpha * lbl_803DD8D4 / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
-                sprintf((char*)&label, &lbl_803DBB58, gCMenuItemIcons[i]);
+                sprintf((char*)&label, &lbl_803DBB58, gCMenuItemIcons[z[0]]);
                 gameTextSetColor(0, 0, 0, a16 & 0xFF);
-                gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + yOff + gCMenuScrollTimer);
+                gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + z[1] + gCMenuScrollTimer);
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
-                gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + yOff + gCMenuScrollTimer);
+                gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + z[1] + gCMenuScrollTimer);
             }
-            yOff += 0x32;
-            i++;
-        } while (i < GCMENU_ITEM_ICON_COUNT);
+            z[1] += 0x32;
+            z[0]++;
+        } while (z[0] < GCMENU_ITEM_ICON_COUNT);
         drawTexture(((PauseMenuHud*)base)->texHandle, gHudRightColX, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF,
                     0x100);
         drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudCMenuColX2, lbl_803E1FD0,
@@ -991,7 +991,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     if (((u32)hudYButtonItemIconTexture == 0) && (yButtonItemTextureId > 0))
     {
         gHudYButtonItemTextureCache = yButtonItemTextureId;
-    hudYButtonItemIconTexture = (int)textureLoadAsset(yButtonItemTextureId);
+        hudYButtonItemIconTexture = (int)textureLoadAsset(yButtonItemTextureId);
     }
     if (lbl_803DD83C != lbl_803E1E3C)
     {
