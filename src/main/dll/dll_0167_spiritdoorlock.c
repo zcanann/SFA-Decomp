@@ -43,8 +43,7 @@ typedef struct
     int a, b, c;
 } Vec3i;
 
-/* per-file extern decls (homes: engine_shared / dll_80220608_shared /
-   objhits / sky_80080E58_shared / gameplay_runtime); the spelling is
+/* Per-file declarations retained where their spelling is
    load-bearing for codegen, so they stay local to this TU. */
 extern int gSpiritDoorLockOrbitOffsetBase[4];
 extern s16 gSpiritDoorLockSpinSpeed;

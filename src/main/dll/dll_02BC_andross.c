@@ -18,7 +18,17 @@
  * moves, 0x12 the spawn cooldown, 0x108..0x10D the six random hit cues, and
  * 0x405/0x4B1/1 the clear/credits transition.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/audio/sfx.h"
+#include "main/camera_interface.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
+#include "main/objtexture.h"
+#include "main/vecmath.h"
 #include "main/dll/tricky.h"
 #include "main/newshadows.h"
 #include "main/game_object.h"

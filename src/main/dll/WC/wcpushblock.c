@@ -15,7 +15,7 @@
  *
  * This is a distinct DLL from the tile-grid wcpushblock (DLL 0x290); it
  * does not use the WCLevelContInterface controller protocol and keeps its
- * own externs (their signatures differ from dll_80220608_shared.h).
+ * own declarations for the distinct cloud-action ABI.
  */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
