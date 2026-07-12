@@ -57,7 +57,6 @@ extern u32 mainGetBit(int eventId);
 extern f32 timeDelta;
 extern void* getTrickyObject(void);
 extern void OSReport(const char* msg, ...);
-extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* src, f32* dst);
@@ -448,8 +447,9 @@ u8 trickyBallMove(u8* obj)
         ((GameObject*)obj)->anim.velocityY -= gSidekickBallGravity * timeDelta;
     }
 
-    objMove((int)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
+    ((void (*)(int, f32, f32, f32))objMove)(
+        (int)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        ((GameObject*)obj)->anim.velocityZ * timeDelta);
     (*gPathControlInterface)->update(obj, state, timeDelta);
     (*gPathControlInterface)->apply(obj, state);
     (*gPathControlInterface)->advance(obj, state, timeDelta);

@@ -54,7 +54,6 @@ extern const f32 gMagicGemBounceRestitutionY;
 extern const f32 gMagicGemBounceRestitutionXZ;
 extern const f32 gMagicGemPickupYRange;
 extern const f32 gMagicGemPickupRadiusBase;
-extern void objMove(int obj, f32 a, f32 b, f32 c);
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
 void MagicDust_free(GameObject* obj)
@@ -212,7 +211,7 @@ void MagicDust_update(GameObject* obj)
                     obj->anim.alpha = 1;
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_liftstpc);
                 }
-                objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+                objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                         obj->anim.velocityZ * timeDelta);
             }
             else

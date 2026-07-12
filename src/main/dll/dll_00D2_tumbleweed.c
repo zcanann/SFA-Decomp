@@ -44,7 +44,6 @@ extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
 extern u8 gTumbleweedCollisionPointData[8];
 extern u8 gTumbleweedCollisionPoint[0xc];
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 getXZDistance(f32* a, f32* b);
 extern int gameBitIncrement(int bit);
 extern void fn_80163990(int obj, int aux);
@@ -464,7 +463,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                 obj->anim.velocityZ = kv * ((BackpackState*)aux)->speed;
             }
             d = getXZDistance((f32*)&obj->anim.localPosX, ((BackpackState*)aux)->targetPos);
-            objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+            objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                     obj->anim.velocityZ * timeDelta);
             if (getXZDistance((f32*)&obj->anim.localPosX, ((BackpackState*)aux)->targetPos) > d)
             {

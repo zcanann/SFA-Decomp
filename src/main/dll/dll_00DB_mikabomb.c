@@ -100,7 +100,6 @@ void MikaBomb_hitDetect(void)
 
 void MikaBomb_update(int* obj)
 {
-    extern void objMove(int* obj, f32 x, f32 y, f32 z);
     extern void Sfx_PlayFromObject(int* obj, int sfx);
     extern void Obj_FreeObject(int* obj);
     extern void ObjHits_EnableObject();
@@ -131,7 +130,7 @@ void MikaBomb_update(int* obj)
         {
             ((GameObject*)obj)->anim.velocityY = gMikaBombMinFallVelocity;
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
     }
 

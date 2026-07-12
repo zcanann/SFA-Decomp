@@ -1,5 +1,6 @@
 /* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
+#include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
@@ -119,7 +120,6 @@ extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
 extern int gPushableDefaultBox[];
 extern int fn_802969F0(void);
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
 extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
 extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
@@ -920,7 +920,7 @@ void pushable_hitDetect(GameObject* obj)
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
                                   &tmpY, (f32*)((char*)obj + 0x2c));
-            objMove((int*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
+            objMove((GameObject*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
             if ((state->flags & 4) == 0)
             {
                 fn_80174BFC(obj, state);
@@ -1236,7 +1236,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
                               &tmpY, (f32*)((char*)obj + 0x2c));
         state->moveFlags.b7 = 1;
-        objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
+        objMove((GameObject*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
         ((void (*)(int*))Obj_BuildTransformMatrices)(obj);
         {
             int j;

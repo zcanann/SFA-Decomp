@@ -65,7 +65,6 @@ extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volu
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int getTrickyObject(void);
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 int KaldaChompMe_getExtraSize(void);
 int KaldaChompMe_getObjectTypeId(void);
 void KaldaChompMe_free(void);
@@ -200,7 +199,7 @@ void KaldaChompSpit_update(int obj)
         vx = ((GameObject*)obj)->anim.velocityX * timeDelta;
         vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
         vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
-        objMove(obj, vx, vy, vz);
+        objMove((GameObject*)obj, vx, vy, vz);
         if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE, 1, 0);

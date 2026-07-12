@@ -605,7 +605,6 @@ extern f32 lbl_803E7F10;
 extern f32 lbl_803E811C;
 extern f32 lbl_803E80E4;
 extern const f32 lbl_803E7ED8;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int gPlayerEggObject;
 extern int gPlayerStaffObject;
 extern int gPlayerModelChain;

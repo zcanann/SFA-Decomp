@@ -39,7 +39,6 @@ extern f32 lbl_803E48A4;
 extern f32 lbl_803E48A8;
 extern f32 lbl_803DBEF0;
 
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
@@ -57,7 +56,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         ObjHitsPriorityState* hitState;
         ((GameObject*)obj)->anim.velocityY = grav * timeDelta + oldvy;
         midVel = lbl_803E48A8 * (oldvy + ((GameObject*)obj)->anim.velocityY);
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, midVel * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, midVel * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         ((GameObject*)obj)->anim.rotZ =
             ((GameObject*)obj)->anim.rotZ + ((DIMwooddoorUpdateFallingDebrisState*)extra)->rotZRate * 10;

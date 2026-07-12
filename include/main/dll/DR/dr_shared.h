@@ -243,7 +243,6 @@ extern f32 lbl_803E6A30;
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern f32 lbl_803E6960;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void PSVECNormalize(f32* out, f32* in);
 extern void PSVECScale(f32* out, f32* in, f32 scale);
 extern void PSVECAdd(f32* out, f32* a, f32* b);

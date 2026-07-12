@@ -31,7 +31,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern void setDrawLights(int v);
-extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};

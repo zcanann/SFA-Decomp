@@ -8,6 +8,7 @@
  * freeing itself when the timer runs out.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/game_object.h"
 
@@ -66,7 +67,7 @@ void ARWSpeedStr_update(GameObject* obj)
         {
             return;
         }
-        objMove((int)obj, zero, zero, state->speed * timeDelta);
+        objMove((GameObject*)obj, zero, zero, state->speed * timeDelta);
         state->alpha = lbl_803E7108 * timeDelta + state->alpha;
         if (state->alpha > *(f32*)&lbl_803E710C)
             state->alpha = lbl_803E710C;

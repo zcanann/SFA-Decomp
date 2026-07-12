@@ -56,7 +56,6 @@ extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
 
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void fn_80165B3C(GameObject* obj, int state);
 extern void landedarwing_moveSurfaceCrawler(int obj, int state);
 extern void fn_80166444(int obj, int state);
@@ -115,7 +114,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     ((GameObject*)obj)->anim.velocityY =
         gBackpackBounceDampingVertical * (((GameObject*)obj)->anim.velocityY - lbl_803E2FEC);
     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * horizontalDamping;
-    objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((GameObject*)obj)->anim.localPosX < state->boundsMinX)
     {

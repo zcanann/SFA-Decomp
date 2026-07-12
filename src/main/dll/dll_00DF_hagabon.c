@@ -90,7 +90,6 @@ extern int lbl_803DBC70;
 extern f32 timeDelta;
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int getAngle(float y, float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -215,7 +214,7 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
         obj->anim.velocityZ = *(f32*)&lbl_803E2638;
     }
 
-    objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+    objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
             obj->anim.velocityZ * timeDelta);
     ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                 (ObjAnimEventList*)animEvents);

@@ -36,7 +36,6 @@ extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;
 extern f32 lbl_803E3148;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 
 #define POLLEN_PARTFX_MOTE 0x4ba
 
@@ -267,7 +266,7 @@ void Pollen_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_majring2);
             ((GameObject*)obj)->anim.alpha = 0;
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLEN_HIT_VOLUME_SLOT, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 7);

@@ -153,7 +153,6 @@ extern f32 lbl_803E83EC;
 extern f32 lbl_803E83F0;
 extern int gDRCloudRunnerVecTable[];
 extern s16 gDRCloudRunnerRollAngleLimits;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void fn_802B0EA4(GameObject* obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
 extern void fn_802B1B28(int obj, f32 t);

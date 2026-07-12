@@ -63,7 +63,6 @@ extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
 
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -240,7 +239,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
         (obj)->anim.velocityZ = lbl_803E26FC;
     }
 
-    objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+    objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
             (obj)->anim.velocityZ * timeDelta);
 }
 

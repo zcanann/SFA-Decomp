@@ -18,6 +18,7 @@
  * its lifetime and speed; all four are called from wcfloortile.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
@@ -251,7 +252,7 @@ void arwingandrossstuff_update(GameObject* obj)
                 state->light = NULL;
             }
         }
-        objMove((int)object, object->anim.velocityX * timeDelta, object->anim.velocityY * timeDelta,
+        objMove(object, object->anim.velocityX * timeDelta, object->anim.velocityY * timeDelta,
                 object->anim.velocityZ * timeDelta);
         if (object->anim.seqId == ARW_SEQID_BOMB)
         {

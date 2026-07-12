@@ -186,7 +186,6 @@ extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern u8 framesThisStep;
 extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int randFn_80080100(int n);
@@ -462,7 +461,7 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
         yawDelta = yawDelta + 0xffff;
     }
     ((GameObject*)obj)->anim.rotX = (f32) * (s16*)(int)obj + ((lbl_803E4128 + yawDelta) * (speed * timeDelta)) / dist;
-    objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
     {

@@ -21,6 +21,7 @@
  * (skeetlawall), an 11-slot object whose callbacks live in a sibling unit.
  */
 #include "main/dll/baddie_state.h"
+#include "main/object_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/path_control_interface.h"
@@ -45,7 +46,6 @@
 #define BOUNCE_WALL_MAXY 0x10 /* boundsMaxY -> surfaceMode 4 */
 #define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
 
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void fn_8003B950(void* mtx);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* hits, int hitCount);
@@ -68,7 +68,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
 {
     int headingAngle;
 
-    objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     switch (state->surfaceMode)
     {

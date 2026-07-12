@@ -714,12 +714,12 @@ ObjPlacement* Obj_AllocObjectSetup(int size, int type)
     return p;
 }
 
-int objMove(u8* obj, f32 dx, f32 dy, f32 dz)
+int objMove(GameObject* obj, f32 dx, f32 dy, f32 dz)
 {
     int n;
-    ((GameObject*)obj)->anim.localPosX += dx;
-    ((GameObject*)obj)->anim.localPosY += dy;
-    ((GameObject*)obj)->anim.localPosZ += dz;
+    obj->anim.localPosX += dx;
+    obj->anim.localPosY += dy;
+    obj->anim.localPosZ += dz;
     ObjGroup_GetObjects(0, &n);
     return 0;
 }

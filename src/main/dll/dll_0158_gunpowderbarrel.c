@@ -71,7 +71,6 @@ extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f3
 extern void saveGame_saveObjectPos(int* obj);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
 
@@ -372,7 +371,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
     ((GameObject*)obj)->anim.velocityY = ((GunpowderBarrelState*)sub)->throwVelY;
     ((GameObject*)obj)->anim.velocityZ = ((GunpowderBarrelState*)sub)->throwVelZ;
     dt = timeDelta;
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
             ((GameObject*)obj)->anim.velocityZ * dt);
     ((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->onGround = 0;
     if (!(((GunpowderBarrelState*)sub)->motionFlags & 2))

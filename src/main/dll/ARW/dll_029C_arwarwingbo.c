@@ -113,7 +113,7 @@ void arwarwingbo_update(int obj)
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
     }
-    objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta, objAnim->velocityZ * timeDelta);
+    objMove((GameObject*)obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta, objAnim->velocityZ * timeDelta);
 }
 
 void arwarwingbo_init(GameObject* obj, ArwingBombSetup* setup)

@@ -20,6 +20,7 @@
  * co-located in this TU. Offsets/bit values inferred from code.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/gameloop_api.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
@@ -363,7 +364,7 @@ void wcpushblock_update(GameObject* obj)
         }
     }
         dt = timeDelta;
-        objMove((int)obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
+        objMove((GameObject*)obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
         moved = 0;
         {
             if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)

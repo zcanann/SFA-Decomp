@@ -86,7 +86,6 @@ extern void tricky_handleDefeat(GameObject* obj, int state);
 extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
 extern void Tricky_applyFloorResponse(GameObject* obj, int state);
 
-extern void objMove(short* obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8014FF20(short* obj, int state);
 extern void fn_8014FF24(short* obj, int state);
 extern void fn_80150910(short* obj, int state);
@@ -620,7 +619,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     {
         if ((((TrickyState*)state)->flags2F1 & 0x80) == 0)
         {
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
         }
     }
@@ -630,14 +629,14 @@ void objAnimFn_8014a9f0(short* obj, int state)
                    lbl_803E25D4 * (((TrickyState*)state)->gravity * (timeDelta * timeDelta));
         if ((((TrickyState*)state)->flags2F1 & 0x80) == 0)
         {
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, newY - ((GameObject*)obj)->anim.localPosY,
+            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, newY - ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
             ((GameObject*)obj)->anim.velocityY = vy;
         }
     }
     else if ((((TrickyState*)state)->flags2F1 & 0x80) == 0)
     {
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
     }
 }

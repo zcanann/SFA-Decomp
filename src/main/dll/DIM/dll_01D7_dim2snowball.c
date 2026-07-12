@@ -75,7 +75,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4AA0;
 
-extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
 extern int getAngle(float y, float x);
 extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
@@ -200,7 +199,7 @@ void dim2snowball_update(int* obj)
                 Obj_FreeObject(obj);
                 return;
             }
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                     ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
         }
@@ -211,7 +210,7 @@ void dim2snowball_update(int* obj)
             ((GameObject*)obj)->anim.velocityY =
                 ((GameObject*)obj)->anim.velocityY - lbl_803E4AB4 * timeDelta;
             ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                     ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
             bbox = objBboxFn_800640cc((char*)obj + 0x80, (char*)obj + 0xc, lbl_803E4AB8, 0, 0,

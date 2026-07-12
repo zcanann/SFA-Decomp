@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/object_api.h"
 #include "main/carryable_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -86,7 +87,6 @@ int mmp_moonrock_getObjectTypeId(void)
     return 0x0;
 }
 
-extern void objMove(void* obj, f32 vx, f32 vy, f32 vz);
 extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2);
 extern f32 lbl_803E4554;
 extern f32 gMoonRockGravity;
@@ -162,7 +162,7 @@ void fn_801A7B10(GameObject* obj)
         }
         obj->anim.velocityX = clamped;
     }
-    objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
+    objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
     state->flags &= ~MOONROCK_FLAG_PROBE;
     posY = obj->anim.localPosY;
     probeResult = fn_801A78C8(obj, obj->anim.localPosX, posY, obj->anim.localPosZ, lbl_803E4568 + posY, &floorYOut,

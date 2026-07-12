@@ -44,7 +44,6 @@ extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
-extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
@@ -468,7 +467,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     ((GameObject*)obj)->anim.velocityZ =
         speed * mathCosf((3.1415927f * (f32)((EdibleMushroomState*)state)->moveAngle) / 32768.0f);
 
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, 0.0f, ((GameObject*)obj)->anim.velocityZ * timeDelta);
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, 0.0f, ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
 #pragma optimization_level reset
 

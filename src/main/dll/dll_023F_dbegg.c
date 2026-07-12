@@ -623,7 +623,6 @@ void dbegg_update(GameObject* obj)
     extern int Obj_GetPlayerObject(void);
     extern void dbegg_processMessages(GameObject*);
     extern void fn_801FE774(int, f32*);
-    extern void objMove(int, f32, f32, f32);
 
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern f32 Vec_xzDistance(int, int);
@@ -726,7 +725,7 @@ void dbegg_update(GameObject* obj)
                         Sfx_PlayFromObject((int)obj, SFXTRIG_id_2df);
                     }
                 }
-                objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+                objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
                         (obj)->anim.velocityZ * timeDelta);
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
@@ -782,7 +781,7 @@ void dbegg_update(GameObject* obj)
             }
             randomGetRange(0x64, 0x1388);
             randomGetRange(0x64, 0x1388);
-            objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+            objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
                     (obj)->anim.velocityZ * timeDelta);
             if (randomGetRange(0, 10) == 0)
             {
@@ -870,7 +869,7 @@ void dbegg_update(GameObject* obj)
                 {
                     (obj)->anim.velocityY = lbl_803E6248 * -(obj)->anim.velocityY;
                 }
-                objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+                objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
                         (obj)->anim.velocityZ * timeDelta);
             }
             break;
@@ -967,7 +966,7 @@ void dbegg_update(GameObject* obj)
                 {
                     (*gPartfxInterface)->spawnObject((void*)obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
                 }
-                objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+                objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
                         (obj)->anim.velocityZ * timeDelta);
             }
             break;

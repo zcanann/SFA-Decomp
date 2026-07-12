@@ -61,7 +61,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 lbl_803E4D44;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void doRumble(f32 duration);
 extern f32 lbl_803E4D38;
@@ -217,7 +216,7 @@ void DIMbossspit_update(GameObject* obj)
         (obj)->anim.rotX = lbl_803E4D68 * timeDelta + (f32)(obj)->anim.rotX;
         (obj)->anim.rotZ = lbl_803E4D6C * timeDelta + (f32)(obj)->anim.rotZ;
         (obj)->anim.rotY = lbl_803E4D6C * timeDelta + (f32)(obj)->anim.rotY;
-        objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
                 (obj)->anim.velocityZ * timeDelta);
         i = 0;
         do

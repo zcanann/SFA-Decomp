@@ -7117,7 +7117,7 @@ void playerUpdate(GameObject* obj)
             {
                 ym = lbl_803E7ED8;
             }
-            objMove((int)obj, obj->anim.velocityX * dt, ym, obj->anim.velocityZ * dt);
+            objMove((GameObject*)obj, obj->anim.velocityX * dt, ym, obj->anim.velocityZ * dt);
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
             m = *(UiMsgBlock*)lbl_802C2C50;
             (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&m, 6);
@@ -10286,7 +10286,7 @@ void fn_802B1B28(GameObject* obj, f32 fv)
     }
     x = obj->anim.velocityX * fv;
     z = obj->anim.velocityZ * fv;
-    objMove((int)obj, x, y, z);
+    objMove((GameObject*)obj, x, y, z);
 }
 
 void Lightfoot_UpdateAttachedChild(GameObject* obj, int inner)

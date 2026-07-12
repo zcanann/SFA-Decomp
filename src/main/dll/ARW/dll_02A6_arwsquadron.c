@@ -302,7 +302,7 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
                                                    state->flags.cmd.f08 ? lbl_803E7168 : lbl_803E71A0, lbl_803E7188);
         }
         state->pathSpeed += interpolate(state->targetPathSpeed - state->pathSpeed, lbl_803E71A4, timeDelta);
-        objMove((int)obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
+        objMove((GameObject*)obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
                 objAnim->velocityZ * timeDelta);
     }
 }

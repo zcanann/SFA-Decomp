@@ -12,6 +12,7 @@
  * per-frame scratch carrying yaw/position between the update sub-passes.
  */
 #include "main/dll/rom_curve_interface.h"
+#include "main/object_api.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -58,7 +59,6 @@ extern const f32 lbl_803E05BC;
 extern const f32 lbl_803E05C0;
 extern const f32 lbl_803E05C4;
 extern int getAngle(float y, float x);
-extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 
 #pragma opt_common_subs off
 void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
@@ -192,7 +192,7 @@ void player_applyVelocityStep(int* obj, int* ctx, f32 t)
         ((GameObject*)obj)->anim.velocityX = outX;
         ((GameObject*)obj)->anim.velocityZ = outZ;
     }
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * t, ((GameObject*)obj)->anim.velocityY * t,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * t, ((GameObject*)obj)->anim.velocityY * t,
             ((GameObject*)obj)->anim.velocityZ * t);
 }
 

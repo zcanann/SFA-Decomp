@@ -103,7 +103,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern u32 ObjHits_EnableObject();
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern f32 lbl_803E47F0;
 extern f32 gDimLavaDebrisGravity, gDimLavaGravity, lbl_803E47F8, lbl_803E47FC;
 extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDimLavaAngleUnitsHalfCircle;
@@ -313,7 +312,7 @@ void lavaball1be_update(s16* obj)
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (steps << 6);
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY - (steps << 9);
             ((GameObject*)obj)->anim.velocityY = gDimLavaGravity * dt + ((GameObject*)obj)->anim.velocityY;
-            objMove((int)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
+            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
                     ((GameObject*)obj)->anim.velocityZ * dt);
             if (((GameObject*)obj)->anim.velocityY < lbl_803E47F8)
             {

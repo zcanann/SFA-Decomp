@@ -54,7 +54,6 @@ extern int ObjHits_GetPriorityHit(GameObject* obj, void** outHitObj, int* outSph
 extern void ObjHits_AddContactObject(int obj, int contactObj);
 extern void saveGame_saveObjectPos(int obj);
 extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
 
 int dll_1DA_getExtraSize(void)
@@ -129,7 +128,7 @@ void dll_1DA_update(int obj)
         ((GameObject*)obj)->anim.velocityX = (k = lbl_803E4AF0);
         ((GameObject*)obj)->anim.velocityZ = k;
     }
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E4AF0,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E4AF0,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
     hitCount = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E4AF4, 1, out.hit, obj, 8, -1, 0xff, 0);
     if (hitCount != 0)

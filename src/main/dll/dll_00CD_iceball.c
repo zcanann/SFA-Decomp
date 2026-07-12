@@ -37,7 +37,6 @@ extern f32 lbl_803E2E54;
 extern f32 lbl_803E2E58;
 extern f32 lbl_803E2E50;
 
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int getTrickyObject(void);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* ObjList_GetObjects(int* outA, int* outB);
@@ -198,7 +197,7 @@ void IceBall_update(u16* obj, int unused)
     ((GameObject*)objInt)->anim.rotX += 910;
     ((GameObject*)objInt)->anim.rotZ += 910;
     ((GameObject*)objInt)->anim.rotY += 910;
-    objMove(objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta,
+    objMove((GameObject*)objInt, ((GameObject*)objInt)->anim.velocityX * timeDelta,
             ((GameObject*)objInt)->anim.velocityY * timeDelta, ((GameObject*)objInt)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)objInt, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)objInt, 5);

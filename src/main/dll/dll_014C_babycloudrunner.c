@@ -134,7 +134,6 @@ extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* getTrickyObject(void);
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
@@ -599,7 +598,7 @@ void babycloudrunner_update(int* obj)
                                                  lbl_803E4238 * speed, lbl_803E4250 * speed, 1);
                 Obj_SmoothTurnAnglesTowardVelocity((GameObject*)obj, (const Vec3f*)&((GameObject*)obj)->anim.velocityX,
                                                    0x1e, lbl_803E4238, lbl_803E4254);
-                objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+                objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                         ((GameObject*)obj)->anim.velocityZ);
                 if (sub->runnerState == 1)
                 {

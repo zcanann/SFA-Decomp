@@ -214,7 +214,6 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, void* x, void* y, void* z, int p);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int gBossDrakorMoveSpeedTable[];
 extern int gBossDrakorTurnMoveStates[];
 extern s16 lbl_803DC198;

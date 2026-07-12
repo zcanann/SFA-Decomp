@@ -251,7 +251,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     v[2] = v[2] < arwing->minAccelZ ? arwing->minAccelZ : (v[2] > arwing->maxAccelZ ? arwing->maxAccelZ : v[2]);
     PSVECScale(v, v, timeDelta);
     PSVECAdd((int)&arwing->velX, (int)v, (int)&arwing->velX);
-    objMove((int)obj, arwing->velX * timeDelta, arwing->velY * timeDelta, arwing->velZ * timeDelta);
+    objMove((GameObject*)obj, arwing->velX * timeDelta, arwing->velY * timeDelta, arwing->velZ * timeDelta);
 
     diff = arwing->rotXTarget - (u16)arwing->rotXCur;
     if (diff > 0x8000)

@@ -12,6 +12,7 @@
  * cleared by hitDetect and set by the first update.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/ARW/dll_02A3.h"
 #include "main/game_object.h"
 
@@ -70,7 +71,7 @@ void dll_2A3_update(GameObject* obj)
     obj->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32)obj->anim.rotY);
     obj->anim.rotZ = (s16)((f32)state->rotZSpeed * timeDelta + (f32)obj->anim.rotZ);
 
-    objMove((int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+    objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
             obj->anim.velocityZ * timeDelta);
 
     if (lbl_803DDD94 == 0)

@@ -30,7 +30,6 @@
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47C0; /* render scale */
 extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
-extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
@@ -137,7 +136,7 @@ void IMSpaceRingGen_update(GameObject* obj)
             }
             obj->unkF4 = 1;
         }
-        objMove((int)obj, state->ringA->anim.localPosX - obj->anim.localPosX,
+        objMove((GameObject*)obj, state->ringA->anim.localPosX - obj->anim.localPosX,
                 (lbl_803E47C4 + state->ringA->anim.localPosY) - obj->anim.localPosY,
                 state->ringA->anim.localPosZ - obj->anim.localPosZ);
         obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x100;

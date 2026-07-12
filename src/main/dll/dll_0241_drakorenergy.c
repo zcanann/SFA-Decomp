@@ -55,7 +55,6 @@ extern f32 lbl_803DC174;
 extern s16 lbl_803DC178;
 
 extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
-extern void objMove(int, f32, f32, f32);
 extern void playerAddHealth(int obj, int amount);
 
 extern void PSVECSubtract(f32*, f32*, f32*);
@@ -137,7 +136,7 @@ void drakorenergy_update(int obj)
             }
         }
         ((GameObject*)obj)->anim.velocityY += gDrakorEnergyGravity;
-        objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
         colorRGB[2] = 0xff;
         colorRGB[1] = 0xff - ((DrakorEnergyState*)state)->phase % 0x500;
@@ -148,7 +147,7 @@ void drakorenergy_update(int obj)
         ((GameObject*)obj)->anim.velocityY =
             gDrakorEnergyBobAmplitude *
             mathSinf(gDrakorEnergyPi * (f32)((DrakorEnergyState*)state)->phase / gDrakorEnergyPhaseDivisor);
-        objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
         if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             gDrakorEnergySeekRange)
@@ -177,7 +176,7 @@ void drakorenergy_update(int obj)
                 spd = dist;
             }
             PSVECScale(seekDir, (f32*)(obj + 0x24), spd);
-            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
             colorRGB[2] = 0xff;
             colorRGB[1] = 0;

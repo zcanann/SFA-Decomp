@@ -77,7 +77,6 @@ extern int ObjHits_GetPriorityHitWithPosition();
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
 {
@@ -141,7 +140,7 @@ void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
         (obj)->anim.velocityZ = lbl_803E268C;
     }
 
-    objMove((int)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+    objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
             (obj)->anim.velocityZ * timeDelta);
 
     state->yawWavePhase += (s16)(lbl_803E2690 * timeDelta);

@@ -18,6 +18,7 @@
  * +0x601 (needs-reinit), +0x610 (point count), +0x611 (mode bits).
  */
 #include "main/camera_interface.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/objprint.h"
@@ -90,7 +91,6 @@ extern int getAngle(float y, float x);
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern void normalize(f32* x, f32* y, f32* z);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
 
@@ -606,7 +606,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         ((GameObject*)obj)->anim.rotX =
             (f32) * (s16*)(int)(GameObject*)obj + (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
     }
-    objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (move != -1)
     {

@@ -573,7 +573,7 @@ void arwarwing_update(GameObject* obj)
         state->rotZCur = (int)(lbl_803E6F6C * timeDelta + (f32)state->rotZCur);
         (obj)->anim.rotZ = (s16)state->rotZCur;
         state->velY = state->velY - lbl_803E6EF8 * timeDelta;
-        objMove((int)obj, state->velX * timeDelta, state->velY * timeDelta,
+        objMove((GameObject*)obj, state->velX * timeDelta, state->velY * timeDelta,
                 state->velZ * timeDelta);
         arwarwing_clampToFlightBounds(obj, state);
         state->thrusterL->anim.flags |= OBJANIM_FLAG_HIDDEN;

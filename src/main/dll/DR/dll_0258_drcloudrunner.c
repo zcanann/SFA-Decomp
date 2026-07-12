@@ -19,6 +19,7 @@
  * shared struct does not yet name.
  */
 #include "main/dll/DR/cloudrunner_state.h"
+#include "main/object_api.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -749,7 +750,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         ((GameObject*)obj)->anim.localPosX = inner->lastPosX;
         ((GameObject*)obj)->anim.localPosY = inner->lastPosY;
         ((GameObject*)obj)->anim.localPosZ = inner->lastPosZ;
-        objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
         if ((*(s8*)((char*)baddie + 0x264) & 0x10) && (int)(idx & 0xfe) == 0)
         {
@@ -762,7 +763,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     }
     else
     {
-        objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
     }
     if (((ByteFlags*)&inner->flagsBC0)->b08 == 0 && (*(int*)&((CloudRunnerState*)baddie)->baddie.unk31C & 0x100))

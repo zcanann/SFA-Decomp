@@ -71,7 +71,6 @@ extern f32 gSpScarabAngleToRadiansDivisor;
 extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
 
 extern int getAngle(float y, float x);
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
@@ -117,7 +116,7 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gSpScarabGravity * timeDelta;
     }
 
-    objMove(obj, timeDelta * (((GameObject*)obj)->anim.velocityX * ((SpscarabState*)state)->speedScale),
+    objMove((GameObject*)obj, timeDelta * (((GameObject*)obj)->anim.velocityX * ((SpscarabState*)state)->speedScale),
             ((GameObject*)obj)->anim.velocityY * timeDelta,
             timeDelta * (((GameObject*)obj)->anim.velocityZ * ((SpscarabState*)state)->speedScale));
 

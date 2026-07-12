@@ -13,6 +13,7 @@
  * pollen, pollenfragment).
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/object_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/objseq_api.h"
 #include "main/vecmath.h"
@@ -84,7 +85,6 @@ extern void s16toFloat(void* timer, int duration);
 extern void storeZeroToFloatParam(void* timer);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80080150(int p);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int timerCountDown(int timer);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
@@ -429,7 +429,7 @@ void pollenfragment_update(int obj)
             lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotY;
     }
     Sfx_KeepAliveLoopedObjectSound(obj, (u16)(((PollenFragmentExtra*)extra)->def)->loopSfx);
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLENFRAGMENT_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((u32)obj);

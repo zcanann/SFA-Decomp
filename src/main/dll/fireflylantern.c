@@ -41,7 +41,6 @@ extern f32 PSVECDotProduct(float*, float*);
 extern void PSVECCrossProduct(float*, float*, float*);
 extern void PSVECNormalize(float*, float*);
 extern int getAngle(float y, float x);
-extern void objMove(short* obj, f32 x, f32 y, f32 z);
 extern u32 lbl_803DBCD0;
 extern f32 timeDelta;
 extern f32 lbl_803E2990;
@@ -414,7 +413,7 @@ u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
     turnStep = objY - dy;
     fn_8015536C(moveTarget, (f32*)(state + 0x344), dxA, turnStep);
     PSVECSubtract(moveTarget, (f32*)(obj + 6), moveDelta);
-    objMove(obj, moveDelta[0], moveDelta[1], moveDelta[2]);
+    objMove((GameObject*)obj, moveDelta[0], moveDelta[1], moveDelta[2]);
     turnStep = lbl_803E2A00;
     ((GameObject*)obj)->anim.velocityX = turnStep;
     ((GameObject*)obj)->anim.velocityY = turnStep;

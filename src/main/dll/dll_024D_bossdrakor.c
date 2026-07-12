@@ -280,7 +280,7 @@ void bossdrakor_update(int obj)
         ((BossDrakorState*)state)->homePosY = ((GameObject*)obj)->anim.localPosY - lbl_803E655C;
         ((BossDrakorState*)state)->homePosZ = ((GameObject*)obj)->anim.localPosZ;
     }
-    objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((DrakorFlags*)((char*)state + 0x198))->b20)
     {

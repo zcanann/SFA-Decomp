@@ -86,7 +86,6 @@ extern const f32 lbl_803E53F4;
 
 extern void ModelLightStruct_free(void* light);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern void objMove(void* obj, f32 x, f32 y, f32 z);
 extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void modelLightStruct_setLightKind(void* light, int value);
@@ -361,7 +360,7 @@ void BombPlantSpore_update(void* obj)
         }
         ((GameObject*)obj)->anim.velocityX = state->driftSin * state->driftSpeed + state->driftBaseX;
         ((GameObject*)obj)->anim.velocityZ = state->driftCos * state->driftSpeed + state->driftBaseZ;
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
         (*gPathControlInterface)->apply(obj, state->pathState);

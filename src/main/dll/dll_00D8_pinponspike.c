@@ -15,6 +15,7 @@
  * given speed under gravity at a target offset (used cross-TU by duster).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
@@ -40,7 +41,6 @@ extern f32 lbl_803E3128;
 extern f32 lbl_803E312C;
 
 extern int getAngle(float y, float x);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
 
 extern void* getTrickyObject(void);
 
@@ -126,7 +126,7 @@ void pinponspike_update(int obj)
         vx = ((GameObject*)obj)->anim.velocityX * timeDelta;
         vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
         vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
-        objMove(obj, vx, vy, vz);
+        objMove((GameObject*)obj, vx, vy, vz);
         ((GameObject*)obj)->anim.velocityY += lbl_803E3124 * timeDelta;
         if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E3128)
         {

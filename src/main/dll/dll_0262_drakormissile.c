@@ -227,7 +227,7 @@ void drakormissile_update(int obj)
     {
     case DRAKORMISSILE_STATE_STRAIGHT:
         moving = 1;
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         break;
     case DRAKORMISSILE_STATE_EXPLODING:
@@ -268,7 +268,7 @@ void drakormissile_update(int obj)
             tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
             ((GameObject*)obj)->anim.rotY = tmpAng;
         }
-        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moving = 1;
         break;
