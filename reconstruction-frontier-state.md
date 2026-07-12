@@ -7572,3 +7572,55 @@ NON-PRAGMA near-misses flagged for the team (real divergences, need source not p
 - **lightmap.c renderSceneGeometry ~97.6%**: target omits an initial for-loop guard (`li 0;cmpwi 256;bge`)
   = loop-inversion the current source doesn't trigger; plus r9<->r7 reg-perm. Not a pragma.
 - **vecmath.c mtxRotateByVec3s 99.25%**: pure #82 FP-perm (f0<->f3/f1<->f4), T==C=226, welded.
+
+## Jul12 CONTROL-FLOW-SHAPE sweep (branch/switch/guard levers) — 0 wins, frontier confirmed sched/reg-perm welded
+Triaged ~20 near-miss -O4,p fns via mnemonic-normalized diff + `ndiff.py` insert/delete filter (looking for
+guard-merge / switch-pivot / delete-MAX-case / entry-guard shape deltas). Finding: NO clean control-flow-shape
+lever applies on the current frontier — every apparent "shape" delta is downstream of reg-perm/scheduling, not
+source-controllable branch structure. 3 genuine attempts, all reverted:
+- **dll_0017_savegame.c SaveGame_gplaySetObjGroupStatus 98.0%**: transient-scan loop is #112 disp-fold (target
+  unrolls-by-5 with folded `K(r4)` disps + one `addi r4,15`; current pointer-walks `addi r4,3`/copy → +4 instr).
+  Indexed-form respell (`s[0]->transient[i]` matching sibling loop) = byte-NEUTRAL (SR re-walks it anyway).
+  `#pragma opt_strength_reduction off` OVER-unreduces the sibling gp[i] loops (274 vs 254, worse). The folded
+  form is a mid-point the unroller picks, not source-reachable. WELDED (#112/SR one-directional).
+- **gameloop.c mainSetBits 98.55%**: loop `for(i=start;i<=end;i++)` emits `bgt`; target emits `bge` (loops
+  `i<end`). Rewrote `end+1; i<end` → bge MATCHED, but the `+1` introduced a worse `add`-scheduling divergence
+  elsewhere → 98.547->97.906 REGRESSION. Reverted. Comparison-sense is source-reachable but net-negative here.
+- **voxmaps.c voxmaps_resetLoadedMaps 96.9%**: target loads `gVoxMaps` straight into slotOrigin home r24
+  (`addi r24,r3,0`, offset-0 field doubles as iterator); current spills via r3 + extra `mr r24,r3` (T=38 C=39).
+  `VoxMaps* mgr=&gVoxMaps` base-hoist did NOT drop the mr — instruction-selection-pinned (r-detour class). WELDED.
+CORRECTION to renderSceneGeometry note above: target does NOT omit the 256-loop guard — it emits
+`li 0;cmpwi 256;bge` at 0x221c same as current (unrolled mtctr-8). The ndiff insert/delete was scheduling
+misalignment, not a real loop-inversion. WELDED (sched/reg-perm). walkGroupFn_800db3e4, ObjSeq_Rebuild*,
+dbstealerworm stateHandlers A0B/A0C, fn_80128470 all = scheduling reorders (insert+delete of SAME instr) = welded.
+
+## Jul12 (Opus, fuzzy-specialist) — near-miss 97.6-99.98% re-triage: 0 wins, all welded
+Swept the top -O4,p near-miss band (skip audio/dolphin/player/model + sibling-WIP objhits/dll_801c0bf8).
+Confirms the Jul12 decl-order/int-proto/pragma harvests are complete; extended weld characterization.
+LEVERS RE-CONFIRMED DRY on this band:
+- **decl-order brute** (brute_match --strategy all): dll_008D_dll8dfunc0 dll_8D_func03, smallbasket
+  resolveCollision, invhit InvHit_update, TreasureChest_SeqFn, staffAction fn_801659B8 — base==best every time.
+- **#pragma opt_* sweep** (18-combo helper: strength_reduction/common_subs/dead_assignments/loop_invariants
+  on&off + pairs, TRUE-fuzzy scored per-fn): tumbleweed_updateStateMachine, CloudPrisonControl_update,
+  animatedobj_update, PressureSwitchFB_update, SpiritPrize_update, snowCloudUpdateFlakes,
+  TitleMenuItem_update, drshackle_updateAttachedPosition, drlasercannon_aimAtTarget, render
+  modelRenderFn_80006744/fn_80007F78, newshadows allocLotsOfTextures, dll_0B_func04 — 0 improvement
+  (any -off combo REGRESSES; -on combos inert). The snowclaw/SB_Galleon/mapInstantiate pragma vein is mined out.
+NEW WELD MECHANISMS CHARACTERIZED:
+- **mr-copy param-home ORDER weld (#126)**: TreasureChest_SeqFn 99.68% & staffAction fn_801659B8 99.79%
+  each miss ONLY by the entry param-spill ORDER (target spills params ascending r3-then-r4/r5; ours
+  reverses because an `o=(GameObject*)obj` alias is a STATEMENT-home emitted AFTER the implicit entry
+  param-spill of the other arg). Inlining the alias to `((GameObject*)obj)->` fixes the prologue order
+  but REPRICES body coloring (TreasureChest: obj r27->r31 full perm; staffAction 99.79->98.81, 2->16
+  regions). The alias is load-bearing for body coloring — welded both ways. decl-order swap [1,0] also regresses.
+- **peephole dead-blr weld**: object.c fn_8002B758 98.46% (T=72 C=73) — ours emits a stray unreachable
+  `blr` after an unconditional `b` (second-loop preheader rotated to fn end by peephole-off block layout);
+  target's peephole removed it as dead code. `#pragma peephole on` removes it BUT over-folds the loop
+  (C=65, -7). while<->for and count-local variants identical; positive-guard restructure (`if(i!=count){...}`)
+  drops the loop preheader instead (C=70). No partial-peephole knob — codegen/peephole-pinned.
+- fcmpo-swap band (DIMwooddoor_updateShardAim, camslide_update, CameraModeWorldMap_update): the fcmpo
+  operand diffs are FP-reg numbering (f31 vs f3 / f1 vs f3) + branch-polarity from coloring, NOT
+  source operand-order — #82/#108 welded, not the "rewrite the comparison" lever.
+LESSON: the 97-99.98% -O4,p frontier is coloring(#108)/FP-perm(#82)/reloc(#70)/peephole-fold saturated.
+Remaining wins need deep per-fn struct/type recovery (T!=C ext-store-narrow cases like objseq
+ApplyFrameCurves extsh, sky fn_80089A60 clrlwi) which are store-narrow codegen-pinned (per expgfx note).
