@@ -4848,6 +4848,7 @@ void trackIntersect(void)
  * line table, sliding/clipping the end point; fills *out with the last hit. */
 #pragma optimization_level 4
 #pragma opt_lifetimes on
+#pragma opt_loop_invariants off
 int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
                  int self)
 {
@@ -5340,6 +5341,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     }
     return count;
 }
+#pragma opt_loop_invariants reset
 #pragma opt_lifetimes reset
 #pragma optimization_level reset
 
