@@ -205,6 +205,9 @@ int Trigger_getObjectTypeId(void)
     return 0x0;
 }
 
+#pragma opt_strength_reduction on
+#pragma opt_loop_invariants off
+#pragma opt_propagation off
 void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
@@ -755,6 +758,9 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
         *state |= TRIGGER_SFLAG_EXITED;
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
+#pragma opt_propagation reset
 
 void Trigger_hitDetect(GameObject* obj)
 {
