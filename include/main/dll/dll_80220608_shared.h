@@ -691,15 +691,6 @@ extern f32 lbl_8032B4A8[];
 
 
 /* Forward declarations for graduated functions (split from placeholder_80220608). */
-int drearthcal_setScale(void);
-int drearthcal_getExtraSize(void);
-int drearthcal_getObjectTypeId(void);
-void drearthcal_free(void);
-void drearthcal_render(void);
-void drearthcal_hitDetect(void);
-void drearthcal_init(GameObject* obj, int setup);
-void drearthcal_release(void);
-void drearthcal_initialise(void);
 int Dummy29E_getExtraSize(void);
 int Dummy29E_getObjectTypeId(void);
 void Dummy29E_free(void);
@@ -713,7 +704,6 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
 int Obj_UpdateRomCurveFollowVelocity(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag);
 int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* p1, int p2, f32 a, f32 b, f32 c, int flag, int* p6);
 void Obj_SpawnHitLightAndFade(int obj, f32* p2);
-void drearthcal_update(int obj);
 int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, ModelLight** light);
 void Obj_SmoothTurnAnglesTowardVelocity(GameObject* a, int b, int c, f32 d, f32 e);
 int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, int p3, int p4);

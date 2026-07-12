@@ -16,6 +16,7 @@
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_02A1_arwlevelcon.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
@@ -102,8 +103,7 @@ extern ResourceDescriptor gDeathGasObjDescriptor, gDeathSeqObjDescriptor, gDecor
 extern ResourceDescriptor gDfpstatue1ObjDescriptor, gDfptargetblockObjDescriptor, gDirectionalLightObjDescriptor,
     gDll14DObjDescriptor, gDllFCObjDescriptor, gDoorF4ObjDescriptor, gDoorLockObjDescriptor, gDoorObjDescriptor;
 extern ResourceDescriptor gDoorswitchObjDescriptor, gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
-    gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor,
-    gDrEarthCalObjDescriptor;
+    gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLaserCannonObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
     gDrakorEnergyObjDescriptor;
@@ -1533,7 +1533,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDrMusicContObjDescriptor,
     &lbl_803DC390,
     &gDrCloudPerObjDescriptor,
-    &gDrEarthCalObjDescriptor,
+    (ResourceDescriptor*)&gDrEarthCalObjDescriptor,
     (ResourceDescriptor*)&gBarrelGenerObjDescriptor,
     &gDrBarrelGrObjDescriptor,
     &gShopItemObjDescriptor,

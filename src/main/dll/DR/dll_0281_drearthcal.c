@@ -1,9 +1,9 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/game_object.h"
 
 #define DREARTHCAL_OBJFLAG_RENDERED 0x800
 
-#define DREARTHCAL_SETUP_YAW  0x18
 #define DREARTHCAL_INIT_FLAGS 0x6000
 
 /* Mount object group: query nearest mount to gate the interact prompt. */
@@ -104,9 +104,9 @@ void drearthcal_update(int obj)
     }
 }
 
-void drearthcal_init(GameObject* obj, int setup)
+void drearthcal_init(GameObject* obj, DREarthCalSetup* setup)
 {
-    obj->anim.rotX = (s16)((s8) * (u8*)(setup + DREARTHCAL_SETUP_YAW) << 8);
+    obj->anim.rotX = (s16)(setup->yaw << 8);
     obj->objectFlags |= DREARTHCAL_INIT_FLAGS;
 }
 #pragma scheduling on
