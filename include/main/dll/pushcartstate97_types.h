@@ -2,6 +2,7 @@
 #define MAIN_DLL_PUSHCARTSTATE97_TYPES_H_
 
 #include "types.h"
+#include "main/lightningeffect.h"
 
 typedef struct
 {
@@ -28,7 +29,7 @@ typedef struct ShopItemState
     s16 helpTextId; /* 0x94 */
     u8 pad96;
     u8 flags97; /* 0x97: PushcartState97 overlay */
-    int lightningHandles[10]; /* 0x98: per-spark lightning effect handles */
+    LightningEffect* lightningHandles[10]; /* 0x98: per-spark lightning effect handles */
     f32 lightningTimers[10];  /* 0xC0: per-spark age timers */
     u8 flagsE8; /* 0xE8: PushcartState97 overlay (sparkle render path) */
     u8 padE9[0xEC - 0xE9];

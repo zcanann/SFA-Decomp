@@ -12,6 +12,7 @@
  * symbol table); it is a sub-object whose lifetime is driven externally.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/newclouds.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
 
@@ -55,7 +56,8 @@ void androssligh_updateBeam(GameObject* obj, AndrossLighState* state)
     PSVECAdd(end, offset, end);
     if (state->bolt == NULL)
     {
-        state->bolt = lightningCreate(start, end, lbl_803DC518, lbl_803DC51C, lbl_803DC520, lbl_803DC524, 0);
+        state->bolt = lightningCreateU16Promoted((const Vec3f*)start, (const Vec3f*)end, lbl_803DC518, lbl_803DC51C,
+                                                 lbl_803DC520, lbl_803DC524, 0);
         state->boltAge = 0.0f;
     }
     else

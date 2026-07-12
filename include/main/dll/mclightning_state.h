@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "global.h"
 #include "main/obj_placement.h"
+#include "main/lightningeffect.h"
 
 enum McLightningPhase {
     MCLIGHTNING_PHASE_READ_PARAM_A = 0,
@@ -22,7 +23,7 @@ typedef struct McLightningFlags {
 } McLightningFlags;
 
 typedef struct McLightningState {
-    void *boltHandle;
+    LightningEffect* boltHandle;
     f32 boltFrameTimer;
     f32 boltParamA;
     f32 boltParamB;

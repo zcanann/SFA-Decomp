@@ -268,7 +268,6 @@ extern int mapBlockFn_800592e4(void);
 extern f32 lbl_803E7154;
 
 extern void fn_8006CB24(int obj);
-extern void lightningRender(void* p);
 extern const f32 lbl_803E75B0;
 
 #pragma dont_inline on
@@ -298,7 +297,6 @@ extern const f32 lbl_803E75A8;
 
 
 
-extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
 

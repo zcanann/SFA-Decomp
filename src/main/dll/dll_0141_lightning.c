@@ -5,12 +5,10 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/newclouds.h"
 
 
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
-extern void lightningRender(u32 handle);
-extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
-                           int colorAngle, u8 flags);
 extern void hitDetectFn_80097070(u8* obj, double radius, int arg3, int arg4, int arg5,
                                  int arg6);
 extern void objfx_spawnDirectionalBurst(u8* obj, int idx, double radius, int kind, int mode,
@@ -43,8 +41,8 @@ void lightning_free(u8* obj, int p2)
 
 void lightning_render(u8* obj)
 {
-    u32 handle = *(u32*)(((GameObject*)obj)->extra);
-    if (handle != 0)
+    LightningEffect* handle = *(LightningEffect**)(((GameObject*)obj)->extra);
+    if (handle != NULL)
     {
         lightningRender(handle);
     }
@@ -69,7 +67,7 @@ typedef struct LightningMode
  * MmpMoonrockState but is its own record. */
 typedef struct LightningState
 {
-    u32 handle;        /* 0x00: active lightning effect handle (object ptr) */
+    LightningEffect* handle; /* 0x00: active lightning effect handle */
     f32 ageTimer;      /* 0x04 */
     f32 radiusX;       /* 0x08 */
     f32 radiusY;       /* 0x0c */
@@ -105,7 +103,7 @@ void lightning_update(u8* obj)
     int objectCount;
     int objectIndex;
     int spawnLightning;
-    int handle;
+    LightningEffect* handle;
     u16 delay;
     float* start;
 
@@ -162,10 +160,9 @@ void lightning_update(u8* obj)
             delay = (u16)(state->delayBase + randomGetRange(-5, 5));
             start = (float*)(obj + 0x0c);
             slot = &objects[objectIndex];
-            handle = lightningCreate(start, (float*)(*slot + 0x0c),
-                                     state->radiusX, state->radiusY,
-                                     delay, state->param1D,
-                                     (u8)(state->flags.style ? 1 : 0));
+            handle = lightningCreatePromoted((const Vec3f*)start, (const Vec3f*)(*slot + 0x0c), state->radiusX,
+                                             state->radiusY, delay, state->param1D,
+                                             (u8)(state->flags.style ? 1 : 0));
             state->handle = handle;
             state->ageTimer = 0.0f;
             if ((state->modeBits.mode & 1) != 0)
@@ -196,9 +193,9 @@ void lightning_update(u8* obj)
         if (state->flags.noAge == 0)
         {
             state->ageTimer += timeDelta;
-            *(u16*)(state->handle + 0x20) = (u16)(int)(0.5f + state->ageTimer);
+            state->handle->timer = (u16)(int)(0.5f + state->ageTimer);
         }
-        if (*(u16*)(state->handle + 0x20) >= *(u16*)(state->handle + 0x22))
+        if (state->handle->timer >= state->handle->lifetime)
         {
             mm_free((void*)state->handle);
             state->handle = 0;

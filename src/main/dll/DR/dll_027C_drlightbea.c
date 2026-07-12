@@ -11,6 +11,7 @@
  * offset 4.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/newclouds.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -62,7 +63,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             state->handle->end[1] = lbl_803E6BB8 + player->anim.localPosY;
             state->handle->end[2] = player->anim.localPosZ;
         }
-        lightningRender(state->handle);
+        lightningRenderLegacy(state->handle);
         state->handle->timer += 1;
         if (state->handle->timer >= state->handle->lifetime)
         {
@@ -103,8 +104,8 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
                 targetPos[1] = lbl_803E6BB8 + player->anim.localPosY;
                 targetPos[2] = player->anim.localPosZ;
             }
-            state->handle = (LightningEffect*)lightningCreate(sourcePos, targetPos, lbl_803E6BBC, lbl_803E6BC0,
-                                                              randomGetRange(5, 0xf), 0x60, 0);
+            state->handle = lightningCreateU16Promoted((const Vec3f*)sourcePos, (const Vec3f*)targetPos,
+                                                       lbl_803E6BBC, lbl_803E6BC0, randomGetRange(5, 0xf), 0x60, 0);
         }
     }
 }

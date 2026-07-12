@@ -12,6 +12,7 @@
  * frame's flags so sfx fire on edges.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/newclouds.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -59,7 +60,7 @@ void KT_Lazerwall_render(GameObject* obj)
             bolt = ((KtlazerwallState*)extra)->bolt;
             *(f32*)(bolt + 0x10) += ((KtlazerwallState*)extra)->driftSpeed * timeDelta;
         }
-        lightningRender(*(void**)&((KtlazerwallState*)extra)->bolt);
+        lightningRender(*(LightningEffect**)&((KtlazerwallState*)extra)->bolt);
         *(u16*)(((KtlazerwallState*)extra)->bolt + 0x20) += framesThisStep;
         bolt = ((KtlazerwallState*)extra)->bolt;
         if (*(u16*)(bolt + 0x20) >= *(u16*)(bolt + 0x22))

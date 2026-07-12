@@ -110,10 +110,6 @@ extern void forceAButtonIcon(int icon);
 extern void objRenderFn_80041018(int obj);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void* p);
-
-extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
-
 extern void fn_801F4D54(int obj, int sub);
 extern void fn_801F4ECC(int obj, int sub);
 extern int getAngle(float y, float x);
@@ -172,17 +168,17 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
     for (i = 0; i < 10; i++)
     {
-        if (*(void**)&state->lightningHandles[i] != NULL)
+        if (state->lightningHandles[i] != NULL)
         {
-            lightningRender(*(void**)&state->lightningHandles[i]);
+            lightningRender(state->lightningHandles[i]);
             if (getHudHiddenFrameCount() == 0)
             {
                 state->lightningTimers[i] += timeDelta;
-                *(u16*)(state->lightningHandles[i] + 0x20) = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
-                if (*(u16*)(state->lightningHandles[i] + 0x20) > 0x14)
+                state->lightningHandles[i]->timer = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
+                if (state->lightningHandles[i]->timer > 0x14)
                 {
-                    mm_free_((void*)state->lightningHandles[i]);
-                    state->lightningHandles[i] = 0;
+                    mm_free_(state->lightningHandles[i]);
+                    state->lightningHandles[i] = NULL;
                 }
             }
         }
@@ -209,7 +205,8 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                     v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
                 }
                 state->lightningHandles[i] =
-                    lightningCreate((f32*)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
+                    lightningCreatePromoted((const Vec3f*)(obj + 0xC), (const Vec3f*)&v, lbl_803E5A48, lbl_803E5A4C,
+                                            0x14, 0x40, 0);
                 state->lightningTimers[i] = lbl_803E5A50;
                 spawned = 1;
             }

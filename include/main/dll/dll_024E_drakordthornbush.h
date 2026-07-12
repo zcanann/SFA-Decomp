@@ -4,6 +4,7 @@
 #include "types.h"
 #include "main/game_object.h"
 #include "global.h"
+#include "main/lightningeffect.h"
 
 struct ModelLightStruct;
 
@@ -23,7 +24,7 @@ typedef struct DrakordThornbushState
     s32 lastHitObj;                   /* 0x08: most recent attacker, debounces re-hits */
     f32 growth;                       /* 0x0C: regrow timer / scale driver */
     f32 regrowTimer;                  /* 0x10: hit/regrow countdown */
-    void* lightningEntries[3];
+    LightningEffect* lightningEntries[3];
     u8 pad20[0x64 - 0x20];
     struct ModelLightStruct* light; /* 0x64: model light handle (lightning variant) */
     f32 lightScale;                   /* 0x68: lightning scale, accumulates over time */

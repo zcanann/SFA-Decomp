@@ -1,5 +1,6 @@
 #include "main/dll/objfsa_romcurve.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/newclouds.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -275,7 +276,8 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     point2[2] = point2[2] + playerMapOffsetZ;
 
     ((void**)((char*)gKTRexState + 0x17c))[slot] =
-        lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
+        lightningCreateU16Promoted((const Vec3f*)point1, (const Vec3f*)point2, lbl_803E67B4, lbl_803E67C0, angle, 96,
+                                   0);
 }
 #pragma dont_inline reset
 
@@ -567,7 +569,7 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
         e = ((KTRexArenaState*)gKTRexState)->lightning[i];
         if (e != NULL)
         {
-            lightningRender(e);
+            lightningRender((LightningEffect*)e);
             *(u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x20) =
                 (f32)(u32) * (u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x20) + timeDelta;
             if (*(u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x20) >=

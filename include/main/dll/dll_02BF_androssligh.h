@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
+#include "main/lightningeffect.h"
 
 typedef enum AndrossLighMode
 {
@@ -14,7 +15,7 @@ typedef enum AndrossLighMode
 typedef struct AndrossLighState
 {
     GameObject* anchor;
-    void* bolt;
+    LightningEffect* bolt;
     f32 boltAge;
     s8 state;
     u8 prevState;

@@ -6,6 +6,7 @@
 #include "main/dfppowersl.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
+#include "main/lightningeffect.h"
 
 #define DFPLIGHTNI_OBJECT_DEF_ID 0x0345
 #define DFPLIGHTNI_DLL_ID 0x023B
@@ -44,7 +45,7 @@ typedef struct DfpLightniMapData {
 } DfpLightniMapData;
 
 typedef struct DfpLightniState {
-  void *effectHandle;
+  LightningEffect* effectHandle;
   f32 timer;
   f32 triggerTime;
   f32 radiusX;

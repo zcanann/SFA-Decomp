@@ -329,7 +329,8 @@ void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale)
     Obj_SetModelColorFadeRecursive((int)obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-int Obj_UpdateLightningCluster(GameObject* obj, void** entries, int count, f32 intensity, ModelLight** light)
+int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int count, f32 intensity,
+                               ModelLight** light)
 {
     int spawned;
     int i;
@@ -359,8 +360,8 @@ int Obj_UpdateLightningCluster(GameObject* obj, void** entries, int count, f32 i
         if (entries[i] != 0)
         {
             lightningRender(entries[i]);
-            *(u16*)((char*)entries[i] + 0x20) += framesThisStep;
-            if ((f32)(u32) * (u16*)((char*)entries[i] + 0x20) > lbl_803DC3A8)
+            entries[i]->timer += framesThisStep;
+            if ((f32)(u32)entries[i]->timer > lbl_803DC3A8)
             {
                 mm_free_(entries[i]);
                 entries[i] = 0;
@@ -375,8 +376,8 @@ int Obj_UpdateLightningCluster(GameObject* obj, void** entries, int count, f32 i
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             entries[i] =
-                lightningCreate(&obj->anim.localPosX, pos, lbl_803DC3A0, lbl_803DC3A4, lbl_803DC3A8,
-                                (u8)lbl_803DC3AC, 0);
+                lightningCreateU16Promoted((const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, lbl_803DC3A0,
+                                           lbl_803DC3A4, lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }
     }

@@ -1,4 +1,5 @@
 #include "main/dfplightni.h"
+#include "main/newclouds.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
@@ -13,9 +14,6 @@ extern f32 gDfpLightningRadiusMin;
 extern const f32 gDfpLightningRadiusMax;
 extern f32 gDfpLightningTriggerTimeBase;
 extern const f32 gDfpLightningRadiusNormDivisor;
-
-extern void lightningRender(void* state);
-extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int frameCount, int colorAngle, int flags);
 
 static inline DfpLightniState* dfplightni_getState(DfpLightniObject* obj)
 {
@@ -157,8 +155,9 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                         clampX = (radiusX < *(f32*)&gDfpLightningRadiusMin)   ? *(f32*)&gDfpLightningRadiusMin
                                  : (radiusX > *(f32*)&gDfpLightningRadiusMax) ? *(f32*)&gDfpLightningRadiusMax
                                                                               : radiusX;
-                        state->effectHandle = lightningCreate(
-                            effectStart, effectEnd, clampX, clampY, DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
+                        state->effectHandle = lightningCreatePromoted(
+                            (const Vec3f*)effectStart, (const Vec3f*)effectEnd, clampX, clampY,
+                            DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
                     }
                     else
@@ -171,8 +170,9 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                         clampX = (radiusX < *(f32*)&gDfpLightningRadiusMin)   ? *(f32*)&gDfpLightningRadiusMin
                                  : (radiusX > *(f32*)&gDfpLightningRadiusMax) ? *(f32*)&gDfpLightningRadiusMax
                                                                               : radiusX;
-                        state->effectHandle = lightningCreate(
-                            effectStart, effectEnd, clampX, clampY, (u16)state->delayFrames,
+                        state->effectHandle = lightningCreatePromoted(
+                            (const Vec3f*)effectStart, (const Vec3f*)effectEnd, clampX, clampY,
+                            (u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
                     }
                 }

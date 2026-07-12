@@ -14,6 +14,7 @@
  * pointer - distinct from this object's flags byte at the same offset).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/newclouds.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -115,7 +116,8 @@ void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
     dir[1] += (obj)->anim.localPosY;
     dir[2] += (obj)->anim.localPosZ;
     runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, angle, 96, 0);
+    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0, lbl_803E68A4,
+                                                  angle, 96, 0);
 }
 
 void KT_RexFloorSwitch_update(GameObject* obj)

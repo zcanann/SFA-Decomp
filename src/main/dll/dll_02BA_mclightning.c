@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/newclouds.h"
 #include "main/dll/dll_02BA_mclightning.h"
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
@@ -80,8 +81,9 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
         else
         {
             McLightningState* foundState;
-            state->boltHandle = lightningCreate(&(obj)->anim.localPosX, (f32*)(objs[i] + 0xc), state->boltParamA,
-                                                state->boltParamB, state->boltParamC, state->boltParamD, 0);
+            state->boltHandle = lightningCreateU16Promoted(
+                (const Vec3f*)&obj->anim.localPosX, (const Vec3f*)(objs[i] + 0xc), state->boltParamA,
+                state->boltParamB, state->boltParamC, state->boltParamD, 0);
             state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;
             state->boltFrameTimer = lbl_803E7450;
             if (state->flags.spawnFlags & 1)

@@ -1,4 +1,5 @@
 #include "main/newclouds_state.h"
+#include "main/newclouds.h"
 #include "main/shader_api.h"
 #include "main/audio/sfx.h"
 #include "main/cloud_action_runtime.h"
@@ -45,26 +46,12 @@
 #define NEWCLOUD_LTG_MED        0x10 /* medium lightning cadence */
 #define NEWCLOUD_LTG_FAST       0x20 /* fast lightning cadence */
 
-typedef struct LightningEffect
-{
-    f32 start[3];
-    f32 end[3];
-    f32 radiusX;
-    f32 radiusY;
-    u16 timer;
-    u16 lifetime;
-    u16 seed;
-    u8 width;
-    u8 flags;
-} LightningEffect;
-
 extern void* Obj_GetActiveModel(void* obj);
-extern void lightningRender(void* state);
 extern f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1D8;
 extern const f32 lbl_803DF1DC;
 extern u8 gNewCloudBlizzardActive;
-extern u8* lbl_803DD19C;
+extern LightningEffect* lbl_803DD19C;
 extern u8 gNewCloudInitialized;
 
 void lightningRenderActive(void)
@@ -236,7 +223,8 @@ void newclouds_onMapSetup(void)
 extern void setTextColor(int unused, int a, int b, int c, int d);
 
 #pragma dont_inline on
-void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g)
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
+                                 u8 width, u8 flags)
 {
     LightningEffect* p = mmAlloc(40, 23, 0);
 
@@ -244,19 +232,19 @@ void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g)
     {
         return NULL;
     }
-    p->start[0] = a[0];
-    p->start[1] = a[1];
-    p->start[2] = a[2];
-    p->end[0] = b[0];
-    p->end[1] = b[1];
-    p->end[2] = b[2];
-    p->radiusX = c;
-    p->radiusY = d;
-    *(s16*)&p->lifetime = e;
-    p->width = f;
+    p->start[0] = start->x;
+    p->start[1] = start->y;
+    p->start[2] = start->z;
+    p->end[0] = end->x;
+    p->end[1] = end->y;
+    p->end[2] = end->z;
+    p->radiusX = radiusX;
+    p->radiusY = radiusY;
+    *(s16*)&p->lifetime = lifetime;
+    p->width = width;
     p->timer = 0;
     p->seed = 0xFFFF;
-    p->flags = g;
+    p->flags = flags;
     return p;
 }
 
@@ -538,9 +526,8 @@ extern const f32 lbl_803DF1D4;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
 
-void lightningRender(void* state)
+void lightningRender(LightningEffect* p)
 {
-    LightningEffect* p = state;
     f32 start[3];
     f32 end[3];
     f32 diff[3];
@@ -1481,7 +1468,8 @@ void snowReposSnowCloud(int cloudId)
         )
         -
             gNewCloudLightningForwardDist * fwd[2];
-        lbl_803DD19C = lightningCreate(from, to, gNewCloudLightningRadius, lbl_803DF1BC, 0xf, 0xc0, 0);
+        lbl_803DD19C = lightningCreate((const Vec3f*)from, (const Vec3f*)to, gNewCloudLightningRadius,
+                                       lbl_803DF1BC, 0xf, 0xc0, 0);
         {
             extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
             Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], SFXTRIG_barrelgrabber_suck);
@@ -2304,8 +2292,8 @@ void dll_07_func06(void)
     }
     if (lbl_803DD19C != NULL)
     {
-        ((LightningEffect*)lbl_803DD19C)->timer += 1;
-        if (((LightningEffect*)lbl_803DD19C)->timer >= ((LightningEffect*)lbl_803DD19C)->lifetime)
+        lbl_803DD19C->timer += 1;
+        if (lbl_803DD19C->timer >= lbl_803DD19C->lifetime)
         {
             mm_free(lbl_803DD19C);
             lbl_803DD19C = NULL;

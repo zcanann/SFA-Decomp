@@ -42,10 +42,6 @@ extern void Sfx_PlayFromObject(int* obj, int soundId);
 extern f32 getXZDistance(void* a, void* b);
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void* state);
-
-extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay, int c, int d);
-
 typedef struct
 {
     u16 msg; // 0x0
@@ -166,7 +162,7 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
             slot = (u8*)state + i * 4;
             if (*(void**)(slot + 8) != NULL)
             {
-                lightningRender(*(void**)(slot + 8));
+                lightningRenderLegacy(*(LightningEffect**)(slot + 8));
                 if (getHudHiddenFrameCount() == 0)
                 {
                     *(f32*)(slot + 0x34) += timeDelta;
@@ -239,7 +235,8 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                     pos[1] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[1];
                     pos[2] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[2];
                 }
-                *(int*)(slot + 8) = lightningCreate(((GameObjPos*)obj)->pos, pos, angle, 0.2f, 0x14, mode, 0);
+                *(LightningEffect**)(slot + 8) = lightningCreatePromoted(
+                    (const Vec3f*)((GameObjPos*)obj)->pos, (const Vec3f*)pos, angle, 0.2f, 0x14, mode, 0);
                 *(f32*)(slot + 0x34) = 0.0f;
                 spawned = 1;
             }
