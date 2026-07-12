@@ -18,6 +18,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
+#include "main/debug.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"

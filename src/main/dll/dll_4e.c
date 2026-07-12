@@ -22,6 +22,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_4D.h"
 #include "main/dll/dll_4E.h"
+#include "main/dll/dll_02C0_front.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/gameplay.h"
 #include "main/lightmap.h"
@@ -65,7 +66,6 @@ extern s8 lbl_803DD705;  /* transition pending flag */
 extern u8* lbl_803DD708; /* saved volumes at [10..12] */
 extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
-extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);
 
 void optionsMenu_applyAudioSetting(int action, int option)

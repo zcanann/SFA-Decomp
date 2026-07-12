@@ -69,7 +69,6 @@ void FUN_80134998(u64 param_1,double param_2,double param_3,u64 param_4,
                  u32 param_13,u32 param_14,u32 param_15,u32 param_16);
 void FUN_80134b94(char param_1);
 void FUN_80134bb0(u8 param_1);
-void creditsStart(void);
 void FUN_80134bd0(void);
 void FUN_80134c44(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,

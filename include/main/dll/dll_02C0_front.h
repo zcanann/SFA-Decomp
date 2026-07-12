@@ -16,5 +16,6 @@ void titleScreenShowCopyright(u8 arg);
 int TitleScreen_getObjectTypeId(u8* obj);
 
 void titleScreenTextDrawFunc(void);
+void creditsStart(void);
 
 #endif

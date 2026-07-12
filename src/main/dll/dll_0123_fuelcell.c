@@ -8,6 +8,7 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 #include "main/gameloop_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/newclouds.h"
 
 #define FUELCELL_OBJGROUP 0x4f
 extern void* ObjGroup_GetObjects();
@@ -35,8 +36,6 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
-extern void mm_free_(void* ptr);
-
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_PlayFromObject(int* obj, int soundId);

@@ -16,6 +16,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
+#include "main/dll/dll_02C0_front.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"

@@ -26,6 +26,7 @@
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/dll/tricky.h"
 #include "main/gameloop_api.h"
+#include "main/newclouds.h"
 #include "main/pad.h"
 
 #define SHOPITEM_OBJGROUP        0x4F
@@ -111,7 +112,6 @@ extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void* p);
 
-extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
 
 extern void fn_801F4D54(int obj, int sub);
@@ -181,7 +181,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                 *(u16*)(state->lightningHandles[i] + 0x20) = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
                 if (*(u16*)(state->lightningHandles[i] + 0x20) > 0x14)
                 {
-                    mm_free_(state->lightningHandles[i]);
+                    mm_free_((void*)state->lightningHandles[i]);
                     state->lightningHandles[i] = 0;
                 }
             }

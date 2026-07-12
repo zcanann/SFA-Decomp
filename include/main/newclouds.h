@@ -40,6 +40,7 @@ extern NewCloudsInterface **gNewCloudsInterface;
 
 
 /* extern-cleanup: defining-file public prototypes */
+void mm_free_(void* ptr);
 void titleScreenDrawFn_80093db4(void);
 void drawSkyStars(void);
 

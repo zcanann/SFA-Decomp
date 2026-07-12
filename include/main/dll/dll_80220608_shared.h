@@ -269,7 +269,6 @@ extern int mapBlockFn_800592e4(void);
 extern f32 lbl_803E7154;
 
 extern void fn_8006CB24(int obj);
-extern void Rcp_DisableDistortionFilter(void);
 extern void lightningRender(void* p);
 extern const f32 lbl_803E75B0;
 
@@ -304,8 +303,6 @@ extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c,
 extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
 
-
-extern void creditsStart(void);
 
 extern f32 lbl_803E738C;
 
@@ -661,7 +658,6 @@ extern f32 lbl_803E6C1C;
 
 extern f32 lbl_803E6C58;
 
-extern void mm_free_(void* ptr);
 extern f32 lbl_803E6C3C;
 extern f32 lbl_803E6C40;
 extern f32 lbl_803E6C44;
@@ -682,7 +678,6 @@ extern f32 lbl_803E6C98;
 extern f32 lbl_803E6EC8;
 extern f32 lbl_803E6ED4;
 extern f32 lbl_803E6ED8;
-extern void debugPrintSetColor(int r, int g, int b, int a);
 extern f32 lbl_8032B4A8[];
 
 
