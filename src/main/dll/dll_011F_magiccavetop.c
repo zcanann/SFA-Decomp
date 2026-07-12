@@ -2,6 +2,7 @@
 #include "main/objseq.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/player_objects.h"
@@ -76,7 +77,6 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 
 
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
                                   void* args, int a);
@@ -302,7 +302,7 @@ void MagicCaveTop_update(int* obj)
     {
         if (0.0f == sub->fadeTimer)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_door_creak);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_door_creak);
         }
         sub->fadeTimer += timeDelta;
         if (sub->fadeTimer > 100.0f)

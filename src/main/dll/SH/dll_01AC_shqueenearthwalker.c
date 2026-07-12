@@ -12,6 +12,7 @@
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/mapEvent.h"
@@ -59,7 +60,6 @@ extern void* getTrickyObject(void);
 extern int playerHasSpell(GameObject* obj, int param);
 extern void* ObjGroup_FindNearestObject(int group, void* obj, f32* distanceOut);
 extern int ObjTrigger_IsSet(void* obj);
-extern void Sfx_PlayFromObject(void* obj, int sfxId);
 
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
 f32 gQueenEarthWalkerMoveSpeedTable[5] = {0.005f, 0.005f, 0.005f, 0.01f, 0.005f};
@@ -245,7 +245,7 @@ void sh_queenearthwalker_update(GameObject* obj)
     if (RandomTimer_UpdateRangeTrigger(&((QueenEarthWalkerState*)state)->attackTimer, gQueenEarthWalkerAttackTimerMin,
                                        gQueenEarthWalkerAttackTimerMax) != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_thorntail);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_thorntail);
     }
 }
 

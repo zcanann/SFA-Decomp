@@ -7,6 +7,7 @@
  * an attack on one of its model parts.
  */
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
@@ -38,7 +39,6 @@ extern f32 lbl_803E4CA8;
 extern f32 lbl_803E4CAC;
 extern f32 lbl_803E4CB0;
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern void Sfx_PlayFromObject(void* obj, int sfxId);
 
 int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int unused)
 {
@@ -146,15 +146,15 @@ void DIMbosstonsil_checkHit(GameObject* obj, DIMbosstonsilState* state)
         (*gPartfxInterface)
             ->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
         objLightFn_8009a1dc(obj, lbl_803E4CA4, spawnArgs, 3, 0);
-        Sfx_PlayFromObject(obj, DIMBOSSTONSIL_PRIMARY_HIT_SFX);
+        Sfx_PlayFromObject((u32)obj, DIMBOSSTONSIL_PRIMARY_HIT_SFX);
         doRumble(lbl_803E4CA8);
         if (state->hitPointsLeft != 0)
         {
-            Sfx_PlayFromObject(obj, DIMBOSSTONSIL_ALT_HIT_SFX);
+            Sfx_PlayFromObject((u32)obj, DIMBOSSTONSIL_ALT_HIT_SFX);
         }
         else
         {
-            Sfx_PlayFromObject(obj, DIMBOSSTONSIL_NORMAL_HIT_SFX);
+            Sfx_PlayFromObject((u32)obj, DIMBOSSTONSIL_NORMAL_HIT_SFX);
         }
         CameraShake_SetAllMagnitudes(lbl_803E4CAC);
         if (lbl_803E4C90 == lbl_803DDB98)

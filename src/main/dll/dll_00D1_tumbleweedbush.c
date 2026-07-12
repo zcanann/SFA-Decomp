@@ -21,6 +21,7 @@
  * by sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
@@ -59,7 +60,6 @@ extern void vecRotateZXY(void* obj, void* p);
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8 gTumbleweedBushHitCooldownState;
 
-extern int Sfx_PlayFromObject(int* obj, int sfx);
 extern f32 lbl_803E2F44;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -176,7 +176,7 @@ void TumbleWeedBush_update(int* obj)
         if (((GameObject*)hit0)->anim.seqId != TUMBLEWEEDBUSH_SIBLING_C)
         {
             objfx_spawnHitEmitterAtPos(hitExtra, 8, 0xff, 0xff, 0x78);
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest222_280);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_swdtest222_280);
             for (i = 0; (u8)i < state->pieceCount; i++)
             {
                 slot = (int**)&state->pieceObjects[(u8)i];

@@ -14,6 +14,7 @@
 #include "main/dll/xyzanimator.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/objhits.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
@@ -138,7 +139,6 @@ extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
 extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
 extern int objCreateLight(int* obj, int arg);
-extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Obj_FreeObject(int* obj);
 
 /* fireball light tint per colorIndex; lives in the staff TU's data (0x80320978) */
@@ -456,11 +456,11 @@ void Fireball_update(int* obj)
         {
             if (hitState->contactHitVolume != 14)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_npu_216);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_npu_216);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_foot_water_walk_1);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_foot_water_walk_1);
                 (*gWaterfxInterface)
                     ->spawnSplashBurst(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, lbl_803E3360);

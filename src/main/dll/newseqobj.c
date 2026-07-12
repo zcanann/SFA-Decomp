@@ -17,6 +17,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -42,7 +43,6 @@ typedef struct
 } FamilyTable;
 
 extern FamilyTable lbl_8031F16C[]; /* per-family table-of-tables, 0x28-byte rows */
-extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void fn_8015039C(GameObject* p1, void* p2);
 extern u32 fn_8014FFB4(GameObject* p1, void* p2, int p3);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
@@ -130,8 +130,8 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
             if (msgId != 0x1a && ((GameObject*)attacker)->anim.seqId != 0x6d &&
                 ((GameObject*)attacker)->anim.seqId != 0x754)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_swdout1);
-                Sfx_PlayFromObject(obj, SFXTRIG_gethit02);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_swdout1);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_gethit02);
             }
             ((BaddieState*)state)->reactionFlags |= 0x10;
             {
@@ -240,16 +240,16 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
         }
         if (((BaddieState*)state)->hitCounter == 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_land);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_land);
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_attack);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_attack);
         }
         if (msgId != 0x1a && msgId != 0x1f && ((GameObject*)attacker)->anim.seqId != 0x6d &&
             ((GameObject*)attacker)->anim.seqId != 0x754)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_stftest);
         }
     }
     return ret;
@@ -302,7 +302,7 @@ void fn_80150EDC(GameObject* obj, void* state)
 
     if ((((BaddieState*)state)->controlFlags & 0x20000000) != 0 && (*(u32*)((u8*)state + 0x2e0) & 0x20000000) == 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_sc_mumble02);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_mumble02);
         ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
 
