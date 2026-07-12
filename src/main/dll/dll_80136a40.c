@@ -188,10 +188,13 @@ extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, 
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern f32 getXZDistance(f32* a, f32* b);
-extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
 extern int dll_19_func1B(GameObject* p);
 extern f32 enemy_getHealthFraction(register int obj);
 extern f32 vec3f_distanceSquared(int, int);
+
+#define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
+    ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
+        (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
 extern void selectTexture(char* tex, int slot);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 extern void gxDebugTextureFn_80078c1c(void);
@@ -660,12 +663,12 @@ void fn_80138D7C(int obj, int state)
                     *(u8*)(*(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x34) + 8) = ratio;
                     alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
                 }
-                Obj_SetModelColorOverrideRecursive(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
+                Obj_SetModelColorOverrideRecursivePromoted(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
             }
             else
             {
                 *(u8*)(state + 0x82c) = ratio;
-                Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+                Obj_SetModelColorOverrideRecursivePromoted(obj, 0, 0, 0, 0, 0);
             }
         }
     }

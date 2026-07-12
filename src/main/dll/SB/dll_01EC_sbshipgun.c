@@ -19,6 +19,7 @@
  * parent Galleon's phase through the Galleon DLL's interface vtable.
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/object_api.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
@@ -64,7 +65,6 @@ extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5888;
 extern int ObjList_GetObjects(int* outIndex, int* outCount);
-extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 
 extern int getAngle(float y, float x);
 
@@ -257,7 +257,7 @@ void SB_ShipGun_update(GameObject* obj)
             placement = SB_GALLEON_VTBL(galleon)->getPhase(galleon);
             if ((placement == 0) && (hit = ObjHits_GetPriorityHit(obj, 0, 0, 0), hit != 0))
             {
-                Obj_SetModelColorFadeRecursive((int)obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0,
+                Obj_SetModelColorFadeRecursive(obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0,
                                                1);
                 Sfx_PlayFromObject((int)obj, SB_SHIPGUN_HIT_ANIM_A);
                 ((SBShipGunState*)state)->hitCount += 1;

@@ -93,7 +93,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 gMagicPlantGemDefIds[4];
 
-extern void Obj_StartModelFadeIn(int obj, int frames);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
@@ -101,8 +100,6 @@ extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern void Obj_Shatter(int obj);
 extern int objIsFrozen(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -129,7 +126,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
         switch (hitKind)
         {
         case 0x10:
-            Obj_StartModelFadeIn((int)obj, 300);
+            Obj_StartModelFadeIn((GameObject*)obj, 300);
             break;
         case 0:
             break;
@@ -149,7 +146,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
             hitPos[0] += playerMapOffsetX;
             hitPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, gMagicPlantHitLightScale, lightPos, 1, 0);
-            Obj_SetModelColorFadeRecursive((int)obj, 0xf, 200, 0, 0, 1); /* red hit-flash (200,0,0) over 15 frames */
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1); /* red hit-flash (200,0,0) over 15 frames */
             break;
         }
     }
@@ -274,7 +271,7 @@ void MagicPlant_update(int obj)
             hitPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, gMagicPlantHitLightScale, lightPos, 1, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
-            Obj_Shatter(obj);
+            Obj_Shatter((GameObject*)obj);
         }
         return;
     }

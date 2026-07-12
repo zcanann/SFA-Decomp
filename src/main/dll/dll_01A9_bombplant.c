@@ -45,7 +45,6 @@ extern f32 gBombPlantGrowRateMin;
 extern f32 gBombPlantGrowDuration;
 extern int objIsFrozen(u8* obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern f32 gBombPlantTriggerDistSq;
 extern f32 gBombPlantGrowRateDecay;
 extern f32 lbl_803E5380;
@@ -260,7 +259,6 @@ void bombplant_init(GameObject *obj, void* param, int flag)
 
 void bombplant_update(void* obj)
 {
-    extern void Obj_StartModelFadeIn(u8* obj, int frames);
     extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId);
     extern void Sfx_PlayFromObject(void* obj, int sndId);
     extern void bombplant_explode(void* obj, void* stateEntry, void* state);
@@ -404,7 +402,7 @@ void bombplant_update(void* obj)
         {
             if (hitType == 0x10)
             {
-                Obj_StartModelFadeIn(obj, 0x12c);
+                Obj_StartModelFadeIn((GameObject*)obj, 0x12c);
             }
             else if ((u32)(hitType - 0xe) <= 1 || hitType == 0x11)
             {

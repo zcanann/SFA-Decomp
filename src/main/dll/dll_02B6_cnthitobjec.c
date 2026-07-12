@@ -18,6 +18,7 @@
  * (0x2B7), which installs it as its anim-event callback.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
@@ -87,7 +88,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
     state->remainingHealth = state->remainingHealth - dmg;
     if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {
-        Obj_SetModelColorFadeRecursive((int)obj, 30, 200, 0, 0, 1);
+        Obj_SetModelColorFadeRecursive(obj, 30, 200, 0, 0, 1);
         Sfx_PlayFromObject((int)obj, SFXTRIG_wmap_nameoff_496); /* hit */
     }
     if (state->remainingHealth <= 0)

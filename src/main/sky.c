@@ -209,7 +209,6 @@ extern void modelLightStruct_setSpecularColor(void*, int, int, int, int);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
-extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
 extern f32 mathCosf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
@@ -1191,7 +1190,7 @@ void fn_8008DAE8(int obj)
 
     if (gSky2State == NULL)
     {
-        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+        Obj_SetModelColorOverrideRecursive((GameObject*)obj, 0, 0, 0, 0, 0);
     }
     if (lbl_803DB750 == 0 && (*(u16*)((s = gSky2State) + 4) & 1) == 0)
     {
@@ -1208,12 +1207,12 @@ void fn_8008DAE8(int obj)
         {
             alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
         }
-        Obj_SetModelColorOverrideRecursive(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
+        Obj_SetModelColorOverrideRecursive((GameObject*)obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
                                            (u8) * (int*)(s + 0x2c), (u8)alpha, 1);
     }
     else
     {
-        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+        Obj_SetModelColorOverrideRecursive((GameObject*)obj, 0, 0, 0, 0, 0);
     }
 }
 

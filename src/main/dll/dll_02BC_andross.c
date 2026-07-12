@@ -280,7 +280,7 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
             {
                 if (stateData->partHitTimer[ht] == 0 && stateData->partHealth[ht] != 0 && stateData->actionState == 0xc)
                 {
-                    Obj_SetModelColorFadeRecursive((int)obj, 0x19, 0xc8, 0, 0, 1);
+                    Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
                     stateData->partHealth[hitType] -= 1;
                     stateData->partHitTimer[hitType] = 0xc8;
                 }

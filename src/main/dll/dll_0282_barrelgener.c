@@ -20,6 +20,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -326,7 +327,7 @@ void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale)
     s.vec[1] = pos->y;
     s.vec[2] = pos->z + playerMapOffsetZ;
     objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
-    Obj_SetModelColorFadeRecursive((int)obj, 0x5a, 0xc8, 0, 0, 1);
+    Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
 int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int count, f32 intensity,

@@ -50,7 +50,6 @@ extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
 extern void ObjHits_EnableObject(FirePipeObject* obj);
 extern void ObjHits_DisableObject(FirePipeObject* obj);
 extern int ObjHits_GetPriorityHit(GameObject* obj, int a, int b, int c);
-extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
@@ -250,7 +249,7 @@ void firepipe_updateState(FirePipeObject* obj)
             if (priorityHit == 0x10)
             {
                 FirePipeMapData* md0 = (FirePipeMapData*)obj->objectDef;
-                Obj_StartModelFadeIn(obj, 0x12c);
+                Obj_StartModelFadeIn((GameObject*)obj, 0x12c);
                 mainSetBits(md0->gameBit, 1);
                 flags->restartPending = 1;
             }

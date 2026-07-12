@@ -31,6 +31,7 @@
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
@@ -96,8 +97,6 @@ extern int EmissionController_IsLingering(GameObject* player);
 extern int playerGetFlags3F0Bit5(GameObject* player);
 extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
-extern void Obj_StartModelFadeIn(int* obj, int frames);
-extern void Obj_Shatter(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void ObjGroup_AddObject(int* obj, int group);
@@ -239,7 +238,7 @@ void enemymushroom_update(int* obj)
             hv.z += playerMapOffsetZ;
             objLightFn_8009a1dc(obj, gKillerMushroomHitEffectScale, &hv, 1, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
-            Obj_Shatter(obj);
+            Obj_Shatter((GameObject*)obj);
         }
         return;
     }
@@ -473,7 +472,7 @@ void enemymushroom_update(int* obj)
         {
             if (hitType == 0x10)
             {
-                Obj_StartModelFadeIn(obj, 0x12c);
+                Obj_StartModelFadeIn((GameObject*)obj, 0x12c);
             }
             else
             {

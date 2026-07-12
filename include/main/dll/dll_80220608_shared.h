@@ -170,7 +170,6 @@ extern f32 lbl_803E70D8;
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 
 extern int arrayIndexOf(int array, int count, int value);
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int e);
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);

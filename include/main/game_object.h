@@ -59,8 +59,10 @@ typedef struct GameObject
     s8 contactRefCount;
     u8 unkEA;
     u8 childCount;
-    u8 unkEC[3];
-    s8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
+    u8 colorFadeRed;
+    u8 colorFadeGreen;
+    u8 colorFadeBlue;
+    u8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
     u8 fadeCounter;    /* obj+0xF0 ++ toward the fade limit each tick */
     u8 unkF1[3];
     s32 unkF4;
@@ -115,6 +117,9 @@ STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, hitVolumeIndex) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
+STATIC_ASSERT(offsetof(GameObject, colorFadeRed) == 0xEC);
+STATIC_ASSERT(offsetof(GameObject, colorFadeGreen) == 0xED);
+STATIC_ASSERT(offsetof(GameObject, colorFadeBlue) == 0xEE);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 

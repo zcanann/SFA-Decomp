@@ -52,8 +52,6 @@ extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(float y, float x);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void Obj_StartModelFadeIn(int obj, int frames);
-extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 
 extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
@@ -540,13 +538,13 @@ void largecrate_update(GameObject* obj)
                                                      &pos.z);
             if (hit == 0x10)
             {
-                Obj_StartModelFadeIn((int)obj, 300);
+                Obj_StartModelFadeIn((GameObject*)obj, 300);
                 hit = 0;
             }
             if ((hit != 0) && ((obj)->anim.parent == NULL))
             {
                 ((LargeCrateState*)state)->damageTaken = ((LargeCrateState*)state)->damageTaken + hitDamage;
-                Obj_SetModelColorFadeRecursive((int)obj, 0xf, 200, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
                 pos.x = pos.x + playerMapOffsetX;
                 pos.z = pos.z + playerMapOffsetZ;
                 objLightFn_8009a1dc((void*)obj, lbl_803E39E4, &lightPos, 1, 0);

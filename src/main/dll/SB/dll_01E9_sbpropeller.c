@@ -42,7 +42,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 timeDelta;
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u8 framesThisStep;
 extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;
@@ -168,7 +167,7 @@ void SB_Propeller_update(GameObject* obj)
              ((camA == 2 || (camA == 5)))) &&
             (objAnim->seqId == SB_PROPELLER_SEQ_ID))
         {
-            Obj_SetModelColorFadeRecursive((int)obj, 0xf, 200, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             Sfx_PlayFromObject((int)obj, SB_PROPELLER_SFX_HIT);
             state->health -= 1;
             if (state->health <= 0)

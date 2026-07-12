@@ -8547,7 +8547,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (**(s8**)&((PlayerState*)inner)->playerStatus > 0)
             {
-                Obj_SetModelColorFadeRecursive(obj, 0xb4, 200, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive((GameObject*)obj, 0xb4, 200, 0, 0, 1);
             }
             if (((PlayerState*)state)->baddie.controlMode == 0x1a)
             {
@@ -8960,7 +8960,7 @@ void playerHeal(GameObject* obj)
         }
     }
     *(s8*)((char*)*(int*)((char*)inner + 0x35C)) = (s8)v;
-    Obj_SetModelColorFadeRecursive((int)obj, 0x168, 0xc8, 0, 0, 1);
+    Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 1;
     inner->knockbackTimer = lbl_803E7EA4;
     inner->moveVariantIndex = 0xff;

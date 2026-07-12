@@ -81,7 +81,6 @@ extern void fn_8003B608(int a, int b, int c);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
@@ -321,7 +320,7 @@ void sc_musictree_update(GameObject* obj)
         vec[0] = vec[0] + playerMapOffsetX;
         vec[2] = vec[2] + playerMapOffsetZ;
         objLightFn_8009a1dc((void*)obj, 0.014f, vec2, 1, 0);
-        Obj_SetModelColorFadeRecursive((int)obj, 0xf, 0xc8, 0, 0, 1);
+        Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         sc_musictree_handleHitObject(obj, inner, ((ScMusictreeState*)inner)->flags & 0xf);
     }
     else

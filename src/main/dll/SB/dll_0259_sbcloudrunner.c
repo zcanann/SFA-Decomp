@@ -22,6 +22,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/objhits.h"
 #include "main/resource.h"
@@ -157,7 +158,6 @@ extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
 extern void objSetMtxFn_800412d4(u32 x);
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void SB_CloudRunner_onSeqFree(void);
@@ -409,7 +409,7 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
         {
             if (((GameObject*)hitObj)->anim.seqId != HIT_TYPE_INVULNERABLE)
             {
-                Obj_SetModelColorFadeRecursive((int)obj, 175, 200, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
                 doRumble(lbl_803E5CB8);
                 Sfx_PlayFromObject(0, SFXTRIG_dn_gscsc1_c);
                 if (mainGetBit(GAMEBIT_CLOUDRUNNER_HIT_SFX) != 0)

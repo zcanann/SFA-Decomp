@@ -285,176 +285,173 @@ ObjModel* Obj_GetActiveModel(GameObject* obj)
     return (ObjModel*)obj->anim.banks[obj->anim.bankIndex];
 }
 
-void Obj_ClearModelColorFadeRecursive(u8* obj)
+void Obj_ClearModelColorFadeRecursive(GameObject* obj)
 {
-    u8* childScan;
     int i;
 
-    ((GameObject*)obj)->colorFadeFrames = 0;
-    ((GameObject*)obj)->colorFadeFlags &= ~(OBJ_COLOR_FADE_FLAG_ACTIVE | OBJ_COLOR_FADE_FLAG_INCREASING);
+    obj->colorFadeFrames = 0;
+    obj->colorFadeFlags &= ~(OBJ_COLOR_FADE_FLAG_ACTIVE | OBJ_COLOR_FADE_FLAG_INCREASING);
     i = 0;
-    childScan = obj;
-    while (i < ((GameObject*)obj)->childCount)
+    while (i < obj->childCount)
     {
-        Obj_ClearModelColorFadeRecursive(((GameObject*)childScan)->childObjs[i]);
+        Obj_ClearModelColorFadeRecursive((GameObject*)obj->childObjs[i]);
         i++;
     }
 }
 
-void Obj_TickModelColorFadeRecursive(u8* obj)
+void Obj_TickModelColorFadeRecursive(GameObject* obj)
 {
     f32 alpha;
     u8* childScan;
     int i;
 
-    if ((((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_INCREASING) != 0)
+    if ((obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_INCREASING) != 0)
     {
-        alpha = obj[0xef] + gObjColorFadeRate * timeDelta;
+        alpha = obj->colorFadeAlpha + gObjColorFadeRate * timeDelta;
     }
     else
     {
-        alpha = obj[0xef] - gObjColorFadeRate * timeDelta;
+        alpha = obj->colorFadeAlpha - gObjColorFadeRate * timeDelta;
     }
 
     if (alpha < lbl_803DE88C)
     {
         alpha = -alpha;
-        ((GameObject*)obj)->colorFadeFlags ^= OBJ_COLOR_FADE_FLAG_INCREASING;
+        obj->colorFadeFlags ^= OBJ_COLOR_FADE_FLAG_INCREASING;
     }
     else if (alpha > gObjColorFadeAlphaMax)
     {
         alpha = gObjColorFadeAlphaMax - (alpha - gObjColorFadeAlphaMax);
-        ((GameObject*)obj)->colorFadeFlags ^= OBJ_COLOR_FADE_FLAG_INCREASING;
+        obj->colorFadeFlags ^= OBJ_COLOR_FADE_FLAG_INCREASING;
     }
 
-    ((GameObject*)obj)->colorFadeAlpha = alpha;
-    if ((((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_INFINITE) == 0)
+    obj->colorFadeAlpha = alpha;
+    if ((obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_INFINITE) == 0)
     {
-        ((GameObject*)obj)->colorFadeFrames -= framesThisStep;
-        if (((GameObject*)obj)->colorFadeFrames <= 0 && ((GameObject*)obj)->ownerObj == NULL)
+        obj->colorFadeFrames -= framesThisStep;
+        if (obj->colorFadeFrames <= 0 && obj->ownerObj == NULL)
         {
             Obj_ClearModelColorFadeRecursive(obj);
         }
     }
 
     i = 0;
-    childScan = obj;
-    while (i < ((GameObject*)obj)->childCount)
+    childScan = (u8*)obj;
+    while (i < obj->childCount)
     {
-        Obj_TickModelColorFadeRecursive(((GameObject*)childScan)->childObjs[i]);
+        Obj_TickModelColorFadeRecursive((GameObject*)((GameObject*)childScan)->childObjs[i]);
         i++;
     }
 }
 
 #pragma dont_inline on
-void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf)
+void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf)
 {
-    u8* childScan;
     int i;
 
-    ((GameObject*)obj)->colorFadeFrames = frames;
-    ((GameObject*)obj)->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_INCREASING;
-    ((GameObject*)obj)->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_ACTIVE;
-    obj[0xec] = red;
-    obj[0xed] = green;
-    obj[0xee] = blue;
+    obj->colorFadeFrames = frames;
+    obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_INCREASING;
+    obj->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_ACTIVE;
+    obj->colorFadeRed = red;
+    obj->colorFadeGreen = green;
+    obj->colorFadeBlue = blue;
     if (frames == 10000)
     {
-        ((GameObject*)obj)->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_INFINITE;
+        obj->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_INFINITE;
     }
     else
     {
-        ((GameObject*)obj)->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_INFINITE;
+        obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_INFINITE;
     }
     if (startAtHalf != 0)
     {
-        obj[0xef] = 0x7f;
+        obj->colorFadeAlpha = 0x7f;
     }
     else
     {
-        obj[0xef] = 0;
+        obj->colorFadeAlpha = 0;
     }
 
     i = 0;
-    childScan = obj;
-    while (i < ((GameObject*)obj)->childCount)
+    while (i < obj->childCount)
     {
-        Obj_SetModelColorFadeRecursive(((GameObject*)childScan)->childObjs[i], frames, red, green, blue, startAtHalf);
+        Obj_SetModelColorFadeRecursive((GameObject*)obj->childObjs[i], frames, red, green, blue, startAtHalf);
         i++;
     }
 }
 
 #pragma dont_inline off
-void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
+void Obj_SetModelColorOverrideRecursive(GameObject* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
 {
     u8* childScan;
     int i;
 
     if (enabled != 0)
     {
-        ((GameObject*)obj)->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_OVERRIDE;
-        obj[0xec] = red;
-        obj[0xed] = green;
-        obj[0xee] = blue;
-        obj[0xef] = alpha;
+        obj->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_OVERRIDE;
+        obj->colorFadeRed = red;
+        obj->colorFadeGreen = green;
+        obj->colorFadeBlue = blue;
+        obj->colorFadeAlpha = alpha;
     }
     else
     {
-        ((GameObject*)obj)->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_OVERRIDE;
+        obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_OVERRIDE;
     }
 
     i = 0;
-    childScan = obj;
-    while (i < ((GameObject*)obj)->childCount)
+    childScan = (u8*)obj;
+    while (i < obj->childCount)
     {
-        Obj_SetModelColorOverrideRecursive(((GameObject*)childScan)->childObjs[i], red, green, blue, alpha, enabled);
+        Obj_SetModelColorOverrideRecursive((GameObject*)((GameObject*)childScan)->childObjs[i], red, green, blue,
+                                           alpha, enabled);
         i++;
     }
 }
 
-void Obj_Shatter(u8* obj)
+void Obj_Shatter(GameObject* obj)
 {
-    ((GameObject*)obj)->colorFadeFrames = 0;
-    ((GameObject*)obj)->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;
-    ((GameObject*)obj)->fadeCounter = 0;
-    ObjModel_ClearRenderAttachment((u8*)Obj_GetActiveModel((GameObject*)obj));
+    obj->colorFadeFrames = 0;
+    obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;
+    obj->fadeCounter = 0;
+    ObjModel_ClearRenderAttachment((u8*)Obj_GetActiveModel(obj));
     (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fb, NULL, 0x50, NULL);
     (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x32, NULL);
 }
 
-void Obj_StartModelFadeIn(u8* obj, int frames)
+void Obj_StartModelFadeIn(GameObject* obj, int frames)
 {
     ObjAnimComponent* objAnim;
     f32 mtx[16];
     int fadeLimit;
     s16 objType;
 
-    objAnim = (ObjAnimComponent*)obj;
+    objAnim = &obj->anim;
     fadeLimit = 10;
-    objType = ((GameObject*)obj)->anim.classId;
+    objType = obj->anim.classId;
     if (objType == 0x1c || objType == 0x6d || objType == 0x2a)
     {
         fadeLimit = 40;
     }
-    if ((((GameObject*)obj)->anim.modelInstance->effectFlags & 1) != 0)
+    if ((obj->anim.modelInstance->effectFlags & 1) != 0)
     {
-        if (((GameObject*)obj)->fadeCounter < fadeLimit)
+        if (obj->fadeCounter < fadeLimit)
         {
-            ((GameObject*)obj)->fadeCounter++;
+            obj->fadeCounter++;
             Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
         }
-        if (((GameObject*)obj)->fadeCounter == fadeLimit)
+        if (obj->fadeCounter == fadeLimit)
         {
-            if ((((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) != 0)
+            if ((obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) != 0)
             {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
-            ((GameObject*)obj)->colorFadeFrames = frames;
-            ((GameObject*)obj)->colorFadeFlags = (u8)(((GameObject*)obj)->colorFadeFlags | OBJ_COLOR_FADE_FLAG_FROZEN);
-            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+            obj->colorFadeFrames = frames;
+            obj->colorFadeFlags = (u8)(obj->colorFadeFlags | OBJ_COLOR_FADE_FLAG_FROZEN);
+            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             ((void (*)(u8*, u8*, f32*, int, f32))ObjModel_EnableDefaultRenderCallback)(
-                obj, (u8*)objAnim->banks[objAnim->bankIndex], mtx, 1,
-                ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale);
+                (u8*)obj, (u8*)objAnim->banks[objAnim->bankIndex], mtx, 1,
+                obj->anim.hitboxScale * obj->anim.rootMotionScale);
             (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x64, NULL);
         }
     }
@@ -1642,7 +1639,7 @@ void objFreeObjDef(u8* obj, int flag)
     }
     if (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE)
     {
-        Obj_ClearModelColorFadeRecursive(obj);
+        Obj_ClearModelColorFadeRecursive((GameObject*)obj);
     }
     group = ObjGroup_GetObjectGroup((u32)obj);
     if (group != 0)
@@ -1727,7 +1724,7 @@ void Obj_UpdateObject(u8* obj)
     if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL &&
         (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE))
     {
-        Obj_TickModelColorFadeRecursive(obj);
+        Obj_TickModelColorFadeRecursive((GameObject*)obj);
     }
     if (((GameObject*)obj)->pendingParentObj != NULL)
     {

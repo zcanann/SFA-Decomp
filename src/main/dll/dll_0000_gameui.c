@@ -112,7 +112,6 @@ extern void* lbl_803A9410[6];
 extern s16 lbl_803DD784;
 extern s16 lbl_803DD786;
 extern s16 lbl_803DD78C;
-extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 
 extern f32 lbl_803E1E3C; /*  0.0f */
 extern f32 lbl_803E1E68; /*  1.0f */
@@ -876,7 +875,7 @@ void pauseMenuInit(void)
     padFn_80014b18(0xf);
     if (obj != NULL)
     {
-    Obj_SetModelColorFadeRecursive((u8*)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
+    Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
     }
     Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
     Sfx_PlayFromObject(0, SFXTRIG_menu_fox_sidekick_up);

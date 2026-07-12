@@ -47,7 +47,6 @@
 
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
-extern u32 Obj_SetModelColorFadeRecursive();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);

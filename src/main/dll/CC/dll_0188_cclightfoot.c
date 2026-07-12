@@ -178,7 +178,6 @@ extern u8 gCcLightfootHitCooldown[8];
 extern int getAngle(float y, float x);
 extern f32 enemy_getHealthFraction(register int obj);
 extern void fn_8014C66C(int obj, int target);
-extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int ObjList_FindObjectById(int id);
 extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
@@ -604,7 +603,7 @@ void cclightfoot_update(int obj)
             move = ((GameObject*)hitObj)->anim.seqId;
             if (move == 0x11 || move == 0x33)
             {
-                Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive((GameObject*)obj, 0xf, 0xc8, 0, 0, 1);
             }
         }
     }

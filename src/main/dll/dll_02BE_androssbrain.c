@@ -12,6 +12,7 @@
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 static const f32 gAndrossBrainRenderScale[2] = {1.0f, 0.0f};
@@ -140,7 +141,7 @@ void AndrossBrain_update(GameObject* obj)
         {
             if (state->flashTimer == 0)
             {
-                Obj_SetModelColorFadeRecursive((int)obj, 0x19, 0xc8, 0, 0, 1);
+                Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
                 state->flashTimer = 6;
                 state->health -= 1;
                 if (state->health == 0)

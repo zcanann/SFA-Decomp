@@ -306,9 +306,6 @@ extern f32 lbl_803E259C;
 extern void fn_802972B4(GameObject* player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
 extern void vecRotateZXY(int obj, void* vel);
 extern int objCreateLight(int a, int b);
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
-extern void Obj_Shatter(int obj);
-extern void Obj_StartModelFadeIn(int obj, int duration);
 extern void fn_802961FC(u8* proj, int result);
 extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector, f32 hDist, f32 vDist);
@@ -2090,7 +2087,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                     params.scale = lbl_803E258C;
                     (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fb, NULL, 0x64, &params);
                     (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7fc, NULL, 0x32, NULL);
-                    Obj_Shatter((int)obj);
+                    Obj_Shatter((GameObject*)obj);
                     *(u16*)&((TrickyState*)state)->eventTime = 0;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~0x20LL;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 0x200;
@@ -2261,7 +2258,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
             {
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 1, (void*)((TrickyState*)state)->light);
             }
-            Obj_SetModelColorFadeRecursive((int)obj, 0xf, 0xc8, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         }
         ((TrickyState*)state)->freezeEffectTimer -= timeDelta;
         if (((TrickyState*)state)->freezeEffectTimer < *(f32*)&lbl_803E2574)
@@ -2304,7 +2301,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 Sfx_PlayFromObject((int)obj, SFXTRIG_fox_kick2);
                 ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter = 0x1f;
             }
-            Obj_StartModelFadeIn((int)obj, 0x12c);
+            Obj_StartModelFadeIn((GameObject*)obj, 0x12c);
         }
         else
         {

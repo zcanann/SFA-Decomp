@@ -41,7 +41,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int DBprotection_getCameraState(u32 g);
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u32 getSbGalleon(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
@@ -211,7 +210,7 @@ void SB_ShipHead_update(GameObject* obj)
         (((u32)(galleonPhase - 3) <= 1 || (galleonPhase == 5))) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) &&
         (((GameObject*)hit)->anim.seqId != SB_FIREBALL_OBJID))
     {
-        Obj_SetModelColorFadeRecursive((int)obj, 0xf, 200, 0, 0, 1);
+        Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_gcfir1_c_37);
         hs->health -= 1;
         if (hs->health <= 0)

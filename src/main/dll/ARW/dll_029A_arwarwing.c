@@ -1176,7 +1176,7 @@ void arwarwing_handlePathDamage(GameObject* obj, int state)
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_wmap_select);
         ((Arw339Flags*)&((ArwingState*)state)->flags339)->scoreFlag = 1;
-        Obj_SetModelColorFadeRecursive((int)obj, 0x4b, 0xc8, 0, 0, 1);
+        Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
         ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;
         ((ArwingState*)state)->hitShake = 1;
         ((ArwingState*)state)->shakeYaw = 0;
@@ -1225,7 +1225,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, int state)
             *(s8*)&((ArwingState*)state)->health = *(s8*)&((ArwingState*)state)->health - hitVol;
             Sfx_PlayFromObject((int)obj, SFXTRIG_wmap_select_2ac);
             ((Arw339Flags*)(state + 0x339))->scoreFlag = 1;
-            Obj_SetModelColorFadeRecursive((int)obj, 0x4b, 0xc8, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
             ((ArwingState*)state)->damageFlashTimer = lbl_803E6F34;
             ((ArwingState*)state)->hitShake = 1;
             ((ArwingState*)state)->shakeYaw = 0;

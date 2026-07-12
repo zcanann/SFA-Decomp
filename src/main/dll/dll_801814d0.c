@@ -14,6 +14,7 @@
 #include "main/dll/dusterstate_types.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -52,13 +53,11 @@ extern f32 lbl_803DBDA8;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 
-extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void* ObjGroup_GetObjects();
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_801816F8(int obj, int arg, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 
 void fn_801814D0(int obj, int arg, u8* state)
 {
@@ -78,7 +77,7 @@ void fn_801814D0(int obj, int arg, u8* state)
     {
         if (hitType == 0x10)
         {
-            Obj_StartModelFadeIn(obj, 0x12c);
+            Obj_StartModelFadeIn((GameObject*)obj, 0x12c);
         }
         else
         {
@@ -116,7 +115,7 @@ void fn_801814D0(int obj, int arg, u8* state)
                 }
             }
             objLightFn_8009a1dc((void*)obj, lbl_803E3934, &effectPos, 1, 0);
-            Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive((GameObject*)obj, 0xf, 0xc8, 0, 0, 1);
             if (Sfx_IsPlayingFromObject(0, (u16)((DusterState*)state)->heldObjectId) == 0)
             {
                 Sfx_PlayFromObject(obj, (u16)((DusterState*)state)->heldObjectId);

@@ -1,6 +1,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/SH/SHthorntail_internal.h"
@@ -48,8 +49,6 @@ extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void Obj_StartModelFadeIn(u8* obj, int frames);
-extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjMsg_AllocQueue();
 
@@ -668,11 +667,11 @@ void EdibleMushroom_update(u8* self)
     {
         if (hitKind == 0x10)
         {
-            Obj_StartModelFadeIn(self, 0x12C);
+            Obj_StartModelFadeIn((GameObject*)self, 0x12C);
         }
         else
         {
-            Obj_SetModelColorFadeRecursive(self, 0xF, 0xC8, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive((GameObject*)self, 0xF, 0xC8, 0, 0, 1);
             if (((GameObject*)hitObj)->anim.seqId != 0x416)
             {
                 if ((((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK) == 0)

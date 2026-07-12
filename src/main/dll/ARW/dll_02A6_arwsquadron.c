@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/ARW/dll_02A6_arwsquadron.h"
@@ -408,7 +409,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
         {
             if (squad->hitFlashActive == 0)
                 Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wmap_nameoff_29e, 4);
-            Obj_SetModelColorFadeRecursive((int)obj, 0xf, 0xc8, 0, 0, 1);
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
             squad->hitFlashTimer = lbl_803E71B4;
             squad->hitFlashActive = 1;
             squad->hitFadeRed = 0;

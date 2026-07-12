@@ -444,7 +444,6 @@ extern void setTimeStop(int x);
 extern void cutsceneEnterExit(int a, int b);
 extern f32 lbl_803E8060;
 extern f32 lbl_803E7F4C;
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern int* gBaddieControlInterface;
 extern int fn_802AC7DC(int a, int b, int c, f32 fv);
 extern int lbl_80332EC0[];

@@ -1854,7 +1854,7 @@ int ktrex_stateHandlerA01(GameObject* obj, int runtime)
         }
         if (((KTRexArenaState*)gKTRexState)->stateTimer <= lbl_803E67B8)
         {
-            Obj_SetModelColorFadeRecursive((int)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
+            Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
             Music_Trigger(MUSICTRIG_mammoth_walk, 0);
             Music_Trigger(MUSICTRIG_menu_page, 0);
             Music_Trigger(MUSICTRIG_guard_theme, 0);

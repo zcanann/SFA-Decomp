@@ -423,7 +423,6 @@ extern CameraInterface** gCameraInterface;
 extern f32 lbl_803E67D8;
 extern f32 lbl_803E67D0;
 extern f32 lbl_803E67D4;
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E67EC;
 extern f32 lbl_803E67F0;

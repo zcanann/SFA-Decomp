@@ -20,6 +20,7 @@
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 
 #define TREE_AMBIENT_EFFECT_OBJECT_ID    0x210
 #define TREE_OBJECT_FLAGS_INIT           0x2000
@@ -270,7 +271,7 @@ void tree_update(GameObject* obj)
                     colorVec[0] += playerMapOffsetX;
                     colorVec[2] += playerMapOffsetZ;
                     objLightFn_8009a1dc((void*)obj, lbl_803E7314, burstVec, 1, 0);
-                    Obj_SetModelColorFadeRecursive((int)obj, 0xf, 0xc8, 0, 0, 1);
+                    Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
                 }
                 if (state->flags & TREE_FLAG_BURST_MODE_MASK)
                 {
