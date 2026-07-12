@@ -42,11 +42,11 @@ STATIC_ASSERT(offsetof(VfpLevelControlSetup, areaMode) == 0x1A);
 void fn_801F9804(GameObject* obj);
 int VFP_LevelControl_getExtraSize(void);
 int VFP_LevelControl_getObjectTypeId(void);
-void VFP_LevelControl_free(int obj);
+void VFP_LevelControl_free(GameObject* obj);
 void VFP_LevelControl_render(void);
 void VFP_LevelControl_hitDetect(void);
 void VFP_LevelControl_update(GameObject* obj);
-void VFP_LevelControl_init(int* obj, u8* init);
+void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup);
 void VFP_LevelControl_release(void);
 void VFP_LevelControl_initialise(void);
 

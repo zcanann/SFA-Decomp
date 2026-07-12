@@ -17,6 +17,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/sky_api.h"
 #include "main/dll/VF/dll_0216_vfplevelcontrol.h"
 
@@ -55,9 +56,6 @@ extern f32 lbl_803E6060;
 extern int coordsToMapCell(f32 x, f32 z);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
-extern u32 ObjGroup_AddObject();
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-
 /* Advance the ordered spell-tablet puzzle. The four step bits must be
    set in array order; the next-expected bit advances the step, any
    later bit lighting early resets the whole puzzle. */
@@ -115,10 +113,10 @@ int VFP_LevelControl_getObjectTypeId(void)
     return 0x0;
 }
 
-void VFP_LevelControl_free(int obj)
+void VFP_LevelControl_free(GameObject* obj)
 {
     timeOfDayFn_80055000();
-    ObjGroup_RemoveObject(obj, VFPLEVELCONTROL_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, VFPLEVELCONTROL_OBJGROUP);
     Music_Trigger(VFP_MUSIC_A, 0);
 }
 
@@ -202,11 +200,10 @@ void VFP_LevelControl_update(GameObject* obj)
     SCGameBitLatch_Update(state->latch.raw, 2, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_B);
 }
 
-void VFP_LevelControl_init(int* obj, u8* init)
+void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup)
 {
-    VfpLevelControlState* state = ((GameObject*)obj)->extra;
-    VfpLevelControlSetup* setup = (VfpLevelControlSetup*)init;
-    ObjGroup_AddObject(obj, VFPLEVELCONTROL_OBJGROUP);
+    VfpLevelControlState* state = obj->extra;
+    ObjGroup_AddObject((int)obj, VFPLEVELCONTROL_OBJGROUP);
     state->unk02[0] = 0;
     state->unk02[1] = 0;
     state->unk02[2] = 0;
@@ -219,10 +216,10 @@ void VFP_LevelControl_init(int* obj, u8* init)
         state->areaMode = setup->areaMode;
     }
     lbl_803DC148 = VFP_TIMER_INIT;
-    (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
     state->unk02[4] = 0;
     state->unk02[5] = 0;
-    ((GameObject*)obj)->objectFlags |= (VFPLEVELCONTROL_OBJFLAG_HIDDEN | VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags |= (VFPLEVELCONTROL_OBJFLAG_HIDDEN | VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     timeOfDayFn_80055038();
     mainSetBits(GAMEBIT_VFP_LATCH, 1);
     unlockLevel(0, 0, 1);
