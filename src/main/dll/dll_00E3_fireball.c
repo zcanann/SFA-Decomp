@@ -18,6 +18,7 @@
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
@@ -116,7 +117,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern const f32 lbl_803E3330;
-extern void projectileParticleFxFn_80099660(int* obj, f32 v, int kind);
 extern const f32 lbl_803E3354;
 extern const f32 lbl_803E3358;
 extern void lightSetFieldBC_8001db14(int light, int v);
@@ -390,15 +390,15 @@ void Fireball_hitDetect(int* obj)
         colorIndex = ((FireballState*)state)->colorIndex;
         if (colorIndex == 0)
         {
-            projectileParticleFxFn_80099660(obj, lbl_803E3354, 3);
+            projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 3);
         }
         else if (colorIndex == 1)
         {
-            projectileParticleFxFn_80099660(obj, lbl_803E3354, 0);
+            projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 0);
         }
         else
         {
-            projectileParticleFxFn_80099660(obj, lbl_803E3354, 6);
+            projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 6);
         }
         ((GameObject*)obj)->anim.alpha = 0;
         if (*(void**)state != NULL)
@@ -472,15 +472,15 @@ void Fireball_update(int* obj)
                 u8 v = ((FireballState*)state)->colorIndex;
                 if (v == 0)
                 {
-                    projectileParticleFxFn_80099660(obj, lbl_803E3354, 3);
+                    projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 3);
                 }
                 else if (v == 1)
                 {
-                    projectileParticleFxFn_80099660(obj, lbl_803E3354, 0);
+                    projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 0);
                 }
                 else
                 {
-                    projectileParticleFxFn_80099660(obj, lbl_803E3354, 6);
+                    projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 6);
                 }
             }
             ((FireballState*)state)->fadeoutTimer = lbl_803E3358;

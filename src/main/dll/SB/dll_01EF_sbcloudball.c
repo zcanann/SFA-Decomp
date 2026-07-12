@@ -29,6 +29,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/vecmath.h"
 
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
@@ -70,7 +71,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
 extern f32 gSbCloudBallFadeTime;
-extern void projectileParticleFxFn_80099660(int* obj, f32 scale, int type);
 extern f32 gSbCloudBallLightAttenNear;
 extern f32 gSbCloudBallLightAttenFar;
 extern f32 lbl_803E58F4;
@@ -130,7 +130,7 @@ void SB_CloudBall_hitDetect(GameObject* obj)
     }
     state->fadeTimer = gSbCloudBallFadeTime;
     obj->anim.alpha = 0;
-    projectileParticleFxFn_80099660((int*)obj, lbl_803E58E8, 2);
+    projectileParticleFxFn_80099660Legacy((int*)obj, lbl_803E58E8, 2);
 }
 
 void SB_CloudBall_update(GameObject* obj)
@@ -195,7 +195,7 @@ void SB_CloudBall_update(GameObject* obj)
         ObjAnim_GetPriorityHitState(&obj->anim)->flags |= 1;
         if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == lbl_803E58EC)
         {
-            projectileParticleFxFn_80099660((int*)obj, lbl_803E58E8, 2);
+            projectileParticleFxFn_80099660Legacy((int*)obj, lbl_803E58E8, 2);
             state->fadeTimer = gSbCloudBallFadeTime;
             obj->anim.alpha = 0;
         }

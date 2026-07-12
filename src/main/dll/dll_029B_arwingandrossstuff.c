@@ -21,6 +21,7 @@
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -182,7 +183,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
         }
         state->despawnTimer = lbl_803E7028;
         objAnim->alpha = 0;
-        projectileParticleFxFn_80099660((int)obj, lbl_803E701C, state->param0.particleKind);
+        projectileParticleFxFn_80099660Legacy((int)obj, lbl_803E701C, state->param0.particleKind);
         if (state->light != NULL)
         {
             ModelLightStruct_free(state->light);
@@ -242,7 +243,7 @@ void arwingandrossstuff_update(GameObject* obj)
             }
             state->despawnTimer = lbl_803E7028;
             object->anim.alpha = 0;
-            projectileParticleFxFn_80099660((int)object, lbl_803E701C, state->param0.particleKind);
+            projectileParticleFxFn_80099660Legacy((int)object, lbl_803E701C, state->param0.particleKind);
             if (state->light != NULL)
             {
                 ModelLightStruct_free(state->light);

@@ -202,7 +202,6 @@ extern void arwingHudSetVisible(int mode);
 
 extern void PSVECNormalize(void* src, void* dst);
 extern void C_VECHalfAngle(void* out, void* a, void* b);
-extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern f32 lbl_803E7008;
 extern f32 lbl_803E7014;
 extern f32 lbl_803E7028;

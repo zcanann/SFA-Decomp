@@ -3206,7 +3206,6 @@ ObjectDescriptor14 expgfx_funcs = {
 extern void objfx_spawnArcedBurst();
 extern void objfx_spawnBoxBurst();
 extern void fn_80098B18();
-extern void projectileParticleFxFn_80099660();
 extern void itemPickupDoParticleFx();
 extern void objParticleFn_80099d84();
 
