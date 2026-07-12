@@ -4311,6 +4311,7 @@ extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, 
                              GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
                              GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
+#pragma opt_lifetimes off
 void textureFn_8004c330(void* p1, void* mtx)
 {
     IndTexMtx23 m;
@@ -4419,6 +4420,7 @@ void textureFn_8004c330(void* p1, void* mtx)
     lbl_803DCD69 += 1;
     lbl_803DCD68 += 1;
 }
+#pragma opt_lifetimes reset
 
 typedef struct
 {
