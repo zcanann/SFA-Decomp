@@ -5,6 +5,7 @@
  * definitions here are collapsed to forward prototypes.
  */
 #include "main/dll/cfguardian_state.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/cfprisonunclestate_struct.h"
@@ -137,8 +138,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* getTrickyObject(void);
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
-extern void Obj_UpdateRomCurveFollowVelocity(GameObject* obj, void* p, f32 a, f32 b, f32 c, int d);
-extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* p, int n, f32 a, f32 b);
 extern void fn_8014C66C(int* a, void* b);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
 int CFPrisonGuard_getExtraSize(void);
@@ -596,10 +595,10 @@ void babycloudrunner_update(int* obj)
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity((GameObject*)(obj), sub->curveWalker, speed, lbl_803E4238 * speed,
-                                                 lbl_803E4250 * speed, 1);
-                Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(obj), (char*)((int)obj + 0x24), 0x1e, lbl_803E4238,
-                                                   lbl_803E4254);
+                Obj_UpdateRomCurveFollowVelocity((GameObject*)obj, (RomCurveWalker*)sub->curveWalker, speed,
+                                                 lbl_803E4238 * speed, lbl_803E4250 * speed, 1);
+                Obj_SmoothTurnAnglesTowardVelocity((GameObject*)obj, (const Vec3f*)&((GameObject*)obj)->anim.velocityX,
+                                                   0x1e, lbl_803E4238, lbl_803E4254);
                 objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                         ((GameObject*)obj)->anim.velocityZ);
                 if (sub->runnerState == 1)

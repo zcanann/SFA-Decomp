@@ -28,10 +28,11 @@ void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3
                                    f32 maxSpeedDelta, f32 turnRate);
 int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32 advanceStep, f32 arriveRadius,
                                      f32 speed, int flag);
-int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, int routePtr, f32 advanceStep, f32 arriveRadius,
-                                            f32 speed, int flag, int* pickIdx);
-void Obj_SpawnHitLightAndFade(int obj, f32* pos);
-int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, struct ModelLightStruct** light);
+int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, RomCurveWalker* route, f32 advanceStep,
+                                            f32 arriveRadius, f32 speed, int flag, int* pickIdx);
+void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale);
+int Obj_UpdateLightningCluster(GameObject* obj, void** entries, int count, f32 intensity,
+                               struct ModelLightStruct** light);
 void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, const Vec3f* velocity, int turnFrames, f32 rollFactor,
                                         f32 pitchFactor);
 int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, Vec3f* outPos);

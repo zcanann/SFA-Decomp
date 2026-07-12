@@ -18,6 +18,7 @@
  * are HoverpadFlags / Flags377.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -685,7 +686,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
     /* snapshot the shared steer speed before building the call args (the
      * through-pointer read keeps the load at this statement) */
     spd = *(f32*)&lbl_803DC2F8;
-    Obj_SteerVelocityTowardVector((int)obj, &(obj)->anim.velocityX, diff, spd, spd / lbl_803E6A98, lbl_803E6A9C);
+    Obj_SteerVelocityTowardVector(obj, (Vec3f*)&obj->anim.velocityX, (Vec3f*)diff, spd, spd / lbl_803E6A98,
+                                  lbl_803E6A9C);
     PSVECAdd(&(obj)->anim.localPosX, &(obj)->anim.velocityX, &(obj)->anim.localPosX);
 }
 #pragma fp_contract reset

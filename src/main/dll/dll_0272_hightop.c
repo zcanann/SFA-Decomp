@@ -17,6 +17,7 @@
  * quartet, and the 0x3F0.. counters).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/baddie_state.h"
@@ -678,7 +679,7 @@ void HighTop_hitDetect(GameObject* obj)
     {
         return;
     }
-    Obj_SpawnHitLightAndFade((int)obj, &l8, lbl_803E6B40);
+    Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&l8, lbl_803E6B40);
     objSoundFn_800392f0((int)obj, (int)((char*)runtime + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
     st = runtime->baddie.controlMode;
     if (st != 3)
@@ -733,7 +734,7 @@ void HighTop_update(GameObject* obj)
     *(int*)state &= ~0x8000;
     if ((((HighTopRuntime*)state)->flagsC40 & HIGHTOP_FLAG_CURVE_FOLLOW) != 0)
     {
-        int ev = Obj_UpdateRomCurveFollowVelocity((GameObject*)(self), (f32*)(state + 0xa10),
+        int ev = Obj_UpdateRomCurveFollowVelocity((GameObject*)self, (RomCurveWalker*)(state + 0xa10),
                                                   lbl_803DC324 *
                                                       (((HighTopRuntime*)state)->curveFollowSpeedScale * timeDelta),
                                                   lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);

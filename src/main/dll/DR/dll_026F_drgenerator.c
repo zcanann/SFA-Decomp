@@ -7,6 +7,7 @@
  * game bit (watchGameBit).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/game_object.h"
 #include "main/dll/DR/dll_026F_drgenerator.h"
@@ -74,7 +75,7 @@ void drgenerator_hitDetect(GameObject* obj)
         return;
     }
     state[0x19a] = *(u8*)(state + 0x19a) - hitVolume;
-    ((void (*)(void*, f32*, f32))Obj_SpawnHitLightAndFade)(obj, &hitPosX, lbl_803E6B5C);
+    Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E6B5C);
     ((void (*)(void*, f32))fn_8009A8C8)(obj, lbl_803E6B60);
     if (state[0x19a] > 0)
     {

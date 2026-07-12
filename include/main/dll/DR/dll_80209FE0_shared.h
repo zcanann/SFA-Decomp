@@ -135,7 +135,6 @@ extern f64 DOUBLE_803e8280;
 
 extern void ModelLightStruct_free(int light);
 extern void Music_Trigger(int id, int value);
-extern void Obj_UpdateLightningCluster(int obj, int p1, int n, int p2, f32 v);
 extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
 extern void storeZeroToFloatParam(f32* p);
 extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
@@ -170,7 +169,6 @@ extern f32 lbl_803E654C;
 extern int gBossDrakorMoveStateTable[];
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern void Obj_SpawnHitLightAndFade(int obj, f32* pos, f32 v);
 extern void gameTextShow(int id);
 extern int warpToMap(int id, int flags);
 extern void timeOfDayFn_80055000(void);
@@ -221,8 +219,6 @@ extern void modelLightStruct_setSpecularTargetColor(int light, int a, int b, int
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
-extern int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* a, f32 b, f32 c, int obj, void* curve, int p, void* out);
-extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* angles, int p, f32 a, f32 b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern void objAnimFn_80038f38(GameObject* obj, int p);

@@ -13,6 +13,7 @@
  * with an attached point light and glow.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -251,7 +252,8 @@ void drakormissile_update(int obj)
             mag = PSVECMag((f32*)(player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
-        Obj_PredictInterceptPoint((GameObject*)(player), mag, &((GameObject*)obj)->anim.localPosX, toTarget);
+        Obj_PredictInterceptPoint((GameObject*)player, mag, (const Vec3f*)&((GameObject*)obj)->anim.localPosX,
+                                  (Vec3f*)toTarget);
         PSVECSubtract(toTarget, (f32*)(obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);

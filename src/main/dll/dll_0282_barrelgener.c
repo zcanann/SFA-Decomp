@@ -269,43 +269,42 @@ int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32
     return result;
 }
 
-int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, int routePtr, f32 advanceStep, f32 arriveRadius, f32 speed,
-                                            int flag, int* pickIdx)
+int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, RomCurveWalker* route, f32 advanceStep,
+                                            f32 arriveRadius, f32 speed, int flag, int* pickIdx)
 {
     int result;
     f32 delta[3];
     f32 dist, ang;
 
     result = 0;
-    delta[0] = (obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-    delta[2] = (obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+    delta[0] = obj->anim.localPosX - route->posX;
+    delta[2] = obj->anim.localPosZ - route->posZ;
     dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
     if (dist < arriveRadius)
     {
-        if (Curve_AdvanceAlongPath((RomCurveWalker*)routePtr, advanceStep) != 0 ||
-            ((RomCurveWalker*)routePtr)->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(route, advanceStep) != 0 || route->atSegmentEnd != 0)
         {
-            if ((*gRomCurveInterface)->goNextPointIndexed((RomCurveWalker*)routePtr, *pickIdx) != 0)
+            if ((*gRomCurveInterface)->goNextPointIndexed(route, *pickIdx) != 0)
                 result = -1;
             else
-                result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
+                result = *(s8*)((int)route->node9C + 0x18);
             *pickIdx = 0;
         }
         speed = lbl_803E6C78 * advanceStep;
     }
-    delta[0] = ((RomCurveWalker*)routePtr)->posX - (obj)->anim.localPosX;
-    delta[1] = ((RomCurveWalker*)routePtr)->posY - (obj)->anim.localPosY;
-    delta[2] = ((RomCurveWalker*)routePtr)->posZ - (obj)->anim.localPosZ;
+    delta[0] = route->posX - obj->anim.localPosX;
+    delta[1] = route->posY - obj->anim.localPosY;
+    delta[2] = route->posZ - obj->anim.localPosZ;
     if ((u8)flag == 0)
     {
-        int state2 = *(int*)&(obj)->extra;
+        ObjUpdateRomCurveFollowVelocityState* state = obj->extra;
         s16 raw;
-        delta[0] = (obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
-        delta[2] = (obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
+        delta[0] = obj->anim.localPosX - route->posX;
+        delta[2] = obj->anim.localPosZ - route->posZ;
         raw = (s16)getAngle(delta[0], delta[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = speed * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = speed * -mathCosf(ang);
+        state->velZ = speed * -mathSinf(ang);
+        state->velX = speed * -mathCosf(ang);
     }
     else
     {
@@ -315,7 +314,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, int routePtr, f32 a
     return result;
 }
 
-void Obj_SpawnHitLightAndFade(int obj, f32* pos)
+void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale)
 {
     struct
     {
@@ -323,14 +322,14 @@ void Obj_SpawnHitLightAndFade(int obj, f32* pos)
         f32 vec[3];
     } s;
 
-    s.vec[0] = pos[0] + playerMapOffsetX;
-    s.vec[1] = pos[1];
-    s.vec[2] = pos[2] + playerMapOffsetZ;
-    objLightFn_8009a1dc((void*)obj, lbl_803E6C68, &s, 1, 0);
-    Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
+    s.vec[0] = pos->x + playerMapOffsetX;
+    s.vec[1] = pos->y;
+    s.vec[2] = pos->z + playerMapOffsetZ;
+    objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
+    Obj_SetModelColorFadeRecursive((int)obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, ModelLight** light)
+int Obj_UpdateLightningCluster(GameObject* obj, void** entries, int count, f32 intensity, ModelLight** light)
 {
     int spawned;
     int i;
@@ -369,21 +368,22 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
         }
         else if (spawned == 0)
         {
-            pos[0] = ((GameObject*)obj)->anim.localPosX;
-            pos[1] = ((GameObject*)obj)->anim.localPosY;
-            pos[2] = ((GameObject*)obj)->anim.localPosZ;
+            pos[0] = obj->anim.localPosX;
+            pos[1] = obj->anim.localPosY;
+            pos[2] = obj->anim.localPosZ;
             pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             entries[i] =
-                lightningCreate((f32*)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4, lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
+                lightningCreate(&obj->anim.localPosX, pos, lbl_803DC3A0, lbl_803DC3A4, lbl_803DC3A8,
+                                (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }
     }
 
     if (*light == 0)
     {
-        *light = modelLightStruct_createPointLight((void*)obj, 0x80, 0x80, 0xff, 0);
+        *light = modelLightStruct_createPointLight(obj, 0x80, 0x80, 0xff, 0);
         if (*light != 0)
         {
             modelLightStruct_setPosition(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);

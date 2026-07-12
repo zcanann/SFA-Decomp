@@ -141,7 +141,6 @@ extern int padGetStickX(int p);
 extern int padGetStickY(int p);
 extern int getButtonsJustPressed(int p);
 extern int getButtonsHeld(int p);
-extern int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, int q, f32 a, f32 b, f32 c, int d);
 extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 extern f32 lbl_803E83B8;

@@ -13,6 +13,7 @@
  * and render draws the device, its path light pulses and the held barrel.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/DR/dll_0283_drbarrelgr.h"
 #include "main/audio/sfx_trigger_ids.h"
 

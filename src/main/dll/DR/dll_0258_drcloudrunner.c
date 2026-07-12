@@ -20,6 +20,7 @@
  */
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -1026,8 +1027,8 @@ void fn_802C11BC(GameObject* obj, f32 f, int triggerFrame)
         inner->baddie.cameraYaw = *(s16*)slot;
         if (((ByteFlags*)&inner->flagsBC0)->b01 != 0)
         {
-            Obj_UpdateRomCurveFollowVelocity(obj, (int)((char*)inner + 0x35c), inner->pathFollowSpeed, lbl_803E83B4,
-                                             lbl_803E8414, 1);
+            Obj_UpdateRomCurveFollowVelocity(obj, (RomCurveWalker*)((char*)inner + 0x35c), inner->pathFollowSpeed,
+                                             lbl_803E83B4, lbl_803E8414, 1);
         }
     }
     else

@@ -409,7 +409,6 @@ extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
 
-extern int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, int q, f32 a, f32 b, f32 c, int d);
 extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 void fn_802BF4D8(GameObject* obj);

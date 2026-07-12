@@ -5,6 +5,8 @@
 #include "main/game_object.h"
 #include "global.h"
 
+struct ModelLightStruct;
+
 typedef struct DrakordThornbushPlacement
 {
     u8 pad0[0x19 - 0x0];
@@ -21,8 +23,9 @@ typedef struct DrakordThornbushState
     s32 lastHitObj;                   /* 0x08: most recent attacker, debounces re-hits */
     f32 growth;                       /* 0x0C: regrow timer / scale driver */
     f32 regrowTimer;                  /* 0x10: hit/regrow countdown */
-    u8 lightningCluster[0x64 - 0x14]; /* 0x14: Obj_UpdateLightningCluster data */
-    s32 light;                        /* 0x64: model light handle (lightning variant) */
+    void* lightningEntries[3];
+    u8 pad20[0x64 - 0x20];
+    struct ModelLightStruct* light; /* 0x64: model light handle (lightning variant) */
     f32 lightScale;                   /* 0x68: lightning scale, accumulates over time */
     void* hitTable;                   /* 0x6C: hit-reaction table pointer */
     f32 baseScale;                    /* 0x70: per-variant init scale constant */

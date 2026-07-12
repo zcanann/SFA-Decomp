@@ -14,6 +14,7 @@
  * gPartfxInterface / objfx_spawnFlaggedTrailBurst.
  */
 #include "main/dll/drakorenergystate_struct.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -57,7 +58,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4,
 extern void objMove(int, f32, f32, f32);
 extern void playerAddHealth(int obj, int amount);
 
-extern int Obj_PredictInterceptPoint(GameObject*, f32, f32*, f32*);
 extern void PSVECSubtract(f32*, f32*, f32*);
 extern void PSVECNormalize(f32*, f32*);
 extern void PSVECScale(f32*, f32*, f32);
@@ -168,7 +168,8 @@ void drakorenergy_update(int obj)
         else
         {
             spd = gDrakorEnergyChaseSpeed;
-            Obj_PredictInterceptPoint((GameObject*)(player), spd / lbl_803E6294, (f32*)(obj + 0xc), interceptPt);
+            Obj_PredictInterceptPoint((GameObject*)player, spd / lbl_803E6294,
+                                      (const Vec3f*)&((GameObject*)obj)->anim.localPosX, (Vec3f*)interceptPt);
             PSVECSubtract(interceptPt, (f32*)(obj + 0xc), seekDir);
             PSVECNormalize(seekDir, seekDir);
             if (dist < spd)

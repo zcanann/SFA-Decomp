@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -253,7 +254,6 @@ extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
 extern void dll_2E_setLookAtMaxDistance(int p, f32 f);
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
-extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
 extern void doRumble(f32 duration);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
@@ -1166,7 +1166,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
                 {
                     return;
                 }
-                Obj_SpawnHitLightAndFade((int)obj, &hx, lbl_803E8368);
+                Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hx, lbl_803E8368);
                 if (hit == 0x1a || hitObj == Obj_GetPlayerObject() || ((GameObject*)hitObj)->anim.seqId == 0x23)
                 {
                     return;

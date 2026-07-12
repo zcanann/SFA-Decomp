@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -83,11 +84,7 @@ typedef struct DrLaserCannonState
     f32 muzzleX;
     f32 muzzleY;
     f32 muzzleZ;
-    u8 curveFollow[DR_LASERCANNON_STATE_CURVE_END_X - 0x1C];
-    f32 curveEndX;
-    f32 curveEndY;
-    f32 curveEndZ;
-    u8 pad90[DR_LASERCANNON_STATE_ANIM_STEP_SCALE - 0x90];
+    RomCurveWalker curveFollow;
     f32 animStepScale;
     int trickyCooldown;
     f32 reloadTimer;
@@ -118,7 +115,7 @@ STATIC_ASSERT(offsetof(DrLaserCannonState, beamObject) == DR_LASERCANNON_STATE_B
 STATIC_ASSERT(offsetof(DrLaserCannonState, lastHitObject) == DR_LASERCANNON_STATE_LAST_HIT_OBJECT);
 STATIC_ASSERT(offsetof(DrLaserCannonState, muzzleX) == DR_LASERCANNON_STATE_MUZZLE_X);
 STATIC_ASSERT(offsetof(DrLaserCannonState, curveFollow) == DR_LASERCANNON_STATE_CURVE_FOLLOW);
-STATIC_ASSERT(offsetof(DrLaserCannonState, curveEndX) == DR_LASERCANNON_STATE_CURVE_END_X);
+STATIC_ASSERT(offsetof(DrLaserCannonState, curveFollow) == DR_LASERCANNON_STATE_CURVE_FOLLOW);
 STATIC_ASSERT(offsetof(DrLaserCannonState, animStepScale) == DR_LASERCANNON_STATE_ANIM_STEP_SCALE);
 STATIC_ASSERT(offsetof(DrLaserCannonState, trickyCooldown) == DR_LASERCANNON_STATE_TRICKY_COOLDOWN);
 STATIC_ASSERT(offsetof(DrLaserCannonState, reloadTimer) == DR_LASERCANNON_STATE_RELOAD_TIMER);
@@ -420,7 +417,7 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
     {
         state->lastHitObject = hitObject;
         state->health -= hitVolume;
-        Obj_SpawnHitLightAndFade((int)obj, &hitPosX, lbl_803E68F0);
+        Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E68F0);
         fn_8009A8C8((int)obj, lbl_803E68F4);
         Sfx_PlayFromObject((int)obj, SFXTRIG_ar_awghitobj16);
         if (state->health <= 0)
@@ -550,8 +547,8 @@ void DR_LaserCannon_update(GameObject* obj)
                 state->hitExcludeType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
                 if (timerCountDown(&state->reloadTimer) != 0)
                 {
-                    if (Obj_PredictInterceptPoint((GameObject*)(target), setup->beamSpeed / lbl_803E6908,
-                                                  &state->muzzleX, hitPos) != 0)
+                    if (Obj_PredictInterceptPoint((GameObject*)target, setup->beamSpeed / lbl_803E6908,
+                                                  (const Vec3f*)&state->muzzleX, (Vec3f*)hitPos) != 0)
                     {
                         spawned = *(int*)&(obj)->extra;
                         if (Obj_IsLoadingLocked() == 0)
@@ -622,7 +619,7 @@ void DR_LaserCannon_update(GameObject* obj)
     }
     if (state->flags.b5 != 0)
     {
-        Obj_UpdateRomCurveFollowVelocity(obj, (f32*)state->curveFollow, lbl_803E6914 * lbl_803DC2A8, lbl_803E6918,
+        Obj_UpdateRomCurveFollowVelocity(obj, &state->curveFollow, lbl_803E6914 * lbl_803DC2A8, lbl_803E6918,
                                          lbl_803E6908, 1);
         ((void (*)(void*, f32, f32, f32))objMove)(obj, (obj)->anim.velocityX * timeDelta,
                                                   (obj)->anim.velocityY * timeDelta, (obj)->anim.velocityZ * timeDelta);
@@ -630,12 +627,12 @@ void DR_LaserCannon_update(GameObject* obj)
     else
     {
         spawnFlag = 1;
-        if ((*gRomCurveInterface)->initCurve(state->curveFollow, (void*)obj, lbl_803E691C, &spawnFlag, 0) == 0)
+        if ((*gRomCurveInterface)->initCurve(&state->curveFollow, (void*)obj, lbl_803E691C, &spawnFlag, 0) == 0)
         {
             state->flags.b5 = 1;
-            (obj)->anim.localPosX = state->curveEndX;
-            (obj)->anim.localPosZ = state->curveEndZ;
-            (obj)->anim.localPosY = state->curveEndY;
+            obj->anim.localPosX = state->curveFollow.posX;
+            obj->anim.localPosZ = state->curveFollow.posZ;
+            obj->anim.localPosY = state->curveFollow.posY;
         }
     }
     {

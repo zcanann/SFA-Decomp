@@ -13,6 +13,7 @@
  * pollen, pollenfragment).
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/objseq_api.h"
 #include "main/vecmath.h"
 #include "main/dll/xyzanimator.h"
@@ -85,7 +86,6 @@ extern int fn_80080150(int p);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int timerCountDown(int timer);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* vel, int rate, f32 a, f32 b);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
 extern f32 PSVECMag(void* v);
@@ -417,7 +417,8 @@ void pollenfragment_update(int obj)
     }
     if ((((PollenFragmentExtra*)extra)->def)->smoothTurn)
     {
-        Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(obj), (void*)(obj + 0x24), 10, lbl_803E3160, lbl_803E3158);
+        Obj_SmoothTurnAnglesTowardVelocity((GameObject*)obj, (const Vec3f*)(obj + 0x24), 10, lbl_803E3160,
+                                           lbl_803E3158);
         ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + framesThisStep * 0x500;
     }
     else if (((GameObject*)obj)->anim.seqId == POLLEN_FRAGMENT_OBJECT_ID)

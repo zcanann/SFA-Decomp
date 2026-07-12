@@ -19,6 +19,7 @@
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/dll/dll_0282_barrelgener.h"
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -134,9 +135,9 @@ void bossdrakor_update(int obj)
             modelLightStruct_setGlowProjectionRadius(((BossDrakorState*)state)->lightObj, lbl_803E6550);
         }
     }
-    moveResult = ((int (*)(int, void*, f32, f32, f32, int, void*))Obj_UpdateRomCurveFollowVelocityIndexed)(
-        obj, (void*)((char*)state + 0x28), ((BossDrakorState*)state)->curveIndex, lbl_803E6568, lbl_803E6520, 1,
-        &((BossDrakorState*)state)->curveFollowState);
+    moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(
+        (GameObject*)obj, (RomCurveWalker*)((char*)state + 0x28), ((BossDrakorState*)state)->curveIndex,
+        lbl_803E6568, lbl_803E6520, 1, &((BossDrakorState*)state)->curveFollowState);
     if (((DrakorFlags*)((char*)state + 0x198))->b40)
     {
         player = (int)Obj_GetPlayerObject();
@@ -175,8 +176,8 @@ void bossdrakor_update(int obj)
     }
     else
     {
-        Obj_SmoothTurnAnglesTowardVelocity((GameObject*)(obj), &((GameObject*)obj)->anim.velocityX, 0x2d, lbl_803E6548,
-                                           lbl_803E656C);
+        Obj_SmoothTurnAnglesTowardVelocity((GameObject*)obj, (const Vec3f*)&((GameObject*)obj)->anim.velocityX, 0x2d,
+                                           lbl_803E6548, lbl_803E656C);
     }
     if (moveResult != 0)
     {
@@ -732,7 +733,7 @@ void bossdrakor_hitDetect(GameObject* obj)
             }
             else
             {
-                Obj_SpawnHitLightAndFade((int)obj, &hx, lbl_803E6554);
+                Obj_SpawnHitLightAndFade((GameObject*)obj, (const Vec3f*)&hx, lbl_803E6554);
             }
             if (((BossDrakorState*)inner)->hitSfxCooldown <= lbl_803E6510)
             {
