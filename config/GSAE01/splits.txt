@@ -776,6 +776,7 @@ main/dll/dll_0043_unk.c:
 
 main/dll/dll_0045_camTalk.c:
 	.text       start:0x80107AEC end:0x8010847C
+	.sdata2     start:0x803E17B8 end:0x803E17C0
 
 main/dll/dll_0044_cameramodeviewfinder.c:
 	.text       start:0x8010847C end:0x80109748
