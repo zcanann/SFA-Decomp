@@ -56,3 +56,9 @@ extern const double lbl_803E7970;
         __HI(x) = (hx&0x800fffff)|(k<<20);
         return lbl_803E7970*x;
 }
+
+__declspec(section ".sdata2") const double lbl_803E7950 = 0.0;
+__declspec(section ".sdata2") const double lbl_803E7958 = 1.8014398509481984e+16;
+__declspec(section ".sdata2") const double lbl_803E7960 = 1e-300;
+__declspec(section ".sdata2") const double lbl_803E7968 = 1e+300;
+__declspec(section ".sdata2") const double lbl_803E7970 = 5.551115123125783e-17;
