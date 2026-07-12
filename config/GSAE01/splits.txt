@@ -2776,6 +2776,7 @@ main/dll/ARW/dll_02A7_arwproximit.c:
 
 main/dll/ARW/dll_02A8_arwblocker.c:
 	.text       start:0x802338F0 end:0x80233B0C
+	.sdata2     start:0x803E7218 end:0x803E7228
 	.sdata2     start:0x803E7228 end:0x803E7230
 
 main/dll/LGT/dll_02A9_lgtpointlight.c:

@@ -21,6 +21,13 @@
 #define ARWBLOCKER_SEQMODE_DEFAULT 0 /* fires sequence 0; never reports "armed" */
 #define ARWBLOCKER_SEQMODE_ARMED   1 /* fires sequence 1; reports armed until locked */
 
+__declspec(section ".sdata2") f32 lbl_803E7218 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E721C = 5120.0f;
+__declspec(section ".sdata2") f32 lbl_803E7220 = 3.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E7224 = 0.0f;
+#pragma explicit_zero_data off
+
 #pragma peephole off
 int ARWBlocker_SeqFn(GameObject* obj)
 {
