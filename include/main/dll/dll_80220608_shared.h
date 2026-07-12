@@ -214,20 +214,9 @@ extern void objfx_spawnDirectionalBurst(int obj, int a, int b, int c, f32 e, f32
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind, int particleId, int lifetime,
                                   f32 scaleX, f32 scaleY, f32 scaleZ, void* args, int arg9);
 
-extern f32 lbl_803E7338;
-extern f32 lbl_803E733C;
-extern f32 lbl_803E7340;
 extern int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB,
                                                      u32 sfxId, float* cooldown);
 
-extern void* lbl_803DDD98;
-extern f32 lbl_803DDD9C;
-extern f32 lbl_803DDDA0;
-extern f32 lbl_803E7288;
-extern f32 lbl_803E728C;
-extern f32 lbl_803E7290;
-extern f32 lbl_803E7294;
-extern f32 lbl_803E7298;
 
 extern f32 lbl_803E7078;
 extern f32 lbl_803E7150;
@@ -923,18 +912,6 @@ void Dummy29E_update(void);
 void Dummy29E_init(void);
 void Dummy29E_release(void);
 void Dummy29E_initialise(void);
-int brokenpipe_getExtraSize(void);
-void brokenpipe_init(GameObject* obj, int setup);
-void brokenpipe_update(GameObject* obj);
-int SoftBody_getExtraSize(void);
-int SoftBody_getObjectTypeId(void);
-void SoftBody_free(int obj);
-void SoftBody_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void SoftBody_hitDetect(void);
-void SoftBody_init(GameObject* obj, int setup);
-void SoftBody_release(void);
-void SoftBody_initialise(void);
-void SoftBody_update(GameObject* obj);
 int arwarwingbo_getExtraSize(void);
 int arwarwingbo_getObjectTypeId(void);
 void arwarwingbo_free(int obj);

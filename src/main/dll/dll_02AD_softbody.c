@@ -14,23 +14,8 @@
  * extra state (getExtraSize returns 0).
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02AD_softbody.h"
 #include "main/game_object.h"
-
-typedef struct SoftBodySetup
-{
-    ObjPlacement base;
-    u8 rotZ;
-    u8 rotY;
-    u8 rotX;
-    u8 scale;
-    u8 pad1C[3];
-    u8 phaseDriverDisabled;
-} SoftBodySetup;
-
-STATIC_ASSERT(offsetof(SoftBodySetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
-STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
-STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
 
@@ -48,9 +33,9 @@ int SoftBody_getObjectTypeId(void)
     return 0;
 }
 
-void SoftBody_free(int obj)
+void SoftBody_free(GameObject* obj)
 {
-    if ((void*)obj == lbl_803DDD98)
+    if (obj == lbl_803DDD98)
     {
         lbl_803DDD98 = NULL;
     }
@@ -75,10 +60,10 @@ void SoftBody_update(GameObject* obj)
 
     if (lbl_803DDD98 == NULL && setup->phaseDriverDisabled == 0)
     {
-        lbl_803DDD98 = (void*)obj;
+        lbl_803DDD98 = obj;
     }
 
-    if ((void*)obj == lbl_803DDD98)
+    if (obj == lbl_803DDD98)
     {
         f32 phase;
 
@@ -111,10 +96,10 @@ void SoftBody_update(GameObject* obj)
     }
 }
 
-void SoftBody_init(GameObject* obj, int setup)
+void SoftBody_init(GameObject* obj, SoftBodySetup* setup)
 {
     GameObject* object = obj;
-    SoftBodySetup* setupData = (SoftBodySetup*)setup;
+    SoftBodySetup* setupData = setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);

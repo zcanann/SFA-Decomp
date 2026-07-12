@@ -9,28 +9,8 @@
  * system, flashing a light-blue hit effect on a cooldown.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/game_object.h"
-
-typedef struct BrokenPipeSetup
-{
-    ObjPlacement base;
-    u8 rotZ;
-    u8 rotY;
-    u8 rotX;
-    u8 scale;
-    u8 pad1C[4];
-} BrokenPipeSetup;
-
-STATIC_ASSERT(offsetof(BrokenPipeSetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(BrokenPipeSetup, scale) == 0x1b);
-STATIC_ASSERT(sizeof(BrokenPipeSetup) == 0x20);
-
-typedef struct BrokenPipeState
-{
-    f32 hitEffectCooldown;
-} BrokenPipeState;
-
-STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 
 #define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
 
@@ -46,10 +26,10 @@ void brokenpipe_update(GameObject* obj)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
 }
 
-void brokenpipe_init(GameObject* obj, int setup)
+void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
 {
     GameObject* object = obj;
-    BrokenPipeSetup* setupData = (BrokenPipeSetup*)setup;
+    BrokenPipeSetup* setupData = setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
