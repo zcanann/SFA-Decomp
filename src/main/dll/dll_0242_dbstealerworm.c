@@ -138,7 +138,6 @@ extern f32 lbl_803E62EC;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 ObjGroup_ContainsObject();
 extern int ObjGroup_FindNearestObjectForObject();
-extern u32 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
 extern void DFP_LevelControl_free(void);
 extern void DFP_LevelControl_getExtraSize(void);
@@ -283,7 +282,7 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie)
         sub_40c->linkedObj = *(int*)&bs->targetObj;
         sub_40c->msgSlotIndex = slotIndex;
         sub_40c->msgMode = 0;
-        ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 18);
+        ObjMsg_SendToObject((void*)sub_40c->linkedObj, 17, obj, 18);
         Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
     }
     *(s8*)&bs->stateTag = 18;
@@ -388,7 +387,7 @@ int dbstealerworm_stateHandlerA05(GameObject* obj, int baddie)
         *(u32*)&bs->targetObj = 0;
         if (*(void**)&sub_40c->linkedObj != NULL)
         {
-            ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 16);
+            ObjMsg_SendToObject((void*)sub_40c->linkedObj, 17, obj, 16);
             sub_40c->linkedObj = 0;
         }
         player_c8 = *(int*)&((GameObject*)Obj_GetPlayerObject())->childObjs[0];
@@ -492,7 +491,7 @@ int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie)
         sub->configFlags |= ((DbstealerwormPlacement*)placementData)->configFlags;
         if (*(void**)&sub_40c->linkedObj != NULL)
         {
-            ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 19);
+            ObjMsg_SendToObject((void*)sub_40c->linkedObj, 17, obj, 19);
             sub_40c->linkedObj = 0;
             sub_40c->msgSlotIndex = -1;
         }
@@ -799,7 +798,7 @@ int dbstealerworm_stateHandlerA0E(GameObject* obj, int baddie)
         sub->linkedObj = *(int*)&bs->targetObj;
         sub->msgSlotIndex = 0x24;
         sub->msgMode = 0;
-        ObjMsg_SendToObject(sub->linkedObj, 0x11, obj, 0x12);
+        ObjMsg_SendToObject((void*)sub->linkedObj, 0x11, obj, 0x12);
         Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
     }
     if ((obj)->anim.currentMoveProgress > lbl_803E62EC)
@@ -1552,7 +1551,7 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
             stk.out[1] = stk.out[1] * lbl_803E631C;
             stk.out[0] = lbl_803E62A8;
             stk.out[2] = lbl_803E6320;
-            ObjMsg_SendToObject(sub->linkedObj, 0x11, obj, 0x11);
+            ObjMsg_SendToObject((void*)sub->linkedObj, 0x11, obj, 0x11);
             (**(void (**)(int, f32*))(*(int*)(*(int*)(sub->linkedObj + 0x68)) + 0x24))(sub->linkedObj, stk.out);
             sub->linkedObj = 0;
             sub->msgSlotIndex = -1;
@@ -2040,7 +2039,6 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 #pragma opt_propagation off
 void dbstealerworm_update(u8* objp)
 {
-    extern int ObjMsg_Pop(int, u32*, int*, int*);
     extern f32 lbl_803E62FC;
     extern f32 lbl_803E6388;
     extern f32 lbl_803E638C;
@@ -2135,11 +2133,11 @@ void dbstealerworm_update(u8* objp)
                 stk.msg = 0;
                 stk.argA = 0;
                 sub2 = *(int*)&((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
-                while (ObjMsg_Pop(obj, &stk.msg, &stk.argB, (int*)(&stk.msg + 1)) != 0)
+                while (ObjMsg_Pop((void*)obj, &stk.msg, (u32*)&stk.argB, &stk.msg + 1) != 0)
                 {
                     if (stk.msg == 0x11 && ((DbStealerwormControl*)sub2)->msgSlotIndex != -1)
                     {
-                        ObjMsg_SendToObject(((DbStealerwormControl*)sub2)->linkedObj, 0x11, obj, 0x14);
+                        ObjMsg_SendToObject((void*)((DbStealerwormControl*)sub2)->linkedObj, 0x11, (void*)obj, 0x14);
                         ((DbStealerwormControl*)sub2)->linkedObj = 0;
                         ((DbStealerwormControl*)sub2)->msgSlotIndex = -1;
                         ObjAnim_SetCurrentMove((int)obj, 0xf, lbl_803E62A8, 0);
