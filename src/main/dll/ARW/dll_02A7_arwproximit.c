@@ -22,6 +22,23 @@
 #include "main/object_api.h"
 #include "main/vecmath.h"
 
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E71D8 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E71DC = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E71E0 = 127.0f;
+__declspec(section ".sdata2") f32 lbl_803E71E4 = 1.0f;
+__declspec(section ".sdata2") f32 gArwProximityTauntDistance = 2700.0f;
+__declspec(section ".sdata2") f32 gArwProximityActivateDistance = 5120.0f;
+__declspec(section ".sdata2") f32 lbl_803E71F0 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E71F4 = 70.0f;
+__declspec(section ".sdata2") f32 lbl_803E71F8 = 65.0f;
+__declspec(section ".sdata2") f32 gArwProximityFadeInRate = 3.0f;
+__declspec(section ".sdata2") f32 gArwProximityWarningDistance = 900.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E7204 = 0.0f;
+#pragma explicit_zero_data off
+
 #pragma dont_inline on
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5

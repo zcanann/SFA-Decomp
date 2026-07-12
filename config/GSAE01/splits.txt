@@ -2808,6 +2808,7 @@ main/dll/ARW/dll_02A6_arwsquadron.c:
 
 main/dll/ARW/dll_02A7_arwproximit.c:
 	.text       start:0x802331B0 end:0x802338F0
+	.sdata2     start:0x803E71D8 end:0x803E7208
 	.sdata2     start:0x803E7208 end:0x803E7218
 
 main/dll/ARW/dll_02A8_arwblocker.c:
