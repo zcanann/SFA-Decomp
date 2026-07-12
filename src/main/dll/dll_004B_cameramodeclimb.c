@@ -21,9 +21,13 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
 #include "main/camera_interface.h"
+#include "main/frame_timing.h"
 #include "main/object_transform.h"
-#include "main/dll/dll_80220608_shared.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_004B_cameramodeclimb.h"
+
+#pragma dont_inline on
 
 extern f32 lbl_803E19A0;
 extern f32 gCamClimbDistanceSmoothRate;

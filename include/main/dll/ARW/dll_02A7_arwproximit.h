@@ -51,7 +51,7 @@ void arwproximit_free(GameObject* obj);
 void arwproximit_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 void arwproximit_hitDetect(void);
 void arwproximit_update(GameObject* obj);
-void arwproximit_init(GameObject* obj, int setup, int p3);
+void arwproximit_init(GameObject* obj, ARWProximitSetup* setup, int p3);
 void arwproximit_release(void);
 void arwproximit_initialise(void);
 

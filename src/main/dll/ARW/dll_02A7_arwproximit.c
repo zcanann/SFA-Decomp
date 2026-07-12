@@ -9,14 +9,20 @@
  * early by a player shot. The placement's textVariant selects which warning
  * / taunt text lines are shown.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/headdisplay.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/dll/ARW/dll_02A7_arwproximit.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
+
+#pragma dont_inline on
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
 
@@ -203,11 +209,11 @@ void arwproximit_update(GameObject* obj)
         modelLightStruct_updateGlowAlpha(state->light);
 }
 
-void arwproximit_init(GameObject* obj, int setup, int flag)
+void arwproximit_init(GameObject* obj, ARWProximitSetup* setup, int flag)
 {
     ObjAnimComponent* objAnim = &(obj)->anim;
     ARWProximitState* state = (obj)->extra;
-    ARWProximitSetup* mapData = (ARWProximitSetup*)setup;
+    ARWProximitSetup* mapData = setup;
 
     state->spinSpeed = randomGetRange(0x64, 0x12c);
     state->textVariant = mapData->textVariant;

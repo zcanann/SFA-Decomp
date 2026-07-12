@@ -1,10 +1,16 @@
-#include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim_update.h"
 #include "main/shader_api.h"
 #include "main/lightmap_api.h"
 #include "main/dll/WC/dll_0296_wctempledia.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+
+#pragma dont_inline on
 
 #define WCTEMPLE_DIA_EXTRA_SIZE       0x14
 #define WCTEMPLE_DIA_STAGE_COUNT      3
