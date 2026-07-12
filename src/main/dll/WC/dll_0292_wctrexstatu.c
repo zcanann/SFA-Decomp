@@ -10,13 +10,10 @@
  * getObjectTypeId picks the render model from the placement's modelIndex.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_0292_wctrexstatu.h"
 #include "main/game_object.h"
 
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
-
-#define WCTREXSTATU_SETUP_TYPE_OFFSET        0x18
-#define WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCTREXSTATU_SETUP_RAISED_BIT_OFFSET  0x1e
 
 #define WCTREXSTATU_RENDER_TYPE_BASE      0x400
 #define WCTREXSTATU_RENDER_TYPE_SHIFT     0xb
@@ -28,21 +25,6 @@
 #define WCTREXSTATU_PARTFX_INVALID_HANDLE -1
 
 #define WCTREXSTATU_MAPEVENT_RAISED 2
-
-typedef struct WCTrexStatueSetup
-{
-    ObjPlacement base;
-    s8 type;
-    u8 modelIndex;
-    u8 pad1A[WCTREXSTATU_SETUP_RAISED_BIT_OFFSET - 0x1A];
-    s16 raisedBit;
-    u8 pad20[0x24 - 0x20];
-} WCTrexStatueSetup;
-
-STATIC_ASSERT(sizeof(WCTrexStatueSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTrexStatueSetup, type) == WCTREXSTATU_SETUP_TYPE_OFFSET);
-STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);
 
 #pragma opt_strength_reduction off
 int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -97,7 +79,7 @@ void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void wctrexstatu_hitDetect(u8* obj)
+void wctrexstatu_hitDetect(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     GameObject* gameObj = (GameObject*)obj;
@@ -123,18 +105,17 @@ void wctrexstatu_update(void)
 {
 }
 
-void wctrexstatu_init(GameObject* obj, int setup, int fromLoad)
+void wctrexstatu_init(GameObject* obj, WCTrexStatueSetup* setup, int fromLoad)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCTrexStatueSetup* setupData = (WCTrexStatueSetup*)setup;
     obj->animEventCallback = wctrexstatu_interactCallback;
-    *(u8*)&objAnim->bankIndex = setupData->modelIndex;
+    *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
 
-    obj->anim.rotX = (s16)(setupData->type << 8);
+    obj->anim.rotX = (s16)(setup->type << 8);
     if (fromLoad == 0)
     {
         if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED)
@@ -143,7 +124,7 @@ void wctrexstatu_init(GameObject* obj, int setup, int fromLoad)
         }
     }
 
-    if ((u32)mainGetBit(setupData->raisedBit) != 0)
+    if ((u32)mainGetBit(setup->raisedBit) != 0)
     {
         ObjTextureRuntimeSlot* texture = objFindTexture((GameObject*)obj, 0, 0);
 

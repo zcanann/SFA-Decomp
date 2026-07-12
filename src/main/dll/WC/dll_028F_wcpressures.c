@@ -15,6 +15,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
+#include "main/dll/WC/dll_0292_wctrexstatu.h"
 #include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 
@@ -344,20 +345,20 @@ void wcpressures_initialise(void)
 
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
 
-u32 gWCTrexStatuObjDescriptor[14] = {0x00000000,
+ObjectDescriptor gWCTrexStatuObjDescriptor = {0x00000000,
                                      0x00000000,
                                      0x00000000,
                                      0x00090000,
-                                     (u32)wctrexstatu_initialise,
-                                     (u32)wctrexstatu_release,
+                                     (ObjectDescriptorCallback)wctrexstatu_initialise,
+                                     (ObjectDescriptorCallback)wctrexstatu_release,
                                      0x00000000,
-                                     (u32)wctrexstatu_init,
-                                     (u32)wctrexstatu_update,
-                                     (u32)wctrexstatu_hitDetect,
-                                     (u32)wctrexstatu_render,
-                                     (u32)wctrexstatu_free,
-                                     (u32)wctrexstatu_getObjectTypeId,
-                                     (u32)wctrexstatu_getExtraSize};
+                                     (ObjectDescriptorCallback)wctrexstatu_init,
+                                     (ObjectDescriptorCallback)wctrexstatu_update,
+                                     (ObjectDescriptorCallback)wctrexstatu_hitDetect,
+                                     (ObjectDescriptorCallback)wctrexstatu_render,
+                                     (ObjectDescriptorCallback)wctrexstatu_free,
+                                     (ObjectDescriptorCallback)wctrexstatu_getObjectTypeId,
+                                     wctrexstatu_getExtraSize};
 ObjectDescriptor gSunTempleObjDescriptor = {0x00000000,
                                    0x00000000,
                                    0x00000000,
