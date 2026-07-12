@@ -32,7 +32,6 @@ extern s16 lbl_80329848[];
 extern u8 lbl_803DC183;
 extern u8 lbl_803DC182;
 extern s16 lbl_803DC180;
-extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern int dbstealerworm_stateHandlerB06();
 int dbstealerworm_stateHandlerB06(GameObject* obj, int p2);
@@ -94,7 +93,7 @@ void fn_80204098(GameObject* obj)
         if (mainGetBit(0x5e5) != 0)
         {
             state->timer = 300;
-            ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 0);
+            ObjMsg_SendToObject((void*)player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 0);
         }
     }
     if (mainGetBit(0x7a1) != 0)
@@ -155,7 +154,7 @@ void fn_80204320(GameObject* obj)
         if (mainGetBit(1509) != 0)
         {
             sub->timer = 300;
-            ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 1);
+            ObjMsg_SendToObject((void*)player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 1);
         }
     }
 }
