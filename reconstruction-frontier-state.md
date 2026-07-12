@@ -7758,3 +7758,36 @@ tree), gameloop (sibling brute-forcing mainSetBits decl-order in-tree — left u
   confirms r0-detour welded independent of hoist.
 - **trickyfollow trickyUpdateApproachSpeed 98.63% (T=C=246)**: #82 FP-perm (f3↔f4 throughout) + one
   local load-schedule swap around lbl_803E2420. Welded.
+
+## Jul12 type/prototype-recovery wave (Opus 4.8) — 3 WINS to 100% (all asm-free, clean-C type/narrow fixes)
+- **WIN dll_00F4_doorf4 DoorF4_SeqFn 99.93->100 (5181a7eab9)**: `ObjMsg_Peek` returns `u32` (shared
+  obj_message.h, Jack-hot — did NOT touch header), so `if(ObjMsg_Peek(...)!=0)` emitted `cmplwi`
+  (unsigned). Target wants `cmpwi` (signed). FIX: cast at call site `if((int)ObjMsg_Peek(...)!=0)`.
+  Only remaining diff = #70 named-vs-@N relocs (neutral). LEVER: u32-returning bool compared !=0 →
+  `(int)` cast flips the compare signed without touching the shared prototype.
+- **WIN dll_0120_trickyguardspot TrickyGuardSpot_update 99.44->100 (24c1d6b0f3)**: `state->resetTimer`
+  typed `s32`; `if(state->resetTimer!=0)` gave `cmpwi` but target uses `cmplwi` (unsigned). FIX: retype
+  field `u32` in dll_0120_trickyguardspot.h (struct is single-TU — verified only this .c uses
+  TrickyGuardSpotState; proximitymine's resetTimer is a DIFFERENT struct). LEVER: for `==0`/`!=0` the
+  compare width/sign tracks the FIELD type; flip field s32<->u32 to match cmpwi<->cmplwi.
+- **WIN dll_01B0_shswapston warpstone_update 99.66->100 (5b838b111e)**: `s16 yawDelta; yawDelta=Obj_Get
+  YawDeltaToObject(...); yawDelta=yawDelta-lbl_803DDBF0;` — the intermediate s16 store narrowed the int
+  return (spurious `extsh r3,r3`) BEFORE the subtract; target narrows ONCE on the difference. FIX: fold
+  to one expr `yawDelta = Obj_GetYawDeltaToObject(...) - lbl;` (int-int, narrow once). Behaviorally
+  identical (yaw already in s16 range). LEVER (narrow-once): an s16 local assigned an int call result
+  then immediately re-used in arithmetic assigned back to itself double-narrows; collapse to a single
+  expression so the extsh lands only on the final result.
+- **BANKED (welded, re-confirmed this wave)**: dbstealerworm_stateHandlerA0A 99.39 (`obj->anim.rotX +=
+  Obj_GetYawDeltaToObject()` spurious extsh on compound-assign store; `(s16)` cast MOVES extsh to RHS,
+  plain-assign inert; file already heavily pragma-tuned by prior owner) • gameloop removeButtonObject
+  98.09 (target needs BOTH displacement-folded unroll = peephole ON *and* unfused srwi = peephole OFF;
+  contradictory for one flag — fusion-vs-fold weld) • voxmaps_resetLoadedMaps 96.92 (r0-detour base
+  materialization `addi r3,r3,lo; mr r24,r3` vs target `addi r24,r3,lo`; comma-init reorder inert) •
+  main.c fn_801FD6B4 99.36 (target `frsp` = mathSinf treated DOUBLE-return, but math_api.h transitively
+  gives `float` proto; needs header surgery on core TU — left; `double wave` local gives 2 misplaced
+  frsps) • render fn_80007F78, objseq/lightmap/checkpoint near-misses, bossdrakor_update,
+  fn_80128A7C, drakorhoverpad = #108 within-class GPR reg-perm / #82 FP-perm (dominant residual).
+- SCAN METHOD (reusable): decode report proto → for 93-99.95% -O4,p fns, normalize objdump (strip
+  addrs, @N-fold relocs) and flag ASYMMETRIC cmpwi/cmplwi and exts counts. Pure-single-diff cmp-flips
+  and lone spurious-exts are the clean type wins; multi-line diffs = coloring welds. Only doorf4 &
+  trickyguardspot were pure cmp-flips in the whole band; warpstone was the lone clean exts.
