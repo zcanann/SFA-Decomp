@@ -7697,3 +7697,32 @@ Targeted the cold (non-Jack/non-sibling) near-miss band via a C>T instruction-co
 LESSON reaffirmed: the cold near-miss band is coloring(#108)/CSE-selectivity/r0-detour/#110 saturated.
 The base-CSE respell (fn_8015165C) is a NEW near-miss mechanism worth noting: fixing a broken base-CSE
 can be a wash when the shared base then flips a sibling access from indexed(lfsx) to displacement(lfs).
+
+## PRAGMA SWEEP Jul12 (full-opt -O4,p non-hot frontier) — 0 wins, frontier confirmed pragma-exhausted
+Enumerated ALL 38 near-miss (fz 88-99.9) fns in the 160 full-opt (-O4,p peephole-ON) units, minus
+model/player/dolphin and minus 40-commit-hot files; ranked by |C-T| instr delta (pragma-lever signature
+= MWCC over/under-optimized vs target). Every one triaged to a documented WELD:
+- **renderSceneGeometry (lightmap) 97.25%, d=+3**: C emits a redundant counted-loop entry guard
+  `li r0,0; cmpwi r0,256; bge` on the `for(k=0;k<256;k++)` clear loop, absent in target. `#pragma
+  opt_propagation on` (fn had propagation OFF) DID elide the guard → C 339->336 == T. But fuzzy stayed
+  EXACTLY 97.254 — the residual r7↔r9 volatile reg-perm dominates and objdiff re-aligned around the
+  removed guard (net wash). Reverted. LESSON: killing a length mismatch is fuzzy-neutral when a
+  whole-fn reg-perm is the real cap — measure fuzzy, not instr count.
+- **removeButtonObject (gameloop) 98.09%, d=-1**: C fused `srwi.` (rlwinm. dot-merge) where T has
+  `srwi`+`cmplwi`. `#pragma peephole off` DID unfuse it — but simultaneously undid the copy-loop's
+  displacement-fold (unrolled body went `lwz 8(r4)/stw 4(r4)` → `addi r4,4; lwz 4(r4); stw 0(r4)`),
+  C 59->67, net WORSE. The dot-merge and the unroll disp-fold are the SAME peephole pass = welded pair.
+- **gameTextInitFn_8001c794 (textrender) 93.66%, d=-2**: wholesale volatile reg-renumber (r12/r8/r10/r0
+  ↔ r11/r0/r9/r12) across the whole tile-copy; the only saved-reg part (r29/r31 for the 1/0 inits) is
+  decl-order-controllable (brute-force agent's lane, not pragma). #108.
+- **ObjAnim_AdvanceCurrentMove 98.84%**: FP-perm (f3↔f4/f2) + bias-double conversion-temp STACK-SLOT
+  alloc (T 36/32(r1) vs C 28/24(r1)) — #67d/#82 welded.
+- **gameTextLoadGraphicsFn_8001a918 98.53%, d=-1 / Effect3_func04 99.89%,d=+1 / gameTextInitFn_8001a234
+  99.67% / mtxRotateByVec3s 99.25% / screenRectFn_800d7568 99.16% / Minimap_update 98.97% (FP-perm+
+  branch) / gameTextBoxFn_80134d40 98.74% (r22↔r23) / WarpstoneUI_getMenuItems 98.49% (#110 shared-zero+
+  sched) / InvHit_update 99.84%**: all pure #108 reg-perm or #82 FP-perm at T==C±1, welded.
+LESSON: the pragma-winnable full-opt fns (last round: snowclaw_update, SB_Galleon, mapInstantiateObjects,
+objInterpretSeq) are HARVESTED. Remaining full-opt non-hot near-miss band is 100% coloring/FP-perm/
+conversion-slot/dot-merge-coupled — no per-fn opt_* toggle moves fuzzy. Reopen only on new team commits
+that add fresh full-opt fns, or work the HOT files once siblings idle (many were skipped as <30min-hot:
+expgfx, boneparticleeffect, babycloudrunner, tricky, object, snowclaw).
