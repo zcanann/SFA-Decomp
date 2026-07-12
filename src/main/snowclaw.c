@@ -568,6 +568,8 @@ void snowclaw_update(GameObject* obj)
     u32* pulseTable;
     u32 pulseTypes[4];
     u32 pulseModes[4];
+    u32* pulseType;
+    u32* pulseMode;
     f32 pulseVec[3];
     SnowClawAnimTbl dropTable;
     SnowClawPulse4* pulseSrc;
@@ -690,8 +692,9 @@ void snowclaw_update(GameObject* obj)
             pulseVec[0] = lbl_803E66F0;
             pulseVec[1] = lbl_803DC21C;
             pulseVec[2] = lbl_803E66F0;
-            fn_80098B18Legacy(obj, lbl_803DC218, (u8)pulseTypes[pulseIndex], (u8)pulseModes[pulseIndex], 0,
-                              pulseVec);
+            pulseType = &pulseTypes[pulseIndex];
+            pulseMode = &pulseModes[pulseIndex];
+            fn_80098B18Legacy(obj, lbl_803DC218, (u8)*pulseType, (u8)*pulseMode, 0, pulseVec);
         }
     }
 }
