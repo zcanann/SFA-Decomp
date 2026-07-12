@@ -14,10 +14,12 @@ typedef struct ChukaState
     u8 pad0A[2];
 } ChukaState;
 
+typedef struct ChukaPlacement ChukaPlacement;
+
 STATIC_ASSERT(offsetof(ChukaState, linkedObject) == 0x4);
 STATIC_ASSERT(sizeof(ChukaState) == 0xC);
 
-void chuka_init(GameObject* obj, int params);
+void chuka_init(GameObject* obj, ChukaPlacement* params);
 int chuka_SeqFn(void);
 void DFP_Floorbar_free(int* obj);
 void chuka_release(void);

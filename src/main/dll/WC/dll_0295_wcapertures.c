@@ -11,13 +11,22 @@
  * The ARM mode is also raised by interactCallback. Camera/player/partfx
  * numeric meanings are inferred.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "main/camera_interface.h"
+#include "main/camera.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/model_light.h"
+#include "main/objanim_update.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
 #include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
+
+#pragma dont_inline on
 
 #define WCAPERTURES_EXTRA_SIZE        8
 #define WCAPERTURES_RENDER_TYPE_BASE  0x400
