@@ -70,6 +70,7 @@ typedef struct AndrossChildSetup
 extern int animatedObjGetSeqId(int obj);
 extern void turnOnDistortionFilter(f32* pos, f32 a, u32* color, f32 c);
 
+#pragma dont_inline on
 void fn_80239DD8(GameObject* obj, AndrossState* state)
 {
     f32 maxDist;
@@ -98,6 +99,7 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
         }
     }
 }
+#pragma dont_inline reset
 
 void fn_80239EAC(GameObject* obj, AndrossState* state)
 {
