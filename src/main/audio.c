@@ -2212,8 +2212,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     extern char sAdpExtension;
     char path[64];
     u8 vol;
-    register u8* dvdTemp;
-    register u8* dvd;
+    u8* dvd;
     int* fadeTbl;
     StreamEntry* s;
     int count;
@@ -2221,10 +2220,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     int i;
     u8 stopped;
 
-    asm {
-        lis dvdTemp, gAudioStreamDvdBlockCurrent@ha
-        addi dvd, dvdTemp, gAudioStreamDvdBlockCurrent@l
-    }
+    dvd = (u8*)&gAudioStreamDvdBlockCurrent;
     fadeTbl = gAudioStreamFadeTable;
     s = gStreamsData;
     count = gStreamsCount;

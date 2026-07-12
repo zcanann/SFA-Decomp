@@ -484,15 +484,12 @@ void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8
     p->specularFadeTargetColor[3] = a;
 }
 
-void modelLightStruct_setDiffuseTargetColor(register ModelLightStruct* p, register int r, register int g, register int b,
-                                            register int a)
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, int r, int g, int b, int a)
 {
-    asm {
-        stb r, 0xb0(p)
-        stb g, 0xb1(p)
-        stb b, 0xb2(p)
-        stb a, 0xb3(p)
-    }
+    p->diffuseFadeTargetColor[0] = r;
+    p->diffuseFadeTargetColor[1] = g;
+    p->diffuseFadeTargetColor[2] = b;
+    p->diffuseFadeTargetColor[3] = a;
 }
 
 void modelLightStruct_getPosition(ModelLightStruct* p, f32* x, f32* y, f32* z)
@@ -706,7 +703,7 @@ void modelLightStruct_setupGlow(ModelLightStruct* light, u32 textureId, u8 red, 
     light->glowProjectionRadius = lbl_803DE788 * light->glowScale;
 }
 
-void modelLightStruct_setEnabled(register ModelLightStruct* light, register int enabled, f32 duration)
+void modelLightStruct_setEnabled(ModelLightStruct* light, int enabled, f32 duration)
 {
     f32 zero;
 
@@ -723,9 +720,7 @@ void modelLightStruct_setEnabled(register ModelLightStruct* light, register int 
             light->activeState = 0;
             light->activeIntensity = zero;
         }
-        asm {
-            stb enabled, 0x4c(light)
-        }
+        light->enabled = enabled;
         return;
     }
 
