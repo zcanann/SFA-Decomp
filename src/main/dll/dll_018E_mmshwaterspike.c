@@ -6,6 +6,7 @@
  * defined ceiling (maxHeight) and spawns a waterfx ripple when it surfaces.
  */
 #include "main/effect_interfaces.h"
+#include "main/debug.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -21,7 +22,6 @@ extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
 
-extern void logPrintf(char* fmt, ...);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 
 int mmsh_waterspike_getExtraSize(void)

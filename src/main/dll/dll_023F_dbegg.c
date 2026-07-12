@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/debug.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
 #include "main/lightmap_api.h"
@@ -633,7 +634,6 @@ void dbegg_update(GameObject* obj)
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern f32 Vec_xzDistance(int, int);
     extern f32 PSVECMag(int);
-    extern void logPrintf(char* fmt, ...);
     extern void ObjHits_EnableObject(int);
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];

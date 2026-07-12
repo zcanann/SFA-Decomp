@@ -128,7 +128,6 @@ extern int hightop_stateHandler10();
 extern void ObjGroup_AddObject(int obj, int group);
 extern int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern char sDrCreatorTimeFormat[];
-extern void logPrintf(char* fmt, ...);
 extern const f32 lbl_803E69A8;
 extern void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int b);
 extern f32 lbl_803E68B8;

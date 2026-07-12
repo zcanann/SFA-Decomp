@@ -8,6 +8,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/debug.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"

@@ -22,6 +22,7 @@
  *     readout (dll_3F_updateTimerReadout).
  */
 #include "main/texture.h"
+#include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"

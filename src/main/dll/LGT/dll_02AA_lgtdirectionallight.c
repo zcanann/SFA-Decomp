@@ -15,6 +15,7 @@
  * text helper logPrintf.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/debug.h"
 #include "main/sky_state.h"
 #include "main/game_object.h"
 #include "dolphin/pad.h"
@@ -87,8 +88,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             obj->anim.rotX += 0x3e8;
         }
-        logPrintf(desc + 0x38);
-        logPrintf(desc + 0x44, obj->anim.rotX);
+    logPrintf((char*)(desc + 0x38));
+        logPrintf((char*)(desc + 0x44), obj->anim.rotX);
         break;
     case 1:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -99,8 +100,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             obj->anim.rotY += 0x3e8;
         }
-        logPrintf(desc + 0x50);
-        logPrintf(desc + 0x44, obj->anim.rotY);
+        logPrintf((char*)(desc + 0x50));
+        logPrintf((char*)(desc + 0x44), obj->anim.rotY);
         break;
     case 2:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -111,8 +112,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             state->diffuseR += 5;
         }
-        logPrintf(desc + 0x60);
-        logPrintf(desc + 0x7c, state->diffuseR);
+        logPrintf((char*)(desc + 0x60));
+        logPrintf((char*)(desc + 0x7c), state->diffuseR);
         break;
     case 3:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -123,8 +124,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             state->diffuseG += 5;
         }
-        logPrintf(desc + 0x88);
-        logPrintf(desc + 0x7c, state->diffuseG);
+        logPrintf((char*)(desc + 0x88));
+        logPrintf((char*)(desc + 0x7c), state->diffuseG);
         break;
     case 4:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -135,8 +136,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             state->diffuseB += 5;
         }
-        logPrintf(desc + 0xa4);
-        logPrintf(desc + 0x7c, state->diffuseB);
+        logPrintf((char*)(desc + 0xa4));
+        logPrintf((char*)(desc + 0x7c), state->diffuseB);
         break;
     case 5:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -147,8 +148,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             state->targetR += 5;
         }
-        logPrintf(desc + 0xc0);
-        logPrintf(desc + 0x7c, state->targetR);
+        logPrintf((char*)(desc + 0xc0));
+        logPrintf((char*)(desc + 0x7c), state->targetR);
         break;
     case 6:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -159,8 +160,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             state->targetG += 5;
         }
-        logPrintf(desc + 0xdc);
-        logPrintf(desc + 0x7c, state->targetG);
+        logPrintf((char*)(desc + 0xdc));
+        logPrintf((char*)(desc + 0x7c), state->targetG);
         break;
     case 7:
         if ((buttons & PAD_BUTTON_LEFT) != 0)
@@ -171,8 +172,8 @@ void directionallight_debugEdit(GameObject* obj, int statePtr)
         {
             state->targetB += 5;
         }
-        logPrintf(desc + 0xfc);
-        logPrintf(desc + 0x7c, state->targetB);
+        logPrintf((char*)(desc + 0xfc));
+        logPrintf((char*)(desc + 0x7c), state->targetB);
         break;
     }
 }

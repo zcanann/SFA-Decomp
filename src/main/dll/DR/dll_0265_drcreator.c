@@ -7,6 +7,7 @@
  * (DR_Creator_SeqFn).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/debug.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/dll/DR/dll_0265_drcreator.h"

@@ -16,6 +16,7 @@
  * external area_* callbacks.
  */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -60,7 +61,6 @@ extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void logPrintf(char* fmt, ...);
 extern const f32 gSidekickBallRestitution;
 extern const f32 lbl_803E36B4;
 extern const f32 gSidekickBallFloorDamping;

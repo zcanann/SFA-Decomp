@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/debug.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
@@ -190,7 +191,6 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
-extern void logPrintf(char* fmt, ...);
 extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;

@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/debug.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
@@ -3086,7 +3087,6 @@ extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
 extern int lbl_803DCE74;
 extern char sTrackCellCoordFormat[];
-extern void logPrintf(char* fmt, ...);
 extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 
 #pragma optimization_level 2

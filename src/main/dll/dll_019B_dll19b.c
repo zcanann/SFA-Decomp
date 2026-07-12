@@ -1,5 +1,6 @@
 /* DLL 0x019B - torch / fire-effect objects [801CBA98-801CBD88) */
 #include "main/dll/torch1CD.h"
+#include "main/debug.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
@@ -27,7 +28,6 @@ extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void playerCancelSpell(int obj, int a);
-extern void logPrintf(char* fmt, ...);
 char sShrineTimeFormat[] = "time %d\n";
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;

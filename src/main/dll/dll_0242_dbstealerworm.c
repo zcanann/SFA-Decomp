@@ -25,6 +25,7 @@
  *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/objanim.h"
+#include "main/debug.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dfptorchstate_struct.h"
@@ -2381,7 +2382,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 {
-    extern void logPrintf(char* fmt, ...);
     extern int Obj_GetPlayerObject(void);
     extern int* ObjGroup_GetObjects(int, int*);
     extern f32 Vec_xzDistance(int, int);

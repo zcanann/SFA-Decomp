@@ -19,6 +19,7 @@
  * game bit.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/debug.h"
 #include "main/dll/moveLib.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"

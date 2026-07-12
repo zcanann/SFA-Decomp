@@ -45,7 +45,6 @@
 #include "main/screen_transition.h"
 #include "main/frame_timing.h"
 #include "main/curve.h"
-extern void logPrintf(void* fmt, ...);
 extern int* gPlayerInterface;
 
 /* Preserve the effective compiler state of the imported header. */

@@ -18,6 +18,7 @@
  * (interpolation rates, clamp limits, FOV span); lbl_803E17C4 is 0.0f.
  */
 #include "main/audio/sfx.h"
+#include "main/debug.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/viewfinder_state.h"
@@ -57,7 +58,6 @@ extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void viewFinderSetZoom(f32 fov);
 
 extern void firstPersonZoomOutOnExit(int a, int b);
-extern void logPrintf(char* fmt, ...);
 extern char sCam5BYDebugFormat;
 extern void* memset(void* dst, int v, int n);
 extern ViewfinderState* lbl_803DD548;

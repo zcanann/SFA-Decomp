@@ -13,6 +13,7 @@
  * timeout table and cached-module count.
  */
 #include "main/dll/partfxspawn_struct.h"
+#include "main/debug.h"
 #include "main/dll/mtxbuildarg_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -25,7 +26,6 @@
 
 extern u8 lbl_80380209[];
 extern char sModgfxAlphaDebugFormat[];
-extern void logPrintf(char* fmt, ...);
 
 f32 gPartfxSpawnAnimPhase0 = 0.1f;
 f32 gPartfxSpawnAnimPhase1 = 0.3f;

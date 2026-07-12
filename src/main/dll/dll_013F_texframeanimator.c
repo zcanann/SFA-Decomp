@@ -1,5 +1,6 @@
 /* DLL 0x13F - TexFrameAnimator [801948C0-80195008) */
 #include "main/game_object.h"
+#include "main/debug.h"
 #include "main/lightmap_api.h"
 #include "main/map_block.h"
 #include "main/gamebits.h"
@@ -68,7 +69,6 @@ extern u8 sfxplayerObj_update[];
 
 extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
-extern void logPrintf(char* fmt, ...);
 
 char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
 

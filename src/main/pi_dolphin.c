@@ -6103,7 +6103,6 @@ void fn_8004CE0C(void* viewMtx)
 
 extern void printHeapStats(int a);
 extern void defragMemory(int mode);
-extern void logPrintf(char* fmt, ...);
 extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;

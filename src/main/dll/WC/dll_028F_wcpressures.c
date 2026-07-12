@@ -13,6 +13,7 @@
  * object and clears solvedBit.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/debug.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
 #include "main/dll/WC/dll_0292_wctrexstatu.h"

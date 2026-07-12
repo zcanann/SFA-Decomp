@@ -10,6 +10,7 @@
  * GameBit 0x2bd when the placement's map-act is 4.
  */
 #include "main/dll/dll200state_struct.h"
+#include "main/debug.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"

@@ -405,7 +405,6 @@ extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 void fn_802BF4D8(GameObject* obj);
 
-extern void logPrintf(const char* fmt, ...);
 extern char sOnCloudFormat[];
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;

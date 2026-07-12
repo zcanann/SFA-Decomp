@@ -416,7 +416,6 @@ extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern u8* mapGetBlockIdx(int layer);
 extern int getHudHiddenFrameCount(void);
-extern void logPrintf(char* fmt, ...);
 
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);

@@ -20,6 +20,7 @@
  * defined by FXEMIT_DEF_ID 0x5A7.
  */
 #include "main/dll/CF/dll_012B_fxemit.h"
+#include "main/debug.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
