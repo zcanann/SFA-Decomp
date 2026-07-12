@@ -23,6 +23,7 @@
  * an object onto the route and select the active checkpoint segment.
  */
 #include "main/checkpoint_route.h"
+#include "main/curve.h"
 #include "main/gameplay_runtime.h"
 
 CheckpointSlot gCheckpointRouteTable[0x640 / sizeof(CheckpointSlot)];
@@ -377,7 +378,6 @@ int Checkpoint_func09_ret_1(void)
 
 extern f32 lbl_803E0504; /* used by Checkpoint_func08/07/06 */
 extern f32 lbl_803E0508; /* used by Checkpoint_func08 */
-extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
 
 /* Object cursor written back by Checkpoint_func08: the sampled heading/pitch
  * angles at the front and the interpolated world position (x/y/z) mid-block. */
@@ -474,9 +474,9 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
             t = kMax;
             clamp = 1;
         }
-        x = Curve_EvalHermite(v1, t, &outX);
-        y = Curve_EvalHermite(v2, t, &outY);
-        z = Curve_EvalHermite(v3, t, &outZ);
+        x = Curve_EvalHermiteValuesFirst(v1, t, &outX);
+        y = Curve_EvalHermiteValuesFirst(v2, t, &outY);
+        z = Curve_EvalHermiteValuesFirst(v3, t, &outZ);
         ang1 = getAngle(outX, outZ) + 0x8000;
         if (flag != 0)
         {

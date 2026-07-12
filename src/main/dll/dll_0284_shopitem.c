@@ -18,6 +18,7 @@
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/dll/tricky.h"
@@ -106,7 +107,6 @@ extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
 
 extern void objRenderFn_80041018(int obj);
-extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void* p);
@@ -275,9 +275,9 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
         }
     }
         {
-            (obj)->anim.localPosX = Curve_EvalBSpline(sub + 4, ((ShopItemState*)sub)->splineT, 0);
-            (obj)->anim.localPosY = Curve_EvalBSpline(sub + 0x14, ((ShopItemState*)sub)->splineT, 0);
-            (obj)->anim.localPosZ = Curve_EvalBSpline(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(sub + 4, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(sub + 0x14, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
             ((ShopItemState*)sub)->splineT =
                 ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->splineT;
             (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
@@ -428,9 +428,9 @@ void shopitem_update(GameObject* obj)
                     }
                     fn_801F4ECC((int)obj, state);
                 }
-                (obj)->anim.localPosX = Curve_EvalBSpline(state + 4, ((ShopItemState*)state)->splineT, 0);
-                (obj)->anim.localPosY = Curve_EvalBSpline(state + 0x14, ((ShopItemState*)state)->splineT, 0);
-                (obj)->anim.localPosZ = Curve_EvalBSpline(state + 0x24, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(state + 4, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(state + 0x14, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(state + 0x24, ((ShopItemState*)state)->splineT, 0);
                 ((ShopItemState*)state)->splineT =
                     ((ShopItemState*)state)->splineSpeed * timeDelta + ((ShopItemState*)state)->splineT;
                 (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,

@@ -5,6 +5,7 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
 #include "main/camera.h"
+#include "main/curve.h"
 #include "main/effect_interfaces.h"
 #include "main/newclouds.h"
 #include "main/sky_interface.h"
@@ -195,33 +196,6 @@ typedef struct SfxTriggerCacheEntry {
     u16 key;
     u16 index;
 } SfxTriggerCacheEntry;
-#ifndef MAIN_CURVE_TYPES_DEFINED
-#define MAIN_CURVE_TYPES_DEFINED
-typedef f32 (*CurveEvalFn)(f32 t, f32 *values, f32 *outTangent);
-typedef void (*CurveCoeffFn)(f32 *values, f32 *coeffs);
-typedef struct Curve {
-    f32 t;
-    f32 segmentDistance;
-    f32 pathDistance;
-    f32 pathLength;
-    int idx;
-    f32 totalLen;
-    f32 segLen[20];
-    f32 sample[3];
-    f32 tangent[3];
-    int dir;
-    f32 *px;
-    f32 *py;
-    f32 *pz;
-    int count;
-    CurveEvalFn eval;
-    CurveCoeffFn coeffFn;
-} Curve;
-#endif /* MAIN_CURVE_TYPES_DEFINED */
-typedef struct CurveHeapNode {
-    u16 priority;
-    u16 value;
-} CurveHeapNode;
 typedef struct RingBufferQueue {
     s16 count;
     s16 capacity;
@@ -627,7 +601,6 @@ extern f32 lbl_803DE5B4;
 extern f32 lbl_803DE5B8;
 extern double lbl_803DE5C0;
 extern double lbl_803DE5C8;
-extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf));
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE658;
 extern f32 lbl_803DE674;
@@ -638,13 +611,9 @@ extern f32 lbl_803DE680;
 extern f32 gCurveForwardDiffStep;
 extern int gCurveCachedSampleCount;
 extern f32 gCurveForwardDiffCoeffs[];
-extern f32 Curve_EvalBezier(f32 t, f32 *values, f32 *outTangent);
-extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
 extern void debugPrintf(char *message, ...);
 extern char sCurvesSetupMoveNetworkCurveTooFewControlPoints[];
 extern char sCurvesSetupMoveNetworkCurveBadControlPointCount[];
-int Curve_AdvanceAlongPath(Curve *curve, f32 dt);
-void Curve_BuildSegmentLengthTable(Curve *curve, int count);
 extern char sCurvesMoveTooFewControlPoints[];
 extern char sCurvesMoveBadControlPointCount[];
 extern u8 gDvdErrorPauseActive;
@@ -1017,8 +986,6 @@ s32 Angle_SubWrappedS16(s32 angle, s16 *delta);
 void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex);
 void Obj_BuildTransformMatrices(u32 obj);
 s32 Obj_BuildTransformMatrixSlot(u32 obj);
-void curvesSetupMoveNetworkCurve(Curve *curve);
-void curvesMove(Curve *curve);
 int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f);
 int return0xFFFF_80008B6C(void);
 int return0x64_8000A378(void);
@@ -1043,14 +1010,6 @@ void fn_8000F8F8(void);
 void fn_8000F9B4(void);
 u16 fn_8000FA70(void);
 u16 fn_8000FA90(void);
-f32 Curve_EvalLinear(f32 t, f32* values);
-f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent);
-f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent);
-void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients);
-f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
-void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients);
-f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent);
-void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index);
 s16 Queue_GetCount(RingBufferQueue* queue);
 BOOL Queue_IsEmpty(RingBufferQueue* queue);
 void Queue_Peek(RingBufferQueue* queue, void* dst);

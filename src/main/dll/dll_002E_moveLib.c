@@ -19,6 +19,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/object_descriptor.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/curve_walker.h"
@@ -132,7 +133,6 @@ extern void n_rareware_initialise(void);
 
 extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
-extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(s16* angles, f32* vec);
 extern int getAngle(float y, float x);
@@ -169,21 +169,21 @@ f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int 
         buf[1] = *(f32*)(startTangent + 0);
         buf[2] = *(f32*)(endPos + 0);
         buf[3] = *(f32*)(endTangent + 0);
-        cur_x = Curve_EvalHermite(buf, t, 0);
+        cur_x = Curve_EvalHermiteValuesFirst(buf, t, 0);
         dx = cur_x - prev_x;
 
         buf[0] = *(f32*)(startPos + 4);
         buf[1] = *(f32*)(startTangent + 4);
         buf[2] = *(f32*)(endPos + 4);
         buf[3] = *(f32*)(endTangent + 4);
-        cur_y = Curve_EvalHermite(buf, t, 0);
+        cur_y = Curve_EvalHermiteValuesFirst(buf, t, 0);
         dy = cur_y - prev_y;
 
         buf[0] = *(f32*)(startPos + 8);
         buf[1] = *(f32*)(startTangent + 8);
         buf[2] = *(f32*)(endPos + 8);
         buf[3] = *(f32*)(endTangent + 8);
-        cur_z = Curve_EvalHermite(buf, t, 0);
+        cur_z = Curve_EvalHermiteValuesFirst(buf, t, 0);
         dz = cur_z - prev_z;
 
         total += sqrtf(dx * dx + dy * dy + dz * dz);
@@ -239,17 +239,17 @@ int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
         buf[1] = *(f32*)(state + 0x0c);
         buf[2] = ((BaddieState*)state)->posY;
         buf[3] = *(f32*)(state + 0x24);
-        (obj)->anim.localPosX = Curve_EvalHermite(buf, *(f32*)phaseOut, 0);
+        (obj)->anim.localPosX = Curve_EvalHermiteValuesFirst(buf, *(f32*)phaseOut, 0);
         buf[0] = *(f32*)(state + 0x04);
         buf[1] = *(f32*)(state + 0x10);
         buf[2] = ((BaddieState*)state)->posZ;
         buf[3] = *(f32*)(state + 0x28);
-        (obj)->anim.localPosY = Curve_EvalHermite(buf, *(f32*)phaseOut, 0);
+        (obj)->anim.localPosY = Curve_EvalHermiteValuesFirst(buf, *(f32*)phaseOut, 0);
         buf[0] = *(f32*)(state + 0x08);
         buf[1] = ((BaddieState*)state)->posX;
         buf[2] = *(f32*)(state + 0x20);
         buf[3] = *(f32*)(state + 0x2c);
-        (obj)->anim.localPosZ = Curve_EvalHermite(buf, *(f32*)phaseOut, 0);
+        (obj)->anim.localPosZ = Curve_EvalHermiteValuesFirst(buf, *(f32*)phaseOut, 0);
     }
     return ret;
 }

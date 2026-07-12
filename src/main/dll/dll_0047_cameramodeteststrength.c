@@ -1,5 +1,6 @@
 /* DLL 0x47 - CameraModeTestStrength [8010AEA8-8010B424) */
 #include "main/camera_interface.h"
+#include "main/curve.h"
 #include "main/dll/CAM/camcannon_state.h"
 #include "main/camera_object.h"
 #include "main/dll/rom_curve_interface.h"
@@ -9,8 +10,6 @@
 #include "main/pad.h"
 #include "main/dll/CAM/dll_5B.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern f32 Curve_EvalLinear(float* values, f32 t, float* outTangent);
-extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMTESTSTRENGTH_CAMMODE_DEFAULT 0x42
@@ -25,8 +24,6 @@ extern f32 lbl_803E18AC;
 extern f32 lbl_803E18B0;
 extern f32 lbl_803E18B4;
 extern f32 lbl_803E18B8;
-extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
-extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
 extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
@@ -76,10 +73,10 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         t = lbl_803E188C;
     }
-    camera->anim.localPosX = Curve_EvalLinear(&lbl_803DD560->posXStart, t, 0x0);
-    camera->anim.localPosY = Curve_EvalLinear(&lbl_803DD560->posYStart, t, 0x0);
-    camera->anim.localPosZ = Curve_EvalLinear(&lbl_803DD560->posZStart, t, 0x0);
-    camera->fov = Curve_EvalLinear(&lbl_803DD560->fovStart, t, 0x0);
+    camera->anim.localPosX = Curve_EvalLinearValuesFirst(&lbl_803DD560->posXStart, t, NULL);
+    camera->anim.localPosY = Curve_EvalLinearValuesFirst(&lbl_803DD560->posYStart, t, NULL);
+    camera->anim.localPosZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->posZStart, t, NULL);
+    camera->fov = Curve_EvalLinearValuesFirst(&lbl_803DD560->fovStart, t, NULL);
 
     if (((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) > lbl_803E1890) ||
         ((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) < lbl_803E1894))
@@ -121,15 +118,15 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     flags = flagsIn;
     if ((flags & 1) == 0)
     {
-        *(s16*)&camera->anim.rotX = Curve_EvalLinear(&lbl_803DD560->rotXStart, t, 0x0);
+        *(s16*)&camera->anim.rotX = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotXStart, t, NULL);
     }
     if ((flags & 2) == 0)
     {
-        *(s16*)&camera->anim.rotY = Curve_EvalLinear(&lbl_803DD560->rotYStart, t, 0x0);
+        *(s16*)&camera->anim.rotY = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotYStart, t, NULL);
     }
     if ((flags & 4) == 0)
     {
-        *(s16*)&camera->anim.rotZ = Curve_EvalLinear(&lbl_803DD560->rotZStart, t, 0x0);
+        *(s16*)&camera->anim.rotZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotZStart, t, NULL);
     }
     return t >= lbl_803E188C;
 }
@@ -274,27 +271,27 @@ void CameraModeTestStrength_update(short* cam)
         }
         t = lbl_803E18BC * (param - lbl_803DD560->pathProgress) + lbl_803DD560->pathProgress;
         lbl_803DD560->pathProgress = t;
-        ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, 0);
-        ((CameraObject*)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, 0);
-        ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, 0);
+        ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSplineValuesFirst(x, t, 0);
+        ((CameraObject*)cam)->anim.worldPosY = Curve_EvalBSplineValuesFirst(y, t, 0);
+        ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSplineValuesFirst(z, t, 0);
         node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
         flags = *(u8*)(node2 + 0x3b);
         lockPitch = flags & 1;
         if (lockPitch == 0)
         {
-            *cam = (int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000;
+            *cam = (int)Curve_EvalCatmullRomValuesFirst(pitchS, t, 0) + 0x8000;
         }
         lockYaw = flags & 2;
         if (lockYaw == 0)
         {
-            cam[1] = Curve_EvalCatmullRom(yawS, t, 0);
+            cam[1] = Curve_EvalCatmullRomValuesFirst(yawS, t, 0);
         }
         lockRoll = flags & 4;
         if (lockRoll == 0)
         {
-            cam[2] = Curve_EvalCatmullRom(rollS, t, 0);
+            cam[2] = Curve_EvalCatmullRomValuesFirst(rollS, t, 0);
         }
-        ((CameraObject*)cam)->fov = Curve_EvalBSpline(fov, t, 0);
+        ((CameraObject*)cam)->fov = Curve_EvalBSplineValuesFirst(fov, t, 0);
         if (lbl_803DD560->transitionComplete == 0 && fn_8010AEA8(cam, flags) != 0)
         {
             lbl_803DD560->transitionComplete = 1;
@@ -310,7 +307,7 @@ void CameraModeTestStrength_update(short* cam)
         {
             int delta;
             yaw = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
-            delta = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0)) - (f32)(cam[1] & 0xffff));
+            delta = (int)(((f32)yaw - Curve_EvalCatmullRomValuesFirst(yawS, t, 0)) - (f32)(cam[1] & 0xffff));
             if (delta > 0x8000)
             {
                 delta -= 0xffff;
@@ -417,9 +414,9 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     {
         t = lbl_803E188C;
     }
-    px = Curve_EvalBSpline(xS, t, 0);
-    py = Curve_EvalBSpline(yS, t, 0);
-    pz = Curve_EvalBSpline(zS, t, 0);
+    px = Curve_EvalBSplineValuesFirst(xS, t, 0);
+    py = Curve_EvalBSplineValuesFirst(yS, t, 0);
+    pz = Curve_EvalBSplineValuesFirst(zS, t, 0);
     dx = px - ((GameObject*)obj)->anim.worldPosX;
     dy = py - ((GameObject*)obj)->anim.worldPosY;
     dz = pz - ((GameObject*)obj)->anim.worldPosZ;
@@ -429,7 +426,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     else
     {
-        pitch = (s16)((int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000);
+        pitch = (s16)((int)Curve_EvalCatmullRomValuesFirst(pitchS, t, 0) + 0x8000);
     }
     if ((*(u8*)(romNode + 0x3b) & 4) != 0)
     {
@@ -437,18 +434,18 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     else
     {
-        roll = Curve_EvalCatmullRom(rollS, t, 0);
+        roll = Curve_EvalCatmullRomValuesFirst(rollS, t, 0);
     }
     if ((*(u8*)(romNode + 0x3b) & 2) != 0)
     {
         yaw = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
-        yaw = (f32)yaw - Curve_EvalCatmullRom(yawS, t, 0);
+        yaw = (f32)yaw - Curve_EvalCatmullRomValuesFirst(yawS, t, 0);
     }
     else
     {
-        yaw = Curve_EvalCatmullRom(yawS, t, 0);
+        yaw = Curve_EvalCatmullRomValuesFirst(yawS, t, 0);
     }
-    fov = Curve_EvalBSpline(fovS, t, 0);
+    fov = Curve_EvalBSplineValuesFirst(fovS, t, 0);
     pos[0] = px;
     pos[1] = py;
     pos[2] = pz;

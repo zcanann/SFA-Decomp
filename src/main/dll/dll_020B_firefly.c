@@ -15,6 +15,7 @@
  * briefly and frees itself 180 frames later.
  */
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -132,9 +133,9 @@ void FireFlyFn_801f4f88(GameObject* obj)
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
     }
-    (obj)->anim.localPosX = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineX, state->splineT, 0);
-    (obj)->anim.localPosY = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineY, state->splineT, 0);
-    (obj)->anim.localPosZ = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(state->splineZ, state->splineT, 0);
+    (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(state->splineX, state->splineT, 0);
+    (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(state->splineY, state->splineT, 0);
+    (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(state->splineZ, state->splineT, 0);
     state->splineT = state->splineSpeed * timeDelta + state->splineT;
     (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
                                 (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);

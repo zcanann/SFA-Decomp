@@ -26,6 +26,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
@@ -119,8 +120,6 @@ extern f32 sqrtf(f32 x);
 extern u32 countLeadingZeros();
 extern void voxmaps_worldToGrid(f32* in, s16* out);
 extern int voxmaps_traceLine(s16* start, s16* end, void* coordOut, u8* occOut, int skipFirst);
-extern void Curve_BuildHermiteCoeffs(void);
-extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
 extern f32 vec3f_distanceSquared(f32* posA, f32* posB);

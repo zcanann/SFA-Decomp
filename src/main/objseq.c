@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
+#include "main/curve.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
@@ -143,10 +144,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
-extern void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count,
-                                      void (*evalFn)(f32* values, f32* coefficients));
-extern void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients);
-extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
 extern f32 lbl_803DF008;
@@ -4966,13 +4963,12 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
         zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         {
-            extern f32 Curve_EvalHermite(f32 * values, f32 t, f32 * outTangent);
-            outPos[0] = Curve_EvalHermite(xPoints, segmentT, &xTangent);
+            outPos[0] = Curve_EvalHermiteValuesFirst(xPoints, segmentT, &xTangent);
             if ((s8)ignoreY == 0)
             {
-                outPos[1] = Curve_EvalHermite(yPoints, segmentT, &yTangent);
+                outPos[1] = Curve_EvalHermiteValuesFirst(yPoints, segmentT, &yTangent);
             }
-            outPos[2] = Curve_EvalHermite(zPoints, segmentT, &zTangent);
+            outPos[2] = Curve_EvalHermiteValuesFirst(zPoints, segmentT, &zTangent);
         }
 
         length = sqrtf(xTangent * xTangent + zTangent * zTangent);

@@ -4,6 +4,7 @@
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
@@ -192,7 +193,6 @@ extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int max
 extern void modelLightStruct_getWorldPosition(u8* p, f32* a, f32* b, f32* c);
 extern void* textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
-extern f32 Curve_EvalLinear(f32* curve, f32 t, int mode);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern f32 Camera_GetFarPlane(void);
 extern void Camera_SetFarPlane(f32 dist, int mode);
@@ -200,7 +200,6 @@ extern void Camera_RebuildProjectionMatrix(void);
 extern void vecRotateZXY(void* rot, f32* vec);
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
-extern f32 Curve_EvalCatmullRom(u8* curve, f32 t, int mode);
 extern void PSVECNormalize(void* src, void* dst);
 extern void padUpdate(void);
 extern void checkReset(void);
@@ -1521,11 +1520,11 @@ void sky2_run(void)
                     u = (t - lbl_803DF174) / step;
                     k = 7;
                 }
-                r = Curve_EvalCatmullRom(*pp + (off1 = k * 4) + 0x70, u, 0);
-                g = Curve_EvalCatmullRom(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
-                b = Curve_EvalCatmullRom(*pp + (k + 0x16) * 4 + 0x70, u, 0);
-                sa = Curve_EvalCatmullRom(*pp + off1 + 0x1fc, u, 0);
-                sb = Curve_EvalCatmullRom(*pp + off2 + 0x1fc, u, 0);
+                r = Curve_EvalCatmullRomValuesFirst(*pp + (off1 = k * 4) + 0x70, u, 0);
+                g = Curve_EvalCatmullRomValuesFirst(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
+                b = Curve_EvalCatmullRomValuesFirst(*pp + (k + 0x16) * 4 + 0x70, u, 0);
+                sa = Curve_EvalCatmullRomValuesFirst(*pp + off1 + 0x1fc, u, 0);
+                sb = Curve_EvalCatmullRomValuesFirst(*pp + off2 + 0x1fc, u, 0);
             }
             else
             {
@@ -2618,13 +2617,13 @@ void skyFn_8008a04c(void)
             }
             else
             {
-                cA = (u8)Curve_EvalLinear(pA, frac, 0);
-                cB = Curve_EvalLinear(pB, frac, 0);
-                cC = Curve_EvalLinear(pC, frac, 0);
+                cA = (u8)Curve_EvalLinearValuesFirst(pA, frac, 0);
+                cB = Curve_EvalLinearValuesFirst(pB, frac, 0);
+                cC = Curve_EvalLinearValuesFirst(pC, frac, 0);
             }
-            rawR = Curve_EvalCatmullRom(gSkyState + iofs + part4 + 0x20, frac, 0);
-            rawG = Curve_EvalCatmullRom(gSkyState + iofs + idx7 + 0x20, frac, 0);
-            blue = Curve_EvalCatmullRom(gSkyState + iofs + idx14 + 0x20, frac, 0);
+            rawR = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + part4 + 0x20, frac, 0);
+            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + idx7 + 0x20, frac, 0);
+            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + idx14 + 0x20, frac, 0);
             p = gSkyState + iofs;
             blend = *(f32*)&((GameObject*)p)->extra;
             if (blend != zero)

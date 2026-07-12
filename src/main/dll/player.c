@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
@@ -7227,7 +7228,6 @@ void playerUpdate(GameObject* obj)
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
 
-extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
 
 void fn_802B0EA4(GameObject* obj, int inner, int state)
 {
@@ -7410,7 +7410,8 @@ void fn_802B0EA4(GameObject* obj, int inner, int state)
             idx = (int)u;
             ((PlayerState*)inner)->velSmoothRate =
                 lbl_803E7EE0 /
-                Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
+                Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4,
+                                                u - (f32)idx, 0);
         }
     }
     else
@@ -7420,24 +7421,25 @@ void fn_802B0EA4(GameObject* obj, int inner, int state)
         u = t * ((PlayerState*)inner)->curveSpeedScale;
         idx = (int)u;
         ((PlayerState*)inner)->velSmoothRate =
-            lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
+            lbl_803E7EE0 / Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4,
+                                                          u - (f32)idx, 0);
     }
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->targetYawSmoothRate =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve1 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->paramCurve1 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->targetYawRateLimit =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve2 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->paramCurve2 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->yawSmoothRate =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve3 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->paramCurve3 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->yawRateLimit =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve4 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->paramCurve4 + (idx + 1) * 4, u - (f32)idx, 0);
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 != 0)
     {
         f32 k;
@@ -7462,7 +7464,8 @@ void fn_802B0EA4(GameObject* obj, int inner, int state)
     {
         int n = ((PlayerState*)inner)->targetYawRateSigned;
         ((PlayerState*)inner)->leanCurveScale =
-            Curve_EvalCatmullRom(((PlayerState*)inner)->leanCurve + (n / 5 + 1) * 4, (f32)(n % 5) / lbl_803E7F10, 0);
+            Curve_EvalCatmullRomValuesFirst(((PlayerState*)inner)->leanCurve + (n / 5 + 1) * 4,
+                                            (f32)(n % 5) / lbl_803E7F10, 0);
     }
     else
     {

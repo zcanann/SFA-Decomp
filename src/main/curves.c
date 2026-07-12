@@ -3,7 +3,7 @@
 typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 
 void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count,
-                               void (*evalFn)(f32* ch, f32* buf))
+                               CurveCoeffFn coeffFn)
 {
     f32 bufX[4];
     f32 bufY[4];
@@ -27,7 +27,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
 
     if (px != NULL)
     {
-        evalFn(px, bufX);
+        coeffFn(px, bufX);
         vx = bufX[3];
         d1x = gCurveForwardDiffStep * bufX[2] +
               (gCurveForwardDiffCoeffs[2] * bufX[0] + gCurveForwardDiffCoeffs[0] * bufX[1]);
@@ -36,7 +36,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
     }
     if (py != NULL)
     {
-        evalFn(py, bufY);
+        coeffFn(py, bufY);
         vy = bufY[3];
         d1y = gCurveForwardDiffStep * bufY[2] +
               (gCurveForwardDiffCoeffs[2] * bufY[0] + gCurveForwardDiffCoeffs[0] * bufY[1]);
@@ -45,7 +45,7 @@ void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, 
     }
     if (pz != NULL)
     {
-        evalFn(pz, bufZ);
+        coeffFn(pz, bufZ);
         vz = bufZ[3];
         d1z = gCurveForwardDiffStep * bufZ[2] +
               (gCurveForwardDiffCoeffs[2] * bufZ[0] + gCurveForwardDiffCoeffs[0] * bufZ[1]);

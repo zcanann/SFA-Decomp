@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/curve_eval.h"
 #include "main/audio/sfx.h"
 #include "main/objprint.h"
 #include "main/dll/modgfx.h"
@@ -321,7 +322,6 @@ void objRenderShadowIfVisible(GameObject* obj)
 #pragma dont_inline on
 int fn_800399C0(s16* curve, s16* state)
 {
-    extern f32 Curve_EvalHermite(int, f32, int);
     extern f32 timeDelta;
     extern f32 lbl_803DE9A4;
     extern f32 lbl_803DE9D8;
@@ -358,7 +358,7 @@ int fn_800399C0(s16* curve, s16* state)
     }
 
     {
-        f32 rate = Curve_EvalHermite((int)buf, ratio, 0);
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
         if (curve[10] < curve[11])
         {
             rate = -rate;
@@ -945,7 +945,6 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 #pragma dont_inline on
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 {
-    extern f32 Curve_EvalHermite(int, f32, int);
     f32 buf[4];
     f32 ratio;
     s16 lo;
@@ -977,7 +976,7 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
     }
 
     {
-        f32 rate = Curve_EvalHermite((int)buf, ratio, 0);
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
         if (curve[10] < curve[11])
         {
             rate = -rate;

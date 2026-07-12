@@ -7,6 +7,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/curve.h"
 #include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
 #include "main/gameloop_api.h"
@@ -70,7 +71,6 @@ extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void ModelLightStruct_free(void* p);
-extern f32 Curve_EvalBSpline(f32* control, f32 t, f32* out);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
@@ -242,9 +242,9 @@ void LanternFireFly_update(GameObject* obj)
         fn_801869DC(obj);
     }
 
-    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->controlX, state->splineT, 0);
-    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->controlY, state->splineT, 0);
-    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->controlZ, state->splineT, 0);
+    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSplineValuesFirst(state->controlX, state->splineT, 0);
+    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSplineValuesFirst(state->controlY, state->splineT, 0);
+    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSplineValuesFirst(state->controlZ, state->splineT, 0);
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {

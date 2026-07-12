@@ -32,6 +32,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
+#include "main/curve.h"
 #include "dolphin/gx/GXDraw.h"
 #include "dolphin/gx/GXEnum.h"
 #include "string.h"
@@ -1355,7 +1356,6 @@ void staff_update(int* obj)
 }
 
 extern float fastFloorf(float x);
-extern f32 Curve_EvalBSpline(f32* a, f32 t, f32* out);
 extern f32 gStaffPi;
 extern f32 gStaffAngleUnitScale;
 extern f32 lbl_803E32A4;
@@ -1526,9 +1526,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             first = 0;
                         }
                         vp = *(u8**)slot + *(u16*)(slot + 0xe) * 20;
-                        *(f32*)(vp + 0) = Curve_EvalBSpline(ptBx, frac, NULL);
-                        *(f32*)(vp + 4) = Curve_EvalBSpline(ptBy, frac, NULL);
-                        *(f32*)(vp + 8) = Curve_EvalBSpline(ptBz, frac, NULL);
+                        *(f32*)(vp + 0) = Curve_EvalBSplineValuesFirst(ptBx, frac, NULL);
+                        *(f32*)(vp + 4) = Curve_EvalBSplineValuesFirst(ptBy, frac, NULL);
+                        *(f32*)(vp + 8) = Curve_EvalBSplineValuesFirst(ptBz, frac, NULL);
                         {
                             f32 cur = *(f32*)(vp + 0);
                             f32 bx = ((StaffState*)swipe)->anchorX;
@@ -1565,9 +1565,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             }
                             *(s16*)(vp + 0x10) = k - clamped;
                         }
-                        *(f32*)(vp + 0x14) = Curve_EvalBSpline(ptAx, frac, NULL);
-                        *(f32*)(vp + 0x18) = Curve_EvalBSpline(ptAy, frac, NULL);
-                        *(f32*)(vp + 0x1c) = Curve_EvalBSpline(ptAz, frac, NULL);
+                        *(f32*)(vp + 0x14) = Curve_EvalBSplineValuesFirst(ptAx, frac, NULL);
+                        *(f32*)(vp + 0x18) = Curve_EvalBSplineValuesFirst(ptAy, frac, NULL);
+                        *(f32*)(vp + 0x1c) = Curve_EvalBSplineValuesFirst(ptAz, frac, NULL);
                         {
                             f32 cur = *(f32*)(vp + 0x14);
                             f32 bx = ((StaffState*)swipe)->anchorX;
