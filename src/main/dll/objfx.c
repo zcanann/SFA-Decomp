@@ -1285,7 +1285,8 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
     }
 }
 
-void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20, u8 f1cinit)
+void spawnExplosion(GameObject* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20,
+                    u8 f1cinit)
 {
     ExplosionSetup* obj;
     if (Obj_IsLoadingLocked() != 0)
@@ -1293,9 +1294,9 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         obj = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
         ((ObjPlacement*)obj)->color[0] = 2;
         ((ObjPlacement*)obj)->color[1] = 1;
-        ((GameObject*)obj)->anim.rootMotionScale = ((ObjAnimComponent*)src)->worldPosX;
-        ((GameObject*)obj)->anim.localPosX = ((ObjAnimComponent*)src)->worldPosY;
-        ((GameObject*)obj)->anim.localPosY = ((ObjAnimComponent*)src)->worldPosZ;
+        ((GameObject*)obj)->anim.rootMotionScale = src->anim.worldPosX;
+        ((GameObject*)obj)->anim.localPosX = src->anim.worldPosY;
+        ((GameObject*)obj)->anim.localPosY = src->anim.worldPosZ;
         ((ExplosionSetup*)obj)->unk19 = a;
         *(s16*)((char*)obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
         *(s16*)((char*)obj + 0x1c) = f1cinit;
@@ -1320,9 +1321,8 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
             GameObject* player = Obj_GetPlayerObject();
             if (player != NULL && (((GameObject*)player)->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) == 0)
             {
-                f32 d = Camera_DistanceToCurrentViewPosition(((ObjAnimComponent*)src)->worldPosX,
-                                                             ((ObjAnimComponent*)src)->worldPosY,
-                                                             ((ObjAnimComponent*)src)->worldPosZ);
+                f32 d = Camera_DistanceToCurrentViewPosition(src->anim.worldPosX, src->anim.worldPosY,
+                                                             src->anim.worldPosZ);
                 if (d <= lbl_803DF3B0)
                 {
                     f32 t = lbl_803DF354 - d / lbl_803DF3B0;
@@ -1331,7 +1331,7 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
                 }
             }
         }
-        Obj_SetupObject(&obj->head, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, NULL);
+        Obj_SetupObject(&obj->head, 5, src->anim.mapEventSlot, -1, NULL);
     }
 }
 

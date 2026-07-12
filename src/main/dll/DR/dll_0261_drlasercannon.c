@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0261_drlasercannon.h"
@@ -424,7 +425,7 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
         {
             tricky = getTrickyObject();
             Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_4b6);
-            spawnExplosion((int)obj, lbl_803E68F8, 0, 1, 1, 1, 0, 1, 0);
+            spawnExplosionLegacy((int)obj, lbl_803E68F8, 0, 1, 1, 1, 0, 1, 0);
             state->flags.b0 = 1;
             mainSetBits(setup->destroyedGameBit, 1);
             if (tricky != 0)

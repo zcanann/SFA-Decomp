@@ -25,6 +25,7 @@
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/audio/sfx.h"
 #include "main/dll/fx_800944A0_shared.h"
 
@@ -156,7 +157,6 @@ enum
 void SB_ShipGun_update(GameObject* obj)
 {
 
-    extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern void* Obj_GetPlayerObject(void);
     extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                               int useInputPosition);
@@ -373,7 +373,7 @@ void SB_ShipGun_update(GameObject* obj)
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (*(char*)&((SBShipGunState*)state)->health == '\0')
             {
-                spawnExplosion((int)obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosionLegacy((int)obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
                 ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_EXPLODED;
             }
             else

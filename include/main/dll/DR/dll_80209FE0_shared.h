@@ -167,7 +167,6 @@ extern f32 lbl_803E6544;
 extern f32 lbl_803E6548;
 extern f32 lbl_803E654C;
 extern int gBossDrakorMoveStateTable[];
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void gameTextShow(int id);
 extern int warpToMap(int id, int flags);

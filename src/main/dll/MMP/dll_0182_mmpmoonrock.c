@@ -200,7 +200,6 @@ extern const f32 gMoonRockRespawnTime;
 #pragma dont_inline on
 void fn_801A79E0(GameObject* obj)
 {
-    extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     int hitScratch[21];
     int hitObjOut;
     MmpMoonrockState* state;
@@ -217,7 +216,7 @@ void fn_801A79E0(GameObject* obj)
                        (state->flags & MOONROCK_FLAG_SUNK) != 0))
     {
         (obj)->anim.localPosY = (obj)->anim.localPosY + lbl_803E4550;
-        spawnExplosion((int)obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
+        spawnExplosionLegacy((int)obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
         state->flags |= MOONROCK_FLAG_RESPAWNING;
         state->respawnTimer = gMoonRockRespawnTime;
         (obj)->anim.alpha = 0;

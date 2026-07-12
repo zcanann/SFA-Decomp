@@ -55,6 +55,7 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
@@ -270,7 +271,6 @@ void lavaball1be_init(s16* obj, u8* p)
 
 void lavaball1be_update(s16* obj)
 {
-    extern void spawnExplosion(s16 * obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
     extern int Sfx_PlayFromObject(int* obj, int sfxId);
     extern void Obj_FreeObject(void* o);
     Lavaball1beState* state;
@@ -337,19 +337,19 @@ void lavaball1be_update(s16* obj)
                 {
                     if (state->explodeCooldown != 0)
                     {
-                        spawnExplosion(obj, lbl_803E47FC, 0, 1, 0, 0, 0, 0, 0);
+                        spawnExplosionLegacy(obj, lbl_803E47FC, 0, 1, 0, 0, 0, 0, 0);
                     }
                     else
                     {
                         state->explodeCooldown = 0xa;
-                        spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
+                        spawnExplosionLegacy(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     }
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
                 if (((ObjAnimComponent*)sub)->bankIndex & 1)
                 {
-                    spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
+                    spawnExplosionLegacy(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     return;

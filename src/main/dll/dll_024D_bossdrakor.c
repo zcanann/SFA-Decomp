@@ -23,6 +23,7 @@
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -727,7 +728,7 @@ void bossdrakor_hitDetect(GameObject* obj)
             if (((BossDrakorState*)inner)->airMeterHandle < 0)
             {
                 mainSetBits(((BossdrakorPlacement*)setup)->defeatedGameBit, 1);
-                spawnExplosion((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
+                spawnExplosionLegacy((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int*)obj);
                 (*gMapEventInterface)->setMapAct(BOSSDRAKOR_MAP_ARENA, 3);
                 mainSetBits(GAMEBIT_ITEM_WaterSpellStone2_Got, 1);

@@ -4,6 +4,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
@@ -47,7 +48,6 @@ extern void PSVECSubtract(void* a, void* b, void* ab);
 extern void PSVECNormalize(void* in, void* out);
 extern void PSVECScale(void* in, void* out, f32 scale);
 extern void PSVECAdd(void* a, void* b, void* ab);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 lbl_803E6118;
 extern f32 lbl_803E6120;
 extern f32 lbl_803E6124;
@@ -534,7 +534,7 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
                 obj->anim.worldPosX = obj->anim.localPosX;
                 obj->anim.worldPosY = obj->anim.localPosY;
                 obj->anim.worldPosZ = obj->anim.localPosZ;
-                spawnExplosion((int)obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
+                spawnExplosionLegacy((int)obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
                 state->exploded = 1;
                 obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }

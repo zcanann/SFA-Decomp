@@ -7,6 +7,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/obj_placement.h"
 #include "main/maketex.h"
@@ -102,7 +103,6 @@ extern int getAngle(float y, float x);
 extern void* loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
 extern void ObjLink_DetachChild(void* obj, int* child);
-extern void spawnExplosion(void* obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
 
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
 extern u8 framesThisStep;
@@ -494,7 +494,7 @@ void snowclaw_hitDetect(GameObject* obj)
             {
                 int* sub2;
 
-                spawnExplosion(obj, lbl_803E6724, 1, 1, 1, 1, 0, 1, 0);
+                spawnExplosionLegacy(obj, lbl_803E6724, 1, 1, 1, 1, 0, 1, 0);
                 sub2 = *(int**)inner;
                 if (sub2 != 0)
                 {

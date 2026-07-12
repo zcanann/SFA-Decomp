@@ -23,6 +23,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_api.h"
 #include "main/audio/sfx.h"
@@ -68,7 +69,6 @@ extern u32* gCarryableInterface;
 extern f32 lbl_803E42DC;
 extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 e);
 extern void saveGame_saveObjectPos(int* obj);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
@@ -280,7 +280,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
         (obj)->anim.localPosY += lbl_803E4308;
-        spawnExplosion((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
+        spawnExplosionLegacy((int*)obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
             (*(void (**)(int, u8*))(*(int*)gCarryableInterface + 0x30))((int)obj, sub);

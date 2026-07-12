@@ -292,7 +292,6 @@ extern f32 lbl_803E6A1C;
 extern f32 lbl_803E695C;
 extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
-extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int ObjGroup_FindNearestObject(int group, int obj, void* out);
 extern f32 lbl_803E6B5C;
 extern f32 lbl_803E6B60;

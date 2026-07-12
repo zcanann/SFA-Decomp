@@ -28,6 +28,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
@@ -564,7 +565,7 @@ void arwarwing_update(GameObject* obj)
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
             (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            spawnExplosion((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosionLegacy((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         ((ArwingState*)state)->rotZCur = (int)(lbl_803E6F6C * timeDelta + (f32)((ArwingState*)state)->rotZCur);
         (obj)->anim.rotZ = (s16)((ArwingState*)state)->rotZCur;
@@ -1151,7 +1152,7 @@ void arwarwing_handlePathDamage(GameObject* obj, int state)
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            spawnExplosion((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosionLegacy((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
         if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
@@ -1212,7 +1213,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, int state)
             ((ArwingState*)state)->mode = ARWING_MODE_EXPLODE;
             ((ArwingState*)state)->modeTimer = gArwingExplodeModeTime;
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            spawnExplosion((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosionLegacy((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         else
         {

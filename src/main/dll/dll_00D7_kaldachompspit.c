@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -59,7 +60,6 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
@@ -114,7 +114,7 @@ void kaldachompspit_burst(GameObject* obj)
     if ((obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
     {
         rnd = randomGetRange(0, 1);
-        spawnExplosion((int)obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
+        spawnExplosionLegacy((int)obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
     }
     else
     {

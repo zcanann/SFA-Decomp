@@ -16,6 +16,7 @@
 #include "main/gamebit_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
@@ -178,7 +179,6 @@ void mmp_asteroid_re_init(GameObject* obj)
 void mmp_asteroid_re_update(int obj)
 {
 
-    extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
     MmpAsteroidReState* state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & ASTEROIDRE_SEQ_TICK) == 0)
@@ -267,7 +267,7 @@ void mmp_asteroid_re_update(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_EXPLODE_DEBRIS, NULL, 1, -1, NULL);
                 count--;
             } while (count != 0);
-            spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
+            spawnExplosionLegacy(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
             CameraShake_Start(lbl_803E4530, lbl_803E4534, lbl_803E4538);
             doRumble(lbl_803E453C);
             state->eventFlags &= ~ASTEROIDRE_FX_EXPLODE;

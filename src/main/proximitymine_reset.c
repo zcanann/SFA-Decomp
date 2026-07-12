@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 
@@ -14,7 +15,6 @@ extern f32 lbl_803DC24C;
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void fn_8009A8C8(void* obj, f32 param2);
-extern void spawnExplosion(void* obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void modelLightStruct_freeSlot(void* handle);
 
 void proximitymine_resetToIdle(ProximityMineObject* obj)
@@ -39,7 +39,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     fn_8009A8C8(obj, lbl_803E676C);
     {
         f32 dist = state->triggerDistance - lbl_803E6774;
-        spawnExplosion(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
+        spawnExplosionLegacy(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);

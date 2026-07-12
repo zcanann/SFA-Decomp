@@ -28,7 +28,6 @@ extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* out);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void WM_newcrystalFn_800969b0(GameObject* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e, int enabled);
 
 ObjectDescriptor gWM_newcrystalObjDescriptor = {
@@ -68,7 +67,7 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
             obj->anim.worldPosX = obj->anim.localPosX;
             obj->anim.worldPosY = obj->anim.localPosY;
             obj->anim.worldPosZ = obj->anim.localPosZ;
-            spawnExplosion((int*)obj, 100.0f, 1, 1, 0, 0, 0, 0, 0);
+            spawnExplosionLegacy((int*)obj, 100.0f, 1, 1, 0, 0, 0, 0, 0);
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
             if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
             {

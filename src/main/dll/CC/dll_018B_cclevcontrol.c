@@ -14,6 +14,7 @@
 #include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/objanim_update.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gamebits.h"
@@ -34,7 +35,6 @@ extern int lbl_80323548[];
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern void Music_Trigger(int id, int arg);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 
@@ -44,7 +44,7 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (animUpdate->eventCount != 0)
     {
-        spawnExplosion(obj, 50.0f, 1, 1, 0, 1, 1, 1, 0);
+        spawnExplosionLegacy(obj, 50.0f, 1, 1, 0, 1, 1, 1, 0);
     }
     return 0;
 }

@@ -12,6 +12,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/dll/headdisplay.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -287,14 +288,14 @@ active:
             arwarwing_addScore((GameObject*)arw, 0xf);
             flags->b40 = 1;
             Obj_SetActiveModelIndex((GameObject*)obj, 1);
-            spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
+            spawnExplosionLegacy(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
         }
         if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
             (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
-            spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
+            spawnExplosionLegacy(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
         }
     }
     if ((u32)arw != 0 && flags->b80 != 0)

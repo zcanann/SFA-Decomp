@@ -15,6 +15,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object_api.h"
 
 #include "main/audio/sfx_ids.h"
@@ -328,11 +329,11 @@ void drakormissile_update(int obj)
             }
             if (((GameObject*)obj)->anim.mapEventSlot == 2)
             {
-                spawnExplosion(obj, lbl_803E6940, 3, 0, 0, 0, 0, 0, 3);
+                spawnExplosionLegacy(obj, lbl_803E6940, 3, 0, 0, 0, 0, 0, 3);
             }
             else
             {
-                spawnExplosion(obj, lbl_803E6940, 1, 0, 0, 0, 0, 0, 3);
+                spawnExplosionLegacy(obj, lbl_803E6940, 1, 0, 0, 0, 0, 0, 3);
             }
             if (state->light != NULL)
             {

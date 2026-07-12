@@ -19,6 +19,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/genprops.h"
 
 typedef struct
@@ -85,7 +86,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int fn_80080150(int p);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int timerCountDown(int timer);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
 extern f32 PSVECMag(void* v);
@@ -277,7 +277,7 @@ void pollenfragment_hitDetect(GameObject* obj)
         {
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
-                spawnExplosion((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosionLegacy((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject((u32)obj);
@@ -289,7 +289,7 @@ void pollenfragment_hitDetect(GameObject* obj)
             ((PollenFragmentExtra*)extra)->timer = lbl_803E3160;
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
-                spawnExplosion((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosionLegacy((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             s16toFloat(extra + 0x20, 0x78);
@@ -441,7 +441,7 @@ void pollenfragment_update(int obj)
         ObjHits_DisableObject((u32)obj);
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
-            spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
+            spawnExplosionLegacy(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
             Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
         s16toFloat(extra + 0x20, 0x78);

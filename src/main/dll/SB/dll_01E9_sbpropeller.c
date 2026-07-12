@@ -19,6 +19,7 @@
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/object_render.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
@@ -43,7 +44,6 @@ extern f32 timeDelta;
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern u8 framesThisStep;
-extern void spawnExplosion(int obj, f32 s, int a, int b, int c, int d, int e, int f, int g);
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;
 extern f32 lbl_803E5818;
@@ -176,7 +176,7 @@ void SB_Propeller_update(GameObject* obj)
                 SB_GALLEON_VTBL(*(int*)&objAnim->parent)->onPartDestroyed(*(int*)&objAnim->parent);
                 ObjHits_DisableObject((int)obj);
                 objAnim->flags = objAnim->flags | OBJANIM_FLAG_HIDDEN;
-                spawnExplosion((int)obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosionLegacy((int)obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
                 Sfx_PlayFromObject((int)obj, SB_PROPELLER_SFX_DESTROYED);
             }
         }

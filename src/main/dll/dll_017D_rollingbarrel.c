@@ -3,6 +3,8 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#define OBJFX_SPAWN_EXPLOSION_REORDERED_LEGACY
+#include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/IM/IMspacecraft.h"
@@ -43,8 +45,8 @@ extern int getAngle(float y, float x);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
 
 #pragma dont_inline on
 void fn_801A5D88(GameObject* obj, int explosionVariant)

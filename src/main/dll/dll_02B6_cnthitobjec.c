@@ -19,6 +19,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
@@ -29,7 +30,7 @@ int cnthitobjec_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
     int i;
     for (i = 0; i < event->explosionCount; i++)
     {
-        spawnExplosion(obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);
+        spawnExplosionLegacy(obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);
     }
     return 0;
 }
@@ -110,7 +111,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
             if (model != CNTHIT_MODEL_NO_EXPLOSION_A && model != CNTHIT_MODEL_NO_EXPLOSION_B &&
                 model != CNTHIT_MODEL_NO_EXPLOSION_C && model != CNTHIT_MODEL_NO_EXPLOSION_D)
             {
-                spawnExplosion((int)obj, amount, 1, 1, 1, 1, 0, 1, 0);
+                spawnExplosionLegacy((int)obj, amount, 1, 1, 1, 1, 0, 1, 0);
             }
             if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
             {

@@ -12,6 +12,16 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int colorIndex, u8 mode, vo
 void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult,
                                  void* origin, int flags);
 void projectileParticleFxFn_80099660(void* obj, int mode);
+#if defined(OBJFX_SPAWN_EXPLOSION_POINTER_LEGACY)
+void spawnExplosion(int* source, f32 scale, int kind, int flag4, int flag8, int flag10, int doShake, int flag20,
+                    int initialFlags);
+#elif defined(OBJFX_SPAWN_EXPLOSION_REORDERED_LEGACY)
+void spawnExplosion(int source, int kind, int flag4, int flag8, int flag10, int doShake, int flag20,
+                    int initialFlags, f32 scale);
+#else
+void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20,
+                    u8 initialFlags);
+#endif
 
 #define objfx_spawnLightPulseLegacy(obj, radius, type, colorIndex, mode, intensity, light)                        \
     ((void (*)(GameObject*, f32, int, int, int, f32, void*))objfx_spawnLightPulse)(                              \
@@ -23,6 +33,10 @@ void projectileParticleFxFn_80099660(void* obj, int mode);
 
 #define projectileParticleFxFn_80099660Legacy(obj, scale, mode)                                                   \
     ((void (*)(void*, f32, int))projectileParticleFxFn_80099660)((void*)(obj), (scale), (mode))
+
+#define spawnExplosionLegacy(source, scale, kind, flag4, flag8, flag10, doShake, flag20, initialFlags)            \
+    ((void (*)(GameObject*, f32, int, int, int, int, int, int, int))spawnExplosion)(                              \
+        (GameObject*)(source), (scale), (kind), (flag4), (flag8), (flag10), (doShake), (flag20), (initialFlags))
 
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 

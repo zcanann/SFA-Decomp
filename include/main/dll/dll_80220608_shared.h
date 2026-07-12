@@ -164,7 +164,6 @@ extern int fn_80080150(int state);
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 
-extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 
 extern int arrayIndexOf(int array, int count, int value);
 

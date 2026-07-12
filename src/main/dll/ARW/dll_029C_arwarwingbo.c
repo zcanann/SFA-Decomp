@@ -12,6 +12,7 @@
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -83,7 +84,7 @@ void arwarwingbo_update(int obj)
             state->control.fuseTimer = lbl_803E7044;
             objAnim->alpha = 0;
             (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
-            spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosionLegacy(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
@@ -107,7 +108,7 @@ void arwarwingbo_update(int obj)
         state->control.fuseTimer = lbl_803E7044;
         objAnim->alpha = 0;
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
-        spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+        spawnExplosionLegacy(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;

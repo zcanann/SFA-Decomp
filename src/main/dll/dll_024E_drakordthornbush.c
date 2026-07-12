@@ -20,6 +20,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_024E_drakordthornbush.h"
 
@@ -117,13 +118,13 @@ void drakord_thornbush_hitDetect(int obj)
             switch (((GameObject*)obj)->anim.seqId)
             {
             case THORNBUSH_SEQ_THORN:
-                spawnExplosion((int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0, 0, 0, 1,
-                               1);
+                spawnExplosionLegacy((int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0,
+                                     0, 0, 1, 1);
                 break;
             case THORNBUSH_SEQ_LIGHTNING:
                 Sfx_PlayFromObject(obj, SFXTRIG_awghitobj16);
-                spawnExplosion((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1, 1, 0, 1,
-                               0);
+                spawnExplosionLegacy((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1,
+                                     1, 0, 1, 0);
                 Obj_UpdateLightningCluster((GameObject*)obj, ((DrakordThornbushState*)inner)->lightningEntries, 3,
                                            lbl_803E6588, &((DrakordThornbushState*)inner)->light);
                 break;

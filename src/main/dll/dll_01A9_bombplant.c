@@ -34,7 +34,6 @@
 extern f32 lbl_803E5370;
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
 extern f32 gBombPlantExplosionScale;
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -85,7 +84,7 @@ void bombplant_explode(int* obj, int unused, int* p3)
         int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
     }
-    spawnExplosion((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
+    spawnExplosionLegacy((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
     ((BombPlantState*)p3)->stateIndex = 1;
     ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     gbId = p4->gameBit;

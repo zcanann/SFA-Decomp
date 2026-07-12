@@ -18,6 +18,7 @@
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -60,7 +61,6 @@ extern void fn_800628CC(int* obj);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 
 void crrockfall_free(void)
 {
@@ -344,7 +344,8 @@ void crrockfall_update(int* obj)
             else
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_jbike_bombbeep);
-                spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale, 1, 1, 0, 1, 1, 1, 1);
+                spawnExplosionLegacy(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale, 1, 1, 0, 1,
+                                     1, 1, 1);
             }
         }
     }
