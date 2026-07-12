@@ -5,6 +5,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/shader_api.h"
 #include "main/audio/sfx.h"
+#include "main/audio.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -245,7 +246,6 @@ extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
 extern void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
-extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern const f32 lbl_803E6DA8;
 typedef struct WcLevelControlState WcLevelControlState;
@@ -714,9 +714,6 @@ extern void skyFn_80089710(int p1, u8 p2, int p3);
 extern void skyFn_800895e0(int p1, int p2, int p3, int p4, int p5, int p6);
 extern void skyFn_800894a8(int p1, f32 p2, f32 p3, f32 p4);
 extern void setDrawLights(int value);
-extern int AudioStream_IsPreparing(void);
-extern void AudioStream_StartPrepared(void);
-extern void AudioStream_Play(int stream, void (*cb)(void));
 extern int mapBlockFn_800592e4(void);
 extern int arwarwing_getRequiredRingCount(int arwing);
 extern int arwarwing_getCollectedRingCount(int arwing);

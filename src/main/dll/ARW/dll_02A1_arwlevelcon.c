@@ -142,7 +142,6 @@ void arwlevelcon_hitDetect(void)
 
 void arwlevelcon_update(GameObject* obj)
 {
-    extern u8 AudioStream_IsPreparing(void);
     ARWLevelConState* state = obj->extra;
     int arwing = getArwing();
 

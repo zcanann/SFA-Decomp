@@ -1737,16 +1737,16 @@ void fn_80008EDC(u32 request)
     }
 }
 
-void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag)
+void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag)
 {
     if (musicFlag != 0 || fxFlag != 0)
     {
-        sndMasterVolume(volume, time, musicFlag, fxFlag);
+        ((void (*)(int, int, u8, u8))sndMasterVolume)(volume, time, musicFlag, fxFlag);
     }
     if (streamFlag != 0)
     {
-        AudioStream_SetVolume(volume);
-        AudioStream_SetDefaultVolume(volume);
+        ((void (*)(int))AudioStream_SetVolume)(volume);
+        ((void (*)(int))AudioStream_SetDefaultVolume)(volume);
     }
 }
 

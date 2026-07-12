@@ -55,7 +55,6 @@ extern u8 dll_19_func17[];
 extern u8 dll_19_func18[];
 extern u8 dll_19_func19[];
 extern u8 dll_19_func1A[];
-extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 
 #pragma scheduling off
 #pragma peephole off

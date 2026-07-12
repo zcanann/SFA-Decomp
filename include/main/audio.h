@@ -39,7 +39,7 @@ void AudioStream_PlayAddrCallback(u32 result);
 int AudioStream_Play(int id, void (*preparedCallback)(void));
 void audioStopByMask(int mask);
 void streamFn_8000a380(int a, int b, int c);
-void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
+void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
 s32 Music_GetActivePriority(void);
 void Music_Trigger(int id, int arg);
 void Music_PlayTrackByIndex(int index);
