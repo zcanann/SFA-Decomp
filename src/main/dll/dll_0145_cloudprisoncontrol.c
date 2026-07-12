@@ -108,7 +108,7 @@ void CloudPrisonControl_update(GameObject* obj)
     int idx;
     int dval;
     int msgId;
-    CPTargetEntry* p;
+    CPTargetEntry* p[1];
     int found;
 
     data = 0;
@@ -127,17 +127,17 @@ void CloudPrisonControl_update(GameObject* obj)
             if (((GameObject*)target)->anim.mapEventSlot == (obj)->anim.mapEventSlot)
             {
                 found = 0;
-                p = lbl_803AC7D8;
+                p[0] = lbl_803AC7D8;
                 dval = data;
                 count = lbl_803DDB09;
                 for (i = 0; i < count; i++)
                 {
-                    if (p->obj == (u32)target)
+                    if (p[0]->obj == (u32)target)
                     {
-                        p->value = dval;
+                        p[0]->value = dval;
                         found = 1;
                     }
-                    p++;
+                    p[0]++;
                 }
                 if (!found)
                 {
@@ -154,22 +154,22 @@ void CloudPrisonControl_update(GameObject* obj)
             break;
         case CPMSG_UNREGISTER:
             i = 0;
-            p = lbl_803AC7D8;
+            p[0] = lbl_803AC7D8;
             count = lbl_803DDB09;
-            while (i < count && p->obj != (u32)target)
+            while (i < count && p[0]->obj != (u32)target)
             {
-                p++;
+                p[0]++;
                 i++;
             }
             lbl_803DDB09--;
             count = lbl_803DDB09;
-            p = &lbl_803AC7D8[count];
+            p[0] = &lbl_803AC7D8[count];
             for (; i < count; i++)
             {
-                p[-1].obj = p[0].obj;
-                p[-1].value = p[0].value;
-                p[-1].flags = p[0].flags;
-                p--;
+                p[0][-1].obj = p[0][0].obj;
+                p[0][-1].value = p[0][0].value;
+                p[0][-1].flags = p[0][0].flags;
+                p[0]--;
             }
             break;
         default:
