@@ -221,7 +221,7 @@ extern f32 gMinimapBlipVeryNearDist;
 
 int Minimap_update(void)
 {
-    u8* player;
+    u32 vv, u;
     int marker;
     u8 found;
     u8 cell;
@@ -246,7 +246,7 @@ int Minimap_update(void)
     int sv;
     u32 texW, texH;
     f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, uq, cx, cy, frac, fx;
-    u32 vv, u;
+    u8* player;
     f32 c2, s1, c1, c3, s3, fv;
     u32 col;
     u32 col2;
