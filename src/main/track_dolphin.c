@@ -4864,7 +4864,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     s16* hitp;
     int start;
     f32* fracp;
-    int flag4;
+    u8 flag4;
     s16* ep;
     u8* rp;
     f32* distp;
@@ -4999,7 +4999,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             i1 = *(s16*)(rec + 6);
             if ((s8)rec[3] & 0x80)
             {
-                if ((u8)flag4 != 0)
+                if (flag4 != 0)
                     continue;
                 lineType = 0;
             }
