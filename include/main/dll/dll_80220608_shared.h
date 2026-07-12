@@ -414,9 +414,7 @@ typedef struct
     f32 x, y, z;
 } SunVec3;
 
-extern void buttonDisable(int a, int b);
 
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int lbl_803DDD90;
 extern int lbl_803DDD94;
 extern f32 lbl_803E7118;
@@ -442,7 +440,6 @@ extern f32 lbl_803E7250;
 extern f32 lbl_803E7254;
 extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
 extern int getButtonsJustPressed(int controller);
-extern void logPrintf(void* fmt, ...);
 
 extern f32 lbl_802C2618[];
 extern f32 lbl_803E7270;
@@ -659,7 +656,6 @@ extern f32 lbl_803E7188;
 extern void arwingHudSetVisible(int mode);
 extern void fn_80125D04(void);
 extern void setIsOvercast(int value);
-extern void Music_Trigger(int id, int p2);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -668,8 +664,6 @@ extern void Music_Trigger(int id, int p2);
 #pragma dont_inline reset
 
 extern int getArwing(void);
-extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
-extern int getAngle(f32 dx, f32 dz);
 extern void doRumble(f32 v);
 extern void PSVECNormalize(void* src, void* dst);
 extern void C_VECHalfAngle(void* out, void* a, void* b);
@@ -715,8 +709,6 @@ extern f32 lbl_803E7060;
 extern f32 lbl_803DC3D0;
 extern f32 lbl_803DC3D4;
 extern f32 lbl_803DC3D8;
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
 extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
@@ -812,7 +804,6 @@ extern const f32 lbl_803E75A8;
 extern const f32 lbl_803E75AC;
 extern f32 gAndrossHandMoveAnimSpeeds[];
 
-extern int ObjList_FindObjectById(int id);
 extern void androssligh_updateBeam(GameObject* obj, int state);
 
 extern void* Camera_GetViewMatrix(void);
@@ -827,7 +818,6 @@ extern f32 lbl_803DC524;
 extern f32 lbl_803DC528;
 extern f32 lbl_803DC52C;
 
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 extern const f32 lbl_803E7480;
 extern int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
@@ -855,7 +845,6 @@ extern const f32 lbl_803E745C;
 extern int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E7440;
 
-extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern const f32 lbl_803E7450;
 extern const f32 lbl_803E7454;
 extern const f32 lbl_803E7458;
@@ -924,10 +913,7 @@ extern void* ObjList_GetObjects(int* startIndex, int* objectCount);
 
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
-extern int getAngle(f32 dx, f32 dz);
-extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
-extern void dll_2E_func03(int obj, int p2);
 extern void dll_2E_func05(GameObject* obj, int p2, int p3, int p4, int p5);
 extern void dll_2E_func09(int p1, void* p2, void* p3, int p4);
 extern int gDll28BMoveBlendDataA[];
@@ -962,7 +948,6 @@ extern f32 lbl_803E6C34;
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDD80;
 
-extern void PSVECAdd(int p1, int p2, int p3);
 typedef struct Vec12
 {
     int a, b, c;
@@ -979,7 +964,6 @@ typedef struct Vec12
 
 #pragma dont_inline reset
 
-extern int gameBitIncrement(int id);
 extern f32 lbl_803E70A0;
 extern f32 gArwBombCollHitToleranceY;
 extern f32 gArwBombCollHitRadiusSq;
@@ -993,7 +977,6 @@ extern f32 lbl_803E6ECC;
 extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
-extern void PSVECScale(void* dst, void* src, f32 scale);
 extern void PSVECSubtract(void* a, void* b, void* ab);
 
 extern f32 lbl_803E6F08;
@@ -1004,7 +987,6 @@ extern f32 lbl_803E6F18;
 extern f32 lbl_803E6F1C;
 extern f32 lbl_803E6F20;
 
-extern void warpToMap(int map, int p2);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1049,11 +1031,7 @@ extern f32 lbl_803E6F6C;
 extern f32 lbl_803E6EF8;
 extern f32 lbl_803E6FFC;
 extern f32 lbl_803E7000;
-extern void unlockLevel(int a, int b, int c);
-extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int idx, int p2);
-extern void warpToMap(int map, int p2);
-extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 
 #pragma dont_inline on
 
@@ -1247,15 +1225,11 @@ extern f32 lbl_803E6F38;
 extern f32 lbl_803E6F3C;
 extern f32 lbl_803E6F40;
 
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int idx, int p2);
-extern int loadMapAndParent(int mapId);
 
 extern int gAndrossHandShotPitch;
 extern int lbl_803DC50C;
 extern int lbl_803DC510;
 
-extern void mapUnload(int a, int b);
 extern void registerNewScore(int a, int b, int c, int d);
 extern u8 gArwingCourseMapIds[8];
 typedef struct
@@ -1274,7 +1248,6 @@ extern int gArwingPathSetupData[];
 extern int sArwingPathName[];
 
 extern f32 PSVECMag(f32* v);
-extern void PSVECNormalize(void* src, void* dst);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 angle);
@@ -1362,8 +1335,6 @@ typedef struct DrMusicContFlags
 } DrMusicContFlags;
 
 extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
-extern void skyFn_80088e54(int a, f32 b);
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
 extern f32 gDrMusicControlCloudOverridePosX;
 extern f32 gDrMusicControlCloudOverridePosY;
@@ -1381,13 +1352,8 @@ extern int gunpowderbarrel_isHeld(int obj);
 extern int gunpowderbarrel_canBeGrabbed(int obj);
 extern void gunpowderbarrel_addThrowVelocity(int obj, void* vec);
 extern void gunpowderbarrel_setHeldState(int obj);
-extern int timerCountDown(void* timer);
-extern void PSVECNormalize(void* src, void* dst);
-extern void PSVECScale(void* dst, void* src, f32 scale);
-extern f32 PSVECDistance(void* a, void* b);
 extern int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, int p2, f32 a, f32 b, f32 c, int p6);
 extern int voxmaps_traceWorldLine(void* p1, void* p2);
-extern void PSVECSubtract(void* a, void* b, void* ab);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
 extern f32 gDrBarrelGenGrabRange;
@@ -1398,7 +1364,6 @@ extern f32 lbl_803E6CC0;
 extern f32 lbl_803DC3B0;
 extern f32 gDrBarrelGenGrabYOffset;
 
-extern void PSVECSubtract(void* a, void* b, void* ab);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
 extern f32 lbl_803E6CAC;
@@ -1412,7 +1377,6 @@ typedef struct DrBarrelGrRenderParams
 } DrBarrelGrRenderParams;
 
 extern int dll_2E_func0A(int a, void* out);
-extern void* lightningCreate(f32* pos, f32* dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E6BB8;
 extern f32 lbl_803E6BBC;
 extern f32 lbl_803E6BC0;
@@ -1456,8 +1420,6 @@ extern f32 lbl_803E70C0;
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70C8;
 extern f32 lbl_803E70CC;
-extern int getArwing(void);
-extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 
 typedef struct
 {
