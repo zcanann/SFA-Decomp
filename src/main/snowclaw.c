@@ -550,6 +550,9 @@ void snowclaw_hitDetect(GameObject* obj)
     }
 }
 
+#pragma opt_strength_reduction on
+#pragma opt_common_subs off
+#pragma opt_dead_assignments off
 void snowclaw_update(GameObject* obj)
 {
     char* inner;
@@ -692,6 +695,9 @@ void snowclaw_update(GameObject* obj)
         }
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_common_subs reset
+#pragma opt_dead_assignments reset
 
 int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
 {
