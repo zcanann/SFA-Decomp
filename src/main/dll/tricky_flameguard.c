@@ -1,11 +1,15 @@
 /* tricky_flameguard - Tricky (DLL 0x00C4) flame/guard AI sub-TU. Spawns Tricky's
    flameblast (def 0x4F0) for the fire-breath/guard behaviour. */
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie/trickyfollow.h"
-#include "main/engine_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 typedef struct TrickyState
 {
