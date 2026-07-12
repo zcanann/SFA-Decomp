@@ -24,6 +24,8 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+
+#define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
@@ -132,7 +134,6 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-extern int ObjList_FindObjectById(int id);
 extern int ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
@@ -865,9 +866,9 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     player = (int)Obj_GetPlayerObject();
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0)
     {
-        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
+        effectObj = ObjList_FindObjectByIdLegacy(DBPROTECTION_ENVFX_B);
         getEnvfxActInt(effectObj, player, state[state[0xa4] + 0xa9], 0);
-        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
+        effectObj = ObjList_FindObjectByIdLegacy(DBPROTECTION_ENVFX_A);
         getEnvfxActInt(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
         getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
@@ -876,9 +877,9 @@ void DBprotection_updateEnvfxGameBits(u8* state)
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0)
     {
-        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
+        effectObj = ObjList_FindObjectByIdLegacy(DBPROTECTION_ENVFX_A);
         getEnvfxActInt(effectObj, player, state[state[0xa4] + 0xa9], 0);
-        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
+        effectObj = ObjList_FindObjectByIdLegacy(DBPROTECTION_ENVFX_B);
         getEnvfxActInt(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
         getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);

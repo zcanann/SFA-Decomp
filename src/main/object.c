@@ -37,12 +37,6 @@ typedef struct ObjListObjectDef
     u32 objectId;
 } ObjListObjectDef;
 
-typedef struct ObjListObject
-{
-    u8 pad00[0x4c];
-    ObjListObjectDef* def;
-} ObjListObject;
-
 typedef f32 Mtx[3][4];
 
 typedef struct LoadedObj
@@ -629,17 +623,17 @@ void* getTrickyObject(void)
     return NULL;
 }
 
-ObjListObject* ObjList_FindObjectById(u32 objectId)
+GameObject* ObjList_FindObjectById(u32 objectId)
 {
     ObjListObjectDef* def;
-    ObjListObject* obj;
+    GameObject* obj;
     int i;
     int count = gObjCount;
-    ObjListObject** arr = gObjList;
+    GameObject** arr = gObjList;
     for (i = 0; i < count; i++)
     {
         obj = arr[i];
-        def = obj->def;
+        def = (ObjListObjectDef*)obj->anim.placementData;
         if (def != NULL && def->objectId == objectId)
         {
             return obj;

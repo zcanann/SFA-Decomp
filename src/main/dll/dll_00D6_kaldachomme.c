@@ -15,6 +15,7 @@
  * table (the config pointer table) for the sibling pollen-fragment object.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/xyzanimator.h"
 #include "main/obj_placement.h"
 #include "main/dll/VF/vf_shared.h"
@@ -52,7 +53,7 @@ int KaldaChompSpit_getObjectTypeId(void);
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {
     KaldaChompMeState* state;
-    int linkedObj;
+    GameObject* linkedObj;
 
     if (obj == NULL)
     {
@@ -102,7 +103,7 @@ void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
     default:
         return;
     }
-    state = *(KaldaChompMeState**)(linkedObj + 0xb8);
+    state = linkedObj->extra;
     if (state != NULL)
     {
         switch (mode)

@@ -12,6 +12,7 @@
  * symbol table); it is a sub-object whose lifetime is driven externally.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
@@ -125,7 +126,7 @@ void androssligh_update(GameObject* obj)
 
     if (state->anchor == NULL)
     {
-        state->anchor = (GameObject*)ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
+        state->anchor = ObjList_FindObjectById(ANDROSSLIGH_ANCHOR_OBJ_ID);
     }
     if (state->anchor != NULL)
     {

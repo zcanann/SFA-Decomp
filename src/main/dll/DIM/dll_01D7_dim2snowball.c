@@ -7,6 +7,7 @@
  * on floor-hit via their hit-callback vtable.
  */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/object_api.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
@@ -73,7 +74,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define GAMEBIT_SNOWBALL_LAUNCH  648
 
 extern f32 lbl_803E4AA0;
-extern int ObjList_FindObjectById(int id);
 
 extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);

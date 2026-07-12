@@ -493,15 +493,15 @@ void andross_update(int obj)
     }
     if (state->handObjA == NULL)
     {
-        state->handObjA = (GameObject*)ObjList_FindObjectById(0x47b78);
+        state->handObjA = ObjList_FindObjectById(0x47b78);
     }
     if (state->handObjB == NULL)
     {
-        state->handObjB = (GameObject*)ObjList_FindObjectById(0x47b6a);
+        state->handObjB = ObjList_FindObjectById(0x47b6a);
     }
     if (state->lightAnchorObj == NULL)
     {
-        state->lightAnchorObj = (GameObject*)ObjList_FindObjectById(0x47dd9);
+        state->lightAnchorObj = ObjList_FindObjectById(0x47dd9);
     }
     if (state->arwingObj == NULL)
     {
@@ -522,7 +522,7 @@ void andross_update(int obj)
         spawnSlot = &state->spawnObj[spawnArrayIndex];
         if (*spawnSlot == NULL)
         {
-            *spawnSlot = (GameObject*)ObjList_FindObjectById(gAndrossSpawnObjectIds[spawnArrayIndex]);
+            *spawnSlot = ObjList_FindObjectById(gAndrossSpawnObjectIds[spawnArrayIndex]);
             if (*spawnSlot != NULL)
             {
                 state->spawnDelta[spawnArrayIndex].x = (*spawnSlot)->anim.localPosX - boss->anim.localPosX;

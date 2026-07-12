@@ -76,7 +76,6 @@ typedef struct ObjCurveKey
     s16 frame;
 } ObjCurveKey;
 
-extern void* ObjList_FindObjectById(int id);
 extern void** ObjList_GetObjects(void* unused, int* count);
 extern void ObjSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void* entries, int count);

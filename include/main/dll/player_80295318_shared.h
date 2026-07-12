@@ -643,7 +643,6 @@ extern f32 lbl_803E8248;
 extern s16 lbl_803DC748;
 extern f32 lbl_803E813C;
 extern int RandomTimer_UpdateRangeTrigger(void* timer, f32 lo, f32 hi);
-extern void* ObjList_FindObjectById(int id);
 extern void fn_8014C63C(int* obj);
 extern void fn_8014C66C(int* obj, int x);
 extern s8 padGetStickX(int channel);

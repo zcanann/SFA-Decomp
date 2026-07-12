@@ -12,6 +12,7 @@
  * DLLs (0x143) and the palace sun (0x21D).
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_api.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
@@ -225,12 +226,12 @@ void wmseqpoint_hitDetect(void)
 void wmseqpoint_update(GameObject* obj)
 {
     WmSeqPointState* state;
-    int player;
-    int target;
+    GameObject* player;
+    GameObject* target;
     int i;
     extern u8 getSkyColorFn_80088e08(int skyId);
 
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     state = obj->extra;
 
     if (state->disableGameBit != -1)
@@ -260,7 +261,7 @@ void wmseqpoint_update(GameObject* obj)
     switch (state->triggerMode)
     {
     case WMSEQPOINT_TRIGGER_PROXIMITY:
-        if (Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius)
+        if (Vec_distance((void*)&obj->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
             state->doneLatch = 1;
@@ -275,10 +276,10 @@ void wmseqpoint_update(GameObject* obj)
                 {
                     mainSetBits(gWM_seqpointSpiritTargets[i * 2], 0);
                     target = ObjList_FindObjectById(gWM_seqpointSpiritTargets[i * 2 + 1]);
-                    ((WmSeqPointState*)((GameObject*)target)->extra)->doneLatch = 0;
-                    if (((GameObject*)target)->seqIndex != -1)
+                    ((WmSeqPointState*)target->extra)->doneLatch = 0;
+                    if (target->seqIndex != -1)
                     {
-                        (*gObjectTriggerInterface)->endSequence(((GameObject*)target)->seqIndex);
+                        (*gObjectTriggerInterface)->endSequence(target->seqIndex);
                     }
                 }
             }
@@ -291,17 +292,17 @@ void wmseqpoint_update(GameObject* obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_SET:
-        if (Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
+        if (Vec_distance((void*)&obj->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius &&
             state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) != 0)
         {
             if (state->sequenceId == WMSEQPOINT_SEQ_SPIRIT_1)
             {
                 mainSetBits(WMSEQPOINT_SPIRIT_1_GAMEBIT, 0);
                 target = ObjList_FindObjectById(WMSEQPOINT_SPIRIT_1_OBJID);
-                ((WmSeqPointState*)((GameObject*)target)->extra)->doneLatch = 0;
-                if (((GameObject*)target)->seqIndex != -1)
+                ((WmSeqPointState*)target->extra)->doneLatch = 0;
+                if (target->seqIndex != -1)
                 {
-                    (*gObjectTriggerInterface)->endSequence(((GameObject*)target)->seqIndex);
+                    (*gObjectTriggerInterface)->endSequence(target->seqIndex);
                 }
             }
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
@@ -309,7 +310,7 @@ void wmseqpoint_update(GameObject* obj)
         }
         break;
     case WMSEQPOINT_TRIGGER_PROXIMITY_BIT_CLEAR:
-        if (Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < state->triggerRadius &&
+        if (Vec_distance((void*)&obj->anim.worldPosX, &player->anim.worldPosX) < state->triggerRadius &&
             state->conditionGameBit != -1 && mainGetBit(state->conditionGameBit) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);

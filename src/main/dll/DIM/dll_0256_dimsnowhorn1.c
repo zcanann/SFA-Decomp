@@ -7,6 +7,7 @@
  * the full per-frame tick.
  */
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/object_api.h"
 #include "main/dll/moveLib.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
@@ -599,10 +600,10 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
         case 1:
             if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) < lbl_803E8290)
             {
-                o1 = ObjList_FindObjectById(id_a);
+                o1 = (int*)ObjList_FindObjectById(id_a);
                 if (o1 != NULL)
                     fn_8014C63C(o1);
-                o1 = ObjList_FindObjectById(id_b);
+                o1 = (int*)ObjList_FindObjectById(id_b);
                 if (o1 != NULL)
                     fn_8014C63C(o1);
                 inner->proximityPhase = 2;
@@ -613,12 +614,12 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
             if ((u32)phase == 0 ||
                 Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) > lbl_803E8240)
             {
-                o1 = ObjList_FindObjectById(id_a);
-                o2 = ObjList_FindObjectById(id_c);
+                o1 = (int*)ObjList_FindObjectById(id_a);
+                o2 = (int*)ObjList_FindObjectById(id_c);
                 if (o1 != NULL && o2 != NULL)
                     fn_8014C66C(o1, (int)o2);
-                o1 = ObjList_FindObjectById(id_b);
-                o2 = ObjList_FindObjectById(id_d);
+                o1 = (int*)ObjList_FindObjectById(id_b);
+                o2 = (int*)ObjList_FindObjectById(id_d);
                 if (o1 != NULL && o2 != NULL)
                     fn_8014C66C(o1, (int)o2);
                 inner->proximityPhase = 1;

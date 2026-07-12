@@ -18,6 +18,7 @@
  * gates entry to each mode.
  */
 #include "main/mm.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/CAM/camworldmap_state.h"
 #include "main/game_object.h"
@@ -137,8 +138,8 @@ void CameraModeWorldMap_update(u8* obj)
     s16 pitchDelta;
 
     focus = (GameObject*)camera->anim.targetObj;
-    objA = (GameObject*)ObjList_FindObjectById(0x42fff);
-    objB = (GameObject*)ObjList_FindObjectById(0x4325b);
+    objA = ObjList_FindObjectById(0x42fff);
+    objB = ObjList_FindObjectById(0x4325b);
     buttons = getButtonsHeld(0);
     getButtonsJustPressed(0);
 
@@ -161,7 +162,7 @@ void CameraModeWorldMap_update(u8* obj)
                 fn_8012DDB8(0);
                 (*gScreenTransitionInterface)->step(0xc, 1);
                 gCamWorldMapState->flags.transitionActive = 0;
-                mk = (GameObject*)ObjList_FindObjectById(0x43077);
+                mk = ObjList_FindObjectById(0x43077);
                 *(u8*)(*(int*)&mk->extra + 0x27d) = 0;
             }
             if (gCamWorldMapState->flags.transitionActive == 0)
@@ -223,7 +224,7 @@ void CameraModeWorldMap_update(u8* obj)
                 dPitch = (s16)((s8)padGetCY(0) * 3);
                 if (gCamWorldMapState->focusBlendTimer != 0)
                 {
-                    GameObject* f = (GameObject*)ObjList_FindObjectById(gCamWorldMapState->focusObjectId);
+                    GameObject* f = ObjList_FindObjectById(gCamWorldMapState->focusObjectId);
                     f32 dx = f->anim.worldPosX - objA->anim.worldPosX;
                     f32 dz = f->anim.worldPosZ - objA->anim.worldPosZ;
                     CameraModeWorldMapState* st;
@@ -294,7 +295,7 @@ void CameraModeWorldMap_update(u8* obj)
         break;
     case WORLDMAP_CAMERA_LOCKED_PATH:
     {
-        GameObject* g = (GameObject*)ObjList_FindObjectById(0x43077);
+        GameObject* g = ObjList_FindObjectById(0x43077);
         if (gCamWorldMapState->previousMode != gCamWorldMapState->mode)
         {
             (*gScreenTransitionInterface)->start(0xc, 1);
@@ -309,7 +310,7 @@ void CameraModeWorldMap_update(u8* obj)
                 fn_8012DDB8(1);
                 (*gScreenTransitionInterface)->step(0xc, 1);
                 gCamWorldMapState->flags.transitionActive = 0;
-                mk = (GameObject*)ObjList_FindObjectById(0x43077);
+                mk = ObjList_FindObjectById(0x43077);
                 *(u8*)(*(int*)&mk->extra + 0x27d) = 1;
             }
             if (gCamWorldMapState->flags.transitionActive == 0)
@@ -387,7 +388,7 @@ void CameraModeWorldMap_update(u8* obj)
 
     gCamWorldMapState->previousMode = gCamWorldMapState->mode;
     {
-        GameObject* marker = (GameObject*)ObjList_FindObjectById(0x431dc);
+        GameObject* marker = ObjList_FindObjectById(0x431dc);
         mdx = marker->anim.worldPosX - camera->anim.worldPosX;
         mdz = marker->anim.worldPosZ - camera->anim.worldPosZ;
         marker->anim.rotX = (s16)(getAngle(mdx, mdz) + 0x8000);

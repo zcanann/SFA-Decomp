@@ -4,6 +4,7 @@
  * and drives a hit-detect object that clears its target on impact.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/object_api.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
@@ -247,7 +248,6 @@ void dimsnowball_update(GameObject* obj)
 
 void dimsnowball_init(DimSnowballObject* objArg, DimSnowballDef* def)
 {
-    extern u8* ObjList_FindObjectById(int objectId);
     DimSnowballObject* obj = objArg;
     DimSnowballState* state;
 

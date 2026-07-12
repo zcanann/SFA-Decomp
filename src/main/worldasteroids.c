@@ -8,7 +8,6 @@ extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;
 extern f32 lbl_803E65EC;
 extern f32 lbl_803E65F0;
-extern WorldAsteroidsObject* ObjList_FindObjectById(int objectId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 fsin16Approx(u16 angle);
 extern f32 fcos16Approx(u16 angle);
@@ -58,7 +57,7 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
     f32 orbitProduct;
 
     state = obj->state;
-    anchor = ObjList_FindObjectById(WORLD_ASTEROIDS_CENTER_OBJECT_ID);
+    anchor = (WorldAsteroidsObject*)ObjList_FindObjectById(WORLD_ASTEROIDS_CENTER_OBJECT_ID);
     obj->rotX += state->rotStepX;
     obj->rotY += state->rotStepY;
     obj->rotZ += state->rotStepZ;

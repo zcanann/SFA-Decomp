@@ -10,6 +10,7 @@
  * energy via game bit 0x4e3 against the map-event Tricky-energy gauge.
  */
 #include "main/gameplay_runtime.h"
+#include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
@@ -28,7 +29,6 @@
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 enemy_getHealthFraction(int* obj);
-extern int* ObjList_FindObjectById(int objId);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_80138920(int* obj, int a, int b);
 extern const f32 lbl_803E5260;
@@ -108,7 +108,7 @@ void NW_tricky_update(int* obj)
 
                 for (i = 0, ip = ids.ids; i < 3; i++, ip++)
                 {
-                    found = ObjList_FindObjectById(*ip);
+                    found = (int*)ObjList_FindObjectById(*ip);
                     if (found != NULL && enemy_getHealthFraction(found) > lbl_803E5260)
                     {
                         (*(void (**)(int*, int, int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x34))(tricky, 1,

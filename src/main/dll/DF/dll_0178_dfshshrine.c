@@ -148,7 +148,6 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
-extern void* ObjList_FindObjectById(int objId);
 extern void fn_8014C5C0(void* obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);

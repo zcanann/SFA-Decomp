@@ -114,7 +114,7 @@ typedef struct ArwSquadronState
     f32 activationDistance;
     f32 exitDistance;
     f32 rollAmplitude;
-    int leaderObj;
+    GameObject* leaderObj;
     s16 rotXSpeed;
     s16 rotYSpeed;
     s16 rotZSpeed;

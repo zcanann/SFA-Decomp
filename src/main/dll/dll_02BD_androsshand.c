@@ -13,6 +13,7 @@
  * damage texture index is written into the model's texture slot.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/object_api.h"
 #include "main/dll/dll_02BC_andross.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -63,7 +64,7 @@ void AndrossHand_update(int obj)
 
     if (state->androssObj == NULL)
     {
-        state->androssObj = (GameObject*)ObjList_FindObjectById(ANDROSS_OBJ_ID);
+        state->androssObj = ObjList_FindObjectById(ANDROSS_OBJ_ID);
     }
     if (state->arwingObj == NULL)
     {

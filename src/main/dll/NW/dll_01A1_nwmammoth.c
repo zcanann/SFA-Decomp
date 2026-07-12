@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
@@ -64,7 +65,6 @@ extern u8 lbl_803DBFAC[4];
 extern u8 lbl_803DBFB0[4];
 extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
-extern int* ObjList_FindObjectById(int id);
 extern void fn_8014C66C(int* o, int* target);
 extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern f32 getXZDistance(void* a, void* b);
@@ -455,7 +455,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     mainSetBits(gNwMammothBushGameBits[i], 0);
                 }
                 {
-                    int* o2 = ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
+                    int* o2 = (int*)ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
                     if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
                     {
                         fn_8014C66C(o2, (int*)state->playerObject);

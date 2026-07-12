@@ -93,11 +93,11 @@ void AndrossBrain_update(GameObject* obj)
 
     if (state->andross == NULL)
     {
-        state->andross = (GameObject*)ObjList_FindObjectById(ANDROSS_OBJ_ID);
+        state->andross = ObjList_FindObjectById(ANDROSS_OBJ_ID);
     }
     if (state->lightning == NULL)
     {
-        state->lightning = (GameObject*)ObjList_FindObjectById(ANDROSSLIGH_OBJ_ID);
+        state->lightning = ObjList_FindObjectById(ANDROSSLIGH_OBJ_ID);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ANDROSSBRAIN_HIT_VOLUME_SLOT, 2, -1);
     ObjHits_EnableObject((int)obj);

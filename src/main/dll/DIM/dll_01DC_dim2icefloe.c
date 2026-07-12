@@ -24,7 +24,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern int ObjList_FindObjectById(int id);
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/curve.h"
 #include "main/frame_timing.h"
@@ -109,7 +108,8 @@ void dim2icefloe_update(GameObject *obj)
         (obj)->anim.alpha = alpha;
         if ((((Dim2IceFloeState*)sub)->flags & 1) == 0)
         {
-            ((Dim2IceFloeState*)sub)->followedObj = ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);
+            ((Dim2IceFloeState*)sub)->followedObj =
+                (int)ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);
             ((Dim2IceFloeState*)sub)->curve.count = (*(VtableFn*)(**(int**)(((Dim2IceFloeState*)sub)->followedObj + 0x68) + 0x20))(
                 ((Dim2IceFloeState*)sub)->followedObj, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
             ((Dim2IceFloeState*)sub)->curve.dir = 0;

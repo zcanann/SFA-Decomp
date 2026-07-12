@@ -6,6 +6,7 @@
 typedef struct ObjModel ObjModel;
 
 GameObject* Obj_GetPlayerObject(void);
+GameObject* ObjList_FindObjectById(u32 objectId);
 u8 Obj_IsLoadingLocked(void);
 ObjModel* Obj_GetActiveModel(GameObject* obj);
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags);

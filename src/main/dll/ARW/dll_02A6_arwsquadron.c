@@ -461,7 +461,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
 void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
 {
     ObjAnimComponent* objAnim = &obj->anim;
-    GameObject* leaderObj = (GameObject*)state->leaderObj;
+    GameObject* leaderObj = state->leaderObj;
     ObjAnimComponent* leaderAnim = &leaderObj->anim;
     ArwSquadronState* leaderState = (ArwSquadronState*)leaderObj->extra;
     ArwSquadronSetup* setup = (ArwSquadronSetup*)objAnim->placementData;
@@ -541,18 +541,18 @@ void ARWSquadron_update(int obj)
     {
     case ARW_SQUADRON_STATE_WAITING:
     {
-        int leader;
+        GameObject* leader;
         ArwSquadronSetup* setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
         int enable;
         getArwing();
-        leader = obj;
+        leader = (GameObject*)obj;
         if (setupL->leaderObjectId > 0)
         {
-            if ((u32)state->leaderObj == 0)
+            if (state->leaderObj == NULL)
                 state->leaderObj = ObjList_FindObjectById(setupL->leaderObjectId);
             leader = state->leaderObj;
         }
-        if ((u32)leader == 0)
+        if (leader == NULL)
             goto enable0;
         {
             f32 thr = state->activationDistance;
@@ -561,7 +561,7 @@ void ARWSquadron_update(int obj)
             int inRange;
             if (aim == NULL)
                 aim = Obj_GetPlayerObject();
-            deltaZ = ((GameObject*)leader)->anim.localPosZ - aim->anim.localPosZ;
+            deltaZ = leader->anim.localPosZ - aim->anim.localPosZ;
             inRange = (deltaZ < thr && deltaZ > lbl_803E7164);
             if (!inRange)
                 goto enable0;
@@ -574,7 +574,7 @@ void ARWSquadron_update(int obj)
                 int inRange2;
                 if (aim2 == NULL)
                     aim2 = Obj_GetPlayerObject();
-                d2 = ((GameObject*)leader)->anim.localPosZ - aim2->anim.localPosZ;
+                d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
                 inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
                 if (inRange2)
                     goto enable1;
@@ -608,16 +608,16 @@ void ARWSquadron_update(int obj)
     }
     case ARW_SQUADRON_STATE_ACTIVE:
     {
-        int leader;
+        GameObject* leader;
         ArwSquadronSetup* setupL;
         int disable;
         ((GameObject*)obj)->anim.alpha = 0xff;
         setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
         getArwing();
-        leader = obj;
-        if ((u32)state->leaderObj != 0)
+        leader = (GameObject*)obj;
+        if (state->leaderObj != NULL)
             leader = state->leaderObj;
-        if ((u32)leader == 0)
+        if (leader == NULL)
             goto disable0;
         {
             f32 thr = state->activationDistance;
@@ -626,7 +626,7 @@ void ARWSquadron_update(int obj)
             int inRange;
             if (aim == NULL)
                 aim = Obj_GetPlayerObject();
-            deltaZ = ((GameObject*)leader)->anim.localPosZ - aim->anim.localPosZ;
+            deltaZ = leader->anim.localPosZ - aim->anim.localPosZ;
             inRange = (deltaZ < thr && deltaZ > lbl_803E7164);
             if (inRange)
                 goto disable0;
@@ -639,7 +639,7 @@ void ARWSquadron_update(int obj)
                 int inRange2;
                 if (aim2 == NULL)
                     aim2 = Obj_GetPlayerObject();
-                d2 = ((GameObject*)leader)->anim.localPosZ - aim2->anim.localPosZ;
+                d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
                 inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
                 if (!inRange2)
                     goto disable1;
@@ -673,7 +673,7 @@ void ARWSquadron_update(int obj)
                 ((GameObject*)obj)->anim.rotZ = state->rotZSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
             }
         }
-        if ((u32)state->leaderObj != 0)
+        if (state->leaderObj != NULL)
         {
             arwsquadron_followLeader((GameObject*)obj, state);
         }

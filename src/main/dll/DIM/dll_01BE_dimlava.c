@@ -11,6 +11,7 @@
 #define LAVA1BE_FLAG_INACTIVE   0x10
 #define LAVA1BE_FLAG_FALLING    0x20
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/object_api.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
@@ -108,7 +109,6 @@ extern f32 gDimLavaLightAttenNear, gDimLavaLightAttenFar, gDimLavaGlowRadius;
 extern u8 gDimLavaDebrisBaseVec[];
 extern void vecRotateZXY(void* in, void* out);
 
-extern int ObjList_FindObjectById(int id);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
@@ -250,7 +250,7 @@ void lavaball1be_init(s16* obj, u8* p)
         {
             ((GameObject*)obj)->anim.modelState->flags |= 0x810;
         }
-        state->targetObj = (GameObject*)ObjList_FindObjectById(state->linkedId);
+        state->targetObj = ObjList_FindObjectById(state->linkedId);
         state->flags |= LAVA1BE_FLAG_INACTIVE;
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->objectFlags |= DIMLAVA_OBJFLAG_HITDETECT_DISABLED;

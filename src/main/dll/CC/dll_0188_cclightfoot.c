@@ -178,7 +178,6 @@ extern u8 gCcLightfootHitCooldown[8];
 extern int getAngle(float y, float x);
 extern f32 enemy_getHealthFraction(register int obj);
 extern void fn_8014C66C(int obj, int target);
-extern int ObjList_FindObjectById(int id);
 extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
 typedef struct LightfootAnimTable
@@ -402,8 +401,8 @@ void cclightfoot_update(int obj)
                 ObjLink_AttachChild(obj, (int)state->childObj, 0);
             }
             state->playerObj = (int)Obj_GetPlayerObject();
-            state->targetA = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
-            state->targetB = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_B);
+            state->targetA = (int)ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
+            state->targetB = (int)ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_B);
             state->state = CCLIGHTFOOT_STATE_INTRO;
             state->sfxTimer = (f32)(int)randomGetRange(0xb4, 0x12c);
         }

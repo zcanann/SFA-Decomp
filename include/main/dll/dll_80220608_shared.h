@@ -255,7 +255,6 @@ extern const f32 lbl_803E75B0;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int ObjList_FindObjectById(int id);
 extern const f32 lbl_803E75AC;
 extern const f32 lbl_803E75B4;
 extern const f32 lbl_803E75C0;

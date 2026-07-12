@@ -4,6 +4,8 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+
+#define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
@@ -78,7 +80,6 @@ extern void objRenderModelAndHitVolumes(f32 e);
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern void vecRotateZXY(void* in, void* out);
-extern int ObjList_FindObjectById(int id);
 extern int objCreateLight(int obj, int arg);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
@@ -172,8 +173,8 @@ void worldobj_init(GameObject* obj, int arg)
         state->effectState = 0;
         break;
     case 0x80f:
-        objA = ObjList_FindObjectById(0x42fe7);
-        objB = ObjList_FindObjectById(0x4305a);
+        objA = ObjList_FindObjectByIdLegacy(0x42fe7);
+        objB = ObjList_FindObjectByIdLegacy(0x4305a);
         base = ((GameObject*)objB)->anim.localPosY - ((GameObject*)objA)->anim.localPosY;
         state->orbitStartY = (((GameObject*)objA)->anim.localPosY - base) + (f32)(int)randomGetRange(-0x3e8, 0x3e8);
         state->orbitEndY = ((GameObject*)objB)->anim.localPosY + (f32)(int)randomGetRange(-5, 5);
@@ -314,8 +315,8 @@ void worldobj_update(GameObject* obj)
         }
         else
         {
-            objA = ObjList_FindObjectById(0x42fe7);
-            objB = ObjList_FindObjectById(0x4305a);
+            objA = ObjList_FindObjectByIdLegacy(0x42fe7);
+            objB = ObjList_FindObjectByIdLegacy(0x4305a);
             if ((void*)objA != NULL && (void*)objB != NULL)
             {
                 state->orbitAngle = (int)((f32)state->spinXStep * timeDelta + state->orbitAngle);
@@ -356,12 +357,12 @@ void worldobj_update(GameObject* obj)
     case 0x5dc:
         if (obj->unkF4 == 0)
         {
-            obj->unkF4 = ObjList_FindObjectById(0x431dc);
+            obj->unkF4 = ObjList_FindObjectByIdLegacy(0x431dc);
             ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->unkF4, 0);
         }
         if (obj->unkF8 == 0)
         {
-            obj->unkF8 = ObjList_FindObjectById(0x4325b);
+            obj->unkF8 = ObjList_FindObjectByIdLegacy(0x4325b);
             ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->unkF8, 0);
         }
         tex = objFindTexture(obj, 0, 0);
@@ -460,7 +461,7 @@ void worldobj_update(GameObject* obj)
     case 0x5d8:
         if (obj->unkF8 == 0)
         {
-            child = ObjList_FindObjectById(state->attachChildObjectId);
+            child = ObjList_FindObjectByIdLegacy(state->attachChildObjectId);
             if ((void*)child != NULL)
             {
                 ((GameObject*)child)->anim.rootMotionScale *= lbl_803E6668;
@@ -518,7 +519,7 @@ void worldobj_update(GameObject* obj)
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosX = obj->anim.localPosX;
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosY = lbl_803E66B8 + obj->anim.localPosY;
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosZ = obj->anim.localPosZ;
-            objA = ObjList_FindObjectById(0x4300c);
+            objA = ObjList_FindObjectByIdLegacy(0x4300c);
             if ((void*)objA != NULL && (((GameObject*)objA)->anim.flags & OBJANIM_FLAG_HIDDEN))
             {
         Obj_SetActiveModelIndex((GameObject*)gWorldObjEffectTargetObj, 1);

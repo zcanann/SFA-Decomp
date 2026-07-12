@@ -8,6 +8,7 @@
  * event (flood the fortress and lock the map).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_api.h"
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
@@ -66,7 +67,6 @@ extern f32 lbl_803E43EC;
 extern void s16toFloat(void* p, int duration);
 extern void storeZeroToFloatParam(void* p);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int ObjList_FindObjectById(int objectId);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
 extern void staffToggle(GameObject* obj, int a);

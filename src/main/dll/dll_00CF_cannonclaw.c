@@ -8,6 +8,7 @@
  * bodies and object descriptors live in their own TUs (dll_00D0/dll_00D1).
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
 #include "main/gamebits.h"
@@ -23,7 +24,6 @@ extern void* gGrimbleStateHandlersB[6];
 extern f32 lbl_803E2F30;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
-extern void* ObjList_FindObjectById(int id);
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -85,9 +85,9 @@ void cannonclaw_hitDetect(void)
 
 void cannonclaw_update(u8* obj)
 {
-    u8* trickyState;
+    GameObject* trickyObj;
     getTrickyObject();
-    trickyState = ObjList_FindObjectById(CANNONCLAW_OBJID_TRICKY);
+    trickyObj = ObjList_FindObjectById(CANNONCLAW_OBJID_TRICKY);
     if (((GameObject*)obj)->unkF4 != 0)
         return;
     if (((GameObject*)obj)->anim.currentMove != CANNONCLAW_MOVE_ARM)
@@ -95,9 +95,9 @@ void cannonclaw_update(u8* obj)
         ObjAnim_SetCurrentMove((int)obj, CANNONCLAW_MOVE_ARM, lbl_803E2F34, 0);
     }
     ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E2F38, timeDelta, NULL);
-    if (trickyState == NULL)
+    if (trickyObj == NULL)
         return;
-    if (mainGetBit(((GameObject*)trickyState)->anim.placementData[13]) == 0)
+    if (mainGetBit(trickyObj->anim.placementData[13]) == 0)
         return;
     ((GameObject*)obj)->unkF4 = 1;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =

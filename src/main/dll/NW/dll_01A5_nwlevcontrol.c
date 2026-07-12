@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_api.h"
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
@@ -78,7 +79,6 @@ extern f32 lbl_803E5280;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
-extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 extern void gameTimerStop(void);
 extern void envFxActFn_800887f8(u8 value);
@@ -318,7 +318,7 @@ int fn_801CFD68(u8* stateBytes)
     int obj;
 
     table = lbl_803269F8;
-    obj = ObjList_FindObjectById(table[state->tableIndex]);
+    obj = (int)ObjList_FindObjectById(table[state->tableIndex]);
     if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -332,7 +332,7 @@ int fn_801CFD68(u8* stateBytes)
 
     if (state->tableIndex != 0)
     {
-        obj = ObjList_FindObjectById(table[state->tableIndex - 1]);
+        obj = (int)ObjList_FindObjectById(table[state->tableIndex - 1]);
         if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
