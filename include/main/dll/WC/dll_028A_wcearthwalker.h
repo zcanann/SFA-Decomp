@@ -68,6 +68,7 @@ extern f32 gEarthWalkerMoveStartProgress;
 extern f32 gEarthWalkerAnimAdvanceRate;
 extern int gEarthWalkerMoveBlendData;
 extern f32 gEarthWalkerLookAtMaxDistance;
+extern f32 lbl_803E6CE0;
 
 int earthwalker_getExtraSize(void);
 int earthwalker_getObjectTypeId(void);

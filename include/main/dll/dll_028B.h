@@ -26,6 +26,14 @@ STATIC_ASSERT(offsetof(Dll28BState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
 STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
 
+extern f32 gWcEarthWalkerFarPlayerDistance;
+extern f32 gWcEarthWalkerNearPlayerDistance;
+extern f32 gWcEarthWalkerIdleTimerThreshold;
+extern f32 gWcEarthWalkerCurveAdvanceStep;
+extern f32 gWcEarthWalkerApproachPlayerDistance;
+extern f32 gWcEarthWalkerChaseMoveSpeed;
+extern f32 gWcEarthWalkerWalkMoveSpeed;
+
 int dll_28B_getExtraSize(void);
 int dll_28B_getObjectTypeId(void);
 void dll_28B_free(int obj);

@@ -35,6 +35,7 @@
 #include "main/dll/moveLib.h"
 #include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
+#include "main/dll/dll_028B.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
@@ -60,7 +61,7 @@ void earthwalker_free(void)
 void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    int state = (int)ewObj->state;
+    EarthWalkerState* state = ewObj->state;
 
     if (visible != 0)
     {
@@ -72,8 +73,7 @@ void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 void earthwalker_hitDetect(GameObject* obj)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    int state = (int)ewObj->state;
-    EarthWalkerState* ewState = (EarthWalkerState*)state;
+    EarthWalkerState* ewState = ewObj->state;
 
     if (ewObj->currentMove == 0x203)
     {
@@ -94,8 +94,7 @@ void earthwalker_update(int obj)
     extern int mainGetBit(int eventId);
     extern u8 ObjHitReact_Update();
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    int state = (int)ewObj->state;
-    EarthWalkerState* ewState = (EarthWalkerState*)state;
+    EarthWalkerState* ewState = ewObj->state;
     int prevAnim;
 
     if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
@@ -120,7 +119,7 @@ void earthwalker_update(int obj)
     }
 
     prevAnim = ewState->animPhase;
-    dll_2E_func03((GameObject*)obj, (MoveLibState*)state);
+    dll_2E_func03((GameObject*)obj, (MoveLibState*)ewState);
     if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 && ewState->animPhase == 1)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
@@ -525,13 +524,12 @@ int dll_28B_stateHandler1(int obj, int ai)
 int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    int state = (int)ewObj->state;
-    EarthWalkerState* ewState = (EarthWalkerState*)state;
+    EarthWalkerState* ewState = ewObj->state;
     int i;
 
     ewState->flags &= ~1;
     characterDoEyeAnims((GameObject*)(obj), (int)ewState->eyeAnimState);
-    if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)state, 0, 0) != 0)
+    if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)ewState, 0, 0) != 0)
     {
         return 0;
     }
@@ -557,18 +555,17 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
 void earthwalker_init(GameObject* obj, int setup)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    int state = (int)ewObj->state;
-    EarthWalkerState* ewState = (EarthWalkerState*)state;
+    EarthWalkerState* ewState = ewObj->state;
     int local;
 
     local = gEarthWalkerMoveBlendData;
     ewObj->animEventCallback = earthwalker_SeqFn;
-    dll_2E_func05(obj, (MoveLibState*)state, -8192, 12743, 2);
-    dll_2E_func09(state, 0, &local, 2);
+    dll_2E_func05(obj, (MoveLibState*)ewState, -8192, 12743, 2);
+    dll_2E_func09((int)ewState, 0, &local, 2);
     /* moveLib state+0x614: head look-at only engages while the target is
      * within this distance (live-verified in Dolphin - drop it below the
      * player distance and the head snaps back to neutral). */
-    dll_2E_setLookAtMaxDistance(state, gEarthWalkerLookAtMaxDistance);
+    dll_2E_setLookAtMaxDistance((int)ewState, gEarthWalkerLookAtMaxDistance);
     ewState->moveLibFlags611 |= 2;
     ewObj->facingAngle = (s16)((s8) * (s8*)(setup + 0x18) << 8);
     ewState->encounterType = *(u8*)(setup + 0x19);
