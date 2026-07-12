@@ -5092,12 +5092,11 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 f32* xp;
                 int mi;
                 int n;
-                f32 zero;
                 mi = 0;
                 mp = m;
                 zp = posZ;
                 xp = posX;
-                zero = __AR_Callback;
+                dist = __AR_Callback;
                 do
                 {
                     s16 mb = 1;
@@ -5111,7 +5110,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                     dp = ld;
                     for (; n < 4; n++)
                     {
-                        if (dp[0] + (px * bp[0] + pz * ap[0]) < zero)
+                        if (dp[0] + (px * bp[0] + pz * ap[0]) < dist)
                             *mp |= mb;
                         mb = (s16)(mb << 1);
                         ap++;
