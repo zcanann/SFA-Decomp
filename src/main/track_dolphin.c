@@ -2369,7 +2369,6 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     return 0;
 }
 
-#pragma peephole on
 #pragma optimization_level 2
 #pragma opt_propagation off
 void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
@@ -3126,6 +3125,7 @@ static inline void GXTexCoord2s16(const s16 x, const s16 y)
     GXWGFifo.s16 = y;
 }
 
+#pragma peephole on
 #pragma optimization_level 2
 typedef struct TrackGXColor
 {
