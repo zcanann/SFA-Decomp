@@ -27,6 +27,7 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/player_control_interface.h"
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
  * HighTop_hitDetect when the air meter empties (death follow-up spawn). */

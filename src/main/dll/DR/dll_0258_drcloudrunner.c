@@ -31,6 +31,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0258_drcloudrunner.h"
+#include "main/player_control_interface.h"
 
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
@@ -430,7 +431,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
         (obj)->anim.localPosZ = stk.mat[3];
         (obj)->anim.rotX = stk.angles[0];
     }
-    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))((int)obj, inner, 8, 1);
+    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 8, 1);
     ((CloudRunnerState*)inner)->baddie.gravity = lbl_803E8424;
     fn_802BF0C8((int)obj, inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x4c4), -0x11c7, 0x1555, 1);
@@ -1007,7 +1008,7 @@ void DR_CloudRunner_hitDetect(GameObject* obj)
             (*gGameUIInterface)->airMeterSetShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
             inner->airTimeRemaining = 1;
-            (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))((int)obj, (int)inner, 7);
+            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 7);
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_gscsc);
     }
@@ -1058,7 +1059,7 @@ void fn_802C11BC(GameObject* obj, f32 f, int triggerFrame)
     {
         *(int*)&inner->baddie &= ~0x400000;
     }
-    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
+    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
         (int)obj, (int)inner, f, timeDelta, (int)gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
     if ((*(int*)&inner->baddie.eventFlags & 1) != 0)
     {
@@ -1131,7 +1132,7 @@ void DR_CloudRunner_update(GameObject* obj)
                 inner->unkB04 = 0;
                 inner->flagsBB6 |= 4;
                 inner->moveFlags |= 1;
-                (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))((int)obj, (int)inner, 4);
+                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 4);
             }
             else
             {

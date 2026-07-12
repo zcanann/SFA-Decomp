@@ -295,7 +295,6 @@ extern u8 gKytesMumMoveSets[];
 extern int gKytesMumRoamEventSfxTable;
 extern int lbl_803DC2D0;
 extern f32 lbl_803E699C;
-extern void** gPlayerInterface;
 extern f32 lbl_803E690C;
 extern f32 lbl_803E6920;
 extern f32 lbl_803E6938;

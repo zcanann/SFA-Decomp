@@ -8,6 +8,7 @@
 #include "main/objprint_api.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/player_control_interface.h"
 
 typedef struct DREarthWarriorPlacement
 {
@@ -591,7 +592,7 @@ void fn_802BE6E8(GameObject* obj, int t, int p3)
     }
     *(int*)((char*)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, sub, inner);
-    (*(void (*)(void*, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
+    (*(void (*)(void*, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
     obj->anim.rotY =
         (s16)(obj->anim.rotY + (((EarthWarriorState*)inner)->baddie.spawnRotY >> 2));
@@ -1193,7 +1194,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
                         }
                     }
                     inner->sub.savedControlMode = inner->baddie.controlMode;
-                    (*(void (*)(void*, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
+                    (*(void (*)(void*, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
                 }
             }
         }
@@ -1377,7 +1378,7 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     ((DREarthWarriorState*)inner)->unk14E8 = ((DREarthWarriorPlacement*)def)->unk19;
     ((DREarthWarriorState*)inner)->unk14DE = 5;
     ((DREarthWarriorState*)inner)->unk14F4 = -1;
-    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))((int)obj, inner, 4, 1);
+    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 4, 1);
     *(int*)inner |= 0x4000;
     ((EarthWarriorState*)inner)->baddie.gravity = lbl_803E8384;
     pathState = (u8*)&((EarthWarriorState*)inner)->baddie + 4;

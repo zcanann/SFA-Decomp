@@ -13,6 +13,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/DIM/dll_01D9_dim2prisonmammoth.h"
+#include "main/player_control_interface.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define PAD_BUTTON_A                                 0x100
@@ -21,7 +22,6 @@ extern int gDim2PrisonMammothStateHandlers[];
 extern void* gDim2PrisonMammothDefaultStateHandler;
 extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;
-extern int* gPlayerInterface;
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
@@ -143,7 +143,7 @@ int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     inner = *(int*)&((GameObject*)obj)->extra;
-    (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, inner, 2);
+    (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, inner, 2);
 
     v.x = ((GameObject*)obj)->anim.localPosX;
     v.y = ((GameObject*)obj)->anim.localPosY;
@@ -228,7 +228,7 @@ void dim2prisonmammoth_update(int obj)
     ((Dim2prisonmammothState*)inner)->unk318 = 0;
     ((Dim2prisonmammothState*)inner)->unk330 = 0;
     ((Dim2prisonmammothState*)inner)->flags |= 0x400000;
-    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
+    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }
@@ -244,7 +244,7 @@ void dim2prisonmammoth_init(int obj, int params)
         ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
         ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
     }
-    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
+    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     ((Dim2prisonmammothState*)inner)->unk25F = 0;
     ((GameObject*)obj)->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
 }

@@ -27,6 +27,7 @@
 #include "main/dll/modgfx.h"
 #include "string.h"
 #include "main/object_transform.h"
+#include "main/player_control_interface.h"
 
 typedef struct Dll19Placement
 {
@@ -59,7 +60,6 @@ extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
 extern u8 lbl_802C2190[];
-extern int* gPlayerInterface;
 extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
@@ -1026,7 +1026,7 @@ int dll_19_func0F(GameObject *obj, ObjSeqState* seq, char* st, int moveArg0, int
             else
             {
                 td = timeDelta;
-                (*(void (**)(int, char*, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                (*(void (**)(int, char*, f32, f32, int, int))((char*)*gPlayerInterface + 0x8))(
                     (int)obj, st, td, td, moveArg0, moveArg1);
             }
         }
@@ -1039,7 +1039,7 @@ int dll_19_func0F(GameObject *obj, ObjSeqState* seq, char* st, int moveArg0, int
             (obj)->anim.localPosX = dist * nx + seq->posOffsetX;
             (obj)->anim.localPosZ = dist * nz + seq->posOffsetZ;
             td = timeDelta;
-            (*(void (**)(int, char*, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+            (*(void (**)(int, char*, f32, f32, int, int))((char*)*gPlayerInterface + 0x8))(
                 (int)obj, st, td, td, moveArg0, moveArg1);
         }
     }

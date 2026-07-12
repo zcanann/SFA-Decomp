@@ -43,6 +43,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/objhits.h"
+#include "main/player_control_interface.h"
 #include "main/objprint.h"
 #include "main/vecmath.h"
 #include "main/objlib.h"
@@ -124,7 +125,6 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 #define DBSTEALERWORM_HIT_VOLUME_SLOT 10
 
 extern void** gBaddieControlInterface;
-extern int* gPlayerInterface;
 extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
@@ -186,7 +186,7 @@ int dbstealerworm_stateHandlerB04(int obj, int baddie)
     b8 = *(int*)&((GameObject*)obj)->extra;
     if (*(char*)&((BaddieState*)baddie)->moveJustStartedB != '\0')
     {
-        (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, baddie, 1);
+        (**(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, baddie, 1);
         b8 = *(int*)&((GroundBaddieState*)b8)->control;
         fz = lbl_803E62A8;
         ((DbStealerwormControl*)b8)->countdown = lbl_803E62A8;
@@ -210,7 +210,7 @@ int dbstealerworm_stateHandlerB02(int obj, int baddie)
         ((DbStealerwormControl*)b8)->countdown = lbl_803E62A8;
         ((DbStealerwormControl*)b8)->nextSfxTime = fz;
         ((DbStealerwormControl*)b8)->unk04 = fz;
-        (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, baddie, 6);
+        (**(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, baddie, 6);
     }
     else
     {
@@ -502,7 +502,7 @@ int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie)
         }
         sub_40c->msgAdvance = 1;
     }
-    (**(int (**)(int, int, int, int, int*))(*gPlayerInterface + 0x34))((int)obj, baddie, 7, 0, lbl_80329640);
+    (**(int (**)(int, int, int, int, int*))((char*)*gPlayerInterface + 0x34))((int)obj, baddie, 7, 0, lbl_80329640);
     return 0;
 }
 
@@ -584,7 +584,7 @@ s16 dbstealerworm_setScale(int* obj)
 void dbstealerworm_hitDetect(GameObject* obj)
 {
     int* inner = obj->extra;
-    (*(void (*)(int, int*, int*))(*(int*)(*gPlayerInterface + 0xc)))((int)obj, inner, gDBStealerWormStateHandlersA);
+    (*(void (*)(int, int*, int*))(*(int*)((char*)*gPlayerInterface + 0xc)))((int)obj, inner, gDBStealerWormStateHandlersA);
 }
 
 void dbstealerworm_initialise(void)

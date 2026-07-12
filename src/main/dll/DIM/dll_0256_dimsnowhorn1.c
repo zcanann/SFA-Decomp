@@ -15,6 +15,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
+#include "main/player_control_interface.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE        0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */
@@ -305,7 +306,7 @@ int DIMSnowHorn1_stateHandler09(GameObject* obj, int state, f32 fv)
         }
     }
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8278;
-    (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))((int)obj, state, fv, 8);
+    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x20)))((int)obj, state, fv, 8);
 
     if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A)
     {
@@ -903,15 +904,15 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
                 state->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
             }
         }
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 1);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 1);
         break;
     case 5:
         animUpdate->sequenceEventActive = 0;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 2);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 2);
         break;
     case 4:
         animUpdate->sequenceEventActive = 0;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 7);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 7);
         break;
     case 1:
         animUpdate->sequenceEventActive = 0;
@@ -935,12 +936,12 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
         {
             animState = 7;
         }
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, animState);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, animState);
         break;
     case 3:
         animUpdate->sequenceEventActive = 0;
         state->baddie.moveJustStartedA = 1;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 7);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 7);
         break;
     default:
         break;
@@ -1468,7 +1469,7 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->trackContactMask = 9;
     }
-    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))((int)obj, (int)inner, 0xc, 1);
+    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, (int)inner, 0xc, 1);
     inner->baddie.gravity = gDIMSnowHorn1Gravity;
     pathState = (u8*)&inner->baddie + 4;
     pathState[0x25b] = 0;

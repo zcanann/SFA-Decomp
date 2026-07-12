@@ -30,6 +30,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"
 #include "main/frame_timing.h"
+#include "main/player_control_interface.h"
 
 #define DIMBOSS_OBJGROUP 3
 
@@ -82,7 +83,6 @@ extern u32 gDIMbossAnimController[];
 extern u32 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
 extern void (*gDIMbossHitDetectAnimTable[])(void);
-extern int gPlayerInterface;
 extern u32* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;

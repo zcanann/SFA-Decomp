@@ -21,6 +21,7 @@
 #include "main/camera.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/pad.h"
+#include "main/player_control_interface.h"
 
 #define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10
@@ -33,7 +34,6 @@ extern u32 ObjMsg_SendToObject();
 
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
-extern void** gPlayerInterface;
 extern f32 lbl_803E4C00;
 extern int lbl_80325AA0[6];
 extern int* gBaddieControlInterface;

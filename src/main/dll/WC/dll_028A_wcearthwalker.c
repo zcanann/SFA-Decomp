@@ -41,6 +41,7 @@
 #include "main/dll/earthwalker_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/player_control_interface.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -399,7 +400,7 @@ void earthwalker_update(int obj)
  * gDll28BStateHandlers / gDll28BSubstateHandlers; driven each frame by
  * gPlayerInterface->update). Each returns the next state index (0 = stay).
  * `ai` is the BaddieState at obj->extra (== the local `state` pointer); the
- * (*gPlayerInterface + 0x14)(obj, ai, N) calls are setState() requests.
+ * The slot at 0x14 is setState().
  *
  *   stateHandler:    0 -> next state 2; 1/3 set moveSpeed on (re)entry,
  *                    3 also faces the player; 2 = locomotion: drives the
@@ -427,7 +428,7 @@ int dll_28B_substateHandler3(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 3);
     }
     else if (*(s8*)&((BaddieState*)ai)->moveDone != 0)
     {
@@ -444,7 +445,7 @@ int dll_28B_substateHandler2(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 |= 1;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 1);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 1);
     }
     state->randomTimer -= timeDelta;
     dist = state->playerDistance;
@@ -471,7 +472,7 @@ int dll_28B_substateHandler1(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
+        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 2);
     }
     if (Curve_AdvanceAlongPath(&route->curve, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
     {

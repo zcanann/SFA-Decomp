@@ -43,6 +43,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+#include "main/player_control_interface.h"
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_00CA_icebaddie.h"
@@ -175,7 +176,6 @@ extern s16 gIceBaddieAttackMovesAlt[];
 extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
 
-extern int* gPlayerInterface;
 extern f32 lbl_803E2D70;
 extern f32 lbl_803E2D74;
 extern f32 lbl_803E2D78;
@@ -228,7 +228,7 @@ int iceBaddie_updateOpenState(GameObject* obj, int state)
     {
         control->effectFlags |= ICEBADDIE_FX_PUFF;
     }
-    (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
+    (*(int (**)(int, int, f32, int))((char*)*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
     return 0;
 }
 
@@ -275,7 +275,7 @@ int iceBaddie_updateOpenHitState(GameObject* obj, int state)
     {
         control->effectFlags |= ICEBADDIE_FX_PUFF;
     }
-    (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
+    (*(int (**)(int, int, f32, int))((char*)*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
     return 0;
 }
 #pragma opt_common_subs reset

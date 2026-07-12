@@ -21,12 +21,12 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/player_control_interface.h"
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 extern void** gBaddieControlInterface;
-extern void** gPlayerInterface;
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
 extern f32 lbl_803E2EB0;

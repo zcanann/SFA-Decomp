@@ -112,7 +112,6 @@ extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void* gDIMSnowHorn1Texture;
 extern f32 lbl_803E8410;
-extern int* gPlayerInterface;
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 extern f32 gEarthWarriorMatrix[];

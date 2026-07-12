@@ -19,6 +19,7 @@
 #include "main/objprint.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/dll/dll_028B.h"
+#include "main/player_control_interface.h"
 
 #define DLL28B_OBJ_GROUP    3
 #define OBJFLAG_BIT_2000000 0x2000000
@@ -66,7 +67,7 @@ void dll_28B_update(GameObject* obj)
     state->playerDistance = Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX);
     state->objectFlagsMirror |= OBJFLAG_BIT_2000000;
     dt = timeDelta;
-    (*(void (**)(int, int, f32, f32, void*, void*))(*gPlayerInterface + 0x8))(
+    (*(void (**)(int, int, f32, f32, void*, void*))((char*)*gPlayerInterface + 0x8))(
         (int)obj, (int)state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
     if ((state->flagsAC0 & 1) != 0)
     {
@@ -107,7 +108,7 @@ void dll_28B_init(GameObject* obj)
     dll_2E_func09(&state->moveLib, &blockB, &blockA, 8);
     state->moveLib.modeBits |= 0x22;
     (*gRomCurveInterface)->initCurve(&state->route, obj, gDll28BCurveInitParam, &curveParam, -1);
-    (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))((int)obj, (int)state, 4, 4);
+    (*(void (**)(int, int, int, int))((char*)*gPlayerInterface + 0x4))((int)obj, (int)state, 4, 4);
     ObjGroup_AddObject((int)obj, DLL28B_OBJ_GROUP);
 }
 

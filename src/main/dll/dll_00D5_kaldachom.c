@@ -29,6 +29,7 @@
 #include "main/audio/sfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/player_control_interface.h"
 
 /* object group this object belongs to */
 #define KALDACHOM_OBJGROUP 3
@@ -63,7 +64,6 @@ extern f32 gKaldachomDustSpawnScratch;
 extern f32 gKaldachomMouthSpawnScratch;
 extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
-extern u32* gPlayerInterface;
 extern u32* gBaddieControlInterface;
 extern void* gKaldachomEffectResource;
 extern f32 lbl_803E3060;
@@ -524,7 +524,7 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
     ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
     (obj)->anim.currentMoveProgress = lbl_803E307C;
     *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-    (*(VtableFn*)(*gPlayerInterface + 0x14))(obj, state, 0);
+    (*(VtableFn*)((char*)*gPlayerInterface + 0x14))(obj, state, 0);
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060;
