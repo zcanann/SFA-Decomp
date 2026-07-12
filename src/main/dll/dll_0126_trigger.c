@@ -127,8 +127,8 @@ void Trigger_initialise(void)
 
 void Trigger_free(GameObject* obj)
 {
-    u8 i;
     u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
+    u8 i;
     i = 0;
 
     while (i < 8)
