@@ -8,43 +8,17 @@
  * the defeated state, signalling andross and the lightning object.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 static const f32 gAndrossBrainRenderScale[2] = {1.0f, 0.0f};
 
-typedef struct AndrossBrainState
-{
-    GameObject* andross;   /* objId ANDROSS_OBJ_ID, main andross object */
-    GameObject* lightning; /* objId ANDROSSLIGH_OBJ_ID, androssligh target */
-    u8 pad08[0x1C - 0x08];
-    s8 brainState; /* BRAIN_* */
-    s8 prevState;
-    u8 health;     /* decrements per hit */
-    u8 flashTimer; /* frames of red flash / hit cooldown */
-    u8 pad20[0x28 - 0x20];
-} AndrossBrainState;
-
-STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
-STATIC_ASSERT(offsetof(AndrossBrainState, andross) == 0x0);
-STATIC_ASSERT(offsetof(AndrossBrainState, lightning) == 0x4);
-STATIC_ASSERT(offsetof(AndrossBrainState, brainState) == 0x1C);
-STATIC_ASSERT(offsetof(AndrossBrainState, prevState) == 0x1D);
-STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
-STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
-
 enum
 {
     ANDROSS_OBJ_ID = 0x47b77,
     ANDROSSLIGH_OBJ_ID = 0x4c611
-};
-
-enum
-{
-    BRAIN_SHIELDED = 0,
-    BRAIN_VULNERABLE = 1,
-    BRAIN_DEFEATED = 2
 };
 
 #define BRAIN_MAX_HEALTH                0x50
@@ -57,7 +31,7 @@ enum
     ANDROSS_SIGNAL_BRAIN_DEFEATED = 8
 };
 
-void androssbrain_setState(GameObject* obj, int newState, u8 force)
+void androssbrain_setState(GameObject* obj, AndrossBrainMode newState, u8 force)
 {
     AndrossBrainState* state;
 
@@ -66,7 +40,7 @@ void androssbrain_setState(GameObject* obj, int newState, u8 force)
         return;
     }
     state = (obj)->extra;
-    if (state->brainState != BRAIN_DEFEATED || force != 0)
+    if (state->brainState != ANDROSSBRAIN_DEFEATED || force != 0)
     {
         state->brainState = newState;
         if (force != 0)
@@ -94,9 +68,9 @@ void AndrossBrain_free(void)
 {
 }
 
-void AndrossBrain_render(int obj, int p2, int p3, int p4, int p5)
+void AndrossBrain_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gAndrossBrainRenderScale[0]);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, gAndrossBrainRenderScale[0]);
 }
 
 void AndrossBrain_hitDetect(void)
@@ -139,7 +113,7 @@ void AndrossBrain_update(GameObject* obj)
     *(u8*)&state->prevState = currentState;
     switch (state->brainState)
     {
-    case BRAIN_SHIELDED:
+    case ANDROSSBRAIN_SHIELDED:
         if (stateChanged != 0)
         {
             (*gGameUIInterface)->airMeterShutdown();
@@ -147,7 +121,7 @@ void AndrossBrain_update(GameObject* obj)
         (obj)->anim.rotX = state->andross->anim.rotX;
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
-    case BRAIN_VULNERABLE:
+    case ANDROSSBRAIN_VULNERABLE:
         if (stateChanged != 0)
         {
             state->flashTimer = 0x3c;
@@ -170,7 +144,7 @@ void AndrossBrain_update(GameObject* obj)
                 state->health -= 1;
                 if (state->health == 0)
                 {
-                    state->brainState = BRAIN_DEFEATED;
+                    state->brainState = ANDROSSBRAIN_DEFEATED;
                     andross_setPartSignal((GameObject*)state->andross, ANDROSS_SIGNAL_BRAIN_HIT);
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11);
                 }
@@ -182,10 +156,10 @@ void AndrossBrain_update(GameObject* obj)
         }
         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
-    case BRAIN_DEFEATED:
+    case ANDROSSBRAIN_DEFEATED:
         if (stateChanged != 0)
         {
-            androssligh_setState((GameObject*)state->lightning, (AndrossLighMode)BRAIN_DEFEATED, 0);
+            androssligh_setState((GameObject*)state->lightning, ANDROSSLIGH_DONE, 0);
             (*gGameUIInterface)->airMeterShutdown();
         }
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

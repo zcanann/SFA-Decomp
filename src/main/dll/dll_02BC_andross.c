@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/dll/dll_02BC_andross.h"
+#include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/dll/dll_02BD_androsshand.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
@@ -1857,7 +1858,7 @@ void andross_update(int obj)
     case 0x1c:
         if (actionChanged)
         {
-            androssbrain_setState(state->lightAnchorObj, 1, 0);
+            androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_VULNERABLE, 0);
             ObjHits_DisableObject(obj);
             state->actionTimer = 0x3c;
             state->durationTimer = 3.0f;
@@ -1904,7 +1905,7 @@ void andross_update(int obj)
                     state->prevFightPhase = 5;
                     state->actionToggle = 0;
                     state->actionState = 0x12;
-                    androssbrain_setState(state->lightAnchorObj, 0, 0);
+                    androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_SHIELDED, 0);
                     ObjHits_EnableObject(obj);
                 }
                 else
@@ -1951,7 +1952,7 @@ void andross_update(int obj)
     case 0x1d:
         if (actionChanged)
         {
-            androssbrain_setState(state->lightAnchorObj, 1, 0);
+            androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_VULNERABLE, 0);
             ObjHits_DisableObject(obj);
             state->actionTimer = gAndrossBrainAttackDuration;
             state->targetPosX = state->arwingObj->anim.localPosX;
