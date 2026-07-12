@@ -22,9 +22,9 @@
 #define AUDIO_LOAD_S_SAMPLE_BUF   0x400 /* sfx group: sample buffer */
 #define AUDIO_LOAD_MIDI_WAD       0x800 /* MIDI WAD */
 
-TextCallbackEntry gAudioArqRequests[0x300 / sizeof(TextCallbackEntry)];
+AudioArqRequestEntry gAudioArqRequests[0x300 / sizeof(AudioArqRequestEntry)];
 u8 gAudioReverbSettings[0x154];
-u8 gAudioAramBlock[0x2C];
+u32 gAudioAramBlock[0x2C / sizeof(u32)];
 MusicChannel gMusicChannels[0x240 / sizeof(MusicChannel)];
 SfxObjectChannel gSfxObjectChannels[0xC40 / sizeof(SfxObjectChannel)];
 u8 gAudioStreamDvdBlockCurrent[0x30];
@@ -1674,20 +1674,22 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
 }
 #pragma dont_inline reset
 
-void fn_80009008(void)
+void fn_80009008(u32 request)
 {
+    (void)request;
     gAudioArqRequestDone = 1;
 }
 
-void fn_80008EDC(TextCallbackEntry* p)
+void fn_80008EDC(u32 request)
 {
     int i;
-    TextCallbackEntry* e = gAudioArqRequests;
+    AudioArqRequestEntry* p = (AudioArqRequestEntry*)request;
+    AudioArqRequestEntry* e = gAudioArqRequests;
     for (i = 0; i < 16; i++)
     {
         if (p == e)
         {
-            e->fn(e->a, e->b, e->c);
+            e->callback(e->callbackArg1, e->callbackArg2, e->callbackArg3);
             return;
         }
         e++;
@@ -2068,7 +2070,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
 void fn_80008F38(void* addr, u32 dest, u32 size)
 {
     int idx;
-    TextCallbackEntry* entry;
+    AudioArqRequestEntry* entry;
     idx = gAudioArqRequestIndex;
     gAudioArqRequestIndex = idx + 1;
     entry = &gAudioArqRequests[idx];
@@ -2082,7 +2084,7 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
     }
     DCFlushRange(addr, size);
     gAudioArqRequestDone = 0;
-    ARQPostRequest(entry, 0x64, 0, 1, (u32)addr, dest, size, (void (*)(void*))fn_80009008);
+    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size, fn_80009008);
     while (gAudioArqRequestDone == 0)
     {
     }
@@ -2093,7 +2095,7 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
 {
     int idx;
     void* buf;
-    TextCallbackEntry* entry;
+    AudioArqRequestEntry* entry;
     idx = gAudioArqRequestIndex;
     gAudioArqRequestIndex = idx + 1;
     entry = &gAudioArqRequests[idx];
@@ -2107,13 +2109,13 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
     }
     buf = mmAlloc(size, 0, 0);
     *outBuf = buf;
-    entry->fn = (void (*)(int, int, int))cb;
-    entry->a = cbArg1;
-    entry->b = cbArg2;
-    entry->c = cbArg3;
+    entry->callback = (void (*)(int, int, int))cb;
+    entry->callbackArg1 = cbArg1;
+    entry->callbackArg2 = cbArg2;
+    entry->callbackArg3 = cbArg3;
     DCFlushRange(buf, size);
     gAudioArqRequestDone = 0;
-    ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
+    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
 }
 #pragma dont_inline reset
 

@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_INTERNAL_H_
 
 #include "global.h"
+#include "dolphin/ar.h"
 
 #define SFX_OBJECT_CHANNEL_COUNT 56
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
@@ -14,13 +15,15 @@
 #define STREAM_VOLBITS_CHANMASK_BIT 7
 #define STREAM_VOLBITS_VOLUME_MASK 0x7F
 
-typedef struct TextCallbackEntry {
-    u8 pad[0x20];
-    void (*fn)(int, int, int);
-    int a;
-    int b;
-    int c;
-} TextCallbackEntry;
+typedef struct AudioArqRequestEntry {
+    ARQRequest request;
+    void (*callback)(int, int, int);
+    int callbackArg1;
+    int callbackArg2;
+    int callbackArg3;
+} AudioArqRequestEntry;
+
+STATIC_ASSERT(sizeof(AudioArqRequestEntry) == 0x30);
 
 typedef struct MusicTrackSlot {
     s16 id;
@@ -190,7 +193,7 @@ extern double lbl_803DE5C0;
 extern double lbl_803DE5C8;
 extern volatile int gAudioArqRequestDone;
 extern int gAudioArqRequestIndex;
-extern TextCallbackEntry gAudioArqRequests[];
+extern AudioArqRequestEntry gAudioArqRequests[];
 extern u32 gAudioPendingLoadFlags;
 extern volatile u32 gAudioCompletedLoadFlags;
 extern char sMidiWadLoadedCallbackLoadError[];
@@ -236,7 +239,7 @@ extern void* gAudioStarfoxSSampleBufferHandle;
 extern int gAudioMemAllocHook;
 extern int gAudioMemFreeHook;
 extern u8 gAudioReverbSettings[];
-extern u8 gAudioAramBlock[];
+extern u32 gAudioAramBlock[0x2C / sizeof(u32)];
 
 int sndSeqPlayEx(int a, int b, void* bank, MusicSeqStartParams* params, int e);
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
@@ -247,7 +250,7 @@ void Sfx_StopAllObjectSounds(void);
 void AudioStream_UpdateFadeTimer(void);
 void AudioStream_CancelCallback(s32 result);
 void fn_8000D0B4(void);
-void fn_80008EDC(TextCallbackEntry* entry);
+void fn_80008EDC(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 
 #endif /* MAIN_AUDIO_INTERNAL_H_ */

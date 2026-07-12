@@ -23,17 +23,15 @@
 #include "main/table_file.h"
 #include "main/voxmaps.h"
 #include "main/vecmath.h"
+#include "dolphin/ai.h"
+#include "dolphin/ar.h"
 
 extern s32 gAttractMovieState;
-extern void AIReset(void);
 extern int sndFXKeyOff(u32 handle);
 extern int sndFXCheck(u32 handle);
 extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
 extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
-extern void AISetStreamPlayState(u32 state);
-extern void AISetStreamVolLeft(u8 volume);
-extern void AISetStreamVolRight(u8 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
@@ -76,13 +74,11 @@ extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern int Sfx_ResolveObjectSfxId(int *outChannel, u16 *sfxId);
 extern int memcmp(const void* lhs, const void* rhs, u32 size);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
-extern void ARQPostRequest(void* req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void*));
 extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
 extern char* strcat(char* dst, const char* src);
@@ -91,9 +87,7 @@ extern int PADInit(void);
 extern int PADRecalibrate(u32 mask);
 extern int PADReset(u32 mask);
 extern u8 lbl_803DCCA5;
-extern char* gameStrcpy(char* dst, char* src);
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
-extern void fn_80008F38(void *addr, u32 dest, u32 size);
 extern int DVDOpen(char* path, void* fileInfo);
 extern void DVDSetAutoInvalidation(int autoInval);
 extern void DCStoreRange(void* addr, u32 nBytes);
@@ -118,10 +112,6 @@ extern void sndOutputMode(int mode);
 extern u32 OSGetSoundMode(void);
 extern void OSSetSoundMode(int mode);
 extern int fn_800119FC(s16 *dest, s16 *start, s16 *out);
-extern void ARInit(void *arena, int count);
-extern void ARQInit(void);
-extern void AIInit(int arg);
-extern void AISetDSPSampleRate(int rate);
 extern void sndSetHooks(int *hooks);
 extern void sndInit(int a, int b, int c, int d, int e, int f);
 extern void sndAuxCallbackUpdateSettingsReverbSTD(void *settings);
@@ -130,9 +120,5 @@ extern void sndSetAuxProcessingCallbacks(int a, void *cb, void *settings, int d,
 extern void sndVolume(int a, int b, int c);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
-void fn_80008F38(void* addr, u32 dest, u32 size);
-int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
-u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-char *gameStrcpy(char *dst, char *src);
 
 #endif

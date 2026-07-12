@@ -48,7 +48,7 @@ int return0x64_8000A378(void);
 void doNothing_8000CF54(void);
 void audioFn_8000b694(u32 value);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
-void fn_80009008(void);
+void fn_80009008(u32 request);
 void MIDIWADLoadedCallback(int status, void* fileInfo);
 int musicInitMidiWad(void);
 void poolDataMLoadedCallback(int status, void* fileInfo);
@@ -67,5 +67,6 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 callback, 
 void audioSetSoundMode(int mode, u8 forceFlag);
 void audioLoadTriggerData(void);
 int audioInit(void);
+void fn_80008F38(void* addr, u32 dest, u32 size);
 
 #endif /* MAIN_AUDIO_H_ */
