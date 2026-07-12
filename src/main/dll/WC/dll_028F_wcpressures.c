@@ -17,6 +17,7 @@
 #include "main/dll/dll_0294_wctemple.h"
 #include "main/dll/WC/dll_0292_wctrexstatu.h"
 #include "main/dll/WC/dll_028F_wcpressures.h"
+#include "main/dll/WC/dll_0295_wcapertures.h"
 #include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 
@@ -342,17 +343,17 @@ ObjectDescriptor dll_299 = {
     (ObjectDescriptorCallback)dll_299_getObjectTypeId,
     dll_299_getExtraSize_ret_2,
 };
-u32 gWCApertureSObjDescriptor[14] = {0x00000000,
+ObjectDescriptor gWCApertureSObjDescriptor = {0x00000000,
                                      0x00000000,
                                      0x00000000,
                                      0x00090000,
-                                     (u32)wcapertures_initialise,
-                                     (u32)wcapertures_release,
+                                     (ObjectDescriptorCallback)wcapertures_initialise,
+                                     (ObjectDescriptorCallback)wcapertures_release,
                                      0x00000000,
-                                     (u32)wcapertures_init,
-                                     (u32)wcapertures_update,
-                                     (u32)wcapertures_hitDetect,
-                                     (u32)wcapertures_render,
-                                     (u32)wcapertures_free,
-                                     (u32)wcapertures_getObjectTypeId,
-                                     (u32)wcapertures_getExtraSize};
+                                     (ObjectDescriptorCallback)wcapertures_init,
+                                     (ObjectDescriptorCallback)wcapertures_update,
+                                     (ObjectDescriptorCallback)wcapertures_hitDetect,
+                                     (ObjectDescriptorCallback)wcapertures_render,
+                                     (ObjectDescriptorCallback)wcapertures_free,
+                                     (ObjectDescriptorCallback)wcapertures_getObjectTypeId,
+                                     wcapertures_getExtraSize};

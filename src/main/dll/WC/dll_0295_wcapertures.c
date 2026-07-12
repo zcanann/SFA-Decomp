@@ -12,21 +12,12 @@
  * numeric meanings are inferred.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_0295_wcapertures.h"
 #include "main/game_object.h"
 
 #define WCAPERTURES_EXTRA_SIZE        8
 #define WCAPERTURES_RENDER_TYPE_BASE  0x400
 #define WCAPERTURES_RENDER_TYPE_SHIFT 0xb
-
-#define WCAPERTURES_SETUP_TYPE_OFFSET        0x18
-#define WCAPERTURES_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCAPERTURES_SETUP_OPEN_BIT_OFFSET    0x1e
-#define WCAPERTURES_SETUP_ARM_BIT_OFFSET     0x20
-
-#define WCAPERTURES_STATE_LIGHT        0x00
-#define WCAPERTURES_STATE_TARGET_ALPHA 0x04
-#define WCAPERTURES_STATE_MODE         0x06
-#define WCAPERTURES_STATE_FLAGS        0x07
 
 #define WCAPERTURES_MODE_CLOSED 0
 #define WCAPERTURES_MODE_ARMED  1
@@ -51,36 +42,6 @@
 #define WCAPERTURES_LIGHT_KIND    2
 #define WCAPERTURES_LIGHT_BLUE_LO 0x4d
 #define WCAPERTURES_LIGHT_BLUE_HI 0x96
-
-typedef struct WCAperturesSetup
-{
-    ObjPlacement base;
-    s8 type;
-    u8 modelIndex;
-    u8 pad1A[WCAPERTURES_SETUP_OPEN_BIT_OFFSET - 0x1A];
-    s16 openBit;
-    s16 armBit;
-    u8 pad22[0x24 - 0x22];
-} WCAperturesSetup;
-
-typedef struct WCAperturesState
-{
-    ModelLight* light;
-    s16 targetAlpha;
-    u8 mode;
-    u8 flags;
-} WCAperturesState;
-
-STATIC_ASSERT(sizeof(WCAperturesState) == WCAPERTURES_EXTRA_SIZE);
-STATIC_ASSERT(sizeof(WCAperturesSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCAperturesState, light) == WCAPERTURES_STATE_LIGHT);
-STATIC_ASSERT(offsetof(WCAperturesState, targetAlpha) == WCAPERTURES_STATE_TARGET_ALPHA);
-STATIC_ASSERT(offsetof(WCAperturesState, mode) == WCAPERTURES_STATE_MODE);
-STATIC_ASSERT(offsetof(WCAperturesState, flags) == WCAPERTURES_STATE_FLAGS);
-STATIC_ASSERT(offsetof(WCAperturesSetup, type) == WCAPERTURES_SETUP_TYPE_OFFSET);
-STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
-STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
 int wcapertures_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -241,11 +202,10 @@ void wcapertures_update(GameObject* obj)
     }
 }
 
-void wcapertures_init(GameObject* obj, int initData)
+void wcapertures_init(GameObject* obj, WCAperturesSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCAperturesState* state = (obj)->extra;
-    WCAperturesSetup* setup = (WCAperturesSetup*)initData;
 
     (obj)->anim.rotX = (s16)(setup->type << 8);
     (obj)->animEventCallback = wcapertures_interactCallback;
