@@ -787,7 +787,7 @@ void SmallBasket_update(GameObject* obj)
     int def;
     CfperchState* state;
     int playerState;
-    int flag;
+    int flag[1];
     s8 contactFlags;
     u8 subtype;
     int level;
@@ -818,8 +818,8 @@ void SmallBasket_update(GameObject* obj)
     }
     if (state->hiddenTimer != 0)
     {
-        flag = 0;
-        (obj)->anim.alpha = flag;
+        flag[0] = 0;
+        (obj)->anim.alpha = flag[0];
         state->hiddenTimer -= (s16)(int)(timeDelta * animSpeed);
         if (state->hiddenTimer <= 0)
         {
@@ -827,9 +827,9 @@ void SmallBasket_update(GameObject* obj)
                  lbl_803E3930) &&
                 (state->enableGameBit == -1))
             {
-                flag = 1;
+                flag[0] = 1;
             }
-            if (flag == 0)
+            if (flag[0] == 0)
             {
                 state->hiddenTimer = 1;
             }
@@ -890,16 +890,16 @@ void SmallBasket_update(GameObject* obj)
         {
             if (state->carryState == 0)
             {
-                flag = 0;
+                flag[0] = 0;
                 if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && ((obj)->unkF8 == 0) &&
                     (ObjTrigger_IsSet((int)obj) != 0))
                 {
                     state->carryAngle = -0x8000;
                     state->carryParam = 0;
                     ObjHits_DisableObject(obj);
-                    flag = 1;
+                    flag[0] = 1;
                 }
-                state->carryState = flag;
+                state->carryState = flag[0];
                 if (state->carryState != 0)
                 {
                     state->carryAttached = 1;
