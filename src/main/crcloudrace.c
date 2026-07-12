@@ -1,4 +1,5 @@
 #include "main/crcloudrace.h"
+#include "main/pi_dolphin_api.h"
 #include "main/audio.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"

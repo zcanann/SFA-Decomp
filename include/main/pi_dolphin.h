@@ -2,6 +2,7 @@
 #define MAIN_PI_DOLPHIN_H_
 
 #include "ghidra_import.h"
+#include "main/pi_dolphin_api.h"
 
 u32 mapLoadDataFile(int param_1, int param_2);
 void FUN_800443fc(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
@@ -129,6 +130,5 @@ void waitNextFrame(void);
 double SeekTwiceBeforeRead();
 int GXFlush_(u8 visible, int unused);
 int loadAndDecompressDataFile();
-int mapGetDirIdx(int idx);
 
 #endif /* MAIN_PI_DOLPHIN_H_ */

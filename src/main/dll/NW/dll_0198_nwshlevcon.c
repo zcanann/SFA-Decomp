@@ -10,6 +10,7 @@
  * music and clears its progress bit.
  */
 #include "main/dll/dll_0198_nwshlevcon.h"
+#include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -29,7 +30,6 @@ extern f32 lbl_803E5150;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
-extern int mapGetDirIdx(int idx);
 extern void skyFn_80088c94(int flags, int mode);
 extern void objSetAnimStateFlags(void* player, int a, int b);
 

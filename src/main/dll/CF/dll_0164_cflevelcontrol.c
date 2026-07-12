@@ -8,6 +8,7 @@
  * event (flood the fortress and lock the map).
  */
 #include "main/audio/sfx_ids.h"
+#include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/object_api.h"
 #include "main/render.h"
@@ -75,7 +76,6 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int musicId);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                           int musicId);
-extern int mapGetDirIdx(int idx);
 extern void objSetSlot(u8* obj, s8 slot);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

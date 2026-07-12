@@ -5,6 +5,7 @@
  * gamebit.
  */
 #include "main/dll/dfp_types.h"
+#include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/gamebits.h"
@@ -48,7 +49,6 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 __declspec(section ".sdata2") f32 lbl_803E63B8 = 1.0f;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int mapGetDirIdx(int idx);
 
 int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

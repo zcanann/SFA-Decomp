@@ -24,6 +24,7 @@
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/sky_api.h"
 
@@ -104,7 +105,6 @@ extern f32 lbl_803E5808;
 extern f32 lbl_803E5738;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
-extern int mapGetDirIdx(int idx);
 extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);

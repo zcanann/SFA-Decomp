@@ -26,6 +26,7 @@
  * clampToFlightBounds, spawnBomb) are defined in a sibling TU.
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "dolphin/mtx.h"

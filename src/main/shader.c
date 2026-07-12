@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/pi_dolphin_api.h"
 #include "main/debug.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"

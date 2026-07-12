@@ -1,5 +1,6 @@
 /* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
 #include "main/dll/VF/vf_shared.h"
+#include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/vecmath.h"

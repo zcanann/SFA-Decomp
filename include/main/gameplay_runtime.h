@@ -30,7 +30,6 @@ typedef struct MapInfoRecord
 } MapInfoRecord;
 
 void objRenderFn_80041018(int obj);
-int mapGetDirIdx(int mapId);
 void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

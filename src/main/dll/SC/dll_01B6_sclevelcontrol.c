@@ -6,6 +6,7 @@
  * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/sclevelcontrolstate_types.h"
+#include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
@@ -58,7 +59,6 @@ extern int isGameTimerDisabled(void);
 
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
-extern int mapGetDirIdx(int idx);
 extern int getSaveGameLoadStatus(void);
 extern void skyFn_80088c94(int flags, int mode);
 
