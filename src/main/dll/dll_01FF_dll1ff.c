@@ -11,6 +11,7 @@
  * gates model-state shadow fade-out on the active trigger sequence.
  */
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
@@ -44,7 +45,6 @@ typedef struct Dll1FFSlots
 #define DLL1FF_BUTTON_ACTION 0x100    /* action-button mask (button-just-pressed / disable) */
 #define DLL1FF_MSG_GRAB      0x100008 /* ObjMsg kind sent on release */
 
-extern void ObjMsg_SendToObject(void* to, int msg, int obj, int param);
 extern const f32 lbl_803E5D80;
 
 int dll_1FF_getExtraSize_ret_8(void)
@@ -191,7 +191,8 @@ void dll_1FF_update(int obj)
         }
         if (state->sendFlag != 0)
         {
-            ObjMsg_SendToObject(player, DLL1FF_MSG_GRAB, obj, ((int)state->msgHi << 16) | ((int)state->msgLo & 0xffff));
+            ObjMsg_SendToObject(player, DLL1FF_MSG_GRAB, (void*)obj,
+                                ((int)state->msgHi << 16) | ((int)state->msgLo & 0xffff));
         }
     }
 }

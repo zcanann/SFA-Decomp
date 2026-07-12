@@ -19,6 +19,7 @@
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/player_api.h"
@@ -82,7 +83,6 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern u64 ObjGroup_RemoveObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_801E83B0(int obj, int, int, int, int);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
@@ -101,10 +101,7 @@ extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 #define GX_AOP_AND     0
 
 extern f32 timeDelta;
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_801F4C28(int, int);
-extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
 extern void forceAButtonIcon(int icon);
 
 extern void objRenderFn_80041018(int obj);
@@ -299,7 +296,7 @@ void shopitem_free(GameObject* obj)
     switch ((obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_SPARKLE:
-        ObjGroup_RemoveObject(obj, SHOPITEM_OBJGROUP);
+        ObjGroup_RemoveObject((int)obj, SHOPITEM_OBJGROUP);
         break;
     }
 }
@@ -342,7 +339,7 @@ void shopitem_update(GameObject* obj)
     else if (b->flag_80)
     {
         ((ShopItemState*)state)->msgParam = -1;
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, (int)obj, (void*)(state + 0x88));
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, state + 0x88);
         b->flag_80 = 0;
         b->flag_40 = 1;
     }
