@@ -20,18 +20,9 @@
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/arwing_state.h"
+#include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-
-/* Spawn-setup buffer for an Arwing bomb: ObjPlacement head (pos/color) plus
- * the class-specific yaw/pitch/roll bytes the parent seeds at +0x18. */
-typedef struct ArwingBombSetup
-{
-    ObjPlacement head; /* 0x00: pos/color/mapId */
-    u8 roll;           /* 0x18 */
-    u8 pitch;          /* 0x19 */
-    u8 yaw;            /* 0x1a */
-} ArwingBombSetup;
 
 #define WCFLOORTILE_CHILD_OBJ_BOMB 0x605
 

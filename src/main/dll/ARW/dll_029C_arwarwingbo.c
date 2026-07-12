@@ -9,36 +9,10 @@
  * cleared via arwarwing_clearActiveBomb when the bomb goes away.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-
-typedef union ArwingBombControl
-{
-    f32 fuseTimer;
-    u8 active;
-} ArwingBombControl;
-
-typedef struct ArwingBombState
-{
-    ArwingBombControl control;
-    u8 pad04[4];
-    f32 explosionTimer;
-} ArwingBombState;
-
-typedef struct ArwingBombSetup
-{
-    u8 pad00[0x18];
-    u8 rotZ;
-    u8 rotY;
-    u8 rotX;
-} ArwingBombSetup;
-
-STATIC_ASSERT(sizeof(ArwingBombState) == 0x0c);
-STATIC_ASSERT(offsetof(ArwingBombState, explosionTimer) == 0x08);
-STATIC_ASSERT(offsetof(ArwingBombSetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(ArwingBombSetup, rotY) == 0x19);
-STATIC_ASSERT(offsetof(ArwingBombSetup, rotX) == 0x1A);
 
 #define ARWARWINGBO_OBJGROUP        0x52
 #define ARWARWINGBO_PARTFX          0x79e
@@ -139,13 +113,11 @@ void arwarwingbo_update(int obj)
     objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta, objAnim->velocityZ * timeDelta);
 }
 
-void arwarwingbo_init(GameObject* obj, int setup)
+void arwarwingbo_init(GameObject* obj, ArwingBombSetup* setup)
 {
-    ArwingBombSetup* mapData = (ArwingBombSetup*)setup;
-
-    (obj)->anim.rotX = (s16)(mapData->rotX << 8);
-    (obj)->anim.rotY = (s16)(mapData->rotY << 8);
-    (obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
+    (obj)->anim.rotX = (s16)(setup->rotX << 8);
+    (obj)->anim.rotY = (s16)(setup->rotY << 8);
+    (obj)->anim.rotZ = (s16)(setup->rotZ << 8);
     ObjGroup_AddObject((int)obj, ARWARWINGBO_OBJGROUP);
 }
 

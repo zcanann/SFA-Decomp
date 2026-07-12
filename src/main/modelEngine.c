@@ -11,6 +11,7 @@
 #include "main/dll/WC/dll_0296_wctempledia.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/dll/WC/WCbeacon.h"
+#include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
@@ -51,7 +52,7 @@ extern ResourceDescriptor Carryable_funcs, boneParticleEffect_funcs, dll_19, dll
 extern ResourceDescriptor dll_19D, dll_19E, dll_1CE, dll_1CF, dll_1D6, dll_1DA, dll_1DB, dll_1FB;
 extern ResourceDescriptor dll_1FF, dll_200, dll_219, dll_21B, dll_224, dll_28B, dll_2A3;
 extern ResourceDescriptor dll_2A4, dll_2E, dll_54, dll_CB, dll_CE, dll_D3, dll_F7, expgfx_funcs;
-extern ResourceDescriptor gARWArwingBoObjDescriptor, gARWArwingGuObjDescriptor, gARWArwingObjDescriptor,
+extern ResourceDescriptor gARWArwingGuObjDescriptor, gARWArwingObjDescriptor,
     gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor, gARWLevelConObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor, gAlphaAnimatorObjDescriptor,
@@ -1556,7 +1557,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&dll_299,
     &gARWArwingObjDescriptor,
     &gArwingAndrossStuffObjDescriptor,
-    &gARWArwingBoObjDescriptor,
+    (ResourceDescriptor*)&gARWArwingBoObjDescriptor,
     &gARWArwingGuObjDescriptor,
     &lbl_8032B6B0,
     &gARWBombCollObjDescriptor,
