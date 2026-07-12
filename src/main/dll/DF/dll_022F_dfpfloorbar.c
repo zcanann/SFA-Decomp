@@ -36,10 +36,10 @@ typedef struct DfpfloorbarPlacement
  * "the puzzle controller object (seqId 0x431)"). */
 #define DFPFLOORBAR_CONTROLLER_SEQID 0x431
 
-extern f32 lbl_803E6408;
-extern f32 lbl_803E640C;
-extern f32 lbl_803E6410;
-extern f32 lbl_803E6414;
+__declspec(section ".sdata2") f32 lbl_803E6408 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E640C = 3.2f;
+__declspec(section ".sdata2") f32 lbl_803E6410 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E6414 = -1.0f;
 
 int dfpfloorbar_SeqFn(void)
 {
