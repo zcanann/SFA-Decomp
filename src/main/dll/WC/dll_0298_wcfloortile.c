@@ -207,6 +207,7 @@ void wcfloortile_update(int obj)
     }
 }
 
+#pragma dont_inline on
 void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
 {
     ArwingState* arwing = state;
@@ -242,6 +243,7 @@ void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
     arwing->camPos[1] = obj->anim.localPosY - arwing->homeY;
     arwing->camPos[2] = lbl_803E6ECC;
 }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
