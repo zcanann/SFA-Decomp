@@ -17,6 +17,7 @@
  * voxmaps_trace* world-line wrappers).
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/barrelgener_state.h"
@@ -173,14 +174,14 @@ void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3
     int gt;
     f64 gtf;
 
-    mag1 = PSVECMag((f32*)currentVelocity);
+    mag1 = PSVECMag((const Vec*)currentVelocity);
     if (mag1 > lbl_803E6C38)
     {
         f32 inv = lbl_803E6C6C / mag1;
         n1[0] = currentVelocity->x * inv;
         n1[1] = currentVelocity->y * inv;
         n1[2] = currentVelocity->z * inv;
-        PSVECNormalize(n1, n1);
+        PSVECNormalize((const Vec*)n1, (Vec*)n1);
     }
     else
     {
@@ -188,7 +189,7 @@ void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3
         n1[1] = lbl_803E6C38;
         n1[2] = lbl_803E6C38;
     }
-    mag2 = PSVECMag((f32*)desiredDirection);
+    mag2 = PSVECMag((const Vec*)desiredDirection);
     if (mag2 > lbl_803E6C38)
     {
         f32 inv = lbl_803E6C6C / mag2;
@@ -202,16 +203,17 @@ void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3
         n2[1] = lbl_803E6C38;
         n2[2] = lbl_803E6C38;
     }
-    PSVECCrossProduct(n1, n2, cross);
-    if (PSVECMag(cross) > lbl_803E6C38)
+    PSVECCrossProduct((const Vec*)n1, (const Vec*)n2, (Vec*)cross);
+    if (PSVECMag((const Vec*)cross) > lbl_803E6C38)
     {
-        ang = fn_80291FF4(PSVECDotProduct(n1, n2));
+        ang = fn_80291FF4(PSVECDotProduct((const Vec*)n1, (const Vec*)n2));
         gt = (ang > maxTurnAngle);
         gtf = __fabs((f32)gt);
         if (gtf != lbl_803E6C38)
         {
-            PSMTXRotAxisRad(mtx, cross, maxTurnAngle * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
-            PSMTXMultVecSR(mtx, n1, n2);
+            PSMTXRotAxisRad((MtxP)mtx, (const Vec*)cross,
+                            maxTurnAngle * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
+            PSMTXMultVecSR((MtxP)mtx, (const Vec*)n1, (Vec*)n2);
         }
     }
     t = mag2 * lbl_803E6C74;
@@ -478,7 +480,7 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, V
 
     if ((GameObject*)obj != Obj_GetPlayerObject())
     {
-        PSVECSubtract((void*)&(obj)->anim.localPosX, &(obj)->anim.previousLocalPosX, vel);
+        PSVECSubtract((const Vec*)&(obj)->anim.localPosX, (const Vec*)&(obj)->anim.previousLocalPosX, (Vec*)vel);
     }
     else
     {
@@ -486,14 +488,15 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, V
         vel[1] = (obj)->anim.velocityY;
         vel[2] = (obj)->anim.velocityZ;
     }
-    PSVECScale(vel, vel, oneOverTimeDelta);
+    PSVECScale((const Vec*)vel, (Vec*)vel, oneOverTimeDelta);
     pos[0] = (obj)->anim.localPosX;
     pos[1] = lbl_803E6C58 + (obj)->anim.localPosY;
     pos[2] = (obj)->anim.localPosZ;
     for (i = 0; i < 5; i++)
     {
-        PSVECScale(vel, step, PSVECDistance(pos, (void*)targetPos) / dt);
-        PSVECAdd((int)obj + 0xc, (int)step, (int)pos);
+        PSVECScale((const Vec*)vel, (Vec*)step,
+                   PSVECDistance((const Vec*)pos, (const Vec*)targetPos) / dt);
+        PSVECAdd((const Vec*)((int)obj + 0xc), (const Vec*)step, (Vec*)pos);
     }
     outPos->x = pos[0];
     outPos->y = pos[1];
@@ -525,9 +528,9 @@ void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
     int e0;
     int e1;
 
-    PSVECNormalize(dir, dir);
-    PSVECScale(dir, scaled, scale);
-    PSVECAdd((int)scaled, (int)origin, (int)endPos);
+    PSVECNormalize((const Vec*)dir, (Vec*)dir);
+    PSVECScale((const Vec*)dir, (Vec*)scaled, scale);
+    PSVECAdd((const Vec*)scaled, (const Vec*)origin, (Vec*)endPos);
     voxmaps_worldToGrid(origin, (s16*)gridA);
     voxmaps_worldToGrid(endPos, (s16*)gridB);
     if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) == 0)

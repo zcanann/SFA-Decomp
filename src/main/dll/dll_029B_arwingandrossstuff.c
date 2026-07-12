@@ -18,6 +18,7 @@
  * its lifetime and speed; all four are called from wcfloortile.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/object_api.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -171,12 +172,12 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
         {
             if (arwarwing_isBarrelRolling(arwing) != 0)
             {
-                PSVECNormalize(&objAnim->velocityX, &objAnim->velocityX);
+                PSVECNormalize((const Vec*)&objAnim->velocityX, (Vec*)&objAnim->velocityX);
                 d.x = objAnim->localPosX - arwingAnim->localPosX;
                 d.y = objAnim->localPosY - arwingAnim->localPosY;
                 d.z = objAnim->localPosZ - arwingAnim->localPosZ;
-                PSVECNormalize(&d, &d);
-                C_VECHalfAngle(&objAnim->velocityX, &d, &objAnim->velocityX);
+                PSVECNormalize((const Vec*)&d, (Vec*)&d);
+                C_VECHalfAngle((const Vec*)&objAnim->velocityX, (const Vec*)&d, (Vec*)&objAnim->velocityX);
                 objAnim->velocityX *= state->deflectSpeedScale;
                 objAnim->velocityY *= state->deflectSpeedScale;
                 objAnim->velocityZ *= state->deflectSpeedScale;

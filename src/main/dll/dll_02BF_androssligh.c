@@ -12,6 +12,7 @@
  * symbol table); it is a sub-object whose lifetime is driven externally.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/dll/dll_02BF_androssligh.h"
@@ -24,40 +25,39 @@ enum
 
 void androssligh_updateBeam(GameObject* obj, AndrossLighState* state)
 {
-    extern void PSVECAdd(f32 * a, f32 * b, f32 * ab);
-    f32 start[3];
-    f32 end[3];
-    f32 offset[3];
+    Vec start;
+    Vec end;
+    Vec offset;
 
-    start[0] = obj->anim.localPosX - lbl_803DC528;
-    start[1] = obj->anim.localPosY;
-    start[2] = obj->anim.localPosZ;
-    end[0] = obj->anim.localPosX + lbl_803DC528;
-    end[1] = start[1];
-    end[2] = start[2];
-    offset[0] = start[0] - playerMapOffsetX;
-    offset[1] = start[1];
-    offset[2] = start[0] - playerMapOffsetZ;
-    PSMTXMultVec(Camera_GetViewMatrix(), offset, offset);
-    offset[0] = -offset[0];
-    offset[1] = -offset[1];
-    offset[2] = -offset[2];
-    PSVECScale(offset, offset, lbl_803DC52C);
-    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), offset, offset);
-    PSVECAdd(start, offset, start);
-    offset[0] = end[0] - playerMapOffsetX;
-    offset[1] = end[1];
-    offset[2] = end[0] - playerMapOffsetZ;
-    PSMTXMultVec(Camera_GetViewMatrix(), offset, offset);
-    offset[0] = -offset[0];
-    offset[1] = -offset[1];
-    offset[2] = -offset[2];
-    PSVECScale(offset, offset, lbl_803DC52C);
-    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), offset, offset);
-    PSVECAdd(end, offset, end);
+    start.x = obj->anim.localPosX - lbl_803DC528;
+    start.y = obj->anim.localPosY;
+    start.z = obj->anim.localPosZ;
+    end.x = obj->anim.localPosX + lbl_803DC528;
+    end.y = start.y;
+    end.z = start.z;
+    offset.x = start.x - playerMapOffsetX;
+    offset.y = start.y;
+    offset.z = start.x - playerMapOffsetZ;
+    PSMTXMultVec((MtxP)Camera_GetViewMatrix(), &offset, &offset);
+    offset.x = -offset.x;
+    offset.y = -offset.y;
+    offset.z = -offset.z;
+    PSVECScale(&offset, &offset, lbl_803DC52C);
+    PSMTXMultVec((MtxP)Camera_GetInverseViewRotationMatrix(), &offset, &offset);
+    PSVECAdd(&start, &offset, &start);
+    offset.x = end.x - playerMapOffsetX;
+    offset.y = end.y;
+    offset.z = end.x - playerMapOffsetZ;
+    PSMTXMultVec((MtxP)Camera_GetViewMatrix(), &offset, &offset);
+    offset.x = -offset.x;
+    offset.y = -offset.y;
+    offset.z = -offset.z;
+    PSVECScale(&offset, &offset, lbl_803DC52C);
+    PSMTXMultVec((MtxP)Camera_GetInverseViewRotationMatrix(), &offset, &offset);
+    PSVECAdd(&end, &offset, &end);
     if (state->bolt == NULL)
     {
-        state->bolt = lightningCreateU16Promoted((const Vec3f*)start, (const Vec3f*)end, lbl_803DC518, lbl_803DC51C,
+        state->bolt = lightningCreateU16Promoted((const Vec3f*)&start, (const Vec3f*)&end, lbl_803DC518, lbl_803DC51C,
                                                  lbl_803DC520, lbl_803DC524, 0);
         state->boltAge = 0.0f;
     }

@@ -13,6 +13,7 @@
  * and render draws the device, its path light pulses and the held barrel.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 #include "main/dll/DR/dll_0283_drbarrelgr.h"
@@ -82,7 +83,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
     for (; i < 4; i++)
     {
         ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(obj, i + 1, vp, vp1, vp2, 0);
-        PSVECSubtract(vp, (void*)&obj->anim.localPosX, vp);
+        PSVECSubtract((Vec*)vp, (const Vec*)&obj->anim.localPosX, (Vec*)vp);
         params.d = dval;
         objfx_spawnLightPulseLegacy(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
     }
@@ -192,14 +193,14 @@ void DR_BarrelGr_update(GameObject* obj)
             state->heldBarrel = NULL;
             break;
         }
-        PSVECSubtract(&state->grabX, &state->heldBarrel->anim.localPosX, throwDir);
+        PSVECSubtract((const Vec*)&state->grabX, (const Vec*)&state->heldBarrel->anim.localPosX, (Vec*)throwDir);
         if (throwDir[0] != lbl_803E6CA4 || throwDir[1] != lbl_803E6CA4 || throwDir[2] != lbl_803E6CA4)
         {
-            PSVECNormalize(throwDir, throwDir);
+            PSVECNormalize((const Vec*)throwDir, (Vec*)throwDir);
         }
-        PSVECScale(throwDir, throwDir, lbl_803DC3B0);
+        PSVECScale((const Vec*)throwDir, (Vec*)throwDir, lbl_803DC3B0);
         gunpowderbarrel_addThrowVelocity(state->heldBarrel, throwDir);
-        if (PSVECDistance(&state->grabX, &state->heldBarrel->anim.localPosX) < lbl_803E6CA0 ||
+        if (PSVECDistance((const Vec*)&state->grabX, (const Vec*)&state->heldBarrel->anim.localPosX) < lbl_803E6CA0 ||
             state->heldBarrel->anim.localPosY > state->grabY)
         {
             ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_jbike_boost);

@@ -17,6 +17,7 @@
  * (RingTable); the optional glow is a ModelLightStruct.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/object_api.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -308,7 +309,7 @@ void ring_update(GameObject* obj)
                                                  (f32)(ang + (int)(state->pullTimer * lbl_8032B720[state->mode].f14)) /
                                                  32768.0f);
                             dir[2] = 0.0f;
-                            PSMTXMultVecSR(mtx, dir, dir);
+                            PSMTXMultVecSR((MtxP)mtx, (const Vec*)dir, (Vec*)dir);
                             spawnBuf[3] = dir[0] + obj->anim.localPosX;
                             spawnBuf[4] = dir[1] + obj->anim.localPosY;
                             spawnBuf[5] = dir[2] + obj->anim.localPosZ;

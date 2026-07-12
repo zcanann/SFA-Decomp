@@ -74,7 +74,6 @@ extern void mapTextureOverrideSetValue(int a, int b, int c);
 #pragma dont_inline reset
 
 
-extern f32 PSVECDistance(void* a, void* b);
 
 extern f32 lbl_803E72E8;
 extern f32 lbl_803E72B0;
@@ -122,8 +121,6 @@ extern f32 lbl_803E7188;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void PSVECNormalize(void* src, void* dst);
-extern void C_VECHalfAngle(void* out, void* a, void* b);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -137,7 +134,6 @@ extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EE8;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
-extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 
 
 
@@ -169,8 +165,6 @@ extern const f32 lbl_803E75A8;
 
 
 
-extern void PSVECScale(void* dst, void* src, f32 scale);
-extern void PSVECAdd(int p1, int p2, int p3);
 
 
 extern f32 lbl_803E7364;
@@ -228,7 +222,6 @@ extern f32 lbl_803E6ECC;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void PSVECSubtract(void* a, void* b, void* ab);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -289,11 +282,6 @@ extern f32 lbl_803E6F40;
 
 
 
-extern f32 PSVECMag(f32* v);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 angle);
-extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern f32 fn_80291FF4(f32 x);
 
 #pragma dont_inline on

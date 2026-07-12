@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/objfx.h"
@@ -485,7 +486,7 @@ void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
              5.0f * setup->leaderOffsetY;
     out[2] = 5.0f * setup->leaderOffsetZ;
     setMatrixFromObjectTransposed(&src, mtx);
-    PSMTXMultVec(mtx, out, &objAnim->localPosX);
+    PSMTXMultVec((MtxP)mtx, (const Vec*)out, (Vec*)&objAnim->localPosX);
     objAnim->velocityX = leaderAnim->velocityX;
     objAnim->velocityY = leaderAnim->velocityY;
     objAnim->velocityZ = leaderAnim->velocityZ;

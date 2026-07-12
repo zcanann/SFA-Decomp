@@ -12,6 +12,7 @@
  * arrays) appears only partly wired; behavior is inferred.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/model.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -216,8 +217,8 @@ void wctemplebri_update(GameObject* obj)
     }
     if ((void*)Obj_GetPlayerObject() != NULL)
     {
-        if (PSVECDistance((void*)&obj->anim.worldPosX,
-                          &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E6E94)
+        if (PSVECDistance((const Vec*)&obj->anim.worldPosX,
+                          (const Vec*)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E6E94)
         {
             mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
         }

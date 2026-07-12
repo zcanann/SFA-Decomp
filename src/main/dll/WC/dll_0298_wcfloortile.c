@@ -17,6 +17,7 @@
  * the floor tile and must not be moved or removed.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/debug.h"
 #include "main/object.h"
@@ -244,13 +245,13 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     {
         arwing->velTargetZ = lbl_803E6ECC;
     }
-    PSVECSubtract((void*)&arwing->velTargetX, &arwing->velX, v);
+    PSVECSubtract((const Vec*)&arwing->velTargetX, (const Vec*)&arwing->velX, (Vec*)v);
     v[0] = v[0] * arwing->accelX;
     v[1] = v[1] * arwing->accelY;
     v[2] = v[2] * arwing->accelZ;
     v[2] = v[2] < arwing->minAccelZ ? arwing->minAccelZ : (v[2] > arwing->maxAccelZ ? arwing->maxAccelZ : v[2]);
-    PSVECScale(v, v, timeDelta);
-    PSVECAdd((int)&arwing->velX, (int)v, (int)&arwing->velX);
+    PSVECScale((const Vec*)v, (Vec*)v, timeDelta);
+    PSVECAdd((const Vec*)&arwing->velX, (const Vec*)v, (Vec*)&arwing->velX);
     objMove((GameObject*)obj, arwing->velX * timeDelta, arwing->velY * timeDelta, arwing->velZ * timeDelta);
 
     diff = arwing->rotXTarget - (u16)arwing->rotXCur;

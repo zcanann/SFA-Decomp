@@ -8,6 +8,7 @@
  * freeing itself when the timer runs out.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/object_api.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/game_object.h"
@@ -44,7 +45,7 @@ void ARWSpeedStr_update(GameObject* obj)
         camOffset[0] = (f32)(int)randomGetRange((int)-state->spreadX, state->spreadX);
         camOffset[1] = (f32)(int)randomGetRange((int)-state->spreadY, state->spreadY);
         camOffset[2] = state->viewZ;
-        PSMTXMultVec(Camera_GetInverseViewMatrix(), &camOffset[0], (f32*)((char*)obj + 12));
+        PSMTXMultVec((MtxP)Camera_GetInverseViewMatrix(), (const Vec*)&camOffset[0], (Vec*)((char*)obj + 12));
         (obj)->anim.localPosX += playerMapOffsetX;
         (obj)->anim.localPosZ += playerMapOffsetZ;
         state->flags = (state->flags | 1) & 0xff;

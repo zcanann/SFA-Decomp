@@ -26,6 +26,7 @@
  * clampToFlightBounds, spawnBomb) are defined in a sibling TU.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "dolphin/mtx.h"
 #include "main/maketex.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/headdisplay.h"
@@ -201,7 +202,7 @@ void arwarwing_hitDetect(GameObject* obj)
     if (((obj)->objectFlags & ARWARWING_OBJFLAG_PARENT_SLACK) != 0 && state->aimSnapshotValid != 0)
     {
         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-        PSMTXMultVec(mtx, &state->aimOffsetX, pos);
+        PSMTXMultVec((MtxP)mtx, (const Vec*)&state->aimOffsetX, (Vec*)pos);
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
         {
@@ -247,7 +248,7 @@ void arwarwing_setVelocity(GameObject* arwing, int velocity)
 void arwarwing_addVelocity(GameObject* arwing, const Vec3f* velocity)
 {
     int v = (int)&((ArwingState*)arwing->extra)->velX;
-    PSVECAdd(v, (int)velocity, v);
+    PSVECAdd((const Vec*)v, (const Vec*)velocity, (Vec*)v);
 }
 
 #pragma scheduling off
