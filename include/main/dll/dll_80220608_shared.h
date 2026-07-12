@@ -382,9 +382,6 @@ extern f32 lbl_803E736C;
 extern f32 lbl_803E7370;
 extern f32 lbl_803E7374;
 extern f32 lbl_803E7384;
-extern u8 gCmbsrcColorCycleIndexTable[8];
-extern u8 gCmbsrcColorSoundIdTable[];
-extern u8 gCmbsrcColorRgbTable[];
 extern f32 lbl_803E7378;
 extern f32 lbl_803E737C;
 extern f32 lbl_803E7380;
@@ -396,7 +393,6 @@ extern void objfx_spawnLightPulse(GameObject* obj, f32 brightness, int b, int c,
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
 extern void lightSetField4D(void* light, int v);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 obj);
-extern f32 gCmbsrcColorRadiusScaleTable[];
 extern f32 lbl_803E73A8;
 extern f32 lbl_803E73AC;
 extern f32 lbl_803E73B0;

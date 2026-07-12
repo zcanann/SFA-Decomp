@@ -165,7 +165,7 @@ void sc_cloudrunnera_update(int obj)
             {
                 if (*(void**)&((GameObject*)obj)->childObjs[0] != NULL)
                 {
-                    cmbsrc_setExternalActive(*(int*)&((GameObject*)obj)->childObjs[0], 0);
+                    cmbsrc_setExternalActive(*(CmbSrcObject**)&((GameObject*)obj)->childObjs[0], 0);
                 }
                 break;
             }

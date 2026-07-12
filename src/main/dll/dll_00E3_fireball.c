@@ -369,7 +369,7 @@ void Fireball_hitDetect(int* obj)
         return;
     if (((GameObject*)target)->anim.seqId == FIREBALL_SEQID_CMBSRC_RECOLOR)
     {
-        int idx = cmbsrc_getColorIndex((int)target);
+        int idx = cmbsrc_getColorIndex((CmbSrcObject*)target);
         if ((s8)idx != -1)
         {
             ((FireballState*)state)->colorIndex = idx;

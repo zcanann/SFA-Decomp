@@ -106,7 +106,7 @@ typedef struct CmbSrcObject {
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   CmbSrcState *state;
-  int (*updateCallback)(GameObject* obj);
+  int (*updateCallback)(struct CmbSrcObject* obj);
 } CmbSrcObject;
 
 STATIC_ASSERT(sizeof(CmbSrcMapData) == CMBSRC_PLACEMENT_BYTES);
@@ -139,22 +139,26 @@ STATIC_ASSERT(offsetof(CmbSrcObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(CmbSrcObject, updateCallback) == 0xBC);
 
 extern ObjectDescriptor gCmbSrcObjDescriptor;
+extern u8 gCmbsrcColorCycleIndexTable[8];
+extern u8 gCmbsrcColorSoundIdTable[];
+extern u8 gCmbsrcColorRgbTable[];
+extern f32 gCmbsrcColorRadiusScaleTable[];
 
 int cmbsrc_getExtraSize(void);
 int cmbsrc_getObjectTypeId(void);
 void cmbsrc_initialise(void);
 void cmbsrc_release(void);
-int cmbsrc_updateAndReturnZero(GameObject* obj);
-int cmbsrc_getColorIndex(int obj);
-void cmbsrc_setExternalActive(int obj,u8 active);
+int cmbsrc_updateAndReturnZero(CmbSrcObject* obj);
+int cmbsrc_getColorIndex(CmbSrcObject* obj);
+void cmbsrc_setExternalActive(CmbSrcObject* obj, u8 active);
 void cmbsrc_free(int obj);
-void cmbsrc_render(int obj,int p2,int p3,int p4,int p5,s8 visible);
-int cmbsrc_shouldActivate(int obj,int state,int setup);
-int cmbsrc_shouldDeactivate(int obj,int state,int setup);
-void cmbsrc_hitDetect(GameObject* obj);
-int cmbsrc_cycleColor(int obj,int state);
-void cmbsrc_updateVisuals(GameObject* obj,int state);
-int cmbsrc_update(GameObject* obj);
-void cmbsrc_init(int obj, u8* setup);
+void cmbsrc_render(CmbSrcObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+u8 cmbsrc_shouldActivate(CmbSrcObject* obj, CmbSrcState* state, CmbSrcMapData* setup);
+u8 cmbsrc_shouldDeactivate(CmbSrcObject* obj, CmbSrcState* state, CmbSrcMapData* setup);
+void cmbsrc_hitDetect(CmbSrcObject* obj);
+u8 cmbsrc_cycleColor(CmbSrcObject* obj, CmbSrcState* state);
+void cmbsrc_updateVisuals(CmbSrcObject* obj, CmbSrcState* state);
+int cmbsrc_update(CmbSrcObject* obj);
+void cmbsrc_init(CmbSrcObject* obj, CmbSrcMapData* setup);
 
 #endif /* MAIN_DLL_CMBSRC_H_ */

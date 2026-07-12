@@ -2,6 +2,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_02B1_cmbsrc.h"
+#include "main/dll/dll_02B2_dustmotesou.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
@@ -51,9 +53,8 @@ extern ResourceDescriptor gCFPerchObjDescriptor, gCFPowerBaseObjDescriptor, gCFP
 extern ResourceDescriptor gCRrockfallObjDescriptor, gCampFireObjDescriptor, gCannonClawObjDescriptor,
     gCflightwallObjDescriptor, gCheckpoint4ObjDescriptor, gChukChukObjDescriptor, gChukaObjDescriptor,
     gCloudPrisonControlObjDescriptor;
-extern ResourceDescriptor gCmbSrcObjDescriptor, gColdWaterControlObjDescriptor, gCollectibleObjDescriptor,
-    gControlLightObjDescriptor, gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor, gCurveFishObjDescriptor,
-    gCurveObjDescriptor;
+extern ResourceDescriptor gColdWaterControlObjDescriptor, gCollectibleObjDescriptor, gControlLightObjDescriptor,
+    gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor, gCurveFishObjDescriptor, gCurveObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDBSH_ShrineObjDescriptor, gDBSH_SymbolObjDescriptor,
     gDB_eggObjDescriptor, gDBstealerwormObjDescriptor, gDFP_LevelControlObjDescriptor, gDFP_ObjCreatorObjDescriptor,
     gDFP_TorchObjDescriptor;
@@ -84,8 +85,7 @@ extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
     gDrakorEnergyObjDescriptor;
 extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor, gDummy108ObjDescriptor,
-    gDustMoteSouObjDescriptor, gDusterObjDescriptor, gECSH_CreatorObjDescriptor, gECSH_CupObjDescriptor,
-    gECSH_ShrineObjDescriptor;
+    gDusterObjDescriptor, gECSH_CreatorObjDescriptor, gECSH_CupObjDescriptor, gECSH_ShrineObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor, gEdibleMushroomObjDescriptor, gEffectBoxObjDescriptor,
     gEnemyMushroomObjDescriptor, gExplodableObjDescriptor, gExplodeAnimatorObjDescriptor, gExplodePlanObjDescriptor,
     gExplodedObjDescriptor;
@@ -1561,8 +1561,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gWaterFlowWeObjDescriptor,
     (ResourceDescriptor*)&gTreeObjDescriptor,
     (ResourceDescriptor*)&gBrokenPipeObjDescriptor,
-    &gCmbSrcObjDescriptor,
-    &gDustMoteSouObjDescriptor,
+    (ResourceDescriptor*)&gCmbSrcObjDescriptor,
+    (ResourceDescriptor*)&gDustMoteSouObjDescriptor,
     &gVortexObjDescriptor,
     &gCNTcounterObjDescriptor,
     &gTimerObjDescriptor,
