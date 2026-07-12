@@ -18,7 +18,7 @@
  * (0x2B7), which installs it as its anim-event callback.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
+#include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

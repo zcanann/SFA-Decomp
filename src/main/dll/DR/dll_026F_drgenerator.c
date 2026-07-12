@@ -7,6 +7,7 @@
  * game bit (watchGameBit).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_02B5_timer.h"
 #include "main/game_object.h"
 #include "main/dll/DR/dll_026F_drgenerator.h"
 

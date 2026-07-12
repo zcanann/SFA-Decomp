@@ -12,41 +12,9 @@
  * running timer.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
+#include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-
-typedef struct TimerSetup
-{
-    ObjPlacement base;
-    u8 pad18;            /* 0x18 */
-    u8 mode;             /* 0x19: TIMER_MODE_* */
-    s16 durationMinutes; /* 0x1A */
-    s16 pad1C;           /* 0x1C */
-    s16 expiredGameBit;  /* 0x1E: set when the countdown reaches zero */
-    s16 startGameBit;    /* 0x20: arms / disarms the countdown */
-} TimerSetup;
-
-typedef struct TimerState
-{
-    f32 countdownTimer;   /* 0x00 */
-    ModelLight* lightSlot; /* 0x04: effect-mode point-light slot pointer */
-    f32 lightScale;       /* 0x08 */
-    u8 mode;              /* 0x0C: TIMER_MODE_* */
-    TimerFlags flags;     /* 0x0D */
-    u8 pad0E[0x20 - 0xE]; /* 0x0E */
-} TimerState;
-
-STATIC_ASSERT(offsetof(TimerSetup, mode) == 0x19);
-STATIC_ASSERT(offsetof(TimerSetup, durationMinutes) == 0x1A);
-STATIC_ASSERT(offsetof(TimerSetup, expiredGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(TimerSetup, startGameBit) == 0x20);
-STATIC_ASSERT(sizeof(TimerSetup) == 0x24);
-STATIC_ASSERT(offsetof(TimerState, lightSlot) == 0x04);
-STATIC_ASSERT(offsetof(TimerState, lightScale) == 0x08);
-STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);
-STATIC_ASSERT(offsetof(TimerState, flags) == 0x0D);
-STATIC_ASSERT(sizeof(TimerState) == 0x20);
 
 #define TIMER_OBJGROUP 0x4c
 

@@ -6,25 +6,8 @@
  * reaches zero. Optionally shows the current count on the HUD.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
-#include "main/dll/cntcounter_state.h"
-
-typedef struct CntCounterSetup
-{
-    ObjPlacement base;
-    u8 pad18;
-    u8 displayHud;
-    s16 initialCount;
-    s16 pad1C;
-    s16 doneGameBit;
-    s16 decrementGameBit;
-} CntCounterSetup;
-
-STATIC_ASSERT(offsetof(CntCounterSetup, displayHud) == 0x19);
-STATIC_ASSERT(offsetof(CntCounterSetup, initialCount) == 0x1A);
-STATIC_ASSERT(offsetof(CntCounterSetup, doneGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(CntCounterSetup, decrementGameBit) == 0x20);
-STATIC_ASSERT(sizeof(CntCounterSetup) == 0x24);
+#include "main/dll/dll_02B4_cntcounter.h"
+#include "main/model_engine.h"
 
 int CntCounter_getExtraSize(void)
 {

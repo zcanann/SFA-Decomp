@@ -41,6 +41,7 @@
 #include "main/sky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0126_trigger.h"
+#include "main/dll/dll_02B5_timer.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
@@ -104,7 +105,6 @@ extern void mainSetBits(int eventId, int value);
 extern int getTrickyObject(void);
 extern void gameTextFn_80125ba4(int id);
 extern int getArwing(void);
-extern void timer_addDuration(GameObject* timer, int dur);
 extern void envFxFn_800887cc(void);
 extern int playerGetFocusObject(void);
 extern int return1_800202BC(void);

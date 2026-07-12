@@ -32,6 +32,7 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
+#include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST 5
@@ -70,7 +71,6 @@ extern void saveGame_saveObjectPos(int* obj);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void* getTrickyObject(void);
 extern void trickyImpress(u8* obj);
-extern void timer_clearManualFlags();
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
@@ -100,9 +100,6 @@ extern int timerCountDown(f32* p);
 extern void s16toFloat(f32* p, s16 val);
 extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);
-extern int timer_isEffectMode(GameObject *obj);
-extern void timer_forceStart(GameObject *obj);
-extern int timer_hasExpired(GameObject *obj);
 extern void barrelgener_queueObjectRelease(GameObject *gen, int obj, int code);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern u32 playerGetStateFlag310(u8 * player);

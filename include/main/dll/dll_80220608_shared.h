@@ -42,7 +42,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 #include "main/frame_timing.h"
-#include "main/dll/cnthitobjec_state.h"
 
 struct AndrossState;
 
@@ -335,41 +334,13 @@ extern void textureFree(void* tex);
 extern void* textureLoadAsset(int id);
 
 
-typedef struct TimerFlags
-{
-    u8 expired : 1;
-    u8 manual : 1;
-    u8 flag20 : 1;
-    u8 pad : 5;
-} TimerFlags;
-
-extern f32 lbl_803E7408;
-extern f32 lbl_803E7418;
-extern f32 lbl_803E7424;
 extern int fn_80080150(int state);
-
-extern f32 lbl_803DC418;
-extern f32 lbl_803DC41C;
-extern f32 lbl_803E741C;
-extern f32 lbl_803E7420;
-
-extern void set_hudNumber_803db278(int n);
 
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 
-typedef struct CntHitFlags
-{
-    u8 disabled : 1;
-    u8 pad : 7;
-} CntHitFlags;
-
-extern f32 lbl_803E7430;
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 
-extern int lbl_8032BEF8[];
-extern u8 lbl_803DC42C;
-extern int lbl_803DC428;
 extern int arrayIndexOf(int array, int count, int value);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
@@ -1344,43 +1315,6 @@ void ControlLight_init(GameObject* obj, int setup);
 void ControlLight_update(GameObject* obj);
 void ControlLight_release(void);
 void ControlLight_initialise(void);
-int timer_getExtraSize(void);
-void timer_free(GameObject* obj);
-int timer_hasExpired(GameObject* obj);
-int timer_isEffectMode(GameObject* obj);
-void timer_clearManualFlags(GameObject* obj);
-void timer_forceStart(GameObject* obj);
-void timer_addDuration(GameObject* obj, int duration);
-void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-void timer_init(GameObject* obj, int setup);
-void timer_update(GameObject* obj);
-int CntCounter_getExtraSize(void);
-int CntCounter_getObjectTypeId(void);
-void CntCounter_free(GameObject* obj);
-void CntCounter_hitDetect(void);
-void CntCounter_render(void);
-void CntCounter_init(GameObject* obj);
-void CntCounter_update(GameObject* obj);
-void CntCounter_release(void);
-void CntCounter_initialise(void);
-int cnthitobjec_getExtraSize(void);
-int cnthitobjec_getObjectTypeId(void);
-void cnthitobjec_free(void);
-void cnthitobjec_release(void);
-void cnthitobjec_initialise(void);
-void cnthitobjec_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-int cnthitobjec_SeqFn(int obj, int p2, int p3);
-void cnthitobjec_hitDetect(GameObject* obj);
-void cnthitobjec_init(GameObject* obj, int setup);
-void cnthitobjec_update(GameObject* obj);
-int dustmotesou_getExtraSize(void);
-int dustmotesou_getObjectTypeId(void);
-void dustmotesou_free(int obj);
-void dustmotesou_hitDetect(void);
-void dustmotesou_init(int obj, int setup);
-void dustmotesou_update(int obj);
-void dustmotesou_release(void);
-void dustmotesou_initialise(void);
 int brokenpipe_getExtraSize(void);
 void brokenpipe_init(GameObject* obj, int setup);
 void brokenpipe_update(GameObject* obj);
@@ -1617,7 +1551,6 @@ void arwarwing_upgradeLaserLevel(int arwing);
 int arwarwing_isExplodingOrWarping(int arwing);
 int arwarwing_isBarrelRolling(int arwing);
 int arwarwing_isDead(int arwing);
-int mcupgrade_SeqFn(GameObject* obj, int unused, CntHitObjectAnimEvent* event);
 int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void mcupgrade_update(GameObject* obj);

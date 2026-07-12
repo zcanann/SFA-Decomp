@@ -13,6 +13,7 @@
  * lives in DLL 0x2B8.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
 
