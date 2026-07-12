@@ -87,6 +87,7 @@ void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
     }
 }
 
+#pragma dont_inline on
 void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
 {
     int i;
@@ -123,6 +124,7 @@ void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
         }
     }
 }
+#pragma dont_inline off
 
 void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
