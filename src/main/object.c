@@ -182,7 +182,6 @@ extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
-void Obj_FreeObject(GameObject* obj);
 extern void Obj_RegisterObject(u8* obj, int b);
 extern void objLoadPlayerFromSave(u8* obj);
 extern void modelInitBones(f32 scale, void* model);
@@ -1555,7 +1554,7 @@ void objFreeObjDef(u8* obj, int flag)
             }
             for (n = 0; n < count; n++)
             {
-                Obj_FreeObject((void*)defs[n]);
+                Obj_FreeObject((GameObject*)defs[n]);
             }
             fn_80059A50(*(u8*)(obj + 0x34));
         }
@@ -2070,7 +2069,7 @@ void Obj_ResetObjectSystem(void)
     off = i << 2;
     for (; i >= 0; i--)
     {
-        Obj_FreeObject(*(void**)((int)gObjList + off));
+        Obj_FreeObject(*(GameObject**)((int)gObjList + off));
         off -= 4;
     }
     Obj_FreeDeferredObjects();
