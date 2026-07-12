@@ -8,6 +8,8 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 void* textureAlloc(u16 width, u16 height, int format, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
                    u8 minFilter, u8 magFilter);
 void Rcp_DisableDistortionFilter(void);
+void setMotionBlur(u8 enabled, f32 amount);
+void warpToMap(int idx, s8 transType);
 void fn_800541A4(Texture* texture, s16 frameStep);
 void textureAnimFn_80053f2c(const Texture* texture, u32* flags, s32* frame);
 

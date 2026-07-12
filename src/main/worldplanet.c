@@ -65,7 +65,6 @@ extern u8 gWorldPlanetLoadMapIndices[6];
 extern u8 gWorldPlanetWarpMapIndices[6];
 
 extern void streamFn_8000a380(int a, int b, int c);
-extern void warpToMap(int idx, s8 transType);
 extern float fsin16Approx(int angle);
 extern float fcos16Approx(int angle);
 extern f32 gWorldPlanetPfxOffsetX;

@@ -15,6 +15,7 @@
  * MagicLight and CrRockfall layouts are size-asserted here as a build guard.
  */
 #include "main/dll/blob10_struct.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"

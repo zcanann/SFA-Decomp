@@ -14,6 +14,7 @@
  * anim.resetHitboxFlags (objanim_internal.h).
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/tricky_api.h"
 #include "main/render.h"

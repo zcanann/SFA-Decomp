@@ -10,6 +10,7 @@
  * issued through the map-event interface.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
@@ -69,7 +70,6 @@ extern void AudioStream_CancelPrepared(void);
 extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 v);
-extern void warpToMap(int idx, s8 transType);
 extern void SHthorntail_updateDustEffects(int obj);
 
 int warpstone_getExtraSize(void)

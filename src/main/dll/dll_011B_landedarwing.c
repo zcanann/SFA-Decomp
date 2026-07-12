@@ -16,6 +16,7 @@
  * Hit state is packed into a one-byte flag word (LandedArwingHitFlagBits).
  */
 #include "main/obj_placement.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -94,7 +95,6 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
 
 extern int mapGetDirIdx(int idx);
 extern void setLoadedFileFlags_blocks1(void);
-extern void warpToMap(int idx, s8 transType);
 
 typedef struct LandedArwingFxPoint
 {

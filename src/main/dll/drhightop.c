@@ -14,6 +14,7 @@
  * Entry points are dispatched from dll_0255_snowbike.c.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
@@ -112,7 +113,6 @@ extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
-extern void setMotionBlur(u8 enabled, f32 amount);
 extern void fn_8009A8C8();
 extern void SnowBike_resetToRomListPosition();
 

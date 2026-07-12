@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/debug.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

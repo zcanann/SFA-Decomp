@@ -19,6 +19,7 @@
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/render.h"

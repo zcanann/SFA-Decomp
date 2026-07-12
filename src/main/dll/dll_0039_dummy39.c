@@ -8,6 +8,7 @@
  * frees the cached texture handle (lbl_803DD72C).
  */
 #include "types.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
@@ -21,7 +22,6 @@
 
 extern u8 lbl_803DD728;
 extern u8* lbl_803DD72C;
-extern void warpToMap(int idx, s8 transType);
 
 void Dummy39_render(void)
 {

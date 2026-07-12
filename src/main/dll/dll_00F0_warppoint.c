@@ -20,6 +20,7 @@
  * pushable TU in the same binary; they are not called from this object.
  */
 #include "main/obj_placement.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
 #include "main/dll/dll_00EF_pushable.h"
@@ -80,7 +81,6 @@ typedef struct WarpPointState
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 
-extern void warpToMap(int idx, s8 transType);
 
 #pragma scheduling off
 #pragma peephole off

@@ -20,6 +20,7 @@
  * list with the interface; release frees the textures and warps home.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "ghidra_import.h"
@@ -53,7 +54,9 @@
 #define PAD_CONFIRM_MASK (PAD_BUTTON_A | PAD_BUTTON_B)
 
 extern int* gTitleMenuLinkInterface;
-extern u32 gWeirdMenuTextureC, gWeirdMenuTextureB, gWeirdMenuTextureA;
+extern Texture* gWeirdMenuTextureC;
+extern Texture* gWeirdMenuTextureB;
+extern Texture* gWeirdMenuTextureA;
 extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
 extern s8 gWeirdMenuSaveTimer;             /* save-phase frame timer */
 extern s16 gWeirdMenuScrollOffset;         /* scroll offset, clamped to 0x8C */
@@ -63,10 +66,7 @@ extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written a
 extern u32 gWeirdMenuWidgetLayout[];       /* widget layout descriptor */
 extern void saveGame_save();
 extern u32 gameTextGet(int textId);
-extern void textureFree(u32);
-extern void warpToMap(int idx, s8 transType);
 extern void buttonDisable(int port, u32 mask);
-extern u32 textureLoadAsset(int);
 
 void WeirdUnusedMenu_render(void)
 {
@@ -141,9 +141,9 @@ int WeirdUnusedMenu_run(void)
 
 void WeirdUnusedMenu_release(void)
 {
-    textureFree(gWeirdMenuTextureA);
-    textureFree(gWeirdMenuTextureB);
-    textureFree(gWeirdMenuTextureC);
+    textureFree((u8*)gWeirdMenuTextureA);
+    textureFree((u8*)gWeirdMenuTextureB);
+    textureFree((u8*)gWeirdMenuTextureC);
     warpToMap(0, 1);
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }

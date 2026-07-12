@@ -1,5 +1,6 @@
 /* DLL 0x255 - SnowBike [801EC7A0-801ECEC4) */
 #include "main/dll/path_control_interface.h"
+#include "main/rcp_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/camera.h"
@@ -141,9 +142,7 @@ extern f32 lbl_803E5C4C;
 extern u32 fn_801EAE4C();
 extern u32 fn_801EB0D4();
 extern u32 fn_801EB634();
-extern void textureFree(u32);
-extern u32 textureLoadAsset(int);
-extern u32 lbl_803DDC60;
+extern Texture* lbl_803DDC60;
 extern char lbl_803284E0[];
 
 /* texture asset loaded into lbl_803DDC60 (this DLL's only texture) */
@@ -172,7 +171,6 @@ extern void fn_801EBD60(int obj, u8* state);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
 extern void objApplyVelocity(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
-extern void setMotionBlur(u8 enabled, f32 amount);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32* a, f32* b, f32* dst);
 extern float powfBitEstimate(float x, float y);
@@ -701,7 +699,7 @@ void SnowBike_release(void)
 {
     if (lbl_803DDC60 != 0)
     {
-        textureFree(lbl_803DDC60);
+        textureFree((u8*)lbl_803DDC60);
         lbl_803DDC60 = 0;
     }
 }

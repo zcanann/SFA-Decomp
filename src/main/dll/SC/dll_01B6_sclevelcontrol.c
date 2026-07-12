@@ -6,6 +6,7 @@
  * complete). Chief/MuscleFoot/throne require mode >=3. Also resets the four
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/sclevelcontrolstate_types.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -63,7 +64,6 @@ extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 
 extern void gameTextShow(int a);
-extern void warpToMap(int idx, s8 transType);
 
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern u16 gScLevelControlMusicStepSequence[4];

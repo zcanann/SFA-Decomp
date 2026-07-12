@@ -1,5 +1,6 @@
 /* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/objseq.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/objlib.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -9,7 +10,6 @@
 extern void objRenderFn_80041018(int obj);
 extern void envFxActFn_800887f8(u8 value);
 
-extern void warpToMap(int idx, s8 transType);
 
 #define MAGICCAVEBOTTOM_GAMEBIT_ACTIVE 0xefb /* bottom-area loaded/active latch */
 #define MAGICCAVE_GAMEBIT_WARP_READY 0x91e   /* handoff to top: perform warp sequence */

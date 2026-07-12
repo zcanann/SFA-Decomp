@@ -11,6 +11,7 @@
 #define LAVA1BE_FLAG_INACTIVE   0x10
 #define LAVA1BE_FLAG_FALLING    0x20
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/object_api.h"
 #include "main/modellight_api.h"
 #include "main/dll/lavaball1bfstate_struct.h"

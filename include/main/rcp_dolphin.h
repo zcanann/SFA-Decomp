@@ -96,6 +96,5 @@ void gxTextureFn_80052efc(void);
 void loadNextMap(void);
 
 void timeOfDayFn_80055000(void);
-void warpToMap(int idx, s8 transType);
 
 #endif /* MAIN_RCP_DOLPHIN_H_ */

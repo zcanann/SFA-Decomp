@@ -15,6 +15,7 @@
  * zones + texture-state swaps).
  */
 #include "main/effect_interfaces.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "main/frame_timing.h"

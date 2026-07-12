@@ -160,7 +160,6 @@ extern f32 lbl_803E654C;
 extern int gBossDrakorMoveStateTable[];
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void gameTextShow(int id);
-extern int warpToMap(int id, int flags);
 extern void timeOfDayFn_80055000(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E6514;

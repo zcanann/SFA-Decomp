@@ -15,6 +15,7 @@
  * collectable. A looping object sound is kept alive while sequences run.
  */
 #include "main/dll/dll_0238_linkalevco.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "main/gameplay_runtime.h"
