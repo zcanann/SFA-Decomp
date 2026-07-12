@@ -14,7 +14,7 @@
 #define INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET 0x6740
 
 void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
-void inpSetMidiCtrl14(int controller, u8 slot, u8 key, u16 data);
+void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 data);
 void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);

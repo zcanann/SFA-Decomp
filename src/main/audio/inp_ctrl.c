@@ -1,4 +1,5 @@
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/inp_midi.h"
 #include "main/audio/synth_scale.h"
 
 #pragma exceptions on
@@ -15,7 +16,7 @@ extern AuxInputSlots lbl_803BDEF4;
 extern u32 lbl_803D3CA0[];
 extern u32 lbl_8032FFE0[];
 extern u32 lbl_8032FFF0[];
-extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
+extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 
 s16 sndSintab[1036] = {
     0,    6,    12,   18,   25,   31,   37,   43,   50,   56,   62,   69,   75,   81,   87,   94,   100,  106,  113,
@@ -238,48 +239,50 @@ void inpInit(u32 state)
  * Map an input byte (0x80..0x88) to a packed table value via a
  * jumptable, falling through for inputs outside that range.
  */
-#pragma dont_inline on
-u32 inpTranslateExCtrl(u32 input)
+u8 inpTranslateExCtrl(u8 ctrl)
 {
-    u32 value = input & 0xff;
-    u32 idx = value - 0x80;
-    switch (idx)
+    switch (ctrl)
     {
-    case 0:
-        return MCMD_CTRL_PITCH_BEND;
-    case 1:
-        return 0x82;
-    case 2:
-        return MCMD_CTRL_EX_A0;
-    case 3:
-        return MCMD_CTRL_EX_A1;
-    case 4:
-        return MCMD_CTRL_SUR_PANNING;
-    case 5:
-        return MCMD_CTRL_DOPPLER;
-    case 6:
-        return MCMD_CTRL_MIDI_LAYER;
-    case 7:
-        return MCMD_CTRL_VOICE_AGE;
-    case 8:
-        return 0xa4;
-    default:
-        return input;
+    case 0x80:
+        ctrl = MCMD_CTRL_PITCH_BEND;
+        break;
+    case 0x81:
+        ctrl = 0x82;
+        break;
+    case 0x82:
+        ctrl = MCMD_CTRL_EX_A0;
+        break;
+    case 0x83:
+        ctrl = MCMD_CTRL_EX_A1;
+        break;
+    case 0x84:
+        ctrl = MCMD_CTRL_SUR_PANNING;
+        break;
+    case 0x85:
+        ctrl = MCMD_CTRL_DOPPLER;
+        break;
+    case 0x86:
+        ctrl = MCMD_CTRL_MIDI_LAYER;
+        break;
+    case 0x87:
+        ctrl = MCMD_CTRL_VOICE_AGE;
+        break;
+    case 0x88:
+        ctrl = 0xa4;
+        break;
     }
+    return ctrl;
 }
-#pragma dont_inline reset
 
 /*
  * Read an extended controller value, with local state-backed overrides for
  * translated controller 0xA0/0xA1.
  */
-u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
+u16 inpGetExCtrl(McmdVoiceState* state, u8 ctrl)
 {
-    int translated;
     u16 value;
 
-    translated = inpTranslateExCtrl(ctrl) & 0xff;
-    switch (translated)
+    switch (inpTranslateExCtrl(ctrl))
     {
     case MCMD_CTRL_EX_A0:
         return state->exCtrlA0Value * 2 + 0x2000;
@@ -301,29 +304,20 @@ u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
 /*
  * Clamp and write an extended controller through MIDI for non-local controls.
  */
-void inpSetExCtrl(McmdVoiceState* state, u32 ctrl, s16 value)
+void inpSetExCtrl(McmdVoiceState* state, u8 ctrl, s16 value)
 {
-    int translated;
-    int clamped;
-    s16 ctrlVal;
-
-    if (value < 0)
+    value = value < 0 ? 0 : value > 0x3fff ? 0x3fff : value;
+    switch (inpTranslateExCtrl(ctrl))
     {
-        clamped = 0;
-    }
-    else if (value > 0x3fff)
-    {
-        clamped = 0x3fff;
-    }
-    else
-    {
-        clamped = value;
-    }
-    ctrlVal = clamped;
-    translated = inpTranslateExCtrl(ctrl) & 0xff;
-    if ((translated >= MCMD_CTRL_MIDI_LAYER || translated < MCMD_CTRL_EX_A0) && state->midiSlot != 0xff)
-    {
-        inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, ctrlVal);
+    case MCMD_CTRL_EX_A1:
+    case MCMD_CTRL_EX_A0:
+        break;
+    default:
+        if (state->midiSlot != 0xff)
+        {
+            inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, value);
+        }
+        break;
     }
 }
 
