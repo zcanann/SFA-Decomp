@@ -29,6 +29,7 @@
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -185,7 +186,6 @@ extern f32 lbl_803E2D7C;
 extern f32 lbl_803E2D80;
 extern int* gBaddieControlInterface;
 extern f32 lbl_803E2DB8;
-extern void Obj_FreeObject(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
 
 #pragma scheduling off
@@ -343,7 +343,7 @@ int iceBaddie_stateHandlerB02(GameObject* obj, int state)
             ObjMsg_SendToObjects(0, 3, obj, 0xe0000, (int)obj);
         if (obj->anim.placementData == NULL)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return 0;
         }
         return 4;
@@ -1188,7 +1188,7 @@ void iceBaddie_free(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, ICEBADDIE_OBJGROUP);
     if (obj->childObjs[0] != NULL)
     {
-        Obj_FreeObject(*(int*)&obj->childObjs[0]);
+        Obj_FreeObject(*(GameObject**)&obj->childObjs[0]);
         *(int*)&obj->childObjs[0] = 0;
     }
     ((void (*)(int, int, int))((void**)*gBaddieControlInterface)[16])((int)obj, (int)state, 0x20);

@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
@@ -53,7 +54,6 @@ typedef struct DIMbossspitState
 } DIMbossspitState;
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
-extern void Obj_FreeObject(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4D44;
 extern u8 framesThisStep;
@@ -119,7 +119,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
     {
         if (burstTimer > 0x22a)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
         return;
     }
@@ -207,7 +207,7 @@ void DIMbossspit_update(GameObject* obj)
         (obj)->unkF4 -= framesThisStep;
         if ((obj)->unkF4 < 0)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
             return;
         }
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_5, 4, 0);

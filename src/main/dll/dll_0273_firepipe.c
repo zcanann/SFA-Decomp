@@ -29,6 +29,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/obj_placement.h"
@@ -42,7 +43,6 @@
 #define FIREPIPE_OBJFLAG_RENDERED        0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void modelLightStruct_freeSlot(int p);
-extern void Obj_FreeObject(int obj);
 extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
@@ -136,7 +136,7 @@ typedef struct FirePipeEffectSetup
 int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef)
 {
     int i;
-    int effectObj;
+    GameObject* effectObj;
     int freeDelay;
 
     if (Obj_IsLoadingLocked() == 0)
@@ -146,31 +146,31 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
     for (i = 0; i < extra->effectCount; i++)
     {
         effectObj = extra->effectObjs[i];
-        if ((((GameObject*)effectObj)->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) == 0)
+        if ((effectObj->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) == 0)
         {
-            ((GameObject*)effectObj)->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;
-            memcpy(((GameObject*)effectObj)->anim.placement, spawnDef, *(u8*)((int)spawnDef + 2));
-            ((GameObject*)effectObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)effectObj)->anim.localPosX = *(float*)((int)spawnDef + 8);
-            ((GameObject*)effectObj)->anim.localPosY = *(float*)((int)spawnDef + 0xc);
-            ((GameObject*)effectObj)->anim.localPosZ = *(float*)((int)spawnDef + 0x10);
-            (*(FirePipeEffectInitFn*)(**(int**)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
+            effectObj->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;
+            memcpy(effectObj->anim.placement, spawnDef, *(u8*)((int)spawnDef + 2));
+            effectObj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            effectObj->anim.localPosX = *(float*)((int)spawnDef + 8);
+            effectObj->anim.localPosY = *(float*)((int)spawnDef + 0xc);
+            effectObj->anim.localPosZ = *(float*)((int)spawnDef + 0x10);
+            (*(FirePipeEffectInitFn*)(**(int**)((char*)effectObj + 0x68) + 4))((int)effectObj, spawnDef, 0);
             freeDelay = mmSetFreeDelay(0);
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
-            Obj_InsertIntoUpdateList(effectObj);
-            ((GameObject*)effectObj)->objectFlags &= ~FIREPIPE_OBJFLAG_UPDATE_DISABLED;
-            return effectObj;
+            Obj_InsertIntoUpdateList((int)effectObj);
+            effectObj->objectFlags &= ~FIREPIPE_OBJFLAG_UPDATE_DISABLED;
+            return (int)effectObj;
         }
     }
-    effectObj = loadObjectAtObject(obj, spawnDef);
+    effectObj = (GameObject*)loadObjectAtObject(obj, spawnDef);
     if (extra->effectCount != 8)
     {
-        ((GameObject*)effectObj)->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;
+        effectObj->objectFlags |= FIREPIPE_OBJFLAG_ACTIVE;
         i = extra->effectCount++;
         extra->effectObjs[i] = effectObj;
     }
-    return effectObj;
+    return (int)effectObj;
 }
 #pragma dont_inline reset
 
@@ -186,7 +186,7 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
     }
     else
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject((GameObject*)obj);
     }
 }
 
@@ -450,13 +450,13 @@ int firepipe_getObjectTypeId(void)
 void firepipe_free(FirePipeObject* obj)
 {
     int i;
-    int* iter;
+    GameObject** iter;
     FirePipeExtra* extra;
 
     extra = obj->extra;
     ObjGroup_RemoveObject(obj, FIREPIPE_OBJGROUP);
     i = 0;
-    iter = (int*)extra;
+    iter = extra->effectObjs;
     while (i < (int)(u32)extra->effectCount)
     {
         Obj_FreeObject(*iter);

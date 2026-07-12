@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DREXPLODABLE_TYPES_H_
 #define MAIN_DLL_DREXPLODABLE_TYPES_H_
 
-#include "types.h"
+#include "main/game_object.h"
 
 typedef struct DrExplodableChunk
 {
@@ -43,7 +43,7 @@ typedef struct DrExplodableChunk
 typedef struct DrExplodableState
 {
     DrExplodableChunk chunks[15]; /* 0x000 */
-    int children[15]; /* 0x690: spawned fragment objects */
+    GameObject* children[15]; /* 0x690: spawned fragment objects */
     u32 flags6CC;
     int breakSfx;
     u8 count6D4;

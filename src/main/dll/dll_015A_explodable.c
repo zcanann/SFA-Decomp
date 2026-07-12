@@ -21,6 +21,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "track/intersect_api.h"
@@ -130,7 +131,6 @@ extern void exploded_initialise(void);
 extern void SpiritDoorLock_initialise(void);
 extern void RollingBarrel_initialise(void);
 extern void MMP_levelcontrol_initialise(void);
-extern void Obj_FreeObject(int obj);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16* rot, f32* vec);
@@ -149,7 +149,7 @@ void explodable_free(GameObject* obj, int flag)
     int state;
     int i = -1;
     int slotPtr;
-    void* child;
+    GameObject* child;
 
     state = *(int*)&(obj)->extra;
     ObjGroup_RemoveObject(obj, EXPLODABLE_OBJ_GROUP);
@@ -158,10 +158,10 @@ void explodable_free(GameObject* obj, int flag)
         slotPtr = state - 4;
         while (slotPtr += 4, ++i < 15)
         {
-            child = *(void**)&((DrExplodableState*)slotPtr)->children[0];
+            child = ((DrExplodableState*)slotPtr)->children[0];
             if (child != NULL)
             {
-                Obj_FreeObject((int)child);
+                Obj_FreeObject(child);
             }
         }
     }
@@ -211,7 +211,7 @@ void explodable_update(GameObject* obj)
                     {
                     case 2:
                         mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
-                        Obj_FreeObject(*(int*)(slotPtr + 0x690));
+                        Obj_FreeObject(*(GameObject**)(slotPtr + 0x690));
                         *(int*)(slotPtr + 0x690) = 0;
                         break;
                     case 0:

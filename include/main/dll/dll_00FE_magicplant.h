@@ -31,7 +31,7 @@ typedef struct MagicPlantSetup
 
 typedef struct MagicPlantState
 {
-    u32 childObject;
+    GameObject* childObject;
     f32 animProgress;
     f32 animStepScale;
     s16 idleTimer;

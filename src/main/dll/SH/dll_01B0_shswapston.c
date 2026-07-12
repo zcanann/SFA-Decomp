@@ -12,6 +12,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/model_engine.h"
 #include "main/mapEvent.h"
@@ -53,7 +54,6 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
 extern int playerHasKrazoaSpirit();
 extern void loadUiDll(int index);
 extern void ObjLink_DetachChild(int obj, int child);
-extern void Obj_FreeObject(int obj);
 extern int randFn_80080100(int n);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80296464(void);
@@ -96,7 +96,7 @@ void warpstone_free(GameObject* obj, int mode)
     if (*(void**)state != NULL && mode == 0)
     {
         ObjLink_DetachChild((int)obj, state[0]);
-        Obj_FreeObject(state[0]);
+        Obj_FreeObject((GameObject*)state[0]);
     }
 }
 
@@ -459,7 +459,7 @@ void warpstone_update(int obj)
     if ((void*)child != NULL)
     {
         ObjLink_DetachChild(obj, child);
-        Obj_FreeObject(*(int*)state);
+        Obj_FreeObject(*(GameObject**)state);
         *(int*)state = 0;
     }
 

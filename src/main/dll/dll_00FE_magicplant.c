@@ -23,6 +23,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
@@ -104,7 +105,6 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
                                           int useInputPosition);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern void Obj_Shatter(int obj);
-extern void Obj_FreeObject(int obj);
 extern int objIsFrozen(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -203,7 +203,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
 void MagicPlant_spawnChild(GameObject* obj, int objectId)
 {
     MagicPlantChildSetup* setup;
-    u32 childObj;
+    GameObject* childObj;
     u8* mapData;
     MagicPlantState* state;
 
@@ -223,10 +223,10 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
         setup->mapByte6 = mapData[0x06];
         setup->mapByte5 = mapData[0x05];
         setup->yawByte = (u8)(mapData[0x07] - 0xf);
-        childObj = Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+        childObj = (GameObject*)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
         if (childObj != 0)
         {
-            ObjLink_AttachChild((int)obj, childObj, 0);
+            ObjLink_AttachChild((int)obj, (int)childObj, 0);
             state->childObject = childObj;
         }
         else
@@ -261,7 +261,7 @@ void MagicPlant_update(int obj)
     if ((state->childObject != 0) && (plant->childLinkActive == 0))
     {
         state->childObject = 0;
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
         return;
     }
 
@@ -390,7 +390,7 @@ void MagicPlant_free(GameObject* obj, int freeChildren)
     ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_B);
     if (plant->childLinkActive != 0)
     {
-        ObjLink_DetachChild((int)obj, state->childObject);
+        ObjLink_DetachChild((int)obj, (int)state->childObject);
         if (freeChildren == 0)
         {
             Obj_FreeObject(state->childObject);
@@ -402,20 +402,20 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     MagicPlantObject* plant;
     MagicPlantState* state;
-    void* child;
+    GameObject* child;
 
     plant = (MagicPlantObject*)obj;
     state = plant->state;
     if (visible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3858);
-        child = (void*)state->childObject;
+        child = state->childObject;
         if (child != NULL)
         {
-            if (*(void**)((char*)child + 0xc4) != NULL)
+            if (child->ownerObj != NULL)
             {
-                ObjPath_GetPointWorldPosition(obj, 0, (float*)((char*)child + 0xc), (float*)((char*)child + 0x10),
-                                              (float*)((char*)child + 0x14), 0);
+                ObjPath_GetPointWorldPosition(obj, 0, &child->anim.localPosX, &child->anim.localPosY,
+                                              &child->anim.localPosZ, 0);
             }
         }
     }

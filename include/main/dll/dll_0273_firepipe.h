@@ -2,12 +2,13 @@
 #define MAIN_DLL_FIREPIPE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
 
 typedef struct FirePipeExtra {
-    int effectObjs[8];
+    GameObject* effectObjs[8];
     u8 effectCount;
     u8 pad21[0x24 - 0x21];
     f32 cycleTimer;
