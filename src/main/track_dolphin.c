@@ -4846,7 +4846,7 @@ void trackIntersect(void)
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *out with the last hit. */
-#pragma optimization_level 2
+#pragma optimization_level 4
 #pragma opt_lifetimes on
 int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
                  int self)
@@ -5108,19 +5108,15 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                     ap = la;
                     bp = lb;
                     dp = ld;
-                    do
+                    for (; n < 4; n++)
                     {
                         if (dp[0] + (px * bp[0] + pz * ap[0]) < zero)
                             *mp |= mb;
                         mb = (s16)(mb << 1);
-                        if (dp[1] + (px * bp[1] + pz * ap[1]) < zero)
-                            *mp |= mb;
-                        mb = (s16)(mb << 1);
-                        ap += 2;
-                        bp += 2;
-                        dp += 2;
-                        n++;
-                    } while (n < 2);
+                        ap++;
+                        bp++;
+                        dp++;
+                    }
                     xp[0] = px;
                     zp[0] = pz;
                     mp++;
