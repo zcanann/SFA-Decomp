@@ -853,13 +853,16 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & ~0x40000LL;                                                    \
     *(u8*)((state) + 0xd) = 0xFF
 
-#define TRICKY_VOICE(obj, st, sfx, vol)                                                                                \
-    st = ((GameObject*)obj)->extra;                                                                                    \
-    if ((((TrickyByteFlags*)((u8*)st + 0x58))->bit6 == 0) &&                                                           \
-        (((*(short*)((obj) + 0xa0) >= 0x30 || (*(short*)((obj) + 0xa0) < 0x29)) &&                                     \
-          (playing = Sfx_IsPlayingFromObjectChannel((obj), 0x10), !playing))))                                         \
+#define TRICKY_VOICE(obj, sfx, vol)                                                                                    \
     {                                                                                                                  \
-        objAudioFn_800393f8((obj), (u8*)st + 0x3a8, (sfx), (vol), 0xffffffff, 0);                                      \
+        TrickyState* voiceState_;                                                                                      \
+        voiceState_ = ((GameObject*)obj)->extra;                                                                       \
+        if ((((TrickyByteFlags*)((u8*)voiceState_ + 0x58))->bit6 == 0) &&                                              \
+            (((*(short*)((obj) + 0xa0) >= 0x30 || (*(short*)((obj) + 0xa0) < 0x29)) &&                                \
+              (playing = Sfx_IsPlayingFromObjectChannel((obj), 0x10), !playing))))                                    \
+        {                                                                                                              \
+            objAudioFn_800393f8((obj), (u8*)voiceState_ + 0x3a8, (sfx), (vol), 0xffffffff, 0);                         \
+        }                                                                                                              \
     }
 
 #define TRICKY_SPAWN_BUBBLE(obj, state)                                                                                \
@@ -923,7 +926,6 @@ void Tricky_update(int obj)
     u8* cursor;
     int cmd;
     TrickyState* st;
-    TrickyState* stState;
     bool playing;
     int i;
     int setup;
@@ -969,11 +971,11 @@ void Tricky_update(int obj)
         cursor = *(u8**)state;
         if (*cursor == *(cursor + 1))
         {
-            TRICKY_VOICE(obj, st, 0x364, 0x500);
+            TRICKY_VOICE(obj, 0x364, 0x500);
         }
         else
         {
-            TRICKY_VOICE(obj, st, 0x363, 0x500);
+            TRICKY_VOICE(obj, 0x363, 0x500);
         }
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000000LL;
     }
@@ -1051,7 +1053,7 @@ void Tricky_update(int obj)
                     i = i + 1;
                 } while (i < 7);
                 Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
-                TRICKY_VOICE(obj, st, 0x29d, 0);
+                TRICKY_VOICE(obj, 0x29d, 0);
             }
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         }
@@ -1107,7 +1109,7 @@ void Tricky_update(int obj)
             case 1:
                 ((TrickyState*)state)->commandPhase = 1;
                 trickySelectQueuedCommandTarget(state, 1);
-                TRICKY_VOICE(obj, st, 0x13c, 0);
+                TRICKY_VOICE(obj, 0x13c, 0);
                 switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                 {
                 case 0x1ca:
@@ -1494,14 +1496,13 @@ void Tricky_update(int obj)
     }
     objAnimFn_80038f38((GameObject*)(obj), state + 0x3a8);
     st = ((GameObject*)obj)->extra;
-    stState = st;
-    cursor = (u8*)stState->targetPosPtr;
-    stState->previousPathPoint = (f32*)cursor;
-    if (stState->previousPathPoint != NULL)
+    cursor = (u8*)st->targetPosPtr;
+    st->previousPathPoint = (f32*)cursor;
+    if (st->previousPathPoint != NULL)
     {
-        stState->previousPathX = *(f32*)cursor;
-        stState->previousPathY = *(f32*)(cursor + 4);
-        stState->previousPathZ = *(f32*)(cursor + 8);
+        st->previousPathX = *(f32*)cursor;
+        st->previousPathY = *(f32*)(cursor + 4);
+        st->previousPathZ = *(f32*)(cursor + 8);
     }
     ((TrickyState*)state)->prevSpeed = ((TrickyState*)state)->speed;
     i = ((TrickyState*)state)->commandCount - 1;
@@ -1559,7 +1560,7 @@ void Tricky_update(int obj)
     }
     if (((TrickyState*)state)->voiceCooldown > lbl_803E23DC)
     {
-        TRICKY_VOICE(obj, st, 0x29c, 0x100);
+        TRICKY_VOICE(obj, 0x29c, 0x100);
     }
     trickyUpdateCollisionAndPathState((u8*)obj);
     if ((((TrickyState*)state)->stateFlags & 0x80000000) != 0)
@@ -1571,7 +1572,7 @@ void Tricky_update(int obj)
 
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0x7FFFFFFF;
             sfxId = ((u16*)&pair)[randomGetRange(0, 1)];
-            TRICKY_VOICE(obj, st, sfxId, 0x500);
+            TRICKY_VOICE(obj, sfxId, 0x500);
         }
     }
     fn_80138D7C(obj, state);
@@ -1648,11 +1649,11 @@ void Tricky_update(int obj)
         {
             if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0)
             {
-                TRICKY_VOICE(obj, st, 0x392, 0x500);
+                TRICKY_VOICE(obj, 0x392, 0x500);
             }
             else
             {
-                TRICKY_VOICE(obj, st, 0x298, 0x500);
+                TRICKY_VOICE(obj, 0x298, 0x500);
             }
             ((TrickyState*)state)->childPhaseTimer0 -= lbl_803E2550;
         }
