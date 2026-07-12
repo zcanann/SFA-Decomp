@@ -7430,3 +7430,27 @@ Ran the fuzzy-scored decl-order sweeper (tools/brute_match.py, --strategy all) a
 - CENSUS: of ~46 count-mismatch band fns scanned, residuals are dominated by #108 reg-perm, #110 shared-zero/value-
   numbering, #70 bias-double/pool-reloc, and peephole/unroll trades. The one crack was a PROTOTYPE-WIDTH lever
   (new class above), not a reg/coloring lever. mtxRotateByVec3s and most FP-heavy rotation fns = #82+#70 welded.
+
+## Jul12 99.0-99.95 band re-triage (Opus, fuzzy-specialist pass)
+Re-scanned all 147 band fns (excl audio/dolphin/player/model). Confirms prior CENSUS: welded. New per-fn:
+- **ObjSeq_onMapSetup** 99.947: r10-vs-r3 scratch GPR perm (T==C len). #108 weld.
+- **mapGetRomListAndOffsets** (shader) 99.237 LENDELTA(-1): `int tabOff=(p1*7)*4` const-folds to `mulli 28`;
+  rewriting `p1*7<<2` (sibling mapInitSetRects style) MAKES COUNT MATCH (mulli7+slwi2) but leaves r7-vs-r0 scratch
+  reg + lwz-base-scheduled-between residual -> fuzzy NEUTRAL (99.237 flat). Reverted. Scheduling/coloring weld.
+- **fn_8015165C** (seqobj11d) 99.026 LENDELTA(-1): fn_8014D08C mask arg `((SeqEntry*)p28)[idx].mask` value-numbers
+  DISTINCT from sibling raw byte `(p28+idx*16)[8]` -> mask re-derived via `addi;lwzx` (2 insns) vs target `lwz 4(r7)`.
+  Respell mask to shared raw base `*(u32*)(p28+idx*16+4)` -> COUNT MATCHES but over-shares: float collapses to
+  `lfs 0(r7)` (target keeps indexed `lfsx r30,r0`) + scheduling cascade -> REGRESSES 99.026->98.63. Reverted.
+  Coloring weld (target wants idx*16 in r0 AND p28+idx*16 in r7 both live; source can't split).
+- **ObjSeq_ApplyFrameCurves** 99.765: 1 spurious `extsh r0,r0` before an s16 `sth` (redundant-narrow) BUT coupled
+  with welded r25/r26 perm -> can't reach 100 even if extsh cured. Skip.
+- **fn_80089A60** (sky) 99.037: MULTI-delta (not single-fix) — commutative `add r9,r9,r0` vs `add r9,r0,r9` x6
+  (gSkyState[slot*0xa4+X] base+index operand-order), mulli/lwz scheduling, + redundant `clrlwi r4,c2,24` before
+  `stb` of c2 param at 0xc0. Too many independent causes.
+- **DIMwooddoor_updateShardAim** 99.154: FP ternary-clamp reg-home f31-vs-f3 + branch-sense (ble/bge). brute_match
+  --strategy all (59 decl-orders) = NO fuzzy improvement (99.1538 flat). #82 FP-perm weld CONFIRMED.
+- **fn_80128A7C** (gameui) 99.209: r26/r27 perm + lfd(bias-double) load scheduling + `extsh r24,r23` vs `mr` (r23
+  already s16-ranged in target). Multi-delta, gameui concurrent-owned.
+- SCAN METHOD: /tmp/nrm2.py normalizes addr+@NNN-vs-named relocs to isolate genuine deltas; /tmp/triage.py tags
+  REGPERM (opcode-set match, same len) vs REAL vs LENDELTA. ~110/147 are pure REGPERM. Prototype-width lever
+  (minimap class) remains the only productive vein; none found this pass.
