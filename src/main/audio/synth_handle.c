@@ -1,4 +1,5 @@
 #include "src/main/audio/synth_internal.h"
+#include "main/audio/snd_synth_legacy.h"
 #pragma exceptions on
 
 typedef struct SynthStartParams
@@ -31,9 +32,6 @@ typedef struct SynthStartParams
 
 extern SynthVoiceRuntime lbl_803AF550;
 extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
-extern void sndSeqVolume(u32 value0, u16 value1, u32 handle, u32 mode);
-extern void sndSeqMute(u32 handle, u32 value0, u32 value1);
-extern void sndSeqContinue(u32 handle);
 extern void sndSeqSpeed(u32 handle, u16 speed);
 extern u32 synthResolveHandle(u32 handle);
 extern u32 seqPlaySong(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);

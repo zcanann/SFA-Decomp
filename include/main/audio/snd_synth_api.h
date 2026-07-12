@@ -3,6 +3,11 @@
 
 #include "ghidra_import.h"
 
+typedef int (*SndFXCtrlWideFn)(u32 handle, u32 controller, u32 value);
+typedef int (*SndFXCtrl14WideFn)(u32 handle, u32 controller, u32 value);
+typedef int (*SndFXStartExWideFn)(s16 fxId, int volume, int pan, int studio);
+typedef void (*SndSeqVolumeNarrowFn)(u8 volume, u16 time, u32 handle, u8 mode);
+
 void sndSeqVolume(int seqId, int volume, int time, int mode);
 void sndSeqStop(u32 handle);
 void sndSeqSpeed(u32 handle, u32 speed);

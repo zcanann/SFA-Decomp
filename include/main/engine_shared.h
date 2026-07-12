@@ -5,8 +5,12 @@
 #include "main/asset_load.h"
 #include "main/audio.h"
 #include "main/audio/inp_midi.h"
+#include "main/audio/hw_samplemem.h"
 #include "main/audio/sfx.h"
+#include "main/audio/snd3d.h"
 #include "main/audio/snd_core.h"
+#include "main/audio/snd_reverb.h"
+#include "main/audio/snd_synth_api.h"
 #include "main/camera.h"
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
@@ -34,19 +38,13 @@
 #include "dolphin/pad.h"
 
 extern s32 gAttractMovieState;
-extern int sndFXKeyOff(u32 handle);
-extern int sndFXCheck(u32 handle);
-extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
-extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern s32 getGameState(void);
 extern u32 mainGetBit(u32 bit);
 extern u8 pauseMenuGetState(void);
 extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
 extern void *memmove(void *dest, const void *src, u32 count);
-extern void sndSeqVolume(int voice, int a, int handle, int b);
 extern int randomGetRange(int min, int max);
-extern int sndFXStartEx(s16 a, int b, int c, int d);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern void *Obj_GetPlayerObject(void);
@@ -70,29 +68,18 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
 extern char* strcat(char* dst, const char* src);
 extern u8 lbl_803DCCA5;
-extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern u8 pauseMenuState;
 extern int getHudHiddenFrameCount(void);
 extern int getMinimapY(void);
 extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
-extern void sndSeqStop(int handle);
-extern void sndSeqMute(int handle, int a, int b);
-extern void sndSeqContinue(int handle);
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 fastFloorf(f32 v);
 extern void *mapGetBlockAtPos(int x, int y, int z);
 extern void *fn_80059334(int a, int b);
 extern void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
-extern void sndOutputMode(int mode);
 extern int fn_800119FC(s16 *dest, s16 *start, s16 *out);
-extern void sndSetHooks(int *hooks);
-extern void sndInit(int a, int b, int c, int d, int e, int f);
-extern void sndAuxCallbackUpdateSettingsReverbSTD(void *settings);
-extern void sndAuxCallbackReverbSTD(void);
-extern void sndSetAuxProcessingCallbacks(int a, void *cb, void *settings, int d, int e, int f, int g, int h, int i);
-extern void sndVolume(int a, int b, int c);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
 

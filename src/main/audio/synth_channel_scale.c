@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
+#include "main/audio/snd_synth_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #ifndef SYNTH_VOICE_STRIDE
@@ -79,7 +80,6 @@ extern void voiceRegister(McmdVoiceState* svoice);
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
-extern u32 sndFXCheck(u32 id);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
 extern float floorf(float x);

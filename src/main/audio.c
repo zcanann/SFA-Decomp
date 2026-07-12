@@ -1113,7 +1113,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
                 {
                     ctrlVolume = volumeByte;
                 }
-                sndFXCtrl(objectChannel->handle, 7, (u8)ctrlVolume);
+                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
             }
         }
 
@@ -1125,7 +1125,8 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
         {
             volumeScale = lbl_803DE574;
         }
-        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
+        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
+                                         (s32)(lbl_803DE578 * volumeScale));
     }
 }
 
@@ -1169,7 +1170,7 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
                 {
                     ctrlVolume = volumeByte;
                 }
-                sndFXCtrl(objectChannel->handle, 7, (u8)ctrlVolume);
+                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
             }
         }
 
@@ -1181,13 +1182,13 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
         {
             volumeScale = lbl_803DE574;
         }
-        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
+        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
+                                         (s32)(lbl_803DE578 * volumeScale));
     }
 }
 
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
 {
-    extern int sndFXCtrl(int handle, u8 controller, u8 value);
     void* slot;
     int level;
     f32 dist;
@@ -1423,14 +1424,14 @@ int d;
         return 0;
     }
 
-    handle = sndFXStartEx(a, b, c, 0);
+    handle = ((SndFXStartExWideFn)sndFXStartEx)(a, b, c, 0);
     if (handle == (u32)-1)
     {
         goto fail;
     }
     if (gSfxGlobalCtrlLevel != 0 && d == 0)
     {
-        sndFXCtrl(handle, 0x5b, gSfxGlobalCtrlLevel);
+        ((SndFXCtrlWideFn)sndFXCtrl)(handle, 0x5b, gSfxGlobalCtrlLevel);
     }
 
     ch->object = 0;
@@ -2502,7 +2503,6 @@ static int Music_IsTriggerExcluded(int id)
 
 void Music_Update(void)
 {
-    extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
     MusicChannel* ch;
     int i = 0;
     int lowPriority = 0x7fff;
@@ -2661,7 +2661,8 @@ void Music_Update(void)
                         }
                         else
                         {
-                            sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle, 1);
+                            ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                                0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle, 1);
                             ch->status = 2;
                         }
                     }
@@ -2670,8 +2671,9 @@ void Music_Update(void)
                 {
                     if (ch->status != 3)
                     {
-                        sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle,
-                                     (u8)(ch->pad11 != 0 ? 0 : 2));
+                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                            0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle,
+                            (u8)(ch->pad11 != 0 ? 0 : 2));
                         ch->status = 3;
                     }
                 }
@@ -2681,8 +2683,9 @@ void Music_Update(void)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
-                        sndSeqVolume((u8) * (u16*)&ch->pad14[0], (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA), ch->seqHandle,
-                                     0);
+                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                            (u8) * (u16*)&ch->pad14[0], (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
+                            ch->seqHandle, 0);
                         ch->status = 1;
                     }
                 }
@@ -2699,7 +2702,8 @@ void Music_Update(void)
                         }
                         else
                         {
-                            sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle, 1);
+                            ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                                0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle, 1);
                             ch->status = 2;
                         }
                     }
@@ -2708,8 +2712,9 @@ void Music_Update(void)
                 {
                     if (ch->status != 3)
                     {
-                        sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle,
-                                     (u8)(ch->pad11 != 0 ? 0 : 2));
+                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                            0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle,
+                            (u8)(ch->pad11 != 0 ? 0 : 2));
                         ch->status = 3;
                     }
                 }
@@ -2719,8 +2724,9 @@ void Music_Update(void)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
-                        sndSeqVolume((u8) * (u16*)&ch->pad14[0], (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB), ch->seqHandle,
-                                     0);
+                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                            (u8) * (u16*)&ch->pad14[0], (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
+                            ch->seqHandle, 0);
                         ch->status = 1;
                     }
                 }
@@ -2899,12 +2905,12 @@ typedef struct AudioMemHookPair
 int audioInit(void)
 {
     char* base = sSampleBufferSLoadedCallbackLoadError;
-    int hooks[2];
+    SalHooks hooks;
     int reverbWork;
     int delay;
     int v;
 
-    *(AudioMemHookPair*)hooks = *(AudioMemHookPair*)&gAudioMemAllocHook;
+    *(AudioMemHookPair*)&hooks = *(AudioMemHookPair*)&gAudioMemAllocHook;
     if (!gAudioInitStarted)
     {
         gAudioInitStarted = 1;
@@ -2920,8 +2926,8 @@ int audioInit(void)
         ARQInit();
         AIInit(0);
         AISetDSPSampleRate(0);
-        sndSetHooks(hooks);
-        sndInit(0x30, 0x30, 0x18, 1, 1, 0x1000000);
+        sndSetHooks(&hooks);
+        sndInit(0x30, 0x30, 0x18, 1, 1, (void*)0x1000000);
         sndSetMaxVoices(0x30, 0x18);
         if (OSGetSoundMode() == 0)
         {
@@ -2939,9 +2945,10 @@ int audioInit(void)
         *(f32*)&gAudioReverbSettings[0x14c] = lbl_803DE558;
         *(f32*)&gAudioReverbSettings[0x140] = lbl_803DE558;
         *(f32*)&gAudioReverbSettings[0x144] = lbl_803DE55C;
-        sndAuxCallbackUpdateSettingsReverbSTD(gAudioReverbSettings);
+        sndAuxCallbackUpdateSettingsReverbSTD((ReverbState*)gAudioReverbSettings);
         reverbWork = 0;
-        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff, reverbWork);
+        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
+                                     (void*)reverbWork);
         {
             extern u32 sndIsInstalled(void);
             if (!sndIsInstalled())
