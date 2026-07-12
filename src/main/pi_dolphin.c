@@ -6453,12 +6453,12 @@ extern int lbl_803DCC84;
 #pragma peephole off
 int initLoadFiles(void)
 {
-    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
+    int* ids;
     int i;
     int* rom;
     s16* owners;
     u8* himem;
-    int* ids;
+    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
     char** names[1];
     int* sizes;
     u8* flags;
