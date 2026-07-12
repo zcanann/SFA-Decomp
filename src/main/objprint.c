@@ -1762,10 +1762,11 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
         if (m[0] != NULL)
         {
             int iv[2];
+            int iv1;
             int n;
             int j;
             iv[0] = (int)found[0];
-            iv[1] = (int)found[0];
+            iv1 = (int)found[0];
             n = ((ObjDef*)m[0])->jointCount;
             for (j = 0; j < n; j++)
             {
@@ -1773,10 +1774,10 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
                 if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + iv[0] + 1) != 0xff &&
                     key == (int)*(u8*)(entries + iv[0]))
                 {
-                    found[0] = (s16*)((int)go->anim.jointPoseData + iv[1]);
+                    found[0] = (s16*)((int)go->anim.jointPoseData + iv1);
                 }
                 iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-                iv[1] += 0x12;
+                iv1 += 0x12;
             }
         }
         if (found[0] == NULL)
@@ -1809,7 +1810,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
                 }
                 else if (v < -lim)
                 {
-                    dst[n2] = -lim;
+                    dst[n2] = -(s16)lim;
                     src[n2] += lim;
                 }
                 else
