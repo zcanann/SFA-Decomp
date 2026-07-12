@@ -64,13 +64,18 @@ typedef struct SCTotemPuzzleParticleBox
 #define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 gTotemPuzzleAngleStep;
-extern f32 lbl_803E55F4;
-extern f32 lbl_803E55F8;
-extern f32 lbl_803E55FC;
-extern f32 lbl_803E5600;
-extern f32 lbl_803E5604;
-extern f32 lbl_803E5608;
+__declspec(section ".sdata2") f32 gTotemPuzzleAngleStep = 8192.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E55F4 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E55F8 = 16.5f;
+__declspec(section ".sdata2") f32 lbl_803E55FC = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5600 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E5604 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E5608 = 30.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E560C = 0.0f;
+#pragma explicit_zero_data off
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
 extern const f32 lbl_803E5620;
