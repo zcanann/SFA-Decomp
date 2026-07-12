@@ -7396,3 +7396,37 @@ Ran the fuzzy-scored decl-order sweeper (tools/brute_match.py, --strategy all) a
   uncommitted mapSetup WIP; stood down per one-owner-per-.c, surgically reverted only my doPendingMapLoads block.
 - VERDICT: the UNCONTENDED 92-96 band is decl-order-exhausted (1 win, rest #108/#82/#126/#67/#110 welded). brute_match
   is the right first probe (cheap, fuzzy-true); wins concentrate where a leading POINTER/scalar has a movable saved-reg home.
+
+## Jul12 98-99.5% band fuzzy sweep (Opus 4.8) — 1 WIN + weld census
+- **WIN minimap Minimap_frameStart 99.491->100.000 (762bb18472)**: sfx.h declares `Sfx_PlayFromObject(u32,u16)`;
+  the u16 id narrows the `int sfx` arg via `clrlwi` at the call, which CSE-merges with the `(u16)sfx != 0` compare
+  mask (one clrlwi feeds both compare AND arg). Retail passes `sfx` raw (`mr r4,r29`) with a SEPARATE compare mask
+  => it saw an INT-id prototype (attested in player_80295318_shared.h). FIX: drop `#include "main/audio/sfx.h"`,
+  add local `void Sfx_PlayFromObject(int,int); void Sfx_StopFromObject(u32,u32);`. NEW LEVER CLASS: a u16/u8 param
+  prototype forcing an arg-narrow that CSE-merges with a nearby same-width cast-compare — swap to the int-param
+  prototype (find an attested int decl) to split them. Grep band units for `Sfx_Play*/similar(_, <int var>)` near a
+  `(u16)var`/`(u8)var` compare.
+- WELDED this pass (confirmed, bank on sight):
+  - **mapGetRomListAndOffsets (shader)**: `(p1*7)*4` folds 7*4->`mulli 28`; target keeps `mulli 7; slwi 2`. Writing
+    `p1*7<<2` (sibling mapInitSetRects form) MATCHES the count BUT puts the product in r0 (reg-perm) => fuzzy DROPS
+    99.237->98.489. The missing-instr form beats the count-match form. #108-welded intermediate reg.
+  - **removeButtonObject / fn_8002B758 (twins)**: array remove-shift loops. srwi.-dotmerge (peephole-on) vs unfused
+    (peephole-off) trades against a dead trailing blr — peephole on/off each fixes ONE and breaks the unroll factor
+    (T=60 C=67). Welded peephole/unroll trade.
+  - **fn_8014FFB4 (wispbaddie)**: `controlFlags & ~0x40` -> `rlwinm` single-bit-clear; target uses `li -65; and`.
+    opt_strength_reduction off does NOT convert it (rlwinm-for-single-bit is instruction-selection, not SR) + adds a
+    li-const regression. Instruction-selection-pinned (r0-detour class).
+  - **pollenfragment_update**: 3-4x `extra+0x20` (deathTimer) cached in a saved reg + `mr r3,rN` per call-site;
+    target re-derives `addi r3,r31,32` each time (#130 re-derive). NO source local to delete (compiler value-numbers
+    the +0x20). opt_common_subs off = inert, opt_propagation off REGRESSES (7 regions). Value-numbering weld.
+  - **Vortex_init**: obj/`o` saved-reg home swap (r28<->r31) cascading 18 regions; decl-reorder base-first -> 30
+    regions (worse). #108 cascade, already #pragma-tuned (opt_strength_reduction on/opt_propagation off present).
+  - **Obj_UpdateModelBlendStates**: walker/j induction reg-home swap (r26<->r30) + shared-zero `mr r31,r28` vs
+    `li r31,0`; decl-reorder inert. #108/#110.
+  - **expgfx_onMapSetup**: single shared-zero `mr r29,r31` vs `li r29,0` (r31 holds the persistent store-0). #110 weld.
+  - **fn_801FD6B4 (main)**: missing `frsp` near mathSinf/`(f32)(int)` — bias-double-trap zone (#70). Welded.
+  - **drawWorldMapHud (gameui)**: gGameUiTaskHintCandidates[k] SDA-direct vs target base-reg reuse; `base[k]` respell
+    COLLAPSES the accesses (C=263, 11 regions) — wrong direction. Welded; gameui also concurrent-owned.
+- CENSUS: of ~46 count-mismatch band fns scanned, residuals are dominated by #108 reg-perm, #110 shared-zero/value-
+  numbering, #70 bias-double/pool-reloc, and peephole/unroll trades. The one crack was a PROTOTYPE-WIDTH lever
+  (new class above), not a reg/coloring lever. mtxRotateByVec3s and most FP-heavy rotation fns = #82+#70 welded.
