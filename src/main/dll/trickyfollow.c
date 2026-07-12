@@ -43,7 +43,6 @@ typedef struct TrickyJumpArc
     f32 landZ;     /* 0x80: landing node localPosY (Z) */
 } TrickyJumpArc;
 
-extern f32 oneOverTimeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E8;

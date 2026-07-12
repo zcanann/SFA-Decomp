@@ -36,7 +36,6 @@ extern u32 objAudioFn_8006ef38();
 
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
-extern f32 oneOverTimeDelta;
 extern f32 gNwMammothPathAccel;
 extern f32 gNwMammothPathSpeedMin;
 extern f32 gNwMammothPlayerNearDistSq;

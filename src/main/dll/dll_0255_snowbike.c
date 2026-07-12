@@ -132,7 +132,6 @@ extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void OSReport(const char* msg, ...);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern char sSnowBikeVelDebugFmt;
-extern f32 oneOverTimeDelta;
 extern f32 lbl_803E5B28;
 extern f32 lbl_803E5B88;
 extern f32 lbl_803E5BA4;

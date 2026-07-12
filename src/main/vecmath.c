@@ -21,7 +21,6 @@ extern f32 lbl_803DE7EC;
 extern f32 gVecMathHalfPi;
 extern f32 gVecMathNegHalfPi;
 extern f32 gVecMathTwoPi;
-extern f32 oneOverTimeDelta;
 extern f32 lbl_803DE7F4;
 
 extern float powfBitEstimate(float x, float y);

@@ -126,7 +126,6 @@ extern f32 lbl_803E257C;
 extern f32 lbl_803E25CC;
 extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
-extern f32 oneOverTimeDelta;
 extern f32 lbl_803E2598;
 
 extern void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg);

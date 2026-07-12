@@ -85,7 +85,6 @@ extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void fn_8014D08C(GameObject* p1, void* p2, int p3, f32 f1, int p5, int p6);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 v, void* params);
 extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
-extern f32 oneOverTimeDelta;
 extern f32 lbl_803DBCB0;
 extern f32 lbl_803DBCB4;
 extern f32 lbl_803E2814;

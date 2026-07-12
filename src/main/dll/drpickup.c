@@ -5,7 +5,6 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
-extern f32 oneOverTimeDelta;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5B48;

@@ -51,7 +51,6 @@ typedef struct HightopFlags
 #define DRHIGHTOP_PARTFX_COLLISION_SPRAY 0x553
 #define DRHIGHTOP_HIT_VOLUME_SLOT        0x15
 
-extern f32 oneOverTimeDelta;
 extern char lbl_803AD088[];
 extern int gDrHighTopHitObjectKinds[];
 extern int lbl_803DC0BC;

@@ -34,7 +34,6 @@
 /* spore puff emitted on the sporePuffTimer tick during the burrow/attack state */
 #define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
 
-extern f32 oneOverTimeDelta;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);

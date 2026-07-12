@@ -54,7 +54,6 @@ extern f32 lbl_803E6658;
 extern f32 lbl_803E6660;
 extern f32 lbl_803E6664;
 extern f32 lbl_803E666C;
-extern f32 oneOverTimeDelta;
 extern int gAudioStreamCurrentId;
 extern f32 gWorldObjAdvanceMoveTable[];
 extern f32 lbl_803E667C;
