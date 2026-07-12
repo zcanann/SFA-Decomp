@@ -163,6 +163,7 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
 #pragma opt_lifetimes reset
 
 #pragma opt_dead_assignments off
+#pragma opt_loop_invariants off
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 {
     extern u32 mapBlockFn_80060678(int* block);
@@ -244,6 +245,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     }
     *(int*)block = return0_80060B90((void*)block);
 }
+#pragma opt_loop_invariants reset
 #pragma opt_dead_assignments reset
 
 int XyzAnimator_getExtraSize(void)
