@@ -5208,8 +5208,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                                     stepLa = lbl_803DB660 * la[3];
                                     while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
-                                        posX[1] = posX[1] + stepLb;
-                                        posZ[1] = posZ[1] + stepLa;
+                                        posX[1] += stepLb;
+                                        posZ[1] += stepLa;
                                         j++;
                                         if (j > 0xa)
                                         {
@@ -5230,8 +5230,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                                     t1 = ld[3];
                                     while (t1 + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
-                                        posX[1] = posX[1] + stepLb;
-                                        posZ[1] = posZ[1] + stepLa;
+                                        posX[1] += stepLb;
+                                        posZ[1] += stepLa;
                                         j++;
                                         if (j > 0xa)
                                         {
