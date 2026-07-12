@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/dll_02BA_mclightning.h"
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
 
@@ -141,7 +142,7 @@ void mclightning_update(GameObject* obj)
     obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
 }
 
-void mclightning_init(GameObject* obj, u8* setup)
+void mclightning_init(GameObject* obj, McLightningSetup* setup)
 {
     McLightningState* state = (obj)->extra;
     f32 effectScale;
@@ -149,7 +150,7 @@ void mclightning_init(GameObject* obj, u8* setup)
     (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     (obj)->animEventCallback = mclightning_SeqFn;
     ObjGroup_AddObject((int)obj, MCLIGHTNING_OBJGROUP);
-    state->flags.spawnFlags = setup[0x1a];
+    state->flags.spawnFlags = setup->spawnFlags;
     effectScale = lbl_803E745C;
     state->hitEffectScale = effectScale;
     state->burstEffectChance = effectScale;

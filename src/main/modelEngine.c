@@ -9,6 +9,8 @@
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
+#include "main/dll/dll_02BA_mclightning.h"
+#include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
@@ -99,9 +101,8 @@ extern ResourceDescriptor gExplosionObjDescriptor, gFElevControlObjDescriptor, g
 extern ResourceDescriptor gFirePipeObjDescriptor, gFireballObjDescriptor, gFlagObjDescriptor,
     gFlameThrowerSpeObjDescriptor, gFlameblastObjDescriptor, gFlammableVineObjDescriptor, gFogControlObjDescriptor,
     gFuelCellObjDescriptor;
-extern ResourceDescriptor gGCRobotLightBeaObjDescriptor, gGCbaddieShieldObjDescriptor, gGF_LevelConObjDescriptor,
-    gGPSH_ObjCreatorObjDescriptor, gGPSH_SceneObjDescriptor, gGPSH_ShrineObjDescriptor, gGmMazeWellObjDescriptor,
-    gGrimbleObjDescriptor;
+extern ResourceDescriptor gGCRobotLightBeaObjDescriptor, gGCbaddieShieldObjDescriptor, gGPSH_ObjCreatorObjDescriptor,
+    gGPSH_SceneObjDescriptor, gGPSH_ShrineObjDescriptor, gGmMazeWellObjDescriptor, gGrimbleObjDescriptor;
 extern ResourceDescriptor gGroundAnimatorObjDescriptor, gGunPowderBarrelObjDescriptor, gHagabonObjDescriptor,
     gHighTopObjDescriptor, gHitAnimatorObjDescriptor, gIMAnimSpaceCraftObjDescriptor, gIMIceMountainObjDescriptor,
     gIMIcePillarObjDescriptor;
@@ -118,8 +119,7 @@ extern ResourceDescriptor gLINKLevControlObjDescriptor, gLampObjDescriptor, gLan
     gLanternFireFlyObjDescriptor, gLargeCrateObjDescriptor, gLaserBeamObjDescriptor, gLaserObjDescriptor,
     gLaserUnsupportedObjDescriptor;
 extern ResourceDescriptor gLavaBall1BEObjDescriptor, gLavaBall1BFObjDescriptor, gLevelNameObjDescriptor,
-    gLightFootObjDescriptor, gLightSourceObjDescriptor, gLightningObjDescriptor, gMAGICMakerObjDescriptor,
-    gMCLightningObjDescriptor;
+    gLightFootObjDescriptor, gLightSourceObjDescriptor, gLightningObjDescriptor, gMAGICMakerObjDescriptor;
 extern ResourceDescriptor gMMP_BridgeObjDescriptor, gMMP_asteroid_reObjDescriptor, gMMP_gyserventObjDescriptor,
     gMMP_levelcontrolObjDescriptor, gMMP_moonrockObjDescriptor;
 extern ResourceDescriptor gMMP_trenchFXObjDescriptor, gMMSH_ScalesObjDescriptor, gMMSH_ShrineObjDescriptor,
@@ -1573,8 +1573,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gMCUpgradeObjDescriptor,
     (ResourceDescriptor*)&gMCUpgradeMaObjDescriptor,
     (ResourceDescriptor*)&gMCStaffEffeObjDescriptor,
-    &gMCLightningObjDescriptor,
-    &gGF_LevelConObjDescriptor,
+    (ResourceDescriptor*)&gMCLightningObjDescriptor,
+    (ResourceDescriptor*)&gGF_LevelConObjDescriptor,
     &gAndrossObjDescriptor,
     &gAndrossHandObjDescriptor,
     &gAndrossBrainObjDescriptor,

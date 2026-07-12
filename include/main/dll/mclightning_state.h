@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/obj_placement.h"
 
 enum McLightningPhase {
     MCLIGHTNING_PHASE_READ_PARAM_A = 0,
@@ -33,6 +34,12 @@ typedef struct McLightningState {
     McLightningFlags flags;
 } McLightningState;
 
+typedef struct McLightningSetup {
+    ObjPlacement base;
+    u8 pad18[2];
+    u8 spawnFlags;
+} McLightningSetup;
+
 STATIC_ASSERT(sizeof(McLightningState) == 0x1C);
 STATIC_ASSERT(offsetof(McLightningState, boltHandle) == 0x00);
 STATIC_ASSERT(offsetof(McLightningState, boltFrameTimer) == 0x04);
@@ -44,5 +51,6 @@ STATIC_ASSERT(offsetof(McLightningState, boltParamC) == 0x18);
 STATIC_ASSERT(offsetof(McLightningState, boltParamD) == 0x19);
 STATIC_ASSERT(offsetof(McLightningState, targetLinkId) == 0x1A);
 STATIC_ASSERT(offsetof(McLightningState, flags) == 0x1B);
+STATIC_ASSERT(offsetof(McLightningSetup, spawnFlags) == 0x1A);
 
 #endif /* MAIN_DLL_MCLIGHTNING_STATE_H_ */

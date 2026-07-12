@@ -87,14 +87,14 @@ int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate)
             getEnvfxActVoid(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
-            gf_levelcon_findLinkedObjects(obj);
+            gf_levelcon_findLinkedObjects((GameObject*)obj);
             if (*(void**)state != NULL)
             {
                 pointlight_setEffectState((GameObject*)(*(int*)state), 1);
             }
             break;
         case GFLEVELCON_SEQEV_LIGHT_OFF:
-            gf_levelcon_findLinkedObjects(obj);
+            gf_levelcon_findLinkedObjects((GameObject*)obj);
             if (*(void**)state != NULL)
             {
                 pointlight_setEffectState((GameObject*)(*(int*)state), 0);
@@ -194,23 +194,23 @@ void gf_levelcon_update(GameObject* obj)
     obj->animEventCallback = gf_levelcon_SeqFn;
 }
 
-void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void gf_levelcon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7480);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E7480);
     }
 }
 
-void gf_levelcon_init(int obj)
+void gf_levelcon_init(GameObject* obj)
 {
     setIsOvercast(0);
     (*gScreenTransitionInterface)->step(0x258, 1);
 }
 
-void gf_levelcon_findLinkedObjects(int obj)
+void gf_levelcon_findLinkedObjects(GameObject* obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&obj->extra;
     int* objects;
     int objectIndex;
     int objectCount;
@@ -223,7 +223,7 @@ void gf_levelcon_findLinkedObjects(int obj)
     for (; objectIndex < objectCount; objectIndex++)
     {
         linkedObj = objects[objectIndex];
-        if ((u32)linkedObj != obj && *(void**)(linkedObj + 0x4c) != NULL)
+        if ((GameObject*)linkedObj != obj && *(void**)(linkedObj + 0x4c) != NULL)
         {
             switch (*(int*)(*(int*)(linkedObj + 0x4c) + 0x14))
             {
