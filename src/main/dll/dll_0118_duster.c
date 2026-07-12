@@ -21,6 +21,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
@@ -97,9 +98,6 @@ extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);
@@ -168,7 +166,7 @@ void duster_update(GameObject* obj)
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
 
-    while (ObjMsg_Pop(obj, &msg, 0, 0) != 0)
+    while (ObjMsg_Pop(obj, (u32*)&msg, 0, 0) != 0)
     {
         switch (msg)
         {
@@ -326,7 +324,7 @@ void duster_update(GameObject* obj)
         {
             state->heldObjectId = -1;
             ObjHits_DisableObject((int)obj);
-            ObjMsg_SendToObject(player, DUSTER_MSG_REQUEST_PICKUP, obj, &state->heldObjectId);
+            ObjMsg_SendToObject((void*)player, DUSTER_MSG_REQUEST_PICKUP, obj, (u32)&state->heldObjectId);
             mainSetBits(GAMEBIT_DUSTER_CARRIED, 1);
         }
         else

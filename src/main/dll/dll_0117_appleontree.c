@@ -6,6 +6,7 @@
 #include "main/dll/groundAnimator.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/objseq.h"
@@ -80,14 +81,11 @@ extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
-extern u32 ObjMsg_SendToObject();
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
-extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
-extern void ObjMsg_AllocQueue(int obj, int capacity);
 void dll_FC_free_nop(void);
 int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
@@ -197,7 +195,7 @@ void appleontree_handleCollectableHit(GameObject* obj)
         ((AppleOnTreeState*)state)->triggerGameBit = -1;
         ((AppleOnTreeState*)state)->unk5E = 0;
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
-        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, (int*)(state + 0x5c));
+        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, state + 0x5c);
         mainSetBits(GAMEBIT_SawApple, 1);
         ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
     }
@@ -590,7 +588,7 @@ void AppleOnTree_update(int objArg)
     msg = 0;
     if ((((AppleOnTreeState*)state)->flags & 4) != 0)
     {
-        while (val = ObjMsg_Pop((int)obj, &msg, 0x0, 0x0), val != 0)
+        while (val = ObjMsg_Pop((void*)obj, (u32*)&msg, 0x0, 0x0), val != 0)
         {
             switch (msg)
             {
@@ -936,7 +934,7 @@ void AppleOnTree_init(int obj, int def)
             }
         }
 
-        ObjMsg_AllocQueue(obj, 2);
+        ObjMsg_AllocQueue((void*)obj, 2);
     }
 }
 

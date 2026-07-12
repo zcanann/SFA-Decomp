@@ -11,6 +11,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
@@ -32,9 +33,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern u32 gScarabMoneyValues;
@@ -141,7 +139,7 @@ void Scarab_update(GameObject* obj)
     player = (int)Obj_GetPlayerObject();
     if ((((ScarabState*)state)->flags28 & 1) != 0)
     {
-        while (ObjMsg_Pop(obj, &msg, 0, 0) != 0)
+        while (ObjMsg_Pop(obj, (u32*)&msg, 0, 0) != 0)
         {
             switch (msg)
             {
@@ -475,7 +473,7 @@ void Scarab_update(GameObject* obj)
                         ((ScarabState*)state)->msgParamA = -1;
                         ((ScarabState*)state)->msgParamB = 0;
                         ((ScarabState*)state)->msgParamC = lbl_803E3A00;
-                        ObjMsg_SendToObject(player, SCARAB_MSG_IN_RANGE, obj, state + 0x2c);
+                        ObjMsg_SendToObject((void*)player, SCARAB_MSG_IN_RANGE, obj, state + 0x2c);
                         mainSetBits(GAMEBIT_SawScarab, 1);
                         ((ScarabState*)state)->flags28 |= 1;
                     }
@@ -504,7 +502,7 @@ void Scarab_update(GameObject* obj)
                     {
                         if (mainGetBit(0x1d9) == 0)
                         {
-                            ObjMsg_SendToObject(player, SCARAB_MSG_PLAYER_BURST, obj, 1);
+                            ObjMsg_SendToObject((void*)player, SCARAB_MSG_PLAYER_BURST, obj, 1);
                         }
                         {
                             f32 k = lbl_803E3A40;
