@@ -167,14 +167,12 @@ extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int dll_2E_func03();
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
 extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
 extern void dll_2E_func0A(int a, int* obj);
-extern void dll_2E_func05(GameObject* obj, u8* sub, int c, int d, int e);
 extern void dll_2E_func08(u8* sub, int b, int c);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void objSeqInitFn_80080078(void* p, int n);
@@ -187,7 +185,6 @@ extern f32 timeDelta;
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern u8 framesThisStep;
 extern int cfguardian_updateMain();
-extern void dll_2E_func06(GameObject* a, int* b, int c);
 extern void normalize(f32* x, f32* y, f32* z);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);

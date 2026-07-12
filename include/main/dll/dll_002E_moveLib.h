@@ -31,5 +31,8 @@ void FUN_801149b8(u64 param_1, double param_2, double param_3, u64 param_4, u64 
 void FUN_801149bc(short* param_1, int param_2, int param_3);
 void FUN_80114b10(int param_1, u32* param_2, u16 param_3, u16 param_4, int param_5);
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, char* st, s16 a, s16 b);
+void dll_2E_func03(void* obj, void* state);
+void dll_2E_func05(GameObject* obj, void* state, s16 minYaw, s16 maxYaw, int count);
+void dll_2E_func06(GameObject* obj, void* state, int point);
 
 #endif /* MAIN_DLL_MOVELIB_H_ */

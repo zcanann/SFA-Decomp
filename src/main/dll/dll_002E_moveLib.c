@@ -384,7 +384,7 @@ int dll_2E_func0C(int idx, char* outArg)
 
 /* Initializes the movement-state block and primes the animation channel
  * tables. */
-void dll_2E_func05(GameObject* obj, char* st, s16 a, s16 b, int count)
+void dll_2E_func05(GameObject* obj, void* st, s16 a, s16 b, int count)
 {
     extern void* seqFn_800394a0(void);
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
@@ -417,7 +417,7 @@ void dll_2E_func05(GameObject* obj, char* st, s16 a, s16 b, int count)
 
 /* Latches the path-relative start offset on first use and refreshes the
  * current path point position. */
-void dll_2E_func06(GameObject* obj, char* st, int point)
+void dll_2E_func06(GameObject* obj, void* st, int point)
 {
     extern void* seqFn_800394a0(void);
     extern void fn_8003AC14(GameObject * obj, void* types, int count);
@@ -695,7 +695,7 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
-void dll_2E_func03(u16* obj, int state, int unused)
+void dll_2E_func03(void* obj, void* state)
 {
     extern int fn_8003A8B4();
     extern int objMathFn_8003a380(u16 * obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw,
@@ -719,7 +719,6 @@ void dll_2E_func03(u16* obj, int state, int unused)
     ProjNearSearch sv;
     MoveLibState* s = (MoveLibState*)state;
 
-    (void)unused;
     sv.range = lbl_803E1C8C;
     targetYaw = lbl_803E1CD0;
     yawDelta = 0;
@@ -876,7 +875,7 @@ void dll_2E_func03(u16* obj, int state, int unused)
                     {
                         s->setupFlag = 0;
                     }
-                    objMathFn_8003a380(obj, target, &s->targetX, (s->setupFlag != 0) ? (int)s->animChannels : 0,
+                    objMathFn_8003a380((u16*)obj, target, &s->targetX, (s->setupFlag != 0) ? (int)s->animChannels : 0,
                                        s->turnTable, targetYaw, 8, s->yawLimitA);
                     s->phase = MOVELIB_PHASE_TURN;
                 }

@@ -93,15 +93,12 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z,
                                           int useInputPosition);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void dll_2E_func06(GameObject* obj, SHthorntailRuntime* runtime, int point);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern u32 Obj_GetActiveModel();
 extern u32 modelInitBones();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void fn_8003B228(GameObject* obj, int p2);
-extern u32 dll_2E_func05();
 extern void dll_2E_func08(int obj, int v1, int v2);
-extern void dll_2E_func03(SHthorntailObject* obj, SHthorntailRuntime* runtime);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int Obj_GetPlayerObject();

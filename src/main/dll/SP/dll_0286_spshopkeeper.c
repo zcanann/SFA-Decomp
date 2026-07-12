@@ -10,18 +10,35 @@
  * look-at and eye animation run through the shared dll_2E (moveLib) blocks.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/DR/DRlaserturret.h"
+#include "main/dll/TREX/TREX_Lazerwall.h"
+#include "main/dll/dll_801e66dc.h"
+#include "main/dll/player_api.h"
+#include "main/dll/tricky.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/gametext.h"
+#include "main/gameplay_runtime.h"
 #include "main/mapEvent.h"
+#include "main/model_engine.h"
+#include "main/objanim.h"
+#include "main/objprint.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/object_api.h"
+#include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/player_control_interface.h"
+#include "main/rcp_dolphin.h"
 #include "main/screen_transition.h"
 #include "main/objlib.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
 #include "main/dll/SP/dll_0286_spshopkeeper.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 #define SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -61,37 +78,14 @@ enum
     SHOPKEEPER_FLAG_TICK = 0x20       /* per-frame tick effect this frame */
 };
 
-extern void dll_2E_func06();
 extern f32 lbl_803E59D8;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Stack_Free();
 extern void* lbl_803AD068[8];
 extern void* lbl_803DDC58;
-extern void DRlaserturret_startLinkedTarget(int);
-extern void DRlaserturret_updateTracking(int);
-extern void DRlaserturret_updateIdle(int);
-extern void TREX_Lazerwall_updateTimedChallenge(int);
-extern void TREX_Lazerwall_waitForStartBit(int);
-extern void TREX_Lazerwall_popQueuedState(int);
-extern void fn_801E66EC(int);
-extern void fn_801E66E4(int);
-extern void fn_801E66DC(int);
 extern f32 lbl_803E5A20;
 extern f32 lbl_803E59DC;
-extern int playerGetMoney(void* player);
-extern void characterDoEyeAnims(GameObject* obj, int p2);
-extern void dll_2E_func03(int, int);
-extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
-extern void dll_2E_func05(GameObject*, int, int, int, int);
 
-extern void DRlaserturret_startTimedChallenge(int);
-extern void DRlaserturret_handlePromptChoice(int);
-extern void setAButtonIcon(int x);
-extern void setBButtonIcon(int icon);
-extern void warpToMap(int idx, s8 transType);
-extern void playerAddMoney(void* player, int amount);
 extern f32 lbl_803E5A24;
 
 void fn_801E7DC8(GameObject* obj, int state, int count)
@@ -160,7 +154,7 @@ void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
     if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E59D8);
-        dll_2E_func06(obj, state + 0x35c, 0);
+        dll_2E_func06(obj, (void*)(state + 0x35c), 0);
     }
     if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
     {
@@ -228,7 +222,7 @@ void ShopKeeper_update(GameObject* obj)
     }
     ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
     (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
-    dll_2E_func03((int)obj, state + 0x35C);
+    dll_2E_func03(obj, (void*)(state + 0x35C));
     characterDoEyeAnims(obj, state + 0x980);
     (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
 }
@@ -243,7 +237,7 @@ void ShopKeeper_init(GameObject* obj)
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
     ((ShopkeeperState*)state)->opacity = 0xFF;
     ((ShopkeeperState*)state)->textTimer = lbl_803E5A28;
-    dll_2E_func05(obj, state + 0x35C, -0x1C71, 0x3555, 2);
+    dll_2E_func05(obj, (void*)(state + 0x35C), -0x1C71, 0x3555, 2);
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
 
