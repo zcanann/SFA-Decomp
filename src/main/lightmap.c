@@ -1798,7 +1798,8 @@ void updateEnvironment(int mode)
     {
         char* entry;
         void* tex;
-        int i, byteOffset, k;
+        int z[2];
+        int w[2];
         f32 deltaY;
 
         envFxFn_80088884();
@@ -1807,33 +1808,33 @@ void updateEnvironment(int mode)
         (*gSkyInterface)->updateTimeOfDay();
         (*gNewCloudsInterface)->run();
 
-        i = 0;
-        byteOffset = i;
+        z[0] = 0;
+        z[1] = z[0];
         do
         {
-            entry = (char*)lbl_803DCE6C + byteOffset;
+            entry = (char*)lbl_803DCE6C + z[1];
             if (*(s16*)(entry + 12) != 0 && (tex = *(void**)entry) != NULL &&
                 *(u16*)((char*)tex + 0x10) != 0x100 && *(u16*)((char*)tex + 0x14) != 0)
             {
                 textureAnimFn_80053f2c(tex, entry + 8, entry + 4);
             }
-            byteOffset += 0x10;
-            i++;
+            z[1] += 0x10;
+            z[0]++;
         }
-        while (i < 80);
+        while (z[0] < 80);
 
-        i = 0;
-        byteOffset = i;
-        for (; i < 58; i++)
+        w[0] = 0;
+        w[1] = w[0];
+        for (; w[0] < 58; w[0]++)
         {
-            entry = (char*)lbl_803DCE68 + byteOffset;
+            entry = (char*)lbl_803DCE68 + w[1];
             if (*(u8*)(entry + 12) != 0)
             {
                 deltaY = (f32) * (s16*)(entry + 10) * timeDelta;
                 *(f32*)entry = *(f32*)entry + (f32) * (s16*)(entry + 8) * timeDelta;
                 *(f32*)(entry + 4) = *(f32*)(entry + 4) + deltaY;
             }
-            byteOffset += 0x10;
+            w[1] += 0x10;
         }
 
         loadNextMap();
