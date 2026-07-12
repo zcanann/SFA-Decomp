@@ -150,6 +150,9 @@ enum SbGalleonCameraState
 #define SBGALLEON_MAP_PALACE       0xb /* map-event/dir id this boss locks */
 #define SBGALLEON_SKY_LIGHT_SLOT   7   /* sky override light slot fn_801E1588 drives */
 
+#pragma opt_common_subs on
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
@@ -277,6 +280,9 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     return 0;
 }
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
 
 typedef struct
 {
