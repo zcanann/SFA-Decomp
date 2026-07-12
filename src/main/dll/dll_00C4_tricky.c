@@ -372,7 +372,6 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int k;
     u8* p;
     int setup;
-    bool playing;
     u8 blockFlags[120];
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -394,7 +393,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                 (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-                  (playing = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !playing))))
+                  (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
             {
                 objAudioFn_800393f8(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
             }
@@ -430,7 +429,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 slot = *(int*)&((GameObject*)obj)->extra;
                 if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                     (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-                      (playing = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !playing))))
+                      (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
                 {
                     objAudioFn_800393f8(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
                 }
@@ -783,7 +782,6 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
 {
     int i;
     int childSlot;
-    bool playing;
     int state;
 
     state = *(int*)&obj->extra;
@@ -817,7 +815,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
         childSlot = *(int*)&obj->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
             (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
-              (playing = Sfx_IsPlayingFromObjectChannel((int)obj, 0x10), !playing))))
+              (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))))
         {
             objAudioFn_800393f8((int)obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
         }
@@ -857,9 +855,9 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     {                                                                                                                  \
         TrickyState* voiceState_;                                                                                      \
         voiceState_ = ((GameObject*)obj)->extra;                                                                       \
-        if ((((TrickyByteFlags*)((u8*)voiceState_ + 0x58))->bit6 == 0) &&                                              \
-            (((*(short*)((obj) + 0xa0) >= 0x30 || (*(short*)((obj) + 0xa0) < 0x29)) &&                                \
-              (playing = Sfx_IsPlayingFromObjectChannel((obj), 0x10), !playing))))                                    \
+        if ((((TrickyByteFlags*)&voiceState_->statusFlags)->bit6 == 0) &&                                              \
+            (((((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&         \
+              (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0))))                                                   \
         {                                                                                                              \
             objAudioFn_800393f8((obj), (u8*)voiceState_ + 0x3a8, (sfx), (vol), 0xffffffff, 0);                         \
         }                                                                                                              \
@@ -926,7 +924,6 @@ void Tricky_update(int obj)
     u8* cursor;
     int cmd;
     TrickyState* st;
-    bool playing;
     int i;
     int setup;
     int count;
