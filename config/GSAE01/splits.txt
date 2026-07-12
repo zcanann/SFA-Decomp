@@ -3328,6 +3328,7 @@ main/audio/mcmd_setup.c:
 	extab       start:0x80005890 end:0x800058C0
 	extabindex  start:0x80006068 end:0x800060B0
 	.text       start:0x802757C4 end:0x802763C0
+	.sdata2     start:0x803E77F0 end:0x803E7800
 
 main/audio/mcmd_volume.c:
 	extab       start:0x800058C0 end:0x800058D0
@@ -3814,6 +3815,7 @@ dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x80294098 end:0x80294204
+	.sdata2     start:0x803E7DB0 end:0x803E7E18
 
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294204 end:0x80294640
