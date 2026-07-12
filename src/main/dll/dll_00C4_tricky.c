@@ -417,10 +417,8 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 1:
             if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
             {
-                ((TrickyState*)state)->stateFlags =
-                    ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
-                ((TrickyState*)state)->stateFlags =
-                    ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
+                ((TrickyState*)state)->stateFlags &= ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
+                ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
                 for (j = 0, slot = state; j < 7; slot = slot + 4, j = j + 1)
                 {
                     objSetAnimSpeedTo1(*(int*)(slot + 0x700));
@@ -855,11 +853,15 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     {                                                                                                                  \
         TrickyState* voiceState_;                                                                                      \
         voiceState_ = ((GameObject*)obj)->extra;                                                                       \
-        if ((((TrickyByteFlags*)&voiceState_->statusFlags)->bit6 == 0) &&                                              \
-            (((((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&         \
-              (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0))))                                                   \
+        if (((TrickyByteFlags*)&voiceState_->statusFlags)->bit6 == 0)                                                  \
         {                                                                                                              \
-            objAudioFn_800393f8((obj), (u8*)voiceState_ + 0x3a8, (sfx), (vol), 0xffffffff, 0);                         \
+            if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)           \
+            {                                                                                                          \
+                if (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0)                                                  \
+                {                                                                                                      \
+                    objAudioFn_800393f8((obj), (u8*)voiceState_ + 0x3a8, (sfx), (vol), 0xffffffff, 0);                 \
+                }                                                                                                      \
+            }                                                                                                          \
         }                                                                                                              \
     }
 
@@ -974,7 +976,7 @@ void Tricky_update(int obj)
         {
             TRICKY_VOICE(obj, 0x363, 0x500);
         }
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000000LL;
+        ((TrickyState*)state)->stateFlags &= ~0x40000000LL;
     }
     flagsByte = ((TrickyState*)state)->unk358;
     trickyDebugPrint(base + 0x894, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8, flagsByte & 0x10,
@@ -1019,7 +1021,7 @@ void Tricky_update(int obj)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x10LL;
+            ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->groundSnapCounter = 2;
             (*gPathControlInterface)->attachObject((void*)obj, &((TrickyState*)state)->pathControlFlags);
             ((GameObject*)obj)->anim.localPosX = ((TrickyState*)state)->homePosX;
@@ -1034,8 +1036,8 @@ void Tricky_update(int obj)
             z = lbl_803E23DC;
             ((TrickyState*)state)->prevSpeed = z;
             ((TrickyState*)state)->speed = z;
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x80000LL;
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x2000;
+            ((TrickyState*)state)->stateFlags |= 0x80000LL;
+            ((TrickyState*)state)->stateFlags &= ~(u64)0x2000;
             if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
             {
                 ((TrickyState*)state)->stateFlags =
@@ -1046,8 +1048,8 @@ void Tricky_update(int obj)
                 do
                 {
                     objSetAnimSpeedTo1(*(int*)(cursor + 0x700));
-                    cursor = cursor + 4;
-                    i = i + 1;
+                    cursor += 4;
+                    i++;
                 } while (i < 7);
                 Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 TRICKY_VOICE(obj, 0x29d, 0);
@@ -1074,7 +1076,7 @@ void Tricky_update(int obj)
             found = 1;
             break;
         }
-        cursor = cursor + 8;
+        cursor += 8;
     }
     if ((((TrickyState*)state)->stateFlags & 0x10) == 0 && trickyFoodFn_8013db3c(obj, state) == 2)
     {
@@ -1094,7 +1096,7 @@ void Tricky_update(int obj)
     }
     else if (cmd == 0)
     {
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x30002LL;
+        ((TrickyState*)state)->stateFlags |= 0x30002LL;
     }
     else
     {
@@ -1114,7 +1116,7 @@ void Tricky_update(int obj)
                     {
                         if (Obj_IsLoadingLocked())
                         {
-                            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 4;
+                            ((TrickyState*)state)->stateFlags |= 4;
                             TRICKY_RESET_COMMAND(state);
                             TRICKY_SPAWN_BUBBLE(obj, state);
                         }
@@ -1129,7 +1131,7 @@ void Tricky_update(int obj)
                     {
                         if (Obj_IsLoadingLocked())
                         {
-                            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 4;
+                            ((TrickyState*)state)->stateFlags |= 4;
                             TRICKY_RESET_COMMAND(state);
                             TRICKY_SPAWN_BUBBLE(obj, state);
                         }
@@ -1150,7 +1152,7 @@ void Tricky_update(int obj)
                     {
                         if (Obj_IsLoadingLocked())
                         {
-                            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 4;
+                            ((TrickyState*)state)->stateFlags |= 4;
                             TRICKY_RESET_COMMAND(state);
                             TRICKY_SPAWN_BUBBLE(obj, state);
                         }
@@ -1165,7 +1167,7 @@ void Tricky_update(int obj)
                     {
                         if (Obj_IsLoadingLocked())
                         {
-                            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 4;
+                            ((TrickyState*)state)->stateFlags |= 4;
                             TRICKY_RESET_COMMAND(state);
                             TRICKY_SPAWN_BUBBLE(obj, state);
                         }
@@ -1196,7 +1198,7 @@ void Tricky_update(int obj)
                         {
                             played = 1;
                         }
-                        cursor = cursor + 8;
+                        cursor += 8;
                     }
                 }
                 else
@@ -1231,7 +1233,7 @@ void Tricky_update(int obj)
                     }
                     else
                     {
-                        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x40000LL;
+                        ((TrickyState*)state)->stateFlags |= 0x40000LL;
                     }
                 }
                 break;
@@ -1240,7 +1242,7 @@ void Tricky_update(int obj)
                 {
                     if (Obj_IsLoadingLocked())
                     {
-                        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 4;
+                        ((TrickyState*)state)->stateFlags |= 4;
                         TRICKY_RESET_COMMAND(state);
                         TRICKY_SPAWN_BUBBLE(obj, state);
                     }
@@ -1358,7 +1360,7 @@ void Tricky_update(int obj)
             *(int*)&((TrickyState*)state)->followObj = obj;
             ((TrickyState*)state)->stateIndex = 0xf;
             ((TrickyState*)state)->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000LL;
+            ((TrickyState*)state)->stateFlags &= ~0x40000LL;
             ((TrickyState*)state)->commandPhase = 3;
             if (*(u32*)&((TrickyState*)state)->targetPosPtr != (u32) & ((TrickyState*)state)->wanderTargetX)
             {
@@ -1373,7 +1375,7 @@ void Tricky_update(int obj)
     ((TrickyState*)state)->heightUpdateActive = 1;
     handlerBase = ((TrickyHandlerTable*)base)->handlers;
     handlerBase[((TrickyState*)state)->stateIndex](obj, state);
-    ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x2;
+    ((TrickyState*)state)->stateFlags &= ~(u64)0x2;
     ((TrickyState*)state)->animTransitionTimer += timeDelta;
     if (((TrickyState*)state)->animTransitionTimer > lbl_803E247C)
     {
@@ -1389,9 +1391,8 @@ void Tricky_update(int obj)
             {
                 ObjAnim_SetCurrentMove(obj, ((TrickyState*)state)->moveId, lbl_803E23DC, 0);
             }
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x060001e0LL;
-            ((TrickyState*)state)->stateFlags =
-                ((TrickyState*)state)->stateFlags | ((TrickyState*)state)->pendingStateFlags;
+            ((TrickyState*)state)->stateFlags &= ~0x060001e0LL;
+            ((TrickyState*)state)->stateFlags |= ((TrickyState*)state)->pendingStateFlags;
             ((TrickyState*)state)->animTransitionTimer = lbl_803E23DC;
             ((TrickyState*)state)->moveProgress = ((TrickyState*)state)->moveProgressTarget;
         }
@@ -1410,11 +1411,11 @@ void Tricky_update(int obj)
     if (ObjAnim_AdvanceCurrentMove((int)obj, ((TrickyState*)state)->moveProgress, timeDelta,
                                                                     (void*)(state + 0x80c)) != 0)
     {
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x8000000LL;
+        ((TrickyState*)state)->stateFlags |= 0x8000000LL;
     }
     else
     {
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x8000000LL;
+        ((TrickyState*)state)->stateFlags &= ~0x8000000LL;
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_ROTATE) != 0)
     {
@@ -1518,7 +1519,7 @@ void Tricky_update(int obj)
                       &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX) >= lbl_803E2538 &&
         mainGetBit(GAMEBIT_Tricky_Usable) != 0)
     {
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x10000LL;
+        ((TrickyState*)state)->stateFlags |= 0x10000LL;
     }
     trickyState->cooldownC -= timeDelta;
     if (trickyState->cooldownC < lbl_803E23DC)
@@ -1547,7 +1548,7 @@ void Tricky_update(int obj)
         }
         if (played != 0)
         {
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x4;
+            ((TrickyState*)state)->stateFlags &= ~(u64)0x4;
         }
     }
     trickyState->voiceCooldown -= timeDelta;
@@ -1565,9 +1566,9 @@ void Tricky_update(int obj)
         ((TrickyState*)state)->impressTimer -= timeDelta;
         if (((TrickyState*)state)->impressTimer <= lbl_803E23DC)
         {
-            u16 sfxId;
+            int sfxId;
 
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0x7FFFFFFF;
+            ((TrickyState*)state)->stateFlags &= 0x7FFFFFFF;
             sfxId = ((u16*)&pair)[randomGetRange(0, 1)];
             TRICKY_VOICE(obj, sfxId, 0x500);
         }
