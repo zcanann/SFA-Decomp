@@ -39,6 +39,13 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == 0x1E);
 STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == 0x20);
 
 extern ObjectDescriptor gWCApertureSObjDescriptor;
+extern f32 lbl_803E6E28;
+extern f32 lbl_803E6E2C;
+extern f32 lbl_803E6E30;
+extern f32 lbl_803E6E34;
+extern f32 lbl_803E6E38;
+extern f32 lbl_803E6E3C;
+extern f32 lbl_803E6E40;
 
 int wcapertures_getExtraSize(void);
 int wcapertures_getObjectTypeId(GameObject* obj);

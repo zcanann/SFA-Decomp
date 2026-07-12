@@ -91,7 +91,7 @@ void wcapertures_free(GameObject* obj)
 void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WCAperturesState* state = (obj)->extra;
-    u8* light;
+    ModelLight* light;
 
     if (visible != 0)
     {
@@ -101,10 +101,10 @@ void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     {
         state->flags &= ~WCAPERTURES_FLAG_VISIBLE;
     }
-    light = (u8*)state->light;
-    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
+    light = state->light;
+    if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
-        queueGlowRender((ModelLight*)light);
+        queueGlowRender(light);
     }
     if (visible != 0)
     {

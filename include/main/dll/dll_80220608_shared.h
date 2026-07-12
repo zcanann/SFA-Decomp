@@ -118,7 +118,6 @@ extern f32 lbl_803E6E7C;
 extern f32 PSVECDistance(void* a, void* b);
 extern f32 lbl_803E6E94;
 
-extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
 extern f32 lbl_803E72B0;
 
@@ -126,15 +125,9 @@ extern int fn_80065640(void);
 extern void fn_80065574(int a, GameObject* b, int c);
 extern f32 lbl_803E6EA0;
 
-extern f32 lbl_803E6E28;
-extern f32 lbl_803E6E30;
-extern f32 lbl_803E6E34;
 
-extern f32 lbl_803E6E3C;
-extern f32 lbl_803E6E40;
 
 extern int fn_802969F0(int player);
-extern f32 lbl_803E6E38;
 
 extern int getAngle(f32 dx, f32 dz);
 
