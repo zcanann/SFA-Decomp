@@ -1,7 +1,8 @@
 /* DLL 0x00E4 (flamethrowerspe) - Flame thrower special effect [0x80170004-0x801702D4). */
 #include "main/dll/dll_00E4_flamethrowerspe.h"
-#include "main/engine_shared.h"
+#include "main/frame_timing.h"
 #include "main/objhits.h"
+#include "main/vecmath.h"
 
 
 /* object group this object joins while active */
