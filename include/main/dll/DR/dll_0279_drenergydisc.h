@@ -4,6 +4,11 @@
 #include "global.h"
 #include "main/game_object.h"
 
+typedef struct DrEnergyDiscState
+{
+    u8 activated : 1;
+} DrEnergyDiscState;
+
 typedef struct DrenergydiscPlacement
 {
     u8 pad0[0x1E - 0x0];

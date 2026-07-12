@@ -4,7 +4,13 @@
 #include "main/game_object.h"
 #include "global.h"
 #include "main/lightningeffect.h"
-#include "main/dll/dll_80220608_shared.h"
+
+typedef struct DrLightBeaFlags
+{
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 pad : 6;
+} DrLightBeaFlags;
 
 typedef struct DrlightbeaPlacement
 {

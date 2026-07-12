@@ -13,47 +13,11 @@
  * and render draws the device, its path light pulses and the held barrel.
  */
 #include "main/dll/dll_80220608_shared.h"
-#include "main/game_object.h"
+#include "main/dll/DR/dll_0283_drbarrelgr.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DRBARRELGR_OBJFLAG_RENDERED     0x800
 #define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19 /* DLL 0x158 gunpowderbarrel (update group) */
-
-typedef struct DrbarrelgrPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 spawnYawByte; /* 0x18 */
-    u8 speed;        /* 0x19: carry speed (defaults to 0xa) */
-    s16 range;       /* 0x1A: grab range (defaults to 0x64) */
-    u8 pad1C[0x20 - 0x1C];
-    s16 gameBit; /* 0x20: gates the device, -1 = always on */
-    u8 pad22[0x28 - 0x22];
-} DrbarrelgrPlacement;
-
-typedef struct DrbarrelgrState
-{
-    s32 mode;       /* 0x00: state-machine mode */
-    s32 prevMode;   /* 0x04: previous mode */
-    s32 heldBarrel; /* 0x08: barrel object currently grabbed, or 0 */
-    u8 padC[0x10 - 0xC];
-    f32 unk10;
-    f32 grabX; /* 0x14 */
-    f32 grabY; /* 0x18 */
-    f32 grabZ; /* 0x1C */
-    u8 pad20[0x88 - 0x20];
-    f32 startPosX; /* 0x88 */
-    f32 startPosY; /* 0x8C */
-    f32 startPosZ; /* 0x90 */
-    u8 pad94[0x128 - 0x94];
-    s16 carrySpeed; /* 0x128: working carry speed */
-    u8 pad12A[0x12C - 0x12A];
-} DrbarrelgrState;
-
-STATIC_ASSERT(offsetof(DrbarrelgrState, heldBarrel) == 0x8);
-STATIC_ASSERT(offsetof(DrbarrelgrState, grabX) == 0x14);
-STATIC_ASSERT(offsetof(DrbarrelgrState, startPosX) == 0x88);
-STATIC_ASSERT(offsetof(DrbarrelgrState, carrySpeed) == 0x128);
-STATIC_ASSERT(sizeof(DrbarrelgrState) == 0x12C);
 
 enum DrbarrelgrMode
 {

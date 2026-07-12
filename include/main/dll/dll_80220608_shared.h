@@ -73,25 +73,6 @@ extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
 extern void postRenderSetAlphaBlendState(void);
 
-typedef struct DrEnergyDiscState
-{
-    u8 activated : 1;
-} DrEnergyDiscState;
-
-typedef struct DrLightBeaFlags
-{
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 pad : 6;
-} DrLightBeaFlags;
-
-typedef struct DrBarrelGrFlags
-{
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 pad : 6;
-} DrBarrelGrFlags;
-
 extern void dll_2E_func03(int obj, int p2);
 extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern f32 gBouncyCrateTriggerSearchRadius;
@@ -968,23 +949,6 @@ extern f32 lbl_8032B4A8[];
 
 
 /* Forward declarations for graduated functions (split from placeholder_80220608). */
-int DR_EnergyDisc_getExtraSize(void);
-int DR_EnergyDisc_getObjectTypeId(void);
-void DR_EnergyDisc_free(void);
-void DR_EnergyDisc_render(void);
-void DR_EnergyDisc_hitDetect(void);
-void DR_EnergyDisc_update(GameObject* obj);
-void DR_EnergyDisc_init(u8* obj, u8* setup);
-void DR_EnergyDisc_release(void);
-void DR_EnergyDisc_initialise(void);
-int DR_LightBea_getExtraSize(void);
-int DR_LightBea_getObjectTypeId(void);
-void DR_LightBea_free(GameObject* obj);
-void DR_LightBea_hitDetect(void);
-void DR_LightBea_update(GameObject* obj);
-void DR_LightBea_init(GameObject* obj);
-void DR_LightBea_release(void);
-void DR_LightBea_initialise(void);
 int drmusiccont_getExtraSize(void);
 int drmusiccont_getObjectTypeId(void);
 void drmusiccont_free(int obj);
@@ -1019,12 +983,6 @@ void barrelgener_hitDetect(void);
 void barrelgener_init(GameObject* obj);
 void barrelgener_release(void);
 void barrelgener_initialise(void);
-int DR_BarrelGr_getExtraSize(void);
-int DR_BarrelGr_getObjectTypeId(void);
-void DR_BarrelGr_free(GameObject* obj);
-void DR_BarrelGr_hitDetect(void);
-void DR_BarrelGr_release(void);
-void DR_BarrelGr_initialise(void);
 int WCBouncyCra_getExtraSize(void);
 int WCBouncyCra_getObjectTypeId(void);
 void WCBouncyCra_free(void);
@@ -1443,10 +1401,6 @@ void ARWSquadron_update(int obj);
 void Obj_SpawnHitLightAndFade(int obj, f32* p2);
 void drmusiccont_init(GameObject* obj);
 void drmusiccont_update(GameObject* obj);
-void DR_BarrelGr_init(GameObject* obj, int setup);
-void DR_BarrelGr_update(GameObject* obj);
-void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5);
-void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void drearthcal_update(int obj);
 int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, ModelLight** light);
 void Obj_SmoothTurnAnglesTowardVelocity(GameObject* a, int b, int c, f32 d, f32 e);
