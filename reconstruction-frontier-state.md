@@ -7624,3 +7624,26 @@ NEW WELD MECHANISMS CHARACTERIZED:
 LESSON: the 97-99.98% -O4,p frontier is coloring(#108)/FP-perm(#82)/reloc(#70)/peephole-fold saturated.
 Remaining wins need deep per-fn struct/type recovery (T!=C ext-store-narrow cases like objseq
 ApplyFrameCurves extsh, sky fn_80089A60 clrlwi) which are store-narrow codegen-pinned (per expgfx note).
+
+## Jul12 (Opus session ad6f35e) — retype/CSE/named-const re-probe, 0 wins (all fuzzy-confirmed welded)
+Re-triaged the whole 93-99.9% -O4,p+noopt near-miss frontier by ndiff --classify signature; attacked the
+few source-controllable-looking tags. All REGRESSED or NEUTRAL on true objdiff fuzzy (reverted each):
+- **objseq ObjSeq_ApplyFrameCurves 99.765**: `s16 scroll`→`int scroll` DOES drop the predicted spurious
+  `extsh` before `sth tex1->offsetS`, but int scroll claims a saved reg → coloring reshuffle +2 regions,
+  99.765→99.749. Confirms the frontier note "store-narrow codegen-pinned": the extsh is real but the fix
+  costs more than the extsh. WELDED.
+- **pollenfragment_update 99.370** (mr-copy×3): target re-materializes `addi r3,r31,32` (obj+0x20) at each
+  of 3 call sites; ours CSEs it into saved r29 (+`mr`). `#pragma opt_common_subs off` (works in noopt —
+  snowclaw precedent) kills the r29 web BUT also drops beneficial CSEs elsewhere in the fn (+2 regions),
+  99.370→98.824. No per-expression CSE knob → WELDED (#130 auto-CSE variant).
+- **Minimap_update 98.971** (fcmpo-swap + 38 pool-reloc): the fcmpo diffs are f-reg numbering (#82). The
+  `@365`/`@367` anon-pool vs target's named `gMinimapZero`/`lbl_803E2250` are the 4× `t=0.0f` literals;
+  spelling them `gMinimapZero` (value-identical, const-CSEs to 1 load) reshuffled 77 regions but fuzzy
+  stayed EXACTLY 98.971 → hard proof #70 (named-vs-anon reloc) is objdiff-score-NEUTRAL. Reverted (keeps
+  byte-faithful literals). Don't chase anon@→named relocs for fuzzy.
+- mr-copy pure cases (staffAction fn_801659B8, TreasureChest_SeqFn, WarpstoneUI_getMenuItems): re-confirmed
+  entry-param-spill ORDER welds (#126) — numbering already matches, only spill order differs, noopt so no
+  scheduling pragma. sched-order tags (drhightop fn_801EAE4C etc) are all in noopt units → no lever.
+LESSON REINFORCED: every source-controllable-LOOKING tag on this frontier trades ≥1 coloring/CSE instr for
+the one it fixes = net loss or neutral. The cheap-win frontier is genuinely mined out; next wins are deep
+per-fn struct/type recovery or new team-commit shifts only.
