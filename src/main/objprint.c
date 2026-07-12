@@ -3,6 +3,7 @@
 #include "main/curve_eval.h"
 #include "main/audio/sfx.h"
 #include "main/objprint.h"
+#include "main/object_render.h"
 #include "main/dll/modgfx.h"
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
@@ -261,15 +262,16 @@ void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
     }
 }
 
-void objRenderModelAndHitVolumes(int* obj)
+void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
 {
-    int** table = OBJPRINT_BANK_TABLE(obj);
+    int** table = OBJPRINT_BANK_TABLE((int*)obj);
+    (void)scale;
     if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
     {
-        objRenderModel(obj, table);
-        if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
+        objRenderModel((int*)obj, table);
+        if (obj->anim.hitVolumeTransforms != NULL)
         {
-            objRenderFn_80041018(obj);
+            objRenderFn_80041018((int*)obj);
         }
     }
 }

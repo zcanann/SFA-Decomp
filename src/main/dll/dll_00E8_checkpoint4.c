@@ -14,6 +14,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genprops.h"
 #include "main/objprint.h"
+#include "main/object_render.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/dll_00E9_setuppoint.h"
@@ -25,7 +26,6 @@ extern f32 lbl_803E3428;
 extern const f32 lbl_803E342C;
 extern f32 lbl_803E3430;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void MagicDust_getExtraSize();
 extern void MagicDust_free();
 extern void MagicDust_render();
@@ -67,7 +67,7 @@ void checkpoint4_free(void)
 
 void checkpoint4_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3420);
+    objRenderModelAndHitVolumes((GameObject*)obj, lbl_803E3420);
 }
 
 void checkpoint4_hitDetect(void)

@@ -17,6 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/objprint.h"
+#include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #define MIKABOMB_HIT_VOLUME_SLOT 5
@@ -25,7 +26,6 @@
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
 
 extern ModgfxInterface** gModgfxInterface;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E31C0;
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
@@ -93,7 +93,7 @@ void MikaBomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E31C0);
+        objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E31C0);
 }
 
 void MikaBomb_hitDetect(void)
