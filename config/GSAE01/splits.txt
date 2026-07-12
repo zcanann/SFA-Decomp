@@ -1787,7 +1787,7 @@ main/dll/DIM/dll_01BF_dimlavaball.c:
 
 main/dll/DIM/dll_01C0_dimlogfire.c:
 	.text       start:0x801B0670 end:0x801B0DD4
-	.sdata2     start:0x803E4840 end:0x803E4848
+	.sdata2     start:0x803E4820 end:0x803E4848
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
@@ -2653,7 +2653,7 @@ main/dll/DR/dll_026B_drchimmey.c:
 
 main/dll/DR/dll_026C_drcagewith.c:
 	.text       start:0x8021A62C end:0x8021ACE8
-	.sdata2     start:0x803E6A20 end:0x803E6A28
+	.sdata2     start:0x803E69F0 end:0x803E6A28
 
 main/dll/DR/dll_026E_drshackle.c:
 	.text       start:0x8021ACE8 end:0x8021B358

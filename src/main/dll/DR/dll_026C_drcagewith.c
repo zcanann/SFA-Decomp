@@ -20,6 +20,21 @@
 
 #define DRCAGEWITH_OBJFLAG_FREED 0x40
 
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E69F0 = 1.0f;
+__declspec(section ".sdata2") f32 gDrCageWithFindObjMaxDist = 300.0f;
+__declspec(section ".sdata2") f32 lbl_803E69F8 = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E69FC = -1300.0f;
+__declspec(section ".sdata2") f32 lbl_803E6A00 = 0.05f;
+__declspec(section ".sdata2") f32 gDrCageWithAngVelRateMin = -50.0f;
+__declspec(section ".sdata2") f32 gDrCageWithAngVelRateMax = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E6A0C = 9.0f;
+__declspec(section ".sdata2") f32 lbl_803E6A10 = -16990.0f;
+__declspec(section ".sdata2") f32 lbl_803E6A14 = -16968.0f;
+__declspec(section ".sdata2") f32 lbl_803E6A18 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E6A1C = 0.0f;
+#pragma explicit_zero_data off
+
 int DR_CageWith_setScale(GameObject* obj)
 {
     u8* state = obj->extra;

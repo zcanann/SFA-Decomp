@@ -51,19 +51,22 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 extern void queueGlowRender(int* obj);
-extern f32 lbl_803E4820;
+extern void ObjGroup_AddObject(u32 obj, int group);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern f32 lbl_803E4824;
-extern f32 lbl_803E4828;
-extern f32 lbl_803E482C;
-extern f32 lbl_803E4830;
-extern f32 lbl_803E4834;
-extern f32 lbl_803E4838;
-extern f32 lbl_803E483C;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4820 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4824 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E4828 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E482C = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E4830 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E4834 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E4838 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E483C = 40.0f;
+#pragma explicit_zero_data off
 
 int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
