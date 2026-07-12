@@ -2293,7 +2293,7 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
-    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2;
+    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2, lc;
 
     if (__AR_Callback == r)
         return 0;
@@ -2323,7 +2323,8 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     if (len2 > __AR_Callback)
     {
         B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
-        disc = B * B - lbl_803DECBC * len2 * cc;
+        lc = lbl_803DECBC * len2;
+        disc = B * B - lc * cc;
         if (disc >= __AR_Callback)
         {
             root = sqrtf(disc);
@@ -2355,7 +2356,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
                     step8 = lbl_803DECC8;
                     step_x = step8 * nx;
                     step_y = step8 * ny;
-                    while (dot + (nx * p4[1] + ny * p5[1]) < step8)
+                    while (dot + (p4[1] * nx + p5[1] * ny) < step8)
                     {
                         p4[1] += step_x;
                         p5[1] += step_y;
