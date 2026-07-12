@@ -118,42 +118,42 @@ void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void wcbeacon_update(int obj)
+void wcbeacon_update(GameObject* obj)
 {
-    WCBeaconSetup* setup = (WCBeaconSetup*)((GameObject*)obj)->anim.placementData;
-    WCBeaconState* state = ((GameObject*)obj)->extra;
+    WCBeaconSetup* setup = (WCBeaconSetup*)obj->anim.placementData;
+    WCBeaconState* state = obj->extra;
     u32 phase;
 
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= WCBEACON_BLOCK_PLAYER_FLAG;
+    *(u8*)&obj->anim.resetHitboxMode |= WCBEACON_BLOCK_PLAYER_FLAG;
     phase = state->phase;
     if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY)
     {
-        int tricky = getTrickyObject();
+        GameObject* tricky = getTrickyObject();
         if ((u32)mainGetBit(setup->armBit) == 0)
         {
-            u32 owner = fn_80138F84(tricky);
-            if (owner != obj || trickyFn_80138f14(tricky) != 0)
+            u32 owner = fn_80138F84((int)tricky);
+            if (owner != (u32)obj || trickyFn_80138f14((int)tricky) != 0)
             {
                 (*gObjectTriggerInterface)
-                    ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, (void*)obj, WCBEACON_TRIGGER_NO_ARG);
+                    ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, obj, WCBEACON_TRIGGER_NO_ARG);
                 state->phase = WCBEACON_PHASE_IDLE;
             }
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
-            if ((u32)tricky != 0 && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG))
+            *(u8*)&obj->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
+            if (tricky != NULL && (*(u8*)&obj->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG))
             {
                 int recv;
-                (*(void (**)(int, int, int, int, int))(recv + 0x28))(tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG,
+                (*(void (**)(int, int, int, int, int))(recv + 0x28))((int)tricky, (int)obj, WCBEACON_TRIGGER_ACCEPT_ARG,
                                                                      WCBEACON_TRICKY_PROMPT_FLAG,
-                                                                     (recv = *(int*)(*(int*)(tricky + 0x68))));
+                                                                     (recv = *(int*)(*(int*)((u8*)tricky + 0x68))));
             }
         }
         if (state->acceptedInteraction != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_en_trpopn_c_9f);
-            Sfx_PlayFromObject(obj, SFXTRIG_forcecryslp11);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_en_trpopn_c_9f);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_forcecryslp11);
             state->phase = WCBEACON_PHASE_ACTIVATING;
             state->timer = lbl_803E6DE4;
         }
@@ -162,7 +162,7 @@ void wcbeacon_update(int obj)
     {
         if ((u32)mainGetBit(setup->armBit) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void*)obj, WCBEACON_TRIGGER_NO_ARG);
+            (*gObjectTriggerInterface)->runSequence(WCBEACON_TRIGGER_ARM_SLOT, obj, WCBEACON_TRIGGER_NO_ARG);
             state->phase = WCBEACON_PHASE_WAITING_FOR_TRICKY;
         }
     }
@@ -177,19 +177,19 @@ void wcbeacon_update(int obj)
     }
     else if (phase == WCBEACON_PHASE_ACTIVE)
     {
-        if (((GameObject*)obj)->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG)
+        if (obj->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG)
         {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, WCBEACON_PARTFX_ACTIVE, NULL, WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG,
+                ->spawnObject(obj, WCBEACON_PARTFX_ACTIVE, NULL, WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG,
                               NULL);
         }
-        if (((GameObject*)obj)->unkF4 == 0)
+        if (obj->unkF4 == 0)
         {
-            (*gObjectTriggerInterface)->preempt(obj, WCBEACON_FINAL_TRIGGER_ID);
-            (*gObjectTriggerInterface)->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void*)obj, WCBEACON_TRIGGER_ACCEPT_ARG);
+            (*gObjectTriggerInterface)->preempt((int)obj, WCBEACON_FINAL_TRIGGER_ID);
+            (*gObjectTriggerInterface)->runSequence(WCBEACON_TRIGGER_ARM_SLOT, obj, WCBEACON_TRIGGER_ACCEPT_ARG);
         }
     }
-    ((GameObject*)obj)->unkF4 = 1;
+    obj->unkF4 = 1;
 }
 
 void wcbeacon_init(u8* obj, u8* setup)

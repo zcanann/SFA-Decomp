@@ -14,6 +14,7 @@
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/game_ui_interface.h"
+#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/model_light.h"
 #include "main/mm.h"
@@ -47,11 +48,8 @@ extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
-extern void storeZeroToFloatParam(void* timer);
-extern void s16toFloat(void* timer, int duration);
 extern void gunpowderbarrel_clearHeldState(int obj);
 extern f32 lbl_803E6CE0;
 extern void dll_2E_func06(GameObject* obj, int state, int flags);
@@ -71,7 +69,6 @@ extern f32 lbl_803E6E20;
 extern f32 lbl_803E6E24;
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void* callback);
-extern void objRenderFn_80041018(int obj);
 extern void postRenderSetAlphaBlendState(void);
 
 typedef struct DrEnergyDiscState
@@ -322,7 +319,6 @@ STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1A);
 
 extern f32 gWcPushBlockTileResetTime;
 
-extern int getTrickyObject(void);
 extern int fn_80138F84(int tricky);
 extern int trickyFn_80138f14(int tricky);
 extern f32 lbl_803E6DE4;
@@ -462,7 +458,6 @@ extern f32 lbl_803E7418;
 extern f32 lbl_803E7424;
 extern int fn_80080150(int state);
 
-extern int timerCountDown(void* timer);
 extern f32 lbl_803DC418;
 extern f32 lbl_803DC41C;
 extern f32 lbl_803E741C;
@@ -792,7 +787,6 @@ extern const f32 lbl_803E75F4;
 extern const f32 lbl_803E75F8;
 
 extern void fn_8006CB50(void);
-extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
 
 extern void ObjPath_GetPointWorldPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z, int p6);
@@ -822,11 +816,6 @@ extern f32 lbl_803DC52C;
 extern const f32 lbl_803E7480;
 extern int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
 extern void gf_levelcon_findLinkedObjects(int obj);
-extern int loadMapAndParent(int mapId);
-extern void mapUnload(int a, int b);
-extern int mapGetDirIdx(int mapId);
-extern void warpToMap(int map, int p2);
-extern void loadUiDll(int id);
 extern void creditsStart(void);
 extern void gameTextShow(int id);
 extern const f32 lbl_803E7460;
@@ -1031,7 +1020,6 @@ extern f32 lbl_803E6F6C;
 extern f32 lbl_803E6EF8;
 extern f32 lbl_803E6FFC;
 extern f32 lbl_803E7000;
-extern void lockLevel(int idx, int p2);
 
 #pragma dont_inline on
 
@@ -1562,7 +1550,7 @@ int wcbeacon_getExtraSize(void);
 int wcbeacon_getObjectTypeId(GameObject* obj);
 void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcbeacon_init(u8* obj, u8* setup);
-void wcbeacon_update(int obj);
+void wcbeacon_update(GameObject* obj);
 int wctile_getExtraSize(void);
 int wctile_getObjectTypeId(GameObject* obj);
 void wctile_free(void);

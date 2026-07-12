@@ -171,21 +171,20 @@ int dll_200_getObjectTypeId(void)
 /* returns immediately if not visible; when the placement's map-act is 4,
  * gate render on GameBit 0x2bd, otherwise render directly via
  * objRenderModelAndHitVolumes. */
-void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
+void dll_200_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     int areaId;
     if (visible == 0)
         return;
-    areaId = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+    areaId = (*gMapEventInterface)->getMapAct((int)obj->anim.mapEventSlot);
     if ((u8)areaId == 4)
     {
         if ((u32)mainGetBit(0x2bd) == 0u)
             return;
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5DC0);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E5DC0);
         return;
     }
-    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5DC0);
+    objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E5DC0);
 }
 
 void dll_200_init(int* obj, int* arg)
