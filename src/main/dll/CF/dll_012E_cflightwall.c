@@ -9,9 +9,11 @@
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
 #define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E3EE8;
-extern f32 lbl_803E3EEC;
-extern f32 lbl_803E3EF0;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3EE8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EEC = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EF0 = 0.0f;
+#pragma explicit_zero_data off
 
 int CFLightWall_getExtraSize(void)
 {
