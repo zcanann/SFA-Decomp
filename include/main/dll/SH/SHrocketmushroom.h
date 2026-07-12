@@ -57,7 +57,7 @@ STATIC_ASSERT(offsetof(BombPlantingSpotMapData, requiredGameBit) == 0x20);
 
 void BombPlantingSpot_init(GameObject* obj, BombPlantingSpotMapData* mapData);
 void BombPlantingSpot_update(GameObject* obj);
-void BombPlantSpore_update(void* obj);
+void BombPlantSpore_update(GameObject* obj);
 void BombPlantSpore_init(GameObject* obj, void* param2);
 int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnimUpdateState* animUpdate);
 

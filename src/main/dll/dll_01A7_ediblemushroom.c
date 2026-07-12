@@ -1,6 +1,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
@@ -36,19 +37,14 @@
 #define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
 
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
-extern void ObjMsg_SendToObject(u8* obj, int msg, u8* sender, void* data);
 extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
-extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern void ObjMsg_AllocQueue();
 
 void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
@@ -395,7 +391,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         }
                         ((EdibleMushroomState*)state)->pickupMsgValue = 0;
                         ((EdibleMushroomState*)state)->pickupMsgDelay = 0.4f;
-                        ObjMsg_SendToObject((u8*)player, EDIBLEMUSHROOM_MSG_IN_RANGE, obj, state + 0x13c);
+                        ObjMsg_SendToObject(player, EDIBLEMUSHROOM_MSG_IN_RANGE, obj, (u32)(state + 0x13c));
                         bit = *(s16*)(other + 0x1a);
                         if (bit != -1)
                         {
@@ -607,7 +603,7 @@ void EdibleMushroom_update(u8* self)
 
     if (((EdibleMushroomState*)state)->animState == 8)
     {
-        while (ObjMsg_Pop(self, &msg, 0, 0) != 0)
+        while (ObjMsg_Pop(self, (u32*)&msg, 0, 0) != 0)
         {
             if (((u32)msg - 0x70000) != 0xB)
                 continue;

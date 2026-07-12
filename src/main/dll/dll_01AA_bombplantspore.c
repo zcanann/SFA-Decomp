@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/objlib.h"
 #include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
@@ -85,14 +86,11 @@ extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
 
 extern void ModelLightStruct_free(void* light);
-extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
 extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void modelLightStruct_setLightKind(void* light, int value);
 extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
 
 int BombPlantSpore_getExtraSize(void)
 {
@@ -244,7 +242,7 @@ void bombplantspore_updateDrift(GameObject* obj, void* state)
 }
 #pragma dont_inline reset
 
-void BombPlantSpore_update(void* obj)
+void BombPlantSpore_update(GameObject* obj)
 {
     BombPlantSporeState* state;
     s32 particleAlpha;
@@ -258,7 +256,7 @@ void BombPlantSpore_update(void* obj)
     int i;
     int j;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     if ((state->stateFlags >> 6 & 1) != 0u)
     {
         while (ObjMsg_Pop(obj, (u32*)&poppedMessage, &poppedSender, NULL) != 0)
@@ -388,7 +386,7 @@ void BombPlantSpore_update(void* obj)
     if (hitObj == playerObj)
     {
         state->damageType = BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE;
-        ObjMsg_SendToObject(hitObj, BOMBPLANTSPORE_MSG_HIT_PLAYER, obj, state);
+        ObjMsg_SendToObject(hitObj, BOMBPLANTSPORE_MSG_HIT_PLAYER, obj, (u32)state);
         BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 1;
     }
     else
