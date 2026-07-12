@@ -302,19 +302,8 @@ extern const f32 lbl_803E75B0;
 #pragma dont_inline reset
 
 extern int ObjList_FindObjectById(int id);
-extern void androsshand_handleDamage(GameObject* obj, int hand);
-extern void androsshand_spawnShot(int p1, int p2, int p3);
 extern const f32 lbl_803E75AC;
-extern f32 gAndrossHandMoveAnimSpeeds[];
-extern f32 lbl_803DC4F0;
-extern f32 lbl_803DC4F4;
-extern f32 lbl_803DC4F8;
-extern int lbl_803DC4FC;
-extern int lbl_803DC500;
-extern int lbl_803DC504;
 extern const f32 lbl_803E75B4;
-extern f32 gAndrossHandPi;
-extern f32 gAndrossHandHalfAngleScale;
 extern const f32 lbl_803E75C0;
 extern const f32 lbl_803E75C4;
 extern const f32 lbl_803E75C8;
@@ -332,7 +321,6 @@ extern int ObjModel_GetRenderOp(int model, int idx);
 
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
                                     int k);
-extern int lbl_803DC508;
 extern const f32 lbl_803E75A8;
 
 
@@ -609,9 +597,6 @@ extern f32 lbl_803E6F3C;
 extern f32 lbl_803E6F40;
 
 
-extern int gAndrossHandShotPitch;
-extern int lbl_803DC50C;
-extern int lbl_803DC510;
 
 extern void registerNewScore(int a, int b, int c, int d);
 extern u8 gArwingCourseMapIds[8];
@@ -889,17 +874,8 @@ void andross_free(int obj);
 void andross_hitDetect(void);
 void andross_render(int obj, int p2, int p3, int p4, int p5);
 void andross_setPartSignal(GameObject* obj, u8 signal);
-int AndrossHand_getExtraSize(void);
-int AndrossHand_getObjectTypeId(void);
-void AndrossHand_free(void);
-void AndrossHand_render(int obj, int p2, int p3, int p4, int p5);
-void AndrossHand_update(int obj);
 int andross_SeqFn(GameObject* obj);
 void andross_init(int obj, u8* setup);
-void AndrossHand_hitDetect(void);
-void androsshand_setState(GameObject* obj, int newState, u8 force);
-void androsshand_handleDamage(GameObject* obj, int hand);
-void AndrossHand_init(int obj, u8* setup);
 void arwarwing_setFlightHalfWidth(int arwing, f32 width);
 int arwarwing_getRotY(int arwing);
 void arwarwing_setRotY(int arwing, int rotY);
@@ -956,7 +932,6 @@ void arwarwingbo_update(int obj);
 void arwarwing_updateThrusters(GameObject* obj, int state);
 void arwarwing_handlePathDamage(GameObject* obj, int state);
 void arwarwing_handleObjectDamage(GameObject* obj, int state);
-void androsshand_spawnShot(int obj, int hand, int p3);
 int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void arwarwing_init(GameObject* obj);
 void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c);

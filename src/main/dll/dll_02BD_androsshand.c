@@ -30,18 +30,6 @@ enum AndrossHandHealth
     ANDROSSHAND_HEALTH_PHASE2 = 0x12
 };
 
-enum AndrossHandStateId
-{
-    ANDROSSHAND_STATE_IDLE = 0,
-    ANDROSSHAND_STATE_ENTER = 1,
-    ANDROSSHAND_STATE_EXIT = 2,
-    ANDROSSHAND_STATE_IDLE2 = 3,
-    ANDROSSHAND_STATE_SWIPE = 4,
-    ANDROSSHAND_STATE_GRAB = 5,
-    ANDROSSHAND_STATE_SHOOT = 6,
-    ANDROSSHAND_STATE_DEAD = 9
-};
-
 int AndrossHand_getExtraSize(void)
 {
     return sizeof(AndrossHandState);
@@ -70,13 +58,13 @@ void AndrossHand_update(int obj)
     SunVec3 swipeVel;
     SunVec3 grabVel;
 
-    if (state->androssObj == 0u)
+    if (state->androssObj == NULL)
     {
-        state->androssObj = ObjList_FindObjectById(ANDROSS_OBJ_ID);
+        state->androssObj = (GameObject*)ObjList_FindObjectById(ANDROSS_OBJ_ID);
     }
-    if (state->arwingObj == 0u)
+    if (state->arwingObj == NULL)
     {
-        state->arwingObj = getArwing();
+        state->arwingObj = (GameObject*)getArwing();
     }
     if (state->startupDelay != 0)
     {
@@ -90,13 +78,13 @@ void AndrossHand_update(int obj)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ANDROSSHAND_HIT_VOLUME_SLOT, 2, -1);
     ObjHits_EnableObject(obj);
 
-    if (state->androssObj != 0u)
+    if (state->androssObj != NULL)
     {
         f32 prevVel;
         f32 angle;
         f32 cosAngle;
 
-        ((GameObject*)obj)->anim.rotX = ((GameObject*)state->androssObj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotX = state->androssObj->anim.rotX;
         if (state->sideFlag != 0)
         {
             fScale = fScale * -1.0f;
@@ -105,14 +93,14 @@ void AndrossHand_update(int obj)
         state->zSpringVelocity = prevVel + ((-state->zSpringOffset / lbl_803DC4FC - prevVel) / lbl_803DC500);
         state->zSpringOffset = state->zSpringOffset + state->zSpringVelocity;
 
-        angle = 3.1415927f * (f32)(s16)(int)((f32)((GameObject*)state->androssObj)->anim.rotX + fScale) /
+        angle = 3.1415927f * (f32)(s16)(int)((f32)state->androssObj->anim.rotX + fScale) /
                 32768.0f;
         fScale = mathSinf(angle);
         cosAngle = mathCosf(angle);
-        ((GameObject*)obj)->anim.localPosX = lbl_803DC4F0 * fScale + ((GameObject*)state->androssObj)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->androssObj)->anim.localPosY + lbl_803DC4F4;
+        ((GameObject*)obj)->anim.localPosX = lbl_803DC4F0 * fScale + state->androssObj->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosY = state->androssObj->anim.localPosY + lbl_803DC4F4;
         ((GameObject*)obj)->anim.localPosZ =
-            state->zSpringOffset + (lbl_803DC4F0 * cosAngle + ((GameObject*)state->androssObj)->anim.localPosZ);
+            state->zSpringOffset + (lbl_803DC4F0 * cosAngle + state->androssObj->anim.localPosZ);
     }
 
     {
@@ -177,7 +165,7 @@ void AndrossHand_update(int obj)
                 swipeVel.y = 0.0f;
                 swipeVel.z = 0.0f;
                 vel = swipeVel;
-                arwarwing_setVelocity(state->arwingObj, (int)&vel);
+                arwarwing_setVelocity((int)state->arwingObj, (int)&vel);
                 doRumble(5.0f);
             }
         }
@@ -196,10 +184,10 @@ void AndrossHand_update(int obj)
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= 1.0f)
         {
-            andross_setPartSignal((GameObject*)(state->androssObj), 1);
+            andross_setPartSignal(state->androssObj, 1);
             *(u8*)&state->handState = ANDROSSHAND_STATE_IDLE2;
         }
-        androsshand_handleDamage((GameObject*)(obj), (int)state);
+        androsshand_handleDamage((GameObject*)obj, state);
         break;
     case ANDROSSHAND_STATE_GRAB:
         if (changed)
@@ -212,7 +200,7 @@ void AndrossHand_update(int obj)
         }
         if (state->sideFlag != 0 && ((GameObject*)obj)->anim.currentMoveProgress >= 1.0f)
         {
-            andross_setPartSignal((GameObject*)(state->androssObj), 1);
+            andross_setPartSignal(state->androssObj, 1);
             *(u8*)&state->handState = ANDROSSHAND_STATE_IDLE2;
         }
         if (((GameObject*)obj)->anim.currentMoveProgress < 1.555f)
@@ -232,7 +220,7 @@ void AndrossHand_update(int obj)
                 grabVel.y = -10.0f;
                 grabVel.z = 0.0f;
                 vel = grabVel;
-                arwarwing_setVelocity(state->arwingObj, (int)&vel);
+                arwarwing_setVelocity((int)state->arwingObj, (int)&vel);
                 doRumble(5.0f);
             }
         }
@@ -251,11 +239,11 @@ void AndrossHand_update(int obj)
         {
             if (state->sideFlag != 0)
             {
-                andross_setPartSignal((GameObject*)(state->androssObj), 1);
+                andross_setPartSignal(state->androssObj, 1);
             }
             *(u8*)&state->handState = ANDROSSHAND_STATE_IDLE2;
         }
-        androsshand_handleDamage((GameObject*)(obj), (int)state);
+        androsshand_handleDamage((GameObject*)obj, state);
         break;
     case ANDROSSHAND_STATE_SHOOT:
         if (changed)
@@ -276,16 +264,16 @@ void AndrossHand_update(int obj)
             state->animSpeed = 0.002f;
             if (state->shotTimer < 0)
             {
-                androsshand_spawnShot(obj, (int)state, 0);
+                androsshand_spawnShot((GameObject*)obj, state, 0);
                 state->shotTimer = lbl_803DC504;
             }
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= 1.0f)
         {
-            andross_setPartSignal((GameObject*)(state->androssObj), 1);
+            andross_setPartSignal(state->androssObj, 1);
             *(u8*)&state->handState = ANDROSSHAND_STATE_IDLE2;
         }
-        androsshand_handleDamage((GameObject*)(obj), (int)state);
+        androsshand_handleDamage((GameObject*)obj, state);
         break;
     case ANDROSSHAND_STATE_IDLE2:
         if (changed)
@@ -296,7 +284,7 @@ void AndrossHand_update(int obj)
         }
         break;
     case ANDROSSHAND_STATE_DEAD:
-        andross_setPartSignal((GameObject*)(state->androssObj), state->sideFlag ? (u8)4 : (u8)2);
+        andross_setPartSignal(state->androssObj, state->sideFlag ? (u8)4 : (u8)2);
         break;
     }
 
@@ -316,7 +304,7 @@ void AndrossHand_hitDetect(void)
 {
 }
 
-void androsshand_setState(GameObject* obj, int newState, u8 force)
+void androsshand_setState(GameObject* obj, AndrossHandStateId newState, u8 force)
 {
     AndrossHandState* state;
 
@@ -344,14 +332,13 @@ void androsshand_setState(GameObject* obj, int newState, u8 force)
     {
         if ((u8)newState != 0)
         {
-            andross_setPartSignal((GameObject*)(state->androssObj), 1);
+            andross_setPartSignal(state->androssObj, 1);
         }
     }
 }
 
-void androsshand_handleDamage(GameObject* obj, int hand)
+void androsshand_handleDamage(GameObject* obj, AndrossHandState* state)
 {
-    AndrossHandState* state = (AndrossHandState*)hand;
     u32 hitVol;
     int sphereIdx;
     int hitObj;
@@ -378,7 +365,7 @@ void androsshand_handleDamage(GameObject* obj, int hand)
             if (state->health == 0)
             {
                 state->handState = ANDROSSHAND_STATE_DEAD;
-                andross_setPartSignal((GameObject*)(state->androssObj), 1);
+                andross_setPartSignal(state->androssObj, 1);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11);
                 ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
                 DIMexplosionFn_8009a96c((int)obj, x, y, z, 120.0f, 1, 1, 1, 1, 0, 1, 0);
@@ -407,12 +394,12 @@ void androsshand_handleDamage(GameObject* obj, int hand)
     }
 }
 
-void AndrossHand_init(int obj, u8* setup)
+void AndrossHand_init(int obj, AndrossHandSetup* setup)
 {
     GameObject* gobj = (GameObject*)obj;
     AndrossHandState* state = gobj->extra;
 
-    state->sideFlag = setup[0x1b];
+    state->sideFlag = setup->sideFlag;
     state->prevState = -1;
     state->health = ANDROSSHAND_HEALTH_NORMAL;
     state->startupDelay = 5;
@@ -425,9 +412,8 @@ void AndrossHand_init(int obj, u8* setup)
     ObjHits_SetTargetMask(obj, 4);
 }
 
-void androsshand_spawnShot(int obj, int hand, int p3)
+void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
 {
-    AndrossHandState* state = (AndrossHandState*)hand;
     f32 pt[3];
     f32 dx, dz, dist;
     int yaw;
@@ -435,26 +421,26 @@ void androsshand_spawnShot(int obj, int hand, int p3)
 
     if (Obj_IsLoadingLocked())
     {
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &pt[0], &pt[1], &pt[2], 0);
-        dx = pt[0] - ((GameObject*)state->arwingObj)->anim.localPosX;
-        dz = pt[2] - ((GameObject*)state->arwingObj)->anim.localPosZ;
+        ObjPath_GetPointWorldPosition(obj, 0, &pt[0], &pt[1], &pt[2], 0);
+        dx = pt[0] - state->arwingObj->anim.localPosX;
+        dz = pt[2] - state->arwingObj->anim.localPosZ;
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz) + 0x8000;
-        gAndrossHandShotPitch = (u16)getAngle(pt[1] - ((GameObject*)state->arwingObj)->anim.localPosY, dist) >> 8;
+        gAndrossHandShotPitch = (u16)getAngle(pt[1] - state->arwingObj->anim.localPosY, dist) >> 8;
         setup = (AndrossHandShotSetup*)Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_SHOT);
         setup->head.posX = pt[0];
         setup->head.posY = pt[1];
         setup->head.posZ = pt[2];
-        setup->yaw = (((GameObject*)obj)->anim.rotX + yaw) >> 8;
+        setup->yaw = (obj->anim.rotX + yaw) >> 8;
         setup->pitch = gAndrossHandShotPitch;
         setup->flag18 = 0;
         setup->head.color[0] = 1;
         setup->head.color[1] = 1;
-        obj = ((int (*)(int, int))loadObjectAtObject)(obj, (int)setup);
-        if ((void*)obj != NULL)
+        obj = (GameObject*)((int (*)(int, int))loadObjectAtObject)((int)obj, (int)setup);
+        if (obj != NULL)
         {
-            arwprojectile_setLifetime((GameObject*)(obj), lbl_803DC510);
-            arwprojectile_placeForward((GameObject*)(obj), lbl_803DC50C);
+            arwprojectile_setLifetime(obj, lbl_803DC510);
+            arwprojectile_placeForward(obj, lbl_803DC50C);
         }
     }
 }
