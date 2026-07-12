@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/objprint_dolphin.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -2200,7 +2201,6 @@ void gxTextureFn_80052efc(void)
 
 extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
-extern void defragMemory(int mode);
 extern char sRcpTexRestructStrings[];
 
 void texRestructRefs(int mode)

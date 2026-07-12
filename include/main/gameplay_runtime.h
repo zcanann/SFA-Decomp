@@ -31,7 +31,6 @@ typedef struct MapInfoRecord
 
 void objRenderFn_80041018(int obj);
 void loadUiDll(int index);
-void defragMemory(int mode);
 int mapGetDirIdx(int mapId);
 void warpToMap(int idx, s8 transType);
 void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
