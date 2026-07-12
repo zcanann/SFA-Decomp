@@ -1651,6 +1651,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
     QuakeFxParams fxA;
     int type;
     f32 power;
+    f32 dv;
     u8* pos2;
     u8* state = ((GameObject*)obj)->extra;
     if (obj == NULL || obj2 == NULL)
@@ -1692,8 +1693,8 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
         switch (type)
         {
         case 135:
-            fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E3298));
-            fxB.f1 = lbl_803E32A4 * (power / lbl_803E32A8 - lbl_803E3294);
+            fxB.count = 21 - (int)(lbl_803E32A0 * ((dv = power) / lbl_803E3298));
+            fxB.f1 = lbl_803E32A4 * (dv / lbl_803E32A8 - lbl_803E3294);
             fxB.id = 0xc94;
             (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
@@ -1744,14 +1745,14 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
             {
                 if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
                 {
-                    fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32B8));
-                    fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32B8);
+                    fxB.count = 21 - (int)(lbl_803E32A0 * (dv = power / lbl_803E32B8));
+                    fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - dv);
                     fxB.id = 0xc75;
                 }
                 else
                 {
-                    fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32A8));
-                    fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32A8);
+                    fxB.count = 21 - (int)(lbl_803E32A0 * (dv = power / lbl_803E32A8));
+                    fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - dv);
                     fxB.id = 0xc94;
                 }
                 (*gPartfxInterface)->spawnObject(obj, STAFF_PARTFX_SWIPE_BURST, &fxB, 2, -1, NULL);
