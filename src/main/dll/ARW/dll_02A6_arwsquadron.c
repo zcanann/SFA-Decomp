@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/ARW/dll_02A6_arwsquadron.h"
@@ -371,13 +372,13 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
         pfx.s4 = 0;
         pfx.f8 = lbl_803E7168;
         ObjPath_GetPointLocalPosition(obj, 2, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulse(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity,
+        objfx_spawnLightPulseLegacy(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity,
                               (int)&pfx);
     }
     if (state->muzzleCount > 1 && (s8)state->health > 1)
     {
         ObjPath_GetPointLocalPosition(obj, 3, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulse(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity,
+        objfx_spawnLightPulseLegacy(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity,
                               (int)&pfx);
     }
 }

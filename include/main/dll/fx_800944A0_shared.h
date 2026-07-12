@@ -356,7 +356,6 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
                          void* origin, int flags);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
 void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d);
-void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* light, f32 fa, f32 fb);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);
 void projectileParticleFxFn_80099660(void* obj, int mode);
 void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval);

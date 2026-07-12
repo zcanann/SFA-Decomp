@@ -307,7 +307,6 @@ extern f32 lbl_803E7388;
 extern f32 lbl_803E7390;
 extern f32 lbl_803E7394;
 extern f32 lbl_803E7398;
-extern void objfx_spawnLightPulse(GameObject* obj, f32 brightness, int b, int c, int d, f32 e, int f);
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
 extern void lightSetField4D(void* light, int v);
 extern void ObjHits_SyncObjectPositionIfDirty(u32 obj);

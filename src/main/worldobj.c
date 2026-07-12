@@ -89,7 +89,6 @@ extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 extern int getAngle(float y, float x);
@@ -606,17 +605,17 @@ void worldobj_spawnGreatFoxEffects(GameObject* obj)
     params.offsetX = lbl_803E6640 * (lbl_803E6648 * obj->anim.rootMotionScale);
     params.offsetY = lbl_803E6640 * (lbl_803E664C * obj->anim.rootMotionScale);
     params.offsetZ = lbl_803E6640 * (lbl_803E6650 * obj->anim.rootMotionScale);
-    objfx_spawnLightPulse(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
+    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
                           lbl_803E6658, &params);
     params.offsetX = lbl_803E665C;
     params.offsetY = lbl_803E6640 * (lbl_803E6660 * obj->anim.rootMotionScale);
     params.offsetZ = lbl_803E6640 * (lbl_803E6664 * obj->anim.rootMotionScale);
-    objfx_spawnLightPulse(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
+    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
                           lbl_803E6668, &params);
     params.offsetX = lbl_803E6640 * (lbl_803E666C * obj->anim.rootMotionScale);
     params.offsetY = lbl_803E6640 * (lbl_803E664C * obj->anim.rootMotionScale);
     params.offsetZ = lbl_803E6640 * (lbl_803E6650 * obj->anim.rootMotionScale);
-    objfx_spawnLightPulse(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
+    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
                           lbl_803E6658, &params);
 }
 

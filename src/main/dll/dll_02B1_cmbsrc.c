@@ -18,6 +18,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/objfx.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
@@ -345,7 +346,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
                     subMode = setup->pulseSubMode;
                 }
             }
-            objfx_spawnLightPulse((GameObject*)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode,
+            objfx_spawnLightPulseLegacy((GameObject*)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode,
                                   (f32)(u32)setup->pulseDistance / lbl_803E7388, 0);
             break;
         case CMBSRC_SEQ_DEFAULT:

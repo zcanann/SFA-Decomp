@@ -24,6 +24,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/checkpoint_interface.h"
 #include "main/vecmath.h"
@@ -36,7 +37,6 @@
 extern s32 Sfx_IsPlayingFromObjectChannel(void* obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u32 volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
-extern void objfx_spawnLightPulse(GameObject* obj, f32 a, int b, int c, int d, f32 e, void* params);
 extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
@@ -536,10 +536,10 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;
         pulse.unk8 = lbl_803E5AE8;
-        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
+        objfx_spawnLightPulseLegacy(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
         pulse.unkC = lbl_803E5B5C;
-        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
+        objfx_spawnLightPulseLegacy(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
     }
     fn_801E9C00(obj, state);

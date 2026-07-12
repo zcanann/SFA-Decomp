@@ -149,8 +149,6 @@ extern f32 lbl_803E3B9C;
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
-
 #pragma dont_inline on
 void landed_arwing_renderPathEffects(GameObject* obj)
 {
@@ -182,7 +180,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
-        objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path6Fx, scratch.effectPos);
+        objfx_spawnLightPulseLegacy(obj, lbl_803E3B9C, 4, 0, 0, state->path6Fx, scratch.effectPos);
     }
 
     if (state->path8Fx != lbl_803E3B98)
@@ -191,7 +189,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
-        objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path8Fx, scratch.effectPos);
+        objfx_spawnLightPulseLegacy(obj, lbl_803E3B9C, 4, 0, 0, state->path8Fx, scratch.effectPos);
     }
 
     if (state->path7Fx != lbl_803E3B98)
@@ -200,7 +198,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
-        objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path7Fx, scratch.effectPos);
+        objfx_spawnLightPulseLegacy(obj, lbl_803E3B9C, 4, 0, 0, state->path7Fx, scratch.effectPos);
     }
 }
 #pragma dont_inline reset

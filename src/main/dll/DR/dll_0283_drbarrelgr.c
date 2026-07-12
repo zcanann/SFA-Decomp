@@ -16,6 +16,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/DR/dll_0283_drbarrelgr.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/objfx.h"
 
 #define DRBARRELGR_OBJFLAG_RENDERED     0x800
 #define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19 /* DLL 0x158 gunpowderbarrel (update group) */
@@ -65,7 +66,6 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
     f32 dval;
     f32 pathPoint[3];
     DrBarrelGrRenderParams params;
-    extern void objfx_spawnLightPulse(GameObject * obj, f32 a, int b, int c, int d, f32 e, void* params);
 
     ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6CA0);
     ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(obj, 0, (f32*)(state + 0x14),
@@ -84,7 +84,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
         ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(obj, i + 1, vp, vp1, vp2, 0);
         PSVECSubtract(vp, (void*)&obj->anim.localPosX, vp);
         params.d = dval;
-        objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
+        objfx_spawnLightPulseLegacy(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
     }
     objRef = *(u32*)&((DrbarrelgrState*)state)->heldBarrel;
     if ((u32)objRef != 0)
