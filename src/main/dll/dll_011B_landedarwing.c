@@ -18,6 +18,7 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
@@ -127,7 +128,7 @@ typedef struct LandedArwingState
     f32 path7Fx;
     f32 path8Fx;
     f32 path6Fx;
-    int childObject;
+    GameObject* childObject;
     s16 unk14;
     u8 sequenceState;
     u8 unk17;
@@ -211,16 +212,13 @@ extern f32 timeDelta;
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void objRenderModelAndHitVolumes(f32);
-extern void Obj_FreeObject(int obj);
-
-void landed_arwing_free(int obj)
+void landed_arwing_free(GameObject* obj)
 {
-    int o = obj;
-    int* p = (int*)((GameObject*)o)->extra;
-    if (*(void**)&p[0x10 / 4] != NULL)
+    LandedArwingState* state = obj->extra;
+    if (state->childObject != NULL)
     {
-        Obj_FreeObject(p[0x10 / 4]);
-        ObjLink_DetachChild(o, p[0x10 / 4]);
+        Obj_FreeObject(state->childObject);
+        ObjLink_DetachChild((int)obj, (int)state->childObject);
     }
 }
 
@@ -288,7 +286,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
     int def;
     LandedArwingState* state;
     int mapId;
-    int child;
+    GameObject* child;
 
     def = *(int*)&obj->anim.placementData;
     state = obj->extra;
@@ -464,16 +462,16 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
             break;
         case 0x18:
             child = state->childObject;
-            if ((void*)child != NULL)
+            if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                child->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             }
             break;
         case 0x19:
             child = state->childObject;
-            if ((void*)child != NULL)
+            if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                child->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
             break;
         }
@@ -485,28 +483,28 @@ void landed_arwing_update(GameObject* obj)
 {
     LandedArwingState* state;
     int player;
-    int child;
+    GameObject* child;
 
     state = (obj)->extra;
     player = (int)Obj_GetPlayerObject();
-    if ((u32)state->childObject == 0)
+    if (state->childObject == NULL)
     {
         if (Obj_IsLoadingLocked() != 0)
         {
-            child = Obj_SetupObject(Obj_AllocObjectSetup(0x24, LANDEDARWING_CHILD_OBJ_GADGET_UNIT), 4, -1, -1, 0);
+            child = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x24, LANDEDARWING_CHILD_OBJ_GADGET_UNIT), 4, -1, -1, 0);
             state->childObject = child;
-            if ((u32)state->childObject != 0)
+            if (state->childObject != NULL)
             {
-                ObjLink_AttachChild((int)obj, state->childObject, 0);
-                arwarwinggu_setTextureFrame((GameObject*)(state->childObject), 0xaf);
-                ((GameObject*)state->childObject)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                ObjLink_AttachChild((int)obj, (int)state->childObject, 0);
+                arwarwinggu_setTextureFrame(state->childObject, 0xaf);
+                state->childObject->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }
 
-    if ((u32)state->childObject != 0)
+    if (state->childObject != NULL)
     {
-        arwarwinggu_applyTextureFrame((GameObject*)(state->childObject));
+        arwarwinggu_applyTextureFrame(state->childObject);
     }
 
     if ((u32)player != 0 && (u32)playerGetFocusObject(player) != 0)
