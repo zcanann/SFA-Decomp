@@ -27,8 +27,8 @@
 #include "main/track_dolphin.h"
 #include "main/objprint_dolphin.h"
 #include "main/fileio.h"
+#include "main/objlib.h"
 #include "dolphin/os/OSCache.h"
-extern void* ObjGroup_GetObjects();
 extern u32 mapLoadDataFile(int mapId, int fileId);
 extern u32 piRomLoadSection();
 extern char sShaderDebugStrings[];
@@ -1051,7 +1051,7 @@ void playerUpdateFn_8005649c(void)
     int i;
     f32 lx, ly, lz;
 
-    objs = ObjGroup_GetObjects(6, &count);
+    objs = (int**)ObjGroup_GetObjects(6, &count);
     cam = Camera_GetCurrentViewSlot();
     Obj_UpdateWorldTransform(cam);
     for (k = 0; k < 31; k++)
@@ -1983,7 +1983,6 @@ int objUpdateOpacity(char* obj)
     return 1;
 }
 
-extern void* ObjList_GetObjects(int* outA, int* outB);
 extern int objShouldUnload(char* obj);
 extern int SaveGame_findTransientMapBit(int mapId, int bit);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
@@ -2047,7 +2046,7 @@ void mapLoadUnloadObjects(int flag)
         tp++;
     }
     {
-        int* objs = ObjList_GetObjects(&i, &objCount);
+        int* objs = (int*)ObjList_GetObjects(&i, &objCount);
         while (i < objCount)
         {
             obj = (char*)objs[i];
@@ -2193,7 +2192,7 @@ void mapLoadUnloadObjects(int flag)
             }
         }
         {
-            int* objs2 = ObjGroup_GetObjects(6, &objCount);
+            int* objs2 = (int*)ObjGroup_GetObjects(6, &objCount);
             for (i = 0; i < objCount; i++)
             {
                 char* obj2 = (char*)objs2[i];

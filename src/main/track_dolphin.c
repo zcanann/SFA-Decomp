@@ -13,6 +13,7 @@
 #include "main/model.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
@@ -343,7 +344,6 @@ extern f32 lbl_803DB660;
 
 extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
-extern void* ObjGroup_GetObjects();
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
@@ -3786,7 +3786,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         memcpy(w0, p0, 0xc);
         memcpy(w1, p1, 0xc);
     }
-    objs = ObjGroup_GetObjects(6, &count);
+    objs = (int*)ObjGroup_GetObjects(6, &count);
     for (i = 0; i < count; i++, objs++)
     {
         int* o = (int*)*objs;
