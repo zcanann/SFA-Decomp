@@ -332,6 +332,7 @@ void groundanimator_update(int* obj)
     int foffVtx;
     f32 nd;
     void* vtx;
+    void* nv;
     void* block;
     s8 bi;
     f32 vbuf[3];
@@ -463,9 +464,8 @@ void groundanimator_update(int* obj)
                 g->flags = g->flags | 2;
                 Sfx_PlayFromObject((u32)obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
             }
-            off2[0] = 0;
-            off2[1] = off2[0];
-            for (blkIdx = 0; blkIdx < g->entryCount; blkIdx++)
+            blkIdx = 0;
+            for (off2[0] = 0, off2[1] = off2[0]; blkIdx < g->entryCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
                 mid = *(u16*)entry;
@@ -473,10 +473,8 @@ void groundanimator_update(int* obj)
                 hoffEntry = off2[1];
                 for (; mid < *(u16*)((char*)entry + 0x14); mid++)
                 {
-                    vtx = fn_800606DC(block, mid);
-                    foffVtx = foffEntry;
-                    hoffVtx = hoffEntry;
-                    for (inner = 0; inner < 3; inner++)
+                    nv = fn_800606DC(block, mid);
+                    for (inner = 0, foffVtx = foffEntry, vtx = nv, hoffVtx = hoffEntry; inner < 3; inner++)
                     {
                         if (*(f32*)((char*)g->falloffBuf + foffVtx) > lbl_803E3FB0)
                         {
