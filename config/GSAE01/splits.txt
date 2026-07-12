@@ -116,7 +116,7 @@ main/objprint_dolphin.c:
 main/pi_dolphin.c:
 	.text       start:0x800443CC end:0x80051868
 	.data       start:0x802CAF48 end:0x802CBE94
-	.bss        start:0x8035EF48 end:0x803779A0
+	.bss        start:0x8035EF48 end:0x803779C0
 
 main/boot_logo.c:
 	.data       start:0x802CC6A0 end:0x8030C6A0
@@ -2382,7 +2382,7 @@ main/dll/WM/dll_0210_wmplanets.c:
 main/dll/WM/dll_0211_wmwallcrawler.c:
 	.text       start:0x801F7FF4 end:0x801F943C
 	.data       start:0x80328DD0 end:0x80328E58
-	.sdata2     start:0x803E6020 end:0x803E6030
+	.sdata2     start:0x803E6020 end:0x803E6038
 
 main/dll/WM/dll_0215_wmnewcrystal.c:
 	.text       start:0x801F943C end:0x801F9804

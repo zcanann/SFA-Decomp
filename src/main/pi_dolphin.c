@@ -7556,7 +7556,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
 #pragma opt_propagation reset
 #pragma use_lmw_stmw reset
 
-/* .bss glue 0x8035EF48-0x80377974 */
+/* .bss glue 0x8035EF48-0x803779C0 */
+u8 lbl_803779A0[0x20];
 u16 lbl_80377974[0x16];
 u16 lbl_80377954[0x10];
 u8 lbl_803778D4[0x80];

@@ -856,3 +856,6 @@ void* gWM_WallCrawlerObjDescriptor[15] = {(void*)0x00000000,
                                           (void*)0x00000000};
 u8 lbl_80328E28[48] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+__declspec(section ".sdata2") f32 lbl_803E6030 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E6034 = 80.0f;
