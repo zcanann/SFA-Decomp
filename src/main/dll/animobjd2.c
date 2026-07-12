@@ -28,6 +28,7 @@
 #include "main/vecmath.h"
 #include "main/dll/player_target.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
@@ -69,7 +70,6 @@ extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int id);
 extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
 /* Sfx_* use int* obj / int sfx (not engine_shared.h's u32/u16) so the int* obj

@@ -152,6 +152,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 timeDelta;
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
@@ -231,7 +232,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern u64 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 extern void** gTitleMenuControlInterfaceCopy;
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
@@ -930,4 +930,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-

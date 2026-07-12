@@ -12,6 +12,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/genprops.h"
 #include "main/mapEvent.h"
@@ -99,7 +100,6 @@ typedef struct DllF7State
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern const f32 lbl_803E3400;
 extern const f32 lbl_803E3404;

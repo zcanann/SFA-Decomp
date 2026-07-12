@@ -21,6 +21,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
@@ -105,7 +106,6 @@ extern f32 lbl_803E24F8;
 void fn_80144B50(u8* obj, u8* state);
 extern void objPosFn_80039510(GameObject* obj, int flags, float* out);
 extern f32 lbl_803E24C8;
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
 extern void objSetAnimSpeedTo1(u8* e);

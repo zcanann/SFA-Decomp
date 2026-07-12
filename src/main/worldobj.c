@@ -2,6 +2,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
@@ -85,7 +86,6 @@ extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, in
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void objfx_spawnMaskedHitEffect(void* obj, f32 scale, int a, int b, int c, void* params);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 arg2, void* params);

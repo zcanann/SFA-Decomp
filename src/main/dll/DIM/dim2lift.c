@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
@@ -31,7 +32,6 @@ extern u32 ObjMsg_SendToObject();
 
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void** gPlayerInterface;

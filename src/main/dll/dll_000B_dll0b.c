@@ -19,6 +19,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
 #include "main/texture.h"
@@ -1589,7 +1590,6 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 #undef base
 }
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 
