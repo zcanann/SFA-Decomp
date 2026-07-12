@@ -55,8 +55,8 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
     FbBuf buf;
     u8* base = (u8*)(int)gDll8DEffectParamBlock;
     FbCmd* p;
-    FbCmd* const entries = buf.entries;
     int ret = 0;
+    FbCmd* const entries = buf.entries;
     f32 jitter;
 
     p = entries;
