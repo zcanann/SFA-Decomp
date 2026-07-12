@@ -7369,3 +7369,30 @@ the best iff it strictly beats baseline AND re-confirms after apply; restores HE
   not a uniform int pool) and (b) usually a peephole/schedule pragma bracket so the reorder isn't re-canonicalized.
   Where those hold, sweep by fuzzy; where the leading block is arrays or a uniform-class pool, it's welded on sight.
 - Gate: all_source EXIT=0, 0 FAILED after the textrender commit; both commits path-scoped, asm-clean.
+
+
+## Jul12 fuzzy-specialist — 93-96 band decl-order sweep pass (brute_match.py)
+Ran the fuzzy-scored decl-order sweeper (tools/brute_match.py, --strategy all) across every UNCONTENDED
+-O4,p near-miss in the 92-96 band. Method = true objdiff fuzzy per variant, apply iff strictly beats + restore else.
+- **WIN: dll_0126_trigger Trigger_free 92.949 -> 93.846% (committed 3e0cbe8456).** Swap the leading
+  `u8 i` / `u8* entry` decls -> the entry pointer takes the higher saved-reg home, matching the retail prologue.
+  Byte-plausible C, asm-free; gate all_source EXIT=0 / 0 FAILED.
+- **WELDS CONFIRMED by full true-fuzzy decl-order sweep (all orderings tie or regress, restored, no edit):**
+  - dll_000B_dll0b dll_0B_func04 (94.296): 60 variants all tie EXACTLY at baseline. 8-param fn; residual is the
+    param saved-reg POOL (r23-r29 T vs r25-r31 C) = #126, decl-order cannot touch the param-class numbering.
+  - render fn_80007F78 (94.803): identity ordering already top; residual = 64-bit conversion-temp pressure +
+    one extra callee-saved reg (savegpr_15 T vs savegpr_14 C) = #67/#67d, no decl leverage.
+  - render modelRenderFn_80006744 (95.976): all tie; residual = pervasive r5<->r6 web-perm + one schedule pull-up = #108/sched.
+  - newshadows fn_8006A028 (95.907), fn_8006CB50 (94.741), allocLotsOfTextures (95.050): all tie; fn_8006CB50/allocLots
+    residual = FP-reg perm (#82) on data-struct const reads (Vdchuff/Udchuff/Yachuff base+disp vs direct-symbol, #70-neutral),
+    not source-controllable.
+  - dll_0298_wcfloortile arwarwing_updateFlightPhysics (92.491): all 5-local orderings tie; FP-perm welded.
+- **textrender gameTextInitFn_8001c794 (93.662):** pragma sweep (opt_strength_reduction on / opt_dead_assignments on)
+  all INERT — the fn already sits at its tuned optimum (decl-swap win already taken 7e8f1b60d1). Residual = the retail
+  keeps a redundant inner-loop up-counter (j, +1/iter) that our build eliminates to pure ctr = induction-elim weld
+  (#110-class); pragma-insensitive, loop-form respell would need j load-bearing (byte-changing).
+- CONTENTION NOTE: shader.c is actively owned by another agent this session (mapSetup decl-reorder appeared mid-run).
+  A brute_match doPendingMapLoads win (94.752 -> 94.790) WAS found but NOT committed — the file carries a sibling's
+  uncommitted mapSetup WIP; stood down per one-owner-per-.c, surgically reverted only my doPendingMapLoads block.
+- VERDICT: the UNCONTENDED 92-96 band is decl-order-exhausted (1 win, rest #108/#82/#126/#67/#110 welded). brute_match
+  is the right first probe (cheap, fuzzy-true); wins concentrate where a leading POINTER/scalar has a movable saved-reg home.
