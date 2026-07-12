@@ -36,6 +36,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
 #include "main/pause_menu_api.h"
+#include "main/audio/sfx.h"
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 
@@ -190,13 +191,11 @@ extern f32 gMinimapFNeg40;
 extern f32 gMinimapF0_05;
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objRender(int a, int b, int c, int d, void* obj, int f);
 extern u8 gMinimapBlipPulse;
 extern f32 gMinimapF110;
 extern f32 gMinimapF43;
 extern f32 gMinimapF390;
-extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
 extern u32 gMinimapCompassColor;
 extern f32 gMinimapCompassPhase;
 extern f32 gMinimapBlipNearDist;

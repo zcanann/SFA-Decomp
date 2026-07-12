@@ -47,6 +47,7 @@
 #include "main/dll/dll_02B5_timer.h"
 #include "main/dll/headdisplay.h"
 #include "main/dll/mmp_gyservent.h"
+#include "main/audio/sfx.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
@@ -91,10 +92,8 @@ extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (h
 extern u8 framesThisStep;
 
 extern int getLActions();
-extern void Sfx_StopFromObject(void* obj, int sfxId);
 extern void objSetSlot(u8* obj, s8 slot);
 extern int mainGetBit(int eventId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
 extern void timeOfDayFn_80055038(void);
@@ -136,7 +135,7 @@ void Trigger_free(GameObject* obj)
     {
         if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
         {
-            Sfx_StopFromObject(obj, (u16)((entry[2] << 8) | entry[3]));
+            Sfx_StopFromObject((u32)obj, (u16)((entry[2] << 8) | entry[3]));
         }
         i++;
         entry += 4;
@@ -325,7 +324,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     else
                     {
-                        Sfx_StopFromObject((void*)obj, (u16)((p[2] << 8) | p[3]));
+                        Sfx_StopFromObject(obj, (u16)((p[2] << 8) | p[3]));
                     }
                     break;
                 case 6:

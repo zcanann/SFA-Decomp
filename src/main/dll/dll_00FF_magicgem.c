@@ -13,6 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/os/OSReport.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx.h"
 #define MAGICGEM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAGICGEM_MSG_IN_RANGE               0x7000a /* sent to player when in pickup range */
 #define MAGICGEM_MSG_PICKUP                 0x7000b /* collect: award magic + burst */
@@ -23,8 +24,6 @@ extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
 extern void ObjLink_DetachChild(int obj, int child);
 extern f32 lbl_803E34B0;
-extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int obj, int amount);
 

@@ -46,6 +46,7 @@
 #include "main/texture.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/frame_timing.h"
+#include "main/audio/sfx.h"
 
 #define SBGALLEON_OBJGROUP 3
 
@@ -54,10 +55,8 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern void SB_Galleon_onSeqFree(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(int id, int arg);
 extern const f32 lbl_803E56CC;
-extern void Sfx_StopFromObject(int obj, int sfxId);
 
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
